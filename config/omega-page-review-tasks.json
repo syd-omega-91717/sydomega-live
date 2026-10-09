@@ -1,0 +1,4306 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Ω Page Review Task Registry",
+  "version": 1,
+  "status": "OPEN_AUDIT_QUEUE",
+  "principle": "EVERY_PAGE_HAS_AUDIT_WORK",
+  "task_contract": "config/omega-task-contract.json",
+  "task_count": 238,
+  "states": [
+    "OPEN",
+    "READY",
+    "AUTHORIZED",
+    "RUNNING",
+    "VERIFYING",
+    "COMPLETED",
+    "FAILED",
+    "BLOCKED",
+    "CANCELLED"
+  ],
+  "tasks": [
+    {
+      "task_id": "PAGE::404::REVIEW",
+      "task_type": "AUDIT",
+      "page": "404",
+      "path": "404.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::academy::REVIEW",
+      "task_type": "AUDIT",
+      "page": "academy",
+      "path": "academy.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::account::REVIEW",
+      "task_type": "AUDIT",
+      "page": "account",
+      "path": "account.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "identity"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::achieve::REVIEW",
+      "task_type": "AUDIT",
+      "page": "achieve",
+      "path": "achieve.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::achievements::REVIEW",
+      "task_type": "AUDIT",
+      "page": "achievements",
+      "path": "achievements.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::ad-network::REVIEW",
+      "task_type": "AUDIT",
+      "page": "ad-network",
+      "path": "ad-network.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::advertising::REVIEW",
+      "task_type": "AUDIT",
+      "page": "advertising",
+      "path": "advertising.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::affirmations::REVIEW",
+      "task_type": "AUDIT",
+      "page": "affirmations",
+      "path": "affirmations.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::agent-network::REVIEW",
+      "task_type": "AUDIT",
+      "page": "agent-network",
+      "path": "agent-network.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::agent-operations::REVIEW",
+      "task_type": "AUDIT",
+      "page": "agent-operations",
+      "path": "agent-operations.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::agent::REVIEW",
+      "task_type": "AUDIT",
+      "page": "agent",
+      "path": "agent.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::agents::REVIEW",
+      "task_type": "AUDIT",
+      "page": "agents",
+      "path": "agents.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::analytics-dashboard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "analytics-dashboard",
+      "path": "analytics-dashboard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::analytics::REVIEW",
+      "task_type": "AUDIT",
+      "page": "analytics",
+      "path": "analytics.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "observability"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::approvals::REVIEW",
+      "task_type": "AUDIT",
+      "page": "approvals",
+      "path": "approvals.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "approvals"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::architect::REVIEW",
+      "task_type": "AUDIT",
+      "page": "architect",
+      "path": "architect.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::architecture::REVIEW",
+      "task_type": "AUDIT",
+      "page": "architecture",
+      "path": "architecture.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::archive::REVIEW",
+      "task_type": "AUDIT",
+      "page": "archive",
+      "path": "archive.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::arena::REVIEW",
+      "task_type": "AUDIT",
+      "page": "arena",
+      "path": "arena.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::ascend::REVIEW",
+      "task_type": "AUDIT",
+      "page": "ascend",
+      "path": "ascend.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::ascension::REVIEW",
+      "task_type": "AUDIT",
+      "page": "ascension",
+      "path": "ascension.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::atlas::REVIEW",
+      "task_type": "AUDIT",
+      "page": "atlas",
+      "path": "atlas.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::automation::REVIEW",
+      "task_type": "AUDIT",
+      "page": "automation",
+      "path": "automation.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::autonomous-insights::REVIEW",
+      "task_type": "AUDIT",
+      "page": "autonomous-insights",
+      "path": "autonomous-insights.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::awards::REVIEW",
+      "task_type": "AUDIT",
+      "page": "awards",
+      "path": "awards.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::beacon::REVIEW",
+      "task_type": "AUDIT",
+      "page": "beacon",
+      "path": "beacon.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::blockchain::REVIEW",
+      "task_type": "AUDIT",
+      "page": "blockchain",
+      "path": "blockchain.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::bloodline::REVIEW",
+      "task_type": "AUDIT",
+      "page": "bloodline",
+      "path": "bloodline.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::body::REVIEW",
+      "task_type": "AUDIT",
+      "page": "body",
+      "path": "body.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::breath::REVIEW",
+      "task_type": "AUDIT",
+      "page": "breath",
+      "path": "breath.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::budget::REVIEW",
+      "task_type": "AUDIT",
+      "page": "budget",
+      "path": "budget.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::character::REVIEW",
+      "task_type": "AUDIT",
+      "page": "character",
+      "path": "character.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::characters::REVIEW",
+      "task_type": "AUDIT",
+      "page": "characters",
+      "path": "characters.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::charter::REVIEW",
+      "task_type": "AUDIT",
+      "page": "charter",
+      "path": "charter.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::chatbot::REVIEW",
+      "task_type": "AUDIT",
+      "page": "chatbot",
+      "path": "chatbot.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::chronicle::REVIEW",
+      "task_type": "AUDIT",
+      "page": "chronicle",
+      "path": "chronicle.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::cinema::REVIEW",
+      "task_type": "AUDIT",
+      "page": "cinema",
+      "path": "cinema.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::cipher::REVIEW",
+      "task_type": "AUDIT",
+      "page": "cipher",
+      "path": "cipher.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::city::REVIEW",
+      "task_type": "AUDIT",
+      "page": "city",
+      "path": "city.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::clarity::REVIEW",
+      "task_type": "AUDIT",
+      "page": "clarity",
+      "path": "clarity.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::codex::REVIEW",
+      "task_type": "AUDIT",
+      "page": "codex",
+      "path": "codex.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::cohorts-dashboard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "cohorts-dashboard",
+      "path": "cohorts-dashboard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::command::REVIEW",
+      "task_type": "AUDIT",
+      "page": "command",
+      "path": "command.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::compliance::REVIEW",
+      "task_type": "AUDIT",
+      "page": "compliance",
+      "path": "compliance.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::consultancy::REVIEW",
+      "task_type": "AUDIT",
+      "page": "consultancy",
+      "path": "consultancy.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::contacts::REVIEW",
+      "task_type": "AUDIT",
+      "page": "contacts",
+      "path": "contacts.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::contracts::REVIEW",
+      "task_type": "AUDIT",
+      "page": "contracts",
+      "path": "contracts.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::contributions::REVIEW",
+      "task_type": "AUDIT",
+      "page": "contributions",
+      "path": "contributions.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::control-center::REVIEW",
+      "task_type": "AUDIT",
+      "page": "control-center",
+      "path": "control-center.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::control-plane::REVIEW",
+      "task_type": "AUDIT",
+      "page": "control-plane",
+      "path": "control-plane.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::cosmetics::REVIEW",
+      "task_type": "AUDIT",
+      "page": "cosmetics",
+      "path": "cosmetics.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::cosmic-ledger::REVIEW",
+      "task_type": "AUDIT",
+      "page": "cosmic-ledger",
+      "path": "cosmic-ledger.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::cosmos::REVIEW",
+      "task_type": "AUDIT",
+      "page": "cosmos",
+      "path": "cosmos.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::council::REVIEW",
+      "task_type": "AUDIT",
+      "page": "council",
+      "path": "council.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::courses::REVIEW",
+      "task_type": "AUDIT",
+      "page": "courses",
+      "path": "courses.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::covenant::REVIEW",
+      "task_type": "AUDIT",
+      "page": "covenant",
+      "path": "covenant.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::creation-studio::REVIEW",
+      "task_type": "AUDIT",
+      "page": "creation-studio",
+      "path": "creation-studio.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::creator::REVIEW",
+      "task_type": "AUDIT",
+      "page": "creator",
+      "path": "creator.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::credentials::REVIEW",
+      "task_type": "AUDIT",
+      "page": "credentials",
+      "path": "credentials.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::dashboard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "dashboard",
+      "path": "dashboard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::data-observatory::REVIEW",
+      "task_type": "AUDIT",
+      "page": "data-observatory",
+      "path": "data-observatory.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::decisions::REVIEW",
+      "task_type": "AUDIT",
+      "page": "decisions",
+      "path": "decisions.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::design-showcase::REVIEW",
+      "task_type": "AUDIT",
+      "page": "design-showcase",
+      "path": "design-showcase.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::design-system::REVIEW",
+      "task_type": "AUDIT",
+      "page": "design-system",
+      "path": "design-system.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::dna::REVIEW",
+      "task_type": "AUDIT",
+      "page": "dna",
+      "path": "dna.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::domain-mastery::REVIEW",
+      "task_type": "AUDIT",
+      "page": "domain-mastery",
+      "path": "domain-mastery.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::ecosystem::REVIEW",
+      "task_type": "AUDIT",
+      "page": "ecosystem",
+      "path": "ecosystem.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::elements::REVIEW",
+      "task_type": "AUDIT",
+      "page": "elements",
+      "path": "elements.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::enter::REVIEW",
+      "task_type": "AUDIT",
+      "page": "enter",
+      "path": "enter.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::enterprise::REVIEW",
+      "task_type": "AUDIT",
+      "page": "enterprise",
+      "path": "enterprise.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::eternity::REVIEW",
+      "task_type": "AUDIT",
+      "page": "eternity",
+      "path": "eternity.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::events::REVIEW",
+      "task_type": "AUDIT",
+      "page": "events",
+      "path": "events.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::evidence::REVIEW",
+      "task_type": "AUDIT",
+      "page": "evidence",
+      "path": "evidence.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::evolution::REVIEW",
+      "task_type": "AUDIT",
+      "page": "evolution",
+      "path": "evolution.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::exam::REVIEW",
+      "task_type": "AUDIT",
+      "page": "exam",
+      "path": "exam.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::expenses::REVIEW",
+      "task_type": "AUDIT",
+      "page": "expenses",
+      "path": "expenses.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::factions::REVIEW",
+      "task_type": "AUDIT",
+      "page": "factions",
+      "path": "factions.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::family::REVIEW",
+      "task_type": "AUDIT",
+      "page": "family",
+      "path": "family.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "family"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::fasting::REVIEW",
+      "task_type": "AUDIT",
+      "page": "fasting",
+      "path": "fasting.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::feed::REVIEW",
+      "task_type": "AUDIT",
+      "page": "feed",
+      "path": "feed.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "feed"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::flashcard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "flashcard",
+      "path": "flashcard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::focus::REVIEW",
+      "task_type": "AUDIT",
+      "page": "focus",
+      "path": "focus.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::forge::REVIEW",
+      "task_type": "AUDIT",
+      "page": "forge",
+      "path": "forge.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::gaming::REVIEW",
+      "task_type": "AUDIT",
+      "page": "gaming",
+      "path": "gaming.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::gates::REVIEW",
+      "task_type": "AUDIT",
+      "page": "gates",
+      "path": "gates.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::gateway::REVIEW",
+      "task_type": "AUDIT",
+      "page": "gateway",
+      "path": "gateway.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::govern::REVIEW",
+      "task_type": "AUDIT",
+      "page": "govern",
+      "path": "govern.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::governance::REVIEW",
+      "task_type": "AUDIT",
+      "page": "governance",
+      "path": "governance.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::grades::REVIEW",
+      "task_type": "AUDIT",
+      "page": "grades",
+      "path": "grades.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::graph-admin::REVIEW",
+      "task_type": "AUDIT",
+      "page": "graph-admin",
+      "path": "graph-admin.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::graph-anomalies::REVIEW",
+      "task_type": "AUDIT",
+      "page": "graph-anomalies",
+      "path": "graph-anomalies.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::graph-centrality::REVIEW",
+      "task_type": "AUDIT",
+      "page": "graph-centrality",
+      "path": "graph-centrality.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::graph-evidence::REVIEW",
+      "task_type": "AUDIT",
+      "page": "graph-evidence",
+      "path": "graph-evidence.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::graph-explorer::REVIEW",
+      "task_type": "AUDIT",
+      "page": "graph-explorer",
+      "path": "graph-explorer.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::graph-timeline::REVIEW",
+      "task_type": "AUDIT",
+      "page": "graph-timeline",
+      "path": "graph-timeline.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::graph::REVIEW",
+      "task_type": "AUDIT",
+      "page": "graph",
+      "path": "graph.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::graphify::REVIEW",
+      "task_type": "AUDIT",
+      "page": "graphify",
+      "path": "graphify.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::gratitude::REVIEW",
+      "task_type": "AUDIT",
+      "page": "gratitude",
+      "path": "gratitude.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::grid::REVIEW",
+      "task_type": "AUDIT",
+      "page": "grid",
+      "path": "grid.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::guide::REVIEW",
+      "task_type": "AUDIT",
+      "page": "guide",
+      "path": "guide.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::habits::REVIEW",
+      "task_type": "AUDIT",
+      "page": "habits",
+      "path": "habits.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::hall::REVIEW",
+      "task_type": "AUDIT",
+      "page": "hall",
+      "path": "hall.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::health::REVIEW",
+      "task_type": "AUDIT",
+      "page": "health",
+      "path": "health.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::healthz::REVIEW",
+      "task_type": "AUDIT",
+      "page": "healthz",
+      "path": "healthz.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::hercules::REVIEW",
+      "task_type": "AUDIT",
+      "page": "hercules",
+      "path": "hercules.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::heritage::REVIEW",
+      "task_type": "AUDIT",
+      "page": "heritage",
+      "path": "heritage.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::honors::REVIEW",
+      "task_type": "AUDIT",
+      "page": "honors",
+      "path": "honors.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::horoscope::REVIEW",
+      "task_type": "AUDIT",
+      "page": "horoscope",
+      "path": "horoscope.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::houses::REVIEW",
+      "task_type": "AUDIT",
+      "page": "houses",
+      "path": "houses.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::identity::REVIEW",
+      "task_type": "AUDIT",
+      "page": "identity",
+      "path": "identity.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::income::REVIEW",
+      "task_type": "AUDIT",
+      "page": "income",
+      "path": "income.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::index::REVIEW",
+      "task_type": "AUDIT",
+      "page": "index",
+      "path": "index.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::intel::REVIEW",
+      "task_type": "AUDIT",
+      "page": "intel",
+      "path": "intel.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::intelligence::REVIEW",
+      "task_type": "AUDIT",
+      "page": "intelligence",
+      "path": "intelligence.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::interface-omni::REVIEW",
+      "task_type": "AUDIT",
+      "page": "interface-omni",
+      "path": "interface-omni.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::invest::REVIEW",
+      "task_type": "AUDIT",
+      "page": "invest",
+      "path": "invest.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::investment::REVIEW",
+      "task_type": "AUDIT",
+      "page": "investment",
+      "path": "investment.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::investor-dashboard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "investor-dashboard",
+      "path": "investor-dashboard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::investor-gate::REVIEW",
+      "task_type": "AUDIT",
+      "page": "investor-gate",
+      "path": "investor-gate.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::journal::REVIEW",
+      "task_type": "AUDIT",
+      "page": "journal",
+      "path": "journal.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::kings::REVIEW",
+      "task_type": "AUDIT",
+      "page": "kings",
+      "path": "kings.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::knowledge-loom::REVIEW",
+      "task_type": "AUDIT",
+      "page": "knowledge-loom",
+      "path": "knowledge-loom.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::knowledge::REVIEW",
+      "task_type": "AUDIT",
+      "page": "knowledge",
+      "path": "knowledge.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::kyc::REVIEW",
+      "task_type": "AUDIT",
+      "page": "kyc",
+      "path": "kyc.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::lab::REVIEW",
+      "task_type": "AUDIT",
+      "page": "lab",
+      "path": "lab.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::leaderboard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "leaderboard",
+      "path": "leaderboard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::ledger::REVIEW",
+      "task_type": "AUDIT",
+      "page": "ledger",
+      "path": "ledger.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::levels::REVIEW",
+      "task_type": "AUDIT",
+      "page": "levels",
+      "path": "levels.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::library::REVIEW",
+      "task_type": "AUDIT",
+      "page": "library",
+      "path": "library.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::life::REVIEW",
+      "task_type": "AUDIT",
+      "page": "life",
+      "path": "life.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::maintenance::REVIEW",
+      "task_type": "AUDIT",
+      "page": "maintenance",
+      "path": "maintenance.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::map::REVIEW",
+      "task_type": "AUDIT",
+      "page": "map",
+      "path": "map.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::marketing::REVIEW",
+      "task_type": "AUDIT",
+      "page": "marketing",
+      "path": "marketing.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::marketplace::REVIEW",
+      "task_type": "AUDIT",
+      "page": "marketplace",
+      "path": "marketplace.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::matrix::REVIEW",
+      "task_type": "AUDIT",
+      "page": "matrix",
+      "path": "matrix.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::media::REVIEW",
+      "task_type": "AUDIT",
+      "page": "media",
+      "path": "media.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::meditate::REVIEW",
+      "task_type": "AUDIT",
+      "page": "meditate",
+      "path": "meditate.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::membership::REVIEW",
+      "task_type": "AUDIT",
+      "page": "membership",
+      "path": "membership.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::mentors::REVIEW",
+      "task_type": "AUDIT",
+      "page": "mentors",
+      "path": "mentors.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::mindmap::REVIEW",
+      "task_type": "AUDIT",
+      "page": "mindmap",
+      "path": "mindmap.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::mirror::REVIEW",
+      "task_type": "AUDIT",
+      "page": "mirror",
+      "path": "mirror.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::missions::REVIEW",
+      "task_type": "AUDIT",
+      "page": "missions",
+      "path": "missions.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::monitoring-dashboard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "monitoring-dashboard",
+      "path": "monitoring-dashboard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::mood::REVIEW",
+      "task_type": "AUDIT",
+      "page": "mood",
+      "path": "mood.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::movies::REVIEW",
+      "task_type": "AUDIT",
+      "page": "movies",
+      "path": "movies.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::my-quests::REVIEW",
+      "task_type": "AUDIT",
+      "page": "my-quests",
+      "path": "my-quests.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::network::REVIEW",
+      "task_type": "AUDIT",
+      "page": "network",
+      "path": "network.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::news::REVIEW",
+      "task_type": "AUDIT",
+      "page": "news",
+      "path": "news.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::nexus::REVIEW",
+      "task_type": "AUDIT",
+      "page": "nexus",
+      "path": "nexus.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::notes::REVIEW",
+      "task_type": "AUDIT",
+      "page": "notes",
+      "path": "notes.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::notifications::REVIEW",
+      "task_type": "AUDIT",
+      "page": "notifications",
+      "path": "notifications.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::nutrition::REVIEW",
+      "task_type": "AUDIT",
+      "page": "nutrition",
+      "path": "nutrition.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::oath::REVIEW",
+      "task_type": "AUDIT",
+      "page": "oath",
+      "path": "oath.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::observatory::REVIEW",
+      "task_type": "AUDIT",
+      "page": "observatory",
+      "path": "observatory.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::offline::REVIEW",
+      "task_type": "AUDIT",
+      "page": "offline",
+      "path": "offline.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::omega-platform-navigator::REVIEW",
+      "task_type": "AUDIT",
+      "page": "omega-platform-navigator",
+      "path": "omega-platform-navigator.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::omega-visual-command::REVIEW",
+      "task_type": "AUDIT",
+      "page": "omega-visual-command",
+      "path": "omega-visual-command.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::ops::REVIEW",
+      "task_type": "AUDIT",
+      "page": "ops",
+      "path": "ops.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "observability"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::oracle::REVIEW",
+      "task_type": "AUDIT",
+      "page": "oracle",
+      "path": "oracle.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::order::REVIEW",
+      "task_type": "AUDIT",
+      "page": "order",
+      "path": "order.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::pantheons::REVIEW",
+      "task_type": "AUDIT",
+      "page": "pantheons",
+      "path": "pantheons.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::passport::REVIEW",
+      "task_type": "AUDIT",
+      "page": "passport",
+      "path": "passport.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::payments::REVIEW",
+      "task_type": "AUDIT",
+      "page": "payments",
+      "path": "payments.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::pending::REVIEW",
+      "task_type": "AUDIT",
+      "page": "pending",
+      "path": "pending.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::phases::REVIEW",
+      "task_type": "AUDIT",
+      "page": "phases",
+      "path": "phases.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::physiology::REVIEW",
+      "task_type": "AUDIT",
+      "page": "physiology",
+      "path": "physiology.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::platform-kernel::REVIEW",
+      "task_type": "AUDIT",
+      "page": "platform-kernel",
+      "path": "platform-kernel.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::points::REVIEW",
+      "task_type": "AUDIT",
+      "page": "points",
+      "path": "points.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::portfolio::REVIEW",
+      "task_type": "AUDIT",
+      "page": "portfolio",
+      "path": "portfolio.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::prediction::REVIEW",
+      "task_type": "AUDIT",
+      "page": "prediction",
+      "path": "prediction.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::predictions-dashboard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "predictions-dashboard",
+      "path": "predictions-dashboard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::principles::REVIEW",
+      "task_type": "AUDIT",
+      "page": "principles",
+      "path": "principles.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::privacy::REVIEW",
+      "task_type": "AUDIT",
+      "page": "privacy",
+      "path": "privacy.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::profile::REVIEW",
+      "task_type": "AUDIT",
+      "page": "profile",
+      "path": "profile.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "identity"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::project-studio::REVIEW",
+      "task_type": "AUDIT",
+      "page": "project-studio",
+      "path": "project-studio.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::projects::REVIEW",
+      "task_type": "AUDIT",
+      "page": "projects",
+      "path": "projects.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::publications::REVIEW",
+      "task_type": "AUDIT",
+      "page": "publications",
+      "path": "publications.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::publishing::REVIEW",
+      "task_type": "AUDIT",
+      "page": "publishing",
+      "path": "publishing.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::pulse::REVIEW",
+      "task_type": "AUDIT",
+      "page": "pulse",
+      "path": "pulse.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::quest-progress::REVIEW",
+      "task_type": "AUDIT",
+      "page": "quest-progress",
+      "path": "quest-progress.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::queue::REVIEW",
+      "task_type": "AUDIT",
+      "page": "queue",
+      "path": "queue.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::quotes::REVIEW",
+      "task_type": "AUDIT",
+      "page": "quotes",
+      "path": "quotes.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::reading::REVIEW",
+      "task_type": "AUDIT",
+      "page": "reading",
+      "path": "reading.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::realm::REVIEW",
+      "task_type": "AUDIT",
+      "page": "realm",
+      "path": "realm.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::realms::REVIEW",
+      "task_type": "AUDIT",
+      "page": "realms",
+      "path": "realms.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::recovery::REVIEW",
+      "task_type": "AUDIT",
+      "page": "recovery",
+      "path": "recovery.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::replay::REVIEW",
+      "task_type": "AUDIT",
+      "page": "replay",
+      "path": "replay.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::research::REVIEW",
+      "task_type": "AUDIT",
+      "page": "research",
+      "path": "research.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::reset::REVIEW",
+      "task_type": "AUDIT",
+      "page": "reset",
+      "path": "reset.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::revenue::REVIEW",
+      "task_type": "AUDIT",
+      "page": "revenue",
+      "path": "revenue.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::rituals::REVIEW",
+      "task_type": "AUDIT",
+      "page": "rituals",
+      "path": "rituals.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::roadmap::REVIEW",
+      "task_type": "AUDIT",
+      "page": "roadmap",
+      "path": "roadmap.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "roadmap"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::rune::REVIEW",
+      "task_type": "AUDIT",
+      "page": "rune",
+      "path": "rune.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::sculpture::REVIEW",
+      "task_type": "AUDIT",
+      "page": "sculpture",
+      "path": "sculpture.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::search::REVIEW",
+      "task_type": "AUDIT",
+      "page": "search",
+      "path": "search.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "search"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::seasonal-events::REVIEW",
+      "task_type": "AUDIT",
+      "page": "seasonal-events",
+      "path": "seasonal-events.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::security::REVIEW",
+      "task_type": "AUDIT",
+      "page": "security",
+      "path": "security.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::segmentation-dashboard::REVIEW",
+      "task_type": "AUDIT",
+      "page": "segmentation-dashboard",
+      "path": "segmentation-dashboard.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::series::REVIEW",
+      "task_type": "AUDIT",
+      "page": "series",
+      "path": "series.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::services::REVIEW",
+      "task_type": "AUDIT",
+      "page": "services",
+      "path": "services.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::settings::REVIEW",
+      "task_type": "AUDIT",
+      "page": "settings",
+      "path": "settings.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "import-export"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::sigil::REVIEW",
+      "task_type": "AUDIT",
+      "page": "sigil",
+      "path": "sigil.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::sigma::REVIEW",
+      "task_type": "AUDIT",
+      "page": "sigma",
+      "path": "sigma.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::signal::REVIEW",
+      "task_type": "AUDIT",
+      "page": "signal",
+      "path": "signal.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::skills::REVIEW",
+      "task_type": "AUDIT",
+      "page": "skills",
+      "path": "skills.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::sleep::REVIEW",
+      "task_type": "AUDIT",
+      "page": "sleep",
+      "path": "sleep.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::social::REVIEW",
+      "task_type": "AUDIT",
+      "page": "social",
+      "path": "social.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "social"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::sovereign-ai::REVIEW",
+      "task_type": "AUDIT",
+      "page": "sovereign-ai",
+      "path": "sovereign-ai.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::sovereign-covenant::REVIEW",
+      "task_type": "AUDIT",
+      "page": "sovereign-covenant",
+      "path": "sovereign-covenant.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::sovereigns::REVIEW",
+      "task_type": "AUDIT",
+      "page": "sovereigns",
+      "path": "sovereigns.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::stoic::REVIEW",
+      "task_type": "AUDIT",
+      "page": "stoic",
+      "path": "stoic.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::studio::REVIEW",
+      "task_type": "AUDIT",
+      "page": "studio",
+      "path": "studio.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::subscriptions::REVIEW",
+      "task_type": "AUDIT",
+      "page": "subscriptions",
+      "path": "subscriptions.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::targets::REVIEW",
+      "task_type": "AUDIT",
+      "page": "targets",
+      "path": "targets.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::terms::REVIEW",
+      "task_type": "AUDIT",
+      "page": "terms",
+      "path": "terms.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::time::REVIEW",
+      "task_type": "AUDIT",
+      "page": "time",
+      "path": "time.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::trailers::REVIEW",
+      "task_type": "AUDIT",
+      "page": "trailers",
+      "path": "trailers.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::travel::REVIEW",
+      "task_type": "AUDIT",
+      "page": "travel",
+      "path": "travel.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::treasury::REVIEW",
+      "task_type": "AUDIT",
+      "page": "treasury",
+      "path": "treasury.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::triads::REVIEW",
+      "task_type": "AUDIT",
+      "page": "triads",
+      "path": "triads.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::tribe::REVIEW",
+      "task_type": "AUDIT",
+      "page": "tribe",
+      "path": "tribe.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::trophies::REVIEW",
+      "task_type": "AUDIT",
+      "page": "trophies",
+      "path": "trophies.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::universe::REVIEW",
+      "task_type": "AUDIT",
+      "page": "universe",
+      "path": "universe.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::vault::REVIEW",
+      "task_type": "AUDIT",
+      "page": "vault",
+      "path": "vault.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "import-export"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::venture-pipeline::REVIEW",
+      "task_type": "AUDIT",
+      "page": "venture-pipeline",
+      "path": "venture-pipeline.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::verify-deployment::REVIEW",
+      "task_type": "AUDIT",
+      "page": "verify-deployment",
+      "path": "verify-deployment.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::verify-modules::REVIEW",
+      "task_type": "AUDIT",
+      "page": "verify-modules",
+      "path": "verify-modules.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::vision::REVIEW",
+      "task_type": "AUDIT",
+      "page": "vision",
+      "path": "vision.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::visual-atlas::REVIEW",
+      "task_type": "AUDIT",
+      "page": "visual-atlas",
+      "path": "visual-atlas.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::vocabulary::REVIEW",
+      "task_type": "AUDIT",
+      "page": "vocabulary",
+      "path": "vocabulary.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::wallet::REVIEW",
+      "task_type": "AUDIT",
+      "page": "wallet",
+      "path": "wallet.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::water::REVIEW",
+      "task_type": "AUDIT",
+      "page": "water",
+      "path": "water.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::wealth::REVIEW",
+      "task_type": "AUDIT",
+      "page": "wealth",
+      "path": "wealth.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::weekly::REVIEW",
+      "task_type": "AUDIT",
+      "page": "weekly",
+      "path": "weekly.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::workout::REVIEW",
+      "task_type": "AUDIT",
+      "page": "workout",
+      "path": "workout.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::world-atlas::REVIEW",
+      "task_type": "AUDIT",
+      "page": "world-atlas",
+      "path": "world-atlas.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::world-shell::REVIEW",
+      "task_type": "AUDIT",
+      "page": "world-shell",
+      "path": "world-shell.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    },
+    {
+      "task_id": "PAGE::world::REVIEW",
+      "task_type": "AUDIT",
+      "page": "world",
+      "path": "world.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_PAGE_SOURCE_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Page source has not yet been audited for semantic role/data/function/auth/truth/media/accessibility evidence.",
+      "next_action": "Audit page source and populate authoritative contract only from direct evidence."
+    }
+  ]
+}

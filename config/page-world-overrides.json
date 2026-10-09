@@ -162,6 +162,15 @@
     "seasonal-events": "arena",
     "cosmic-ledger": "void",
     "data-observatory": "genesis",
-    "knowledge-loom": "academy"
+    "knowledge-loom": "academy",
+    "achieve": "arena",
+    "archive": "citadel",
+    "ascend": "genesis",
+    "creation-studio": "citadel",
+    "govern": "genesis",
+    "intel": "intelligence",
+    "invest": "exchange",
+    "order": "heritage",
+    "security": "genesis"
   }
 }

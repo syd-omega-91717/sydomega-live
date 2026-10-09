@@ -10,7 +10,7 @@ const sb=window.__omegaSb||(window.__omegaSb=createClient(URL,KEY));
 
 const DECLARED=['GATEWAY','AUTH','USER','MATRIX','PAYMENT','NOTIFICATION','CHAT','MEDIA','GAMING','NFT','SEARCH','HERITAGE','INVESTMENT','HOROSCOPE','NEWS','CONSULTANCY','PUBLISHING','BLOCKCHAIN','KYC','ANALYTICS','ACADEMY'];
 
-function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function state(label,detail,kind){return '<div class="services-native-state services-native-'+kind.toLowerCase()+'"><b>'+esc(label)+'</b><span>'+esc(detail)+'</span></div>';}
 function render(el,m){
   el.innerHTML='<div class="services-native-head"><div><div class="services-native-kicker">CANONICAL CAPABILITY RECONCILIATION</div><h2>RUNTIME SERVICE TRUTH</h2></div><span class="services-native-mode">READ-ONLY</span></div>'+

@@ -14,16 +14,16 @@
 .eyebrow{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--gold);margin-bottom:10px}
 h1{font-family:var(--D);font-size:clamp(28px,5vw,54px);letter-spacing:3px;color:var(--gold);margin-bottom:10px}
 .hero-copy{max-width:800px;color:var(--muted);line-height:1.7;font-size:15px}
-.truth{display:inline-flex;margin-top:18px;font-family:var(--M);font-size:11px;letter-spacing:1.5px;border:1px solid rgba(201,168,76,.25);padding:6px 9px;color:var(--gold)}
+.truth{display:inline-flex;margin-top:18px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;border:1px solid rgba(201,168,76,.25);padding:6px 9px;color:var(--gold)}
 .section{margin-top:20px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:12px}
-.section-head h2{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan)}.section-head span{font-family:var(--M);font-size:11px;color:var(--muted)}
+.section-head h2{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--cyan)}.section-head span{font-family:var(--M);font-size:12px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
 .cardx{display:flex;flex-direction:column;min-height:160px;border:1px solid var(--line);background:rgba(10,10,15,.5);padding:17px;text-decoration:none;color:inherit;transition:.18s}
-.cardx:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.42)}.cardx .k{font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:7px}
-.cardx h3{font-family:var(--D);font-size:16px;color:var(--ink);margin-bottom:7px}.cardx p{font-size:13px;color:var(--muted);line-height:1.55;flex:1}.go{font-family:var(--M);font-size:11px;letter-spacing:1.5px;color:var(--cyan);margin-top:14px}
+.cardx:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.42)}.cardx .k{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:7px}
+.cardx h3{font-family:var(--D);font-size:16px;color:var(--ink);margin-bottom:7px}.cardx p{font-size:13px;color:var(--muted);line-height:1.55;flex:1}.go{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--cyan);margin-top:14px}
 .note{border-left:2px solid var(--gold);background:rgba(201,168,76,.045);padding:14px 16px;color:var(--muted);font-size:13px;line-height:1.65;margin-top:12px}.note strong{color:var(--ink)}
 @media(max-width:650px){.ach-wrap{padding:16px}.grid{grid-template-columns:1fr}}
-.native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:12px}.native-card{border:1px solid var(--line);padding:12px;background:rgba(10,10,15,.5)}.native-card b{display:block;font:600 20px monospace;color:var(--cyan)}.native-card span{display:block;margin-top:5px;font:10px monospace;letter-spacing:1px;color:var(--muted)}.native-boundary{margin-top:12px;font:11px monospace;line-height:1.7;color:var(--muted)}
+.native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:12px}.native-card{border:1px solid var(--line);padding:12px;background:rgba(10,10,15,.5)}.native-card b{display:block;font:600 20px monospace;color:var(--cyan)}.native-card span{display:block;margin-top:5px;font:12px monospace;letter-spacing:1px;color:var(--muted)}.native-boundary{margin-top:12px;font:12px monospace;line-height:1.7;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -84,6 +84,6 @@ h1{font-family:var(--D);font-size:clamp(28px,5vw,54px);letter-spacing:3px;color:
 </div>
 </main>
 </div>
-<script src="/omega-achieve-native.js"></script><script>(function(){function boot(){if(!window.OmegaAchieveNative)return;window.OmegaAchieveNative.load().then(window.OmegaAchieveNative.render).catch(function(e){var el=document.getElementById("achieve-native-state");if(el)el.innerHTML="<div class=\"native-boundary\">"+(e&&e.message==="SIGN_IN_REQUIRED"?"UNAVAILABLE · SIGN IN REQUIRED":"UNAVAILABLE · EVIDENCE READ FAILED")+"</div>";});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();})();</script>
+<script src="/omega-achieve-native.js"></script><script src="/omega-achieve-boot.js" defer></script>
 </body>
 </html>

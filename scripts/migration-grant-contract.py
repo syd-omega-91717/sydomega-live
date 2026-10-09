@@ -46,6 +46,7 @@ IDENT = r'(?:"?public"?\.)?"?([a-z_][a-z0-9_]*)"?'
 CREATE_TABLE = re.compile(r'create\s+table\s+(?:if\s+not\s+exists\s+)?' + IDENT)
 CREATE_POLICY = re.compile(
     r'create\s+policy\s+(?:"[^"]+"|\S+)\s+on\s+' + IDENT + r'(.*?);', re.S)
+DROP_TABLE = re.compile(r'drop\s+table\s+(?:if\s+exists\s+)?' + IDENT + r'[^;]*;', re.S)
 GRANT = re.compile(
     r'grant\s+(.*?)\s+on\s+(?:table\s+)?((?:(?:"?public"?\.)?"?[a-z_][a-z0-9_]*"?\s*,\s*)*'
     r'(?:"?public"?\.)?"?[a-z_][a-z0-9_]*"?)\s+to\s+([^;]*);', re.S)
@@ -96,14 +97,18 @@ def policy_roles(tail):
 
 
 def scan(migrations_dir):
-    created = {}      # table -> file that created it after the revoke
+    created = {}      # table -> (version, file) that created it after the revoke
+    dropped = {}      # table -> latest version that explicitly dropped it
     needs = {}        # table -> roles some policy names
     granted = {}      # table -> roles granted anything
     for path in sorted(migrations_dir.glob('*.sql')):
         sql = strip_sql(path.read_text(encoding='utf-8', errors='replace'))
         if version_of(path) >= REVOKE_VERSION:
+            version = version_of(path)
             for t in CREATE_TABLE.findall(sql):
-                created.setdefault(t, path.name)
+                created[t] = (version, path.name)
+            for t in DROP_TABLE.findall(sql):
+                dropped[t] = version
         for t, tail in CREATE_POLICY.findall(sql):
             needs.setdefault(t, set()).update(policy_roles(tail))
         for _privs, tables, roles in GRANT.findall(sql):
@@ -111,7 +116,12 @@ def scan(migrations_dir):
             for t in re.findall(IDENT, tables):
                 granted.setdefault(t, set()).update(role_set & set(CLIENT_ROLES))
     findings = []
-    for t, where in sorted(created.items()):
+    for t, (created_version, where) in sorted(created.items()):
+        # A table that was explicitly retired after its creation is not a live
+        # client surface. Do not turn historical create/policy statements into
+        # a false grant finding (e.g. omega_agent_action_proposals).
+        if t in dropped and dropped[t] > created_version:
+            continue
         # A table some policy opens to a client role, on which NO client role
         # holds any privilege: no policy on it can ever run. A PUBLIC policy
         # with only `authenticated` granted is the normal member-table shape,

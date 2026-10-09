@@ -21,6 +21,14 @@ open, recorded in `FIXES_LOG.md`:
 - **CLOSED 2026-10-06 — Creation Layer truth enforcement is live.** Authenticated clients no longer have direct DML on the four Creation Layer tables; authenticated public RPC wrappers enforce server-owned lifecycle/truth state, provenance and run state through non-exposed `private` SECURITY DEFINER implementations with `search_path=''` and ownership checks. Project creation is forced to `DRAFT / USER-CREATED`, asset creation to `DESIGNED / USER-CREATED`, experience creation to `DRAFT / SIMULATED`, and run score/state transitions are server-owned. Experience-step events are persisted canonically, and published experiences are readable by authenticated members while draft/retired experiences remain owner-scoped. The remaining gap is provider-live generation, artifact delivery/hashing, licensing verification and the public Creation Studio; those must not be represented as LIVE until provider evidence exists. See `docs/OMEGA_CREATION_LAYER.md`.
 - **CLOSED 2026-10-09 — client read grants are materialised.** The seven tables `omega_notifications`, `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`, `omega_agent_tasks`, `omega_agent_task_events`, and `omega_matrix_node_semantics` now have the production `authenticated SELECT` grants represented by `supabase/migrations/20261006194000_materialize_existing_client_read_grants_20261006.sql`. Live `has_table_privilege` verification confirms those grants. The migration-grant contract no longer tracks them as missing migration grants.
 - **CLOSED 2026-10-09 — `omega_agent_action_proposals` was a retired schema, not a missing live table.** Migration `20260929113731` created the proposal table and `20260929115306` explicitly dropped it. Live absence is therefore expected; the stale `KNOWN` exception was removed from `scripts/migration-grant-contract.py`.
+- **KNOWN LIVE/REPLAY SCHEMA RESIDUE CLOSED 2026-10-09; migration history reconciled.**
+  Live production now records the repository's 373-version migration chain through canonical
+  version `20261008032846`; the previously unrecorded Creation/Provider/Security/Knowledge
+  migrations were reconciled under their repository version IDs, and the two Knowledge migrations
+  were corrected to their actual live versions `20261008032308` and `20261008032846`.
+  The verified schema residue is also materialised by `20261009020000_migration_live_schema_reconciliation_20261009.sql`.
+  A fresh zero-state replay including the reconciled 373-version chain is still required before
+  claiming exact replay/live parity.
 - **KNOWN LIVE/REPLAY SCHEMA RESIDUE CLOSED 2026-10-09; full replay verification remains pending.**
   Live verification found four `omega_platform_evidence` columns that were intentionally nullable
   in the replay prelude but are `NOT NULL` in production; those four constraints are now captured
@@ -48,6 +56,14 @@ open, recorded in `FIXES_LOG.md`:
   to end. Owner: set the secret (`supabase secrets set STRIPE_WEBHOOK_SECRET=…`) only when
   payments are meant to go live.
 - **CLOSED 2026-10-09 — governed runtime modules are wired or intentionally retired.**
+  `omega-action-runtime.js` and `omega-data-runtime.js` are platform-wide entrypoints loaded by
+  `bg.js`; `omega-mission-state.js` loads only where the existing mission-state mount is present.
+  `omega-theme-personalization.js` remains intentionally retired because the canonical theme engine
+  is `omega-theme-elemental.js`.
+- **CLOSED 2026-10-09 — five inert progression-table member-write policies removed.**
+  The live policies on `quest_completions`, `domain_mastery`, `leaderboard_entries`, and
+  `covenant_progress` were removed after confirming the authenticated write grants were absent;
+  no client mutation authority was restored.
   `omega-action-runtime.js` and `omega-data-runtime.js` are now platform-wide runtime
   entrypoints loaded by `bg.js`, with manifest declarations and regression coverage.
   `omega-mission-state.js` is conditionally loaded whenever the existing

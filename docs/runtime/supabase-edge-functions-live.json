@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-05T10:12:00Z",
+  "captured_at": "2026-10-09T01:45:00Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
@@ -62,24 +62,45 @@
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 36,
+      "version": 93,
       "verify_jwt": false,
-      "live_sha256": "8443f4184c528683d51ac7a703671728f04b9554e882da5f17b836082fd8803d",
+      "live_sha256": "d89c1a22f01c8087f9f550fa6251190dfcd1f9cf8eafe98a3735dbcd3c973b41",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 40,
+      "version": 97,
       "verify_jwt": true,
-      "live_sha256": "b8bbb1c46efc044e342ed8e045ca6e4ee397685f45234bcbae91e911de662cec",
+      "live_sha256": "aa699d7f664c15164812e84c4fb1d76a0abbeea2528ede44663ab8b98315de00",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 34,
+      "version": 92,
       "verify_jwt": false,
-      "live_sha256": "140f6f8675d599e64841c213eab548d69dd0f3eac429d76675de14018d75e6db",
+      "live_sha256": "9840e5b826b5da73c94bc9d6ce0efcb9ef1059d506dd63af1674c05683b23263",
       "repository_blob_sha": "0ea395b4e9aa9723420d2a26e6a3de2a857325cb"
+    },
+    "intel-feed": {
+      "state": "DEPLOYED",
+      "version": 1,
+      "verify_jwt": false,
+      "live_sha256": "8415eea3a9db5645846346c94b5e4110f367115d081cdce20c5883ed80a785bb",
+      "repository_blob_sha": "d7f272478432c211794d57be5a06bebaff6a84ae"
+    },
+    "omega-provider-worker": {
+      "state": "DEPLOYED",
+      "version": 2,
+      "verify_jwt": false,
+      "live_sha256": "f11344b949a9af4aee6f1f023c7c8ed4dadc9403d5a14e3876a0d9f69a734667",
+      "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b"
+    },
+    "omega-knowledge-embedding-worker": {
+      "state": "DEPLOYED",
+      "version": 3,
+      "verify_jwt": false,
+      "live_sha256": "bec1288ae413407dd4512b43224a0db11e8df2f864dc936caacf63d37f98e26d",
+      "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
     },
     "checkout": {
       "state": "LOCAL_ONLY"
@@ -99,16 +120,13 @@
     "weekly-digest": {
       "state": "LOCAL_ONLY"
     },
-    "intel-feed": {
-      "state": "LOCAL_ONLY"
-    },
-    "market-price": {
-      "state": "LOCAL_ONLY"
-    },
     "graphify-ai-ingest": {
       "state": "LOCAL_ONLY"
     },
     "graphify-ai-query": {
+      "state": "LOCAL_ONLY"
+    },
+    "market-price": {
       "state": "LOCAL_ONLY"
     }
   }

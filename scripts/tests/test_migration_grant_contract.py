@@ -95,6 +95,12 @@ class Repository(unittest.TestCase):
                            capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
+
+    def test_retired_agent_action_proposals_is_not_a_finding(self):
+        self.assertNotIn('omega_agent_action_proposals', {t for t, _w, _r in gc.scan(gc.MIGRATIONS)})
+        cleanup = gc.MIGRATIONS / '20260929115306_omega_agent_operations_proposal_cleanup_20260929.sql'
+        self.assertTrue(cleanup.exists())
+
     def test_known_baseline_matches_findings_exactly(self):
         found = {t for t, _w, _r in gc.scan(gc.MIGRATIONS)}
         self.assertEqual(found, set(gc.KNOWN))

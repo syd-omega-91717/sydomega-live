@@ -101,6 +101,33 @@
       "verify_jwt": false,
       "live_sha256": "bec1288ae413407dd4512b43224a0db11e8df2f864dc936caacf63d37f98e26d",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
+    },
+    "checkout": {
+      "state": "LOCAL_ONLY"
+    },
+    "event-ingest": {
+      "state": "LOCAL_ONLY"
+    },
+    "notify-access": {
+      "state": "LOCAL_ONLY"
+    },
+    "rankings": {
+      "state": "LOCAL_ONLY"
+    },
+    "snapshot-leaderboard": {
+      "state": "LOCAL_ONLY"
+    },
+    "weekly-digest": {
+      "state": "LOCAL_ONLY"
+    },
+    "graphify-ai-ingest": {
+      "state": "LOCAL_ONLY"
+    },
+    "graphify-ai-query": {
+      "state": "LOCAL_ONLY"
+    },
+    "market-price": {
+      "state": "LOCAL_ONLY"
     }
   }
 }

@@ -214,6 +214,16 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/validate-monitoring.py']).returncode)
+      - name: Global execution program
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/omega-execution-program.py']).returncode)
+      - name: Global execution program tests
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['node', 'scripts/tests/test_omega_execution_program.js']).returncode)
       - name: Client credential scan
         shell: python
         run: |

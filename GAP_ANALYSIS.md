@@ -21,12 +21,18 @@ open, recorded in `FIXES_LOG.md`:
 - **CLOSED 2026-10-06 — Creation Layer truth enforcement is live.** Authenticated clients no longer have direct DML on the four Creation Layer tables; authenticated public RPC wrappers enforce server-owned lifecycle/truth state, provenance and run state through non-exposed `private` SECURITY DEFINER implementations with `search_path=''` and ownership checks. Project creation is forced to `DRAFT / USER-CREATED`, asset creation to `DESIGNED / USER-CREATED`, experience creation to `DRAFT / SIMULATED`, and run score/state transitions are server-owned. Experience-step events are persisted canonically, and published experiences are readable by authenticated members while draft/retired experiences remain owner-scoped. The remaining gap is provider-live generation, artifact delivery/hashing, licensing verification and the public Creation Studio; those must not be represented as LIVE until provider evidence exists. See `docs/OMEGA_CREATION_LAYER.md`.
 - **CLOSED 2026-10-09 — client read grants are materialised.** The seven tables `omega_notifications`, `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`, `omega_agent_tasks`, `omega_agent_task_events`, and `omega_matrix_node_semantics` now have the production `authenticated SELECT` grants represented by `supabase/migrations/20261006194000_materialize_existing_client_read_grants_20261006.sql`. Live `has_table_privilege` verification confirms those grants. The migration-grant contract no longer tracks them as missing migration grants.
 - **CLOSED 2026-10-09 — `omega_agent_action_proposals` was a retired schema, not a missing live table.** Migration `20260929113731` created the proposal table and `20260929115306` explicitly dropped it. Live absence is therefore expected; the stale `KNOWN` exception was removed from `scripts/migration-grant-contract.py`.
-- **A migration-built database is close to live, not equal to it** (opened 2026-10-06,
-  `FIXES_LOG.md` "Fresh replay restored"). Three `REPLAY PRELUDE` blocks now let all 357
-  migrations replay from zero, but they add only what today's views read. Known residue:
-  live NOT NULLs left nullable on 8 columns, `notification_queue`/`omega_knowledge_chunks`
-  replay without their live policy, `notification_templates` exists live only. Closing it
-  means a schema diff of a replayed DB against live, materialised as one migration.
+- **KNOWN LIVE/REPLAY SCHEMA RESIDUE CLOSED 2026-10-09; full replay verification remains pending.**
+  Live verification found four `omega_platform_evidence` columns that were intentionally nullable
+  in the replay prelude but are `NOT NULL` in production; those four constraints are now captured
+  in `supabase/migrations/20261009020000_migration_live_schema_reconciliation_20261009.sql`.
+  The same reconciliation materialises the previously live-only empty `notification_templates`
+  table, its `notification_queue.template_id` foreign key, the fail-closed policies on
+  `notification_queue`/`omega_knowledge_chunks`/`notification_templates`, and removes the five
+  inert progression-table member-write policies. Live verification after the change reports:
+  zero NULLs in the four evidence columns, zero rows in `notification_templates`, all three
+  fail-closed policies present, the five inert policies absent, and the queue foreign key present.
+  A fresh zero-state replay including this new migration is still required before claiming exact
+  replay/live parity.
 - **Legacy-key migration: owner steps outstanding** (opened 2026-10-05,
   `docs/decisions/legacy-key-migration/PLAN.md`). All 7 live Edge Functions read keys through
   `supabase/functions/_shared/keys.ts` and log `KEY_SOURCE`. Publishable already reports `new`;

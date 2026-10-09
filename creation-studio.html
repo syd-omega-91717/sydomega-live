@@ -8,6 +8,7 @@
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
 <script src="/omega-creation-studio.js" defer></script>
+<script src="/omega-content-tasks.js" defer></script>
 <style>
 :root{--dim:rgba(201,168,76,.18);--gold:#C9A84D;--cyan:#00E5FF;--red:#8B0000;--green:#00FF88;--ink:#E9E8E3;--muted:#8D8C96;--pad:clamp(14px,3vw,36px)}
 *{box-sizing:border-box}body{margin:0;background:#020206;color:var(--ink);font-family:var(--R,Arial,sans-serif);line-height:1.6}
@@ -52,6 +53,17 @@ label{display:block;font:12px var(--M,monospace);letter-spacing:1.2px;color:var(
 </form>
 </section>
 <section class="card">
+<div class="title">IMPORT CONTENT ASSET</div>
+<form id="content-import-form">
+<label for="content-import-file">FILE</label>
+<input id="content-import-file" type="file" required>
+<label for="content-import-type">CONTENT TYPE</label>
+<select id="content-import-type"><option>IMAGE</option><option>VIDEO</option><option>AUDIO</option><option>MOVIE</option><option>GAME</option><option>DOCUMENT</option><option>DATA</option><option>OTHER</option></select>
+<div class="actions"><button type="submit">UPLOAD · REGISTER · REVIEW</button></div>
+<div id="content-import-message" class="note" aria-live="polite"></div>
+</form>
+</section>
+<section class="card">
 <div class="title">CREATE ASSET</div>
 <form id="asset-form">
 <label for="asset-project">PROJECT</label><select id="asset-project" required></select>
@@ -73,5 +85,27 @@ label{display:block;font:12px var(--M,monospace);letter-spacing:1.2px;color:var(
 </div>
 </main>
 </div>
-</body>
+<script>
+(function(){
+  var form=document.getElementById('content-import-form');
+  var file=document.getElementById('content-import-file');
+  var type=document.getElementById('content-import-type');
+  var msg=document.getElementById('content-import-message');
+  if(!form||!file||!msg||!window.OmegaContentTasks)return;
+  form.addEventListener('submit',async function(e){
+    e.preventDefault();
+    var f=file.files&&file.files[0];
+    if(!f){msg.textContent='SELECT A FILE FIRST';return;}
+    msg.textContent='UPLOADING · REGISTERING · VERIFYING OWNER PATH…';
+    var r=await window.OmegaContentTasks.upload(f,{content_type:String(type.value||'OTHER').toLowerCase()});
+    if(r.state==='PENDING_REVIEW'){
+      msg.textContent='REGISTERED: '+(r.data&&r.data.content_id||'CONTENT')+' · RIGHTS/PUBLICATION/ENTITLEMENT REMAIN UNVERIFIED';
+    }else if(r.state==='ROLLED_BACK'){
+      msg.textContent='ROLLED BACK: '+(r.data&&r.data.error||'REGISTRATION FAILED')+' · NO ORPHAN UPLOAD KEPT';
+    }else{
+      msg.textContent='NOT AVAILABLE: '+(r.data&&r.data.error||'UPLOAD FAILED');
+    }
+  });
+})();
+</script></body>
 </html>

@@ -62,11 +62,6 @@ body{margin:0;background:#020206;color:#e8e5da;font-family:Arial,sans-serif}
 <div class="notice">TRUTH BOUNDARY: this workspace deliberately does not fabricate portfolio balances, market prices, reserves, revenue, transactions or sovereign currency value. Where a specialist page uses browser-local storage, its data remains local. Where a platform surface has live backend state, that state remains governed by its existing authorization and database contracts.</div>
 </main>
 <script src="/omega-invest-native.js"></script>
-<script>
-(function(){
-  var side=document.getElementById('omega-side');
-  if(side){document.body.classList.add('omega-invest-workspace');}
-})();
-</script><script src="/omega-invest-boot.js" defer></script>
+<script src="/omega-invest-shell-boot.js" defer></script><script src="/omega-invest-boot.js" defer></script>
 </body>
 </html>

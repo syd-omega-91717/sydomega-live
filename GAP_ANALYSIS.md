@@ -29,6 +29,18 @@ open, recorded in `FIXES_LOG.md`:
   The verified schema residue is also materialised by `20261009020000_migration_live_schema_reconciliation_20261009.sql`.
   A fresh zero-state replay including the reconciled 373-version chain is still required before
   claiming exact replay/live parity.
+- **KNOWN LIVE/REPLAY SCHEMA RESIDUE CLOSED 2026-10-09; full replay verification remains pending.**
+  Live verification found four `omega_platform_evidence` columns that were intentionally nullable
+  in the replay prelude but are `NOT NULL` in production; those four constraints are now captured
+  in `supabase/migrations/20261009020000_migration_live_schema_reconciliation_20261009.sql`.
+  The same reconciliation materialises the previously live-only empty `notification_templates`
+  table, its `notification_queue.template_id` foreign key, the fail-closed policies on
+  `notification_queue`/`omega_knowledge_chunks`/`notification_templates`, and removes the five
+  inert progression-table member-write policies. Live verification after the change reports:
+  zero NULLs in the four evidence columns, zero rows in `notification_templates`, all three
+  fail-closed policies present, the five inert policies absent, and the queue foreign key present.
+  A fresh zero-state replay including this new migration is still required before claiming exact
+  replay/live parity.
 - **Legacy-key migration: owner steps outstanding** (opened 2026-10-05,
   `docs/decisions/legacy-key-migration/PLAN.md`). All 7 live Edge Functions read keys through
   `supabase/functions/_shared/keys.ts` and log `KEY_SOURCE`. Publishable already reports `new`;
@@ -52,6 +64,23 @@ open, recorded in `FIXES_LOG.md`:
   The live policies on `quest_completions`, `domain_mastery`, `leaderboard_entries`, and
   `covenant_progress` were removed after confirming the authenticated write grants were absent;
   no client mutation authority was restored.
+  `omega-action-runtime.js` and `omega-data-runtime.js` are now platform-wide runtime
+  entrypoints loaded by `bg.js`, with manifest declarations and regression coverage.
+  `omega-mission-state.js` is conditionally loaded whenever the existing
+  `[data-omega-mission-state]` mount is present (currently `missions.html`). It remains
+  read-only and never grants progression. `omega-theme-personalization.js` is intentionally
+  not loaded: `omega-theme-elemental.js` is the canonical theme engine and the repository
+  already tests that the deprecated duplicate is not globally injected. The old four-module
+  "unloaded" finding is therefore closed as wiring + intentional retirement, not by
+  deleting historical compatibility code.
+- **Five inert member write policies on the progression tables** (opened 2026-10-03):
+  `quest_completions_member_insert/_update`, `domain_mastery_member_update`,
+  `leaderboard_member_update`, `covenant_member_update`. Inert since `20261003220754`
+  revoked the grants. The Supabase connector holds every `DROP` for a confirmation an
+  agent session cannot give, so run in the SQL editor:
+  `drop policy quest_completions_member_insert on public.quest_completions;` (and the
+  other four), then add the matching migration file. Retried 2026-10-04 with the
+  owner present: the confirmation still never surfaced; live count still 5.
 - **Leaked-password protection is off** (Supabase security advisor; issue #375). The
   control requires the **Pro** plan (`get_organization` reports `free`), so no SQL or
   repo change can enable it. Once on Pro: Authentication → Policies → Password Security,

@@ -18,14 +18,7 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
-- **Creation Layer truth contract is declared, not enforced** (opened 2026-10-06,
-  `docs/OMEGA_CREATION_LAYER.md` "Enforcement status"). Members hold full write on
-  their own `omega_creative_*`/`omega_experience_*` rows, so `truth_state`,
-  `status`, `provider*`, `content_sha256` and `experience_runs.score`/`state` are
-  client-set; `omega_creation_surface()`'s `truth_contract` keys are constants.
-  Published experiences are owner-read only, so nothing is playable by another
-  member. Fix before any UI or provider adapter: server-owned columns (trigger or
-  definer RPC) and a published-read policy. HIGH-RISK pipeline (`grill-me-codex`).
+- **CLOSED 2026-10-06 — Creation Layer truth enforcement is live.** Authenticated clients no longer have direct DML on the four Creation Layer tables; authenticated public RPC wrappers enforce server-owned lifecycle/truth state, provenance and run state through non-exposed `private` SECURITY DEFINER implementations with `search_path=''` and ownership checks. Project creation is forced to `DRAFT / USER-CREATED`, asset creation to `DESIGNED / USER-CREATED`, experience creation to `DRAFT / SIMULATED`, and run score/state transitions are server-owned. Experience-step events are persisted canonically, and published experiences are readable by authenticated members while draft/retired experiences remain owner-scoped. The remaining gap is provider-live generation, artifact delivery/hashing, licensing verification and the public Creation Studio; those must not be represented as LIVE until provider evidence exists. See `docs/OMEGA_CREATION_LAYER.md`.
 - **CLOSED 2026-10-09 — client read grants are materialised.** The seven tables `omega_notifications`, `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`, `omega_agent_tasks`, `omega_agent_task_events`, and `omega_matrix_node_semantics` now have the production `authenticated SELECT` grants represented by `supabase/migrations/20261006194000_materialize_existing_client_read_grants_20261006.sql`. Live `has_table_privilege` verification confirms those grants. The migration-grant contract no longer tracks them as missing migration grants.
 - **CLOSED 2026-10-09 — `omega_agent_action_proposals` was a retired schema, not a missing live table.** Migration `20260929113731` created the proposal table and `20260929115306` explicitly dropped it. Live absence is therefore expected; the stale `KNOWN` exception was removed from `scripts/migration-grant-contract.py`.
 - **A migration-built database is close to live, not equal to it** (opened 2026-10-06,

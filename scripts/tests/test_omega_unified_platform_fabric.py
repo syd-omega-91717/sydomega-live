@@ -16,7 +16,7 @@ class UnifiedPlatformFabricTests(unittest.TestCase):
 
     def test_page_registry_covers_current_html_estate(self):
         registry=self.load("omega-page-contracts.json")
-        self.assertEqual(registry["status"],"SOURCE_EVIDENCE_BOOTSTRAP")
+        self.assertEqual(registry["status"],"EVIDENCE_CONTRACT")
         self.assertEqual(registry["page_count"],len(registry["contracts"]))
         self.assertGreater(registry["page_count"],0)
         self.assertTrue(all(c["page_id"] and c["path"].endswith(".html") for c in registry["contracts"]))

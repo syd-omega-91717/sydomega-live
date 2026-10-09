@@ -6,7 +6,12 @@ contract facts. It never infers production truth from HTML.
 """
 from __future__ import annotations
 import json
+import sys
 from pathlib import Path
+
+if any(arg in {"--help", "-h"} for arg in sys.argv[1:]):
+    print(__doc__.strip())
+    raise SystemExit(0)
 
 ROOT=Path(__file__).resolve().parents[1]
 FABRIC=json.loads((ROOT/"config/omega-unified-platform-fabric.json").read_text())

@@ -22,6 +22,11 @@ create table if not exists public.notification_templates (
 );
 
 alter table public.notification_templates enable row level security;
+
+-- Explicit Data API grants are required after the 2026 default-privilege hardening.
+-- Restrictive deny policies remain authoritative, so these grants do not expose rows.
+grant select on public.notification_templates to authenticated;
+grant select on public.notification_queue to authenticated;
 drop policy if exists omega_deny_by_default on public.notification_templates;
 create policy omega_deny_by_default on public.notification_templates
   as restrictive for all to anon, authenticated
@@ -47,6 +52,7 @@ begin
 end $$;
 
 alter table public.omega_knowledge_chunks enable row level security;
+grant select on public.omega_knowledge_chunks to authenticated;
 drop policy if exists omega_deny_by_default on public.omega_knowledge_chunks;
 create policy omega_deny_by_default on public.omega_knowledge_chunks
   as restrictive for all to anon, authenticated

@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-09",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 373,
-  "latestRemoteMigration": "20261008032846",
+  "remoteMigrationCount": 374,
+  "latestRemoteMigration": "20261009020000",
   "versions": [
     "0001",
     "0002",
@@ -376,7 +376,8 @@
     "20261007005000",
     "20261007120000",
     "20261008032308",
-    "20261008032846"
+    "20261008032846",
+    "20261009020000"
   ],
   "migrations": [
     {
@@ -1870,6 +1871,10 @@
     {
       "version": "20261008032846",
       "name": "omega_knowledge_embedding_worker_20261008"
+    },
+    {
+      "version": "20261009020000",
+      "name": "migration_live_schema_reconciliation_20261009"
     }
   ]
 }

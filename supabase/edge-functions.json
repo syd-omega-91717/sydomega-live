@@ -4,6 +4,8 @@
     "checkout",
     "concierge",
     "concierge-orchestrator",
+    "content-delivery",
+    "content-ingest",
     "event-ingest",
     "evidence-graph",
     "graphify-ai-ingest",

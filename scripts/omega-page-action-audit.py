@@ -21,6 +21,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VALID = {"GOVERNED","AVAILABLE_WITHOUT_MUTATION","UNAVAILABLE","UNMAPPED"}
+PURE_NAVIGATION_PATTERNS = (
+    re.compile(r"""^\s*(?:window\.)?location\.(?:href|assign|replace)\s*=\s*['"]([^'"]+)['"]\s*;?\s*$""", re.I),
+    re.compile(r"""^\s*(?:window\.)?open\s*\(\s*['"]([^'"]+)['"][^)]*\)\s*;?\s*$""", re.I),
+)
+
+def pure_navigation_target(handler):
+    if not handler:
+        return None
+    for pattern in PURE_NAVIGATION_PATTERNS:
+        match = pattern.match(handler)
+        if match and match.group(1).lower().split("#", 1)[0].endswith(".html"):
+            return match.group(1)
+    return None
 
 class ActionParser(HTMLParser):
     def __init__(self):
@@ -44,10 +57,13 @@ class ActionParser(HTMLParser):
         capability=a.get("data-omega-capability-id")
         disabled=("disabled" in a or a.get("aria-disabled","").lower()=="true")
         unavailable_reason=a.get("data-omega-unavailable-reason","").strip()
+        navigation_target = pure_navigation_target(a.get("onclick","")) or pure_navigation_target(a.get("onsubmit",""))
         if disabled and unavailable_reason:
             state="UNAVAILABLE"
         elif task or capability:
             state="GOVERNED"
+        elif navigation_target:
+            state="AVAILABLE_WITHOUT_MUTATION"
         elif kind in {"a"} and a.get("href","").lower().startswith("javascript:"):
             state="UNMAPPED"
         elif kind=="form" and a.get("method","get").lower()=="get" and not a.get("onsubmit"):
@@ -66,6 +82,7 @@ class ActionParser(HTMLParser):
                 "onclick": "onclick" in a,
                 "onsubmit": "onsubmit" in a,
                 "javascript_href": a.get("href","").lower().startswith("javascript:"),
+                "navigation_target": navigation_target,
                 "download": a.get("download") is not None,
                 "data_task_marker": bool(task),
                 "data_capability_marker": bool(capability),
@@ -122,6 +139,7 @@ def audit_estate(root=ROOT):
         "actions":rows,
         "truth_boundary":"DOM presence does not prove functionality, authorization, truth, production deployment or successful execution.",
         "unmapped_rule":"UNMAPPED actions require an explicit governed task/capability mapping or an explicit unavailable state before production-complete classification.",
+        "navigation_rule":"Pure local HTML navigation proven directly by onclick/onsubmit source is AVAILABLE_WITHOUT_MUTATION; opaque or mutating handlers remain UNMAPPED.",
     }
 
 def validate(data):

@@ -43,23 +43,15 @@ open, recorded in `FIXES_LOG.md`:
   verification and is unchanged code; `checkout` is source-only, so no payment flow is live end
   to end. Owner: set the secret (`supabase secrets set STRIPE_WEBHOOK_SECRET=…`) only when
   payments are meant to go live.
-- **Four modules on disk that no page or module loads** (opened 2026-10-03, `audit.py`):
-  `omega-mission-state.js` (detached when `missions.html` removed its legacy bridge,
-  09-29), `omega-action-runtime.js` and `omega-data-runtime.js` (built 10-01, listed in
-  `config/omega-runtime-manifest.json`, never wired to a page), and
-  `omega-theme-personalization.js` (Proposal #22; bg.js loads `omega-theme-elemental.js`
-  instead). Not deleted: an unloaded module has been load-bearing before
-  (`omega-bottom-stack.js`). Wire or retire each with its author's intent in hand.
-  (`omega-mission-board.js` was a false positive — loaded by an inline `import`, which
-  `audit.py` now counts.)
-- **Five inert member write policies on the progression tables** (opened 2026-10-03):
-  `quest_completions_member_insert/_update`, `domain_mastery_member_update`,
-  `leaderboard_member_update`, `covenant_member_update`. Inert since `20261003220754`
-  revoked the grants. The Supabase connector holds every `DROP` for a confirmation an
-  agent session cannot give, so run in the SQL editor:
-  `drop policy quest_completions_member_insert on public.quest_completions;` (and the
-  other four), then add the matching migration file. Retried 2026-10-04 with the
-  owner present: the confirmation still never surfaced; live count still 5.
+- **CLOSED 2026-10-09 — governed runtime modules are wired or intentionally retired.**
+  `omega-action-runtime.js` and `omega-data-runtime.js` are platform-wide entrypoints loaded by
+  `bg.js`; `omega-mission-state.js` loads only where the existing mission-state mount is present.
+  `omega-theme-personalization.js` remains intentionally retired because the canonical theme engine
+  is `omega-theme-elemental.js`.
+- **CLOSED 2026-10-09 — five inert progression-table member-write policies removed.**
+  The live policies on `quest_completions`, `domain_mastery`, `leaderboard_entries`, and
+  `covenant_progress` were removed after confirming the authenticated write grants were absent;
+  no client mutation authority was restored.
 - **Leaked-password protection is off** (Supabase security advisor; issue #375). The
   control requires the **Pro** plan (`get_organization` reports `free`), so no SQL or
   repo change can enable it. Once on Pro: Authentication → Policies → Password Security,

@@ -22693,3 +22693,25 @@ Owner instruction: "Go ahead" (Phase 1 of `docs/decisions/legacy-key-migration/P
 - **Not fixable from the repo.** Restoring service: an `unpause_project` call was accepted
   (null result) but not verifiable from this session; the account block is lifted by the
   owner (upgrade, or the usage window resetting).
+
+## `main` red after #826: page-contract authority test vs. data; bootstrap wrote absolute paths (2026-10-09)
+
+- **Symptom.** `CI` run 37967089488 on `45e555f` (the #826 merge) failed at "Audit tooling
+  tests", skipping 30 later steps: `test_page_registry_covers_current_html_estate` required
+  `authority == REPOSITORY_SOURCE_EVIDENCE_ONLY` on all 238 contracts; the committed
+  `config/omega-page-contracts.json` has `REPOSITORY_IDENTITY_AND_CAPABILITY_REGISTRY_ONLY` on
+  238/238, status `EVIDENCE_CONTRACT_PARTIAL_AUDIT`, 17/238 source-audited.
+- **Cause.** `d26063e` flipped the test to the value `--promote` writes, but the registry was
+  never promoted. The data is the honest side: 221 pages are not source-audited. #826 widened
+  the status assertion and left the authority one. Fix: authority is asserted *per status*
+  (promoted → source evidence; partial audit → identity/registry only), plus paths must be
+  repo-relative.
+- **Second bug, latent.** `omega-page-contract-bootstrap.py:111` emitted `path.as_posix()` of
+  an absolute glob — `/home/user/sydomega-live/404.html` here, `/home/runner/work/...` in
+  Actions. With that file in the tree, `vercel-build.sh` printed
+  `VERCEL_BUILD=FAIL unreachable_assets=238` (local check 9b red), and
+  `omega-page-evidence-materialization.yml` `git add`s that file — so it would have shipped the
+  break to `main`. Now `path.relative_to(ROOT)`; `PageContractBootstrapPathTests` fails on the
+  old code (`'/home/user/sydomega-live/404.html' != '404.html'`) and passes on the fix.
+- **Verified.** `./scripts/ci-local.sh`: ALL 28 BLOCKING CHECKS PASSED (unshallowed clone; 2j's
+  shallow-clone refusal is environmental, as designed).

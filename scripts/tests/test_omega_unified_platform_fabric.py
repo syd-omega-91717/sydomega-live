@@ -12,7 +12,11 @@ class UnifiedPlatformFabricTests(unittest.TestCase):
         self.assertIn(registry["status"],{"EVIDENCE_CONTRACT","EVIDENCE_CONTRACT_PARTIAL_AUDIT"})
         self.assertEqual(registry["page_count"],len(registry["contracts"])); self.assertGreater(registry["page_count"],0)
         self.assertTrue(all(c["page_id"] and c["path"].endswith(".html") for c in registry["contracts"]))
-        self.assertTrue(all(c["authority"]=="REPOSITORY_SOURCE_EVIDENCE_ONLY" for c in registry["contracts"]))
+        # Authority follows status: a promoted registry claims source evidence; a partial
+        # audit may only claim identity/capability-registry authority.
+        expected={"EVIDENCE_CONTRACT":"REPOSITORY_SOURCE_EVIDENCE_ONLY","EVIDENCE_CONTRACT_PARTIAL_AUDIT":"REPOSITORY_IDENTITY_AND_CAPABILITY_REGISTRY_ONLY"}[registry["status"]]
+        self.assertTrue(all(c["authority"]==expected for c in registry["contracts"]))
+        self.assertTrue(all(not c["path"].startswith("/") for c in registry["contracts"]))
     def test_page_review_queue_covers_every_page(self):
         registry=self.load("omega-page-contracts.json"); queue=self.load("omega-page-review-tasks.json")
         self.assertEqual(queue["task_count"],registry["page_count"]); self.assertEqual(len(queue["tasks"]),registry["page_count"])
@@ -31,3 +35,11 @@ class UnifiedPlatformFabricTests(unittest.TestCase):
     def test_task_contract_requires_evidence(self):
         self.assertIn("evidence_required",self.load("omega-task-contract.json")["required"])
 if __name__=="__main__": unittest.main()
+
+class PageContractBootstrapPathTests(unittest.TestCase):
+    def test_bootstrap_emits_repo_relative_paths(self):
+        import importlib.util
+        spec=importlib.util.spec_from_file_location("bootstrap",ROOT/"scripts"/"omega-page-contract-bootstrap.py")
+        mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        row=mod.scan_page(ROOT/"404.html",mod.load_capabilities(),mod.load_domains())
+        self.assertEqual(row["path"],"404.html")

@@ -38,6 +38,8 @@
   "entrypoints": {
     "kernel": "/bg.js",
     "actionRuntime": "/omega-action-runtime.js",
+    "dataRuntime": "/omega-data-runtime.js",
+    "missionState": "/omega-mission-state.js",
     "observability": "/assets/js/omega-runtime-observability.js",
     "navigation": "/nav.js",
     "architecture": "/omega-architecture-runtime.js",

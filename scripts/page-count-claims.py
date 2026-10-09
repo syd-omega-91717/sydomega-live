@@ -103,6 +103,45 @@ def i18n_findings(ok):
     return out
 
 
+STAT = re.compile(r'data-countup>(\d+)</dt>\s*<dd class="ohz-stat-l">([A-Z]+)<')
+
+
+def front_door_findings():
+    """The front door's stat row, held to the sources its own comment names.
+
+    index.html renders "216 SURFACES" and "14 SERVICES" -- not the "N pages"
+    shape -- so this gate passed while both were stale (2026-10-09: 238 pages,
+    16 deployed Edge Functions). SERVICES counts what is DEPLOYED live per
+    docs/runtime/supabase-edge-functions-live.json, never source-only
+    functions: a member reads the row as what is running.
+    """
+    import json
+    index = ROOT / 'index.html'
+    if not index.exists():
+        return []
+    expected = {'SURFACES': len(list(ROOT.glob('*.html')))}
+    agents = ROOT / 'omega-agents.json'
+    if agents.exists():
+        try:
+            expected['AGENTS'] = len(json.loads(agents.read_text(encoding='utf-8'))['agents'])
+        except (ValueError, KeyError, TypeError):
+            pass
+    live = ROOT / 'docs' / 'runtime' / 'supabase-edge-functions-live.json'
+    if live.exists():
+        try:
+            fns = json.loads(live.read_text(encoding='utf-8'))['functions']
+            expected['SERVICES'] = sum(1 for f in fns.values() if f.get('state') == 'DEPLOYED')
+        except (ValueError, KeyError, TypeError, AttributeError):
+            pass
+    out = []
+    for m in STAT.finditer(index.read_text(encoding='utf-8', errors='replace')):
+        n, label = int(m.group(1)), m.group(2)
+        if label in expected and n != expected[label]:
+            out.append('index.html stat row claims %d %s; the source says %d'
+                       % (n, label, expected[label]))
+    return out
+
+
 def main(argv):
     if '--help' in argv or '-h' in argv:
         print(__doc__)
@@ -125,6 +164,7 @@ def main(argv):
                                ', '.join(str(c) for c in sorted(ok))))
 
     findings.extend(i18n_findings(ok))
+    findings.extend(front_door_findings())
 
     if findings:
         print('PAGE COUNT CLAIMS: FAIL')

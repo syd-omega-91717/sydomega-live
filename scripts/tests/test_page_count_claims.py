@@ -105,5 +105,30 @@ class TestGate(Fixture):
         self.assertIn('Refuse a page-count claim', r.stdout)
 
 
+class TestFrontDoorStats(Fixture):
+    """index.html's stat row says "N SURFACES"/"N SERVICES", not "N pages"."""
+
+    def _door(self, surfaces, services):
+        import json
+        (self.dir / 'docs' / 'runtime').mkdir(parents=True)
+        (self.dir / 'docs' / 'runtime' / 'supabase-edge-functions-live.json').write_text(json.dumps(
+            {'functions': {'a': {'state': 'DEPLOYED'}, 'b': {'state': 'LOCAL_ONLY'}}}))
+        row = ('<dt class="ohz-stat-n" data-countup>%d</dt><dd class="ohz-stat-l">SURFACES</dd>'
+               '<dt class="ohz-stat-n" data-countup>%d</dt><dd class="ohz-stat-l">SERVICES</dd>')
+        self.write('index.html', row % (surfaces, services))
+
+    def test_control_stale_stats_fail(self):
+        self._door(216, 2)
+        r = self.run_gate()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn('claims 216 SURFACES; the source says 1', r.stdout)
+        self.assertIn('claims 2 SERVICES; the source says 1', r.stdout)
+
+    def test_derived_stats_pass(self):
+        self._door(1, 1)
+        r = self.run_gate()
+        self.assertEqual(r.returncode, 0, r.stdout)
+
+
 if __name__ == '__main__':
     unittest.main()

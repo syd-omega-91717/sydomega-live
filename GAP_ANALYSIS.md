@@ -47,15 +47,16 @@ open, recorded in `FIXES_LOG.md`:
   verification and is unchanged code; `checkout` is source-only, so no payment flow is live end
   to end. Owner: set the secret (`supabase secrets set STRIPE_WEBHOOK_SECRET=…`) only when
   payments are meant to go live.
-- **Four modules on disk that no page or module loads** (opened 2026-10-03, `audit.py`):
-  `omega-mission-state.js` (detached when `missions.html` removed its legacy bridge,
-  09-29), `omega-action-runtime.js` and `omega-data-runtime.js` (built 10-01, listed in
-  `config/omega-runtime-manifest.json`, never wired to a page), and
-  `omega-theme-personalization.js` (Proposal #22; bg.js loads `omega-theme-elemental.js`
-  instead). Not deleted: an unloaded module has been load-bearing before
-  (`omega-bottom-stack.js`). Wire or retire each with its author's intent in hand.
-  (`omega-mission-board.js` was a false positive — loaded by an inline `import`, which
-  `audit.py` now counts.)
+- **CLOSED 2026-10-09 — governed runtime modules are wired or intentionally retired.**
+  `omega-action-runtime.js` and `omega-data-runtime.js` are now platform-wide runtime
+  entrypoints loaded by `bg.js`, with manifest declarations and regression coverage.
+  `omega-mission-state.js` is conditionally loaded whenever the existing
+  `[data-omega-mission-state]` mount is present (currently `missions.html`). It remains
+  read-only and never grants progression. `omega-theme-personalization.js` is intentionally
+  not loaded: `omega-theme-elemental.js` is the canonical theme engine and the repository
+  already tests that the deprecated duplicate is not globally injected. The old four-module
+  "unloaded" finding is therefore closed as wiring + intentional retirement, not by
+  deleting historical compatibility code.
 - **Five inert member write policies on the progression tables** (opened 2026-10-03):
   `quest_completions_member_insert/_update`, `domain_mastery_member_update`,
   `leaderboard_member_update`, `covenant_member_update`. Inert since `20261003220754`

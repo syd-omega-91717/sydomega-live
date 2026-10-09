@@ -63,6 +63,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/omega-page-census.py']).returncode)
+      - name: Unified page action task audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/omega-page-action-audit.py', '--check']).returncode)
       - name: Unified page contract bootstrap
         shell: python
         run: |

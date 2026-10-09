@@ -94,7 +94,7 @@ var AGENTS=[
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['chat','agents','logs','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
-  if(name==='logs')renderSessionLog();
+  if(name==='logs'&&typeof window.renderSessionLog==='function')window.renderSessionLog();
 }
 var g=document.getElementById('agent-grid');
 AGENTS.forEach(function(a){
@@ -129,6 +129,8 @@ function addTyping(){
   log.appendChild(d);log.scrollTop=log.scrollHeight;return d;
 }
 
+/* Published: the classic tab switcher above calls it, and module scope is not global. */
+window.renderSessionLog=renderSessionLog;
 function renderSessionLog(){
   var box=document.getElementById('session-log');if(!box)return;
   if(!_history.length){

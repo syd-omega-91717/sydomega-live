@@ -155,6 +155,10 @@
         Chart.defaults.color='rgba(233,230,220,.6)';
         Chart.defaults.borderColor='rgba(201,168,76,.08)';
         Chart.defaults.backgroundColor='rgba(201,168,76,.08)';
+        /* A redraw onto the same canvas threw "Canvas is already in use"
+           (dashboard #dash-radar, client_errors). Replace, never stack. */
+        var prev=typeof Chart.getChart==='function'&&Chart.getChart(canvas);
+        if(prev) prev.destroy();
         var chart=new Chart(canvas,config);
         if(cb) cb(chart);
       });

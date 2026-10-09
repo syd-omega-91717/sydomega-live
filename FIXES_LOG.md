@@ -22751,3 +22751,28 @@ Owner instruction: "Go ahead" (Phase 1 of `docs/decisions/legacy-key-migration/P
   the old tree, 0 now. `DeadBuilderCatchTests` (3) plant the violation; the test that encoded
   the bug now uses a valid chain. Production still runs the 2026-10-06 build, so the live error
   rate drops only once Vercel deploys.
+
+## The rest of the live error log: six causes behind the recurring client errors (2026-10-09)
+
+Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry above.
+- **`charter.html` — `history.map is not a function`.** A top-level `var history=[]` in a
+  classic script *is* `window.history`, which ignores assignment, so the list stayed a History
+  object. Chromium proof: `old_history_map: undefined`, renamed `charterHistory`: `function`.
+- **`cosmos.html` — reading `'glyph'` of undefined (lines 948/964/989 live).**
+  `SIGNS.findIndex(...)||0`: `findIndex` returns -1, which is truthy, so `||0` never fires and
+  `SIGNS[-1]` is undefined. Proof: `old_index: -1`, `Math.max(0,…)`: `0`. 3 sites.
+- **`profile.html` — `esc is not defined` (12).** `esc` is declared in a `type="module"`
+  block; a classic block calls it 3×. Module scope is not global (§8.1 class 4a) → `window.esc`.
+- **`chatbot.html` — `renderSessionLog is not defined`.** Same shape: defined in the module,
+  called from the classic tab switcher. Published on `window`; the call is guarded.
+- **`dashboard.html` — Chart.js "Canvas is already in use" (17).** `OmegaOSS.chart()` built a
+  new chart over an existing one; it now destroys `Chart.getChart(canvas)` first — once, for
+  every caller.
+- **Noise taking the reporter's 5-per-load cap.** 96 `ResizeObserver loop…` and ~55
+  view-transition abort/skip rejections. No code here handles a ViewTransition promise (the
+  browser's cross-document transition rejects them); `bg.js`'s reporter now drops exactly
+  those three message shapes, by name.
+- **Verified.** `verify-runtime.js --pages` charter, cosmos, chatbot, profile, dashboard,
+  settings, social: PASS (7). `node --check` + `check-inline-js.py` clean. Already gone, not
+  re-fixed: `reading 'has'` (397, last 09-12), `applyStyles` (427, last 09-20), the web-vitals
+  `ttfb/lcp/fid` setters (last 09-12).

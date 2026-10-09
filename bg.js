@@ -798,6 +798,13 @@ function __omegaAppend(el){
       /* ignore noise we cannot act on and errors from this reporter */
       if (msg.indexOf('__omegaErr') !== -1) return;
       if (msg === 'Script error.' && !src) return;   // opaque cross-origin
+      /* Browser notices, not app faults, and they used up the 5-per-load cap
+         ahead of real errors: 96 ResizeObserver-loop and ~55 view-transition
+         abort/skip reports in 30 days (client_errors, 2026-10-09). Nothing on
+         this site handles a ViewTransition promise; the browser's own
+         cross-document transition rejects them. */
+      if (/^ResizeObserver loop/.test(msg) ||
+          /^(Transition was (aborted|skipped)|Skipping view transition)/.test(msg)) return;
       var sig = signature(msg, src, line);
       if (seen[sig]) return;
       seen[sig] = 1; sent++;

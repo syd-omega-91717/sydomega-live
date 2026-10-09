@@ -11,6 +11,9 @@ class ContentTaskPipelineTests(unittest.TestCase):
     def test_contract_is_explicitly_not_publication(self):
         c=json.loads((ROOT/"config/omega-content-task-pipeline.json").read_text())
         self.assertEqual(c["principle"],"UPLOAD_IS_NOT_PUBLICATION")
+        self.assertEqual(c["status"],"IMPLEMENTED_PROVIDER_DEPLOYED")
+        self.assertEqual(c["provider_evidence"]["functions"]["content-ingest"]["verify_jwt"],True)
+        self.assertEqual(c["provider_evidence"]["functions"]["content-delivery"]["verify_jwt"],True)
         self.assertIn("registration_does_not_prove_rights",c["upload"]["rules"])
         self.assertIn("public_download_is_never_inferred_from_storage_path",c["download"]["rules"])
 

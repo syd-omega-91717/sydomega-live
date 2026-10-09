@@ -2839,6 +2839,22 @@ setTimeout(function(){
      relied on to parse before the approval guard reveals the shell. */
   if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}
 
+  /* Governed action/data runtimes — platform-wide primitives. They are client boundaries only:
+     authorization remains server/RLS/Edge-owned. Loading them here makes the declared runtime
+     manifest truthful without changing page authority or inventing state. */
+  if(!document.querySelector('script[data-omega-action-runtime]')){
+    var _oar=document.createElement('script');_oar.src='/omega-action-runtime.js';
+    _oar.setAttribute('data-omega-action-runtime','1');_oar.defer=true;__omegaAppend(_oar);
+  }
+  if(!document.querySelector('script[data-omega-data-runtime]')){
+    var _odr=document.createElement('script');_odr.src='/omega-data-runtime.js';
+    _odr.setAttribute('data-omega-data-runtime','1');_odr.defer=true;__omegaAppend(_odr);
+  }
+  if(document.querySelector('[data-omega-mission-state]') && !document.querySelector('script[data-omega-mission-state]')){
+    var _oms=document.createElement('script');_oms.src='/omega-mission-state.js';
+    _oms.setAttribute('data-omega-mission-state','1');_oms.defer=true;__omegaAppend(_oms);
+  }
+
   /* Ω World Action Recorder — authenticated district actions only. */
   if(!document.querySelector('script[data-omega-world-actions]')){
     var _owa=document.createElement('script');_owa.src='/omega-world-actions.js';

@@ -48,6 +48,9 @@ def scan(path:Path)->dict:
     }
 
 def main()->int:
+    if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+        print(__doc__.strip())
+        return 0
     pages=sorted(ROOT.glob("*.html"))
     rows=[scan(p) for p in pages]
     OUT.write_text(json.dumps({

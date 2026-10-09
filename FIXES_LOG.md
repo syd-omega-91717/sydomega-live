@@ -22715,3 +22715,16 @@ Owner instruction: "Go ahead" (Phase 1 of `docs/decisions/legacy-key-migration/P
   old code (`'/home/user/sydomega-live/404.html' != '404.html'`) and passes on the fix.
 - **Verified.** `./scripts/ci-local.sh`: ALL 28 BLOCKING CHECKS PASSED (unshallowed clone; 2j's
   shallow-clone refusal is environmental, as designed).
+
+## Front door asserted 216 surfaces / 14 services; the gate could not see it (2026-10-09)
+
+- **Symptom.** `index.html`'s stat row read `216 SURFACES` and `14 SERVICES` — in the repo and
+  live on `sydomega.com`. Real: 238 root `.html` files; 16 Edge Functions `DEPLOYED`
+  (`docs/runtime/supabase-edge-functions-live.json`, matching `list_edge_functions`).
+- **Why no gate fired.** The page's own comment said `page-count-claims.py` "gates exactly this".
+  It matches only `<N> pages`; the stat row's shape is `<N></dt><dd>SURFACES`. Same lesson as
+  the i18n case: a gate covers the shape it parses, not the claim's meaning.
+- **Fix.** `front_door_findings()` holds SURFACES to the `.html` count, AGENTS to
+  `omega-agents.json`, SERVICES to the **deployed** count (a member reads the row as what is
+  running; 9 source-only functions are not services). Stats corrected to 238/16.
+  `TestFrontDoorStats` plants 216/2 and fails, passes on derived values.

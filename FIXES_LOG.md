@@ -22776,3 +22776,23 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   settings, social: PASS (7). `node --check` + `check-inline-js.py` clean. Already gone, not
   re-fixed: `reading 'has'` (397, last 09-12), `applyStyles` (427, last 09-20), the web-vitals
   `ttfb/lcp/fid` setters (last 09-12).
+
+## Uploads promised 5 GB on a 50 MB plan; the action audit trusted any marker and gated nothing (2026-10-09)
+
+- **False limit.** `upload.js` capped files at 5 GB and `publishing.html`/`marketing.html` told
+  members "MAX 5 GB". Live: org `vztvuckpdsoriyvpdkzx` is on plan `free`; Supabase docs
+  (Storage → Limits): "For Free projects, the limit can't exceed 50 MB". A 200 MB file
+  uploaded in full and then failed server-side with a generic error. Cap → 50 MB with the
+  reason in a comment; copy and `registry.json` corrected; "handles … compression" removed
+  (nothing compresses). `test_storage_upload_contract.py` fails on the old cap, passes now.
+- **Storage rules checked live, sound.** `uploads` is private; members write/read only
+  `<their uid>/…`, owner reads all; 0 objects stored. KYC documents share the bucket.
+- **#820 audit trusted any capability id.** `data-omega-capability-id` made a control GOVERNED
+  with no check that the id exists. Now resolved against `docs/capabilities/registry.json`;
+  `capability_registered` is recorded; tests pin a real id (governs) and an invented one (does
+  not).
+- **#820 criterion 4 had no gate.** `ci.yml` ran `--check`, which validated structure only.
+  `UNMAPPED_CEILING = 1320` now fails `--check` when a new unmapped control appears (planted
+  button: exit 1; clean: exit 0).
+- **Mapped:** the 8 file inputs (5 server uploads incl. KYC, 3 local JSON imports) →
+  `import-export`, whose contract names `upload.js`. Audit: GOVERNED 0 → 8, UNMAPPED 1328 → 1320.

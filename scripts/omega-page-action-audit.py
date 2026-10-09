@@ -20,6 +20,25 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _registered_capabilities():
+    """Capability ids that exist in docs/capabilities/registry.json.
+
+    A marker is evidence only if it names something real: an unknown id would
+    otherwise turn into GOVERNED from a typo or an invented name -- the
+    synthetic evidence #820 forbids.
+    """
+    try:
+        reg = json.loads((ROOT / "docs" / "capabilities" / "registry.json").read_text(encoding="utf-8"))
+        caps = reg["capabilities"] if isinstance(reg, dict) else reg
+        return {c["id"] for c in caps if isinstance(c, dict) and c.get("id")}
+    except (OSError, ValueError, KeyError, TypeError):
+        return set()
+
+
+KNOWN_CAPABILITIES = _registered_capabilities()
+UNMAPPED_CEILING = 1320  # measured 2026-10-09, after the 8 upload/import controls were mapped
 VALID = {"GOVERNED","AVAILABLE_WITHOUT_MUTATION","UNAVAILABLE","UNMAPPED"}
 PURE_NAVIGATION_PATTERNS = (
     re.compile(r"""^\s*(?:window\.)?location\.(?:href|assign|replace)\s*=\s*['"]([^'"]+)['"]\s*;?\s*$""", re.I),
@@ -60,7 +79,7 @@ class ActionParser(HTMLParser):
         navigation_target = pure_navigation_target(a.get("onclick","")) or pure_navigation_target(a.get("onsubmit",""))
         if disabled and unavailable_reason:
             state="UNAVAILABLE"
-        elif task or capability:
+        elif task or (capability and capability in KNOWN_CAPABILITIES):
             state="GOVERNED"
         elif navigation_target:
             state="AVAILABLE_WITHOUT_MUTATION"
@@ -86,6 +105,7 @@ class ActionParser(HTMLParser):
                 "download": a.get("download") is not None,
                 "data_task_marker": bool(task),
                 "data_capability_marker": bool(capability),
+                "capability_registered": bool(capability) and capability in KNOWN_CAPABILITIES,
             },
         })
 
@@ -164,6 +184,18 @@ def main():
     args=ap.parse_args()
     data=audit_estate()
     validate(data)
+    if args.check:
+        # Ratchet (#820 criterion 4: "CI detects new unmapped executable
+        # actions"). --check used to validate structure only, so a new
+        # unmapped button could never fail it. Lower this when actions are
+        # mapped; never raise it to admit a new one -- map that one instead.
+        n=data["counts"].get("UNMAPPED",0)
+        if n>UNMAPPED_CEILING:
+            raise SystemExit(f"UNMAPPED actions rose to {n} (ceiling {UNMAPPED_CEILING}): "
+                             "give each new control a data-omega-task-id, a registered "
+                             "data-omega-capability-id, or disabled + data-omega-unavailable-reason")
+        if n<UNMAPPED_CEILING:
+            print(f"note: UNMAPPED is {n}, below the ceiling {UNMAPPED_CEILING} -- lower UNMAPPED_CEILING to lock it in")
     if args.write:
         out=ROOT/"config"/"omega-page-action-audit.json"
         out.write_text(json.dumps(data,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")

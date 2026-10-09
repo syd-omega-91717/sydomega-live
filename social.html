@@ -175,7 +175,7 @@ async function connectPlatform(pid,pname){
   if(!username)return;
   var handle=username.replace('@','');
   if(sb){
-    var r=await sb.from('social_connections').upsert({platform:pid,handle:handle}).catch(function(e){return{error:e};});
+    var r=await sb.from('social_connections').upsert({platform:pid,handle:handle}).then(null,function(e){return{error:e};});
     if(r&&r.error){alert('Could not link '+pname+'. Try again.');return;}
   }
   connections[pid]={username:handle};
@@ -184,7 +184,7 @@ async function connectPlatform(pid,pname){
 
 async function disconnectPlatform(pid){
   if(sb){
-    var r=await sb.from('social_connections').delete().eq('platform',pid).catch(function(e){return{error:e};});
+    var r=await sb.from('social_connections').delete().eq('platform',pid).then(null,function(e){return{error:e};});
     if(r&&r.error){alert('Could not disconnect. Try again.');return;}
   }
   delete connections[pid];

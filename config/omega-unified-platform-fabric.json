@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "name":"Ω SYD OMEGA 91717 Unified Platform Fabric",
+  "version":1,
+  "principle":"ONE_PLATFORM_MANY_PROJECTIONS",
+  "truth_states":["LIVE","IMPLEMENTED","RUNTIME-VERIFIED","PRODUCTION-VERIFIED","PARTIAL","CALCULATED","SIMULATED","USER-CREATED","EMPTY","UNAVAILABLE","UNVERIFIED","BLOCKED","LORE","FUTURE","REJECTED","REPLACED"],
+  "page_contract_required":["page_id","path","workspace","domain","primary_role","purpose","data_sources","capabilities","tasks","authorization","truth_states","asset_requirements","events","failure_paths","accessibility","responsive","traceability","evidence"],
+  "content_types":["image","video","audio","movie","series","episode","game","game_asset","character","document","pdf","poster","thumbnail","dataset","research","downloadable_file"],
+  "content_contract_required":["content_id","content_type","title","source","provenance","truth_state","rights","lifecycle","assets","relationships","access_policy","evidence"],
+  "task_states":["OPEN","READY","AUTHORIZED","RUNNING","VERIFYING","COMPLETED","FAILED","BLOCKED","CANCELLED"],
+  "task_types":["CREATE","READ","UPDATE","DELETE","UPLOAD","DOWNLOAD","PUBLISH","UNPUBLISH","VERIFY","APPROVE","REJECT","GENERATE","IMPORT","EXPORT","SEARCH","ANALYZE","SIMULATE","BOOK","PAY","RECONCILE","AUDIT","RECOVER"],
+  "release_rule":"A page, capability, content object or task is not production-complete merely because it renders or exists in source. Provider evidence remains authoritative."
+}

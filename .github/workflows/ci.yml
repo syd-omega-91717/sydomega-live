@@ -58,6 +58,16 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/audit.py']).returncode)
+      - name: Unified platform page census
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/omega-page-census.py']).returncode)
+      - name: Unified page contract audit
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/omega-page-contract-audit.py']).returncode)
       - name: Audit tooling tests
         shell: python
         run: |

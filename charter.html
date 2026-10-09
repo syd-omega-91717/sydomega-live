@@ -146,7 +146,9 @@ function switchTab(id,btn){
 
 var meta={name:'SOVEREIGN',date:'',preamble:''};
 var articles=[];
-var history=[];
+/* Not `history`: a top-level `var history` is window.history, which ignores
+   assignment -- the list stayed a History object and `.map` threw (client_errors). */
+var charterHistory=[];
 var DEFAULT_ARTICLES=[
   {title:'Article I — On Mastery',body:'I commit to the relentless pursuit of mastery in my chosen domains. I will study, practice, and iterate daily, accepting that mastery is a direction, not a destination.'},
   {title:'Article II — On Sovereignty',body:'I am the sole author of my life. I accept full responsibility for my choices, my outcomes, and my character. I do not blame circumstances for my results.'},
@@ -158,10 +160,10 @@ var DEFAULT_ARTICLES=[
 function load(){
   try{meta=JSON.parse(localStorage.getItem('omega_charter_meta')||'null')||{name:'SOVEREIGN',date:'',preamble:''};}catch(e){}
   try{articles=JSON.parse(localStorage.getItem('omega_charter_articles')||'null')||[];}catch(e){articles=[];}
-  try{history=JSON.parse(localStorage.getItem('omega_charter_history')||'[]');}catch(e){history=[];}
+  try{charterHistory=JSON.parse(localStorage.getItem('omega_charter_history')||'[]');}catch(e){charterHistory=[];}
   if(!articles.length)articles=DEFAULT_ARTICLES.map(function(a){return Object.assign({id:uid()},a);});
 }
-function save(){localStorage.setItem('omega_charter_meta',JSON.stringify(meta));localStorage.setItem('omega_charter_articles',JSON.stringify(articles));localStorage.setItem('omega_charter_history',JSON.stringify(history));}
+function save(){localStorage.setItem('omega_charter_meta',JSON.stringify(meta));localStorage.setItem('omega_charter_articles',JSON.stringify(articles));localStorage.setItem('omega_charter_history',JSON.stringify(charterHistory));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function renderCharter(){
@@ -184,7 +186,7 @@ function saveMeta(){
   meta.name=document.getElementById('m-name').value.trim()||'SOVEREIGN';
   meta.date=document.getElementById('m-date').value;
   meta.preamble=document.getElementById('m-preamble').value.trim();
-  history.unshift({action:'META UPDATED',date:new Date().toISOString()});
+  charterHistory.unshift({action:'META UPDATED',date:new Date().toISOString()});
   save();
 }
 function addArticle(){
@@ -192,14 +194,14 @@ function addArticle(){
   var body=document.getElementById('a-body').value.trim();
   if(!title||!body){alert('Title and body required.');return;}
   articles.push({id:uid(),title:title,body:body});
-  history.unshift({action:'ARTICLE ADDED: '+title,date:new Date().toISOString()});
+  charterHistory.unshift({action:'ARTICLE ADDED: '+title,date:new Date().toISOString()});
   save();document.getElementById('a-title').value='';document.getElementById('a-body').value='';
   renderArticlesList();
 }
 function loadDefaults(){
   if(!confirm('Append default articles?'))return;
   DEFAULT_ARTICLES.forEach(function(a){articles.push(Object.assign({id:uid()},a));});
-  history.unshift({action:'DEFAULT ARTICLES LOADED',date:new Date().toISOString()});
+  charterHistory.unshift({action:'DEFAULT ARTICLES LOADED',date:new Date().toISOString()});
   save();renderArticlesList();
 }
 function moveArticle(id,dir){
@@ -212,7 +214,7 @@ function deleteArticle(id){
   var a=articles.find(function(x){return x.id===id;});
   if(!confirm('Delete this article?'))return;
   articles=articles.filter(function(x){return x.id!==id;});
-  history.unshift({action:'ARTICLE DELETED: '+(a?a.title:''),date:new Date().toISOString()});
+  charterHistory.unshift({action:'ARTICLE DELETED: '+(a?a.title:''),date:new Date().toISOString()});
   save();renderArticlesList();
 }
 function renderArticlesList(){
@@ -231,8 +233,8 @@ function renderArticlesList(){
 }
 function renderHistory(){
   var el=document.getElementById('history-list');
-  if(!history.length){el.innerHTML='<div style="color:var(--muted);font-family:\'Courier New\',monospace;padding:20px;">NO HISTORY YET</div>';return;}
-  el.innerHTML=history.map(function(h){return '<div class="history-item"><span style="color:#FFD700;">'+esc(h.action)+'</span><span class="history-date">'+new Date(h.date).toLocaleString()+'</span></div>';}).join('');
+  if(!charterHistory.length){el.innerHTML='<div style="color:var(--muted);font-family:\'Courier New\',monospace;padding:20px;">NO HISTORY YET</div>';return;}
+  el.innerHTML=charterHistory.map(function(h){return '<div class="history-item"><span style="color:#FFD700;">'+esc(h.action)+'</span><span class="history-date">'+new Date(h.date).toLocaleString()+'</span></div>';}).join('');
 }
 load();renderCharter();
 </script>

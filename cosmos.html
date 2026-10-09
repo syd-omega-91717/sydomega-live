@@ -962,7 +962,7 @@ function drawHeroWheel(sign){
   const S=160, ctx=cv.getContext('2d');
   const CX=320, CY=320, R=280;
   let t=0;
-  const si=SIGNS.findIndex(s=>s.name===sign)||0;
+  const si=Math.max(0,SIGNS.findIndex(s=>s.name===sign));
   function frame(){
     t+=0.008;
     ctx.clearRect(0,0,640,640);
@@ -1038,11 +1038,11 @@ const GATES=['GATE I','GATE III','GATE V','GATE VII','GATE IX','GATE XI'];
 const PLANETS_RULING=['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Pluto','Jupiter','Saturn','Uranus','Neptune'];
 
 function getDailyOracle(sign){
-  const d=new Date(); const seed=(d.getDate()+d.getMonth()*31+(SIGNS.findIndex(s=>s.name===sign)||0));
+  const d=new Date(); const seed=(d.getDate()+d.getMonth()*31+(Math.max(0,SIGNS.findIndex(s=>s.name===sign))));
   const energy=ENERGIES[seed%12];
   const axis=AXES[seed%4];
   const gate=GATES[seed%6];
-  const ruler=PLANETS_RULING[SIGNS.findIndex(s=>s.name===sign)||0];
+  const ruler=PLANETS_RULING[Math.max(0,SIGNS.findIndex(s=>s.name===sign))];
   document.getElementById('r-energy').textContent=energy;
   document.getElementById('r-axis').textContent=axis;
   document.getElementById('r-planet').textContent=ruler;

@@ -16,7 +16,7 @@ class UnifiedPlatformFabricTests(unittest.TestCase):
 
     def test_page_registry_covers_current_html_estate(self):
         registry=self.load("omega-page-contracts.json")
-        self.assertEqual(registry["status"],"EVIDENCE_CONTRACT_BOOTSTRAP")
+        self.assertEqual(registry["status"],"EVIDENCE_CONTRACT_PARTIAL_AUDIT")
         self.assertEqual(registry["page_count"],len(registry["contracts"]))
         self.assertGreater(registry["page_count"],0)
         self.assertTrue(all(c["page_id"] and c["path"].endswith(".html") for c in registry["contracts"]))
@@ -35,7 +35,11 @@ class UnifiedPlatformFabricTests(unittest.TestCase):
         for contract in registry["contracts"]:
             self.assertEqual(contract["source_of_truth"] if "source_of_truth" in contract else "UNSPECIFIED","UNSPECIFIED")
             self.assertIn("UNVERIFIED",contract["truth_states"])
-            self.assertFalse(contract["evidence"]["source_content_audited"])
+            audited=bool(contract["evidence"].get("source_content_audited",False))
+            trace=contract.get("traceability",{})
+            self.assertEqual(audited,bool(trace.get("source_content_audited",False)))
+            if audited:
+                self.assertEqual(contract["evidence"].get("method"),"direct HTML source inspection")
 
     def test_content_non_inference_rules(self):
         data=self.load("omega-content-contract.json")

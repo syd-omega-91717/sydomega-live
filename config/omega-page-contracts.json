@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "name":"Ω Page Contract Registry",
+  "version":1,
+  "status":"BOOTSTRAP",
+  "source_of_truth":"Extends the existing Domain Registry and Capability Registry; it does not replace them.",
+  "contracts":[],
+  "coverage_policy":{
+    "missing_contract":"OPEN_TASK",
+    "missing_role":"OPEN_TASK",
+    "missing_data_path":"OPEN_TASK",
+    "missing_capability":"OPEN_TASK",
+    "missing_truth_state":"OPEN_TASK",
+    "missing_authorization":"OPEN_TASK",
+    "missing_evidence":"OPEN_TASK"
+  }
+}

@@ -3,9 +3,9 @@ const fs=require('fs');
 const bg=fs.readFileSync('bg.js','utf8');
 const manifest=JSON.parse(fs.readFileSync('config/omega-runtime-manifest.json','utf8'));
 for(const [needle,label] of [
-  ['src='/omega-action-runtime.js'','action runtime'],
-  ['src='/omega-data-runtime.js'','data runtime'],
-  ['src='/omega-mission-state.js'','mission state']
+  ["src='/omega-action-runtime.js'","action runtime"],
+  ["src='/omega-data-runtime.js'","data runtime"],
+  ["src='/omega-mission-state.js'","mission state"]
 ]) if(!bg.includes(needle)) throw new Error('bg.js missing '+label);
 if(manifest.entrypoints.actionRuntime!='/omega-action-runtime.js') throw new Error('action entrypoint drift');
 if(manifest.entrypoints.dataRuntime!='/omega-data-runtime.js') throw new Error('data entrypoint drift');

@@ -26,14 +26,8 @@ open, recorded in `FIXES_LOG.md`:
   Published experiences are owner-read only, so nothing is playable by another
   member. Fix before any UI or provider adapter: server-owned columns (trigger or
   definer RPC) and a published-read policy. HIGH-RISK pipeline (`grill-me-codex`).
-- **Seven tables are granted live by statements no migration holds** (opened
-  2026-10-06, `scripts/migration-grant-contract.py` `KNOWN`): `omega_notifications`,
-  `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`,
-  `omega_agent_tasks`, `omega_agent_task_events`, `omega_matrix_node_semantics`
-  have client grants live (`has_table_privilege`) and none in `migrations/`, so a
-  rebuild from the repo would lock members out of them. Materialise the live
-  grants as a migration, then drop them from `KNOWN`. `omega_agent_action_proposals`
-  is the reverse: declared in `20260929113731`, absent live.
+- **CLOSED 2026-10-09 — client read grants are materialised.** The seven tables `omega_notifications`, `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`, `omega_agent_tasks`, `omega_agent_task_events`, and `omega_matrix_node_semantics` now have the production `authenticated SELECT` grants represented by `supabase/migrations/20261006194000_materialize_existing_client_read_grants_20261006.sql`. Live `has_table_privilege` verification confirms those grants. The migration-grant contract no longer tracks them as missing migration grants.
+- **CLOSED 2026-10-09 — `omega_agent_action_proposals` was a retired schema, not a missing live table.** Migration `20260929113731` created the proposal table and `20260929115306` explicitly dropped it. Live absence is therefore expected; the stale `KNOWN` exception was removed from `scripts/migration-grant-contract.py`.
 - **A migration-built database is close to live, not equal to it** (opened 2026-10-06,
   `FIXES_LOG.md` "Fresh replay restored"). Three `REPLAY PRELUDE` blocks now let all 357
   migrations replay from zero, but they add only what today's views read. Known residue:

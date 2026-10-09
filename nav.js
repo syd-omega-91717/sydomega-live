@@ -116,7 +116,7 @@
           ['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html'],
           ['horoscope-page','HOROSCOPE','/horoscope.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],
           ['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],
-          ['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html']]},
+          ['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html'],['intel','INTEL WORKSPACE','/intel.html']]},
     /* ── EXTENDED SECTIONS — deployed-page coverage ─────────────── */
     {key:'arena',  icon:'\u25CF', label:'ARENA',   href:'/sovereign-ai.html',col:'#AB82F2',
      sub:[['sovereign-ai','AI COMMAND','/sovereign-ai.html'],['agent-network','AGENT NETWORK','/agent-network.html'],['analytics','ANALYTICS','/analytics.html'],
@@ -136,7 +136,7 @@
      sub:[['achieve-home','ACHIEVE HOME','/achieve.html'],['achievements','ACHIEVEMENTS','/achievements.html'],['leaderboard','LEADERBOARD','/leaderboard.html'],['quest-progress','QUEST PROGRESS','/quest-progress.html'],['my-quests','MY QUESTS','/my-quests.html'],['cosmetics','COSMETICS','/cosmetics.html'],['domain-mastery','DOMAIN MASTERY','/domain-mastery.html'],['covenant','MONTHLY COVENANT','/covenant.html'],['seasonal-events','SEASONAL EVENTS','/seasonal-events.html'],['gates','AUTHORITY GATES','/gates.html'],
           ['grades','GRADES','/grades.html'],['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html'],
           ['ascension','ASCENSION','/ascension.html'],['kings','KINGS LATTICE','/kings.html'],['triads','TRIADS','/triads.html'],
-          ['grid','LATTICE GRID','/grid.html'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html']]},
+          ['grid','LATTICE GRID','/grid.html'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html'],['trophies','TROPHIES','/trophies.html']]},
     {key:'archive',icon:'\u2735', label:'ARCHIVE', href:'/archive.html',     col:'#3fb27f',
      sub:[['archive','ARCHIVE WORKSPACE','/archive.html'],['heritage','HERITAGE','/heritage.html'],['bloodline','BLOODLINE','/bloodline.html'],['character','CHARACTER','/character.html'],
           ['identity','IDENTITY','/identity.html'],['passport','PASSPORT','/passport.html'],['kyc','KYC','/kyc.html'],

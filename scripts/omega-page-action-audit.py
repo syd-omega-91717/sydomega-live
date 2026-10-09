@@ -22,8 +22,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VALID = {"GOVERNED","AVAILABLE_WITHOUT_MUTATION","UNAVAILABLE","UNMAPPED"}
 PURE_NAVIGATION_PATTERNS = (
-    re.compile(r"""^\\s*(?:window\\.)?location\\.(?:href|assign|replace)\\s*=\\s*['"]([^'"]+)['"]\\s*;?\\s*$""", re.I),
-    re.compile(r"""^\\s*(?:window\\.)?open\\s*\\(\\s*['"]([^'"]+)['"][^)]*\\)\\s*;?\\s*$""", re.I),
+    re.compile(r"""^\s*(?:window\.)?location\.(?:href|assign|replace)\s*=\s*['"]([^'"]+)['"]\s*;?\s*$""", re.I),
+    re.compile(r"""^\s*(?:window\.)?open\s*\(\s*['"]([^'"]+)['"][^)]*\)\s*;?\s*$""", re.I),
 )
 
 def pure_navigation_target(handler):

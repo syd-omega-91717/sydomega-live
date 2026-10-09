@@ -3,7 +3,11 @@
   if(window.OmegaStorage) return;
   var URL="https://ydqhzvvoyufiiqvzcjns.supabase.co";
   var KEY="sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
-  var MAX=5*1024*1024*1024; // 5 GB client cap
+  /* The real ceiling is Supabase's global file-size limit, which a client cap
+     cannot raise: 50 MB on the Free plan this project is on (Pro: 500 GB).
+     This said 5 GB, so a 200 MB file uploaded in full and then failed at the
+     server with a generic error. Raise it only after the plan changes. */
+  var MAX=50*1024*1024; // 50 MB = Supabase Free-plan global limit
   var ready=window.OmegaSB?window.OmegaSB.get():import('/vendor/supabase-js.js').then(function(m){ return m.createClient(URL,KEY); });
   window.OmegaStorage={
     MAX:MAX,
@@ -19,7 +23,7 @@
       if(typeof bucket!=='string' && typeof file==='string'){ var _b=file; file=bucket; bucket=_b; }
       if(!bucket || typeof bucket!=='string') return {error:'No storage bucket named.'};
       if(!file || typeof file.name!=='string' || typeof file.size!=='number') return {error:'No file chosen.'};
-      if(file.size>MAX) return {error:'File exceeds the 5 GB limit.'};
+      if(file.size>MAX) return {error:'File exceeds the 50 MB limit.'};
       var sb=await ready;
       var s=(await sb.auth.getSession()).data.session;
       if(!s) return {error:'Sign in first.'};

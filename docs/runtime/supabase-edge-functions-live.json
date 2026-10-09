@@ -109,13 +109,15 @@
       "state": "DEPLOYED",
       "version": 1,
       "verify_jwt": true,
-      "live_sha256": "2c4d72c9274fac88444515a641d0692e223536be334463c68e7b52f80c97b0db"
+      "live_sha256": "2c4d72c9274fac88444515a641d0692e223536be334463c68e7b52f80c97b0db",
+      "repository_blob_sha": "9bff50574c29d508f0359094d6d445422cf30721"
     },
     "content-ingest": {
       "state": "DEPLOYED",
       "version": 1,
       "verify_jwt": true,
-      "live_sha256": "8356c4c4e01dd20f2d91af39761fc9054d26db32728c2766d4bb91735e987641"
+      "live_sha256": "8356c4c4e01dd20f2d91af39761fc9054d26db32728c2766d4bb91735e987641",
+      "repository_blob_sha": "e450c0ce2252e1e8eb3313707c9b54b3f53405c8"
     },
     "event-ingest": {
       "state": "LOCAL_ONLY"

@@ -1,13 +1,11 @@
 /* Ω MEDIA NATIVE — truth-aware projection over the canonical persisted media catalog. */
 (function(root){
 'use strict';
-function client(){if(root.OmegaSB&&typeof root.OmegaSB.get==='function')return root.OmegaSB.get();return Promise.resolve(root.__omegaSb||null);}
 async function load(){
- var sb=await client();if(!sb)throw new Error('DATABASE_CLIENT_UNAVAILABLE');
- var s=(await sb.auth.getSession()).data.session;if(!s||!s.user)throw new Error('SIGN_IN_REQUIRED');
- var r=await sb.from('media_items').select('id,title,media_type,status,created_at').order('created_at',{ascending:false}).limit(100);
- if(r.error)throw r.error;
- return {truth_state:r.data&&r.data.length?'LIVE':'EMPTY',items:r.data||[]};
+ if(!root.OmegaContentFabric)throw new Error('CONTENT_FABRIC_UNAVAILABLE');
+ var result=await root.OmegaContentFabric.list({sources:['media_items']});
+ if(result.truth_state==='UNAVAILABLE'&&result.errors&&result.errors.indexOf('SIGN_IN_REQUIRED')>=0)throw new Error('SIGN_IN_REQUIRED');
+ return {truth_state:result.truth_state,items:result.items||[],errors:result.errors||[]};
 }
 function esc(v){return String(v==null?'—':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function render(d){

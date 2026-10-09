@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "Ω Page Contract Registry",
   "version": 2,
-  "status": "EVIDENCE_CONTRACT_BOOTSTRAP",
+  "status": "EVIDENCE_CONTRACT_PARTIAL_AUDIT",
   "source_of_truth": "Extends the existing Domain Registry and Capability Registry; unknown fields remain explicitly UNVERIFIED until page-source audit evidence proves them.",
   "contract_policy": {
     "unknown_is_not_production_truth": true,
@@ -141,8 +141,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — ACHIEVE",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -163,11 +166,29 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "achieve.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-achieve-boot.js",
+          "/omega-achieve-native.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — ACHIEVE",
+        "h1": [
+          "ACHIEVE"
+        ]
       }
     },
     {
@@ -663,8 +684,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — ARCHIVE WORKSPACE",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -685,11 +709,27 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "archive.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — ARCHIVE WORKSPACE",
+        "h1": [
+          "ARCHIVE WORKSPACE"
+        ]
       }
     },
     {
@@ -700,8 +740,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — Simulation Arena",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -722,11 +765,27 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "arena.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-simulation-arena.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — Simulation Arena",
+        "h1": [
+          "SIMULATION ARENA"
+        ]
       }
     },
     {
@@ -737,8 +796,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — ASCEND Workspace",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -759,11 +821,27 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "ascend.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-ascend-native.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — ASCEND Workspace",
+        "h1": [
+          "ASCEND"
+        ]
       }
     },
     {
@@ -1662,8 +1740,14 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; CONSULTANCY",
+      "data_sources": {
+        "supabase_tables": [
+          "consult_requests",
+          "profiles"
+        ],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -1684,11 +1768,29 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "consultancy.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "consult_requests",
+            "profiles"
+          ],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; CONSULTANCY",
+        "h1": []
       }
     },
     {
@@ -1958,8 +2060,13 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Cosmos",
+      "data_sources": {
+        "supabase_tables": [
+          "profiles"
+        ],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -1980,11 +2087,31 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "cosmos.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-analytics-init.js",
+          "/omega-cosmos-native.js",
+          "/omega-demo-video.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "profiles"
+          ],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; Cosmos",
+        "h1": []
       }
     },
     {
@@ -2883,8 +3010,16 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Family Vault",
+      "data_sources": {
+        "supabase_tables": [
+          "bloodline_nodes",
+          "family_nodes",
+          "heritage_records",
+          "profiles"
+        ],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "family"
       ],
@@ -2905,13 +3040,33 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "family.html",
-        "capability_registry_matches": [
-          "family"
-        ]
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-analytics-init.js",
+          "/omega-demo-video.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "bloodline_nodes",
+            "family_nodes",
+            "heritage_records",
+            "profiles"
+          ],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; Family Vault",
+        "h1": []
       }
     },
     {
@@ -3109,8 +3264,14 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Games &amp; Exams",
+      "data_sources": {
+        "supabase_tables": [
+          "profiles",
+          "task_completions"
+        ],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -3131,11 +3292,31 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "gaming.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-arcade.js",
+          "/omega-spatial-realms.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "profiles",
+            "task_completions"
+          ],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; Games &amp; Exams",
+        "h1": []
       }
     },
     {
@@ -3220,8 +3401,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — GOVERN WORKSPACE",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -3242,11 +3426,31 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "govern.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-govern-boot.js",
+          "/omega-govern-native.js",
+          "/omega-govern-product-reality.js",
+          "/omega-product-reality.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — GOVERN WORKSPACE",
+        "h1": [
+          "GOVERN WORKSPACE"
+        ]
       }
     },
     {
@@ -3997,8 +4201,13 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Horoscope",
+      "data_sources": {
+        "supabase_tables": [
+          "profiles"
+        ],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -4019,11 +4228,28 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "horoscope.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "profiles"
+          ],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; Horoscope",
+        "h1": []
       }
     },
     {
@@ -4182,8 +4408,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — Intel Workspace",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -4204,11 +4433,29 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "intel.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-intel-fabric.js",
+          "/omega-intel-native.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — Intel Workspace",
+        "h1": [
+          "INTEL"
+        ]
       }
     },
     {
@@ -4293,8 +4540,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — Invest Workspace",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -4315,11 +4565,29 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "invest.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-invest-boot.js",
+          "/omega-invest-native.js",
+          "/omega-invest-shell-boot.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — Invest Workspace",
+        "h1": [
+          "INVEST"
+        ]
       }
     },
     {
@@ -4811,8 +5079,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — Life",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -4833,11 +5104,32 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "life.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-life-native-systems.js",
+          "/omega-life-surface.js",
+          "/omega-life.js",
+          "/omega-product-reality.js",
+          "/omega-relearn-sigil-mana.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — Life",
+        "h1": [
+          "YOUR LIFE. YOUR LEARNING. YOUR CAPACITY. YOUR WORLD."
+        ]
       }
     },
     {
@@ -5033,8 +5325,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Creative Universe",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -5055,11 +5350,33 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "media.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-analytics-init.js",
+          "/omega-content-fabric.js",
+          "/omega-demo-video.js",
+          "/omega-media-boot.js",
+          "/omega-media-native.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; Creative Universe",
+        "h1": [
+          "The Living Codex"
+        ]
       }
     },
     {
@@ -5923,8 +6240,11 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — ORDER WORKSPACE",
+      "data_sources": {
+        "supabase_tables": [],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -5945,11 +6265,27 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "order.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "Ω SYD OMEGA 91717 — ORDER WORKSPACE",
+        "h1": [
+          "ORDER WORKSPACE"
+        ]
       }
     },
     {
@@ -7409,8 +7745,13 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; PLATFORM SERVICES",
+      "data_sources": {
+        "supabase_tables": [
+          "profiles"
+        ],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -7431,11 +7772,29 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "services.html",
-        "capability_registry_matches": []
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-services-native.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "profiles"
+          ],
+          "supabase_rpcs": []
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; PLATFORM SERVICES",
+        "h1": []
       }
     },
     {
@@ -8301,8 +8660,17 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "UNVERIFIED",
-      "data_sources": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Vault",
+      "data_sources": {
+        "supabase_tables": [
+          "profiles",
+          "task_completions",
+          "user_assets"
+        ],
+        "supabase_rpcs": [
+          "access_audit_log"
+        ]
+      },
       "capabilities": [
         "import-export"
       ],
@@ -8323,13 +8691,33 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "vault.html",
-        "capability_registry_matches": [
-          "import-export"
-        ]
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-speed-insights-init.js",
+          "/omega-vault-native.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "profiles",
+            "task_completions",
+            "user_assets"
+          ],
+          "supabase_rpcs": [
+            "access_audit_log"
+          ]
+        }
       },
       "evidence": {
         "filesystem_present": true,
-        "source_content_audited": false
+        "source_content_audited": true,
+        "source_audited_at": "2026-10-09",
+        "method": "direct HTML source inspection"
+      },
+      "identity": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; Vault",
+        "h1": []
       }
     },
     {
@@ -8850,5 +9238,11 @@
         "source_content_audited": false
       }
     }
-  ]
+  ],
+  "audit_summary": {
+    "page_count": 238,
+    "source_audited_pages": 17,
+    "remaining_source_audit_pages": 221,
+    "truth_and_authorization_still_unverified": true
+  }
 }

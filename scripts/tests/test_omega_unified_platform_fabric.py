@@ -22,6 +22,14 @@ class UnifiedPlatformFabricTests(unittest.TestCase):
         self.assertTrue(all(c["page_id"] and c["path"].endswith(".html") for c in registry["contracts"]))
         self.assertTrue(all(c["authority"]=="REPOSITORY_IDENTITY_AND_CAPABILITY_REGISTRY_ONLY" for c in registry["contracts"]))
 
+    def test_page_review_queue_covers_every_page(self):
+        registry=self.load("omega-page-contracts.json")
+        queue=self.load("omega-page-review-tasks.json")
+        self.assertEqual(queue["task_count"],registry["page_count"])
+        self.assertEqual(len(queue["tasks"]),registry["page_count"])
+        self.assertEqual({t["page"] for t in queue["tasks"]},{c["page_id"] for c in registry["contracts"]})
+        self.assertTrue(all(t["state"]=="OPEN" and t["evidence_required"] for t in queue["tasks"]))
+
     def test_page_contracts_do_not_fake_unknowns(self):
         registry=self.load("omega-page-contracts.json")
         for contract in registry["contracts"]:

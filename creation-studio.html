@@ -8,6 +8,8 @@
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
 <script src="/omega-creation-studio.js" defer></script>
+<script src="/omega-content-tasks.js" defer></script>
+<script src="/omega-content-import.js" defer></script>
 <style>
 :root{--dim:rgba(201,168,76,.18);--gold:#C9A84D;--cyan:#00E5FF;--red:#8B0000;--green:#00FF88;--ink:#E9E8E3;--muted:#8D8C96;--pad:clamp(14px,3vw,36px)}
 *{box-sizing:border-box}body{margin:0;background:#020206;color:var(--ink);font-family:var(--R,Arial,sans-serif);line-height:1.6}
@@ -49,6 +51,17 @@ label{display:block;font:12px var(--M,monospace);letter-spacing:1.2px;color:var(
 <label for="project-type">TYPE</label><select id="project-type"><option>IMAGE</option><option>VIDEO</option><option>MOVIE</option><option>GAME</option><option>WORLD</option><option selected>MIXED</option></select>
 <div class="actions"><button type="submit">CREATE DRAFT</button></div>
 <div id="project-message" class="note" aria-live="polite"></div>
+</form>
+</section>
+<section class="card">
+<div class="title">IMPORT CONTENT ASSET</div>
+<form id="content-import-form">
+<label for="content-import-file">FILE</label>
+<input id="content-import-file" type="file" required>
+<label for="content-import-type">CONTENT TYPE</label>
+<select id="content-import-type"><option>IMAGE</option><option>VIDEO</option><option>AUDIO</option><option>MOVIE</option><option>GAME</option><option>DOCUMENT</option><option>DATA</option><option>OTHER</option></select>
+<div class="actions"><button type="submit">UPLOAD · REGISTER · REVIEW</button></div>
+<div id="content-import-message" class="note" aria-live="polite"></div>
 </form>
 </section>
 <section class="card">

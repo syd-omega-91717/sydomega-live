@@ -59,6 +59,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # (id, what it protects, argv). Order is cheapest-first only for readability;
 # every gate runs regardless, so the order carries no meaning.
 GATES = [
+    ('page-contract-remediation',
+     'canonical page-contract gaps remain explicit remediation rather than synthetic truth',
+     ['scripts/omega-page-contract-remediation-contract.py']),
     ('unified-core-contract',
      'the canonical fabric enforces one governed core with domain projections and task acceptance contracts',
      ['scripts/omega-unified-core-contract.py']),

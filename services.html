@@ -32,7 +32,7 @@
       <button class="tab-btn" data-tab="science" role="tab">SCIENCE</button>
     </div>
 
-    <!-- SERVICES TAB -->
+<section class="services-native" aria-labelledby="services-native-title"><div id="services-native-state" data-services-native-state><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">LOADING CANONICAL CAPABILITY STATE…</div></div></section>\n\n    <!-- SERVICES TAB -->
     <div class="tab-panel active pad" id="tab-services">
       <div class="kpi-row" data-stagger data-stagger-gap="70">
         <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-live">--</div><div class="kpi-l">LIVE</div></div>
@@ -117,6 +117,8 @@
 .svc-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:5px}
 .svc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px}
 .svc-badge{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid;border-radius:2px;display:inline-block}
+
+.services-native{margin:0 var(--pad,24px) 18px;padding:18px;border:1px solid rgba(0,229,255,.16);background:rgba(10,10,15,.62)}.services-native-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid rgba(0,229,255,.1);padding-bottom:12px;margin-bottom:12px}.services-native-kicker{font:12px var(--M);letter-spacing:3px;color:var(--cyan)}.services-native h2{font:20px var(--D);color:var(--gold);margin:5px 0 0}.services-native-mode{font:12px var(--M);letter-spacing:1.5px;color:var(--green)}.services-native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}.services-native-state{border:1px solid var(--line);padding:11px;background:rgba(2,2,6,.35)}.services-native-state b{display:block;font:12px var(--M);letter-spacing:1.5px;color:currentColor}.services-native-state span{display:block;margin-top:4px;font-size:12px;line-height:1.5;color:var(--muted)}.services-native-live{color:var(--green)}.services-native-calculated{color:var(--cyan)}.services-native-empty{color:var(--muted)}.services-native-unavailable{color:var(--crim)}.services-native-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:6px;margin-top:10px}.services-native-list div{display:flex;justify-content:space-between;gap:10px;border:1px solid var(--line);padding:8px 10px;font:12px var(--M)}.services-native-list strong{color:var(--ink)}.services-native-list span{color:var(--muted);text-align:right}.services-native-boundary{margin-top:10px;padding:12px;border-left:2px solid var(--gold);background:rgba(201,168,76,.035);font:12px/1.7 var(--M);color:var(--muted)}.services-native-boundary strong{color:var(--gold);letter-spacing:1.5px}@media(max-width:650px){.services-native-head{display:block}.services-native-mode{display:block;margin-top:7px}}
 </style>
 <script>
 var SVCS=[
@@ -197,5 +199,5 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 })();
 </script>
 <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script><script type="module" src="/omega-services-native.js"></script></body>
 </html>

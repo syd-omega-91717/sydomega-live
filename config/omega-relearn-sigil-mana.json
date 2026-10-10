@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "state": "DESIGN_PROPOSAL",
+  "system": "Ω Relearn · Sigil · Mana Civilization Layer",
+  "purpose": "Make learning, symbolic identity, and governed capacity visible as user-owned and civilization-aware platform primitives without creating a parallel identity, event, evidence, mission, capability, or progression system.",
+  "truthStates": ["USER_CREATED","OBSERVED","CALCULATED","VERIFIED","SIMULATED","UNAVAILABLE","BLOCKED"],
+  "domains": {
+    "relearn": {
+      "meaning": "A governed improvement cycle that converts experience, outcomes, evidence and user reflection into a new learning action.",
+      "lifecycle": ["CAPTURE","REFLECT","UNDERSTAND","RETRY","VERIFY","INTEGRATE"],
+      "inputs": ["task_outcome","mission_state","evidence","user_reflection","agent_feedback","prior_learning"],
+      "canonicalIntegrations": ["omega_platform_events","omega_platform_evidence","task_completions","omega_mission_transitions","capability_registry","data_lineage","omega-execution-os","omega-execution-graph","729-progression"]
+    },
+    "sigil": {
+      "meaning": "A user-facing symbolic representation of declared identity, verified milestones, roles and chosen civilization affiliations.",
+      "sources": ["user_authored_identity","verified_credentials","verified_progression","earned_achievements","declared_affiliations"],
+      "mustNotInfer": ["health","religion","ethnicity","politics","sexual_orientation","psychological_diagnosis","financial_risk","social_worth"],
+      "evolution": ["CREATED","EARNED","EVOLVED","ARCHIVED"],
+      "securityBoundary": "A visual sigil is not an authentication credential or authorization grant unless separately issued and verified through the credential/authorization systems."
+    },
+    "mana": {
+      "meaning": "A non-financial, transparent capacity abstraction representing currently available user/system agency for governed actions.",
+      "sources": ["verified_capabilities","active_missions","completed_learning","explicit_user_preferences","system_capacity"],
+      "neverMeans": ["money","creditworthiness","social_worth","employment_score","health_score","legal_status"],
+      "components": ["FOCUS","LEARNING","CREATIVE","COLLABORATION","EXECUTION"],
+      "rules": ["show_sources","show_freshness","never_fabricate","never_hide_constraints","never_grant_authority"],
+      "civilizationAggregation": "Aggregate only explicit, authorized, privacy-preserving observations; never expose an individual's private capacity through civilization views."
+    }
+  },
+  "userRepresentation": {
+    "profile": ["identity","goals","ideas","preferences","boundaries","projects","skills","credentials","sigil"],
+    "progress": ["missions","tasks","learning","relearn","verifiedAchievements","729Progression"],
+    "agency": ["consent","capabilities","mana","agentModes"],
+    "civilization": ["country","city","district","service","faction","empire","planetaryBody"],
+    "visibility": ["PRIVATE","SHARED","CIVILIZATION_AGGREGATE","PUBLIC"]
+  },
+  "civilizationModel": {
+    "personToWorld": ["PERSON","PROJECT","TASK","SERVICE","CITY","REGION","COUNTRY","WORLD"],
+    "relationshipTypes": ["BELONGS_TO","CONTRIBUTES_TO","LEARNS_FROM","SERVES","COLLABORATES_WITH","REPRESENTS","AFFILIATES_WITH"],
+    "hardRule": "Civilization membership or representation never implies legal citizenship, sovereignty, ownership, rank, or authority."
+  },
+  "canonicalSystems": ["Supabase Auth + authorization","omega_platform_events","omega_platform_evidence / graph_evidence","omega_mission_transitions","capability_registry","data_lineage","Civilization Atlas","Ω Object Model","729 progression","Ω Human Agency","Ω Execution OS","Ω Execution Graph","Ω Production Assurance"],
+  "eventContract": {
+    "relearn": ["learning_captured","relearn_started","relearn_verified"],
+    "sigil": ["sigil_created","sigil_evolved","sigil_archived"],
+    "mana": ["mana_calculated","mana_spent","mana_recovered"],
+    "requirements": ["actor_from_auth","schema_version","source_references","truth_state","idempotency_key"]
+  },
+  "promotionGate": ["identity","scope","consent","source_provenance","authorization","event","evidence","verification","privacy_policy","automated_contract"]
+}

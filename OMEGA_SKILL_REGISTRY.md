@@ -20,7 +20,7 @@ effectively invisible unless invoked by exact name.
 |---|---|---|---|---|---|
 | `autonomous-coder` | yes | — | 1,737 | CLAUDE.md, README.md | 2026-08-11 |
 | `cinematic-media` | yes | — | 1,621 | CLAUDE.md, README.md | 2026-08-30 |
-| `context-budget` | yes | — | 1,419 | CLAUDE.md, README.md | 2026-08-23 |
+| `context-budget` | yes | — | 1,692 | CLAUDE.md, README.md | 2026-10-06 |
 | `deploy-gate` | yes | — | 1,672 | CLAUDE.md, README.md | 2026-08-30 |
 | `edge-functions` | yes | — | 1,207 | CLAUDE.md, README.md | 2026-09-29 |
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
@@ -42,7 +42,7 @@ effectively invisible unless invoked by exact name.
 | `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,620 tokens** if every SKILL.md were read in one
+**23 skills, ~38,893 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 > **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
@@ -94,13 +94,13 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 224 |
-| pages loading `bg.js` | 224 of 224 |
-| `omega-*.js` modules | 191 (1739 KB) |
-| root `.js` files | 206 |
+| `.html` pages | 238 |
+| pages loading `bg.js` | 238 of 238 |
+| `omega-*.js` modules | 235 (2054 KB) |
+| root `.js` files | 250 |
 | `supabase/*.sql` (flat bag) | 127 |
-| `supabase/migrations/*.sql` | 337 (107 numbered `NNNN_`, 230 timestamped) |
-| Edge Functions | 21 |
+| `supabase/migrations/*.sql` | 374 (107 numbered `NNNN_`, 267 timestamped) |
+| Edge Functions | 26 |
 | skills | 23 |
 | agent definitions | 2 |
 
@@ -123,11 +123,11 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 243 files added since (numbered and
+end-to-end for the first time"*. The 280 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 337. Treat the validated scope as `0001`–`0094` only.
+all 374. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 224 pages.** It is a hard single point of
+**`bg.js` is loaded by all 238 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

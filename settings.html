@@ -80,7 +80,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
   </div>
   <div class="settings-section">
     <div class="settings-section-title">CALM MODE</div>
-    <p class="settings-hint">Hide the ambient extras on every page: ticker, banners, floating buttons. Navigation and visuals stay. Language stays here in Settings.</p>
+    <p class="settings-hint">Quiet pages: no banners, tickers or floating widgets. On by default.</p>
     <div class="langrow">
       <button class="btn-gold" id="btn-calm" type="button" aria-pressed="false" style="font-size:12px;letter-spacing:2px;padding:10px 16px">CALM: OFF</button>
     </div>
@@ -126,12 +126,14 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
   </div>
   <div class="settings-section">
     <div class="settings-section-title">YOUR DATA</div>
-    <p class="settings-hint">Supported browser-local fields keep what you enter in this browser only. Clearing your browser
-      data, or moving to a new device, loses it. Export writes a single file you keep; import reads it
-      back. Nothing here is uploaded &mdash; the file goes straight to your device.</p>
+    <p class="settings-hint">While you are signed in, what you record in the trackers (journal, rituals, habits, sleep, quotes
+      and the rest) is backed up to your account automatically. On a new device, or after clearing your browser,
+      RESTORE FROM CLOUD brings it back; it never overwrites anything this browser already holds. Export writes a
+      single file you keep; import reads it back.</p>
     <div class="acct-row" style="gap:8px;flex-wrap:wrap">
       <button class="btn-gold" id="btn-data-export" style="font-size:12px;letter-spacing:2px;padding:10px 16px">EXPORT MY DATA</button>
       <button class="btn-gold" id="btn-data-import" style="font-size:12px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--muted);border-color:var(--line)">IMPORT FROM FILE</button>
+      <button class="btn-gold" id="btn-data-cloud" style="font-size:12px;letter-spacing:2px;padding:10px 16px;background:transparent;color:var(--cyan);border-color:var(--cyan)">RESTORE FROM CLOUD</button>
     </div>
     <div class="settings-msg" id="data-msg" role="status" aria-live="polite"></div>
   </div>
@@ -187,6 +189,23 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
   document.addEventListener('DOMContentLoaded', function(){
     var ex=document.getElementById('btn-data-export');
     var im=document.getElementById('btn-data-import');
+    var cl=document.getElementById('btn-data-cloud');
+    /* Pull the account's member_state backup down. OmegaMemberState.restore
+       resolves {restored, skipped, error} and never throws; keys this browser
+       already holds are skipped, so nothing local is overwritten. */
+    if(cl) cl.addEventListener('click', function(){
+      var ms=window.OmegaMemberState;
+      if(!ms||typeof ms.restore!=='function'){ msg('Cloud backup not loaded yet — reload the page and try again.'); return; }
+      cl.disabled=true; msg('Restoring from your cloud backup…');
+      ms.restore().then(function(r){
+        cl.disabled=false;
+        if(!r||r.error){ msg(r&&r.error==='not signed in' ? 'Sign in to restore your cloud backup.' : 'Restore failed: ' + ((r&&r.error)||'unknown error') + '. Nothing was changed.'); return; }
+        if(!r.restored&&!r.skipped){ msg('Your cloud backup is empty — nothing to restore yet.'); return; }
+        msg('Restored ' + r.restored + ' item' + (r.restored===1?'':'s')
+            + (r.skipped ? ' — ' + r.skipped + ' already in this browser, kept as is.' : '.')
+            + (r.restored ? ' Reload a page to see them.' : ''));
+      });
+    });
     if(ex) ex.addEventListener('click', function(){
       var b=lb();
       if(!b||!b.exportAll){ msg('Backup module not loaded — reload the page and try again.'); return; }
@@ -253,7 +272,7 @@ async function saveBg(color){
   applyBg(color);markSwatch(color);
   var msg=document.getElementById('s-msg');
   if(_user){
-    var r=await sb.from('profiles').update({bg_color:color}).eq('id',_user.id).catch(function(e){return{error:e};});
+    var r=await sb.from('profiles').update({bg_color:color}).eq('id',_user.id).then(null,function(e){return{error:e};});
     if(msg)msg.textContent=(r&&r.error)?'Background saved on this device. Sync to your account failed.':'Background saved.';
   } else if(msg){msg.textContent='Background saved.';}
 }
@@ -263,7 +282,7 @@ async function resetBg(){
   applyBg(DEFAULT_BG);markSwatch(DEFAULT_BG);document.getElementById('cpick').value=DEFAULT_BG;
   var msg=document.getElementById('s-msg');
   if(_user){
-    var r=await sb.from('profiles').update({bg_color:null}).eq('id',_user.id).catch(function(e){return{error:e};});
+    var r=await sb.from('profiles').update({bg_color:null}).eq('id',_user.id).then(null,function(e){return{error:e};});
     if(msg)msg.textContent=(r&&r.error)?'Reset on this device. Sync to your account failed.':'Reset to the Void.';
   } else if(msg){msg.textContent='Reset to the Void.';}
 }

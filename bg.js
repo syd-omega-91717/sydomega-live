@@ -482,7 +482,14 @@ function __omegaAppend(el){
          transitions on .card, .kpi and .btn, which bg.js and
          omega-visual-evolution.css already own. */
       el.style.transition = 'transform 0.18s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.18s ease';
-      el.style.transformStyle = 'preserve-3d';
+      /* No transform-style:preserve-3d, and no tilt on a control that sits
+         inside a card. A hovered card lifted with translateZ(8px) in a 3-D
+         context, holding a control lifted the same way, made the browser
+         hit-test the plane between them: the click reached the container, not
+         the button (measured: 10/10 card controls on social.html dead while
+         hovered). The card still tilts; its contents ride along flat. */
+      var nested = el.parentElement && el.parentElement.closest('[class*="card"],.kpi');
+      if (nested && el.matches('button, a, [role="button"], input, select, textarea, .btn')) el.classList.add('omg-no-tilt');
       /* No will-change here: it was promoting all 580 matched elements to their
          own compositing layer at once, which costs far more than the hover
          transform it was meant to smooth. */
@@ -498,7 +505,9 @@ function __omegaAppend(el){
       });
 
       el.addEventListener('mouseleave', function(){
-        el.style.transform = 'perspective(1000px) translateZ(0) rotateX(0) rotateY(0)';
+        /* Back to no transform at all: a resting perspective() transform kept
+           every element hovered once in its own 3-D rendering context. */
+        if(!el.classList.contains('omg-no-tilt')) el.style.transform = '';
       });
 
       /* Scroll-reactive parallax on cards */
@@ -789,6 +798,13 @@ function __omegaAppend(el){
       /* ignore noise we cannot act on and errors from this reporter */
       if (msg.indexOf('__omegaErr') !== -1) return;
       if (msg === 'Script error.' && !src) return;   // opaque cross-origin
+      /* Browser notices, not app faults, and they used up the 5-per-load cap
+         ahead of real errors: 96 ResizeObserver-loop and ~55 view-transition
+         abort/skip reports in 30 days (client_errors, 2026-10-09). Nothing on
+         this site handles a ViewTransition promise; the browser's own
+         cross-document transition rejects them. */
+      if (/^ResizeObserver loop/.test(msg) ||
+          /^(Transition was (aborted|skipped)|Skipping view transition)/.test(msg)) return;
       var sig = signature(msg, src, line);
       if (seen[sig]) return;
       seen[sig] = 1; sent++;
@@ -944,13 +960,17 @@ function __omegaAppend(el){
 (function(){
   var KEY='omega_calm', root=document.documentElement;
   function apply(on){ if(on) root.setAttribute('data-omega-calm',''); else root.removeAttribute('data-omega-calm'); }
-  try{ apply(localStorage.getItem(KEY)==='1'); }catch(e){}
+  /* Default ON since 2026-10-04 (owner: "pages with less text and not disturbing");
+     only an explicit '0' from the toggle turns it off. */
+  var calmOn=true; try{ calmOn=localStorage.getItem(KEY)!=='0'; }catch(e){}
+  apply(calmOn);
   if(!document.getElementById('omega-calm-style')){
     var st=document.createElement('style'); st.id='omega-calm-style';
     st.textContent='html[data-omega-calm] .omega-page-door,html[data-omega-calm] #omega-ticker-strip,'+
       'html[data-omega-calm] #omega-pmi-badge,html[data-omega-calm] #omega-controls-dock,'+
       'html[data-omega-calm] #ofb-btn,html[data-omega-calm] #osh-btn,html[data-omega-calm] #omega-voice-btn,'+
-      'html[data-omega-calm] .omega-context-actions,html[data-omega-calm] #omega-ded-widget{display:none!important}'+
+      'html[data-omega-calm] .omega-context-actions,html[data-omega-calm] #omega-ded-widget,'+
+      'html[data-omega-calm] #omega-value-layer,html[data-omega-calm] #omega-page-world,html[data-omega-calm] #omega-kbd-hint{display:none!important}'+
       '@media (min-width:901px){html[data-omega-calm] #omega-tb-nav{display:none!important}}';
     (document.head||root).appendChild(st);
   }
@@ -1860,7 +1880,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     s.textContent=[
       '.ofx-rise{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}',
       '.ofx-rise.ofx-in{opacity:1;transform:none}',
-      '.ofx-tilt{transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease;transform-style:preserve-3d;will-change:transform}',
+      '.ofx-tilt{transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease;will-change:transform}',
       '.ofx-tilt:hover{box-shadow:0 18px 50px -20px rgba(0,0,0,.7),0 0 24px -8px rgba(201,168,76,.35)}',
       '@supports ((-webkit-background-clip:text) or (background-clip:text)){',
       '.ofx-sheen{background-image:linear-gradient(100deg,currentColor 38%,rgba(255,247,214,.95) 50%,currentColor 62%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:240% 100%;background-position:140% 0;animation:ofx-sweep 7s ease-in-out infinite}',
@@ -2713,6 +2733,8 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-bottom-stack]')){var _obstk=document.createElement('script');_obstk.src='/omega-bottom-stack.js';_obstk.setAttribute('data-omega-bottom-stack','1');_obstk.defer=true;__omegaAppend(_obstk);}
   /* Progressive disclosure: long paragraphs show two lines and a MORE toggle. */
   if(!document.querySelector('script[data-omega-alive]')){var _oal=document.createElement('script');_oal.src='/omega-alive.js';_oal.setAttribute('data-omega-alive','1');_oal.defer=true;__omegaAppend(_oal);}
+  /* Ω LIVING ART — every real <img> breathes, glows and tilts (omega-living-art.js header). */
+  if(!document.querySelector('script[data-omega-living-art]')){var _ola=document.createElement('script');_ola.src='/omega-living-art.js';_ola.setAttribute('data-omega-living-art','1');_ola.defer=true;__omegaAppend(_ola);}
   if(!document.querySelector('script[data-omega-readmore]')){var _orm=document.createElement('script');_orm.src='/omega-readmore.js';_orm.setAttribute('data-omega-readmore','1');_orm.defer=true;__omegaAppend(_orm);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */
@@ -2823,6 +2845,22 @@ setTimeout(function(){
      synchronously further up, because a dynamic script like this one is async and cannot be
      relied on to parse before the approval guard reveals the shell. */
   if(!document.querySelector('script[data-omega-flags]')){var _oflg=document.createElement('script');_oflg.src='/omega-flags.js';_oflg.setAttribute('data-omega-flags','1');__omegaAppend(_oflg);}
+
+  /* Governed action/data runtimes — platform-wide primitives. They are client boundaries only:
+     authorization remains server/RLS/Edge-owned. Loading them here makes the declared runtime
+     manifest truthful without changing page authority or inventing state. */
+  if(!document.querySelector('script[data-omega-action-runtime]')){
+    var _oar=document.createElement('script');_oar.src='/omega-action-runtime.js';
+    _oar.setAttribute('data-omega-action-runtime','1');_oar.defer=true;__omegaAppend(_oar);
+  }
+  if(!document.querySelector('script[data-omega-data-runtime]')){
+    var _odr=document.createElement('script');_odr.src='/omega-data-runtime.js';
+    _odr.setAttribute('data-omega-data-runtime','1');_odr.defer=true;__omegaAppend(_odr);
+  }
+  if(document.querySelector('[data-omega-mission-state]') && !document.querySelector('script[data-omega-mission-state]')){
+    var _oms=document.createElement('script');_oms.src='/omega-mission-state.js';
+    _oms.setAttribute('data-omega-mission-state','1');_oms.defer=true;__omegaAppend(_oms);
+  }
 
   /* Ω World Action Recorder — authenticated district actions only. */
   if(!document.querySelector('script[data-omega-world-actions]')){

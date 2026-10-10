@@ -48,9 +48,18 @@
   var VIDEO_SRC    = "/SYDOMEGA91717_DEMOD-1-.mp4";
   var SUPABASE_URL = "https://ydqhzvvoyufiiqvzcjns.supabase.co";
   var SUPABASE_KEY = "sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q";
-  var LS_KEY       = "omega_demo_watched_at";   // fallback when the column is absent
+  var LS_KEY       = "omega_demo_watched_at";
+  var AUDIO_VOICE  = "Welcome to SYD OMEGA 91717. This cinematic introduction explains the platform as a sovereign digital intelligence experience. The interface, mythology, and fictional universe are presented as designed media, while live platform capabilities are identified separately.";   // fallback when the column is absent
 
   var state = { lastReason: "not run yet", lastError: null };
+  function ensureCinematicAudio(){
+    if(window.OmegaCinematicAudio)return Promise.resolve();
+    return new Promise(function(resolve){
+      var s=document.createElement("script");
+      s.src="/omega-cinematic-audio.js";s.onload=resolve;s.onerror=resolve;
+      (document.head||document.documentElement).appendChild(s);
+    });
+  }
   function note(reason, err) {
     state.lastReason = reason;
     state.lastError = err || null;
@@ -170,7 +179,10 @@
     document.body.appendChild(overlay);
 
     var video   = overlay.querySelector("#omg-demo-video");
+    video.setAttribute("data-omega-audio-required","true");
+    video.setAttribute("data-omega-voice",AUDIO_VOICE);
     var status  = overlay.querySelector("#omg-demo-status");
+    if(window.OmegaCinematicAudio&&window.OmegaCinematicAudio.diagnose)status.textContent="SOUND • MUSIC • VOICE READY";
     var closeBtn= overlay.querySelector("#omg-demo-close");
     var gate    = overlay.querySelector("#omg-demo-playgate");
     var done    = false;
@@ -221,12 +233,13 @@
       gate.addEventListener("click", function () {
         gate.remove();
         video.muted = false;
+        if(window.OmegaCinematicAudio)window.OmegaCinematicAudio.start(video);
         video.play().catch(function (err) { note("play() rejected", err); });
       });
       note("reduced-motion active: showing click-to-play gate");
     } else {
       video.play().then(function () {
-        note("autoplay started");
+        note("autoplay started; audio may require the viewer to enable sound");
       }).catch(function (err) {
         note("autoplay blocked even muted — showing play gate", err);
         showGate(false);
@@ -255,7 +268,7 @@
           if (watched) { note("already watched — use OmegaDemo.reset() to see it again"); return; }
 
           note("eligible and unwatched — opening");
-          openModal(function () { markWatched(sb, session.user.id); });
+          return ensureCinematicAudio().then(function(){openModal(function () { markWatched(sb, session.user.id); });});
         });
       });
     }).catch(function (err) {

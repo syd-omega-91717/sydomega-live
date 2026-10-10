@@ -524,14 +524,14 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **Production is live and current (re-verified 2026-09-17, `FIXES_LOG.md` #180) — the
-  2026-09-06 outage this used to describe is closed.** `sydomega.com` now returns **200** with
-  the exact HTML of the newest `target:production` deployment (matching `etag`); `vercel.json`
-  now sets `git.deploymentEnabled.main: true`, so Vercel's own Git integration promotes every
-  `main` push. `vercel-production.yml`'s `deploy` job still self-reports `CONTROLLED` (no
-  `VERCEL_TOKEN`) — harmless, since it isn't the active promotion path. Read a deployment URL
-  with `web_fetch_vercel_url`, never curl (`ssoProtection=all_except_custom_domains` 401s a
-  bare `*.vercel.app` curl). Re-verify before trusting this if it's been a while.
+- **Production went DOWN 2026-10-06: Vercel blocked the Hobby account for usage**
+  (`sydomega.com` → 402 "This deployment is temporarily paused"; commit status "Account is
+  blocked"). Cause: 42 production deploys in ~3.5 days (every `main` push, docs-only too, at
+  ~85 MB) plus a PR-triggered Chromium crawl of **production**. `ignoreCommand` is now
+  `scripts/vercel-ignore.sh` (skips commits that ship nothing — 28/45 replayed) and that crawl
+  no longer runs on PRs. Restoring service is the owner's dashboard action (upgrade, or wait
+  for the window). Previews are off (`deploymentEnabled`: `main` only). Read a deployment
+  with `web_fetch_vercel_url`, never curl (`ssoProtection` 401s a bare `*.vercel.app`).
 - **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies every
   web-extension file into `public/` minus an **exclusion** list (`scripts/`, `supabase/`, `docs/`…),
   then copies `vendor/` and `i18n/` whole — a missed directory once cost `/vendor/supabase-js.js`
@@ -560,7 +560,7 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **8** warnings — **4 `.js`** unloaded (`GAP_ANALYSIS.md` §S), 0 `.css`. Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **505** tests, all passing |
+| `python3 -m unittest discover -s scripts/tests` | **582** tests, all passing |
 | `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
@@ -578,8 +578,8 @@ entries (which were accurate when written):
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/module-contract.py` | 0 broken; **164** contracts. Publisher must exist **and be reachable** — the conjunction; half of it passes on the tree that shipped 160 (162) |
-| `python3 scripts/evidence-audit.py --summary` | 106 BUILT / 27 PARTIAL / 42 LOCAL_ONLY / 48 STATIC / 1 BROKEN (dormant payments/tokens, honest empty states) / **0** UNREACHABLE (224 pages; the owner deck reaches the 13 nav.js omits); **0 declared relations absent live** (snapshot 2026-09-21) |
-| `./scripts/ci-local.sh` | **28** blocking checks, all passing (`contract-suite.py` holds **22** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
+| `python3 scripts/evidence-audit.py --summary` | 107 BUILT / 27 PARTIAL / 42 LOCAL_ONLY / 48 STATIC / 0 BROKEN / **0** UNREACHABLE (224 pages; the owner deck reaches the 13 nav.js omits); **0 read relations absent live** (snapshot 2026-10-04; keys are `public.`-qualified — strip it) |
+| `./scripts/ci-local.sh` | **28** blocking checks, all passing (`contract-suite.py` holds **37** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

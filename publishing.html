@@ -64,8 +64,8 @@
       <textarea id="p-body" class="form-input" style="resize:vertical;min-height:180px" maxlength="20000" placeholder="Write or paste your work…"></textarea>
     </div>
     <div style="margin-bottom:12px">
-      <label class="form-label">ATTACH FILE (OPTIONAL &middot; MAX 5 GB)</label>
-      <input type="file" id="p-file" class="form-input" style="padding:6px"/>
+      <label class="form-label">ATTACH FILE (OPTIONAL &middot; MAX 50 MB)</label>
+      <input data-omega-capability-id="import-export" type="file" id="p-file" class="form-input" style="padding:6px"/>
     </div>
     <button id="p-go" class="btn-gold">COMMIT TO ARCHIVE</button>
     <div id="p-msg" style="font-family:var(--M);font-size:12px;margin-top:10px;display:none"></div>
@@ -83,7 +83,7 @@
   <div class="sechead">PUBLISHING PROCESS</div>
   <div class="glass">
     <div class="howit-step"><div class="howit-num">01</div><div class="howit-body"><div class="ht">PREPARE YOUR WORK</div><p>A work can be a manuscript, treatise, report, article, or codex entry. The title and body are the primary archival record — make them precise. The minimum body length is 40 characters.</p></div></div>
-    <div class="howit-step"><div class="howit-num">02</div><div class="howit-body"><div class="ht">ATTACH A FILE (OPTIONAL)</div><p>Attach any file up to 5 GB — a PDF, audio, image, or binary. OmegaStorage handles the upload, compression, and secure storage. The file path is recorded in the publication record but not exposed publicly.</p></div></div>
+    <div class="howit-step"><div class="howit-num">02</div><div class="howit-body"><div class="ht">ATTACH A FILE (OPTIONAL)</div><p>Attach any file up to 50 MB — a PDF, audio, image, or binary. OmegaStorage uploads it to private storage. The file path is recorded in the publication record but not exposed publicly.</p></div></div>
     <div class="howit-step"><div class="howit-num">03</div><div class="howit-body"><div class="ht">COMMIT TO ARCHIVE</div><p>Your first publication advances the Contribution axis by +0.25 via the complete_task RPC. This is farm-proof — the axis advance only applies once. Further publications still count toward milestones and the archive but do not re-trigger the first-publication award.</p></div></div>
     <div class="howit-step"><div class="howit-num">04</div><div class="howit-body"><div class="ht">APPROVAL FOR PUBLIC SHOWCASE</div><p>The platform owner reviews submitted works and may approve them for the public showcase (Phase II). Approved works earn additional visibility and are included in the sovereign codex. Approval is recorded as a status change in the publications table.</p></div></div>
   </div>
@@ -94,7 +94,7 @@
   <div class="card-grid" data-stagger data-stagger-gap="60">
     <div class="card" data-reveal="fade-up"><div class="card-title">THE SOVEREIGN ARCHIVE</div><div class="card-body">Publications are stored in the Supabase `publications` table with fields: user_id, kind, title, body, file_path, status, created_at. Status starts as 'private'. The archive is personal-only — Row Level Security ensures a member can only read their own publications. No cross-member data leaks are possible at the database layer.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">AXIS C CONTRIBUTION</div><div class="card-body">The first publication triggers the complete_task RPC with kind='contribution', axis='c'. This is idempotent — the task ID 'first-publication' can only apply once per member. Subsequent publications do not re-trigger the axis advance but still count in the archive and milestone counters.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">Files are stored via OmegaStorage in the 'uploads' bucket. The storage path is recorded in the publication's file_path column. Files are not publicly accessible — only the authenticated author can retrieve a signed URL. The 5 GB limit covers large manuscripts, research data, or multimedia attachments.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">Files are stored via OmegaStorage in the 'uploads' bucket. The storage path is recorded in the publication's file_path column. Files are not publicly accessible — only the authenticated author can retrieve a signed URL. The 50 MB limit covers manuscripts, research data, or multimedia attachments.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">PHASE II GATEWAY</div><div class="card-body">The public showcase, creator marketplace, and licensing layer are Phase II features gated on legal review and MiCA compliance clearance. Until Phase II activates, all published works remain private. The archive is already building the canon; publication date and authorship are immutably recorded for priority purposes.</div></div>
   </div>
 </div>

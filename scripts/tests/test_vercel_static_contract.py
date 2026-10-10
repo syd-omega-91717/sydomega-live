@@ -37,7 +37,7 @@ BASE_CONFIG = {
     "buildCommand": "bash scripts/vercel-build.sh",
     "installCommand": "",
     "outputDirectory": "public",
-    "git": {"deploymentEnabled": {"*": False, "main": True}},
+    "git": {"deploymentEnabled": {"*": False, "**": False, "main": True}},
     "redirects": [],
 }
 
@@ -174,6 +174,15 @@ class ConfigShapeTests(unittest.TestCase):
         code, out = self.fx.run_contract()
         self.assertEqual(code, 1, out)
         self.assertIn("automatic_git_deploy_must_be_disabled", out)
+
+    def test_star_alone_leaves_slashed_branches_deploying(self):
+        """VIOLATOR. minimatch "*" does not match "/", so with only "*": false every
+        claude/..., feat/... and fix/... branch still built a preview and exhausted the
+        free plan's 100 deployments/day (2026-10-04, 2026-10-05)."""
+        self.fx.config_with(git={"deploymentEnabled": {"*": False, "main": True}})
+        code, out = self.fx.run_contract()
+        self.assertEqual(code, 1, out)
+        self.assertIn("automatic_git_deploy_must_be_disabled_for_slashed_branches", out)
 
     def test_git_key_absent_entirely_is_rejected(self):
         """Omitting the key is not the same as setting it false, and the default

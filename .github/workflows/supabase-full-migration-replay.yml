@@ -28,7 +28,7 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
         with:
-          version: 2.84.2
+          version: 2.119.0
 
       - name: Validate migration inventory
         run: python3 scripts/migration-replay-contract.py

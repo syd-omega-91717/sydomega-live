@@ -6,6 +6,7 @@
 <title>&#937; SYD OMEGA 91717 &mdash; Command Bridge</title>
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
+<script src="/omega-daily.js" defer></script>
 <style>
 :root{--pad:clamp(14px,3vw,36px)}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
@@ -125,15 +126,12 @@
     <!-- STATUS STRIP -->
     <div class="status-strip" role="status" aria-label="Platform status">
       <div class="ss-item"><div class="ss-label" data-i18n="active_members">MEMBERS</div><div class="ss-val" id="ss-members" data-live-members>--</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="auth_apex">AUTH APEX</div><div class="ss-val" style="--vc:var(--gold)">27.8367</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="lattice_nodes">LATTICE NODES</div><div class="ss-val" style="--vc:var(--cyan)">104,976</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="js_engines">JS ENGINES</div><div class="ss-val" style="--vc:var(--purple)">92</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="pages">PAGES</div><div class="ss-val" style="--vc:var(--green)">170</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="sql_files">SQL FILES</div><div class="ss-val" style="--vc:var(--solar)">105</div></div>
       <div class="ss-item"><div class="ss-label" data-i18n="my_gate">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
       <div class="ss-item"><div class="ss-label" data-i18n="my_element">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="formula">FORMULA</div><div class="ss-val" style="--vc:rgba(138,134,118,.5);font-size:12px">A&#179;+B&#179;+C&#179;</div></div>
     </div>
+
+    <!-- DAILY THREE: the member's daily loop (omega-daily.js) -->
+    <div class="pad" style="padding-bottom:0"><div data-omega-daily></div></div>
 
     <!-- PLATFORM HEALTH BAR -->
     <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:87%;background:var(--green)"></div></div>
@@ -271,7 +269,7 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 224 PAGES &middot; 14 SECTIONS <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 238 PAGES &middot; 14 SECTIONS <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
         <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:12px;color:var(--muted);padding:14px 0">NO PAGES MATCH</div>
         <div id="platform-sections"></div>
@@ -384,7 +382,7 @@
       </div>
     </div>
     <div data-page-emblem="dashboard" style="margin:20px auto 0"></div>
-<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 224 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
+<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 238 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
   </main>
 </div>
 

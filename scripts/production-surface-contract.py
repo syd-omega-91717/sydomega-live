@@ -61,7 +61,10 @@ else:
 
 # Never allow obvious secret material to enter tracked text files.
 secret_patterns = [
-    re.compile(r"sk-[A-Za-z0-9_-]{20,}"),
+    # The key prefix must start a token: unanchored, it matched inside the
+    # word "risk" in a NIST AI RMF URL and turned main red on a docs-only
+    # merge (2026-10-10).
+    re.compile(r"(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{20,}"),
     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
 ]
 for p in ROOT.rglob("*"):

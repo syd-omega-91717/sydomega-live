@@ -22796,3 +22796,16 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   button: exit 1; clean: exit 0).
 - **Mapped:** the 8 file inputs (5 server uploads incl. KYC, 3 local JSON imports) →
   `import-export`, whose contract names `upload.js`. Audit: GOVERNED 0 → 8, UNMAPPED 1328 → 1320.
+
+## `main` red on a docs-only merge: the secret scan matched the word "risk" (2026-10-10)
+
+- **Symptom.** `Contracts` failed on `58f56423` (#837 merge): `production-surface` reported
+  "possible secret material" in `docs/OMEGA_UNIFIED_ARCHITECTURE_TRUST_ENFORCEMENT_MODEL.md`.
+- **Cause.** The pattern `sk-[A-Za-z0-9_-]{20,}` was unanchored. Line 174 cites the NIST AI RMF
+  URL (ai-risk-management-framework); the pattern matched 23 characters starting inside "risk".
+  No credential — checked with the value redacted.
+- **Fix.** `(?<![A-Za-z0-9])sk-…`: a key prefix must start a token. The document is unchanged;
+  editing prose to dodge a scanner would leave the next citation of a "risk" URL to fail again.
+  `test_production_surface_secret_pattern.py` reads the pattern from the script, asserts real
+  `sk-`/`sk-ant-`/`sk-proj-` shapes are still caught and three "…sk-…" words are not; it fails on
+  the old pattern. `contract-suite.py`: 37 gates, 0 failing.

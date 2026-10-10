@@ -9,6 +9,10 @@ import json
 import os
 import sys
 
+if "--help" in sys.argv:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PATH = os.path.join(ROOT, "config", "omega-extreme-evolution-control.json")
 

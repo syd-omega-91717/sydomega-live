@@ -474,17 +474,15 @@ The repository therefore maintains release evidence and production gates coverin
 - Payment lifecycle
 - Disaster recovery
 - Privacy lifecycle
-- Provider credentials
+- Provider configuration
 - Scale and capacity
 - AI quality
 - Vercel production deployment
-- Owner security
+- Security and governance
 
-Some of these gates are intentionally **PENDING**, **PARTIAL**, or **BLOCKED** until provider-side evidence exists.
+Detailed release evidence is maintained in the project's engineering controls rather than exposed here as operational or security-sensitive detail.
 
-That is deliberate.
-
-**Omega does not use a green-looking README to hide a red production dependency.**
+**Omega distinguishes product documentation from production evidence.**
 
 ---
 
@@ -521,26 +519,10 @@ Omega intentionally preserves a lightweight architecture rather than rewriting t
 - Explicit release and production evidence controls
 
 ### Runtime services
-The live Supabase environment currently exposes a governed Edge Function estate including:
 
-- Concierge
-- Concierge Orchestrator
-- Growth Orchestrator
-- Product Orchestrator
-- Stripe Webhook
-- Secrets Health
-- Agent Execute
-- Evidence Graph
-- Notification Worker
-- Runtime Gateway
-- Media Worker
-- Intelligence Feed
-- Provider Worker
-- Knowledge Embedding Worker
-- Content Ingest
-- Content Delivery
+The backend includes governed Supabase Edge Functions for orchestration, intelligence, evidence, notifications, media, provider integration, knowledge processing, and content delivery.
 
-**Runtime parity is separately audited; repository source is not treated as proof that every function is deployed identically.**
+**Deployment and runtime parity are verified separately; repository source is not treated as proof of provider-side production state.**
 
 ---
 
@@ -574,6 +556,18 @@ See:
 - [Unified Platform Fabric](config/omega-unified-platform-fabric.json)
 - [Production 10/10 Evidence Gate](config/omega-production-10-10-evidence-gate.json)
 - [Edge Runtime Parity Control](docs/OMEGA_EDGE_RUNTIME_PARITY_CONTROL.md)
+
+---
+
+## ◈ Real Project Visual Identity
+
+The visuals above are **actual repository assets from the Ω SYD OMEGA 91717 project**, not stock imagery or generated placeholders:
+
+- `assets/omega-sigil.svg` — the project's Ω sigil
+- `assets/omega-banner.svg` — the project's primary visual banner
+- `assets/omega-divider.svg` — the project's visual divider
+
+They are version-controlled with the product and rendered directly by GitHub from the repository.
 
 ---
 
@@ -735,13 +729,7 @@ The production estate is delivered through Vercel and uses Supabase for backend/
 
 Production readiness is continuously verified rather than assumed.
 
-For the authoritative state of release readiness, use:
-
-[`config/omega-production-10-10-evidence-gate.json`](config/omega-production-10-10-evidence-gate.json)
-
-For live provider/runtime parity, use:
-
-[`docs/OMEGA_EDGE_RUNTIME_PARITY_CONTROL.md`](docs/OMEGA_EDGE_RUNTIME_PARITY_CONTROL.md)
+Release and runtime verification are governed by the repository's engineering controls. Public product documentation intentionally does not expose credentials, deployment identifiers, provider configuration values, private operational evidence, or internal security findings.
 
 ---
 

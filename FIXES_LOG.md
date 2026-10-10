@@ -22809,3 +22809,15 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   `test_production_surface_secret_pattern.py` reads the pattern from the script, asserts real
   `sk-`/`sk-ant-`/`sk-proj-` shapes are still caught and three "…sk-…" words are not; it fails on
   the old pattern. `contract-suite.py`: 37 gates, 0 failing.
+
+## #833: a placeholder-only `.env.example`, kept equal to what the functions read (2026-10-10)
+
+- **Gap.** #833 asks for "obviously invalid placeholders and a safe `.env.example` policy"; none
+  existed, so the only list of the secrets the Edge Functions need was scattered across 24
+  `index.ts` files.
+- **Added** `supabase/functions/.env.example`: the 13 owner-set names (`Deno.env.get` literals
+  minus the 7 platform-injected `SUPABASE_*`/`SB_EXECUTION_ID`), every value `replace-me`, and
+  which functions read each. Under `supabase/`, which `vercel-build.sh` excludes, so it never ships.
+- **Gated** by `test_env_example.py`: names must equal what the functions read; every value must
+  be a placeholder; `.env` stays ignored. Planted violations — a real-looking value, a removed
+  name — each fail it. Provider-side rotation (#833's acceptance criterion) remains the owner's.

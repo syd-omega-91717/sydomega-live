@@ -191,11 +191,11 @@ async function disconnectPlatform(pid){
   buildPlatforms();
 }
 
-var FEED_SEED=[
-  {net:'instagram',col:'#E1306C',header:'INSTAGRAM · Shared yesterday',text:'My sovereign sigil and element alignment — ascending through the gates.'},
-  {net:'twitter',col:'#ffffff',header:'X / TWITTER · 3 days ago',text:'Matrix node reached. Knowledge axis advancing. The Order recognises the threshold. #SydOmega91717'},
-  {net:'telegram',col:'#26A5E4',header:'TELEGRAM · 1 week ago',text:'Daily horoscope broadcast delivered to channel subscribers. 9.1717 Hz resonance active.'},
-];
+/* No seeded posts. Three hardcoded entries ("Shared yesterday", "3 days ago",
+   "Daily horoscope broadcast delivered to channel subscribers") rendered in the
+   member's own feed exactly like their real broadcasts, and kept the empty state
+   below from ever showing (CLAUDE.md 8.1 class 9: fabricated data as fact).
+   The feed now shows only social_broadcasts rows. */
 
 var storedBroadcasts=[];
 
@@ -206,7 +206,6 @@ function renderFeed(tab){
   if(tab==='all'||tab==='broadcasts'){
     storedBroadcasts.forEach(function(b){entries.push({net:'broadcast',col:'var(--gold)',header:'BROADCAST · '+(b.created_at?new Date(b.created_at).toLocaleString():'')+ ' · TO: '+(b.networks||[]).join(', ').toUpperCase(),text:b.body||''});});
   }
-  if(tab==='all'||tab==='horoscope'){entries=entries.concat(FEED_SEED.filter(function(e){return tab!=='horoscope'||e.net==='telegram';}));}
   if(!entries.length){var em=document.createElement('div');em.className='feed-empty';em.textContent='No activity yet for this filter.';list.appendChild(em);return;}
   entries.forEach(function(e){
     var item=document.createElement('div');item.className='feed-item';

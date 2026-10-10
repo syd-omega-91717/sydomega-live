@@ -118,7 +118,8 @@
     "requirement_traceability": "config/omega-requirement-control-plane.json and config/omega-source-traceability-v2.json",
     "release_evidence": "config/omega-production-10-10-evidence-gate.json",
     "event_evidence": "existing Supabase event/evidence/lineage contracts",
-    "design_and_navigation": "existing shared design primitives, nav.js, and experience contracts"
+    "design_and_navigation": "existing shared design primitives, nav.js, and experience contracts",
+    "product_domain_registry": "config/omega-product-domain-registry.json"
   },
   "core_invariants": [
     "ONE_IDENTITY_AND_POLICY_BOUNDARY",

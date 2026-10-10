@@ -22809,3 +22809,16 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   `test_production_surface_secret_pattern.py` reads the pattern from the script, asserts real
   `sk-`/`sk-ant-`/`sk-proj-` shapes are still caught and three "…sk-…" words are not; it fails on
   the old pattern. `contract-suite.py`: 37 gates, 0 failing.
+
+## `social.html` showed every member three posts they never made (2026-10-10)
+
+- **Symptom.** The ALL PLATFORMS feed always rendered `FEED_SEED`: "INSTAGRAM · Shared yesterday —
+  My sovereign sigil…", "X / TWITTER · 3 days ago — Matrix node reached…", "TELEGRAM · 1 week ago —
+  Daily horoscope broadcast delivered to channel subscribers…". Same markup as the member's real
+  `social_broadcasts` rows, no label — a member who had shared nothing saw activity, and the
+  "No activity yet for this filter." empty state could never appear on ALL or HOROSCOPE.
+  CLAUDE.md §8.1 class 9 (fabricated data rendered as fact).
+- **Fix.** Seed removed; the feed renders only `social_broadcasts`. HOROSCOPE held only seeded
+  content and now shows the honest empty state. A repo-wide scan for hardcoded relative-date
+  activity ("yesterday", "N days ago") found no other instance (the remaining hits are element
+  ids and real date logic). `verify-runtime.js --pages social.html`: PASS.

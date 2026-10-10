@@ -13,6 +13,7 @@ REQUIRED_AUTHORITIES = {
     "content_registry": "config/content-registry.json",
     "requirement_traceability": "config/omega-requirement-control-plane.json and config/omega-source-traceability-v2.json",
     "release_evidence": "config/omega-production-10-10-evidence-gate.json",
+    "product_domain_registry": "config/omega-product-domain-registry.json",
 }
 REQUIRED_CORE_INVARIANTS = {
     "ONE_IDENTITY_AND_POLICY_BOUNDARY",
@@ -66,13 +67,37 @@ def main() -> int:
     for key, expected in REQUIRED_AUTHORITIES.items():
         if authorities.get(key) != expected:
             errors.append(f"canonical authority mismatch: {key}")
-    for key in ("page_contracts", "content_registry", "release_evidence"):
+    for key in ("page_contracts", "content_registry", "release_evidence", "product_domain_registry"):
         target = ROOT / authorities.get(key, "__missing__")
         if not target.is_file():
             errors.append(f"canonical authority file missing: {authorities.get(key)}")
     for path in ("config/omega-requirement-control-plane.json", "config/omega-source-traceability-v2.json"):
         if not (ROOT / path).is_file():
             errors.append(f"traceability authority file missing: {path}")
+
+    registry_path = ROOT / "config/omega-product-domain-registry.json"
+    try:
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"invalid product domain registry: {exc}")
+        registry = {}
+    domains = registry.get("domains", [])
+    domain_ids = [d.get("domain_id") for d in domains if isinstance(d, dict)]
+    if len(domains) != 18:
+        errors.append(f"product domain registry must contain exactly 18 historical domains; found {len(domains)}")
+    if len(set(domain_ids)) != len(domain_ids):
+        errors.append("product domain registry contains duplicate domain_id values")
+    for domain in domains:
+        if not isinstance(domain, dict):
+            errors.append("product domain registry contains a non-object domain")
+            continue
+        for field in REQUIRED_DOMAIN_FIELDS:
+            if field not in domain:
+                errors.append(f"product domain {domain.get('domain_id', 'UNKNOWN')} missing field: {field}")
+        if domain.get("implementation_state") not in {"UNVERIFIED","PARTIAL","IMPLEMENTED","RUNTIME-VERIFIED","PRODUCTION-VERIFIED","BLOCKED","UNAVAILABLE"}:
+            errors.append(f"product domain {domain.get('domain_id', 'UNKNOWN')} has invalid implementation_state")
+        if domain.get("implementation_state") == "UNVERIFIED" and domain.get("canonical_capabilities"):
+            errors.append(f"unverified product domain {domain.get('domain_id')} must not claim canonical capabilities")
 
     invariants = set(config.get("core_invariants", []))
     for item in sorted(REQUIRED_CORE_INVARIANTS - invariants):

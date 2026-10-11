@@ -1,0 +1,29 @@
+/* Ω COSMIC LEDGER — CSS 3-D concept layer; no second WebGL owner. */
+.cl-shell{min-height:100vh;background:radial-gradient(circle at 50% 0,rgba(201,168,76,.13),transparent 34%),#020206;color:#f5f1e6}
+.cl-main{width:auto;flex:1;min-width:0;padding:32px clamp(16px,4vw,52px) 80px}
+.cl-header{max-width:980px}.cl-kicker{font:700 12px/1.2 var(--M,monospace);letter-spacing:3px;color:var(--gold,#c9a84c)}
+.cl-header h1{font:700 clamp(34px,6vw,76px)/.95 var(--D,serif);margin:10px 0 16px}
+.cl-header p{max-width:820px;color:var(--muted,#a8a5a0);font-size:17px;line-height:1.7}
+.cl-truth{margin-top:16px;border-left:2px solid var(--cyan,#00e5ff);background:rgba(0,229,255,.035);padding:12px 14px;color:#a8a5a0;font:12px/1.6 var(--M,monospace)}
+.cl-truth strong{color:#f5f1e6}
+.cl-system{margin-top:28px;border:1px solid rgba(201,168,76,.2);background:rgba(5,6,10,.9);padding:18px}
+.cl-system h2,.cl-coverage h2{font:700 17px/1.3 var(--D,serif);letter-spacing:1.5px;color:#e8c97a}.cl-system-copy{max-width:980px;color:#a8a5a0;font:12px/1.7 var(--M,monospace);margin:8px 0 14px}
+.cl-space{position:relative;height:min(72vw,760px);min-height:520px;overflow:hidden;border:1px solid rgba(255,255,255,.06);background:radial-gradient(circle,rgba(0,229,255,.055),transparent 34%),radial-gradient(circle,rgba(201,168,76,.08),transparent 15%),#03040a;perspective:1000px}
+.cl-space:before{content:"";position:absolute;inset:5%;border:1px solid rgba(201,168,76,.08);border-radius:50%;transform:rotateX(68deg);box-shadow:0 0 90px rgba(0,229,255,.03)}
+.cl-sun{position:absolute;left:50%;top:50%;width:112px;height:112px;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff2b8 0,#e8c97a 28%,#c9a84c 62%,#6d5520 100%);box-shadow:0 0 55px rgba(232,201,122,.38);z-index:5;cursor:pointer}
+.cl-sun span{font:700 34px var(--D,serif);color:#020206}.cl-sun small{font:9px var(--M,monospace);letter-spacing:1px;color:#020206;margin-top:-25px}
+.cl-orbit{position:absolute;left:50%;top:50%;border:1px solid rgba(232,201,122,.13);border-radius:50%;transform:translate(-50%,-50%) rotateX(66deg);transform-style:preserve-3d}
+.cl-o1{width:17%;height:17%}.cl-o2{width:25%;height:25%}.cl-o3{width:33%;height:33%}.cl-o4{width:41%;height:41%}.cl-o5{width:53%;height:53%}.cl-o6{width:65%;height:65%}.cl-o7{width:77%;height:77%}.cl-o8{width:89%;height:89%}
+.cl-planet{position:absolute;left:50%;top:0;border:0;padding:0;transform:translate(-50%,-50%) rotateX(-66deg);border-radius:50%;cursor:pointer;box-shadow:0 0 20px rgba(255,255,255,.08);transition:filter .2s,transform .2s}
+.cl-planet:hover,.cl-planet:focus-visible{filter:brightness(1.3);transform:translate(-50%,-50%) rotateX(-66deg) scale(1.22);outline:2px solid var(--cyan,#00e5ff);outline-offset:4px}
+.cl-mercury{width:12px;height:12px;background:#9b9284}.cl-venus{width:18px;height:18px;background:#c99d68}.cl-earth{width:22px;height:22px;background:radial-gradient(circle at 30% 30%,#4ed0e8 0 22%,#2c76a0 23% 48%,#5e8d58 49% 65%,#16364b 66%)}.cl-mars{width:18px;height:18px;background:#b64e39}.cl-jupiter{width:42px;height:42px;background:repeating-linear-gradient(#d8b889 0 5px,#8f684b 5px 9px,#e1d0ac 9px 14px)}.cl-saturn{width:36px;height:36px;background:#c7b17f}.cl-saturn:after{content:"";position:absolute;inset:10px -16px;border:2px solid rgba(232,201,122,.75);border-radius:50%;transform:rotate(-15deg)}.cl-uranus{width:27px;height:27px;background:#79c8cf}.cl-neptune{width:27px;height:27px;background:#315fc1}
+.cl-selected{margin-top:12px;border:1px solid rgba(0,229,255,.16);background:rgba(0,229,255,.025);padding:13px;min-height:72px;color:#a8a5a0;font:12px/1.6 var(--M,monospace)}
+.cl-selected strong{color:#f5f1e6;font:700 16px var(--D,serif)}
+.cl-ledger-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.cl-card{border:1px solid rgba(255,255,255,.08);background:rgba(10,10,15,.78);padding:15px}.cl-card h3{margin:0;color:#e8c97a;font:700 15px var(--D,serif)}.cl-card p{color:#a8a5a0;font:12px/1.55 var(--M,monospace)}.cl-state{display:inline-block;margin-top:8px;padding:4px 7px;border:1px solid rgba(201,168,76,.3);color:#e8c97a;font:10px var(--M,monospace);letter-spacing:1px}
+.cl-coverage{margin-top:18px;border:1px solid rgba(201,168,76,.18);padding:18px;background:rgba(5,6,10,.86)}.cl-coverage p{max-width:900px;color:#a8a5a0;font:12px/1.7 var(--M,monospace)}.cl-coverage a{display:inline-block;margin:8px 14px 0 0;color:#e8c97a;font:11px var(--M,monospace);letter-spacing:1px;text-decoration:none}
+@media(max-width:800px){.cl-ledger-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cl-space{min-height:440px}}
+@media(max-width:560px){.cl-main{padding-top:20px}.cl-space{height:440px;min-height:440px}.cl-ledger-grid{grid-template-columns:1fr}.cl-sun{width:84px;height:84px}.cl-sun span{font-size:28px}.cl-sun small{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.cl-planet{transition:none}}
+
+.cl-space-3d{background:radial-gradient(circle at 50% 45%,rgba(232,201,122,.09),transparent 24%),radial-gradient(circle at 50% 50%,rgba(0,229,255,.06),transparent 48%),#03040a;isolation:isolate}.cl-sculpture{position:absolute;inset:0;z-index:1}.cl-sculpture canvas{width:100%!important;height:100%!important;border-radius:0!important}.cl-solar-overlay{position:absolute;left:14px;right:14px;top:12px;display:flex;justify-content:space-between;gap:12px;z-index:3;pointer-events:none;color:rgba(232,201,122,.72);font:10px var(--M,monospace);letter-spacing:1.4px;text-shadow:0 1px 8px #020206}.cl-solar-overlay span:last-child{color:rgba(0,229,255,.68)}.cl-space-3d .omega-sculpt-links a{z-index:4}@media(max-width:700px){.cl-solar-overlay{flex-direction:column;gap:4px;font-size:9px}.cl-space-3d{min-height:440px;height:440px}}

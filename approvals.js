@@ -42,7 +42,7 @@ function startChrono(uid,expISO,startISO){
       cdEl.textContent='EXPIRED';cdEl.style.color='var(--crim)';
       clearInterval(timers[uid]);
       /* auto-expire in DB */
-      sb.rpc('check_trial_status',{p_uid:uid}).catch(function(){});
+      sb.rpc('check_trial_status',{p_uid:uid}).then(null,function(){});
       setTimeout(function(){load();},1500);
     }
     /* progress bar: pct of 557s remaining */
@@ -190,122 +190,13 @@ async function load(){
 }
 
 /* ── ACTIONS ── */
-async function rpcOk(name,args){
-  try{ var r=await sb.rpc(name,args); return !!(r&&r.data&&r.data.ok); }
-  catch(e){ return false; }
-}
-async function approve(uid){
-  var exp=new Date(Date.now()+557*1000).toISOString();
-  var ok=await rpcOk('approve_member',{p_uid:uid});
-  if(!ok){
-    var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
-    ok=!r.error;
-  }
-  if(ok){toast(t('toast_trial_granted').replace('{TIME}','9 MINUTES 17 SECONDS'),'var(--green)');}
-  else{toast('COULD NOT GRANT ACCESS — try again','var(--crim)');}
-  load();
-}
-async function grantPermanent(uid){
-  if(!confirm('Grant PERMANENT lifetime access to this member?'))return;
-  try{
-    if(window.OmegaGuardian&&window.OmegaGuardian.gate){
-      await window.OmegaGuardian.gate('admin',async function(){
-        var ok=await rpcOk('grant_permanent_access',{p_uid:uid});
-        if(!ok){
-          var r=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
-          ok=!r.error;
-        }
-        if(ok){toast(t('toast_permanent_granted'),'var(--gold)');}
-        else{toast('COULD NOT GRANT PERMANENT ACCESS — try again','var(--crim)');}
-        load();
-      },{action:'grant_permanent_access',member:uid});
-    }else{
-      var ok=await rpcOk('grant_permanent_access',{p_uid:uid});
-      if(!ok){
-        var r=await sb.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null,is_rejected:false}).eq('id',uid);
-        ok=!r.error;
-      }
-      if(ok){toast(t('toast_permanent_granted'),'var(--gold)');}
-      else{toast('COULD NOT GRANT PERMANENT ACCESS — try again','var(--crim)');}
-      load();
-    }
-  }catch(err){
-    toast('SECURITY GATE DENIED ACTION','var(--crim)');
-  }
-}
-async function extend(uid){
-  try{
-    if(window.OmegaGuardian&&window.OmegaGuardian.gate){
-      await window.OmegaGuardian.gate('admin',async function(){
-        var m=allMembers.find(function(x){return x.id===uid;});
-        var base=m&&m.trial_expires_at&&new Date(m.trial_expires_at)>new Date()?new Date(m.trial_expires_at).getTime():Date.now();
-        var exp=new Date(base+557*1000).toISOString();
-        var ok=await rpcOk('extend_trial',{p_uid:uid,p_seconds:557});
-        if(!ok){
-          var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
-          ok=!r.error;
-        }
-        if(ok){toast(t('toast_extend_trial'),'var(--cyan)');}
-        else{toast('COULD NOT EXTEND TRIAL — try again','var(--crim)');}
-        load();
-      },{action:'extend_trial',member:uid});
-    }else{
-      var m=allMembers.find(function(x){return x.id===uid;});
-      var base=m&&m.trial_expires_at&&new Date(m.trial_expires_at)>new Date()?new Date(m.trial_expires_at).getTime():Date.now();
-      var exp=new Date(base+557*1000).toISOString();
-      var ok=await rpcOk('extend_trial',{p_uid:uid,p_seconds:557});
-      if(!ok){
-        var r=await sb.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp,is_rejected:false}).eq('id',uid);
-        ok=!r.error;
-      }
-      if(ok){toast(t('toast_extend_trial'),'var(--cyan)');}
-      else{toast('COULD NOT EXTEND TRIAL — try again','var(--crim)');}
-      load();
-    }
-  }catch(err){
-    toast('SECURITY GATE DENIED ACTION','var(--crim)');
-  }
-}
-async function reject(uid){
-  if(!confirm('Reject this access request?'))return;
-  var ok=await rpcOk('reject_member',{p_uid:uid});
-  if(!ok){
-    var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null,is_rejected:true}).eq('id',uid);
-    ok=!r.error;
-  }
-  if(ok){toast(t('toast_rejected'),'var(--crim)');}
-  else{toast('COULD NOT REJECT REQUEST — try again','var(--crim)');}
-  load();
-}
-async function revoke(uid){
-  if(!confirm('Immediately revoke access for this member?'))return;
-  try{
-    if(window.OmegaGuardian&&window.OmegaGuardian.gate){
-      await window.OmegaGuardian.gate('admin',async function(){
-        var ok=await rpcOk('revoke_member',{p_uid:uid});
-        if(!ok){
-          var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
-          ok=!r.error;
-        }
-        if(ok){toast(t('toast_revoked'),'var(--crim)');}
-        else{toast('COULD NOT REVOKE ACCESS — try again','var(--crim)');}
-        load();
-      },{action:'revoke_member',member:uid});
-    }else{
-      var ok=await rpcOk('revoke_member',{p_uid:uid});
-      if(!ok){
-        var r=await sb.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
-        ok=!r.error;
-      }
-      if(ok){toast(t('toast_revoked'),'var(--crim)');}
-      else{toast('COULD NOT REVOKE ACCESS — try again','var(--crim)');}
-      load();
-    }
-  }catch(err){
-    toast('SECURITY GATE DENIED ACTION','var(--crim)');
-  }
-}
-
+async function rpcResult(name,args){try{var r=await sb.rpc(name,args),d=r&&r.data;if(r&&r.error)return{ok:false,error:r.error.message||'database_error',code:r.error.code||''};if(d&&typeof d==='object'&&d.ok===false)return{ok:false,error:d.error||'action_denied',code:''};return{ok:!!(d&&d.ok),data:d,error:(d&&d.ok)?null:'action_denied',code:''};}catch(e){return{ok:false,error:e&&e.message?e.message:'request_failed',code:e&&e.code?e.code:''};}}
+function explainActionError(prefix,result){var reason=(result&&result.error)||'unknown_error';var msg=reason==='aal2_required'?'AAL2 REQUIRED — open Security and complete MFA step-up, then retry.':reason==='forbidden'||reason==='Not authorised: only a platform owner may grant trial access.'?'OWNER AUTHORIZATION REQUIRED — this action is restricted to the platform owner.':prefix+' — '+reason;toast(msg,'var(--crim)');}
+async function approve(uid){var result=await rpcResult('approve_member',{p_uid:uid});if(result.ok)toast(t('toast_trial_granted').replace('{TIME}','9 MINUTES 17 SECONDS'),'var(--green)');else explainActionError('COULD NOT GRANT TRIAL ACCESS',result);load();}
+async function grantPermanent(uid){if(!confirm('Grant PERMANENT lifetime access to this member?'))return;try{if(window.OmegaGuardian&&window.OmegaGuardian.gate){await window.OmegaGuardian.gate('admin',async function(){var result=await rpcResult('grant_permanent_access',{p_uid:uid});if(result.ok)toast(t('toast_permanent_granted'),'var(--gold)');else explainActionError('COULD NOT GRANT PERMANENT ACCESS',result);load();},{action:'grant_permanent_access',member:uid});}else{var result=await rpcResult('grant_permanent_access',{p_uid:uid});if(result.ok)toast(t('toast_permanent_granted'),'var(--gold)');else explainActionError('COULD NOT GRANT PERMANENT ACCESS',result);load();}}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
+async function extend(uid){try{if(window.OmegaGuardian&&window.OmegaGuardian.gate){await window.OmegaGuardian.gate('admin',async function(){var result=await rpcResult('extend_trial',{p_uid:uid,p_seconds:557});if(result.ok)toast(t('toast_extend_trial'),'var(--cyan)');else explainActionError('COULD NOT EXTEND TRIAL',result);load();},{action:'extend_trial',member:uid});}else{var result=await rpcResult('extend_trial',{p_uid:uid,p_seconds:557});if(result.ok)toast(t('toast_extend_trial'),'var(--cyan)');else explainActionError('COULD NOT EXTEND TRIAL',result);load();}}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
+async function reject(uid){if(!confirm('Reject this access request?'))return;var result=await rpcResult('reject_member',{p_uid:uid});if(result.ok)toast(t('toast_rejected'),'var(--crim)');else explainActionError('COULD NOT REJECT REQUEST',result);load();}
+async function revoke(uid){if(!confirm('Immediately revoke access for this member?'))return;try{if(window.OmegaGuardian&&window.OmegaGuardian.gate){await window.OmegaGuardian.gate('admin',async function(){var result=await rpcResult('revoke_member',{p_uid:uid});if(result.ok)toast(t('toast_revoked'),'var(--crim)');else explainActionError('COULD NOT REVOKE ACCESS',result);load();},{action:'revoke_member',member:uid});}else{var result=await rpcResult('revoke_member',{p_uid:uid});if(result.ok)toast(t('toast_revoked'),'var(--crim)');else explainActionError('COULD NOT REVOKE ACCESS',result);load();}}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
 /* ── QUEUE LOADERS ── */
 async function loadContracts(){
   var el=document.getElementById('contracts-queue');if(!el)return;
@@ -426,20 +317,11 @@ async function kycIntake(on){
 }
 
 async function sendDispatch(){
-  var title=document.getElementById('disp-title');
-  var cat=document.getElementById('disp-category');
-  var body=document.getElementById('disp-body');
+  var title=document.getElementById('disp-title'),cat=document.getElementById('disp-category'),body=document.getElementById('disp-body');
   if(!title||!body||!title.value.trim()||!body.value.trim()){toast(t('error_dispatch_empty'),'var(--crim)');return;}
-  if(await rpcOk('post_dispatch',{p_title:title.value.trim(),p_category:cat?cat.value:'',p_body:body.value.trim()})){
-    title.value='';body.value='';if(cat)cat.value='';
-    toast(t('toast_dispatch_sent'),'var(--gold)');
-  }else{
-    /* No raw-insert fallback: public.dispatches has no INSERT policy for
-       anyone (only post_dispatch(), SECURITY DEFINER, can write to it), so
-       a direct .insert() here can never succeed regardless of column names
-       -- surface the real failure instead of a false "recorded" success. */
-    toast(t('error_dispatch_rpc'),'var(--crim)');
-  }
+  var result=await rpcResult('post_dispatch',{p_title:title.value.trim(),p_category:cat?cat.value:'',p_body:body.value.trim()});
+  if(result.ok){title.value='';body.value='';if(cat)cat.value='';toast(t('toast_dispatch_sent'),'var(--gold)');}
+  else toast(t('error_dispatch_rpc')+' — '+(result.error||'unknown_error'),'var(--crim)');
 }
 
 /* ── EXPOSE TO WINDOW (for) ── */

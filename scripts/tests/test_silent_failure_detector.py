@@ -137,6 +137,40 @@ class SilentFailureDetectorTests(unittest.TestCase):
         self.assertIn("OK", out)
 
 
+class DeadBuilderCatchTests(unittest.TestCase):
+    """A Supabase builder has .then and no .catch: `.catch()` on it throws and
+    nothing is sent. Live this was 1,877 client errors in 30 days."""
+
+    def setUp(self):
+        self.fx = SilentFailureFixture()
+
+    def tearDown(self):
+        self.fx.cleanup()
+
+    def test_control_catch_directly_on_builder_fails(self):
+        self.fx.write_html("page.html", """<script>
+        async function save(){ var r = await sb.from('profiles').update({a:1}).eq('id',1).catch(function(e){return{error:e};});
+          if(r&&r.error){alert('x');} }
+        </script>""")
+        code, out = self.fx.run()
+        self.assertEqual(code, 1, out)
+        self.assertIn(".catch() ON A SUPABASE BUILDER", out)
+
+    def test_then_before_catch_passes(self):
+        self.fx.write_html("page.html", """<script>
+        sb.rpc('record_x',{}).then(function(r){ if(r&&r.error) console.warn(r.error); }).catch(function(){});
+        </script>""")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0, out)
+
+    def test_catch_inside_callback_argument_is_not_the_builders(self):
+        self.fx.write_html("page.html", """<script>
+        sb.rpc('record_x',{}).then(function(r){ if(r&&r.error) other().catch(function(){}); });
+        </script>""")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0, out)
+
+
 class FalsePositivePassTests(unittest.TestCase):
     """Each case below was a real finding on origin/main that was not a bug.
 
@@ -226,8 +260,12 @@ class FalsePositivePassTests(unittest.TestCase):
         self.assertIn("expire_trial", out)
 
     def test_a_catch_in_the_same_chain_does_vouch_for_it(self):
+        # This fixture was `sb.rpc(...).catch(...)` with no `.then` -- which
+        # throws "catch is not a function" and sends nothing (the builder has
+        # no .catch). DeadBuilderCatchTests now fails that form; a `.catch`
+        # after a `.then` is the chain this test always meant.
         self.fx.write_html("g.js",
-                           "await sb.rpc('record_thing',{p:1}).catch(function(){});\n")
+                           "await sb.rpc('record_thing',{p:1}).then(function(){}).catch(function(){});\n")
         code, out = self.fx.run()
         self.assertEqual(code, 0, out)
 

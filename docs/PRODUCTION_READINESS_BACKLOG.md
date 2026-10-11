@@ -139,3 +139,15 @@ names are not yet covered by a pass.
 ## Operating rule
 
 No item may be marked complete solely because it appears in a prompt, blueprint, generated report, or successful static check. Evidence must identify the exact file, test result, deployed behavior, or live provider response.
+
+## External source-corpus exposure (2026-10-10)
+
+A separate five-document project specification corpus supplied for audit contains credential-shaped example values. The repository scan documented above remains valid for the repository itself; it must **not** be interpreted as proof that historical/off-repository source material was clean.
+
+- [ ] Determine whether any credential-shaped value in the supplied legacy corpus was ever valid.
+- [ ] Revoke/rotate every confirmed or uncertain real credential at its provider.
+- [ ] Review provider logs and repository/deployment history without reproducing secret values.
+- [ ] Preserve only safe placeholders in retained project documentation.
+- [ ] Re-run repository secret scanning after remediation.
+
+**Boundary:** provider-side rotation is required to close this item. A clean repository scan cannot close exposure from an external source corpus.

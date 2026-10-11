@@ -11,6 +11,8 @@
 .msp-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--purple);margin-bottom:10px}
 .msp-name{font-family:var(--D);font-size:clamp(20px,4vw,30px);color:var(--ink);margin-bottom:8px}
 .msp-oracle{font-size:13px;line-height:1.9;color:var(--ink);opacity:.8;margin-bottom:14px}
+.msp-art{display:block;width:min(220px,60vw);height:auto;margin:0 auto 14px;filter:drop-shadow(0 8px 28px rgba(155,107,240,.35))}
+.msp-art[hidden]{display:none}
 .msp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 .msp-field{text-overflow:ellipsis;overflow:hidden}
 .mf-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
@@ -61,6 +63,7 @@
          (childless, 1-2 chars, in its recognized icon ranges) -- so no
          aria-hidden here: that system sets its own aria-label on conversion. -->
     <div class="omega-emblem" id="hr-sign-emblem" style="width:64px;height:64px;font-size:32px;margin-bottom:10px">—</div>
+    <img id="hr-sign-art" class="msp-art" alt="" hidden width="220" height="220" decoding="async">
     <div class="msp-name" id="hr-sign-name">—</div>
     <div class="msp-oracle" id="hr-sign-oracle">Detecting your sign&hellip;</div>
     <div class="msp-grid">
@@ -260,7 +263,11 @@ async function boot(){
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('stat-auth',auth.toFixed(4));sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
-    var si=SNAMES.indexOf(pr.sign||'');if(si<0)si=0;
+    var si=SNAMES.indexOf(pr.sign||'');
+    /* The member's own sign art (owner collection, alpha cutouts) -- shown only
+       when the profile actually records a sign; never a stand-in sign. */
+    if(si>=0){var art=document.getElementById('hr-sign-art');if(art){var dir='/assets/legacy/';art.src=dir+'sign-'+SNAMES[si].toLowerCase()+'.webp';art.alt=SNAMES[si]+' sign art';art.hidden=false;}}
+    if(si<0)si=0;
     sid('hr-sign-emblem',SYMS[si]);
     sid('hr-sign-name',SNAMES[si]+' '+SYMS[si]);
     document.getElementById('hr-sign-oracle').textContent=SORACLES[si];

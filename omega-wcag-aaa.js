@@ -46,29 +46,42 @@
      Tab walks back into the sidebar the link exists to skip. */
 
   // Enhanced screen reader announcements
-  window.OmegaA11y = {
-    announce: (message, priority = 'polite') => {
-      const region = document.querySelector('[role="status"][aria-live="' + priority + '"]');
+  /* Augment the canonical accessibility API instead of replacing it.
+     omega-a11y.js owns the global object and exposes focus trapping,
+     landmarks, live regions, table semantics and reduced-motion behavior.
+     Replacing window.OmegaA11y here used to make behavior depend on script
+     load order and could silently discard those methods. */
+  const a11y = window.OmegaA11y || {};
+  if(typeof a11y.announce !== 'function') {
+    a11y.announce = (message, priority = 'polite') => {
+      if(!message) return;
+      const region = document.querySelector(
+        '[role="status"][aria-live="' + priority + '"], [role="alert"][aria-live="' + priority + '"]'
+      );
       if(region) {
-        region.textContent = message;
-      } else {
-        const announce = document.createElement('div');
-        announce.setAttribute('role', 'status');
-        announce.setAttribute('aria-live', priority);
-        announce.setAttribute('aria-atomic', 'true');
-        announce.style.position = 'absolute';
-        announce.style.left = '-10000px';
-        announce.textContent = message;
-        document.body.appendChild(announce);
+        region.textContent = String(message);
+        return;
       }
-    },
-    label: (elementId, labelText) => {
+      if(!document.body) return;
+      const announce = document.createElement('div');
+      announce.setAttribute('role', priority === 'assertive' ? 'alert' : 'status');
+      announce.setAttribute('aria-live', priority);
+      announce.setAttribute('aria-atomic', 'true');
+      announce.style.position = 'absolute';
+      announce.style.left = '-10000px';
+      announce.textContent = String(message);
+      document.body.appendChild(announce);
+    };
+  }
+  if(typeof a11y.label !== 'function') {
+    a11y.label = (elementId, labelText) => {
       const el = document.getElementById(elementId);
-      if(!el) return;
+      if(!el || !labelText || el.hasAttribute('aria-label') || el.hasAttribute('aria-labelledby')) return;
       const label = document.createElement('label');
       label.htmlFor = elementId;
-      label.textContent = labelText;
+      label.textContent = String(labelText);
       el.parentNode?.insertBefore(label, el);
-    }
-  };
+    };
+  }
+  window.OmegaA11y = a11y;
 })();

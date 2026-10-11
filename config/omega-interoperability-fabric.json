@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Ω Interoperability Fabric",
+  "state": "DESIGN_PROPOSAL",
+  "purpose": "Give OMEGA standards-based boundaries for AI agents, digital credentials, IoT/robotics, spatial worlds and external services without coupling the core platform to a single vendor or protocol.",
+  "protocolFamilies": [
+    {
+      "id": "mcp",
+      "domain": "AI_TOOL_INTEROPERABILITY",
+      "role": "Expose governed tools and data to authorized agents.",
+      "truth": "PROTOCOL_CAPABILITY",
+      "policy": "Every tool invocation requires identity, scope, authorization, audit event and failure semantics."
+    },
+    {
+      "id": "a2a",
+      "domain": "AGENT_INTEROPERABILITY",
+      "role": "Allow OMEGA agents to communicate with compatible external agents through explicit task contracts.",
+      "truth": "PROTOCOL_CAPABILITY",
+      "policy": "Remote agents are untrusted peers until identity, capability, scope and response provenance are verified."
+    },
+    {
+      "id": "w3c-vc",
+      "domain": "VERIFIABLE_CREDENTIALS",
+      "role": "Represent machine-verifiable claims such as education, skills, credentials and organizational attestations.",
+      "truth": "STANDARDS_BASED_DESIGN",
+      "policy": "Credential presentation must be purpose-limited and disclose only required claims."
+    },
+    {
+      "id": "mqtt",
+      "domain": "IOT_TELEMETRY",
+      "role": "Potential transport boundary for constrained device and sensor telemetry.",
+      "truth": "STANDARDS_BASED_DESIGN",
+      "policy": "Authentication, authorization, encryption, topic isolation and device identity are mandatory before production use."
+    },
+    {
+      "id": "ros2",
+      "domain": "ROBOTICS",
+      "role": "Potential robotics adapter boundary for robot capabilities, telemetry and supervised commands.",
+      "truth": "STANDARDS_BASED_DESIGN",
+      "policy": "OMEGA never assumes that a ROS graph or robot command is safe merely because it is reachable."
+    },
+    {
+      "id": "openusd",
+      "domain": "SPATIAL_DIGITAL_TWIN",
+      "role": "Potential scene-description boundary for interoperable spatial worlds, assets, simulation and robotics visualization.",
+      "truth": "STANDARDS_BASED_DESIGN",
+      "policy": "Assets require validation, provenance and explicit separation between simulation and observed physical state."
+    },
+    {
+      "id": "ogc-3d-tiles-citygml-cityjson",
+      "domain": "GEO_SPATIAL",
+      "role": "Potential geospatial/digital-twin boundary for cities, regions and planetary visualization.",
+      "truth": "STANDARDS_BASED_DESIGN",
+      "policy": "Geospatial claims must retain source, timestamp, coordinate reference and freshness."
+    }
+  ],
+  "adapterContract": [
+    "DISCOVER",
+    "IDENTIFY",
+    "AUTHORIZE",
+    "NEGOTIATE_SCOPE",
+    "EXECUTE_OR_QUERY",
+    "EMIT_EVENT",
+    "ATTACH_EVIDENCE",
+    "VERIFY",
+    "REVOKE"
+  ],
+  "deviceCommandContract": [
+    "DEVICE_IDENTITY",
+    "CAPABILITY",
+    "SAFETY_STATE",
+    "USER_OR_SYSTEM_AUTHORIZATION",
+    "COMMAND",
+    "TIMEOUT",
+    "FAIL_SAFE",
+    "TELEMETRY",
+    "RESULT",
+    "EVIDENCE"
+  ],
+  "canonicalIntegrations": {
+    "authorization": "Supabase Auth + governed authorization",
+    "events": "omega_platform_events",
+    "evidence": "omega_platform_evidence / graph_evidence",
+    "lineage": "data_lineage",
+    "capabilities": "capability_registry",
+    "execution": "Ω Execution Graph",
+    "assurance": "Ω Production Assurance"
+  },
+  "hardRules": [
+    "No protocol connection implies trust.",
+    "No robot command is LIVE without device identity, authorization, safety state and result evidence.",
+    "No digital twin is physical truth unless backed by observed authoritative telemetry.",
+    "No external agent can escalate its own permissions.",
+    "No credential is accepted outside its stated issuer, subject, validity and purpose constraints.",
+    "Simulation and physical execution must remain visibly distinct."
+  ]
+}

@@ -125,7 +125,7 @@
           p_event_type:'member.onboarded',
           p_event_data:{sign:selected.sign,element:selected.el,token:selected.token},
           p_axis_delta:{a:0.009,b:0.009,c:0.009}
-        }).catch(function(){});
+        }).then(function(r){ if(r&&r.error) console.warn('[Omega] onboarding event not recorded:', r.error); },function(){});
         if(ov.parentNode)document.body.removeChild(ov);
         /* Show welcome */
         if(window.OmegaSDT&&window.OmegaSDT.pulse) window.OmegaSDT.pulse('a',0.009,0.001);

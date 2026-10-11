@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "name": "OMEGA_REQUIREMENT_CONTROL_PLANE",
+  "audit_date": "2026-10-08",
+  "corpus": {
+    "sources": 5,
+    "total_lines": 4068,
+    "total_words": 31212,
+    "normalized_requirement_records": 1622
+  },
+  "rule": "IMPLEMENTATION_IS_NOT_PROVIDER_EVIDENCE",
+  "states": [
+    "LIVE",
+    "IMPLEMENTED",
+    "RUNTIME-VERIFIED",
+    "PRODUCTION-VERIFIED",
+    "PARTIAL",
+    "CALCULATED",
+    "SIMULATED",
+    "USER-CREATED",
+    "EMPTY",
+    "UNAVAILABLE",
+    "UNVERIFIED",
+    "BLOCKED",
+    "LORE",
+    "FUTURE",
+    "REJECTED",
+    "REPLACED"
+  ],
+  "authority_order": [
+    "provider_legal",
+    "live_state",
+    "production_code_runtime",
+    "ci_security_deployment",
+    "current_docs",
+    "current_requirements",
+    "historical_specs",
+    "vision_lore"
+  ],
+  "release_required": [
+    "implementation_path",
+    "authoritative_data_source",
+    "authorization_boundary",
+    "failure_behavior",
+    "verification",
+    "provider_evidence_when_applicable",
+    "user_truth_state",
+    "documentation"
+  ],
+  "priorities": [
+    [
+      "RC-001",
+      "vercel",
+      "BLOCKED",
+      "current-main production deployment accepted by provider"
+    ],
+    [
+      "RC-002",
+      "supabase_auth",
+      "BLOCKED",
+      "leaked-password protection enabled and advisor clean"
+    ],
+    [
+      "RC-003",
+      "authentication",
+      "UNVERIFIED",
+      "register/login/confirmation/reset/session invalidation E2E"
+    ],
+    [
+      "RC-004",
+      "mfa",
+      "UNVERIFIED",
+      "enrollment/challenge/recovery evidence"
+    ],
+    [
+      "RC-005",
+      "authorization",
+      "PARTIAL",
+      "semantic per-row RLS regression"
+    ],
+    [
+      "RC-006",
+      "storage",
+      "PARTIAL",
+      "isolated upload/read/delete and cross-user denial"
+    ],
+    [
+      "RC-007",
+      "edge_functions",
+      "PARTIAL",
+      "source-to-live deployment reconciliation"
+    ],
+    [
+      "RC-008",
+      "payments",
+      "BLOCKED",
+      "signed payment lifecycle with ledger/entitlement/reversal evidence"
+    ],
+    [
+      "RC-009",
+      "disaster_recovery",
+      "BLOCKED",
+      "restore drill with measured RPO/RTO"
+    ],
+    [
+      "RC-010",
+      "migrations",
+      "PENDING",
+      "clean-baseline migration replay"
+    ],
+    [
+      "RC-011",
+      "scale",
+      "PENDING",
+      "controlled load and saturation evidence"
+    ],
+    [
+      "RC-012",
+      "ai_quality",
+      "PENDING",
+      "groundedness/retrieval/hallucination/latency/cost/adversarial evaluation"
+    ],
+    [
+      "RC-013",
+      "owner_security",
+      "PENDING",
+      "owner MFA evidence"
+    ],
+    [
+      "RC-014",
+      "accessibility",
+      "PARTIAL",
+      "keyboard/names/reduced-motion/readability/responsive evidence"
+    ],
+    [
+      "RC-015",
+      "navigation",
+      "PARTIAL",
+      "duplicate-key/target/deep-link regression"
+    ],
+    [
+      "RC-016",
+      "observability",
+      "PARTIAL",
+      "logs/metrics/traces/SLO/alert ownership"
+    ],
+    [
+      "RC-017",
+      "privacy",
+      "PARTIAL",
+      "export/erasure/retention verification"
+    ],
+    [
+      "RC-018",
+      "module_traceability",
+      "PARTIAL",
+      "18-module evidence matrix"
+    ],
+    [
+      "RC-019",
+      "blueprint_governance",
+      "IMPLEMENTED",
+      "source-qualified 999-point IDs and truth states"
+    ],
+    [
+      "RC-020",
+      "credential_hygiene",
+      "IMPLEMENTED",
+      "secret scan remains mandatory"
+    ]
+  ],
+  "workspace_rule": "WORKSPACES_ARE_PROJECTIONS_SPECIALIST_ROUTES_REMAIN_AUTHORITATIVE",
+  "high_risk_rule": "NO_LIVE_CLAIM_WITHOUT_INDEPENDENT_EVIDENCE"
+}

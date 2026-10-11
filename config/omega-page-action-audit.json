@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "name":"Ω Page Action / Task Audit",
+  "version":1,
+  "status":"SOURCE_EVIDENCE_ONLY",
+  "source":"scripts/omega-page-action-audit.py",
+  "states":["GOVERNED","AVAILABLE_WITHOUT_MUTATION","UNAVAILABLE","UNMAPPED"],
+  "rule":"Executable controls require explicit task/capability evidence or an explicit unavailable reason; DOM presence alone never proves functionality.",
+  "release_boundary":"UNMAPPED actions are remediation work and must not be treated as production-complete."
+}

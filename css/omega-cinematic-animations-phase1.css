@@ -23,14 +23,16 @@
   transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
-.card::before,
-.kpi-card::before {
+/* .kpi-card is deliberately NOT here (2026-10-04): its ::before is the full-cover
+   sheen owned by omega-visual-evolution.css (inset:0), not .card's 2px top bar, so a
+   solid accent background filled every KPI tile (lilac on cosmos pages, measured
+   rgb(171,130,242) at opacity .8 behind gold numerals). Pseudos cascade per property. */
+.card::before {
   background: var(--card-accent);
   transition: all 0.4s ease-out;
 }
 
-.card:hover::before,
-.kpi-card:hover::before {
+.card:hover::before {
   background: var(--card-accent);
   opacity: 1;
 }

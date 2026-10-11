@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "truth": "CALCULATED",
+  "purpose": "Canonical source registry and truth contract for real product data.",
+  "states": ["LIVE","CALCULATED","SIMULATED","USER_CREATED","LORE","UNAVAILABLE","UNVERIFIED","BLOCKED"],
+  "accessModes": ["DATABASE","PUBLIC_API","WEBHOOK","CONNECTOR","USER_CREATED","INTERNAL"],
+  "requiredEvidence": ["source_identity","access_mode","verification_method","freshness","last_verified_at"],
+  "hardRules": [
+    "A source is never LIVE without verification evidence.",
+    "Provider configuration does not imply provider health.",
+    "Freshness is metadata, not proof of current availability.",
+    "Source truth does not grant authorization.",
+    "No secrets or credentials belong in the registry.",
+    "UNVERIFIED and BLOCKED must remain visible to product surfaces."
+  ],
+  "canonicalIntegration": {
+    "lineage": "data_lineage",
+    "events": "omega_platform_events",
+    "evidence": "omega_platform_evidence / graph_evidence",
+    "productReality": "omega_member_product_reality / omega_platform_product_reality",
+    "sourceRegistry": "omega_data_sources"
+  }
+}

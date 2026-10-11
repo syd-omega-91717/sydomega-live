@@ -27,8 +27,20 @@ jobs:
           fetch-depth: 0
 
       - name: Semgrep SAST
+        # Docker Hub rate-limits anonymous pulls per runner IP; on 2026-10-09 the
+        # digest pull failed twice ("toomanyrequests") before any scan ran, leaving
+        # main red with no finding. Only a failed PULL falls back to the pinned
+        # PyPI engine; the scan itself, its rules and --error are identical, so a
+        # real finding still fails the job either way.
         run: |
-          docker run --rm -v "${PWD}:/src" semgrep/semgrep@sha256:d1825c2c72110b5bfbf0602ff68f7f117322597a7c33037a79dba9f897f5f1f0 semgrep scan --config=auto --error --sarif --output=/src/semgrep.sarif /src
+          IMAGE=semgrep/semgrep@sha256:d1825c2c72110b5bfbf0602ff68f7f117322597a7c33037a79dba9f897f5f1f0
+          if docker pull "$IMAGE"; then
+            docker run --rm -v "${PWD}:/src" "$IMAGE" semgrep scan --config=auto --error --sarif --output=/src/semgrep.sarif /src
+          else
+            echo "::warning::Semgrep image pull failed; using pinned PyPI semgrep==1.178.0"
+            python3 -m pip install --quiet semgrep==1.178.0
+            semgrep scan --config=auto --error --sarif --output=semgrep.sarif .
+          fi
 
       - name: List Semgrep findings
         # The SARIF goes to code scanning, which most readers of this log cannot

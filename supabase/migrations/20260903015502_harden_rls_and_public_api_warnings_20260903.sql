@@ -14,35 +14,55 @@ create policy "platform_metrics_insert_own_session"
     and metric_value is not null
   );
 
-drop policy if exists "public can join" on public.signups;
-create policy "public can join validated"
-  on public.signups
-  for insert
-  to anon
-  with check (
-    email is not null
-    and length(btrim(email)) between 3 and 320
-    and position('@' in btrim(email)) > 1
-    and position('.' in split_part(btrim(email),'@',2)) > 1
-    and length(coalesce(sign,'')) <= 64
-    and length(coalesce(element,'')) <= 64
-    and length(coalesce(olympian,'')) <= 128
-    and length(coalesce(planet,'')) <= 128
-    and length(coalesce(agent,'')) <= 128
-  );
+-- Guarded (owner-approved edit, 2026-10-04): public.signups exists live but
+-- no file in this repository creates it (made out-of-band), so a fresh
+-- `supabase db reset` failed here. Live already applied this version.
+do $$
+begin
+  if to_regclass('public.signups') is not null then
+    drop policy if exists "public can join" on public.signups;
+    create policy "public can join validated"
+      on public.signups
+      for insert
+      to anon
+      with check (
+        email is not null
+        and length(btrim(email)) between 3 and 320
+        and position('@' in btrim(email)) > 1
+        and position('.' in split_part(btrim(email),'@',2)) > 1
+        and length(coalesce(sign,'')) <= 64
+        and length(coalesce(element,'')) <= 64
+        and length(coalesce(olympian,'')) <= 128
+        and length(coalesce(planet,'')) <= 128
+        and length(coalesce(agent,'')) <= 128
+      );
+  end if;
+end $$;
 
 -- Prevent broad object listing in the public avatars bucket while preserving
 -- public object retrieval. The operation-aware helper distinguishes listing
 -- from object retrieval.
-drop policy if exists "avatars read" on storage.objects;
-create policy "avatars read objects only"
-  on storage.objects
-  for select
-  to anon, authenticated
-  using (
-    bucket_id = 'avatars'
-    and storage.allow_any_operation(array['storage.object.get_authenticated_info','storage.object.get_authenticated'])
-  );
+-- Guarded (owner-approved, 2026-10-04): older local Supabase stacks (CLI
+-- 2.84.2) have no storage.allow_any_operation, so a fresh `supabase db reset`
+-- failed here. Where the helper is missing the policy is skipped rather than
+-- replaced by a weaker one -- avatars stay unreadable, never listable. Live has
+-- the helper and already applied this version.
+do $$
+begin
+  if to_regprocedure('storage.allow_any_operation(text[])') is not null then
+    drop policy if exists "avatars read" on storage.objects;
+    create policy "avatars read objects only"
+      on storage.objects
+      for select
+      to anon, authenticated
+      using (
+        bucket_id = 'avatars'
+        and storage.allow_any_operation(array['storage.object.get_authenticated_info','storage.object.get_authenticated'])
+      );
+  else
+    raise notice 'storage.allow_any_operation missing; avatars read policy skipped';
+  end if;
+end $$;
 
 -- SECURITY DEFINER RPCs must not be exposed to anonymous/authenticated roles
 -- unless explicitly required. The application should use trusted server-side

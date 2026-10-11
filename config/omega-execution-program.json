@@ -1,0 +1,538 @@
+{
+  "schema_version": 1,
+  "name": "OMEGA_GLOBAL_EXECUTION_PROGRAM",
+  "date": "2026-10-09",
+  "principle": "ONE_PLATFORM_MANY_GOVERNED_PROJECTIONS",
+  "truth_rule": "IMPLEMENTATION_IS_NOT_PROVIDER_EVIDENCE",
+  "execution_grammar": [
+    "PURPOSE",
+    "DATA",
+    "AUTHORIZATION",
+    "EXECUTION",
+    "FAILURE",
+    "VERIFICATION",
+    "EVIDENCE",
+    "COST",
+    "RELEASE"
+  ],
+  "waves": [
+    {
+      "id": "W1",
+      "name": "FOUNDATION_CONTROL",
+      "priority": "P0",
+      "goal": "Make identity, policy, capability, workflow, evidence, lineage, release and operational state converge on one control plane.",
+      "tracks": [
+        {
+          "id": "W1-T1",
+          "name": "Requirement execution registry",
+          "status": "IMPLEMENTED_BY_THIS_CHANGE",
+          "depends": [],
+          "evidence": [
+            "repository_test",
+            "ci"
+          ]
+        },
+        {
+          "id": "W1-T2",
+          "name": "Production truth ledger",
+          "status": "PARTIAL",
+          "depends": [
+            "W1-T1"
+          ],
+          "evidence": [
+            "live_provider",
+            "ci",
+            "deployment"
+          ]
+        },
+        {
+          "id": "W1-T3",
+          "name": "Module capability traceability",
+          "status": "PARTIAL",
+          "depends": [
+            "W1-T1"
+          ],
+          "evidence": [
+            "repository_test",
+            "runtime",
+            "provider_when_applicable"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W2",
+      "name": "PRODUCTION_TRUTH",
+      "priority": "P0",
+      "goal": "Close externally verifiable release blockers without converting design artifacts into false production claims.",
+      "tracks": [
+        {
+          "id": "W2-T1",
+          "name": "Vercel current-main deployment",
+          "status": "BLOCKED_EXTERNAL",
+          "depends": [
+            "W1-T2"
+          ],
+          "requirement_ids": [
+            "RC-001"
+          ],
+          "evidence": [
+            "provider_deployment",
+            "browser_smoke"
+          ]
+        },
+        {
+          "id": "W2-T2",
+          "name": "Supabase auth security",
+          "status": "BLOCKED_EXTERNAL",
+          "depends": [
+            "W1-T2"
+          ],
+          "requirement_ids": [
+            "RC-002",
+            "RC-013"
+          ],
+          "evidence": [
+            "security_advisor",
+            "mfa_provider_state"
+          ]
+        },
+        {
+          "id": "W2-T3",
+          "name": "Auth/RLS/storage/function verification",
+          "status": "PARTIAL",
+          "depends": [
+            "W1-T2"
+          ],
+          "requirement_ids": [
+            "RC-003",
+            "RC-004",
+            "RC-005",
+            "RC-006",
+            "RC-007"
+          ],
+          "evidence": [
+            "authenticated_e2e",
+            "database_runtime"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W3",
+      "name": "COMMERCE_CORE",
+      "priority": "P0",
+      "goal": "Make payment, entitlement, ledger, reconciliation and reversal flows real, signed, idempotent and auditable.",
+      "tracks": [
+        {
+          "id": "W3-T1",
+          "name": "Payment lifecycle contract",
+          "status": "PARTIAL",
+          "depends": [
+            "W1-T1"
+          ],
+          "requirement_ids": [
+            "RC-008"
+          ],
+          "evidence": [
+            "repository_test",
+            "signed_provider_event",
+            "ledger",
+            "reconciliation"
+          ]
+        },
+        {
+          "id": "W3-T2",
+          "name": "Subscription and entitlement state",
+          "status": "DESIGN_REQUIRED",
+          "depends": [
+            "W3-T1"
+          ],
+          "evidence": [
+            "provider_event",
+            "database_state",
+            "user_truth_state"
+          ]
+        },
+        {
+          "id": "W3-T3",
+          "name": "Marketplace and payout extension",
+          "status": "FUTURE",
+          "depends": [
+            "W3-T2"
+          ],
+          "evidence": [
+            "provider_settlement",
+            "tax_legal",
+            "dispute_lifecycle"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W4",
+      "name": "INTELLIGENCE_FABRIC",
+      "priority": "P1",
+      "goal": "Turn AI, retrieval, memory, agents and knowledge graph concepts into governed, evaluated capabilities.",
+      "tracks": [
+        {
+          "id": "W4-T1",
+          "name": "AI provider gateway",
+          "status": "PARTIAL",
+          "depends": [
+            "W1-T1"
+          ],
+          "evidence": [
+            "provider_health",
+            "auth",
+            "cost",
+            "fallback"
+          ]
+        },
+        {
+          "id": "W4-T2",
+          "name": "Semantic memory and retrieval",
+          "status": "BLOCKED_EXTERNAL",
+          "depends": [
+            "W4-T1"
+          ],
+          "requirement_ids": [
+            "RC-012"
+          ],
+          "evidence": [
+            "embedding_provider",
+            "retrieval_provenance",
+            "groundedness_eval"
+          ]
+        },
+        {
+          "id": "W4-T3",
+          "name": "Agent/tool authorization",
+          "status": "DESIGN_REQUIRED",
+          "depends": [
+            "W1-T1",
+            "W4-T1"
+          ],
+          "evidence": [
+            "capability_policy",
+            "tool_audit",
+            "failure_recovery"
+          ]
+        },
+        {
+          "id": "W4-T4",
+          "name": "Platform knowledge graph",
+          "status": "DESIGN_REQUIRED",
+          "depends": [
+            "W1-T3",
+            "W4-T2"
+          ],
+          "evidence": [
+            "graph_integrity",
+            "provenance",
+            "query_tests"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W5",
+      "name": "EXPERIENCE",
+      "priority": "P1",
+      "goal": "Make the large page estate feel like one understandable product with accessible, responsive and data-honest experiences.",
+      "tracks": [
+        {
+          "id": "W5-T1",
+          "name": "Command Center and universal discovery",
+          "status": "DESIGN_REQUIRED",
+          "depends": [
+            "W1-T3"
+          ],
+          "evidence": [
+            "navigation_test",
+            "deep_link_test",
+            "responsive_browser"
+          ]
+        },
+        {
+          "id": "W5-T2",
+          "name": "Accessibility and responsive quality",
+          "status": "PARTIAL",
+          "depends": [
+            "W5-T1"
+          ],
+          "requirement_ids": [
+            "RC-014",
+            "RC-015"
+          ],
+          "evidence": [
+            "keyboard",
+            "accessible_name",
+            "contrast",
+            "reduced_motion",
+            "responsive"
+          ]
+        },
+        {
+          "id": "W5-T3",
+          "name": "Mobile API-first surface",
+          "status": "FUTURE",
+          "depends": [
+            "W1-T1",
+            "W5-T1"
+          ],
+          "evidence": [
+            "api_contract",
+            "mobile_e2e"
+          ]
+        },
+        {
+          "id": "W5-T4",
+          "name": "Internationalization and RTL",
+          "status": "PARTIAL",
+          "depends": [
+            "W5-T1"
+          ],
+          "evidence": [
+            "locale",
+            "timezone",
+            "currency",
+            "rtl"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W6",
+      "name": "ECOSYSTEM_AND_ENTERPRISE",
+      "priority": "P1",
+      "goal": "Add durable organization, API, partner, governance and business primitives without prematurely fragmenting the architecture.",
+      "tracks": [
+        {
+          "id": "W6-T1",
+          "name": "Organization and tenancy model",
+          "status": "DESIGN_REQUIRED",
+          "depends": [
+            "W1-T1"
+          ],
+          "evidence": [
+            "tenant_isolation",
+            "rbac",
+            "rls"
+          ]
+        },
+        {
+          "id": "W6-T2",
+          "name": "Public/private/event/capability APIs",
+          "status": "DESIGN_REQUIRED",
+          "depends": [
+            "W1-T1"
+          ],
+          "evidence": [
+            "versioning",
+            "auth",
+            "rate_limit",
+            "idempotency",
+            "audit"
+          ]
+        },
+        {
+          "id": "W6-T3",
+          "name": "Observability and SLO operations center",
+          "status": "PARTIAL",
+          "depends": [
+            "W1-T2"
+          ],
+          "requirement_ids": [
+            "RC-016"
+          ],
+          "evidence": [
+            "logs",
+            "metrics",
+            "traces",
+            "alerts",
+            "incident_owner"
+          ]
+        },
+        {
+          "id": "W6-T4",
+          "name": "Privacy/data governance",
+          "status": "PARTIAL",
+          "depends": [
+            "W1-T1"
+          ],
+          "requirement_ids": [
+            "RC-017"
+          ],
+          "evidence": [
+            "lineage",
+            "retention",
+            "export",
+            "erasure",
+            "purpose"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W7",
+      "name": "FUTURE_LAB",
+      "priority": "P2",
+      "goal": "Continuously research, benchmark, experiment and evolve the platform while preserving evidence boundaries.",
+      "tracks": [
+        {
+          "id": "W7-T1",
+          "name": "Benchmark and research intake",
+          "status": "DESIGN_REQUIRED",
+          "depends": [
+            "W1-T1"
+          ],
+          "evidence": [
+            "source_quality",
+            "provenance",
+            "adoption_decision"
+          ]
+        },
+        {
+          "id": "W7-T2",
+          "name": "Experimentation and feature evaluation",
+          "status": "DESIGN_REQUIRED",
+          "depends": [
+            "W6-T3"
+          ],
+          "evidence": [
+            "cohort",
+            "treatment",
+            "metric",
+            "decision"
+          ]
+        },
+        {
+          "id": "W7-T3",
+          "name": "Predictive invention / 10-step foresight",
+          "status": "FUTURE",
+          "depends": [
+            "W7-T1",
+            "W4-T4"
+          ],
+          "evidence": [
+            "research_sources",
+            "model_eval",
+            "human_review"
+          ]
+        },
+        {
+          "id": "W7-T4",
+          "name": "999-point evolution governance",
+          "status": "IMPLEMENTED",
+          "depends": [
+            "W1-T1"
+          ],
+          "evidence": [
+            "source_traceability",
+            "unique_ids",
+            "truth_state"
+          ]
+        }
+      ]
+    }
+  ],
+  "release_gates": [
+    {
+      "id": "G1",
+      "name": "Source traceability",
+      "requires": [
+        "W1-T1",
+        "W7-T4"
+      ],
+      "blocks": [
+        "production_claim"
+      ]
+    },
+    {
+      "id": "G2",
+      "name": "Security and identity",
+      "requires": [
+        "W2-T2",
+        "W2-T3"
+      ],
+      "blocks": [
+        "10_of_10_security"
+      ]
+    },
+    {
+      "id": "G3",
+      "name": "Production deployment",
+      "requires": [
+        "W2-T1"
+      ],
+      "blocks": [
+        "production_release"
+      ]
+    },
+    {
+      "id": "G4",
+      "name": "Commerce reality",
+      "requires": [
+        "W3-T1",
+        "W3-T2"
+      ],
+      "blocks": [
+        "live_payment_claim"
+      ]
+    },
+    {
+      "id": "G5",
+      "name": "AI quality",
+      "requires": [
+        "W4-T1",
+        "W4-T2",
+        "W4-T3"
+      ],
+      "blocks": [
+        "semantic_recall_claim",
+        "autonomous_agent_claim"
+      ]
+    },
+    {
+      "id": "G6",
+      "name": "Recovery",
+      "requires": [
+        "W6-T3"
+      ],
+      "additional_requirement_ids": [
+        "RC-009",
+        "RC-010"
+      ],
+      "blocks": [
+        "resilience_claim"
+      ]
+    },
+    {
+      "id": "G7",
+      "name": "Experience quality",
+      "requires": [
+        "W5-T1",
+        "W5-T2"
+      ],
+      "blocks": [
+        "accessibility_complete_claim"
+      ]
+    }
+  ],
+  "external_blockers": [
+    "Vercel provider/account authorization",
+    "Supabase leaked-password protection control",
+    "Owner MFA enrollment/enforcement",
+    "Stripe live/test provider lifecycle evidence",
+    "Backup restore exercise and measured RPO/RTO",
+    "Approved embedding provider/model configuration"
+  ],
+  "forbidden_shortcuts": [
+    "Do not mark provider-dependent work LIVE from source code.",
+    "Do not convert SIMULATED or LORE states into LIVE.",
+    "Do not introduce a framework rewrite to solve governance gaps.",
+    "Do not manufacture users, balances, payment events, achievements, deployment state or AI quality scores.",
+    "Do not weaken security, CI or release gates to obtain green checks."
+  ]
+}

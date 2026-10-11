@@ -1,0 +1,12 @@
+const fs=require('fs');
+const assert=require('assert');
+const config=JSON.parse(fs.readFileSync('config/omega-data-reality-fabric.json','utf8'));
+const runtime=fs.readFileSync('omega-data-reality.js','utf8');
+assert.strictEqual(config.schemaVersion,'1.0.0');
+assert(config.states.includes('LIVE')&&config.states.includes('UNVERIFIED')&&config.states.includes('BLOCKED'));
+assert(config.hardRules.some(x=>x.includes('never LIVE')));
+assert(runtime.includes("omega_data_sources"));
+assert(runtime.includes("last_verified_at"));
+assert(runtime.includes("UNVERIFIED"));
+assert(!runtime.includes('innerHTML'));
+console.log('OMEGA_DATA_REALITY_FABRIC=PASS');

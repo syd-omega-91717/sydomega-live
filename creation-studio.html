@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ω SYD OMEGA 91717 — Creation Studio</title>
+<meta name="description" content="Governed Ω Creation Studio for projects, assets, provider jobs and verified production lineage.">
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+<script src="/omega-creation-studio.js" defer></script>
+<script src="/omega-content-tasks.js" defer></script>
+<script src="/omega-content-import.js" defer></script>
+<style>
+:root{--dim:rgba(201,168,76,.18);--gold:#C9A84D;--cyan:#00E5FF;--red:#8B0000;--green:#00FF88;--ink:#E9E8E3;--muted:#8D8C96;--pad:clamp(14px,3vw,36px)}
+*{box-sizing:border-box}body{margin:0;background:#020206;color:var(--ink);font-family:var(--R,Arial,sans-serif);line-height:1.6}
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}.side{background:rgba(201,168,76,.03);border-right:1px solid var(--dim);padding:16px;position:sticky;top:0;height:100vh;overflow:auto}.main{min-width:0}
+.topbar{display:flex;align-items:center;padding:14px var(--pad);border-bottom:1px solid var(--dim);background:rgba(2,2,6,.84);backdrop-filter:blur(10px);position:sticky;top:0;z-index:10}.brand{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;color:var(--gold)}.brand small{display:block;color:var(--muted);letter-spacing:1.5px;margin-top:2px}
+.pad{padding:20px var(--pad);max-width:1500px}.hero{border:1px solid var(--dim);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(0,229,255,.025));padding:20px;margin-bottom:16px}.hero h1{font-family:var(--M,monospace);font-size:clamp(20px,3vw,32px);letter-spacing:2px;color:var(--gold);margin:0 0 8px}.hero p{max-width:900px;color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:16px}.stack{display:grid;gap:16px}.card{border:1px solid var(--dim);background:rgba(201,168,76,.035);padding:16px}.title{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:12px}.truth{display:inline-flex;gap:7px;align-items:center;border:1px solid rgba(0,229,255,.22);padding:5px 8px;font:12px var(--M,monospace);letter-spacing:1.2px;color:var(--cyan);margin:3px 4px 3px 0}.truth.user{color:var(--gold);border-color:var(--dim)}.truth.sim{color:#b7a7ff;border-color:rgba(183,167,255,.22)}.truth.unavailable{color:#aaa;border-color:rgba(170,170,170,.2)}
+label{display:block;font:12px var(--M,monospace);letter-spacing:1.2px;color:var(--muted);margin:10px 0 5px}input,textarea,select{width:100%;padding:10px;background:#08080e;color:var(--ink);border:1px solid var(--dim);outline:none;border-radius:2px;font:12px var(--R,Arial,sans-serif)}textarea{min-height:86px;resize:vertical}button{font:12px var(--M,monospace);letter-spacing:1.2px;color:var(--gold);background:rgba(201,168,76,.05);border:1px solid var(--dim);padding:10px 12px;cursor:pointer}button:hover,button:focus-visible{background:rgba(201,168,76,.11);border-color:rgba(201,168,76,.55)}button:disabled{opacity:.45;cursor:not-allowed}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}.kpi{border:1px solid var(--dim);padding:12px;background:rgba(201,168,76,.025)}.kpi b{display:block;font:20px var(--M,monospace);color:var(--gold)}.kpi span{font:9px var(--M,monospace);letter-spacing:1px;color:var(--muted)}
+.list{display:grid;gap:8px;max-height:420px;overflow:auto}.row{border:1px solid rgba(201,168,76,.12);padding:11px;background:rgba(0,0,0,.12)}.row-head{display:flex;gap:8px;justify-content:space-between;align-items:center}.row-name{font-weight:700}.meta{font:12px var(--M,monospace);color:var(--muted);letter-spacing:.5px}.status{font:9px var(--M,monospace);letter-spacing:1px;border:1px solid rgba(0,229,255,.18);padding:3px 6px;color:var(--cyan)}.status.warn{color:var(--gold);border-color:var(--dim)}.status.bad{color:#ff8a8a;border-color:rgba(139,0,0,.5)}.empty{padding:18px;text-align:center;color:var(--muted);font:12px var(--M,monospace);border:1px dashed rgba(201,168,76,.16)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.note{font-size:12px;color:var(--muted);line-height:1.65}.error{color:#ff9b9b;font-size:12px}.ok{color:var(--green);font-size:12px}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="omega-side" data-page="creation-studio" aria-label="Navigation"></aside>
+<main class="main">
+<header class="topbar"><div class="brand">Ω CREATION STUDIO<small>PROJECT · ASSET · PROVIDER · LINEAGE</small></div><span id="live-state" class="meta" style="margin-left:auto">CONNECTING</span></header>
+<div class="pad">
+<section class="hero">
+<h1>Ω CREATION STUDIO</h1>
+<p>A governed production surface for creating projects and assets, inspecting real provider readiness, submitting provider jobs, and keeping LIVE state behind verifiable artifact evidence. Client code never writes provider-owned truth directly.</p>
+<div style="margin-top:10px"><span class="truth user">USER-CREATED</span><span class="truth sim">SIMULATED</span><span class="truth">LIVE ONLY AFTER VERIFIED ARTIFACT</span><span class="truth unavailable">UNAVAILABLE WHEN PROVIDER IS NOT CONFIGURED</span></div>
+</section>
+<div class="kpis">
+<div class="kpi"><b id="k-projects">0</b><span>PROJECTS</span></div>
+<div class="kpi"><b id="k-assets">0</b><span>ASSETS</span></div>
+<div class="kpi"><b id="k-jobs">0</b><span>PROVIDER JOBS</span></div>
+<div class="kpi"><b id="k-ready">0</b><span>READY / LIVE ASSETS</span></div>
+</div>
+<div class="grid">
+<div class="stack">
+<section class="card">
+<div class="title">CREATE PROJECT</div>
+<form id="project-form">
+<label for="project-name">NAME</label><input id="project-name" required maxlength="160" placeholder="e.g. Omega Visual Forge">
+<label for="project-description">DESCRIPTION</label><textarea id="project-description" maxlength="4000" placeholder="What is this production project for?"></textarea>
+<label for="project-type">TYPE</label><select id="project-type"><option>IMAGE</option><option>VIDEO</option><option>MOVIE</option><option>GAME</option><option>WORLD</option><option selected>MIXED</option></select>
+<div class="actions"><button type="submit">CREATE DRAFT</button></div>
+<div id="project-message" class="note" aria-live="polite"></div>
+</form>
+</section>
+<section class="card">
+<div class="title">IMPORT CONTENT ASSET</div>
+<form id="content-import-form">
+<label for="content-import-file">FILE</label>
+<input data-omega-capability-id="import-export" id="content-import-file" type="file" required>
+<label for="content-import-type">CONTENT TYPE</label>
+<select id="content-import-type"><option>IMAGE</option><option>VIDEO</option><option>AUDIO</option><option>MOVIE</option><option>GAME</option><option>DOCUMENT</option><option>DATA</option><option>OTHER</option></select>
+<div class="actions"><button type="submit">UPLOAD · REGISTER · REVIEW</button></div>
+<div id="content-import-message" class="note" aria-live="polite"></div>
+</form>
+</section>
+<section class="card">
+<div class="title">CREATE ASSET</div>
+<form id="asset-form">
+<label for="asset-project">PROJECT</label><select id="asset-project" required></select>
+<label for="asset-title">TITLE</label><input id="asset-title" required maxlength="240" placeholder="e.g. Observatory key visual">
+<label for="asset-type">ASSET TYPE</label><select id="asset-type"><option selected>IMAGE</option><option>VIDEO</option><option>MOVIE</option><option>AUDIO</option><option>GAME_BUILD</option><option>MODEL</option><option>TEXT</option><option>DATA</option><option>OTHER</option></select>
+<label for="asset-prompt">PROMPT / INTENT</label><textarea id="asset-prompt" maxlength="12000" placeholder="Describe the intended artifact. This remains DESIGNED until a provider produces verifiable output."></textarea>
+<div class="actions"><button type="submit">CREATE DESIGNED ASSET</button></div>
+<div id="asset-message" class="note" aria-live="polite"></div>
+</form>
+</section>
+</div>
+<div class="stack">
+<section class="card"><div class="title">PROJECTS</div><div id="projects" class="list"><div class="empty">LOADING</div></div></section>
+<section class="card"><div class="title">ASSETS</div><div id="assets" class="list"><div class="empty">LOADING</div></div></section>
+<section class="card"><div class="title">PROVIDER REGISTRY</div><div id="providers" class="list"><div class="empty">LOADING</div></div></section>
+<section class="card"><div class="title">PROVIDER JOBS</div><div id="jobs" class="list"><div class="empty">LOADING</div></div></section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body>
+</html>

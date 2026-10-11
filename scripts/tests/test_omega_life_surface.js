@@ -1,0 +1,15 @@
+const fs=require('fs');
+const assert=require('assert');
+const html=fs.readFileSync('life.html','utf8');
+const js=fs.readFileSync('omega-life.js','utf8');
+const css=fs.readFileSync('omega-life.css','utf8');
+const primitive=fs.readFileSync('omega-relearn-sigil-mana.js','utf8');
+assert(html.includes('omega-life.js')&&html.includes('omega-relearn-sigil-mana.js'));
+assert(js.includes("task_completions")&&js.includes("omega_platform_events")&&js.includes("capability_registry"));
+assert(js.includes("calculateMana")&&js.includes("createSigil"));
+assert(js.includes("SIGN IN REQUIRED")&&js.includes("SOURCE READ FAILED"));
+assert(!js.includes('innerHTML'));
+assert(!js.includes('localStorage'));
+assert(primitive.includes('not an authentication credential')||primitive.includes('not an authentication'));
+assert(css.includes('@media'));
+console.log('PASS omega life surface contract');

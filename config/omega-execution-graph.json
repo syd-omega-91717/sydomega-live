@@ -1,0 +1,29 @@
+{
+  "schemaVersion":"1.0.0",
+  "name":"Ω Life Execution Graph",
+  "purpose":"A governed graph model connecting an intent to prerequisites, capabilities, services, tasks, costs, risks, evidence, actions and outcomes.",
+  "truthPolicy":"The graph is a CALCULATED execution plan. It never grants authority, creates financial state, or converts simulation into production state.",
+  "nodeTypes":["INTENT","PREREQUISITE","CAPABILITY","SERVICE","TASK","COST","RISK","EVIDENCE","ACTION","OUTCOME","MISSION","AGENT"],
+  "edgeTypes":["REQUIRES","ENABLES","ROUTES_TO","EXECUTES","COSTS","RISKS","PROVES","PRODUCES","PROGRESSES","ASSIGNED_TO"],
+  "canonicalSystems":{
+    "execution":"omega-execution-os.js",
+    "atlas":"config/omega-civilization-atlas.json",
+    "events":"omega_platform_events",
+    "evidence":"omega_platform_evidence / graph_evidence",
+    "missions":"omega_missions / omega_member_mission_state / omega_mission_transitions",
+    "capabilities":"capability_registry",
+    "lineage":"data_lineage",
+    "progression":"9x9x9 / 729-node progression model"
+  },
+  "promotionGate":[
+    "intent is explicit",
+    "required capability is known",
+    "authorization is explicit",
+    "service route is authoritative",
+    "task transition is server-authoritative",
+    "action emits an event",
+    "result has evidence",
+    "outcome is verified",
+    "failure path is observable"
+  ]
+}

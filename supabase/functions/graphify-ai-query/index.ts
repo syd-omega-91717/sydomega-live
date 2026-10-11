@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.8";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
 import { Anthropic } from "https://esm.sh/@anthropic-ai/sdk@0.9.0";
 
 interface QueryRequest {
@@ -18,7 +19,7 @@ interface GraphResponse {
 }
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const supabaseServiceKey = secretKey()!;
 const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -27,7 +28,7 @@ async function requireCaller(req: Request): Promise<{ userId: string } | Respons
   const authorization = req.headers.get("Authorization") || "";
   const match = authorization.match(/^Bearer\s+(.+)$/i);
   const token = match?.[1]?.trim();
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const anonKey = publishableKey();
   if (!token || !anonKey) {
     return new Response(JSON.stringify({ error: "unauthorized" }), {
       status: 401,

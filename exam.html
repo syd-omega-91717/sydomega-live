@@ -6,194 +6,120 @@
 <title>&#937; SYD OMEGA 91717 &mdash; Examination</title>
 <link rel="manifest" href="/manifest.json">
 <style>
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi-c{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-top:2px solid var(--gold)}
-.kpi-c .kpi-n{font-family:serif;font-size:16px;color:var(--gold);line-height:1}
-.kpi-c .kpi-l{font-family:monospace;font-size:12px;letter-spacing:2px;color:#85837b;margin-top:3px}
-.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-.stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
-.stat-num{font-family:'Courier New',monospace;font-size:20px;color:var(--purple);font-weight:700}
-.stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
-.exam-card{background:#0d0d0d;border:1px solid #222;padding:28px;max-width:600px;margin:0 auto 20px;text-align:center;position:relative}
-.exam-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--cyan))}
-.exam-q{font-family:'Courier New',monospace;font-size:14px;color:#e0e0e0;line-height:1.6;margin-bottom:20px}
-.exam-domain{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;margin-bottom:16px}
-.flip-btn{padding:10px 24px;background:#1a1a2e;border:1px solid var(--purple);color:var(--purple);font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;margin-bottom:16px}
-.flip-btn:hover{background:var(--purple);color:#fff}
-.exam-answer{background:#111;border:1px solid #222;padding:16px;margin-bottom:20px;font-size:12px;color:#ccc;line-height:1.6;text-align:left;display:none}
-.grade-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.grade-btn{padding:10px 20px;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;border:1px solid;font-weight:700}
-.grade-easy{background:#4CAF50;border-color:#4CAF50;color:#000}
-.grade-good{background:var(--cyan);border-color:var(--cyan);color:#000}
-.grade-hard{background:#FF9800;border-color:#FF9800;color:#000}
-.grade-miss{background:#FF4444;border-color:#FF4444;color:#fff}
-.progress-hdr{display:flex;justify-content:space-between;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);margin-bottom:6px}
-.progress-bar{background:#1a1a1a;height:6px;border-radius:3px;overflow:hidden;margin-bottom:20px}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .4s}
-.q-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--purple);padding:14px;margin-bottom:8px;position:relative}
-.q-text{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0;margin-bottom:4px}
-.q-answer{font-size:12px;color:var(--muted);margin-top:4px}
-.q-meta{display:flex;gap:8px;margin-top:8px;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);flex-wrap:wrap}
-.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px}
-.del-btn:hover{color:#FF4444}
-.form-group{margin-bottom:14px}
-.form-group label{display:block;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:6px}
-.form-group input,.form-group textarea,.form-group select{width:100%;background:#0d0d0d;border:1px solid #222;color:#e0e0e0;padding:10px;font-family:'Courier New',monospace;font-size:12px;box-sizing:border-box}
-.form-group textarea{resize:vertical;line-height:1.6;min-height:80px}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--purple)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.btn-primary{padding:10px 24px;background:var(--purple);border:none;color:#fff;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1.5px;cursor:pointer;font-weight:700}
-.btn-primary:hover{background:#7a4fcf}
-.btn-secondary{padding:10px 18px;background:#111;border:1px solid #333;color:#aaa;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;cursor:pointer}
-.section-label{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:14px}
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.filter-tag{padding:4px 12px;background:#111;border:1px solid #222;color:var(--muted);font-size:12px;font-family:'Courier New',monospace;letter-spacing:1px;cursor:pointer;transition:all .2s}
-.filter-tag.active{background:#1a1a2e;border-color:var(--purple);color:var(--purple)}
-.sci-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;margin-bottom:14px;--card-accent:var(--purple)}
-.sci-title{font-family:'Courier New',monospace;font-size:12px;color:var(--purple);letter-spacing:1px;margin-bottom:8px}
-.sci-body{font-size:12px;color:#888;line-height:1.65}
-.sci-ref{font-size:12px;color:var(--muted);margin-top:8px;font-family:'Courier New',monospace}
-.session-result{background:#0d0d0d;border:1px solid var(--purple);padding:24px;text-align:center;max-width:500px;margin:0 auto}
-.result-big{font-family:'Courier New',monospace;font-size:36px;color:var(--purple);font-weight:700}
-.result-label{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;margin-bottom:8px}
+.xm-wrap{padding:16px var(--pad,20px) 40px;min-width:0}
+.xm-title{font-family:var(--D);font-size:clamp(20px,4vw,28px);letter-spacing:3px;color:var(--gold);margin:4px 0 14px}
+.xm-kpis .kpi{text-align:center}
+.xm-panel[hidden]{display:none!important}
+.fc-card{max-width:620px;margin:0 auto 16px;padding:22px;text-align:center}
+.fc-meta{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
+.fc-q{font-size:18px;line-height:1.45;margin-bottom:16px;overflow-wrap:anywhere}
+.fc-a{font-size:15px;line-height:1.5;color:var(--ink);text-align:left;padding:12px 14px;border-left:3px solid var(--cyan);background:rgba(255,255,255,.04);margin-bottom:14px;overflow-wrap:anywhere}
+.fc-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.fc-row .btn,.fc-form .btn{min-height:44px;padding:0 16px}
+.fc-g0{color:var(--crim)!important;border-color:var(--crim)!important}
+.fc-g3{color:#e8a33c!important;border-color:#e8a33c!important}
+.fc-g4{color:var(--cyan)!important;border-color:var(--cyan)!important}
+.fc-g5{color:var(--green)!important;border-color:var(--green)!important}
+.fc-sub{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 14px}
+.fc-form{display:grid;gap:10px;max-width:620px}
+.fc-form textarea,.fc-form select{width:100%;min-height:44px}
+.fc-form .fc-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fc-list{display:grid;gap:8px}
+.fc-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--purple,#9B6BF0);background:rgba(10,12,18,.5)}
+.fc-item.due{border-left-color:var(--crim)}
+.fc-item .fc-txt{flex:1;min-width:0;overflow-wrap:anywhere;font-size:14px}
+.fc-item small{display:block;font-family:var(--M);font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:1px}
+.fc-del{min-width:44px;min-height:44px;background:none;border:1px solid rgba(255,255,255,.12);color:var(--muted);cursor:pointer}
+.fc-msg{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);min-height:16px}
+@media (max-width:480px){.fc-form .fc-two{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="shell">
 <aside class="side" id="omega-side" data-page="exam"></aside>
 <main class="main">
-<div class="topbar"><div class="t">SOVEREIGN EXAMINATION<small>TEST &middot; GRADE &middot; REPEAT &middot; MASTER &middot; SYD OMEGA 91717</small></div></div>
-<div style="padding:20px var(--pad,20px)">
+<div class="xm-wrap">
+  <h1 class="xm-title">EXAMINATION</h1>
 
-  <div class="tab-row">
-    <button class="tab-btn act" data-tab="exam" onclick="switchTab('exam',this)">&#9670; EXAM</button>
-    <button class="tab-btn" data-tab="questions" onclick="switchTab('questions',this)">&#9670; QUESTIONS</button>
-    <button class="tab-btn" data-tab="add" onclick="switchTab('add',this)">&#9670; ADD Q&amp;A</button>
-    <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
+  <div class="kpi-row xm-kpis">
+    <div class="kpi"><div class="kpi-n" id="xm-passed">0/12</div><div class="kpi-l">SECTORS PASSED</div></div>
+    <div class="kpi"><div class="kpi-n" id="xm-avg">0%</div><div class="kpi-l">BEST AVERAGE</div></div>
+    <div class="kpi"><div class="kpi-n" id="xm-answered">0</div><div class="kpi-l">ANSWERED</div></div>
   </div>
 
-  <div id="tab-exam" class="tab-panel act">
-    <div class="stats-row">
-      <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">TOTAL Q&amp;A</div></div>
-      <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-due">0</div><div class="stat-lbl">DUE TODAY</div></div>
-      <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-mastered">0</div><div class="stat-lbl">MASTERED</div></div>
-      <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-accuracy">0%</div><div class="stat-lbl">ACCURACY</div></div>
+  <div class="tab-row" role="tablist">
+    <button type="button" class="tab-btn act" role="tab" aria-selected="true" data-tab="exams" onclick="xmTab('exams')">EXAMS</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="cards" onclick="xmTab('cards')">FLASHCARDS</button>
+  </div>
+
+  <section class="xm-panel" id="xm-exams" role="tabpanel">
+    <div id="xm-mount"></div>
+  </section>
+
+  <section class="xm-panel" id="xm-cards" role="tabpanel" hidden>
+    <div class="fc-sub">
+      <button type="button" class="btn btn-cyan" data-sub="review" onclick="fcSub('review')">REVIEW</button>
+      <button type="button" class="btn" data-sub="list" onclick="fcSub('list')">ALL <span id="fc-count">0</span></button>
+      <button type="button" class="btn" data-sub="add" onclick="fcSub('add')">+ ADD</button>
     </div>
-    <div id="exam-area"></div>
-  </div>
-
-  <div id="tab-questions" class="tab-panel">
-    <div class="filter-row" id="dom-filter">
-      <div class="filter-tag active" data-d="all" onclick="setDomFilter('all',this)">ALL</div>
-      <div class="filter-tag" data-d="strategy" onclick="setDomFilter('strategy',this)">STRATEGY</div>
-      <div class="filter-tag" data-d="finance" onclick="setDomFilter('finance',this)">FINANCE</div>
-      <div class="filter-tag" data-d="science" onclick="setDomFilter('science',this)">SCIENCE</div>
-      <div class="filter-tag" data-d="philosophy" onclick="setDomFilter('philosophy',this)">PHILOSOPHY</div>
-      <div class="filter-tag" data-d="health" onclick="setDomFilter('health',this)">HEALTH</div>
-      <div class="filter-tag" data-d="trivia" onclick="setDomFilter('trivia',this)">TRIVIA</div>
-      <div class="filter-tag" data-d="custom" onclick="setDomFilter('custom',this)">CUSTOM</div>
-    </div>
-    <div id="questions-list"></div>
-  </div>
-
-  <div id="tab-add" class="tab-panel">
-    <div class="section-label">IMPORT REAL TRIVIA &middot; OPEN TRIVIA DB</div>
-    <div style="font-size:12px;color:#888;line-height:1.6;margin-bottom:14px">Pulls real, freely-licensed trivia questions from <a href="https://opentdb.com" target="_blank" rel="noopener" style="color:var(--purple)">Open Trivia DB</a>, a public, community-maintained trivia database (no login, no key). Imported questions are added to your spaced-repetition queue alongside your own.</div>
-    <div class="form-row">
-      <div class="form-group"><label>CATEGORY</label>
-        <select id="triv-cat">
-          <option value="9">General Knowledge</option>
-          <option value="17">Science &amp; Nature</option>
-          <option value="18">Science: Computers</option>
-          <option value="19">Science: Mathematics</option>
-          <option value="20">Mythology</option>
-          <option value="21">Sports</option>
-          <option value="22">Geography</option>
-          <option value="23">History</option>
-          <option value="25">Art</option>
-          <option value="27">Animals</option>
-        </select>
-      </div>
-      <div class="form-group"><label>DIFFICULTY</label>
-        <select id="triv-diff">
-          <option value="">Any</option>
-          <option value="easy">Easy</option>
-          <option value="medium" selected>Medium</option>
-          <option value="hard">Hard</option>
-        </select>
+    <div id="fc-review"></div>
+    <div id="fc-list" class="fc-list" hidden></div>
+    <div id="fc-add" hidden>
+      <div class="fc-form">
+        <textarea id="fc-q" rows="2" placeholder="Question" aria-label="Question"></textarea>
+        <textarea id="fc-a" rows="3" placeholder="Answer" aria-label="Answer"></textarea>
+        <div class="fc-two">
+          <select id="fc-domain" aria-label="Domain">
+            <option value="strategy">Strategy</option><option value="finance">Finance</option>
+            <option value="science">Science</option><option value="philosophy">Philosophy</option>
+            <option value="health">Health</option><option value="trivia">Trivia</option>
+            <option value="custom" selected>Custom</option>
+          </select>
+          <select id="fc-diff" aria-label="Difficulty">
+            <option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="fc-row" style="justify-content:flex-start">
+          <button type="button" class="btn btn-gold" onclick="fcAdd()">ADD CARD</button>
+        </div>
+        <div class="fc-two">
+          <select id="fc-triv" aria-label="Open Trivia DB category">
+            <option value="9">Trivia &middot; General</option><option value="17">Trivia &middot; Science</option>
+            <option value="18">Trivia &middot; Computers</option><option value="19">Trivia &middot; Mathematics</option>
+            <option value="22">Trivia &middot; Geography</option><option value="23">Trivia &middot; History</option>
+          </select>
+          <button type="button" class="btn" id="fc-triv-btn" onclick="fcImport()">IMPORT 10</button>
+        </div>
+        <div class="fc-msg" id="fc-msg" aria-live="polite"></div>
       </div>
     </div>
-    <div class="form-group"><label>NUMBER OF QUESTIONS</label><input id="triv-amount" type="number" min="1" max="50" value="10"></div>
-    <div style="display:flex;gap:8px">
-      <button class="btn-primary" onclick="importTrivia()" id="triv-btn">FETCH &amp; IMPORT</button>
-    </div>
-    <div id="triv-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:12px;color:#9B6BF0"></div>
-
-    <div class="section-label" style="margin-top:28px">ADD QUESTION &amp; ANSWER</div>
-    <div class="form-group"><label>QUESTION</label><textarea id="q-question" placeholder="What is the question?" rows="3"></textarea></div>
-    <div class="form-group"><label>ANSWER</label><textarea id="q-answer" placeholder="What is the correct answer?" rows="4"></textarea></div>
-    <div class="form-row">
-      <div class="form-group"><label>DOMAIN</label>
-        <select id="q-domain">
-          <option value="strategy">Strategy</option>
-          <option value="finance">Finance</option>
-          <option value="science">Science</option>
-          <option value="philosophy">Philosophy</option>
-          <option value="health">Health</option>
-          <option value="trivia">Trivia</option>
-          <option value="custom">Custom</option>
-        </select>
-      </div>
-      <div class="form-group"><label>DIFFICULTY</label>
-        <select id="q-diff">
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn-primary" onclick="addQuestion()">ADD QUESTION</button>
-      <button class="btn-secondary" onclick="loadSeedQuestions()">LOAD SEEDS</button>
-    </div>
-    <div id="add-msg" style="margin-top:10px;font-family:'Courier New',monospace;font-size:12px;color:#9B6BF0"></div>
-  </div>
-
-  <div id="tab-science" class="tab-panel">
-    <div class="kpi-row" data-stagger data-stagger-gap="70">
-      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
-      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
-      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
-      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
-    </div>
-    <div class="kpi-row" data-stagger data-stagger-gap="70">
-      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
-      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
-      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
-      <div class="kpi-c" data-reveal="fade-up"><div class="kpi-n">9.1717</div><div class="kpi-l">Hz FREQUENCY</div></div>
-    </div>
-    <div class="sci-card card card-edge" data-reveal="fade-up"><div class="sci-title">TESTING EFFECT</div><div class="sci-body">Roediger &amp; Karpicke (2006): retrieval practice (testing) produces dramatically better long-term retention than re-reading. Being forced to recall an answer — even incorrectly — strengthens the memory trace more than passive review. Tests are not assessments; they are the learning itself.</div><div class="sci-ref">Roediger &amp; Karpicke (2006). Psychological Science</div></div>
-    <div class="sci-card card card-edge" data-reveal="fade-up"><div class="sci-title">SPACED REPETITION (SM-2)</div><div class="sci-body">Ebbinghaus (1885) forgetting curve + Wozniak (1987) SM-2 algorithm: review items at expanding intervals (1d → 6d → 14d → 28d...) calibrated by recall quality. SM-2 reduces study time by 60–80% vs. mass practice for the same retention.</div><div class="sci-ref">Wozniak (1987). SuperMemo SM-2 Algorithm</div></div>
-    <div class="sci-card card card-edge" data-reveal="fade-up"><div class="sci-title">INTERLEAVING</div><div class="sci-body">Rohrer &amp; Taylor (2007): mixing problem types during practice produces worse immediate performance but far better long-term retention and transfer — because it forces discrimination between concepts.</div><div class="sci-ref">Rohrer &amp; Taylor (2007). European Journal of Cognitive Psychology</div></div>
-    <div class="sci-card card card-edge" data-reveal="fade-up"><div class="sci-title">DESIRABLE DIFFICULTY</div><div class="sci-body">Bjork (1994): learning is most effective when it is effortful. The harder a retrieval feels in the moment, the stronger the memory trace it builds. Easy practice feels productive but is not.</div><div class="sci-ref">Bjork, R.A. (1994). Memory Distortions</div></div>
-    <div class="sci-card card card-edge" data-reveal="fade-up"><div class="sci-title">METACOGNITION</div><div class="sci-body">Flavell (1979): metacognition — knowing what you know — is a trainable skill. Self-examination with grading forces calibration of confidence vs. accuracy, building the metacognitive awareness that separates experts from novices.</div><div class="sci-ref">Flavell (1979) &middot; Dunning &amp; Kruger (1999)</div></div>
-    <div class="sci-card card card-edge" data-reveal="fade-up"><div class="sci-title">DELIBERATE PRACTICE</div><div class="sci-body">Ericsson (1993): expert performance results from deliberate practice — focused repetition in areas of weakness with immediate feedback. 10,000 hours of random practice ≠ 10,000 hours of deliberate practice.</div><div class="sci-ref">Ericsson et al. (1993). Psychological Review</div></div>
-  </div>
-
+  </section>
 </div>
 </main>
-<div data-page-emblem="exam" style="margin:20px auto 0"></div>
 </div>
 
 <script>
-var questions=[];
-var domFilter='all';
-var sessionQueue=[];
-var sessionIdx=0;
-var sessionAnswered=0;
-var sessionCorrect=0;
-var showingAnswer=false;
-var DOMAIN_COLORS={strategy:'#FFD700',finance:'#4CAF50',science:'#00E5FF',philosophy:'#9B6BF0',health:'#FF9800',trivia:'#FF69B4',custom:'#888'};
+/* ── KPIs + exam mount ── */
+function xmKpis(){
+  var s=window.OmegaExam?window.OmegaExam.stats():{passed:0,avg:0,answered:0};
+  document.getElementById('xm-passed').textContent=s.passed+'/12';
+  document.getElementById('xm-avg').textContent=s.avg+'%';
+  document.getElementById('xm-answered').textContent=s.answered;
+}
+function xmTab(id){
+  document.querySelectorAll('.tab-row .tab-btn').forEach(function(b){var on=b.getAttribute('data-tab')===id;b.classList.toggle('act',on);b.setAttribute('aria-selected',on?'true':'false');});
+  document.getElementById('xm-exams').hidden=id!=='exams';
+  document.getElementById('xm-cards').hidden=id!=='cards';
+  if(id==='cards')fcSub(fcView);
+}
+document.addEventListener('omega-exam:update',xmKpis);
+(function boot(){
+  if(window.OmegaExam){window.OmegaExam.mount(document.getElementById('xm-mount'));xmKpis();return;}
+  setTimeout(boot,50);
+})();
+
+/* ── Flashcards: spaced repetition (SM-2) on the existing omega_exam data ── */
+var questions=[],fcQueue=[],fcIdx=0,fcView='review';
 var SEEDS=[
   {q:'What is the Rule of 72?',a:'Divide 72 by an annual interest rate to estimate years to double. At 7%: 72÷7 ≈ 10.3 years.',domain:'finance',diff:'easy'},
   {q:'What is the Pareto Principle?',a:'80% of outcomes come from 20% of causes. Apply it to identify the high-leverage 20% of inputs.',domain:'strategy',diff:'easy'},
@@ -204,215 +130,100 @@ var SEEDS=[
   {q:'What is the 4% rule in finance?',a:'Bengen 1994: a portfolio can sustain 4% annual withdrawal for 30+ years. FI number = Annual Expenses × 25.',domain:'finance',diff:'medium'},
   {q:'What is the testing effect?',a:'Roediger & Karpicke 2006: retrieval practice (testing yourself) produces far better long-term retention than re-reading. Tests ARE the learning.',domain:'science',diff:'easy'},
   {q:'Define the authority formula AUTH.',a:'AUTH = sqrt(A³ + B³ + C³) × φ/e. APEX = 27.8367. A=Accomplishment, B=Breadth, C=Consistency. φ=1.618 (golden ratio), e=2.718.',domain:'custom',diff:'hard'},
-  {q:'What is Cognitive Load Theory?',a:'Sweller 1988: working memory holds ~4 chunks. Externalizing knowledge (notes, systems) frees working memory for higher-order reasoning. Reduce extraneous load, maximize germane load.',domain:'science',diff:'hard'},
+  {q:'What is Cognitive Load Theory?',a:'Sweller 1988: working memory holds ~4 chunks. Externalizing knowledge (notes, systems) frees working memory for higher-order reasoning. Reduce extraneous load, maximize germane load.',domain:'science',diff:'hard'}
 ];
-
-function load(){
-  try{questions=JSON.parse(localStorage.getItem('omega_exam')||'null')||[];}catch(e){questions=[];}
-  if(!questions.length)questions=SEEDS.map(function(s,i){return Object.assign({id:'s'+i,repetitions:0,interval:1,easiness:2.5,nextReview:new Date().toISOString().slice(0,10)},s);});
-}
-function save(){localStorage.setItem('omega_exam',JSON.stringify(questions));}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function today(){return new Date().toISOString().slice(0,10);}
-function isDue(q){return q.nextReview<=today();}
-
-function switchTab(id,btn){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
-  if(btn) btn.classList.add('act');
-  else {var b=document.querySelector('.tab-btn[data-tab="'+id+'"]');if(b)b.classList.add('act');}
-  document.getElementById('tab-'+id).classList.add('act');
-  if(id==='exam')renderExam();
-  if(id==='questions')renderQuestions();
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function fcLoad(){
+  var raw=null;try{raw=localStorage.getItem('omega_exam');}catch(e){}
+  try{questions=JSON.parse(raw||'null')||[];}catch(e){questions=[];}
+  if(!Array.isArray(questions))questions=[];
+  if(!questions.length)questions=SEEDS.map(function(s,i){return Object.assign({id:'s'+i,repetitions:0,interval:1,easiness:2.5,nextReview:today()},s);});
 }
-
-function renderStats(){
-  var due=questions.filter(isDue).length;
-  var mastered=questions.filter(function(q){return q.interval>=21;}).length;
-  document.getElementById('stat-total').textContent=questions.length;
-  document.getElementById('stat-due').textContent=due;
-  document.getElementById('stat-mastered').textContent=mastered;
-  var acc=sessionAnswered?Math.round(sessionCorrect/sessionAnswered*100):0;
-  document.getElementById('stat-accuracy').textContent=acc+'%';
+function fcSave(){try{localStorage.setItem('omega_exam',JSON.stringify(questions));return true;}catch(e){fcMsg('NOT SAVED — STORAGE UNAVAILABLE');return false;}}
+function isDue(q){return (q.nextReview||'')<=today();}
+function mk(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n;}
+function fcMsg(t){var m=document.getElementById('fc-msg');if(m){m.textContent=t;setTimeout(function(){if(m.textContent===t)m.textContent='';},3000);}}
+function fcSub(v){
+  fcView=v;
+  ['review','list','add'].forEach(function(k){document.getElementById('fc-'+k).hidden=k!==v;});
+  document.querySelectorAll('.fc-sub .btn').forEach(function(b){b.classList.toggle('btn-cyan',b.getAttribute('data-sub')===v);});
+  document.getElementById('fc-count').textContent=questions.length;
+  if(v==='review')fcReview();
+  if(v==='list')fcList();
 }
-
-function renderExam(){
-  renderStats();
-  var area=document.getElementById('exam-area');
-  if(!sessionQueue.length||sessionIdx>=sessionQueue.length){
-    startSession(area);return;
+function fcReview(){
+  if(fcIdx>=fcQueue.length){fcQueue=questions.filter(isDue).sort(function(){return Math.random()-.5;});fcIdx=0;}
+  var box=document.getElementById('fc-review');box.textContent='';
+  var card=mk('div','card fc-card');
+  if(!fcQueue.length){
+    var next=questions.map(function(q){return q.nextReview;}).sort()[0]||'—';
+    card.appendChild(mk('div','fc-meta','ALL CAUGHT UP · NEXT '+next));
+    box.appendChild(card);return;
   }
-  showQuestion(area);
+  var q=fcQueue[fcIdx];
+  card.appendChild(mk('div','fc-meta',(fcIdx+1)+'/'+fcQueue.length+' · '+String(q.domain||'custom').toUpperCase()+' · '+(q.interval||1)+'d'));
+  card.appendChild(mk('div','fc-q',q.q));
+  var ans=mk('div','fc-a',q.a);ans.hidden=true;card.appendChild(ans);
+  var row=mk('div','fc-row');
+  var flip=mk('button','btn btn-gold','REVEAL');flip.type='button';
+  flip.onclick=function(){ans.hidden=false;flip.remove();grades.hidden=false;};
+  row.appendChild(flip);card.appendChild(row);
+  var grades=mk('div','fc-row');grades.hidden=true;
+  [[0,'MISS'],[3,'HARD'],[4,'GOOD'],[5,'EASY']].forEach(function(g){
+    var b=mk('button','btn fc-g'+g[0],g[1]);b.type='button';b.onclick=function(){fcGrade(q.id,g[0]);};grades.appendChild(b);
+  });
+  card.appendChild(grades);box.appendChild(card);
 }
-
-function startSession(area){
-  var due=questions.filter(isDue);
-  if(!due.length){
-    area.innerHTML='<div class="session-result"><div class="result-label">ALL CAUGHT UP</div><div class="result-big">&#10003;</div><div style="font-family:\'Courier New\',monospace;font-size:12px;color:var(--muted);margin-top:12px;">No questions due today.<br>Next review: '+nextDue()+'</div></div>';
-    return;
+function fcGrade(id,g){
+  var o=questions.find(function(x){return x.id===id;});
+  if(o){
+    o.easiness=typeof o.easiness==='number'?o.easiness:2.5;o.repetitions=o.repetitions|0;o.interval=o.interval||1;
+    if(g>=3){
+      o.easiness=Math.max(1.3,o.easiness+(0.1-(5-g)*(0.08+(5-g)*0.02)));
+      if(o.repetitions===0)o.interval=1;else if(o.repetitions===1)o.interval=6;else o.interval=Math.round(o.interval*o.easiness);
+      o.repetitions++;
+    }else{o.repetitions=0;o.interval=1;}
+    var d=new Date();d.setDate(d.getDate()+o.interval);o.nextReview=d.toISOString().slice(0,10);
   }
-  sessionQueue=shuffle(due);
-  sessionIdx=0;sessionAnswered=0;sessionCorrect=0;showingAnswer=false;
-  showQuestion(area);
+  fcSave();fcIdx++;fcReview();
 }
-
-function nextDue(){
-  var dates=questions.map(function(q){return q.nextReview;}).sort();
-  return dates[0]||'—';
-}
-
-function shuffle(arr){var a=[...arr];for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
-
-function showQuestion(area){
-  if(sessionIdx>=sessionQueue.length){showResult(area);return;}
-  var q=sessionQueue[sessionIdx];
-  var col=DOMAIN_COLORS[q.domain]||'#888';
-  var pct=sessionQueue.length?(sessionIdx/sessionQueue.length*100):0;
-  area.innerHTML='<div class="progress-hdr"><span>'+sessionIdx+' / '+sessionQueue.length+'</span><span style="color:'+col+'">'+q.domain.toUpperCase()+'</span></div>'
-    +'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>'
-    +'<div class="exam-card">'
-    +'<div class="exam-domain" style="color:'+col+'">'+q.domain.toUpperCase()+' &middot; '+q.diff.toUpperCase()+' &middot; INTERVAL: '+q.interval+'d</div>'
-    +'<div class="exam-q">'+esc(q.q)+'</div>'
-    +'<button class="flip-btn" onclick="showAnswer()">REVEAL ANSWER</button>'
-    +'<div class="exam-answer" id="exam-answer">'+esc(q.a)+'</div>'
-    +'<div class="grade-row" id="grade-row" style="display:none">'
-    +'<button class="grade-btn grade-miss" onclick="grade(0)">MISS</button>'
-    +'<button class="grade-btn grade-hard" onclick="grade(3)">HARD</button>'
-    +'<button class="grade-btn grade-good" onclick="grade(4)">GOOD</button>'
-    +'<button class="grade-btn grade-easy" onclick="grade(5)">EASY</button>'
-    +'</div></div>';
-}
-
-function showAnswer(){
-  document.getElementById('exam-answer').style.display='block';
-  document.getElementById('grade-row').style.display='flex';
-  document.querySelector('.flip-btn').style.display='none';
-}
-
-function grade(q_grade){
-  var q=sessionQueue[sessionIdx];
-  var orig=questions.find(function(x){return x.id===q.id;});
-  if(orig){
-    if(q_grade>=3){
-      orig.easiness=Math.max(1.3,orig.easiness+(0.1-(5-q_grade)*(0.08+(5-q_grade)*0.02)));
-      if(orig.repetitions===0)orig.interval=1;
-      else if(orig.repetitions===1)orig.interval=6;
-      else orig.interval=Math.round(orig.interval*orig.easiness);
-      orig.repetitions++;
-    } else {orig.repetitions=0;orig.interval=1;}
-    var next=new Date();next.setDate(next.getDate()+orig.interval);
-    orig.nextReview=next.toISOString().slice(0,10);
-  }
-  sessionAnswered++;
-  if(q_grade>=4)sessionCorrect++;
-  save();sessionIdx++;
-  renderExam();
-}
-
-function showResult(area){
-  var acc=sessionAnswered?Math.round(sessionCorrect/sessionAnswered*100):0;
-  area.innerHTML='<div class="session-result">'
-    +'<div class="result-label">SESSION COMPLETE</div>'
-    +'<div class="result-big">'+acc+'%</div>'
-    +'<div style="font-family:\'Courier New\',monospace;font-size:12px;color:var(--muted);margin-top:10px;">'+sessionCorrect+' correct / '+sessionAnswered+' reviewed</div>'
-    +'<button class="flip-btn" onclick="sessionQueue=[];renderExam();" style="margin-top:20px">NEW SESSION</button>'
-    +'</div>';
-  renderStats();
-}
-
-function setDomFilter(d,el){
-  domFilter=d;
-  document.querySelectorAll('#dom-filter .filter-tag').forEach(function(x){x.classList.remove('active');});
-  el.classList.add('active');renderQuestions();
-}
-
-function renderQuestions(){
-  var list=document.getElementById('questions-list');
-  var filtered=domFilter==='all'?questions:questions.filter(function(q){return q.domain===domFilter;});
-  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-family:\'Courier New\',monospace">NO QUESTIONS</div>';return;}
-  list.innerHTML=filtered.map(function(q){
-    var col=DOMAIN_COLORS[q.domain]||'#888';
-    var due=isDue(q);
-    return '<div class="q-card" style="border-left-color:'+col+(due?';border-left-color:#FF4444':'')+'">'
-      +'<button class="del-btn" onclick="delQ(\''+q.id+'\')">DEL</button>'
-      +'<div class="q-text">'+esc(q.q)+'</div>'
-      +'<div class="q-answer">A: '+esc(q.a.slice(0,100))+(q.a.length>100?'...':'')+'</div>'
-      +'<div class="q-meta">'
-      +'<span style="color:'+col+'">'+q.domain.toUpperCase()+'</span>'
-      +'<span>INTERVAL: '+q.interval+'d</span>'
-      +'<span>REPS: '+q.repetitions+'</span>'
-      +'<span>NEXT: '+q.nextReview+'</span>'
-      +(due?'<span style="color:#FF4444">DUE</span>':'')
-      +(q.source?'<span style="color:var(--muted)">'+esc(q.source)+'</span>':'')
-      +'</div></div>';
-  }).join('');
-}
-
-function delQ(id){if(!confirm('Delete?'))return;questions=questions.filter(function(x){return x.id!==id;});save();renderQuestions();}
-
-function addQuestion(){
-  var q_text=document.getElementById('q-question').value.trim();
-  var a_text=document.getElementById('q-answer').value.trim();
-  var domain=document.getElementById('q-domain').value;
-  var diff=document.getElementById('q-diff').value;
-  if(!q_text||!a_text){alert('Question and answer required.');return;}
-  questions.push({id:uid(),q:q_text,a:a_text,domain:domain,diff:diff,repetitions:0,interval:1,easiness:2.5,nextReview:today()});
-  save();
-  document.getElementById('q-question').value='';document.getElementById('q-answer').value='';
-  document.getElementById('add-msg').textContent='QUESTION ADDED';
-  setTimeout(function(){document.getElementById('add-msg').textContent='';},2500);
-}
-
-function decodeEntities(str){
-  var ta=document.createElement('textarea');
-  ta.innerHTML=str;
-  return ta.value;
-}
-
-function importTrivia(){
-  var cat=document.getElementById('triv-cat').value;
-  var diff=document.getElementById('triv-diff').value;
-  var amount=Math.max(1,Math.min(50,parseInt(document.getElementById('triv-amount').value,10)||10));
-  var btn=document.getElementById('triv-btn');
-  var msg=document.getElementById('triv-msg');
-  btn.disabled=true;btn.textContent='FETCHING...';msg.textContent='';
-  var url='https://opentdb.com/api.php?amount='+amount+'&category='+cat+(diff?'&difficulty='+diff:'')+'&type=multiple';
-  fetch(url).then(function(r){return r.json();}).then(function(data){
-    if(data.response_code!==0||!data.results||!data.results.length){
-      msg.textContent='No questions returned — try a different category or fewer questions.';
-      return;
-    }
-    var added=0;
-    data.results.forEach(function(r){
-      var q_text=decodeEntities(r.question);
-      var correct=decodeEntities(r.correct_answer);
-      var incorrect=r.incorrect_answers.map(decodeEntities);
-      var a_text='Correct answer: '+correct+'. (Other options: '+incorrect.join(', ')+')';
-      questions.push({id:uid(),q:q_text,a:a_text,domain:'trivia',diff:r.difficulty||'medium',repetitions:0,interval:1,easiness:2.5,nextReview:today(),source:'Open Trivia DB · '+decodeEntities(r.category)});
-      added++;
-    });
-    save();
-    msg.textContent=added+' REAL TRIVIA QUESTIONS IMPORTED';
-    renderStats();
-    setTimeout(function(){msg.textContent='';},3500);
-  }).catch(function(){
-    msg.textContent='Could not reach Open Trivia DB — check your connection and try again.';
-  }).finally(function(){
-    btn.disabled=false;btn.textContent='FETCH & IMPORT';
+function fcList(){
+  var list=document.getElementById('fc-list');list.textContent='';
+  if(!questions.length){list.appendChild(mk('div','fc-meta','NO CARDS'));return;}
+  questions.forEach(function(q){
+    var it=mk('div','fc-item'+(isDue(q)?' due':''));
+    var t=mk('div','fc-txt',q.q);
+    t.appendChild(mk('small',null,String(q.domain||'custom').toUpperCase()+' · '+(q.interval||1)+'d · '+(q.nextReview||'')+(q.source?' · '+q.source:'')));
+    it.appendChild(t);
+    var del=mk('button','fc-del','✕');del.type='button';del.setAttribute('aria-label','Delete card');
+    del.onclick=function(){if(!confirm('Delete?'))return;questions=questions.filter(function(x){return x.id!==q.id;});fcSave();fcQueue=[];fcSub('list');};
+    it.appendChild(del);list.appendChild(it);
   });
 }
-
-function loadSeedQuestions(){
-  if(!confirm('Load seed questions? They will be appended.'))return;
-  SEEDS.forEach(function(s){questions.push(Object.assign({id:uid(),repetitions:0,interval:1,easiness:2.5,nextReview:today()},s));});
-  save();
-  document.getElementById('add-msg').textContent=SEEDS.length+' SEEDS LOADED';
-  setTimeout(function(){document.getElementById('add-msg').textContent='';},2500);
+function fcAdd(){
+  var q=document.getElementById('fc-q').value.trim(),a=document.getElementById('fc-a').value.trim();
+  if(!q||!a){fcMsg('QUESTION AND ANSWER REQUIRED');return;}
+  questions.push({id:uid(),q:q,a:a,domain:document.getElementById('fc-domain').value,diff:document.getElementById('fc-diff').value,repetitions:0,interval:1,easiness:2.5,nextReview:today()});
+  if(!fcSave())return;
+  document.getElementById('fc-q').value='';document.getElementById('fc-a').value='';
+  document.getElementById('fc-count').textContent=questions.length;fcQueue=[];fcMsg('CARD ADDED');
 }
-
-load();renderExam();
+function decodeEntities(s){return new DOMParser().parseFromString('<!doctype html><body>'+s,'text/html').body.textContent||'';}
+function fcImport(){
+  var btn=document.getElementById('fc-triv-btn');btn.disabled=true;
+  fetch('https://opentdb.com/api.php?amount=10&type=multiple&category='+encodeURIComponent(document.getElementById('fc-triv').value))
+    .then(function(r){return r.json();}).then(function(d){
+      if(!d||d.response_code!==0||!d.results||!d.results.length){fcMsg('NO QUESTIONS RETURNED');return;}
+      d.results.forEach(function(r){
+        questions.push({id:uid(),q:decodeEntities(r.question),a:'Correct answer: '+decodeEntities(r.correct_answer),domain:'trivia',diff:r.difficulty||'medium',repetitions:0,interval:1,easiness:2.5,nextReview:today(),source:'Open Trivia DB · '+decodeEntities(r.category)});
+      });
+      if(fcSave()){fcQueue=[];document.getElementById('fc-count').textContent=questions.length;fcMsg(d.results.length+' IMPORTED');}
+    }).catch(function(){fcMsg('OPEN TRIVIA DB UNREACHABLE');}).finally(function(){btn.disabled=false;});
+}
+fcLoad();
 </script>
+<script src="/omega-exam-engine.js" defer></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

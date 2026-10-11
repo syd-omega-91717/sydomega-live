@@ -27,7 +27,7 @@ def main():
     source = FUNCTION.read_text(encoding="utf-8")
     migration = MIGRATION.read_text(encoding="utf-8")
     doc = DOC.read_text(encoding="utf-8")
-    for marker in ("auth.getUser()","actorUserId","omega_platform_events","metadata.schema_version","idempotency_key","SUPABASE_SERVICE_ROLE_KEY"):
+    for marker in ("auth.getUser()","actorUserId","omega_platform_events","metadata.schema_version","idempotency_key","secretKey()"):
         if marker not in source: fail(f"missing runtime marker: {marker}")
     for event_type in EVENT_TYPES:
         if f'"{event_type}"' not in source or event_type not in doc:

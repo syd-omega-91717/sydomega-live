@@ -8,6 +8,23 @@
 -- Every column/type/default/FK below is copied from a live
 -- information_schema.columns + pg_constraint query.
 
+-- public.organizations (captured 2026-10-04 from live pg_attribute/pg_constraint):
+-- projects references it, but no file in this repo created it, so a fresh
+-- `supabase db reset` failed below. Idempotent; a no-op live.
+create table if not exists public.organizations (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null,
+  logo_url text,
+  website text,
+  description text,
+  owner_id uuid references public.profiles(id),
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  constraint organizations_slug_key unique (slug)
+);
+alter table public.organizations enable row level security;
+
 create table if not exists public.projects (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid references public.organizations(id) on delete set null,

@@ -65,6 +65,25 @@ PROP_PUB = re.compile(
     r"|=\s*['\"](--omega-[a-z0-9-]+)['\"]"                  # via a PROP constant
 )
 GLOB_PUB = re.compile(r"window\.(Omega[A-Za-z0-9_]+)\s*=(?!=)")
+# The environment-neutral UMD-style module -- `(function (root) { root.OmegaX = ... })
+# (typeof globalThis !== "undefined" ? globalThis : window)` -- publishes the same
+# global through its parameter. omega-relearn-sigil-mana.js and
+# omega-password-guard.js do this; reading only `window.X =` reported
+# OmegaRelearnSigilMana as "published by NOTHING" the moment life.html became
+# reachable, while the page computed mana correctly in a render. The parameter
+# only counts when the IIFE is invoked with a real global object.
+IIFE_PARAM = re.compile(r"\(\s*function\s*\(\s*([A-Za-z_$][\w$]*)")
+IIFE_GLOBAL_CALL = re.compile(r"\}\s*\)\s*\(\s*[^)]*\b(?:globalThis|window|self)\b")
+GLOBALTHIS_PUB = re.compile(r"\b(?:globalThis|self)\.(Omega[A-Za-z0-9_]+)\s*=(?!=)")
+
+
+def global_publishes(src):
+    names = set(GLOB_PUB.findall(src)) | set(GLOBALTHIS_PUB.findall(src))
+    m = IIFE_PARAM.search(src)
+    if m and IIFE_GLOBAL_CALL.search(src):
+        param = re.escape(m.group(1))
+        names |= set(re.findall(r"\b" + param + r"\.(Omega[A-Za-z0-9_]+)\s*=(?!=)", src))
+    return names
 GLOB_READ = re.compile(r"window\.(Omega[A-Za-z0-9_]+)")
 
 # ---- reachability, mirrored from audit.py's module graph ----------------
@@ -181,7 +200,7 @@ def collect():
             pub[a or b].add(f)
         for name in PROP_READ.findall(src):
             rd[name].add(f)
-        for name in GLOB_PUB.findall(src):
+        for name in global_publishes(src):
             pub["window." + name].add(f)
         for name in GLOB_READ.findall(src):
             rd["window." + name].add(f)

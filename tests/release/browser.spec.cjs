@@ -97,7 +97,10 @@ test.describe('Omega production release surface', () => {
     await visit(page, new URL('/dashboard.html', BASE_URL).toString());
     const body = await onSettled(page, () => page.locator('body').innerText());
     expect(body).not.toMatch(/balance\s*[:=]\s*\$?\s*0\.00\s*(USD|EUR)?/i);
-    expect(body).toMatch(/UNAVAILABLE|PARTIAL|LIVE|CALCULATED|SIMULATED|sign in|login|authenticate/i);
+    // A signed-out visitor lands on the account page, whose real prompt is "LOG IN";
+    // `login` never matched it -- the test passed only because the ticker/value banner
+    // happened to print "LIVE", and calm mode (default since 2026-10-04) hides those.
+    expect(body).toMatch(/UNAVAILABLE|PARTIAL|LIVE|CALCULATED|SIMULATED|sign\s*in|log\s*in|authenticate/i);
   });
 
   for (const [route] of MODULE_ROUTES.slice(0, 5)) {

@@ -1,0 +1,461 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Ω SYD OMEGA 91717 Product Domain Registry",
+  "version": 1,
+  "status": "GOVERNANCE_TAXONOMY_NOT_PRODUCTION_PROOF",
+  "source_basis": "docs/OMEGA_MASTER_SOURCE_TRACEABILITY_V2.md §6 historical 18-module product contract; current workspace reconciliation remains authoritative for implementation state.",
+  "authority_rule": "This registry defines product-domain identity and ownership boundaries. It does not assert that a domain, capability, provider, payment flow, or page is production-live.",
+  "unknown_policy": "UNVERIFIED is preserved until repository and runtime evidence proves the field.",
+  "domains": [
+    {
+      "domain_id": "platform-core",
+      "name": "Platform Core (Auth & Profile)",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "consultancy",
+      "name": "Consultancy Hub",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "gaming",
+      "name": "Gaming & Characters",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "achievements",
+      "name": "Achievements System",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "family",
+      "name": "Family & Tree Links",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "media",
+      "name": "Media (Movies / Series / Demos)",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "blockchain",
+      "name": "Blockchain / Crypto / NFT",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "communication-security",
+      "name": "Communication & Security",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "horoscope-elements",
+      "name": "Horoscope & Elements",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "news",
+      "name": "Media & News",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "heritage",
+      "name": "Heredity & Heritage",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "progress",
+      "name": "Evaluation & Progress",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "passport",
+      "name": "System Passport & Crypto Card",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "legal",
+      "name": "Legal & Rights",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "cosmology",
+      "name": "Gods, Planets & Elements",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "investment",
+      "name": "Asset Ownership & Investment Engine",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "intelligence",
+      "name": "AI & System Intelligence",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    },
+    {
+      "domain_id": "hierarchy",
+      "name": "Level & Ownership Hierarchy",
+      "source_contract": "historical_18_module_product_contract",
+      "implementation_state": "UNVERIFIED",
+      "accountable_owner": "UNASSIGNED",
+      "customer_job": "UNVERIFIED",
+      "canonical_capabilities": [],
+      "authoritative_data_sources": [],
+      "authorization_boundary": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "BLOCKED",
+        "UNAVAILABLE"
+      ],
+      "dependencies": [],
+      "failure_paths": [
+        "UNVERIFIED"
+      ],
+      "telemetry": [],
+      "acceptance_tests": [],
+      "cost_and_operational_owner": "UNASSIGNED",
+      "release_evidence": [],
+      "rollback_or_retirement": "UNVERIFIED"
+    }
+  ]
+}

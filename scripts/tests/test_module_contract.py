@@ -94,6 +94,30 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("window.OmegaGhost", out)
 
+    def test_iife_root_parameter_publishes(self):
+        """`(function (root) { root.OmegaX = ... })(globalThis)` publishes OmegaX --
+        the shape of omega-relearn-sigil-mana.js, read by omega-life.js."""
+        self.fx.write("bg.js",
+                      "var a=document.createElement('script');a.src='/omega-reader.js';"
+                      "var b=document.createElement('script');b.src='/omega-umd.js';")
+        self.fx.write("omega-reader.js", "window.OmegaUmd.go();")
+        self.fx.write("omega-umd.js",
+                      "(function (root) { root.OmegaUmd = {go:function(){}}; })"
+                      "(typeof globalThis !== 'undefined' ? globalThis : window);")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0, out)
+
+    def test_a_local_object_property_is_not_a_global_publish(self):
+        """`state.OmegaX = ...` in an IIFE invoked with no global is not a publish."""
+        self.fx.write("bg.js", "var a=document.createElement('script');a.src='/omega-reader.js';"
+                      "var b=document.createElement('script');b.src='/omega-local.js';")
+        self.fx.write("omega-reader.js", "window.OmegaLocal.go();")
+        self.fx.write("omega-local.js",
+                      "(function (state) { state.OmegaLocal = {}; })({});")
+        code, out = self.fx.run()
+        self.assertEqual(code, 1)
+        self.assertIn("window.OmegaLocal", out)
+
     # ---- the false-positive directions ---------------------------------
 
     def test_a_name_only_mentioned_in_a_comment_is_not_a_read(self):

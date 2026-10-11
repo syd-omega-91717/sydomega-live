@@ -40,6 +40,11 @@ CREATE POLICY ai_memory_embeddings_update ON public.ai_memory_embeddings FOR UPD
 DROP POLICY IF EXISTS ai_memory_embeddings_delete ON public.ai_memory_embeddings;
 CREATE POLICY ai_memory_embeddings_delete ON public.ai_memory_embeddings FOR DELETE USING (user_id=(SELECT auth.uid()));
 
+-- (2026-10-04, owner-approved) Live ai_memory carries a legacy `memory` column
+-- (added out-of-band) that the chain never adds; the backfill below reads it,
+-- so a fresh `supabase db reset` failed here. A no-op live.
+ALTER TABLE public.ai_memory ADD COLUMN IF NOT EXISTS memory text;
+
 INSERT INTO public.ai_memory_embeddings (memory_id,user_id,provider_code,model,model_version,dimensions,content_hash,status)
 SELECT m.id,m.user_id,'UNSELECTED','UNSELECTED','UNSELECTED',NULL,md5(coalesce(m.content,m.memory,'')),'pending'
 FROM public.ai_memory m

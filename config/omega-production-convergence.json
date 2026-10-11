@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Ω Production Convergence Wave",
+  "truth": "CALCULATED",
+  "purpose": "Convert remaining externally verifiable production-readiness gaps into explicit auditable gates without weakening the existing assurance plane.",
+  "sourceBasis": [
+    "SYD OMEGA 91717 - Master Prompt",
+    "SYD OMEGA 91717.txt",
+    "Ω SYD OMEGA 91717_Document.txt",
+    "Ω- SYD OMEGA 91717-THE 999-POINT SOVEREIGN BLUEPRINT-NANO-DETAIL EXPANSION.txt",
+    "Absolute.txt"
+  ],
+  "canonicalSystems": {
+    "assurance": "config/omega-production-assurance.json",
+    "identity": "Supabase Auth + governed authorization",
+    "events": "omega_platform_events",
+    "evidence": "omega_platform_evidence / graph_evidence",
+    "missions": "omega_missions / omega_member_mission_state / omega_mission_transitions",
+    "capabilities": "capability_registry",
+    "lineage": "data_lineage",
+    "deployment": "Vercel production deployment",
+    "payments": "Stripe webhook + financial ledger + entitlement state",
+    "memory": "ai_memory + vector extension + governed retrieval"
+  },
+  "gates": [
+    {
+      "id": "credential_containment",
+      "priority": "P0",
+      "ownerAction": true,
+      "requires": [
+        "provider_rotation_evidence",
+        "repository_history_scan",
+        "secret_lifecycle_record"
+      ],
+      "blocks": [
+        "production_claim"
+      ]
+    },
+    {
+      "id": "owner_mfa",
+      "priority": "P0",
+      "ownerAction": true,
+      "requires": [
+        "verified_mfa_factor",
+        "enforcement_evidence",
+        "recovery_path_evidence"
+      ],
+      "blocks": [
+        "production_readiness"
+      ]
+    },
+    {
+      "id": "leaked_password_protection",
+      "priority": "P0",
+      "ownerAction": true,
+      "requires": [
+        "supabase_auth_setting_enabled",
+        "security_advisor_clean"
+      ],
+      "blocks": [
+        "security_10_of_10"
+      ]
+    },
+    {
+      "id": "commerce_reality",
+      "priority": "P0",
+      "ownerAction": true,
+      "requires": [
+        "webhook_secret_configured",
+        "signature_verification",
+        "idempotency",
+        "settlement_evidence",
+        "entitlement_evidence",
+        "replay_evidence"
+      ],
+      "blocks": [
+        "live_payment_claim"
+      ]
+    },
+    {
+      "id": "semantic_memory",
+      "priority": "P1",
+      "ownerAction": false,
+      "requires": [
+        "approved_embedding_provider",
+        "versioned_vector_schema",
+        "authenticated_generation",
+        "retrieval_provenance",
+        "groundedness_evaluation",
+        "unavailable_fallback"
+      ],
+      "blocks": [
+        "semantic_recall_claim"
+      ]
+    },
+    {
+      "id": "life_state_persistence",
+      "priority": "P1",
+      "ownerAction": false,
+      "requires": [
+        "server_authoritative_persistence",
+        "rls",
+        "event_registration",
+        "evidence_lineage",
+        "export_deletion"
+      ],
+      "blocks": [
+        "persistent_life_state_claim"
+      ]
+    },
+    {
+      "id": "service_execution",
+      "priority": "P1",
+      "ownerAction": false,
+      "requires": [
+        "service_capability_binding",
+        "task_authorization",
+        "event",
+        "evidence",
+        "outcome_verification"
+      ],
+      "blocks": [
+        "live_service_execution_claim"
+      ]
+    },
+    {
+      "id": "operational_recovery",
+      "priority": "P1",
+      "ownerAction": false,
+      "requires": [
+        "backup_evidence",
+        "restore_exercise",
+        "migration_replay",
+        "rto_rpo_record"
+      ],
+      "blocks": [
+        "resilience_claim"
+      ]
+    }
+  ],
+  "truthRules": {
+    "missingExternalEvidence": "UNVERIFIED",
+    "missingProviderConfiguration": "BLOCKED",
+    "simulation": "NEVER_LIVE",
+    "lore": "NEVER_LIVE",
+    "designProposal": "NEVER_LIVE",
+    "unknown": "PRESERVE_UNKNOWN",
+    "noSecretValues": true
+  }
+}

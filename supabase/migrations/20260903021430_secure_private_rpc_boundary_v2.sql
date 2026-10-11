@@ -27,7 +27,7 @@ BEGIN
            has_function_privilege('anon',p.oid,'EXECUTE') AS anon_exec,
            has_function_privilege('authenticated',p.oid,'EXECUTE') AS auth_exec
     FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
-    WHERE n.nspname='public' AND p.prosecdef=true AND p.prorettype <> 'event_trigger'::regtype
+    WHERE n.nspname='public' AND p.prosecdef=true AND p.prorettype NOT IN ('event_trigger'::regtype, 'trigger'::regtype)
       AND (has_function_privilege('anon',p.oid,'EXECUTE') OR has_function_privilege('authenticated',p.oid,'EXECUTE'))
   LOOP
     v_call := '';

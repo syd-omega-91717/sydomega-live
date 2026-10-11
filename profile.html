@@ -1163,7 +1163,7 @@ function frame(){ctx.clearRect(0,0,120,120);
     <div class="sechead" data-reveal="fade-up" data-i18n="prof_passport_submit_header">SUBMIT IDENTITY DOCUMENT  .  READY TO ACTIVATE</div>
     <div class="kyc">
       <label data-i18n="prof_passport_file_label">GOVERNMENT ID OR PASSPORT (image or PDF)</label>
-      <input id="kyc-file" type="file" accept="image/*,application/pdf" />
+      <input data-omega-capability-id="import-export" id="kyc-file" type="file" accept="image/*,application/pdf" />
       <label class="kyc-consent"><input id="kyc-consent" type="checkbox" /> <span>I agree to my document being stored only until it is reviewed, as described in the <a href="/privacy.html#identity-documents">identity documents notice</a>.</span></label>
       <button class="sb" id="kyc-submit" data-i18n="prof_passport_submit_btn">SUBMIT FOR VERIFICATION</button>
       <button class="sb kyc-withdraw" id="kyc-withdraw" type="button" hidden>WITHDRAW AND DELETE</button>
@@ -1413,6 +1413,8 @@ function callWhenReady(fnName){
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));var supabase=sb;
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+/* The classic <script> below calls esc() too; module scope is not global (CLAUDE.md 8.1 class 4a). */
+window.esc=esc;
 
 const ACHIEV=[
   {n:1,key:'achievement_genesis',col:'#D9B86A',sym:'\u03A9'},{n:2,key:'achievement_knowledge',col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),sym:'\u25CF'},

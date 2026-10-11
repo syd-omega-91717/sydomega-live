@@ -1,0 +1,77 @@
+{
+  "schemaVersion":"1.0.0",
+  "name":"Ω Execution OS",
+  "purpose":"A governed intent-to-state layer that turns structured user goals into auditable execution plans without granting the browser authority to perform protected actions.",
+  "sourceInspiration":[
+    "Universal Fulfillment Protocols",
+    "Intent-to-Action Mapping",
+    "Zero-Waste Search Logic",
+    "Temporal Anchoring",
+    "Ω-City OS",
+    "128-Core Synthesis",
+    "Auditor Self-Optimizer",
+    "Interplanetary Latency Sync"
+  ],
+  "truthPolicy":"Planning is CALCULATED. External actions require authoritative capability, authorization, event, evidence and verification.",
+  "systems":[
+    {
+      "id":"intent-compiler",
+      "name":"Ω Intent Compiler",
+      "state":"IMPLEMENTED_LIBRARY",
+      "purpose":"Convert a structured goal into a deterministic, risk-aware action graph.",
+      "inputs":["intent","constraints","capabilities","authorization"],
+      "outputs":["plan","risk","requiredEvidence","blockedReasons"],
+      "neverDoes":["execute payments","change identity","mint assets","grant permissions","assert legal ownership"]
+    },
+    {
+      "id":"city-digital-twin",
+      "name":"Ω City Pulse Twin",
+      "state":"IMPLEMENTED_LIBRARY",
+      "purpose":"Derive a city operating view from governed events instead of fabricated population or economic statistics.",
+      "inputs":["cityId","events","services","missions"],
+      "outputs":["serviceHealth","missionFlow","eventDensity","truthState"]
+    },
+    {
+      "id":"failure-learning-loop",
+      "name":"Ω Zero-Waste Learning Loop",
+      "state":"IMPLEMENTED_LIBRARY",
+      "purpose":"Turn failed or incomplete workflows into structured improvement records.",
+      "inputs":["attempt","failure","evidence"],
+      "outputs":["learningRecord","retryPolicy","missingCapability"]
+    },
+    {
+      "id":"temporal-continuity",
+      "name":"Ω Temporal Continuity",
+      "state":"IMPLEMENTED_LIBRARY",
+      "purpose":"Create tamper-evident client checkpoints that reference the canonical event/evidence fabric.",
+      "inputs":["sequence","stateDigest","eventIds"],
+      "outputs":["checkpoint"],
+      "note":"A client checkpoint is evidence metadata, not a substitute for server-side audit state."
+    },
+    {
+      "id":"opportunity-radar",
+      "name":"Ω Opportunity Radar",
+      "state":"IMPLEMENTED_LIBRARY",
+      "purpose":"Rank actionable opportunities from supplied evidence without pretending to predict the future.",
+      "inputs":["signals","constraints"],
+      "outputs":["rankedSignals","confidence","missingEvidence"]
+    }
+  ],
+  "canonicalIntegrations":{
+    "events":"omega_platform_events",
+    "evidence":"omega_platform_evidence / graph_evidence",
+    "missions":"omega_mission_transitions",
+    "capabilities":"capability_registry",
+    "lineage":"data_lineage",
+    "atlas":"config/omega-civilization-atlas.json"
+  },
+  "productionPromotionGate":[
+    "server-side authorization",
+    "authoritative state transition",
+    "failure semantics",
+    "observability",
+    "automated contract coverage",
+    "production deployment evidence",
+    "provider verification where external services are involved"
+  ]
+}

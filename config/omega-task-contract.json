@@ -1,0 +1,8 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "name":"Ω Universal Task Contract",
+  "version":1,
+  "required":["task_id","domain","workspace","page","role","task_type","capability","authorization","truth_state","evidence_required","status"],
+  "states":["OPEN","READY","AUTHORIZED","RUNNING","VERIFYING","COMPLETED","FAILED","BLOCKED","CANCELLED"],
+  "rule":"Every executable page action must map to one task or explicitly render unavailable/disabled with a reason."
+}

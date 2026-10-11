@@ -4,6 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 &mdash; Games &amp; Exams</title>\n<meta name="description" content="Ω SYD OMEGA 91717 gaming realm for interactive challenges, competitions, progression and simulations.">
 <script src="/bg.js" defer></script>
+<script src="/omega-arcade.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
@@ -59,6 +60,8 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .kpi-n{font-family:var(--D);font-size:20px;color:var(--kc)}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.catalog-toggle{display:block;margin:14px auto 0;min-height:44px;padding:0 20px;border-radius:22px;border:1px solid rgba(201,168,76,.4);background:rgba(10,10,15,.6);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;cursor:pointer}
+.catalog-toggle:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 @media(max-width:700px){.split-hero{grid-template-columns:1fr}.progress-split{grid-template-columns:1fr}.card-grid{grid-template-columns:1fr}.tab-divider{display:none}}
 </style>
 <script src="/omega-spatial-realms.js" data-omega-spatial-realms-js defer></script>
@@ -121,6 +124,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <button class="tab-btn" data-tab="progress">&#9670; PROGRESS</button>
         <button class="tab-btn" data-tab="science">&#9670; SCIENCE</button>
       </div>
+    </div><div class="tab-panel" id="tab-arcade">
+      <div class="sechead" style="color:var(--gold)">&#9670; PLAY NOW</div>
+      <div id="oxa-mount" data-omega-arcade="thumbs" role="region" aria-label="Playable games"></div>
+      <button type="button" class="catalog-toggle" id="catalog-toggle" aria-expanded="false" aria-controls="tab-strategy tab-action tab-puzzle tab-sport tab-simulation tab-sovereign_g">Browse the full catalog</button>
     </div><div class="tab-panel" id="tab-strategy"><div class="sechead" data-reveal="fade-up" style="color:var(--purple)">STRATEGY & BOARD &middot; AXIS B MASTERY</div><div class="card-grid"><div class="g-card card" data-task="Chess Master" data-task-type="mastery">
   <div class="c-cat">&#9670; STRATEGY & BOARD</div>
   <div class="c-name" style="color:var(--purple)">CHESS MASTER</div>
@@ -1228,7 +1235,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 </main>
 </div><script>
 var TAB_GROUPS={
-  games:['tab-strategy','tab-action','tab-puzzle','tab-sport','tab-simulation','tab-sovereign_g'],
+  games:['tab-arcade','tab-strategy','tab-action','tab-puzzle','tab-sport','tab-simulation','tab-sovereign_g'],
   exams:['tab-stem','tab-professional','tab-technology','tab-healthcare','tab-sovereign_e'],
   progress:['tab-progress_tab'],
   science:['tab-science']
@@ -1239,9 +1246,25 @@ function setTab(name){
     b.classList.toggle('on',on);
   });
   document.querySelectorAll('.tab-panel').forEach(function(p){
-    p.style.display=(TAB_GROUPS[name]||[]).indexOf(p.id)>-1?'block':'none';
+    var on=(TAB_GROUPS[name]||[]).indexOf(p.id)>-1;
+    /* The text catalog stays in the DOM (data-task handlers and progress
+       counts read it) but is collapsed behind one toggle under PLAY NOW. */
+    if(on&&CATALOG.indexOf(p.id)>-1&&!catalogOpen)on=false;
+    p.style.display=on?'block':'none';
   });
 }
+var CATALOG=['tab-strategy','tab-action','tab-puzzle','tab-sport','tab-simulation','tab-sovereign_g'];
+var catalogOpen=false;
+(function(){
+  var t=document.getElementById('catalog-toggle');
+  if(!t)return;
+  t.addEventListener('click',function(){
+    catalogOpen=!catalogOpen;
+    t.setAttribute('aria-expanded',String(catalogOpen));
+    t.textContent=catalogOpen?'Hide the catalog':'Browse the full catalog';
+    setTab('games');
+  });
+})();
 document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
 window.setTab=setTab;
 setTab('games');

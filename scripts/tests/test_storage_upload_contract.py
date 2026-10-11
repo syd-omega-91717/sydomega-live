@@ -161,10 +161,10 @@ class UploadReturnsRatherThanThrows(unittest.TestCase):
     def test_over_limit_file_is_rejected_before_any_network_call(self):
         self.assertEqual(
             self._run(
-                "const big = {name:'x.bin', size: 6*1024*1024*1024};\n"
+                "const big = {name:'x.bin', size: 50*1024*1024 + 1};\n"
                 "console.log(JSON.stringify(await upload('uploads', big)));"
             ),
-            '{"error":"File exceeds the 5 GB limit."}',
+            '{"error":"File exceeds the 50 MB limit."}',
         )
 
 

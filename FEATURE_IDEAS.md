@@ -2556,6 +2556,15 @@ Sources read: Duolingo's KDD 2020 paper on recurring-notification bandits (resea
 
 ## 39. Gamification System Phase 2: Quests, Characters, and Cosmetics Marketplace
 
+> **Status (2026-10-04): implementation removed — superseded.** PR #703 shipped this
+> proposal as `quests.html` + `supabase/omega_gamification.sql`. The page used a
+> fabricated anon key (project ref misspelled), read five tables that exist only in
+> that reference file (never deployed), and duplicated Phase 2 as already built and
+> merged: `my-quests.html`, `cosmetics.html` and the PROGRESSION tab on
+> `character.html`, on the live `member_quests` / `omega_quests` / perk tables, dormant
+> behind `gamification_enabled`. Removed at the owner's direction; see `FIXES_LOG.md`.
+> Build on the shipped Phase 2, not on the blueprint below.
+
 **Grounded in:**
 - `nav.js:75` (ACHIEVE section, col=#00d4aa, trophy icon) — existing hub with no owned pages yet; consolidation target for achievements/habits/goals/vault/community/social (6 pages may consolidate, 4 new pages required per brief analysis)
 - `omega-cinematic-animations-phase3.js` — voice-responsive particle emission already wired to custom DOM events; reusable for quest-completion celebrations

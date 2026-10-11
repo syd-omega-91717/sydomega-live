@@ -208,6 +208,160 @@
       "identity": "id",
       "label": "capability_name",
       "owner": "owner_agent"
+    },
+    {
+      "type": "planetary_body",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "PLANET",
+        "PLANETARY_CORE"
+      ]
+    },
+    {
+      "type": "world",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "WORLD"
+      ]
+    },
+    {
+      "type": "country",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "COUNTRY"
+      ]
+    },
+    {
+      "type": "empire",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "EMPIRE"
+      ]
+    },
+    {
+      "type": "city",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "CITY"
+      ]
+    },
+    {
+      "type": "district",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "DISTRICT"
+      ]
+    },
+    {
+      "type": "service",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "SERVICE"
+      ]
+    },
+    {
+      "type": "task",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "TASK"
+      ]
+    },
+    {
+      "type": "building",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "BUILDING"
+      ]
+    },
+    {
+      "type": "resource",
+      "sources": [
+        "config/omega-civilization-atlas.json"
+      ],
+      "identity": "id",
+      "label": "name",
+      "owner": null,
+      "recordTypes": [
+        "RESOURCE"
+      ]
+    },
+    {
+      "type": "relearn_record",
+      "sources": [
+        "omega_platform_events",
+        "omega_platform_evidence",
+        "task_completions"
+      ],
+      "identity": "id",
+      "label": "description",
+      "owner": "user_id"
+    },
+    {
+      "type": "sigil",
+      "sources": [
+        "profiles",
+        "certificates",
+        "evolution_events"
+      ],
+      "identity": "id",
+      "label": "id",
+      "owner": "user_id"
+    },
+    {
+      "type": "mana_state",
+      "sources": [
+        "capability_registry",
+        "omega_platform_events",
+        "task_completions"
+      ],
+      "identity": "id",
+      "label": "id",
+      "owner": "user_id"
     }
   ],
   "relations": [
@@ -317,6 +471,133 @@
       "to": [
         "*"
       ]
+    },
+    {
+      "type": "CONTAINS",
+      "from": [
+        "world",
+        "country",
+        "empire",
+        "city",
+        "district",
+        "building"
+      ],
+      "to": [
+        "country",
+        "empire",
+        "city",
+        "district",
+        "building",
+        "service",
+        "resource",
+        "mission",
+        "task"
+      ]
+    },
+    {
+      "type": "LOCATED_IN",
+      "from": [
+        "service",
+        "resource",
+        "mission",
+        "task"
+      ],
+      "to": [
+        "district",
+        "city",
+        "country",
+        "world"
+      ]
+    },
+    {
+      "type": "IMPLEMENTS",
+      "from": [
+        "service"
+      ],
+      "to": [
+        "capability"
+      ]
+    },
+    {
+      "type": "VERIFIED_BY",
+      "from": [
+        "mission",
+        "task",
+        "achievement",
+        "credential"
+      ],
+      "to": [
+        "event",
+        "document"
+      ]
+    },
+    {
+      "type": "PROGRESSES",
+      "from": [
+        "mission",
+        "task",
+        "achievement"
+      ],
+      "to": [
+        "gate",
+        "credential",
+        "capability"
+      ]
+    },
+    {
+      "type": "RELEARNS_FROM",
+      "from": [
+        "member"
+      ],
+      "to": [
+        "event",
+        "document",
+        "mission",
+        "task"
+      ]
+    },
+    {
+      "type": "REPRESENTS",
+      "from": [
+        "sigil"
+      ],
+      "to": [
+        "member",
+        "city",
+        "country",
+        "world"
+      ]
+    },
+    {
+      "type": "EVOLVES",
+      "from": [
+        "sigil"
+      ],
+      "to": [
+        "achievement",
+        "credential",
+        "gate"
+      ]
+    },
+    {
+      "type": "HAS_CAPACITY",
+      "from": [
+        "member"
+      ],
+      "to": [
+        "mana_state"
+      ]
+    },
+    {
+      "type": "LEADS_TO",
+      "from": [
+        "relearn_record"
+      ],
+      "to": [
+        "capability",
+        "gate",
+        "credential"
+      ]
     }
   ],
   "sourceRegistry": {
@@ -363,7 +644,14 @@
     "Relations must retain source and observedAt lineage.",
     "Writes must flow through OmegaAction and server authorization.",
     "Graph visualization consumes this contract rather than inventing parallel state.",
-    "Mission definitions are sourced from the live-verified omega_missions table; member mission state and transitions remain separate state/evidence sources."
+    "Mission definitions are sourced from the live-verified omega_missions table; member mission state and transitions remain separate state/evidence sources.",
+    "Planetary and civilization objects are registry-backed; visual rendering never creates authoritative state.",
+    "City, country and empire simulation objects cannot imply legal jurisdiction, ownership, citizenship or real-world sovereignty.",
+    "Service and task objects require a canonical capability, authorization policy, event path and evidence path before production advertisement.",
+    "Building and resource objects remain UNKNOWN or UNAVAILABLE until a canonical source is registered.",
+    "Relearn records are learning provenance, not independent progression authority.",
+    "Sigils are representational objects and never authenticate, authorize or imply legal status.",
+    "Mana states are calculated capacity views and never constitute money, credit, health, employment or social-worth scores."
   ],
   "evidencePolicy": {
     "$ref": "config/omega-schema-evidence-policy.json",

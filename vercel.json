@@ -4,10 +4,11 @@
   "buildCommand": "bash scripts/vercel-build.sh",
   "installCommand": "",
   "outputDirectory": "public",
-  "ignoreCommand": "exit 1",
+  "ignoreCommand": "bash scripts/vercel-ignore.sh",
   "git": {
     "deploymentEnabled": {
       "*": false,
+      "**": false,
       "main": true
     }
   },

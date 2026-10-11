@@ -1,0 +1,45 @@
+{
+  "schemaVersion":"1.0.0",
+  "name":"Ω Architectural Immune System",
+  "purpose":"Continuously detect architectural drift, orphaned features, unsafe truth upgrades and missing production controls before a concept is advertised as capability.",
+  "truthPolicy":"Diagnostics are CALCULATED. A finding never changes production authority or truth state by itself.",
+  "checks":[
+    "canonical_system_presence",
+    "truth_state_validity",
+    "route_reachability_contract",
+    "authorization_contract",
+    "event_contract",
+    "evidence_contract",
+    "mission_transition_contract",
+    "capability_contract",
+    "lineage_contract",
+    "renderer_ownership",
+    "orphan_detection",
+    "simulation_truth_boundary",
+    "production_evidence_gate",
+    "provider_health",
+    "schema_drift"
+  ],
+  "severity":{
+    "CRITICAL":"Blocks production promotion.",
+    "HIGH":"Requires remediation or explicit waiver.",
+    "MEDIUM":"Requires tracked remediation.",
+    "INFO":"Informational architectural signal."
+  },
+  "canonicalSystems":["identity","events","evidence","missions","capabilities","lineage","atlas","objectModel","progression"],
+  "requiredProductionEvidence":[
+    "authoritative implementation",
+    "authorization/policy path",
+    "failure handling",
+    "observability",
+    "automated verification",
+    "deployment evidence"
+  ],
+  "hardRules":[
+    "Never treat SIMULATED, LORE or DESIGN_PROPOSAL as LIVE.",
+    "Never permit a browser-only authority path for protected actions.",
+    "Never create a second WebGL renderer when a canonical renderer exists.",
+    "Never publish an outcome as verified without evidence.",
+    "Never silently replace a canonical system with a parallel subsystem."
+  ]
+}

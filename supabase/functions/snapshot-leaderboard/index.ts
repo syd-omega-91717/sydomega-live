@@ -9,9 +9,10 @@
 //   → 200 { ok: true, rows_written: number, snapshot_date: string }
 //   → 200 { enabled: false } if service key not configured
 //
-// Env (Supabase secrets): SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+// Env (Supabase secrets): SUPABASE_URL; API keys via ../_shared/keys.ts
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
 
 const PHI = 1.6180339887;
 const EU  = 2.7182818285;
@@ -45,7 +46,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceKey = secretKey();
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
 
   if (!serviceKey || !supabaseUrl) {
@@ -60,9 +61,13 @@ Deno.serve(async (req) => {
   const bearer = authHeader.replace(/^Bearer\s+/i, "");
   if (!bearer) return json({ error: "unauthorized" }, 401);
 
+  // REDESIGN BEFORE DEPLOY (legacy-key-migration PLAN.md, Phase 1): comparing a
+  // bearer to the admin key is not timing-safe, and with an sb_secret_ key it
+  // only passes through the gateway's Bearer-equals-apikey compatibility rule.
+  // Move to an apikey header + timing-safe compare before this is deployed.
   const isServiceCall = bearer === serviceKey;
   if (!isServiceCall) {
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+    const anonKey = publishableKey() || "";
     try {
       const callerClient = createClient(supabaseUrl, anonKey, {
         global: { headers: { Authorization: authHeader } },

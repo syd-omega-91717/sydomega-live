@@ -1,0 +1,40 @@
+{
+  "version": "2",
+  "generated": "2026-10-08",
+  "sourceCorpus": {
+    "files": 5,
+    "lines": 4068,
+    "words": 31212
+  },
+  "requirementRecords": 1622,
+  "domains": {
+    "ai_intelligence": 285,
+    "architecture_or_vision": 837,
+    "data_platform": 26,
+    "devops_deployment": 29,
+    "finance_payments": 169,
+    "product_module": 94,
+    "quality": 31,
+    "security_compliance": 82,
+    "ui_ux": 69
+  },
+  "recordsBySource": {
+    "Absolute.txt": 24,
+    "SYD OMEGA 91717 - Master Prompt.txt": 534,
+    "SYD OMEGA 91717.txt": 340,
+    "Ω SYD OMEGA 91717_Document.txt": 217,
+    "Ω- SYD OMEGA 91717-THE 999-POINT SOVEREIGN BLUEPRINT-NANO-DETAIL EXPANSION.txt": 507
+  },
+  "blueprintIdentityRule": "source + section heading + point number",
+  "truthPolicy": "Source statements are not production evidence; production truth requires implementation, authorization, tests, CI, and provider evidence.",
+  "currentMain": {
+    "sha": "58ed2502f0a884a15c9553e508059ed097945d64",
+    "vercel": "BLOCKED"
+  },
+  "artifacts": {
+    "masterReport": "docs/OMEGA_MASTER_SOURCE_TRACEABILITY_V2.md",
+    "fullLineLedger": "local-audit-artifact: SYD_OMEGA_91717_SOURCE_LINE_LEDGER_V2.csv",
+    "requirementLedger": "local-audit-artifact: SYD_OMEGA_91717_REQUIREMENT_LEDGER_V2.csv",
+    "blueprintPointLedger": "local-audit-artifact: SYD_OMEGA_91717_999_BLUEPRINT_POINT_LEDGER_V2.csv"
+  }
+}

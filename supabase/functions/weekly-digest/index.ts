@@ -4,10 +4,11 @@
 // ============================================================================
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
-const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+const serviceRoleKey = secretKey() || "";
+const anonKey = publishableKey() || "";
 const supabase = createClient(supabaseUrl, serviceRoleKey);
 
 async function requireAuthorizedCaller(req: Request): Promise<boolean> {
@@ -18,6 +19,9 @@ async function requireAuthorizedCaller(req: Request): Promise<boolean> {
 
   // Scheduled invocations may authenticate directly with the service-role
   // secret. Never log or return the token.
+  // REDESIGN BEFORE DEPLOY (legacy-key-migration PLAN.md, Phase 1): not
+  // timing-safe, and relies on the gateway's Bearer-equals-apikey rule for an
+  // sb_secret_ key. Move to an apikey header + timing-safe compare first.
   if (serviceRoleKey && token === serviceRoleKey) return true;
 
   // Interactive owner invocations must present a real Supabase user session.

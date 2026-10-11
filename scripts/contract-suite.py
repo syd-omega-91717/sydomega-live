@@ -59,6 +59,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # (id, what it protects, argv). Order is cheapest-first only for readability;
 # every gate runs regardless, so the order carries no meaning.
 GATES = [
+    ('page-contract-remediation',
+     'canonical page-contract gaps remain explicit remediation rather than synthetic truth',
+     ['scripts/omega-page-contract-remediation-contract.py']),
+    ('unified-core-contract',
+     'the canonical fabric enforces one governed core with domain projections and task acceptance contracts',
+     ['scripts/omega-unified-core-contract.py']),
     ('content-registry',
      'the canonical content registry matches the page estate',
      ['scripts/content-registry-contract.py']),
@@ -162,6 +168,20 @@ GATES = [
     ('implementation-ledger',
      'the source-to-production implementation ledger is structurally valid and evidence-bound',
      ['scripts/omega-implementation-ledger-contract.py']),
+    # Both block on GitHub (contracts.yml, omega-object-contract.yml) and were absent
+    # here, so on 2026-10-05 main went red on them while ci-local read 28/28: a new
+    # page with no City district, and object types sourced from a registry file.
+    ('page-world',
+     'every root HTML page resolves to exactly one City district',
+     ['scripts/page-world-contract.py']),
+    ('object-contract',
+     'every Omega object is backed by live tables or a validated config registry',
+     ['scripts/omega-object-contract.py']),
+    # Eight tables shipped on 2026-10-06 with member policies and no GRANT; every
+    # member query failed 42501 and rls-auditor (policy text only) passed them.
+    ('migration-grant',
+     'no new table has client policies without a GRANT (8.1 class 6c)',
+     ['scripts/migration-grant-contract.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Validate the canonical Ω Object contract against live-schema evidence."""
+"""Validate the canonical Ω Object contract against live-schema evidence.
+
+An object is backed either by live tables (names present in supabase/live-schema.json)
+or by a static registry under config/*.json. A registry source must name the record
+types that back the object (`recordTypes`), and every such record must carry the
+object's identity and label fields and a `state` from the truth vocabulary -- a
+registry can declare SOURCE/SIMULATED/LIVE per record, but a missing file, an
+undeclared record type, or a record without identity, label or truth fails.
+"""
 from __future__ import annotations
 import json
 import sys
@@ -18,6 +26,42 @@ ALLOWED_TRUTH = {
     "LIVE", "VERIFIED", "CALCULATED", "SOURCE",
     "SIMULATED", "STALE", "UNAVAILABLE", "UNKNOWN",
 }
+
+def registry_errors(path: Path, record_types, identity, label) -> list:
+    """Problems with a static registry source; [] when it backs the object."""
+    if not path.is_file():
+        return ["registry file missing: " + str(path.relative_to(ROOT) if path.is_relative_to(ROOT) else path)]
+    if not record_types:
+        return ["registry source declares no recordTypes"]
+    data = json.loads(path.read_text(encoding="utf-8"))
+    found = {t: [] for t in record_types}
+    def walk(node):
+        if isinstance(node, dict):
+            t = node.get("type")
+            if t in found and "id" in node:
+                found[t].append(node)
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+    walk(data)
+    errors = []
+    for t, records in found.items():
+        if not records:
+            errors.append("no records of type " + t)
+        for r in records:
+            rid = r.get("id")
+            for field in (identity, label):
+                if field and field not in r:
+                    errors.append(f"{t}:{rid} lacks {field}")
+            if r.get("state") not in ALLOWED_TRUTH:
+                errors.append(f"{t}:{rid} state {r.get('state')!r} is not a truth state")
+    return errors
+
+
+def is_registry(source: str) -> bool:
+    return source.startswith("config/") and source.endswith(".json")
 
 def main() -> None:
     model = json.loads(MODEL.read_text())
@@ -44,8 +88,20 @@ def main() -> None:
 
     missing_sources = {}
     invalid_fields = {}
+    invalid_registry = {}
+    registry_backed = 0
     for obj in objects:
         sources = obj.get("sources", [])
+        registries = [name for name in sources if is_registry(name)]
+        if registries and len(registries) == len(sources):
+            problems = []
+            for name in registries:
+                problems += registry_errors(ROOT / name, obj.get("recordTypes"), obj.get("identity"), obj.get("label"))
+            if problems:
+                invalid_registry[obj["type"]] = problems[:8]
+            else:
+                registry_backed += 1
+            continue
         available = [name for name in sources if name in tables]
         if not available:
             missing_sources[obj["type"]] = sources
@@ -81,6 +137,11 @@ def main() -> None:
             "OMEGA_OBJECT_CONTRACT=FAIL missing source tables: "
             + json.dumps(missing_sources, sort_keys=True)
         )
+    if invalid_registry:
+        raise SystemExit(
+            "OMEGA_OBJECT_CONTRACT=FAIL invalid registry sources: "
+            + json.dumps(invalid_registry, sort_keys=True)
+        )
     if invalid_fields:
         raise SystemExit(
             "OMEGA_OBJECT_CONTRACT=FAIL invalid source fields: "
@@ -103,7 +164,7 @@ def main() -> None:
 
     print(
         f"OMEGA_OBJECT_CONTRACT=PASS objects={len(objects)} "
-        f"relations={len(relations)} tables={len(tables)}"
+        f"relations={len(relations)} tables={len(tables)} registry_backed={registry_backed}"
     )
 
 if __name__ == "__main__":

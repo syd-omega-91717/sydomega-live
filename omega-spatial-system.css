@@ -38,11 +38,20 @@ html[data-omega-visual="active"] body::before{content:"";position:fixed;inset:0;
    sit directly on <body> with no wrapper, so it loses this subtle depth until
    it gets a content column. That is the correct trade against re-breaking the
    floating chrome on all 204. */
-.omega-cinematic .main,.omega-cinematic .page-shell,.omega-cinematic main,.omega-cinematic #omega-main-content{perspective:var(--omega-spatial-perspective);perspective-origin:50% 12%;transform-style:preserve-3d}
+/* transform-style stays FLAT here. `perspective` alone gives every tilted
+   card its depth; preserve-3d on the column put every card, KPI and control
+   on the page into ONE shared 3-D space, depth-sorted for hit-testing as well
+   as paint -- so a hovered or parallaxed tile could sit "in front of" a
+   neighbour's button and take its click (measured 2026-10-04: dashboard 1/3,
+   social 2/10 card controls dead under the pointer after the bg.js fix).
+   Cards are flat too: a tilted card that was its own 3-D context depth-sorted
+   its children, and a sibling note took the header's click (habits.html 4/5).
+   Their ::before glow stays behind content through z-index:-1 + isolation. */
+.omega-cinematic .main,.omega-cinematic .page-shell,.omega-cinematic main,.omega-cinematic #omega-main-content{perspective:var(--omega-spatial-perspective);perspective-origin:50% 12%;transform-style:flat}
 
 /* Existing cards/panels gain physical depth without taking ownership of
    their transform animations. */
-.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card){position:relative;transform-style:preserve-3d;isolation:isolate;box-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 var(--omega-spatial-depth) 42px rgba(0,0,0,.20),0 0 0 1px rgba(201,168,76,.025)}
+.omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card){position:relative;transform-style:flat;isolation:isolate;box-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 var(--omega-spatial-depth) 42px rgba(0,0,0,.20),0 0 0 1px rgba(201,168,76,.025)}
 .omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card)::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;transform:translateZ(-10px) scale(.985);background:linear-gradient(145deg,rgba(201,168,76,.055),transparent 34%,rgba(0,229,255,.028));filter:blur(1px);opacity:.8}
 .omega-cinematic :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.section-card,.glass,.omega-depth-card):hover{box-shadow:0 2px 0 rgba(255,255,255,.065) inset,0 24px 58px rgba(0,0,0,.28),0 0 32px var(--omega-spatial-glow)}
 

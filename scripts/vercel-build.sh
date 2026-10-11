@@ -26,6 +26,7 @@ find . -type f \
   ! -path './node_modules/*' \
   ! -path './tests/*' \
   ! -path './scripts/*' \
+  ! -path './.claude/*' \
   ! -path './supabase/*' \
   ! -path './core/*' \
   ! -path './docs/*' \

@@ -1,0 +1,12 @@
+const fs=require('fs');
+const assert=require('assert');
+const html=fs.readFileSync('life.html','utf8');
+const js=fs.readFileSync('omega-life-native-systems.js','utf8');
+assert(html.includes('/omega-life-native-systems.js'));
+assert(html.includes('omega-life-native-systems'));
+assert(js.includes('omega_habits_v2'));
+assert(js.includes('omega_okr_data'));
+assert(js.includes('No browser-local habits are currently stored.'));
+assert(js.includes('No browser-local objectives are currently stored.'));
+assert(!js.includes('Math.random'));
+console.log('omega-life-native-consolidation: PASS');

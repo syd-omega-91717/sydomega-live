@@ -112,7 +112,8 @@ def check_platform_kernel() -> int:
 
 def check_client_secrets() -> int:
     failures = 0
-    patterns = (re.compile(r"SUPABASE_SERVICE_ROLE_KEY", re.I), re.compile(r"service_role", re.I))
+    patterns = (re.compile(r"SUPABASE_SERVICE_ROLE_KEY", re.I), re.compile(r"service_role", re.I),
+                re.compile(r"sb_secret_[A-Za-z0-9_-]{8,}"))
     for path in sorted(ROOT.glob("*.js")) + sorted(ROOT.glob("*.html")):
         text = path.read_text(encoding="utf-8", errors="ignore")
         if any(pattern.search(text) for pattern in patterns):

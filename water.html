@@ -135,7 +135,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       </div>
       <button style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.08);border-radius:2px;cursor:pointer" onclick="exportWaterBackup()">EXPORT BACKUP</button>
       <button style="font-family:var(--M);font-size:12px;letter-spacing:2px;padding:9px 20px;border:1px solid rgba(201,168,76,.15);color:var(--dim);background:none;border-radius:2px;cursor:pointer" onclick="document.getElementById('water-import-file').click()">IMPORT BACKUP</button>
-      <input type="file" id="water-import-file" accept=".json" style="display:none">
+      <input data-omega-capability-id="import-export" type="file" id="water-import-file" accept=".json" style="display:none">
       <div id="water-backup-msg" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--dim);margin-top:8px"></div>
     </div>
     <div class="sect">

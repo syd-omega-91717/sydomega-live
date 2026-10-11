@@ -1,8 +1,9 @@
 // SYD OMEGA 91717 -- Stripe Checkout (DORMANT until the founder enables payments)
 // Double-gated: refuses unless payments_enabled=true AND STRIPE_SECRET_KEY is set.
 // Env (Supabase secrets): STRIPE_SECRET_KEY, STRIPE_PRICE_MAP (JSON tier->price_id),
-//   SITE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
+//   SITE_URL, SUPABASE_URL, and the API keys read through ../_shared/keys.ts
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -16,8 +17,8 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   try {
     const url = Deno.env.get("SUPABASE_URL");
-    const svc = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    const anon = Deno.env.get("SUPABASE_ANON_KEY");
+    const svc = secretKey();
+    const anon = publishableKey();
     if (!url || !svc || !anon) {
       console.error("[checkout] required Supabase server configuration is missing");
       return json({ error: "checkout_not_configured" }, 503);

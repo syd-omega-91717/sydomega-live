@@ -47,6 +47,10 @@ def main() -> int:
 
     deployment_enabled = config.get("git", {}).get("deploymentEnabled", {})
     check(deployment_enabled.get("*", True) is False, "automatic_git_deploy_must_be_disabled_for_non_main")
+    # minimatch "*" never crosses "/", so "*": false alone leaves every claude/... feat/... fix/...
+    # branch deploying a preview -- measured: that burned the 100/day free quota and stalled
+    # production deploys on 2026-10-04 and 2026-10-05. "**" is the pattern that covers them.
+    check(deployment_enabled.get("**", True) is False, "automatic_git_deploy_must_be_disabled_for_slashed_branches")
     check(deployment_enabled.get("main", False) is True, "main_git_deploy_must_be_enabled")
 
     redirects = config.get("redirects", [])

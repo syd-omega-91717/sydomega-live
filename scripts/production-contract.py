@@ -77,6 +77,7 @@ def check_client_credentials() -> None:
     patterns = (
         re.compile(r"service_role", re.I),
         re.compile(r"SUPABASE_SERVICE_ROLE_KEY", re.I),
+        re.compile(r"sb_secret_[A-Za-z0-9_-]{8,}"),
     )
     for path in sorted(ROOT.glob("*.js")) + sorted(ROOT.glob("*.html")):
         text = path.read_text(encoding="utf-8", errors="ignore")

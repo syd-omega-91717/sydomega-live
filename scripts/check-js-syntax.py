@@ -40,6 +40,7 @@ print(f"FIRST_PARTY_JS_CHECK checked={checked}")
 if failures:
     print(f"FIRST_PARTY_JS_CHECK failed={len(failures)}")
     for path, detail in failures:
+        print(f"JS_SYNTAX_FAILURE file={path} detail={detail}")
         print(f"::error file={path}::{detail}")
     raise SystemExit(1)
 print("FIRST_PARTY_JS_CHECK=PASS")

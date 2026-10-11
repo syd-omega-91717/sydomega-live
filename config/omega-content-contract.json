@@ -1,0 +1,24 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "name":"Ω Content and Asset Contract",
+  "version":1,
+  "status":"BOOTSTRAP",
+  "source_of_truth":"Existing Supabase content/storage tables plus this contract; no duplicate CMS is introduced.",
+  "lifecycle":["IMPORTED","VALIDATED","SCANNED","METADATA_READY","PROVENANCE_READY","RIGHTS_REVIEW","APPROVED","PUBLISHED","ARCHIVED","BLOCKED"],
+  "asset_states":["UPLOADED","PROCESSING","READY","FAILED","DELETED","UNAVAILABLE"],
+  "required":{
+    "identity":["content_id","content_type","title"],
+    "provenance":["source","source_type","imported_at","verification_state"],
+    "rights":["rights_state","license_or_basis"],
+    "truth":["truth_state"],
+    "delivery":["visibility","download_policy"],
+    "evidence":["evidence_refs"]
+  },
+  "non_inference_rules":[
+    "bytes_do_not_prove_ownership",
+    "metadata_does_not_prove_publication",
+    "catalog_presence_does_not_prove_entitlement",
+    "visual_asset_does_not_prove_achievement",
+    "external_reference_does_not_prove_provider_availability"
+  ]
+}

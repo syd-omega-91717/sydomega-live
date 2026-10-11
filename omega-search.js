@@ -1,12 +1,27 @@
 /* ==========================================================================
    Ω SYD OMEGA 91717 — SOVEREIGN SEARCH ENGINE
-   Ctrl+K opens overlay. Searches all 160 pages, tracks, elements, Olympians, canon.
+   Ctrl+K opens overlay. Searches canonical workspaces, platform routes, tracks, elements, Olympians, and canon.
    ========================================================================== */
 (function(){
   if(window.__omegaSearchActive) return;
   window.__omegaSearchActive=true;
   var CAT_COLORS={PAGE:'var(--gold,#C9A84C)',TRACK:'var(--cyan,#00E5FF)',ELEMENT:'var(--purple,#9B6BF0)',OLYMPIAN:'var(--solar,#E2C86D)',CANON:'var(--green,#3fb27f)'};
   var INDEX=[
+    {t:'COMMAND WORKSPACE',d:'Dashboard, search, missions, notifications, world, evidence and command surfaces',u:'/dashboard.html',c:'PAGE'},
+    {t:'IDENTITY WORKSPACE',d:'Profile, security, credentials, KYC and identity controls',u:'/profile.html',c:'PAGE'},
+    {t:'LIFE WORKSPACE',d:'Wellness, habits, journal, goals, nutrition, sleep and personal development',u:'/life.html',c:'PAGE'},
+    {t:'ASCEND WORKSPACE',d:'Academy, courses, evolution, levels, phases, ascension and mastery',u:'/ascend.html',c:'PAGE'},
+    {t:'COSMOS WORKSPACE',d:'World, civilization, agents, mythology and governed world experience',u:'/world.html',c:'PAGE'},
+    {t:'VAULT WORKSPACE',d:'Wallet, blockchain, marketplace, payments and verifiable assets',u:'/vault.html',c:'PAGE'},
+    {t:'ORDER WORKSPACE',d:'Family, factions, city, community and governed approvals',u:'/order.html',c:'PAGE'},
+    {t:'SERVICES WORKSPACE',d:'Consultancy, commerce, creation and professional services',u:'/services.html',c:'PAGE'},
+    {t:'INTEL WORKSPACE',d:'Research, intelligence, knowledge retrieval, graphs and evidence',u:'/intel.html',c:'PAGE'},
+    {t:'ARENA WORKSPACE',d:'Games, simulations, AI and governed agent capabilities',u:'/arena.html',c:'PAGE'},
+    {t:'GOVERN WORKSPACE',d:'Governance, observability, compliance, recovery and administration',u:'/govern.html',c:'PAGE'},
+    {t:'INVEST WORKSPACE',d:'Investment, portfolio, wealth, treasury, revenue, income and budgets',u:'/invest.html',c:'PAGE'},
+    {t:'ACHIEVE WORKSPACE',d:'Achievements, quests, progression, honors and contribution',u:'/achievements.html',c:'PAGE'},
+    {t:'ARCHIVE WORKSPACE',d:'Heritage, identity records, credentials, KYC and continuity',u:'/archive.html',c:'PAGE'},
+    {t:'MEDIA WORKSPACE',d:'Cinema, movies, series, publishing, visual media and creator assets',u:'/media.html',c:'PAGE'},
     /* ── CORE PAGES ─────────────────────────────────────────────────────── */
     {t:'DASHBOARD',d:'Authority axes KPIs system galaxy 5 layers AI query timeline',u:'/dashboard.html',c:'PAGE'},
     {t:'VAULT',d:'Reserve wallet NFT earning ledger articles audit ΩSYD token',u:'/vault.html',c:'PAGE'},

@@ -1,10 +1,14 @@
 name: Browser Accessibility and Performance Evidence
 
+# This job tests LIVE production (OMEGA_BASE_URL below), never the PR's code,
+# so a pull_request trigger only added production traffic on a Hobby-plan
+# account that Vercel blocked for usage on 2026-10-06. It runs after main
+# changes, daily, and on demand.
 on:
-  pull_request:
-    branches: [main]
   push:
     branches: [main]
+  schedule:
+    - cron: "41 6 * * *"
   workflow_dispatch:
 
 permissions:

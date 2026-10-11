@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "name": "Omega Edge Runtime Parity Evidence",
+  "status": "EVIDENCE_SNAPSHOT_NOT_LIVE_AUTHORITY",
+  "project_id": "ydqhzvvoyufiiqvzcjns",
+  "captured_at": "2026-10-10",
+  "active_provider_functions": [
+    "concierge",
+    "concierge-orchestrator",
+    "growth-orchestrator",
+    "product-orchestrator",
+    "stripe-webhook",
+    "secrets-health",
+    "agent-execute",
+    "evidence-graph",
+    "omega-notification-worker",
+    "omega-runtime-gateway",
+    "omega-media-worker",
+    "intel-feed",
+    "omega-provider-worker",
+    "omega-knowledge-embedding-worker",
+    "content-ingest",
+    "content-delivery"
+  ],
+  "required_verification": [
+    "Each active provider function has a reviewed repository source path.",
+    "Repository functions intended for production have a corresponding ACTIVE provider deployment or an explicit dormant/retired decision.",
+    "verify_jwt posture matches the canonical capability authorization contract.",
+    "Deployed version/source hash is reconciled before declaring deployment parity.",
+    "Provider-side environment/secrets are verified without storing secret values."
+  ],
+  "truth_boundary": "This file records a provider snapshot returned by the authenticated Supabase provider check. It is not a substitute for a fresh provider query and must not be used to claim live parity after the snapshot becomes stale."
+}

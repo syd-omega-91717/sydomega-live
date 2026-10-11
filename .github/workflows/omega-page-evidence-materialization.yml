@@ -1,0 +1,75 @@
+name: Ω Page Evidence Materialization
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.html'
+      - 'docs/capabilities/registry.json'
+      - 'docs/OMEGA_DOMAIN_REGISTRY.md'
+      - 'scripts/omega-page-contract-bootstrap.py'
+      - 'scripts/omega-page-action-audit.py'
+      - 'config/omega-page-contracts.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: omega-page-evidence-materialization
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # repository-pinned setup-python
+        with:
+          python-version: '3.12'
+
+      - name: Materialize page source evidence
+        run: |
+          python scripts/omega-page-contract-bootstrap.py --promote
+          python scripts/omega-page-action-audit.py --write
+
+      - name: Validate generated control plane
+        run: |
+          python scripts/omega-page-contract-audit.py
+          python scripts/omega-page-contract-bootstrap.py
+          python scripts/omega-page-action-audit.py --check
+          python -m unittest scripts/tests/test_omega_unified_platform_fabric.py scripts/tests/test_omega_page_contract_bootstrap.py
+
+      - name: Create evidence PR when changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then
+            echo "No page evidence changes."
+            exit 0
+          fi
+          branch="automation/page-evidence-$(date -u +%Y%m%d%H%M%S)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add config/omega-page-contracts.json config/omega-page-review-tasks.json config/omega-page-action-audit.json config/omega-page-contract-bootstrap.json
+          git commit -m "chore: refresh page evidence control plane"
+          git push --set-upstream origin "$branch"
+          gh pr create --base main --head "$branch" --title "chore: refresh page evidence control plane" --body "Automated source-evidence refresh. This PR contains only directly observed HTML evidence and explicit UNVERIFIED semantic fields; it does not claim production authorization, truth, deployment, or successful execution."
+
+      - name: Publish evidence summary
+        run: |
+          {
+            echo "## Ω Page Evidence Materialization"
+            echo ""
+            echo "- Generated from direct repository HTML source."
+            echo "- Semantic/authorization/production claims remain UNVERIFIED unless independently evidenced."
+            echo "- Page contracts and action audit are reviewable artifacts."
+          } >> "$GITHUB_STEP_SUMMARY"

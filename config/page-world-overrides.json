@@ -16,6 +16,7 @@
     "vision": "genesis",
     "weekly": "genesis",
     "world": "void",
+    "world-atlas": "void",
     "agent-network": "intelligence",
     "agent-operations": "intelligence",
     "agent": "intelligence",
@@ -114,6 +115,7 @@
     "membership": "genesis",
     "passport": "genesis",
     "profile": "genesis",
+    "life": "genesis",
     "blockchain": "intelligence",
     "graph-admin": "intelligence",
     "graph-anomalies": "intelligence",
@@ -157,6 +159,18 @@
     "domain-mastery": "arena",
     "my-quests": "arena",
     "quest-progress": "arena",
-    "seasonal-events": "arena"
+    "seasonal-events": "arena",
+    "cosmic-ledger": "void",
+    "data-observatory": "genesis",
+    "knowledge-loom": "academy",
+    "achieve": "arena",
+    "archive": "citadel",
+    "ascend": "genesis",
+    "creation-studio": "citadel",
+    "govern": "genesis",
+    "intel": "intelligence",
+    "invest": "exchange",
+    "order": "heritage",
+    "security": "genesis"
   }
 }

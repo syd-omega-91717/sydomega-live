@@ -21,7 +21,7 @@
       p_content_type:contentType||'page',
       p_axis_type:axisType||null,
       p_weight:weight||1.0
-    }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
+    }).then(function(r){ if(r&&r.error) console.warn('[Omega] non-critical write failed:', r.error); },function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
   }
 
   /* Record 'watch' signal when page is active for 30+ seconds */

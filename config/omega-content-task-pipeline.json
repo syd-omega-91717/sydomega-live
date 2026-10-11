@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Ω Governed Content Task Pipeline",
+  "version": 1,
+  "status": "IMPLEMENTED_PROVIDER_DEPLOYED",
+  "principle": "UPLOAD_IS_NOT_PUBLICATION",
+  "source_of_truth": [
+    "Supabase Storage bucket uploads",
+    "public.storage_files",
+    "public.storage_shares",
+    "public.omega_platform_events"
+  ],
+  "upload": {
+    "states": [
+      "SELECTED",
+      "VALIDATED",
+      "AUTHORIZED",
+      "UPLOADED",
+      "REGISTERED",
+      "PENDING_REVIEW",
+      "FAILED",
+      "ROLLED_BACK"
+    ],
+    "required": {
+      "authentication": true,
+      "owner_path": true,
+      "storage_record": true,
+      "audit_event": true
+    },
+    "rules": [
+      "client_upload_must_be_authenticated",
+      "storage_path_first_segment_must_equal_authenticated_user_id",
+      "server_registration_is_required_after_storage_upload",
+      "registration_failure_must_attempt_storage_rollback",
+      "registration_does_not_prove_rights",
+      "registration_does_not_prove_publication",
+      "registration_does_not_prove_entitlement",
+      "registration_does_not_prove_malware_scan"
+    ]
+  },
+  "download": {
+    "states": [
+      "REQUESTED",
+      "AUTHENTICATED",
+      "AUTHORIZED",
+      "SIGNED",
+      "DELIVERED",
+      "DENIED",
+      "FAILED"
+    ],
+    "required": {
+      "authentication": true,
+      "owner_authorization": true,
+      "signed_url": true,
+      "audit_event": true
+    },
+    "rules": [
+      "first_slice_is_owner_only",
+      "shared_delivery_is_not_inferred_from_storage_shares_until_explicit_policy_is_verified",
+      "public_download_is_never_inferred_from_storage_path",
+      "signed_url_is_time_limited"
+    ]
+  },
+  "truth_states": {
+    "registered": "LIVE",
+    "rights": "UNVERIFIED",
+    "publication": "UNVERIFIED",
+    "entitlement": "UNVERIFIED",
+    "scan": "UNAVAILABLE_UNLESS_PROVIDER_EVIDENCE_EXISTS"
+  },
+  "release_rule": "Provider deployment evidence is recorded, but authenticated end-to-end transaction evidence, rights/publication/entitlement and malware-scan evidence remain separate truth gates.",
+  "provider_evidence": {
+    "source": "docs/runtime/supabase-edge-functions-live.json",
+    "functions": {
+      "content-ingest": {
+        "status": "DEPLOYED",
+        "version": 1,
+        "verify_jwt": true
+      },
+      "content-delivery": {
+        "status": "DEPLOYED",
+        "version": 1,
+        "verify_jwt": true
+      }
+    },
+    "limitation": "Deployment evidence proves live function availability/configuration; it does not prove an authenticated end-to-end upload/download transaction has been exercised."
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Ω Content Asset Fabric Source Map",
+  "version": 1,
+  "status": "IMPLEMENTED_READ_ONLY",
+  "authority": "Existing production Supabase tables remain authoritative; this file defines normalization only.",
+  "sources": {
+    "media_items": {
+      "domain": "Media",
+      "content_types": [
+        "movie",
+        "series",
+        "episode",
+        "video",
+        "audio",
+        "image",
+        "game",
+        "catalog_item"
+      ],
+      "identity": {
+        "id": "id",
+        "title": "title"
+      },
+      "delivery": {
+        "thumbnail": "thumbnail_url",
+        "primary": "video_url"
+      },
+      "truth": "persisted_record"
+    },
+    "storage_files": {
+      "domain": "Storage",
+      "content_types": [
+        "document",
+        "image",
+        "video",
+        "audio",
+        "archive",
+        "dataset",
+        "other"
+      ],
+      "identity": {
+        "id": "id",
+        "title": "filename"
+      },
+      "delivery": {
+        "primary": "storage_path"
+      },
+      "provenance": {
+        "owner": "owner_id",
+        "checksum": "checksum",
+        "mime": "mime_type",
+        "bytes": "size_bytes"
+      },
+      "truth": "persisted_record"
+    },
+    "user_assets": {
+      "domain": "Storage",
+      "content_types": [
+        "user_asset"
+      ],
+      "identity": {
+        "id": "id",
+        "title": "name"
+      },
+      "provenance": {
+        "owner": "user_id"
+      },
+      "truth": "persisted_record"
+    }
+  },
+  "normalization": {
+    "id": "source:id",
+    "title": "source.title",
+    "content_type": "source-specific mapping",
+    "truth_state": "LIVE only when an authenticated query returns the persisted row; EMPTY when no rows; UNAVAILABLE on query/auth/client failure",
+    "rights_state": "UNVERIFIED unless explicit rights evidence exists",
+    "publication_state": "UNVERIFIED unless explicit publication evidence exists",
+    "entitlement_state": "UNVERIFIED unless explicit entitlement evidence exists"
+  },
+  "non_inference_rules": [
+    "storage_path_does_not_prove_public_download",
+    "checksum_does_not_prove_ownership",
+    "media_url_does_not_prove_distribution_rights",
+    "user_asset_does_not_prove_nft_ownership",
+    "catalog_status_does_not_prove_publication",
+    "record_existence_does_not_prove_entitlement"
+  ]
+}

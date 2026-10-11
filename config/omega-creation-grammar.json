@@ -1,0 +1,15 @@
+{
+  "name":"Ω Creation Grammar",
+  "version":1,
+  "pipeline":["IDEA","PROJECT","PROMPT_OR_RULES","PROVIDER_JOB","ASSET","LINEAGE","EXPERIENCE","RUN","EVENT","EVIDENCE","ANALYTICS"],
+  "domains":{
+    "visual_forge":["IMAGE"],
+    "cinema":["VIDEO","MOVIE","AUDIO"],
+    "game_forge":["GAME_BUILD","MODEL","DATA"],
+    "simulation_lab":["DATA","MODEL","VIDEO"],
+    "world_builder":["IMAGE","VIDEO","MODEL","DATA"],
+    "story_engine":["TEXT","IMAGE","VIDEO","AUDIO"]
+  },
+  "truth_states":["LIVE","CALCULATED","SIMULATED","USER-CREATED","LORE","UNAVAILABLE"],
+  "provider_policy":"adapters_are_not_sources_of_truth"
+}

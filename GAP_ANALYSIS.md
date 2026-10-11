@@ -18,24 +18,100 @@ project's own established convention (security/data-integrity first).
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 
-- **Four modules on disk that no page or module loads** (opened 2026-10-03, `audit.py`):
-  `omega-mission-state.js` (detached when `missions.html` removed its legacy bridge,
-  09-29), `omega-action-runtime.js` and `omega-data-runtime.js` (built 10-01, listed in
-  `config/omega-runtime-manifest.json`, never wired to a page), and
-  `omega-theme-personalization.js` (Proposal #22; bg.js loads `omega-theme-elemental.js`
-  instead). Not deleted: an unloaded module has been load-bearing before
-  (`omega-bottom-stack.js`). Wire or retire each with its author's intent in hand.
-  (`omega-mission-board.js` was a false positive — loaded by an inline `import`, which
-  `audit.py` now counts.)
+- **OPEN 2026-10-09 — production is frozen at the 2026-10-06 build.** Vercel's newest
+  `READY` production deployment is `dpl_9h9Eq1MSC3XgeAyzijV852RQnu14` (#755, `7d70ce14`);
+  `sydomega.com` answers 200 from cache (`age: 287253`, `last-modified: Tue, 06 Oct 2026`).
+  `main` is 417 commits / 90 merges ahead, 52 shipped `.html`/`.js`/`.css` files changed. Every
+  "verified" claim since #755 is repository evidence only. Owner: lift the account block
+  (§8.2), then confirm one production deploy of current `main`.
+- **OPEN 2026-10-09 — access requests go unanswered; the owner is never emailed.**
+  `notify-access` (emails the owner on a new request) is `LOCAL_ONLY` — 9 of 25 functions are
+  (`docs/runtime/supabase-edge-functions-live.json`; `list_edge_functions` returns 16). Live:
+  9 accounts, 4 approved, **4 pending for 72–115 days**, 1 rejected; 2 sign-ins in 30 days.
+  (Corrected same day: a first count said 5 pending by including the rejected row.) A signal
+  does exist — `omega-owner-deck.js` `waitingChip()` shows "N WAITING" — but only on
+  `control-plane.html`. Owner: decide each request in `approvals.html`; to deploy
+  `notify-access`, set `RESEND_API_KEY` + `NOTIFY_ACCESS_WEBHOOK_SECRET` and the `profiles`
+  DB webhook first.
+- **OPEN 2026-10-09 — nothing runs on a schedule.** `pg_cron` is **not installed** live
+  (`cron.job` → 42P01; `pg_available_extensions` lists it, `pg_net` is installed). So
+  `rankings`, `snapshot-leaderboard`, `weekly-digest` (also undeployed) and the trial sweep
+  never run. Live row counts are 0 in all eight async tables: `leaderboard_snapshots`,
+  `weekly_digest_queue`, `notification_queue`, `omega_event_queue`, `ai_jobs`,
+  `omega_media_jobs`, `omega_provider_jobs`, `omega_knowledge_embedding_jobs` — the four
+  deployed workers have never had work. **2 expired trials are unswept.** Enforcement does not
+  depend on the sweep (`0082_trial_917.sql:211`), but scheduling it is **not** a safe default:
+  `sweep_expired_trials()` deletes the member's `task_completions` (`0082_trial_917.sql:243`),
+  so its first run wipes those two members' progress. Owner decision before any schedule.
+- **CLOSED 2026-10-06 — Creation Layer truth enforcement is live.** Authenticated clients no longer have direct DML on the four Creation Layer tables; authenticated public RPC wrappers enforce server-owned lifecycle/truth state, provenance and run state through non-exposed `private` SECURITY DEFINER implementations with `search_path=''` and ownership checks. Project creation is forced to `DRAFT / USER-CREATED`, asset creation to `DESIGNED / USER-CREATED`, experience creation to `DRAFT / SIMULATED`, and run score/state transitions are server-owned. Experience-step events are persisted canonically, and published experiences are readable by authenticated members while draft/retired experiences remain owner-scoped. The remaining gap is provider-live generation, artifact delivery/hashing, licensing verification and the public Creation Studio; those must not be represented as LIVE until provider evidence exists. See `docs/OMEGA_CREATION_LAYER.md`.
+- **CLOSED 2026-10-09 — client read grants are materialised.** The seven tables `omega_notifications`, `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`, `omega_agent_tasks`, `omega_agent_task_events`, and `omega_matrix_node_semantics` now have the production `authenticated SELECT` grants represented by `supabase/migrations/20261006194000_materialize_existing_client_read_grants_20261006.sql`. Live `has_table_privilege` verification confirms those grants. The migration-grant contract no longer tracks them as missing migration grants.
+- **CLOSED 2026-10-09 — `omega_agent_action_proposals` was a retired schema, not a missing live table.** Migration `20260929113731` created the proposal table and `20260929115306` explicitly dropped it. Live absence is therefore expected; the stale `KNOWN` exception was removed from `scripts/migration-grant-contract.py`.
+- **KNOWN LIVE/REPLAY SCHEMA RESIDUE CLOSED 2026-10-09; migration history reconciled.**
+  Live production now records the repository's 373-version migration chain through canonical
+  version `20261008032846`; the previously unrecorded Creation/Provider/Security/Knowledge
+  migrations were reconciled under their repository version IDs, and the two Knowledge migrations
+  were corrected to their actual live versions `20261008032308` and `20261008032846`.
+  The verified schema residue is also materialised by `20261009020000_migration_live_schema_reconciliation_20261009.sql`.
+  A fresh zero-state replay including the reconciled 373-version chain is still required before
+  claiming exact replay/live parity.
+- **KNOWN LIVE/REPLAY SCHEMA RESIDUE CLOSED 2026-10-09; full replay verification remains pending.**
+  Live verification found four `omega_platform_evidence` columns that were intentionally nullable
+  in the replay prelude but are `NOT NULL` in production; those four constraints are now captured
+  in `supabase/migrations/20261009020000_migration_live_schema_reconciliation_20261009.sql`.
+  The same reconciliation materialises the previously live-only empty `notification_templates`
+  table, its `notification_queue.template_id` foreign key, the fail-closed policies on
+  `notification_queue`/`omega_knowledge_chunks`/`notification_templates`, and removes the five
+  inert progression-table member-write policies. Live verification after the change reports:
+  zero NULLs in the four evidence columns, zero rows in `notification_templates`, all three
+  fail-closed policies present, the five inert policies absent, and the queue foreign key present.
+  A fresh zero-state replay including this new migration is still required before claiming exact
+  replay/live parity.
+- **Legacy-key migration: owner steps outstanding** (opened 2026-10-05,
+  `docs/decisions/legacy-key-migration/PLAN.md`). All 7 live Edge Functions read keys through
+  `supabase/functions/_shared/keys.ts` and log `KEY_SOURCE`. Publishable already reports `new`;
+  secret reports `legacy_fallback` because `SUPABASE_SECRET_KEYS` is `{}` (key names `[]`, from
+  the function logs): the project has **no new-format secret key yet**. Owner: create one in
+  Settings → API Keys (Phase 0); functions pick it up on their next boot, no redeploy. Phases 3–4
+  (deactivate legacy keys, then revoke the legacy JWT secret) stay gated on every function
+  logging `secret:new`.
+- **`stripe-webhook` refuses every event: `STRIPE_WEBHOOK_SECRET` is not set** (opened
+  2026-10-05). A live probe returned `503 webhook_not_configured` and the function logged
+  "STRIPE_WEBHOOK_SECRET is not configured; refusing webhook." The check runs before signature
+  verification and is unchanged code; `checkout` is source-only, so no payment flow is live end
+  to end. Owner: set the secret (`supabase secrets set STRIPE_WEBHOOK_SECRET=…`) only when
+  payments are meant to go live.
+- **CLOSED 2026-10-09 — governed runtime modules are wired or intentionally retired.**
+  `omega-action-runtime.js` and `omega-data-runtime.js` are platform-wide entrypoints loaded by
+  `bg.js`; `omega-mission-state.js` loads only where the existing mission-state mount is present.
+  `omega-theme-personalization.js` remains intentionally retired because the canonical theme engine
+  is `omega-theme-elemental.js`.
+- **CLOSED 2026-10-09 — five inert progression-table member-write policies removed.**
+  The live policies on `quest_completions`, `domain_mastery`, `leaderboard_entries`, and
+  `covenant_progress` were removed after confirming the authenticated write grants were absent;
+  no client mutation authority was restored.
+  `omega-action-runtime.js` and `omega-data-runtime.js` are now platform-wide runtime
+  entrypoints loaded by `bg.js`, with manifest declarations and regression coverage.
+  `omega-mission-state.js` is conditionally loaded whenever the existing
+  `[data-omega-mission-state]` mount is present (currently `missions.html`). It remains
+  read-only and never grants progression. `omega-theme-personalization.js` is intentionally
+  not loaded: `omega-theme-elemental.js` is the canonical theme engine and the repository
+  already tests that the deprecated duplicate is not globally injected. The old four-module
+  "unloaded" finding is therefore closed as wiring + intentional retirement, not by
+  deleting historical compatibility code.
 - **Five inert member write policies on the progression tables** (opened 2026-10-03):
   `quest_completions_member_insert/_update`, `domain_mastery_member_update`,
   `leaderboard_member_update`, `covenant_member_update`. Inert since `20261003220754`
   revoked the grants. The Supabase connector holds every `DROP` for a confirmation an
   agent session cannot give, so run in the SQL editor:
   `drop policy quest_completions_member_insert on public.quest_completions;` (and the
-  other four), then add the matching migration file.
-- **Leaked-password protection is off** (Supabase security advisor). Dashboard-only:
-  Authentication → Policies (password strength / HaveIBeenPwned). No API path from here.
+  other four), then add the matching migration file. Retried 2026-10-04 with the
+  owner present: the confirmation still never surfaced; live count still 5.
+- **Leaked-password protection is off** (Supabase security advisor; issue #375). The
+  control requires the **Pro** plan (`get_organization` reports `free`), so no SQL or
+  repo change can enable it. Once on Pro: Authentication → Policies → Password Security,
+  or `scripts/enable-supabase-hibp.py` with an owner access token. Compensating
+  control today: `omega-password-guard.js` (HIBP k-anonymity at sign-up and reset),
+  which direct Auth API calls bypass.
 - **Gamification Phase 2 is built and dormant** (opened 2026-10-03). To turn it on:
   `set_platform_flag('gamification_enabled', true)` as the owner. Pages:
   `character.html` (PROGRESSION tab), `cosmetics.html`, `my-quests.html`. Paid
@@ -57,10 +133,10 @@ open, recorded in `FIXES_LOG.md`:
   mapping `supabase/functions/*` `.from()` calls to table grants would make this a gate
   rather than a checklist.
 - **The Guide is English-only** (opened 2026-09-26). `omega-guide.js` holds its 26 answers as English strings, not `T_EN` keys, so the six packs do not reach it. Keying them means 26 × 7 entries through the i18n contract, which is worth doing once the wording settles.
-- **`find_contradictions` does not exist** (opened 2026-09-26).
-  `graphify-ai-query/index.ts:252` calls it and only logs a warning when it fails, so the
-  anomaly report's contradiction list is always empty. The function is not deployed, so
-  no member sees it yet.
+- **CLOSED 2026-10-04 — `find_contradictions` exists** (opened 2026-09-26). Defined in
+  `20261003085246` (+ `20261003085318` pinning `search_path`) and present live
+  (`pg_proc` count 1). Its only caller, `graphify-ai-query`, is still `LOCAL_ONLY` in
+  `docs/runtime/supabase-edge-functions-live.json`, so no member reaches it yet.
 
 - **The concept art and the canon disagree in three places now** (opened
   2026-09-13; `FIXES_LOG.md` 139, 141). Not a bug — a **decision the owner has
@@ -796,7 +872,8 @@ open, recorded in `FIXES_LOG.md`:
   member**, by pre-existing policy. Both look deliberate but became *reachable*
   only when the missing grants were added, so they are recorded rather than
   assumed fine. All 10 visible governance rows are `status='active'`.
-- **125 tables have RLS policies and no grant** (live 2026-10-04; was 127, and
+- **126 tables have RLS policies and no grant** (live 2026-10-06, column grants
+  counted; was 125 on 2026-10-04 and 127 before that, and
   the 2026-09-21 claim that the rest were "unreachable from any page" was
   wrong for three). `omega_platform_events`, `omega_platform_evidence` and
   `capability_registry` were read by `omega-eternity-engine.js`,
@@ -808,7 +885,10 @@ open, recorded in `FIXES_LOG.md`:
   **none is read by a page**, and every table a page reads exists live with a
   member SELECT path. Left locked out — the safe state; do not grant without
   deciding the feature is wanted. (`agent_experiments` was the earlier
-  reachable case, #179.)
+  reachable case, #179.) Re-cross-checked 2026-10-06: none of the 126 is read
+  by a page. That day's eight new cases *were* reached (Creation Layer, mission
+  board) and were granted, not added here; `migration-grant-contract.py` now
+  fails any new one.
 - **Proposal #26's sculpture data binding is inert end to end** (found
   2026-10-04). `omega-sculpture-dataviz.js` (bg.js-injected) feeds the
   ascension/elements/signet scenes from `profile.current_tier_progress`,
@@ -822,25 +902,21 @@ open, recorded in `FIXES_LOG.md`:
   `.from().on()` realtime API, were removed. Wiring the layer needs a real
   source: Phase 2 progression exists but is dormant behind its flag, so
   binding it would expose a dormant feature — decide that first.
-- **The full migration replay has never passed** (`supabase-full-migration-replay.yml`,
-  measured 2026-10-04). A fresh `supabase db reset` stops at migration #129,
-  `20260819071913_optimize_auth_rls_initplan_seven_policies.sql`: its unguarded
-  `ALTER POLICY … ON public.council_deliberations` runs before the table exists,
-  because that table only reaches `migrations/` in `20260905211725`; live had it
-  from the flat bag first. Reproduced locally on PG16 + pgvector + pg_cron with
-  a Supabase platform stub, failing at the same statement. The fix that leaves
-  live untouched wraps those three `ALTER`s in a `pg_policies` existence check:
-  the version is already applied live and never re-runs, and `20260905211725`
-  creates the same three policies in the same `(SELECT auth.uid())` form. It
-  edits an applied migration, though, which CLAUDE.md §5 forbids, and the edit
-  was refused by this session's permission policy. **Owner decision.** Further
-  gaps past #129 are unmeasured until this one is resolved.
-- **Five inert progression write policies** (`covenant_member_update`,
-  `domain_mastery_member_update`, `leaderboard_member_update`,
-  `quest_completions_member_insert`, `quest_completions_member_update`) are still
-  live. A DROP through the connector waits on a confirmation that never reaches
-  the user and times out; retried 2026-10-04, still 5. Run in the SQL editor:
-  `drop policy if exists <name> on public.<table>;` for each.
+- **The full migration replay — CLOSED 2026-10-04 on real Supabase.** `supabase-full-migration-replay.yml`
+  run 37211479551 on `main` (`21febb81`, CLI 2.119.0) went green on every step: `supabase db reset`
+  applied all 337 migrations, the post-replay inventory passed, the migration security audit passed and
+  the hardening contract passed. It had never passed before.
+
+  This needed owner-approved edits to versions already recorded as applied in live
+  `supabase_migrations.schema_migrations`, so they are a no-op there. They landed in #707, #708, #709,
+  #710 and #711. `FIXES_LOG.md` has the per-migration detail.
+
+  **Drift that remains, and does not block replay:**
+  - `task_completions.id` is `bigint` live and `uuid` fresh;
+  - live `search_index` is not `0016`'s shape;
+  - live `ai_memory` is a union of two shapes.
+
+  A database rebuilt from the repo is structurally close to live, not identical.
 - **Third-party pins are gated** (`scripts/resilience-audit.py`, blocking;
   detail in `FIXES_LOG.md`). It caught 15 CDN deps floating, one at `@latest`.
   **A grep cannot find these — they are injected at runtime, not markup**; only

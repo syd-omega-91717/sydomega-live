@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "OMEGA_EXTREME_EVOLUTION_CONTROL",
+  "version": 1,
+  "status": "GOVERNED_BACKLOG_NOT_PRODUCTION_PROOF",
+  "purpose": "Convert the supplied source corpus and current production evidence into dependency-ordered major/extreme engineering work without inventing implementation or provider truth.",
+  "source_basis": {
+    "source_files": 5,
+    "normalized_requirement_records": 1622,
+    "blueprint_rule": "source + section heading + point number",
+    "truth_rule": "SOURCE_REQUIREMENT_IS_NOT_PRODUCTION_EVIDENCE"
+  },
+  "priority_model": {
+    "EXTREME_0": "security, identity, money, privacy, provider integrity, data loss, authorization, release integrity",
+    "MAJOR_1": "shared core, page/capability/task coverage, runtime parity, observability, recovery, accessibility, performance",
+    "MAJOR_2": "validated product value, AI quality, content/media lifecycle, marketplace, communications",
+    "EXPANSION_3": "gaming/social, blockchain/digital assets, advanced personalization, external ecosystem integrations",
+    "FUTURE_4": "speculative or physical-world/cosmic concepts requiring separate feasibility, legal, scientific, and economic validation"
+  },
+  "gates": [
+    {
+      "id": "EXT-001",
+      "priority": "EXTREME_0",
+      "area": "production_release",
+      "status": "BLOCKED",
+      "depends_on": [
+        "provider_deployment"
+      ],
+      "exit_evidence": [
+        "current_main_ready_production_deployment",
+        "smoke_test_current_revision",
+        "rollback_reference"
+      ],
+      "rule": "Never bypass a provider deployment failure by changing labels or suppressing checks."
+    },
+    {
+      "id": "EXT-002",
+      "priority": "EXTREME_0",
+      "area": "identity_authentication",
+      "status": "UNVERIFIED",
+      "exit_evidence": [
+        "registration_login_confirmation_reset_session_invalidation_e2e",
+        "owner_mfa_evidence",
+        "recovery_evidence"
+      ],
+      "rule": "Sensitive member and owner operations require verified authentication assurance."
+    },
+    {
+      "id": "EXT-003",
+      "priority": "EXTREME_0",
+      "area": "authorization",
+      "status": "PARTIAL",
+      "exit_evidence": [
+        "semantic_rls_matrix",
+        "unauthorized_cross_user_tests",
+        "owner_boundary_tests",
+        "edge_function_authorization_tests"
+      ],
+      "rule": "Client UI state is never an authorization authority."
+    },
+    {
+      "id": "EXT-004",
+      "priority": "EXTREME_0",
+      "area": "secrets_and_credentials",
+      "status": "IMPLEMENTED_CONTROL_UNVERIFIED_PROVIDER_CLOSURE",
+      "exit_evidence": [
+        "provider_credential_inventory",
+        "rotation_or_revocation",
+        "access_log_review",
+        "repository_secret_scan"
+      ],
+      "rule": "Credential-shaped legacy material is treated as exposure risk until provider validity is disproven or credentials are rotated."
+    },
+    {
+      "id": "EXT-005",
+      "priority": "EXTREME_0",
+      "area": "payments",
+      "status": "BLOCKED",
+      "exit_evidence": [
+        "signed_webhook_verification",
+        "idempotency",
+        "immutable_ledger",
+        "reconciliation",
+        "entitlement",
+        "refund_reversal",
+        "provider_live_proof"
+      ],
+      "rule": "No payment-dependent entitlement is production-live without provider evidence."
+    },
+    {
+      "id": "EXT-006",
+      "priority": "EXTREME_0",
+      "area": "privacy",
+      "status": "PARTIAL",
+      "exit_evidence": [
+        "controlled_export",
+        "controlled_erasure",
+        "retention_verification",
+        "access_audit_visibility"
+      ],
+      "rule": "Privacy promises must be mapped to executable controls and evidence."
+    },
+    {
+      "id": "EXT-007",
+      "priority": "EXTREME_0",
+      "area": "sensitive_storage_kyc",
+      "status": "PARTIAL",
+      "exit_evidence": [
+        "file_type_validation",
+        "size_limits",
+        "malware_scan_strategy",
+        "private_object_access_tests",
+        "cross_user_denial",
+        "retention_delete_evidence"
+      ],
+      "rule": "KYC and sensitive uploads require stronger isolation and lifecycle controls than generic content uploads."
+    },
+    {
+      "id": "EXT-008",
+      "priority": "EXTREME_0",
+      "area": "disaster_recovery",
+      "status": "BLOCKED",
+      "exit_evidence": [
+        "restore_drill",
+        "measured_rpo",
+        "measured_rto",
+        "restore_integrity_check",
+        "documented_runbook"
+      ],
+      "rule": "Backups are not recovery evidence until restoration is demonstrated."
+    },
+    {
+      "id": "EXT-009",
+      "priority": "EXTREME_0",
+      "area": "edge_runtime_parity",
+      "status": "UNVERIFIED",
+      "exit_evidence": [
+        "source_provider_fingerprint_reconciliation",
+        "function_inventory",
+        "jwt_posture",
+        "secret_presence_fingerprint",
+        "representative_auth_unauth_malformed_repeated_tests"
+      ],
+      "rule": "Repository Edge Function source does not prove provider deployment state."
+    },
+    {
+      "id": "MAJ-001",
+      "priority": "MAJOR_1",
+      "area": "page_capability_coverage",
+      "status": "PARTIAL",
+      "exit_evidence": [
+        "source_audited_page_contracts",
+        "canonical_capability_mapping",
+        "unknown_action_remediation",
+        "negative_cases"
+      ],
+      "rule": "Unknown controls become explicit remediation; never create blind mappings."
+    },
+    {
+      "id": "MAJ-002",
+      "priority": "MAJOR_1",
+      "area": "navigation_and_search",
+      "status": "PARTIAL",
+      "exit_evidence": [
+        "duplicate_key_check",
+        "dead_target_check",
+        "deep_link_check",
+        "keyboard_navigation",
+        "search_result_truth_state"
+      ],
+      "rule": "Navigation is a platform capability, not a page-by-page invention."
+    },
+    {
+      "id": "MAJ-003",
+      "priority": "MAJOR_1",
+      "area": "accessibility_and_readability",
+      "status": "PARTIAL",
+      "exit_evidence": [
+        "keyboard",
+        "accessible_names",
+        "focus_visibility",
+        "contrast",
+        "reduced_motion",
+        "responsive",
+        "text_scale"
+      ],
+      "rule": "Cinematic design cannot reduce comprehension or operability."
+    },
+    {
+      "id": "MAJ-004",
+      "priority": "MAJOR_1",
+      "area": "observability",
+      "status": "PARTIAL",
+      "exit_evidence": [
+        "structured_logs",
+        "metrics",
+        "traces_where_needed",
+        "slo_definitions",
+        "alert_ownership",
+        "privacy_review"
+      ],
+      "rule": "Telemetry must be actionable and privacy-safe."
+    },
+    {
+      "id": "MAJ-005",
+      "priority": "MAJOR_1",
+      "area": "scale_and_cost",
+      "status": "PENDING",
+      "exit_evidence": [
+        "concurrency_test",
+        "db_saturation",
+        "queue_limits",
+        "edge_limits",
+        "latency_percentiles",
+        "cost_per_successful_task"
+      ],
+      "rule": "Scale claims require measured workload evidence."
+    },
+    {
+      "id": "MAJ-006",
+      "priority": "MAJOR_1",
+      "area": "migration_reproducibility",
+      "status": "PENDING",
+      "exit_evidence": [
+        "clean_baseline_replay",
+        "schema_consistency",
+        "seed_policy",
+        "rollback_or_forward_fix"
+      ],
+      "rule": "Database state must be reproducible, not dependent on an undocumented live history."
+    },
+    {
+      "id": "MAJ-007",
+      "priority": "MAJOR_1",
+      "area": "ai_quality",
+      "status": "PENDING",
+      "exit_evidence": [
+        "groundedness",
+        "retrieval_precision_recall_or_equivalent",
+        "hallucination_eval",
+        "latency",
+        "cost",
+        "adversarial_recovery",
+        "privacy_scope"
+      ],
+      "rule": "AI output must remain subordinate to authorization, provenance, and truth-state controls."
+    },
+    {
+      "id": "MAJ-008",
+      "priority": "MAJOR_2",
+      "area": "content_and_media_lifecycle",
+      "status": "PARTIAL",
+      "exit_evidence": [
+        "content_registry",
+        "provenance",
+        "rights",
+        "publication_state",
+        "storage_lifecycle",
+        "export_delete"
+      ],
+      "rule": "Content bytes, metadata, rights, publication, and entitlement remain distinct."
+    },
+    {
+      "id": "MAJ-009",
+      "priority": "MAJOR_2",
+      "area": "product_economics",
+      "status": "PENDING",
+      "exit_evidence": [
+        "validated_customer_job",
+        "pricing_hypothesis",
+        "provider_cost_model",
+        "support_cost",
+        "conversion_or_usage_evidence",
+        "unit_economics"
+      ],
+      "rule": "Do not scale expensive capabilities before proving value and sustainable economics."
+    },
+    {
+      "id": "EXP-001",
+      "priority": "EXPANSION_3",
+      "area": "blockchain_digital_assets",
+      "status": "UNVERIFIED",
+      "exit_evidence": [
+        "jurisdiction_review",
+        "custody_model",
+        "chain_authority",
+        "asset_provenance",
+        "transaction_reconciliation",
+        "fraud_controls",
+        "user_disclosures"
+      ],
+      "rule": "Blockchain concepts cannot become financial or ownership truth merely because a ledger exists."
+    },
+    {
+      "id": "EXP-002",
+      "priority": "EXPANSION_3",
+      "area": "gaming_social",
+      "status": "UNVERIFIED",
+      "exit_evidence": [
+        "authoritative_game_state",
+        "anti_cheat_or_integrity_model",
+        "moderation",
+        "privacy",
+        "age/safety policy where applicable",
+        "economic controls"
+      ],
+      "rule": "Competitive or reward-bearing state must be server-authoritative and auditable."
+    },
+    {
+      "id": "FUT-001",
+      "priority": "FUTURE_4",
+      "area": "speculative_physical_cosmic_systems",
+      "status": "FUTURE",
+      "exit_evidence": [
+        "scientific_feasibility",
+        "engineering_feasibility",
+        "capital_model",
+        "legal_jurisdiction",
+        "physical_system_validation"
+      ],
+      "rule": "Narrative or speculative concepts remain LORE/FUTURE until independently feasible and evidenced."
+    }
+  ],
+  "global_exit_rule": "A priority item is not complete until its contract, implementation path, authorization boundary, failure behavior, tests, required provider/runtime evidence, truth state, documentation, owner, cost/risk, and rollback/retirement path are recorded.",
+  "anti_shortcuts": [
+    "no synthetic production evidence",
+    "no blind page-action mappings",
+    "no client-authoritative security or financial state",
+    "no credentials in documentation",
+    "no provider failure suppression",
+    "no architectural rewrite without measured need",
+    "no vanity metrics without source and freshness",
+    "no lore presented as real-world fact"
+  ]
+}

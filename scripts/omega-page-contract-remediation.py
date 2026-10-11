@@ -11,6 +11,11 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import sys
+
+if "--help" in sys.argv:
+    print(__doc__.strip())
+    raise SystemExit(0)
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = ROOT / "config" / "omega-page-contracts.json"

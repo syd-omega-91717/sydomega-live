@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "Ω SYD OMEGA 91717 Unified Platform Fabric",
-  "version": 2,
+  "version": 3,
   "principle": "ONE_PLATFORM_MANY_PROJECTIONS",
   "truth_states": [
     "LIVE",
@@ -119,13 +119,15 @@
     "release_evidence": "config/omega-production-10-10-evidence-gate.json",
     "event_evidence": "existing Supabase event/evidence/lineage contracts",
     "design_and_navigation": "existing shared design primitives, nav.js, and experience contracts",
-    "product_domain_registry": "config/omega-product-domain-registry.json"
+    "product_domain_registry": "config/omega-product-domain-registry.json",
+    "extreme_evolution_control": "config/omega-extreme-evolution-control.json"
   },
   "core_invariants": [
     "ONE_IDENTITY_AND_POLICY_BOUNDARY",
     "ONE_CANONICAL_TRUTH_VOCABULARY",
     "ONE_GOVERNED_TASK_LIFECYCLE",
     "ONE_VERSIONED_EVENT_AND_EVIDENCE_MODEL",
+    "ONE_EXTREME_EVOLUTION_PRIORITY_ORDER",
     "ONE_RELEASE_EVIDENCE_GATE",
     "DOMAIN_OWNERSHIP_MUST_BE_EXPLICIT",
     "DOMAIN_MODULES_MUST_NOT_CREATE_PARALLEL_CORE_REGISTRIES",
@@ -176,6 +178,7 @@
     "client-generated financial, achievement, KYC, owner, or deployment truth",
     "monolith rewrite or microservice split without measured need and approved decision record",
     "feature activation based only on UI, prompt, SQL file, or successful static test",
-    "vanity KPIs without source, definition, freshness, and production evidence"
+    "vanity KPIs without source, definition, freshness, and production evidence",
+    "expanding feature scope while extreme trust gates remain unresolved"
   ]
 }

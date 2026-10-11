@@ -59,6 +59,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # (id, what it protects, argv). Order is cheapest-first only for readability;
 # every gate runs regardless, so the order carries no meaning.
 GATES = [
+    ('extreme-evolution',
+     'major and extreme evolution priorities remain structurally governed and evidence-bound',
+     ['scripts/omega-extreme-evolution-contract.py']),
     ('page-contract-remediation',
      'canonical page-contract gaps remain explicit remediation rather than synthetic truth',
      ['scripts/omega-page-contract-remediation-contract.py']),

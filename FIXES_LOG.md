@@ -22911,3 +22911,35 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   one `stream-end` per answer. Proven against history: the pre-#858 module fails 11/14, the pre-#859
   module fails exactly the 4 memory/event cases, current passes 14/14. Runs in the same CI job, and
   as `ci-local.sh` step 2s (29 blocking checks).
+
+## Live grant audit: the sign-up birth-date gate and the achievements panel could never succeed (2026-10-12)
+
+- **Method.** Live catalog of every `public` table's privileges for `authenticated` (has_table_privilege
+  + `information_schema.column_privileges`), cross-checked against every client `.from('t').<op>()` in
+  root `*.html`/`*.js` (171 table/op pairs, 106 tables). 7 pairs lacked a table-level grant; 4 were
+  deliberate **column-level** grants whose callers name only granted columns (`academy_questions`,
+  `advertisements` read + insert, `capability_registry` ×3) — not bugs. Each remaining one was
+  proven by impersonating a real member (CLAUDE.md §8.4: `SET LOCAL ROLE` + `request.jwt.claims`),
+  `EXPLAIN` or a rolled-back transaction, nothing persisted (re-read afterwards: unchanged).
+- **`account.html` birth-date gate — every new member stuck.** The gate is shown to every member
+  with no sign who is neither approved nor owner (3 live profiles today). Its save was an `upsert` of
+  `id,email,sign,element,god,agent,birth_date`; members have **no INSERT** on `profiles` and UPDATE
+  only on 14 columns that exclude `email/element/god/agent`. Live as member `f1968a22…`:
+  `42501 permission denied for table profiles`. The UI showed the error (not class 1), but no member
+  could pass. **Fix:** update `birth_date` alone — the row exists (`handle_new_user`) and
+  `trg_derive_cosmology` derives `sign/element/god/agent` from it. Live as the same member in a
+  rolled-back transaction: succeeds, returns `Aries/FIRE/Ares/Sentinel`. `.select('sign')` turns a
+  0-row update (no error) into a visible failure. Harness: old page → "Could not save (42501)",
+  stuck; new → reaches `/dashboard.html`; 0-row stub → "no profile found", no redirect.
+  The tempting fix — `GRANT INSERT, UPDATE ON profiles` (Postgres's own HINT) — was rejected: it
+  would let a member write their own `access_approved`/`is_owner` columns.
+- **`omega-achieve-native.js` — the whole panel failed for every member.** It `Promise.all`s 7 reads
+  and throws on any error; one read `omega_achievement_verifications`, which is server-only by
+  design (deny-all policy, no grant): live as a member, 42501. So `achieve.html`'s native state
+  never rendered. **Fix:** drop that read; the card now counts the member's own verified
+  achievements from `omega_user_achievements.verified_at` (readable, real) instead of a server
+  table it can never see. Live as a member, the six remaining reads all succeed. Harness with a
+  live-like stub: old module throws "permission denied…"; new renders all 7 cards.
+- **Recorded, not fixed** (`GAP_ANALYSIS.md` §S): `profile.html`'s owner access panel writes
+  `access_approved` directly and always 42501s (`approvals.html` uses RPCs); and
+  `omega-graphify-integration.js`'s `notifications` fallback insert always fails (logged, not silent).

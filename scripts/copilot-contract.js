@@ -17,6 +17,10 @@
  *   honesty    offline, a command says nothing was generated (never a canned
  *              answer passed off as the result) and stays out of history.
  *   events     omega:copilot-stream-end fires once per answered message.
+ *   visuals    a visual command (/decisionmatrix, /timeline, ...) sends its JSON
+ *              schema; a valid reply is drawn as a visual; a matrix total is
+ *              recomputed, not trusted; markup in a label renders as text; an
+ *              undrawable reply shows the text with a no-visual note.
  *
  *   node scripts/copilot-contract.js            run the contract
  *   node scripts/copilot-contract.js --help     this text
@@ -70,6 +74,7 @@ function installStub() {
     if (window.__mode === 'offline') throw new Error('network');
     if (window.__mode === 'blockhistory' && b.message.includes('[CONVERSATION SO FAR]')) return { data: null, error: { status: 403 } };
     if (b.message.length > 2000) return { data: null, error: { status: 400 } };
+    if (window.__nextReply) { const r = window.__nextReply; window.__nextReply = null; return { data: { reply: r }, error: null }; }
     return { data: { reply: 'R' + (++n) }, error: null };
   } } };
   document.addEventListener('omega:copilot-stream-end', () => { window.__ends++; });
@@ -90,6 +95,7 @@ async function main() {
   try {
     await page.setContent('<!doctype html><html><head></head><body></body></html>');
     await page.evaluate(installStub);
+    await page.addScriptTag({ content: fs.readFileSync(path.join(ROOT, 'omega-copilot-visuals.js'), 'utf8') });
     await page.addScriptTag({ content: fs.readFileSync(MODULE, 'utf8') });
     await page.evaluate(() => document.dispatchEvent(new CustomEvent('omega:populated',
       { detail: { profile: { sign: 'Aries', axis_a: 1, axis_b: 1, axis_c: 1 } } })));
@@ -104,7 +110,7 @@ async function main() {
     await page.fill('#cp-input', '/s');
     await page.dispatchEvent('#cp-input', 'input');
     const picked = await page.$$eval('#cp-suggest .cp-cmd-k', els => els.map(e => e.textContent)).catch(() => []);
-    check('picker filters "/s" to /summarize and /strategy', JSON.stringify(picked) === '["/summarize","/strategy"]', 'got ' + JSON.stringify(picked));
+    check('picker filters "/s" to /summarize, /strategy and /sketchnotes', JSON.stringify(picked) === '["/summarize","/strategy","/sketchnotes"]', 'got ' + JSON.stringify(picked));
     await page.fill('#cp-input', '');
 
     let before = await calls();
@@ -155,8 +161,26 @@ async function main() {
     c = await last();
     check('the offline notice never enters history', c && c.message === 'next', 'sent ' + JSON.stringify(c && c.message));
 
+    // ── visuals (after /clear so history does not wrap the message)
+    await send('/clear');
+    const lastVisual = () => page.evaluate(() => { const m = document.querySelectorAll('#cp-messages .cp-msg-ai'); const d = m[m.length - 1]; const v = d && d.querySelector('[data-copilot-visual]'); return { kind: v ? v.getAttribute('data-copilot-visual') : null, text: d ? d.textContent : '', html: d ? d.innerHTML : '' }; });
+    await page.evaluate(() => { window.__nextReply = '```json\n{"title":"Pick a host","criteria":[{"name":"Cost","weight":3},{"name":"Speed","weight":2}],"options":[{"name":"A","scores":[5,1],"total":99},{"name":"B","scores":[2,4]}]}\n```'; });
+    await send('/decisionmatrix choose a host');
+    c = await last();
+    check('a visual command sends its JSON schema as the persona', /"criteria"/.test(c && c.system_override || '') && /Analyst/.test(c.system_override), JSON.stringify(c && c.system_override).slice(0, 120));
+    let v = await lastVisual();
+    check('a valid matrix reply is drawn, with totals recomputed (A=17, B=14) not the claimed 99', v.kind === 'matrix' && /17/.test(v.text) && /14/.test(v.text) && !/99/.test(v.text), JSON.stringify(v).slice(0, 200));
+    await page.evaluate(() => { window.__nextReply = '{"title":"T","items":[{"tag":"2020","label":"<img src=x onerror=alert(1)>","detail":"d"}]}'; });
+    await send('/timeline x');
+    v = await lastVisual();
+    check('markup in a label renders as text, never as an element', v.kind === 'timeline' && !/<img/i.test(v.html) && /&lt;img/.test(v.html), v.html.slice(0, 160));
+    await page.evaluate(() => { window.__nextReply = '{"title":"cut off","items":[{"label":"a"'; });
+    await send('/cycle x');
+    v = await lastVisual();
+    check('an undrawable reply shows the text and says no visual was drawn', v.kind === null && /No \/cycle visual was drawn/.test(v.text), v.text.slice(0, 120));
+
     // ── events: every message that reached aiSend fired one stream-end
-    const answered = await page.evaluate(() => document.querySelectorAll('#cp-messages .cp-msg-user').length) - 5; // help, unknown, usage, 2x clear answer locally
+    const answered = await page.evaluate(() => document.querySelectorAll('#cp-messages .cp-msg-user').length) - 6; // help, unknown, usage, 3x clear answer locally
     await page.waitForTimeout(6000);
     const ends = await page.evaluate(() => window.__ends);
     check('omega:copilot-stream-end fires once per answered message', ends === answered, ends + ' events for ' + answered + ' answered messages');

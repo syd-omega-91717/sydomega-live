@@ -94,6 +94,28 @@
     {c:'debug',agent:'Auditor',hint:'/debug <code or error>',d:'Find the root cause of a bug',
       g:'Task: debug. Identify the most likely root cause first, explain why in one or two sentences, then give the minimal fix as a code snippet. If the input is insufficient, say exactly what is missing.'}
   ];
+  /* Visual commands (/decisionmatrix, /timeline, ...) live in omega-copilot-visuals.js,
+     fetched only when the drawer opens or a command is typed, so no page pays for it
+     up front. Its commands join COMMANDS once it has loaded. */
+  var _visualsP=null, _merged=false;
+  function mergeVisuals(){
+    var V=window.OmegaCopilotVisuals;
+    if(V&&!_merged){_merged=true;V.commands.forEach(function(x){if(!findCommand(x.c)) COMMANDS.push(x);});}
+  }
+  function ensureVisuals(){
+    if(window.OmegaCopilotVisuals){mergeVisuals();return Promise.resolve(true);}
+    if(_visualsP) return _visualsP;
+    _visualsP=new Promise(function(done){
+      if(document.querySelector('script[data-omega-copilot-visuals]')){
+        document.addEventListener('omega:copilot-visuals-ready',function(){mergeVisuals();done(true);},{once:true});return;}
+      var sc=document.createElement('script');sc.src='/omega-copilot-visuals.js';sc.defer=true;
+      sc.setAttribute('data-omega-copilot-visuals','1');
+      sc.onload=function(){mergeVisuals();done(!!window.OmegaCopilotVisuals);};
+      sc.onerror=function(){_visualsP=null;done(false);};
+      (document.head||document.documentElement).appendChild(sc);
+    });
+    return _visualsP;
+  }
   function findCommand(name){
     for(var i=0;i<COMMANDS.length;i++){if(COMMANDS[i].c===name) return COMMANDS[i];}
     return null;
@@ -152,6 +174,7 @@
     try{document.dispatchEvent(new CustomEvent('omega:copilot-stream-start',{detail:{userMsg:userMsg}}));}catch(e){}
 
     var reply='';
+    _lastFallback=false;
     try{
       if(window.__omegaSb&&_profile){
         var persona=cmd?'You speak as '+cmd.agent+', the SYD OMEGA agent for this domain. '+cmd.g:'';
@@ -190,10 +213,24 @@
     /* The keyword guide's answer is real context for a follow-up; the "unavailable"
        notice is not, so it never enters history. */
     if(!cmd) remember(userMsg,fallback);
+    _lastFallback=true;
     endStream(fallback.length);
     return fallback;
   }
 
+  var _lastFallback=false;
+  /* A visual command's reply is JSON for omega-copilot-visuals.js to draw. When it is not
+     drawable (cut off by the reply limit, or the wrong shape), show the text and say plainly
+     that no visual was drawn -- never a half picture. */
+  function addVisual(cmd,reply){
+    var msgs=document.getElementById('cp-messages');
+    if(!msgs) return;
+    var d=document.createElement('div');
+    d.className='cp-msg cp-msg-ai';
+    var V=window.OmegaCopilotVisuals;
+    if(!_lastFallback&&V&&V.render(cmd,reply,d)){msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return;}
+    addMsg('ai',_lastFallback?reply:reply+'\n\n_No /'+cmd.c+' visual was drawn: the answer was cut off or not in the expected shape. Try a narrower subject._');
+  }
   function remember(q,a){
     _history.push({role:'user',content:q},{role:'assistant',content:a});
     if(_history.length>HISTORY_KEEP) _history.splice(0,_history.length-HISTORY_KEEP);
@@ -252,7 +289,7 @@
       if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.OmegaCopilot.send();}
     });
     /* Welcome message */
-    addMsg('ai','I am the Sovereign Copilot. Ask me about the Authority Formula, lattice nodes, gates, elements, your progression, or anything on this page. Type / for commands such as /summarize, /explain or /strategy.'+(_profile?' You are at AUTH='+window.OmegaCopilot.auth()+'.':''));
+    addMsg('ai','I am the Sovereign Copilot. Ask me about the Authority Formula, lattice nodes, gates, elements, your progression, or anything on this page. Type / for commands such as /summarize, /strategy, /decisionmatrix or /timeline.'+(_profile?' You are at AUTH='+window.OmegaCopilot.auth()+'.':''));
   }
 
   /* Command picker: shown while the input is a bare '/word' (no argument yet). */
@@ -318,6 +355,7 @@
       buildUI();
       var dr=document.getElementById('cp-drawer');
       if(dr){dr.style.display='flex';_open=true;}
+      ensureVisuals();
       setTimeout(function(){var inp=document.getElementById('cp-input');if(inp)inp.focus();},100);
     },
     close:function(){
@@ -336,6 +374,7 @@
       var q=inp.value.trim();inp.value='';
       addMsg('user',q);
       hideSuggest();
+      if(q.charAt(0)==='/') await ensureVisuals();
       var parsed=parseCommand(q);
       if(parsed&&parsed.help){addMsg('ai',commandHelp());return;}
       if(parsed&&parsed.clear){_history=[];addMsg('ai','Conversation cleared. I no longer carry the earlier turns.');return;}
@@ -345,7 +384,8 @@
       if(typing)typing.style.display='block';
       var reply=parsed?await aiSend(parsed.arg,parsed.cmd):await aiSend(q);
       if(typing)typing.style.display='none';
-      addMsg('ai',reply);
+      if(parsed&&parsed.cmd.visual) addVisual(parsed.cmd,reply);
+      else addMsg('ai',reply);
     }
   };
 

@@ -76,7 +76,7 @@ function capabilityPages() {
   }
   for (const ep of EXTRA_PAGES) if (!pages.includes(ep)) pages.push(ep);
   // Entrypoints come from the repo's own capability registry, not request input.
-  // nosemgrep: path-join-resolve-traversal
+  // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
   return pages.filter(p => fs.existsSync(path.join(ROOT, p)));
 }
 

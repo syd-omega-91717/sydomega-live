@@ -64,15 +64,22 @@ open, recorded in `FIXES_LOG.md`:
   a second bug (`<=>` unresolvable under `search_path=''`), fixed by 20261012064247.
   `grant-contract.py` now gates end-to-end callability, and fails all 14 call sites on the
   pre-fix snapshot.
-- **OPEN 2026-10-12 — 23 more public RPCs are granted to members but can never run**, same cause,
-  called by no client page today: `grant_trial_access`, `is_app_owner`,
-  `omega_{create,update,publish}_experience`, `omega_{start,step,abandon}_experience_run`,
-  `omega_update_creative_{project,asset}`, `omega_{issue,revoke,verify}_certificate`,
-  `omega_knowledge_ingest_document`, `omega_knowledge_search`, `omega_transition_mission_task`,
-  `purchase_perk`, `revoke_permanent_access`, `set_{consult,contract,reservation}_status`,
-  `set_dispatch_published`, `submit_exam_result`. Left as is on purpose: some (certificate
-  issue/revoke, ingest) may be meant server-only, so each needs its body read before a grant, and
-  `grant-contract.py` fails the first client call to any of them. Restore with its first caller.
+- **CLOSED 2026-10-12 — 19 of the 23 remaining blocked RPCs restored** by 20261012091641 after
+  reading each body live (owner+aal2 console actions, owner-only certificate issue/revoke and
+  knowledge ingest, caller-scoped Creation Layer and experience-run lifecycle, authenticated
+  knowledge search and certificate verification). Live probe: a non-owner gets `owner_only` /
+  `owner_authorization_required` / `owner authorization required` on every owner action; a member
+  updates only their own project; anon 42501.
+- **OPEN 2026-10-12 — 4 public RPCs stay blocked on purpose:** `omega_transition_mission_task` (a
+  member may move their own task `submitted→verified→completed`; whether evidence is enforced needs
+  review before it opens), `purchase_perk` (spends points — a product decision), `submit_exam_result`
+  (disabled legacy path that only redirects to `submit_exam_attempt`), `is_app_owner` (no caller).
+- **OPEN 2026-10-12 — `set_consult_status`, `set_contract_status`, `set_reservation_status` can never
+  update a row.** They take `p_id uuid`; `consult_requests.id`, `commission_contracts.id` and
+  `media_reservations.id` are `bigint`, so the owner call raises `operator does not exist: bigint =
+  uuid` (measured live as owner@aal2). Fix is `DROP FUNCTION` of both the public wrapper and private
+  body, then recreate with `p_id bigint` — DROP needs the owner's confirmation (CLAUDE.md §8.2). No
+  client calls them today. They also report `ok:true` even when no row matched.
 - **OPEN 2026-10-12 — the knowledge base is empty.** 11 approved sources, **0** chunks, 0
   embeddings: `omega_knowledge_hybrid_search` now runs and correctly returns nothing. Nothing has
   ingested source text (and `omega_knowledge_ingest_document` is in the blocked list above).

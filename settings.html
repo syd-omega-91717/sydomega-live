@@ -229,6 +229,9 @@ function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['preferences','account','privacy','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
+/* Deep link: approvals.js sends an owner with no authenticator to settings.html#two-factor.
+   That section lives on the ACCOUNT tab, which is not the default one. */
+if(location.hash==='#two-factor'){setTab('account');setTimeout(function(){var t=document.getElementById('two-factor');if(t)t.scrollIntoView({block:'start'});},400);}
 var DEFAULT_BG='#0A0A0F';
 var PRESETS=[['Void Black','#0A0A0F'],['Obsidian Navy','#06080f'],['Crimson Void','#0c0608'],['Forest Void','#060a08'],['Charcoal','#0e0e12'],['Deep Plum','#0a0710'],['Abyss Teal','#05090b'],['Ash','#101013']];
 function applyBg(color){document.documentElement.style.setProperty('--void',color);document.body.style.background=color;}

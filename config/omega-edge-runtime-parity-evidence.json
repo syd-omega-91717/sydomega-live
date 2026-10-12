@@ -3,7 +3,7 @@
   "name": "Omega Edge Runtime Parity Evidence",
   "status": "EVIDENCE_SNAPSHOT_NOT_LIVE_AUTHORITY",
   "project_id": "ydqhzvvoyufiiqvzcjns",
-  "captured_at": "2026-10-10",
+  "captured_at": "2026-10-12",
   "active_provider_functions": [
     "concierge",
     "concierge-orchestrator",

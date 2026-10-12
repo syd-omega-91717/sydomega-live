@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-09T08:20:00Z",
+  "captured_at": "2026-10-12T06:11:00Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
@@ -34,10 +34,10 @@
     },
     "stripe-webhook": {
       "state": "DEPLOYED",
-      "version": 2,
+      "version": 4,
       "verify_jwt": false,
-      "live_sha256": "cca7c0890c835dc8eb99a77ffdfac712d0853fe50db92d33f9f602821dea36f6",
-      "repository_blob_sha": "91a152a70509d603812bc0e37db312855aa5dea3"
+      "live_sha256": "e3c625d0e2e8f45cf6f5b4bc5bf5007f73e6756944284ef66609c077fbe4df5e",
+      "repository_blob_sha": "5527316e0c4f6eeac15755a4342599c562acba74"
     },
     "secrets-health": {
       "state": "DEPLOYED",

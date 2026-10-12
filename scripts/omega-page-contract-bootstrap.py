@@ -203,7 +203,7 @@ def promote(rows: list[dict]) -> None:
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "name": "Ω Page Contract Registry",
         "version": 4,
-        "status": "SOURCE_EVIDENCE_BOOTSTRAP",
+        "status": "EVIDENCE_CONTRACT",
         "source_of_truth": "Repository source evidence plus canonical capability/domain registries; semantic gaps remain explicit UNVERIFIED.",
         "contract_policy": {
             "unknown_is_not_production_truth": True,

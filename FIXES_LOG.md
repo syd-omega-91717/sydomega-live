@@ -23238,3 +23238,23 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   `docs/decisions/family-access/` (verdict REVISE, 10 findings folded in). The re-enumeration
   found `leaderboard_snapshots` readable by every member (`SELECT true`), so the grant must also
   delete the target's snapshot rows. No code yet.
+
+## Two workflows red on every `main` push: Pages smoke and page evidence (2026-10-12)
+
+- **Omega Static Failover.** Run 38253837405 (merge of #878):
+  - The deploy succeeded ("Reported success!"), so Pages now serves the built artifact, not the
+    raw repository the stock workflows published.
+  - The next step then failed: `python3: can't open file '.../scripts/omega-pages-failover-smoke.py'`.
+    The `deploy` job runs on a fresh runner with no checkout.
+  - Fix: a pinned `actions/checkout` step before the smoke test.
+  - Verified: `workflow-contract.py` exits 0. The real proof is the next `main` run.
+- **Ω Page Evidence Materialization.** It has failed on every run since at least #9
+  (2026-10-11):
+  - `--promote` wrote the registry `status: SOURCE_EVIDENCE_BOOTSTRAP`.
+  - The same job's test accepts only `EVIDENCE_CONTRACT` / `EVIDENCE_CONTRACT_PARTIAL_AUDIT`,
+    and maps a promoted registry, whose contracts carry `REPOSITORY_SOURCE_EVIDENCE_ONLY`
+    authority, to `EVIDENCE_CONTRACT`. Nothing else reads the old value.
+  - Fix: the script writes `EVIDENCE_CONTRACT`.
+  - Verified in a throwaway worktree of `main`: `--promote`, `--write`, the contract audit and
+    `--check` all exit 0, and the 9 tests pass. Before the fix the run failed with exactly
+    CI's AssertionError.

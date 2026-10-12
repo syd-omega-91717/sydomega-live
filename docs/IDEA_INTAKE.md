@@ -20,5 +20,6 @@ it to `FEATURE_IDEAS.md` and delete the line here.
 
 - [SHIPPED] Copilot visual commands — 14 slash commands (/handwritten, /decision-matrix, /infographic, /canvas, /layers, /cycle, /diagram, /roadmap, /sketchnotes, /iceberg, /blueprint, /explodedview, /tree, /timeline); omega-copilot-visuals.js, PR #874 (2026-10-12)
 - [SHIPPED] Owner two-factor deep link — settings.html#two-factor opens the enrolment section; approvals offers it on aal2_no_factor, PR #875 (2026-10-12)
-- [NEEDS_DECISION] Extract the 608 unextracted 999-blueprint points — needs the original blueprint text from the owner; docs/OMEGA_999_EXTRACTION_TRUTH_20261004.md refuses to invent them (2026-10-12)
-- [IN_PROGRESS] Map the 319 indexed 999-blueprint points still REQUIRES_CURRENT_RUNTIME_MAPPING — the weekly idea routine maps a batch per run (2026-10-12)
+- [DECIDED] Extract the 608 unextracted 999-blueprint points — the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blueprint-truth-map.py) (2026-10-12)
+- [SHIPPED] Map every 999-blueprint point — all 413 entries (391 + 8 restored duplicates + 14 appendix Nodes) classified with reasons by scripts/blueprint-truth-map.py (2026-10-12)
+- [NEEDS_DECISION] Database backups the owner controls — the blueprint's Mars Ledger (points 9, 615) reduces to off-site backups / point-in-time restore, which needs Supabase Pro (2026-10-12)

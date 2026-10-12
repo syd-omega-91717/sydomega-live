@@ -23170,3 +23170,41 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   opens a DRAFT PR. It never merges, migrates, DROPs, flips a flag or edits workflows: the owner's
   merge stays the only path to `main`. At 15 a week, the 309 points take about 21 weeks; the 608
   unextracted points need the original blueprint text from the owner.
+
+## The 999-point blueprint, classified point by point; one point built (2026-10-12)
+
+- **Source.** The owner re-supplied the full blueprint text. It is the same 1,231-line source
+  indexed on 2026-10-04: point 100 occurs twice, and the gaps 106→111→116 match. It numbers 391
+  unique points; the other 608 numbers do not occur in it. `B-MISSING` is now `DECIDED`: those
+  numbers will not be invented.
+- **Found: the 2026-10-04 extraction lost 23 items.** It keyed entries on the point number, so the
+  second text of each repeated number (100-104, 112, 113, 133) overwrote the first, and 8 source
+  points vanished. The appendix's 14 "Node NNN" items (N089 … N999) were never extracted at all.
+  `scripts/blueprint-truth-map.py` restores both as entries with an `id` (413 in total).
+- **Classified.** Every entry now has a status and a reason, and `blueprint-truth-map.py` is the
+  only source; a status edited into the registry by hand is discarded.
+
+  | status | count |
+  |---|---|
+  | RND_OR_LORE | 175 |
+  | REJECTED | 114 |
+  | PARTIAL | 56 |
+  | NEEDS_DECISION | 50 |
+  | PROPOSED | 16 |
+  | SHIPPED | 2 |
+
+  - **REJECTED** means the point evades law, tax, sanctions or courts; manipulates markets or
+    members; attacks third parties; surveils or scores people without consent; makes medical
+    claims; or removes human review.
+  - **PARTIAL** cites the file holding the real version: `matrix.html`'s 729 nodes,
+    `flashcard.html`'s SM-2, `honors.html`'s bronze/silver/gold, aal2 MFA, `command.html` TODAY.
+  - The blueprint's own closing audit "proved" 999/999 with `def is_mapped(point): return True`.
+- **Built: point 245, "Weight = Benefit × Probability".** `decisions.html` gains an
+  EXPECTED VALUE framework: benefit (−10..10) × probability (0–100%) per option, with the highest
+  weight named. A delegated listener stays inside the CSP inline-handler ratchet; a first draft
+  with two `oninput=` attributes failed it (20 → 22). Verified in Chromium: 8 × 40% = 3.20,
+  3 × 90% = 2.70, "HIGHEST WEIGHT: Take job"; no page errors, no horizontal overflow at 390px.
+- **Gates.** `blueprint-truth-map` joins `contract-suite.py` (42 gates). Its 6 tests in
+  `scripts/tests/test_blueprint_truth_map.py` (663 in the suite) cover a point classified twice,
+  an unclassified point, registry drift, dropped duplicates or Nodes, and an unknown status. Two
+  of those tests failed on the first run and exposed the hand-mapped bypass fixed above.

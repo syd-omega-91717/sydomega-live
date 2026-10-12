@@ -111,7 +111,7 @@ def blueprint(errors):
     data = json.loads(read('docs/OMEGA_999_CONCEPT_REGISTRY.json'))
     out = []
     for e in data.get('entries', []):
-        iid = 'B%03d' % e['point']
+        iid = e.get('id') or 'B%03d' % e['point']
         if e.get('ledger_status'):
             status, evidence = e['ledger_status'], e.get('evidence', '')
             if not evidence.strip():
@@ -124,8 +124,9 @@ def blueprint(errors):
     missing = data.get('missing_points', [])
     if missing:
         out.append(('B-MISSING', '999 blueprint',
-                    '%d declared points never extracted (needs the source text)' % len(missing),
-                    'UNEXTRACTED', 'docs/OMEGA_999_EXTRACTION_TRUTH_20261004.md'))
+                    '%d declared point numbers that the source text does not contain' % len(missing),
+                    data.get('missing_points_status', 'UNEXTRACTED'),
+                    data.get('missing_points_evidence', 'docs/OMEGA_999_EXTRACTION_TRUTH_20261004.md')))
     return out
 
 
@@ -181,7 +182,7 @@ def render(ideas):
     rows += ['| %s | %d |' % (s, by[s]) for s in STATUSES if by[s]]
     rows += ['', '## Actionable queue', '',
              'Everything not yet settled, owner decisions first. The weekly idea routine',
-             'works this list top-down; `UNMAPPED` blueprint points are mapped in batches.', '']
+             'works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-checks the rest.', '']
     for s in STATUSES:
         group = [i for i in ideas if i[3] == s]
         if not group:

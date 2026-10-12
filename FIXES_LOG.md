@@ -23093,3 +23093,25 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   `omega-object-contract.schema.json`), and a listed file that does not exist fails the build in the
   parent shell. Published: **12** of 69. The readiness job's commands replayed locally pass; 2 more
   build tests (closure, missing listed file).
+
+## Copilot visual commands; approvals now steps up to MFA instead of dead-ending (2026-10-12)
+
+- **Visual commands.** 14 commands (`/decisionmatrix` `/infographic` `/canvas` `/layers` `/cycle`
+  `/diagram` `/roadmap` `/sketchnotes` `/iceberg` `/blueprint` `/explodedview` `/tree` `/timeline`
+  `/handwritten`) in the new `omega-copilot-visuals.js`, loaded only when the drawer opens or a `/`
+  command is typed (guard `data-omega-copilot-visuals`). Constraint stated plainly: concierge returns
+  text, `max_tokens: 400` (`supabase/functions/concierge/index.ts:149`), so each command asks for one
+  small JSON object of a fixed shape and the module draws it. Model output is data: every label goes
+  through `textContent`; matrix totals are recomputed client-side; a cut-off or wrong-shaped reply shows
+  the text plus "No /x visual was drawn". Longest persona 802 + history note < 1,200 of the 2,000-char
+  `system_override` limit. Rendered all 14 from sample data in headless Chromium (0 page errors) and
+  fixed three layouts that overflowed the drawer (canvas, diagram, roadmap); type raised to the 12px
+  floor `type-scale.py` enforces. `copilot-contract.js` 14 → 18 cases (schema persona sent, matrix
+  totals recomputed — claimed 99 ignored, `<img onerror>` label rendered as text, undrawable reply
+  noted); against the previous `omega-copilot.js` the run fails.
+- **Approvals MFA step-up.** Owner RPCs return `aal2_required` below aal2, and the live owner account
+  has **0** verified factors, so after #872 every approval still dead-ended in a toast. `approvals.js`
+  `rpcResult` now loads `omega-mfa.js` (same `data-omega-mfa-mod` guard as `omega-mfa-gate.js`), calls
+  `OmegaMFA.stepUp()`, retries once on success, and otherwise reports `aal2_no_factor` with where to
+  enrol (Settings → Two-factor sign-in; `mfa_enrolment_enabled` is `true` live). Stub test: aal2 →
+  step-up → retry succeeds (2 calls); no factor → 1 call, the enrol message.

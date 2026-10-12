@@ -22834,3 +22834,24 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
 - **Gated** by `test_env_example.py`: names must equal what the functions read; every value must
   be a placeholder; `.env` stays ignored. Planted violations — a real-looking value, a removed
   name — each fail it. Provider-side rotation (#833's acceptance criterion) remains the owner's.
+
+## Copilot slash commands, via the existing `system_override` path (2026-10-12)
+
+- **Added.** `omega-copilot.js` now parses `/command <text>`: `/summarize` (Historian), `/explain`
+  (Tutor), `/translate` (Scout), `/brief` (Sovereign), `/strategy` (Oracle), `/outline` (Proxy),
+  `/compare` (Analyst), `/debug` (Auditor). Each sends its task persona as concierge's
+  `system_override` — the field agents.html, sovereign-ai.html, weekly.html and omega-ai.js
+  already use, appended *below* the governed prompt — so no Edge Function or schema change.
+  `/` or `/help` lists them; typing `/x` opens a filtered picker; an unknown command or a
+  missing argument answers locally and makes no paid call.
+- **Honest offline state.** A command the keyword guide cannot perform now says the AI is
+  unavailable and that nothing was generated, rather than returning an unrelated KB answer as
+  if it were the result (§8.1 class 9). Plain questions keep the old fallback.
+- **Known limit, unchanged.** concierge's `classify()` fails closed on words like `deploy`/`pay`,
+  so `/debug` on text that mentions a deploy gets the offline message.
+- **Verified.** Headless Chromium against the module with a stubbed concierge: picker filters
+  (`/s` → summarize, strategy), help/unknown/no-arg make 0 calls, a command sends
+  `system_override`, a plain question sends none, offline paths as above, 0 page errors.
+  `verify-runtime.js`: PASS, 13 pages. `ci-local.sh`: 25 pass / 3 fail — the same 3 fail on
+  pristine `origin/main` (`omega-static-failover.yml` unpinned `actions/*@vN` from #857, the
+  skill-registry census, and 6 unit tests), not this change.

@@ -273,7 +273,7 @@ auth), `omega-user.js` (loads current user's profile), `omega-onboard.js` (first
 zodiac/element selection), `omega-appearance.js` (member view personalization),
 `omega-protect.js` (anti-DevTools/copy protection).
 
-**AI / copilot:** `omega-copilot.js` (context-aware assistant, every page), `omega-ai.js`
+**AI / copilot:** `omega-copilot.js` (context-aware assistant, every page; 8 slash commands — `/summarize` `/explain` `/translate` `/brief` `/strategy` `/outline` `/compare` `/debug`, each an agent persona sent as concierge `system_override`), `omega-ai.js`
 (GraphRAG-inspired), `omega-intelligence.js` (autonomous AI layer), `omega-memory.js`
 (persistent queryable AI memory), `omega-recommend.js` (interest-signal recommendations).
 

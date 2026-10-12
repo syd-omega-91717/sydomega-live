@@ -70,7 +70,7 @@ def remote_check(base_url: str) -> int:
     for route in routes:
         url = base + route
         try:
-            with urllib.request.urlopen(url, timeout=20) as response:
+            # The URL is supplied by the operator as the explicit smoke-test target.\n            # Restrict it to HTTPS before opening it; do not permit file:// or other schemes.\n            if not url.startswith(\"https://\"):\n                raise ValueError(f\"refusing non-https URL: {url!r}\")\n            # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected\n            with urllib.request.urlopen(url, timeout=20) as response:
                 status = response.status
                 body = response.read(8192).decode("utf-8", "ignore")
             if status != 200:

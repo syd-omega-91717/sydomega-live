@@ -23128,3 +23128,18 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   - **Found, not fixed: `set_consult_status` / `set_contract_status` / `set_reservation_status`** take
     `uuid` for `bigint` ids (`operator does not exist: bigint = uuid` as owner@aal2). Needs DROP +
     recreate — owner's confirmation required; recorded open.
+
+## One GitHub Pages deployer: the stock templates published the raw repository (2026-10-12)
+
+- **Found.** `main` gained `.github/workflows/static.yml` (`0a91d5be`) and `jekyll-gh-pages.yml`
+  (`4bbc48a3`), GitHub's stock Pages templates. `static.yml` uploads `path: '.'` — the whole
+  repository, unbuilt — and the Jekyll one builds `source: ./`. Both deployed successfully (runs
+  `38227798582`, `38227831529`), so Pages served the repository root, bypassing `vercel-build.sh` and
+  its `config/` exclusion. Three workflows then raced for the one Pages site (last push wins), and
+  both new files fail `workflow-contract.py` (mutable `@v4`/`@v5` tags), turning that gate red on
+  `main` and every PR.
+- **Fix (owner's merge is the decision).** Remove both; `omega-static-failover.yml` stays the single
+  Pages deployer — it builds with `vercel-build.sh`, binds `CNAME`, and refuses to publish unless
+  `omega-pages-failover-smoke.py` passes (only runtime-fetched or contract-listed `config/` files,
+  no secret-shaped values). Its `Configure GitHub Pages` step failed earlier only because Pages was
+  not yet enabled; the stock deploys show it now is. `workflow-contract.py`: PASS after removal.

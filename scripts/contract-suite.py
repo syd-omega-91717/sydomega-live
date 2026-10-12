@@ -189,6 +189,10 @@ GATES = [
     ('idea-ledger',
      'every recorded idea has a known status and the ledger is regenerated',
      ['scripts/idea-ledger.py', '--check']),
+    # The blueprint's own audit proved 999/999 with is_mapped() returning True.
+    ('blueprint-truth-map',
+     'every 999-blueprint point is classified once, with a reason',
+     ['scripts/blueprint-truth-map.py', '--check']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

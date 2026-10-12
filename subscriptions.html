@@ -132,27 +132,47 @@ function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['plan','tiers','payments','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-var TIERS=[
-  {n:'I',name:'INITIATE',price:'FREE',period:'TRIAL ACCESS',color:'var(--muted)',perks:['Trial session access','Basic matrix (0.001)','Platform preview','Sovereign onboarding']},
-  {n:'II',name:'SUBSCRIBER',price:'$9.17',period:'PER MONTH',color:'var(--cyan)',perks:['Full platform access','Academy & gaming','Contributions axis','Community feed']},
-  {n:'III',name:'VERIFIED',price:'$17.17',period:'PER MONTH',color:'var(--gold)',perks:['All Subscriber perks','KYC verified status','Priority queue','Consultancy access']},
-  {n:'IV',name:'SOVEREIGN',price:'$91.17',period:'PER MONTH',color:'var(--solar)',perks:['All Verified perks','Sovereign token allocation','Heritage access','NFT vault']},
-  {n:'V',name:'ARCHITECT',price:'$171.17',period:'PER MONTH',color:'var(--green)',perks:['All Sovereign perks','Matrix fast-track','Media universe','Investment layer']},
-  {n:'VI',name:'LIFETIME',price:'$1,917',period:'ONE TIME',color:'#ff9900',perks:['Permanent access forever','All tiers included','Family nest protocol','Bloodline inheritance']},
-];
-var tg=document.getElementById('tiers-grid');
-TIERS.forEach(function(t){
-  var card=document.createElement('div');card.className='tier-card card';card.style.setProperty('--tc',t.color);
-  var ul='<ul class="tier-perks">'+t.perks.map(function(p){return '<li>'+p+'</li>';}).join('')+'</ul>';
-  card.innerHTML='<div class="tier-n">TIER '+t.n+'</div>'
-    +'<div class="tier-name" style="color:'+t.color+'">'+t.name+'</div>'
-    +'<div class="tier-price" style="color:'+t.color+'">'+t.price+'</div>'
-    +'<div class="tier-period">'+t.period+'</div>'+ul;
-  var btn=document.createElement('button');btn.className='tier-btn';btn.textContent='REQUEST '+t.name;
-  btn.addEventListener('click',function(){alert('Ω REQUEST SUBMITTED\n\nYour request for the '+t.name+' tier has been noted.\nThe Sovereign Architect will review and contact you.');});
-  card.appendChild(btn);
-  tg.appendChild(card);
-});
+/* The tier ladder has ONE owner: omega-canon.json, read through window.OmegaCanon
+   (the same data tierUnlocks() gates features with). This page used to carry its
+   own 6-tier copy with different names and prices, and perks that do not exist
+   ("Sovereign token allocation", "Investment layer") -- CLAUDE.md 8.1 classes 8
+   and 9. Payments are dormant (platform_settings.payments_enabled=false), so the
+   button says so instead of claiming a request was sent: nothing records it. */
+function renderTiers(canon){
+  var tg=document.getElementById('tiers-grid');if(!tg||tg.dataset.rendered)return;
+  var tiers=canon.tiers||[],feat=canon.tierFeatures||{};
+  if(!tiers.length){tg.textContent='TIER LADDER UNAVAILABLE.';return;}
+  tg.dataset.rendered='1';
+  tiers.forEach(function(t){
+    var card=document.createElement('div');card.className='tier-card card';card.dataset.n=t.n;
+    if(t.color)card.style.setProperty('--tc',t.color);
+    var head=[['tier-n','TIER '+t.n+(t.mat?' · '+t.mat:'')],['tier-name',String(t.name||'').toUpperCase()],
+      ['tier-price','$'+Number(t.price||0).toFixed(2)],['tier-period','BILLING NOT YET ENABLED']];
+    head.forEach(function(h){var d=document.createElement('div');d.className=h[0];d.textContent=h[1];
+      if(h[0]!=='tier-n'&&h[0]!=='tier-period'&&t.color)d.style.color=t.color;card.appendChild(d);});
+    var ul=document.createElement('ul');ul.className='tier-perks';
+    if(t.n>1){var li0=document.createElement('li');li0.textContent='Everything in tier '+(t.n-1);ul.appendChild(li0);}
+    (t.unlocks||[]).forEach(function(k){var li=document.createElement('li');li.textContent=k==='all'?'Every feature':(feat[k]||k);ul.appendChild(li);});
+    card.appendChild(ul);
+    var btn=document.createElement('button');btn.className='tier-btn';btn.type='button';btn.disabled=true;
+    btn.textContent='UPGRADES OPEN WHEN BILLING IS ENABLED';btn.style.cursor='default';btn.style.opacity='.6';
+    card.appendChild(btn);tg.appendChild(card);
+  });
+  markCurrentTier();
+}
+function markCurrentTier(){
+  var n=window.__omegaMemberTier;if(n==null)return;
+  document.querySelectorAll('.tier-card').forEach(function(card){card.classList.toggle('current',Number(card.dataset.n)===n);});
+}
+/* bg.js injects omega-canon.js after this page's own scripts run, so wait for it. */
+window.__whenCanon=function(cb,onFail){
+  (function poll(tries){
+    if(window.OmegaCanon&&window.OmegaCanon.onReady){window.OmegaCanon.onReady(cb);return;}
+    if(tries>100){if(onFail)onFail();return;}
+    setTimeout(function(){poll(tries+1);},100);
+  })(0);
+};
+window.__whenCanon(renderTiers,function(){var tg=document.getElementById('tiers-grid');if(tg&&!tg.dataset.rendered)tg.textContent='TIER LADDER UNAVAILABLE.';});
 (function(){
   var cv=document.getElementById('sub-cv');if(!cv||!cv.getContext)return;
   var ctx=cv.getContext('2d'),t=0;
@@ -181,7 +201,8 @@ function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){retur
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    var tier=(pr.subscription_tier||'free').toUpperCase();
+    var tierN=Number(pr.membership_tier)||1;
+    var tier=pr.is_owner?'OWNER · ALL TIERS':'TIER '+tierN;
     var isPermanent=pr.access_approved&&!pr.is_trial;
     var isTrial=pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)>new Date();
     sid('mem-tier',tier);
@@ -211,15 +232,14 @@ function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){retur
       sid('plan-trial','NO ACTIVE TRIAL');
       sid('plan-expires',pr.is_owner?'NEVER — IRREVOCABLE':isPermanent?'PERMANENT':'--');
     }
-    /* Highlight current tier */
-    document.querySelectorAll('.tier-card').forEach(function(card){
-      var nm=card.querySelector('.tier-name');
-      if(nm&&nm.textContent.toUpperCase()===tier)card.classList.add('current');
+    /* Highlight the member's tier from membership_tier, the column tierUnlocks() reads
+       (subscription_tier is null for every member). The owner holds every tier. */
+    window.__whenCanon(function(c){
+      window.__omegaMemberTier=pr.is_owner?c.tiers.length:tierN;
+      markCurrentTier();
+      var t=c.tier(tierN);
+      if(t&&!pr.is_owner){sid('mem-tier',t.name.toUpperCase());sid('plan-tier',t.name.toUpperCase());}
     });
-    if(pr.is_owner){
-      document.querySelectorAll('.tier-card').forEach(function(card){card.classList.remove('current');});
-      var last=document.querySelector('.tier-card:last-child');if(last)last.classList.add('current');
-    }
     /* Payment ledger is intentionally dormant until the existing legal/KYC gate is activated.
        Do not query an undeclared relation. This is an explicit unavailable state, not an empty ledger. */
     var ph=document.getElementById('payments-list');

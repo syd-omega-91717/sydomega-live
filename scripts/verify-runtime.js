@@ -20,6 +20,9 @@
  * and any dev box with `npm i -g playwright-core`, it runs for real.
  *
  *   Exit 0 = checks pass, or SKIPPED.   Exit 1 = a real runtime failure.
+ *   With OMEGA_REQUIRE_BROWSER set (capability-evidence.yml sets it), a
+ *   SKIPPED exits 1: on GitHub-hosted runners this script printed SKIPPED on
+ *   every run while its job reported green (found 2026-10-12, FIXES_LOG.md).
  *   Exit 2 = the harness itself could not run.
  */
 'use strict';
@@ -462,10 +465,13 @@ async function selfTest(pw, channel) {
 async function main() {
   const pw = loadPlaywright();
   const channel = systemChannel();
-  if (!pw || (!channel && !process.env.OMEGA_SCRATCHPAD)) {
+  /* Only a missing Playwright is a skip here; a missing browser is caught by the
+     launch below. This used to also require a system Chrome or $OMEGA_SCRATCHPAD,
+     which on Linux CI meant SKIPPED even with Playwright and Chromium installed. */
+  if (!pw) {
     console.log('SKIPPED: playwright-core not resolvable' + (channel ? '' : ' and no system Chrome/Edge') +
       '. Install with `npm i -g playwright-core`. Runtime verification not run.');
-    return 0;
+    return process.env.OMEGA_REQUIRE_BROWSER ? 1 : 0;
   }
   if (SELF_TEST) return selfTest(pw, channel);
   /* Run it as a PRECONDITION of every sweep, not as a separate step someone
@@ -490,7 +496,7 @@ async function main() {
       srv.close();
       console.log('SKIPPED: could not launch a browser (' + e.message.split('\n')[0].slice(0, 120) +
         '). Install Chrome/Edge, or `npx playwright-core install chromium`.');
-      return 0;
+      return process.env.OMEGA_REQUIRE_BROWSER ? 1 : 0;
     }
     const ctx = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1280, height: 900 } });
     await ctx.route('**/vendor/supabase-js.js', r => r.fulfill({ status: 200, contentType: 'text/javascript', body: STUB }));

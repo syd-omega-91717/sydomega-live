@@ -22889,3 +22889,25 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   no new false positives; both now say 239. `test_hyphenated_singular_form_is_caught` plants
   "222-PAGE PLATFORM" and "62-page" (must fail) and a true "12-page" (must pass); it fails against
   the old pattern (`git show origin/main:scripts/page-count-claims.py`) and passes on the new one.
+
+## `verify-runtime.js` had not rendered a page on GitHub since the self-hosted runner died (2026-10-12)
+
+- **Symptom.** `capability-evidence.yml`'s "Runtime verification" step printed `SKIPPED: playwright-core
+  not resolvable and no system Chrome/Edge. Runtime verification not run.` and exited 0, so the job
+  was green (job 114616337547, PR #860). CLAUDE.md §8.3 and `docs/capabilities/registry.json` cite
+  this script as runtime evidence; on GitHub-hosted runners it was evidence of nothing.
+- **Two causes, both needed for a real run.** (1) Nothing installed a browser on the Ubuntu runner.
+  (2) Its guard, `!pw || (!channel && !OMEGA_SCRATCHPAD)`, skipped on Linux unless a scratchpad
+  path was set — so it would have skipped even with Playwright installed. Measured here: with a
+  resolvable Playwright and `OMEGA_REQUIRE_BROWSER=1`, the old guard exited 1 (SKIPPED).
+- **Fix.** The guard now skips only when Playwright itself is missing (a missing browser is already
+  caught at launch). The workflow installs Chromium with the exact pinned recipe
+  `browser-release-evidence.yml` already runs green (`@playwright/test@1.63.0`, `--no-save`), and sets
+  `OMEGA_REQUIRE_BROWSER`, under which a SKIPPED exits 1. Locally (no env var) a skip still exits 0.
+- **Added alongside: `scripts/copilot-contract.js`**, 14 behavioural cases on the real
+  `omega-copilot.js` with a stubbed concierge — commands (`/help`, unknown, no-arg make 0 calls; a
+  command sends its persona), memory (follow-up carries prior turns, `/clear`, ≤2000 chars, bare retry
+  when declined with history), honesty (offline "nothing was generated", never enters history), and
+  one `stream-end` per answer. Proven against history: the pre-#858 module fails 11/14, the pre-#859
+  module fails exactly the 4 memory/event cases, current passes 14/14. Runs in the same CI job, and
+  as `ci-local.sh` step 2s (29 blocking checks).

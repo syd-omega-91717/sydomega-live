@@ -1,6 +1,10 @@
 # Feature Ideas — sydomega-live
 
-**Status: proposal only.** Nothing in this file is built, scheduled, or approved. Per
+**Status: per entry, not per file.** This header once said nothing here was built; 30 of the 39
+entries have since shipped. Each entry's current status, with evidence, is in the generated
+`docs/IDEA_LEDGER.md` (`scripts/idea-ledger.py`); an entry whose title carries no status needs
+one in `docs/idea-status.json`, or the contract suite fails. New ideas start in
+`docs/IDEA_INTAKE.md`. Per
 `CLAUDE.md` §9, no monetizable or legally-sensitive feature ships "live" without an explicit
 gating decision first — every idea below that touches money, tokens, or new data collection is
 flagged accordingly. This file exists so ideas aren't re-derived from scratch each session; pick

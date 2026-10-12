@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-12T06:11:00Z",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 379,
-  "latestRemoteMigration": "20261012064247",
+  "remoteMigrationCount": 380,
+  "latestRemoteMigration": "20261012091641",
   "versions": [
     "0001",
     "0002",
@@ -382,7 +382,8 @@
     "20261012014343",
     "20261012060927",
     "20261012064126",
-    "20261012064247"
+    "20261012064247",
+    "20261012091641"
   ],
   "migrations": [
     {
@@ -1900,6 +1901,10 @@
     {
       "version": "20261012064247",
       "name": "omega_knowledge_hybrid_search_operator_path_20261012"
+    },
+    {
+      "version": "20261012091641",
+      "name": "omega_restore_remaining_private_rpc_execute_20261012"
     }
   ]
 }

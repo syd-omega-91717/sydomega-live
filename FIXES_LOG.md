@@ -23143,3 +23143,30 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   `omega-pages-failover-smoke.py` passes (only runtime-fetched or contract-listed `config/` files,
   no secret-shaped values). Its `Configure GitHub Pages` step failed earlier only because Pages was
   not yet enabled; the stock deploys show it now is. `workflow-contract.py`: PASS after removal.
+
+## Idea ledger: every recorded idea in one gated list, plus a weekly routine (2026-10-12)
+
+- **Found.** Ideas lived in four places that never met. `FEATURE_IDEAS.md` (39 entries) opened
+  with "Nothing in this file is built", yet 30 have shipped, and 20 titles carried no status at
+  all. Two "proposals" were already live on every page: #25 (`bg.js:154` injects
+  `omega-voice-responsive.js`) and #29 (`bg.js:285-288` injects `css/omega-signal-pulse.css`).
+  `docs/OMEGA_999_CONCEPT_REGISTRY.json` indexes 391 blueprint points, and 319 were still
+  `REQUIRES_CURRENT_RUNTIME_MAPPING`; 608 declared points were never extracted, since the source
+  text does not number them. Conversation requests (the 14 copilot commands, the MFA deep link)
+  were recorded nowhere as ideas.
+- **Fix.** `scripts/idea-ledger.py` generates `docs/IDEA_LEDGER.md` from all four sources
+  (FEATURE_IDEAS, the 999 registry, GAP_ANALYSIS §S, the new `docs/IDEA_INTAKE.md`).
+  `docs/idea-status.json` gives the 20 status-less entries an evidence-cited status, and 10
+  blueprint points (1, 3-6, 10, 11, 13, 17, 20) gained `ledger_status` + `evidence`. `--check`
+  is gate `idea-ledger` in `contract-suite.py` (41 gates). It fails on an idea with no known
+  status, an override without evidence or for a vanished idea, an unparseable intake line, or a
+  stale ledger. `scripts/tests/test_idea_ledger.py`: 8 tests plant each violator.
+- **Result (at commit).** 451 ideas, **337 actionable**: 9 NEEDS_DECISION, 1 IN_PROGRESS,
+  3 PROPOSED, 8 PARTIAL, 309 UNMAPPED, 7 OPEN_GAP, 1 UNEXTRACTED. The ledger's own table is the
+  current count; this line is a dated snapshot.
+- **Automation, human-gated.** Routine `trig_01FPt47UNvqQNvTPnQLmnjSJ` (Mondays 06:47 UTC, bound to
+  the session that created it) maps 15 UNMAPPED points per run with evidence, re-checks stale
+  statuses, adds at most one web-trend-scout proposal, may build one LOW-RISK item dormant, and
+  opens a DRAFT PR. It never merges, migrates, DROPs, flips a flag or edits workflows: the owner's
+  merge stays the only path to `main`. At 15 a week, the 309 points take about 21 weeks; the 608
+  unextracted points need the original blueprint text from the owner.

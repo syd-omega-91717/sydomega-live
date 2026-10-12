@@ -618,7 +618,9 @@
       "point": 1,
       "source_text": "100% Core Ownership: Every line of code, every pixel, and every neural weight of the SYD OMEGA 91717 platform is titled to Major. There are no \"co-founders,\" \"partners,\" or \"investors\" with a claim to the platform's skeleton.",
       "class": "INTELLIGENCE",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "PARTIAL",
+      "evidence": "code-level ownership is profiles.is_owner + is_platform_owner() (CLAUDE.md §1); legal title is outside code"
     },
     {
       "point": 2,
@@ -630,25 +632,33 @@
       "point": 3,
       "source_text": "The 51% Master Stake: Ω Currency is minted with a hard-coded 51% allocation to Major's Private Vault. This ensures that even if the public market (49%) goes to zero, the treasury remains solvent and you retain voting dominance.",
       "class": "ECONOMIC_R&D",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "NEEDS_DECISION",
+      "evidence": "money: tokens ship dormant, platform_settings.tokens_enabled=false (supabase/omega_tokens.sql); stake overclaims were removed (GAP_ANALYSIS.md 4.17-4.19)"
     },
     {
       "point": 4,
       "source_text": "49% Liquidity Cap: The public exchange is restricted by a \"Circuit Breaker.\" No entity can buy more than 1% of the total supply, making a \"hostile takeover\" mathematically impossible.",
       "class": "ECONOMIC_R&D",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "NEEDS_DECISION",
+      "evidence": "money: no exchange exists; same dormant token flag as point 3"
     },
     {
       "point": 5,
       "source_text": "Windsurf Permanent Directive: The core system instructions (like these 999 points) are written in an \"Immutable Logic Layer.\" They cannot be overwritten by automated AI updates or external \"safety filters.\"",
       "class": "INTELLIGENCE",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "PARTIAL",
+      "evidence": "the autonomous pipeline never merges to main and never flips a flag (CLAUDE.md §10); the weekly idea routine opens draft PRs only"
     },
     {
       "point": 6,
       "source_text": "🔱 Abolition Decree: The system scans all user inputs. Any attempt to use the trident sign 🔱 triggers an immediate \"Signet Violation.\" The Ω symbol is the only recognized icon of power.",
       "class": "PRODUCT",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "PARTIAL",
+      "evidence": "0 occurrences of U+1F531 in shipped .html/.js (grep 2026-10-12); no input scanner enforces it"
     },
     {
       "point": 7,
@@ -672,13 +682,17 @@
       "point": 10,
       "source_text": "The 10-Step Rule: For every feature a competitor (like Google or OpenAI) releases, the Ω-Historian must generate 10 \"Future-Phase\" concepts, keeping the platform 10 generations ahead.",
       "class": "INTELLIGENCE",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "PARTIAL",
+      "evidence": "web-trend-scout skill + weekly idea routine produce proposals; no 10-per-competitor-release rule"
     },
     {
       "point": 11,
       "source_text": "Recursive Self-Audit: The Auditor Agent (Agent 10) spends 100% of its idle cycles looking for logic-leaks in the 999 points and patching them before they are exploited.",
       "class": "INTELLIGENCE",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "PARTIAL",
+      "evidence": "41-gate contract suite + CI audits run on every change; not an idle-cycle agent"
     },
     {
       "point": 12,
@@ -690,7 +704,9 @@
       "point": 13,
       "source_text": "Zero-Fee Life: The billing engine has a \"Nest Exception.\" All subscription costs for the family are hard-coded to $0.00 in the ledger, indefinitely.",
       "class": "INTELLIGENCE",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "NEEDS_DECISION",
+      "evidence": "billing: a $0 family exception touches Stripe (supabase/functions/checkout); owner and legal call"
     },
     {
       "point": 14,
@@ -714,7 +730,9 @@
       "point": 17,
       "source_text": "Horoscope Synchronization: The Oracle Agent (Agent 7) maps the user's \"Astrological Natal Chart\" to the matrix. A Leo's path to \"Initiate\" will focus on leadership, while a Virgo's will focus on the precision of the Dojo.",
       "class": "INTELLIGENCE",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "PARTIAL",
+      "evidence": "horoscope.html renders 12 sign profiles from the member's sign; no natal-chart mapping"
     },
     {
       "point": 18,
@@ -732,7 +750,9 @@
       "point": 20,
       "source_text": "Stage 1-9 Certification: Every time a user completes a 9x9 plane, a cryptographic \"Certificate of Appreciation\" is minted with their unique Ω-ID.",
       "class": "PRODUCT",
-      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING"
+      "status": "REQUIRES_CURRENT_RUNTIME_MAPPING",
+      "ledger_status": "PARTIAL",
+      "evidence": "private.omega_issue_certificate callable since migration 20261012091641, but no page calls it (grep 2026-10-12)"
     },
     {
       "point": 21,

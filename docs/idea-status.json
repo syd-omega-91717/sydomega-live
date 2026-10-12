@@ -1,0 +1,83 @@
+{
+  "_comment": "Explicit status for every FEATURE_IDEAS.md entry whose title does not carry one. Read by scripts/idea-ledger.py; each entry needs a status from that script's STATUSES and an evidence string (file:line, a grep result, or the section that decides it). Checked 2026-10-12.",
+  "F2": {
+    "status": "NEEDS_DECISION",
+    "evidence": "the entry asks the owner which events should notify; no decision recorded"
+  },
+  "F3": {
+    "status": "NEEDS_DECISION",
+    "evidence": "wire-or-retire choice for the guardian badge; gate callers exist in approvals.html, badge decision open"
+  },
+  "F4": {
+    "status": "DECIDED",
+    "evidence": "GAP_ANALYSIS.md 4.2 'Finance pages: localStorage-only persistence — decided this session'"
+  },
+  "F5": {
+    "status": "NEEDS_DECISION",
+    "evidence": "money: needs legal/business sign-off (title); GAP_ANALYSIS.md 3.2 re-scoped as not customer-facing"
+  },
+  "F6": {
+    "status": "NEEDS_DECISION",
+    "evidence": "GAP_ANALYSIS.md 3.1 'Duplicate CREATE OR REPLACE FUNCTION definitions ... owner action'; scripts/rpc-consolidation-gate.py stops new forks"
+  },
+  "F16": {
+    "status": "NEEDS_DECISION",
+    "evidence": "needs an explicit opt-in decision (title); supabase/functions/weekly-digest exists but nothing runs on a schedule (GAP_ANALYSIS.md S, pg_cron not installed)"
+  },
+  "F21": {
+    "status": "PROPOSED",
+    "evidence": "'Status: proposal. Do not build as-is — see the open decisions below.'"
+  },
+  "F23": {
+    "status": "PROPOSED",
+    "evidence": "title '— proposal'; no tier-scaled celebration code found"
+  },
+  "F25": {
+    "status": "SHIPPED",
+    "evidence": "title still says proposal, but bg.js:154 injects /omega-voice-responsive.js on every page"
+  },
+  "F26": {
+    "status": "PARTIAL",
+    "evidence": "omega-sculpture.js delivers real-time geometry (entries 32, 35, 36); data-bound geometry beyond those scenes is not built"
+  },
+  "F27": {
+    "status": "SHIPPED",
+    "evidence": "omega-sparkline.js, referenced by 18 files (data-omega-spark)"
+  },
+  "F28": {
+    "status": "SHIPPED",
+    "evidence": "omega-signal-sweep on dashboard.html, treasury.html, intelligence.html; rule in css/omega-system.css"
+  },
+  "F29": {
+    "status": "SHIPPED",
+    "evidence": "bg.js:285-288 injects css/omega-signal-pulse.css on every page"
+  },
+  "F39": {
+    "status": "SUPERSEDED",
+    "evidence": "'Status (2026-10-04): implementation removed — superseded. PR #703 shipped this'"
+  },
+  "F30": {
+    "status": "SHIPPED",
+    "evidence": "'What shipped: the CSS rule' (@view-transition), kept deliberately non-load-bearing"
+  },
+  "F31": {
+    "status": "SHIPPED",
+    "evidence": "'What shipped: a mechanical, non-subjective matching pass' (constellation map)"
+  },
+  "F32": {
+    "status": "SHIPPED",
+    "evidence": "'Shipped: the agents scene mounted on agents.html's COUNCIL tab'"
+  },
+  "F33": {
+    "status": "SHIPPED",
+    "evidence": "intelligence.html GRAPHIFY tab sparkline 'real, and shipped'"
+  },
+  "F34": {
+    "status": "SHIPPED",
+    "evidence": "'What shipped: renderPlatformSections() rewritten'"
+  },
+  "F35": {
+    "status": "SHIPPED",
+    "evidence": "'What shipped: one .osc-stage[data-omega-sculpture=\"signet\"] mount per realm hub page'"
+  }
+}

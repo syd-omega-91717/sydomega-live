@@ -185,6 +185,10 @@ GATES = [
     ('migration-grant',
      'no new table has client policies without a GRANT (8.1 class 6c)',
      ['scripts/migration-grant-contract.py']),
+    # Ideas lived in four unconnected places; two "proposals" were already live.
+    ('idea-ledger',
+     'every recorded idea has a known status and the ledger is regenerated',
+     ['scripts/idea-ledger.py', '--check']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

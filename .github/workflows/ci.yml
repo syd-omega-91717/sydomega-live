@@ -139,6 +139,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/schema-dictionary.py']).returncode)
+      - name: Grant contract (client calls vs live grants)
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/grant-contract.py']).returncode)
       - name: RLS audit
         shell: python
         run: |

@@ -139,6 +139,7 @@ step "2p.  All-roles control"                  python3 scripts/omega-all-roles-c
 step "2q.  Edge service-role authorization"     python3 scripts/edge-service-role-auth-audit.py
 step "2r.  Edge Function census"               python3 scripts/edge-function-census.py
 step "2s.  Copilot behaviour contract"         node scripts/copilot-contract.js
+step "2t.  Grant contract (live grants)"       python3 scripts/grant-contract.py
 step "3.   Static contract suite"              python3 scripts/contract-suite.py
 step "4.   Broken local asset refs"            broken_assets
 step "5.   Service-role key scan"               service_role_scan

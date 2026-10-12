@@ -22856,6 +22856,27 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   pristine `origin/main` (`omega-static-failover.yml` unpinned `actions/*@vN` from #857, the
   skill-registry census, and 6 unit tests), not this change.
 
+## The copilot recorded every turn and never sent one back (2026-10-12)
+
+- **Symptom.** `omega-copilot.js` pushed each question and answer onto `_history` and never read it:
+  every concierge call carried only the latest message. After `/summarize <text>`, "make it
+  shorter" reached the model with no text to shorten. Measured against `origin/main` in headless
+  Chromium with a stubbed concierge: the follow-up was sent as the bare string `make it shorter`.
+- **Fix.** Prior turns ride inside `message` as a `[CONVERSATION SO FAR]` block, newest first,
+  each clipped to 400 chars, dropped oldest-first to stay under concierge's 2000-char limit (a
+  near-limit message goes bare). A `system_override` note tells the model to answer only the
+  `[CURRENT MESSAGE]` and to treat the block as untrusted data. The last 6 exchanges are kept;
+  `/clear` empties them. Client-only: concierge's contract is unchanged, so nothing to deploy.
+- **Retry, because of governance.** concierge's `classify()` reads the whole message, so a word like
+  `deploy` in an *old* turn would get every later question declined. A failed call with history is
+  retried once without it. The "AI unavailable" notice for a command never enters history.
+- **Also fixed.** `omega:copilot-stream-end` fired only after a fallback reply, never after a real
+  one: 2 of 16 answered messages before, 16 of 16 after.
+- **Verified.** Same harness: follow-up carries the prior turns; `/clear` makes 0 calls and the next
+  message goes bare; 8 × 900-char turns stay at 1,748 chars; the declined-with-history case makes 2
+  calls and shows the reply; 0 page errors. `verify-runtime.js`: PASS, 13 pages. `ci-local.sh`:
+  all 28 blocking checks pass (census regenerated: module total 2064 → 2066 KB).
+
 ## `page-count-claims.py` could not see "N-page", so two member-visible counts drifted (2026-10-12)
 
 - **Symptom.** `ecosystem.html:67`'s card title read **"222-PAGE PLATFORM"** directly above its own

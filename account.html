@@ -464,11 +464,16 @@
     const s=find(signOf(m,d));
     const prof={ sign:s[0], element:s[3], olympian:s[4], planet:s[5], agent:s[6], dob:val };
     const btn=document.getElementById('gate-go'); btn.disabled=true;
-    const { error } = await supabase.from('profiles').upsert(
-      { id:currentUser.id, email:currentUser.email, sign:prof.sign, element:prof.element, god:prof.olympian, agent:prof.agent, birth_date:prof.dob },
-      { onConflict:'id' }
-    );
+    /* birth_date only. Members hold a column-level UPDATE grant on profiles
+       (no INSERT at all), so the old upsert -- which also wrote email, element,
+       god and agent -- failed 42501 for every new member, live 2026-10-12. The
+       row already exists (handle_new_user), and trg_derive_cosmology derives
+       sign/element/god/agent from birth_date server-side. .select() makes a
+       0-row update visible: it resolves without an error (CLAUDE.md 8.1 #1). */
+    const { data:saved, error } = await supabase.from('profiles')
+      .update({ birth_date:prof.dob }).eq('id',currentUser.id).select('sign');
     btn.disabled=false;
+    if(!error && (!saved || !saved.length)){ err.textContent='Could not save (no profile found). Sign out and back in, then try again.'; return; }
     if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+'). Try again.'; console.log('save error',error); return; }
     const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
     window.location.href='/dashboard.html'; return;

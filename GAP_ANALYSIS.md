@@ -43,6 +43,17 @@ open, recorded in `FIXES_LOG.md`:
   depend on the sweep (`0082_trial_917.sql:211`), but scheduling it is **not** a safe default:
   `sweep_expired_trials()` deletes the member's `task_completions` (`0082_trial_917.sql:243`),
   so its first run wipes those two members' progress. Owner decision before any schedule.
+- **OPEN 2026-10-12 — `profile.html`'s owner access panel cannot change access.** Its
+  `grantAccess`/`revokeAccess` (profile.html:1717-1732) `.update()` `access_approved`, `is_trial`
+  and `trial_expires_at` directly; members *and the owner* hold only a column-level UPDATE grant on
+  `profiles` that excludes all three, so every click fails 42501 and shows "Could not update
+  access". `approvals.html` does the same job correctly through `approve_member` /
+  `grant_permanent_access` / `revoke_member` / `extend_trial` (MFA-gated). Open, not fixed: the
+  panel's free "N minutes" trial picker has no 1:1 RPC, so mapping it is an auth decision for the
+  high-risk path (CLAUDE.md §10) — or the panel defers to `approvals.html`.
+- **OPEN 2026-10-12 — `omega-graphify-integration.js`'s `notifications` fallback insert always
+  fails** (no INSERT grant or policy for members; server-side `notify_member` owns that table). It
+  checks `.error` and logs, so it is not silent and the feature is a non-essential fallback.
 - **CLOSED 2026-10-06 — Creation Layer truth enforcement is live.** Authenticated clients no longer have direct DML on the four Creation Layer tables; authenticated public RPC wrappers enforce server-owned lifecycle/truth state, provenance and run state through non-exposed `private` SECURITY DEFINER implementations with `search_path=''` and ownership checks. Project creation is forced to `DRAFT / USER-CREATED`, asset creation to `DESIGNED / USER-CREATED`, experience creation to `DRAFT / SIMULATED`, and run score/state transitions are server-owned. Experience-step events are persisted canonically, and published experiences are readable by authenticated members while draft/retired experiences remain owner-scoped. The remaining gap is provider-live generation, artifact delivery/hashing, licensing verification and the public Creation Studio; those must not be represented as LIVE until provider evidence exists. See `docs/OMEGA_CREATION_LAYER.md`.
 - **CLOSED 2026-10-09 — client read grants are materialised.** The seven tables `omega_notifications`, `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`, `omega_agent_tasks`, `omega_agent_task_events`, and `omega_matrix_node_semantics` now have the production `authenticated SELECT` grants represented by `supabase/migrations/20261006194000_materialize_existing_client_read_grants_20261006.sql`. Live `has_table_privilege` verification confirms those grants. The migration-grant contract no longer tracks them as missing migration grants.
 - **CLOSED 2026-10-09 — `omega_agent_action_proposals` was a retired schema, not a missing live table.** Migration `20260929113731` created the proposal table and `20260929115306` explicitly dropped it. Live absence is therefore expected; the stale `KNOWN` exception was removed from `scripts/migration-grant-contract.py`.

@@ -23059,3 +23059,37 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
 - **Parallel work noted.** Another agent applied `20261012060927_harden_stripe_rpc_boundaries` live
   and merged it to `main` meanwhile; it only drops a legacy `apply_subscription_event` overload — no
   overlap. `remote-migrations.json` carries all 379 versions.
+
+## The site shipped all 68 internal `config/` files, and the Pages failover failed on every push because of it (2026-10-12)
+
+- **Found by** reading why `Omega Static Failover` (the GitHub Pages fallback while Vercel is blocked)
+  concluded `failure` on runs 11–15 — every `main` push today. Job `114689039745`: build passes, step
+  "Validate failover artifact" fails. Reproduced locally: `omega-pages-failover-smoke.py` prints
+  `FAIL: forbidden directory in artifact: config/...` 68 times. The smoke test is right:
+  `vercel-build.sh` excluded only `config/omega-implementation-ledger.json`, so the production
+  artifact (Vercel's too) carried `omega-rpc-security-policy.json`,
+  `supabase-security-definer-exposure.json`, `supabase-live-runtime-evidence.json`,
+  `supabase-migration-provenance.json` and 64 more internal files.
+- **Constraint.** 7 are fetched at runtime by shipped modules (`omega-page-world.js`,
+  `omega-world-atlas.js`, `omega-value-layer.js`, `omega-action-runtime.js`, …): excluding the whole
+  directory would break them.
+- **Fix.** `vercel-build.sh` excludes `./config/*`, then copies exactly the `/config/<name>.json` files
+  referenced by the emitted HTML/JS — derived, so a new runtime fetch ships itself; the existing
+  unreachable-asset scan still fails the build if one is missing. The ledger marker the static contract
+  asserts stays. The smoke test allows a `config/` file only if a shipped page references it.
+- **Verified.** Build: `VERCEL_BUILD=PASS`, `public/config/` = those 7 files. Smoke:
+  `PASS: static failover artifact validated (1131 paths)`. New test
+  `test_only_runtime_fetched_config_ships` fails on the previous `vercel-build.sh`
+  (`git show HEAD:`, `True is not false`) and passes on this one. `ci-local.sh`: 30/30.
+- **Not done here.** Whether GitHub Pages should actually serve `sydomega.com` while Vercel is blocked
+  is the owner's call: it needs the Pages source set to "GitHub Actions" and a DNS change, both outside
+  the repository. This change only makes the artifact deployable and stops the leak on every host.
+- **Follow-up, same PR (#873).** CI's `readiness` job (`omega-release-readiness.yml:68-71`) asserts
+  `omega-scale-policy`, `omega-runtime-manifest` and `omega-truth-model` in `public/config/`; no page
+  fetches them, so the first push dropped them (job `114696984781`, exit 1 at `test -s`). That gate is a
+  standing publication contract, so it is honoured, not edited: `config/public-config.txt` lists
+  config files published by contract, the build ships them plus anything a published config file
+  references (the runtime manifest names `omega-object-model.json` and
+  `omega-object-contract.schema.json`), and a listed file that does not exist fails the build in the
+  parent shell. Published: **12** of 69. The readiness job's commands replayed locally pass; 2 more
+  build tests (closure, missing listed file).

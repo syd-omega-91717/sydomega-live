@@ -31,6 +31,7 @@ find . -type f \
   ! -path './core/*' \
   ! -path './docs/*' \
   ! -path './config/omega-implementation-ledger.json' \
+  ! -path './config/*' \
   ! -path './vendor/*' \
   ! -path './i18n/*' \
   ! -name 'vercel.json' ! -name 'package.json' \
@@ -41,6 +42,41 @@ find . -type f \
   done
 
 [ -s public/index.html ] || { echo 'VERCEL_BUILD=FAIL missing public/index.html'; exit 1; }
+
+# config/ is internal (security policies, migration provenance, live-runtime
+# evidence: 68 files) except the handful a shipped module fetches at runtime.
+# Ship exactly those -- derived from the references in the emitted tree, so a
+# new runtime fetch ships itself and nothing else leaks. The unreachable-asset
+# scan below still fails the build if a referenced config file is missing.
+{ grep -rhoE "/config/[A-Za-z0-9._-]+\.json" --include='*.html' --include='*.js' public 2>/dev/null || true; } \
+  | sort -u | while IFS= read -r cfg; do
+    [ -f ".${cfg}" ] || continue
+    mkdir -p "public/config"
+    cp -f ".${cfg}" "public${cfg}"
+  done
+# Plus the files published by contract (config/public-config.txt: one name per line, # comments).
+{ [ -f config/public-config.txt ] && grep -vE '^[[:space:]]*(#|$)' config/public-config.txt || true; } | while IFS= read -r cfg; do
+  [ -f "config/${cfg}" ] || { echo "VERCEL_BUILD=FAIL public-config.txt names missing config/${cfg}"; exit 1; }
+  mkdir -p public/config
+  cp -f "config/${cfg}" "public/config/${cfg}"
+done
+# `| while` runs in a subshell, so its exit 1 cannot fail this script: re-assert here.
+if [ -f config/public-config.txt ]; then
+  for cfg in $(grep -vE '^[[:space:]]*(#|$)' config/public-config.txt); do
+    [ -s "public/config/${cfg}" ] || { echo "VERCEL_BUILD=FAIL public-config.txt names missing config/${cfg}"; exit 1; }
+  done
+fi
+# A published config file can reference another (the runtime manifest names the
+# object model). Follow /config/ references out of public/config until none are new.
+for _pass in 1 2 3 4 5; do
+  added=0
+  for cfg in $( { grep -rhoE "/config/[A-Za-z0-9._-]+\.json" public/config 2>/dev/null || true; } | sort -u); do
+    [ -f "public${cfg}" ] && continue
+    [ -f ".${cfg}" ] || continue
+    cp -f ".${cfg}" "public${cfg}"; added=1
+  done
+  [ "${added}" -eq 1 ] || break
+done
 [ ! -e "public/config/omega-implementation-ledger.json" ] || { echo 'VERCEL_BUILD=FAIL internal_ledger_exposed'; exit 1; }
 
 # Copy directories that cannot be copied by the extension-based find above.

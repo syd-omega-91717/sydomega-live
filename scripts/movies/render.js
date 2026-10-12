@@ -55,7 +55,7 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '
 function serve() {
   return new Promise((res) => {
     // Loopback-only render server (127.0.0.1, ephemeral port); never deployed.
-    // nosemgrep: using-http-server
+    // nosemgrep: problem-based-packs.insecure-transport.js-node.using-http-server.using-http-server
     const srv = http.createServer((req, rsp) => {
       // Normalized, then confined to ROOT on the next line.
       // nosemgrep: path-join-resolve-traversal

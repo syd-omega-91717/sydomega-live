@@ -378,7 +378,7 @@
     /* Match on the raw text and escape each piece, so a query can never
        land inside an entity (a search for "3" used to split &#39;). */
     // `q` is regex-escaped on this line, so it matches literally (no ReDoS).
-    // nosemgrep: detect-non-literal-regexp
+    // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
     var re2=new RegExp('('+String(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
     return t.split(re2).map(function(part,i){
       return i%2?'<mark style="background:rgba(201,168,76,.22);color:#E2C86D;border-radius:2px;padding:0 2px">'+esc(part)+'</mark>':esc(part);

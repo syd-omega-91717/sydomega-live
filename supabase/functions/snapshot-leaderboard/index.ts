@@ -88,11 +88,14 @@ Deno.serve(async (req) => {
   try {
     const sb = createClient(supabaseUrl, serviceKey);
 
-    // Fetch all approved profiles
+    // Fetch all approved profiles. Family members (profiles.family_of set) are
+    // never ranked where members can see: leaderboard_snapshots is readable by
+    // every member (docs/decisions/family-access).
     const { data: profiles, error } = await sb
       .from("profiles")
       .select("id, display_name, axis_a, axis_b, axis_c, element, sign, is_owner, subscription_tier")
-      .eq("access_approved", true);
+      .eq("access_approved", true)
+      .is("family_of", null);
 
     if (error) return json({ error: error.message }, 502);
 

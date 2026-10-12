@@ -90,7 +90,9 @@ Deno.serve(async (req) => {
     const { data: profiles, error } = await sb
       .from("profiles")
       .select("id, display_name, axis_a, axis_b, axis_c, element, sign, is_owner, subscription_tier")
-      .eq("access_approved", true);
+      .eq("access_approved", true)
+      // Family members are never ranked where members can see (docs/decisions/family-access).
+      .is("family_of", null);
 
     if (error) return json({ error: error.message }, 502);
 

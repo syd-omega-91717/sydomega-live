@@ -23115,3 +23115,18 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   `OmegaMFA.stepUp()`, retries once on success, and otherwise reports `aal2_no_factor` with where to
   enrol (Settings → Two-factor sign-in; `mfa_enrolment_enabled` is `true` live). Stub test: aal2 →
   step-up → retry succeeds (2 calls); no factor → 1 call, the enrol message.
+
+## One GitHub Pages deployer: the stock templates published the raw repository (2026-10-12)
+
+- **Found.** `main` gained `.github/workflows/static.yml` (`0a91d5be`) and `jekyll-gh-pages.yml`
+  (`4bbc48a3`), GitHub's stock Pages templates. `static.yml` uploads `path: '.'` — the whole
+  repository, unbuilt — and the Jekyll one builds `source: ./`. Both deployed successfully (runs
+  `38227798582`, `38227831529`), so Pages served the repository root, bypassing `vercel-build.sh` and
+  its `config/` exclusion. Three workflows then raced for the one Pages site (last push wins), and
+  both new files fail `workflow-contract.py` (mutable `@v4`/`@v5` tags), turning that gate red on
+  `main` and every PR.
+- **Fix (owner's merge is the decision).** Remove both; `omega-static-failover.yml` stays the single
+  Pages deployer — it builds with `vercel-build.sh`, binds `CNAME`, and refuses to publish unless
+  `omega-pages-failover-smoke.py` passes (only runtime-fetched or contract-listed `config/` files,
+  no secret-shaped values). Its `Configure GitHub Pages` step failed earlier only because Pages was
+  not yet enabled; the stock deploys show it now is. `workflow-contract.py`: PASS after removal.

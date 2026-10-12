@@ -113,6 +113,11 @@ function buildCard(m){
   if(isRejected&&!isExpired){
     btns+='<button class="ac approve" data-uid="'+esc(m.id)+'" data-action="approve">&#10003; '+btnReconsider+'</button>';
   }
+  /* family (owner decision 2026-10-12, docs/decisions/family-access): adults only, owner-granted */
+  if(!m.is_owner){
+    if(m.family_of)btns+='<button class="ac reject" data-uid="'+esc(m.id)+'" data-action="unlinkFamily">&#8856; '+t('btn_unlink_family')+'</button>';
+    else btns+='<button class="ac permanent" data-uid="'+esc(m.id)+'" data-action="grantFamily">&#8962; '+t('btn_grant_family')+'</button>';
+  }
 
   var card=document.createElement('div');
   card.className='mc card';
@@ -126,6 +131,7 @@ function buildCard(m){
       +'</div>'
       +'<div class="mc-right">'
         +'<div class="mc-pill" style="border-color:'+col+';color:'+col+'">'+label+'</div>'
+        +(m.family_of?'<div class="mc-pill" style="border-color:var(--gold);color:var(--gold)">'+t('chip_family')+'</div>':'')
         +(isActive?'<div class="mc-chrono" id="cd-'+esc(m.id)+'" style="color:'+col+'">--:--</div><div class="mc-chrono-lbl">'+t('label_remaining')+'</div>':'')
       +'</div>'
     +'</div>'
@@ -199,6 +205,9 @@ async function rpcResult(name,args){var r=await rpcOnce(name,args);if(r.ok||r.er
 function explainActionError(prefix,result){var reason=(result&&result.error)||'unknown_error';if(reason==='aal2_no_factor'&&confirm('Owner actions need two-factor sign-in, and this account has no authenticator yet.\n\nOpen Settings now to set one up? (Account tab \u2192 Turn on two-factor)')){location.href='/settings.html#two-factor';return;}var msg=reason==='aal2_no_factor'?'TWO-FACTOR REQUIRED — owner actions need your authenticator code. Enter it when asked; if you have no authenticator yet, set one up in Settings → Two-factor sign-in, then retry.':reason==='aal2_required'?'TWO-FACTOR NOT CONFIRMED — enter your authenticator code when asked, then retry.':reason==='forbidden'||reason==='Not authorised: only a platform owner may grant trial access.'?'OWNER AUTHORIZATION REQUIRED — this action is restricted to the platform owner.':prefix+' — '+reason;toast(msg,'var(--crim)');}
 async function approve(uid){var result=await rpcResult('approve_member',{p_uid:uid});if(result.ok)toast(t('toast_trial_granted').replace('{TIME}','9 MINUTES 17 SECONDS'),'var(--green)');else explainActionError('COULD NOT GRANT TRIAL ACCESS',result);load();}
 async function grantPermanent(uid){if(!confirm('Grant PERMANENT lifetime access to this member?'))return;try{if(window.OmegaGuardian&&window.OmegaGuardian.gate){await window.OmegaGuardian.gate('admin',async function(){var result=await rpcResult('grant_permanent_access',{p_uid:uid});if(result.ok)toast(t('toast_permanent_granted'),'var(--gold)');else explainActionError('COULD NOT GRANT PERMANENT ACCESS',result);load();},{action:'grant_permanent_access',member:uid});}else{var result=await rpcResult('grant_permanent_access',{p_uid:uid});if(result.ok)toast(t('toast_permanent_granted'),'var(--gold)');else explainActionError('COULD NOT GRANT PERMANENT ACCESS',result);load();}}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
+async function ownerGated(action,uid,rpc,okKey,okCol,errPrefix){var run=async function(){var result=await rpcResult(rpc,{p_uid:uid});if(result.ok)toast(t(okKey),okCol);else if(result.error==='minor_by_dob')toast(t('error_family_minor'),'var(--crim)');else explainActionError(errPrefix,result);load();};try{if(window.OmegaGuardian&&window.OmegaGuardian.gate)return await window.OmegaGuardian.gate('admin',run,{action:action,member:uid});return await run();}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
+async function grantFamily(uid){if(!confirm(t('confirm_family_adult')))return;await ownerGated('grant_family_access',uid,'grant_family_access','toast_family_granted','var(--gold)','COULD NOT GRANT FAMILY ACCESS');}
+async function unlinkFamily(uid){if(!confirm(t('confirm_family_unlink')))return;await ownerGated('revoke_family_link',uid,'revoke_family_link','toast_family_unlinked','var(--cyan)','COULD NOT UNLINK FAMILY');}
 async function extend(uid){try{if(window.OmegaGuardian&&window.OmegaGuardian.gate){await window.OmegaGuardian.gate('admin',async function(){var result=await rpcResult('extend_trial',{p_uid:uid,p_seconds:557});if(result.ok)toast(t('toast_extend_trial'),'var(--cyan)');else explainActionError('COULD NOT EXTEND TRIAL',result);load();},{action:'extend_trial',member:uid});}else{var result=await rpcResult('extend_trial',{p_uid:uid,p_seconds:557});if(result.ok)toast(t('toast_extend_trial'),'var(--cyan)');else explainActionError('COULD NOT EXTEND TRIAL',result);load();}}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
 async function reject(uid){if(!confirm('Reject this access request?'))return;var result=await rpcResult('reject_member',{p_uid:uid});if(result.ok)toast(t('toast_rejected'),'var(--crim)');else explainActionError('COULD NOT REJECT REQUEST',result);load();}
 async function revoke(uid){if(!confirm('Immediately revoke access for this member?'))return;try{if(window.OmegaGuardian&&window.OmegaGuardian.gate){await window.OmegaGuardian.gate('admin',async function(){var result=await rpcResult('revoke_member',{p_uid:uid});if(result.ok)toast(t('toast_revoked'),'var(--crim)');else explainActionError('COULD NOT REVOKE ACCESS',result);load();},{action:'revoke_member',member:uid});}else{var result=await rpcResult('revoke_member',{p_uid:uid});if(result.ok)toast(t('toast_revoked'),'var(--crim)');else explainActionError('COULD NOT REVOKE ACCESS',result);load();}}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
@@ -333,6 +342,8 @@ async function sendDispatch(){
 window.load=load;
 window.approve=approve;
 window.grantPermanent=grantPermanent;
+window.grantFamily=grantFamily;
+window.unlinkFamily=unlinkFamily;
 window.extend=extend;
 window.reject=reject;
 window.revoke=revoke;

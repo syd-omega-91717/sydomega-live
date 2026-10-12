@@ -24,6 +24,12 @@ supabase/live-grants.json (the `authenticated` role, captured live):
   upsert   both INSERT and UPDATE (it is INSERT ... ON CONFLICT DO UPDATE)
   delete   table-level DELETE
 
+  rpc      every `.rpc('fn')` -- and `rpcResult('fn', ...)`, approvals.js's wrapper --
+           must name a public function `authenticated` may EXECUTE (snapshot
+           `functions`). recovery.html called two functions that existed only in
+           the private schema, so both of its buttons failed for every member until
+           migration 20261012014343 bridged them.
+
 Tables missing from the snapshot are skipped (scripts/schema-dictionary.py owns
 names that do not exist). Embedded resources in a select (`rel!inner(col)`) are
 not checked here.
@@ -94,6 +100,7 @@ if os.environ.get('OMEGA_GRANT_KNOWN') == 'none':   # test fixtures: no repo fil
 NEED = {'select': 'S', 'insert': 'I', 'update': 'U', 'upsert': 'IU', 'delete': 'D'}
 PRIV = {'S': 'SELECT', 'I': 'INSERT', 'U': 'UPDATE', 'D': 'DELETE'}
 FROM = re.compile(r"""(?<![\w.])(?:\w+\s*\.\s*)?from\(\s*(['"`])([a-z_][a-z0-9_]*)\1\s*\)""")
+RPC = re.compile(r"""(?:\.rpc|\brpcResult)\(\s*(['"`])([a-zA-Z_][a-zA-Z0-9_]*)\1""")
 OP = re.compile(r"\.\s*(select|insert|update|upsert|delete)\s*\(")
 
 
@@ -198,13 +205,27 @@ def in_comment(s, pos):
 
 def check(root=ROOT):
     try:
-        rel = json.load(open(SNAPSHOT if root == ROOT else os.path.join(root, 'supabase', 'live-grants.json')))['relations']
+        snap = json.load(open(SNAPSHOT if root == ROOT else os.path.join(root, 'supabase', 'live-grants.json')))
+        rel = snap['relations']
+        funcs = set(snap['functions']) if 'functions' in snap else None
     except (OSError, ValueError, KeyError) as e:
         return [('supabase/live-grants.json', 0, '-', '-', 'snapshot missing or unreadable: %s' % e)], set(), 0
     findings, seen, calls = [], set(), 0
     files = sorted(f for f in os.listdir(root) if f.endswith(('.html', '.js')))
     for f in files:
         s = open(os.path.join(root, f), encoding='utf-8', errors='replace').read()
+        for m in RPC.finditer(s) if funcs is not None else ():
+            if in_comment(s, m.start()):
+                continue
+            calls += 1
+            name = m.group(2)
+            if name not in funcs:
+                key = (f, name, 'rpc')
+                if key in KNOWN:
+                    seen.add(key)
+                    continue
+                findings.append((f, s.count('\n', 0, m.start()) + 1, name, 'rpc',
+                                 'no public function members may EXECUTE (missing, private-only, or not granted)'))
         for m in FROM.finditer(s):
             if 'storage' in s[max(0, m.start() - 12):m.start()] or in_comment(s, m.start()):
                 continue

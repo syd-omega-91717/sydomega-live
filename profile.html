@@ -1714,22 +1714,28 @@ function startCountdown(uid,expiresAt,el){
   tick();window.__timers[uid]=setInterval(tick,1000);
 }
 
-async function grantAccess(uid,minutes,sbRef){
-  let error;
-  if(minutes<0){
-    ({error}=await sbRef.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null}).eq('id',uid));
-  } else {
-    const exp=new Date(Date.now()+minutes*60000).toISOString();
-    ({error}=await sbRef.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp}).eq('id',uid));
+/* Owner access actions go through the same server functions as approvals.js
+   (owner + MFA checked server-side, audit + member notification included).
+   Members may not UPDATE access_approved/is_trial/trial_expires_at, so the
+   direct profiles.update this replaced failed for every caller. The RPC
+   resolves {ok:false,error} rather than throwing -- check both. */
+async function ownerAccessRpc(name,uid,sbRef){
+  const {data,error}=await sbRef.rpc(name,{p_uid:uid});
+  if(error||!data||data.ok!==true){
+    const why=error?(error.message||'database_error'):((data&&data.error)||'action_denied');
+    alert(why==='aal2_required'?'This action needs your two-factor sign-in (MFA). Verify, then try again.':'Could not update access ('+why+'). Try again.');
+    return false;
   }
-  if(error){alert('Could not update access. Try again.');return;}
-  loadMembers();
+  return true;
+}
+
+async function grantAccess(uid,minutes,sbRef){
+  /* minutes<0 = permanent; otherwise the fixed 9:17 trial, which approve_member owns */
+  if(await ownerAccessRpc(minutes<0?'grant_permanent_access':'approve_member',uid,sbRef)) loadMembers();
 }
 
 async function revokeAccess(uid,sbRef){
-  const {error}=await sbRef.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
-  if(error){alert('Could not revoke access. Try again.');return;}
-  loadMembers();
+  if(await ownerAccessRpc('revoke_member',uid,sbRef)) loadMembers();
 }
 
 function buildMemberList(members){

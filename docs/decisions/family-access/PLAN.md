@@ -1,4 +1,4 @@
-# Status: REVISE (round 1 findings folded in below; round 2 review pending before any code)
+# Status: REVISE (rounds 1-2 folded in; round 3 reviews the implementation diff)
 
 ## Goal
 
@@ -147,3 +147,19 @@ Changes to the approach:
    the header, so a redefinition in a new migration is expected to pass; verify, don't assume.
 9. **Feed:** `activity_feed` rows with `is_public = true` expose a family member's activity
    (not their name) by `user_id`. Acknowledged; the person's own posts are theirs to share.
+
+## Round 2 revisions (2026-10-12)
+
+- `private.get_all_members` (live body) also returns `family_of`, with no filter. approvals.js
+  shows a FAMILY chip and an UNLINK action, both inside `OmegaGuardian.gate('admin', …)` like
+  the existing grant and revoke.
+- `grant_family_access` on a member already linked to *any* owner account writes the access
+  fields again and leaves the link. `revoke_member` keeps the link, and the chip shows it.
+  Any owner may unlink.
+- Refusals write `access_grant_audit` rows with `allowed=false`. `detail` is a JSON string
+  holding `{dob, birth_date, age_basis}`.
+- The `leaderboard_snapshots` DELETE runs as the function owner. Check `proowner` and
+  `relforcerowsecurity` live before relying on it.
+- Guard and `public_leaderboard` bodies come from live `pg_get_functiondef`. The diff against
+  live is asserted to be exactly the added predicate.
+- New UI strings get keys in `i18n.js` T_EN and all 6 packs.

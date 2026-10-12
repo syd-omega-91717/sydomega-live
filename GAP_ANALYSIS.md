@@ -43,14 +43,39 @@ open, recorded in `FIXES_LOG.md`:
   depend on the sweep (`0082_trial_917.sql:211`), but scheduling it is **not** a safe default:
   `sweep_expired_trials()` deletes the member's `task_completions` (`0082_trial_917.sql:243`),
   so its first run wipes those two members' progress. Owner decision before any schedule.
-- **OPEN 2026-10-12 — `profile.html`'s owner access panel cannot change access.** Its
-  `grantAccess`/`revokeAccess` (profile.html:1717-1732) `.update()` `access_approved`, `is_trial`
-  and `trial_expires_at` directly; members *and the owner* hold only a column-level UPDATE grant on
-  `profiles` that excludes all three, so every click fails 42501 and shows "Could not update
-  access". `approvals.html` does the same job correctly through `approve_member` /
-  `grant_permanent_access` / `revoke_member` / `extend_trial` (MFA-gated). Open, not fixed: the
-  panel's free "N minutes" trial picker has no 1:1 RPC, so mapping it is an auth decision for the
-  high-risk path (CLAUDE.md §10) — or the panel defers to `approvals.html`.
+- **CLOSED 2026-10-12 — `profile.html`'s owner access panel now changes access.** It wrote
+  `access_approved`/`is_trial`/`trial_expires_at` directly, which no caller may UPDATE (42501 on
+  every click). It now calls `approve_member` / `grant_permanent_access` / `revoke_member`, the
+  same owner+MFA-checked RPCs as `approvals.js`, and reports `{ok:false,error}` (incl.
+  `aal2_required`). The "N minutes" picker this item called an auth decision is in fact fixed at
+  9.1717 (`window.__selectedMinutes`, "FIXED -- never changes"), exactly what `approve_member`
+  grants — a 1:1 mapping, no new authority. Those RPCs were themselves dead until the item below.
+- **CLOSED 2026-10-12 — 12 client-called RPCs failed 42501 for everyone, the owner included.**
+  Each `public.<fn>` is a SECURITY INVOKER wrapper calling `private.<fn>` as the caller; migrations
+  20261006193000 / 20261006201000 / 20261007001000 / 20261007002000 / 20261008032308 revoked EXECUTE
+  on the private side while granting the public side, and 20261007120000's "restore" re-granted
+  only the wrappers. Dead: approvals approve / grant-permanent / revoke / KYC review / KYC intake,
+  settings "delete account", profile KYC submit, interface-omni platform flag, Creation Studio
+  create project / asset / provider job, intel-fabric knowledge search. Restored by
+  20261012064126 after reading each body (owner actions check `is_platform_owner()` + aal2; member
+  actions scope to `auth.uid()`). Live probe: owner@aal2 revoke/approve run; non-owner gets
+  `forbidden`; delete-account@aal1 gets `aal2_required`; anon 42501. So the CLOSED Creation Layer
+  entry below was true of its checks and false in effect for six days. Knowledge search then hit
+  a second bug (`<=>` unresolvable under `search_path=''`), fixed by 20261012064247.
+  `grant-contract.py` now gates end-to-end callability, and fails all 14 call sites on the
+  pre-fix snapshot.
+- **OPEN 2026-10-12 — 23 more public RPCs are granted to members but can never run**, same cause,
+  called by no client page today: `grant_trial_access`, `is_app_owner`,
+  `omega_{create,update,publish}_experience`, `omega_{start,step,abandon}_experience_run`,
+  `omega_update_creative_{project,asset}`, `omega_{issue,revoke,verify}_certificate`,
+  `omega_knowledge_ingest_document`, `omega_knowledge_search`, `omega_transition_mission_task`,
+  `purchase_perk`, `revoke_permanent_access`, `set_{consult,contract,reservation}_status`,
+  `set_dispatch_published`, `submit_exam_result`. Left as is on purpose: some (certificate
+  issue/revoke, ingest) may be meant server-only, so each needs its body read before a grant, and
+  `grant-contract.py` fails the first client call to any of them. Restore with its first caller.
+- **OPEN 2026-10-12 — the knowledge base is empty.** 11 approved sources, **0** chunks, 0
+  embeddings: `omega_knowledge_hybrid_search` now runs and correctly returns nothing. Nothing has
+  ingested source text (and `omega_knowledge_ingest_document` is in the blocked list above).
 - **OPEN 2026-10-12 — `omega-graphify-integration.js`'s `notifications` fallback insert always
   fails** (no INSERT grant or policy for members; server-side `notify_member` owns that table). It
   checks `.error` and logs, so it is not silent and the feature is a non-essential fallback.

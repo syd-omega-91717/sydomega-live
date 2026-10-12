@@ -168,7 +168,7 @@ const FIXTURE = `<!doctype html><html><head><meta charset="utf-8"><style>
 function startServer() {
   return new Promise((resolve) => {
     // Loopback-only static server for the headless render (listen on 127.0.0.1 below).
-    // nosemgrep: using-http-server
+    // nosemgrep: problem-based-packs.insecure-transport.js-node.using-http-server.using-http-server
     const srv = http.createServer((req, res) => {
       let u = decodeURIComponent(req.url.split('?')[0]);
       if (u === '/__contrast-fixture.html') {

@@ -22855,3 +22855,16 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   `verify-runtime.js`: PASS, 13 pages. `ci-local.sh`: 25 pass / 3 fail — the same 3 fail on
   pristine `origin/main` (`omega-static-failover.yml` unpinned `actions/*@vN` from #857, the
   skill-registry census, and 6 unit tests), not this change.
+
+## `page-count-claims.py` could not see "N-page", so two member-visible counts drifted (2026-10-12)
+
+- **Symptom.** `ecosystem.html:67`'s card title read **"222-PAGE PLATFORM"** directly above its own
+  body text "comprises 239 PAGES"; `prediction.html:92`'s roadmap said Q3 2026 shipped a **"Full
+  62-page sovereign platform"**. Real estate: 239 pages. The gate passed throughout.
+- **Root cause.** `CLAIM = (\d{2,4})\+?\s+pages\b` required a space and the plural, so the hyphenated
+  singular form was invisible. The body copy it *could* see had been kept current; the title beside
+  it had not — the gate's blind spot is exactly where the drift sat (§8.4: a number in prose drifts).
+- **Fix.** `(\d{2,4})\+?(?:\s+|-)pages?\b`. Widened, it finds exactly these two across the estate and
+  no new false positives; both now say 239. `test_hyphenated_singular_form_is_caught` plants
+  "222-PAGE PLATFORM" and "62-page" (must fail) and a true "12-page" (must pass); it fails against
+  the old pattern (`git show origin/main:scripts/page-count-claims.py`) and passes on the new one.

@@ -42,7 +42,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CLAIM = re.compile(r'(\d{2,4})\+?\s+pages\b', re.I)
+CLAIM = re.compile(r'(\d{2,4})\+?(?:\s+|-)pages?\b', re.I)
 
 # Diagnostic harnesses, not member-visible copy.
 SKIP = {'verify-deployment.html', 'verify-modules.html'}

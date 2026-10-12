@@ -26,12 +26,16 @@ jobs:
         shell: bash
         run: bash scripts/vercel-build.sh
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
-
       - name: Bind canonical domain in Pages artifact
         shell: bash
         run: printf '%s\n' 'sydomega.com' > public/CNAME
+
+      - name: Validate failover artifact
+        shell: bash
+        run: python3 scripts/omega-pages-failover-smoke.py
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
@@ -48,3 +52,11 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+
+      - name: Smoke test deployed Pages site
+        shell: bash
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          python3 scripts/omega-pages-failover-smoke.py --url "${PAGES_URL}"

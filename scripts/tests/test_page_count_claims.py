@@ -66,6 +66,21 @@ class TestGate(Fixture):
         self.write('a.html', '<p>99 PAGES</p>')
         self.assertEqual(self.run_gate().returncode, 1)
 
+    def test_hyphenated_singular_form_is_caught(self):
+        """'222-PAGE PLATFORM' (ecosystem.html) and 'Full 62-page platform'
+        (prediction.html) sat beside correct "239 PAGES" copy and drifted
+        unseen: the pattern required a space and the plural. 2026-10-12."""
+        for i in range(12):
+            self.write('p%02d.html' % i, '<p>x</p>')
+        self.write('p00.html', '<div class="card-title">222-PAGE PLATFORM</div>')
+        r = self.run_gate()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn('222', r.stdout)
+        self.write('p00.html', '<p>Full 62-page sovereign platform live</p>')
+        self.assertEqual(self.run_gate().returncode, 1)
+        self.write('p00.html', '<p>the 12-page estate</p>')
+        self.assertEqual(self.run_gate().returncode, 0)
+
     def test_diagnostic_harnesses_are_skipped(self):
         """verify-*.html are tools, not member-visible copy."""
         self.write('a.html', '<p>x</p>')

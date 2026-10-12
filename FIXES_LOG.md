@@ -22943,3 +22943,30 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
 - **Recorded, not fixed** (`GAP_ANALYSIS.md` §S): `profile.html`'s owner access panel writes
   `access_approved` directly and always 42501s (`approvals.html` uses RPCs); and
   `omega-graphify-integration.js`'s `notifications` fallback insert always fails (logged, not silent).
+
+## `grant-contract.py`: client calls are now gated against the live grants (2026-10-12)
+
+- **Gap.** Nothing in CI compared what client code *does* with what the `authenticated` role *may*
+  do. `rls-auditor.py` reads policies, `schema-dictionary.py` reads column names; neither reads
+  GRANTs, and column-level grants were invisible to every gate. That is how `account.html`'s
+  sign-up upsert (no INSERT; 4 of 7 columns outside the UPDATE grant) shipped and failed for every
+  new member (previous entry) while CI was green.
+- **Added.** `supabase/live-grants.json` — the live table-level SIUD privileges of `authenticated`
+  on all 290 public relations, plus column lists wherever the table-level privilege is absent
+  (captured 2026-10-12; the transcription cross-checked 290/290 against an independent capture;
+  regeneration query in the script's `--help`). `scripts/grant-contract.py` checks every
+  `.from('t').select/insert/update/upsert/delete(...)` in root `*.html`/`*.js` (458 calls):
+  literal column lists and payload keys against column grants; `*`, empty or non-literal lists
+  need the table-level privilege; upsert needs INSERT **and** UPDATE. Blocking in `ci.yml` and
+  `ci-local.sh` step 2t (30 blocking checks).
+- **Known open findings are named, not hidden.** `KNOWN` excuses exactly the three recorded in
+  `GAP_ANALYSIS.md` §S / the previous entry (profile.html owner panel, graphify notifications,
+  bg.js's never-firing owner repair), each with its reason; an entry that stops matching **fails**
+  the run, so the list cannot outlive its bug.
+- **Proven.** Run on the tree before #862 it fails exactly the two bugs found live
+  (`account.html:467 profiles.upsert — no INSERT grant; UPDATE not granted on agent, element,
+  email, god, id` and `omega-achieve-native.js:14 omega_achievement_verifications.select — no
+  SELECT grant`); on current `main` it passes. `test_grant_contract.py`: 14 tests — every rule has
+  a planted violator that must fail (ungranted upsert, one extra column, non-literal payload,
+  `select('*')` on a column grant, server-only read, delete, upsert-needs-update), plus comments,
+  `storage.from` and unknown tables ignored, a stale KNOWN entry failing, and the repo passing.

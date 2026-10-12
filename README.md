@@ -100,7 +100,7 @@ Investment · Economy · Marketplace · Blockchain · Digital assets · Wallet/V
 ### Communication & services
 Communication · Social experiences · Notifications · Services · Legal · Events · Travel · Wellbeing
 
-The repository currently contains a **238-page web estate** under canonical page-contract governance.
+The repository currently contains a **239-page web estate** under canonical page-contract governance.
 
 ---
 
@@ -449,7 +449,7 @@ Production status is evidence-driven. Public documentation intentionally avoids 
 
 **Operating model:** One governed core, many domain projections
 
-**Web estate:** 238 pages under page-contract governance
+**Web estate:** 239 pages under page-contract governance
 
 **Backend model:** Supabase PostgreSQL + RLS + Edge Functions + Storage
 

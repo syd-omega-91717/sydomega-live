@@ -23209,6 +23209,36 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   an unclassified point, registry drift, dropped duplicates or Nodes, and an unknown status. Two
   of those tests failed on the first run and exposed the hand-mapped bypass fixed above.
 
+## Owner decisions on the blueprint's waiting items; one tier ladder (2026-10-12)
+
+- **Decisions (owner, 2026-10-12):** the 12-tier `omega-canon.json` ladder; family accounts
+  for adults only, granted by the owner; all money items dormant, with Ω as non-cash,
+  non-transferable points; a counsel brief for Lebanon, UAE/GCC, US and EU/UK. The blueprint
+  items waiting on the owner went from 50 to 8 (39 DECIDED, 4 IN_PROGRESS) in
+  `scripts/blueprint-truth-map.py`.
+- **Found, live:** 9 profiles, 4 approved, 1 owner. 0 rows in each of `payments`,
+  `subscriptions`, `billing_invoices`, `stripe_webhook_events`, `family_nodes` and
+  `leaderboard_snapshots`. `payments_enabled`, `stripe_integration_enabled` and
+  `tokens_enabled` are all false. `pg_cron` is now installed, contrary to `GAP_ANALYSIS.md`,
+  which is updated.
+- **Fixed: two divergent tier ladders (§8.1 class 8, plus class 9 and class 1).**
+  - `subscriptions.html` carried its own 6-tier copy: different names and prices ($9.17/mo …
+    $1,917 lifetime), with perks that do not exist ("Sovereign token allocation",
+    "Investment layer").
+  - Its "REQUEST" button alerted "Your request … has been noted" while recording nothing.
+  - It displayed `subscription_tier`, which is null for every member, instead of the
+    `membership_tier` that `tierUnlocks()` reads.
+  - It now renders the canon ladder through `window.OmegaCanon`, with a wait helper because
+    bg.js injects omega-canon.js after the page's own scripts. It marks the member's
+    `membership_tier`, and shows a disabled "UPGRADES OPEN WHEN BILLING IS ENABLED" button.
+  - Verified in Chromium: 12 cards (INITIATE … ASCENDANT, $9.17 / $19.17 / $37.17 …), the
+    current tier marked, canon perk labels, neither fake perk present, no page errors. The CSP
+    inline-handler ratchet is unchanged.
+- **Family access:** a HIGH-RISK plan and round-1 adversarial review are in
+  `docs/decisions/family-access/` (verdict REVISE, 10 findings folded in). The re-enumeration
+  found `leaderboard_snapshots` readable by every member (`SELECT true`), so the grant must also
+  delete the target's snapshot rows. No code yet.
+
 ## Two workflows red on every `main` push: Pages smoke and page evidence (2026-10-12)
 
 - **Omega Static Failover.** Run 38253837405 (merge of #878):

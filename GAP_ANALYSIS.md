@@ -14,6 +14,7 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-10-12 — owner decisions recorded, legal review pending.** Owner chose the 12-tier `omega-canon.json` ladder (subscriptions.html now renders it), adult-only owner-granted family access (HIGH-RISK build in review: `docs/decisions/family-access/`), and dormant non-cash points for every money item. `docs/COUNSEL_BRIEF.md` lists the questions for counsel in Lebanon, UAE/GCC, US and EU/UK; no flag changes until answered. 8 blueprint items still need the owner (provenance marks 66/166, succession 73/652/969/N155, tier permanence 266, model per tier 289).
 
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
@@ -33,6 +34,7 @@ open, recorded in `FIXES_LOG.md`:
   `control-plane.html`. Owner: decide each request in `approvals.html`; to deploy
   `notify-access`, set `RESEND_API_KEY` + `NOTIFY_ACCESS_WEBHOOK_SECRET` and the `profiles`
   DB webhook first.
+- **UPDATE 2026-10-12:** `pg_cron` now **is** installed live (`pg_extension` row present), but `leaderboard_snapshots` still holds 0 rows, so the schedule is not yet producing work — re-measure `cron.job` before closing this item.
 - **OPEN 2026-10-09 — nothing runs on a schedule.** `pg_cron` is **not installed** live
   (`cron.job` → 42P01; `pg_available_extensions` lists it, `pg_net` is installed). So
   `rankings`, `snapshot-leaderboard`, `weekly-digest` (also undeployed) and the trial sweep

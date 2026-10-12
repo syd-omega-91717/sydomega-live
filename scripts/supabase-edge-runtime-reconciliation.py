@@ -18,7 +18,7 @@ def git_blob_sha(path: Path) -> str:
     header=f"blob {len(data)}\0".encode("utf-8")
     # Git defines a blob's identity as SHA-1 of this header + content; this is an
     # identity comparison against git, not a security use.
-    # nosemgrep: insecure-hash-algorithm-sha1
+    # nosemgrep: python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
     return hashlib.sha1(header + data, usedforsecurity=False).hexdigest()
 
 def main()->int:

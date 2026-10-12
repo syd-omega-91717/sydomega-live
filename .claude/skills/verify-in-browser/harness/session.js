@@ -20,7 +20,7 @@ const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 function loadPlaywright(scratchpad) {
   const tries = [
     // scratchpad is the developer's own $OMEGA_SCRATCHPAD on a local harness, not request input.
-    // nosemgrep: path-join-resolve-traversal
+    // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
     scratchpad && path.join(scratchpad, 'node_modules', 'playwright'),
     'playwright'
   ].filter(Boolean);

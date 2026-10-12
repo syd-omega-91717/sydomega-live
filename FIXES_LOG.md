@@ -23041,3 +23041,12 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
 - **Not done here.** Whether GitHub Pages should actually serve `sydomega.com` while Vercel is blocked
   is the owner's call: it needs the Pages source set to "GitHub Actions" and a DNS change, both outside
   the repository. This change only makes the artifact deployable and stops the leak on every host.
+- **Follow-up, same PR (#873).** CI's `readiness` job (`omega-release-readiness.yml:68-71`) asserts
+  `omega-scale-policy`, `omega-runtime-manifest` and `omega-truth-model` in `public/config/`; no page
+  fetches them, so the first push dropped them (job `114696984781`, exit 1 at `test -s`). That gate is a
+  standing publication contract, so it is honoured, not edited: `config/public-config.txt` lists
+  config files published by contract, the build ships them plus anything a published config file
+  references (the runtime manifest names `omega-object-model.json` and
+  `omega-object-contract.schema.json`), and a listed file that does not exist fails the build in the
+  parent shell. Published: **12** of 69. The readiness job's commands replayed locally pass; 2 more
+  build tests (closure, missing listed file).

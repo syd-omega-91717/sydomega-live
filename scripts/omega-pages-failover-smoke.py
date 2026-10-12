@@ -45,6 +45,24 @@ def artifact_check() -> int:
         except OSError:
             continue
         runtime_config.update(m.lstrip("/") for m in re.findall(r"/config/[A-Za-z0-9._-]+\.json", body))
+    published = pathlib.Path("config/public-config.txt")
+    if published.is_file():
+        for line in published.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                runtime_config.add("config/" + line)
+    # ...and whatever an allowed config file itself references (transitive closure).
+    frontier = set(runtime_config)
+    while frontier:
+        nxt = set()
+        for rel_cfg in frontier:
+            cfg_path = ROOT / rel_cfg
+            if cfg_path.is_file():
+                for m in re.findall(r"/config/[A-Za-z0-9._-]+\.json", cfg_path.read_text(encoding="utf-8", errors="ignore")):
+                    if m.lstrip("/") not in runtime_config:
+                        nxt.add(m.lstrip("/"))
+        runtime_config |= nxt
+        frontier = nxt
 
     for path in ROOT.rglob("*"):
         if not path.is_file():

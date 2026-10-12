@@ -22992,3 +22992,27 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   Pro plan (`get_organization`: `free`, re-checked); owner action, compensated by `omega-password-guard.js`
   on both password-setting pages. Performance: INFO `unused_index` ×329 only — not dropped (see
   `GAP_ANALYSIS.md` §S).
+
+## `recovery.html` could never create or verify a checkpoint: its functions lived only in `private` (2026-10-12)
+
+- **Found by** checking all 71 client RPC names (65 literal `.rpc('…')` + 6 through approvals.js's
+  `rpcResult('…')`) live: 69 exist in `public` and are executable by `authenticated`; two —
+  `omega_create_recovery_checkpoint` and `omega_verify_recovery_checkpoint`, called by
+  `omega-recovery.js:12-13` — exist only in `private` (migrations 20260929115839 / 20260929120017 /
+  20260929120620). PostgREST resolves `sb.rpc()` in `public`, so both of `recovery.html`'s buttons
+  failed for every member. The page reported the failure honestly (not class 1); it just never worked.
+- **Fix.** Migration `20261012014343_omega_recovery_checkpoint_public_rpc_bridge_20261012` — the same
+  shape as `20260929092815_omega_mission_public_rpc_bridge`: `language sql`, `security invoker`,
+  `search_path = ''`, body `select private.fn($1)`; EXECUTE revoked from `public, anon`, granted to
+  `authenticated`. Applied live (file renamed to the version live recorded). **Threat check** (CLAUDE.md
+  §10, new public-callable function): the wrapper adds no privilege; the private functions are SECURITY
+  DEFINER with a pinned search_path, require `auth.uid()`, write/count only the caller's rows, verify
+  reads only `member_id = auth.uid()`, and validate the key.
+- **Verified live** as member `5ca6ae1c…` in a `DO` block ending in a deliberate exception:
+  `PROBE_RESULT created=t owner_is_caller=t verified_valid=true foreign_id=checkpoint_not_found`; then
+  `anon_exec=false`, `auth_exec=true`, invoker, pinned search_path for both; 0 probe rows left. Security
+  advisor unchanged (still only the Pro-plan leaked-password WARN).
+- **Gated.** `supabase/live-grants.json` gains `functions` (the 146 public functions `authenticated`
+  may execute); `grant-contract.py` now also checks every `.rpc('fn')` and `rpcResult('fn')` (557 calls).
+  With the pre-bridge function list it fails exactly `omega-recovery.js:12` and `:13`; current passes.
+  4 new tests (missing function, executable function, the approvals wrapper, comments) — 18 total.

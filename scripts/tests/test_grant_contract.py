@@ -103,6 +103,31 @@ class GrantContract(unittest.TestCase):
                           "sb.storage.from('server_only').upload(p, f);\n"
                           "sb.from('not_in_snapshot').delete();")
 
+    # -- rpc: the name must be a public function members may execute
+    def with_functions(self, names):
+        path = os.path.join(self.dir, 'supabase', 'live-grants.json')
+        with open(path, 'w') as fh:
+            json.dump({'relations': GRANTS, 'functions': names}, fh)
+
+    def test_rpc_to_missing_function_fails(self):
+        """recovery.html's case: the function existed only in private."""
+        self.with_functions(['my_lattice'])
+        self.assertFails("sb.rpc('omega_create_recovery_checkpoint',{p_checkpoint_key:k});",
+                         'omega_create_recovery_checkpoint')
+
+    def test_rpc_to_executable_function_passes(self):
+        self.with_functions(['my_lattice'])
+        self.assertPasses("const {data,error} = await sb.rpc('my_lattice');")
+
+    def test_rpc_through_the_approvals_wrapper_is_checked(self):
+        self.with_functions(['approve_member'])
+        self.assertPasses("rpcResult('approve_member',{p_uid:u});")
+        self.assertFails("rpcResult('grant_everything',{p_uid:u});", 'grant_everything')
+
+    def test_rpc_in_a_comment_is_ignored(self):
+        self.with_functions([])
+        self.assertPasses("// sb.rpc('not_there');")
+
     # -- the allowlist cannot outlive its bug
     def test_known_entry_without_a_matching_call_is_stale(self):
         r = self.run_with("sb.from('notes').select('*');", known=None)

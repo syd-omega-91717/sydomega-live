@@ -123,6 +123,11 @@ open, recorded in `FIXES_LOG.md`:
   or `scripts/enable-supabase-hibp.py` with an owner access token. Compensating
   control today: `omega-password-guard.js` (HIBP k-anonymity at sign-up and reset),
   which direct Auth API calls bypass.
+  **Re-verified 2026-10-12:** still the only security-advisor finding (1 WARN, 0 ERROR);
+  `get_organization` still `free`; the guard is loaded on both password-setting pages
+  (`account.html` sign-up, `reset.html`). The performance advisor reports only INFO
+  `unused_index` ×329 — expected at 9 profiles and near-zero traffic, not evidence an index
+  is unneeded; no `duplicate_index` lint. Not dropped (a DROP is the owner's call, §8.2).
 - **Gamification Phase 2 is built and dormant** (opened 2026-10-03). To turn it on:
   `set_platform_flag('gamification_enabled', true)` as the owner. Pages:
   `character.html` (PROGRESSION tab), `cosmetics.html`, `my-quests.html`. Paid

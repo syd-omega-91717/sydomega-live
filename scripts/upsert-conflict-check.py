@@ -73,7 +73,10 @@ H = _load_helpers()
 
 
 def parse_unique_keys():
-    """table -> {'pk': [cols], 'unique': [[cols], ...]} from supabase/*.sql."""
+    """table -> {'pk': [cols], 'unique': [[cols], ...]} from supabase/*.sql AND
+    supabase/migrations/*.sql. migrations/ is the authoritative source (CLAUDE.md 5);
+    reading only the bag reported courses.html's academy_progress upsert as 42P10
+    while live -- and migration 20260921010709 -- had the key (2026-10-12)."""
     keys = {}
 
     def slot(t):
@@ -83,7 +86,9 @@ def parse_unique_keys():
         return [c.strip().strip('"').lower()
                 for c in raw.split(",") if c.strip()]
 
-    for sql_file in sorted((_ROOT / "supabase").glob("*.sql")):
+    sql_files = sorted((_ROOT / "supabase").glob("*.sql")) + \
+        sorted((_ROOT / "supabase" / "migrations").glob("*.sql"))
+    for sql_file in sql_files:
         sql = H._strip_sql_comments(
             sql_file.read_text(encoding="utf-8", errors="ignore"))
 
@@ -93,6 +98,16 @@ def parse_unique_keys():
                 r"(?:\s+IF\s+NOT\s+EXISTS)?\s+\w+\s+ON\s+(?:public\.)?(\w+)\s*\(([^)]+)\)",
                 sql, re.I):
             slot(m.group(1).lower())["unique"].append(cols(m.group(2)))
+
+        # ALTER TABLE [IF EXISTS] [ONLY] [public.]t ADD CONSTRAINT n UNIQUE|PRIMARY KEY (a, b)
+        for m in re.finditer(
+                r"ALTER\s+TABLE(?:\s+IF\s+EXISTS)?(?:\s+ONLY)?\s+(?:public\.)?(\w+)\s+"
+                r"ADD\s+CONSTRAINT\s+\w+\s+(UNIQUE|PRIMARY\s+KEY)\s*\(([^)]+)\)",
+                sql, re.I):
+            if m.group(2).upper().startswith("PRIMARY"):
+                slot(m.group(1).lower())["pk"] = cols(m.group(3))
+            else:
+                slot(m.group(1).lower())["unique"].append(cols(m.group(3)))
 
         # CREATE TABLE bodies: table-level PRIMARY KEY / UNIQUE, and
         # column-level `col type PRIMARY KEY` / `col type UNIQUE`.
@@ -117,6 +132,7 @@ def parse_unique_keys():
                 p = part.strip()
                 if not p:
                     continue
+                p = re.sub(r"^CONSTRAINT\s+\w+\s+", "", p, flags=re.I)   # named table constraint
                 tm = re.match(r"PRIMARY\s+KEY\s*\(([^)]+)\)", p, re.I)
                 if tm:
                     slot(table)["pk"] = cols(tm.group(1))
@@ -215,7 +231,7 @@ def main():
     print("=" * 70)
     print("UPSERT CONFLICT-TARGET CHECK")
     print("=" * 70)
-    print("Parsed unique keys for %d tables from supabase/*.sql." % len(keys))
+    print("Parsed unique keys for %d tables from supabase/*.sql + supabase/migrations/*.sql." % len(keys))
 
     if not findings:
         print("\n  No upsert conflict-target problems found.")

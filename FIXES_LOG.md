@@ -22970,3 +22970,25 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   a planted violator that must fail (ungranted upsert, one extra column, non-literal payload,
   `select('*')` on a column grant, server-only read, delete, upsert-needs-update), plus comments,
   `storage.from` and unknown tables ignored, a stale KNOWN entry failing, and the repo passing.
+
+## `courses.html` progress upsert verified live; `upsert-conflict-check.py` read the wrong half of the schema (2026-10-12)
+
+- **Lead.** CI's advisory upsert check reported `courses.html:303 — academy_progress [42P10]: onConflict
+  'enrollment_id,lesson_id' matches no unique key`. If true, every lesson completion fails.
+- **Live: not a bug.** `academy_progress_enrollment_lesson_uk UNIQUE (enrollment_id, lesson_id)` exists
+  live (and in migration `20260921010709`). End-to-end as a real member (`5ca6ae1c…`) inside a `DO` block
+  that ends in a deliberate exception, so nothing could persist: enroll upsert succeeds, first progress
+  upsert inserts, second takes the `ON CONFLICT DO UPDATE` path on the **same row**, member sees 1 row —
+  `PROBE_RESULT enroll=t progress_first=t progress_second=t same_row=t visible_rows=1`. (Nobody has ever
+  enrolled live: 0 enrollments, 0 progress rows, 1 published course, 4 lessons.)
+- **Root cause of the false lead.** The check parsed only `supabase/*.sql` — the reference bag, not the
+  authoritative `migrations/` (CLAUDE.md §5) — and skipped every *named* unique key: `ALTER TABLE …
+  ADD CONSTRAINT n UNIQUE (…)` was never matched, and `CONSTRAINT n UNIQUE (…)` inside `CREATE TABLE`
+  hit the `CONSTRAINT → continue` branch. **Fix:** read both trees; parse both named forms. Keys found:
+  112 → 216 tables; the false finding is gone. New `test_upsert_conflict_check.py` (4 tests: a planted
+  missing key must report; a key from a migration `ALTER TABLE`, a named in-table constraint, and a key on
+  other columns) — the two new-form tests fail against the old script.
+- **Supabase advisor, same pass.** Security: 1 WARN only — leaked-password protection, which needs the
+  Pro plan (`get_organization`: `free`, re-checked); owner action, compensated by `omega-password-guard.js`
+  on both password-setting pages. Performance: INFO `unused_index` ×329 only — not dropped (see
+  `GAP_ANALYSIS.md` §S).

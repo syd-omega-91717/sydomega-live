@@ -233,6 +233,20 @@ class BuildOutputTests(unittest.TestCase):
         self.assertIn("VERCEL_BUILD=PASS", out)
         self.assertTrue(os.path.isfile(os.path.join(self.fx.dir, "public", "vendor", "supabase-js.js")))
 
+    def test_only_runtime_fetched_config_ships(self):
+        """config/ held 68 internal files (security policies, migration provenance,
+        live-runtime evidence) and all of them shipped, which also failed the Pages
+        failover smoke on every main push. Only a file a shipped module fetches by a
+        literal /config/<name>.json reference may reach public/ (2026-10-12)."""
+        self.fx.write("app.html", '<!doctype html><html><body><script src="/mod.js"></script></body></html>')
+        self.fx.write("mod.js", "fetch('/config/runtime.json');\n")
+        self.fx.write("config/runtime.json", '{"used":true}')
+        self.fx.write("config/internal-policy.json", '{"secret_shape":"internal"}')
+        code, out = self.fx.run_build()
+        self.assertEqual(code, 0, out)
+        self.assertTrue(os.path.isfile(os.path.join(self.fx.dir, "public", "config", "runtime.json")))
+        self.assertFalse(os.path.exists(os.path.join(self.fx.dir, "public", "config", "internal-policy.json")))
+
     def test_a_dropped_vendor_directory_fails_the_build(self):
         # VIOLATOR. Before this check the same tree printed VERCEL_BUILD=PASS.
         self.fx.patch_build("for dir in vendor i18n", "for dir in i18n")

@@ -36,11 +36,23 @@ def artifact_check() -> int:
     if not cname.is_file() or cname.read_text(encoding="utf-8").strip() != "sydomega.com":
         failures.append("CNAME must contain exactly sydomega.com")
 
+    # config/ stays forbidden except files a shipped page or module fetches by a
+    # literal /config/<name>.json reference (vercel-build.sh ships exactly those).
+    runtime_config = set()
+    for shipped in list(ROOT.rglob("*.html")) + list(ROOT.rglob("*.js")):
+        try:
+            body = shipped.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        runtime_config.update(m.lstrip("/") for m in re.findall(r"/config/[A-Za-z0-9._-]+\.json", body))
+
     for path in ROOT.rglob("*"):
         if not path.is_file():
             continue
         rel = path.relative_to(ROOT)
-        if any(part in FORBIDDEN_DIRS for part in rel.parts):
+        if rel.parts[0] == "config" and len(rel.parts) == 2 and rel.as_posix() in runtime_config:
+            pass  # fetched at runtime by a shipped module (runtime_config above)
+        elif any(part in FORBIDDEN_DIRS for part in rel.parts):
             failures.append(f"forbidden directory in artifact: {rel}")
             continue
         if path.suffix.lower() in {".pem", ".key", ".p12", ".pfx"}:

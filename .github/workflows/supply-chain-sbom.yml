@@ -43,8 +43,6 @@ jobs:
           fi
 
       - name: List Semgrep findings
-        # The SARIF goes to code scanning, which most readers of this log cannot
-        # open; without this a red run shows only "N findings".
         if: failure()
         run: |
           python3 - <<'PY'
@@ -61,12 +59,13 @@ jobs:
           PY
 
       - name: Upload Semgrep SARIF
-        if: always()
+        if: ${{ always() && hashFiles('semgrep.sarif') != '' }}
         uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
         with:
           sarif_file: semgrep.sarif
 
       - name: Trivy filesystem vulnerability scan
+        if: ${{ success() }}
         uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36.0 lineage
         with:
           scan-type: fs
@@ -78,12 +77,13 @@ jobs:
           output: trivy-results.sarif
 
       - name: Upload Trivy SARIF
-        if: always()
+        if: ${{ always() && hashFiles('trivy-results.sarif') != '' }}
         uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
         with:
           sarif_file: trivy-results.sarif
 
       - name: Trivy IaC/misconfiguration scan
+        if: ${{ success() }}
         uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36.0 lineage
         with:
           scan-type: config
@@ -94,7 +94,7 @@ jobs:
           output: trivy-config.sarif
 
       - name: Upload Trivy config SARIF
-        if: always()
+        if: ${{ always() && hashFiles('trivy-config.sarif') != '' }}
         uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
         with:
           sarif_file: trivy-config.sarif
@@ -103,6 +103,7 @@ jobs:
           category: trivy-config
 
       - name: Generate dependency SBOM
+        if: ${{ success() }}
         uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36.0 lineage
         with:
           scan-type: fs
@@ -112,6 +113,7 @@ jobs:
           exit-code: '0'
 
       - name: Validate SBOM artifact
+        if: ${{ success() }}
         run: |
           test -s omega-sbom.cdx.json
           python3 - <<'PY'
@@ -126,7 +128,7 @@ jobs:
           PY
 
       - name: Upload SBOM
-        if: always()
+        if: ${{ always() && hashFiles('omega-sbom.cdx.json') != '' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: omega-sbom

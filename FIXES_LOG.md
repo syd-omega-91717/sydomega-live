@@ -23115,6 +23115,19 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   `OmegaMFA.stepUp()`, retries once on success, and otherwise reports `aal2_no_factor` with where to
   enrol (Settings → Two-factor sign-in; `mfa_enrolment_enabled` is `true` live). Stub test: aal2 →
   step-up → retry succeeds (2 calls); no factor → 1 call, the enrol message.
+- **Follow-up, same day (owner path + remaining RPCs).**
+  - **MFA setup verified in a browser as the owner.** `get_platform_flag('mfa_enrolment_enabled')` →
+    `true` for the owner (live). The two-factor section renders and "Turn on two-factor" calls
+    `mfa.enroll` and shows the scan/verify step — but it sits on Settings' ACCOUNT tab, not the
+    default. `settings.html#two-factor` now opens that tab (rendered: visible, enroll called), and
+    approvals offers to go there on `aal2_no_factor`.
+  - **19 of 23 blocked RPCs restored** (20261012091641, applied live as version `20261012091641`)
+    after reading each body; 4 kept blocked with reasons (GAP_ANALYSIS.md §S). Live probe as a
+    non-owner: every owner action refused; own-project update ok; anon 42501. `live-grants.json`
+    `functions` 123 → 142; `remote-migrations.json` 380.
+  - **Found, not fixed: `set_consult_status` / `set_contract_status` / `set_reservation_status`** take
+    `uuid` for `bigint` ids (`operator does not exist: bigint = uuid` as owner@aal2). Needs DROP +
+    recreate — owner's confirmation required; recorded open.
 
 ## One GitHub Pages deployer: the stock templates published the raw repository (2026-10-12)
 

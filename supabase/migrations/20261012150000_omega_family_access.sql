@@ -268,8 +268,12 @@ as $function$
   FROM numbered;
 $function$;
 
--- Invoker: other members' names already read null under profiles RLS; the
--- predicate is defence in depth.
+-- Invoker: under self-or-owner profiles RLS the inner join already drops other
+-- members' rows, so this predicate changes nothing today. It is defence in
+-- depth for the day the function or the policy changes, not the guarantee.
+-- The member-visible name paths that DO need the filter are
+-- private.public_leaderboard (above) and the service-role Edge Functions
+-- rankings and snapshot-leaderboard.
 create or replace function public.get_activity_feed(p_limit integer default 20, p_offset integer default 0)
  returns table(id uuid, user_id uuid, display_name text, element text, activity_type text, title text, body text, metadata jsonb, created_at timestamp with time zone)
  language sql

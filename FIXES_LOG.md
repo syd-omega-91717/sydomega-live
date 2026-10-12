@@ -23017,6 +23017,49 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   With the pre-bridge function list it fails exactly `omega-recovery.js:12` and `:13`; current passes.
   4 new tests (missing function, executable function, the approvals wrapper, comments) — 18 total.
 
+## 12 client RPCs — approvals, delete-account, KYC, Creation Studio, knowledge search — failed 42501 for everyone, the owner included (2026-10-12)
+
+- **Found by** testing whether the functions `grant-contract.py` approves can actually run, not just
+  be called. Impersonating the owner at aal2 (`DO` block, `SET LOCAL ROLE authenticated`, claims with
+  `aal: aal2`, ending in a deliberate exception): `public.revoke_member(...)` →
+  `ERR 42501 permission denied for function revoke_member`. Each `public.<fn>` is a SECURITY INVOKER
+  SQL wrapper running `select private.<fn>(...)` as the caller, so it needs EXECUTE on the private
+  function too. A live join of every authenticated-executable invoker wrapper against the private
+  functions it calls found **35** lacking it; **12** are called by client code.
+- **Cause.** 20261006193000 / 20261006201000 / 20261007001000 / 20261007002000 / 20261008032308
+  each revoke EXECUTE on `private.<fn>` from `authenticated` in the same file that grants
+  `public.<fn>` to it; 20261007120000 (`approvals_rpc_execute_restore`) re-granted only the
+  wrappers. Contradictory intent, not a deliberate disable. Dead since 2026-10-06/07:
+  `approvals.js` approve / grant-permanent / revoke / KYC review / KYC intake switch;
+  `settings.html` delete account; `profile.html` KYC submit; `interface-omni.html` platform flag;
+  `omega-creation-studio.js` create project / asset / provider job; `omega-intel-fabric.js`
+  hybrid search. Every page checked `.error`, so it showed a failure, never a false success.
+- **Fix.** `20261012064126_omega_restore_private_rpc_execute_20261012` grants EXECUTE on those 12
+  private functions to `authenticated` — after reading each body live: owner actions return
+  `forbidden` unless `is_platform_owner()` and `aal2_required` below aal2; member actions write only
+  `auth.uid()`'s rows (`delete_account`, `submit_kyc`, `omega_submit_provider_job` also need aal2).
+  The repo's standard bridge (`private.reject_member`, `private.extend_trial` already held it).
+  The other 23 are called by nothing and stay blocked (`GAP_ANALYSIS.md` §S).
+- **Second bug behind the first.** Knowledge search then failed `42883 operator does not exist:
+  extensions.vector <=> extensions.vector` — pinned `search_path=''`, bare `<=>`, and operators
+  resolve through the path, so it failed at plan time even with no embedding.
+  `20261012064247` sets `search_path = extensions` (every table reference is qualified; ALTER keeps
+  20261008032308 the single definition). It now runs and returns 0 rows: 0 chunks exist.
+- **Verified live** (one `DO` block, rolled back by its closing exception):
+  `owner.revoke={"ok": true…} owner.approve=true owner.permanent=target_not_found_or_owner
+  member.approve=forbidden member.flag=forbidden member.kycreview=forbidden member.project=true
+  member.delete@aal1=aal2_required anon.approve=ERR 42501`. Security advisor unchanged.
+- **`profile.html` owner panel** (open since earlier today) now calls the same three RPCs instead of
+  writing ungranted `profiles` columns; the "N minutes" picker is fixed at 9.1717, which is exactly
+  `approve_member`'s trial. Stub-client test: correct RPC per button, reload only on `ok:true`,
+  an MFA-specific message for `aal2_required`. Its `KNOWN` entry is removed (2 remain).
+- **Gated.** `live-grants.json` `functions` now lists what `authenticated` can call **end to end**
+  (123): authenticated-executable, minus invoker wrappers over a non-executable private function.
+  Query in `grant-contract.py --help`. On the pre-fix list the gate fails all 14 call sites above.
+- **Parallel work noted.** Another agent applied `20261012060927_harden_stripe_rpc_boundaries` live
+  and merged it to `main` meanwhile; it only drops a legacy `apply_subscription_event` overload — no
+  overlap. `remote-migrations.json` carries all 379 versions.
+
 ## The site shipped all 68 internal `config/` files, and the Pages failover failed on every push because of it (2026-10-12)
 
 - **Found by** reading why `Omega Static Failover` (the GitHub Pages fallback while Vercel is blocked)

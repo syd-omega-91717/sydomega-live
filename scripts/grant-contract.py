@@ -25,10 +25,13 @@ supabase/live-grants.json (the `authenticated` role, captured live):
   delete   table-level DELETE
 
   rpc      every `.rpc('fn')` -- and `rpcResult('fn', ...)`, approvals.js's wrapper --
-           must name a public function `authenticated` may EXECUTE (snapshot
+           must name a public function `authenticated` can call END TO END (snapshot
            `functions`). recovery.html called two functions that existed only in
            the private schema, so both of its buttons failed for every member until
-           migration 20261012014343 bridged them.
+           migration 20261012014343 bridged them. EXECUTE on the public function is
+           not enough: a SECURITY INVOKER wrapper calls private.<fn> as the caller,
+           and 12 client-called wrappers (approvals, delete-account, KYC, creation
+           studio) failed 42501 that way until 20261012064126.
 
 Tables missing from the snapshot are skipped (scripts/schema-dictionary.py owns
 names that do not exist). Embedded resources in a select (`rel!inner(col)`) are
@@ -63,6 +66,20 @@ replace `relations` in supabase/live-grants.json; read-only):
           or (cols.privilege_type = 'UPDATE' and substr(tbl.t,3,1) = '-'))), '{}'::jsonb))))
   from tbl;
 
+FUNCTIONS (replace `functions`): public functions authenticated may EXECUTE, minus
+SECURITY INVOKER ones that call a private function authenticated may not execute:
+
+  with pub as (select p.proname, p.prosecdef, p.prosrc from pg_proc p
+               where p.pronamespace = 'public'::regnamespace
+                 and has_function_privilege('authenticated', p.oid, 'EXECUTE')),
+  blocked as (select distinct pub.proname from pub,
+                regexp_matches(pub.prosrc, 'private\\.([a-z0-9_]+)\\s*\\(', 'g') m
+              where not pub.prosecdef and not exists (select 1 from pg_proc pp
+                where pp.pronamespace = 'private'::regnamespace and pp.proname = m[1]
+                  and has_function_privilege('authenticated', pp.oid, 'EXECUTE')))
+  select jsonb_agg(distinct proname order by proname) from pub
+  where proname not in (select proname from blocked);
+
   python3 scripts/grant-contract.py           check the repo
   python3 scripts/grant-contract.py --help    this text
 
@@ -82,9 +99,6 @@ SNAPSHOT = os.path.join(ROOT, 'supabase', 'live-grants.json')
 
 # (file, table, op) -> why it is open. Each must still match a call, or the run fails.
 KNOWN = {
-    ('profile.html', 'profiles', 'update'):
-        "owner access panel writes access_approved/is_trial/trial_expires_at directly; "
-        "approvals.html uses RPCs. GAP_ANALYSIS.md S, opened 2026-10-12",
     ('omega-graphify-integration.js', 'notifications', 'insert'):
         "fallback notification insert; server-side notify_member owns the table; logged, "
         "not silent. GAP_ANALYSIS.md S, opened 2026-10-12",
@@ -225,7 +239,7 @@ def check(root=ROOT):
                     seen.add(key)
                     continue
                 findings.append((f, s.count('\n', 0, m.start()) + 1, name, 'rpc',
-                                 'no public function members may EXECUTE (missing, private-only, or not granted)'))
+                                 'no public function members can call end to end (missing, private-only, not granted, or its private body is not granted)'))
         for m in FROM.finditer(s):
             if 'storage' in s[max(0, m.start() - 12):m.start()] or in_comment(s, m.start()):
                 continue

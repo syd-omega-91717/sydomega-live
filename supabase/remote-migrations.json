@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-12",
+  "_captured": "2026-10-12T06:11:00Z",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 376,
-  "latestRemoteMigration": "20261012014343",
+  "remoteMigrationCount": 377,
+  "latestRemoteMigration": "20261012060927",
   "versions": [
     "0001",
     "0002",
@@ -379,7 +379,8 @@
     "20261008032846",
     "20261009020000",
     "20261011120000",
-    "20261012014343"
+    "20261012014343",
+    "20261012060927"
   ],
   "migrations": [
     {
@@ -1885,6 +1886,10 @@
     {
       "version": "20261012014343",
       "name": "omega_recovery_checkpoint_public_rpc_bridge_20261012"
+    },
+    {
+      "version": "20261012060927",
+      "name": "harden_stripe_rpc_boundaries_20261012"
     }
   ]
 }

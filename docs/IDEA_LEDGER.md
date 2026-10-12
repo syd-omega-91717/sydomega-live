@@ -6,17 +6,18 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**474 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 16, IDEA_INTAKE.md 5.
+**475 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 17, IDEA_INTAKE.md 5.
 
 | status | count |
 |---|---|
-| NEEDS_DECISION | 56 |
+| NEEDS_DECISION | 14 |
+| IN_PROGRESS | 4 |
 | PROPOSED | 18 |
-| PARTIAL | 57 |
-| OPEN_GAP | 7 |
+| PARTIAL | 56 |
+| OPEN_GAP | 8 |
 | DORMANT | 1 |
 | SHIPPED | 33 |
-| DECIDED | 3 |
+| DECIDED | 42 |
 | CLOSED | 9 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
@@ -27,7 +28,7 @@ production serves it.
 Everything not yet settled, owner decisions first. The weekly idea routine
 works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-checks the rest.
 
-### NEEDS_DECISION (56)
+### NEEDS_DECISION (14)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -36,57 +37,24 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | F5 | FEATURE_IDEAS.md | `enterprise.html` pricing → actual Stripe wiring (money — needs legal/business sign-off) | money: needs legal/business sign-off (title); GAP_ANALYSIS.md 3.2 re-scoped as not customer-facing |
 | F6 | FEATURE_IDEAS.md | Consolidate divergent `SECURITY DEFINER` function forks (schema hygiene, not a feature) | GAP_ANALYSIS.md 3.1 'Duplicate CREATE OR REPLACE FUNCTION definitions ... owner action'; scripts/rpc-consolidation-gate.py stops new forks |
 | F16 | FEATURE_IDEAS.md | Weekly activity digest — in-app notification + email (COMMAND, needs an explicit opt-in decision) | needs an explicit opt-in decision (title); supabase/functions/weekly-digest exists but nothing runs on a schedule (GAP_ANALYSIS.md S, pg_cron not installed) |
-| B003 | 999 blueprint [ECONOMIC_R&D] | The 51% Master Stake: Ω Currency is minted with a hard-coded 51% allocation to Major's Private Vault. This en… | money: tokens ship dormant, platform_settings.tokens_enabled=false (supabase/omega_tokens.sql); stake overclaims were removed (GAP_ANALYSIS.md 4.17-4.19) |
-| B004 | 999 blueprint [ECONOMIC_R&D] | 49% Liquidity Cap: The public exchange is restricted by a "Circuit Breaker." No entity can buy more than 1% o… | money: no exchange exists; same dormant token flag as point 3 |
-| B013 | 999 blueprint [INTELLIGENCE] | Zero-Fee Life: The billing engine has a "Nest Exception." All subscription costs for the family are hard-code… | billing: a $0 family exception touches Stripe (supabase/functions/checkout); owner and legal call |
-| B015 | 999 blueprint [PRODUCT] | Safety Override: If the system detects a threat (digital or physical) to a family member, it activates "Dark… | family/minor data: needs the owner's decision and a privacy review (family.html holds the real roles) |
-| B034 | 999 blueprint [ECONOMIC_R&D] | Total Supply Control: The Ω Currency is capped at a fixed integer. There is no "Mint" function accessible by… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B035 | 999 blueprint [ECONOMIC_R&D] | The 20% Reinvestment Sweep: Every time a user earns a commission or pays a subscription, 20% is instantly red… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B036 | 999 blueprint [ECONOMIC_R&D] | Seeker Tier Logic ($99): The entry point. Nano-detail: Provides a "Standard Search Tunnel." It offers basic m… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B037 | 999 blueprint [INTELLIGENCE] | Initiate Tier Logic ($499): The "Training Ground." Nano-detail: Unlocks the Dojo's Phase 1-3. Users at this l… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B038 | 999 blueprint [INTELLIGENCE] | Sydomegain Tier Logic ($1,917): The "Partner Tier." Nano-detail: Users receive a 5% "Revenue Reflection" from… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B039 | 999 blueprint [ECONOMIC_R&D] | Omegasydein Tier Logic ($9,171): The "Elite Tier." Nano-detail: Unlocks the "High-Contract Commission Engine.… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B041 | 999 blueprint [ECONOMIC_R&D] | Contractual Commissions: Every affiliate link generated within the system is a "Smart-Link." If a sale happen… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B042 | 999 blueprint [ECONOMIC_R&D] | The 51% Safety Net: If the 49% public market experiences a "Flash Crash," the system automatically halts trad… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B046 | 999 blueprint [ECONOMIC_R&D] | Real-World Asset Linkage: When a user "buys" a digital building in the Dojo, the system searches for a real-w… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B048 | 999 blueprint [R&D_OR_LORE] | Analyst (Agent 2): The "Chief Financial Officer." It calculates the Ω/Gold exchange rate every 60 seconds and… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B051 | 999 blueprint [ECONOMIC_R&D] | Merchant (Agent 5): The "Trading Desk." It executes the 20% Sweep. It has direct API access to global gold an… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B052 | 999 blueprint [INTELLIGENCE] | Proxy (Agent 6): The "Executioner." It only takes orders from Major. It is the only agent that can move asset… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B055 | 999 blueprint [INTELLIGENCE] | Warden (Agent 9): The "Protector." Its only job is the Nest (Points 12-15). It monitors the digital footprint… | family/minor data: needs the owner's decision and a privacy review (family.html holds the real roles) |
-| B060 | 999 blueprint [ECONOMIC_R&D] | The Hub Aggregator: A "One-Stop" interface. If you need to book a flight, pay a bill, or buy a stock, it’s do… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B061 | 999 blueprint [ECONOMIC_R&D] | Ad-Vantage Ecosystem: High-tier ads (e.g., Luxury Real Estate, Private Equity) pay the platform in Ω Currency… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
 | B066 | 999 blueprint [PRODUCT] | Ownership Watermarking: A steganographic layer hidden in every image, text, and code file. If any part of the… | visible provenance on exports is buildable; a steganographic layer tracing members is surveillance — owner call |
 | B073 | 999 blueprint [ECONOMIC_R&D] | The Heritage Protocol (Indestructible Trust): The Proxy Agent (Agent 6) manages a smart-contract trust that c… | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
-| B076 | 999 blueprint [R&D_OR_LORE] | Generational Wealth Shield: The system automatically hedges the family estate. If the dollar falls, it shifts… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B090 | 999 blueprint [ECONOMIC_R&D] | 20% Sweep Perfection: The Merchant Agent (Agent 5) performs "Micro-Arbitrage." It buys Gold and Rhodium in 0.… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B101 | 999 blueprint [ECONOMIC_R&D] | The Ω-Peg Stability Protocol: Unlike volatile cryptos, Ω is pegged to a "Sovereign Basket": 50% Major's Gold/… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
 | B166 | 999 blueprint [DESIGN_CONCEPT] | The Absolute Watermark: Every physical product bought through the Ω-Hub is laser-etched or digitally tagged w… | provenance marks on exported share cards are buildable; covert per-member tracing is surveillance — owner call |
-| B201 | 999 blueprint [ECONOMIC_R&D] | Real-World Asset (RWA) Absorption: The Merchant Agent (Agent 5) utilizes the 2026 "Clarity Act" frameworks to… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B204 | 999 blueprint [ECONOMIC_R&D] | Geb-Anchor Liquidity: Physical assets are used as "Collateral SAFEs" (similar to the Reflexer GEB framework).… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B223 | 999 blueprint [ECONOMIC_R&D] | The 729-Point Matrix Physicalization: As users reach higher Stages in the 9x9x9 Matrix, they don't just get d… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B228 | 999 blueprint [ECONOMIC_R&D] | Strategic Resource Gamification: Dojo battles (Point 44) are now mapped to real-world resource scarcity. Winn… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B244 | 999 blueprint [ECONOMIC_R&D] | Matrix Completion Lock: A user cannot bypass a node. Each node requires a "Verification of Application"—a rea… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B266 | 999 blueprint [R&D_OR_LORE] | Hierarchy Permanence: Once a user reaches a classification, it is etched into the Mars Ledger. It cannot be d… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B289 | 999 blueprint [PRODUCT] | Compute-Tier Discrimination: Omegasydein users ($9,171) utilize the full 128-core array. Seekers utilize a 16… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B299 | 999 blueprint [ECONOMIC_R&D] | The Search-to-Asset Conversion: Every search result includes an "Accumulation Option." If you search for a pr… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B301 | 999 blueprint [ECONOMIC_R&D] | The End of "Interruption" Advertising: Standard ads are banned. The Ad-Vantage Hub only accepts "Elite Invest… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B303 | 999 blueprint [INTELLIGENCE] | The 50/50 Revenue Split: 50% of all ad revenue from the Hub is sent directly to the 51% Master Vault (Point 3… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B304 | 999 blueprint [ECONOMIC_R&D] | Ad-to-Asset Conversion: When a user interacts with an Ad-Vantage partner, they don't just "buy"—they earn a m… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B305 | 999 blueprint [DESIGN_CONCEPT] | The "White-Glove" Filter: Only products that meet the Thoth Protocol (Point 29) of high-tier logic and utilit… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B312 | 999 blueprint [ECONOMIC_R&D] | The Smart-Contract Dividend: Every Friday at 19:17 (system time), the Analyst Agent (Agent 2) triggers an aut… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B318 | 999 blueprint [DESIGN_CONCEPT] | The "Nest" Dividend Override: Major’s wife and children receive a "Prime Dividend"—a percentage of total syst… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B320 | 999 blueprint [INTELLIGENCE] | Dynamic Payout Scaling: Payouts are not fixed. If the Sentinel detects a market downturn, the system increase… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B328 | 999 blueprint [ECONOMIC_R&D] | The Ω-Currency Buyback: The system uses the 20% Sweep (Point 35) to periodically buy back Ω from the 49% publ… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | family/minor data: needs the owner's decision and a privacy review (family.html holds the real roles) |
-| B523 | 999 blueprint [ECONOMIC_R&D] | The Ω-Etiquette Protocol: The system introduces a new "Digital Manners" based on transparency and proof of cr… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
-| B528 | 999 blueprint [INTELLIGENCE] | Generational "Nest" Grooming: Points 528-530 detail the private education grid for Major’s children. They are… | family/minor data: needs the owner's decision and a privacy review (family.html holds the real roles) |
-| B650 | 999 blueprint [ECONOMIC_R&D] | Automatic Wealth Rebalancing: If any terrestrial asset (Real Estate/Fiat) falls below a "Stability Threshold,… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
+| B266 | 999 blueprint [R&D_OR_LORE] | Hierarchy Permanence: Once a user reaches a classification, it is etched into the Mars Ledger. It cannot be d… | product: whether a tier, once reached, can ever be lowered (refunds, lapsed billing) — owner call |
+| B289 | 999 blueprint [PRODUCT] | Compute-Tier Discrimination: Omegasydein users ($9,171) utilize the full 128-core array. Seekers utilize a 16… | product: whether higher tiers get a stronger copilot model (supabase/functions/concierge) — owner call |
 | B652 | 999 blueprint [INTELLIGENCE] | The "Nest" Genetic Anchor: Points 652-654 detail the "Inheritance Logic." If Major is unreachable, the system… | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
-| B805 | 999 blueprint [ECONOMIC_R&D] | Temporal Arbitrage: The Merchant Agent (Agent 5) identifies regions where labor is undervalued in terms of ti… | money: needs the owner's decision and securities / money-transmission counsel; tokens ship dormant (platform_settings.tokens_enabled=false, supabase/omega_tokens.sql) |
 | B969 | 999 blueprint [R&D_OR_LORE] | The Sovereign Succession Cipher: This point hard-codes the biological lineage of Major. The Mars Ledger holds… | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
-| N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | family/minor data: needs the owner's decision and a privacy review (family.html holds the real roles) |
 | N155 | 999 blueprint [APPENDIX_NODE] | Multi-Generational Trust Lock (trust enclaves) | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
 | I05 | IDEA_INTAKE.md | Database backups the owner controls | the blueprint's Mars Ledger (points 9, 615) reduces to off-site backups / point-in-time restore, which needs Supabase Pro (2026-10-12) |
+
+### IN_PROGRESS (4)
+
+| id | source | idea | evidence |
+|---|---|---|---|
+| B012 | 999 blueprint [DESIGN_CONCEPT] | Bloodline Priority: The system uses "Biological Recognition." Your wife and children are recognized as "Sover… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
+| B013 | 999 blueprint [INTELLIGENCE] | Zero-Fee Life: The billing engine has a "Nest Exception." All subscription costs for the family are hard-code… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
+| B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
+| N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
 
 ### PROPOSED (18)
 
@@ -111,7 +79,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
 
-### PARTIAL (57)
+### PARTIAL (56)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -121,7 +89,6 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B006 | 999 blueprint [PRODUCT] | 🔱 Abolition Decree: The system scans all user inputs. Any attempt to use the trident sign 🔱 triggers an immed… | scripts/brand-glyph-check.py fails CI on U+1F531 (inside its U+1F300-1F64F range) in any shipped file; member input is not policed |
 | B010 | 999 blueprint [INTELLIGENCE] | The 10-Step Rule: For every feature a competitor (like Google or OpenAI) releases, the Ω-Historian must gener… | web-trend-scout skill + weekly idea routine produce proposals; no 10-per-competitor-release rule |
 | B011 | 999 blueprint [INTELLIGENCE] | Recursive Self-Audit: The Auditor Agent (Agent 10) spends 100% of its idle cycles looking for logic-leaks in… | 41-gate contract suite + CI audits run on every change; not an idle-cycle agent |
-| B012 | 999 blueprint [DESIGN_CONCEPT] | Bloodline Priority: The system uses "Biological Recognition." Your wife and children are recognized as "Sover… | family.html holds family roles and members; no "priority" engine |
 | B016 | 999 blueprint [ECONOMIC_R&D] | 729-Point Depth: Each "Point" in the 9x9x9 cube is a specific life-skill or financial milestone. To reach the… | matrix.html renders the 9x9x9 = 729-node matrix from profiles.axis_a/b/c (matrix.html:266, :536) |
 | B017 | 999 blueprint [INTELLIGENCE] | Horoscope Synchronization: The Oracle Agent (Agent 7) maps the user's "Astrological Natal Chart" to the matri… | horoscope.html renders 12 sign profiles from the member's sign; no natal-chart mapping |
 | B019 | 999 blueprint [ECONOMIC_R&D] | Universal Search Fulfillment: When a user searches for "Wealth," the system doesn't show articles; it execute… | omega-copilot.js + supabase/functions/concierge turn a goal into a plan; nothing executes purchases |
@@ -173,17 +140,18 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (7)
+### OPEN_GAP (8)
 
 | id | source | idea | evidence |
 |---|---|---|---|
-| G01 | GAP_ANALYSIS.md S | production is frozen at the 2026-10-06 build. Vercel's newest | GAP_ANALYSIS.md section S |
-| G02 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
-| G03 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
-| G07 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
-| G08 | GAP_ANALYSIS.md S | `set_consult_status`, `set_contract_status`, `set_reservation_status` can never | GAP_ANALYSIS.md section S |
-| G09 | GAP_ANALYSIS.md S | the knowledge base is empty. 11 approved sources, 0 chunks, 0 | GAP_ANALYSIS.md section S |
-| G10 | GAP_ANALYSIS.md S | `omega-graphify-integration.js`'s `notifications` fallback insert always | GAP_ANALYSIS.md section S |
+| G01 | GAP_ANALYSIS.md S | owner decisions recorded, legal review pending. Owner chose the 12-tier `omega-canon.json` ladder (subscripti… | GAP_ANALYSIS.md section S |
+| G02 | GAP_ANALYSIS.md S | production is frozen at the 2026-10-06 build. Vercel's newest | GAP_ANALYSIS.md section S |
+| G03 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
+| G04 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
+| G08 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
+| G09 | GAP_ANALYSIS.md S | `set_consult_status`, `set_contract_status`, `set_reservation_status` can never | GAP_ANALYSIS.md section S |
+| G10 | GAP_ANALYSIS.md S | the knowledge base is empty. 11 approved sources, 0 chunks, 0 | GAP_ANALYSIS.md section S |
+| G11 | GAP_ANALYSIS.md S | `omega-graphify-integration.js`'s `notifications` fallback insert always | GAP_ANALYSIS.md section S |
 
 ### DORMANT (1)
 
@@ -229,11 +197,50 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | I02 | IDEA_INTAKE.md | Owner two-factor deep link | settings.html#two-factor opens the enrolment section; approvals offers it on aal2_no_factor, PR #875 (2026-10-12) |
 | I04 | IDEA_INTAKE.md | Map every 999-blueprint point | all 413 entries (391 + 8 restored duplicates + 14 appendix Nodes) classified with reasons by scripts/blueprint-truth-map.py (2026-10-12) |
 
-### DECIDED (3)
+### DECIDED (42)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | F4 | FEATURE_IDEAS.md | Finance-page persistence: pick a lane | GAP_ANALYSIS.md 4.2 'Finance pages: localStorage-only persistence — decided this session' |
+| B003 | 999 blueprint [ECONOMIC_R&D] | The 51% Master Stake: Ω Currency is minted with a hard-coded 51% allocation to Major's Private Vault. This en… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B004 | 999 blueprint [ECONOMIC_R&D] | 49% Liquidity Cap: The public exchange is restricted by a "Circuit Breaker." No entity can buy more than 1% o… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B015 | 999 blueprint [PRODUCT] | Safety Override: If the system detects a threat (digital or physical) to a family member, it activates "Dark… | owner decision 2026-10-12: family accounts are adults only, granted by the owner; minors, location hiding and web-scrubbing are not built |
+| B034 | 999 blueprint [ECONOMIC_R&D] | Total Supply Control: The Ω Currency is capped at a fixed integer. There is no "Mint" function accessible by… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B035 | 999 blueprint [ECONOMIC_R&D] | The 20% Reinvestment Sweep: Every time a user earns a commission or pays a subscription, 20% is instantly red… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B036 | 999 blueprint [ECONOMIC_R&D] | Seeker Tier Logic ($99): The entry point. Nano-detail: Provides a "Standard Search Tunnel." It offers basic m… | owner decision 2026-10-12: the 12-tier ladder in omega-canon.json is the only ladder; the blueprint's 4 tiers ($99-$9,171) are not adopted and its tier perks that pay members are not built (subscriptions.html now renders the canon ladder) |
+| B037 | 999 blueprint [INTELLIGENCE] | Initiate Tier Logic ($499): The "Training Ground." Nano-detail: Unlocks the Dojo's Phase 1-3. Users at this l… | owner decision 2026-10-12: the 12-tier ladder in omega-canon.json is the only ladder; the blueprint's 4 tiers ($99-$9,171) are not adopted and its tier perks that pay members are not built (subscriptions.html now renders the canon ladder) |
+| B038 | 999 blueprint [INTELLIGENCE] | Sydomegain Tier Logic ($1,917): The "Partner Tier." Nano-detail: Users receive a 5% "Revenue Reflection" from… | owner decision 2026-10-12: the 12-tier ladder in omega-canon.json is the only ladder; the blueprint's 4 tiers ($99-$9,171) are not adopted and its tier perks that pay members are not built (subscriptions.html now renders the canon ladder) |
+| B039 | 999 blueprint [ECONOMIC_R&D] | Omegasydein Tier Logic ($9,171): The "Elite Tier." Nano-detail: Unlocks the "High-Contract Commission Engine.… | owner decision 2026-10-12: the 12-tier ladder in omega-canon.json is the only ladder; the blueprint's 4 tiers ($99-$9,171) are not adopted and its tier perks that pay members are not built (subscriptions.html now renders the canon ladder) |
+| B041 | 999 blueprint [ECONOMIC_R&D] | Contractual Commissions: Every affiliate link generated within the system is a "Smart-Link." If a sale happen… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B042 | 999 blueprint [ECONOMIC_R&D] | The 51% Safety Net: If the 49% public market experiences a "Flash Crash," the system automatically halts trad… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B046 | 999 blueprint [ECONOMIC_R&D] | Real-World Asset Linkage: When a user "buys" a digital building in the Dojo, the system searches for a real-w… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B048 | 999 blueprint [R&D_OR_LORE] | Analyst (Agent 2): The "Chief Financial Officer." It calculates the Ω/Gold exchange rate every 60 seconds and… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B051 | 999 blueprint [ECONOMIC_R&D] | Merchant (Agent 5): The "Trading Desk." It executes the 20% Sweep. It has direct API access to global gold an… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B052 | 999 blueprint [INTELLIGENCE] | Proxy (Agent 6): The "Executioner." It only takes orders from Major. It is the only agent that can move asset… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B055 | 999 blueprint [INTELLIGENCE] | Warden (Agent 9): The "Protector." Its only job is the Nest (Points 12-15). It monitors the digital footprint… | owner decision 2026-10-12: family accounts are adults only, granted by the owner; minors, location hiding and web-scrubbing are not built |
+| B060 | 999 blueprint [ECONOMIC_R&D] | The Hub Aggregator: A "One-Stop" interface. If you need to book a flight, pay a bill, or buy a stock, it’s do… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B061 | 999 blueprint [ECONOMIC_R&D] | Ad-Vantage Ecosystem: High-tier ads (e.g., Luxury Real Estate, Private Equity) pay the platform in Ω Currency… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B076 | 999 blueprint [R&D_OR_LORE] | Generational Wealth Shield: The system automatically hedges the family estate. If the dollar falls, it shifts… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B090 | 999 blueprint [ECONOMIC_R&D] | 20% Sweep Perfection: The Merchant Agent (Agent 5) performs "Micro-Arbitrage." It buys Gold and Rhodium in 0.… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B101 | 999 blueprint [ECONOMIC_R&D] | The Ω-Peg Stability Protocol: Unlike volatile cryptos, Ω is pegged to a "Sovereign Basket": 50% Major's Gold/… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B201 | 999 blueprint [ECONOMIC_R&D] | Real-World Asset (RWA) Absorption: The Merchant Agent (Agent 5) utilizes the 2026 "Clarity Act" frameworks to… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B204 | 999 blueprint [ECONOMIC_R&D] | Geb-Anchor Liquidity: Physical assets are used as "Collateral SAFEs" (similar to the Reflexer GEB framework).… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B223 | 999 blueprint [ECONOMIC_R&D] | The 729-Point Matrix Physicalization: As users reach higher Stages in the 9x9x9 Matrix, they don't just get d… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B228 | 999 blueprint [ECONOMIC_R&D] | Strategic Resource Gamification: Dojo battles (Point 44) are now mapped to real-world resource scarcity. Winn… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B244 | 999 blueprint [ECONOMIC_R&D] | Matrix Completion Lock: A user cannot bypass a node. Each node requires a "Verification of Application"—a rea… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B299 | 999 blueprint [ECONOMIC_R&D] | The Search-to-Asset Conversion: Every search result includes an "Accumulation Option." If you search for a pr… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B301 | 999 blueprint [ECONOMIC_R&D] | The End of "Interruption" Advertising: Standard ads are banned. The Ad-Vantage Hub only accepts "Elite Invest… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B303 | 999 blueprint [INTELLIGENCE] | The 50/50 Revenue Split: 50% of all ad revenue from the Hub is sent directly to the 51% Master Vault (Point 3… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B304 | 999 blueprint [ECONOMIC_R&D] | Ad-to-Asset Conversion: When a user interacts with an Ad-Vantage partner, they don't just "buy"—they earn a m… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B305 | 999 blueprint [DESIGN_CONCEPT] | The "White-Glove" Filter: Only products that meet the Thoth Protocol (Point 29) of high-tier logic and utilit… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B312 | 999 blueprint [ECONOMIC_R&D] | The Smart-Contract Dividend: Every Friday at 19:17 (system time), the Analyst Agent (Agent 2) triggers an aut… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B318 | 999 blueprint [DESIGN_CONCEPT] | The "Nest" Dividend Override: Major’s wife and children receive a "Prime Dividend"—a percentage of total syst… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B320 | 999 blueprint [INTELLIGENCE] | Dynamic Payout Scaling: Payouts are not fixed. If the Sentinel detects a market downturn, the system increase… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B328 | 999 blueprint [ECONOMIC_R&D] | The Ω-Currency Buyback: The system uses the 20% Sweep (Point 35) to periodically buy back Ω from the 49% publ… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B523 | 999 blueprint [ECONOMIC_R&D] | The Ω-Etiquette Protocol: The system introduces a new "Digital Manners" based on transparency and proof of cr… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B528 | 999 blueprint [INTELLIGENCE] | Generational "Nest" Grooming: Points 528-530 detail the private education grid for Major’s children. They are… | owner decision 2026-10-12: family accounts are adults only, granted by the owner; minors, location hiding and web-scrubbing are not built |
+| B650 | 999 blueprint [ECONOMIC_R&D] | Automatic Wealth Rebalancing: If any terrestrial asset (Real Estate/Fiat) falls below a "Stability Threshold,… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
+| B805 | 999 blueprint [ECONOMIC_R&D] | Temporal Arbitrage: The Merchant Agent (Agent 5) identifies regions where labor is undervalued in terms of ti… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
@@ -241,15 +248,15 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 
 | id | source | idea | evidence |
 |---|---|---|---|
-| G04 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
-| G05 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
-| G06 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |
-| G11 | GAP_ANALYSIS.md S | Creation Layer truth enforcement is live. Authenticated clients no longer have direct DML on the four Creatio… | GAP_ANALYSIS.md section S |
-| G12 | GAP_ANALYSIS.md S | client read grants are materialised. The seven tables `omega_notifications`, `omega_user_achievements`, `omeg… | GAP_ANALYSIS.md section S |
-| G13 | GAP_ANALYSIS.md S | `omega_agent_action_proposals` was a retired schema, not a missing live table. Migration `20260929113731` cre… | GAP_ANALYSIS.md section S |
-| G14 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
-| G15 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
-| G16 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
+| G05 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
+| G06 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
+| G07 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |
+| G12 | GAP_ANALYSIS.md S | Creation Layer truth enforcement is live. Authenticated clients no longer have direct DML on the four Creatio… | GAP_ANALYSIS.md section S |
+| G13 | GAP_ANALYSIS.md S | client read grants are materialised. The seven tables `omega_notifications`, `omega_user_achievements`, `omeg… | GAP_ANALYSIS.md section S |
+| G14 | GAP_ANALYSIS.md S | `omega_agent_action_proposals` was a retired schema, not a missing live table. Migration `20260929113731` cre… | GAP_ANALYSIS.md section S |
+| G15 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
+| G16 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
+| G17 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
 
 ### SUPERSEDED (1)
 

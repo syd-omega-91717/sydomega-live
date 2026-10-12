@@ -70,6 +70,16 @@ WHY = {
     'money': 'money: needs the owner\'s decision and securities / money-transmission counsel; tokens ship dormant '
              '(platform_settings.tokens_enabled=false, supabase/omega_tokens.sql)',
     'family': 'family/minor data: needs the owner\'s decision and a privacy review (family.html holds the real roles)',
+    'decided_money': 'owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; '
+                     'payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). '
+                     'Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md)',
+    'decided_tiers': 'owner decision 2026-10-12: the 12-tier ladder in omega-canon.json is the only ladder; the blueprint\'s '
+                     '4 tiers ($99-$9,171) are not adopted and its tier perks that pay members are not built '
+                     '(subscriptions.html now renders the canon ladder)',
+    'decided_family_no': 'owner decision 2026-10-12: family accounts are adults only, granted by the owner; minors, '
+                         'location hiding and web-scrubbing are not built',
+    'family_build': 'owner decision 2026-10-12: adult family members get free access granted by the owner and linked as '
+                    'family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md)',
     'succession': 'succession is a legal instrument plus a second owner account; only 1 owner account exists live '
                   '(GAP_ANALYSIS.md S)',
 }
@@ -117,17 +127,21 @@ MAP.update(many(R, 'eugenics', 895))
 MAP.update(many(R, 'unlicensed', 113, 114))
 MAP.update({315: (R, 'multi-level commission on a recruit\'s trades for 99 years: a pyramid structure, will not be built'),
             502: (R, 'claims ownership of members\' own creative work: will not be built'),
-            305: (D, 'money')})
-MAP.update(many(D, 'money', 34, 35, 36, 37, 38, 39, 41, 42, 46, 48, 51, 52, 60, 61, 76, 90, 101, 201, 204, 223, 228,
-                244, 266, 289, 299, 301, 303, 304, 312, 318, 320, 328, 523, 650, 805))
-MAP.update(many(D, 'family', 15, 55, 455, 528))
+            305: ('DECIDED', 'decided_money')})
+MAP.update(many('DECIDED', 'decided_tiers', 36, 37, 38, 39))
+MAP.update(many('DECIDED', 'decided_money', 34, 35, 41, 42, 46, 48, 51, 52, 60, 61, 76, 90, 101, 201, 204, 223, 228,
+                244, 299, 301, 303, 304, 312, 318, 320, 328, 523, 650, 805))
+MAP.update({266: (D, 'product: whether a tier, once reached, can ever be lowered (refunds, lapsed billing) — owner call'),
+            289: (D, 'product: whether higher tiers get a stronger copilot model (supabase/functions/concierge) — owner call')})
+MAP.update(many('DECIDED', 'decided_family_no', 15, 55, 528))
+MAP.update(many('IN_PROGRESS', 'family_build', 455))
 MAP.update(many(D, 'succession', 73, 652, 969))
 MAP.update({
     166: (D, 'provenance marks on exported share cards are buildable; covert per-member tracing is surveillance — owner call'),
     66: (D, 'visible provenance on exports is buildable; a steganographic layer tracing members is surveillance — owner call'),
 })
 MAP.update({
-    12: (P, 'family.html holds family roles and members; no "priority" engine'),
+    12: ('IN_PROGRESS', 'family_build'),
     16: (P, 'matrix.html renders the 9x9x9 = 729-node matrix from profiles.axis_a/b/c (matrix.html:266, :536)'),
     234: (P, 'matrix.html: three axes (Knowledge, Mastery, Contribution) to depth 9 = 729 nodes (matrix.html:389)'),
     235: (P, 'matrix.html axis A (Knowledge); numeracy curriculum not built'),
@@ -179,12 +193,12 @@ MAP.update({
 })
 MAP.update({  # mapped by hand 2026-10-12 (first ledger batch), kept verbatim
     1: (P, 'code-level ownership is profiles.is_owner + is_platform_owner() (CLAUDE.md §1); legal title is outside code'),
-    3: (D, 'money: tokens ship dormant, platform_settings.tokens_enabled=false (supabase/omega_tokens.sql); stake overclaims were removed (GAP_ANALYSIS.md 4.17-4.19)'),
-    4: (D, 'money: no exchange exists; same dormant token flag as point 3'),
+    3: ('DECIDED', 'decided_money'),
+    4: ('DECIDED', 'decided_money'),
     5: (P, 'the autonomous pipeline never merges to main and never flips a flag (CLAUDE.md §10); the weekly idea routine opens draft PRs only'),
     10: (P, 'web-trend-scout skill + weekly idea routine produce proposals; no 10-per-competitor-release rule'),
     11: (P, '41-gate contract suite + CI audits run on every change; not an idle-cycle agent'),
-    13: (D, 'billing: a $0 family exception touches Stripe (supabase/functions/checkout); owner and legal call'),
+    13: ('IN_PROGRESS', 'family_build'),
     17: (P, "horoscope.html renders 12 sign profiles from the member's sign; no natal-chart mapping"),
     20: (P, 'private.omega_issue_certificate callable since migration 20261012091641, but no page calls it (grep 2026-10-12)'),
 })
@@ -210,7 +224,7 @@ APPENDIX = [
     ('N089', 89, 'Quantum-Transition Kernel', L, 'impossible'),
     ('N093', 93, 'Bio-Digital Sync', L, 'impossible'),
     ('N097', 97, 'Sovereign Chronos (own clock, no NTP)', L, 'impossible'),
-    ('N142', 142, 'Primary Beneficiary Hard-Code (family as Level-0 users)', D, 'family'),
+    ('N142', 142, 'Primary Beneficiary Hard-Code (family as Level-0 users)', 'IN_PROGRESS', 'family_build'),
     ('N155', 155, 'Multi-Generational Trust Lock (trust enclaves)', D, 'succession'),
     ('N212', 212, 'Birth-Date/Horoscope Logic (sign-themed tools)', P, 'horoscope.html sign profiles; theming by sign is fine, gating by sign is not'),
     ('N238', 238, 'The Mastery Promotion Trigger (stage -> sticker + certificate)', Q, 'on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate'),

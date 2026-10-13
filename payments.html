@@ -48,23 +48,23 @@
 </div>
 
 <div class="tab-panel active" id="tab-overview">
-  <div class="notice-bar">PAYMENT PROCESSING &mdash; READY TO ACTIVATE &mdash; Stripe integration wired. Live processing requires licensed payment counsel sign-off. Your full history will populate once payments are active.</div>
+  <div class="notice-bar" role="status">PAYMENT PROCESSING &mdash; UNVERIFIED &mdash; Provider settlement, signed webhook idempotency, and ledger reconciliation have not yet been verified. This page will not infer payments from task activity.</div>
   <div class="sechead">ACCOUNT SUMMARY</div>
   <div class="kpi-row" data-stagger data-stagger-gap="70" id="kpi-row">
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-inflow">—</div><div class="kpi-label">TOTAL INFLOW</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">1</div><div class="kpi-label">ACTIVE TIER</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">0</div><div class="kpi-label">CONSULTANCY</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">0</div><div class="kpi-label">MARKETPLACE</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">PENDING</div><div class="kpi-label">NEXT BILLING</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">ACTIVE TIER · UNAVAILABLE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">CONSULTANCY · UNAVAILABLE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">MARKETPLACE · UNAVAILABLE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">NEXT BILLING · UNAVAILABLE</div></div>
   </div>
   <div class="sechead" style="margin-top:16px">UPCOMING</div>
   <div class="card">
     <div class="card-title">SUBSCRIPTION RENEWAL</div>
-    <div class="card-body">Your current membership tier will auto-renew when Stripe is activated. No manual action required.</div>
+    <div class="card-body">Renewal scheduling is unavailable until an active subscription and its billing state are verified through the payment provider.</div>
   </div>
   <div class="card" style="margin-top:8px">
     <div class="card-title">CONSULTANCY SESSIONS</div>
-    <div class="card-body">Any consultancy bookings will generate invoices here automatically.</div>
+    <div class="card-body">Verified consultancy bookings and invoice records will appear here once their authoritative data source is connected.</div>
   </div>
 </div>
 
@@ -127,7 +127,7 @@ function renderTx(rows,filter){
   });
   var cols='grid-template-columns:110px 1.5fr 150px 130px 130px';
   if(!filtered.length){
-    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted)">No transactions yet.</div>';
+    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted)">TRANSACTION LEDGER UNAVAILABLE — authoritative payment records are not connected. No payment has been inferred from task activity.</div>';
     return;
   }
   tb.innerHTML=filtered.map(function(tx){
@@ -143,17 +143,9 @@ function renderTx(rows,filter){
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
-async function buildTxLog(uid){
-  var{data:tasks}=await sb.from('task_completions').select('kind,completed_at,created_at').eq('user_id',uid).order('completed_at',{ascending:false}).limit(20);
-  var rows=[];
-  (tasks||[]).forEach(function(t,i){
-    var date=new Date(t.completed_at||t.created_at);
-    rows.push({date:date.toLocaleDateString(),desc:t.kind==='academy'?'Academy module completion bonus':t.kind==='gaming'?'Gaming arena stage reward':'Contribution axis event reward',type:'PLATFORM REWARD',status:'completed',amount:'+'+((i+1)*91.717).toFixed(2)+' Ω',dir:'in'});
-  });
-  rows.push({date:new Date().toLocaleDateString(),desc:'Monthly subscription — current tier',type:'SUBSCRIPTION',status:'pending',amount:'READY TO ACTIVATE',dir:'pending'});
-  rows.push({date:new Date().toLocaleDateString(),desc:'Platform access — trial period',type:'ACCESS',status:'completed',amount:'0.00',dir:'in'});
-  return rows;
-}
+/* Payment ledger deliberately remains unavailable until authoritative provider
+   events and ledger rows are connected and verified. Task completions are not
+   financial transactions, and UI-generated rows must never imply settlement. */
 
 async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
@@ -162,11 +154,9 @@ async function boot(){
   if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
-  var rows=await buildTxLog(sess.user.id);
-  window.__txRows=rows;
-  var inflow=rows.filter(function(r){return r.dir==='in';}).length;
-  document.getElementById('kpi-inflow').textContent='Ω '+(inflow*91.717).toFixed(0);
-  renderTx(rows,'all');
+  window.__txRows=[];
+  var inflow=document.getElementById('kpi-inflow');if(inflow)inflow.textContent='—';
+  renderTx([],'all');
 }
 boot();
 </script>

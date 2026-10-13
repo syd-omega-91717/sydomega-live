@@ -109,7 +109,7 @@ end;
 $function$;
 
 -- 3. Owner actions -----------------------------------------------------------
-create or replace function private.grant_family_access(p_uid uuid)
+create or replace function private.grant_family_access(p_uid uuid, p_attested_adult boolean default false)
  returns jsonb
  language plpgsql
  security definer
@@ -141,8 +141,21 @@ begin
   -- not trusted. A recorded date under 18 refuses; no date means the owner
   -- attested adulthood in the confirm dialog.
   dob_v := coalesce(t.dob, t.birth_date);
-  basis := case when dob_v is null then 'owner_attested_adult' else 'date_of_birth' end;
-  detail := jsonb_build_object('dob',t.dob,'birth_date',t.birth_date,'age_basis',basis)::text;
+  basis := case
+    when dob_v is null and coalesce(p_attested_adult,false) then 'owner_attested_adult'
+    when dob_v is null then 'missing_date_unattested'
+    else 'date_of_birth'
+  end;
+  detail := jsonb_build_object(
+    'dob',t.dob,'birth_date',t.birth_date,'age_basis',basis,
+    'owner_attested_adult',coalesce(p_attested_adult,false)
+  )::text;
+
+  if dob_v is null and not coalesce(p_attested_adult,false) then
+    insert into public.access_grant_audit(action,actor_uid,target_uid,allowed,detail)
+    values('grant_family_access',auth.uid(),p_uid,false,detail);
+    return jsonb_build_object('ok',false,'error','adult_attestation_required');
+  end if;
 
   if dob_v is not null and dob_v > (current_date - interval '18 years') then
     insert into public.access_grant_audit(action,actor_uid,target_uid,allowed,detail)
@@ -200,11 +213,11 @@ begin
 end;
 $function$;
 
-create or replace function public.grant_family_access(p_uid uuid)
+create or replace function public.grant_family_access(p_uid uuid, p_attested_adult boolean default false)
  returns jsonb
  language sql
  set search_path = 'public', 'pg_temp'
-as $function$ SELECT private.grant_family_access($1) $function$;
+as $function$ SELECT private.grant_family_access($1, $2) $function$;
 
 create or replace function public.revoke_family_link(p_uid uuid)
  returns jsonb
@@ -212,13 +225,13 @@ create or replace function public.revoke_family_link(p_uid uuid)
  set search_path = 'public', 'pg_temp'
 as $function$ SELECT private.revoke_family_link($1) $function$;
 
-revoke all on function private.grant_family_access(uuid) from public, anon;
+revoke all on function private.grant_family_access(uuid, boolean) from public, anon;
 revoke all on function private.revoke_family_link(uuid)  from public, anon;
-revoke all on function public.grant_family_access(uuid)  from public, anon;
+revoke all on function public.grant_family_access(uuid, boolean)  from public, anon;
 revoke all on function public.revoke_family_link(uuid)   from public, anon;
-grant execute on function private.grant_family_access(uuid) to authenticated;
+grant execute on function private.grant_family_access(uuid, boolean) to authenticated;
 grant execute on function private.revoke_family_link(uuid)  to authenticated;
-grant execute on function public.grant_family_access(uuid)  to authenticated, service_role;
+grant execute on function public.grant_family_access(uuid, boolean)  to authenticated, service_role;
 grant execute on function public.revoke_family_link(uuid)   to authenticated, service_role;
 
 -- 4. Member-visible lists exclude family ----------------------------------------

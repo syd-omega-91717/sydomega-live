@@ -35,7 +35,7 @@ class AcademyAccessFailClosedContract(unittest.TestCase):
     def test_visible_error_has_retry_action(self):
         self.assertIn('id="academy-load-error" hidden role="alert"', SOURCE)
         self.assertIn('id="academy-load-retry"', SOURCE)
-        self.assertIn('location.reload();', SOURCE)
+        self.assertIn('id="academy-load-retry" href="/academy.html"', SOURCE)
 
 
 if __name__ == "__main__":

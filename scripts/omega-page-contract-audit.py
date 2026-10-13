@@ -30,13 +30,18 @@ EXCLUDED_PATH_PARTS = {
 
 
 def unresolved(value):
-    if value is None or value == "" or value == []:
+    """Recursively detect unresolved markers in nested contract data."""
+    if value is None or value == "":
         return True
     if isinstance(value, str):
-        return value in UNVERIFIED
+        return value in UNVERIFIED or value == "OPEN_TASK"
+    if isinstance(value, list):
+        return not value or any(unresolved(item) for item in value)
     if isinstance(value, dict):
         state = value.get("state")
-        return state in UNVERIFIED or state == "OPEN_TASK"
+        if state in UNVERIFIED or state == "OPEN_TASK":
+            return True
+        return any(unresolved(item) for item in value.values())
     return False
 
 

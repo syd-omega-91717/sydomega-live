@@ -2,11 +2,19 @@
 """Tests for the local migration inventory gate; no provider state is required."""
 from __future__ import annotations
 
+import importlib.util
 import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.migration_replay_contract import inspect_inventory
+ROOT = Path(__file__).resolve().parents[2]
+SPEC = importlib.util.spec_from_file_location(
+    "migration_replay_contract", ROOT / "scripts" / "migration-replay-contract.py"
+)
+assert SPEC is not None and SPEC.loader is not None
+MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(MODULE)
+inspect_inventory = MODULE.inspect_inventory
 
 
 class MigrationReplayInventoryTests(unittest.TestCase):

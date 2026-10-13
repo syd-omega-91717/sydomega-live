@@ -188,6 +188,7 @@
 <div class="lf"><span>&#937; TREASURY &middot; SYD OMEGA 91717</span><span>ASSETS &middot; RESERVES &middot; CASH FLOWS</span></div>
   </main>
 </div>
+<section id="treasury-load-error" hidden role="alert" aria-live="assertive" style="max-width:620px;margin:10vh auto;padding:24px;border:1px solid var(--crim);color:var(--ink);background:var(--void2);font-family:var(--M);line-height:1.7"><h1 style="color:var(--crim);font-size:16px;letter-spacing:2px">TREASURY DATA UNAVAILABLE</h1><p id="treasury-load-error-message">Your session or profile could not be verified. Treasury remains locked.</p><a id="treasury-load-retry" href="/treasury.html" class="btn btn-fill" style="display:inline-block;margin-top:16px;text-align:center">RETRY</a></section>
 <style>.pad{padding:var(--pad)}.tab{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
 .sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
@@ -326,9 +327,9 @@ window.addFlow=function(){
 
 (async function(){
   try{
-    var s=(await sb.auth.getSession()).data.session;
+    var sessionResult=await sb.auth.getSession();if(sessionResult.error)throw sessionResult.error;var s=sessionResult.data&&sessionResult.data.session;
     if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    var profileResult=await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle();if(profileResult.error)throw profileResult.error;if(!profileResult.data||typeof profileResult.data!=='object')throw new Error('profile_record_unavailable');var pr=profileResult.data;
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
@@ -349,7 +350,7 @@ window.addFlow=function(){
         if(btn.dataset.tab==='overview')setTimeout(drawCanvas,50);
       };
     });
-  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+  }catch(e){var app=document.getElementById('app');if(app)app.style.display='none';var panel=document.getElementById('treasury-load-error');var msg=document.getElementById('treasury-load-error-message');if(panel)panel.hidden=false;if(msg)msg.textContent='The session/profile request failed. Treasury remains locked. Retry after checking your connection.';console.error('[Omega Treasury] access verification failed; page remains locked.',e);}
 })();
 </script>
 <script src="/omega-local-backup.js"></script>

@@ -92,7 +92,7 @@ def page_inventory_errors(root: Path, registry: dict, alias_registry: dict) -> l
         if source_file.is_file():
             body = source_file.read_text(encoding="utf-8", errors="ignore")
             if target not in body or not re.search(
-                r"window\\.location\\.(?:href|assign|replace)|http-equiv=[\"']refresh",
+                r"window\.location\.(?:href|assign|replace)|http-equiv=[\"']refresh",
                 body,
                 re.IGNORECASE,
             ):

@@ -30,6 +30,9 @@ jobs:
         with:
           version: 2.119.0
 
+      - name: Test migration inventory gate
+        run: python3 -m unittest scripts/tests/test_migration_replay_contract.py -v
+
       - name: Validate migration inventory
         run: python3 scripts/migration-replay-contract.py
 

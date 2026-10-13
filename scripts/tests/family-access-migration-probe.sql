@@ -33,6 +33,10 @@ ON CONFLICT (id) DO UPDATE SET
   dob=excluded.dob,
   birth_date=excluded.birth_date;
 
+INSERT INTO public.platform_owners(user_id)
+VALUES ('10000000-0000-4000-8000-000000000001')
+ON CONFLICT (user_id) DO NOTHING;
+
 INSERT INTO public.sovereign_points_ledger(user_id,delta,reason)
 VALUES
   ('10000000-0000-4000-8000-000000000002',500,'family-access-privacy-probe'),

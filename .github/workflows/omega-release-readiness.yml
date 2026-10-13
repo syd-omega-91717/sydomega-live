@@ -71,3 +71,8 @@ jobs:
           test -s public/config/omega-truth-model.json
           test -d public/i18n
           test -d public/vendor
+
+      # Source CI may validate a pending migration, but a release may not ship it.
+      - name: Block release on unapplied migrations
+        if: github.event_name != 'pull_request'
+        run: python scripts/migration-drift.py

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": "1.0.0",
+  "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
+  "pending": [
+    {
+      "version": "20261012150000",
+      "file": "20261012150000_omega_family_access.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Owner-granted adult family access is awaiting round-three privacy/security review, fresh-database replay, RPC consolidation, and owner/AAL2 authorization probes. Do not apply or claim live parity until those checks and the owner security prerequisites are satisfied."
+    }
+  ]
+}

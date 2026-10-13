@@ -42,6 +42,7 @@ def main() -> int:
         "activity feed excludes linked family": "pr.family_of is null" in function_body(migration, "public.get_activity_feed"),
         "grant deletes any pre-existing snapshot": bool(re.search(r"delete\s+from\s+public\.leaderboard_snapshots\s+where\s+user_id\s*=\s*p_uid", migration, re.I)),
         "owner RPCs require AAL2": migration.count("auth.jwt()->>'aal'") >= 2 and "aal2_required" in migration,
+        "family owner identity uses canonical platform_owners membership": all("exists (select 1 from public.platform_owners where user_id = auth.uid())" in function_body(migration, name) for name in ("private.grant_family_access", "private.revoke_family_link")),
         "missing DOB requires explicit server-side adult attestation": "private.grant_family_access(p_uid uuid, p_attested_adult boolean default false)" in migration.lower() and "adult_attestation_required" in function_body(migration, "private.grant_family_access") and "owner_attested_adult" in function_body(migration, "private.grant_family_access"),
         "service-role snapshot source filters family": '.is("family_of", null)' in edge,
         "family link is guarded against non-owner writes": "new.family_of is distinct from old.family_of" in migration,

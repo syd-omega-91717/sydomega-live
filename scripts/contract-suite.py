@@ -97,7 +97,7 @@ GATES = [
      ['scripts/migration-drift.py', '--source-only']),
     ('migration-pending-boundary',
      'pending migrations remain distinct from live-applied versions and block release',
-     ['python3', '-m', 'unittest', 'scripts/tests/test_migration_pending_boundary.py']),
+     ['scripts/tests/test_migration_pending_boundary.py']),
     ('page-experience',
      'every experience profile declares its required fields',
      ['scripts/page-experience-contract.py']),

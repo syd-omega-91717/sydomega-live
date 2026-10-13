@@ -20,10 +20,10 @@ MIGRATION = ROOT / "supabase/migrations/20261012150000_omega_family_access.sql"
 EDGE = ROOT / "supabase/functions/snapshot-leaderboard/index.ts"
 
 
-def function_body(source: str, name: str) -> str:
+def function_sql(source: str, name: str) -> str:
     pattern = re.compile(
-        rf"create\s+or\s+replace\s+function\s+{re.escape(name)}\b"
-        rf"[\s\S]*?as\s+\$function\$([\s\S]*?)\$function\$\s*;",
+        rf"(create\s+or\s+replace\s+function\s+{re.escape(name)}\b"
+        rf"[\s\S]*?as\s+\$function\$[\s\S]*?\$function\$\s*;)",
         re.IGNORECASE,
     )
     match = pattern.search(source)
@@ -32,12 +32,32 @@ def function_body(source: str, name: str) -> str:
     return match.group(1).lower()
 
 
+def function_body(source: str, name: str) -> str:
+    definition = function_sql(source, name)
+    match = re.search(r"as\s+\$function\$([\s\S]*?)\$function\$\s*;", definition, re.I)
+    if not match:
+        raise AssertionError(f"missing function body: {name}")
+    return match.group(1).lower()
+
+
 def main() -> int:
     migration = MIGRATION.read_text(encoding="utf-8")
     edge = EDGE.read_text(encoding="utf-8")
     checks = {
         "public leaderboard excludes linked family": "family_of is null" in function_body(migration, "private.public_leaderboard"),
-        "points leaderboard excludes other linked family": "p.family_of is null or p.id = v_uid" in function_body(migration, "public.get_points_leaderboard"),
+        "points leaderboard excludes other linked family": "p.family_of is null or p.id = v_uid" in function_body(migration, "private.get_points_leaderboard"),
+        "points leaderboard definer is isolated behind empty search_path": (
+            "security definer" in function_sql(migration, "private.get_points_leaderboard")
+            and bool(re.search(r"set search_path\s*=\s*''", function_sql(migration, "private.get_points_leaderboard")))
+        ),
+        "public points RPC remains an invoker wrapper": (
+            "select * from private.get_points_leaderboard($1)" in function_body(migration, "public.get_points_leaderboard")
+            and "security definer" not in function_sql(migration, "public.get_points_leaderboard")
+        ),
+        "private points projection is authenticated-only": (
+            "revoke all on function private.get_points_leaderboard(integer) from public, anon" in migration.lower()
+            and "grant execute on function private.get_points_leaderboard(integer) to authenticated" in migration.lower()
+        ),
         "snapshot recomputation excludes linked family": "family_of is null" in function_body(migration, "public.compute_leaderboard_snapshot"),
         "activity feed excludes linked family": "pr.family_of is null" in function_body(migration, "public.get_activity_feed"),
         "grant deletes any pre-existing snapshot": bool(re.search(r"delete\s+from\s+public\.leaderboard_snapshots\s+where\s+user_id\s*=\s*p_uid", migration, re.I)),

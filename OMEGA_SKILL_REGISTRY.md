@@ -96,7 +96,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 239 |
 | pages loading `bg.js` | 239 of 239 |
-| `omega-*.js` modules | 237 (2089 KB) |
+| `omega-*.js` modules | 237 (2092 KB) |
 | root `.js` files | 252 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 381 (107 numbered `NNNN_`, 274 timestamped) |
@@ -112,13 +112,13 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 
 | Source | Keys |
 |---|---|
-| `T_EN` (English, inlined in `i18n.js`) | 1185 |
-| `i18n/ar.json` | 1185 |
-| `i18n/es.json` | 1185 |
-| `i18n/fr.json` | 1185 |
-| `i18n/hi.json` | 1185 |
-| `i18n/nl.json` | 1185 |
-| `i18n/zh.json` | 1185 |
+| `T_EN` (English, inlined in `i18n.js`) | 1188 |
+| `i18n/ar.json` | 1188 |
+| `i18n/es.json` | 1188 |
+| `i18n/fr.json` | 1188 |
+| `i18n/hi.json` | 1188 |
+| `i18n/nl.json` | 1188 |
+| `i18n/zh.json` | 1188 |
 
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**

@@ -6,17 +6,17 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**482 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 17, IDEA_INTAKE.md 12.
+**483 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 17, IDEA_INTAKE.md 13.
 
 | status | count |
 |---|---|
-| NEEDS_DECISION | 15 |
+| NEEDS_DECISION | 16 |
 | IN_PROGRESS | 5 |
-| PROPOSED | 19 |
+| PROPOSED | 18 |
 | PARTIAL | 56 |
 | OPEN_GAP | 8 |
 | DORMANT | 1 |
-| SHIPPED | 33 |
+| SHIPPED | 34 |
 | DECIDED | 42 |
 | CLOSED | 9 |
 | SUPERSEDED | 1 |
@@ -28,7 +28,7 @@ production serves it.
 Everything not yet settled, owner decisions first. The weekly idea routine
 works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-checks the rest.
 
-### NEEDS_DECISION (15)
+### NEEDS_DECISION (16)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -47,6 +47,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N155 | 999 blueprint [APPENDIX_NODE] | Multi-Generational Trust Lock (trust enclaves) | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
 | I05 | IDEA_INTAKE.md | Database backups the owner controls | the blueprint's Mars Ledger (points 9, 615) reduces to off-site backups / point-in-time restore, which needs Supabase Pro (2026-10-12) |
 | I08 | IDEA_INTAKE.md | Member sticker and logo pack | from the Unified Blueprint board; no sticker surface exists in the repo (2026-10-13) |
+| I13 | IDEA_INTAKE.md | Align the passport PDF's 12 gate names with the canon tiers | omega-passport.js GATE_NAMES (INITIATE, ACOLYTE, SCHOLAR...) differ from omega-canon.json tiers (Initiate, Seeker, Adept...); its authority… |
 
 ### IN_PROGRESS (5)
 
@@ -56,9 +57,9 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B013 | 999 blueprint [INTELLIGENCE] | Zero-Fee Life: The billing engine has a "Nest Exception." All subscription costs for the family are hard-code… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
 | B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
 | N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
-| I06 | IDEA_INTAKE.md | Owner concept media on the Vision Board | 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today… |
+| I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; reuse omega-passport.js (vendored jsPDF) and the certificates profile.html already lists (2026-10-13) |
 
-### PROPOSED (19)
+### PROPOSED (18)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -80,7 +81,6 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
-| I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; reuse omega-passport.js (vendored jsPDF) and the certificates profile.html already lists (2026-10-13) |
 
 ### PARTIAL (56)
 
@@ -162,7 +162,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (33)
+### SHIPPED (34)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -199,6 +199,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | I01 | IDEA_INTAKE.md | Copilot visual commands | 14 slash commands (/handwritten, /decision-matrix, /infographic, /canvas, /layers, /cycle, /diagram, /roadmap, /sketchnotes, /iceberg, /blu… |
 | I02 | IDEA_INTAKE.md | Owner two-factor deep link | settings.html#two-factor opens the enrolment section; approvals offers it on aal2_no_factor, PR #875 (2026-10-12) |
 | I04 | IDEA_INTAKE.md | Map every 999-blueprint point | all 413 entries (391 + 8 restored duplicates + 14 appendix Nodes) classified with reasons by scripts/blueprint-truth-map.py (2026-10-12) |
+| I06 | IDEA_INTAKE.md | Owner concept media on the Vision Board | 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today… |
 
 ### DECIDED (42)
 

@@ -74,4 +74,5 @@ jobs:
 
       # Source CI may validate a pending migration, but a release may not ship it.
       - name: Block release on unapplied migrations
+        if: github.event_name != 'pull_request'
         run: python scripts/migration-drift.py

@@ -94,12 +94,12 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 238 |
-| pages loading `bg.js` | 238 of 238 |
-| `omega-*.js` modules | 235 (2054 KB) |
-| root `.js` files | 250 |
+| `.html` pages | 239 |
+| pages loading `bg.js` | 239 of 239 |
+| `omega-*.js` modules | 236 (2057 KB) |
+| root `.js` files | 251 |
 | `supabase/*.sql` (flat bag) | 127 |
-| `supabase/migrations/*.sql` | 374 (107 numbered `NNNN_`, 267 timestamped) |
+| `supabase/migrations/*.sql` | 375 (107 numbered `NNNN_`, 268 timestamped) |
 | Edge Functions | 26 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -123,11 +123,11 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 (`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 280 files added since (numbered and
+end-to-end for the first time"*. The 281 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
-all 374. Treat the validated scope as `0001`–`0094` only.
+all 375. Treat the validated scope as `0001`–`0094` only.
 
-**`bg.js` is loaded by all 238 pages.** It is a hard single point of
+**`bg.js` is loaded by all 239 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

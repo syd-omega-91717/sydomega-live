@@ -3,9 +3,9 @@
 -- them as family; a family member's name never appears in a list other members
 -- can see. Decision record: docs/decisions/family-access/PLAN.md (+ CODEX_REVIEW.md).
 --
--- Additive only, no DROP. Bodies of the three replaced functions are copied from
--- live pg_get_functiondef (2026-10-12); each differs from live only where marked
--- "family:".
+-- Additive only, no DROP. Replaced function bodies are based on live
+-- pg_get_functiondef (2026-10-12); intentional family-visibility changes are
+-- marked below. Keep all member-visible ranking paths covered by the contract.
 
 -- 1. The link ---------------------------------------------------------------
 alter table public.profiles
@@ -267,6 +267,76 @@ as $function$
   ) ORDER BY rnk), '[]'::jsonb)
   FROM numbered;
 $function$;
+
+
+-- Points leaderboard: retain a member's own row, but never expose another
+-- linked family member in a member-visible ranking. The predicate runs before
+-- row_number(), so excluded family rows cannot distort other members' ranks.
+create or replace function public.get_points_leaderboard(p_limit integer default 10)
+ returns table(rank integer, display_name text, element text, sign text, level integer, lifetime_points integer, is_self boolean)
+ language plpgsql
+ stable
+ set search_path to 'pg_catalog', 'public'
+as $function$
+declare
+  v_uid uuid := (select auth.uid());
+begin
+  if v_uid is null then return; end if;
+  return query
+  with totals as (
+    select l.user_id, coalesce(sum(l.delta) filter (where l.delta > 0), 0)::int as pts
+      from public.sovereign_points_ledger l group by l.user_id
+  )
+  select (row_number() over (order by t.pts desc, p.id))::int,
+         coalesce(nullif(btrim(p.display_name), ''), 'MEMBER'),
+         p.element, p.sign, (floor(sqrt(t.pts / 25.0))::int + 1), t.pts, (p.id = v_uid)
+    from totals t join public.profiles p on p.id = t.user_id
+    where t.pts > 0
+      and (p.is_public is true or p.id = v_uid)
+      and (p.access_approved is true or p.is_owner is true)
+      and p.deactivated_at is null
+      and (p.family_of is null or p.id = v_uid) -- family: only self may see self
+    order by t.pts desc, p.id
+    limit greatest(1, least(coalesce(p_limit, 10), 50));
+end;
+$function$;
+
+-- Daily snapshot recomputation must not reintroduce linked family accounts
+-- after grant_family_access deletes their pre-existing snapshot rows.
+create or replace function public.compute_leaderboard_snapshot()
+ returns void
+ language plpgsql
+ security definer
+ set search_path to 'public'
+as $function$
+DECLARE
+  _PHI constant numeric := 1.6180339887;
+  _EU  constant numeric := 2.7182818285;
+BEGIN
+  INSERT INTO public.leaderboard_snapshots(user_id,snapshot_date,authority,axis_a,axis_b,axis_c)
+  SELECT
+    id,
+    CURRENT_DATE,
+    SQRT(POWER(axis_a,3)+POWER(axis_b,3)+POWER(axis_c,3))*_PHI/_EU,
+    axis_a, axis_b, axis_c
+  FROM public.profiles
+  WHERE (access_approved=true OR is_owner=true)
+    AND family_of IS NULL -- family: do not snapshot linked members
+  ON CONFLICT(user_id,snapshot_date) DO UPDATE SET
+    authority=EXCLUDED.authority,
+    axis_a=EXCLUDED.axis_a,
+    axis_b=EXCLUDED.axis_b,
+    axis_c=EXCLUDED.axis_c;
+  /* Compute global ranks */
+  WITH ranked AS(
+    SELECT user_id, ROW_NUMBER() OVER(ORDER BY authority DESC) as rk
+    FROM public.leaderboard_snapshots WHERE snapshot_date=CURRENT_DATE
+  )
+  UPDATE public.leaderboard_snapshots ls SET rank_global=r.rk
+  FROM ranked r WHERE ls.user_id=r.user_id AND ls.snapshot_date=CURRENT_DATE;
+END;
+$function$;
+
 
 -- Invoker: under self-or-owner profiles RLS the inner join already drops other
 -- members' rows, so this predicate changes nothing today. It is defence in

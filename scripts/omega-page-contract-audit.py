@@ -47,7 +47,7 @@ def shipped_html_paths(root: Path) -> set[str]:
         if not path.is_file():
             continue
         relative = path.relative_to(root)
-        if any(part in EXCLUDED_PATH_PARTS for part in relative.parts):
+        if relative.parts and relative.parts[0] in EXCLUDED_PATH_PARTS:
             continue
         paths.add(relative.as_posix())
     return paths

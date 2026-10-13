@@ -42,6 +42,14 @@ class PageInventoryCoverageTests(unittest.TestCase):
         errors = AUDIT.page_inventory_errors(self.root, self.registry, self.aliases)
         self.assertIn("alias target does not exist: legacy.html -> /missing.html", errors)
 
+    def test_alias_target_must_be_canonical_not_another_alias(self):
+        self.aliases["aliases"][0]["target"] = "/legacy.html"
+        errors = AUDIT.page_inventory_errors(self.root, self.registry, self.aliases)
+        self.assertIn(
+            "alias target is not a canonical page contract: legacy.html -> /legacy.html",
+            errors,
+        )
+
     def test_alias_redirect_must_match_declared_target(self):
         (self.root / "legacy.html").write_text(
             "<html><script>window.location.href = '/index.html'</script></html>",

@@ -57,7 +57,7 @@ class ReviewQueueContract(unittest.TestCase):
         for name in ("loadContracts", "loadReservations", "loadAudit", "loadErrors"):
             with self.subTest(queue=name):
                 start = queues.index("async function " + name + "(")
-                next_start = queues.find("\\nasync function ", start + 1)
+                next_start = queues.find("\nasync function ", start + 1)
                 body = queues[start:next_start if next_start >= 0 else len(queues)]
                 self.assertIn("if(r&&r.error)throw new Error", body)
                 self.assertIn("showQueueError(", body)

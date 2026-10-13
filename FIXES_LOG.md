@@ -22834,3 +22834,458 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
 - **Gated** by `test_env_example.py`: names must equal what the functions read; every value must
   be a placeholder; `.env` stays ignored. Planted violations — a real-looking value, a removed
   name — each fail it. Provider-side rotation (#833's acceptance criterion) remains the owner's.
+
+## Copilot slash commands, via the existing `system_override` path (2026-10-12)
+
+- **Added.** `omega-copilot.js` now parses `/command <text>`: `/summarize` (Historian), `/explain`
+  (Tutor), `/translate` (Scout), `/brief` (Sovereign), `/strategy` (Oracle), `/outline` (Proxy),
+  `/compare` (Analyst), `/debug` (Auditor). Each sends its task persona as concierge's
+  `system_override` — the field agents.html, sovereign-ai.html, weekly.html and omega-ai.js
+  already use, appended *below* the governed prompt — so no Edge Function or schema change.
+  `/` or `/help` lists them; typing `/x` opens a filtered picker; an unknown command or a
+  missing argument answers locally and makes no paid call.
+- **Honest offline state.** A command the keyword guide cannot perform now says the AI is
+  unavailable and that nothing was generated, rather than returning an unrelated KB answer as
+  if it were the result (§8.1 class 9). Plain questions keep the old fallback.
+- **Known limit, unchanged.** concierge's `classify()` fails closed on words like `deploy`/`pay`,
+  so `/debug` on text that mentions a deploy gets the offline message.
+- **Verified.** Headless Chromium against the module with a stubbed concierge: picker filters
+  (`/s` → summarize, strategy), help/unknown/no-arg make 0 calls, a command sends
+  `system_override`, a plain question sends none, offline paths as above, 0 page errors.
+  `verify-runtime.js`: PASS, 13 pages. `ci-local.sh`: 25 pass / 3 fail — the same 3 fail on
+  pristine `origin/main` (`omega-static-failover.yml` unpinned `actions/*@vN` from #857, the
+  skill-registry census, and 6 unit tests), not this change.
+
+## The copilot recorded every turn and never sent one back (2026-10-12)
+
+- **Symptom.** `omega-copilot.js` pushed each question and answer onto `_history` and never read it:
+  every concierge call carried only the latest message. After `/summarize <text>`, "make it
+  shorter" reached the model with no text to shorten. Measured against `origin/main` in headless
+  Chromium with a stubbed concierge: the follow-up was sent as the bare string `make it shorter`.
+- **Fix.** Prior turns ride inside `message` as a `[CONVERSATION SO FAR]` block, newest first,
+  each clipped to 400 chars, dropped oldest-first to stay under concierge's 2000-char limit (a
+  near-limit message goes bare). A `system_override` note tells the model to answer only the
+  `[CURRENT MESSAGE]` and to treat the block as untrusted data. The last 6 exchanges are kept;
+  `/clear` empties them. Client-only: concierge's contract is unchanged, so nothing to deploy.
+- **Retry, because of governance.** concierge's `classify()` reads the whole message, so a word like
+  `deploy` in an *old* turn would get every later question declined. A failed call with history is
+  retried once without it. The "AI unavailable" notice for a command never enters history.
+- **Also fixed.** `omega:copilot-stream-end` fired only after a fallback reply, never after a real
+  one: 2 of 16 answered messages before, 16 of 16 after.
+- **Verified.** Same harness: follow-up carries the prior turns; `/clear` makes 0 calls and the next
+  message goes bare; 8 × 900-char turns stay at 1,748 chars; the declined-with-history case makes 2
+  calls and shows the reply; 0 page errors. `verify-runtime.js`: PASS, 13 pages. `ci-local.sh`:
+  all 28 blocking checks pass (census regenerated: module total 2064 → 2066 KB).
+
+## `page-count-claims.py` could not see "N-page", so two member-visible counts drifted (2026-10-12)
+
+- **Symptom.** `ecosystem.html:67`'s card title read **"222-PAGE PLATFORM"** directly above its own
+  body text "comprises 239 PAGES"; `prediction.html:92`'s roadmap said Q3 2026 shipped a **"Full
+  62-page sovereign platform"**. Real estate: 239 pages. The gate passed throughout.
+- **Root cause.** `CLAIM = (\d{2,4})\+?\s+pages\b` required a space and the plural, so the hyphenated
+  singular form was invisible. The body copy it *could* see had been kept current; the title beside
+  it had not — the gate's blind spot is exactly where the drift sat (§8.4: a number in prose drifts).
+- **Fix.** `(\d{2,4})\+?(?:\s+|-)pages?\b`. Widened, it finds exactly these two across the estate and
+  no new false positives; both now say 239. `test_hyphenated_singular_form_is_caught` plants
+  "222-PAGE PLATFORM" and "62-page" (must fail) and a true "12-page" (must pass); it fails against
+  the old pattern (`git show origin/main:scripts/page-count-claims.py`) and passes on the new one.
+
+## `verify-runtime.js` had not rendered a page on GitHub since the self-hosted runner died (2026-10-12)
+
+- **Symptom.** `capability-evidence.yml`'s "Runtime verification" step printed `SKIPPED: playwright-core
+  not resolvable and no system Chrome/Edge. Runtime verification not run.` and exited 0, so the job
+  was green (job 114616337547, PR #860). CLAUDE.md §8.3 and `docs/capabilities/registry.json` cite
+  this script as runtime evidence; on GitHub-hosted runners it was evidence of nothing.
+- **Two causes, both needed for a real run.** (1) Nothing installed a browser on the Ubuntu runner.
+  (2) Its guard, `!pw || (!channel && !OMEGA_SCRATCHPAD)`, skipped on Linux unless a scratchpad
+  path was set — so it would have skipped even with Playwright installed. Measured here: with a
+  resolvable Playwright and `OMEGA_REQUIRE_BROWSER=1`, the old guard exited 1 (SKIPPED).
+- **Fix.** The guard now skips only when Playwright itself is missing (a missing browser is already
+  caught at launch). The workflow installs Chromium with the exact pinned recipe
+  `browser-release-evidence.yml` already runs green (`@playwright/test@1.63.0`, `--no-save`), and sets
+  `OMEGA_REQUIRE_BROWSER`, under which a SKIPPED exits 1. Locally (no env var) a skip still exits 0.
+- **Added alongside: `scripts/copilot-contract.js`**, 14 behavioural cases on the real
+  `omega-copilot.js` with a stubbed concierge — commands (`/help`, unknown, no-arg make 0 calls; a
+  command sends its persona), memory (follow-up carries prior turns, `/clear`, ≤2000 chars, bare retry
+  when declined with history), honesty (offline "nothing was generated", never enters history), and
+  one `stream-end` per answer. Proven against history: the pre-#858 module fails 11/14, the pre-#859
+  module fails exactly the 4 memory/event cases, current passes 14/14. Runs in the same CI job, and
+  as `ci-local.sh` step 2s (29 blocking checks).
+
+## Live grant audit: the sign-up birth-date gate and the achievements panel could never succeed (2026-10-12)
+
+- **Method.** Live catalog of every `public` table's privileges for `authenticated` (has_table_privilege
+  + `information_schema.column_privileges`), cross-checked against every client `.from('t').<op>()` in
+  root `*.html`/`*.js` (171 table/op pairs, 106 tables). 7 pairs lacked a table-level grant; 4 were
+  deliberate **column-level** grants whose callers name only granted columns (`academy_questions`,
+  `advertisements` read + insert, `capability_registry` ×3) — not bugs. Each remaining one was
+  proven by impersonating a real member (CLAUDE.md §8.4: `SET LOCAL ROLE` + `request.jwt.claims`),
+  `EXPLAIN` or a rolled-back transaction, nothing persisted (re-read afterwards: unchanged).
+- **`account.html` birth-date gate — every new member stuck.** The gate is shown to every member
+  with no sign who is neither approved nor owner (3 live profiles today). Its save was an `upsert` of
+  `id,email,sign,element,god,agent,birth_date`; members have **no INSERT** on `profiles` and UPDATE
+  only on 14 columns that exclude `email/element/god/agent`. Live as member `f1968a22…`:
+  `42501 permission denied for table profiles`. The UI showed the error (not class 1), but no member
+  could pass. **Fix:** update `birth_date` alone — the row exists (`handle_new_user`) and
+  `trg_derive_cosmology` derives `sign/element/god/agent` from it. Live as the same member in a
+  rolled-back transaction: succeeds, returns `Aries/FIRE/Ares/Sentinel`. `.select('sign')` turns a
+  0-row update (no error) into a visible failure. Harness: old page → "Could not save (42501)",
+  stuck; new → reaches `/dashboard.html`; 0-row stub → "no profile found", no redirect.
+  The tempting fix — `GRANT INSERT, UPDATE ON profiles` (Postgres's own HINT) — was rejected: it
+  would let a member write their own `access_approved`/`is_owner` columns.
+- **`omega-achieve-native.js` — the whole panel failed for every member.** It `Promise.all`s 7 reads
+  and throws on any error; one read `omega_achievement_verifications`, which is server-only by
+  design (deny-all policy, no grant): live as a member, 42501. So `achieve.html`'s native state
+  never rendered. **Fix:** drop that read; the card now counts the member's own verified
+  achievements from `omega_user_achievements.verified_at` (readable, real) instead of a server
+  table it can never see. Live as a member, the six remaining reads all succeed. Harness with a
+  live-like stub: old module throws "permission denied…"; new renders all 7 cards.
+- **Recorded, not fixed** (`GAP_ANALYSIS.md` §S): `profile.html`'s owner access panel writes
+  `access_approved` directly and always 42501s (`approvals.html` uses RPCs); and
+  `omega-graphify-integration.js`'s `notifications` fallback insert always fails (logged, not silent).
+
+## `grant-contract.py`: client calls are now gated against the live grants (2026-10-12)
+
+- **Gap.** Nothing in CI compared what client code *does* with what the `authenticated` role *may*
+  do. `rls-auditor.py` reads policies, `schema-dictionary.py` reads column names; neither reads
+  GRANTs, and column-level grants were invisible to every gate. That is how `account.html`'s
+  sign-up upsert (no INSERT; 4 of 7 columns outside the UPDATE grant) shipped and failed for every
+  new member (previous entry) while CI was green.
+- **Added.** `supabase/live-grants.json` — the live table-level SIUD privileges of `authenticated`
+  on all 290 public relations, plus column lists wherever the table-level privilege is absent
+  (captured 2026-10-12; the transcription cross-checked 290/290 against an independent capture;
+  regeneration query in the script's `--help`). `scripts/grant-contract.py` checks every
+  `.from('t').select/insert/update/upsert/delete(...)` in root `*.html`/`*.js` (458 calls):
+  literal column lists and payload keys against column grants; `*`, empty or non-literal lists
+  need the table-level privilege; upsert needs INSERT **and** UPDATE. Blocking in `ci.yml` and
+  `ci-local.sh` step 2t (30 blocking checks).
+- **Known open findings are named, not hidden.** `KNOWN` excuses exactly the three recorded in
+  `GAP_ANALYSIS.md` §S / the previous entry (profile.html owner panel, graphify notifications,
+  bg.js's never-firing owner repair), each with its reason; an entry that stops matching **fails**
+  the run, so the list cannot outlive its bug.
+- **Proven.** Run on the tree before #862 it fails exactly the two bugs found live
+  (`account.html:467 profiles.upsert — no INSERT grant; UPDATE not granted on agent, element,
+  email, god, id` and `omega-achieve-native.js:14 omega_achievement_verifications.select — no
+  SELECT grant`); on current `main` it passes. `test_grant_contract.py`: 14 tests — every rule has
+  a planted violator that must fail (ungranted upsert, one extra column, non-literal payload,
+  `select('*')` on a column grant, server-only read, delete, upsert-needs-update), plus comments,
+  `storage.from` and unknown tables ignored, a stale KNOWN entry failing, and the repo passing.
+
+## `courses.html` progress upsert verified live; `upsert-conflict-check.py` read the wrong half of the schema (2026-10-12)
+
+- **Lead.** CI's advisory upsert check reported `courses.html:303 — academy_progress [42P10]: onConflict
+  'enrollment_id,lesson_id' matches no unique key`. If true, every lesson completion fails.
+- **Live: not a bug.** `academy_progress_enrollment_lesson_uk UNIQUE (enrollment_id, lesson_id)` exists
+  live (and in migration `20260921010709`). End-to-end as a real member (`5ca6ae1c…`) inside a `DO` block
+  that ends in a deliberate exception, so nothing could persist: enroll upsert succeeds, first progress
+  upsert inserts, second takes the `ON CONFLICT DO UPDATE` path on the **same row**, member sees 1 row —
+  `PROBE_RESULT enroll=t progress_first=t progress_second=t same_row=t visible_rows=1`. (Nobody has ever
+  enrolled live: 0 enrollments, 0 progress rows, 1 published course, 4 lessons.)
+- **Root cause of the false lead.** The check parsed only `supabase/*.sql` — the reference bag, not the
+  authoritative `migrations/` (CLAUDE.md §5) — and skipped every *named* unique key: `ALTER TABLE …
+  ADD CONSTRAINT n UNIQUE (…)` was never matched, and `CONSTRAINT n UNIQUE (…)` inside `CREATE TABLE`
+  hit the `CONSTRAINT → continue` branch. **Fix:** read both trees; parse both named forms. Keys found:
+  112 → 216 tables; the false finding is gone. New `test_upsert_conflict_check.py` (4 tests: a planted
+  missing key must report; a key from a migration `ALTER TABLE`, a named in-table constraint, and a key on
+  other columns) — the two new-form tests fail against the old script.
+- **Supabase advisor, same pass.** Security: 1 WARN only — leaked-password protection, which needs the
+  Pro plan (`get_organization`: `free`, re-checked); owner action, compensated by `omega-password-guard.js`
+  on both password-setting pages. Performance: INFO `unused_index` ×329 only — not dropped (see
+  `GAP_ANALYSIS.md` §S).
+
+## `recovery.html` could never create or verify a checkpoint: its functions lived only in `private` (2026-10-12)
+
+- **Found by** checking all 71 client RPC names (65 literal `.rpc('…')` + 6 through approvals.js's
+  `rpcResult('…')`) live: 69 exist in `public` and are executable by `authenticated`; two —
+  `omega_create_recovery_checkpoint` and `omega_verify_recovery_checkpoint`, called by
+  `omega-recovery.js:12-13` — exist only in `private` (migrations 20260929115839 / 20260929120017 /
+  20260929120620). PostgREST resolves `sb.rpc()` in `public`, so both of `recovery.html`'s buttons
+  failed for every member. The page reported the failure honestly (not class 1); it just never worked.
+- **Fix.** Migration `20261012014343_omega_recovery_checkpoint_public_rpc_bridge_20261012` — the same
+  shape as `20260929092815_omega_mission_public_rpc_bridge`: `language sql`, `security invoker`,
+  `search_path = ''`, body `select private.fn($1)`; EXECUTE revoked from `public, anon`, granted to
+  `authenticated`. Applied live (file renamed to the version live recorded). **Threat check** (CLAUDE.md
+  §10, new public-callable function): the wrapper adds no privilege; the private functions are SECURITY
+  DEFINER with a pinned search_path, require `auth.uid()`, write/count only the caller's rows, verify
+  reads only `member_id = auth.uid()`, and validate the key.
+- **Verified live** as member `5ca6ae1c…` in a `DO` block ending in a deliberate exception:
+  `PROBE_RESULT created=t owner_is_caller=t verified_valid=true foreign_id=checkpoint_not_found`; then
+  `anon_exec=false`, `auth_exec=true`, invoker, pinned search_path for both; 0 probe rows left. Security
+  advisor unchanged (still only the Pro-plan leaked-password WARN).
+- **Gated.** `supabase/live-grants.json` gains `functions` (the 146 public functions `authenticated`
+  may execute); `grant-contract.py` now also checks every `.rpc('fn')` and `rpcResult('fn')` (557 calls).
+  With the pre-bridge function list it fails exactly `omega-recovery.js:12` and `:13`; current passes.
+  4 new tests (missing function, executable function, the approvals wrapper, comments) — 18 total.
+
+## 12 client RPCs — approvals, delete-account, KYC, Creation Studio, knowledge search — failed 42501 for everyone, the owner included (2026-10-12)
+
+- **Found by** testing whether the functions `grant-contract.py` approves can actually run, not just
+  be called. Impersonating the owner at aal2 (`DO` block, `SET LOCAL ROLE authenticated`, claims with
+  `aal: aal2`, ending in a deliberate exception): `public.revoke_member(...)` →
+  `ERR 42501 permission denied for function revoke_member`. Each `public.<fn>` is a SECURITY INVOKER
+  SQL wrapper running `select private.<fn>(...)` as the caller, so it needs EXECUTE on the private
+  function too. A live join of every authenticated-executable invoker wrapper against the private
+  functions it calls found **35** lacking it; **12** are called by client code.
+- **Cause.** 20261006193000 / 20261006201000 / 20261007001000 / 20261007002000 / 20261008032308
+  each revoke EXECUTE on `private.<fn>` from `authenticated` in the same file that grants
+  `public.<fn>` to it; 20261007120000 (`approvals_rpc_execute_restore`) re-granted only the
+  wrappers. Contradictory intent, not a deliberate disable. Dead since 2026-10-06/07:
+  `approvals.js` approve / grant-permanent / revoke / KYC review / KYC intake switch;
+  `settings.html` delete account; `profile.html` KYC submit; `interface-omni.html` platform flag;
+  `omega-creation-studio.js` create project / asset / provider job; `omega-intel-fabric.js`
+  hybrid search. Every page checked `.error`, so it showed a failure, never a false success.
+- **Fix.** `20261012064126_omega_restore_private_rpc_execute_20261012` grants EXECUTE on those 12
+  private functions to `authenticated` — after reading each body live: owner actions return
+  `forbidden` unless `is_platform_owner()` and `aal2_required` below aal2; member actions write only
+  `auth.uid()`'s rows (`delete_account`, `submit_kyc`, `omega_submit_provider_job` also need aal2).
+  The repo's standard bridge (`private.reject_member`, `private.extend_trial` already held it).
+  The other 23 are called by nothing and stay blocked (`GAP_ANALYSIS.md` §S).
+- **Second bug behind the first.** Knowledge search then failed `42883 operator does not exist:
+  extensions.vector <=> extensions.vector` — pinned `search_path=''`, bare `<=>`, and operators
+  resolve through the path, so it failed at plan time even with no embedding.
+  `20261012064247` sets `search_path = extensions` (every table reference is qualified; ALTER keeps
+  20261008032308 the single definition). It now runs and returns 0 rows: 0 chunks exist.
+- **Verified live** (one `DO` block, rolled back by its closing exception):
+  `owner.revoke={"ok": true…} owner.approve=true owner.permanent=target_not_found_or_owner
+  member.approve=forbidden member.flag=forbidden member.kycreview=forbidden member.project=true
+  member.delete@aal1=aal2_required anon.approve=ERR 42501`. Security advisor unchanged.
+- **`profile.html` owner panel** (open since earlier today) now calls the same three RPCs instead of
+  writing ungranted `profiles` columns; the "N minutes" picker is fixed at 9.1717, which is exactly
+  `approve_member`'s trial. Stub-client test: correct RPC per button, reload only on `ok:true`,
+  an MFA-specific message for `aal2_required`. Its `KNOWN` entry is removed (2 remain).
+- **Gated.** `live-grants.json` `functions` now lists what `authenticated` can call **end to end**
+  (123): authenticated-executable, minus invoker wrappers over a non-executable private function.
+  Query in `grant-contract.py --help`. On the pre-fix list the gate fails all 14 call sites above.
+- **Parallel work noted.** Another agent applied `20261012060927_harden_stripe_rpc_boundaries` live
+  and merged it to `main` meanwhile; it only drops a legacy `apply_subscription_event` overload — no
+  overlap. `remote-migrations.json` carries all 379 versions.
+
+## The site shipped all 68 internal `config/` files, and the Pages failover failed on every push because of it (2026-10-12)
+
+- **Found by** reading why `Omega Static Failover` (the GitHub Pages fallback while Vercel is blocked)
+  concluded `failure` on runs 11–15 — every `main` push today. Job `114689039745`: build passes, step
+  "Validate failover artifact" fails. Reproduced locally: `omega-pages-failover-smoke.py` prints
+  `FAIL: forbidden directory in artifact: config/...` 68 times. The smoke test is right:
+  `vercel-build.sh` excluded only `config/omega-implementation-ledger.json`, so the production
+  artifact (Vercel's too) carried `omega-rpc-security-policy.json`,
+  `supabase-security-definer-exposure.json`, `supabase-live-runtime-evidence.json`,
+  `supabase-migration-provenance.json` and 64 more internal files.
+- **Constraint.** 7 are fetched at runtime by shipped modules (`omega-page-world.js`,
+  `omega-world-atlas.js`, `omega-value-layer.js`, `omega-action-runtime.js`, …): excluding the whole
+  directory would break them.
+- **Fix.** `vercel-build.sh` excludes `./config/*`, then copies exactly the `/config/<name>.json` files
+  referenced by the emitted HTML/JS — derived, so a new runtime fetch ships itself; the existing
+  unreachable-asset scan still fails the build if one is missing. The ledger marker the static contract
+  asserts stays. The smoke test allows a `config/` file only if a shipped page references it.
+- **Verified.** Build: `VERCEL_BUILD=PASS`, `public/config/` = those 7 files. Smoke:
+  `PASS: static failover artifact validated (1131 paths)`. New test
+  `test_only_runtime_fetched_config_ships` fails on the previous `vercel-build.sh`
+  (`git show HEAD:`, `True is not false`) and passes on this one. `ci-local.sh`: 30/30.
+- **Not done here.** Whether GitHub Pages should actually serve `sydomega.com` while Vercel is blocked
+  is the owner's call: it needs the Pages source set to "GitHub Actions" and a DNS change, both outside
+  the repository. This change only makes the artifact deployable and stops the leak on every host.
+- **Follow-up, same PR (#873).** CI's `readiness` job (`omega-release-readiness.yml:68-71`) asserts
+  `omega-scale-policy`, `omega-runtime-manifest` and `omega-truth-model` in `public/config/`; no page
+  fetches them, so the first push dropped them (job `114696984781`, exit 1 at `test -s`). That gate is a
+  standing publication contract, so it is honoured, not edited: `config/public-config.txt` lists
+  config files published by contract, the build ships them plus anything a published config file
+  references (the runtime manifest names `omega-object-model.json` and
+  `omega-object-contract.schema.json`), and a listed file that does not exist fails the build in the
+  parent shell. Published: **12** of 69. The readiness job's commands replayed locally pass; 2 more
+  build tests (closure, missing listed file).
+
+## Copilot visual commands; approvals now steps up to MFA instead of dead-ending (2026-10-12)
+
+- **Visual commands.** 14 commands (`/decisionmatrix` `/infographic` `/canvas` `/layers` `/cycle`
+  `/diagram` `/roadmap` `/sketchnotes` `/iceberg` `/blueprint` `/explodedview` `/tree` `/timeline`
+  `/handwritten`) in the new `omega-copilot-visuals.js`, loaded only when the drawer opens or a `/`
+  command is typed (guard `data-omega-copilot-visuals`). Constraint stated plainly: concierge returns
+  text, `max_tokens: 400` (`supabase/functions/concierge/index.ts:149`), so each command asks for one
+  small JSON object of a fixed shape and the module draws it. Model output is data: every label goes
+  through `textContent`; matrix totals are recomputed client-side; a cut-off or wrong-shaped reply shows
+  the text plus "No /x visual was drawn". Longest persona 802 + history note < 1,200 of the 2,000-char
+  `system_override` limit. Rendered all 14 from sample data in headless Chromium (0 page errors) and
+  fixed three layouts that overflowed the drawer (canvas, diagram, roadmap); type raised to the 12px
+  floor `type-scale.py` enforces. `copilot-contract.js` 14 → 18 cases (schema persona sent, matrix
+  totals recomputed — claimed 99 ignored, `<img onerror>` label rendered as text, undrawable reply
+  noted); against the previous `omega-copilot.js` the run fails.
+- **Approvals MFA step-up.** Owner RPCs return `aal2_required` below aal2, and the live owner account
+  has **0** verified factors, so after #872 every approval still dead-ended in a toast. `approvals.js`
+  `rpcResult` now loads `omega-mfa.js` (same `data-omega-mfa-mod` guard as `omega-mfa-gate.js`), calls
+  `OmegaMFA.stepUp()`, retries once on success, and otherwise reports `aal2_no_factor` with where to
+  enrol (Settings → Two-factor sign-in; `mfa_enrolment_enabled` is `true` live). Stub test: aal2 →
+  step-up → retry succeeds (2 calls); no factor → 1 call, the enrol message.
+- **Follow-up, same day (owner path + remaining RPCs).**
+  - **MFA setup verified in a browser as the owner.** `get_platform_flag('mfa_enrolment_enabled')` →
+    `true` for the owner (live). The two-factor section renders and "Turn on two-factor" calls
+    `mfa.enroll` and shows the scan/verify step — but it sits on Settings' ACCOUNT tab, not the
+    default. `settings.html#two-factor` now opens that tab (rendered: visible, enroll called), and
+    approvals offers to go there on `aal2_no_factor`.
+  - **19 of 23 blocked RPCs restored** (20261012091641, applied live as version `20261012091641`)
+    after reading each body; 4 kept blocked with reasons (GAP_ANALYSIS.md §S). Live probe as a
+    non-owner: every owner action refused; own-project update ok; anon 42501. `live-grants.json`
+    `functions` 123 → 142; `remote-migrations.json` 380.
+  - **Found, not fixed: `set_consult_status` / `set_contract_status` / `set_reservation_status`** take
+    `uuid` for `bigint` ids (`operator does not exist: bigint = uuid` as owner@aal2). Needs DROP +
+    recreate — owner's confirmation required; recorded open.
+
+## One GitHub Pages deployer: the stock templates published the raw repository (2026-10-12)
+
+- **Found.** `main` gained `.github/workflows/static.yml` (`0a91d5be`) and `jekyll-gh-pages.yml`
+  (`4bbc48a3`), GitHub's stock Pages templates. `static.yml` uploads `path: '.'` — the whole
+  repository, unbuilt — and the Jekyll one builds `source: ./`. Both deployed successfully (runs
+  `38227798582`, `38227831529`), so Pages served the repository root, bypassing `vercel-build.sh` and
+  its `config/` exclusion. Three workflows then raced for the one Pages site (last push wins), and
+  both new files fail `workflow-contract.py` (mutable `@v4`/`@v5` tags), turning that gate red on
+  `main` and every PR.
+- **Fix (owner's merge is the decision).** Remove both; `omega-static-failover.yml` stays the single
+  Pages deployer — it builds with `vercel-build.sh`, binds `CNAME`, and refuses to publish unless
+  `omega-pages-failover-smoke.py` passes (only runtime-fetched or contract-listed `config/` files,
+  no secret-shaped values). Its `Configure GitHub Pages` step failed earlier only because Pages was
+  not yet enabled; the stock deploys show it now is. `workflow-contract.py`: PASS after removal.
+
+## Idea ledger: every recorded idea in one gated list, plus a weekly routine (2026-10-12)
+
+- **Found.** Ideas lived in four places that never met. `FEATURE_IDEAS.md` (39 entries) opened
+  with "Nothing in this file is built", yet 30 have shipped, and 20 titles carried no status at
+  all. Two "proposals" were already live on every page: #25 (`bg.js:154` injects
+  `omega-voice-responsive.js`) and #29 (`bg.js:285-288` injects `css/omega-signal-pulse.css`).
+  `docs/OMEGA_999_CONCEPT_REGISTRY.json` indexes 391 blueprint points, and 319 were still
+  `REQUIRES_CURRENT_RUNTIME_MAPPING`; 608 declared points were never extracted, since the source
+  text does not number them. Conversation requests (the 14 copilot commands, the MFA deep link)
+  were recorded nowhere as ideas.
+- **Fix.** `scripts/idea-ledger.py` generates `docs/IDEA_LEDGER.md` from all four sources
+  (FEATURE_IDEAS, the 999 registry, GAP_ANALYSIS §S, the new `docs/IDEA_INTAKE.md`).
+  `docs/idea-status.json` gives the 20 status-less entries an evidence-cited status, and 10
+  blueprint points (1, 3-6, 10, 11, 13, 17, 20) gained `ledger_status` + `evidence`. `--check`
+  is gate `idea-ledger` in `contract-suite.py` (41 gates). It fails on an idea with no known
+  status, an override without evidence or for a vanished idea, an unparseable intake line, or a
+  stale ledger. `scripts/tests/test_idea_ledger.py`: 8 tests plant each violator.
+- **Result (at commit).** 451 ideas, **337 actionable**: 9 NEEDS_DECISION, 1 IN_PROGRESS,
+  3 PROPOSED, 8 PARTIAL, 309 UNMAPPED, 7 OPEN_GAP, 1 UNEXTRACTED. The ledger's own table is the
+  current count; this line is a dated snapshot.
+- **Automation, human-gated.** Routine `trig_01FPt47UNvqQNvTPnQLmnjSJ` (Mondays 06:47 UTC, bound to
+  the session that created it) maps 15 UNMAPPED points per run with evidence, re-checks stale
+  statuses, adds at most one web-trend-scout proposal, may build one LOW-RISK item dormant, and
+  opens a DRAFT PR. It never merges, migrates, DROPs, flips a flag or edits workflows: the owner's
+  merge stays the only path to `main`. At 15 a week, the 309 points take about 21 weeks; the 608
+  unextracted points need the original blueprint text from the owner.
+
+## The 999-point blueprint, classified point by point; one point built (2026-10-12)
+
+- **Source.** The owner re-supplied the full blueprint text. It is the same 1,231-line source
+  indexed on 2026-10-04: point 100 occurs twice, and the gaps 106→111→116 match. It numbers 391
+  unique points; the other 608 numbers do not occur in it. `B-MISSING` is now `DECIDED`: those
+  numbers will not be invented.
+- **Found: the 2026-10-04 extraction lost 23 items.** It keyed entries on the point number, so the
+  second text of each repeated number (100-104, 112, 113, 133) overwrote the first, and 8 source
+  points vanished. The appendix's 14 "Node NNN" items (N089 … N999) were never extracted at all.
+  `scripts/blueprint-truth-map.py` restores both as entries with an `id` (413 in total).
+- **Classified.** Every entry now has a status and a reason, and `blueprint-truth-map.py` is the
+  only source; a status edited into the registry by hand is discarded.
+
+  | status | count |
+  |---|---|
+  | RND_OR_LORE | 175 |
+  | REJECTED | 114 |
+  | PARTIAL | 56 |
+  | NEEDS_DECISION | 50 |
+  | PROPOSED | 16 |
+  | SHIPPED | 2 |
+
+  - **REJECTED** means the point evades law, tax, sanctions or courts; manipulates markets or
+    members; attacks third parties; surveils or scores people without consent; makes medical
+    claims; or removes human review.
+  - **PARTIAL** cites the file holding the real version: `matrix.html`'s 729 nodes,
+    `flashcard.html`'s SM-2, `honors.html`'s bronze/silver/gold, aal2 MFA, `command.html` TODAY.
+  - The blueprint's own closing audit "proved" 999/999 with `def is_mapped(point): return True`.
+- **Built: point 245, "Weight = Benefit × Probability".** `decisions.html` gains an
+  EXPECTED VALUE framework: benefit (−10..10) × probability (0–100%) per option, with the highest
+  weight named. A delegated listener stays inside the CSP inline-handler ratchet; a first draft
+  with two `oninput=` attributes failed it (20 → 22). Verified in Chromium: 8 × 40% = 3.20,
+  3 × 90% = 2.70, "HIGHEST WEIGHT: Take job"; no page errors, no horizontal overflow at 390px.
+- **Gates.** `blueprint-truth-map` joins `contract-suite.py` (42 gates). Its 6 tests in
+  `scripts/tests/test_blueprint_truth_map.py` (663 in the suite) cover a point classified twice,
+  an unclassified point, registry drift, dropped duplicates or Nodes, and an unknown status. Two
+  of those tests failed on the first run and exposed the hand-mapped bypass fixed above.
+
+## Owner decisions on the blueprint's waiting items; one tier ladder (2026-10-12)
+
+- **Decisions (owner, 2026-10-12):** the 12-tier `omega-canon.json` ladder; family accounts
+  for adults only, granted by the owner; all money items dormant, with Ω as non-cash,
+  non-transferable points; a counsel brief for Lebanon, UAE/GCC, US and EU/UK. The blueprint
+  items waiting on the owner went from 50 to 8 (39 DECIDED, 4 IN_PROGRESS) in
+  `scripts/blueprint-truth-map.py`.
+- **Found, live:** 9 profiles, 4 approved, 1 owner. 0 rows in each of `payments`,
+  `subscriptions`, `billing_invoices`, `stripe_webhook_events`, `family_nodes` and
+  `leaderboard_snapshots`. `payments_enabled`, `stripe_integration_enabled` and
+  `tokens_enabled` are all false. `pg_cron` is now installed, contrary to `GAP_ANALYSIS.md`,
+  which is updated.
+- **Fixed: two divergent tier ladders (§8.1 class 8, plus class 9 and class 1).**
+  - `subscriptions.html` carried its own 6-tier copy: different names and prices ($9.17/mo …
+    $1,917 lifetime), with perks that do not exist ("Sovereign token allocation",
+    "Investment layer").
+  - Its "REQUEST" button alerted "Your request … has been noted" while recording nothing.
+  - It displayed `subscription_tier`, which is null for every member, instead of the
+    `membership_tier` that `tierUnlocks()` reads.
+  - It now renders the canon ladder through `window.OmegaCanon`, with a wait helper because
+    bg.js injects omega-canon.js after the page's own scripts. It marks the member's
+    `membership_tier`, and shows a disabled "UPGRADES OPEN WHEN BILLING IS ENABLED" button.
+  - Verified in Chromium: 12 cards (INITIATE … ASCENDANT, $9.17 / $19.17 / $37.17 …), the
+    current tier marked, canon perk labels, neither fake perk present, no page errors. The CSP
+    inline-handler ratchet is unchanged.
+- **Family access:** a HIGH-RISK plan and round-1 adversarial review are in
+  `docs/decisions/family-access/` (verdict REVISE, 10 findings folded in). The re-enumeration
+  found `leaderboard_snapshots` readable by every member (`SELECT true`), so the grant must also
+  delete the target's snapshot rows. No code yet.
+
+## Two workflows red on every `main` push: Pages smoke and page evidence (2026-10-12)
+
+- **Omega Static Failover.** Run 38253837405 (merge of #878):
+  - The deploy succeeded ("Reported success!"), so Pages now serves the built artifact, not the
+    raw repository the stock workflows published.
+  - The next step then failed: `python3: can't open file '.../scripts/omega-pages-failover-smoke.py'`.
+    The `deploy` job runs on a fresh runner with no checkout.
+  - Fix: a pinned `actions/checkout` step before the smoke test.
+  - Verified: `workflow-contract.py` exits 0. The real proof is the next `main` run.
+- **Ω Page Evidence Materialization.** It has failed on every run since at least #9
+  (2026-10-11):
+  - `--promote` wrote the registry `status: SOURCE_EVIDENCE_BOOTSTRAP`.
+  - The same job's test accepts only `EVIDENCE_CONTRACT` / `EVIDENCE_CONTRACT_PARTIAL_AUDIT`,
+    and maps a promoted registry, whose contracts carry `REPOSITORY_SOURCE_EVIDENCE_ONLY`
+    authority, to `EVIDENCE_CONTRACT`. Nothing else reads the old value.
+  - Fix: the script writes `EVIDENCE_CONTRACT`.
+  - Verified in a throwaway worktree of `main`: `--promote`, `--write`, the contract audit and
+    `--check` all exit 0, and the 9 tests pass. Before the fix the run failed with exactly
+    CI's AssertionError.
+
+## Certificates: real rows with a PDF, and unlock copy that stopped promising dormant features (2026-10-13)
+
+- **Fixed: every member was shown all 12 certificates as their own (§8.1 class 9).**
+  - `profile.html` `buildCerts()` drew the whole catalogue under "YOUR SOVEREIGN CERTIFICATES", whatever the member held. Its neighbour `buildAchievementsGrid()` had already been fixed for the same fault.
+  - Live, `public.certificates` has 24 rows across 2 holders, with self-or-owner RLS and `SELECT` granted to `authenticated`. Every other member saw 12 certificates they did not hold.
+  - It now reads the member's own rows, filtered on uid because the owner can read every member's. It checks `.error` and renders with `textContent`. It shows "No certificates issued yet." when the member has none, and an error line when the read fails.
+- **Added: a PDF for each certificate held.**
+  - `omega-passport.js` (already on every page via bg.js) gains `generateCertificate` and a delegated `[data-certificate-download]` handler, on the vendored jsPDF and its existing error path.
+  - The page states it is a membership record, not an accredited qualification.
+- **Fixed: the KYC tab's "UNLOCKS ON COMPLETION" read as live** (live Stripe payments, 12 active tokens, full legal succession, "Verifiable on-chain"). Billing, Stripe and tokens are off. The six lines are now future tense (§9); the credentials line points at the PDFs and says "Not on-chain".
+- **Verified in headless Chromium:**
+  - With no rows: "No certificates issued yet." and 0 cards.
+  - With 2 stubbed rows (one with a null name): 2 cards, and clicking DOWNLOAD saved `omega-certificate-1-initiate.pdf`, which was rasterised and read.
+  - 0 page errors in both runs.
+- **Logged, not fixed:** `omega-passport.js` keeps its own 12 gate names, which differ from the canon tiers. The mapping is the owner's call (`docs/IDEA_INTAKE.md`).
+
+## Leaderboard: every member was ranked #1 of 1 (2026-10-13)
+
+- **Fixed (§8.1 class 9): `leaderboard.js`'s last fallback read `profiles` directly, and RLS returns only the caller's own row.**
+  - Its first source, the `rankings` Edge Function, is not deployed: `list_edge_functions` on `ydqhzvvoyufiiqvzcjns` returns 16 functions, and neither `rankings` nor `snapshot-leaderboard` is among them.
+  - Its second source, `leaderboard_snapshots`, has 0 rows, because nothing deployed writes to it.
+  - The `profiles` policy is `auth.uid() = id OR private.is_platform_owner()`. So every non-owner member saw themselves as the only ranked member, marked LIVE, while 4 members are approved.
+  - Measured live with real role impersonation for a non-owner member: `public.public_leaderboard(50)` returns 4 rows, while `profiles` returns 1.
+- **The fallback now calls `public_leaderboard`, the member-visible ranking that already exists.** The migration `20261012150000` also makes it exclude family accounts.
+  - The RPC returns no user ids, so "you" is marked only when exactly one row has your name and your authority. Otherwise your rank stays unstated instead of being guessed.
+  - When the RPC fails, the page says "Ranking is unavailable right now." and shows no rank.
+- **Verified in headless Chromium, with the stub patched in memory and the Edge Function made to fail:**
+  - Stub returning 3 rows: 3 rows rendered, "YOU" on rank 2, and `my-rank` = 2.
+  - Stub returning an error: the unavailable message, with `my-rank` left as `--`.
+  - 0 page errors in both runs.

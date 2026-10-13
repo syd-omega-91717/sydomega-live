@@ -39,9 +39,9 @@ function renderTable(rows,myUid){
 
 (async function(){
   try{
-    var s=(await sb.auth.getSession()).data.session;
+    var sessionResult=await sb.auth.getSession();if(sessionResult.error)throw sessionResult.error;var s=sessionResult.data&&sessionResult.data.session;
     if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    var profileResult=await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle();if(profileResult.error)throw profileResult.error;if(!profileResult.data||typeof profileResult.data!=='object')throw new Error('profile_record_unavailable');var pr=profileResult.data;
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
@@ -86,20 +86,30 @@ function renderTable(rows,myUid){
         ranked=true;
       }catch(e){}
     }
-    /* Live profiles fallback */
+    /* Live ranking fallback: public_leaderboard is the member-visible ranking.
+       A direct profiles read cannot be one -- RLS returns only the caller's own
+       row, so every member used to see themselves ranked #1 of 1. */
     if(!ranked){
-      var pf=await sb.from('profiles').select('id,display_name,axis_a,axis_b,axis_c,element,is_owner').eq('access_approved',true).limit(100);
-      var profiles=(pf.data||[]).map(function(p){
-        var auth=p.is_owner?27.8367:calcAuth(p.axis_a,p.axis_b,p.axis_c);
-        return Object.assign({},p,{auth:auth,authority:auth,user_id:p.id,rank:0});
+      var pl=await sb.rpc('public_leaderboard',{p_limit:50});
+      if(pl.error||!Array.isArray(pl.data)){
+        sid('lb-total','--');sid('my-total','--');sid('lb-date','UNAVAILABLE');
+        var lbEl=document.getElementById('lb-rows');
+        if(lbEl)lbEl.textContent='Ranking is unavailable right now.';
+        console.warn('[leaderboard] public_leaderboard failed',pl.error);
+        return;
+      }
+      var myName=(pr.display_name||'').trim()||('Initiate-'+String(s.user.id).slice(0,4));
+      var rows2=pl.data.map(function(r){
+        return {rank:r.rank,display_name:r.name,element:r.element,sign:r.sign,
+          axis_a:r.axis_a,axis_b:r.axis_b,axis_c:r.axis_c,authority:Number(r.authority),auth:Number(r.authority)};
       });
-      profiles.sort(function(a,b){return b.auth-a.auth;});
-      profiles.forEach(function(p,i){p.rank=i+1;});
-      sid('lb-total',profiles.length);sid('my-total',profiles.length);sid('lb-date','LIVE');
-      var meR=profiles.findIndex(function(p){return p.id===s.user.id;});
-      if(meR>=0){sid('my-rank',meR+1);sid('my-rank-2',meR+1);sid('banner-rank',meR+1);}
-      renderPodium(profiles[0],profiles[1],profiles[2]);
-      renderTable(profiles,s.user.id);
+      /* The RPC returns no user ids. Mark "you" only when exactly one row has
+         your name and your authority; otherwise leave your rank unstated. */
+      var mine=rows2.filter(function(r){return r.display_name===myName&&Math.abs(r.auth-myAuth)<0.001;});
+      if(mine.length===1){mine[0].user_id=s.user.id;sid('my-rank',mine[0].rank);sid('my-rank-2',mine[0].rank);sid('banner-rank',mine[0].rank);}
+      sid('lb-total',rows2.length);sid('my-total',rows2.length);sid('lb-date','LIVE');
+      renderPodium(rows2[0],rows2[1],rows2[2]);
+      renderTable(rows2,s.user.id);
     }
-  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+  }catch(e){var app=document.getElementById('app');if(app)app.style.display='none';var panel=document.getElementById('leaderboard-load-error');if(panel)panel.hidden=false;console.error('[leaderboard] access verification failed; page remains locked.',e);}
 })();

@@ -1,0 +1,1103 @@
+{
+ "_comment": [
+  "GENERATED snapshot of what the `authenticated` role may do on every live public relation.",
+  "",
+  "WHY. A correct RLS policy on a table with no matching GRANT never runs: the privilege is",
+  "checked first, every call fails 42501, and the page shows an empty or error state (CLAUDE.md",
+  "8.1 class 6). Column-level grants make it subtler: profiles allows UPDATE on 14 columns only,",
+  "so a write naming one more column fails whole. On 2026-10-12 this killed the sign-up",
+  "birth-date gate for every new member (FIXES_LOG.md) while every existing gate passed.",
+  "scripts/grant-contract.py checks every client .from('t').<op>() against this file.",
+  "",
+  "SHAPE. relations.<name>.table is 'SIUD' (SELECT/INSERT/UPDATE/DELETE), '-' where absent.",
+  "relations.<name>.columns.<PRIV> lists the granted columns, present only where the",
+  "table-level privilege is absent and a column-level grant exists.",
+  "",
+  "REGENERATE whenever grants change live (same change, like live-schema.json): run the query",
+  "in scripts/grant-contract.py's --help against project ydqhzvvoyufiiqvzcjns and replace",
+  "`relations`. A stale snapshot gives false findings in both directions.",
+  "",
+  "functions: every public function the `authenticated` role can CALL END TO END (142, captured",
+  "2026-10-12). EXECUTE on the public function is not enough: a SECURITY INVOKER wrapper runs",
+  "`select private.<fn>(...)` as the caller, so it also needs EXECUTE on every private function it",
+  "calls. 35 wrappers held the first grant and lacked the second -- approvals, delete-account, KYC,",
+  "creation studio and knowledge search all failed 42501 until 20261012064126 (12 restored; the",
+  "23 then blocked were reviewed and 19 restored by 20261012091641; the 4 still blocked are listed in",
+  "GAP_ANALYSIS.md S). A client .rpc('name') whose name is not here fails for every member.",
+  "Regenerate with the query in",
+  "scripts/grant-contract.py --help (FUNCTIONS)."
+ ],
+ "captured_at": "2026-10-12",
+ "project": "ydqhzvvoyufiiqvzcjns",
+ "role": "authenticated",
+ "relations": {
+  "academy_access": {
+   "table": "S---"
+  },
+  "academy_categories": {
+   "table": "SIUD"
+  },
+  "academy_courses": {
+   "table": "SIUD"
+  },
+  "academy_enrollments": {
+   "table": "SIU-"
+  },
+  "academy_exam_results": {
+   "table": "S---"
+  },
+  "academy_exams": {
+   "table": "SIUD"
+  },
+  "academy_lessons": {
+   "table": "SIUD"
+  },
+  "academy_modules": {
+   "table": "SIUD"
+  },
+  "academy_progress": {
+   "table": "SIU-"
+  },
+  "academy_questions": {
+   "table": "-IUD",
+   "columns": {
+    "SELECT": [
+     "exam_id",
+     "id",
+     "option_a",
+     "option_b",
+     "option_c",
+     "option_d",
+     "points",
+     "question"
+    ]
+   }
+  },
+  "access_audit": {
+   "table": "S---"
+  },
+  "access_grant_audit": {
+   "table": "----"
+  },
+  "activity_feed": {
+   "table": "SIUD"
+  },
+  "activity_logs": {
+   "table": "----"
+  },
+  "advertisements": {
+   "table": "-I--",
+   "columns": {
+    "SELECT": [
+     "category",
+     "company",
+     "created_at",
+     "description",
+     "ends_at",
+     "id",
+     "rate_tier",
+     "starts_at",
+     "status",
+     "title",
+     "url"
+    ]
+   }
+  },
+  "agent_experiments": {
+   "table": "S---"
+  },
+  "agent_performance_metrics": {
+   "table": "S---"
+  },
+  "agent_threads": {
+   "table": "----"
+  },
+  "ai_agents": {
+   "table": "----"
+  },
+  "ai_conversations": {
+   "table": "----"
+  },
+  "ai_documents": {
+   "table": "----"
+  },
+  "ai_jobs": {
+   "table": "----"
+  },
+  "ai_memory": {
+   "table": "SIUD"
+  },
+  "ai_memory_embeddings": {
+   "table": "----"
+  },
+  "ai_memory_links": {
+   "table": "----"
+  },
+  "ai_messages": {
+   "table": "----"
+  },
+  "ai_prompts": {
+   "table": "----"
+  },
+  "ai_providers": {
+   "table": "----"
+  },
+  "ai_workspace_documents": {
+   "table": "----"
+  },
+  "ai_workspace_members": {
+   "table": "----"
+  },
+  "ai_workspaces": {
+   "table": "----"
+  },
+  "analytics_events": {
+   "table": "----"
+  },
+  "api_keys": {
+   "table": "SIUD"
+  },
+  "approval_requests": {
+   "table": "----"
+  },
+  "architecture_blocks": {
+   "table": "----"
+  },
+  "architecture_tasks": {
+   "table": "----"
+  },
+  "audit_logs": {
+   "table": "----"
+  },
+  "automation_rules": {
+   "table": "SIUD"
+  },
+  "autonomous_decisions": {
+   "table": "S---"
+  },
+  "autonomous_insights": {
+   "table": "S---"
+  },
+  "billing_features": {
+   "table": "----"
+  },
+  "billing_invoices": {
+   "table": "----"
+  },
+  "billing_plan_features": {
+   "table": "----"
+  },
+  "billing_plans": {
+   "table": "----"
+  },
+  "bloodline_nodes": {
+   "table": "SI-D"
+  },
+  "calendar_events": {
+   "table": "----"
+  },
+  "calendars": {
+   "table": "----"
+  },
+  "capability_kpi_log": {
+   "table": "----"
+  },
+  "capability_registry": {
+   "table": "----",
+   "columns": {
+    "SELECT": [
+     "capability_id",
+     "capability_name",
+     "health_status",
+     "lifecycle_status",
+     "version"
+    ]
+   }
+  },
+  "certificates": {
+   "table": "S---"
+  },
+  "character_records": {
+   "table": "SIU-"
+  },
+  "circuit_breakers": {
+   "table": "----"
+  },
+  "client_errors": {
+   "table": "S---"
+  },
+  "codex_bookmarks": {
+   "table": "SIUD"
+  },
+  "commission_contracts": {
+   "table": "SI--"
+  },
+  "compliance_controls": {
+   "table": "----"
+  },
+  "consent_records": {
+   "table": "SIUD"
+  },
+  "consult_requests": {
+   "table": "SI--"
+  },
+  "content_recommendations": {
+   "table": "----"
+  },
+  "content_versions": {
+   "table": "----"
+  },
+  "contribution_log": {
+   "table": "SI--"
+  },
+  "conversations": {
+   "table": "----"
+  },
+  "conversion_funnel": {
+   "table": "----"
+  },
+  "council_deliberations": {
+   "table": "SIU-"
+  },
+  "covenant_progress": {
+   "table": "S---"
+  },
+  "creator_proposals": {
+   "table": "----"
+  },
+  "daily_engagement": {
+   "table": "----"
+  },
+  "data_domains": {
+   "table": "----"
+  },
+  "data_entities": {
+   "table": "----"
+  },
+  "data_export_requests": {
+   "table": "----"
+  },
+  "data_lineage": {
+   "table": "----"
+  },
+  "devices": {
+   "table": "----"
+  },
+  "digest_preferences": {
+   "table": "----"
+  },
+  "dispatches": {
+   "table": "SI--"
+  },
+  "domain_mastery": {
+   "table": "S---"
+  },
+  "enterprise_accounts": {
+   "table": "SIUD"
+  },
+  "enterprise_audit": {
+   "table": "----"
+  },
+  "error_budget_policy": {
+   "table": "SIUD"
+  },
+  "ethics_declarations": {
+   "table": "----"
+  },
+  "event_rsvps": {
+   "table": "SI-D"
+  },
+  "evolution_events": {
+   "table": "S---"
+  },
+  "exam_results": {
+   "table": "SI--"
+  },
+  "expert_bookings": {
+   "table": "----"
+  },
+  "family_nodes": {
+   "table": "SIUD"
+  },
+  "feature_flags": {
+   "table": "SIUD"
+  },
+  "feedback": {
+   "table": "SI--"
+  },
+  "focus_sessions": {
+   "table": "SIUD"
+  },
+  "founder_dashboard_events": {
+   "table": "----"
+  },
+  "gate_evaluations": {
+   "table": "----"
+  },
+  "gate_matrix": {
+   "table": "----"
+  },
+  "governance_policies": {
+   "table": "SIUD"
+  },
+  "graph_entities": {
+   "table": "SIUD"
+  },
+  "graph_events": {
+   "table": "SI--"
+  },
+  "graph_evidence": {
+   "table": "S---"
+  },
+  "graph_relationships": {
+   "table": "SIUD"
+  },
+  "habit_logs": {
+   "table": "SIUD"
+  },
+  "health_logs": {
+   "table": "SI--"
+  },
+  "heritage_records": {
+   "table": "SI-D"
+  },
+  "incidents": {
+   "table": "SIUD"
+  },
+  "interest_signals": {
+   "table": "SI--"
+  },
+  "knowledge_attachments": {
+   "table": "----"
+  },
+  "knowledge_documents": {
+   "table": "SIUD"
+  },
+  "knowledge_edges": {
+   "table": "----"
+  },
+  "knowledge_nodes": {
+   "table": "----"
+  },
+  "knowledge_spaces": {
+   "table": "----"
+  },
+  "leaderboard_entries": {
+   "table": "S---"
+  },
+  "leaderboard_snapshots": {
+   "table": "S---"
+  },
+  "lesson_completions": {
+   "table": "S---"
+  },
+  "marketplace_categories": {
+   "table": "----"
+  },
+  "marketplace_favorites": {
+   "table": "SI-D"
+  },
+  "marketplace_listings": {
+   "table": "SIU-"
+  },
+  "marketplace_orders": {
+   "table": "----"
+  },
+  "marketplace_reviews": {
+   "table": "----"
+  },
+  "matrix_phases": {
+   "table": "S---"
+  },
+  "matrix_progress": {
+   "table": "S---"
+  },
+  "matrix_tracks": {
+   "table": "S---"
+  },
+  "medals": {
+   "table": "S---"
+  },
+  "media_items": {
+   "table": "----"
+  },
+  "media_reservations": {
+   "table": "SIU-"
+  },
+  "meeting_participants": {
+   "table": "----"
+  },
+  "meetings": {
+   "table": "----"
+  },
+  "member_agent_interactions": {
+   "table": "SI--"
+  },
+  "member_events": {
+   "table": "SI-D"
+  },
+  "member_feature_flags": {
+   "table": "S-U-"
+  },
+  "member_perks": {
+   "table": "S---"
+  },
+  "member_posts": {
+   "table": "SIUD"
+  },
+  "member_preferences": {
+   "table": "S---"
+  },
+  "member_presence": {
+   "table": "SIUD"
+  },
+  "member_quests": {
+   "table": "SIUD"
+  },
+  "member_state": {
+   "table": "SIUD"
+  },
+  "messages": {
+   "table": "----"
+  },
+  "news": {
+   "table": "S---"
+  },
+  "notification_queue": {
+   "table": "S---"
+  },
+  "notification_templates": {
+   "table": "S---"
+  },
+  "notifications": {
+   "table": "S-U-"
+  },
+  "oaths": {
+   "table": "SI--"
+  },
+  "okr_key_results": {
+   "table": "SIUD"
+  },
+  "okr_objectives": {
+   "table": "SIUD"
+  },
+  "omega_achievement_definitions": {
+   "table": "S---"
+  },
+  "omega_achievement_verifications": {
+   "table": "----"
+  },
+  "omega_agent_operations": {
+   "table": "S---"
+  },
+  "omega_agent_task_events": {
+   "table": "S---"
+  },
+  "omega_agent_tasks": {
+   "table": "S---"
+  },
+  "omega_agent_tool_grants": {
+   "table": "----"
+  },
+  "omega_agents": {
+   "table": "S---"
+  },
+  "omega_ai_requests": {
+   "table": "----"
+  },
+  "omega_architecture_blocks": {
+   "table": "----"
+  },
+  "omega_architecture_verifications": {
+   "table": "----"
+  },
+  "omega_audit_log": {
+   "table": "----"
+  },
+  "omega_blockchain_ownership_verifications": {
+   "table": "S---"
+  },
+  "omega_capabilities": {
+   "table": "S---"
+  },
+  "omega_certificates": {
+   "table": "S---"
+  },
+  "omega_creative_assets": {
+   "table": "S---"
+  },
+  "omega_creative_projects": {
+   "table": "S---"
+  },
+  "omega_data_sources": {
+   "table": "S---"
+  },
+  "omega_dead_letters": {
+   "table": "----"
+  },
+  "omega_entitlements": {
+   "table": "S---"
+  },
+  "omega_event_queue": {
+   "table": "----"
+  },
+  "omega_experience_definitions": {
+   "table": "S---"
+  },
+  "omega_experience_runs": {
+   "table": "S---"
+  },
+  "omega_fraud_signals": {
+   "table": "----"
+  },
+  "omega_investment_watchlists": {
+   "table": "SIUD"
+  },
+  "omega_knowledge_chunks": {
+   "table": "S---"
+  },
+  "omega_knowledge_documents": {
+   "table": "S---"
+  },
+  "omega_knowledge_embedding_jobs": {
+   "table": "S---"
+  },
+  "omega_knowledge_sources": {
+   "table": "----"
+  },
+  "omega_ledger_accounts": {
+   "table": "S---"
+  },
+  "omega_ledger_entries": {
+   "table": "S---"
+  },
+  "omega_ledger_transactions": {
+   "table": "S---"
+  },
+  "omega_legal_documents": {
+   "table": "S---"
+  },
+  "omega_matrix_node_semantics": {
+   "table": "S---"
+  },
+  "omega_matrix_nodes": {
+   "table": "S---"
+  },
+  "omega_media_jobs": {
+   "table": "S---"
+  },
+  "omega_member_knowledge_loom": {
+   "table": "S---"
+  },
+  "omega_member_life_surface": {
+   "table": "S---"
+  },
+  "omega_member_mission_state": {
+   "table": "S---"
+  },
+  "omega_member_mission_tasks": {
+   "table": "S---"
+  },
+  "omega_member_product_reality": {
+   "table": "S---"
+  },
+  "omega_member_quest_state": {
+   "table": "S---"
+  },
+  "omega_mission_task_transitions": {
+   "table": "S---"
+  },
+  "omega_mission_tasks": {
+   "table": "S---"
+  },
+  "omega_mission_transitions": {
+   "table": "S---"
+  },
+  "omega_missions": {
+   "table": "S---"
+  },
+  "omega_module_runtime_actions": {
+   "table": "S---"
+  },
+  "omega_notifications": {
+   "table": "S---"
+  },
+  "omega_payment_events": {
+   "table": "----"
+  },
+  "omega_payment_reconciliation": {
+   "table": "S---"
+  },
+  "omega_platform_events": {
+   "table": "S---"
+  },
+  "omega_platform_evidence": {
+   "table": "S---"
+  },
+  "omega_platform_product_reality": {
+   "table": "S---"
+  },
+  "omega_provider_jobs": {
+   "table": "S---"
+  },
+  "omega_provider_registry": {
+   "table": "S---"
+  },
+  "omega_quest_missions": {
+   "table": "S---"
+  },
+  "omega_quests": {
+   "table": "S---"
+  },
+  "omega_recovery_checkpoints": {
+   "table": "S---"
+  },
+  "omega_referral_attributions": {
+   "table": "----"
+  },
+  "omega_referral_clicks": {
+   "table": "----"
+  },
+  "omega_referral_codes": {
+   "table": "----"
+  },
+  "omega_referral_conversions": {
+   "table": "----"
+  },
+  "omega_referral_rewards": {
+   "table": "----"
+  },
+  "omega_service_orders": {
+   "table": "S---"
+  },
+  "omega_services": {
+   "table": "S---"
+  },
+  "omega_simulation_runs": {
+   "table": "S---"
+  },
+  "omega_user_achievements": {
+   "table": "S---"
+  },
+  "organization_members": {
+   "table": "----"
+  },
+  "organizations": {
+   "table": "----"
+  },
+  "payments": {
+   "table": "----"
+  },
+  "pending_access_requests": {
+   "table": "----"
+  },
+  "permanent_access_review": {
+   "table": "----"
+  },
+  "permissions": {
+   "table": "----"
+  },
+  "platform_events": {
+   "table": "SI--"
+  },
+  "platform_metrics": {
+   "table": "S-UD"
+  },
+  "platform_owners": {
+   "table": "----"
+  },
+  "platform_settings": {
+   "table": "S---"
+  },
+  "point_perks": {
+   "table": "S---"
+  },
+  "policy_eval_log": {
+   "table": "----"
+  },
+  "policy_rules": {
+   "table": "----"
+  },
+  "profiles": {
+   "table": "S---",
+   "columns": {
+    "UPDATE": [
+     "avatar_url",
+     "bg_color",
+     "bio",
+     "birth_date",
+     "demo_watched_at",
+     "display_name",
+     "dob",
+     "nationality",
+     "profession",
+     "sign",
+     "terms_accepted",
+     "terms_accepted_at",
+     "trial_started_at",
+     "updated_at"
+    ]
+   }
+  },
+  "project_activity": {
+   "table": "----"
+  },
+  "project_files": {
+   "table": "----"
+  },
+  "project_members": {
+   "table": "----"
+  },
+  "project_milestones": {
+   "table": "SIUD"
+  },
+  "projects": {
+   "table": "SIUD"
+  },
+  "publication_categories": {
+   "table": "----"
+  },
+  "publication_comments": {
+   "table": "----"
+  },
+  "publication_tag_map": {
+   "table": "----"
+  },
+  "publication_tags": {
+   "table": "----"
+  },
+  "publication_versions": {
+   "table": "----"
+  },
+  "publications": {
+   "table": "SIU-"
+  },
+  "quest_completions": {
+   "table": "S---"
+  },
+  "rate_limits": {
+   "table": "----"
+  },
+  "research_hypotheses": {
+   "table": "SI--"
+  },
+  "risk_register": {
+   "table": "SIUD"
+  },
+  "role_permissions": {
+   "table": "----"
+  },
+  "roles": {
+   "table": "----"
+  },
+  "search_index": {
+   "table": "S---"
+  },
+  "seasonal_events": {
+   "table": "S---"
+  },
+  "security_policies": {
+   "table": "----"
+  },
+  "session_heartbeats": {
+   "table": "SI--"
+  },
+  "sessions": {
+   "table": "----"
+  },
+  "settings": {
+   "table": "----"
+  },
+  "signal_saves": {
+   "table": "SIUD"
+  },
+  "signups": {
+   "table": "----"
+  },
+  "sim_trades": {
+   "table": "S---"
+  },
+  "sla_metrics": {
+   "table": "----"
+  },
+  "slo_metrics": {
+   "table": "----"
+  },
+  "soc_alerts": {
+   "table": "----"
+  },
+  "social_broadcasts": {
+   "table": "SI--"
+  },
+  "social_connections": {
+   "table": "SIUD"
+  },
+  "sovereign_events": {
+   "table": "S---"
+  },
+  "sovereign_points_ledger": {
+   "table": "S---"
+  },
+  "storage_files": {
+   "table": "----"
+  },
+  "storage_shares": {
+   "table": "----"
+  },
+  "stripe_webhook_events": {
+   "table": "----"
+  },
+  "subscriptions": {
+   "table": "----"
+  },
+  "system_configuration": {
+   "table": "----"
+  },
+  "system_health": {
+   "table": "----"
+  },
+  "system_incidents": {
+   "table": "----"
+  },
+  "system_metrics": {
+   "table": "----"
+  },
+  "task_attachments": {
+   "table": "----"
+  },
+  "task_comments": {
+   "table": "----"
+  },
+  "task_completions": {
+   "table": "S---"
+  },
+  "task_label_map": {
+   "table": "----"
+  },
+  "task_labels": {
+   "table": "----"
+  },
+  "tasks": {
+   "table": "SIUD"
+  },
+  "team_members": {
+   "table": "----"
+  },
+  "team_messages": {
+   "table": "----"
+  },
+  "teams": {
+   "table": "----"
+  },
+  "telemetry_events": {
+   "table": "SI--"
+  },
+  "threat_events": {
+   "table": "SIUD"
+  },
+  "token_balances": {
+   "table": "S---"
+  },
+  "token_catalog": {
+   "table": "S---"
+  },
+  "top_pages": {
+   "table": "S---"
+  },
+  "travel_journeys": {
+   "table": "SI-D"
+  },
+  "trophies": {
+   "table": "S---"
+  },
+  "user_assets": {
+   "table": "S---"
+  },
+  "user_dedication": {
+   "table": "SIU-"
+  },
+  "user_journeys": {
+   "table": "----"
+  },
+  "wallet_accounts": {
+   "table": "----"
+  },
+  "wallet_transactions": {
+   "table": "----"
+  },
+  "wealth_snapshots": {
+   "table": "SIUD"
+  },
+  "webhook_logs": {
+   "table": "----"
+  },
+  "webhooks": {
+   "table": "----"
+  },
+  "weekly_digest_queue": {
+   "table": "----"
+  },
+  "workflow_analytics": {
+   "table": "----"
+  },
+  "workflow_definitions": {
+   "table": "----"
+  },
+  "workflow_executions": {
+   "table": "SI--"
+  },
+  "workflow_runs": {
+   "table": "----"
+  },
+  "workflow_steps": {
+   "table": "----"
+  },
+  "workflows": {
+   "table": "----"
+  }
+ },
+ "functions": [
+  "academy_promote",
+  "academy_subscribe",
+  "access_audit_log",
+  "advance_matrix",
+  "approve_member",
+  "authority_score",
+  "check_gate",
+  "check_trial_status",
+  "claim_daily_points",
+  "complete_task",
+  "compute_authority",
+  "compute_data_quality",
+  "deactivate_account",
+  "delete_account",
+  "derive_cosmology",
+  "enforce_access_defaults",
+  "engagement_day",
+  "engagement_heartbeat",
+  "engagement_pause",
+  "engagement_report",
+  "engagement_target",
+  "erase_ai_memory",
+  "error_summary",
+  "evaluate_policy",
+  "expire_trial",
+  "export_my_data",
+  "extend_trial",
+  "find_contradictions",
+  "find_graph_paths",
+  "get_activity_feed",
+  "get_all_members",
+  "get_analytics_summary",
+  "get_capability_health",
+  "get_engagement_status",
+  "get_enterprise_summary",
+  "get_governance_health",
+  "get_member_preferences",
+  "get_my_task_log",
+  "get_pending_requests",
+  "get_platform_flag",
+  "get_points_leaderboard",
+  "get_public_schema_metrics",
+  "get_threat_summary",
+  "grant_permanent_access",
+  "grant_trial_access",
+  "graph_entity_centrality",
+  "has_academy_access",
+  "has_active_access",
+  "is_platform_owner",
+  "kyc_document_purged",
+  "kyc_queue",
+  "lattice_node",
+  "log_workflow_execution",
+  "matrix_node",
+  "member_state_touch",
+  "membership_report",
+  "milestones_for_axis",
+  "my_exam_results",
+  "my_feedback",
+  "my_interest_profile",
+  "my_lattice",
+  "my_matrix",
+  "my_points_balance",
+  "my_progression",
+  "my_sovereign_summary",
+  "my_subscription",
+  "my_token_balances",
+  "my_trial_status",
+  "notify_achievement",
+  "omega_abandon_experience_run",
+  "omega_complete_mission",
+  "omega_create_creative_asset",
+  "omega_create_creative_project",
+  "omega_create_experience",
+  "omega_create_recovery_checkpoint",
+  "omega_creation_surface",
+  "omega_is_owner",
+  "omega_issue_certificate",
+  "omega_knowledge_hybrid_search",
+  "omega_knowledge_ingest_document",
+  "omega_knowledge_search",
+  "omega_member_mission_task_surface",
+  "omega_publish_experience",
+  "omega_record_simulation_run",
+  "omega_record_world_action",
+  "omega_revoke_certificate",
+  "omega_start_experience_run",
+  "omega_start_mission",
+  "omega_step_experience_run",
+  "omega_submit_provider_job",
+  "omega_update_creative_asset",
+  "omega_update_creative_project",
+  "omega_update_experience",
+  "omega_verify_certificate",
+  "omega_verify_recovery_checkpoint",
+  "order_stats",
+  "owner_confirm_secrets_rotated",
+  "owner_security_status",
+  "owner_set_kyc_intake",
+  "owner_set_mfa_required",
+  "ping_session",
+  "post_dispatch",
+  "propose_sim_trade",
+  "protect_owner_lifetime",
+  "public_leaderboard",
+  "published_dispatches",
+  "ratify_existing_permanent_access",
+  "reactivate_account",
+  "recall_ai_context",
+  "record_interest_signal",
+  "record_sovereign_event",
+  "reject_member",
+  "report_client_error",
+  "request_account_erasure",
+  "resolve_sim_trade",
+  "review_contracts",
+  "review_kyc",
+  "review_reservations",
+  "revoke_member",
+  "revoke_permanent_access",
+  "seal_commission",
+  "set_consult_status",
+  "set_contract_status",
+  "set_dispatch_published",
+  "set_member_preferences",
+  "set_perk_equipped",
+  "set_platform_flag",
+  "set_profile_visibility",
+  "set_reservation_status",
+  "start_trial_countdown",
+  "submit_exam_attempt",
+  "submit_feedback",
+  "submit_kyc",
+  "touch_ai_memory",
+  "touch_creator_proposal_updated_at",
+  "track_for_sign",
+  "track_quest_progress",
+  "trial_duration",
+  "trial_length",
+  "update_consent",
+  "withdraw_kyc",
+  "zodiac_from_date"
+ ]
+}

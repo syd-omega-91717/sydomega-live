@@ -16,6 +16,18 @@
 .lt{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
 .lt.active,.lt:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.05)}
 .tab-pane{display:none}.tab-pane.active{display:block}
+/* Concept art (AI-generated mood media, labelled as such; not a capability claim) */
+.cx-note{font-family:var(--R);font-size:14px;line-height:1.6;color:var(--ink);border:1px solid rgba(201,168,76,.25);border-left:3px solid var(--gold);padding:12px 14px;margin-bottom:18px;background:rgba(201,168,76,.04)}
+.cx-reel{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:12px;margin-bottom:26px}
+.cx-clip{margin:0;border:1px solid rgba(201,168,76,.12);background:rgba(0,0,0,.25)}
+.cx-clip video,.cx-board img{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
+.cx-board img{aspect-ratio:1408/768;object-fit:contain}
+.cx-clip figcaption,.cx-board figcaption{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--dim);padding:8px 10px;line-height:1.6}
+.cx-clip figcaption b,.cx-board figcaption b{color:var(--gold);font-weight:400}
+.cx-boards{display:grid;gap:16px}
+.cx-board{margin:0;border:1px solid rgba(201,168,76,.12);background:rgba(0,0,0,.25)}
+.cx-board ul{margin:4px 0 0 18px;padding:0}
+.cx-board li{margin:2px 0}
 
 /* AREAS GRID */
 .areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:20px}
@@ -103,6 +115,7 @@ input[type=range].area-sl::-webkit-slider-thumb{-webkit-appearance:none;width:12
     <button class="lt" id="t-wheel">&#9670; WHEEL</button>
     <button class="lt" id="t-manifesto">&#9670; MANIFESTO</button>
     <button class="lt" id="t-science">&#9670; SCIENCE</button>
+    <button class="lt" id="t-concept" data-omega-task-id="vision.concept-art.view">&#9670; CONCEPT ART</button>
   </div>
 
   <!-- LIFE BOARD -->
@@ -167,6 +180,65 @@ input[type=range].area-sl::-webkit-slider-thumb{-webkit-appearance:none;width:12
     </div>
     <div class="goals-filter" id="v-goals-filter"></div>
     <div id="v-goals-list"></div>
+  </div>
+
+  <!-- CONCEPT ART: AI-generated mood media, owner-supplied 2026-10-13. Labelled, never a capability claim (CLAUDE.md 8.1 class 9). -->
+  <div class="tab-pane" id="tab-concept" data-no-clamp>
+    <p class="cx-note">Concept art, not a feature list. These clips and boards were generated with AI (Google Veo and an image model) to explore the look and the ideas of SYD OMEGA. Their on-screen text is machine-made and often misspelled, and much of what they show does not exist. Each board says plainly what is real today.</p>
+    <div class="section-title">CONCEPT REEL</div>
+    <div class="cx-reel">
+      <figure class="cx-clip">
+        <video controls muted playsinline preload="none" poster="/assets/concept/reel-01.jpg" width="960" height="540">
+          <source src="/assets/concept/reel-01.mp4" type="video/mp4">
+        </video>
+        <figcaption><b>Ecosystem dashboard</b> &middot; An early look at a gold dashboard with agents, wallet and progress panels. 8&nbsp;s, AI-generated (Google Veo).</figcaption>
+      </figure>
+      <figure class="cx-clip">
+        <video controls muted playsinline preload="none" poster="/assets/concept/reel-02.jpg" width="960" height="540">
+          <source src="/assets/concept/reel-02.mp4" type="video/mp4">
+        </video>
+        <figcaption><b>Cinematic intelligence</b> &middot; Title cards and the cinematic-universe grid as a single moving board. 8&nbsp;s, AI-generated (Google Veo).</figcaption>
+      </figure>
+      <figure class="cx-clip">
+        <video controls muted playsinline preload="none" poster="/assets/concept/reel-03.jpg" width="960" height="540">
+          <source src="/assets/concept/reel-03.mp4" type="video/mp4">
+        </video>
+        <figcaption><b>Blueprint manifest</b> &middot; The unified blueprint and a one-system architecture diagram in motion. 8&nbsp;s, AI-generated (Google Veo).</figcaption>
+      </figure>
+      <figure class="cx-clip">
+        <video controls muted playsinline preload="none" poster="/assets/concept/reel-04.jpg" width="960" height="540">
+          <source src="/assets/concept/reel-04.mp4" type="video/mp4">
+        </video>
+        <figcaption><b>Omega cosmos</b> &middot; The Omega mark over Earth, an AI mind and the agent chamber. 8&nbsp;s, AI-generated (Google Veo).</figcaption>
+      </figure>
+      <figure class="cx-clip">
+        <video controls muted playsinline preload="none" poster="/assets/concept/reel-05.jpg" width="960" height="540">
+          <source src="/assets/concept/reel-05.mp4" type="video/mp4">
+        </video>
+        <figcaption><b>Pyramid and helix</b> &middot; A mountain pyramid, a golden DNA helix and a molecular analysis scene. 8&nbsp;s, AI-generated (Google Veo).</figcaption>
+      </figure>
+      <figure class="cx-clip">
+        <video controls muted playsinline preload="none" poster="/assets/concept/reel-06.jpg" width="960" height="540">
+          <source src="/assets/concept/reel-06.mp4" type="video/mp4">
+        </video>
+        <figcaption><b>Crystal network</b> &middot; Crystal data nodes, live percentages and a glowing city network. 8&nbsp;s, AI-generated (Google Veo).</figcaption>
+      </figure>
+    </div>
+    <div class="section-title">CONCEPT BOARDS</div>
+    <div class="cx-boards">
+      <figure class="cx-board">
+        <img src="/assets/concept/board-01.jpg" alt="AI-generated concept board: Unified Blueprint Manifest" width="1408" height="768" loading="lazy" decoding="async">
+        <figcaption><b>Unified Blueprint Manifest</b><ul><li><b>Exists:</b> the 12 houses, 4 elements and zodiac canon (one source, <code>omega-canon.json</code>); the franchise films on Movies; adult family access, owner-granted (built; going live once its database change is applied).</li><li><b>Concept only:</b> the 100,000,000-year &ldquo;stability perimeter&rdquo; and the &ldquo;Ledger Wars 51% currency control&rdquo;. No money feature is live: billing, Stripe and tokens are all switched off.</li></ul></figcaption>
+      </figure>
+      <figure class="cx-board">
+        <img src="/assets/concept/board-02.jpg" alt="AI-generated concept board: Complete Master Blueprint" width="1408" height="768" loading="lazy" decoding="async">
+        <figcaption><b>Complete Master Blueprint</b><ul><li><b>Exists:</b> the 12 agent personas (Sentinel to Historian) that voice the copilot and name the sections; a browser-side threat monitor; certificates and exams.</li><li><b>Differs from canon:</b> the board's 9&times;9&times;9 matrix (729 nodes). The canon lattice is 9<sup>5</sup> = 59,049 nodes.</li><li><b>Concept only:</b> Nginx, Redis and microservices (the platform is a static site on Supabase); &ldquo;Master Vault 51% / Public 49%&rdquo;; server-side firewall and IP blacklists.</li></ul></figcaption>
+      </figure>
+      <figure class="cx-board">
+        <img src="/assets/concept/board-03.jpg" alt="AI-generated concept board: Sovereign Terminal" width="1408" height="768" loading="lazy" decoding="async">
+        <figcaption><b>Sovereign Terminal</b><ul><li><b>Exists:</b> owner two-factor sign-in (an authenticator app) protecting every owner action.</li><li><b>Differs from canon:</b> the board's 9-stage Sand&rarr;Omega Master ladder. The platform ladder is the 12 canon tiers, Initiate to Ascendant.</li><li><b>Concept only:</b> G7 servers, PPO reinforcement-learning agents, buying gold or rhodium bars, ML-KEM quantum keys, biometric unlock and a &ldquo;malware purge in under 10 ms&rdquo;. None of these exists, and the money items stay out by the owner&rsquo;s 2026-10-12 decision.</li></ul></figcaption>
+      </figure>
+    </div>
   </div>
 
 </div>
@@ -562,16 +634,17 @@ function esc(t) {
 /* ── TAB ROUTER ──────────────────────────────────────────────────────── */
 
 function activateTab(name) {
-  ['board','wheel','manifesto','science'].forEach(t => {
+  ['board','wheel','manifesto','science','concept'].forEach(t => {
     document.getElementById('tab-'+t).classList.toggle('active', t===name);
     document.getElementById('t-'+t).classList.toggle('active', t===name);
   });
   if (name==='wheel')     drawWheel();
   if (name==='manifesto') renderManifesto();
   if (name==='science')   renderAllGoals();
+  if (name!=='concept') document.querySelectorAll('#tab-concept video').forEach(v => { if (!v.paused) v.pause(); });
 }
 
-['board','wheel','manifesto','science'].forEach(t => {
+['board','wheel','manifesto','science','concept'].forEach(t => {
   document.getElementById('t-'+t).addEventListener('click', () => activateTab(t));
 });
 

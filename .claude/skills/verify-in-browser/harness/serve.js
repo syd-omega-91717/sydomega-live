@@ -6,7 +6,7 @@ const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/jav
   '.woff2': 'font/woff2', '.txt': 'text/plain' };
 const cache = new Map();
 // Local harness server, bound to loopback below; never deployed.
-// nosemgrep: using-http-server
+// nosemgrep: problem-based-packs.insecure-transport.js-node.using-http-server.using-http-server
 http.createServer((req, res) => {
   let u = decodeURIComponent(req.url.split('?')[0]);
   if (u === '/') u = '/index.html';

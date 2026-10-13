@@ -100,6 +100,10 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | root `.js` files | 251 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 375 (107 numbered `NNNN_`, 268 timestamped) |
+| `omega-*.js` modules | 237 (2092 KB) |
+| root `.js` files | 252 |
+| `supabase/*.sql` (flat bag) | 127 |
+| `supabase/migrations/*.sql` | 381 (107 numbered `NNNN_`, 274 timestamped) |
 | Edge Functions | 26 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -112,13 +116,13 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 
 | Source | Keys |
 |---|---|
-| `T_EN` (English, inlined in `i18n.js`) | 1177 |
-| `i18n/ar.json` | 1177 |
-| `i18n/es.json` | 1177 |
-| `i18n/fr.json` | 1177 |
-| `i18n/hi.json` | 1177 |
-| `i18n/nl.json` | 1177 |
-| `i18n/zh.json` | 1177 |
+| `T_EN` (English, inlined in `i18n.js`) | 1188 |
+| `i18n/ar.json` | 1188 |
+| `i18n/es.json` | 1188 |
+| `i18n/fr.json` | 1188 |
+| `i18n/hi.json` | 1188 |
+| `i18n/nl.json` | 1188 |
+| `i18n/zh.json` | 1188 |
 
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
@@ -126,6 +130,9 @@ fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 end-to-end for the first time"*. The 281 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
 all 375. Treat the validated scope as `0001`–`0094` only.
+end-to-end for the first time"*. The 287 files added since (numbered and
+timestamped alike) were **not part of that validation**, and no run has covered
+all 381. Treat the validated scope as `0001`–`0094` only.
 
 **`bg.js` is loaded by all 239 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

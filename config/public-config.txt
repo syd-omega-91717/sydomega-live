@@ -1,0 +1,8 @@
+# config/ files published by contract even though no shipped page fetches them.
+# Everything else in config/ is internal and never leaves the repository; files a
+# shipped page fetches by a literal /config/<name>.json reference ship on their own.
+# Read by scripts/vercel-build.sh and scripts/omega-pages-failover-smoke.py.
+# Source: .github/workflows/omega-release-readiness.yml asserts these in public/.
+omega-scale-policy.json
+omega-runtime-manifest.json
+omega-truth-model.json

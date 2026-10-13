@@ -1,0 +1,65 @@
+{
+  "name": "Ω Canonical Page Alias Registry",
+  "version": 1,
+  "status": "SOURCE_EVIDENCE_ONLY",
+  "truth_rule": "ALIASES_ARE_NOT_CANONICAL_PRODUCT_PAGES",
+  "purpose": "Explicitly account for shipped legacy HTML shells that redirect to a canonical page. Aliases are not counted as canonical product pages.",
+  "aliases": [
+    {
+      "path": "frontend/platform/platform.html",
+      "target": "/dashboard.html",
+      "kind": "legacy_redirect",
+      "status": "ACTIVE_SOURCE_ALIAS",
+      "reason": "Source HTML redirects to the canonical dashboard; this file is an alias shell, not an independent product page."
+    },
+    {
+      "path": "root/audit-report.html",
+      "target": "/dashboard.html",
+      "kind": "legacy_redirect",
+      "status": "ACTIVE_SOURCE_ALIAS",
+      "reason": "Source HTML redirects to the canonical dashboard; this file is an alias shell, not an independent product page."
+    },
+    {
+      "path": "root/dashboard/dashboard.html",
+      "target": "/dashboard.html",
+      "kind": "legacy_redirect",
+      "status": "ACTIVE_SOURCE_ALIAS",
+      "reason": "Source HTML redirects to the canonical dashboard; this file is an alias shell, not an independent product page."
+    },
+    {
+      "path": "root/portal.html",
+      "target": "/dashboard.html",
+      "kind": "legacy_redirect",
+      "status": "ACTIVE_SOURCE_ALIAS",
+      "reason": "Source HTML redirects to the canonical dashboard; this file is an alias shell, not an independent product page."
+    },
+    {
+      "path": "web/templates/admin_console.html",
+      "target": "/dashboard.html",
+      "kind": "legacy_redirect",
+      "status": "ACTIVE_SOURCE_ALIAS",
+      "reason": "Source HTML redirects to the canonical dashboard; this file is an alias shell, not an independent product page."
+    },
+    {
+      "path": "web/templates/leaderboard.html",
+      "target": "/dashboard.html",
+      "kind": "legacy_redirect",
+      "status": "ACTIVE_SOURCE_ALIAS",
+      "reason": "Source HTML redirects to the canonical dashboard; this file is an alias shell, not an independent product page."
+    },
+    {
+      "path": "web/templates/sovereign_health.html",
+      "target": "/dashboard.html",
+      "kind": "legacy_redirect",
+      "status": "ACTIVE_SOURCE_ALIAS",
+      "reason": "Source HTML redirects to the canonical dashboard; this file is an alias shell, not an independent product page."
+    },
+    {
+      "path": "web/templates/system_health.html",
+      "target": "/dashboard.html",
+      "kind": "legacy_redirect",
+      "status": "ACTIVE_SOURCE_ALIAS",
+      "reason": "Source HTML redirects to the canonical dashboard; this file is an alias shell, not an independent product page."
+    }
+  ]
+}

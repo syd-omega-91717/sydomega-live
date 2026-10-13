@@ -237,6 +237,14 @@
       </div>
     </div>
     <div class="ref-card card">
+      <div class="ref-title">EXPECTED VALUE</div>
+      <div class="ref-body">
+        For each option: benefit if it works (−10 to +10) × the probability it works (0–100%) = its weight.
+        Compare weights, then challenge the probabilities — they are the part people inflate.<br>
+        <b style="color:rgba(201,168,76,.6)">WHEN TO USE:</b> Two or more options whose outcomes are uncertain and roughly comparable.
+      </div>
+    </div>
+    <div class="ref-card card">
       <div class="ref-title">INVERSION (CHARLIE MUNGER)</div>
       <div class="ref-body">
         Instead of asking "How do I succeed?", ask "What would guarantee failure?"
@@ -297,6 +305,7 @@ const FRAMEWORKS = [
   {id:'regret', name:'REGRET MIN.', desc:'What will 80-year-old me regret?'},
   {id:'premortem', name:'PRE-MORTEM', desc:'Assume it failed — what went wrong?'},
   {id:'inversion', name:'INVERSION', desc:'What guarantees failure? Avoid those.'},
+  {id:'expected_value', name:'EXPECTED VALUE', desc:'Weight = benefit × probability, per option'},
 ];
 
 const BIASES = [
@@ -410,7 +419,7 @@ function renderOptions() {
   ).join('');
 }
 
-window.updateOpt = (i, val) => { _options[i]=val; renderChoiceButtons(); };
+window.updateOpt = (i, val) => { _options[i]=val; renderChoiceButtons(); if (_fw==='expected_value') renderAnalysis(); };
 window.removeOpt = i => { _options.splice(i,1); renderOptions(); renderChoiceButtons(); };
 
 /* ── FRAMEWORK SELECTOR ──────────────────────────────────────────────── */
@@ -495,7 +504,54 @@ function renderAnalysis() {
       <textarea class="d-area" rows="3" placeholder="To avoid failure, I must not… I must ensure…"
         oninput="updateFWData('inversions',this.value)">${esc(_fw_data.inversions||'')}</textarea>`;
   }
+  else if (_fw === 'expected_value') {
+    const opts = _options.map((o,i)=>({o:o.trim(),i})).filter(x=>x.o);
+    el.innerHTML = `<div class="sect-title">EXPECTED VALUE (WEIGHT = BENEFIT × PROBABILITY)</div>
+      <p style="font-family:var(--M);font-size:12px;color:var(--dim);margin-bottom:12px;line-height:1.8">
+        For each option, rate the benefit if it works out (−10 to +10) and your honest probability that it does (0–100%).
+        The weight is your own estimate multiplied out — a way to see your reasoning, not a prediction.
+      </p>
+      ${opts.length ? opts.map(({o,i}) => `<div class="ttt-row">
+        <div class="ttt-label">${esc(o)}</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <label class="d-label" style="margin:0">BENEFIT <input class="opt-in" type="number" min="-10" max="10" step="1" style="width:80px"
+            value="${esc(_fw_data['ev_b'+i]??'')}" data-ev-i="${i}" data-ev-k="b"/></label>
+          <label class="d-label" style="margin:0">PROBABILITY % <input class="opt-in" type="number" min="0" max="100" step="5" style="width:90px"
+            value="${esc(_fw_data['ev_p'+i]??'')}" data-ev-i="${i}" data-ev-k="p"/></label>
+          <span class="d-label" style="margin:0" id="ev-w${i}"></span>
+        </div>
+      </div>`).join('') + '<div class="d-label" id="ev-best" style="margin-top:10px"></div>'
+      : '<p style="font-family:var(--M);font-size:12px;color:var(--dim)">Add at least one option in step 2 first.</p>'}`;
+    renderEVResult();
+  }
 }
+
+function evWeight(i) {
+  const b = parseFloat(_fw_data['ev_b'+i]), p = parseFloat(_fw_data['ev_p'+i]);
+  if (!isFinite(b) || !isFinite(p)) return null;
+  return Math.max(-10, Math.min(10, b)) * Math.max(0, Math.min(100, p)) / 100;
+}
+
+function renderEVResult() {
+  let best = null, scored = 0;
+  _options.forEach((o,i) => {
+    if (!o.trim()) return;
+    const w = evWeight(i), cell = document.getElementById('ev-w'+i);
+    if (cell) cell.textContent = w === null ? 'WEIGHT —' : 'WEIGHT ' + w.toFixed(2);
+    if (w !== null) { scored++; if (!best || w > best.w) best = {o:o.trim(), w}; }
+  });
+  const el = document.getElementById('ev-best');
+  if (el) el.textContent = scored < 2 ? 'Score at least two options to compare them.'
+    : 'HIGHEST WEIGHT: ' + best.o + ' (' + best.w.toFixed(2) + '). Check it against your biases in step 5.';
+}
+
+// One delegated listener, not an inline handler per input (scripts/csp-inline-ratchet.py).
+document.getElementById('d-analysis-wrap').addEventListener('input', e => {
+  const t = e.target;
+  if (!t.dataset || t.dataset.evI === undefined) return;
+  _fw_data['ev_' + t.dataset.evK + t.dataset.evI] = t.value;
+  renderEVResult();
+});
 
 function renderPCItems(type) {
   return (_fw_data[type]||['']).map((v,i)=>`

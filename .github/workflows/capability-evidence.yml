@@ -61,11 +61,32 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/architecture-readiness.py']).returncode)
+      # Without these two steps both browser checks below printed SKIPPED and
+      # passed: verify-runtime.js had not rendered a page on a GitHub-hosted
+      # run since the self-hosted runner died. Same pinned install as
+      # browser-release-evidence.yml; --no-save leaves package files untouched.
+      - name: Install isolated browser runtime
+        shell: bash
+        env:
+          npm_config_package_lock: 'false'
+        run: npm install --no-save --ignore-scripts @playwright/test@1.63.0
+      - name: Install Chromium
+        shell: bash
+        run: npx --no-install playwright install --with-deps chromium
       - name: Runtime verification (headless render of capability entrypoints)
         shell: python
+        env:
+          OMEGA_REQUIRE_BROWSER: '1'
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['node', 'scripts/verify-runtime.js']).returncode)
+      - name: Copilot behaviour contract
+        shell: python
+        env:
+          OMEGA_REQUIRE_BROWSER: '1'
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['node', 'scripts/copilot-contract.js']).returncode)
       - name: Execution marker
         shell: python
         run: |

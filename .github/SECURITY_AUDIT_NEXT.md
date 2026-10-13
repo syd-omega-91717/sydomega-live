@@ -1,15 +1,28 @@
 # Security audit continuation
 
-This file records the next verified security target identified during the 2026-09-16 audit.
+This file records the verified status of the security target identified during the 2026-09-16 audit.
 
 ## Finding
 
-`omega-emblem-panel.js` builds the emblem panel with `innerHTML` and interpolates configuration values (`sections`, `label`, `body`, `stats`, and action labels/URLs). The current implementation therefore requires a trusted-input boundary before those values are treated as markup.
+`omega-emblem-panel.js` previously built the emblem panel with `innerHTML` and interpolated configuration values (`sections`, `label`, `body`, `stats`, and action labels/URLs). That implementation required a trusted-input boundary before those values could safely be treated as markup.
 
-## Required remediation
+## Resolution verified in main
 
-Replace dynamic HTML interpolation with DOM construction and `textContent`/attribute assignment. For links, validate URL schemes and set attributes explicitly. Preserve the existing public `OmegaEmblemPanel.open()` / `close()` API, focus trap, reduced-motion behavior, emblem rendering, and action callbacks.
+The current `omega-emblem-panel.js` no longer uses `innerHTML` for dynamic panel content.
 
-## Verification requirement
+The current implementation:
+- constructs panel, sections, statistics, actions, and controls with DOM APIs;
+- renders untrusted/dynamic textual values with `textContent`;
+- validates action URLs through `safeHref()` and permits only `http:`/`https:` schemes;
+- applies `noopener noreferrer` to cross-origin links opened in a new tab;
+- preserves the public `OmegaEmblemPanel.open()` / `close()` API;
+- preserves the focus trap and reduced-motion behavior;
+- isolates the remaining SVG insertion to `appendTrustedMarkup()` for the emblem renderer.
 
-Do not classify this finding as resolved until the complete file is changed, JavaScript syntax is checked, the generated registry is synchronized if required, and the resulting PR is reviewed before merge.
+## Verification
+
+The complete current file was inspected on 2026-10-12 and contains no `innerHTML` assignment.
+
+The remaining security work is to keep this control covered by automated regression/security scanning and to review any future changes to the emblem renderer or action configuration boundary.
+
+Status: **RESOLVED IN IMPLEMENTATION; REGRESSION-GUARD REQUIRED**.

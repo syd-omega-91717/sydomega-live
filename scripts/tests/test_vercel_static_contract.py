@@ -233,6 +233,44 @@ class BuildOutputTests(unittest.TestCase):
         self.assertIn("VERCEL_BUILD=PASS", out)
         self.assertTrue(os.path.isfile(os.path.join(self.fx.dir, "public", "vendor", "supabase-js.js")))
 
+    def test_only_runtime_fetched_config_ships(self):
+        """config/ held 68 internal files (security policies, migration provenance,
+        live-runtime evidence) and all of them shipped, which also failed the Pages
+        failover smoke on every main push. Only a file a shipped module fetches by a
+        literal /config/<name>.json reference may reach public/ (2026-10-12)."""
+        self.fx.write("app.html", '<!doctype html><html><body><script src="/mod.js"></script></body></html>')
+        self.fx.write("mod.js", "fetch('/config/runtime.json');\n")
+        self.fx.write("config/runtime.json", '{"used":true}')
+        self.fx.write("config/internal-policy.json", '{"secret_shape":"internal"}')
+        code, out = self.fx.run_build()
+        self.assertEqual(code, 0, out)
+        self.assertTrue(os.path.isfile(os.path.join(self.fx.dir, "public", "config", "runtime.json")))
+        self.assertFalse(os.path.exists(os.path.join(self.fx.dir, "public", "config", "internal-policy.json")))
+
+    def test_contract_published_config_ships_with_what_it_references(self):
+        """omega-release-readiness.yml asserts three config files in public/ that no
+        page fetches; config/public-config.txt publishes them, and anything a
+        published config file references ships with it (the runtime manifest names
+        the object model)."""
+        self.fx.write("app.html", "<!doctype html><html><body></body></html>")
+        self.fx.write("config/public-config.txt", "# comment\nmanifest.json\n")
+        self.fx.write("config/manifest.json", '{"model":"/config/model.json"}')
+        self.fx.write("config/model.json", '{}')
+        self.fx.write("config/internal.json", '{}')
+        code, out = self.fx.run_build()
+        self.assertEqual(code, 0, out)
+        pub = os.path.join(self.fx.dir, "public", "config")
+        self.assertTrue(os.path.isfile(os.path.join(pub, "manifest.json")))
+        self.assertTrue(os.path.isfile(os.path.join(pub, "model.json")))
+        self.assertFalse(os.path.exists(os.path.join(pub, "internal.json")))
+
+    def test_a_listed_config_file_that_does_not_exist_fails_the_build(self):
+        self.fx.write("app.html", "<!doctype html><html><body></body></html>")
+        self.fx.write("config/public-config.txt", "absent.json\n")
+        code, out = self.fx.run_build()
+        self.assertEqual(code, 1, out)
+        self.assertIn("config/absent.json", out)
+
     def test_a_dropped_vendor_directory_fails_the_build(self):
         # VIOLATOR. Before this check the same tree printed VERCEL_BUILD=PASS.
         self.fx.patch_build("for dir in vendor i18n", "for dir in i18n")

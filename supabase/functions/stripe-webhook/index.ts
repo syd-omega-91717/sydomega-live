@@ -80,7 +80,7 @@ async function recordStripePayment(admin: ReturnType<typeof createClient>, args:
   providerReference: string; payloadHash: string;
 }) {
   if (!Number.isSafeInteger(args.amountMinor) || args.amountMinor <= 0) return { ok: true as const, skipped: "no_positive_amount" };
-  const { data: transactionId, error } = await admin.rpc("record_stripe_payment", {
+  const { data: transactionId, error } = await admin.schema("omega_private").rpc("record_stripe_payment", {
     p_event_id: args.eventId,
     p_event_type: args.eventType,
     p_user_id: args.uid,

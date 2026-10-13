@@ -453,9 +453,9 @@ are listed in rough order of how often they have recurred.
    spoofing gap. (c) **The reverse, and the most expensive one found so far: a
    correct RLS policy on a table with no table-level `GRANT` at all.** A GRANT
    is checked *before* row security, so the policy never runs and every query
-   fails with `42501 permission denied` — 60 tables were in this state, 22 of
-   them queried by live client code. Check grants and policies together; either
-   one alone tells you nothing.
+   fails with `42501 permission denied` (60 tables once, 22 read by live code).
+   Check both. `grant-contract.py` gates client calls (column grants too)
+   against `supabase/live-grants.json`.
 7. **An upsert whose conflict target matches no unique index.** Two shapes,
    both silent. `onConflict` naming columns with no matching unique index
    raises `42P10` and the statement never runs; *omitting* `onConflict` on a
@@ -560,8 +560,8 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **8** warnings — **4 `.js`** unloaded (`GAP_ANALYSIS.md` §S), 0 `.css`. Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **582** tests, all passing |
-| `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; `ci.yml` and `ci-local.sh` both discover this directory |
+| `python3 -m unittest discover -s scripts/tests` | **663** tests, all passing |
+| `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; both CI paths run them |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
@@ -573,13 +573,13 @@ entries (which were accurate when written):
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; `SKIPPED` without a browser — see the `runtime-verify` skill). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **1** on `--all` (verify-deployment.html, a diagnostic page; was 48 — fix the hue's lightness, never its alpha: the scanner reads full opacity) |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; see the `runtime-verify` skill). **Skipped every GitHub run until 2026-10-12**; CI now sets `OMEGA_REQUIRE_BROWSER` (skip = fail). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **1** on `--all` (verify-deployment.html, a diagnostic page; was 48 — fix the hue's lightness, never its alpha: the scanner reads full opacity) |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/module-contract.py` | 0 broken; **164** contracts. Publisher must exist **and be reachable** — the conjunction; half of it passes on the tree that shipped 160 (162) |
 | `python3 scripts/evidence-audit.py --summary` | 107 BUILT / 27 PARTIAL / 42 LOCAL_ONLY / 48 STATIC / 0 BROKEN / **0** UNREACHABLE (224 pages; the owner deck reaches the 13 nav.js omits); **0 read relations absent live** (snapshot 2026-10-04; keys are `public.`-qualified — strip it) |
-| `./scripts/ci-local.sh` | **28** blocking checks, all passing (`contract-suite.py` holds **37** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93, 94, 102, 103, 104) |
+| `./scripts/ci-local.sh` | **30** blocking checks, all passing (`contract-suite.py` holds **42** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93–104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

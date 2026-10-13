@@ -14,6 +14,7 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-10-12 — owner decisions recorded, legal review pending.** Owner chose the 12-tier `omega-canon.json` ladder (subscriptions.html now renders it), adult-only owner-granted family access (HIGH-RISK build in review: `docs/decisions/family-access/`), and dormant non-cash points for every money item. `docs/COUNSEL_BRIEF.md` lists the questions for counsel in Lebanon, UAE/GCC, US and EU/UK; no flag changes until answered. 8 blueprint items still need the owner (provenance marks 66/166, succession 73/652/969/N155, tier permanence 266, model per tier 289).
 
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
@@ -33,6 +34,7 @@ open, recorded in `FIXES_LOG.md`:
   `control-plane.html`. Owner: decide each request in `approvals.html`; to deploy
   `notify-access`, set `RESEND_API_KEY` + `NOTIFY_ACCESS_WEBHOOK_SECRET` and the `profiles`
   DB webhook first.
+- **UPDATE 2026-10-12:** `pg_cron` now **is** installed live (`pg_extension` row present), but `leaderboard_snapshots` still holds 0 rows, so the schedule is not yet producing work — re-measure `cron.job` before closing this item.
 - **OPEN 2026-10-09 — nothing runs on a schedule.** `pg_cron` is **not installed** live
   (`cron.job` → 42P01; `pg_available_extensions` lists it, `pg_net` is installed). So
   `rankings`, `snapshot-leaderboard`, `weekly-digest` (also undeployed) and the trial sweep
@@ -43,6 +45,49 @@ open, recorded in `FIXES_LOG.md`:
   depend on the sweep (`0082_trial_917.sql:211`), but scheduling it is **not** a safe default:
   `sweep_expired_trials()` deletes the member's `task_completions` (`0082_trial_917.sql:243`),
   so its first run wipes those two members' progress. Owner decision before any schedule.
+- **CLOSED 2026-10-12 — `profile.html`'s owner access panel now changes access.** It wrote
+  `access_approved`/`is_trial`/`trial_expires_at` directly, which no caller may UPDATE (42501 on
+  every click). It now calls `approve_member` / `grant_permanent_access` / `revoke_member`, the
+  same owner+MFA-checked RPCs as `approvals.js`, and reports `{ok:false,error}` (incl.
+  `aal2_required`). The "N minutes" picker this item called an auth decision is in fact fixed at
+  9.1717 (`window.__selectedMinutes`, "FIXED -- never changes"), exactly what `approve_member`
+  grants — a 1:1 mapping, no new authority. Those RPCs were themselves dead until the item below.
+- **CLOSED 2026-10-12 — 12 client-called RPCs failed 42501 for everyone, the owner included.**
+  Each `public.<fn>` is a SECURITY INVOKER wrapper calling `private.<fn>` as the caller; migrations
+  20261006193000 / 20261006201000 / 20261007001000 / 20261007002000 / 20261008032308 revoked EXECUTE
+  on the private side while granting the public side, and 20261007120000's "restore" re-granted
+  only the wrappers. Dead: approvals approve / grant-permanent / revoke / KYC review / KYC intake,
+  settings "delete account", profile KYC submit, interface-omni platform flag, Creation Studio
+  create project / asset / provider job, intel-fabric knowledge search. Restored by
+  20261012064126 after reading each body (owner actions check `is_platform_owner()` + aal2; member
+  actions scope to `auth.uid()`). Live probe: owner@aal2 revoke/approve run; non-owner gets
+  `forbidden`; delete-account@aal1 gets `aal2_required`; anon 42501. So the CLOSED Creation Layer
+  entry below was true of its checks and false in effect for six days. Knowledge search then hit
+  a second bug (`<=>` unresolvable under `search_path=''`), fixed by 20261012064247.
+  `grant-contract.py` now gates end-to-end callability, and fails all 14 call sites on the
+  pre-fix snapshot.
+- **CLOSED 2026-10-12 — 19 of the 23 remaining blocked RPCs restored** by 20261012091641 after
+  reading each body live (owner+aal2 console actions, owner-only certificate issue/revoke and
+  knowledge ingest, caller-scoped Creation Layer and experience-run lifecycle, authenticated
+  knowledge search and certificate verification). Live probe: a non-owner gets `owner_only` /
+  `owner_authorization_required` / `owner authorization required` on every owner action; a member
+  updates only their own project; anon 42501.
+- **OPEN 2026-10-12 — 4 public RPCs stay blocked on purpose:** `omega_transition_mission_task` (a
+  member may move their own task `submitted→verified→completed`; whether evidence is enforced needs
+  review before it opens), `purchase_perk` (spends points — a product decision), `submit_exam_result`
+  (disabled legacy path that only redirects to `submit_exam_attempt`), `is_app_owner` (no caller).
+- **OPEN 2026-10-12 — `set_consult_status`, `set_contract_status`, `set_reservation_status` can never
+  update a row.** They take `p_id uuid`; `consult_requests.id`, `commission_contracts.id` and
+  `media_reservations.id` are `bigint`, so the owner call raises `operator does not exist: bigint =
+  uuid` (measured live as owner@aal2). Fix is `DROP FUNCTION` of both the public wrapper and private
+  body, then recreate with `p_id bigint` — DROP needs the owner's confirmation (CLAUDE.md §8.2). No
+  client calls them today. They also report `ok:true` even when no row matched.
+- **OPEN 2026-10-12 — the knowledge base is empty.** 11 approved sources, **0** chunks, 0
+  embeddings: `omega_knowledge_hybrid_search` now runs and correctly returns nothing. Nothing has
+  ingested source text (and `omega_knowledge_ingest_document` is in the blocked list above).
+- **OPEN 2026-10-12 — `omega-graphify-integration.js`'s `notifications` fallback insert always
+  fails** (no INSERT grant or policy for members; server-side `notify_member` owns that table). It
+  checks `.error` and logs, so it is not silent and the feature is a non-essential fallback.
 - **CLOSED 2026-10-06 — Creation Layer truth enforcement is live.** Authenticated clients no longer have direct DML on the four Creation Layer tables; authenticated public RPC wrappers enforce server-owned lifecycle/truth state, provenance and run state through non-exposed `private` SECURITY DEFINER implementations with `search_path=''` and ownership checks. Project creation is forced to `DRAFT / USER-CREATED`, asset creation to `DESIGNED / USER-CREATED`, experience creation to `DRAFT / SIMULATED`, and run score/state transitions are server-owned. Experience-step events are persisted canonically, and published experiences are readable by authenticated members while draft/retired experiences remain owner-scoped. The remaining gap is provider-live generation, artifact delivery/hashing, licensing verification and the public Creation Studio; those must not be represented as LIVE until provider evidence exists. See `docs/OMEGA_CREATION_LAYER.md`.
 - **CLOSED 2026-10-09 — client read grants are materialised.** The seven tables `omega_notifications`, `omega_user_achievements`, `omega_certificates`, `omega_achievement_definitions`, `omega_agent_tasks`, `omega_agent_task_events`, and `omega_matrix_node_semantics` now have the production `authenticated SELECT` grants represented by `supabase/migrations/20261006194000_materialize_existing_client_read_grants_20261006.sql`. Live `has_table_privilege` verification confirms those grants. The migration-grant contract no longer tracks them as missing migration grants.
 - **CLOSED 2026-10-09 — `omega_agent_action_proposals` was a retired schema, not a missing live table.** Migration `20260929113731` created the proposal table and `20260929115306` explicitly dropped it. Live absence is therefore expected; the stale `KNOWN` exception was removed from `scripts/migration-grant-contract.py`.
@@ -112,6 +157,11 @@ open, recorded in `FIXES_LOG.md`:
   or `scripts/enable-supabase-hibp.py` with an owner access token. Compensating
   control today: `omega-password-guard.js` (HIBP k-anonymity at sign-up and reset),
   which direct Auth API calls bypass.
+  **Re-verified 2026-10-12:** still the only security-advisor finding (1 WARN, 0 ERROR);
+  `get_organization` still `free`; the guard is loaded on both password-setting pages
+  (`account.html` sign-up, `reset.html`). The performance advisor reports only INFO
+  `unused_index` ×329 — expected at 9 profiles and near-zero traffic, not evidence an index
+  is unneeded; no `duplicate_index` lint. Not dropped (a DROP is the owner's call, §8.2).
 - **Gamification Phase 2 is built and dormant** (opened 2026-10-03). To turn it on:
   `set_platform_flag('gamification_enabled', true)` as the owner. Pages:
   `character.html` (PROGRESSION tab), `cosmetics.html`, `my-quests.html`. Paid

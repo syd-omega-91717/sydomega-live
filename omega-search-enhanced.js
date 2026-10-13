@@ -57,7 +57,7 @@
       /* Highlight text nodes only. Never rebuild an element with innerHTML:
          search input is user-controlled and must not become executable markup. */
       // `raw` is regex-escaped on this line, so it matches literally (no ReDoS).
-      // nosemgrep: detect-non-literal-regexp
+      // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
       const regex = new RegExp('(' + escapeRegExp(raw) + ')', 'gi');
       document.querySelectorAll('.card, p, h1, h2, h3').forEach(el => {
         const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);

@@ -15,6 +15,7 @@ assert.match(source, /signatures\.some\(\(candidate\) =>/, 'webhook must accept 
 
 assert.match(source, /typeof event\.id === "string"/, 'webhook must require Stripe event ID');
 assert.match(source, /admin\.rpc\("apply_subscription_event"/, 'webhook must use the canonical event RPC boundary');
+assert.match(source, /admin\.schema\("omega_private"\)\.rpc\("record_stripe_payment"/, 'webhook must call the private Stripe settlement RPC schema explicitly');
 assert.match(source, /p_event_id: args\.eventId/, 'webhook must pass Stripe event ID');
 assert.match(source, /p_event_type: args\.eventType/, 'webhook must pass event type');
 assert.match(source, /!obj \|\| typeof obj !== "object"/, 'webhook must reject malformed event data before processing');

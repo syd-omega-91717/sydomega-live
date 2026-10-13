@@ -545,7 +545,7 @@ a{color:inherit;text-decoration:none}
       <div id="member-credentials-note" style="display:none;padding:40px 20px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)">
         Professional credential cards are set individually. This section is available to the Architect only for the platform's own registration.
       </div>
-      <!-- 12 Certs - all issued -->
+      <!-- The member's own certificates (public.certificates), each with a PDF -->
       <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_certificates">YOUR SOVEREIGN CERTIFICATES</div>
       <div class="pad" data-reveal="fade-up" id="cert-display"></div>
     </div>
@@ -1499,16 +1499,40 @@ function buildAchievementsGrid(earned){
   const sgs=document.getElementById('sg-ach-sub');if(sgs)sgs.textContent=totalCount>=ACHIEV.length?'All complete':(totalCount+' earned so far');
 }
 
-function buildCerts(uid){
+/* Certificates are the member's own public.certificates rows (self-or-owner
+   RLS; the owner reads every member's, so filter on uid). This used to draw
+   all 12 catalogue certificates under "YOUR SOVEREIGN CERTIFICATES" for every
+   member -- a catalogue rendered as the member's own record (CLAUDE.md 8.1
+   class 9). Each held certificate offers a PDF (omega-passport.js). */
+async function buildCerts(uid){
   const g=document.getElementById('cert-display');
   if(!g) return;
-  g.innerHTML='';
-  const certs=ACHIEV.filter(a=>a.type==='CERT');
-  certs.forEach((cert)=>{
-    const c=document.createElement('div');c.className='cert-card';c.style.borderColor=cert.col+'44';
-    const certName=window.OmegaI18n?window.OmegaI18n.t(cert.key,'en'):'';
-    c.innerHTML=`<div style="font-size:18px;margin-bottom:8px">${cert.sym}</div><div style="color:${cert.col};font-size:12px;font-weight:700">${(certName||cert.key).toUpperCase().slice(0,14)}</div>`;
-    g.appendChild(c);
+  g.textContent='';
+  const t=(k,f)=>{const v=window.OmegaI18n&&window.OmegaI18n.t?window.OmegaI18n.t(k):'';return v&&v!==k?v:f;};
+  const r=await sb.from('certificates').select('cert_num,cert_name,title,grade,issued_at,milestone').eq('user_id',uid).order('cert_num',{ascending:true});
+  if(r.error){
+    console.warn('[profile] certificates read failed:',r.error.message);
+    const p=document.createElement('div');p.className='cert-empty';p.textContent=t('profile_cert_error','Certificates could not be loaded right now.');
+    g.appendChild(p);window.__omegaCertificates=[];return;
+  }
+  const rows=r.data||[];
+  window.__omegaCertificates=rows;
+  if(!rows.length){
+    const p=document.createElement('div');p.className='cert-empty';p.textContent=t('profile_cert_none','No certificates issued yet.');
+    g.appendChild(p);return;
+  }
+  rows.forEach((row,i)=>{
+    const c=document.createElement('div');c.className='cert-card';
+    const sym=document.createElement('div');sym.style.cssText='font-size:18px;margin-bottom:8px';sym.textContent='▣';
+    const nm=document.createElement('div');nm.style.cssText='color:var(--gold);font-size:12px;font-weight:700';
+    nm.textContent=String(row.cert_name||row.title||('Certificate '+(row.cert_num??''))).toUpperCase().slice(0,24);
+    const meta=document.createElement('div');meta.style.cssText='font-size:12px;color:var(--muted);margin-top:4px';
+    meta.textContent=(row.grade?row.grade+' · ':'')+(row.issued_at?String(row.issued_at).slice(0,10):'');
+    const b=document.createElement('button');b.type='button';b.className='btn';b.style.cssText='margin-top:8px;font-size:12px;letter-spacing:1px';
+    b.setAttribute('data-certificate-download',String(i));
+    b.setAttribute('data-omega-task-id','profile.certificate.pdf');
+    b.textContent=t('profile_cert_download','↓ PDF');
+    c.append(sym,nm,meta,b);g.appendChild(c);
   });
 }
 
@@ -1714,22 +1738,28 @@ function startCountdown(uid,expiresAt,el){
   tick();window.__timers[uid]=setInterval(tick,1000);
 }
 
-async function grantAccess(uid,minutes,sbRef){
-  let error;
-  if(minutes<0){
-    ({error}=await sbRef.from('profiles').update({access_approved:true,is_trial:false,trial_expires_at:null}).eq('id',uid));
-  } else {
-    const exp=new Date(Date.now()+minutes*60000).toISOString();
-    ({error}=await sbRef.from('profiles').update({access_approved:true,is_trial:true,trial_expires_at:exp}).eq('id',uid));
+/* Owner access actions go through the same server functions as approvals.js
+   (owner + MFA checked server-side, audit + member notification included).
+   Members may not UPDATE access_approved/is_trial/trial_expires_at, so the
+   direct profiles.update this replaced failed for every caller. The RPC
+   resolves {ok:false,error} rather than throwing -- check both. */
+async function ownerAccessRpc(name,uid,sbRef){
+  const {data,error}=await sbRef.rpc(name,{p_uid:uid});
+  if(error||!data||data.ok!==true){
+    const why=error?(error.message||'database_error'):((data&&data.error)||'action_denied');
+    alert(why==='aal2_required'?'This action needs your two-factor sign-in (MFA). Verify, then try again.':'Could not update access ('+why+'). Try again.');
+    return false;
   }
-  if(error){alert('Could not update access. Try again.');return;}
-  loadMembers();
+  return true;
+}
+
+async function grantAccess(uid,minutes,sbRef){
+  /* minutes<0 = permanent; otherwise the fixed 9:17 trial, which approve_member owns */
+  if(await ownerAccessRpc(minutes<0?'grant_permanent_access':'approve_member',uid,sbRef)) loadMembers();
 }
 
 async function revokeAccess(uid,sbRef){
-  const {error}=await sbRef.from('profiles').update({access_approved:false,is_trial:false,trial_expires_at:null}).eq('id',uid);
-  if(error){alert('Could not revoke access. Try again.');return;}
-  loadMembers();
+  if(await ownerAccessRpc('revoke_member',uid,sbRef)) loadMembers();
 }
 
 function buildMemberList(members){
@@ -2466,13 +2496,16 @@ const SEC_TIERS=[
   {level:'TIER 4',name:'SOVEREIGN VERIFIED',desc:'HSM biometric linked. Full succession and inheritance rights.',col:'#C9A84C',badge:'APEX UNLOCK'},
 ];
 
+/* Future tense until a feature is on (CLAUDE.md 9): billing, Stripe and tokens
+   are switched off, and every money item stays dormant by the owner's
+   2026-10-12 decision. These read as live before 2026-10-13. */
 const UNLOCKS=[
-  {icon:'&#x20BF;',title:'TOKEN ECONOMY',desc:'12 sovereign tokens fully active. Earning and spending enabled.',col:'#C9A84C'},
-  {icon:'&#x21C4;',title:'MARKETPLACE',desc:'Full listing, buying, and selling on the sovereign marketplace.',col:'#E2C86D'},
-  {icon:'&#x25C8;',title:'SUBSCRIPTION PAYMENTS',desc:'Live Stripe payment processing for all membership tiers.',col:'#9B6BF0'},
-  {icon:'&#x2694;',title:'CONSULTANCY BOOKING',desc:'Paid consultancy sessions across all 6 expert domains.',col:'#00E5FF'},
-  {icon:'&#x22D4;',title:'INHERITANCE RIGHTS',desc:'Full legal succession protocol. Bloodline vault inheritance active.',col:'#CF6760'},
-  {icon:'&#x272A;',title:'SOVEREIGN CREDENTIALS',desc:'Cryptographic certificate issuance. Verifiable on-chain.',col:'#C9A84C'},
+  {icon:'&#x20BF;',title:'TOKEN ECONOMY',desc:'Planned. Tokens are switched off today; when they open they are non-cash points.',col:'#C9A84C'},
+  {icon:'&#x21C4;',title:'MARKETPLACE',desc:'Planned. Opens only when the owner enables it.',col:'#E2C86D'},
+  {icon:'&#x25C8;',title:'SUBSCRIPTION PAYMENTS',desc:'Planned. Billing is switched off; no payment is taken today.',col:'#9B6BF0'},
+  {icon:'&#x2694;',title:'CONSULTANCY BOOKING',desc:'Planned. Paid sessions open only once billing is enabled.',col:'#00E5FF'},
+  {icon:'&#x22D4;',title:'INHERITANCE RIGHTS',desc:'Planned. Nothing here is a legal instrument; succession is an open owner decision.',col:'#CF6760'},
+  {icon:'&#x272A;',title:'SOVEREIGN CREDENTIALS',desc:'Available now: each certificate you hold downloads as a PDF from your profile. Not on-chain.',col:'#C9A84C'},
 ];
 
 function buildSteps(kycStatus){

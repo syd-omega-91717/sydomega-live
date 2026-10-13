@@ -273,7 +273,7 @@ auth), `omega-user.js` (loads current user's profile), `omega-onboard.js` (first
 zodiac/element selection), `omega-appearance.js` (member view personalization),
 `omega-protect.js` (anti-DevTools/copy protection).
 
-**AI / copilot:** `omega-copilot.js` (context-aware assistant, every page), `omega-ai.js`
+**AI / copilot:** `omega-copilot.js` (context-aware assistant, every page; 8 slash commands — `/summarize` `/explain` `/translate` `/brief` `/strategy` `/outline` `/compare` `/debug`, each an agent persona sent as concierge `system_override`; remembers the last 6 exchanges, sent inside the 2000-char message, `/clear` resets; plus 14 visual commands in `omega-copilot-visuals.js`, loaded on first use — `/decisionmatrix` `/infographic` `/canvas` `/layers` `/cycle` `/diagram` `/roadmap` `/sketchnotes` `/iceberg` `/blueprint` `/explodedview` `/tree` `/timeline` `/handwritten`: the model returns a small JSON object (concierge caps replies at 400 tokens) and the module draws it with textContent only, recomputes matrix totals itself, and shows the text with a no-visual note when the JSON is cut off — 18 cases in `scripts/copilot-contract.js`), `omega-ai.js`
 (GraphRAG-inspired), `omega-intelligence.js` (autonomous AI layer), `omega-memory.js`
 (persistent queryable AI memory), `omega-recommend.js` (interest-signal recommendations).
 

@@ -307,7 +307,7 @@ create or replace function public.compute_leaderboard_snapshot()
  returns void
  language plpgsql
  security definer
- set search_path to 'public'
+ set search_path = 'public'
 as $function$
 DECLARE
   _PHI constant numeric := 1.6180339887;

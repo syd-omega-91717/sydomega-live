@@ -163,3 +163,8 @@ Changes to the approach:
 - Guard and `public_leaderboard` bodies come from live `pg_get_functiondef`. The diff against
   live is asserted to be exactly the added predicate.
 - New UI strings get keys in `i18n.js` T_EN and all 6 packs.
+
+
+## Round 3 security refinement (2026-10-13)
+
+When a member has no DOB/birth_date, the family-grant RPC requires `p_attested_adult=true`. The owner console sends this only after the explicit adult confirmation. A direct RPC call omitting the flag is refused and audited. A recorded DOB under 18 is refused regardless of the attestation flag.

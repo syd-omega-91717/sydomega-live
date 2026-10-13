@@ -70,6 +70,7 @@ DECLARE
   v_result jsonb;
   v_rows jsonb;
   v_diag jsonb;
+  v_count bigint;
   owner_id constant uuid := '10000000-0000-4000-8000-000000000001';
   adult_no_dob constant uuid := '10000000-0000-4000-8000-000000000002';
   minor_id constant uuid := '10000000-0000-4000-8000-000000000003';
@@ -200,6 +201,12 @@ BEGIN
   -- authenticated-only private projection is required, not just its filter.
   PERFORM set_config('request.jwt.claim.sub', nonowner_id::text, true);
   PERFORM set_config('request.jwt.claims', jsonb_build_object('sub',nonowner_id,'role','authenticated','aal','aal1')::text, true);
+  SELECT count(*) INTO v_count
+    FROM public.sovereign_points_ledger
+   WHERE user_id = '10000000-0000-4000-8000-000000000007';
+  IF v_count <> 0 THEN
+    RAISE EXCEPTION 'direct ledger read bypassed member-self RLS: visible rows=%', v_count;
+  END IF;
   SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
     INTO v_rows
     FROM public.get_points_leaderboard(50) AS p;

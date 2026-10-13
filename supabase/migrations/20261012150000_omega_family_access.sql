@@ -121,7 +121,7 @@ declare
   dob_v  date;
   detail text;
 begin
-  if not public.is_platform_owner() then
+  if not exists (select 1 from public.platform_owners where user_id = auth.uid()) then
     return jsonb_build_object('ok',false,'error','forbidden');
   end if;
   if coalesce((select auth.jwt()->>'aal'),'aal1') <> 'aal2' then
@@ -191,7 +191,7 @@ create or replace function private.revoke_family_link(p_uid uuid)
  set search_path = 'public'
 as $function$
 begin
-  if not public.is_platform_owner() then
+  if not exists (select 1 from public.platform_owners where user_id = auth.uid()) then
     return jsonb_build_object('ok',false,'error','forbidden');
   end if;
   if coalesce((select auth.jwt()->>'aal'),'aal1') <> 'aal2' then

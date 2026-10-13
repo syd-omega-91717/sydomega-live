@@ -45,3 +45,6 @@ Status: round 3 (final, per Mode 1's 3-round budget) reviews the implementation 
 | Major | The first authorization probe returned `forbidden` because the fixture only set `profiles.is_owner`; live owner authority is canonically stored in `public.platform_owners` | Probe now seeds the canonical owner membership; family grant/unlink functions check that membership first, then explicitly enforce AAL2, so owner identity and MFA errors remain distinct even if the global owner-MFA flag changes |
 
 **Live boundary noted during review:** read-only queries on 2026-10-13 showed zero rows in `auth.mfa_factors` and `platform_settings.owner_mfa_required=false`. This PR does not flip the live flag because doing so before owner MFA enrollment could lock the owner out. Sensitive family RPCs still enforce AAL2 explicitly; global MFA enforcement remains an owner action before production readiness.
+
+
+| Medium | The global activity-feed predicate hid a linked member's own activity as well as hiding it from other members | Predicate now preserves self-visibility with `family_of IS NULL OR id = auth.uid()`; the isolated probe asserts owner-global exclusion and member-self visibility for activity and points |

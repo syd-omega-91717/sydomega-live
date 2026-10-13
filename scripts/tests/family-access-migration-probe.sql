@@ -125,8 +125,28 @@ BEGIN
     INTO v_rows
     FROM public.get_activity_feed(50,0) AS f;
   IF v_rows::text ILIKE '%PROBE FAMILY ACTIVITY MUST BE HIDDEN%' THEN
-    RAISE EXCEPTION 'family activity leaked through activity feed: %', v_rows;
+    RAISE EXCEPTION 'family activity leaked through activity feed to the owner global feed: %', v_rows;
   END IF;
+
+  -- A linked member may still see their own activity; other members cannot.
+  PERFORM set_config('request.jwt.claim.sub', adult_no_dob::text, true);
+  PERFORM set_config('request.jwt.claims', jsonb_build_object('sub',adult_no_dob,'role','authenticated','aal','aal1')::text, true);
+  SELECT coalesce(jsonb_agg(to_jsonb(f)), '[]'::jsonb)
+    INTO v_rows
+    FROM public.get_activity_feed(50,0) AS f;
+  IF v_rows::text NOT ILIKE '%PROBE FAMILY ACTIVITY MUST BE HIDDEN%' THEN
+    RAISE EXCEPTION 'family member cannot see their own activity: %', v_rows;
+  END IF;
+
+  SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
+    INTO v_rows
+    FROM public.get_points_leaderboard(50) AS p;
+  IF v_rows::text NOT ILIKE '%Probe Family Adult No DOB%' THEN
+    RAISE EXCEPTION 'family member cannot see their own points row: %', v_rows;
+  END IF;
+
+  PERFORM set_config('request.jwt.claim.sub', owner_id::text, true);
+  PERFORM set_config('request.jwt.claims', jsonb_build_object('sub',owner_id,'role','authenticated','aal','aal2')::text, true);
 
   v_rows := public.get_all_members();
   IF v_rows::text NOT ILIKE '%10000000-0000-4000-8000-000000000002%' OR

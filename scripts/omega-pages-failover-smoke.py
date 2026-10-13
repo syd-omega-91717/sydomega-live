@@ -110,8 +110,13 @@ def remote_check(base_url: str) -> int:
                 body = response.read(8192).decode("utf-8", "ignore")
             if status != 200:
                 failures.append(f"{route}: HTTP {status}")
-            elif route == "/" and "<html" not in body.lower():
+            elif "<html" not in body.lower():
                 failures.append(f"{route}: response is not HTML")
+            elif route == "/" and (
+                not re.search(r"<title[^>]*>[^<]*syd omega 91717", body, re.IGNORECASE)
+                or "omega-visual-universe.css" not in body
+            ):
+                failures.append(f"{route}: root does not prove Omega app identity and canonical CSS asset")
         except Exception as exc:
             failures.append(f"{route}: {exc}")
 

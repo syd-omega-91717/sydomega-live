@@ -15384,14 +15384,14 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 12,
+          "buttons": 13,
           "forms": 0,
           "inputs": 5,
           "links": 0
         },
         "media_evidence": {
-          "images": 0,
-          "video": 0,
+          "images": 3,
+          "video": 6,
           "audio": 0,
           "iframes": 0
         }

@@ -6,6 +6,11 @@ The database migration must keep all known ranking/snapshot paths privacy-aware.
 """
 from __future__ import annotations
 
+import sys
+if __name__ == "__main__" and any(arg in {"--help", "-h"} for arg in sys.argv[1:]):
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 import pathlib
 import re
 import sys

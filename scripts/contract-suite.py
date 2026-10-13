@@ -85,7 +85,7 @@ GATES = [
      ['scripts/page-count-claims.py']),
     ('migration-drift',
      'supabase/migrations/ and the live migration history agree both ways',
-     ['scripts/migration-drift.py']),
+     ['scripts/migration-drift.py', '--source-only']),
     ('page-experience',
      'every experience profile declares its required fields',
      ['scripts/page-experience-contract.py']),

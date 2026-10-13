@@ -33,6 +33,15 @@ ON CONFLICT (id) DO UPDATE SET
   dob=excluded.dob,
   birth_date=excluded.birth_date;
 
+-- enforce_access_defaults() intentionally resets access on INSERT. These two
+-- fixtures model members already approved by the trusted access workflow.
+UPDATE public.profiles
+   SET access_approved = true, is_public = true
+ WHERE id IN (
+   '10000000-0000-4000-8000-000000000005',
+   '10000000-0000-4000-8000-000000000007'
+ );
+
 INSERT INTO public.platform_owners(user_id)
 VALUES ('10000000-0000-4000-8000-000000000001')
 ON CONFLICT (user_id) DO NOTHING;
@@ -186,6 +195,23 @@ BEGIN
     RAISE EXCEPTION 'family member cannot see their own activity: %', v_rows;
   END IF;
 
+  -- A normal approved member must see approved public leaderboard rows even
+  -- though direct ledger reads remain RLS-scoped to self. This proves the
+  -- authenticated-only private projection is required, not just its filter.
+  PERFORM set_config('request.jwt.claim.sub', nonowner_id::text, true);
+  PERFORM set_config('request.jwt.claims', jsonb_build_object('sub',nonowner_id,'role','authenticated','aal','aal1')::text, true);
+  SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
+    INTO v_rows
+    FROM public.get_points_leaderboard(50) AS p;
+  IF v_rows::text ILIKE '%Probe Family Adult No DOB%' OR v_rows::text ILIKE '%Probe Family Adult DOB%' THEN
+    RAISE EXCEPTION 'member points leaderboard leaked linked family: %', v_rows;
+  END IF;
+  IF v_rows::text NOT ILIKE '%Probe Public Member%' THEN
+    RAISE EXCEPTION 'approved member cannot see the public points leaderboard: %', v_rows;
+  END IF;
+
+  PERFORM set_config('request.jwt.claim.sub', adult_no_dob::text, true);
+  PERFORM set_config('request.jwt.claims', jsonb_build_object('sub',adult_no_dob,'role','authenticated','aal','aal1')::text, true);
   SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
     INTO v_rows
     FROM public.get_points_leaderboard(50) AS p;

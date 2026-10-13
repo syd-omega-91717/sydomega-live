@@ -23258,3 +23258,19 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   - Verified in a throwaway worktree of `main`: `--promote`, `--write`, the contract audit and
     `--check` all exit 0, and the 9 tests pass. Before the fix the run failed with exactly
     CI's AssertionError.
+
+## Certificates: real rows with a PDF, and unlock copy that stopped promising dormant features (2026-10-13)
+
+- **Fixed: every member was shown all 12 certificates as their own (§8.1 class 9).**
+  - `profile.html` `buildCerts()` drew the whole catalogue under "YOUR SOVEREIGN CERTIFICATES", whatever the member held. Its neighbour `buildAchievementsGrid()` had already been fixed for the same fault.
+  - Live, `public.certificates` has 24 rows across 2 holders, with self-or-owner RLS and `SELECT` granted to `authenticated`. Every other member saw 12 certificates they did not hold.
+  - It now reads the member's own rows, filtered on uid because the owner can read every member's. It checks `.error` and renders with `textContent`. It shows "No certificates issued yet." when the member has none, and an error line when the read fails.
+- **Added: a PDF for each certificate held.**
+  - `omega-passport.js` (already on every page via bg.js) gains `generateCertificate` and a delegated `[data-certificate-download]` handler, on the vendored jsPDF and its existing error path.
+  - The page states it is a membership record, not an accredited qualification.
+- **Fixed: the KYC tab's "UNLOCKS ON COMPLETION" read as live** (live Stripe payments, 12 active tokens, full legal succession, "Verifiable on-chain"). Billing, Stripe and tokens are off. The six lines are now future tense (§9); the credentials line points at the PDFs and says "Not on-chain".
+- **Verified in headless Chromium:**
+  - With no rows: "No certificates issued yet." and 0 cards.
+  - With 2 stubbed rows (one with a null name): 2 cards, and clicking DOWNLOAD saved `omega-certificate-1-initiate.pdf`, which was rasterised and read.
+  - 0 page errors in both runs.
+- **Logged, not fixed:** `omega-passport.js` keeps its own 12 gate names, which differ from the canon tiers. The mapping is the owner's call (`docs/IDEA_INTAKE.md`).

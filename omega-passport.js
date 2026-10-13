@@ -187,6 +187,63 @@ function generate(btn){
 
 window.OmegaPassport={generate:generate};
 
+/* ── Certificate PDF ─────────────────────────────────────────────────────────
+   One A5 landscape page per certificate the member actually holds. The row
+   comes from public.certificates (self-or-owner RLS), published by
+   profile.html as window.__omegaCertificates; nothing here invents a
+   certificate. The page says what it is: a SYD OMEGA membership record, not
+   an accredited qualification. */
+function certTitle(row){
+  return String(row.cert_name||row.title||('Certificate '+(row.cert_num||''))).trim();
+}
+function drawCertificate(pdf, row, pr, user){
+  var W=210,H=148;
+  var name=(pr&&pr.display_name)||(user&&user.email?user.email.split('@')[0]:'Member');
+  var title=certTitle(row);
+  var issued=row.issued_at?String(row.issued_at).slice(0,10):'date not recorded';
+  pdf.setFillColor(10,10,15);pdf.rect(0,0,W,H,'F');
+  pdf.setDrawColor(201,168,76);pdf.setLineWidth(0.8);pdf.rect(8,8,W-16,H-16);
+  pdf.setLineWidth(0.25);pdf.rect(11,11,W-22,H-22);
+  pdf.setTextColor(201,168,76);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
+  pdf.text('SYD OMEGA 91717',W/2,24,{align:'center'});
+  pdf.setFontSize(22);pdf.text('CERTIFICATE',W/2,40,{align:'center'});
+  pdf.setTextColor(226,200,109);pdf.setFont('helvetica','normal');pdf.setFontSize(11);
+  pdf.text('This records that',W/2,56,{align:'center'});
+  pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(18);
+  pdf.text(String(name).toUpperCase().slice(0,40),W/2,70,{align:'center'});
+  pdf.setTextColor(226,200,109);pdf.setFont('helvetica','normal');pdf.setFontSize(11);
+  pdf.text('holds the certificate',W/2,82,{align:'center'});
+  pdf.setTextColor(201,168,76);pdf.setFont('helvetica','bold');pdf.setFontSize(16);
+  pdf.text(title.toUpperCase().slice(0,48),W/2,95,{align:'center'});
+  pdf.setTextColor(180,175,160);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
+  var meta='No. '+(row.cert_num!=null?row.cert_num:'-')+(row.grade?'   Grade '+row.grade:'')+'   Issued '+issued;
+  pdf.text(meta,W/2,110,{align:'center'});
+  pdf.setFontSize(7);pdf.setTextColor(138,134,118);
+  pdf.text('A SYD OMEGA 91717 membership record. Not an accredited or third-party-verified qualification.',W/2,128,{align:'center'});
+}
+function generateCertificate(btn, row){
+  var pr=window.__omegaProfile||{};
+  var user=window.__omegaUser||{};
+  loadJsPDF().then(function(jsPDF){
+    var pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a5'});
+    drawCertificate(pdf,row,pr,user);
+    var slug=certTitle(row).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'certificate';
+    pdf.save('omega-certificate-'+(row.cert_num!=null?row.cert_num+'-':'')+slug+'.pdf');
+  })['catch'](function(e){
+    passportError(btn, (e&&e.message)||'could not load the PDF engine');
+  });
+}
+window.OmegaPassport.generateCertificate=generateCertificate;
+
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('[data-certificate-download]');
+  if(!btn) return;
+  var i=parseInt(btn.getAttribute('data-certificate-download'),10);
+  var rows=window.__omegaCertificates||[];
+  if(!(i>=0&&i<rows.length)){ passportError(btn,'certificate not found'); return; }
+  generateCertificate(btn, rows[i]);
+});
+
 document.addEventListener('click',function(e){
   var btn=e.target.closest('[data-passport-download]');
   if(btn) generate(btn);

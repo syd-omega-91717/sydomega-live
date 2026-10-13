@@ -89,6 +89,8 @@ def page_inventory_errors(root: Path, registry: dict, alias_registry: dict) -> l
         source_file = root / path
         if not target_file.is_file():
             errors.append(f"alias target does not exist: {path} -> {target}")
+        elif target.lstrip("/") not in set(contract_paths):
+            errors.append(f"alias target is not a canonical page contract: {path} -> {target}")
         if source_file.is_file():
             body = source_file.read_text(encoding="utf-8", errors="ignore")
             if target not in body or not re.search(

@@ -60,6 +60,7 @@ DO $probe$
 DECLARE
   v_result jsonb;
   v_rows jsonb;
+  v_diag jsonb;
   owner_id constant uuid := '10000000-0000-4000-8000-000000000001';
   adult_no_dob constant uuid := '10000000-0000-4000-8000-000000000002';
   minor_id constant uuid := '10000000-0000-4000-8000-000000000003';
@@ -118,7 +119,33 @@ BEGIN
     RAISE EXCEPTION 'family name leaked through points leaderboard: %', v_rows;
   END IF;
   IF v_rows::text NOT ILIKE '%Probe Public Member%' THEN
-    RAISE EXCEPTION 'control public member missing from points leaderboard: %', v_rows;
+    v_diag := jsonb_build_object(
+      'auth_uid', auth.uid(),
+      'is_platform_owner', private.is_platform_owner(),
+      'public_member_ledger_rows_visible', (
+        SELECT count(*) FROM public.sovereign_points_ledger
+        WHERE user_id = '10000000-0000-4000-8000-000000000007'
+      ),
+      'public_member_profile_rows_visible', (
+        SELECT count(*) FROM public.profiles
+        WHERE id = '10000000-0000-4000-8000-000000000007'
+      ),
+      'private_projection', (
+        SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
+        FROM private.get_points_leaderboard(50) AS p
+      ),
+      'private_projection_security_definer', (
+        SELECT p.prosecdef
+        FROM pg_proc p
+        WHERE p.oid = to_regprocedure('private.get_points_leaderboard(integer)')
+      ),
+      'private_projection_owner', (
+        SELECT pg_get_userbyid(p.proowner)
+        FROM pg_proc p
+        WHERE p.oid = to_regprocedure('private.get_points_leaderboard(integer)')
+      )
+    );
+    RAISE EXCEPTION 'control public member missing from points leaderboard: rows=% diagnostics=%', v_rows, v_diag;
   END IF;
 
   SELECT coalesce(jsonb_agg(to_jsonb(f)), '[]'::jsonb)

@@ -367,7 +367,7 @@ as $function$
   FROM public.activity_feed af
   JOIN public.profiles pr ON pr.id=af.user_id
   WHERE af.is_public=true
-    AND pr.family_of IS NULL  -- family: never listed where members can see
+    AND (pr.family_of IS NULL OR pr.id = auth.uid()) -- family: hide from others, retain self-visibility
   ORDER BY af.created_at DESC
   LIMIT p_limit OFFSET p_offset;
 $function$;

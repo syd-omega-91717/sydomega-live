@@ -39,9 +39,9 @@ function renderTable(rows,myUid){
 
 (async function(){
   try{
-    var s=(await sb.auth.getSession()).data.session;
+    var sessionResult=await sb.auth.getSession();if(sessionResult.error)throw sessionResult.error;var s=sessionResult.data&&sessionResult.data.session;
     if(!s){location.replace('/account.html');return;}
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    var profileResult=await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle();if(profileResult.error)throw profileResult.error;if(!profileResult.data||typeof profileResult.data!=='object')throw new Error('profile_record_unavailable');var pr=profileResult.data;
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
@@ -111,5 +111,5 @@ function renderTable(rows,myUid){
       renderPodium(rows2[0],rows2[1],rows2[2]);
       renderTable(rows2,s.user.id);
     }
-  }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
+  }catch(e){var app=document.getElementById('app');if(app)app.style.display='none';var panel=document.getElementById('leaderboard-load-error');if(panel)panel.hidden=false;console.error('[leaderboard] access verification failed; page remains locked.',e);}
 })();

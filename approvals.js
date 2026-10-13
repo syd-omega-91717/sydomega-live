@@ -154,13 +154,46 @@ function buildCard(m){
 /* ── LOAD ALL MEMBERS ── */
 async function load(){
   Object.values(timers).forEach(clearInterval);timers={};
-  var members=[];
+  var members;
+  var primaryError=null;
   try{
     var r=await sb.rpc('get_all_members');
-    members=r.data||[];
+    if(r&&r.error)throw new Error(r.error.message||'get_all_members_failed');
+    if(!r||!Array.isArray(r.data))throw new Error('get_all_members_invalid_response');
+    members=r.data;
   }catch(e){
-    var r2=await sb.from('profiles').select('*').order('created_at',{ascending:false});
-    members=r2.data||[];
+    primaryError=e;
+    try{
+      var r2=await sb.from('profiles').select('*').order('created_at',{ascending:false});
+      if(r2&&r2.error)throw new Error(r2.error.message||'profiles_query_failed');
+      if(!r2||!Array.isArray(r2.data))throw new Error('profiles_query_invalid_response');
+      members=r2.data;
+      console.warn('[OMEGA] get_all_members failed; owner-scoped profiles fallback succeeded.',primaryError);
+      toast('MEMBER DATA DEGRADED — using fallback query. Check the console for the RPC failure.','var(--gold)');
+    }catch(fallbackError){
+      allMembers=[];
+      ['stat-total','stat-pending','stat-active','stat-approved','stat-rejected','hb-total','hb-pending'].forEach(function(id){
+        var el=document.getElementById(id);if(el)el.textContent='—';
+      });
+      var bp=document.getElementById('badge-pending');
+      if(bp){bp.textContent='!';bp.style.display='inline';bp.setAttribute('aria-label','Member data unavailable');}
+      var list=document.getElementById('member-list');
+      if(list){
+        list.replaceChildren();
+        var message=document.createElement('div');
+        message.className='empty';
+        message.textContent='MEMBER DATA UNAVAILABLE — '+String((fallbackError&&fallbackError.message)||'request_failed');
+        var retry=document.createElement('button');
+        retry.type='button';retry.className='btn btn-gold';retry.textContent='RETRY';
+        retry.addEventListener('click',function(){load();});
+        message.appendChild(document.createTextNode(' '));
+        message.appendChild(retry);
+        list.appendChild(message);
+      }
+      toast('COULD NOT LOAD MEMBER DATA — '+String((fallbackError&&fallbackError.message)||'request_failed'),'var(--crim)');
+      console.error('[OMEGA] member list unavailable; both data paths failed.',{primaryError:primaryError,fallbackError:fallbackError});
+      return;
+    }
   }
   allMembers=members.filter(function(m){return !m.is_owner;});
   var now=Date.now();
@@ -181,12 +214,12 @@ async function load(){
 
   /* pending badge on tab */
   var bp=document.getElementById('badge-pending');
-  if(bp){bp.textContent=pending.length;bp.style.display=pending.length?'inline':'none';}
+  if(bp){bp.textContent=pending.length;bp.style.display=pending.length?'inline':'none';bp.removeAttribute('aria-label');}
 
   /* render */
   var list=document.getElementById('member-list');
   if(!list)return;
-  list.innerHTML='';
+  list.replaceChildren();
   var cards=allMembers.map(buildCard).filter(Boolean);
   if(!cards.length){
     list.innerHTML='<div class="empty">'+t('empty_no_members')+'</div>';

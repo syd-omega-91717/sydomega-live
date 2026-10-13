@@ -84,7 +84,7 @@ GATES = [
      'every "N pages" claim in member-visible copy matches a real count',
      ['scripts/page-count-claims.py']),
     ('migration-drift',
-     'supabase/migrations/ and the live migration history agree both ways',
+     'live migration history plus explicit pending registry reconcile with source migrations',
      ['scripts/migration-drift.py', '--source-only']),
     ('page-experience',
      'every experience profile declares its required fields',

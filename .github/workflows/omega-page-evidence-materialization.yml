@@ -13,8 +13,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
   group: omega-page-evidence-materialization
@@ -47,22 +46,33 @@ jobs:
           python scripts/omega-page-action-audit.py --check
           python -m unittest scripts/tests/test_omega_unified_platform_fabric.py scripts/tests/test_omega_page_contract_bootstrap.py
 
-      - name: Create evidence PR when changed
-        env:
-          GH_TOKEN: ${{ github.token }}
+      # The refreshed files are uploaded, not pushed. The repository setting
+      # "Allow GitHub Actions to create and approve pull requests" is off, so
+      # `gh pr create` failed on every main push and each run left a stray
+      # automation/page-evidence-* branch behind (run 38288717671). A
+      # maintainer reviews the artifact and commits it by hand.
+      - name: Upload refreshed evidence when changed
+        id: changed
         run: |
-          if git diff --quiet; then
+          if git diff --quiet -- config/omega-page-contracts.json config/omega-page-review-tasks.json config/omega-page-action-audit.json config/omega-page-contract-bootstrap.json; then
             echo "No page evidence changes."
-            exit 0
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git diff --stat -- config/
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
-          branch="automation/page-evidence-$(date -u +%Y%m%d%H%M%S)"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
-          git add config/omega-page-contracts.json config/omega-page-review-tasks.json config/omega-page-action-audit.json config/omega-page-contract-bootstrap.json
-          git commit -m "chore: refresh page evidence control plane"
-          git push --set-upstream origin "$branch"
-          gh pr create --base main --head "$branch" --title "chore: refresh page evidence control plane" --body "Automated source-evidence refresh. This PR contains only directly observed HTML evidence and explicit UNVERIFIED semantic fields; it does not claim production authorization, truth, deployment, or successful execution."
+
+      - name: Upload evidence artifact
+        if: steps.changed.outputs.changed == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: page-evidence-${{ github.sha }}
+          path: |
+            config/omega-page-contracts.json
+            config/omega-page-review-tasks.json
+            config/omega-page-action-audit.json
+            config/omega-page-contract-bootstrap.json
+          retention-days: 14
 
       - name: Publish evidence summary
         run: |
@@ -71,5 +81,5 @@ jobs:
             echo ""
             echo "- Generated from direct repository HTML source."
             echo "- Semantic/authorization/production claims remain UNVERIFIED unless independently evidenced."
-            echo "- Page contracts and action audit are reviewable artifacts."
+            echo "- Page contracts and action audit are uploaded as the page-evidence artifact when they change; nothing is pushed."
           } >> "$GITHUB_STEP_SUMMARY"

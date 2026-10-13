@@ -10,6 +10,14 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "Owner-granted adult family access is awaiting round-three privacy/security review, fresh-database replay, RPC consolidation, and owner/AAL2 authorization probes. Do not apply or claim live parity until those checks and the owner security prerequisites are satisfied."
+    },
+    {
+      "version": "20261013160000",
+      "file": "20261013160000_secure_public_points_leaderboard_projection.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Fresh-database family-access probe exposed that the SECURITY INVOKER points leaderboard cannot read the public-member ledger rows needed to produce a public ranking under the ledger's member/owner RLS. This migration scopes SECURITY DEFINER to a narrow allowlisted projection with locked search_path and explicit public, approved, active, and family-privacy predicates. Must pass fresh replay and security review before production."
     }
   ]
 }

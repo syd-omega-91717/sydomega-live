@@ -75,13 +75,11 @@ for (const file of files) {
   // Universal visual/content contract: every shipped content page receives the
   // same restrained background and the shared platform runtime. Existing page
   // scripts remain in place; bg.js is internally guarded against duplication.
-  if (unifiedBackground && !/omega-unified-background\\.css/i.test(html)) {
-    html = html.replace(/<head(\\s[^>]*)?>/i, match => `${match}
-<link rel="stylesheet" href="${unifiedBackground}" data-omega-unified-background="1">`);
+  if (unifiedBackground && !html.toLowerCase().includes('omega-unified-background.css')) {
+    html = html.replace(/<head(\s[^>]*)?>/i, match => match + '\n<link rel="stylesheet" href="' + unifiedBackground + '" data-omega-unified-background="1">');
   }
-  if (backgroundScript && !/data-omega-global-bg="1"/i.test(html) && !/<script[^>]+src=["'][^"']*\\/bg\\.js/i.test(html)) {
-    html = html.replace(/<body(\\s[^>]*)?>/i, match => `${match}
-<script src="${backgroundScript}" defer data-omega-global-bg="1"></script>`);
+  if (backgroundScript && !html.includes('data-omega-global-bg="1"') && !html.toLowerCase().includes('/bg.js')) {
+    html = html.replace(/<body(\s[^>]*)?>/i, match => match + '\n<script src="' + backgroundScript + '" defer data-omega-global-bg="1"></script>');
   }
 
   const scripts = [];

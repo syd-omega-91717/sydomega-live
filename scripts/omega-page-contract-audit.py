@@ -39,7 +39,7 @@ def unresolved(value):
         return not value or any(unresolved(item) for item in value)
     if isinstance(value, dict):
         state = value.get("state")
-        if state in UNVERIFIED or state == "OPEN_TASK":
+        if isinstance(state, str) and (state in UNVERIFIED or state == "OPEN_TASK"):
             return True
         return any(unresolved(item) for item in value.values())
     return False

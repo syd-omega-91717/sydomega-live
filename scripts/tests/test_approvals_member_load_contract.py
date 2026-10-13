@@ -49,5 +49,28 @@ class MemberLoadContract(unittest.TestCase):
         self.assertIn("t('empty_no_members')", LOAD)
 
 
+class ReviewQueueContract(unittest.TestCase):
+    def test_review_queues_check_supabase_errors(self):
+        queue_start = SOURCE.index("/* ── QUEUE LOADERS ── */")
+        queue_end = SOURCE.index("/* ── IDENTITY REVIEW", queue_start)
+        queues = SOURCE[queue_start:queue_end]
+        for name in ("loadContracts", "loadReservations", "loadAudit", "loadErrors"):
+            with self.subTest(queue=name):
+                start = queues.index("async function " + name + "(")
+                next_start = queues.find("\\nasync function ", start + 1)
+                body = queues[start:next_start if next_start >= 0 else len(queues)]
+                self.assertIn("if(r&&r.error)throw new Error", body)
+                self.assertIn("showQueueError(", body)
+
+    def test_queue_errors_show_retry_state_not_empty_state(self):
+        queue_start = SOURCE.index("/* ── QUEUE LOADERS ── */")
+        queue_end = SOURCE.index("/* ── IDENTITY REVIEW", queue_start)
+        queues = SOURCE[queue_start:queue_end]
+        self.assertIn("function showQueueError(", queues)
+        self.assertIn("message.textContent=t(key)", queues)
+        self.assertIn("retry.addEventListener('click',function(){retryLoad();})", queues)
+        self.assertIn("Array.isArray(r.data.rows)", queues)
+
+
 if __name__ == "__main__":
     unittest.main()

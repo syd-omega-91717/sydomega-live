@@ -43,8 +43,9 @@ snapshot in the same change that applies a migration live.** A stale snapshot
 makes this gate lie in both directions (CLAUDE.md 8.1 class 2).
 
 Usage:
-  python3 scripts/migration-drift.py            # exit 1 on drift
-  python3 scripts/migration-drift.py --help     # this text
+  python3 scripts/migration-drift.py            # strict release check; exit 1 on unapplied migrations
+  python3 scripts/migration-drift.py --source-only # source parity; accepts only registered pending migrations
+  python3 scripts/migration-drift.py --help       # this text
 """
 import json
 import re

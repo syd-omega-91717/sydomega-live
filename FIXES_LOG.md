@@ -23274,3 +23274,18 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   - With 2 stubbed rows (one with a null name): 2 cards, and clicking DOWNLOAD saved `omega-certificate-1-initiate.pdf`, which was rasterised and read.
   - 0 page errors in both runs.
 - **Logged, not fixed:** `omega-passport.js` keeps its own 12 gate names, which differ from the canon tiers. The mapping is the owner's call (`docs/IDEA_INTAKE.md`).
+
+## Leaderboard: every member was ranked #1 of 1 (2026-10-13)
+
+- **Fixed (§8.1 class 9): `leaderboard.js`'s last fallback read `profiles` directly, and RLS returns only the caller's own row.**
+  - Its first source, the `rankings` Edge Function, is not deployed: `list_edge_functions` on `ydqhzvvoyufiiqvzcjns` returns 16 functions, and neither `rankings` nor `snapshot-leaderboard` is among them.
+  - Its second source, `leaderboard_snapshots`, has 0 rows, because nothing deployed writes to it.
+  - The `profiles` policy is `auth.uid() = id OR private.is_platform_owner()`. So every non-owner member saw themselves as the only ranked member, marked LIVE, while 4 members are approved.
+  - Measured live with real role impersonation for a non-owner member: `public.public_leaderboard(50)` returns 4 rows, while `profiles` returns 1.
+- **The fallback now calls `public_leaderboard`, the member-visible ranking that already exists.** The migration `20261012150000` also makes it exclude family accounts.
+  - The RPC returns no user ids, so "you" is marked only when exactly one row has your name and your authority. Otherwise your rank stays unstated instead of being guessed.
+  - When the RPC fails, the page says "Ranking is unavailable right now." and shows no rank.
+- **Verified in headless Chromium, with the stub patched in memory and the Edge Function made to fail:**
+  - Stub returning 3 rows: 3 rows rendered, "YOU" on rank 2, and `my-rank` = 2.
+  - Stub returning an error: the unavailable message, with `my-rank` left as `--`.
+  - 0 page errors in both runs.

@@ -285,11 +285,15 @@ $function$;
 -- Points leaderboard: retain a member's own row, but never expose another
 -- linked family member in a member-visible ranking. The predicate runs before
 -- row_number(), so excluded family rows cannot distort other members' ranks.
-create or replace function public.get_points_leaderboard(p_limit integer default 10)
+-- The ledger is RLS-protected to each member. Keep the public RPC as an
+-- invoker wrapper, and put the narrowly projected, explicitly filtered read
+-- behind a private SECURITY DEFINER implementation so approved public rows
+-- remain visible without granting direct cross-member ledger access.
+create or replace function private.get_points_leaderboard(p_limit integer default 10)
  returns table(rank integer, display_name text, element text, sign text, level integer, lifetime_points integer, is_self boolean)
  language plpgsql
- stable
- set search_path to 'pg_catalog', 'public'
+ stable security definer
+ set search_path = ''
 as $function$
 declare
   v_uid uuid := (select auth.uid());
@@ -308,10 +312,22 @@ begin
       and (p.is_public is true or p.id = v_uid)
       and (p.access_approved is true or p.is_owner is true)
       and p.deactivated_at is null
-      and (p.family_of is null or p.id = v_uid) -- family: only self may see self
+      and (p.family_of is null or p.id = v_uid)
     order by t.pts desc, p.id
     limit greatest(1, least(coalesce(p_limit, 10), 50));
 end;
+$function$;
+
+revoke all on function private.get_points_leaderboard(integer) from public, anon;
+grant execute on function private.get_points_leaderboard(integer) to authenticated;
+
+create or replace function public.get_points_leaderboard(p_limit integer default 10)
+ returns table(rank integer, display_name text, element text, sign text, level integer, lifetime_points integer, is_self boolean)
+ language sql
+ stable
+ set search_path = ''
+as $function$
+  select * from private.get_points_leaderboard($1);
 $function$;
 
 -- Daily snapshot recomputation must not reintroduce linked family accounts

@@ -130,6 +130,27 @@ BEGIN
         SELECT count(*) FROM public.profiles
         WHERE id = '10000000-0000-4000-8000-000000000007'
       ),
+      'public_member_profile', (
+        SELECT jsonb_build_object(
+          'display_name', p.display_name,
+          'is_public', p.is_public,
+          'access_approved', p.access_approved,
+          'is_owner', p.is_owner,
+          'deactivated_at', p.deactivated_at,
+          'family_of', p.family_of
+        )
+        FROM public.profiles p
+        WHERE p.id = '10000000-0000-4000-8000-000000000007'
+      ),
+      'public_member_points', (
+        SELECT jsonb_build_object(
+          'rows', count(*),
+          'sum', coalesce(sum(l.delta), 0),
+          'positive_sum', coalesce(sum(l.delta) filter (where l.delta > 0), 0)
+        )
+        FROM public.sovereign_points_ledger l
+        WHERE l.user_id = '10000000-0000-4000-8000-000000000007'
+      ),
       'private_projection', (
         SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
         FROM private.get_points_leaderboard(50) AS p

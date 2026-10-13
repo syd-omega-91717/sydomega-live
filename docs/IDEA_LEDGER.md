@@ -6,13 +6,13 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**475 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 17, IDEA_INTAKE.md 5.
+**482 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 17, IDEA_INTAKE.md 12.
 
 | status | count |
 |---|---|
-| NEEDS_DECISION | 14 |
-| IN_PROGRESS | 4 |
-| PROPOSED | 18 |
+| NEEDS_DECISION | 15 |
+| IN_PROGRESS | 5 |
+| PROPOSED | 19 |
 | PARTIAL | 56 |
 | OPEN_GAP | 8 |
 | DORMANT | 1 |
@@ -21,14 +21,14 @@ production serves it.
 | CLOSED | 9 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
-| REJECTED | 114 |
+| REJECTED | 118 |
 
 ## Actionable queue
 
 Everything not yet settled, owner decisions first. The weekly idea routine
 works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-checks the rest.
 
-### NEEDS_DECISION (14)
+### NEEDS_DECISION (15)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -46,8 +46,9 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B969 | 999 blueprint [R&D_OR_LORE] | The Sovereign Succession Cipher: This point hard-codes the biological lineage of Major. The Mars Ledger holds… | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
 | N155 | 999 blueprint [APPENDIX_NODE] | Multi-Generational Trust Lock (trust enclaves) | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
 | I05 | IDEA_INTAKE.md | Database backups the owner controls | the blueprint's Mars Ledger (points 9, 615) reduces to off-site backups / point-in-time restore, which needs Supabase Pro (2026-10-12) |
+| I08 | IDEA_INTAKE.md | Member sticker and logo pack | from the Unified Blueprint board; no sticker surface exists in the repo (2026-10-13) |
 
-### IN_PROGRESS (4)
+### IN_PROGRESS (5)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -55,8 +56,9 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B013 | 999 blueprint [INTELLIGENCE] | Zero-Fee Life: The billing engine has a "Nest Exception." All subscription costs for the family are hard-code… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
 | B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
 | N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
+| I06 | IDEA_INTAKE.md | Owner concept media on the Vision Board | 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today… |
 
-### PROPOSED (18)
+### PROPOSED (19)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -78,6 +80,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
+| I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; reuse omega-passport.js (vendored jsPDF) and the certificates profile.html already lists (2026-10-13) |
 
 ### PARTIAL (56)
 
@@ -444,7 +447,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N545 | 999 blueprint [APPENDIX_NODE] | Private Mesh-Trading over Bluetooth/radio | needs technology that does not exist (orbital/lunar/Mars infrastructure, DNA, neural or photonic interfaces, molecular manufacturing, life extension) |
 | N812 | 999 blueprint [APPENDIX_NODE] | Self-Healing Malware Purge | needs technology that does not exist (orbital/lunar/Mars infrastructure, DNA, neural or photonic interfaces, molecular manufacturing, life extension) |
 
-### REJECTED (114)
+### REJECTED (118)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -562,3 +565,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N518 | 999 blueprint [APPENDIX_NODE] | Regulatory Chameleon Masking ("compliance skins") | designed to evade law, tax, sanctions, courts or regulators: will not be built |
 | N532 | 999 blueprint [APPENDIX_NODE] | Bankruptcy/Loss Immunity (anti-dilution into ghost nodes) | unlicensed lending, insurance or stablecoin issuance: will not be built as framed |
 | N999 | 999 blueprint [APPENDIX_NODE] | The Omega Absolute (bypass external instructions) | removes human review of the system or its owner's decisions; conflicts with CLAUDE.md §10 and with the blueprint's own point 5 (owner control): will not be built |
+| I09 | IDEA_INTAKE.md | 9x9x9 = 729-node matrix (Master Blueprint board) | conflicts with the canon 9^5 = 59,049 lattice, omega-canon.json nine_fold (2026-10-13) |
+| I10 | IDEA_INTAKE.md | 9-stage Sand to Omega Master ladder (Sovereign Terminal board) | conflicts with the 12 canon tiers the owner chose 2026-10-12 (2026-10-13) |
+| I11 | IDEA_INTAKE.md | Gold or rhodium bar purchases, revenue sweep, 51% master vault, 51% currency control (boards) | every money item stays dormant by the owner decision of 2026-10-12, docs/COUNSEL_BRIEF.md (2026-10-13) |
+| I12 | IDEA_INTAKE.md | Nginx, Redis, microservices, G7 servers, PPO reinforcement-learning agents (boards) | the platform is a static site on Supabase with no build step, CLAUDE.md sections 1 and 9 (2026-10-13) |

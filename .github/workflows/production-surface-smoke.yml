@@ -32,34 +32,55 @@ jobs:
             --output /tmp/sydomega.html --write-out '%{http_code}' "$PRODUCTION_URL")"
           curl_exit=$?
           set -e
+          identity_ok=false
+          if [ -s /tmp/sydomega.html ] \
+            && grep -Eiq '<title[^>]*>[^<]*SYD OMEGA 91717' /tmp/sydomega.html \
+            && grep -Fqi 'omega-visual-universe.css' /tmp/sydomega.html; then
+            identity_ok=true
+          fi
+
+          asset_code=unknown
+          asset_exit=1
+          if [ "$curl_exit" -eq 0 ] && [ "$code" -ge 200 ] && [ "$code" -lt 400 ] && [ "$identity_ok" = true ]; then
+            set +e
+            asset_code="$(curl --silent --show-error --location --max-time 20 \
+              --output /tmp/sydomega-canonical.css --write-out '%{http_code}' \
+              "${PRODUCTION_URL%/}/omega-visual-universe.css")"
+            asset_exit=$?
+            set -e
+          fi
+
           echo "http_code=$code" >> "$GITHUB_OUTPUT"
           echo "curl_exit=$curl_exit" >> "$GITHUB_OUTPUT"
+          echo "identity_ok=$identity_ok" >> "$GITHUB_OUTPUT"
+          echo "asset_http_code=$asset_code" >> "$GITHUB_OUTPUT"
+          echo "asset_curl_exit=$asset_exit" >> "$GITHUB_OUTPUT"
 
-          if [ "$curl_exit" -eq 0 ] && [ "$code" -ge 200 ] && [ "$code" -lt 400 ] && [ -s /tmp/sydomega.html ] && grep -qi '<html' /tmp/sydomega.html; then
+          if [ "$curl_exit" -eq 0 ] && [ "$code" -ge 200 ] && [ "$code" -lt 400 ] \
+            && [ "$identity_ok" = true ] && [ "$asset_exit" -eq 0 ] \
+            && [ "$asset_code" -ge 200 ] && [ "$asset_code" -lt 300 ] \
+            && [ -s /tmp/sydomega-canonical.css ]; then
             echo "site_reachable=true" >> "$GITHUB_OUTPUT"
-            echo "Production site is reachable: HTTP $code"
+            echo "Production Omega app identity verified: root HTTP $code; canonical CSS HTTP $asset_code"
           else
             echo "site_reachable=false" >> "$GITHUB_OUTPUT"
             {
               echo "## Production deployment verification"
               echo
-              echo "The repository-side contract is intact, but the configured production endpoint is not currently serving the expected HTML response."
+              echo "The repository-side contract is intact, but the configured endpoint did not prove the expected Omega application identity and canonical asset."
               echo
               echo "- URL: $PRODUCTION_URL"
-              echo "- HTTP status: ${code:-unknown}"
-              echo "- curl exit: $curl_exit"
+              echo "- Root HTTP status: ${code:-unknown}"
+              echo "- Root curl exit: $curl_exit"
+              echo "- Expected page title and CSS reference found: $identity_ok"
+              echo "- Canonical CSS HTTP status: $asset_code"
+              echo "- Canonical CSS curl exit: $asset_exit"
               echo "- Classification: **EXTERNAL_DEPLOYMENT_BLOCKED**"
               echo
-              echo "This check is intentionally non-failing so a Vercel/provider/account outage or deployment-rate limit does not masquerade as a repository code failure. The live surface remains explicitly unverified until the endpoint serves the expected page."
+              echo "A generic HTML response or provider-branded error page is not accepted as proof that the Omega application is live. This check remains non-failing for provider outages, but the live surface is explicitly unverified."
             } >> "$GITHUB_STEP_SUMMARY"
-            echo "Production endpoint unavailable or invalid; classified as EXTERNAL_DEPLOYMENT_BLOCKED."
-            # Non-failing is the right call -- an owner-only provider outage is not
-            # a repository code defect -- but a bare green check made the outage
-            # invisible everywhere except this job's step summary, and CLAUDE.md
-            # 8.2 recorded the opposite ("red because production is 404ing"). A
-            # warning annotation surfaces it on the run and the commit without
-            # turning an outage into a build failure.
-            echo "::warning title=Production is not serving::${PRODUCTION_URL} returned HTTP ${code:-unknown} (curl exit ${curl_exit}). EXTERNAL_DEPLOYMENT_BLOCKED -- the live surface is UNVERIFIED. This is an outage, not a code defect; clearing it is an owner action in the Vercel dashboard."
+            echo "Production endpoint did not prove Omega app identity; classified as EXTERNAL_DEPLOYMENT_BLOCKED."
+            echo "::warning title=Production app identity unverified::${PRODUCTION_URL} did not prove the expected title and canonical CSS asset. EXTERNAL_DEPLOYMENT_BLOCKED -- live surface UNVERIFIED."
           fi
 
       - name: Verify Supabase Auth transport and boundary

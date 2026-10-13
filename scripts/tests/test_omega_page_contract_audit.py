@@ -13,6 +13,17 @@ AUDIT = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(AUDIT)
 
 
+class RecursiveTruthMarkerTests(unittest.TestCase):
+    def test_unverified_marker_inside_list_is_open(self):
+        self.assertTrue(AUDIT.unresolved(["LIVE", "UNVERIFIED"]))
+
+    def test_open_task_nested_in_contract_object_is_open(self):
+        self.assertTrue(AUDIT.unresolved({"authorization": {"state": "OPEN_TASK"}}))
+
+    def test_resolved_nested_contract_data_is_not_open(self):
+        self.assertFalse(AUDIT.unresolved({"state": "VERIFIED", "sources": ["LIVE", "CALCULATED"]}))
+
+
 class PageInventoryCoverageTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix="omega-page-inventory-")

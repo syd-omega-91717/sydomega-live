@@ -178,6 +178,13 @@ jobs:
       VERCEL_ORG_ID: ${{ needs.credentials.outputs.org }}
       VERCEL_PROJECT_ID: ${{ needs.credentials.outputs.project }}
     steps:
+      - name: Refuse production promotion from non-main manual dispatch
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+        shell: bash
+        run: |
+          echo "::error title=Production deployment refused::Manual production promotion is allowed only from refs/heads/main."
+          echo "requested_ref=$GITHUB_REF"
+          exit 1
       - name: Controlled state when token is unavailable
         if: needs.credentials.outputs.ready != 'true'
         run: |

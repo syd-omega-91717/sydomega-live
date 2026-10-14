@@ -126,9 +126,6 @@ fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
 end-to-end for the first time"*. The 287 files added since (numbered and
 timestamped alike) were **not part of that validation**, and no run has covered
 all 381. Treat the validated scope as `0001`–`0094` only.
-end-to-end for the first time"*. The 287 files added since (numbered and
-timestamped alike) were **not part of that validation**, and no run has covered
-all 381. Treat the validated scope as `0001`–`0094` only.
 
 **`bg.js` is loaded by all 239 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

@@ -132,3 +132,13 @@ Use this template in the approved internal evidence system (not with secrets in 
 The release owner must review the canonical production evidence gate after provider actions complete. Keep every incomplete domain at `BLOCKED`, `PENDING`, `PARTIAL`, or `UNVERIFIED` as appropriate. Never promote status from this runbook's existence or from a planned action.
 
 **Current known release constraint:** repository code cannot independently resolve Vercel account/provider restrictions, enable Supabase account settings, enroll owner MFA, approve a financial business model, or conduct a provider-side restore drill. Those require authorized external actions and fresh evidence.
+
+## Verified provider observation — 2026-10-15
+
+A live Vercel deployment-creation request for the current repository `main` revision was rejected by the provider with HTTP `402`, code `resource_creation_blocked`, and the explicit reason: **the Vercel team exceeded its fair-use limits and has been blocked**. The response classifies this as a user action required. This is provider-side evidence, not a source-code build failure.
+
+The latest production deployment returned by the Vercel deployment API was `READY` but referenced source SHA `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28`, while the audited repository `main` revision was `dd1c6cab41410f1397c6db43c5e60d9196e486a6`. Therefore, deployment readiness must not be confused with source freshness.
+
+**Required owner action:** resolve the Vercel team restriction in the authorized Vercel account, then deploy the intended `main` SHA and verify the canonical aliases, HTTPS/assets, and browser smoke tests. Do not try to evade the restriction by creating another project/team, changing billing or security settings automatically, bypassing protections, or claiming production is current without a successful source-SHA check.
+
+**Evidence boundary:** the deployment API's `READY` state and alias metadata were observed. This does not by itself prove every production page, API, or user journey works correctly.

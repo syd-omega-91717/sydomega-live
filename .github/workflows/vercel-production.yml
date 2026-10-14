@@ -92,6 +92,8 @@ jobs:
           echo "VERCEL_PRODUCTION_VALIDATE_RUN_ID=${GITHUB_RUN_ID}"
       - name: Static contract
         run: python scripts/vercel_static_contract.py
+      - name: Vercel production dispatch regression contract
+        run: python -m unittest scripts/tests/test_vercel_production_dispatch_contract.py
       - name: Release surface quality
         run: python scripts/release-surface-quality.py
       - name: Build artifact

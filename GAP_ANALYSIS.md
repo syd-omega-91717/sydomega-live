@@ -2349,3 +2349,19 @@ here for a future session rather than acted on speculatively.
     store. Whoever builds a client for them should note that `member_agent_interactions`
     was deliberately granted INSERT to `authenticated` with a member-scoped policy in that
     same migration, so it is the one of the three designed to be written from the client.
+
+
+---
+
+## Verified external deployment blocker — 2026-10-15
+
+**Status: OPEN / OWNER ACTION REQUIRED.** This finding supplements, rather than replaces, the earlier production-freeze evidence above.
+
+- The audited repository `main` revision is `dd1c6cab41410f1397c6db43c5e60d9196e486a6`.
+- The latest production deployment returned by Vercel's deployment API was `READY`, but its source revision was `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28`. A `READY` state proves deployment state only; it does not prove source freshness or end-to-end correctness.
+- A deployment-creation request for the intended repository revision was rejected with HTTP `402`, code `resource_creation_blocked`. Vercel's response explicitly says the team exceeded its fair-use limits and has been blocked; it classifies remediation as a user action.
+- The current combined status for the runbook evidence commit also reports `Vercel: failure`. No deployment of the intended `main` revision has been verified.
+
+**Required sequence:** the authorized team owner must resolve the Vercel restriction in the provider account; then deploy the intended `main` SHA; verify the resulting deployment SHA and canonical production aliases; run HTTPS/asset and browser smoke checks; and attach fresh evidence to the release gate. Do not evade the provider restriction by creating another team/project, weakening repository protections, or marking production current without evidence.
+
+**Evidence boundary:** this is a verified provider rejection and source-revision mismatch. It is not evidence that every page or API is broken, nor that the current production deployment is unavailable.

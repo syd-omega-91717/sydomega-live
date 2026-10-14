@@ -286,6 +286,7 @@ var T_EN={
 "meaning_index":"MEANING INDEX",
 "slo_uptime":"SLO UPTIME",
 "thirty_day":"30-DAY",
+"slo_target_unmonitored":"TARGET · NOT MONITORED",
 "open_risks":"OPEN RISKS",
 "iso_27001":"ISO 27001",
 "events_today":"EVENTS TODAY",

@@ -6,7 +6,7 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**483 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 17, IDEA_INTAKE.md 13.
+**484 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 18, IDEA_INTAKE.md 13.
 
 | status | count |
 |---|---|
@@ -14,7 +14,7 @@ production serves it.
 | IN_PROGRESS | 5 |
 | PROPOSED | 18 |
 | PARTIAL | 56 |
-| OPEN_GAP | 8 |
+| OPEN_GAP | 9 |
 | DORMANT | 1 |
 | SHIPPED | 34 |
 | DECIDED | 42 |
@@ -143,18 +143,19 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (8)
+### OPEN_GAP (9)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | G01 | GAP_ANALYSIS.md S | owner decisions recorded, legal review pending. Owner chose the 12-tier `omega-canon.json` ladder (subscripti… | GAP_ANALYSIS.md section S |
 | G02 | GAP_ANALYSIS.md S | production is frozen at the 2026-10-06 build. Vercel's newest | GAP_ANALYSIS.md section S |
-| G03 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
-| G04 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
-| G08 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
-| G09 | GAP_ANALYSIS.md S | `set_consult_status`, `set_contract_status`, `set_reservation_status` can never | GAP_ANALYSIS.md section S |
-| G10 | GAP_ANALYSIS.md S | the knowledge base is empty. 11 approved sources, 0 chunks, 0 | GAP_ANALYSIS.md section S |
-| G11 | GAP_ANALYSIS.md S | `omega-graphify-integration.js`'s `notifications` fallback insert always | GAP_ANALYSIS.md section S |
+| G03 | GAP_ANALYSIS.md S | nothing measures uptime or service health. Live: `incidents`, | GAP_ANALYSIS.md section S |
+| G04 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
+| G05 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
+| G09 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
+| G10 | GAP_ANALYSIS.md S | `set_consult_status`, `set_contract_status`, `set_reservation_status` can never | GAP_ANALYSIS.md section S |
+| G11 | GAP_ANALYSIS.md S | the knowledge base is empty. 11 approved sources, 0 chunks, 0 | GAP_ANALYSIS.md section S |
+| G12 | GAP_ANALYSIS.md S | `omega-graphify-integration.js`'s `notifications` fallback insert always | GAP_ANALYSIS.md section S |
 
 ### DORMANT (1)
 
@@ -252,15 +253,15 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 
 | id | source | idea | evidence |
 |---|---|---|---|
-| G05 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
-| G06 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
-| G07 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |
-| G12 | GAP_ANALYSIS.md S | Creation Layer truth enforcement is live. Authenticated clients no longer have direct DML on the four Creatio… | GAP_ANALYSIS.md section S |
-| G13 | GAP_ANALYSIS.md S | client read grants are materialised. The seven tables `omega_notifications`, `omega_user_achievements`, `omeg… | GAP_ANALYSIS.md section S |
-| G14 | GAP_ANALYSIS.md S | `omega_agent_action_proposals` was a retired schema, not a missing live table. Migration `20260929113731` cre… | GAP_ANALYSIS.md section S |
-| G15 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
-| G16 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
-| G17 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
+| G06 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
+| G07 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
+| G08 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |
+| G13 | GAP_ANALYSIS.md S | Creation Layer truth enforcement is live. Authenticated clients no longer have direct DML on the four Creatio… | GAP_ANALYSIS.md section S |
+| G14 | GAP_ANALYSIS.md S | client read grants are materialised. The seven tables `omega_notifications`, `omega_user_achievements`, `omeg… | GAP_ANALYSIS.md section S |
+| G15 | GAP_ANALYSIS.md S | `omega_agent_action_proposals` was a retired schema, not a missing live table. Migration `20260929113731` cre… | GAP_ANALYSIS.md section S |
+| G16 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
+| G17 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
+| G18 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
 
 ### SUPERSEDED (1)
 

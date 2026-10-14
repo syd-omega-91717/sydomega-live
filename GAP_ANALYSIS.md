@@ -25,6 +25,13 @@ open, recorded in `FIXES_LOG.md`:
   `main` is 417 commits / 90 merges ahead, 52 shipped `.html`/`.js`/`.css` files changed. Every
   "verified" claim since #755 is repository evidence only. Owner: lift the account block
   (§8.2), then confirm one production deploy of current `main`.
+- **OPEN 2026-10-14 — nothing measures uptime or service health.** Live: `incidents`,
+  `slo_metrics`, `system_health`, `system_incidents` hold 0 rows; `platform_metrics` 0 rows;
+  all 5 `error_budget_policy` rows are the 2026-07-27 seed (`status` green,
+  `budget_4wk_pct` null). The dashboard and Observatory now say "NOT MONITORED" / "NOT
+  MEASURED" instead of 99.9% / GREEN (`FIXES_LOG.md`, 2026-10-14). Closing it needs an
+  external probe (e.g. a scheduled check of `sydomega.com`) writing real rows — an owner
+  choice of provider, not a page change.
 - **OPEN 2026-10-09 — access requests go unanswered; the owner is never emailed.**
   `notify-access` (emails the owner on a new request) is `LOCAL_ONLY` — 9 of 25 functions are
   (`docs/runtime/supabase-edge-functions-live.json`; `list_edge_functions` returns 16). Live:

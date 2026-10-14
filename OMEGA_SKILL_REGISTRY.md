@@ -112,13 +112,13 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 
 | Source | Keys |
 |---|---|
-| `T_EN` (English, inlined in `i18n.js`) | 1188 |
-| `i18n/ar.json` | 1188 |
-| `i18n/es.json` | 1188 |
-| `i18n/fr.json` | 1188 |
-| `i18n/hi.json` | 1188 |
-| `i18n/nl.json` | 1188 |
-| `i18n/zh.json` | 1188 |
+| `T_EN` (English, inlined in `i18n.js`) | 1189 |
+| `i18n/ar.json` | 1189 |
+| `i18n/es.json` | 1189 |
+| `i18n/fr.json` | 1189 |
+| `i18n/hi.json` | 1189 |
+| `i18n/nl.json` | 1189 |
+| `i18n/zh.json` | 1189 |
 
 `supabase/migrations/README.md` records exactly one end-to-end run against a
 fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**

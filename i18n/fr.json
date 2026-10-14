@@ -219,6 +219,7 @@
   "meaning_index": "INDICE DE SENS",
   "slo_uptime": "DISPONIBILITÉ SLO",
   "thirty_day": "30 JOURS",
+  "slo_target_unmonitored": "OBJECTIF · NON SURVEILLÉ",
   "open_risks": "RISQUES OUVERTS",
   "iso_27001": "ISO 27001",
   "events_today": "ÉVÉNEMENTS AUJOURD'HUI",

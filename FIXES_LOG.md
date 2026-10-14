@@ -23289,3 +23289,33 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   - Stub returning 3 rows: 3 rows rendered, "YOU" on rank 2, and `my-rank` = 2.
   - Stub returning an error: the unavailable message, with `my-rank` left as `--`.
   - 0 page errors in both runs.
+
+## Uptime and service health shown as measured while nothing measured them (2026-10-14)
+
+- **Fixed (§8.1 class 9): the platform asserted health it never measured.**
+  - `dashboard.html` showed "99.9% · SLO UPTIME · 30-DAY" to every member, a hard-coded target
+    rendered as a 30-day result (the count-up drew it as "99.90%").
+  - `observatory.html` (owner-only) showed "ALL SYSTEMS OPERATIONAL", a static 2.3% error
+    budget, five SLO cards hard-coded GREEN, and "NO INCIDENTS ON RECORD · PLATFORM CLEAN".
+  - Its uptime KPI was "computed" as 100 minus logged incident downtime, so an empty
+    `incidents` table printed **100.00%**, including through the 2026-10-06 production pause,
+    which was never filed as an incident.
+- **Live evidence (`execute_sql` on `ydqhzvvoyufiiqvzcjns`, 2026-10-14):** `incidents`,
+  `slo_metrics`, `system_health`, `system_incidents` and `platform_metrics` each 0 rows; all 5
+  `error_budget_policy` rows have `status='green'`, `budget_4wk_pct` null and
+  `last_computed` 2026-07-27 — a seed, not a computation.
+- **Change:**
+  - Dashboard tile keeps the 99.9% figure, labelled "TARGET · NOT MONITORED" (new key
+    `slo_target_unmonitored` in `T_EN` and all six packs) with a tooltip saying no monitor runs.
+  - Observatory starts at "NO UPTIME MONITOR", "—", "NOT COMPUTED" and "NOT MEASURED"; the
+    incident-derived uptime is removed; an SLO card is coloured only by a row whose
+    `budget_4wk_pct` is non-null; an incident read error says "INCIDENT LOG UNAVAILABLE"
+    instead of "no incidents".
+- **Verified in headless Chromium** with an owner stub serving the live seed rows:
+  - BEFORE (`main`): `ALL SYSTEMS OPERATIONAL`, uptime `100.00%`, budget `2.3%`, 4× GREEN.
+  - AFTER, seed rows: `NO UPTIME MONITOR`, `—`, `NOT COMPUTED`, 4× `NOT MEASURED`.
+  - AFTER, one computed row (vault, 0.35, yellow): only that card reads `35% BUDGET USED / YELLOW`.
+  - Dashboard tile in en/fr/ar: `TARGET · NOT MONITORED` / `OBJECTIF · NON SURVEILLÉ` /
+    `الهدف · غير مراقَب`. 0 page errors in every run.
+- **Gated:** `scripts/tests/test_uptime_truth_contract.py` (5 tests) passes here and fails 5/5
+  against `main`. The open item — no monitor exists — is in `GAP_ANALYSIS.md` §S.

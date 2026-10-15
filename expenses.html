@@ -367,9 +367,14 @@ function itemHTML(e){
     +'</div>'
     +'<div class="exp-date">'+date+'</div>'
     +'<div class="exp-amount '+type+'">'+(type==='income'?'+':'-')+'$'+amount.toFixed(2)+'</div>'
-    +'<button class="btn-red btn-sm" type="button" onclick="deleteEntry(\''+id+'\')" aria-label="Delete transaction">DEL</button>'
+    +'<button class="btn-red btn-sm" type="button" data-delete-expense="'+id+'" aria-label="Delete transaction">DEL</button>'
     +'</div>';
 }
+document.addEventListener('click',function(event){
+  var button=event.target.closest('[data-delete-expense]');
+  if(button) deleteEntry(button.getAttribute('data-delete-expense'));
+});
+
 function renderLedger(){
   var list=document.getElementById('ledger-list');
   var q=(document.getElementById('search-input').value||'').toLowerCase();

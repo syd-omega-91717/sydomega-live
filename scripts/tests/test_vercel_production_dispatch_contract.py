@@ -31,6 +31,21 @@ class VercelProductionDispatchContract(unittest.TestCase):
         )
         self.assertIn("exit 1", WORKFLOW[guard_pos:deployment_pos])
 
+    def test_missing_credentials_fail_when_production_deploy_is_requested(self):
+        guard = "Controlled state when token is unavailable"
+        guard_pos = WORKFLOW.index(guard)
+        deployment_pos = WORKFLOW.index("Deploy to Vercel Production")
+        block = WORKFLOW[guard_pos:deployment_pos]
+        self.assertIn("DEPLOY_REQUESTED:", block)
+        self.assertIn(
+            "github.event_name == 'push' || "
+            "(github.event_name == 'workflow_dispatch' && inputs.deploy == true)",
+            block,
+        )
+        self.assertIn('if [[ "$DEPLOY_REQUESTED" == "true" ]]; then', block)
+        self.assertIn("exit 1", block)
+        self.assertIn("do not treat artifact validation as a production deployment", block)
+
     def test_deployment_uses_the_validated_workflow_path(self):
         self.assertIn("needs: validate", WORKFLOW)
         self.assertIn("needs: credentials", WORKFLOW)

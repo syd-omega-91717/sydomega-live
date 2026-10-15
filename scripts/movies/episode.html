@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Series Episode Scene</title>
+<!--
+  Ω vertical micro-episode scene — the frame source for
+  `scripts/movies/render.js --episodes`. NOT shipped (scripts/ is excluded by
+  scripts/vercel-build.sh); only the rendered assets/series/ output ships.
+
+  Same contract as scene.html: a seeded RNG drives every random choice and
+  time is t = i / FPS, never the wall clock, so frame(i) always paints the
+  same pixels for the same episode.
+
+  Script: /assets/series/twelve-houses-s1.json — the single source the
+  series.html player reads too. Hero art: /assets/legacy/sign-<sign>.webp,
+  read at render time; a gold glyph stands in if it fails to load.
+
+  Acts (seconds):  0-2.6 cold open · 2.6-8 the guide forms · 8-15 voice and
+  plot · 15-18.4 cliffhanger · 18.4-20 next-episode card.
+
+  Usage:  episode.html?e=1..12   await SCENE.ready;  SCENE.frame(i)
+-->
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c" width="720" height="1280"></canvas>
+<script>
+(function () {
+  'use strict';
+  var W = 720, H = 1280, FPS = 24, DUR = 20, FRAMES = FPS * DUR;
+  var CX = W / 2;
+  var ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+  var SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+  var GOLD = [201, 168, 76], INK = [232, 236, 240], CRIM = [207, 103, 96], CREAM = [232, 217, 168];
+  var q = new URLSearchParams(location.search);
+  var EN = Math.max(1, Math.min(12, parseInt(q.get('e') || '1', 10)));
+
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
+  function sstep(a, b, x) { var t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
+  function eout(t) { t = clamp(t, 0, 1); return 1 - Math.pow(1 - t, 3); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function hex(h) { h = h.replace('#', ''); return [parseInt(h.substr(0, 2), 16), parseInt(h.substr(2, 2), 16), parseInt(h.substr(4, 2), 16)]; }
+  function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+  function mix(a, b, t) { return [Math.round(lerp(a[0], b[0], t)), Math.round(lerp(a[1], b[1], t)), Math.round(lerp(a[2], b[2], t))]; }
+  function mk(w, h) { var c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+  function glyph(i) { return String.fromCodePoint(0x2648 + i) + '︎'; }
+
+  var cv = document.getElementById('c'), ctx = cv.getContext('2d');
+  var EP, NEXT, SEASON, C1, CDEEP, ART = null, R, STARS = [], MOTES = [], VIG, GRAIN = [];
+
+  function sprite(c) {
+    var s = mk(64, 64), g = s.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, rgba(mix(c, [255, 255, 255], 0.7), 1)); gr.addColorStop(0.2, rgba(c, 0.8));
+    gr.addColorStop(0.5, rgba(c, 0.18)); gr.addColorStop(1, rgba(c, 0));
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return s;
+  }
+  var SP, SPG;
+
+  function setup() {
+    C1 = hex(EP.color); CDEEP = mix(C1, [6, 7, 16], 0.82);
+    SP = sprite(C1); SPG = sprite(GOLD);
+    R = mulberry32(91717 + EP.n * 977);
+    for (var i = 0; i < 260; i++) STARS.push({ x: R() * W, y: R() * H, s: 0.4 + Math.pow(R(), 2) * 2.2, v: 6 + R() * 28, ph: R() * 6.283 });
+    for (var k = 0; k < 140; k++) MOTES.push({ a: R() * 6.283, r: 150 + R() * 230, w: (0.15 + R() * 0.35) * (R() < 0.5 ? 1 : -1), s: 0.6 + R() * 2.2, h: (R() - 0.5) * 0.5, g: R() < 0.35 });
+    VIG = mk(W, H);
+    var g = VIG.getContext('2d'), gr = g.createRadialGradient(CX, H * 0.42, H * 0.18, CX, H * 0.5, H * 0.78);
+    gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(0.65, 'rgba(0,0,0,0.42)'); gr.addColorStop(1, 'rgba(0,0,0,0.9)');
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    for (var n = 0; n < 4; n++) {
+      var t = mk(256, 256), tg = t.getContext('2d'), id = tg.createImageData(256, 256);
+      for (var p = 0; p < id.data.length; p += 4) { var v = R() * 255; id.data[p] = id.data[p + 1] = id.data[p + 2] = v; id.data[p + 3] = 14; }
+      tg.putImageData(id, 0, 0); GRAIN.push(t);
+    }
+  }
+
+  // Letter-spaced text with optional typewriter reveal (0..1 of characters).
+  function txt(s, x, y, font, color, spacing, align, reveal) {
+    ctx.font = font; ctx.letterSpacing = (spacing || 0) + 'px';
+    ctx.textAlign = align || 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = color;
+    var shown = reveal == null ? s : s.slice(0, Math.floor(s.length * clamp(reveal, 0, 1)));
+    ctx.fillText(shown, x, y);
+  }
+  // Word-wrapped block; returns the lines so callers can typewriter across them.
+  function wrap(s, font, maxW, spacing) {
+    ctx.font = font; ctx.letterSpacing = (spacing || 0) + 'px';
+    var words = s.split(' '), lines = [], cur = '';
+    words.forEach(function (w) { var tst = cur ? cur + ' ' + w : w; if (ctx.measureText(tst).width > maxW && cur) { lines.push(cur); cur = w; } else cur = tst; });
+    if (cur) lines.push(cur); return lines;
+  }
+  function block(s, y, font, lh, color, spacing, reveal, maxW) {
+    var lines = wrap(s, font, maxW || 600, spacing), total = s.length, budget = Math.floor(total * clamp(reveal == null ? 1 : reveal, 0, 1));
+    lines.forEach(function (ln, i) {
+      var take = Math.max(0, Math.min(ln.length, budget)); budget -= ln.length + 1;
+      if (take > 0) txt(ln.slice(0, take), CX, y + i * lh, font, color, spacing);
+    });
+  }
+
+  function background(t, shake) {
+    var gr = ctx.createLinearGradient(0, 0, 0, H);
+    gr.addColorStop(0, rgba(mix(CDEEP, [0, 0, 0], 0.4), 1)); gr.addColorStop(0.55, rgba(CDEEP, 1)); gr.addColorStop(1, '#04050b');
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+    var neb = ctx.createRadialGradient(CX + Math.sin(t * 0.3) * 60, H * 0.4, 10, CX, H * 0.42, 560);
+    neb.addColorStop(0, rgba(C1, 0.30)); neb.addColorStop(0.5, rgba(C1, 0.08)); neb.addColorStop(1, rgba(C1, 0));
+    ctx.fillStyle = neb; ctx.fillRect(0, 0, W, H);
+    STARS.forEach(function (s) {
+      var y = (s.y - t * s.v + H * 4) % H, a = 0.35 + 0.65 * Math.abs(Math.sin(s.ph + t * 1.3));
+      ctx.fillStyle = 'rgba(255,248,230,' + (a * 0.8).toFixed(3) + ')'; ctx.fillRect(s.x + shake, y, s.s, s.s);
+    });
+  }
+
+  function guide(t, shake) {
+    var form = eout(sstep(2.6, 6.8, t)), cy = H * 0.40 + Math.sin(t * 0.8) * 8, sc = lerp(0.72, 1, form);
+    // rings
+    ctx.save(); ctx.translate(CX + shake, cy);
+    [[300, 0.9, 0.35], [250, -0.6, 0.22]].forEach(function (r, i) {
+      ctx.save(); ctx.rotate(t * 0.12 * r[1]); ctx.scale(1, 0.32 + i * 0.1);
+      ctx.strokeStyle = rgba(i ? GOLD : C1, r[2] * form); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, r[0] * sc, 0, 6.283); ctx.stroke(); ctx.restore();
+    });
+    ctx.restore();
+    // orbiting motes
+    ctx.globalCompositeOperation = 'lighter';
+    MOTES.forEach(function (m) {
+      var a = m.a + t * m.w, rr = m.r * lerp(1.8, 1, form), x = CX + Math.cos(a) * rr + shake, y = cy + Math.sin(a) * rr * 0.36 + m.h * 120;
+      var sz = 18 * m.s * (0.4 + form * 0.6); ctx.globalAlpha = 0.5 * form; ctx.drawImage(m.g ? SPG : SP, x - sz / 2, y - sz / 2, sz, sz);
+    });
+    ctx.globalAlpha = 1;
+    // halo
+    var hz = 520 * sc; ctx.globalAlpha = 0.55 * form; ctx.drawImage(SP, CX - hz / 2 + shake, cy - hz / 2, hz, hz); ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+    // the guide: owner's sign art, else a forged glyph
+    ctx.save(); ctx.globalAlpha = form;
+    if (ART) {
+      var aw = 470 * sc, ah = aw * ART.height / ART.width;
+      ctx.shadowColor = rgba(C1, 0.9); ctx.shadowBlur = 40; ctx.drawImage(ART, CX - aw / 2 + shake, cy - ah / 2, aw, ah);
+    } else {
+      txt(glyph(EP.n - 1), CX + shake, cy, 'bold ' + Math.round(300 * sc) + 'px "DejaVu Sans"', rgba(GOLD, 1), 0);
+    }
+    ctx.restore();
+  }
+
+  function render(i) {
+    var t = i / FPS;
+    var hit = t >= 15 && t < 18.4, shake = hit ? Math.sin(t * 90) * 6 * Math.max(0, 1 - (t - 15) / 0.9) : 0;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    background(t, shake);
+    if (t > 2.2 && t < 18.8) guide(t, shake);
+    ctx.drawImage(VIG, 0, 0);
+
+    // Act I: cold open
+    var a1 = sstep(0.2, 0.9, t) * (1 - sstep(2.2, 2.8, t));
+    if (a1 > 0) {
+      ctx.globalAlpha = a1;
+      txt('THE TWELVE HOUSES', CX, H * 0.38, '22px "DejaVu Sans Mono"', rgba(CREAM, 1), 10);
+      txt(ROMAN[EP.n - 1], CX, H * 0.48, 'bold 150px "DejaVu Serif"', rgba(GOLD, 1), 6);
+      txt('EPISODE ' + EP.n + ' · ' + EP.title.toUpperCase(), CX, H * 0.58, '20px "DejaVu Sans Mono"', rgba(INK, 0.9), 5);
+      ctx.globalAlpha = 1;
+    }
+    // persistent chrome
+    var chrome = sstep(2.4, 3.0, t) * (1 - sstep(18.4, 18.8, t));
+    if (chrome > 0) {
+      ctx.globalAlpha = chrome * 0.85;
+      txt('Ω  THE TWELVE HOUSES · S1 · EP ' + EP.n + '/12', 40, 64, '17px "DejaVu Sans Mono"', rgba(CREAM, 1), 3, 'left');
+      ctx.globalAlpha = 1;
+    }
+    // Act II: guide name plate
+    var plate = sstep(4.4, 5.4, t) * (1 - sstep(14.6, 15.0, t));
+    if (plate > 0) {
+      ctx.globalAlpha = plate;
+      txt(EP.guide.toUpperCase(), CX, H * 0.665, 'bold 64px "DejaVu Serif"', rgba(mix(C1, [255, 255, 255], 0.35), 1), 8);
+      txt(EP.sign.toUpperCase() + ' · ' + EP.element.toUpperCase() + ' · ' + EP.god.toUpperCase(), CX, H * 0.665 + 58, '18px "DejaVu Sans Mono"', rgba(CREAM, 1), 6);
+      ctx.globalAlpha = 1;
+    }
+    // Act III: voice then plot, subtitled
+    if (t >= 8 && t < 15) {
+      var sub = H * 0.80, panel = sstep(8, 8.4, t) * (1 - sstep(14.6, 15, t));
+      ctx.fillStyle = 'rgba(4,5,11,' + (0.62 * panel).toFixed(3) + ')'; ctx.fillRect(28, sub - 70, W - 56, 200);
+      ctx.globalAlpha = panel;
+      if (t < 11.4) block('“' + EP.voice + '”', sub, 'italic 34px "DejaVu Serif"', 48, rgba(INK, 1), 0, (t - 8.3) / 2.2, 620);
+      else block(EP.plot, sub, '32px "DejaVu Serif"', 46, rgba(INK, 1), 0, (t - 11.5) / 2.4, 620);
+      ctx.globalAlpha = 1;
+    }
+    // Act IV: cliffhanger
+    if (hit) {
+      var flash = Math.max(0, 1 - (t - 15) / 0.35);
+      if (flash > 0) { ctx.fillStyle = 'rgba(255,240,230,' + (flash * 0.85).toFixed(3) + ')'; ctx.fillRect(0, 0, W, H); }
+      var pulse = 0.18 + 0.1 * Math.sin((t - 15) * 7);
+      ctx.fillStyle = rgba(CRIM, pulse * sstep(15, 15.3, t)); ctx.fillRect(0, 0, W, H);
+      var cy = H * 0.76;
+      ctx.fillStyle = 'rgba(4,5,11,0.7)'; ctx.fillRect(0, cy - 110, W, 260);
+      txt('— ' + EP.guide.toUpperCase() + ' —', CX, cy - 70, '18px "DejaVu Sans Mono"', rgba(CRIM, 1), 8);
+      block(EP.cliff, cy, 'bold 38px "DejaVu Serif"', 52, rgba([255, 244, 236], 1), 0, (t - 15.2) / 1.6, 640);
+    }
+    // Act V: next-episode card
+    var a5 = sstep(18.4, 18.9, t);
+    if (a5 > 0) {
+      ctx.fillStyle = 'rgba(3,4,9,' + (0.9 * a5).toFixed(3) + ')'; ctx.fillRect(0, 0, W, H);
+      ctx.globalAlpha = a5;
+      if (NEXT) {
+        txt('NEXT EPISODE', CX, H * 0.36, '22px "DejaVu Sans Mono"', rgba(CREAM, 1), 10);
+        txt(glyph(NEXT.n - 1), CX, H * 0.47, '140px "DejaVu Sans"', rgba(hex(NEXT.color), 1), 0);
+        txt('EP ' + NEXT.n + ' · ' + NEXT.title.toUpperCase(), CX, H * 0.585, 'bold 34px "DejaVu Serif"', rgba(INK, 1), 3);
+        txt(NEXT.guide.toUpperCase() + ' · ' + NEXT.sign.toUpperCase(), CX, H * 0.635, '18px "DejaVu Sans Mono"', rgba(CREAM, 0.9), 6);
+      } else {
+        txt('END OF SEASON 1', CX, H * 0.40, '22px "DejaVu Sans Mono"', rgba(CREAM, 1), 10);
+        txt('Ω', CX, H * 0.49, 'bold 150px "DejaVu Serif"', rgba(GOLD, 1), 0);
+        txt(SEASON, CX, H * 0.60, 'bold 28px "DejaVu Serif"', rgba(INK, 1), 3);
+      }
+      txt('A FICTIONAL SYD OMEGA 91717 SERIES', CX, H - 70, '15px "DejaVu Sans Mono"', rgba(CREAM, 0.6), 5);
+      ctx.globalAlpha = 1;
+    }
+    // film grain + letterbox fade in/out
+    ctx.globalAlpha = 1; ctx.drawImage(GRAIN[i % GRAIN.length], 0, 0, W, H);
+    var fade = 1 - sstep(0, 0.4, t) + sstep(19.5, 20, t);
+    if (fade > 0) { ctx.fillStyle = 'rgba(0,0,0,' + clamp(fade, 0, 1).toFixed(3) + ')'; ctx.fillRect(0, 0, W, H); }
+  }
+
+  var ready = fetch('/assets/series/twelve-houses-s1.json').then(function (r) { return r.json(); }).then(function (d) {
+    EP = d.episodes[EN - 1]; NEXT = d.episodes[EN] || null; SEASON = d.next_season;
+    if (!EP || EP.sign !== SIGNS[EN - 1]) throw new Error('episode ' + EN + ' does not match the canon sign order');
+    setup();
+    var img = new Image();
+    var art = new Promise(function (res) { img.onload = function () { ART = img; res(true); }; img.onerror = function () { res(false); }; });
+    img.src = '/assets/legacy/sign-' + EP.sign.toLowerCase() + '.webp';
+    var fonts = document.fonts && document.fonts.load ? Promise.all([
+      document.fonts.load('bold 64px "DejaVu Serif"'), document.fonts.load('italic 34px "DejaVu Serif"'),
+      document.fonts.load('20px "DejaVu Sans Mono"'), document.fonts.load('140px "DejaVu Sans"')]) : Promise.resolve();
+    return Promise.all([art, fonts]).then(function (x) { return { frames: FRAMES, art: x[0] ? img.src : null, episode: EP }; });
+  });
+
+  window.SCENE = {
+    fps: FPS, frames: FRAMES, ready: ready, posterFrame: Math.round(9.6 * FPS),
+    render: render,
+    frame: function (i) { render(i); return cv.toDataURL('image/png'); }
+  };
+})();
+</script>
+</body>
+</html>

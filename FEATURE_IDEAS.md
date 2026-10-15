@@ -2830,3 +2830,29 @@ Claude-Session: https://claude.ai/code/session_012eUxe6TqiEjiG8DwKPJ6Qk
 ```
 
 **Status:** PROPOSAL (ready for Phase 2 implementation)
+
+## 40. Vertical micro-episodes, the short-drama format without the coin paywall — THE TWELVE HOUSES S1 (2026-10-14) — SHIPPED (pending owner merge)
+
+**Outside research (web search, 2026-10-14).**
+- **The market:** short-drama apps (DramaBox, ReelShort, ShortMax, GoodShort, FlexTV, DramaWave) each brought in close to $140M in-app revenue in Q1 2026 for the two leaders, and category downloads rose 140% year on year. Sources: [Sensor Tower](https://sensortower.com/blog/state-of-short-drama-apps-2026-report), [Screen Daily](https://www.screendaily.com/news/microdrama-revenue-outside-china-to-hit-36bn-in-2026-says-report/5219165.article).
+- **The format** is the transferable part: vertical 9:16 video, 1–2 minute episodes, every one ending on a cliffhanger, autoplay into the next, resume where you left off, one-thumb swipe navigation. Source: [Vodlix guide](https://vodlix.com/blog/how-to-create-a-microdrama-short-video.md).
+- **The monetization** is not transferable: 5–10 free episodes, then coins bought or earned by watching ads, which critics liken to slot machines. Sources: [ppc.land](https://ppc.land/microdrama/), [The Post](https://thepost.ph/arts-culture/streaming/popularity-of-microdrama-2026/).
+
+**Grounded here.**
+- `series.html` already declared THE TWELVE HOUSES S1 as the flagship: "12 episodes, one per sign". All 144 series episodes were text cards marked IN DEVELOPMENT or CONCEPT, and none played.
+- `scripts/movies/render.js` already rendered the 12 franchise films deterministically. `omega-agents.json` already holds each guide's voice, so the dialogue is canon, not new copy.
+- §9 forbids live monetization and `tokens_enabled` is `false`, so the coin paywall is out. Every episode is free.
+
+**Built.**
+- `assets/series/twelve-houses-s1.json`: the season script and the single source for both renderer and player.
+- `scripts/movies/episode.html`: a vertical scene in five acts. It is followed by `render.js --episodes`, which outputs `assets/series/houses-s1-epNN.mp4/.jpg` at 720×1280, 20 s, with a drone plus a cliffhanger impact.
+- A **WATCH · S1** tab on `series.html` with:
+  - a vertical player, an episode list and resume (localStorage);
+  - autoplay into the next episode after a 3 s countdown, with a stay option;
+  - swipe and ↑/↓ navigation;
+  - the existing `data-omega-audio-required` / `data-omega-voice` contract.
+
+**Next candidates (not built).**
+- S2 THE SOVEREIGN GENESIS (9 episodes): the season file's `next_season`.
+- Per-guide spin-off shorts on `movies.html`.
+- A "continue watching" chip on the dashboard, reading the same localStorage key.

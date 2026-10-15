@@ -8,12 +8,21 @@
  *     [--out DIR]       output directory (default: assets/movies)
  *     [--keep]          keep the PNG frame directories
  *     [--jobs N]        parallel browser pages (default 3)
+ *     [--episodes]      render THE TWELVE HOUSES S1 vertical micro-episodes
+ *                       instead (episode.html; assets/series/; see below)
  *     [--help]
  *
  * Output: franchise-NN.mp4 (H.264 yuv420p 1280x720 24fps, faststart, AAC 64k
  * synthesized drone) and franchise-NN.jpg (poster from the title-card frame).
  * Each mp4 is held to <= 1.5 MB by stepping CRF up, each poster to <= 120 KB
  * by stepping JPEG quality down.
+ *
+ * With --episodes: houses-s1-epNN.mp4 (720x1280 9:16, 20 s, same codec and
+ * faststart; the drone takes an impact hit at the 15 s cliffhanger) and
+ * houses-s1-epNN.jpg, held to <= 1.2 MB and <= 90 KB. The script is
+ * /assets/series/twelve-houses-s1.json, the file series.html plays from.
+ *
+ * OMEGA_CHROME=<path> launches that Chromium instead of playwright-core's own.
  *
  * Deterministic: scene.html seeds its RNG per franchise and derives time from
  * the frame index, so re-running produces the same frames. The page is served
@@ -35,14 +44,21 @@ if (argv.includes('--help') || argv.includes('-h')) {
 }
 function opt(name, def) { const i = argv.indexOf(name); return i >= 0 ? argv[i + 1] : def; }
 const ONLY = (opt('--only', '') || '').split(',').filter(Boolean).map(Number);
+const EPISODES = argv.includes('--episodes');
+// One table per kind keeps both outputs on the same pipeline.
+const KIND = EPISODES
+  ? { scene: 'episode.html', param: 'e', w: 720, h: 1280, dur: 20, dir: 'series', prefix: 'houses-s1-ep', label: 'episode',
+      maxMp4: 1.2 * 1024 * 1024, maxJpg: 90 * 1024, posterW: [720, 720, 540, 540, 432, 432], hitAt: 15 }
+  : { scene: 'scene.html', param: 'f', w: 1280, h: 720, dur: 12, dir: 'movies', prefix: 'franchise-', label: 'franchise',
+      maxMp4: 1.5 * 1024 * 1024, maxJpg: 120 * 1024, posterW: [1280, 1280, 1280, 960, 960, 800, 800], hitAt: null };
 const KEEP = argv.includes('--keep');
 const JOBS = Number(opt('--jobs', 3));
 const ROOT = path.resolve(__dirname, '..', '..');
-const OUT = path.resolve(opt('--out', path.join(ROOT, 'assets', 'movies')));
+const OUT = path.resolve(opt('--out', path.join(ROOT, 'assets', KIND.dir)));
 const SCRATCH = process.env.OMEGA_SCRATCHPAD || os.tmpdir();
 const TMP = path.join(SCRATCH, 'movie-frames');
-const MAX_MP4 = 1.5 * 1024 * 1024;
-const MAX_JPG = 120 * 1024;
+const MAX_MP4 = KIND.maxMp4;
+const MAX_JPG = KIND.maxJpg;
 
 function loadPlaywright() {
   const tries = [path.join(SCRATCH, 'node_modules', 'playwright-core'), 'playwright-core'];
@@ -51,7 +67,7 @@ function loadPlaywright() {
   process.exit(2);
 }
 
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.css': 'text/css' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.css': 'text/css' };
 function serve() {
   return new Promise((res) => {
     // Loopback-only render server (127.0.0.1, ephemeral port); never deployed.
@@ -76,15 +92,17 @@ function ff(args) {
 // A quiet ambient drone, one root per franchise (A1 upward, chromatic).
 function droneGraph(n) {
   const f = (55 * Math.pow(2, (n - 1) / 12)).toFixed(3);
-  const e = `(0.30*sin(2*PI*${f}*t)+0.18*sin(2*PI*${f}*1.5*t+0.6*sin(2*PI*0.11*t))+0.12*sin(2*PI*${f}*2.003*t)+0.05*sin(2*PI*${f}*3.01*t))*(0.75+0.25*sin(2*PI*0.2*t))`;
-  return `aevalsrc='${e}':s=48000:d=12,lowpass=f=900,afade=t=in:d=2,afade=t=out:st=9.5:d=2.5,volume=0.45`;
+  // Episodes add a decaying low impact at the cliffhanger.
+  const hit = KIND.hitAt == null ? '' : `+0.9*gte(t,${KIND.hitAt})*exp(-2.6*(t-${KIND.hitAt}))*sin(2*PI*41*t)`;
+  const e = `(0.30*sin(2*PI*${f}*t)+0.18*sin(2*PI*${f}*1.5*t+0.6*sin(2*PI*0.11*t))+0.12*sin(2*PI*${f}*2.003*t)+0.05*sin(2*PI*${f}*3.01*t))*(0.75+0.25*sin(2*PI*0.2*t))${hit}`;
+  return `aevalsrc='${e}':s=48000:d=${KIND.dur},lowpass=f=900,afade=t=in:d=2,afade=t=out:st=${KIND.dur - 2.5}:d=2.5,volume=0.45`;
 }
 
 function encode(n, dir) {
   const nn = String(n).padStart(2, '0');
   // `n` is a loop integer 1..12.
   // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
-  const mp4 = path.join(OUT, `franchise-${nn}.mp4`);
+  const mp4 = path.join(OUT, `${KIND.prefix}${nn}.mp4`);
   let crf = 27;
   for (;;) {
     // `dir` is this script's own temp dir.
@@ -93,7 +111,7 @@ function encode(n, dir) {
       '-map', '0:v', '-map', '1:a', '-c:v', 'libx264', '-preset', 'slow', '-crf', String(crf), '-pix_fmt', 'yuv420p',
       '-profile:v', 'high', '-r', '24', '-c:a', 'aac', '-b:a', '64k', '-ac', '1', '-shortest', '-movflags', '+faststart', mp4]);
     const sz = fs.statSync(mp4).size;
-    if (sz <= MAX_MP4 || crf >= 40) { console.log(`  franchise-${nn}.mp4  crf=${crf}  ${(sz / 1024).toFixed(0)} KB`); break; }
+    if (sz <= MAX_MP4 || crf >= 40) { console.log(`  ${KIND.prefix}${nn}.mp4  crf=${crf}  ${(sz / 1024).toFixed(0)} KB`); break; }
     crf += 1;
   }
   return mp4;
@@ -103,11 +121,12 @@ function poster(n, png) {
   const nn = String(n).padStart(2, '0');
   // `n` is a loop integer 1..12.
   // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
-  const jpg = path.join(OUT, `franchise-${nn}.jpg`);
-  for (const [w, qv] of [[1280, 3], [1280, 5], [1280, 7], [960, 5], [960, 8], [800, 8], [800, 12]]) {
+  const jpg = path.join(OUT, `${KIND.prefix}${nn}.jpg`);
+  const qs = [3, 5, 7, 5, 8, 8, 12];
+  for (const [w, qv] of KIND.posterW.map((w, k) => [w, qs[k]])) {
     ff(['-i', png, '-vf', `scale=${w}:-2`, '-q:v', String(qv), jpg]);
     const sz = fs.statSync(jpg).size;
-    if (sz <= MAX_JPG) { console.log(`  franchise-${nn}.jpg  ${w}w q=${qv}  ${(sz / 1024).toFixed(0)} KB`); return jpg; }
+    if (sz <= MAX_JPG) { console.log(`  ${KIND.prefix}${nn}.jpg  ${w}w q=${qv}  ${(sz / 1024).toFixed(0)} KB`); return jpg; }
   }
   throw new Error('poster over budget: ' + jpg);
 }
@@ -117,13 +136,13 @@ async function renderOne(browser, base, n) {
   // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
   const dir = path.join(TMP, `f${String(n).padStart(2, '0')}`);
   fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({ viewport: { width: KIND.w, height: KIND.h }, deviceScaleFactor: 1 });
   page.on('console', (m) => { if (m.type() === 'warning' || m.type() === 'error') console.log(`  [f${n}] ${m.text()}`); });
-  await page.goto(`${base}/scripts/movies/scene.html?f=${n}`);
+  await page.goto(`${base}/scripts/movies/${KIND.scene}?${KIND.param}=${n}`);
   const info = await page.evaluate(() => window.SCENE.ready);
   const total = info.frames;
   const posterAt = await page.evaluate(() => window.SCENE.posterFrame);
-  console.log(`  franchise ${n}: ${total} frames, art=${info.art || 'glyph fallback'}`);
+  console.log(`  ${KIND.label} ${n}: ${total} frames, art=${info.art || 'glyph fallback'}`);
   for (let i = 0; i < total; i++) {
     const url = await page.evaluate((k) => window.SCENE.frame(k), i);
     // `i` is a frame counter.
@@ -143,7 +162,8 @@ async function renderOne(browser, base, n) {
   fs.mkdirSync(OUT, { recursive: true }); fs.mkdirSync(TMP, { recursive: true });
   const srv = await serve();
   const base = `http://127.0.0.1:${srv.address().port}`;
-  const browser = await chromium.launch();
+  // OMEGA_CHROME: a system Chromium when the installed playwright-core expects another build.
+  const browser = await chromium.launch(process.env.OMEGA_CHROME ? { executablePath: process.env.OMEGA_CHROME } : {});
   const list = (ONLY.length ? ONLY : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).filter((n) => n >= 1 && n <= 12);
   const queue = list.slice();
   const t0 = Date.now();
@@ -151,5 +171,5 @@ async function renderOne(browser, base, n) {
     while (queue.length) await renderOne(browser, base, queue.shift());
   }));
   await browser.close(); srv.close();
-  console.log(`done: ${list.length} film(s) in ${((Date.now() - t0) / 1000).toFixed(0)}s -> ${OUT}`);
+  console.log(`done: ${list.length} ${KIND.label}(s) in ${((Date.now() - t0) / 1000).toFixed(0)}s -> ${OUT}`);
 })().catch((e) => { console.error(e); process.exit(1); });

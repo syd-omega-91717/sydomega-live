@@ -20,10 +20,11 @@
   "here fails the audit, and a listed file whose count changes fails as drift --",
   "an applied migration changing at all is itself the defect.",
   "",
-  "Regenerate ONLY when a file legitimately leaves supabase/migrations/."
+  "When scanner semantics change, review every fingerprint delta with regression tests; do not edit applied migrations to satisfy the audit.",
+  "This 2026-10-16 recalibration removes false positives caused by quoted -- text and recognizes SET search_path TO syntax."
  ],
  "_captured": "2026-09-05",
- "_total": 67,
+ "_total": 62,
  "findings": {
   "0001_omega_master_deploy.sql::SECURITY DEFINER function without explicit search_path": 17,
   "0018_trial_access.sql::SECURITY DEFINER function without explicit search_path": 3,
@@ -43,11 +44,7 @@
   "0078_omega_formula_patch.sql::SECURITY DEFINER function without explicit search_path": 3,
   "0090_omega_extend_trial_fix.sql::SECURITY DEFINER function without explicit search_path": 1,
   "0092_omega_notify_triggers.sql::SECURITY DEFINER function without explicit search_path": 5,
-  "0093_omega_apply_subscription_fix.sql::SECURITY DEFINER function without explicit search_path": 1,
-  "0094_omega_complete_task_dedup_fix.sql::SECURITY DEFINER function without explicit search_path": 1,
-  "0099_omega_live_schema_reconciliation.sql::SECURITY DEFINER function without explicit search_path": 1,
-  "20260817231834_consolidate_my_matrix_my_lattice_onto_compute_authority.sql::SECURITY DEFINER function without explicit search_path": 2,
+  "20260817231834_consolidate_my_matrix_my_lattice_onto_compute_authority.sql::SECURITY DEFINER function without explicit search_path": 1,
   "20260818141500_omega_graphify_schema.sql::SECURITY DEFINER function without explicit search_path": 2,
-  "20260818224748_omega_task_and_achievement_notifications.sql::SECURITY DEFINER function without explicit search_path": 1
  }
 }

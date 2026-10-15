@@ -362,12 +362,14 @@ function itemHTML(e){
   if(!Number.isFinite(amount)) amount=0;
   return '<div class="expense-item">'
     +'<div>'
-    +'<div class="exp-name">'+desc+(e.recurring!=='none'?' <span class="cat-badge">'+recurring.toUpperCase()+'</span>':'')+'</div>'
+    +'<div class="exp-name">'+desc+(e.recurring&&e.recurring!=='none'?' <span class="cat-badge">'+recurring.toUpperCase()+'</span>':'')+'</div>'
     +'<div class="exp-cat"><span class="cat-badge" style="color:'+catColor+'">'+cat+'</span>'+(notes?' &middot; '+notes:'')+'</div>'
     +'</div>'
     +'<div class="exp-date">'+date+'</div>'
-    +'<div class="exp-amount '+type+'">'+(type==='income'?'+':'-')+'
-
+    +'<div class="exp-amount '+type+'">'+(type==='income'?'+':'-')+'$'+amount.toFixed(2)+'</div>'
+    +'<button class="btn-red btn-sm" type="button" onclick="deleteEntry(\''+id+'\')" aria-label="Delete transaction">DEL</button>'
+    +'</div>';
+}
 function renderLedger(){
   var list=document.getElementById('ledger-list');
   var q=(document.getElementById('search-input').value||'').toLowerCase();
@@ -394,7 +396,7 @@ function renderBudget(){
     var k=kv[0],v=kv[1];
     return '<div style="display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:center;margin-bottom:8px">'
       +'<label style="font-size:.65rem;color:'+(CAT_COLORS[k]||'#888')+'">'+v+'</label>'
-      +'<input type="number" id="bgt-'+k+'" min="0" step="10" placeholder="0 = no limit" value="'+(budgets[k]||'')+'" style="max-width:120px">'
+      +'<input type="number" data-budget-category="'+k+'" min="0" step="10" placeholder="0 = no limit" value="'+(budgets[k]||'')+'" style="max-width:120px">'
       +'</div>';
   }).join('');
 
@@ -420,7 +422,8 @@ function renderBudget(){
 
 function saveBudgets(){
   Object.keys(CATS).forEach(function(k){
-    var v=parseFloat(document.getElementById('bgt-'+k).value);
+    var input=document.querySelector('[data-budget-category="'+k+'"]');
+    var v=parseFloat(input ? input.value : '');
     if(v>0) budgets[k]=v; else delete budgets[k];
   });
   localStorage.setItem('omega_budgets',JSON.stringify(budgets));
@@ -598,7 +601,7 @@ function renderBudget(){
     var k=kv[0],v=kv[1];
     return '<div style="display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:center;margin-bottom:8px">'
       +'<label style="font-size:.65rem;color:'+(CAT_COLORS[k]||'#888')+'">'+v+'</label>'
-      +'<input type="number" id="bgt-'+k+'" min="0" step="10" placeholder="0 = no limit" value="'+(budgets[k]||'')+'" style="max-width:120px">'
+      +'<input type="number" data-budget-category="'+k+'" min="0" step="10" placeholder="0 = no limit" value="'+(budgets[k]||'')+'" style="max-width:120px">'
       +'</div>';
   }).join('');
 
@@ -624,7 +627,8 @@ function renderBudget(){
 
 function saveBudgets(){
   Object.keys(CATS).forEach(function(k){
-    var v=parseFloat(document.getElementById('bgt-'+k).value);
+    var input=document.querySelector('[data-budget-category="'+k+'"]');
+    var v=parseFloat(input ? input.value : '');
     if(v>0) budgets[k]=v; else delete budgets[k];
   });
   localStorage.setItem('omega_budgets',JSON.stringify(budgets));

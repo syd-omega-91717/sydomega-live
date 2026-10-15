@@ -72,7 +72,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         body = sql.split("AS $function$", 1)[1].split("$function$", 1)[0].lower()
         self.assertIn("security invoker", definition)
         self.assertNotIn("security definer", definition)
-        self.assertIn("select * from private.get_points_leaderboard($1)", body)
+        self.assertEqual(" ".join(body.split()), "select * from private.get_points_leaderboard($1);")
         self.assertIn("revoke all on function public.get_points_leaderboard(integer) from public, anon", sql.lower())
         self.assertIn("grant execute on function public.get_points_leaderboard(integer) to authenticated", sql.lower())
 

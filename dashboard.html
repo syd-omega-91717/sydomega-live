@@ -675,8 +675,8 @@ function renderPersonalOS(){
   /* BUDGET */
   var months={};try{months=JSON.parse(localStorage.getItem('omega_budget_months')||'{}');}catch(e){}
   var curMo=new Date().toISOString().slice(0,7),mo=months[curMo]||{};
-  var inc=Object.values(mo.income||{}).reduce(function(s,v){return s+Number(v||0);},0);
-  var exp=Object.values(mo.expenses||{}).reduce(function(s,x){return s+Object.values(x).reduce(function(s2,v){return s2+Number(v||0);},0);},0);
+  var inc=(Array.isArray(mo.income)?mo.income:Object.values(mo.income||{})).reduce(function(s,r){var n=Number(r&&typeof r==='object'?r.amount:r);return s+(Number.isFinite(n)?n:0);},0);
+  var exp=(Array.isArray(mo.expenses)?mo.expenses:Object.values(mo.expenses||{})).reduce(function(s,r){var n=Number(r&&typeof r==='object'?r.amount:r);return s+(Number.isFinite(n)?n:0);},0);
   var rate=inc>0?Math.round(((inc-exp)/inc)*100):null;
   var pkb=document.getElementById('pk-savings');if(pkb)pkb.textContent=rate!=null?rate+'%':'—';
   var pabS=document.getElementById('pa-budget-sub');

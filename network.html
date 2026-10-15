@@ -280,8 +280,39 @@ let _editCat = 'NETWORK';
 /* ── STORAGE ─────────────────────────────────────────────────────────── */
 
 function load() {
-  try { _contacts     = JSON.parse(localStorage.getItem(CONTACTS_KEY))     || []; } catch { _contacts = []; }
+  try { _contacts = JSON.parse(localStorage.getItem(CONTACTS_KEY)) || []; } catch { _contacts = []; }
   try { _interactions = JSON.parse(localStorage.getItem(INTERACTIONS_KEY)) || []; } catch { _interactions = []; }
+  let legacyContacts=[], legacyInteractions=[];
+  try { legacyContacts = JSON.parse(localStorage.getItem(LEGACY_CONTACTS_KEY)) || []; } catch {}
+  try { legacyInteractions = JSON.parse(localStorage.getItem(LEGACY_INTERACTIONS_KEY)) || []; } catch {}
+  const idMap = {};
+  let nextId = Math.max(Date.now(), ..._contacts.map(c => Number(c.id)||0)) + 1;
+  legacyContacts.forEach(n => {
+    if (!n || !n.name) return;
+    const existing = _contacts.find(c => String(c.id)===String(n.id) || String(c.name||'').trim().toLowerCase()===String(n.name).trim().toLowerCase());
+    if (existing) { idMap[String(n.id)] = existing.id; return; }
+    const id = nextId++;
+    idMap[String(n.id)] = id;
+    _contacts.push({id, name:String(n.name), category:n.category||n.cat||'other', cat:n.cat||n.category||'other',
+      frequency:Number(n.frequency||n.freq)||30, freq:Number(n.freq||n.frequency)||30,
+      lastContact:n.lastContact||'', strength:Number(n.strength)||3, note:n.note||n.notes||'', notes:n.notes||n.note||'',
+      tier:n.tier||'network', role:n.role||'', company:n.company||'', email:n.email||'', phone:n.phone||'',
+      tags:Array.isArray(n.tags)?n.tags:[], vip:!!n.vip, added:n.added||new Date().toISOString().slice(0,10)});
+  });
+  legacyInteractions.forEach(i => {
+    if (!i) return;
+    const mapped = idMap[String(i.contactId)];
+    const target = mapped!=null ? mapped : (_contacts.find(c => String(c.id)===String(i.contactId))||{}).id;
+    if (target==null) return;
+    const date = i.date || new Date(i.ts||Date.now()).toISOString().slice(0,10);
+    if (!_interactions.some(x => String(x.contactId)===String(target) && x.date===date && String(x.note||'')===String(i.note||''))) {
+      _interactions.push({contactId:target, date, type:i.type||i.channel||'other', note:i.note||'', ts:i.ts||Date.now()});
+    }
+  });
+  _contacts = _contacts.map(c => ({...c, category:c.category||c.cat||'other', cat:c.cat||c.category||'other',
+    frequency:Number(c.frequency||c.freq)||30, freq:Number(c.freq||c.frequency)||30,
+    note:c.note||c.notes||'', notes:c.notes||c.note||'', strength:Number(c.strength)||3}));
+  saveContacts(); saveInteractions();
 }
 function saveContacts()     { localStorage.setItem(CONTACTS_KEY,     JSON.stringify(_contacts)); }
 function saveInteractions() { localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(_interactions)); }

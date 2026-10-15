@@ -94,6 +94,11 @@ jobs:
         run: |
           import subprocess, sys
           result = subprocess.run(['node', 'scripts/tests/test_contacts_network_migration.js'])
+      - name: Settings fail-closed regression test
+        shell: python
+        run: |
+          import subprocess, sys
+          result = subprocess.run(['node', 'scripts/tests/test_settings_fail_closed.js'])
           sys.exit(result.returncode)
       - name: Intelligence fabric tests
         shell: python

@@ -3,10 +3,10 @@
   "name": "Ω Page Action / Task Audit",
   "status": "SOURCE_EVIDENCE_ONLY",
   "page_count": 239,
-  "action_count": 1342,
+  "action_count": 1343,
   "counts": {
     "AVAILABLE_WITHOUT_MUTATION": 14,
-    "GOVERNED": 8,
+    "GOVERNED": 9,
     "UNAVAILABLE": 0,
     "UNMAPPED": 1320
   },
@@ -26747,6 +26747,27 @@
     {
       "action_id": 5,
       "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "vision.concept-art.view",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "vision",
+      "path": "vision.html"
+    },
+    {
+      "action_id": 6,
+      "kind": "button",
       "state": "UNMAPPED",
       "task_id": null,
       "capability_id": null,
@@ -26766,7 +26787,7 @@
       "path": "vision.html"
     },
     {
-      "action_id": 6,
+      "action_id": 7,
       "kind": "button",
       "state": "UNMAPPED",
       "task_id": null,

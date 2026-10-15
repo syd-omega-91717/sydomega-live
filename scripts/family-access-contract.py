@@ -62,7 +62,7 @@ def main() -> int:
         "latest public points RPC is an invoker wrapper": (
             "security invoker" in wrapper_definition
             and "security definer" not in wrapper_definition
-            and "select * from private.get_points_leaderboard($1)" in wrapper_body
+            and " ".join(wrapper_body.split()) == "select * from private.get_points_leaderboard($1);"
         ),
         "latest public points RPC revokes anon and grants authenticated": (
             "revoke all on function public.get_points_leaderboard(integer) from public, anon" in wrapper_migration.lower()

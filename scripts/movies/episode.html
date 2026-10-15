@@ -226,7 +226,7 @@
     setup();
     var img = new Image();
     var art = new Promise(function (res) { img.onload = function () { ART = img; res(true); }; img.onerror = function () { res(false); }; });
-    img.src = '/assets/legacy/sign-' + EP.sign.toLowerCase() + '.webp';
+    var art = '/assets/legacy/sign-' + EP.sign.toLowerCase() + '.webp'; img.src = art;
     var fonts = document.fonts && document.fonts.load ? Promise.all([
       document.fonts.load('bold 64px "DejaVu Serif"'), document.fonts.load('italic 34px "DejaVu Serif"'),
       document.fonts.load('20px "DejaVu Sans Mono"'), document.fonts.load('140px "DejaVu Sans"')]) : Promise.resolve();

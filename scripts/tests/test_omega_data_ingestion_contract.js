@@ -1,0 +1,17 @@
+"use strict";
+const assert = require("node:assert/strict");
+const ingestion = require("../../omega-data-ingestion-contract.js");
+const now = Date.parse("2026-10-15T12:00:00Z");
+const dataset = {datasetId:"news-source-a",providerId:"provider-a",license:"CC-BY-4.0",attribution:"Provider A",schemaVersion:"1",retrievedAt:"2026-10-15T11:00:00Z",expiresAt:"2026-10-15T13:00:00Z",contentHash:"sha256:abc123",truthState:"LIVE"};
+const record = {recordId:"article-1",datasetId:"news-source-a",observedAt:"2026-10-15T10:30:00Z",sourceUri:"https://example.com/article-1",contentHash:"sha256:record123"};
+assert.equal(ingestion.validateDataset(dataset,now).ok,true);
+assert.equal(ingestion.validateRecord(record,dataset,now).ok,true);
+assert.equal(ingestion.validateDataset({...dataset,expiresAt:"2026-10-15T11:59:00Z"},now).state,"UNAVAILABLE");
+assert.equal(ingestion.validateDataset({...dataset,attribution:""},now).state,"BLOCKED");
+assert.equal(ingestion.validateDataset({...dataset,truthState:"SIMULATED"},now).ok,false);
+assert.equal(ingestion.validateRecord({...record,sourceUri:"http://example.com"},dataset,now).ok,false);
+assert.equal(ingestion.validateRecord({...record,datasetId:"other"},dataset,now).ok,false);
+assert.equal(ingestion.idempotencyKey("d","r","h"),"d:r:h");
+assert.equal(ingestion.idempotencyKey("d","","h"),null);
+assert.equal(ingestion.validateDataset(null,now).ok,false);
+console.log("OMEGA DATA INGESTION CONTRACT: PASS");

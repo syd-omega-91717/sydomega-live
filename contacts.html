@@ -249,7 +249,9 @@ function migrateNetworkStore(){
   let legacyContacts=[],legacyInteractions=[];
   try{legacyContacts=JSON.parse(localStorage.getItem('omega_network_contacts')||'[]');}catch(e){}
   try{legacyInteractions=JSON.parse(localStorage.getItem('omega_network_interactions')||'[]');}catch(e){}
-  if(!Array.isArray(legacyContacts)||!legacyContacts.length)return;
+  if(!Array.isArray(legacyContacts))legacyContacts=[];
+  if(!Array.isArray(legacyInteractions))legacyInteractions=[];
+  if(!legacyContacts.length&&!legacyInteractions.length)return;
   const idMap={};
   let nextId=Math.max(Date.now(),...contacts.map(function(c){return Number(c.id)||0;}))+1;
   legacyContacts.forEach(function(n){

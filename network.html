@@ -322,7 +322,7 @@ function daysSince(d) { return d ? Math.floor((Date.now() - new Date(d).getTime(
 function daysUntilDue(c) { return (c.frequency||30) - daysSince(c.lastContact); }
 function isOverdue(c) { return daysUntilDue(c) < 0; }
 function circleOf(id) { return CIRCLES.find(c=>c.id===id)||CIRCLES[3]; }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function uid() { return Date.now() + Math.floor(Math.random()*1000); }
 
 function updateTopMeta() {
   const od = _contacts.filter(isOverdue).length;
@@ -360,7 +360,7 @@ function clearForm() {
 
 window.editContact=editContact;
 function editContact(id) {
-  const c = _contacts.find(x=>x.id===id); if(!c) return;
+  const c = _contacts.find(x=>String(x.id)===String(id)); if(!c) return;
   document.getElementById('n-edit-id').value    = c.id;
   document.getElementById('nf-name').value      = c.name;
   document.getElementById('nf-note').value      = c.note||'';
@@ -379,7 +379,7 @@ function saveContact() {
   if (!name) { document.getElementById('nf-name').focus(); return; }
   const eid  = document.getElementById('n-edit-id').value;
   const entry = {
-    id: eid || uid(),
+    id: eid ? ((_contacts.find(c=>String(c.id)===String(eid))||{}).id) : uid(),
     name,
     category:    _editCat,
     frequency:   +document.getElementById('nf-freq').value,
@@ -389,7 +389,7 @@ function saveContact() {
     createdAt:   Date.now()
   };
   if (eid) {
-    const idx = _contacts.findIndex(c=>c.id===eid);
+    const idx = _contacts.findIndex(c=>String(c.id)===String(eid));
     if (idx>=0) _contacts[idx] = {..._contacts[idx], ...entry};
   } else {
     _contacts.push(entry);
@@ -427,9 +427,9 @@ function saveLog() {
   const date = document.getElementById('nl-date').value || today();
   const type = document.getElementById('nl-type').value;
   const note = document.getElementById('nl-note').value.trim();
-  _interactions.push({contactId:cid, date, type, note, ts:Date.now()});
+  _interactions.push({contactId:(_contacts.find(c=>String(c.id)===String(cid))||{}).id||cid, date, type, note, ts:Date.now()});
   // Update lastContact on the contact
-  const idx = _contacts.findIndex(c=>c.id===cid);
+  const idx = _contacts.findIndex(c=>String(c.id)===String(cid));
   if (idx>=0 && date >= (_contacts[idx].lastContact||'')) {
     _contacts[idx].lastContact = date;
     saveContacts();

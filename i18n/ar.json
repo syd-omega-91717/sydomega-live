@@ -219,6 +219,7 @@
   "meaning_index": "مؤشر المعنى",
   "slo_uptime": "وقت التشغيل SLO",
   "thirty_day": "30 يوم",
+  "slo_target_unmonitored": "الهدف · غير مراقَب",
   "open_risks": "المخاطر المفتوحة",
   "iso_27001": "ISO 27001",
   "events_today": "الأحداث اليوم",

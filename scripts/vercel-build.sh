@@ -43,6 +43,15 @@ find . -type f \
 
 [ -s public/index.html ] || { echo 'VERCEL_BUILD=FAIL missing public/index.html'; exit 1; }
 
+# Enhance emitted HTML before resolving runtime config references. The enhancer
+# injects shared runtime scripts into pages; those scripts can introduce
+# /config/*.json dependencies. Resolving config references before this step
+# silently omitted those dependencies from public/ and made failover validation
+# fail (or left pages broken) even though the canonical Vercel build could pass.
+if command -v node >/dev/null 2>&1 && [ -f scripts/vercel-build-enhance.mjs ]; then
+  node scripts/vercel-build-enhance.mjs
+fi
+
 # config/ is internal (security policies, migration provenance, live-runtime
 # evidence: 68 files) except the handful a shipped module fetches at runtime.
 # Ship exactly those -- derived from the references in the emitted tree, so a
@@ -131,9 +140,7 @@ done
 
 [ "${missing_refs}" -eq 0 ] || { echo "VERCEL_BUILD=FAIL unreachable_assets=${missing_refs}"; exit 1; }
 
-if command -v node >/dev/null 2>&1 && [ -f scripts/vercel-build-enhance.mjs ]; then
-  node scripts/vercel-build-enhance.mjs
-fi
+
 
 html_count="$(find public -type f -name '*.html' | wc -l | tr -d ' ')"
 js_count="$(find public -type f -name '*.js' | wc -l | tr -d ' ')"

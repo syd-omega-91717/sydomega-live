@@ -23289,3 +23289,136 @@ Source: live `client_errors` since 2026-09-25, after the builder-`.catch` entry 
   - Stub returning 3 rows: 3 rows rendered, "YOU" on rank 2, and `my-rank` = 2.
   - Stub returning an error: the unavailable message, with `my-rank` left as `--`.
   - 0 page errors in both runs.
+
+## Uptime and service health shown as measured while nothing measured them (2026-10-14)
+
+- **Fixed (§8.1 class 9): the platform asserted health it never measured.**
+  - `dashboard.html` showed "99.9% · SLO UPTIME · 30-DAY" to every member, a hard-coded target
+    rendered as a 30-day result (the count-up drew it as "99.90%").
+  - `observatory.html` (owner-only) showed "ALL SYSTEMS OPERATIONAL", a static 2.3% error
+    budget, five SLO cards hard-coded GREEN, and "NO INCIDENTS ON RECORD · PLATFORM CLEAN".
+  - Its uptime KPI was "computed" as 100 minus logged incident downtime, so an empty
+    `incidents` table printed **100.00%**, including through the 2026-10-06 production pause,
+    which was never filed as an incident.
+- **Live evidence (`execute_sql` on `ydqhzvvoyufiiqvzcjns`, 2026-10-14):** `incidents`,
+  `slo_metrics`, `system_health`, `system_incidents` and `platform_metrics` each 0 rows; all 5
+  `error_budget_policy` rows have `status='green'`, `budget_4wk_pct` null and
+  `last_computed` 2026-07-27 — a seed, not a computation.
+- **Change:**
+  - Dashboard tile keeps the 99.9% figure, labelled "TARGET · NOT MONITORED" (new key
+    `slo_target_unmonitored` in `T_EN` and all six packs) with a tooltip saying no monitor runs.
+  - Observatory starts at "NO UPTIME MONITOR", "—", "NOT COMPUTED" and "NOT MEASURED"; the
+    incident-derived uptime is removed; an SLO card is coloured only by a row whose
+    `budget_4wk_pct` is non-null; an incident read error says "INCIDENT LOG UNAVAILABLE"
+    instead of "no incidents".
+- **Verified in headless Chromium** with an owner stub serving the live seed rows:
+  - BEFORE (`main`): `ALL SYSTEMS OPERATIONAL`, uptime `100.00%`, budget `2.3%`, 4× GREEN.
+  - AFTER, seed rows: `NO UPTIME MONITOR`, `—`, `NOT COMPUTED`, 4× `NOT MEASURED`.
+  - AFTER, one computed row (vault, 0.35, yellow): only that card reads `35% BUDGET USED / YELLOW`.
+  - Dashboard tile in en/fr/ar: `TARGET · NOT MONITORED` / `OBJECTIF · NON SURVEILLÉ` /
+    `الهدف · غير مراقَب`. 0 page errors in every run.
+- **Gated:** `scripts/tests/test_uptime_truth_contract.py` (5 tests) passes here and fails 5/5
+  against `main`. The open item — no monitor exists — is in `GAP_ANALYSIS.md` §S.
+
+## Access requests waited 77–121 days because the owner's only signal sat on one page (2026-10-15)
+
+**Measured live** (project `ydqhzvvoyufiiqvzcjns`, 2026-10-15): 9 profiles; 4 not approved and
+not rejected, created 120, 121, 77 and 77 days earlier; 1 rejected (105 days). `cron.job`: 0 rows,
+so nothing would ever remind anyone. The count already existed as `omega-owner-deck.js`
+`waitingChip()`, but that deck mounts only on `control-plane.html`.
+
+**Fix.** `bg.js`, right after it marks the owner from `profiles.is_owner`, runs the same count as
+`waitingChip()` (`access_approved=false`, `is_owner=false`, `is_rejected` not true) and publishes
+`window.__omegaWaiting` plus an `omega:waiting` event. A read error publishes nothing, so no badge
+appears rather than a wrong 0. `nav.js` paints an owner-only **N WAITING** dock item linking to
+`/approvals.html`, plus the same entry at the top of the phone drawer. It is a sibling item, not a
+badge inside the OWNER anchor, because an `<a>` inside an `<a>` is rewritten by the parser
+(§8.1 class 10).
+
+**Verified in a render** (harness Chromium, stubbed client): owner with 4 waiting sees "4" linking
+to `/approvals.html` with label "4 people waiting for access approval", on `dashboard.html` and
+`habits.html`. A member, an owner with 0 waiting, and a failed read all show nothing.
+`querySelectorAll('a a')` returns 0, and there are 0 page errors. At 390px the drawer reads
+"4 WAITING FOR APPROVAL" for the owner and stays hidden for a member.
+
+**Also:** `scripts/ci-local.sh` gained step 4b, `repository_integrity_audit.py`. On PR #909 that
+GitHub gate failed on `scripts/movies/episode.html` while all 30 local checks were green, because
+the gate had no local twin.
+
+**Still open:** this is a signal, not a notification. Emailing the owner needs `notify-access`
+deployed with `RESEND_API_KEY` and `NOTIFY_ACCESS_WEBHOOK_SECRET`, which only the owner can set.
+The 4 decisions themselves are the owner's, in `approvals.html`.
+
+## Oracle showed a fake sky; three pages kept second copies of shared data or unsourced claims (2026-10-15)
+
+**oracle.html (§8.1 class 9).** Four of its displays were invented:
+- **Planet signs and degrees** (`getPlanetSign`/`getPlanetDeg`) were `days/orbitalPeriod*12` since 2000-01-01. That is a linear fraction of a heliocentric period, which is not where a planet appears in the sky.
+- **`isRetrograde()`** was `Math.sin(days*idx*0.1)` against a probability table, so "℞ RETRO" was noise.
+- **"TODAY'S POWER"** (`dailyPower`) was `(auth*1000+date*month*0.7)%100`, rendered as a percentage.
+- **The "ELEMENTAL POWER INDEX"** (`elemForecast`) was `40+|sin(d*k)|*55` per element.
+
+**What replaced them:**
+- **An ephemeris:** JPL/Standish Keplerian elements (1800–2050) for the planets, a truncated Meeus lunar series, and precession to the equinox of date. Retrograde means the longitude is decreasing across ±12 h.
+- **Validation** against the astronomy-engine library on 528 dates, 2018–2030:
+  - maximum error: Sun 0.016°, Moon 0.321°, Mercury 0.021°, Venus 0.027°, Mars 0.028°, Jupiter 0.083°, Saturn 0.083°, Uranus 0.039°, Neptune 0.022°, Pluto 0.018°;
+  - **0** wrong retrograde flags;
+  - 3 of 5,280 signs differ, each within 0.08° of a cusp.
+- **Spot check,** rendered on 2026-10-15 12:00 UTC: Moon Sagittarius 17.7° (reference 257.63°), Mercury Scorpio 16.9° (226.89°), Venus Scorpio 5.6° ℞, Mars Leo 9.9° (129.91°), Jupiter Leo 22.1° (142.03°), Saturn Aries 10.5° ℞ (10.44°). Illumination 22% (reference 22%).
+- **The KPI** is now MOON ILLUMINATED, (1−cos elongation)/2.
+- **The forecast** is now ELEMENTS IN THE SKY, a count of the 10 bodies per element's signs. Soul was dropped because no sign maps to it.
+- **Moon phase** now comes from elongation, not elapsed days from one epoch.
+- **Notes on the page** say the positions are computed and the readings are symbolic fiction.
+
+`scripts/tests/test_oracle_ephemeris_contract.py` runs the page's own ephemeris in node against
+astronomy-engine fixtures on 5 dates.
+
+**Duplicate data owners (§8.1 class 8):**
+- **Water.** `nutrition.html` kept cups per day in `omega_water_track`, beside `water.html`'s ml log `omega_water_log`, so the same day showed two totals. Nutrition now reads and writes the shared log at 250 ml per cup, and migrates old cup days once. Verified in a render:
+  - legacy key removed;
+  - today shows 2 cups from a 500 ml log entry (not the legacy 3);
+  - 5 cups writes 1250 ml;
+  - lowering to 1 cup leaves 250 ml;
+  - `water.html` shows the same 250 ml;
+  - 0 errors.
+- **Exam.** `exam.html` carried a third SM-2 copy that updated the ease factor before computing the interval, which is the drift `omega-srs.js` was written to remove. It now calls `OmegaSRS.review(o, g, 'word')`; the field names already matched. Verified: I(3) = 6 × 2.5 = 15 with the current EF.
+
+**Unsourced or stale member-visible copy:**
+- **breath.html:** "68% STRESS REDUCTION" had no source. It now reads "5 MIN · CYCLIC SIGHING · BALBAN 2023", the protocol the page already cites.
+- **forge.html:** promised a "Realm-wide leaderboard coming". It now says the scores stay on the device.
+- **pulse.html:** its caption still said gold and oil were "SIMULATED", but the code already shows "—" / UNAVAILABLE without a provider quote. The caption and comment now say nothing is simulated.
+
+## Weight, net worth and certificates each had a second owner (2026-10-15)
+
+Follow-up to the water and exam fixes above, from `FEATURE_IDEAS.md` §41's "one owner per number" list (§8.1 class 8).
+
+- **Weight.** `physiology.html` stored `weight` on every reading in `omega_physiology`, beside `body.html`'s `omega_body_log`, so "current weight" differed between the two pages.
+  - A weight entered on physiology now goes to the body log.
+  - Readings no longer carry it.
+  - Its strip, history column and 30-day trend read the body log.
+  - Stored weights migrate once (skipped when the body log already has that day).
+  - `body.html` no longer throws on an entry without a `time` field.
+
+  Verified in a render: 10-10's 81.5 kg moved over and 10-01 kept the body value (no duplicate); the strip shows 81.5; a new 80.9 kg logged on physiology appears as `body.html`'s latest (80.9kg); 0 errors.
+- **Net worth.** `wallet.html` and `wealth.html` both headlined "SOVEREIGN NET WORTH" from different stores; `treasury.html` and `investment.html` keep their own totals too.
+  - Wealth is now the net-worth page.
+  - Wallet's headline reads "WALLET NET · ACCOUNTS − DEBTS" and links to Wealth.
+  - Wealth lists the other pages' totals read-only, under "ELSEWHERE ON THE PLATFORM · NOT INCLUDED ABOVE", so a double entry is visible instead of producing two numbers.
+
+  Verified in a render: wallet 5000 − 1200 = $4K and investments 10 × 150 = $2K are listed with links; 0 errors.
+
+  The four stores themselves are still four models (accounts/debts, asset classes, reserves, holdings). Merging them is a product decision.
+- **Certificates.** `credentials.html` marked KNOWLEDGE/MASTERY/CONTRIBUTION/ARCHITECT certificates "EARNED" from axis thresholds. No table holds those. Live, `certificates` is a 12-step ladder (Initiate, Adept, Architect, Sentinel, Oracle, Sovereign, Warden, Auditor, Beacon, Merchant, Historian, Athena Apex; `cert_num` 1–12, each also with a null-name row).
+  - The tab now reads the member's rows, the same table profile, honors, trophies and achievements read.
+  - Rows are deduped by `cert_num`, preferring the named one.
+  - It renders with `textContent`.
+  - Empty and error states are explicit.
+
+  Verified: 3 stub rows render as 2 cards (INITIATE, ADEPT, "✓ ISSUED" with dates); no rows shows "No certificate has been issued to you yet"; 0 errors.
+
+`scripts/tests/test_one_owner_per_number_contract.py` holds all five fixes, water and exam included.
+
+**Not merged, by design:**
+- **`budget.html` / `expenses.html`:** 8 vs 15 categories, each with its own transaction log.
+- **`contacts.html` / `network.html`:** different Dunbar circles. Network's TRIBE is 15, contacts' is 50, and network has PROSPECTS.
+
+These are parallel tools, not one fact stored twice. Merging either means choosing a taxonomy and mapping the other onto it, which loses information: an owner decision, recorded in `GAP_ANALYSIS.md` §S.

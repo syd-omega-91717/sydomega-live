@@ -154,13 +154,46 @@ function buildCard(m){
 /* ── LOAD ALL MEMBERS ── */
 async function load(){
   Object.values(timers).forEach(clearInterval);timers={};
-  var members=[];
+  var members;
+  var primaryError=null;
   try{
     var r=await sb.rpc('get_all_members');
-    members=r.data||[];
+    if(r&&r.error)throw new Error(r.error.message||'get_all_members_failed');
+    if(!r||!Array.isArray(r.data))throw new Error('get_all_members_invalid_response');
+    members=r.data;
   }catch(e){
-    var r2=await sb.from('profiles').select('*').order('created_at',{ascending:false});
-    members=r2.data||[];
+    primaryError=e;
+    try{
+      var r2=await sb.from('profiles').select('*').order('created_at',{ascending:false});
+      if(r2&&r2.error)throw new Error(r2.error.message||'profiles_query_failed');
+      if(!r2||!Array.isArray(r2.data))throw new Error('profiles_query_invalid_response');
+      members=r2.data;
+      console.warn('[OMEGA] get_all_members failed; owner-scoped profiles fallback succeeded.',primaryError);
+      toast('MEMBER DATA DEGRADED — using fallback query. Check the console for the RPC failure.','var(--gold)');
+    }catch(fallbackError){
+      allMembers=[];
+      ['stat-total','stat-pending','stat-active','stat-approved','stat-rejected','hb-total','hb-pending'].forEach(function(id){
+        var el=document.getElementById(id);if(el)el.textContent='—';
+      });
+      var bp=document.getElementById('badge-pending');
+      if(bp){bp.textContent='!';bp.style.display='inline';bp.setAttribute('aria-label','Member data unavailable');}
+      var list=document.getElementById('member-list');
+      if(list){
+        list.replaceChildren();
+        var message=document.createElement('div');
+        message.className='empty';
+        message.textContent='MEMBER DATA UNAVAILABLE — '+String((fallbackError&&fallbackError.message)||'request_failed');
+        var retry=document.createElement('button');
+        retry.type='button';retry.className='btn btn-gold';retry.textContent='RETRY';
+        retry.addEventListener('click',function(){load();});
+        message.appendChild(document.createTextNode(' '));
+        message.appendChild(retry);
+        list.appendChild(message);
+      }
+      toast('COULD NOT LOAD MEMBER DATA — '+String((fallbackError&&fallbackError.message)||'request_failed'),'var(--crim)');
+      console.error('[OMEGA] member list unavailable; both data paths failed.',{primaryError:primaryError,fallbackError:fallbackError});
+      return;
+    }
   }
   allMembers=members.filter(function(m){return !m.is_owner;});
   var now=Date.now();
@@ -181,12 +214,12 @@ async function load(){
 
   /* pending badge on tab */
   var bp=document.getElementById('badge-pending');
-  if(bp){bp.textContent=pending.length;bp.style.display=pending.length?'inline':'none';}
+  if(bp){bp.textContent=pending.length;bp.style.display=pending.length?'inline':'none';bp.removeAttribute('aria-label');}
 
   /* render */
   var list=document.getElementById('member-list');
   if(!list)return;
-  list.innerHTML='';
+  list.replaceChildren();
   var cards=allMembers.map(buildCard).filter(Boolean);
   if(!cards.length){
     list.innerHTML='<div class="empty">'+t('empty_no_members')+'</div>';
@@ -212,41 +245,62 @@ async function extend(uid){try{if(window.OmegaGuardian&&window.OmegaGuardian.gat
 async function reject(uid){if(!confirm('Reject this access request?'))return;var result=await rpcResult('reject_member',{p_uid:uid});if(result.ok)toast(t('toast_rejected'),'var(--crim)');else explainActionError('COULD NOT REJECT REQUEST',result);load();}
 async function revoke(uid){if(!confirm('Immediately revoke access for this member?'))return;try{if(window.OmegaGuardian&&window.OmegaGuardian.gate){await window.OmegaGuardian.gate('admin',async function(){var result=await rpcResult('revoke_member',{p_uid:uid});if(result.ok)toast(t('toast_revoked'),'var(--crim)');else explainActionError('COULD NOT REVOKE ACCESS',result);load();},{action:'revoke_member',member:uid});}else{var result=await rpcResult('revoke_member',{p_uid:uid});if(result.ok)toast(t('toast_revoked'),'var(--crim)');else explainActionError('COULD NOT REVOKE ACCESS',result);load();}}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
 /* ── QUEUE LOADERS ── */
+function showQueueError(el,key,error,retryLoad){
+  el.replaceChildren();
+  var message=document.createElement('div');
+  message.className='empty';
+  message.textContent=t(key);
+  var retry=document.createElement('button');
+  retry.type='button';retry.className='btn btn-gold';retry.textContent='RETRY';
+  retry.addEventListener('click',function(){retryLoad();});
+  message.appendChild(document.createTextNode(' '));
+  message.appendChild(retry);
+  el.appendChild(message);
+  console.error('[OMEGA] approvals queue failed; showing an error state.',error);
+}
 async function loadContracts(){
   var el=document.getElementById('contracts-queue');if(!el)return;
   try{
     var r=await sb.rpc('review_contracts');
-    var rows=r.data||[];
+    if(r&&r.error)throw new Error(r.error.message||'review_contracts_failed');
+    if(!r||!Array.isArray(r.data))throw new Error('review_contracts_invalid_response');
+    var rows=r.data;
     if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_contracts')+'</div>';return;}
     el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.type||'CONTRACT').toUpperCase())+'</div><div class="q-btn">REVIEW</div></div>';}).join('');
-  }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_contract')+'</div>';}
+  }catch(e){showQueueError(el,'error_rpc_contract',e,loadContracts);}
 }
 async function loadReservations(){
   var el=document.getElementById('reservations-queue');if(!el)return;
   try{
     var r=await sb.rpc('review_reservations');
-    var rows=r.data||[];
+    if(r&&r.error)throw new Error(r.error.message||'review_reservations_failed');
+    if(!r||!Array.isArray(r.data))throw new Error('review_reservations_invalid_response');
+    var rows=r.data;
     if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_reservations')+'</div>';return;}
     el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.service||'RESERVATION').toUpperCase())+'</div><div class="q-btn">REVIEW</div></div>';}).join('');
-  }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_reservations')+'</div>';}
+  }catch(e){showQueueError(el,'error_rpc_reservations',e,loadReservations);}
 }
 async function loadAudit(){
   var el=document.getElementById('audit-list');if(!el)return;
   try{
     var r=await sb.rpc('access_audit_log');
-    var rows=(r.data&&r.data.rows)||[];
+    if(r&&r.error)throw new Error(r.error.message||'access_audit_log_failed');
+    if(!r||!r.data||!Array.isArray(r.data.rows))throw new Error('access_audit_log_invalid_response');
+    var rows=r.data.rows;
     if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_audit')+'</div>';return;}
     el.innerHTML=rows.map(function(row){return '<div class="audit-row"><div class="aud-time">'+fmtTime(row.created_at)+'</div><div class="aud-evt">'+esc((row.action||'EVENT').toUpperCase())+'</div><div class="aud-uid">'+esc((row.subject||'').slice(0,10))+'</div></div>';}).join('');
-  }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_audit')+'</div>';}
+  }catch(e){showQueueError(el,'error_rpc_audit',e,loadAudit);}
 }
 async function loadErrors(){
   var el=document.getElementById('err-list');if(!el)return;
   try{
     var r=await sb.rpc('error_summary');
-    var rows=(r.data&&r.data.rows)||[];
+    if(r&&r.error)throw new Error(r.error.message||'error_summary_failed');
+    if(!r||!r.data||!Array.isArray(r.data.rows))throw new Error('error_summary_invalid_response');
+    var rows=r.data.rows;
     if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_errors')+'</div>';return;}
     el.innerHTML=rows.map(function(row){return '<div class="err-row"><div class="err-msg">'+esc((row.message||'ERROR').slice(0,120))+'</div><div class="err-ctx">'+esc(row.page||'')+'  '+(row.hits?'×'+row.hits:'')+'</div></div>';}).join('');
-  }catch(e){el.innerHTML='<div class="empty">'+t('error_rpc_errors')+'</div>';}
+  }catch(e){showQueueError(el,'error_rpc_errors',e,loadErrors);}
 }
 /* ── IDENTITY REVIEW (docs/decisions/kyc-intake/PLAN.md) ──
    kyc_queue() / review_kyc() are owner-only on the server; this list only

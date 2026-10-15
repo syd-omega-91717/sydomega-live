@@ -33,7 +33,7 @@ function render(target, model) {
     '<div class="vault-native-grid">' +
       state('ACCESS', model.access, model.accessKind) +
       state('PROFILE', model.profile, model.profileKind) +
-      state('EARNINGS', model.earnings, model.earningsKind) +
+      state('TASK PROGRESSION', model.progression, model.progressionKind) +
       state('NFT RECORD', model.nfts, model.nftsKind) +
       state('TOKEN LEDGER', 'No governed token ledger is active; no balance is claimed.', 'PLANNED') +
       state('SOVEREIGN RESERVE', 'Reserve figures remain design/planning data; no authoritative financial balance is exposed here.', 'PLANNED') +
@@ -50,12 +50,13 @@ async function load() {
 
   try {
     const sessionResult = await sb.auth.getSession();
+    if (sessionResult && sessionResult.error) throw sessionResult.error;
     const session = sessionResult && sessionResult.data && sessionResult.data.session;
     if (!session) {
       render(target, {
         access: 'Authentication required.', accessKind: 'UNAVAILABLE',
         profile: 'No authenticated member profile available.', profileKind: 'UNAVAILABLE',
-        earnings: 'No member earnings projection available.', earningsKind: 'UNAVAILABLE',
+        progression: 'No member task-progression projection available.', progressionKind: 'UNAVAILABLE',
         nfts: 'No member NFT projection available.', nftsKind: 'UNAVAILABLE'
       });
       return;
@@ -70,7 +71,7 @@ async function load() {
       render(target, {
         access: 'Access state could not be verified.', accessKind: 'UNAVAILABLE',
         profile: 'Canonical profile query failed.', profileKind: 'UNAVAILABLE',
-        earnings: 'Member earnings query not attempted.', earningsKind: 'UNAVAILABLE',
+        progression: 'Task-progression query not attempted.', progressionKind: 'UNAVAILABLE',
         nfts: 'Member NFT query not attempted.', nftsKind: 'UNAVAILABLE'
       });
       return;
@@ -82,18 +83,18 @@ async function load() {
     const profileComplete = !!(profile && [profile.axis_a, profile.axis_b, profile.axis_c].every(v => v !== null && v !== undefined));
     const profileKind = profileComplete ? 'LIVE' : (profile ? 'EMPTY' : 'UNAVAILABLE');
 
-    let earningsKind = 'UNAVAILABLE';
-    let earningsText = 'Member task-completion data is unavailable.';
+    let progressionKind = 'UNAVAILABLE';
+    let progressionText = 'Member task-progression data is unavailable.';
     const tasks = await sb.from('task_completions')
       .select('id,points_earned,completed_at')
       .eq('user_id', session.user.id)
       .limit(200);
 
     if (!tasks.error) {
-      earningsKind = tasks.data && tasks.data.length ? 'LIVE' : 'EMPTY';
-      earningsText = tasks.data && tasks.data.length
-        ? tasks.data.length + ' authenticated task-completion records observed.'
-        : 'No authenticated task-completion records observed.';
+      progressionKind = tasks.data && tasks.data.length ? 'LIVE' : 'EMPTY';
+      progressionText = tasks.data && tasks.data.length
+        ? tasks.data.length + ' authenticated task-progression records observed; these are not financial earnings.'
+        : 'No authenticated task-progression records observed; this is not a financial balance.';
     }
 
     let nftsKind = 'UNAVAILABLE';
@@ -116,8 +117,8 @@ async function load() {
       accessKind,
       profile: profileComplete ? 'Canonical profile axes A/B/C are present.' : 'Canonical profile exists but its authority axes are incomplete.',
       profileKind,
-      earnings: earningsText,
-      earningsKind,
+      progression: progressionText,
+      progressionKind,
       nfts: nftsText,
       nftsKind
     });
@@ -126,7 +127,7 @@ async function load() {
     render(target, {
       access: 'Vault state is unavailable.', accessKind: 'UNAVAILABLE',
       profile: 'Canonical profile state is unavailable.', profileKind: 'UNAVAILABLE',
-      earnings: 'Member earnings state is unavailable.', earningsKind: 'UNAVAILABLE',
+      progression: 'Member task-progression state is unavailable.', progressionKind: 'UNAVAILABLE',
       nfts: 'Member NFT state is unavailable.', nftsKind: 'UNAVAILABLE'
     });
   }

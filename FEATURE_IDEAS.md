@@ -2830,3 +2830,136 @@ Claude-Session: https://claude.ai/code/session_012eUxe6TqiEjiG8DwKPJ6Qk
 ```
 
 **Status:** PROPOSAL (ready for Phase 2 implementation)
+
+## 40. Vertical micro-episodes, the short-drama format without the coin paywall — THE TWELVE HOUSES S1 (2026-10-14) — SHIPPED (PR #909, merged 2026-10-15)
+
+**Outside research (web search, 2026-10-14).**
+- **The market:** short-drama apps (DramaBox, ReelShort, ShortMax, GoodShort, FlexTV, DramaWave) each brought in close to $140M in-app revenue in Q1 2026 for the two leaders, and category downloads rose 140% year on year. Sources: [Sensor Tower](https://sensortower.com/blog/state-of-short-drama-apps-2026-report), [Screen Daily](https://www.screendaily.com/news/microdrama-revenue-outside-china-to-hit-36bn-in-2026-says-report/5219165.article).
+- **The format** is the transferable part: vertical 9:16 video, 1–2 minute episodes, every one ending on a cliffhanger, autoplay into the next, resume where you left off, one-thumb swipe navigation. Source: [Vodlix guide](https://vodlix.com/blog/how-to-create-a-microdrama-short-video.md).
+- **The monetization** is not transferable: 5–10 free episodes, then coins bought or earned by watching ads, which critics liken to slot machines. Sources: [ppc.land](https://ppc.land/microdrama/), [The Post](https://thepost.ph/arts-culture/streaming/popularity-of-microdrama-2026/).
+
+**Grounded here.**
+- `series.html` already declared THE TWELVE HOUSES S1 as the flagship: "12 episodes, one per sign". All 144 series episodes were text cards marked IN DEVELOPMENT or CONCEPT, and none played.
+- `scripts/movies/render.js` already rendered the 12 franchise films deterministically. `omega-agents.json` already holds each guide's voice, so the dialogue is canon, not new copy.
+- §9 forbids live monetization and `tokens_enabled` is `false`, so the coin paywall is out. Every episode is free.
+
+**Built.**
+- `assets/series/twelve-houses-s1.json`: the season script and the single source for both renderer and player.
+- `scripts/movies/episode.html`: a vertical scene in five acts. It is followed by `render.js --episodes`, which outputs `assets/series/houses-s1-epNN.mp4/.jpg` at 720×1280, 20 s, with a drone plus a cliffhanger impact.
+- A **WATCH · S1** tab on `series.html` with:
+  - a vertical player, an episode list and resume (localStorage);
+  - autoplay into the next episode after a 3 s countdown, with a stay option;
+  - swipe and ↑/↓ navigation;
+  - the existing `data-omega-audio-required` / `data-omega-voice` contract.
+
+**Next candidates (not built).**
+- S2 THE SOVEREIGN GENESIS (9 episodes): the season file's `next_season`.
+- Per-guide spin-off shorts on `movies.html`.
+- A "continue watching" chip on the dashboard, reading the same localStorage key.
+
+## 41. Platform map: the best real product behind every nav section, and one grounded upgrade per page (2026-10-15) — proposal (integrity fixes SHIPPED in the same change)
+
+**How this was produced.** Four parallel research passes, one per group of nav sections. Each read every
+page's title, its `from()`/`rpc()` calls, its localStorage keys and its `EVIDENCE_MATRIX.md` row.
+Each checked every proposed table against `supabase/live-schema.json`, and confirmed at least one
+current feature per reference platform with a source URL. The bar for an upgrade:
+- buildable with no build step;
+- no fabricated numbers (§8.1 class 9);
+- reads or writes only tables or keys that already exist;
+- money, tokens and data-sharing stay dormant (§9).
+
+What is listed here is the shortlist. The integrity bugs it found are fixed in the same change; see
+`FIXES_LOG.md`, 2026-10-15.
+
+### Reference platforms by section
+
+| section | reference platforms (confirmed feature) |
+|---|---|
+| COMMAND | Sunsama (daily planning + shutdown), Linear (inbox snooze, project health updates), Raycast (fuzzy + frecency), Dex (keep-in-touch cadence), Cloverpop (decision outcome review), Toggl Track (timeline), Readwise (daily review half-life), Obsidian (backlinks, unlinked mentions, JSON Canvas) |
+| IDENTITY | 1Password Watchtower (security checklist), GitHub (active sessions) |
+| GOVERN | Backstage/Roadie (scorecards), Atlassian Statuspage (components, honest uptime), Vanta (tests behind each control), Storybook a11y |
+| INTEL | Neo4j Bloom (centrality colouring), Fatebook (Brier score, calibration), Zapier (run history), Feedly (mute filters), Elicit (quote per claim) |
+| LIFE | Streaks/Habitica/Duolingo (streak freeze), implementation intentions (d=0.65, 94 tests; 2024 meta-analysis of 642), Oura (bedtime guidance after 2 weeks of data), Breathwrk + Balban 2023 (cyclic sighing), Zero (fasting zones), Day One (On This Day), Hevy/Strong (PRs, Brzycki 1RM), How We Feel / Daylio |
+| ASCEND | Anki FSRS (desired retention), Khan Academy (weekly streaks, mastery), Forest (deep focus), StoryGraph/Readwise |
+| ACHIEVE | Xbox (achievement rarity, only from real aggregates), Strava Local Legends, Duolingo leagues, Fortnite pass (free track only) |
+| COSMOS | Co-Star (real ephemeris, compare charts), The Pattern (bonds), CHANI (transits + journal prompts), World Anvil (timelines, eras) |
+| MEDIA | Netflix Moments (save a scene), Letterboxd (seen/diary), ReelShort/DramaBox (built in §40), Webtoon (subscribe alerts) |
+| ARCHIVE | FamilySearch (record hints), Ancestry, Credly / Open Badges 3.0 |
+| ORDER / ARENA | Chess.com (daily puzzle streak, Puzzle Rush), Kahoot (play-again ghosts), LaunchDarkly (flag audit trail) |
+| INVEST / VAULT | YNAB (Ready to Assign), Monarch (rollover budgets), Kubera (per-asset staleness), Sharesight (price vs income), Copilot Money (recurrings), Expensify |
+| SERVICES | Luma/TripIt (.ics feeds), Calendly (routing forms), Ghost (draft → scheduled → published), Bearable (day-of-week insights), Circle (spaces) |
+
+### Highest-value upgrades (ranked; S/M = effort)
+
+1. **One owner per number.** Live bugs, not enhancements:
+   - Water: nutrition vs water. **Fixed 2026-10-15.**
+   - Exam SM-2: **fixed 2026-10-15.**
+   - Weight: body vs physiology.
+   - Net worth: wallet, wealth, treasury and investment keep 4 stores.
+   - Budget: budget vs expenses.
+   - Contacts: contacts vs network.
+   - Lineage: bloodline/heritage localStorage vs `family.html`'s tables.
+   - Credentials: derived "certs" vs the `certificates` table.
+2. **Habits: structured if-then plans** on the existing cue field (S). This has the strongest behavioural evidence in the whole map.
+3. **Streak freeze on every local streak page** (S each). `omega-streak-freeze.js` exists but is wired into only 3 pages.
+4. **Time and command onto `focus_sessions`** (M). The live table has the columns and a SIUD grant.
+5. **Budget: Monarch rollover plus YNAB "Ready to Assign"** (M). Local only; no money moves.
+6. **`wealth_snapshots` as the first durable member finance history** (M, **HIGH-RISK**: route through `grill-me-codex` and impersonation-test RLS).
+7. **.ics export for events and travel** (S, one shared helper).
+8. **Notifications onto the server `notifications` table, with snooze** (M).
+9. **Sleep regularity (SD of bed/wake over 14 nights) and a mood × sleep view** (S–M). Shows nothing below 7 nights.
+10. **Trailers get real 15-second cuts** from `scripts/movies/render.js` (M). Movies gets Netflix-style resume Moments.
+
+### Consolidation (about 40 pages read the same data under different names)
+
+Merge targets, with the evidence in the research passes:
+- honors ← trophies, achievements, awards.
+- matrix ← evolution, points, ascension, standing-dashboard, grid.
+- levels ← phases, grades, gates.
+- graph-explorer ← graph-timeline/-centrality/-anomalies/-evidence.
+- control-plane ← control-center, platform-kernel, world-shell, ops.
+- contacts ← network.
+- atlas ← mindmap.
+- design-system ← design-showcase.
+- replay ← eternity.
+- hall ← sovereigns.
+- realm ← realms.
+- character ← characters.
+- media ← universe.
+- publishing ← studio.
+- creation-studio ← project-studio, creator.
+- subscriptions ← payments.
+
+Each merge is nav plus a redirect plus tabs, and needs the owner's decision on URLs.
+
+### Scanner gaps found on the way (open)
+
+`evidence-audit.py` reads only a page's inline scripts. These are misclassified:
+- `approvals`, `arena`, `leaderboard`, `my-quests`, `cosmetics`, `hercules`, `replay`, `evidence`, `recovery` and `eternity` show as STATIC or "no backend", but they do real Supabase work in sibling modules.
+- `cosmic-ledger`, `archive`, `invest`, `creation-studio`, `data-observatory`, `world-atlas`, `security`, `knowledge-loom` and `govern` have no matrix row at all.
+
+### Sources
+
+Duolingo streaks: https://blog.duolingo.com/how-duolingo-streak-builds-habit ·
+Oura Bedtime Guidance: https://support.ouraring.com/hc/en-us/articles/360025445154-Bedtime-Guidance ·
+Balban et al. 2023: https://hubermanlab.stanford.edu/publications/brief-structured-respiration-practices-enhance-mood-and-reduce-physiological-arousal ·
+Day One On This Day: https://dayoneapp.com/features/on-this-day/ · Khan streaks: https://support.khanacademy.org/hc/en-us/articles/46962453239437 ·
+Hevy PRs: https://help.hevyapp.com/hc/en-us/articles/35649367857175 · Readwise review: https://docs.readwise.io/readwise/docs/faqs/reviewing-highlights ·
+Sunsama: https://www.sunsama.com/features/daily-planning-and-shutdown · Linear snooze: https://linear.app/docs/snooze ·
+Linear project updates: https://linear.app/changelog/2023-08-16-project-progress-reports · Raycast: https://manual.raycast.com/search-bar ·
+Dex: https://getdex.com/blog/dex-vs-contacts-contact-management-app · Obsidian backlinks: https://obsidian.md/help/plugins/backlinks ·
+JSON Canvas: https://obsidian.md/blog/json-canvas/ · 1Password Watchtower: https://support.1password.com/watchtower/ ·
+Statuspage components: https://support.atlassian.com/statuspage/docs/create-and-manage-your-components/ ·
+Neo4j Bloom GDS: https://neo4j.com/docs/bloom-user-guide/current/bloom-tutorial/gds-integration/ ·
+Zapier history: https://help.zapier.com/hc/en-us/articles/8496291148685 · Vanta tests: https://developer.vanta.com/docs/guide-custom-tests ·
+Roadie scorecards: https://roadie.io/docs/getting-started/creating-a-scorecard/ · Feedly mute: https://docs.feedly.com/article/251-muting-topics ·
+YNAB assigning: https://support.ynab.com/en_us/assigning-your-money-a-guide-SypgkrNJi ·
+Monarch rollover: https://help.monarch.com/hc/en-us/articles/4411119762196-Rollover-Budgets ·
+Sharesight: https://www.sharesight.com/blog/track-your-investments-with-sharesights-performance-report/ ·
+Copilot recurrings: https://help.copilot.money/en/articles/3783499-optimizing-recurrings · Luma iCal: https://help.luma.com/p/ical-syncing ·
+TripIt feed: https://help.tripit.com/en/support/solutions/articles/103000063280 · Calendly routing: https://calendly.com/blog/routing-forms ·
+Ghost scheduling: https://docs.ghost.org/admin-api/posts/scheduling-a-post · World Anvil timelines: https://www.worldanvil.com/learn/timelines ·
+CHANI: https://www.chani.com/blogs/your-chani-android-app-is-here · FamilySearch hints: https://www.familysearch.org/blog/en/record-hints ·
+Open Badges 3.0: https://www.1edtech.org/1edtech-article/new-open-badges-30-standard-provides-enhanced-security-and-mobility/411060 ·
+Netflix Moments: https://advanced-television.com/2024/10/28/netflix-rolls-out-moments-mobile-feature · Letterboxd: https://letterboxd.com/welcome/ ·
+Chess.com daily puzzle: https://support.chess.com/en/articles/8708990-how-does-the-daily-puzzle-work · Kahoot play again: https://support.kahoot.com/hc/en-us/articles/115000510968

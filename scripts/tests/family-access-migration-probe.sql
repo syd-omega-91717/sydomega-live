@@ -33,6 +33,15 @@ ON CONFLICT (id) DO UPDATE SET
   dob=excluded.dob,
   birth_date=excluded.birth_date;
 
+-- enforce_access_defaults() intentionally resets access on INSERT. These two
+-- fixtures model members already approved by the trusted access workflow.
+UPDATE public.profiles
+   SET access_approved = true, is_public = true
+ WHERE id IN (
+   '10000000-0000-4000-8000-000000000005',
+   '10000000-0000-4000-8000-000000000007'
+ );
+
 INSERT INTO public.platform_owners(user_id)
 VALUES ('10000000-0000-4000-8000-000000000001')
 ON CONFLICT (user_id) DO NOTHING;
@@ -60,6 +69,8 @@ DO $probe$
 DECLARE
   v_result jsonb;
   v_rows jsonb;
+  v_diag jsonb;
+  v_count bigint;
   owner_id constant uuid := '10000000-0000-4000-8000-000000000001';
   adult_no_dob constant uuid := '10000000-0000-4000-8000-000000000002';
   minor_id constant uuid := '10000000-0000-4000-8000-000000000003';
@@ -118,7 +129,54 @@ BEGIN
     RAISE EXCEPTION 'family name leaked through points leaderboard: %', v_rows;
   END IF;
   IF v_rows::text NOT ILIKE '%Probe Public Member%' THEN
-    RAISE EXCEPTION 'control public member missing from points leaderboard: %', v_rows;
+    v_diag := jsonb_build_object(
+      'auth_uid', auth.uid(),
+      'is_platform_owner', private.is_platform_owner(),
+      'public_member_ledger_rows_visible', (
+        SELECT count(*) FROM public.sovereign_points_ledger
+        WHERE user_id = '10000000-0000-4000-8000-000000000007'
+      ),
+      'public_member_profile_rows_visible', (
+        SELECT count(*) FROM public.profiles
+        WHERE id = '10000000-0000-4000-8000-000000000007'
+      ),
+      'public_member_profile', (
+        SELECT jsonb_build_object(
+          'display_name', p.display_name,
+          'is_public', p.is_public,
+          'access_approved', p.access_approved,
+          'is_owner', p.is_owner,
+          'deactivated_at', p.deactivated_at,
+          'family_of', p.family_of
+        )
+        FROM public.profiles p
+        WHERE p.id = '10000000-0000-4000-8000-000000000007'
+      ),
+      'public_member_points', (
+        SELECT jsonb_build_object(
+          'rows', count(*),
+          'sum', coalesce(sum(l.delta), 0),
+          'positive_sum', coalesce(sum(l.delta) filter (where l.delta > 0), 0)
+        )
+        FROM public.sovereign_points_ledger l
+        WHERE l.user_id = '10000000-0000-4000-8000-000000000007'
+      ),
+      'private_projection', (
+        SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
+        FROM private.get_points_leaderboard(50) AS p
+      ),
+      'private_projection_security_definer', (
+        SELECT p.prosecdef
+        FROM pg_proc p
+        WHERE p.oid = to_regprocedure('private.get_points_leaderboard(integer)')
+      ),
+      'private_projection_owner', (
+        SELECT pg_get_userbyid(p.proowner)
+        FROM pg_proc p
+        WHERE p.oid = to_regprocedure('private.get_points_leaderboard(integer)')
+      )
+    );
+    RAISE EXCEPTION 'control public member missing from points leaderboard: rows=% diagnostics=%', v_rows, v_diag;
   END IF;
 
   SELECT coalesce(jsonb_agg(to_jsonb(f)), '[]'::jsonb)
@@ -138,6 +196,29 @@ BEGIN
     RAISE EXCEPTION 'family member cannot see their own activity: %', v_rows;
   END IF;
 
+  -- A normal approved member must see approved public leaderboard rows even
+  -- though direct ledger reads remain RLS-scoped to self. This proves the
+  -- authenticated-only private projection is required, not just its filter.
+  PERFORM set_config('request.jwt.claim.sub', nonowner_id::text, true);
+  PERFORM set_config('request.jwt.claims', jsonb_build_object('sub',nonowner_id,'role','authenticated','aal','aal1')::text, true);
+  SELECT count(*) INTO v_count
+    FROM public.sovereign_points_ledger
+   WHERE user_id = '10000000-0000-4000-8000-000000000007';
+  IF v_count <> 0 THEN
+    RAISE EXCEPTION 'direct ledger read bypassed member-self RLS: visible rows=%', v_count;
+  END IF;
+  SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
+    INTO v_rows
+    FROM public.get_points_leaderboard(50) AS p;
+  IF v_rows::text ILIKE '%Probe Family Adult No DOB%' OR v_rows::text ILIKE '%Probe Family Adult DOB%' THEN
+    RAISE EXCEPTION 'member points leaderboard leaked linked family: %', v_rows;
+  END IF;
+  IF v_rows::text NOT ILIKE '%Probe Public Member%' THEN
+    RAISE EXCEPTION 'approved member cannot see the public points leaderboard: %', v_rows;
+  END IF;
+
+  PERFORM set_config('request.jwt.claim.sub', adult_no_dob::text, true);
+  PERFORM set_config('request.jwt.claims', jsonb_build_object('sub',adult_no_dob,'role','authenticated','aal','aal1')::text, true);
   SELECT coalesce(jsonb_agg(to_jsonb(p)), '[]'::jsonb)
     INTO v_rows
     FROM public.get_points_leaderboard(50) AS p;

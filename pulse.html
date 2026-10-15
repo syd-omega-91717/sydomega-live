@@ -103,7 +103,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 <aside class="side" id="omega-side" data-page="pulse"></aside>
 <main class="main">
   <div class="topbar"><div class="t">PULSE<small>SOVEREIGN MARKET SIGNAL &middot; SYD OMEGA 91717</small></div><div class="live-dot" style="margin-left:auto"></div><span style="font-size:12px;letter-spacing:1px;color:var(--green);margin-left:4px">LIVE</span><span style="font-size:12px;letter-spacing:1px;color:var(--dim);margin-left:8px" id="ts-label">--</span></div>
-  <div style="font-size:12px;letter-spacing:1px;color:var(--dim);padding:4px var(--pad,20px) 0">* SIMULATED &mdash; no free real-time source for gold/oil spot price without an API key. Crypto, forex, and weather figures on this page are genuinely live.</div>
+  <div style="font-size:12px;letter-spacing:1px;color:var(--dim);padding:4px var(--pad,20px) 0">* Shown only when the configured market-price provider returns a quote; otherwise &mdash;. Nothing on this page is simulated. Crypto, forex and weather come from free live sources.</div>
 
 <!-- Ticker strip -->
 <div>
@@ -436,12 +436,9 @@ function renderForex(rates){
   }
 }
 
-/* ── Commodities — metals/energy remain simulated (no verified free source exists;
-   honestly labelled as such in the markup, not silently faked). Indices now attempt a
-   real quote via the market-price Edge Function (same dormant-until-configured
-   TWELVE_DATA_API_KEY infra investment.html uses) and fall back to the existing
-   simulated value on any failure, so this is a strict improvement with no regression
-   risk if a given index symbol doesn't resolve. ── */
+/* ── Commodities and indices — a real quote from the market-price Edge Function
+   (dormant until TWELVE_DATA_API_KEY is set, as on investment.html) or "—"
+   with UNAVAILABLE. No simulated value is ever shown. ── */
 async function fetchIndexPrice(sym){
   try{
     var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/market-price?symbol='+encodeURIComponent(sym));

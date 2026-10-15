@@ -15,6 +15,8 @@ const ACTION_RUNTIME_CANDIDATES = ['omega-action-runtime.js','assets/js/omega-ac
 const DATA_RUNTIME_CANDIDATES = ['omega-data-runtime.js','assets/js/omega-data-runtime.js','js/omega-data-runtime.js'];
 const OBJECT_RUNTIME_CANDIDATES = ['omega-object-runtime.js','assets/js/omega-object-runtime.js','js/omega-object-runtime.js'];
 const OBJECT_GRAPH_CANDIDATES = ['omega-object-graph-runtime.js','assets/js/omega-object-graph-runtime.js','js/omega-object-graph-runtime.js'];
+const UNIFIED_BACKGROUND_CANDIDATES = ['omega-unified-background.css','assets/css/omega-unified-background.css','css/omega-unified-background.css'];
+const BACKGROUND_SCRIPT_CANDIDATES = ['bg.js','assets/js/bg.js','js/bg.js'];
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -47,6 +49,8 @@ const actionRuntime = await findAsset(ACTION_RUNTIME_CANDIDATES);
 const dataRuntime = await findAsset(DATA_RUNTIME_CANDIDATES);
 const objectRuntime = await findAsset(OBJECT_RUNTIME_CANDIDATES);
 const objectGraph = await findAsset(OBJECT_GRAPH_CANDIDATES);
+const unifiedBackground = await findAsset(UNIFIED_BACKGROUND_CANDIDATES);
+const backgroundScript = await findAsset(BACKGROUND_SCRIPT_CANDIDATES);
 const manifestExists = await findAsset(['manifest.json']);
 const offlineExists = await findAsset(['offline.html']);
 let changed = 0;
@@ -71,13 +75,11 @@ for (const file of files) {
   // Universal visual/content contract: every shipped content page receives the
   // same restrained background and the shared platform runtime. Existing page
   // scripts remain in place; bg.js is internally guarded against duplication.
-  if (!/omega-unified-background\.css/i.test(html)) {
-    html = html.replace(/<head(\s[^>]*)?>/i, match => `${match}
-<link rel="stylesheet" href="/omega-unified-background.css" data-omega-unified-background="1">`);
+  if (unifiedBackground && !html.toLowerCase().includes('omega-unified-background.css')) {
+    html = html.replace(/<head(\s[^>]*)?>/i, match => match + '\n<link rel="stylesheet" href="' + unifiedBackground + '" data-omega-unified-background="1">');
   }
-  if (!/data-omega-global-bg="1"/i.test(html) && !/<script[^>]+src=["'][^"']*\/bg\.js/i.test(html)) {
-    html = html.replace(/<body(\s[^>]*)?>/i, match => `${match}
-<script src="/bg.js" defer data-omega-global-bg="1"></script>`);
+  if (backgroundScript && !html.includes('data-omega-global-bg="1"') && !html.toLowerCase().includes('/bg.js')) {
+    html = html.replace(/<body(\s[^>]*)?>/i, match => match + '\n<script src="' + backgroundScript + '" defer data-omega-global-bg="1"></script>');
   }
 
   const scripts = [];

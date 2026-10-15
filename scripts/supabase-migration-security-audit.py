@@ -84,6 +84,11 @@ def main() -> int:
     for path in sorted(ROOT.glob("*.sql")):
         text = path.read_text(encoding="utf-8", errors="replace")
         normalized = re.sub(r"--[^\n]*", "", text).lower()
+        # SQL string literals are data, not executable privilege/function syntax.
+        # Mask them while preserving newlines so COMMENT ON strings mentioning
+        # SECURITY DEFINER cannot trigger false positives. Doubled single quotes
+        # are handled as SQL escapes.
+        normalized = re.sub(r"'(?:''|[^'])*'", lambda m: re.sub(r"[^\n]", " ", m.group(0)), normalized, flags=re.S)
         for pattern, message in RULES:
             for match in pattern.finditer(normalized):
                 fragment = normalized[max(0, match.start()-80):match.end()+80]

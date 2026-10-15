@@ -45,6 +45,6 @@
   "0090_omega_extend_trial_fix.sql::SECURITY DEFINER function without explicit search_path": 1,
   "0092_omega_notify_triggers.sql::SECURITY DEFINER function without explicit search_path": 5,
   "20260817231834_consolidate_my_matrix_my_lattice_onto_compute_authority.sql::SECURITY DEFINER function without explicit search_path": 1,
-  "20260818141500_omega_graphify_schema.sql::SECURITY DEFINER function without explicit search_path": 2,
+  "20260818141500_omega_graphify_schema.sql::SECURITY DEFINER function without explicit search_path": 2
  }
 }

@@ -259,8 +259,10 @@
    SOVEREIGN NETWORK — Relationship Intelligence System
    ═══════════════════════════════════════════════════════════════════════ */
 
-const CONTACTS_KEY     = 'omega_network_contacts';
-const INTERACTIONS_KEY = 'omega_network_interactions';
+const CONTACTS_KEY     = 'omega_contacts';
+const INTERACTIONS_KEY = 'omega_contact_ints';
+const LEGACY_CONTACTS_KEY = 'omega_network_contacts';
+const LEGACY_INTERACTIONS_KEY = 'omega_network_interactions';
 
 const CIRCLES = [
   {id:'INNER_CIRCLE', label:'INNER CIRCLE', color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), limit:5,  freq:7},

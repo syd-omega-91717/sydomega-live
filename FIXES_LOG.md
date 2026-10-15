@@ -23386,3 +23386,39 @@ astronomy-engine fixtures on 5 dates.
 - **breath.html:** "68% STRESS REDUCTION" had no source. It now reads "5 MIN · CYCLIC SIGHING · BALBAN 2023", the protocol the page already cites.
 - **forge.html:** promised a "Realm-wide leaderboard coming". It now says the scores stay on the device.
 - **pulse.html:** its caption still said gold and oil were "SIMULATED", but the code already shows "—" / UNAVAILABLE without a provider quote. The caption and comment now say nothing is simulated.
+
+## Weight, net worth and certificates each had a second owner (2026-10-15)
+
+Follow-up to the water and exam fixes above, from `FEATURE_IDEAS.md` §41's "one owner per number" list (§8.1 class 8).
+
+- **Weight.** `physiology.html` stored `weight` on every reading in `omega_physiology`, beside `body.html`'s `omega_body_log`, so "current weight" differed between the two pages.
+  - A weight entered on physiology now goes to the body log.
+  - Readings no longer carry it.
+  - Its strip, history column and 30-day trend read the body log.
+  - Stored weights migrate once (skipped when the body log already has that day).
+  - `body.html` no longer throws on an entry without a `time` field.
+
+  Verified in a render: 10-10's 81.5 kg moved over and 10-01 kept the body value (no duplicate); the strip shows 81.5; a new 80.9 kg logged on physiology appears as `body.html`'s latest (80.9kg); 0 errors.
+- **Net worth.** `wallet.html` and `wealth.html` both headlined "SOVEREIGN NET WORTH" from different stores; `treasury.html` and `investment.html` keep their own totals too.
+  - Wealth is now the net-worth page.
+  - Wallet's headline reads "WALLET NET · ACCOUNTS − DEBTS" and links to Wealth.
+  - Wealth lists the other pages' totals read-only, under "ELSEWHERE ON THE PLATFORM · NOT INCLUDED ABOVE", so a double entry is visible instead of producing two numbers.
+
+  Verified in a render: wallet 5000 − 1200 = $4K and investments 10 × 150 = $2K are listed with links; 0 errors.
+
+  The four stores themselves are still four models (accounts/debts, asset classes, reserves, holdings). Merging them is a product decision.
+- **Certificates.** `credentials.html` marked KNOWLEDGE/MASTERY/CONTRIBUTION/ARCHITECT certificates "EARNED" from axis thresholds. No table holds those. Live, `certificates` is a 12-step ladder (Initiate, Adept, Architect, Sentinel, Oracle, Sovereign, Warden, Auditor, Beacon, Merchant, Historian, Athena Apex; `cert_num` 1–12, each also with a null-name row).
+  - The tab now reads the member's rows, the same table profile, honors, trophies and achievements read.
+  - Rows are deduped by `cert_num`, preferring the named one.
+  - It renders with `textContent`.
+  - Empty and error states are explicit.
+
+  Verified: 3 stub rows render as 2 cards (INITIATE, ADEPT, "✓ ISSUED" with dates); no rows shows "No certificate has been issued to you yet"; 0 errors.
+
+`scripts/tests/test_one_owner_per_number_contract.py` holds all five fixes, water and exam included.
+
+**Not merged, by design:**
+- **`budget.html` / `expenses.html`:** 8 vs 15 categories, each with its own transaction log.
+- **`contacts.html` / `network.html`:** different Dunbar circles. Network's TRIBE is 15, contacts' is 50, and network has PROSPECTS.
+
+These are parallel tools, not one fact stored twice. Merging either means choosing a taxonomy and mapping the other onto it, which loses information: an owner decision, recorded in `GAP_ANALYSIS.md` §S.

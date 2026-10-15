@@ -684,7 +684,7 @@ function renderPersonalOS(){
 
   /* NETWORK */
   var contacts=[];try{contacts=JSON.parse(localStorage.getItem('omega_contacts')||'[]');}catch(e){}
-  var dueNet=contacts.filter(function(c){return daysSince(c.lastContact)>=(c.frequency||30);}).length;
+  var dueNet=contacts.filter(function(c){return daysSince(c.lastContact)>=(c.frequency||c.freq||30);}).length;
   var pkn=document.getElementById('pk-network');if(pkn)pkn.textContent=dueNet||'0';
 
   /* DECISIONS */

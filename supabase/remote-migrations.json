@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-12T06:11:00Z",
-  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns",
-  "remoteMigrationCount": 380,
-  "latestRemoteMigration": "20261012091641",
+  "_captured": "2026-10-15T22:48:08Z",
+  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (read-only provider query)",
+  "remoteMigrationCount": 382,
+  "latestRemoteMigration": "20261013160000",
   "versions": [
     "0001",
     "0002",
@@ -383,7 +383,9 @@
     "20261012060927",
     "20261012064126",
     "20261012064247",
-    "20261012091641"
+    "20261012091641",
+    "20261012150000",
+    "20261013160000"
   ],
   "migrations": [
     {
@@ -907,8 +909,7 @@
       "name": "schema_sync_point"
     },
     {
-      "version": "20260822000000",
-      "name": null
+      "version": "20260822000000"
     },
     {
       "version": "20260822024048",
@@ -1423,12 +1424,10 @@
       "name": "omega_agent_audit_rpc_service_only_20260929"
     },
     {
-      "version": "20260929172000",
-      "name": null
+      "version": "20260929172000"
     },
     {
-      "version": "20260929174000",
-      "name": null
+      "version": "20260929174000"
     },
     {
       "version": "20260930090758",
@@ -1905,6 +1904,14 @@
     {
       "version": "20261012091641",
       "name": "omega_restore_remaining_private_rpc_execute_20261012"
+    },
+    {
+      "version": "20261012150000",
+      "name": "omega_family_access"
+    },
+    {
+      "version": "20261013160000",
+      "name": "secure_public_points_leaderboard_projection"
     }
   ]
 }

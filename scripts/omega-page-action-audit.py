@@ -162,6 +162,47 @@ def audit_estate(root=ROOT):
         "navigation_rule":"Pure local HTML navigation proven directly by onclick/onsubmit source is AVAILABLE_WITHOUT_MUTATION; opaque or mutating handlers remain UNMAPPED.",
     }
 
+def unmapped_page_delta(current, baseline):
+    """Compare current source inventory with the checked-in snapshot by page.
+
+    The snapshot is evidence of the last reviewed inventory, not authority over
+    current source. This helper only improves diagnostics; it never classifies
+    a control as governed or changes the release threshold.
+    """
+    def counts_by_page(data):
+        counts = {}
+        for action in data.get("actions", []):
+            if action.get("state") == "UNMAPPED":
+                page = action.get("page") or action.get("path") or "<unknown>"
+                counts[page] = counts.get(page, 0) + 1
+        return counts
+
+    baseline_counts = counts_by_page(baseline or {})
+    current_counts = counts_by_page(current or {})
+    rows = []
+    for page in sorted(set(baseline_counts) | set(current_counts)):
+        delta = current_counts.get(page, 0) - baseline_counts.get(page, 0)
+        if delta > 0:
+            rows.append({
+                "page": page,
+                "baseline_unmapped": baseline_counts.get(page, 0),
+                "current_unmapped": current_counts.get(page, 0),
+                "delta": delta,
+                "actions": [
+                    {
+                        "action_id": action.get("action_id"),
+                        "kind": action.get("kind"),
+                        "path": action.get("path"),
+                        "evidence": action.get("evidence", {}),
+                    }
+                    for action in current.get("actions", [])
+                    if action.get("state") == "UNMAPPED"
+                    and (action.get("page") or action.get("path") or "<unknown>") == page
+                ],
+            })
+    return rows
+
+
 def validate(data):
     required={"schema_version","name","status","page_count","action_count","counts","actions"}
     missing=required-set(data)
@@ -191,6 +232,32 @@ def main():
         # mapped; never raise it to admit a new one -- map that one instead.
         n=data["counts"].get("UNMAPPED",0)
         if n>UNMAPPED_CEILING:
+            snapshot_path = ROOT / "config" / "omega-page-action-audit.json"
+            try:
+                snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                snapshot = {}
+            deltas = unmapped_page_delta(data, snapshot)
+            if deltas:
+                print("UNMAPPED_ACTION_DIAGNOSTICS_BEGIN")
+                for row in deltas:
+                    print(
+                        f"PAGE={row['page']} baseline_unmapped={row['baseline_unmapped']} "
+                        f"current_unmapped={row['current_unmapped']} delta=+{row['delta']}"
+                    )
+                    for action in row["actions"]:
+                        evidence = action["evidence"]
+                        print(
+                            f"  CONTROL path={action['path']} action_id={action['action_id']} "
+                            f"kind={action['kind']} onclick={evidence.get('onclick', False)} "
+                            f"onsubmit={evidence.get('onsubmit', False)} "
+                            f"javascript_href={evidence.get('javascript_href', False)} "
+                            f"download={evidence.get('download', False)}"
+                        )
+                print("UNMAPPED_ACTION_DIAGNOSTICS_END")
+            else:
+                print("UNMAPPED_ACTION_DIAGNOSTICS: no per-page increase could be isolated "
+                      "against config/omega-page-action-audit.json")
             raise SystemExit(f"UNMAPPED actions rose to {n} (ceiling {UNMAPPED_CEILING}): "
                              "give each new control a data-omega-task-id, a registered "
                              "data-omega-capability-id, or disabled + data-omega-unavailable-reason")

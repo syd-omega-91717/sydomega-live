@@ -35,7 +35,12 @@ LANGUAGE sql SECURITY DEFINER AS $$ SELECT 1 $$;
 """
 SAFE = """
 CREATE OR REPLACE FUNCTION public.careful() RETURNS void
-LANGUAGE sql SECURITY DEFINER SET search_path = public, pg_temp AS $$ SELECT 1 $$;
+LANGUAGE sql SECURITY DEFINER SET search_path = public, pg_temp AS $ SELECT 1 $;
+"""
+
+SAFE_TO = """
+CREATE OR REPLACE FUNCTION public.careful_to() RETURNS void
+LANGUAGE sql SECURITY DEFINER SET search_path TO public, pg_temp AS $ SELECT 1 $;
 """
 
 
@@ -89,6 +94,31 @@ class MigrationSecurityAuditTests(unittest.TestCase):
         code, out = self.fx.run()
         self.assertEqual(code, 0, out)
         self.assertIn("PASSED", out)
+
+    def test_search_path_to_syntax_is_safe(self):
+        self.fx.add("0001_safe_to.sql", SAFE_TO)
+        code, out = self.fx.run()
+        self.assertEqual(code, 0, msg="SET search_path TO is valid PostgreSQL syntax\n" + out)
+
+    def test_double_dash_inside_string_does_not_hide_unsafe_sql(self):
+        self.fx.add(
+            "0001_string_comment.sql",
+            "COMMENT ON TABLE public.t IS 'label -- text';\n" + UNSAFE,
+        )
+        code, out = self.fx.run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("0001_string_comment.sql", out)
+        self.assertIn(SECDEF, out)
+
+    def test_security_definer_phrase_in_comment_and_literal_is_ignored(self):
+        self.fx.add(
+            "0001_safe_text.sql",
+            "-- SECURITY DEFINER is documentation only\n"
+            "COMMENT ON TABLE public.t IS 'SECURITY DEFINER';\n"
+            "CREATE TABLE public.t (id int);\n",
+        )
+        code, out = self.fx.run()
+        self.assertEqual(code, 0, msg="comments and string literals are not executable function syntax\n" + out)
 
     def test_an_unbaselined_unsafe_function_fails(self):
         """VIOLATOR. The whole point of the gate: a NEW SECURITY DEFINER with no

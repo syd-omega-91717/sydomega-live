@@ -367,7 +367,7 @@ function itemHTML(e){
     +'</div>'
     +'<div class="exp-date">'+date+'</div>'
     +'<div class="exp-amount '+type+'">'+(type==='income'?'+':'-')+'$'+amount.toFixed(2)+'</div>'
-    +'<button class="btn-red btn-sm" type="button" data-delete-expense="'+id+'" aria-label="Delete transaction">DEL</button>'
+    +'<button class="btn-red btn-sm" type="button" data-omega-task-id="expenses.delete-entry" data-delete-expense="'+id+'" aria-label="Delete transaction">DEL</button>'
     +'</div>';
 }
 document.addEventListener('click',function(event){

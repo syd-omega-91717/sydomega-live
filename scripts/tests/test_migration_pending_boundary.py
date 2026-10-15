@@ -65,6 +65,17 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("revoke all on function public.get_points_leaderboard(integer) from public, anon", sql)
         self.assertIn("grant execute on function public.get_points_leaderboard(integer) to authenticated", sql)
 
+    def test_latest_public_points_rpc_is_invoker_wrapper(self) -> None:
+        path = MIGRATIONS / "20261015220000_restore_points_leaderboard_invoker_wrapper.sql"
+        sql = path.read_text(encoding="utf-8")
+        definition = sql.split("CREATE OR REPLACE FUNCTION public.get_points_leaderboard", 1)[1].split("AS $function$", 1)[0].lower()
+        body = sql.split("AS $function$", 1)[1].split("$function$", 1)[0].lower()
+        self.assertIn("security invoker", definition)
+        self.assertNotIn("security definer", definition)
+        self.assertIn("select * from private.get_points_leaderboard($1)", body)
+        self.assertIn("revoke all on function public.get_points_leaderboard(integer) from public, anon", sql.lower())
+        self.assertIn("grant execute on function public.get_points_leaderboard(integer) to authenticated", sql.lower())
+
     def test_source_only_gate_and_strict_release_gate_are_distinct(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)

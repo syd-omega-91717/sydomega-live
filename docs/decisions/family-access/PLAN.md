@@ -168,3 +168,10 @@ Changes to the approach:
 ## Round 3 security refinement (2026-10-13)
 
 When a member has no DOB/birth_date, the family-grant RPC requires `p_attested_adult=true`. The owner console sends this only after the explicit adult confirmation. A direct RPC call omitting the flag is refused and audited. A recorded DOB under 18 is refused regardless of the attestation flag.
+
+
+## Post-apply security reconciliation (2026-10-16)
+
+The connected Supabase migration ledger now confirms that migrations 20261012150000 and 20261013160000 are applied. A read-only catalog query confirms both private.get_points_leaderboard(integer) and public.get_points_leaderboard(integer) exist with locked empty search paths and the same public/approved/active/family-privacy filters. However, Supabase Security Advisor reports that the public function is executable by authenticated while marked SECURITY DEFINER.
+
+The narrow private definer projection already exists and denies execution to anon; the exposed public RPC should therefore remain a SECURITY INVOKER wrapper that delegates to that private function. Follow-up source migration 20261015220000_restore_points_leaderboard_invoker_wrapper.sql is registered as pending and blocks release until fresh replay, the updated family-access contract, and authorization/privacy probes pass. The migration has NOT been applied to production by this change.

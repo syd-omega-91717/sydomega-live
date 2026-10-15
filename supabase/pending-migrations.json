@@ -2,5 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": []
+  "pending": [
+    {
+      "version": "20261015220000",
+      "file": "20261015220000_restore_points_leaderboard_invoker_wrapper.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Live Supabase Security Advisor reports public.get_points_leaderboard as an authenticated-callable SECURITY DEFINER endpoint. A narrow private SECURITY DEFINER projection already exists with empty search_path and public/approved/active/family-privacy predicates. This migration restores the public RPC as a SECURITY INVOKER wrapper. Must pass fresh replay, family-access contract, and authorization/privacy probes before live application."
+    }
+  ]
 }

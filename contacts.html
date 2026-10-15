@@ -281,7 +281,7 @@ function initials(name){return name.split(' ').map(function(w){return w[0];}).jo
 
 function isDue(c){
   if(!c.freq) return false;
-  var last=interactions.filter(function(i){return i.contactId===c.id;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
+  var last=interactions.filter(function(i){return String(i.contactId)===String(c.id);}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
   if(!last) return true;
   var daysAgo=(Date.now()-new Date(last.date).getTime())/(86400000);
   return daysAgo>=c.freq;
@@ -315,7 +315,7 @@ function addContact(){
 
 function deleteContact(id){
   if(!confirm('Remove contact?')) return;
-  contacts=contacts.filter(function(c){return c.id!==id;});
+  contacts=contacts.filter(function(c){return String(c.id)!==String(id);});
   save();updateStats();renderContacts();
 }
 

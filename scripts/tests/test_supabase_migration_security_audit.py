@@ -98,7 +98,7 @@ class MigrationSecurityAuditTests(unittest.TestCase):
     def test_search_path_to_syntax_is_safe(self):
         self.fx.add("0001_safe_to.sql", SAFE_TO)
         code, out = self.fx.run()
-        self.assertEqual(code, 0, out, "SET search_path TO is valid PostgreSQL syntax")
+        self.assertEqual(code, 0, msg="SET search_path TO is valid PostgreSQL syntax\n" + out)
 
     def test_double_dash_inside_string_does_not_hide_unsafe_sql(self):
         self.fx.add(
@@ -118,7 +118,7 @@ class MigrationSecurityAuditTests(unittest.TestCase):
             "CREATE TABLE public.t (id int);\n",
         )
         code, out = self.fx.run()
-        self.assertEqual(code, 0, out, "comments and string literals are not executable function syntax")
+        self.assertEqual(code, 0, msg="comments and string literals are not executable function syntax\n" + out)
 
     def test_an_unbaselined_unsafe_function_fails(self):
         """VIOLATOR. The whole point of the gate: a NEW SECURITY DEFINER with no

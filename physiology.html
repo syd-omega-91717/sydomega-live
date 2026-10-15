@@ -238,6 +238,33 @@ function switchTab(id,btn){
 var metrics=JSON.parse(localStorage.getItem('omega_physiology')||'[]');
 function save(){localStorage.setItem('omega_physiology',JSON.stringify(metrics));}
 
+/* Weight has one owner: body.html's log ('omega_body_log', kg, sorted by
+   date). This page kept its own weight field on every reading, so the two
+   pages showed different "current weight" (CLAUDE.md 8.1 class 8). A weight
+   entered here is written to that log; readings here no longer store it, and
+   weights already stored are moved over once. */
+var BODY_KEY='omega_body_log';
+function bodyLog(){try{var l=JSON.parse(localStorage.getItem(BODY_KEY)||'[]');return Array.isArray(l)?l:[];}catch(e){return[];}}
+function addBodyWeight(day,kg){
+  var l=bodyLog();
+  l.push({id:Date.now()+Math.floor(Math.random()*1000),date:day,weight:+kg.toFixed(2),bf:null,height:null,waist:null,unit:'metric',time:'',hydration:'',condition:'',source:'physiology'});
+  l.sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
+  localStorage.setItem(BODY_KEY,JSON.stringify(l));
+}
+(function migrateWeights(){
+  var moved=false,have={};
+  bodyLog().forEach(function(e){have[String(e.date).slice(0,10)]=true;});
+  metrics.forEach(function(m){
+    if(m.weight==null) return;
+    var day=String(m.date).slice(0,10);
+    if(!have[day]&&+m.weight>0){addBodyWeight(day,+m.weight);have[day]=true;}
+    m.weight=null;moved=true;
+  });
+  if(moved) save();
+})();
+function latestWeight(){var l=bodyLog();return l.length?l[l.length-1]:null;}
+function weightOn(day){var w=null;bodyLog().forEach(function(e){if(String(e.date).slice(0,10)===day)w=e.weight;});return w;}
+
 function classifyRHR(v){if(v<40||v>100) return['BAD','status-bad'];if(v<60) return['ATHLETE','status-ok'];if(v<80) return['NORMAL','status-ok'];return['ELEVATED','status-warn'];}
 function classifyHRV(v){if(v>=65) return['HIGH','status-ok'];if(v>=40) return['MODERATE','status-warn'];if(v>=20) return['LOW','status-warn'];return['POOR','status-bad'];}
 function classifyBP(sys,dia){if(sys<120&&dia<80) return['OPTIMAL','status-ok'];if(sys<130&&dia<80) return['NORMAL','status-ok'];if(sys<140||dia<90) return['ELEVATED','status-warn'];return['HIGH','status-bad'];}
@@ -257,7 +284,8 @@ function logMetrics(){
   var energy=parseInt(document.getElementById('l-energy').value)||null;
   var context=document.getElementById('l-context').value;
   if(!date){alert('Date required.');return;}
-  metrics.unshift({id:Date.now(),date:date,context:context,rhr:rhr,hrv:hrv,spo2:spo2,sys:sys,dia:dia,weight:weight,vo2:vo2,sleep:sleep,energy:energy});
+  if(weight) addBodyWeight(date.slice(0,10),weight);
+  metrics.unshift({id:Date.now(),date:date,context:context,rhr:rhr,hrv:hrv,spo2:spo2,sys:sys,dia:dia,weight:null,vo2:vo2,sleep:sleep,energy:energy});
   save();
   updateStrip();
   alert('METRICS LOGGED');
@@ -285,8 +313,9 @@ function updateStrip(){
     var sc=classifySPO2(last.spo2);
     document.getElementById('s-spo2').textContent=sc[0];document.getElementById('s-spo2').className='metric-status '+sc[1];
   }
-  if(last.weight){
-    document.getElementById('m-weight').textContent=last.weight;
+  var lw=latestWeight();
+  if(lw){
+    document.getElementById('m-weight').textContent=(+lw.weight).toFixed(1);
     document.getElementById('s-weight').textContent='LOGGED';document.getElementById('s-weight').className='metric-status status-ok';
   }
   if(last.vo2){
@@ -309,7 +338,7 @@ function renderHistory(){
       +'<span style="color:var(--blue)">'+esc(m.hrv||'—')+'</span>'
       +'<span style="color:var(--orange)">'+esc(m.sys&&m.dia?m.sys+'/'+m.dia:'—')+'</span>'
       +'<span style="color:var(--green)">'+esc(m.spo2||'—')+'</span>'
-      +'<span style="color:var(--gold)">'+esc(m.weight||'—')+'</span>'
+      +'<span style="color:var(--gold)">'+esc(weightOn(String(m.date).slice(0,10))||'—')+'</span>'
       +'<span>'+esc(m.vo2||'—')+'</span>'
       +'<span>'+esc(m.sleep||'—')+'</span>'
       +'<span>'+esc(m.energy||'—')+'</span>'
@@ -326,7 +355,8 @@ function drawTrend(canvasId,field,color,decimals){
   for(var i=days-1;i>=0;i--){
     var d=new Date(today); d.setDate(d.getDate()-i);
     var key=d.toISOString().slice(0,10);
-    var dayMetrics=metrics.filter(function(m){return m.date.startsWith(key)&&m[field]!=null;});
+    var src=field==='weight'?bodyLog():metrics;
+    var dayMetrics=src.filter(function(m){return String(m.date).startsWith(key)&&m[field]!=null;});
     var val=dayMetrics.length?dayMetrics.reduce(function(s,m){return s+m[field];},0)/dayMetrics.length:null;
     pts.push(val);
   }

@@ -275,7 +275,7 @@ function addEntry(){
 }
 
 function deleteEntry(id){
-  entries=entries.filter(function(e){return e.id!==id;});
+  entries=entries.filter(function(e){return String(e.id)!==String(id);});
   save();
   updateAll();
 }

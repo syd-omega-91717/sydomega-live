@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Ω Governed Data Ingestion",
+  "truth": "CALCULATED",
+  "status": "DESIGN_PROPOSAL",
+  "pipeline": [
+    "PROVIDER",
+    "DATASET_REGISTRY",
+    "INGESTION_RUN",
+    "VALIDATE",
+    "NORMALIZE",
+    "FRESHNESS",
+    "PROVENANCE",
+    "CANONICAL_OBJECT",
+    "EVENT",
+    "EVIDENCE",
+    "READ_MODEL",
+    "MONITOR"
+  ],
+  "truthStates": [
+    "LIVE",
+    "CALCULATED",
+    "SIMULATED",
+    "USER_CREATED",
+    "LORE",
+    "UNAVAILABLE",
+    "UNVERIFIED",
+    "BLOCKED"
+  ],
+  "requiredDatasetFields": [
+    "datasetId",
+    "providerId",
+    "license",
+    "attribution",
+    "schemaVersion",
+    "retrievedAt",
+    "expiresAt",
+    "contentHash",
+    "truthState"
+  ],
+  "requiredRecordFields": [
+    "recordId",
+    "datasetId",
+    "observedAt",
+    "sourceUri",
+    "contentHash"
+  ],
+  "initialDomains": [
+    {
+      "id": "geography_civic",
+      "status": "UNVERIFIED"
+    },
+    {
+      "id": "news_media",
+      "status": "UNVERIFIED"
+    },
+    {
+      "id": "markets_economics",
+      "status": "UNVERIFIED"
+    },
+    {
+      "id": "science_space_environment",
+      "status": "UNVERIFIED"
+    }
+  ],
+  "productionPromotionRequirements": [
+    "approvedProvider",
+    "licenseAndAttributionReview",
+    "serverSideCredentialBoundary",
+    "schemaValidation",
+    "freshnessPolicy",
+    "idempotentPersistence",
+    "authorizationAndRls",
+    "eventAndEvidenceLineage",
+    "failureAndRetryTests",
+    "productionSmokeEvidence"
+  ],
+  "hardRules": [
+    "No provider secrets in browser code.",
+    "Stale data is not LIVE.",
+    "Missing provenance blocks publication.",
+    "Simulated and lore data never become LIVE by inference.",
+    "Failed ingestion remains unavailable or blocked; never substitute fabricated data."
+  ]
+}

@@ -89,6 +89,12 @@ jobs:
           import subprocess, sys
           result = subprocess.run(['node', 'scripts/tests/test_omega_password_guard.js'])
           sys.exit(result.returncode)
+      - name: Settings fail-closed regression test
+        shell: python
+        run: |
+          import subprocess, sys
+          result = subprocess.run(['node', 'scripts/tests/test_settings_fail_closed.js'])
+          sys.exit(result.returncode)
       - name: Intelligence fabric tests
         shell: python
         run: |

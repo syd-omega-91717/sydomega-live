@@ -254,7 +254,7 @@ function monthLabel(m) {
 function load() {
   try { _months  = JSON.parse(localStorage.getItem(MONTHS_KEY))  || {}; } catch { _months = {}; }
   try { _targets = JSON.parse(localStorage.getItem(TARGETS_KEY)) || {}; } catch { _targets = {}; }
-  CATS.forEach(c => { if (!_targets[c.id]) _targets[c.id] = DEFAULT_TARGETS[c.id]||0; });
+  CATS.forEach(c => { if (!Object.prototype.hasOwnProperty.call(_targets, c.id) || _targets[c.id] == null || !Number.isFinite(Number(_targets[c.id]))) _targets[c.id] = DEFAULT_TARGETS[c.id]||0; else _targets[c.id] = Number(_targets[c.id]); });
 }
 function saveMonths()  { localStorage.setItem(MONTHS_KEY,  JSON.stringify(_months)); }
 function saveTargets() { localStorage.setItem(TARGETS_KEY, JSON.stringify(_targets)); }

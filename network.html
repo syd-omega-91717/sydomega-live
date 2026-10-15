@@ -403,8 +403,8 @@ function saveContact() {
 window.deleteContact=deleteContact;
 function deleteContact(id) {
   if (!confirm('Remove this contact?')) return;
-  _contacts = _contacts.filter(c=>c.id!==id);
-  _interactions = _interactions.filter(i=>i.contactId!==id);
+  _contacts = _contacts.filter(c=>String(c.id)!==String(id));
+  _interactions = _interactions.filter(i=>String(i.contactId)!==String(id));
   saveContacts(); saveInteractions();
   renderContactList(); updateTopMeta();
 }

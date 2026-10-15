@@ -55,10 +55,10 @@
 .hw-ep:hover,.hw-ep:focus-visible{border-color:var(--gold)}
 .hw-ep[aria-current="true"]{border-color:var(--gold);background:rgba(201,168,76,.08)}
 .hw-ep img{width:48px;height:85px;object-fit:cover;border-radius:6px;background:#000}
-.hw-ep-n{font-family:var(--M);font-size:11px;letter-spacing:2px;color:var(--muted)}
+.hw-ep-n{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .hw-ep-t{font-family:var(--R);font-size:15px;font-weight:600;line-height:1.25}
-.hw-ep-done{font-family:var(--M);font-size:11px;letter-spacing:1px;color:var(--green)}
-.hw-note{font-family:var(--M);font-size:11px;letter-spacing:1.5px;color:var(--muted);line-height:1.6}
+.hw-ep-done{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--green)}
+.hw-note{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);line-height:1.6}
 .hw-err{font-family:var(--M);font-size:12px;color:var(--crim)}
 @media(max-width:900px){.hw-wrap{grid-template-columns:1fr}.hw-stage{height:auto;width:100%;max-width:420px;margin:0 auto}}
 </style>
@@ -71,7 +71,7 @@
     <div class="topbar"><div class="t">SOVEREIGN SERIES<small>M6 Media Universe &middot; 144 SERIES ACROSS 12 TRACKS &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="ser-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="purple" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:12px;color:var(--purple)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
     <div class="pad" data-reveal="fade-up">
       <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
-      <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-all-series')">&#9670; ALL SERIES</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-track')">&#9670; BY TRACK</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-element')">&#9670; BY ELEMENT</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-science')">&#9670; SCIENCE</button><button class="tab-btn" role="tab" aria-selected="false" data-hw-tab>&#9654; WATCH &middot; S1</button></div><!-- ALL SERIES -->
+      <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-all-series')">&#9670; ALL SERIES</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-track')">&#9670; BY TRACK</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-by-element')">&#9670; BY ELEMENT</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-science')">&#9670; SCIENCE</button><button class="tab-btn" role="tab" aria-selected="false" data-hw-tab data-omega-task-id="series.houses-s1.watch">&#9654; WATCH &middot; S1</button></div><!-- ALL SERIES -->
 <div id="tp-all-series" class="tab-panel active" style="padding:var(--pad)">
   <div class="sechead" data-reveal="fade-up">ALL SOVEREIGN SERIES &middot; 12 TRACKS &middot; 144 EPISODES CANONICAL</div>
   <div class="series-grid" data-reveal="fade-up" data-stagger="70">
@@ -80,7 +80,7 @@
       <div class="ser-tag">FLAGSHIP &middot; S1</div>
       <div class="ser-title">THE TWELVE HOUSES</div>
       <div class="ser-meta">TRACK: ALL 12 SIGNS<br>ELEMENT: ALL 9<br>GATE UNLOCK: IV<br>STATUS: STREAMING &middot; 12 MICRO-EPISODES</div>
-      <button class="btn btn-fill" type="button" data-hw-open style="margin-top:10px">&#9654; WATCH SEASON 1</button>
+      <button class="btn btn-fill" type="button" data-hw-open data-omega-task-id="series.houses-s1.open" style="margin-top:10px">&#9654; WATCH SEASON 1</button>
     </div>
     <div class="ser-card" style="--sc:var(--crim)" data-tooltip="Origin series — the formation of the sovereign order across the first three ages." data-tooltip-placement="top">
       <span class="ser-ep">9</span>
@@ -184,7 +184,7 @@
       <video id="hw-video" controls playsinline preload="metadata" data-omega-audio-required="true" aria-label="THE TWELVE HOUSES episode player"></video>
       <div class="hw-next" id="hw-next" role="status" aria-live="polite">
         <div class="hw-now" id="hw-next-label">NEXT EPISODE</div>
-        <div class="hw-next-row"><button class="btn btn-fill" type="button" id="hw-next-play">&#9654; PLAY NOW</button><button class="btn" type="button" id="hw-next-stop">STAY HERE</button></div>
+        <div class="hw-next-row"><button class="btn btn-fill" type="button" id="hw-next-play" data-omega-task-id="series.houses-s1.next">&#9654; PLAY NOW</button><button class="btn" type="button" id="hw-next-stop" data-omega-task-id="series.houses-s1.stay">STAY HERE</button></div>
       </div>
     </div>
     <div class="hw-side">
@@ -223,8 +223,6 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
     sid('s-a',a.toFixed(3));sid('s-b',b.toFixed(3));sid('s-c',c.toFixed(3));
   }catch(e){document.getElementById('app').style.display='flex';}
 })();
-</script>
-<script>
 /* THE TWELVE HOUSES S1 player. Episodes and their script come from
    /assets/series/twelve-houses-s1.json, the file scripts/movies/render.js
    --episodes rendered them from. No coins, no paywall: every episode plays.
@@ -236,6 +234,7 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
   var video=$('hw-video'), list=$('hw-list');
   if(!video||!list)return;
   function nn(n){return (n<10?'0':'')+n;}
+  function asset(n,ext){return '/assets/series/houses-s1-ep'+nn(n)+ext;}
   function fmt(s){s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+':'+nn(s%60);}
   function load(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};}}
   function save(p){try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}}
@@ -245,8 +244,8 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
   function show(n,opts){
     opts=opts||{};var ep=data.episodes[n-1];if(!ep)return;
     clearNext();cur=n;
-    video.poster='/assets/series/houses-s1-ep'+nn(n)+'.jpg';
-    video.src='/assets/series/houses-s1-ep'+nn(n)+'.mp4';
+    video.poster=asset(n,'.jpg');
+    video.src=asset(n,'.mp4');
     video.setAttribute('data-omega-voice','Episode '+n+', '+ep.title+'. '+ep.guide+' of '+ep.sign+'. A fictional SYD OMEGA 91717 series.');
     $('hw-now').textContent='EPISODE '+n+' OF 12 · '+ep.guide.toUpperCase()+' · '+ep.sign.toUpperCase();
     $('hw-title').textContent=ep.title;
@@ -261,7 +260,7 @@ function switchTab(btn,id){document.querySelectorAll('.tab-btn').forEach(functio
     data.episodes.forEach(function(ep){
       var li=document.createElement('li'),b=document.createElement('button');
       b.type='button';b.className='hw-ep';b.dataset.n=ep.n;
-      var img=document.createElement('img');img.alt='';img.loading='lazy';img.src='/assets/series/houses-s1-ep'+nn(ep.n)+'.jpg';
+      var img=document.createElement('img');img.alt='';img.loading='lazy';img.src=asset(ep.n,'.jpg');
       var mid=document.createElement('span'),a=document.createElement('span'),t=document.createElement('span');
       a.className='hw-ep-n';a.textContent='EP '+ep.n+' · '+ep.sign.toUpperCase();
       t.className='hw-ep-t';t.textContent=ep.title;mid.appendChild(a);mid.appendChild(document.createElement('br'));mid.appendChild(t);

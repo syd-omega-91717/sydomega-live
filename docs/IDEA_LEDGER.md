@@ -6,7 +6,7 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**484 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 18, IDEA_INTAKE.md 13.
+**485 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 40, GAP_ANALYSIS.md S 18, IDEA_INTAKE.md 13.
 
 | status | count |
 |---|---|
@@ -16,7 +16,7 @@ production serves it.
 | PARTIAL | 56 |
 | OPEN_GAP | 9 |
 | DORMANT | 1 |
-| SHIPPED | 34 |
+| SHIPPED | 35 |
 | DECIDED | 42 |
 | CLOSED | 9 |
 | SUPERSEDED | 1 |
@@ -163,7 +163,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (34)
+### SHIPPED (35)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -195,6 +195,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | F35 | FEATURE_IDEAS.md | Scene-per-realm 3-D backdrops — the 9 realm hub pages get their own tinted signet | 'What shipped: one .osc-stage[data-omega-sculpture="signet"] mount per realm hub page' |
 | F36 | FEATURE_IDEAS.md | Navigable 3-D scenes — already shipped; verifying it live found and fixed a real flaky-click bug | FEATURE_IDEAS.md title |
 | F38 | FEATURE_IDEAS.md | TODAY — one view of what is due and done across the platform (COMMAND) — SHIPPED | FEATURE_IDEAS.md title |
+| F40 | FEATURE_IDEAS.md | Vertical micro-episodes, the short-drama format without the coin paywall — THE TWELVE HOUSES S1 (2026-10-14)… | FEATURE_IDEAS.md title |
 | B245 | 999 blueprint [ECONOMIC_R&D] | The "Weight-Calculatism" Engine: Integration of the Weight = Benefit × Probability model. The Tutor Agent (Ag… | decisions.html EXPECTED VALUE framework: weight = benefit x probability per option, highest named (renderEVResult); verified in Chromium 2026-10-12 |
 | B250 | 999 blueprint [PRODUCT] | Bayesian Belief Updating: The system tracks the user's "Rate of Forgetting" (Point 5.6) and creates a Digital… | flashcard.html implements SM-2 spaced repetition: reviews scheduled at the forgetting curve (flashcard.html:125, :202) |
 | I01 | IDEA_INTAKE.md | Copilot visual commands | 14 slash commands (/handwritten, /decision-matrix, /infographic, /canvas, /layers, /cycle, /diagram, /roadmap, /sketchnotes, /iceberg, /blu… |

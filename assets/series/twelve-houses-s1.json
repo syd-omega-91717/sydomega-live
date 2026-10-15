@@ -34,7 +34,7 @@
       "plot": "I can broker a truce with the thief. Every truce has terms.",
       "cliff": "The terms are already signed. The signature is the Sovereign's." },
     { "n": 8,  "title": "Never Broken",             "sign": "Scorpio",     "guide": "Oracle",    "god": "Demeter",    "element": "Water", "color": "#3FB27F",
-      "voice": "Oracle. Ask what you fear to ask.",
+      "voice": "Oracle. I read the currents beneath the surface.",
       "plot": "I have seen how this ends. You will not like the beginning.",
       "cliff": "The signet was never broken. It was opened." },
     { "n": 9,  "title": "The Light Points Back",    "sign": "Sagittarius", "guide": "Beacon",    "god": "Zeus",       "element": "Fire",  "color": "#E2C86D",

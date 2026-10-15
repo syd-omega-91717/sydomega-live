@@ -206,7 +206,10 @@
       } else {
         txt('END OF SEASON 1', CX, H * 0.40, '22px "DejaVu Sans Mono"', rgba(CREAM, 1), 10);
         txt('Ω', CX, H * 0.49, 'bold 150px "DejaVu Serif"', rgba(GOLD, 1), 0);
-        txt(SEASON, CX, H * 0.60, 'bold 28px "DejaVu Serif"', rgba(INK, 1), 3);
+        // Two lines: on one, the title ran to within 4px of both edges.
+        var sp = SEASON.split(' \u00b7 ');
+        txt(sp[0], CX, H * 0.585, 'bold 28px "DejaVu Serif"', rgba(INK, 1), 3);
+        if (sp[1]) txt(sp[1], CX, H * 0.625, 'bold 28px "DejaVu Serif"', rgba(INK, 1), 3);
       }
       txt('A FICTIONAL SYD OMEGA 91717 SERIES', CX, H - 70, '15px "DejaVu Sans Mono"', rgba(CREAM, 0.6), 5);
       ctx.globalAlpha = 1;

@@ -245,6 +245,34 @@ const CAT_COLORS={business:'#3498db',personal:'#27ae60',mentor:(getComputedStyle
 
 let contacts=JSON.parse(localStorage.getItem('omega_contacts')||'[]');
 let interactions=JSON.parse(localStorage.getItem('omega_contact_ints')||'[]');
+function migrateNetworkStore(){
+  let legacyContacts=[],legacyInteractions=[];
+  try{legacyContacts=JSON.parse(localStorage.getItem('omega_network_contacts')||'[]');}catch(e){}
+  try{legacyInteractions=JSON.parse(localStorage.getItem('omega_network_interactions')||'[]');}catch(e){}
+  if(!Array.isArray(legacyContacts)||!legacyContacts.length)return;
+  const idMap={};
+  let nextId=Math.max(Date.now(),...contacts.map(function(c){return Number(c.id)||0;}))+1;
+  legacyContacts.forEach(function(n){
+    if(!n||!n.name)return;
+    const existing=contacts.find(function(c){return String(c.id)===String(n.id)||String(c.name||'').trim().toLowerCase()===String(n.name).trim().toLowerCase();});
+    if(existing){idMap[String(n.id)]=existing.id;return;}
+    const id=nextId++;
+    idMap[String(n.id)]=id;
+    contacts.push({id:id,name:String(n.name),role:'',company:'',email:'',phone:'',tier:'network',cat:n.category||'other',freq:Number(n.frequency)||30,frequency:Number(n.frequency)||30,lastContact:n.lastContact||'',tags:[],notes:n.note||'',note:n.note||'',vip:false,added:new Date().toISOString().slice(0,10),category:n.category||'other',strength:Number(n.strength)||3,color:CAT_COLORS[n.category]||'#888'});
+  });
+  legacyInteractions.forEach(function(i){
+    if(!i)return;
+    const mapped=idMap[String(i.contactId)];
+    const target=mapped!=null?mapped:contacts.find(function(c){return String(c.id)===String(i.contactId);})?.id;
+    if(target==null)return;
+    const date=i.date||new Date(i.ts||Date.now()).toISOString().slice(0,10);
+    const exists=interactions.some(function(x){return String(x.contactId)===String(target)&&x.date===date&&String(x.note||'')===String(i.note||'');});
+    if(!exists)interactions.push({id:Date.now()+interactions.length,contactId:target,contactName:i.contactName||((contacts.find(function(c){return String(c.id)===String(target);})||{}).name||''),date:date,channel:i.type||i.channel||'other',quality:3,note:i.note||''});
+  });
+  localStorage.setItem('omega_contacts',JSON.stringify(contacts));
+  localStorage.setItem('omega_contact_ints',JSON.stringify(interactions));
+}
+try{migrateNetworkStore();}catch(e){console.error('Network contact migration deferred:',e);}
 let libFilter='all';
 
 function save(){localStorage.setItem('omega_contacts',JSON.stringify(contacts));}
@@ -253,7 +281,7 @@ function initials(name){return name.split(' ').map(function(w){return w[0];}).jo
 
 function isDue(c){
   if(!c.freq) return false;
-  var last=interactions.filter(function(i){return i.contactId===c.id;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
+  var last=interactions.filter(function(i){return String(i.contactId)===String(c.id);}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
   if(!last) return true;
   var daysAgo=(Date.now()-new Date(last.date).getTime())/(86400000);
   return daysAgo>=c.freq;
@@ -287,7 +315,7 @@ function addContact(){
 
 function deleteContact(id){
   if(!confirm('Remove contact?')) return;
-  contacts=contacts.filter(function(c){return c.id!==id;});
+  contacts=contacts.filter(function(c){return String(c.id)!==String(id);});
   save();updateStats();renderContacts();
 }
 

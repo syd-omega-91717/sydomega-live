@@ -426,6 +426,11 @@
      The page gates itself too; this only keeps members' docks uncluttered. */
   h+='<div class="on-item on-owner" style="display:none"><a class="on-icon'+(dp==='control-plane'?' on-active':'')+'" href="/control-plane.html" style="--col:#C9A84C" aria-label="Owner deck: every page">';
   h+='<span class="on-glyph" style="color:#C9A84C">\u03A9</span><span class="on-lbl">OWNER</span></a></div>';
+  /* Owner-only: access requests waiting for a decision (count from bg.js,
+     'omega:waiting'). A sibling item, never a badge inside the OWNER anchor:
+     an <a> inside an <a> is rewritten by the parser (CLAUDE.md 8.1 class 10). */
+  h+='<div class="on-item on-wait" style="display:none"><a class="on-icon" href="/approvals.html" style="--col:#E0736B">';
+  h+='<span class="on-glyph on-wait-n" style="color:#E0736B"></span><span class="on-lbl">WAITING</span></a></div>';
   h+='<div class="on-logout" id="on-logout">LOG OUT</div>';
 
   injectWorkspaceRail();
@@ -441,6 +446,19 @@
       document.querySelectorAll('.on-owner,.tip-owner,.ds-owner').forEach(function(n){n.style.display='';});
       return true;
     }
+    function paintWaiting(n){
+      document.querySelectorAll('.on-wait').forEach(function(item){
+        var a=item.querySelector('a');
+        if(!(n>0)){item.style.display='none';return;}
+        item.querySelector('.on-wait-n').textContent=String(n);
+        a.setAttribute('aria-label',n+(n===1?' person':' people')+' waiting for access approval');
+        item.style.display='';
+      });
+    }
+    /* The phone drawer is built later and calls this again. */
+    window.__omegaPaintWaiting=function(){ if(window.__omegaWaiting!=null) paintWaiting(window.__omegaWaiting); };
+    window.__omegaPaintWaiting();
+    document.addEventListener('omega:waiting',function(e){paintWaiting(e.detail&&e.detail.count);});
     /* The phone drawer is built after this runs; it calls this again. */
     window.__omegaRevealOwner=reveal;
     if(reveal()||!document.body||typeof MutationObserver!=='function') return;
@@ -619,6 +637,12 @@
     var dOwner=document.createElement('a');dOwner.className='dss-head ds-owner';dOwner.href='/control-plane.html';
     dOwner.style.display='none';dOwner.style.cssText+=';color:#E8C766;font-family:var(--M,"Courier Prime",monospace);font-size:13px;letter-spacing:3px;padding:14px 18px;border-bottom:1px solid rgba(232,199,102,.25)';dOwner.textContent='\u03A9 OWNER DECK \u00B7 EVERY PAGE';
     drawer.appendChild(dOwner);
+    var dWait=document.createElement('div');dWait.className='on-wait';dWait.style.display='none';
+    var dWaitA=document.createElement('a');dWaitA.href='/approvals.html';
+    dWaitA.style.cssText='display:block;color:#E0736B;font-family:var(--M,"Courier Prime",monospace);font-size:13px;letter-spacing:3px;padding:12px 18px;border-bottom:1px solid rgba(224,115,107,.3);text-decoration:none';
+    var dWaitN=document.createElement('span');dWaitN.className='on-wait-n';
+    dWaitA.appendChild(dWaitN);dWaitA.appendChild(document.createTextNode(' WAITING FOR APPROVAL'));
+    dWait.appendChild(dWaitA);drawer.appendChild(dWait);
     var dsgrid=document.createElement('div');dsgrid.className='drawer-sections';
     DRAWER_SECTIONS.forEach(function(sec){
       var ds=document.createElement('div');ds.className='ds-section';
@@ -638,6 +662,7 @@
     });
     drawer.appendChild(dsgrid);document.body.appendChild(drawer);
     if(window.__omegaRevealOwner)window.__omegaRevealOwner();
+    if(window.__omegaPaintWaiting)window.__omegaPaintWaiting();
 
     document.getElementById('drawer-close').addEventListener('click',function(){closeDrawer();});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'){var d=document.getElementById('omega-drawer');if(d&&d.classList.contains('drawer-open'))closeDrawer();}});

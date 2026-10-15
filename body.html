@@ -294,7 +294,7 @@ function renderLogEntries(){
       +(e.bf?'<div><div class="er-val">'+e.bf.toFixed(1)+'</div><div class="er-unit">BF%</div></div>':'')
       +(bmi?'<div class="er-tag">BMI '+bmi+'</div>':'')
       +(e.waist?'<div class="er-tag">WAIST '+e.waist+'cm</div>':'')
-      +'<div class="er-tag">'+e.time.toUpperCase()+'</div>'
+      +(e.time?'<div class="er-tag">'+String(e.time).toUpperCase()+'</div>':'')
       +'<button class="er-del" onclick="deleteLog('+e.id+')">✕</button>'
       +'</div>';
   }).join('');

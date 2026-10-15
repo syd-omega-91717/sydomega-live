@@ -93,6 +93,11 @@
         <div data-omega-spark id="wealth-nw-spark" data-spark-label="NET WORTH, LAST 14 SNAPSHOTS" data-spark-trend="off" hidden style="margin-top:10px;justify-content:center;display:flex"></div>
       </div>
     </div>
+    <div id="wealth-elsewhere" class="glass" hidden style="margin:0 0 16px;padding:14px 16px">
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">ELSEWHERE ON THE PLATFORM &middot; NOT INCLUDED ABOVE</div>
+      <div id="wealth-elsewhere-rows"></div>
+      <div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px">These pages keep their own records. If an asset is entered there and here, it is counted twice: enter it here once.</div>
+    </div>
 
     <div class="tab-row">
       <button class="tab-btn act" onclick="switchTab('assets',this)">&#9670; ASSETS</button>
@@ -409,6 +414,28 @@ function calcNetWorth(){
   return total;
 }
 
+/* Net worth has one home: this page. Wallet, treasury and investment keep
+   their own records and used to imply their own net worth; their totals are
+   shown here read-only, labelled as not included, so a double entry is
+   visible instead of silently producing two different numbers. */
+function renderElsewhere(){
+  function arr(k){try{const v=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(v)?v:[];}catch{return[];}}
+  const rows=[];
+  const w=arr('omega_wallet');
+  if(w.length){const a=w.filter(x=>x&&x.type!=='debt').reduce((s,x)=>s+safeNum(x.balance),0),d=w.filter(x=>x&&x.type==='debt').reduce((s,x)=>s+safeNum(x.balance),0);
+    rows.push(['WALLET · '+w.length+' ACCOUNTS, NET',a-d,'/wallet.html']);}
+  const t=arr('omega_treasury_assets');
+  if(t.length) rows.push(['TREASURY · '+t.length+' ASSETS',t.reduce((s,x)=>s+safeNum(x&&x.value),0),'/treasury.html']);
+  const h=arr('omega_investments');
+  if(h.length) rows.push(['INVESTMENTS · '+h.length+' HOLDINGS, AT ENTERED PRICE',h.reduce((s,x)=>s+safeNum(x&&x.qty)*safeNum(x&&x.price),0),'/investment.html']);
+  const box=document.getElementById('wealth-elsewhere'),list=document.getElementById('wealth-elsewhere-rows');
+  if(!box||!list) return;
+  list.textContent='';
+  rows.forEach(r=>{const a=document.createElement('a');a.href=r[2];a.style.cssText='display:flex;justify-content:space-between;gap:12px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);padding:4px 0;text-decoration:none';
+    const l=document.createElement('span');l.textContent=r[0];const v=document.createElement('span');v.textContent=fmt(r[1]);v.style.color='var(--gold)';a.appendChild(l);a.appendChild(v);list.appendChild(a);});
+  box.hidden=!rows.length;
+}
+
 function renderAssets(){
   const assets=getAssets();
   const nw=calcNetWorth();
@@ -416,6 +443,7 @@ function renderAssets(){
   const positive=CLASSES.filter(c=>c!=='liabilities').reduce((a,c)=>a+(assets[c]||[]).reduce((s,i)=>s+safeNum(i?.value),0),0);
   const negative=(assets['liabilities']||[]).reduce((s,i)=>s+safeNum(i?.value),0);
   document.getElementById('net-worth-sub').textContent=`ASSETS ${fmt(positive)} — LIABILITIES ${fmt(negative)}`;
+  renderElsewhere();
 
   CLASSES.forEach(cls=>{
     const items=assets[cls]||[];

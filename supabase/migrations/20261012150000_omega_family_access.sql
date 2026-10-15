@@ -3,9 +3,9 @@
 -- them as family; a family member's name never appears in a list other members
 -- can see. Decision record: docs/decisions/family-access/PLAN.md (+ CODEX_REVIEW.md).
 --
--- Additive only, no DROP. Bodies of the three replaced functions are copied from
--- live pg_get_functiondef (2026-10-12); each differs from live only where marked
--- "family:".
+-- Additive only, no DROP. Replaced function bodies are based on live
+-- pg_get_functiondef (2026-10-12); intentional family-visibility changes are
+-- marked below. Keep all member-visible ranking paths covered by the contract.
 
 -- 1. The link ---------------------------------------------------------------
 alter table public.profiles
@@ -109,7 +109,7 @@ end;
 $function$;
 
 -- 3. Owner actions -----------------------------------------------------------
-create or replace function private.grant_family_access(p_uid uuid)
+create or replace function private.grant_family_access(p_uid uuid, p_attested_adult boolean default false)
  returns jsonb
  language plpgsql
  security definer
@@ -121,7 +121,7 @@ declare
   dob_v  date;
   detail text;
 begin
-  if not public.is_platform_owner() then
+  if not exists (select 1 from public.platform_owners where user_id = auth.uid()) then
     return jsonb_build_object('ok',false,'error','forbidden');
   end if;
   if coalesce((select auth.jwt()->>'aal'),'aal1') <> 'aal2' then
@@ -141,8 +141,21 @@ begin
   -- not trusted. A recorded date under 18 refuses; no date means the owner
   -- attested adulthood in the confirm dialog.
   dob_v := coalesce(t.dob, t.birth_date);
-  basis := case when dob_v is null then 'owner_attested_adult' else 'date_of_birth' end;
-  detail := jsonb_build_object('dob',t.dob,'birth_date',t.birth_date,'age_basis',basis)::text;
+  basis := case
+    when dob_v is null and coalesce(p_attested_adult,false) then 'owner_attested_adult'
+    when dob_v is null then 'missing_date_unattested'
+    else 'date_of_birth'
+  end;
+  detail := jsonb_build_object(
+    'dob',t.dob,'birth_date',t.birth_date,'age_basis',basis,
+    'owner_attested_adult',coalesce(p_attested_adult,false)
+  )::text;
+
+  if dob_v is null and not coalesce(p_attested_adult,false) then
+    insert into public.access_grant_audit(action,actor_uid,target_uid,allowed,detail)
+    values('grant_family_access',auth.uid(),p_uid,false,detail);
+    return jsonb_build_object('ok',false,'error','adult_attestation_required');
+  end if;
 
   if dob_v is not null and dob_v > (current_date - interval '18 years') then
     insert into public.access_grant_audit(action,actor_uid,target_uid,allowed,detail)
@@ -178,7 +191,7 @@ create or replace function private.revoke_family_link(p_uid uuid)
  set search_path = 'public'
 as $function$
 begin
-  if not public.is_platform_owner() then
+  if not exists (select 1 from public.platform_owners where user_id = auth.uid()) then
     return jsonb_build_object('ok',false,'error','forbidden');
   end if;
   if coalesce((select auth.jwt()->>'aal'),'aal1') <> 'aal2' then
@@ -200,11 +213,11 @@ begin
 end;
 $function$;
 
-create or replace function public.grant_family_access(p_uid uuid)
+create or replace function public.grant_family_access(p_uid uuid, p_attested_adult boolean default false)
  returns jsonb
  language sql
  set search_path = 'public', 'pg_temp'
-as $function$ SELECT private.grant_family_access($1) $function$;
+as $function$ SELECT private.grant_family_access($1, $2) $function$;
 
 create or replace function public.revoke_family_link(p_uid uuid)
  returns jsonb
@@ -212,13 +225,13 @@ create or replace function public.revoke_family_link(p_uid uuid)
  set search_path = 'public', 'pg_temp'
 as $function$ SELECT private.revoke_family_link($1) $function$;
 
-revoke all on function private.grant_family_access(uuid) from public, anon;
+revoke all on function private.grant_family_access(uuid, boolean) from public, anon;
 revoke all on function private.revoke_family_link(uuid)  from public, anon;
-revoke all on function public.grant_family_access(uuid)  from public, anon;
+revoke all on function public.grant_family_access(uuid, boolean)  from public, anon;
 revoke all on function public.revoke_family_link(uuid)   from public, anon;
-grant execute on function private.grant_family_access(uuid) to authenticated;
+grant execute on function private.grant_family_access(uuid, boolean) to authenticated;
 grant execute on function private.revoke_family_link(uuid)  to authenticated;
-grant execute on function public.grant_family_access(uuid)  to authenticated, service_role;
+grant execute on function public.grant_family_access(uuid, boolean)  to authenticated, service_role;
 grant execute on function public.revoke_family_link(uuid)   to authenticated, service_role;
 
 -- 4. Member-visible lists exclude family ----------------------------------------
@@ -268,6 +281,92 @@ as $function$
   FROM numbered;
 $function$;
 
+
+-- Points leaderboard: retain a member's own row, but never expose another
+-- linked family member in a member-visible ranking. The predicate runs before
+-- row_number(), so excluded family rows cannot distort other members' ranks.
+-- The ledger is RLS-protected to each member. Keep the public RPC as an
+-- invoker wrapper, and put the narrowly projected, explicitly filtered read
+-- behind a private SECURITY DEFINER implementation so approved public rows
+-- remain visible without granting direct cross-member ledger access.
+create or replace function private.get_points_leaderboard(p_limit integer default 10)
+ returns table(rank integer, display_name text, element text, sign text, level integer, lifetime_points integer, is_self boolean)
+ language plpgsql
+ stable security definer
+ set search_path = ''
+as $function$
+declare
+  v_uid uuid := (select auth.uid());
+begin
+  if v_uid is null then return; end if;
+  return query
+  with totals as (
+    select l.user_id, coalesce(sum(l.delta) filter (where l.delta > 0), 0)::int as pts
+      from public.sovereign_points_ledger l group by l.user_id
+  )
+  select (row_number() over (order by t.pts desc, p.id))::int,
+         coalesce(nullif(btrim(p.display_name), ''), 'MEMBER'),
+         p.element, p.sign, (floor(sqrt(t.pts / 25.0))::int + 1), t.pts, (p.id = v_uid)
+    from totals t join public.profiles p on p.id = t.user_id
+    where t.pts > 0
+      and (p.is_public is true or p.id = v_uid)
+      and (p.access_approved is true or p.is_owner is true)
+      and p.deactivated_at is null
+      and (p.family_of is null or p.id = v_uid)
+    order by t.pts desc, p.id
+    limit greatest(1, least(coalesce(p_limit, 10), 50));
+end;
+$function$;
+
+revoke all on function private.get_points_leaderboard(integer) from public, anon;
+grant execute on function private.get_points_leaderboard(integer) to authenticated;
+
+create or replace function public.get_points_leaderboard(p_limit integer default 10)
+ returns table(rank integer, display_name text, element text, sign text, level integer, lifetime_points integer, is_self boolean)
+ language sql
+ stable
+ set search_path = ''
+as $function$
+  select * from private.get_points_leaderboard($1);
+$function$;
+
+-- Daily snapshot recomputation must not reintroduce linked family accounts
+-- after grant_family_access deletes their pre-existing snapshot rows.
+create or replace function public.compute_leaderboard_snapshot()
+ returns void
+ language plpgsql
+ security definer
+ set search_path = 'public'
+as $function$
+DECLARE
+  _PHI constant numeric := 1.6180339887;
+  _EU  constant numeric := 2.7182818285;
+BEGIN
+  INSERT INTO public.leaderboard_snapshots(user_id,snapshot_date,authority,axis_a,axis_b,axis_c)
+  SELECT
+    id,
+    CURRENT_DATE,
+    SQRT(POWER(axis_a,3)+POWER(axis_b,3)+POWER(axis_c,3))*_PHI/_EU,
+    axis_a, axis_b, axis_c
+  FROM public.profiles
+  WHERE (access_approved=true OR is_owner=true)
+    AND family_of IS NULL -- family: do not snapshot linked members
+  ON CONFLICT(user_id,snapshot_date) DO UPDATE SET
+    authority=EXCLUDED.authority,
+    axis_a=EXCLUDED.axis_a,
+    axis_b=EXCLUDED.axis_b,
+    axis_c=EXCLUDED.axis_c;
+  /* Compute global ranks */
+  WITH ranked AS(
+    SELECT user_id, ROW_NUMBER() OVER(ORDER BY authority DESC) as rk
+    FROM public.leaderboard_snapshots WHERE snapshot_date=CURRENT_DATE
+  )
+  UPDATE public.leaderboard_snapshots ls SET rank_global=r.rk
+  FROM ranked r WHERE ls.user_id=r.user_id AND ls.snapshot_date=CURRENT_DATE;
+END;
+$function$;
+
+
 -- Invoker: under self-or-owner profiles RLS the inner join already drops other
 -- members' rows, so this predicate changes nothing today. It is defence in
 -- depth for the day the function or the policy changes, not the guarantee.
@@ -284,7 +383,7 @@ as $function$
   FROM public.activity_feed af
   JOIN public.profiles pr ON pr.id=af.user_id
   WHERE af.is_public=true
-    AND pr.family_of IS NULL  -- family: never listed where members can see
+    AND (pr.family_of IS NULL OR pr.id = auth.uid()) -- family: hide from others, retain self-visibility
   ORDER BY af.created_at DESC
   LIMIT p_limit OFFSET p_offset;
 $function$;

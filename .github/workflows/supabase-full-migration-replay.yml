@@ -30,6 +30,9 @@ jobs:
         with:
           version: 2.119.0
 
+      - name: Test migration inventory gate
+        run: python3 -m unittest scripts/tests/test_migration_replay_contract.py -v
+
       - name: Validate migration inventory
         run: python3 scripts/migration-replay-contract.py
 
@@ -47,6 +50,14 @@ jobs:
 
       - name: Run latest hardening contract
         run: python3 -m unittest scripts/tests/test_rls_rpc_performance_hardening.py
+
+      - name: Run family-access authorization and privacy probes
+        shell: bash
+        run: |
+          set -euo pipefail
+          db_url="$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')"
+          test -n "$db_url"
+          psql "$db_url" -v ON_ERROR_STOP=1 -f scripts/tests/family-access-migration-probe.sql
 
       - name: Stop isolated Supabase stack
         if: always()

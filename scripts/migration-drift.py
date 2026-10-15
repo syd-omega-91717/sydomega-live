@@ -43,8 +43,9 @@ snapshot in the same change that applies a migration live.** A stale snapshot
 makes this gate lie in both directions (CLAUDE.md 8.1 class 2).
 
 Usage:
-  python3 scripts/migration-drift.py            # exit 1 on drift
-  python3 scripts/migration-drift.py --help     # this text
+  python3 scripts/migration-drift.py            # strict release check; exit 1 on unapplied migrations
+  python3 scripts/migration-drift.py --source-only # source parity; accepts only registered pending migrations
+  python3 scripts/migration-drift.py --help       # this text
 """
 import json
 import re
@@ -54,6 +55,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS = ROOT / 'supabase' / 'migrations'
 SNAPSHOT = ROOT / 'supabase' / 'remote-migrations.json'
+PENDING = ROOT / 'supabase' / 'pending-migrations.json'
 
 
 def local_versions():
@@ -68,7 +70,13 @@ def local_versions():
 def main(argv):
     if '--help' in argv or '-h' in argv:
         print(__doc__)
+        print('Additional mode: --source-only permits only explicitly registered pending migrations; it never claims they are live-applied.')
         return 0
+    unknown = [arg for arg in argv if arg != '--source-only']
+    if unknown:
+        print('Usage: migration-drift.py [--source-only]')
+        return 2
+    source_only = '--source-only' in argv
 
     if not MIGRATIONS.is_dir():
         print('MIGRATION DRIFT: FAIL\n- supabase/migrations/ is missing')
@@ -85,19 +93,62 @@ def main(argv):
     local = local_versions()
     remote_only = sorted(remote - set(local))
     local_only = sorted(set(local) - remote)
+    try:
+        pending_doc = json.loads(PENDING.read_text(encoding='utf-8')) if PENDING.is_file() else {'pending': []}
+        pending_entries = pending_doc.get('pending', [])
+        if not isinstance(pending_entries, list):
+            raise ValueError("'pending' must be a list")
+        pending = {}
+        for entry in pending_entries:
+            if not isinstance(entry, dict):
+                raise ValueError('pending entries must be objects')
+            version = str(entry.get('version', ''))
+            filename = str(entry.get('file', ''))
+            if not version or local.get(version) != filename:
+                raise ValueError('pending version/file does not match a local migration: %r / %r' % (version, filename))
+            if entry.get('status') != 'PENDING_REVIEW' or entry.get('liveStatus') != 'NOT_APPLIED':
+                raise ValueError('%s must remain PENDING_REVIEW / NOT_APPLIED' % version)
+            if entry.get('blocksProduction') is not True:
+                raise ValueError('%s must explicitly block production' % version)
+            if version in pending:
+                raise ValueError('duplicate pending version: %s' % version)
+            pending[version] = filename
+    except Exception as exc:
+        print('MIGRATION DRIFT: FAIL\n- invalid pending migration registry: %s' % exc)
+        return 1
 
-    if remote_only or local_only:
+    overlap = sorted(remote.intersection(pending))
+    pending_missing = sorted(set(pending) - set(local))
+    unregistered_local = sorted(set(local_only) - set(pending))
+    pending_local = sorted(set(local_only).intersection(pending))
+
+    if remote_only or unregistered_local or pending_missing or overlap:
         print('MIGRATION DRIFT: FAIL  (snapshot captured %s)' % captured)
         for v in remote_only:
             print('- remote has %s with no file in supabase/migrations/ '
                   '— this is what `supabase db push` reports' % v)
-        for v in local_only:
-            print('- %s (%s) has never been applied — `db push` would run it'
+        for v in unregistered_local:
+            print('- %s (%s) has never been applied and is not registered pending'
                   % (v, local[v]))
-        print('\nTo resolve: materialise the missing file from the recorded '
-              'statements, or register the applied version, then regenerate '
-              'supabase/remote-migrations.json in the same change.')
+        for v in pending_missing:
+            print('- pending migration %s has no local file' % v)
+        for v in overlap:
+            print('- %s is incorrectly listed as both live-applied and pending' % v)
         return 1
+
+    if pending_local and not source_only:
+        print('MIGRATION DRIFT: BLOCKED  (snapshot captured %s)' % captured)
+        for v in pending_local:
+            print('- %s (%s) is registered PENDING_REVIEW / NOT_APPLIED; production release is blocked'
+                  % (v, pending[v]))
+        print('Do not add pending versions to remote-migrations.json without provider evidence.')
+        return 1
+
+    if pending_local:
+        print('MIGRATION DRIFT: SOURCE PASS (%d live versions; %d explicitly pending; snapshot %s).'
+              % (len(remote), len(pending_local), captured))
+        print('Release state: BLOCKED until pending migrations pass review and are applied with provider evidence.')
+        return 0
 
     print('MIGRATION DRIFT: PASS (%d versions, local and remote agree; '
           'snapshot %s)' % (len(remote), captured))

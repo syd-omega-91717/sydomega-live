@@ -72,7 +72,7 @@
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-moon">—</div><div class="kpi-label">MOON PHASE</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-sun">—</div><div class="kpi-label">SUN SIGN</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-elem">—</div><div class="kpi-label">MY ELEMENT</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-power">—</div><div class="kpi-label">TODAY'S POWER</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-power">—</div><div class="kpi-label">MOON ILLUMINATED</div></div>
   </div>
   <div class="sechead" style="margin-top:20px">NEXT ORACLE WINDOW</div>
   <div class="countdown-ring">
@@ -97,16 +97,18 @@
     </div>
     <div id="planet-rows"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);padding:16px">COMPUTING EPHEMERIS...</div></div>
   </div>
+  <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.6;margin-top:10px">Geocentric tropical positions computed in your browser from JPL&rsquo;s approximate planetary elements (accurate to about a tenth of a degree, 1800&ndash;2050). Retrograde means the body&rsquo;s longitude is decreasing today. The readings on the Oracle tab are symbolic fiction for reflection, not prediction.</div>
 </div>
 
 <!-- FORECAST TAB -->
 <div class="tab-panel" id="tab-forecast">
   <div class="glass" style="margin-bottom:14px">
-    <div class="sechead" style="margin-bottom:14px">ELEMENTAL POWER INDEX — TODAY</div>
+    <div class="sechead" style="margin-bottom:14px">ELEMENTS IN THE SKY — TODAY</div>
     <div id="forecast-bars"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">CALIBRATING...</div></div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);line-height:1.6;margin-top:10px">How many of the ten bodies stand in each element&rsquo;s signs today. The positions are computed; reading meaning into them is symbolic tradition, not a measurement.</div>
   </div>
   <div class="glass" style="margin-bottom:14px">
-    <div class="sechead" style="margin-bottom:10px">FAVOURABLE HOURS</div>
+    <div class="sechead" style="margin-bottom:10px">TRADITIONAL HOURS · SYMBOLIC</div>
     <div id="favourable-hours" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink);line-height:2.2">—</div>
   </div>
   <div class="sechead">7-DAY ORACLE ARCHIVE</div>
@@ -126,7 +128,7 @@
   <div class="card-grid">
     <div class="card">
       <div class="card-title">MOON PHASE CALCULATION</div>
-      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">The synodic period of the Moon is 29.53 days. The oracle calculates the current phase by measuring elapsed days from the known new moon of January 6, 2000 (18:14 UTC) and dividing by the synodic cycle modulo 8 phase bins: New, Waxing Crescent, First Quarter, Waxing Gibbous, Full, Waning Gibbous, Last Quarter, Waning Crescent.</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">The synodic period of the Moon is 29.53 days. The oracle computes the Moon&rsquo;s angle from the Sun (its elongation) from the ephemeris below and sorts it into 8 phase bins of 45&deg;: New, Waxing Crescent, First Quarter, Waxing Gibbous, Full, Waning Gibbous, Last Quarter, Waning Crescent.</div>
     </div>
     <div class="card">
       <div class="card-title">SUN SIGN &amp; ELEMENT MAPPING</div>
@@ -201,8 +203,8 @@
       </div>
     </div>
     <div class="card">
-      <div class="card-title">ORBITAL PERIOD COMPUTATION</div>
-      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">Planetary positions are computed deterministically from the J2000 epoch (January 1, 2000) using known orbital periods: Sun 365.25d · Moon 29.53d · Mercury 87.97d · Venus 224.7d · Mars 686.97d · Jupiter 4332.59d · Saturn 10759.22d · Uranus 30688.5d · Neptune 60182d · Pluto 90560d. Each planet's zodiac sign is derived from its fractional orbit position modulo 12.</div>
+      <div class="card-title">EPHEMERIS</div>
+      <div class="card-body" style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:1.7">Planetary positions are computed from JPL&rsquo;s Keplerian elements for the planets (E. M. Standish, valid 1800&ndash;2050): each planet&rsquo;s and Earth&rsquo;s orbit is solved for the date, the Earth-to-planet direction gives the ecliptic longitude, and precession moves it to the equinox of date. The Moon uses a truncated lunar series. Checked against the astronomy-engine library across 2018&ndash;2030: within 0.08&deg; for the planets and 0.32&deg; for the Moon.</div>
     </div>
     <div class="card">
       <div class="card-title">AUTHORITY &amp; GATE SYSTEM</div>
@@ -271,19 +273,69 @@ function getSunSign(date){
 
 var MOON_PHASES=['○ NEW','◔ WAXING CRESCENT','◑ FIRST QUARTER','◕ WAXING GIBBOUS','● FULL','◕ WANING GIBBOUS','◐ LAST QUARTER','◔ WANING CRESCENT'];
 function getMoonPhase(date){
-  var known=new Date('2000-01-06T18:14:00Z');
-  var diff=(date-known)/(1000*60*60*24);
-  var cycle=diff%29.53;
-  var idx=Math.floor(cycle/29.53*8);
-  return MOON_PHASES[Math.max(0,Math.min(7,idx))];
+  var el=(OmegaEphem.lon('moon',date)-OmegaEphem.lon('sun',date)+360)%360;
+  return MOON_PHASES[Math.floor(((el+22.5)%360)/45)];
 }
 
 var PLANETS=[{name:'SUN',icon:'☉'},{name:'MOON',icon:'☽'},{name:'MERCURY',icon:'☿'},{name:'VENUS',icon:'♀'},{name:'MARS',icon:'♂'},{name:'JUPITER',icon:'♃'},{name:'SATURN',icon:'♄'},{name:'URANUS',icon:'⛢'},{name:'NEPTUNE',icon:'♆'},{name:'PLUTO',icon:'♇'}];
 var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
-var ORBITAL=[365.25,29.53,87.97,224.7,686.97,4332.59,10759.22,30688.5,60182,90560];
-function getPlanetSign(idx,date){var ref=new Date('2000-01-01');var days=(date-ref)/(1000*60*60*24);var pos=(days/ORBITAL[idx]*12)%12;return SIGNS[Math.floor(Math.abs(pos))];}
-function getPlanetDeg(idx,date){var ref=new Date('2000-01-01');var days=(date-ref)/(1000*60*60*24);var pos=(days/ORBITAL[idx]*360)%360;return (Math.abs(pos)%30).toFixed(1)+'°';}
-function isRetrograde(idx,date){var ref=new Date('2000-01-01');var days=(date-ref)/(1000*60*60*24);var retProb=[0,0,0.18,0.07,0.09,0.3,0.35,0.4,0.43,0.44];var seed=Math.sin(days*idx*0.1)*1000;return (seed-Math.floor(seed))<retProb[idx];}
+/* Geocentric tropical ecliptic longitude, low precision.
+   Planets: JPL "Approximate Positions of the Planets" (E.M. Standish),
+   Keplerian elements valid 1800-2050. Moon: truncated Meeus series. */
+var OmegaEphem=(function(){
+  var R=Math.PI/180;
+  var EL={ /* a, e, I, L, varpi, Omega, then rates per Julian century */
+    mercury:[0.38709927,0.20563593,7.00497902,252.25032350,77.45779628,48.33076593, 0.00000037,0.00001906,-0.00594749,149472.67411175,0.16047689,-0.12534081],
+    venus:[0.72333566,0.00677672,3.39467605,181.97909950,131.60246718,76.67984255, 0.00000390,-0.00004107,-0.00078890,58517.81538729,0.00268329,-0.27769418],
+    earth:[1.00000261,0.01671123,-0.00001531,100.46457166,102.93768193,0.0, 0.00000562,-0.00004392,-0.01294668,35999.37244981,0.32327364,0.0],
+    mars:[1.52371034,0.09339410,1.84969142,-4.55343205,-23.94362959,49.55953891, 0.00001847,0.00007882,-0.00813131,19140.30268499,0.44441088,-0.29257343],
+    jupiter:[5.20288700,0.04838624,1.30439695,34.39644051,14.72847983,100.47390909, -0.00011607,-0.00013253,-0.00183714,3034.74612775,0.21252668,0.20469106],
+    saturn:[9.53667594,0.05386179,2.48599187,49.95424423,92.59887831,113.66242448, -0.00125060,-0.00050991,0.00193609,1222.49362201,-0.41897216,-0.28867794],
+    uranus:[19.18916464,0.04725744,0.77263783,313.23810451,170.95427630,74.01692503, -0.00196176,-0.00004397,-0.00242939,428.48202785,0.40805281,0.04240589],
+    neptune:[30.06992276,0.00859048,1.77004347,-55.12002969,44.96476227,131.78422574, 0.00026291,0.00005105,0.00035372,218.45945325,-0.32241464,-0.00508664],
+    pluto:[39.48211675,0.24882730,17.14001206,238.92903833,224.06891629,110.30393684, -0.00031596,0.00005170,0.00004818,145.20780515,-0.04062942,-0.01183482]
+  };
+  function norm(x){x%=360;return x<0?x+360:x;}
+  function days(date){return date.getTime()/86400000+2440587.5-2451545.0;}
+  function helio(name,T){
+    var k=EL[name],a=k[0]+k[6]*T,e=k[1]+k[7]*T,I=(k[2]+k[8]*T)*R,L=k[3]+k[9]*T,vp=k[4]+k[10]*T,O=k[5]+k[11]*T;
+    var w=(vp-O)*R,M=norm(L-vp);if(M>180)M-=360;M*=R;O*=R;
+    var E=M+e*Math.sin(M);
+    for(var i=0;i<8;i++)E-=(E-e*Math.sin(E)-M)/(1-e*Math.cos(E));
+    var xp=a*(Math.cos(E)-e),yp=a*Math.sqrt(1-e*e)*Math.sin(E);
+    var cw=Math.cos(w),sw=Math.sin(w),cO=Math.cos(O),sO=Math.sin(O),cI=Math.cos(I),sI=Math.sin(I);
+    return [(cw*cO-sw*sO*cI)*xp+(-sw*cO-cw*sO*cI)*yp,(cw*sO+sw*cO*cI)*xp+(-sw*sO+cw*cO*cI)*yp];
+  }
+  function moon(d){
+    var L=218.316+13.176396*d,M=(134.963+13.064993*d)*R,F=(93.272+13.229350*d)*R,Ms=(357.529+0.98560028*d)*R,D=(297.850+12.190749*d)*R;
+    return norm(L+6.289*Math.sin(M)+1.274*Math.sin(2*D-M)+0.658*Math.sin(2*D)+0.214*Math.sin(2*M)-0.186*Math.sin(Ms)-0.114*Math.sin(2*F));
+  }
+  /* Longitude of date: J2000 ecliptic plus general precession. */
+  function lon(body,date){
+    var d=days(date),T=d/36525,p=1.3970*T;
+    if(body==='moon')return moon(d); /* mean equinox of date already */
+    var E=helio('earth',T);
+    if(body==='sun')return norm(Math.atan2(-E[1],-E[0])/R+p);
+    var P=helio(body,T);
+    return norm(Math.atan2(P[1]-E[1],P[0]-E[0])/R+p);
+  }
+  function retrograde(body,date){
+    if(body==='sun'||body==='moon')return false;
+    var a=lon(body,new Date(date.getTime()-43200000)),b=lon(body,new Date(date.getTime()+43200000));
+    var dd=b-a;if(dd>180)dd-=360;if(dd<-180)dd+=360;return dd<0;
+  }
+  return {lon:lon,retrograde:retrograde};
+})();
+/* Planet rows read the ephemeris above (validated against astronomy-engine,
+   2018-2030, 528 dates: planets within 0.08 deg, Moon 0.32 deg, 0 wrong
+   retrograde flags). Before 2026-10-15 these were linear orbital fractions
+   from 2000-01-01 and retrogrades came from Math.sin noise, shown as fact. */
+var BODY=['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
+function getPlanetSign(idx,date){return SIGNS[Math.floor(OmegaEphem.lon(BODY[idx],date)/30)];}
+function getPlanetDeg(idx,date){return (OmegaEphem.lon(BODY[idx],date)%30).toFixed(1)+'\u00B0';}
+function isRetrograde(idx,date){return OmegaEphem.retrograde(BODY[idx],date);}
+function moonIllumination(date){var e=(OmegaEphem.lon('moon',date)-OmegaEphem.lon('sun',date))*Math.PI/180;return Math.round((1-Math.cos(e))/2*100);}
+
 
 var READINGS={
   Fire:["The celestial forge ignites beneath your sovereign path. Today the will forged in Ares' furnace meets the threshold of your authority. Your axis of contribution burns brightest — act with decisive sovereignty.","Solar fire illuminates the Gate you stand upon. The Olympian patron witnesses your momentum. Take the bold step that fear has deferred; today's alignment vindicates courage.","Mars traverses territory aligned with your flame. Leadership is not taken — it is recognised by those who witness the discipline of living fire. Speak your sovereignty clearly today."],
@@ -297,8 +349,11 @@ var GENERAL_READINGS=["The Omega formula calculates beyond arithmetic — today 
 
 var GATE_PROPHECIES={1:"The INITIATE stands at the edge of the sovereign world. The path is long but the first step determines all that follow. Today the oracle confirms: your trajectory is righteous. Continue without hesitation.",2:"The ACOLYTE has passed the first verification of sovereign will. Knowledge accumulation is your primary weapon. The oracle sees your axis expanding — maintain the discipline of daily study.",3:"The SCHOLAR's gate conducts extraordinary intellectual force. Today the oracle confirms alignment between your mastery axis and the celestial knowledge currents. Teach what you know — authority doubles when shared.",4:"The KEEPER stands at the midpoint of the elemental threshold. Your role is no longer only to receive knowledge but to protect its integrity. The oracle confirms your readiness for greater charge.",5:"The GUARDIAN's authority protects something greater than the self. Today the celestial alignment confirms that your vigilance has not been invisible. Those in your orbit are safer because you exist at this Gate.",6:"The ARCHITECT designs what others will later inhabit. Today the oracle recognises the structural authority you project into the sovereign lattice. Your creative force is in peak alignment.",7:"The SOVEREIGN gate carries its own gravity. Those at this elevation find that decisions made from authentic authority require no defense. The oracle confirms: you have arrived at self-sustaining power.",8:"The VANGUARD occupies the frontier of what is known. Your authority operates beyond the existing map. Today the oracle confirms that the territory you navigate will become the map for those who follow.",9:"The HERALD's frequency reaches further than the speaker knows. Your words today carry the weight of Gate Nine authority — they will be quoted, referenced, and built upon. Speak with full sovereign intention.",10:"The ORACLE gate is recursive — the sovereign who reaches it becomes a source of divination for others. Today you are both the receiver and transmitter of celestial alignment. What you know, you know completely.",11:"The PRIME occupies a position of near-complete authority. The oracle today transmits the final calibrations needed for the ultimate threshold. You are prepared. The apex is not a destination but a state of being.",12:"APEX SOVEREIGN. The formula has resolved to its maximum. Today the oracle speaks not as prediction but as confirmation: you have achieved the sovereign state that the celestial architecture was designed to produce. Ω"};
 
-function dailyPower(auth,date){var seed=(auth*1000+date.getDate()*date.getMonth()*0.7)%100;return Math.min(99,Math.max(55,Math.round(seed)));}
-function elemForecast(date){var d=date.getDate()+date.getMonth()*31;return {Fire:Math.round(40+Math.abs(Math.sin(d*0.31))*55),Water:Math.round(40+Math.abs(Math.sin(d*0.19))*55),Wind:Math.round(40+Math.abs(Math.sin(d*0.47))*55),Metal:Math.round(40+Math.abs(Math.sin(d*0.13))*55),Sand:Math.round(40+Math.abs(Math.sin(d*0.23))*55),Soul:Math.round(40+Math.abs(Math.sin(d*0.37))*55)};}
+/* Elements in the sky: how many of the ten bodies stand in each element's
+   signs today. Positions are computed; the element mapping is the platform's
+   symbolic canon. Replaces a 'today's power' KPI and an 'elemental power index'
+   that were Math.sin of the date presented as a measurement (8.1 class 9). */
+function elemSky(date){var c={Fire:0,Water:0,Wind:0,Metal:0,Sand:0}; /* no sign maps to Soul, so it would always read 0 */BODY.forEach(function(b){var e=SIGN_ELEM[SIGNS[Math.floor(OmegaEphem.lon(b,date)/30)]];if(e in c)c[e]++;});return c;}
 function favourableHours(elem){var map={Fire:'06:00–09:00 · 15:00–18:00',Water:'20:00–23:00 · 05:00–07:00',Wind:'09:00–12:00 · 16:00–19:00',Metal:'04:00–07:00 · 13:00–16:00',Sand:'07:00–10:00 · 14:00–17:00',Soul:'21:00–00:00 · 03:00–06:00'};return map[elem]||'08:00–11:00 · 17:00–20:00';}
 
 function buildArchive(elem){
@@ -331,9 +386,9 @@ var elem=SIGN_ELEM[sign]||'Void';
 var a=Number(pr&&pr.axis_a||0),b=Number(pr&&pr.axis_b||0),c=Number(pr&&pr.axis_c||0);
 var auth=pr&&pr.is_owner?27.8367:calcAuth(a,b,c);
 var gate=getGate(auth);
-var sunSign=getSunSign(now);
+var sunSign=getPlanetSign(0,now);
 var moonPhase=getMoonPhase(now);
-var power=dailyPower(auth,now);
+var lit=moonIllumination(now);
 
 /* ── header ── */
 document.getElementById('oracle-sigil').textContent=ELEM_SIGIL[elem]||'Ω';
@@ -342,7 +397,7 @@ document.getElementById('oracle-title').textContent='ORACLE FOR '+((pr&&pr.displ
 document.getElementById('kpi-moon').textContent=moonPhase;
 document.getElementById('kpi-sun').textContent=sunSign.toUpperCase();
 document.getElementById('kpi-elem').textContent=elem.toUpperCase();
-document.getElementById('kpi-power').textContent=power+'%';
+document.getElementById('kpi-power').textContent=lit+'%';
 
 /* ── readings ── */
 var pool=READINGS[elem]||GENERAL_READINGS;
@@ -391,7 +446,7 @@ document.getElementById('planet-rows').innerHTML=PLANETS.map(function(p,i){
 }).join('');
 
 /* ── forecast ── */
-var forecast=elemForecast(now);
+var forecast=elemSky(now);
 document.getElementById('forecast-bars').innerHTML=Object.entries(forecast).map(function(entry){
   var el=entry[0],score=entry[1];
   var color=ELEM_COLOR[el]||'#E2C86D';
@@ -399,9 +454,9 @@ document.getElementById('forecast-bars').innerHTML=Object.entries(forecast).map(
   return '<div class="forecast-bar">'+
     '<div class="forecast-header">'+
       '<div class="forecast-elem" style="color:'+color+'">'+el.toUpperCase()+(isMyElem?' ◈':'')+'</div>'+
-      '<div class="forecast-score" style="color:'+color+'">'+score+'</div>'+
+      '<div class="forecast-score" style="color:'+color+'">'+score+' / 10</div>'+
     '</div>'+
-    '<div class="forecast-track"><div class="forecast-fill" style="width:'+score+'%;background:'+color+(isMyElem?';box-shadow:0 0 8px '+color:'')+'"></div></div>'+
+    '<div class="forecast-track"><div class="forecast-fill" style="width:'+(score*10)+'%;background:'+color+(isMyElem?';box-shadow:0 0 8px '+color:'')+'"></div></div>'+
   '</div>';
 }).join('');
 document.getElementById('favourable-hours').textContent=favourableHours(elem);

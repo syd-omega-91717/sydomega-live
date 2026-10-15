@@ -25,6 +25,14 @@ open, recorded in `FIXES_LOG.md`:
   `main` is 417 commits / 90 merges ahead, 52 shipped `.html`/`.js`/`.css` files changed. Every
   "verified" claim since #755 is repository evidence only. Owner: lift the account block
   (§8.2), then confirm one production deploy of current `main`.
+- **OPEN 2026-10-14 — nothing measures uptime or service health.** Live: `incidents`,
+  `slo_metrics`, `system_health`, `system_incidents` hold 0 rows; `platform_metrics` 0 rows;
+  all 5 `error_budget_policy` rows are the 2026-07-27 seed (`status` green,
+  `budget_4wk_pct` null). The dashboard and Observatory now say "NOT MONITORED" / "NOT
+  MEASURED" instead of 99.9% / GREEN (`FIXES_LOG.md`, 2026-10-14). Closing it needs an
+  external probe (e.g. a scheduled check of `sydomega.com`) writing real rows — an owner
+  choice of provider, not a page change.
+- **UPDATE 2026-10-15:** still 4 pending (77–121 days) and 0 `cron.job` rows, measured live. The owner now sees an **N WAITING** dock item and phone-drawer entry on every page (`bg.js` count → `nav.js`; `FIXES_LOG.md`, 2026-10-15). Email is still undeployed.
 - **OPEN 2026-10-09 — access requests go unanswered; the owner is never emailed.**
   `notify-access` (emails the owner on a new request) is `LOCAL_ONLY` — 9 of 25 functions are
   (`docs/runtime/supabase-edge-functions-live.json`; `list_edge_functions` returns 16). Live:
@@ -82,6 +90,26 @@ open, recorded in `FIXES_LOG.md`:
   uuid` (measured live as owner@aal2). Fix is `DROP FUNCTION` of both the public wrapper and private
   body, then recreate with `p_id bigint` — DROP needs the owner's confirmation (CLAUDE.md §8.2). No
   client calls them today. They also report `ok:true` even when no row matched.
+- **OPEN 2026-10-15 — `evidence-audit.py` misclassifies pages whose data access lives in a module.** It reads only a page's inline scripts.
+  - Shown as STATIC or "no backend" though their sibling modules do real Supabase work: `approvals`, `arena`, `leaderboard`, `my-quests`, `cosmetics`, `hercules`, `replay`, `evidence`, `recovery`, `eternity`.
+  - No row at all: `cosmic-ledger`, `archive`, `invest`, `creation-studio`, `data-observatory`, `world-atlas`, `security`, `knowledge-loom`, `govern`.
+
+  Fix: follow `<script src>` modules the page loads. The BUILT/STATIC counts in CLAUDE.md §8.3 move when it lands. Found by the `FEATURE_IDEAS.md` §41 research.
+- **OPEN 2026-10-15 — about 40 pages duplicate another page's data** (`FEATURE_IDEAS.md` §41, "Consolidation"). Remaining second copies of one number:
+  - weight: body vs physiology;
+  - net worth: wallet, wealth, treasury and investment;
+  - budget: budget vs expenses;
+  - contacts vs network;
+  - bloodline/heritage localStorage vs `family.html`'s tables;
+  - `credentials.html`'s derived certificates vs the `certificates` table.
+
+  Water and exam SRS were fixed 2026-10-15. **Weight, net worth (one home, others listed as not included) and credentials' certificates were fixed later the same day.**
+
+  Two remain, and they need an owner decision, not a fix:
+  - `budget`/`expenses`: 8 vs 15 categories, separate transaction logs.
+  - `contacts`/`network`: incompatible Dunbar circles.
+
+  Merging either means choosing one taxonomy. Merging URLs is also the owner's decision.
 - **OPEN 2026-10-12 — the knowledge base is empty.** 11 approved sources, **0** chunks, 0
   embeddings: `omega_knowledge_hybrid_search` now runs and correctly returns nothing. Nothing has
   ingested source text (and `omega_knowledge_ingest_document` is in the blocked list above).
@@ -2342,3 +2370,19 @@ here for a future session rather than acted on speculatively.
     store. Whoever builds a client for them should note that `member_agent_interactions`
     was deliberately granted INSERT to `authenticated` with a member-scoped policy in that
     same migration, so it is the one of the three designed to be written from the client.
+
+
+---
+
+## Verified external deployment blocker — 2026-10-15
+
+**Status: OPEN / OWNER ACTION REQUIRED.** This finding supplements, rather than replaces, the earlier production-freeze evidence above.
+
+- The audited repository `main` revision is `dd1c6cab41410f1397c6db43c5e60d9196e486a6`.
+- The latest production deployment returned by Vercel's deployment API was `READY`, but its source revision was `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28`. A `READY` state proves deployment state only; it does not prove source freshness or end-to-end correctness.
+- A deployment-creation request for the intended repository revision was rejected with HTTP `402`, code `resource_creation_blocked`. Vercel's response explicitly says the team exceeded its fair-use limits and has been blocked; it classifies remediation as a user action.
+- The current combined status for the runbook evidence commit also reports `Vercel: failure`. No deployment of the intended `main` revision has been verified.
+
+**Required sequence:** the authorized team owner must resolve the Vercel restriction in the provider account; then deploy the intended `main` SHA; verify the resulting deployment SHA and canonical production aliases; run HTTPS/asset and browser smoke checks; and attach fresh evidence to the release gate. Do not evade the provider restriction by creating another team/project, weakening repository protections, or marking production current without evidence.
+
+**Evidence boundary:** this is a verified provider rejection and source-revision mismatch. It is not evidence that every page or API is broken, nor that the current production deployment is unavailable.

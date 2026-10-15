@@ -6,17 +6,17 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**482 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 39, GAP_ANALYSIS.md S 17, IDEA_INTAKE.md 12.
+**488 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 20, IDEA_INTAKE.md 13.
 
 | status | count |
 |---|---|
-| NEEDS_DECISION | 15 |
+| NEEDS_DECISION | 16 |
 | IN_PROGRESS | 5 |
-| PROPOSED | 19 |
+| PROPOSED | 18 |
 | PARTIAL | 56 |
-| OPEN_GAP | 8 |
+| OPEN_GAP | 11 |
 | DORMANT | 1 |
-| SHIPPED | 33 |
+| SHIPPED | 36 |
 | DECIDED | 42 |
 | CLOSED | 9 |
 | SUPERSEDED | 1 |
@@ -28,7 +28,7 @@ production serves it.
 Everything not yet settled, owner decisions first. The weekly idea routine
 works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-checks the rest.
 
-### NEEDS_DECISION (15)
+### NEEDS_DECISION (16)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -47,6 +47,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N155 | 999 blueprint [APPENDIX_NODE] | Multi-Generational Trust Lock (trust enclaves) | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
 | I05 | IDEA_INTAKE.md | Database backups the owner controls | the blueprint's Mars Ledger (points 9, 615) reduces to off-site backups / point-in-time restore, which needs Supabase Pro (2026-10-12) |
 | I08 | IDEA_INTAKE.md | Member sticker and logo pack | from the Unified Blueprint board; no sticker surface exists in the repo (2026-10-13) |
+| I13 | IDEA_INTAKE.md | Align the passport PDF's 12 gate names with the canon tiers | omega-passport.js GATE_NAMES (INITIATE, ACOLYTE, SCHOLAR...) differ from omega-canon.json tiers (Initiate, Seeker, Adept...); its authority… |
 
 ### IN_PROGRESS (5)
 
@@ -56,9 +57,9 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B013 | 999 blueprint [INTELLIGENCE] | Zero-Fee Life: The billing engine has a "Nest Exception." All subscription costs for the family are hard-code… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
 | B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
 | N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
-| I06 | IDEA_INTAKE.md | Owner concept media on the Vision Board | 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today… |
+| I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; reuse omega-passport.js (vendored jsPDF) and the certificates profile.html already lists (2026-10-13) |
 
-### PROPOSED (19)
+### PROPOSED (18)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -80,7 +81,6 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
-| I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; reuse omega-passport.js (vendored jsPDF) and the certificates profile.html already lists (2026-10-13) |
 
 ### PARTIAL (56)
 
@@ -143,18 +143,21 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (8)
+### OPEN_GAP (11)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | G01 | GAP_ANALYSIS.md S | owner decisions recorded, legal review pending. Owner chose the 12-tier `omega-canon.json` ladder (subscripti… | GAP_ANALYSIS.md section S |
 | G02 | GAP_ANALYSIS.md S | production is frozen at the 2026-10-06 build. Vercel's newest | GAP_ANALYSIS.md section S |
-| G03 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
-| G04 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
-| G08 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
-| G09 | GAP_ANALYSIS.md S | `set_consult_status`, `set_contract_status`, `set_reservation_status` can never | GAP_ANALYSIS.md section S |
-| G10 | GAP_ANALYSIS.md S | the knowledge base is empty. 11 approved sources, 0 chunks, 0 | GAP_ANALYSIS.md section S |
-| G11 | GAP_ANALYSIS.md S | `omega-graphify-integration.js`'s `notifications` fallback insert always | GAP_ANALYSIS.md section S |
+| G03 | GAP_ANALYSIS.md S | nothing measures uptime or service health. Live: `incidents`, | GAP_ANALYSIS.md section S |
+| G04 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
+| G05 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
+| G09 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
+| G10 | GAP_ANALYSIS.md S | `set_consult_status`, `set_contract_status`, `set_reservation_status` can never | GAP_ANALYSIS.md section S |
+| G11 | GAP_ANALYSIS.md S | `evidence-audit.py` misclassifies pages whose data access lives in a module. It reads only a page's inline sc… | GAP_ANALYSIS.md section S |
+| G12 | GAP_ANALYSIS.md S | about 40 pages duplicate another page's data (`FEATURE_IDEAS.md` §41, "Consolidation"). Remaining second copi… | GAP_ANALYSIS.md section S |
+| G13 | GAP_ANALYSIS.md S | the knowledge base is empty. 11 approved sources, 0 chunks, 0 | GAP_ANALYSIS.md section S |
+| G14 | GAP_ANALYSIS.md S | `omega-graphify-integration.js`'s `notifications` fallback insert always | GAP_ANALYSIS.md section S |
 
 ### DORMANT (1)
 
@@ -162,7 +165,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (33)
+### SHIPPED (36)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -194,11 +197,14 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | F35 | FEATURE_IDEAS.md | Scene-per-realm 3-D backdrops — the 9 realm hub pages get their own tinted signet | 'What shipped: one .osc-stage[data-omega-sculpture="signet"] mount per realm hub page' |
 | F36 | FEATURE_IDEAS.md | Navigable 3-D scenes — already shipped; verifying it live found and fixed a real flaky-click bug | FEATURE_IDEAS.md title |
 | F38 | FEATURE_IDEAS.md | TODAY — one view of what is due and done across the platform (COMMAND) — SHIPPED | FEATURE_IDEAS.md title |
+| F40 | FEATURE_IDEAS.md | Vertical micro-episodes, the short-drama format without the coin paywall — THE TWELVE HOUSES S1 (2026-10-14)… | FEATURE_IDEAS.md title |
+| F41 | FEATURE_IDEAS.md | Platform map: the best real product behind every nav section, and one grounded upgrade per page (2026-10-15)… | FEATURE_IDEAS.md title |
 | B245 | 999 blueprint [ECONOMIC_R&D] | The "Weight-Calculatism" Engine: Integration of the Weight = Benefit × Probability model. The Tutor Agent (Ag… | decisions.html EXPECTED VALUE framework: weight = benefit x probability per option, highest named (renderEVResult); verified in Chromium 2026-10-12 |
 | B250 | 999 blueprint [PRODUCT] | Bayesian Belief Updating: The system tracks the user's "Rate of Forgetting" (Point 5.6) and creates a Digital… | flashcard.html implements SM-2 spaced repetition: reviews scheduled at the forgetting curve (flashcard.html:125, :202) |
 | I01 | IDEA_INTAKE.md | Copilot visual commands | 14 slash commands (/handwritten, /decision-matrix, /infographic, /canvas, /layers, /cycle, /diagram, /roadmap, /sketchnotes, /iceberg, /blu… |
 | I02 | IDEA_INTAKE.md | Owner two-factor deep link | settings.html#two-factor opens the enrolment section; approvals offers it on aal2_no_factor, PR #875 (2026-10-12) |
 | I04 | IDEA_INTAKE.md | Map every 999-blueprint point | all 413 entries (391 + 8 restored duplicates + 14 appendix Nodes) classified with reasons by scripts/blueprint-truth-map.py (2026-10-12) |
+| I06 | IDEA_INTAKE.md | Owner concept media on the Vision Board | 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today… |
 
 ### DECIDED (42)
 
@@ -251,15 +257,15 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 
 | id | source | idea | evidence |
 |---|---|---|---|
-| G05 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
-| G06 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
-| G07 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |
-| G12 | GAP_ANALYSIS.md S | Creation Layer truth enforcement is live. Authenticated clients no longer have direct DML on the four Creatio… | GAP_ANALYSIS.md section S |
-| G13 | GAP_ANALYSIS.md S | client read grants are materialised. The seven tables `omega_notifications`, `omega_user_achievements`, `omeg… | GAP_ANALYSIS.md section S |
-| G14 | GAP_ANALYSIS.md S | `omega_agent_action_proposals` was a retired schema, not a missing live table. Migration `20260929113731` cre… | GAP_ANALYSIS.md section S |
-| G15 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
-| G16 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
-| G17 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
+| G06 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
+| G07 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
+| G08 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |
+| G15 | GAP_ANALYSIS.md S | Creation Layer truth enforcement is live. Authenticated clients no longer have direct DML on the four Creatio… | GAP_ANALYSIS.md section S |
+| G16 | GAP_ANALYSIS.md S | client read grants are materialised. The seven tables `omega_notifications`, `omega_user_achievements`, `omeg… | GAP_ANALYSIS.md section S |
+| G17 | GAP_ANALYSIS.md S | `omega_agent_action_proposals` was a retired schema, not a missing live table. Migration `20260929113731` cre… | GAP_ANALYSIS.md section S |
+| G18 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
+| G19 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
+| G20 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
 
 ### SUPERSEDED (1)
 

@@ -43,6 +43,14 @@ class PageActionNavigationTests(unittest.TestCase):
         self.assertEqual(delta[0]["delta"], 1)
         self.assertEqual([row["action_id"] for row in delta[0]["actions"]], [1, 2])
 
+    def test_html_documents_have_no_content_after_closing_html(self):
+        for path in sorted(ROOT.glob("*.html")):
+            source = path.read_text(encoding="utf-8", errors="ignore")
+            closing = source.lower().find("</html>")
+            self.assertGreaterEqual(closing, 0, f"{path.name} has no closing html tag")
+            trailing = source[closing + len("</html>"):].strip()
+            self.assertEqual(trailing, "", f"{path.name} has content after </html>")
+
     def test_estate_is_within_the_unmapped_ceiling(self):
         data=module.audit_estate()
         self.assertLessEqual(data["counts"].get("UNMAPPED",0), module.UNMAPPED_CEILING)

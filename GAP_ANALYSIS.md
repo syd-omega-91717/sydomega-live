@@ -32,6 +32,7 @@ open, recorded in `FIXES_LOG.md`:
   MEASURED" instead of 99.9% / GREEN (`FIXES_LOG.md`, 2026-10-14). Closing it needs an
   external probe (e.g. a scheduled check of `sydomega.com`) writing real rows — an owner
   choice of provider, not a page change.
+- **UPDATE 2026-10-15:** still 4 pending (77–121 days) and 0 `cron.job` rows, measured live. The owner now sees an **N WAITING** dock item and phone-drawer entry on every page (`bg.js` count → `nav.js`; `FIXES_LOG.md`, 2026-10-15). Email is still undeployed.
 - **OPEN 2026-10-09 — access requests go unanswered; the owner is never emailed.**
   `notify-access` (emails the owner on a new request) is `LOCAL_ONLY` — 9 of 25 functions are
   (`docs/runtime/supabase-edge-functions-live.json`; `list_edge_functions` returns 16). Live:
@@ -89,6 +90,20 @@ open, recorded in `FIXES_LOG.md`:
   uuid` (measured live as owner@aal2). Fix is `DROP FUNCTION` of both the public wrapper and private
   body, then recreate with `p_id bigint` — DROP needs the owner's confirmation (CLAUDE.md §8.2). No
   client calls them today. They also report `ok:true` even when no row matched.
+- **OPEN 2026-10-15 — `evidence-audit.py` misclassifies pages whose data access lives in a module.** It reads only a page's inline scripts.
+  - Shown as STATIC or "no backend" though their sibling modules do real Supabase work: `approvals`, `arena`, `leaderboard`, `my-quests`, `cosmetics`, `hercules`, `replay`, `evidence`, `recovery`, `eternity`.
+  - No row at all: `cosmic-ledger`, `archive`, `invest`, `creation-studio`, `data-observatory`, `world-atlas`, `security`, `knowledge-loom`, `govern`.
+
+  Fix: follow `<script src>` modules the page loads. The BUILT/STATIC counts in CLAUDE.md §8.3 move when it lands. Found by the `FEATURE_IDEAS.md` §41 research.
+- **OPEN 2026-10-15 — about 40 pages duplicate another page's data** (`FEATURE_IDEAS.md` §41, "Consolidation"). Remaining second copies of one number:
+  - weight: body vs physiology;
+  - net worth: wallet, wealth, treasury and investment;
+  - budget: budget vs expenses;
+  - contacts vs network;
+  - bloodline/heritage localStorage vs `family.html`'s tables;
+  - `credentials.html`'s derived certificates vs the `certificates` table.
+
+  Water and exam SRS were fixed 2026-10-15. Merging URLs is the owner's decision.
 - **OPEN 2026-10-12 — the knowledge base is empty.** 11 approved sources, **0** chunks, 0
   embeddings: `omega_knowledge_hybrid_search` now runs and correctly returns nothing. Nothing has
   ingested source text (and `omega_knowledge_ingest_document` is in the blocked list above).

@@ -2098,6 +2098,18 @@ setTimeout(function(){
       if(!pr||!pr.is_owner) return;
       window.__omegaIsOwner=true;
       document.body.classList.add('omega-owner');
+      /* Owner inbox. Measured live 2026-10-15: 4 access requests had waited
+         77-121 days while the only count sat on control-plane.html, a page the
+         owner rarely opens. Publish the number on every page so nav.js can show
+         it in the dock. Same filter as omega-owner-deck.js waitingChip(). A
+         failed read publishes nothing: no badge beats a wrong 0. */
+      sb.from('profiles').select('id',{count:'exact',head:true})
+        .eq('access_approved',false).eq('is_owner',false).not('is_rejected','is',true)
+        .then(function(r){
+          if(r.error) return;
+          window.__omegaWaiting=r.count||0;
+          document.dispatchEvent(new CustomEvent('omega:waiting',{detail:{count:window.__omegaWaiting}}));
+        });
       /* Enforce lifetime access */
       if(!pr.access_approved||pr.is_trial||pr.trial_expires_at||parseFloat(pr.axis_a)<9){
         /* This is the write that grants lifetime access. Unchecked, it could

@@ -223,7 +223,13 @@
 <script src="omega-ui.js"></script>
 <script type="module">
 const LOG_KEY   = 'omega_nutrition_log';
-const WATER_KEY = 'omega_water_track';
+/* Water has one owner: water.html's ml log. This page kept its own cup count
+   under 'omega_water_track', so the two pages showed different totals for
+   the same day (CLAUDE.md 8.1 class 8). Cups are now 250 ml entries in that
+   log; old cup counts are moved over once. */
+const WATER_KEY = 'omega_water_log';
+const LEGACY_WATER_KEY = 'omega_water_track';
+const CUP_ML = 250;
 const TARGETS   = {cal:2200, pro:180, carb:220, fat:80, fiber:25};
 
 const QUICK_FOODS = [
@@ -239,7 +245,21 @@ const QUICK_FOODS = [
 
 function todayKey(){ return new Date().toISOString().slice(0,10); }
 function getLog(){ try{return JSON.parse(localStorage.getItem(LOG_KEY)||'{}');}catch{return{};} }
-function getWater(){ try{return JSON.parse(localStorage.getItem(WATER_KEY)||'{}');}catch{return{};} }
+function waterLogs(){ try{const l=JSON.parse(localStorage.getItem(WATER_KEY)||'[]');return Array.isArray(l)?l:[];}catch{return[];} }
+function migrateLegacyWater(){
+  let old; try{old=JSON.parse(localStorage.getItem(LEGACY_WATER_KEY)||'null');}catch{old=null;}
+  if(!old||typeof old!=='object'){ return; }
+  const logs=waterLogs(); const have=new Set(logs.map(l=>String(l.ts).slice(0,10)));
+  let id=Date.now();
+  Object.keys(old).forEach(day=>{ const cups=Number(old[day])||0;
+    if(cups>0&&!have.has(day)) logs.push({id:id++,ts:day+'T12:00:00.000Z',ml:cups*CUP_ML}); });
+  localStorage.setItem(WATER_KEY,JSON.stringify(logs));
+  localStorage.removeItem(LEGACY_WATER_KEY);
+}
+migrateLegacyWater();
+/* Day -> cups, derived from the shared ml log. */
+function getWater(){ const out={}; waterLogs().forEach(l=>{const k=String(l.ts).slice(0,10);out[k]=(out[k]||0)+(Number(l.ml)||0);});
+  Object.keys(out).forEach(k=>{out[k]=Math.round(out[k]/CUP_ML);}); return out; }
 
 function getTodayEntries(){
   const log=getLog();
@@ -384,14 +404,20 @@ function renderWater(){
     `<div class="water-cup ${i<count?'filled':''}" onclick="toggleCup(${i})" aria-label="Set water intake to ${i+1} cup${i?'s':''}" aria-pressed="${i<count}"></div>`).join('');
 }
 function toggleCup(i){
-  const water=getWater();
   const key=todayKey();
-  const current=water[key]||0;
-  water[key]=i<current?i:i+1;
-  // Keep 30 days
-  const keys=Object.keys(water).sort().slice(-30);
-  const trimmed={};keys.forEach(k=>{trimmed[k]=water[k];});
-  localStorage.setItem(WATER_KEY,JSON.stringify(trimmed));
+  const current=getWater()[key]||0;
+  const wantMl=(i<current?i:i+1)*CUP_ML;
+  /* Edit today's entries in the shared log: drop the newest until at or
+     under the target, then add the difference as one entry. */
+  let logs=waterLogs();
+  const todayMl=()=>logs.filter(l=>String(l.ts).slice(0,10)===key).reduce((a,l)=>a+(Number(l.ml)||0),0);
+  while(todayMl()>wantMl){
+    let idx=-1; logs.forEach((l,j)=>{ if(String(l.ts).slice(0,10)===key&&(idx<0||l.ts>=logs[idx].ts)) idx=j; });
+    if(idx<0) break; logs.splice(idx,1);
+  }
+  const gap=wantMl-todayMl();
+  if(gap>0) logs.push({id:Date.now(),ts:new Date().toISOString(),ml:gap});
+  localStorage.setItem(WATER_KEY,JSON.stringify(logs));
   renderWater();
 }
 window.toggleCup=toggleCup;

@@ -6,7 +6,7 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**485 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 40, GAP_ANALYSIS.md S 18, IDEA_INTAKE.md 13.
+**488 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 20, IDEA_INTAKE.md 13.
 
 | status | count |
 |---|---|
@@ -14,9 +14,9 @@ production serves it.
 | IN_PROGRESS | 5 |
 | PROPOSED | 18 |
 | PARTIAL | 56 |
-| OPEN_GAP | 9 |
+| OPEN_GAP | 11 |
 | DORMANT | 1 |
-| SHIPPED | 35 |
+| SHIPPED | 36 |
 | DECIDED | 42 |
 | CLOSED | 9 |
 | SUPERSEDED | 1 |
@@ -143,7 +143,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (9)
+### OPEN_GAP (11)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -154,8 +154,10 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | G05 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
 | G09 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
 | G10 | GAP_ANALYSIS.md S | `set_consult_status`, `set_contract_status`, `set_reservation_status` can never | GAP_ANALYSIS.md section S |
-| G11 | GAP_ANALYSIS.md S | the knowledge base is empty. 11 approved sources, 0 chunks, 0 | GAP_ANALYSIS.md section S |
-| G12 | GAP_ANALYSIS.md S | `omega-graphify-integration.js`'s `notifications` fallback insert always | GAP_ANALYSIS.md section S |
+| G11 | GAP_ANALYSIS.md S | `evidence-audit.py` misclassifies pages whose data access lives in a module. It reads only a page's inline sc… | GAP_ANALYSIS.md section S |
+| G12 | GAP_ANALYSIS.md S | about 40 pages duplicate another page's data (`FEATURE_IDEAS.md` §41, "Consolidation"). Remaining second copi… | GAP_ANALYSIS.md section S |
+| G13 | GAP_ANALYSIS.md S | the knowledge base is empty. 11 approved sources, 0 chunks, 0 | GAP_ANALYSIS.md section S |
+| G14 | GAP_ANALYSIS.md S | `omega-graphify-integration.js`'s `notifications` fallback insert always | GAP_ANALYSIS.md section S |
 
 ### DORMANT (1)
 
@@ -163,7 +165,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (35)
+### SHIPPED (36)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -196,6 +198,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | F36 | FEATURE_IDEAS.md | Navigable 3-D scenes — already shipped; verifying it live found and fixed a real flaky-click bug | FEATURE_IDEAS.md title |
 | F38 | FEATURE_IDEAS.md | TODAY — one view of what is due and done across the platform (COMMAND) — SHIPPED | FEATURE_IDEAS.md title |
 | F40 | FEATURE_IDEAS.md | Vertical micro-episodes, the short-drama format without the coin paywall — THE TWELVE HOUSES S1 (2026-10-14)… | FEATURE_IDEAS.md title |
+| F41 | FEATURE_IDEAS.md | Platform map: the best real product behind every nav section, and one grounded upgrade per page (2026-10-15)… | FEATURE_IDEAS.md title |
 | B245 | 999 blueprint [ECONOMIC_R&D] | The "Weight-Calculatism" Engine: Integration of the Weight = Benefit × Probability model. The Tutor Agent (Ag… | decisions.html EXPECTED VALUE framework: weight = benefit x probability per option, highest named (renderEVResult); verified in Chromium 2026-10-12 |
 | B250 | 999 blueprint [PRODUCT] | Bayesian Belief Updating: The system tracks the user's "Rate of Forgetting" (Point 5.6) and creates a Digital… | flashcard.html implements SM-2 spaced repetition: reviews scheduled at the forgetting curve (flashcard.html:125, :202) |
 | I01 | IDEA_INTAKE.md | Copilot visual commands | 14 slash commands (/handwritten, /decision-matrix, /infographic, /canvas, /layers, /cycle, /diagram, /roadmap, /sketchnotes, /iceberg, /blu… |
@@ -257,12 +260,12 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | G06 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
 | G07 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
 | G08 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |
-| G13 | GAP_ANALYSIS.md S | Creation Layer truth enforcement is live. Authenticated clients no longer have direct DML on the four Creatio… | GAP_ANALYSIS.md section S |
-| G14 | GAP_ANALYSIS.md S | client read grants are materialised. The seven tables `omega_notifications`, `omega_user_achievements`, `omeg… | GAP_ANALYSIS.md section S |
-| G15 | GAP_ANALYSIS.md S | `omega_agent_action_proposals` was a retired schema, not a missing live table. Migration `20260929113731` cre… | GAP_ANALYSIS.md section S |
-| G16 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
-| G17 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
-| G18 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
+| G15 | GAP_ANALYSIS.md S | Creation Layer truth enforcement is live. Authenticated clients no longer have direct DML on the four Creatio… | GAP_ANALYSIS.md section S |
+| G16 | GAP_ANALYSIS.md S | client read grants are materialised. The seven tables `omega_notifications`, `omega_user_achievements`, `omeg… | GAP_ANALYSIS.md section S |
+| G17 | GAP_ANALYSIS.md S | `omega_agent_action_proposals` was a retired schema, not a missing live table. Migration `20260929113731` cre… | GAP_ANALYSIS.md section S |
+| G18 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
+| G19 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
+| G20 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
 
 ### SUPERSEDED (1)
 

@@ -142,6 +142,7 @@ step "2s.  Copilot behaviour contract"         node scripts/copilot-contract.js
 step "2t.  Grant contract (live grants)"       python3 scripts/grant-contract.py
 step "3.   Static contract suite"              python3 scripts/contract-suite.py
 step "4.   Broken local asset refs"            broken_assets
+step "4b.  Repository integrity (local refs)"  python3 scripts/repository_integrity_audit.py
 step "5.   Service-role key scan"               service_role_scan
 step "7.   Service worker precache"             sw_precache
 step "8.   PWA manifest icons"                  manifest_icons

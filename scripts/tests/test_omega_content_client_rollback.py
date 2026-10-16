@@ -7,19 +7,24 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class ContentClientRollbackTests(unittest.TestCase):
-    def test_client_does_not_bypass_storage_delete_policy(self):
+    def test_cleanup_requires_successful_owner_authorized_storage_removal(self):
         js = (ROOT / "omega-content-tasks.js").read_text()
-        self.assertNotIn("OmegaStorage.remove", js)
-        self.assertIn("Client-side Storage DELETE is not authorized", js)
-        self.assertIn("registered.data.rollback_state==='complete'", js)
+        self.assertIn("async function cleanupUploaded(path)", js)
+        self.assertIn("root.OmegaStorage.remove('uploads',path)", js)
+        self.assertIn("return !!removed&&!removed.error", js)
+        self.assertIn("catch(_error){return false;}", js)
         self.assertIn("cleanup_state:'UNCONFIRMED'", js)
 
-    def test_rolled_back_state_requires_explicit_server_compensation_evidence(self):
+    def test_rolled_back_state_requires_confirmed_cleanup(self):
         js = (ROOT / "omega-content-tasks.js").read_text()
-        self.assertIn("if(registered.data&&registered.data.rollback_state==='complete')", js)
-        self.assertIn("task('ROLLED_BACK'", js)
+        self.assertIn("function cleanupTask(error,path,confirmed)", js)
+        self.assertIn("confirmed\n    ? task('ROLLED_BACK'", js)
         self.assertIn("cleanup_state:'CONFIRMED'", js)
         self.assertIn("task('ROLLBACK_REQUIRED'", js)
+
+    def test_upload_never_overwrites_existing_object_before_registration(self):
+        js = (ROOT / "upload.js").read_text()
+        self.assertIn("upload(path,file,{upsert:false", js)
 
     def test_unexpected_upload_and_download_errors_are_handled(self):
         js = (ROOT / "omega-content-tasks.js").read_text()

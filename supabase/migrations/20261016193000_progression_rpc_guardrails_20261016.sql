@@ -111,7 +111,7 @@ begin
   new_v := case p_axis_type when 'a' then new_a when 'b' then new_b else new_c end;
 
   update public.profiles set axis_a = new_a, axis_b = new_b, axis_c = new_c,
-    authority = auth_score, nodes_earned = coalesce(nodes_earned, 0) + 1
+    authority = auth_score, nodes_earned = coalesce(nodes_earned, 0) + case when p_points > 0 and new_v > old_v then 1 else 0 end
   where id = uid;
 
   insert into public.task_completions(

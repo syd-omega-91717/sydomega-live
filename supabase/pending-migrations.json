@@ -2,14 +2,5 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": [
-    {
-      "version": "20261016193700",
-      "file": "20261016193700_progression_rpc_guardrails_20261016.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Bound client-supplied complete_task points and inputs, serialize per-user awards, and cap awards over a rolling 24-hour window. Interim defense-in-depth; source-specific verified task awards remain a separate required phase."
-    }
-  ]
+  "pending": []
 }

@@ -49,6 +49,8 @@ Deno.serve(async (req: Request) => {
     if (signError || !data?.signedUrl) throw signError || new Error("signed_url_failed");
 
     const { error: eventError } = await admin.from("omega_platform_events").insert({
+      // event_id is NOT NULL with no default live (20261002073936).
+      event_id: crypto.randomUUID(),
       event_type: "capability_used",
       route: "/content",
       actor_user_id: userId,
@@ -70,7 +72,13 @@ Deno.serve(async (req: Request) => {
       expires_at: new Date(Date.now() + 900000).toISOString(),
       delivery_state: "SIGNED",
     });
-  } catch {
+  } catch (caught) {
+    const detail = caught as { code?: unknown; message?: unknown } | null;
+    console.error(JSON.stringify({
+      event: "CONTENT_DELIVERY_FAILED",
+      code: typeof detail?.code === "string" ? detail.code : null,
+      detail: typeof detail?.message === "string" ? detail.message.slice(0, 300) : null,
+    }));
     return json({ error: "content_delivery_failed" }, 500);
   }
 });

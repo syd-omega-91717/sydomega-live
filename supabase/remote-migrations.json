@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-16T22:40:00.000Z",
+  "_captured": "2026-10-16T22:56:00.000Z",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated provider query)",
-  "remoteMigrationCount": 389,
-  "latestRemoteMigration": "20261016223949",
+  "remoteMigrationCount": 390,
+  "latestRemoteMigration": "20261016225535",
   "versions": [
     "0001",
     "0002",
@@ -392,7 +392,8 @@
     "20261016194804",
     "20261016213149",
     "20261016221059",
-    "20261016223949"
+    "20261016223949",
+    "20261016225535"
   ],
   "migrations": [
     {
@@ -1947,6 +1948,10 @@
     {
       "version": "20261016223949",
       "name": "omega_platform_events_event_id_default_20261016"
+    },
+    {
+      "version": "20261016225535",
+      "name": "world_action_security_definer_20261016"
     }
   ]
 }

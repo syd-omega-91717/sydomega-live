@@ -28,11 +28,16 @@ project's own established convention (security/data-integrity first).
   `storage_files` itself had no migration until `20261016221059` (captured from live, 2026-10-16);
   other live-only tables may exist — `live-schema.json` vs migrations has not been diffed for them.
 
-- **OPEN 2026-10-16 — `omega_record_world_action` cannot write its event (42501).** It is
+- **CLOSED 2026-10-16 (`20261016225535`, SECURITY DEFINER; verified by member impersonation) — was: `omega_record_world_action` cannot write its event (42501).** It is
   SECURITY INVOKER and inserts into `omega_platform_events` as the member; `authenticated` has no
   INSERT grant although policy `omega_platform_events_insert_own` exists (§8.1 class 6c). Fix is a
   narrow `GRANT INSERT … TO authenticated` (the policy already scopes rows to `auth.uid()`) —
   an owner decision, since it opens a client write path to the audit table.
+
+- **OPEN 2026-10-16 — `omega_record_simulation_run` cannot write (42501), 0 rows ever.** Same
+  root cause as world actions: live-only `20260930090758` made it SECURITY INVOKER and added
+  `omega_simulation_runs_insert_own` with no INSERT grant; the repo's alias of that migration is a
+  no-op, so live and a fresh replay differ. Read its body before choosing definer vs grant.
 
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:

@@ -17,10 +17,14 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("registration_does_not_prove_rights", c["upload"]["rules"])
         self.assertIn("public_download_is_never_inferred_from_storage_path", c["download"]["rules"])
 
-    def test_client_pipeline_rolls_back_orphan_on_registration_failure(self):
+    def test_client_rollback_is_confirmed_and_does_not_write_metadata(self):
         js = (ROOT / "omega-content-tasks.js").read_text()
         self.assertIn("content-ingest", js)
-        self.assertIn("OmegaStorage.remove('uploads',uploaded.path)", js)
+        self.assertIn("async function cleanupUploaded(path)", js)
+        self.assertIn("root.OmegaStorage.remove('uploads',path)", js)
+        self.assertIn("task('ROLLBACK_REQUIRED'", js)
+        self.assertIn("cleanup_state:'CONFIRMED'", js)
+        self.assertIn("REGISTRATION_UNCERTAIN", js)
 
     def test_ingest_requires_authenticated_and_segment_validated_owner_path(self):
         js = (ROOT / "supabase/functions/content-ingest/index.ts").read_text()
@@ -53,6 +57,8 @@ class ContentTaskPipelineTests(unittest.TestCase):
         js = (ROOT / "omega-content-tasks.js").read_text()
         self.assertNotRegex(js, r"from\(['\"]storage_files['\"]\)\s*\.insert")
         self.assertNotRegex(js, r"from\(['\"]storage_files['\"]\)\s*\.update")
+        uploader = (ROOT / "upload.js").read_text()
+        self.assertIn("upload(path,file,{upsert:false", uploader)
 
 
 if __name__ == "__main__":

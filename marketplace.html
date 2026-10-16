@@ -185,9 +185,8 @@ document.getElementById('btn-pub').addEventListener('click',async function(){
     file_path=up.path||up.fullPath||up.key||null;
     if(!file_path){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='UPLOAD FAILED: storage returned no path -- nothing was listed.';return;}
   }
-  var ins;
   try{
-    ins=await sb.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
+    var ins=await sb.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
   }catch(_){
     msg.style.display='block';msg.style.color='var(--crim)';
     msg.textContent=file_path

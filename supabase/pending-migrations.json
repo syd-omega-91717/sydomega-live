@@ -2,14 +2,5 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": [
-    {
-      "version": "20261016172500",
-      "file": "20261016172500_marketplace_asset_path_isolation_20261016.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Isolate marketplace Storage object paths in omega_private, restrict inactive listing visibility, and keep public read models accurate. Apply only after CI review and controlled production rollout."
-    }
-  ]
+  "pending": []
 }

@@ -6,7 +6,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-MIGRATION = ROOT / "supabase/migrations/20261016172500_marketplace_asset_path_isolation_20261016.sql"
+MIGRATION = ROOT / "supabase/migrations/20261016174416_marketplace_asset_path_isolation_20261016.sql"
 PAGE = ROOT / "marketplace.html"
 
 

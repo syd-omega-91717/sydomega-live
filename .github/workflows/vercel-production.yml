@@ -48,6 +48,7 @@ on:
       - 'scripts/vercel-build-enhance.mjs'
       - 'scripts/release-surface-quality.py'
       - 'scripts/omega-enterprise-readiness-contract.py'
+      - '!supabase/**'
   pull_request:
     branches: [main]
     paths:

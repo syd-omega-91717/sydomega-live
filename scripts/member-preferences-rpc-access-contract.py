@@ -17,17 +17,20 @@ def main() -> int:
         return 1
 
     sql = " ".join(MIGRATION.read_text(encoding="utf-8").lower().split())
+    compact_sql = "".join(sql.split())
     implementation = IMPLEMENTATION.read_text(encoding="utf-8").lower()
     signatures = {
-        "get_member_preferences()",
-        "set_member_preferences(boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean)",
+        "get_member_preferences()": "get_member_preferences()",
+        "set_member_preferences(boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean)": "set_member_preferences(boolean,boolean,boolean,boolean,boolean,boolean,boolean,boolean,boolean,boolean,boolean,boolean)",
     }
     errors = []
-    for signature in signatures:
-        if f"revoke execute on function public.{signature} from public, anon" not in sql:
-            errors.append(f"{signature}: missing PUBLIC and anon execute revocation")
-        if f"grant execute on function public.{signature} to authenticated" not in sql:
-            errors.append(f"{signature}: missing authenticated execute grant")
+    for display, compact_signature in signatures.items():
+        revoke = f"revokeexecuteonfunctionpublic.{compact_signature}frompublic,anon;"
+        grant = f"grantexecuteonfunctionpublic.{compact_signature}toauthenticated;"
+        if revoke not in compact_sql:
+            errors.append(f"{display}: missing PUBLIC and anon execute revocation")
+        if grant not in compact_sql:
+            errors.append(f"{display}: missing authenticated execute grant")
 
     if "if v_uid is null then" not in implementation or "authenticated session required" not in implementation:
         errors.append("set_member_preferences must retain its explicit authenticated-user guard")

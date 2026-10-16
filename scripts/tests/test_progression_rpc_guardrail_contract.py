@@ -41,7 +41,9 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
         self.assertIn("completed_at >= now() - interval '24 hours'", self.sql)
         self.assertIn("progression_daily_cap_exceeded", self.sql)
         self.assertIn("task_completions_user_completed_at_points_idx", self.sql)
-        self.assertIn("case when p_points > 0 and new_v > old_v then 1 else 0 end", self.sql)
+        self.assertIn("applied_points := greatest(0, new_v - old_v)", self.sql)
+        self.assertIn("description, applied_points,", self.sql)
+        self.assertIn("'points', applied_points", self.sql)
 
     def test_security_definer_search_path_stays_empty(self):
         self.assertIn("security definer\nset search_path = ''", self.sql)

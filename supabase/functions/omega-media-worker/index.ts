@@ -53,7 +53,7 @@ async function dispatch(job: MediaJob) {
     return {
       status: 'BLOCKED_PROVIDER',
       errorCode: 'provider_not_configured',
-      errorDetail: 'No media generation provider is configured; job remains durable and retryable.',
+      errorDetail: 'No media generation provider is configured; job remains durable for inspection. Automatic retry is not enabled.',
     }
   }
 

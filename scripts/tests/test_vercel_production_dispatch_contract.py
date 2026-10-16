@@ -22,8 +22,10 @@ class VercelProductionDispatchContract(unittest.TestCase):
         push_config = WORKFLOW.split("  pull_request:", 1)[0]
         positive_json = "      - '**/*.json'"
         negative_supabase = "      - '!supabase/**'"
+        negative_runtime_evidence = "      - '!docs/runtime/supabase-edge-functions-live.json'"
         self.assertIn(positive_json, push_config)
         self.assertIn(negative_supabase, push_config)
+        self.assertIn(negative_runtime_evidence, push_config)
         self.assertLess(
             push_config.index(positive_json),
             push_config.index(negative_supabase),

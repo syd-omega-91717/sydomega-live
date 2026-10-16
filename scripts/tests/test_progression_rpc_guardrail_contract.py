@@ -29,6 +29,12 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
         self.assertIn("length(p_task_type) not between 1 and 48", self.sql)
         self.assertIn("length(p_description) > 500", self.sql)
 
+    def test_first_publication_award_respects_the_rpc_cap(self):
+        publishing = (ROOT / "publishing.html").read_text(encoding="utf-8")
+        self.assertIn("p_points:0.12", publishing)
+        self.assertIn("Contribution axis advanced +0.12.", publishing)
+        self.assertNotIn("p_points:0.25", publishing)
+
     def test_rolling_award_cap_is_serialized_and_indexed(self):
         self.assertIn("MAX_POINTS_PER_24H constant numeric := 0.30;", self.sql)
         self.assertIn("pg_advisory_xact_lock", self.sql)

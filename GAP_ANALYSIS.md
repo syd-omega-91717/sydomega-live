@@ -21,12 +21,18 @@ project's own established convention (security/data-integrity first).
   the service-role client fails 42501. Only `content-ingest`/`content-delivery` were granted
   (`20261016213149`, owner chose the narrow fix). The other Edge Functions are unaudited against
   it — next step is a per-function table audit, then per-table grants (`FIXES_LOG.md`, 2026-10-16).
-- **OPEN 2026-10-16 — `omega_platform_events.event_id` is NOT NULL with no default live.** 7 rows,
+- **CLOSED 2026-10-16 (`20261016223949`, default `gen_random_uuid()`, verified live) — was: `omega_platform_events.event_id` is NOT NULL with no default live.** 7 rows,
   newest 2026-09-29: every writer omitting `event_id` has failed since `20261002073936`. The content
   functions now send one; restoring `DEFAULT gen_random_uuid()` would fix all writers at once and is
   an owner decision. Also: live ledger row `20261016193700` has no local file.
   `storage_files` itself had no migration until `20261016221059` (captured from live, 2026-10-16);
   other live-only tables may exist — `live-schema.json` vs migrations has not been diffed for them.
+
+- **OPEN 2026-10-16 — `omega_record_world_action` cannot write its event (42501).** It is
+  SECURITY INVOKER and inserts into `omega_platform_events` as the member; `authenticated` has no
+  INSERT grant although policy `omega_platform_events_insert_own` exists (§8.1 class 6c). Fix is a
+  narrow `GRANT INSERT … TO authenticated` (the policy already scopes rows to `auth.uid()`) —
+  an owner decision, since it opens a client write path to the audit table.
 
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:

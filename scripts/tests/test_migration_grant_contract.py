@@ -70,6 +70,23 @@ class Fixture(unittest.TestCase):
                    'grant select on public.widgets to authenticated;\n')
         self.assertEqual(self.tables(), [])
 
+    def test_deny_only_policy_implies_no_grant(self):
+        # using (false) with check (false) admits no row: nothing to grant.
+        self.write('20261006134235_widgets.sql', TABLE + RLS +
+                   'create policy deny on public.widgets as permissive for all '
+                   'to anon, authenticated using (false) with check (false);\n')
+        self.assertEqual(self.tables(), [])
+
+    def test_partly_false_policy_still_needs_a_grant(self):
+        # Only a policy whose EVERY clause is false is exempt.
+        self.write('20261006134235_widgets.sql', TABLE + RLS +
+                   'create policy p on public.widgets for all to authenticated '
+                   'using ((select auth.uid())=owner_id) with check (false);\n')
+        self.assertEqual(self.tables(), ['widgets'])
+        self.write('20261006134236_more.sql',
+                   'create policy q on public.widgets for select to authenticated using (false or true);\n')
+        self.assertEqual(self.tables(), ['widgets'])
+
     def test_service_only_table_is_out_of_scope(self):
         self.write('20261006134235_widgets.sql', TABLE + RLS)
         self.assertEqual(self.tables(), [])

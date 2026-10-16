@@ -49,6 +49,8 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
     def test_first_publication_award_respects_the_rpc_cap(self):
         publishing = (ROOT / "publishing.html").read_text(encoding="utf-8")
         self.assertIn("p_points:0.12", publishing)
+        self.assertIn("up to +0.12", publishing)
+        self.assertIn("reports only the amount confirmed by the server", publishing)
         self.assertIn("Number(rpc.data.points)>0", publishing)
         self.assertIn("Progression award not applied; publication is still saved.", publishing)
         self.assertIn("Progression award could not be confirmed; publication is still saved.", publishing)

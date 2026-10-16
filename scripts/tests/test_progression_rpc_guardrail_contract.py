@@ -13,6 +13,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MIGRATION_PATH = ROOT / "supabase/migrations/20261016193700_progression_rpc_guardrails_20261016.sql"
 PENDING_PATH = ROOT / "supabase/pending-migrations.json"
+MIGRATION_PATH = ROOT / "supabase/migrations/20261016194804_progression_rpc_guardrails_20261016.sql"
+PENDING_PATH = ROOT / "supabase/pending-migrations.json"
+REMOTE_PATH = ROOT / "supabase/remote-migrations.json"
 
 
 class ProgressionRpcGuardrailContract(unittest.TestCase):
@@ -20,6 +23,7 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
     def setUpClass(cls):
         cls.sql = MIGRATION_PATH.read_text(encoding="utf-8")
         cls.pending = json.loads(PENDING_PATH.read_text(encoding="utf-8"))
+        cls.remote = json.loads(REMOTE_PATH.read_text(encoding="utf-8"))
 
     def test_client_award_inputs_are_bounded(self):
         self.assertIn("MAX_POINTS_PER_CALL constant numeric := 0.12;", self.sql)
@@ -85,6 +89,20 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
         self.assertEqual(entries[0].get("status"), "PENDING_REVIEW")
         self.assertEqual(entries[0].get("liveStatus"), "NOT_APPLIED")
         self.assertIs(entries[0].get("blocksProduction"), True)
+    def test_migration_is_registered_as_applied_and_not_pending(self):
+        version = "20261016194804"
+        self.assertIn(version, self.remote.get("versions", []))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), version)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote.get("versions", [])))
+        entry = next(
+            (item for item in self.remote.get("migrations", []) if item.get("version") == version),
+            None,
+        )
+        self.assertIsNotNone(entry)
+        self.assertEqual(entry.get("name"), "progression_rpc_guardrails_20261016")
+        self.assertFalse(any(
+            str(item.get("version")) == version for item in self.pending.get("pending", [])
+        ))
 
 
 if __name__ == "__main__":

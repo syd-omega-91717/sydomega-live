@@ -46,4 +46,29 @@ for path in / /world.html /evidence.html; do
   echo "PRODUCTION_SMOKE=PASS status=$status url=$effective_url"
 done
 
+if [[ -n "${EXPECTED_RELEASE_SHA:-}" ]]; then
+  if [[ ! "${EXPECTED_RELEASE_SHA}" =~ ^[0-9a-f]{40}$ ]]; then
+    echo "PRODUCTION_SMOKE=FAIL reason=invalid_expected_release_sha"
+    exit 2
+  fi
+  manifest_url="${BASE_URL}/.well-known/omega-release.json"
+  manifest_meta="$(curl --silent --show-error --fail --location --proto '=https' --proto-redir '=https' --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 10 --max-time 30 --output "$tmp" --write-out '%{http_code}|%{content_type}|%{url_effective}' "$manifest_url")" || {
+    echo "PRODUCTION_SMOKE=FAIL url=$manifest_url reason=release_manifest_request_failed"
+    exit 1
+  }
+  IFS='|' read -r manifest_status manifest_type manifest_effective <<< "$manifest_meta"
+  manifest_host="${manifest_effective#https://}"
+  manifest_host="${manifest_host%%/*}"
+  if [[ "$manifest_host" != "$EXPECTED_HOST" || "$manifest_status" != "200" || "$manifest_type" != application/json* ]]; then
+    echo "PRODUCTION_SMOKE=FAIL url=$manifest_url status=$manifest_status content_type=$manifest_type effective_host=$manifest_host"
+    exit 1
+  fi
+  actual_release_sha="$(node -e 'const fs=require("node:fs"); const value=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write(String(value.commit_sha||""));' "$tmp")"
+  if [[ "$actual_release_sha" != "$EXPECTED_RELEASE_SHA" ]]; then
+    echo "PRODUCTION_SMOKE=FAIL reason=served_commit_mismatch expected=$EXPECTED_RELEASE_SHA actual=$actual_release_sha"
+    exit 1
+  fi
+  echo "PRODUCTION_SMOKE=PASS served_commit=$actual_release_sha"
+fi
+
 echo "PRODUCTION_SMOKE=PASS base=$BASE_URL routes=3"

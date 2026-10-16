@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-15T23:09:03.147Z",
-  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (read-only provider query)",
-  "remoteMigrationCount": 383,
-  "latestRemoteMigration": "20261015220000",
+  "_captured": "2026-10-16T19:49:18.990Z",
+  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated provider query)",
+  "remoteMigrationCount": 386,
+  "latestRemoteMigration": "20261016194804",
   "versions": [
     "0001",
     "0002",
@@ -386,7 +386,10 @@
     "20261012091641",
     "20261012150000",
     "20261013160000",
-    "20261015220000"
+    "20261015220000",
+    "20261016174416",
+    "20261016193000",
+    "20261016194804"
   ],
   "migrations": [
     {
@@ -1917,6 +1920,18 @@
     {
       "version": "20261015220000",
       "name": "restore_points_leaderboard_invoker_wrapper"
+    },
+    {
+      "version": "20261016174416",
+      "name": "20261016172500_marketplace_asset_path_isolation_20261016"
+    },
+    {
+      "version": "20261016193000",
+      "name": "revoke_anon_member_preferences_rpc_20261016"
+    },
+    {
+      "version": "20261016194804",
+      "name": "progression_rpc_guardrails_20261016"
     }
   ]
 }

@@ -1,13 +1,49 @@
 project_id = "ydqhzvvoyufiiqvzcjns"
 
+[functions.agent-execute]
+verify_jwt = true
+
+[functions.concierge]
+verify_jwt = true
+
+[functions.concierge-orchestrator]
+verify_jwt = true
+
+[functions.content-delivery]
+verify_jwt = true
+
+[functions.content-ingest]
+verify_jwt = true
+
+[functions.evidence-graph]
+verify_jwt = false
+
+[functions.growth-orchestrator]
+verify_jwt = true
+
+[functions.intel-feed]
+verify_jwt = false
+
+[functions.omega-knowledge-embedding-worker]
+verify_jwt = false
+
+[functions.omega-media-worker]
+verify_jwt = false
+
 [functions.omega-notification-worker]
+verify_jwt = false
+
+[functions.omega-provider-worker]
 verify_jwt = false
 
 [functions.omega-runtime-gateway]
 verify_jwt = true
 
-[functions.omega-media-worker]
-verify_jwt = false
+[functions.product-orchestrator]
+verify_jwt = true
 
-[functions.omega-knowledge-embedding-worker]
+[functions.secrets-health]
+verify_jwt = true
+
+[functions.stripe-webhook]
 verify_jwt = false

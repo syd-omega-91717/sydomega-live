@@ -1,105 +1,105 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-16T12:44:08.962Z",
+  "captured_at": "2026-10-16T19:38:01.341Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
     "concierge": {
       "state": "DEPLOYED",
-      "version": 7,
+      "version": 8,
       "verify_jwt": true,
-      "live_sha256": "fbaa626c4fc5040e8ec06343be487af82d891ac2c70d7a6a6a3496cbf84bc71f",
+      "live_sha256": "b7b8b3a8665a9fe72920fc334ba2622c43fa6a64dd88f97cc78837f180cd0bb2",
       "repository_blob_sha": "1c32c845e716ac1d1fc702e1dc28c5b5c142ef92"
     },
     "concierge-orchestrator": {
       "state": "DEPLOYED",
-      "version": 5,
+      "version": 6,
       "verify_jwt": true,
-      "live_sha256": "6aa8e587de997ec53f3fd215b0d38c36004f098192e08310fb2f7fac36a75501",
+      "live_sha256": "40bc683527c2284b617a989de297c18ec500d2227fe0d2e52f2016199a03e632",
       "repository_blob_sha": "ac3e09af10fcce118edfa24c5861232680045cf3"
     },
     "growth-orchestrator": {
       "state": "DEPLOYED",
-      "version": 5,
+      "version": 6,
       "verify_jwt": true,
-      "live_sha256": "d0f7570005c5a14eea584b83ad058a54f47cfd42e672ab277d51073df3a1ddbc",
+      "live_sha256": "5ceba1cebdc45372a6723042fa3ec5d6c15b45e675e5d3cbb7f249393fe69dc0",
       "repository_blob_sha": "9cec2653d62f52d87b95329aad09a2546b4a3bf7"
     },
     "product-orchestrator": {
       "state": "DEPLOYED",
-      "version": 6,
+      "version": 7,
       "verify_jwt": true,
-      "live_sha256": "76feb64360cfa3efb782417093b92ce22a2ed627c3571eb86208272bea3fa932",
+      "live_sha256": "ab1326ee6f3a8cfc76c466945715fab0208b1c9d24868c274faa2cefffceb2d2",
       "repository_blob_sha": "8b0f55110215608545e277771bddca91510a4a29"
     },
     "stripe-webhook": {
       "state": "DEPLOYED",
-      "version": 4,
+      "version": 5,
       "verify_jwt": false,
-      "live_sha256": "e3c625d0e2e8f45cf6f5b4bc5bf5007f73e6756944284ef66609c077fbe4df5e",
+      "live_sha256": "381468ae364c532a921b57f3322d3c2f7d4368c0f25901be3e00916b7a08bf4a",
       "repository_blob_sha": "5527316e0c4f6eeac15755a4342599c562acba74"
     },
     "secrets-health": {
       "state": "DEPLOYED",
-      "version": 5,
+      "version": 6,
       "verify_jwt": true,
-      "live_sha256": "b4f0d46dac10c941a2ccea633bd45bab267ad43959eacc408eebb41c8cb25ca8",
+      "live_sha256": "ffc905b152b2fb61eefa5b2c6efdaa75be0b2e5b555909a4ff2c1d9a6682cef5",
       "repository_blob_sha": "b78b470eba3d141052295d25b83e77336489a83f"
     },
     "agent-execute": {
       "state": "DEPLOYED",
-      "version": 3,
+      "version": 4,
       "verify_jwt": true,
-      "live_sha256": "cbfaeac862f78251d0884d67baecf2c52588d644a617128894f23d035587c7f8",
+      "live_sha256": "eb53c13f75e40a8fc567b4fd755df8256b3af0878533dae7577bb60f90a12320",
       "repository_blob_sha": "d5ef6fbf9e7b64e9f409675f88558465994b1fa6"
     },
     "evidence-graph": {
       "state": "DEPLOYED",
-      "version": 3,
+      "version": 5,
       "verify_jwt": false,
-      "live_sha256": "f8a38e6e138999229ae9b2062e4fce683e749bae2d1556ae6fe147ab888249a1",
+      "live_sha256": "6d9e7825d002762d93cb1d3c96e838c8fa5229e0fc38c6c5ea553c5d8581a8de",
       "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 172,
+      "version": 184,
       "verify_jwt": false,
-      "live_sha256": "150e79caf305dd75638cb026336e7f1275ef9fa1cce0a856b68e14cfe7af3293",
+      "live_sha256": "2bf55db2df2dd3cb2e57173e36aa98a24c0f81eaa92d7caedf3b42e2eef86de5",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 176,
+      "version": 188,
       "verify_jwt": true,
-      "live_sha256": "b962b659e36a0d50191b9f80c882d651ce0a72abb0ba5196b36a9285a4d603c5",
+      "live_sha256": "975eae3408031dce32dccc1f6a17b1798053cc7bc28ea7309e0a19de9b3309ec",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 172,
+      "version": 184,
       "verify_jwt": false,
-      "live_sha256": "39b554739860688faebd79b04491748b7d4a9616992f3aa5086eb3a42ec95798",
+      "live_sha256": "7c269bfe0871fc8e91bd21f09cc835089e7fc0746ecb866f86351d5e4e06b501",
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc"
     },
     "intel-feed": {
       "state": "DEPLOYED",
-      "version": 2,
+      "version": 3,
       "verify_jwt": false,
-      "live_sha256": "8415eea3a9db5645846346c94b5e4110f367115d081cdce20c5883ed80a785bb",
+      "live_sha256": "2ea8b05689d73ca7bc388d0de1c9ce5390d7807dc9abe1588da7205acfb11e0e",
       "repository_blob_sha": "d7f272478432c211794d57be5a06bebaff6a84ae"
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
-      "version": 3,
+      "version": 5,
       "verify_jwt": false,
-      "live_sha256": "f11344b949a9af4aee6f1f023c7c8ed4dadc9403d5a14e3876a0d9f69a734667",
+      "live_sha256": "5e348d1c116193b0b101378a042d639294f1db66005fb0ca1ce39fdb63546e43",
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
-      "version": 82,
+      "version": 94,
       "verify_jwt": false,
-      "live_sha256": "58646b5492bc592a6bf217daf88c95b1b91edb1502b28bc48d000ff2e8ba04e8",
+      "live_sha256": "8d6b528c33ee38b3807ebc5a247423f0e8484f86d10f86fc8a26c07aec98236f",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
     },
     "checkout": {
@@ -107,16 +107,16 @@
     },
     "content-delivery": {
       "state": "DEPLOYED",
-      "version": 3,
+      "version": 4,
       "verify_jwt": true,
-      "live_sha256": "032b5397e90a99e4fd60a4af7b15d8a16a080bc562630e10c4ed4326b0d38856",
+      "live_sha256": "3d92f6a8038d9a4fd8816da3ae031d6eb9ccc443f4bf2553becb6e9b625764f0",
       "repository_blob_sha": "6af8faface5d678de6519be4c6a913ddd589dc7d"
     },
     "content-ingest": {
       "state": "DEPLOYED",
-      "version": 3,
+      "version": 4,
       "verify_jwt": true,
-      "live_sha256": "e9116bc02b76d83a9fd198bc69cc605efc1f30aa5d5ee1da36fdbe1cfc12310a",
+      "live_sha256": "6267ea76df2c0649b580e002d409d7f018ed1cc2e05606aad408d796d1f4c1a6",
       "repository_blob_sha": "cf97e6496efc9bfe5cd87b35cd5cdc03909cbef0"
     },
     "event-ingest": {

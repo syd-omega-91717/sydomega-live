@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "description": "Explicit runtime authentication mode for every deployed Supabase Edge Function. verify_jwt is kept in sync with the CLI config and point-in-time live inventory.",
+  "functions": {
+    "agent-execute": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Requires a valid Supabase JWT; handler performs its own authorization."
+    },
+    "concierge": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Authenticated orchestration endpoint."
+    },
+    "concierge-orchestrator": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Authenticated orchestration endpoint."
+    },
+    "content-delivery": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Authenticated owner-only delivery endpoint."
+    },
+    "content-ingest": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Authenticated owner-only ingestion endpoint."
+    },
+    "evidence-graph": {
+      "verify_jwt": false,
+      "auth_mode": "USER_SESSION",
+      "rationale": "Supabase server adapter enforces auth=user and handler requires userClaims.sub."
+    },
+    "growth-orchestrator": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Authenticated orchestration endpoint."
+    },
+    "intel-feed": {
+      "verify_jwt": false,
+      "auth_mode": "PUBLIC_READONLY",
+      "rationale": "Public GET-only Hacker News industry feed; no privileged database writes."
+    },
+    "omega-knowledge-embedding-worker": {
+      "verify_jwt": false,
+      "auth_mode": "SHARED_SECRET",
+      "rationale": "Worker verifies OMEGA_PROVIDER_WORKER_SECRET in x-omega-worker-secret."
+    },
+    "omega-media-worker": {
+      "verify_jwt": false,
+      "auth_mode": "SHARED_SECRET",
+      "rationale": "Supabase server adapter enforces auth=secret."
+    },
+    "omega-notification-worker": {
+      "verify_jwt": false,
+      "auth_mode": "SHARED_SECRET",
+      "rationale": "Supabase server adapter enforces auth=secret."
+    },
+    "omega-provider-worker": {
+      "verify_jwt": false,
+      "auth_mode": "SHARED_SECRET",
+      "rationale": "Worker verifies OMEGA_PROVIDER_WORKER_SECRET in x-omega-worker-secret."
+    },
+    "omega-runtime-gateway": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "User-authenticated governed runtime gateway."
+    },
+    "product-orchestrator": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Authenticated orchestration endpoint."
+    },
+    "secrets-health": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Authenticated operational health endpoint."
+    },
+    "stripe-webhook": {
+      "verify_jwt": false,
+      "auth_mode": "STRIPE_SIGNATURE",
+      "rationale": "Webhook authenticates using Stripe's signed raw request body; Supabase JWT verification is not the webhook trust boundary."
+    }
+  }
+}

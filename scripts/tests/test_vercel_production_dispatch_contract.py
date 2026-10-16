@@ -18,11 +18,24 @@ class VercelProductionDispatchContract(unittest.TestCase):
     def test_automatic_production_push_is_main_only(self):
         self.assertIn("push:\n    branches: [main]", WORKFLOW)
 
+    def test_supabase_migration_evidence_does_not_trigger_static_site_deploy(self):
+        push_config = WORKFLOW.split("  pull_request:", 1)[0]
+        positive_json = "      - '**/*.json'"
+        negative_supabase = "      - '!supabase/**'"
+        negative_runtime_evidence = "      - '!docs/runtime/supabase-edge-functions-live.json'"
+        self.assertIn(positive_json, push_config)
+        self.assertIn(negative_supabase, push_config)
+        self.assertIn(negative_runtime_evidence, push_config)
+        self.assertLess(
+            push_config.index(positive_json),
+            push_config.index(negative_supabase),
+        )
+
     def test_manual_dispatch_refuses_non_main_before_mutation(self):
         guard = "Refuse production promotion from non-main manual dispatch"
         self.assertIn(guard, WORKFLOW)
         guard_pos = WORKFLOW.index(guard)
-        deployment_pos = WORKFLOW.index("Deploy to Vercel Production")
+        deployment_pos = WORKFLOW.index("Deploy prebuilt production artifact")
         self.assertLess(guard_pos, deployment_pos)
         self.assertIn(
             "github.event_name == 'workflow_dispatch' && "
@@ -34,7 +47,7 @@ class VercelProductionDispatchContract(unittest.TestCase):
     def test_missing_credentials_fail_when_production_deploy_is_requested(self):
         guard = "Controlled state when token is unavailable"
         guard_pos = WORKFLOW.index(guard)
-        deployment_pos = WORKFLOW.index("Deploy to Vercel Production")
+        deployment_pos = WORKFLOW.index("Deploy prebuilt production artifact")
         block = WORKFLOW[guard_pos:deployment_pos]
         self.assertIn("DEPLOY_REQUESTED:", block)
         self.assertIn(
@@ -47,11 +60,14 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn("do not treat artifact validation as a production deployment", block)
 
     def test_production_smoke_runs_after_a_requested_successful_deploy(self):
-        deploy_pos = WORKFLOW.index("Deploy to Vercel Production")
+        deploy_pos = WORKFLOW.index("Deploy prebuilt production artifact")
         smoke_pos = WORKFLOW.index("Verify production domain smoke routes")
         self.assertLess(deploy_pos, smoke_pos)
         self.assertIn("run: bash scripts/vercel-production-smoke.sh", WORKFLOW)
         self.assertIn("OMEGA_PRODUCTION_BASE_URL: https://sydomega.com", WORKFLOW)
+        self.assertIn("EXPECTED_RELEASE_SHA: ${{ github.sha }}", WORKFLOW)
+        script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
+        self.assertIn("served_commit_mismatch", script)
 
     def test_smoke_script_checks_successful_html_routes(self):
         script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
@@ -73,10 +89,10 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn("needs: validate", WORKFLOW)
         self.assertIn("needs: credentials", WORKFLOW)
         self.assertIn("bash scripts/vercel-deployment-auth-check.sh", WORKFLOW)
-        self.assertIn(
-            'npx --yes vercel@59.6.0 deploy --prod --yes --token "$VERCEL_TOKEN"',
-            WORKFLOW,
-        )
+        self.assertIn('npx --yes vercel@59.6.0 pull --yes --environment=production --token "$VERCEL_TOKEN"', WORKFLOW)
+        self.assertIn('npx --yes vercel@59.6.0 build --prod --yes --token "$VERCEL_TOKEN"', WORKFLOW)
+        self.assertIn('npx --yes vercel@59.6.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"', WORKFLOW)
+        self.assertIn("node scripts/omega-release-manifest.mjs --check .vercel/output/static/.well-known/omega-release.json", WORKFLOW)
 
 
 if __name__ == "__main__":

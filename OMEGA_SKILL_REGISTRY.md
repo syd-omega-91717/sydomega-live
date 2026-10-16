@@ -96,10 +96,10 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 239 |
 | pages loading `bg.js` | 239 of 239 |
-| `omega-*.js` modules | 238 (2096 KB) |
+| `omega-*.js` modules | 238 (2098 KB) |
 | root `.js` files | 253 |
 | `supabase/*.sql` (flat bag) | 127 |
-| `supabase/migrations/*.sql` | 383 (107 numbered `NNNN_`, 276 timestamped) |
+| `supabase/migrations/*.sql` | 386 (107 numbered `NNNN_`, 279 timestamped) |
 | Edge Functions | 26 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -120,12 +120,10 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 | `i18n/nl.json` | 1189 |
 | `i18n/zh.json` | 1189 |
 
-`supabase/migrations/README.md` records exactly one end-to-end run against a
-fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
-(`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 289 files added since (numbered and
-timestamped alike) were **not part of that validation**, and no run has covered
-all 383. Treat the validated scope as `0001`–`0094` only.
+Migration replay and production migration-history evidence are maintained in
+[`supabase/migrations/README.md`](supabase/migrations/README.md). This generated
+registry links to that canonical source rather than duplicating dated run IDs,
+migration counts, or point-in-time production parity claims.
 
 **`bg.js` is loaded by all 239 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

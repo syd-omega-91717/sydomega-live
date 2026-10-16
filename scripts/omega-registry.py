@@ -60,15 +60,11 @@ BYTES_PER_TOKEN = 4
 # of them is reachable only by someone who already knows it exists.
 REFERENCE_DOCS = [Path("CLAUDE.md"), SKILLS_DIR / "README.md"]
 
-# How far the ONE recorded scratch-database run actually reached. This is a
-# fact about a run that happened, so it is pinned here rather than derived from
-# the current file count -- the generated text used to say
-# `0001`-`00{numbered}`, which meant every newly added numbered migration
-# silently claimed to have been part of a validation it was never in. Evidence:
-# supabase/migrations/README.md, heading "Full 94-file sequence validated
-# end-to-end for the first time". Raise this ONLY after a run that actually
-# covers the higher number, and record that run in the README first.
-VALIDATED_MIGRATIONS = 94
+# The registry mirrors dated migration evidence recorded in
+# supabase/migrations/README.md. Keep the generated paragraph synchronized with
+# that source; never infer replay coverage from the current migration count.
+# The 2026-10-16 evidence is point-in-time and must be refreshed after new
+# migrations or a new production parity check.
 
 
 def lf_bytes(path: Path) -> int:
@@ -427,13 +423,10 @@ def render(skills, agents, census) -> str:
             add(f"| `i18n/{lang}.json` | {n}{gap} |")
         add("")
     if census["migrations_timestamped"]:
-        unvalidated = census["migrations"] - VALIDATED_MIGRATIONS
-        add(f"`supabase/migrations/README.md` records exactly one end-to-end run against a")
-        add(f"fresh scratch PostgreSQL 16 instance, covering the **{VALIDATED_MIGRATIONS}-file numbered sequence**")
-        add(f"(`0001`–`{VALIDATED_MIGRATIONS:04d}`) — see its heading *\"Full {VALIDATED_MIGRATIONS}-file sequence validated")
-        add(f"end-to-end for the first time\"*. The {unvalidated} files added since (numbered and")
-        add(f"timestamped alike) were **not part of that validation**, and no run has covered")
-        add(f"all {census['migrations']}. Treat the validated scope as `0001`–`{VALIDATED_MIGRATIONS:04d}` only.")
+        add("Migration replay and production migration-history evidence are maintained in")
+        add("[`supabase/migrations/README.md`](supabase/migrations/README.md). This generated")
+        add("registry links to that canonical source rather than duplicating dated run IDs,")
+        add("migration counts, or point-in-time production parity claims.")
         add("")
 
     if census["pages_loading_bg"] == census["pages"]:

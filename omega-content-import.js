@@ -19,6 +19,8 @@ form.addEventListener('submit',async function(e){
     msg.textContent='UPLOAD REMOVED AFTER REGISTRATION FAILURE · CLEANUP CONFIRMED';
   }else if(r.state==='ROLLBACK_REQUIRED'){
     msg.textContent='REGISTRATION FAILED · CLEANUP NOT CONFIRMED · SUPPORT REVIEW REQUIRED';
+  }else if(r.state==='REGISTRATION_UNCERTAIN'){
+    msg.textContent='REGISTRATION STATUS UNKNOWN · FILE PRESERVED TO AVOID DATA LOSS · SUPPORT REVIEW REQUIRED';
   }else{
     msg.textContent='NOT AVAILABLE: '+(r.data&&r.data.error||'UPLOAD FAILED');
   }

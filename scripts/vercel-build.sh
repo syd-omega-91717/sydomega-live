@@ -140,6 +140,11 @@ done
 
 [ "${missing_refs}" -eq 0 ] || { echo "VERCEL_BUILD=FAIL unreachable_assets=${missing_refs}"; exit 1; }
 
+# Embed the exact source commit in the public artifact. CI validates it before
+# upload, and the post-deploy smoke check validates the same SHA from production.
+node scripts/omega-release-manifest.mjs --write
+
+
 
 
 html_count="$(find public -type f -name '*.html' | wc -l | tr -d ' ')"

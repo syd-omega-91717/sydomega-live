@@ -120,12 +120,14 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 | `i18n/nl.json` | 1189 |
 | `i18n/zh.json` | 1189 |
 
-`supabase/migrations/README.md` records exactly one end-to-end run against a
-fresh scratch PostgreSQL 16 instance, covering the **94-file numbered sequence**
-(`0001`–`0094`) — see its heading *"Full 94-file sequence validated
-end-to-end for the first time"*. The 289 files added since (numbered and
-timestamped alike) were **not part of that validation**, and no run has covered
-all 383. Treat the validated scope as `0001`–`0094` only.
+`supabase/migrations/README.md` records the historical PostgreSQL 16 replay of the
+94-file numbered baseline (`0001`–`0094`) and the newer full migration replay.
+On 2026-10-16, GitHub Actions run [38912798583](https://github.com/syd-omega-91717/sydomega-live/actions/runs/38912798583)
+passed against an isolated fresh Supabase stack and replayed the full **383-file
+migration inventory**. The run also passed migration security, hardening, and
+family-access authorization/privacy probes. This validates fresh replay at the
+recorded commit; it does **not** establish that production has applied all 383
+migrations. Production migration history must be verified separately.
 
 **`bg.js` is loaded by all 239 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

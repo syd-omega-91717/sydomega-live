@@ -26,6 +26,12 @@ supabase migration list
 
 The expected result has no row where only LOCAL or only REMOTE is populated. If a remote version is missing locally, recover the migration file/version before pushing anything else. If the remote history is wrong but the database schema is already correct, use `supabase migration repair` only after verifying the actual database state. `migration repair` changes tracking history; it does not execute or undo SQL.
 
+### Full fresh-database replay — 2026-10-16
+
+GitHub Actions [Supabase Full Migration Replay run 38912798583](https://github.com/syd-omega-91717/sydomega-live/actions/runs/38912798583) passed on `main` commit `b5f0ea9f0aa0ba82fd343ed84eada2e3bc29f463`. The run validated all **383 local migration files**, started an isolated Supabase stack, successfully replayed the history from a fresh database with `supabase db reset`, revalidated the inventory, and passed the migration security audit, hardening contract, and family-access authorization/privacy probes.
+
+This proves the repository's full migration sequence can replay in the isolated CI database at that commit. Separately, on 2026-10-16, the authenticated Supabase migration-list query for the production project returned **383 versions**, matching the **383 local migration filenames exactly**: no local-only versions, no remote-only versions, and no duplicate versions on either side. The highest recorded version on both sides was `20261015220000`. This is a point-in-time history match, not proof that production's schema is semantically identical to a fresh replay or that a future deployment has run; recheck after every production migration.
+
 ## Safe recovery procedure
 
 When the CLI reports remote versions that do not exist locally:

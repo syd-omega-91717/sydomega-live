@@ -17,6 +17,7 @@ import shlex
 import subprocess
 import tempfile
 import time
+from datetime import datetime, timezone
 import uuid
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -146,7 +147,7 @@ def rest_rows(api_url: str, service_key: str, table: str, params: dict[str, str]
     return data
 
 
-def run_e2e(env: dict[str, str], server_log_path: Path) -> None:
+def run_e2e(env: dict[str, str]) -> None:
     api_url = env["API_URL"]
     anon_key = env["ANON_KEY"]
     service_key = env["SERVICE_ROLE_KEY"]
@@ -226,7 +227,14 @@ def run_e2e(env: dict[str, str], server_log_path: Path) -> None:
     require(status == 200 and isinstance(delivery, dict) and delivery.get("ok") is True,
             "owner_signed_download_failed")
     require(delivery.get("delivery_state") == "SIGNED", "signed_delivery_state_missing")
-    require(delivery.get("expires_seconds", 900) == 900, "signed_url_expiry_not_900_seconds")
+    expires_at = delivery.get("expires_at")
+    require(isinstance(expires_at, str), "signed_url_expiry_missing")
+    try:
+        expiry_time = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise E2EFailure("signed_url_expiry_invalid") from exc
+    remaining = (expiry_time - datetime.now(timezone.utc)).total_seconds()
+    require(885 <= remaining <= 915, "signed_url_expiry_not_900_seconds")
     signed_url = delivery.get("signed_url")
     require(isinstance(signed_url, str) and signed_url.startswith(("http://", "https://", "/")),
             "signed_url_missing")
@@ -268,6 +276,14 @@ def run_e2e(env: dict[str, str], server_log_path: Path) -> None:
     }
     require("content_asset_registered" in event_names, "content_registration_audit_missing")
     require("content_asset_signed_download" in event_names, "signed_download_audit_missing")
+    signed_event = next(
+        (event for event in events if (event.get("metadata") or {}).get("event_name") == "content_asset_signed_download"),
+        None,
+    )
+    require(
+        signed_event is not None and (signed_event.get("metadata") or {}).get("expires_seconds") == 900,
+        "signed_download_audit_expiry_mismatch",
+    )
     print("CONTENT_PIPELINE_E2E=PASS local_only=true stages=auth,upload,registration,idempotency,path_guard,jwt,owner_download,expiry,audit")
 
 
@@ -291,7 +307,7 @@ def main() -> int:
                 cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, text=True,
             )
             try:
-                run_e2e(env, log_path)
+                run_e2e(env)
             except Exception as exc:
                 server.poll()
                 log.flush()

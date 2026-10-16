@@ -46,6 +46,10 @@
          deliberately thin so it cannot become a second authorization system. */
       var r=await sb.storage.from(bucket).remove([path]);
       if(r.error) return {error:r.error.message};
+      /* Storage can return an empty success when RLS filtered the deletion.
+         Treat only an explicit matching removed object as confirmed cleanup. */
+      if(!Array.isArray(r.data) || !r.data.some(function(item){ return item && item.name===path; }))
+        return {error:'Storage deletion was not confirmed.'};
       return {path:path};
     },
     /* An identity document is deleted through the Storage API, never SQL

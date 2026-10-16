@@ -65,6 +65,8 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertLess(deploy_pos, smoke_pos)
         self.assertIn("run: bash scripts/vercel-production-smoke.sh", WORKFLOW)
         self.assertIn("OMEGA_PRODUCTION_BASE_URL: https://sydomega.com", WORKFLOW)
+        self.assertIn("EXPECTED_RELEASE_SHA: ${{ github.sha }}", WORKFLOW)
+        self.assertIn("served_commit_mismatch", script)
 
     def test_smoke_script_checks_successful_html_routes(self):
         script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
@@ -86,10 +88,10 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn("needs: validate", WORKFLOW)
         self.assertIn("needs: credentials", WORKFLOW)
         self.assertIn("bash scripts/vercel-deployment-auth-check.sh", WORKFLOW)
-        self.assertIn(
-            'npx --yes vercel@59.6.0 deploy --prod --yes --token "$VERCEL_TOKEN"',
-            WORKFLOW,
-        )
+        self.assertIn('npx --yes vercel@59.6.0 pull --yes --environment=production --token "$VERCEL_TOKEN"', WORKFLOW)
+        self.assertIn('npx --yes vercel@59.6.0 build --prod --yes --token "$VERCEL_TOKEN"', WORKFLOW)
+        self.assertIn('npx --yes vercel@59.6.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"', WORKFLOW)
+        self.assertIn("node scripts/omega-release-manifest.mjs --check .vercel/output/static/.well-known/omega-release.json", WORKFLOW)
 
 
 if __name__ == "__main__":

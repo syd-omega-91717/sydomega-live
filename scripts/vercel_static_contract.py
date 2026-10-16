@@ -21,6 +21,7 @@ def main() -> int:
         (index_path, "index.html"),
         (build_path, "scripts/vercel-build.sh"),
         (enhancer_path, "scripts/vercel-build-enhance.mjs"),
+        (ROOT / "scripts" / "omega-release-manifest.mjs", "scripts/omega-release-manifest.mjs"),
     )
     missing = [label for path, label in required if not path.is_file()]
     if missing:
@@ -82,12 +83,17 @@ def main() -> int:
         "vendor files src=",
         "unreachable_asset=${ref}",
         "vercel-build-enhance.mjs",
+        "omega-release-manifest.mjs",
     ):
         check(marker in build, "build_marker=" + marker)
 
     enhancer = enhancer_path.read_text(encoding="utf-8", errors="strict")
     for marker in ("viewport", "<title>", "omega-visual-engine.js"):
         check(marker in enhancer, "enhancer_marker=" + marker)
+
+    manifest = (ROOT / "scripts" / "omega-release-manifest.mjs").read_text(encoding="utf-8", errors="strict")
+    for marker in ("commit_sha", "schema_version", "GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA"):
+        check(marker in manifest, "release_manifest_marker=" + marker)
 
     if errors:
         print("VERCEL_STATIC_CONTRACT=FAIL")

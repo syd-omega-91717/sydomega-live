@@ -133,6 +133,8 @@ jobs:
           set -euo pipefail
           test -s public/index.html
           test -f public/vendor/supabase-js.js
+          test -s public/.well-known/omega-release.json
+          OMEGA_RELEASE_SHA="$GITHUB_SHA" node scripts/omega-release-manifest.mjs --check public/.well-known/omega-release.json
           test "$(find public -type f -name '*.html' | wc -l)" -gt 0
           echo 'VERCEL_PRODUCTION_ARTIFACT=PASS'
 
@@ -222,15 +224,31 @@ jobs:
       - name: Verify Vercel token and project authority
         if: needs.credentials.outputs.ready == 'true'
         run: bash scripts/vercel-deployment-auth-check.sh
-      - name: Deploy to Vercel Production
+      - name: Pull Vercel production settings
         if: >-
           needs.credentials.outputs.ready == 'true' &&
           (github.event_name == 'push' || inputs.deploy == true)
-        run: npx --yes vercel@59.6.0 deploy --prod --yes --token "$VERCEL_TOKEN"
+        run: npx --yes vercel@59.6.0 pull --yes --environment=production --token "$VERCEL_TOKEN"
+      - name: Build immutable production artifact
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_RELEASE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          npx --yes vercel@59.6.0 build --prod --yes --token "$VERCEL_TOKEN"
+          node scripts/omega-release-manifest.mjs --check .vercel/output/static/.well-known/omega-release.json
+      - name: Deploy prebuilt production artifact
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        run: npx --yes vercel@59.6.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"
       - name: Verify production domain smoke routes
         if: >-
           needs.credentials.outputs.ready == 'true' &&
           (github.event_name == 'push' || inputs.deploy == true)
         env:
           OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
+          EXPECTED_RELEASE_SHA: ${{ github.sha }}
         run: bash scripts/vercel-production-smoke.sh

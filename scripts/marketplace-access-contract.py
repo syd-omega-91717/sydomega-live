@@ -30,6 +30,16 @@ def main() -> int:
         sql,
         re.S,
     )
+    insert_policy = re.search(
+        r'create\s+policy\s+marketplace_listings_insert\b(.*?);',
+        sql,
+        re.S,
+    )
+    update_policy = re.search(
+        r'create\s+policy\s+marketplace_listings_update\b(.*?);',
+        sql,
+        re.S,
+    )
     checks = [
         ("server-only asset table", "create table omega_private.marketplace_listing_assets" in sql),
         ("private asset table has RLS", "alter table omega_private.marketplace_listing_assets enable row level security" in sql),
@@ -39,6 +49,8 @@ def main() -> int:
         ("public listing path is cleared", "new.file_path := null;" in sql),
         ("legacy public paths are backfilled then cleared", "update public.marketplace_listings\nset file_path = null" in sql),
         ("inactive listing rows are not broadly visible", bool(select_policy) and "status = 'active'" in select_policy.group(1) and "seller_id = (select auth.uid())" in select_policy.group(1) and "private.is_platform_owner()" in select_policy.group(1) and "auth.role()" not in select_policy.group(1)),
+        ("listing insert requires an approved profile", bool(insert_policy) and "p.access_approved is true" in insert_policy.group(1) and "seller_id = (select auth.uid())" in insert_policy.group(1)),
+        ("unapproved sellers cannot reactivate listings", bool(update_policy) and "status <> 'active'" in update_policy.group(1) and "p.access_approved is true" in update_policy.group(1)),
         ("member read model counts own listing IDs", "count(l.id)" in sql and "marketplace_listing_count" in sql),
         ("platform count is active inventory only", "count(id) from public.marketplace_listings where status='active'" in sql),
         ("public listing query uses an explicit field allowlist", "from('marketplace_listings').select('id,seller_id,title,kind,price_omega,description,status,created_at,user_id')" in page),

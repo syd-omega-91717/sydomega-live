@@ -29,6 +29,18 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
         self.assertIn("length(p_task_type) not between 1 and 48", self.sql)
         self.assertIn("length(p_description) > 500", self.sql)
 
+    def test_matrix_never_paints_optimistic_progress_after_rpc_failure(self):
+        matrix = (ROOT / "omega-matrix.js").read_text(encoding="utf-8")
+        self.assertIn("Progression is server-authoritative", matrix)
+        self.assertIn("if(d.ok!==true)", matrix)
+        self.assertIn("points:Number(d.points||0)", matrix)
+        self.assertNotIn("Graceful offline fallback: update display optimistically", matrix)
+
+    def test_progress_toast_uses_server_confirmed_delta(self):
+        progress = (ROOT / "omega-progress.js").read_text(encoding="utf-8")
+        self.assertIn("Number(d.points) > 0", progress)
+        self.assertIn("toast(axis, opts.title, Number(d.points))", progress)
+
     def test_first_publication_award_respects_the_rpc_cap(self):
         publishing = (ROOT / "publishing.html").read_text(encoding="utf-8")
         self.assertIn("p_points:0.12", publishing)

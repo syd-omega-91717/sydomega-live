@@ -23522,3 +23522,26 @@ wrongly exempted). That retired **7 of 12** `KNOWN` entries — each table's onl
 policies were `using (false) [with check (false)]`; the one non-false policy
 (`stripe_webhook_events`, `using (true)`) is `to service_role`, out of scope. `KNOWN` 12 → 5.
 `ci-local.sh` 31/31; `scripts/tests` OK. **Not yet proven:** the replay on GitHub.
+
+## 2026-10-16 — `omega_platform_events.event_id` had no default: missions could not start or complete
+
+**Found (live):** `event_id uuid NOT NULL` + unique index, `column_default` null. Both
+`20261002025000` and `20261002073936` added the column, backfilled it with `gen_random_uuid()` and
+set NOT NULL, but neither set a default, so a fresh replay matches live. Any insert not naming
+`event_id` raised `23502`. 7 rows, newest **2026-09-29**. 10 database functions write the table;
+**3 omit `event_id`**: `private.omega_start_mission`, `private.omega_complete_mission` (both
+SECURITY DEFINER, owner `postgres`) and `public.omega_record_world_action` (invoker). Callers:
+`omega-mission-board.js:177,186`, `omega-world-mission.js:59`, `omega-world-actions.js:36`.
+No client code inserts into the table directly.
+
+**Fix (owner approved):** `20261016223949` sets `DEFAULT gen_random_uuid()` — the same function both
+migrations used to backfill. Existing rows, NOT NULL and the unique index are unchanged.
+Applied live; the ledger recorded `20261016223949`, the file carries it.
+
+**Verified live:** `column_default` = `gen_random_uuid()`. A DO block inserted a row without
+`event_id`, got `c82c61ff-5e98-4d96-b2d2-0febbddb6f84`, then raised to roll back — table still
+7 rows. Mission start/complete (owner-run definers) no longer hit `23502`.
+
+**Still broken, not changed (§8.1 class 6c):** `authenticated` holds **no INSERT** on
+`omega_platform_events` though `omega_platform_events_insert_own` (`auth.uid() = actor_user_id`)
+exists, so invoker `omega_record_world_action` still fails 42501 (`GAP_ANALYSIS.md`).

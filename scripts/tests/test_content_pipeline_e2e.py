@@ -88,7 +88,10 @@ def local_env() -> dict[str, str]:
     require(parsed_url.scheme in {"http", "https"} and parsed_url.hostname in {"127.0.0.1", "localhost", "::1"},
             "refusing_nonlocal_supabase_target")
     require(bool(anon_key) and bool(service_key), "local_supabase_keys_missing")
+    db_url = values.get("DB_URL") or ""
+    require(urlparse(db_url).hostname in {"127.0.0.1", "localhost", "::1"}, "refusing_nonlocal_database_target")
     return {
+        "DB_URL": db_url,
         "SUPABASE_URL": api_url.rstrip("/"),
         "SUPABASE_ANON_KEY": anon_key,
         "SUPABASE_SERVICE_ROLE_KEY": service_key,
@@ -145,6 +148,24 @@ def rest_rows(api_url: str, service_key: str, table: str, params: dict[str, str]
     )
     require(status == 200 and isinstance(data, list), f"service_role_read_failed_{table}")
     return data
+
+
+def db_events(db_url: str, actor_id: str) -> list:
+    # service_role holds INSERT only on omega_platform_events (20261016213149):
+    # the content functions write audit events and never read them. Verify the
+    # rows as the local database owner instead of widening that grant for a test.
+    actor = str(uuid.UUID(actor_id))
+    sql = ("select coalesce(json_agg(e), '[]'::json) from (select event_type, actor_user_id, metadata "
+           "from public.omega_platform_events where actor_user_id = '%s'::uuid limit 100) e" % actor)
+    result = subprocess.run(["psql", db_url, "-At", "-v", "ON_ERROR_STOP=1", "-c", sql],
+                            capture_output=True, text=True)
+    require(result.returncode == 0, "audit_event_read_failed")
+    try:
+        rows = json.loads(result.stdout.strip() or "[]")
+    except json.JSONDecodeError as exc:
+        raise E2EFailure("audit_event_read_unparseable") from exc
+    require(isinstance(rows, list), "audit_event_read_unparseable")
+    return rows
 
 
 def run_e2e(env: dict[str, str]) -> None:
@@ -273,11 +294,7 @@ def run_e2e(env: dict[str, str]) -> None:
     require(row.get("mime_type") == "text/plain", "client_supplied_mime_was_trusted")
     require(row.get("visibility") == "private", "content_not_private_by_default")
 
-    events = rest_rows(api_url, service_key, "omega_platform_events", {
-        "select": "event_type,actor_user_id,metadata",
-        "actor_user_id": "eq." + first_id,
-        "limit": "100",
-    })
+    events = db_events(env["DB_URL"], first_id)
     event_names = {
         (event.get("metadata") or {}).get("event_name")
         for event in events

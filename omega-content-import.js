@@ -15,8 +15,10 @@ form.addEventListener('submit',async function(e){
   var r=await root.OmegaContentTasks.upload(f,{content_type:String(type&&type.value||'OTHER').toLowerCase()});
   if(r.state==='PENDING_REVIEW'){
     msg.textContent='REGISTERED: '+(r.data&&r.data.content_id||'CONTENT')+' · RIGHTS/PUBLICATION/ENTITLEMENT REMAIN UNVERIFIED';
-  }else if(r.state==='ROLLED_BACK'){
-    msg.textContent='ROLLED BACK: '+(r.data&&r.data.error||'REGISTRATION FAILED')+' · NO ORPHAN UPLOAD KEPT';
+  }else if(r.state==='ROLLED_BACK'&&r.data&&r.data.cleanup_state==='CONFIRMED'){
+    msg.textContent='UPLOAD REMOVED AFTER REGISTRATION FAILURE · CLEANUP CONFIRMED';
+  }else if(r.state==='ROLLBACK_REQUIRED'){
+    msg.textContent='REGISTRATION FAILED · CLEANUP NOT CONFIRMED · SUPPORT REVIEW REQUIRED';
   }else{
     msg.textContent='NOT AVAILABLE: '+(r.data&&r.data.error||'UPLOAD FAILED');
   }

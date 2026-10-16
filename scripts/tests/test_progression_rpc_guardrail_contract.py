@@ -46,6 +46,8 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
         self.assertIn("p_points:0.12", publishing)
         self.assertIn("Contribution axis advanced +0.12.", publishing)
         self.assertNotIn("p_points:0.25", publishing)
+        self.assertNotIn("farm-proof", publishing.lower())
+        self.assertIn("server-side source verification remains required", publishing)
 
     def test_rolling_award_cap_is_serialized_and_indexed(self):
         self.assertIn("MAX_POINTS_PER_24H constant numeric := 0.30;", self.sql)

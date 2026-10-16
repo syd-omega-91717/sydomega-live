@@ -49,6 +49,7 @@ on:
       - 'scripts/release-surface-quality.py'
       - 'scripts/omega-enterprise-readiness-contract.py'
       - '!supabase/**'
+      - '!docs/runtime/supabase-edge-functions-live.json'
   pull_request:
     branches: [main]
     paths:

@@ -44,6 +44,7 @@ def main() -> int:
         ("server-only asset table", "create table omega_private.marketplace_listing_assets" in sql),
         ("private asset table has RLS", "alter table omega_private.marketplace_listing_assets enable row level security" in sql),
         ("asset foreign key is deferred for the before-row trigger", "deferrable initially deferred" in sql),
+        ("listing deletion cannot orphan the private cleanup locator", "on delete no action deferrable initially deferred" in sql and "on delete cascade" not in sql),
         ("private asset table is not granted to API roles", "revoke all on table omega_private.marketplace_listing_assets from public, anon, authenticated, service_role" in sql),
         ("asset paths are seller-prefix validated", "path_value !~ ('^' || new.seller_id::text || '/[a-za-z0-9._-]+$')" in sql),
         ("public listing path is cleared", "new.file_path := null;" in sql),

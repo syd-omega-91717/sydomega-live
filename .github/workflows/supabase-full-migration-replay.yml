@@ -59,6 +59,10 @@ jobs:
           test -n "$db_url"
           psql "$db_url" -v ON_ERROR_STOP=1 -f scripts/tests/family-access-migration-probe.sql
 
+      - name: Run authenticated content pipeline end-to-end
+        shell: bash
+        run: python3 scripts/tests/test_content_pipeline_e2e.py
+
       - name: Stop isolated Supabase stack
         if: always()
         run: supabase stop --no-backup

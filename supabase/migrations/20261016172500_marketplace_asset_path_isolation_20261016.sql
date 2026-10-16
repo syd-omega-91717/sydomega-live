@@ -6,8 +6,8 @@ begin;
 
 create schema if not exists omega_private;
 
-create table if not exists omega_private.marketplace_listing_assets (
-  listing_id uuid primary key references public.marketplace_listings(id) on delete cascade,
+create table omega_private.marketplace_listing_assets (
+  listing_id uuid primary key references public.marketplace_listings(id) on delete cascade deferrable initially deferred,
   seller_id uuid not null,
   bucket text not null default 'uploads' check (bucket = 'uploads'),
   object_path text not null unique,
@@ -60,7 +60,7 @@ update public.marketplace_listings
 set file_path = null
 where file_path is not null;
 
-create or replace function omega_private.capture_marketplace_listing_asset()
+create function omega_private.capture_marketplace_listing_asset()
 returns trigger
 language plpgsql
 security definer

@@ -119,6 +119,8 @@ Deno.serve(async (req: Request) => {
     if (insertError) throw insertError;
 
     const { error: eventError } = await admin.from("omega_platform_events").insert({
+      // event_id is NOT NULL with no default live (20261002073936).
+      event_id: crypto.randomUUID(),
       event_type: "evidence_recorded",
       route: "/content",
       actor_user_id: userId,
@@ -162,6 +164,14 @@ Deno.serve(async (req: Request) => {
     }, 201);
   } catch (error) {
     const message = error instanceof Error ? error.message : "content_ingest_failed";
+    // Supabase errors are plain objects, not Error instances: log their code so a
+    // 500 names its cause server-side. Never returned to the caller.
+    const detail = error as { code?: unknown; message?: unknown } | null;
+    console.error(JSON.stringify({
+      event: "CONTENT_INGEST_FAILED",
+      code: typeof detail?.code === "string" ? detail.code : null,
+      detail: typeof detail?.message === "string" ? detail.message.slice(0, 300) : null,
+    }));
     const clientErrors = new Set([
       "invalid_filename",
       "unsupported_bucket",

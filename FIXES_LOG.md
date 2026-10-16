@@ -23444,3 +23444,41 @@ policy") is false live; it came from `GAP_ANALYSIS.md`'s 2026-08-31 note, supers
 
 **Fix:** both files restored to `b31b4a72`. `node --check` OK; content pipeline tests 6/6;
 `ci-local.sh` → ALL 31 BLOCKING CHECKS PASSED. `GAP_ANALYSIS.md` storage DELETE item closed.
+
+## 2026-10-16 — content upload pipeline: two live blockers behind one generic 500
+
+**Found:** `Fresh database replay (all migrations)` red on every `main` run since #961 added
+`test_content_pipeline_e2e.py` (runs 1013–1019): `content-ingest` → 500
+`content_ingest_failed`, nothing logged. Its catch block reported a Postgrest error as generic
+because a Supabase error is not `instanceof Error`.
+
+**Cause 1 — §8.1 class 6c, measured live:** `has_table_privilege('service_role', …)` was false
+for SELECT/INSERT/DELETE on `public.storage_files` and INSERT on `public.omega_platform_events`.
+`20260903015535` revoked the schema's default table privileges from `service_role`; live,
+`service_role` reaches **32 of 281** public tables. Both content functions use the service-role
+client, so the first query failed 42501 before RLS (`service_role` has `rolbypassrls`).
+
+**Cause 2, measured live:** `omega_platform_events.event_id` is `uuid NOT NULL` with **no
+default** (set NOT NULL by `20261002073936`). A `service_role` insert without it → `23502`.
+Neither content function sent one. The table holds 7 rows, newest **2026-09-29** — consistent
+with every writer that omits `event_id` failing since 2026-10-02 (left open, `GAP_ANALYSIS.md`).
+
+**Fix (owner chose the narrow option):** migration `20261016213149` grants `service_role`
+SELECT/INSERT/DELETE on `storage_files` and INSERT on `omega_platform_events` — nothing else.
+Applied live; the ledger recorded `20261016213149`, so the file carries that version and
+`supabase/remote-migrations.json` lists it. Both functions now send `event_id:
+crypto.randomUUID()` and log the error code server-side (never returned to the caller).
+
+**Verified live, as `SET LOCAL ROLE service_role`, rolled back:** `storage_files` insert …
+returning → 1 row; both audit inserts (`evidence_recorded`, `capability_used`) → 1 row each;
+afterwards 0 probe rows, 7 events, 0 idle-in-transaction. DELETE proven by
+`has_table_privilege` = true only: a DELETE probe through the connector timed out twice
+(its destructive-statement confirmation), with no backend left blocked. Both functions parse
+under TypeScript 5; `ci-local.sh` 31/31; `scripts/tests` OK. **Not yet proven:** the e2e run on
+GitHub, and the redeploy of both Edge Functions (they deploy by hand, §1).
+
+**Also found, not changed:** the live ledger holds `20261016193700`
+(`progression_rpc_guardrails_20261016`, same name as `20261016194804`) with no local file; it is
+left out of the snapshot because `migration-drift.py` fails on remote-only versions.
+`test_progression_rpc_guardrail_contract.py` pinned `latestRemoteMigration` to `20261016194804`,
+so any later migration broke it; it now asserts presence and `latest >= version`.

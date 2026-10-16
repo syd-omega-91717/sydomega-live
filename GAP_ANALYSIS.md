@@ -16,6 +16,16 @@ project's own established convention (security/data-integrity first).
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
 - **OPEN 2026-10-12 — owner decisions recorded, legal review pending.** Owner chose the 12-tier `omega-canon.json` ladder (subscriptions.html now renders it), adult-only owner-granted family access (HIGH-RISK build in review: `docs/decisions/family-access/`), and dormant non-cash points for every money item. `docs/COUNSEL_BRIEF.md` lists the questions for counsel in Lebanon, UAE/GCC, US and EU/UK; no flag changes until answered. 8 blueprint items still need the owner (provenance marks 66/166, succession 73/652/969/N155, tier permanence 266, model per tier 289).
 
+- **OPEN 2026-10-16 — `service_role` reaches 32 of 281 public tables live.** `20260903015535`
+  revoked default table privileges from it, so every newer table an Edge Function touches through
+  the service-role client fails 42501. Only `content-ingest`/`content-delivery` were granted
+  (`20261016213149`, owner chose the narrow fix). The other Edge Functions are unaudited against
+  it — next step is a per-function table audit, then per-table grants (`FIXES_LOG.md`, 2026-10-16).
+- **OPEN 2026-10-16 — `omega_platform_events.event_id` is NOT NULL with no default live.** 7 rows,
+  newest 2026-09-29: every writer omitting `event_id` has failed since `20261002073936`. The content
+  functions now send one; restoring `DEFAULT gen_random_uuid()` would fix all writers at once and is
+  an owner decision. Also: live ledger row `20261016193700` has no local file.
+
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
 

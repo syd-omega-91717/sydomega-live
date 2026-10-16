@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-16T19:04:33.458Z",
-  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (read-only provider query)",
-  "remoteMigrationCount": 384,
-  "latestRemoteMigration": "20261016174416",
+  "_captured": "2026-10-16T19:32:56.012Z",
+  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated read-only provider query)",
+  "remoteMigrationCount": 385,
+  "latestRemoteMigration": "20261016193000",
   "versions": [
     "0001",
     "0002",
@@ -387,7 +387,8 @@
     "20261012150000",
     "20261013160000",
     "20261015220000",
-    "20261016174416"
+    "20261016174416",
+    "20261016193000"
   ],
   "migrations": [
     {
@@ -1922,6 +1923,10 @@
     {
       "version": "20261016174416",
       "name": "20261016172500_marketplace_asset_path_isolation_20261016"
+    },
+    {
+      "version": "20261016193000",
+      "name": "revoke_anon_member_preferences_rpc_20261016"
     }
   ]
 }

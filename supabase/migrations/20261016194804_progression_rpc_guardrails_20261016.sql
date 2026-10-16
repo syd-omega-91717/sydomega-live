@@ -1,4 +1,4 @@
--- Migration: 20261016193700_progression_rpc_guardrails_20261016.sql
+-- Migration: 20261016194804_progression_rpc_guardrails_20261016.sql
 -- The public complete_task RPC is callable by authenticated clients. Bound
 -- client-supplied inputs and serialize per-user awards until source-specific
 -- verified-task award paths replace self-reported completion claims.

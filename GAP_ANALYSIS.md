@@ -34,7 +34,7 @@ project's own established convention (security/data-integrity first).
   narrow `GRANT INSERT … TO authenticated` (the policy already scopes rows to `auth.uid()`) —
   an owner decision, since it opens a client write path to the audit table.
 
-- **OPEN 2026-10-16 — `omega_record_simulation_run` cannot write (42501), 0 rows ever.** Same
+- **CLOSED 2026-10-16 (`20261016231606`, SECURITY DEFINER; verified by member impersonation) — was: `omega_record_simulation_run` cannot write (42501), 0 rows ever.** Same
   root cause as world actions: live-only `20260930090758` made it SECURITY INVOKER and added
   `omega_simulation_runs_insert_own` with no INSERT grant; the repo's alias of that migration is a
   no-op, so live and a fresh replay differ. Read its body before choosing definer vs grant.

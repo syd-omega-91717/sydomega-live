@@ -14,11 +14,11 @@ production serves it.
 | IN_PROGRESS | 5 |
 | PROPOSED | 18 |
 | PARTIAL | 56 |
-| OPEN_GAP | 13 |
+| OPEN_GAP | 12 |
 | DORMANT | 1 |
 | SHIPPED | 36 |
 | DECIDED | 42 |
-| CLOSED | 12 |
+| CLOSED | 13 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
 | REJECTED | 118 |
@@ -143,13 +143,12 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (13)
+### OPEN_GAP (12)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | G01 | GAP_ANALYSIS.md S | owner decisions recorded, legal review pending. Owner chose the 12-tier `omega-canon.json` ladder (subscripti… | GAP_ANALYSIS.md section S |
 | G02 | GAP_ANALYSIS.md S | `service_role` reaches 32 of 281 public tables live. `20260903015535` | GAP_ANALYSIS.md section S |
-| G05 | GAP_ANALYSIS.md S | `omega_record_simulation_run` cannot write (42501), 0 rows ever. Same | GAP_ANALYSIS.md section S |
 | G06 | GAP_ANALYSIS.md S | production is frozen at the 2026-10-06 build. Vercel's newest | GAP_ANALYSIS.md section S |
 | G07 | GAP_ANALYSIS.md S | nothing measures uptime or service health. Live: `incidents`, | GAP_ANALYSIS.md section S |
 | G08 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
@@ -255,12 +254,13 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
-### CLOSED (12)
+### CLOSED (13)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | G03 | GAP_ANALYSIS.md S | was: `omega_platform_events.event_id` is NOT NULL with no default live. 7 rows, | GAP_ANALYSIS.md section S |
 | G04 | GAP_ANALYSIS.md S | was: `omega_record_world_action` cannot write its event (42501). It is | GAP_ANALYSIS.md section S |
+| G05 | GAP_ANALYSIS.md S | was: `omega_record_simulation_run` cannot write (42501), 0 rows ever. Same | GAP_ANALYSIS.md section S |
 | G10 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
 | G11 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
 | G12 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |

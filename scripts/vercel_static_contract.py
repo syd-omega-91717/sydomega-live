@@ -52,7 +52,7 @@ def main() -> int:
     # branch deploying a preview -- measured: that burned the 100/day free quota and stalled
     # production deploys on 2026-10-04 and 2026-10-05. "**" is the pattern that covers them.
     check(deployment_enabled.get("**", True) is False, "automatic_git_deploy_must_be_disabled_for_slashed_branches")
-    check(deployment_enabled.get("main", False) is True, "main_git_deploy_must_be_enabled")
+    check(deployment_enabled.get("main", True) is False, "automatic_git_deploy_must_be_disabled_for_main")
 
     redirects = config.get("redirects", [])
     def host_rules(host: str) -> list:
@@ -108,7 +108,8 @@ def main() -> int:
     print("install_command=empty")
     print("output_directory=public")
     print("host_policy=" + host_policy)
-    print("git_auto_deploy=main_only")
+    print("git_auto_deploy=disabled")
+    print("git_auto_deploy_main=disabled")
     print("git_auto_deploy_non_main=disabled")
     print("promotion_workflow=.github/workflows/vercel-production.yml")
     print("build_output_verified=references_resolve_in_public")

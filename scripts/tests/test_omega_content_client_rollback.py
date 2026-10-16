@@ -14,6 +14,9 @@ class ContentClientRollbackTests(unittest.TestCase):
         self.assertIn("return !!removed&&!removed.error", js)
         self.assertIn("catch(_error){return false;}", js)
         self.assertIn("cleanup_state:'UNCONFIRMED'", js)
+        self.assertIn("registrationStarted=true", js)
+        self.assertIn("REGISTRATION_UNCERTAIN", js)
+        self.assertIn("registered.error&&!registered.data", js)
 
     def test_rolled_back_state_requires_confirmed_cleanup(self):
         js = (ROOT / "omega-content-tasks.js").read_text()
@@ -42,6 +45,7 @@ class ContentClientRollbackTests(unittest.TestCase):
         self.assertIn("r.state==='ROLLBACK_REQUIRED'", js)
         self.assertIn("CLEANUP NOT CONFIRMED", js)
         self.assertNotIn("NO ORPHAN UPLOAD KEPT", js)
+        self.assertIn("REGISTRATION STATUS UNKNOWN", js)
 
 
 if __name__ == "__main__":

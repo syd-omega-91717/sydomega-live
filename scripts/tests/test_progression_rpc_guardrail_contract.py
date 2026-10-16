@@ -36,6 +36,11 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
         self.assertIn("points:Number(d.points||0)", matrix)
         self.assertNotIn("Graceful offline fallback: update display optimistically", matrix)
 
+    def test_workflow_animation_uses_server_confirmed_delta(self):
+        workflow = (ROOT / "omega-workflow.js").read_text(encoding="utf-8")
+        self.assertIn("var appliedDelta = Number(ctx.axis_result && ctx.axis_result.points)", workflow)
+        self.assertIn("ctx.axis_result&&ctx.axis_result.applied?appliedDelta:0", workflow)
+
     def test_progress_toast_uses_server_confirmed_delta(self):
         progress = (ROOT / "omega-progress.js").read_text(encoding="utf-8")
         self.assertIn("Number(d.points) > 0", progress)

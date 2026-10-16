@@ -11,6 +11,10 @@ PAGE = ROOT / "marketplace.html"
 
 
 def main() -> int:
+    if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+        print(__doc__)
+        return 0
+
     errors = []
     if not MIGRATION.is_file() or not PAGE.is_file():
         print("MARKETPLACE ACCESS CONTRACT: FAIL")

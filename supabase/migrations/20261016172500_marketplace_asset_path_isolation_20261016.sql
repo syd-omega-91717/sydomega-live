@@ -7,7 +7,7 @@ begin;
 create schema if not exists omega_private;
 
 create table omega_private.marketplace_listing_assets (
-  listing_id uuid primary key references public.marketplace_listings(id) on delete cascade deferrable initially deferred,
+  listing_id uuid primary key references public.marketplace_listings(id) on delete no action deferrable initially deferred,
   seller_id uuid not null,
   bucket text not null default 'uploads' check (bucket = 'uploads'),
   object_path text not null unique,

@@ -14,7 +14,7 @@ PAGE = (ROOT / "marketplace.html").read_text(encoding="utf-8")
 
 class MarketplaceUploadRollbackContract(unittest.TestCase):
     def test_listing_insert_exception_preserves_file_and_avoids_duplicate_retry(self):
-        block = PAGE.split("var ins;", 1)[1].split("if(ins.error)", 1)[0]
+        block = PAGE.split("var ins=await sb.from('marketplace_listings').insert", 1)[1].split("if(ins.error)", 1)[0]
         self.assertIn("catch(_)", block)
         self.assertIn("FILE PRESERVED TO AVOID DATA LOSS", block)
         self.assertIn("Refresh MY LISTINGS before retrying", block)

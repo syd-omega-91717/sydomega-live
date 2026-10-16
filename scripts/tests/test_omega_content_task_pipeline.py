@@ -24,6 +24,7 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("root.OmegaStorage.remove('uploads',path)", js)
         self.assertIn("task('ROLLBACK_REQUIRED'", js)
         self.assertIn("cleanup_state:'CONFIRMED'", js)
+        self.assertIn("REGISTRATION_UNCERTAIN", js)
 
     def test_ingest_requires_authenticated_and_segment_validated_owner_path(self):
         js = (ROOT / "supabase/functions/content-ingest/index.ts").read_text()

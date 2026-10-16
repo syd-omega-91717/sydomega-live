@@ -23494,3 +23494,31 @@ via `pg_net` from the database (this session's egress blocks `supabase.co`): bot
 `config/omega-content-task-pipeline.json` claimed version 3 (stale before this change); now 5.
 Rollback: redeploy the v4 sources, git blobs `cf97e649` (ingest) / `6af8fafa` (delivery).
 **Still not proven:** an authenticated upload end-to-end against production.
+
+## 2026-10-16 — #966 broke the fresh replay outright; `storage_files` was never in a migration
+
+**Found:** after #966 merged, `Fresh database replay` failed at `supabase db reset`:
+`ERROR: relation "public.storage_files" does not exist (SQLSTATE 42P01)` at
+`20261016213149`. The table exists live but **no file in `supabase/` creates it** (grep:
+only `live-schema.json`, `live-grants.json` and the two functions name it) — so the replay had
+never had it, which is also why the content e2e step 500'd there before the grant existed.
+Separately, #966 merged at its first commit (`4a5c55d5`) while the deploy record
+(`c756b54b`) was still being pushed, so `main` recorded v4 for functions running v5 (§8.2's
+frozen-head rule, again).
+
+**Fix:** (1) `20261016213149`'s two grants are wrapped in `to_regclass(...) is not null` guards
+— an edit to an applied file, made only because live state is identical (both ran
+unconditionally there). (2) New `20261016221059_capture_storage_files_schema` captures the live
+definition read the same day (12 columns, defaults, PK, both FKs, two indexes, RLS, the one
+`omega_deny_by_default` policy) with `create … if not exists` / guarded policy, revokes client
+roles (none held live) and re-grants `service_role`. Applied live as a no-op: still 1 policy, 3
+indexes, the same grants, 0 rows. (3) `c756b54b` cherry-picked.
+
+**Gate fix it forced:** `migration-grant-contract.py` read any policy naming a client role as
+needing a GRANT, so the capture's deny-only policy failed it. A policy whose every clause is
+literally `(false)` admits no row and now implies none; a policy with any other clause still
+counts (planted tests for both, plus `using (x) with check (false)`, which the first regex
+wrongly exempted). That retired **7 of 12** `KNOWN` entries — each table's only client-role
+policies were `using (false) [with check (false)]`; the one non-false policy
+(`stripe_webhook_events`, `using (true)`) is `to service_role`, out of scope. `KNOWN` 12 → 5.
+`ci-local.sh` 31/31; `scripts/tests` OK. **Not yet proven:** the replay on GitHub.

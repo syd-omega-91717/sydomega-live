@@ -10,9 +10,24 @@
 --   omega_platform_events  insert (audit event; id is an identity column)
 -- No other role and no other table changes. RLS is unchanged.
 
+-- Guarded 2026-10-16 (after it was applied live): public.storage_files was
+-- created outside the migration chain, so a fresh replay reached this file
+-- without it and failed 42P01. Live the table exists and both grants ran
+-- unconditionally, so the guarded form leaves live state identical. A fresh
+-- replay creates the table in 20261016221059_capture_storage_files_schema,
+-- which re-applies the same grants.
+
 begin;
 
-grant select, insert, delete on table public.storage_files to service_role;
-grant insert on table public.omega_platform_events to service_role;
+do $$
+begin
+  if to_regclass('public.storage_files') is not null then
+    grant select, insert, delete on table public.storage_files to service_role;
+  end if;
+  if to_regclass('public.omega_platform_events') is not null then
+    grant insert on table public.omega_platform_events to service_role;
+  end if;
+end
+$$;
 
 commit;

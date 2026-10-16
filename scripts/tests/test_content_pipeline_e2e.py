@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 import uuid
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urlencode, urlparse
+from urllib.parse import quote, urlencode, urlparse, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -241,8 +241,18 @@ def run_e2e(env: dict[str, str]) -> None:
         signed_url = api_url + "/storage/v1" + signed_url
     elif signed_url.startswith("/storage/"):
         signed_url = api_url + signed_url
+    else:
+        # Inside the local Edge runtime SUPABASE_URL is the Docker-internal
+        # gateway (http://kong:8000), which this runner cannot resolve. Keep the
+        # signed path and token exactly; only the host is rebased. Production
+        # signs against its public URL, so this changes nothing there.
+        parsed_url = urlsplit(signed_url)
+        if parsed_url.path.startswith("/storage/v1/"):
+            base = urlsplit(api_url)
+            signed_url = urlunsplit((base.scheme, base.netloc, parsed_url.path, parsed_url.query, ""))
     status, _, downloaded = request("GET", signed_url, timeout=15)
-    require(status == 200 and downloaded == contents, "signed_download_content_mismatch")
+    require(status == 200, f"signed_download_http_{status}")
+    require(downloaded == contents, "signed_download_content_mismatch")
 
     status, forbidden, _ = invoke(
         api_url, anon_key, second_token, "content-delivery", {"file_id": file_id},

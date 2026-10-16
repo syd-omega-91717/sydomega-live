@@ -120,16 +120,10 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 | `i18n/nl.json` | 1189 |
 | `i18n/zh.json` | 1189 |
 
-`supabase/migrations/README.md` records the historical PostgreSQL 16 replay of the
-94-file numbered baseline (`0001`–`0094`) and the newer full migration replay.
-On 2026-10-16, GitHub Actions run [38912798583](https://github.com/syd-omega-91717/sydomega-live/actions/runs/38912798583)
-passed against an isolated fresh Supabase stack and replayed all **383 migration
-files**, including migration security, hardening, and family-access authorization/
-privacy probes. A separate authenticated production migration-list check on the
-same date matched **383 local versions to 383 production-recorded versions**, with
-no local-only, remote-only, or duplicate versions; latest version on both sides
-was `20261015220000`. This is point-in-time migration-history parity, not proof of
-semantic schema equivalence or future deployment success; recheck after changes.
+Migration replay and production migration-history evidence are maintained in
+[`supabase/migrations/README.md`](supabase/migrations/README.md). This generated
+registry links to that canonical source rather than duplicating dated run IDs,
+migration counts, or point-in-time production parity claims.
 
 **`bg.js` is loaded by all 239 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every

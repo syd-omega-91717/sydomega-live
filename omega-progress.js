@@ -94,7 +94,7 @@
         }).then(function (res) {
           if (res.error) throw res.error;
           var d = res.data || {};
-          if (d.applied && !silent) toast(axis, opts.title, weight);
+          if (d.applied && !silent && Number(d.points) > 0) toast(axis, opts.title, Number(d.points));
           return d;
         });
       });

@@ -114,6 +114,47 @@ before insert or update of file_path, seller_id
 on public.marketplace_listings
 for each row execute function omega_private.capture_marketplace_listing_asset();
 
+-- Enforce approved-account access at the database boundary, not just in
+-- marketplace.html. Owners retain administrative access.
+drop policy if exists marketplace_listings_insert on public.marketplace_listings;
+create policy marketplace_listings_insert
+on public.marketplace_listings
+for insert to authenticated
+with check (
+  private.is_platform_owner()
+  or (
+    seller_id = (select auth.uid())
+    and exists (
+      select 1 from public.profiles p
+      where p.id = (select auth.uid())
+        and p.access_approved is true
+    )
+  )
+);
+
+drop policy if exists marketplace_listings_update on public.marketplace_listings;
+create policy marketplace_listings_update
+on public.marketplace_listings
+for update to authenticated
+using (
+  private.is_platform_owner()
+  or seller_id = (select auth.uid())
+)
+with check (
+  private.is_platform_owner()
+  or (
+    seller_id = (select auth.uid())
+    and (
+      status <> 'active'
+      or exists (
+        select 1 from public.profiles p
+        where p.id = (select auth.uid())
+          and p.access_approved is true
+      )
+    )
+  )
+);
+
 -- Do not expose inactive/draft listing rows to other members. Sellers can still
 -- inspect their own listings; the platform owner can inspect all rows.
 drop policy if exists marketplace_listings_select on public.marketplace_listings;

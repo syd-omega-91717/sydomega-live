@@ -3,8 +3,8 @@
 # This checks reachability and HTML delivery, not authenticated workflows or API correctness.
 set -euo pipefail
 
-BASE_URL="\${OMEGA_PRODUCTION_BASE_URL:-https://sydomega.com}"
-BASE_URL="\${BASE_URL%/}"
+BASE_URL="${OMEGA_PRODUCTION_BASE_URL:-https://sydomega.com}"
+BASE_URL="${BASE_URL%/}"
 case "$BASE_URL" in
   https://*) ;;
   *)
@@ -17,7 +17,7 @@ tmp="$(mktemp)"
 trap 'rm -f "$tmp"' EXIT
 
 for path in / /world.html /evidence.html; do
-  url="\${BASE_URL}\${path}"
+  url="${BASE_URL}${path}"
   meta="$(curl --silent --show-error --fail --location --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 10 --max-time 30 --output "$tmp" --write-out '%{http_code}|%{content_type}|%{url_effective}' "$url")" || {
     echo "PRODUCTION_SMOKE=FAIL url=$url reason=request_failed"
     exit 1

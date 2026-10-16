@@ -23422,3 +23422,25 @@ Follow-up to the water and exam fixes above, from `FEATURE_IDEAS.md` §41's "one
 - **`contacts.html` / `network.html`:** different Dunbar circles. Network's TRIBE is 15, contacts' is 50, and network has PROSPECTS.
 
 These are parallel tools, not one fact stored twice. Merging either means choosing a taxonomy and mapping the other onto it, which loses information: an owner decision, recorded in `GAP_ANALYSIS.md` §S.
+
+## 2026-10-16 — `main` red: `omega-content-tasks.js` was a syntax-error merge of two designs
+
+**Found:** `./scripts/ci-local.sh` on `64ec4ca` → 5 blocking failures (JS syntax ×2, audit
+self-tests, skill registry, repository integrity). `node --check omega-content-tasks.js` →
+`SyntaxError: Unexpected token 'catch'` at line 100. Merge `b429e13f` interleaved
+`3a69a310` (client must never delete; cleanup only via the Edge Function's
+`rollback_state`) with `b31b4a72` (#961: client `cleanupUploaded()` with confirmation,
+`REGISTRATION_UNCERTAIN` on an ambiguous response): two `catch` on one `try`, a duplicate
+`var uploaded`, `registered` read outside its scope. The test file merged the same way —
+one test asserted `OmegaStorage.remove` absent, the next asserted it present, so no code
+could pass. Since this file is loaded by the content upload flow, every page using it threw
+at parse time.
+
+**Decided by live fact, not preference:** `pg_policies` on `storage.objects` (2026-10-16)
+holds `uploads delete` — authenticated, `(storage.foldername(name))[1] = auth.uid()::text`.
+`3a69a310`'s premise ("Client-side Storage DELETE is not authorized by the current RLS
+policy") is false live; it came from `GAP_ANALYSIS.md`'s 2026-08-31 note, superseded by
+`20260926083157`. `upload.js:38` publishes `OmegaStorage.remove`.
+
+**Fix:** both files restored to `b31b4a72`. `node --check` OK; content pipeline tests 6/6;
+`ci-local.sh` → ALL 31 BLOCKING CHECKS PASSED. `GAP_ANALYSIS.md` storage DELETE item closed.

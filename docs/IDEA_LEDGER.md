@@ -6,7 +6,7 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**488 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 20, IDEA_INTAKE.md 13.
+**489 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 21, IDEA_INTAKE.md 13.
 
 | status | count |
 |---|---|
@@ -18,7 +18,7 @@ production serves it.
 | DORMANT | 1 |
 | SHIPPED | 36 |
 | DECIDED | 42 |
-| CLOSED | 9 |
+| CLOSED | 10 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
 | REJECTED | 118 |
@@ -253,7 +253,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
-### CLOSED (9)
+### CLOSED (10)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -266,6 +266,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | G18 | GAP_ANALYSIS.md S | governed runtime modules are wired or intentionally retired. | GAP_ANALYSIS.md section S |
 | G19 | GAP_ANALYSIS.md S | five inert progression-table member-write policies removed. | GAP_ANALYSIS.md section S |
 | G20 | GAP_ANALYSIS.md S | `find_contradictions` exists (opened 2026-09-26). Defined in | GAP_ANALYSIS.md section S |
+| G21 | GAP_ANALYSIS.md S | `storage.objects` DELETE exists live. `pg_policies` now | GAP_ANALYSIS.md section S |
 
 ### SUPERSEDED (1)
 

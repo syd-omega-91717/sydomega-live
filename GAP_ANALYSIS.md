@@ -721,9 +721,11 @@ open, recorded in `FIXES_LOG.md`:
   was rejected: no stable client secret exists, and it changes no trust boundary
   — `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` already hold
   comparable data under the same tested RLS.
-- **No DELETE policy on `storage.objects`** (live 2026-08-31): writes scoped to
-  own `<uid>/`, but deleting one's own upload is 42501. No client offers a
-  delete — a gap, and a product decision.
+- **CLOSED 2026-10-16 — `storage.objects` DELETE exists live.** `pg_policies` now
+  returns `uploads delete` / `avatars delete` (authenticated, own `<uid>/` folder) and
+  `uploads owner delete` (`private.is_platform_owner()`), from
+  `20260926083157_..._allow_member_owned_storage_delete.sql`. The 2026-08-31 "42501"
+  note went stale and a branch built on it broke `main` (`FIXES_LOG.md`, 2026-10-16).
 - **`.mp4` (3.7 MB) and `.docx` committed, no LFS.** Asked and declined;
   `.vercelignore` keeps both out of the deploy. A fix needs a history rewrite.
 - **Member location is not collected** (live 2026-08-29): `profiles.country`

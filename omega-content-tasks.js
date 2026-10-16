@@ -14,16 +14,8 @@ async function session(sb){
 }
 async function invoke(sb,name,body){
   var r=await sb.functions.invoke(name,{body:body});
-  if(r.error)return {error:r.error.message||String(r.error),data:r.data||null};
+  if(r.error)return {error:'FUNCTION_INVOCATION_FAILED',data:r.data||null};
   return {error:null,data:r.data||null};
-}
-async function cleanupUploaded(path){
-  if(typeof path!=='string'||!path)return false;
-  if(!root.OmegaStorage||typeof root.OmegaStorage.remove!=='function')return false;
-  try{
-    var removed=await root.OmegaStorage.remove('uploads',path);
-    return !!removed&&!removed.error;
-  }catch(_error){return false;}
 }
 async function upload(file,options){
   options=options||{};
@@ -38,7 +30,7 @@ async function upload(file,options){
       return task('FAILED',{truth_state:'UNAVAILABLE',error:'STORAGE_HELPER_UNAVAILABLE'});
     uploaded=await root.OmegaStorage.upload('uploads',file);
     if(!uploaded||uploaded.error||typeof uploaded.path!=='string'||!uploaded.path)
-      return task('FAILED',{truth_state:'UNAVAILABLE',error:(uploaded&&uploaded.error)||'UPLOAD_FAILED'});
+      return task('FAILED',{truth_state:'UNAVAILABLE',error:'UPLOAD_FAILED'});
     var registered=await invoke(sb,'content-ingest',{
       bucket:'uploads',
       path:uploaded.path,
@@ -48,11 +40,13 @@ async function upload(file,options){
       requested_content_type:options.content_type||null
     });
     if(registered.error||!registered.data||registered.data.ok!==true){
-      var cleaned=await cleanupUploaded(uploaded.path);
-      var error=(registered.error)||(registered.data&&registered.data.error)||'REGISTRATION_FAILED';
-      return cleaned
-        ? task('ROLLED_BACK',{truth_state:'LIVE',error:error,path:uploaded.path,cleanup_state:'CONFIRMED'})
-        : task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:error,path:uploaded.path,cleanup_state:'UNCONFIRMED'});
+      var error=(registered.data&&registered.data.error)||registered.error||'REGISTRATION_FAILED';
+      // Client-side Storage DELETE is not authorized by the current RLS policy.
+      // Only the privileged Edge Function's explicit compensation result can
+      // prove cleanup; otherwise surface an actionable unresolved state.
+      if(registered.data&&registered.data.rollback_state==='complete')
+        return task('ROLLED_BACK',{truth_state:'LIVE',error:error,path:uploaded.path,cleanup_state:'CONFIRMED'});
+      return task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:error,path:uploaded.path,cleanup_state:'UNCONFIRMED'});
     }
     return task('PENDING_REVIEW',{
       truth_state:'LIVE',
@@ -64,12 +58,8 @@ async function upload(file,options){
       scan_state:'UNAVAILABLE'
     });
   }catch(_error){
-    if(uploaded&&typeof uploaded.path==='string'&&uploaded.path){
-      var cleaned=await cleanupUploaded(uploaded.path);
-      return cleaned
-        ? task('ROLLED_BACK',{truth_state:'LIVE',error:'UNEXPECTED_PIPELINE_ERROR',path:uploaded.path,cleanup_state:'CONFIRMED'})
-        : task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:'UNEXPECTED_PIPELINE_ERROR',path:uploaded.path,cleanup_state:'UNCONFIRMED'});
-    }
+    if(uploaded&&typeof uploaded.path==='string'&&uploaded.path)
+      return task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:'UNEXPECTED_PIPELINE_ERROR',path:uploaded.path,cleanup_state:'UNCONFIRMED'});
     return task('FAILED',{truth_state:'UNAVAILABLE',error:'UNEXPECTED_PIPELINE_ERROR'});
   }
 }
@@ -80,7 +70,7 @@ async function signedDownload(fileId){
     if(!s)return task('FAILED',{truth_state:'UNAVAILABLE',error:'SIGN_IN_REQUIRED'});
     var r=await invoke(sb,'content-delivery',{file_id:fileId});
     if(r.error||!r.data||r.data.ok!==true)
-      return task('DENIED',{truth_state:'UNAVAILABLE',error:(r.data&&r.data.error)||'DELIVERY_DENIED'});
+      return task('DENIED',{truth_state:'UNAVAILABLE',error:(r.data&&r.data.error)||r.error||'DELIVERY_DENIED'});
     return task('SIGNED',{truth_state:'LIVE',content_id:fileId,signed_url:r.data.signed_url,expires_at:r.data.expires_at});
   }catch(_error){
     return task('FAILED',{truth_state:'UNAVAILABLE',error:'DELIVERY_UNAVAILABLE'});

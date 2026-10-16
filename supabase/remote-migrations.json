@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-15T23:09:03.147Z",
+  "_captured": "2026-10-16T19:00:30.899Z",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (read-only provider query)",
-  "remoteMigrationCount": 383,
-  "latestRemoteMigration": "20261015220000",
+  "remoteMigrationCount": 384,
+  "latestRemoteMigration": "20261016174416",
   "versions": [
     "0001",
     "0002",
@@ -386,7 +386,8 @@
     "20261012091641",
     "20261012150000",
     "20261013160000",
-    "20261015220000"
+    "20261015220000",
+    "20261016174416"
   ],
   "migrations": [
     {
@@ -1917,6 +1918,10 @@
     {
       "version": "20261015220000",
       "name": "restore_points_leaderboard_invoker_wrapper"
+    },
+    {
+      "version": "20261016174416",
+      "name": "20261016172500_marketplace_asset_path_isolation_20261016"
     }
   ]
 }

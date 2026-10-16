@@ -65,7 +65,7 @@ class VercelProductionDispatchContract(unittest.TestCase):
         script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
         self.assertIn("--proto '=https'", script)
         self.assertIn("--proto-redir '=https'", script)
-        self.assertIn('effective_host!="$EXPECTED_HOST"', script)
+        self.assertIn('if [[ "$effective_host" != "$EXPECTED_HOST" ]]; then', script)
         self.assertIn("redirect_left_expected_host", script)
         self.assertIn('EXPECTED_HOST="${EXPECTED_HOST%%/*}"', script)
 

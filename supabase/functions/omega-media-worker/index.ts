@@ -15,7 +15,7 @@ type MediaJob = {
 function safeProviderEndpoint(raw: string): string | null {
   try {
     const url = new URL(raw)
-    const hostname = url.hostname.toLowerCase().replace(/^\\[|\\]$/g, '')
+    const hostname = url.hostname.toLowerCase()
     const ipv4Literal = /^(?:\\d{1,3}\\.){3}\\d{1,3}$/.test(hostname)
     if (url.protocol !== 'https:' || !hostname || url.username || url.password || url.hash ||
         ipv4Literal || hostname.includes(':') || hostname === 'localhost' ||

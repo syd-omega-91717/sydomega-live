@@ -68,6 +68,7 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn('effective_host!="$EXPECTED_HOST"', script)
         self.assertIn("redirect_left_expected_host", script)
         self.assertIn('EXPECTED_HOST="${EXPECTED_HOST%%/*}"', script)
+
     def test_deployment_uses_the_validated_workflow_path(self):
         self.assertIn("needs: validate", WORKFLOW)
         self.assertIn("needs: credentials", WORKFLOW)

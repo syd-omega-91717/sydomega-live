@@ -23482,3 +23482,15 @@ GitHub, and the redeploy of both Edge Functions (they deploy by hand, §1).
 left out of the snapshot because `migration-drift.py` fails on remote-only versions.
 `test_progression_rpc_guardrail_contract.py` pinned `latestRemoteMigration` to `20261016194804`,
 so any later migration broke it; it now asserts presence and `latest >= version`.
+
+**Deployed (owner approved, 2026-10-16 ~22:01Z):** `content-ingest` and `content-delivery` →
+**version 5** each (were 4), `verify_jwt` unchanged true, same `_shared/keys.ts`. Read back from
+the provider: `content-ingest` v5 source matches the repo file. Provider `ezbr_sha256`
+`93b191b3…0054` (ingest) and `f316e715…1615` (delivery) are recorded in
+`docs/runtime/supabase-edge-functions-live.json` with the repo blob SHAs;
+`supabase-edge-runtime-reconciliation.py` → PASS (25 / 16 deployed / 9 local-only). Boot check
+via `pg_net` from the database (this session's egress blocks `supabase.co`): both return
+**401 `{"error":"not_authenticated"}`** — the function's own body, so both modules load.
+`config/omega-content-task-pipeline.json` claimed version 3 (stale before this change); now 5.
+Rollback: redeploy the v4 sources, git blobs `cf97e649` (ingest) / `6af8fafa` (delivery).
+**Still not proven:** an authenticated upload end-to-end against production.

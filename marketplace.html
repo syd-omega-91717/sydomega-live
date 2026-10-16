@@ -185,8 +185,45 @@ document.getElementById('btn-pub').addEventListener('click',async function(){
     file_path=up.path||up.fullPath||up.key||null;
     if(!file_path){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='UPLOAD FAILED: storage returned no path -- nothing was listed.';return;}
   }
-  var ins=await sb.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
-  if(ins.error){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='ERROR: '+ins.error.message;return;}
+  var ins;
+  try{
+    ins=await sb.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
+  }catch(_){
+    msg.style.display='block';msg.style.color='var(--crim)';
+    msg.textContent=file_path
+      ?'LISTING STATUS UNKNOWN — FILE PRESERVED TO AVOID DATA LOSS. Refresh MY LISTINGS before retrying.'
+      :'LISTING STATUS UNKNOWN. Refresh MY LISTINGS before retrying to avoid a duplicate.';
+    return;
+  }
+  if(!ins){
+    msg.style.display='block';msg.style.color='var(--crim)';
+    msg.textContent=file_path
+      ?'LISTING STATUS UNKNOWN — FILE PRESERVED TO AVOID DATA LOSS. Refresh MY LISTINGS before retrying.'
+      :'LISTING STATUS UNKNOWN. Refresh MY LISTINGS before retrying to avoid a duplicate.';
+    return;
+  }
+  if(ins.error){
+    var sqlState=ins.error&&typeof ins.error.code==='string'&&/^[0-9A-Z]{5}$/.test(ins.error.code);
+    if(!sqlState){
+      msg.style.display='block';msg.style.color='var(--crim)';
+      msg.textContent=file_path
+        ?'LISTING STATUS UNKNOWN — FILE PRESERVED TO AVOID DATA LOSS. Refresh MY LISTINGS before retrying.'
+        :'LISTING STATUS UNKNOWN. Refresh MY LISTINGS before retrying to avoid a duplicate.';
+      return;
+    }
+    if(file_path){
+      var cleanup;
+      try{cleanup=await window.OmegaStorage.remove('uploads',file_path);}catch(_){cleanup={error:'cleanup_exception'};}
+      msg.style.display='block';msg.style.color='var(--crim)';
+      msg.textContent=cleanup&&!cleanup.error
+        ?'LISTING REJECTED ('+ins.error.code+'). UPLOAD ROLLED BACK.'
+        :'LISTING REJECTED ('+ins.error.code+'). FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED.';
+      return;
+    }
+    msg.style.display='block';msg.style.color='var(--crim)';
+    msg.textContent='LISTING REJECTED ('+ins.error.code+'). No file was uploaded.';
+    return;
+  }
   window.OmegaProgress&&OmegaProgress.record({kind:'marketplace',task:'listed:'+title,axis:'c',title:'Marketplace Listing'});
   msg.style.display='block';msg.style.color='var(--green)';msg.textContent='&#x2713; LISTED — Your work is now visible in the marketplace.';
   document.getElementById('f-title').value='';document.getElementById('f-desc').value='';

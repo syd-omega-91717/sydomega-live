@@ -23574,3 +23574,24 @@ false; authenticated INSERT on the table still false.
 **Same defect, not changed:** `20260930090758` did the identical thing to
 `public.omega_record_simulation_run` / `omega_simulation_runs` — invoker, insert policy, no grant;
 0 rows ever (`GAP_ANALYSIS.md`).
+
+## 2026-10-16 — Simulation Arena "save run" failed 42501 since 2026-09-30; 0 runs ever saved
+
+**Found (live):** same root cause as world actions. `20260930090758` (live-only; repo alias is a
+no-op) set `public.omega_record_simulation_run` to SECURITY INVOKER and created
+`omega_simulation_runs_insert_own`, with no INSERT grant to `authenticated`. The canonical source
+`20260929112443` declares `security definer`. Caller: `omega-simulation-arena.js:28` (`saveRun`,
+RPC only); history is read over REST (`authenticated` SELECT + `select_own`, already working).
+Only other reader: `private.omega_create_recovery_checkpoint` (a count). 0 rows ever.
+
+**Why definer, not a grant:** the function caps each snapshot at 12000 bytes and validates key,
+version and object shape; the table only checks key/version length, so a direct REST insert would
+skip the caps.
+
+**Fix:** `20261016231606` — `security definer set search_path = ''`, EXECUTE revoked from
+PUBLIC/anon and granted to `authenticated`. No table grant. Applied live; ledger version matches.
+
+**Verified live, impersonating member `023a2c20…`, rolled back by a deliberate raise:** save →
+row owned by the member and visible to them via `select_own`; a 13000-byte snapshot →
+`input_snapshot_too_large` (22023); direct `insert into omega_simulation_runs` → **42501**.
+Afterwards 0 rows; prosecdef true; anon EXECUTE false; authenticated INSERT false.

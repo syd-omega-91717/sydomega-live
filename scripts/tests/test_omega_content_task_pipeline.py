@@ -17,10 +17,12 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("registration_does_not_prove_rights", c["upload"]["rules"])
         self.assertIn("public_download_is_never_inferred_from_storage_path", c["download"]["rules"])
 
-    def test_client_pipeline_rolls_back_orphan_on_registration_failure(self):
+    def test_client_does_not_claim_or_perform_unauthorized_rollback(self):
         js = (ROOT / "omega-content-tasks.js").read_text()
         self.assertIn("content-ingest", js)
-        self.assertIn("OmegaStorage.remove('uploads',uploaded.path)", js)
+        self.assertIn("task('ROLLBACK_REQUIRED'", js)
+        self.assertIn("registered.data.rollback_state==='complete'", js)
+        self.assertNotIn("OmegaStorage.remove", js)
 
     def test_ingest_requires_authenticated_and_segment_validated_owner_path(self):
         js = (ROOT / "supabase/functions/content-ingest/index.ts").read_text()

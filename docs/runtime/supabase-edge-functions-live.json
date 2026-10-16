@@ -107,17 +107,17 @@
     },
     "content-delivery": {
       "state": "DEPLOYED",
-      "version": 4,
+      "version": 5,
       "verify_jwt": true,
-      "live_sha256": "3d92f6a8038d9a4fd8816da3ae031d6eb9ccc443f4bf2553becb6e9b625764f0",
-      "repository_blob_sha": "6af8faface5d678de6519be4c6a913ddd589dc7d"
+      "live_sha256": "f316e715c6ae02afb420b01246047f01e30f2c91612062f9025e10f0d79a1615",
+      "repository_blob_sha": "410d77e9f8267406b40291830ac85f5191a63665"
     },
     "content-ingest": {
       "state": "DEPLOYED",
-      "version": 4,
+      "version": 5,
       "verify_jwt": true,
-      "live_sha256": "6267ea76df2c0649b580e002d409d7f018ed1cc2e05606aad408d796d1f4c1a6",
-      "repository_blob_sha": "cf97e6496efc9bfe5cd87b35cd5cdc03909cbef0"
+      "live_sha256": "93b191b3c5859210b5ac62188715af13ae2a65361ad607b8c740cf01d8ab0054",
+      "repository_blob_sha": "9f8dbddcb9901d55e20afe98e2b7794c7f2c10d7"
     },
     "event-ingest": {
       "state": "LOCAL_ONLY"

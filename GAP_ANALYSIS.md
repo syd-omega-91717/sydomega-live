@@ -25,6 +25,8 @@ project's own established convention (security/data-integrity first).
   newest 2026-09-29: every writer omitting `event_id` has failed since `20261002073936`. The content
   functions now send one; restoring `DEFAULT gen_random_uuid()` would fix all writers at once and is
   an owner decision. Also: live ledger row `20261016193700` has no local file.
+  `storage_files` itself had no migration until `20261016221059` (captured from live, 2026-10-16);
+  other live-only tables may exist — `live-schema.json` vs migrations has not been diffed for them.
 
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:

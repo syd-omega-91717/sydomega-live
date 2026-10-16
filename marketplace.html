@@ -80,15 +80,15 @@
   <div class="sechead">SOVEREIGN EXCHANGE ARCHITECTURE</div>
   <div class="card-grid" data-stagger data-stagger-gap="60">
     <div class="card" data-reveal="fade-up"><div class="card-title">THE OMEGA ECONOMY</div><div class="card-body">The marketplace is part of the internal &#937; economy. Transactions use Omega tokens — not fiat currencies. All listings are denominated in &#937;. The platform takes a 17% commission on each sale (consistent with 91717). The commission is intended to feed the sovereign treasury. The &#937; token economy is dormant &mdash; it stays off behind <code>platform_settings.tokens_enabled</code> (currently false), so no commission is charged, collected or owed today.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">SELLER TIERS</div><div class="card-body">Marketplace access is tier-gated. Free members can browse. Sovereign tier members can list. (Buying isn't built yet — see EARN ON SALE below.) The OmegaCanon.tierUnlocks() function evaluates this at listing time — the tier guard runs entirely in the client against the member's profile.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">File listings are stored in Supabase Storage via OmegaStorage.upload() and the path is recorded in marketplace_listings. There is no purchase step yet, so there's nothing to gate delivery on — this is upload/listing only, not a buy-then-receive flow.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">CONTRIBUTION CREDIT</div><div class="card-body">Listing an item in the marketplace earns Contribution XP (axis C). Completing a sale earns additional XP. The marketplace is not just commerce — it is the sovereign economy layer of the contribution axis, recognising economic action as an act of sovereignty.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">SELLER TIERS</div><div class="card-body">Marketplace access currently requires an approved account. The intended Sovereign-tier restriction is not enforced server-side yet, so client-side tier labels are not an authorization control. Buying and checkout are not built.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">File uploads go to the private uploads bucket. A database trigger moves each valid object path into server-only metadata and clears it from the public listing row. Purchase-gated signed delivery is not implemented; files are not purchasable or downloadable through the marketplace yet.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">CONTRIBUTION CREDIT</div><div class="card-body">Listing an item in the marketplace earns Contribution XP (axis C). Sale-related XP is planned, not available: no sale can complete because the purchase and payment flow is not implemented.</div></div>
   </div>
   <div class="sechead" style="margin-top:24px">LISTING PROCESS</div>
   <div class="glass">
     <div class="howit-step"><div class="howit-num">01</div><div class="howit-body"><div class="ht">PREPARE YOUR WORK</div><p>A listing can be a document, report, service, code, or any sovereign creation. Title and description are the primary discovery mechanism — make them precise.</p></div></div>
     <div class="howit-step"><div class="howit-num">02</div><div class="howit-body"><div class="ht">SET YOUR PRICE</div><p>Price in Omega tokens. Set to 0 for a free listing. Free listings still contribute to your Contribution axis. All prices are visible to all members.</p></div></div>
-    <div class="howit-step"><div class="howit-num">03</div><div class="howit-body"><div class="ht">UPLOAD (OPTIONAL)</div><p>Attach a file. OmegaStorage handles upload, compression, and secure delivery. The path is stored in the listing but never exposed publicly.</p></div></div>
+    <div class="howit-step"><div class="howit-num">03</div><div class="howit-body"><div class="ht">UPLOAD (OPTIONAL)</div><p>Attach a file. OmegaStorage uploads it to the private bucket; the database keeps the object path in server-only metadata, not in the listing row. Purchase-gated signed delivery is not implemented yet.</p></div></div>
     <div class="howit-step"><div class="howit-num">04</div><div class="howit-body"><div class="ht">EARN ON SALE &mdash; PLANNED</div><p>An 83%/17% seller/platform split is designed but not yet built — there is no buy step, no payment processing, and no revenue split anywhere in the platform today. Listings are visible and priced, not yet purchasable.</p></div></div>
   </div>
 </div>
@@ -150,7 +150,7 @@ async function toggleFavorite(listingId,btn){
 
 async function load(){
   var grid=document.getElementById('grid');
-  var r=await sb.from('marketplace_listings').select('*').eq('status','active').order('created_at',{ascending:false}).limit(60);
+  var r=await sb.from('marketplace_listings').select('id,seller_id,title,kind,price_omega,description,status,created_at,user_id').eq('status','active').order('created_at',{ascending:false}).limit(60);
   var rows=r.data||[];
   document.getElementById('count').textContent=rows.length+' ACTIVE';
   grid.replaceChildren();if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='NO LISTINGS YET. BE THE FIRST TO LIST A SOVEREIGN WORK.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,it.seller_id===uid));});
@@ -165,7 +165,7 @@ async function loadMine(){
 
 async function loadFavorites(){
   var grid=document.getElementById('fav-grid');
-  var r=await sb.from('marketplace_favorites').select('marketplace_listings(*)').eq('profile_id',uid).order('created_at',{ascending:false});
+  var r=await sb.from('marketplace_favorites').select('marketplace_listings(id,seller_id,title,kind,price_omega,description,status,created_at,user_id').eq('profile_id',uid).order('created_at',{ascending:false});
   grid.replaceChildren();if(r.error){var e=document.createElement('div');e.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';e.textContent='COULD NOT LOAD FAVORITES ('+String(r.error.message||'unknown error')+')';grid.appendChild(e);return;}var rows=(r.data||[]).map(function(f){return f.marketplace_listings;}).filter(Boolean);if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='NO FAVORITES YET. STAR A LISTING FROM THE LISTINGS TAB.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,it.seller_id===uid));});
 }
 

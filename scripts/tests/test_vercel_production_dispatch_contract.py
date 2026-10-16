@@ -60,6 +60,15 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn("/evidence.html", script)
         self.assertIn("content_type", script)
         self.assertIn("html_document_marker_missing", script)
+
+    def test_smoke_redirects_stay_on_expected_https_host(self):
+        script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
+        self.assertIn("--proto '=https'", script)
+        self.assertIn("--proto-redir '=https'", script)
+        self.assertIn('if [[ "$effective_host" != "$EXPECTED_HOST" ]]; then', script)
+        self.assertIn("redirect_left_expected_host", script)
+        self.assertIn('EXPECTED_HOST="${EXPECTED_HOST%%/*}"', script)
+
     def test_deployment_uses_the_validated_workflow_path(self):
         self.assertIn("needs: validate", WORKFLOW)
         self.assertIn("needs: credentials", WORKFLOW)

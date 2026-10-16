@@ -423,16 +423,10 @@ def render(skills, agents, census) -> str:
             add(f"| `i18n/{lang}.json` | {n}{gap} |")
         add("")
     if census["migrations_timestamped"]:
-        add("`supabase/migrations/README.md` records the historical PostgreSQL 16 replay of the")
-        add("94-file numbered baseline (`0001`–`0094`) and the newer full migration replay.")
-        add("On 2026-10-16, GitHub Actions run [38912798583](https://github.com/syd-omega-91717/sydomega-live/actions/runs/38912798583)")
-        add("passed against an isolated fresh Supabase stack and replayed all **383 migration")
-        add("files**, including migration security, hardening, and family-access authorization/")
-        add("privacy probes. A separate authenticated production migration-list check on the")
-        add("same date matched **383 local versions to 383 production-recorded versions**, with")
-        add("no local-only, remote-only, or duplicate versions; latest version on both sides")
-        add("was `20261015220000`. This is point-in-time migration-history parity, not proof of")
-        add("semantic schema equivalence or future deployment success; recheck after changes.")
+        add("Migration replay and production migration-history evidence are maintained in")
+        add("[`supabase/migrations/README.md`](supabase/migrations/README.md). This generated")
+        add("registry links to that canonical source rather than duplicating dated run IDs,")
+        add("migration counts, or point-in-time production parity claims.")
         add("")
 
     if census["pages_loading_bg"] == census["pages"]:

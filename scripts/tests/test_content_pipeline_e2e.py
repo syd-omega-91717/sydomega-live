@@ -199,7 +199,7 @@ def run_e2e(env: dict[str, str]) -> None:
     }
     status, ingest, _ = invoke(api_url, anon_key, first_token, "content-ingest", ingest_body)
     require(status in (200, 201) and isinstance(ingest, dict) and ingest.get("ok") is True,
-            "content_ingest_registration_failed")
+            f"content_ingest_registration_failed_http_{status}_error_{(ingest or {}).get('error', 'none')}")
     file_record = ingest.get("file") or {}
     file_id = file_record.get("id")
     require(isinstance(file_id, str) and bool(file_id), "content_ingest_id_missing")
@@ -299,21 +299,12 @@ def main() -> int:
     env = local_env()
     with tempfile.TemporaryDirectory(prefix="omega-content-pipeline-e2e-") as tmp:
         temp = Path(tmp)
-        env_file = temp / "functions.env"
-        env_file.write_text(
-            "\n".join(f"{key}={value}" for key, value in (
-                ("SUPABASE_URL", env["SUPABASE_URL"]),
-                ("SUPABASE_ANON_KEY", env["SUPABASE_ANON_KEY"]),
-                ("SUPABASE_SERVICE_ROLE_KEY", env["SUPABASE_SERVICE_ROLE_KEY"]),
-                ("SUPABASE_PUBLISHABLE_KEYS", json.dumps({"default": env["SUPABASE_ANON_KEY"]})),
-                ("SUPABASE_SECRET_KEYS", json.dumps({"default": env["SUPABASE_SERVICE_ROLE_KEY"]})),
-            )) + "\n",
-            encoding="utf-8",
-        )
         log_path = temp / "edge-runtime.log"
         with log_path.open("w+", encoding="utf-8") as log:
+            # The CLI injects its reserved SUPABASE_* local secrets. Its --env-file
+            # parser deliberately rejects those names, so do not override them.
             server = subprocess.Popen(
-                ["supabase", "functions", "serve", "--env-file", str(env_file)],
+                ["supabase", "functions", "serve"],
                 cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, text=True,
             )
             try:

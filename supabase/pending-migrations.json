@@ -4,8 +4,8 @@
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
   "pending": [
     {
-      "version": "20261016174416",
-      "file": "20261016174416_marketplace_asset_path_isolation_20261016.sql",
+      "version": "20261016172500",
+      "file": "20261016172500_marketplace_asset_path_isolation_20261016.sql",
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,

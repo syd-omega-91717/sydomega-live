@@ -76,10 +76,10 @@
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 92,
+      "version": 171,
       "verify_jwt": false,
-      "live_sha256": "9840e5b826b5da73c94bc9d6ce0efcb9ef1059d506dd63af1674c05683b23263",
-      "repository_blob_sha": "0ea395b4e9aa9723420d2a26e6a3de2a857325cb"
+      "live_sha256": "4380ed2d9c32e9c6dd8f24e54e551ca3fb6e9af812b55be683efb90514e4dbf4",
+      "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc"
     },
     "intel-feed": {
       "state": "DEPLOYED",

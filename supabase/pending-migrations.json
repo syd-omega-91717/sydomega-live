@@ -2,14 +2,5 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": [
-    {
-      "version": "20261016193000",
-      "file": "20261016193000_revoke_anon_member_preferences_rpc_20261016.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Least-privilege hardening: anonymous callers do not need member preference read/write RPCs; the write RPC already requires auth.uid(). Apply only after full migration replay and policy review."
-    }
-  ]
+  "pending": []
 }

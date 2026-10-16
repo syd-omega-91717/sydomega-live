@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-16T19:04:33.458Z",
-  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (read-only provider query)",
-  "remoteMigrationCount": 384,
-  "latestRemoteMigration": "20261016174416",
+  "_captured": "2026-10-16T19:32:15.526Z",
+  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated read-only provider query)",
+  "remoteMigrationCount": 385,
+  "latestRemoteMigration": "20261016193000",
   "versions": [
     "0001",
     "0002",
@@ -387,7 +387,8 @@
     "20261012150000",
     "20261013160000",
     "20261015220000",
-    "20261016174416"
+    "20261016174416",
+    "20261016193000"
   ],
   "migrations": [
     {

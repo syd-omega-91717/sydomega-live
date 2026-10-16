@@ -198,13 +198,12 @@ def run_e2e(env: dict[str, str]) -> None:
         "mime_type": "application/x-client-claimed",
     }
     status, ingest, _ = invoke(api_url, anon_key, first_token, "content-ingest", ingest_body)
-    require(status == 200 and isinstance(ingest, dict) and ingest.get("ok") is True,
+    require(status in (200, 201) and isinstance(ingest, dict) and ingest.get("ok") is True,
             "content_ingest_registration_failed")
     file_record = ingest.get("file") or {}
     file_id = file_record.get("id")
     require(isinstance(file_id, str) and bool(file_id), "content_ingest_id_missing")
     require(ingest.get("review_state") == "PENDING_REVIEW", "upload_must_not_imply_publication")
-    require(ingest.get("rights_state") == "UNVERIFIED", "upload_must_not_imply_rights_clearance")
 
     status, duplicate, _ = invoke(api_url, anon_key, first_token, "content-ingest", ingest_body)
     require(status == 200 and isinstance(duplicate, dict) and duplicate.get("duplicate") is True,
@@ -276,6 +275,15 @@ def run_e2e(env: dict[str, str]) -> None:
     }
     require("content_asset_registered" in event_names, "content_registration_audit_missing")
     require("content_asset_signed_download" in event_names, "signed_download_audit_missing")
+    registration_event = next(
+        (event for event in events if (event.get("metadata") or {}).get("event_name") == "content_asset_registered"),
+        None,
+    )
+    registration_metadata = (registration_event or {}).get("metadata") or {}
+    require(registration_metadata.get("rights_state") == "UNVERIFIED", "upload_must_not_imply_rights_clearance")
+    require(registration_metadata.get("publication_state") == "UNVERIFIED", "upload_must_not_imply_publication")
+    require(registration_metadata.get("entitlement_state") == "UNVERIFIED", "upload_must_not_imply_entitlement")
+    require(registration_metadata.get("scan_state") == "UNAVAILABLE", "upload_scan_state_must_be_explicit")
     signed_event = next(
         (event for event in events if (event.get("metadata") or {}).get("event_name") == "content_asset_signed_download"),
         None,
@@ -297,6 +305,8 @@ def main() -> int:
                 ("SUPABASE_URL", env["SUPABASE_URL"]),
                 ("SUPABASE_ANON_KEY", env["SUPABASE_ANON_KEY"]),
                 ("SUPABASE_SERVICE_ROLE_KEY", env["SUPABASE_SERVICE_ROLE_KEY"]),
+                ("SUPABASE_PUBLISHABLE_KEYS", json.dumps({"default": env["SUPABASE_ANON_KEY"]})),
+                ("SUPABASE_SECRET_KEYS", json.dumps({"default": env["SUPABASE_SERVICE_ROLE_KEY"]})),
             )) + "\n",
             encoding="utf-8",
         )

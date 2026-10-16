@@ -29,7 +29,9 @@
       if(!s) return {error:'Sign in first.'};
       var safe=file.name.replace(/[^A-Za-z0-9._-]+/g,'_');
       var path=s.user.id+'/'+Date.now()+'_'+safe;
-      var r=await sb.storage.from(bucket).upload(path,file,{upsert:true,contentType:file.type||undefined});
+      /* Never overwrite an existing object: registration failure may trigger
+         cleanup, so upload paths must be create-only to protect prior content. */
+      var r=await sb.storage.from(bucket).upload(path,file,{upsert:false,contentType:file.type||undefined});
       if(r.error) return {error:r.error.message};
       return {path:path,name:file.name,size:file.size};
     },

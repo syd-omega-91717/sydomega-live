@@ -18,6 +18,17 @@ class VercelProductionDispatchContract(unittest.TestCase):
     def test_automatic_production_push_is_main_only(self):
         self.assertIn("push:\n    branches: [main]", WORKFLOW)
 
+    def test_supabase_migration_evidence_does_not_trigger_static_site_deploy(self):
+        push_config = WORKFLOW.split("  pull_request:", 1)[0]
+        positive_json = "      - '**/*.json'"
+        negative_supabase = "      - '!supabase/**'"
+        self.assertIn(positive_json, push_config)
+        self.assertIn(negative_supabase, push_config)
+        self.assertLess(
+            push_config.index(positive_json),
+            push_config.index(negative_supabase),
+        )
+
     def test_manual_dispatch_refuses_non_main_before_mutation(self):
         guard = "Refuse production promotion from non-main manual dispatch"
         self.assertIn(guard, WORKFLOW)

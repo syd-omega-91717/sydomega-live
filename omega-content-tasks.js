@@ -17,6 +17,19 @@ async function invoke(sb,name,body){
   if(r.error)return {error:'FUNCTION_INVOCATION_FAILED',data:r.data||null};
   return {error:null,data:r.data||null};
 }
+async function cleanupUploaded(path){
+  if(typeof path!=='string'||!path)return false;
+  if(!root.OmegaStorage||typeof root.OmegaStorage.remove!=='function')return false;
+  try{
+    var removed=await root.OmegaStorage.remove('uploads',path);
+    return !!removed&&!removed.error;
+  }catch(_error){return false;}
+}
+function cleanupTask(error,path,confirmed){
+  return confirmed
+    ? task('ROLLED_BACK',{truth_state:'LIVE',error:error,path:path,cleanup_state:'CONFIRMED'})
+    : task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:error,path:path,cleanup_state:'UNCONFIRMED'});
+}
 async function upload(file,options){
   options=options||{};
   if(!file||typeof file.name!=='string'||typeof file.size!=='number'||!Number.isFinite(file.size)||file.size<0)
@@ -41,12 +54,7 @@ async function upload(file,options){
     });
     if(registered.error||!registered.data||registered.data.ok!==true){
       var error=(registered.data&&registered.data.error)||registered.error||'REGISTRATION_FAILED';
-      // Client-side Storage DELETE is not authorized by the current RLS policy.
-      // Only the privileged Edge Function's explicit compensation result can
-      // prove cleanup; otherwise surface an actionable unresolved state.
-      if(registered.data&&registered.data.rollback_state==='complete')
-        return task('ROLLED_BACK',{truth_state:'LIVE',error:error,path:uploaded.path,cleanup_state:'CONFIRMED'});
-      return task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:error,path:uploaded.path,cleanup_state:'UNCONFIRMED'});
+      return cleanupTask(error,uploaded.path,await cleanupUploaded(uploaded.path));
     }
     return task('PENDING_REVIEW',{
       truth_state:'LIVE',
@@ -59,7 +67,7 @@ async function upload(file,options){
     });
   }catch(_error){
     if(uploaded&&typeof uploaded.path==='string'&&uploaded.path)
-      return task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:'UNEXPECTED_PIPELINE_ERROR',path:uploaded.path,cleanup_state:'UNCONFIRMED'});
+      return cleanupTask('UNEXPECTED_PIPELINE_ERROR',uploaded.path,await cleanupUploaded(uploaded.path));
     return task('FAILED',{truth_state:'UNAVAILABLE',error:'UNEXPECTED_PIPELINE_ERROR'});
   }
 }

@@ -225,3 +225,10 @@ jobs:
           needs.credentials.outputs.ready == 'true' &&
           (github.event_name == 'push' || inputs.deploy == true)
         run: npx --yes vercel@59.6.0 deploy --prod --yes --token "$VERCEL_TOKEN"
+      - name: Verify production domain smoke routes
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
+        run: bash scripts/vercel-production-smoke.sh

@@ -46,6 +46,20 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn("exit 1", block)
         self.assertIn("do not treat artifact validation as a production deployment", block)
 
+    def test_production_smoke_runs_after_a_requested_successful_deploy(self):
+        deploy_pos = WORKFLOW.index("Deploy to Vercel Production")
+        smoke_pos = WORKFLOW.index("Verify production domain smoke routes")
+        self.assertLess(deploy_pos, smoke_pos)
+        self.assertIn("run: bash scripts/vercel-production-smoke.sh", WORKFLOW)
+        self.assertIn("OMEGA_PRODUCTION_BASE_URL: https://sydomega.com", WORKFLOW)
+
+    def test_smoke_script_checks_successful_html_routes(self):
+        script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
+        self.assertIn("curl --silent --show-error --fail --location", script)
+        self.assertIn("/world.html", script)
+        self.assertIn("/evidence.html", script)
+        self.assertIn("content_type", script)
+        self.assertIn("html_document_marker_missing", script)
     def test_deployment_uses_the_validated_workflow_path(self):
         self.assertIn("needs: validate", WORKFLOW)
         self.assertIn("needs: credentials", WORKFLOW)

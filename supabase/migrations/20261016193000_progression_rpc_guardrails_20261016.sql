@@ -29,6 +29,7 @@ declare
   MAX_POINTS_PER_CALL constant numeric := 0.12;
   MAX_POINTS_PER_24H constant numeric := 0.30;
   recent_points numeric := 0;
+  applied_points numeric := 0;
   PHI constant numeric := 1.6180339887;
   EU constant numeric := 2.7182818285;
   APEX constant numeric := 9.000;
@@ -86,18 +87,6 @@ begin
       'authority', pr.authority, 'new_profile', row_to_json(pr)::jsonb);
   end if;
 
-  select coalesce(sum(points_earned), 0)
-    into recent_points
-    from public.task_completions
-   where user_id = uid
-     and completed_at >= now() - interval '24 hours'
-     and points_earned > 0;
-
-  if p_points > 0 and recent_points + p_points > MAX_POINTS_PER_24H then
-    return jsonb_build_object('ok', false, 'applied', false,
-      'error', 'progression_daily_cap_exceeded');
-  end if;
-
   new_a := least(APEX, coalesce(pr.axis_a, 0.001));
   new_b := least(APEX, coalesce(pr.axis_b, 0.001));
   new_c := least(APEX, coalesce(pr.axis_c, 0.001));
@@ -107,11 +96,28 @@ begin
   end if;
 
   auth_score := sqrt(power(new_a,3) + power(new_b,3) + power(new_c,3)) * PHI / EU;
-  old_v := case p_axis_type when 'a' then pr.axis_a when 'b' then pr.axis_b else pr.axis_c end;
+  old_v := case p_axis_type
+    when 'a' then coalesce(pr.axis_a, 0.001)
+    when 'b' then coalesce(pr.axis_b, 0.001)
+    else coalesce(pr.axis_c, 0.001)
+  end;
   new_v := case p_axis_type when 'a' then new_a when 'b' then new_b else new_c end;
+  applied_points := greatest(0, new_v - old_v);
+
+  select coalesce(sum(points_earned), 0)
+    into recent_points
+    from public.task_completions
+   where user_id = uid
+     and completed_at >= now() - interval '24 hours'
+     and points_earned > 0;
+
+  if applied_points > 0 and recent_points + applied_points > MAX_POINTS_PER_24H then
+    return jsonb_build_object('ok', false, 'applied', false,
+      'error', 'progression_daily_cap_exceeded');
+  end if;
 
   update public.profiles set axis_a = new_a, axis_b = new_b, axis_c = new_c,
-    authority = auth_score, nodes_earned = coalesce(nodes_earned, 0) + case when p_points > 0 and new_v > old_v then 1 else 0 end
+    authority = auth_score, nodes_earned = coalesce(nodes_earned, 0) + case when applied_points > 0 then 1 else 0 end
   where id = uid;
 
   insert into public.task_completions(
@@ -119,7 +125,7 @@ begin
     axis_a_before, axis_b_before, axis_c_before,
     axis_a_after, axis_b_after, axis_c_after, auth_after, completed_at
   ) values (
-    uid, p_task_type, p_task_name, p_task_name, p_task_type, p_axis_type, p_description, p_points,
+    uid, p_task_type, p_task_name, p_task_name, p_task_type, p_axis_type, p_description, applied_points,
     pr.axis_a, pr.axis_b, pr.axis_c, new_a, new_b, new_c, auth_score, now()
   );
 
@@ -189,7 +195,7 @@ begin
   return jsonb_build_object(
     'ok', true, 'applied', true, 'axis_type', p_axis_type,
     'axis_a', new_a, 'axis_b', new_b, 'axis_c', new_c,
-    'authority', auth_score, 'points', p_points, 'unlocked', unlocked,
+    'authority', auth_score, 'points', applied_points, 'unlocked', unlocked,
     'new_profile', row_to_json(pr)::jsonb || jsonb_build_object(
       'axis_a', new_a, 'axis_b', new_b, 'axis_c', new_c, 'authority', auth_score
     )

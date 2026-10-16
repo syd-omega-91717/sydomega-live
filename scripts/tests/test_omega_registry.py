@@ -201,30 +201,25 @@ class TestGeneration(unittest.TestCase):
         for i in range(timestamped):
             write(self.fx.path("supabase", "migrations", f"2026080{i}120000_t{i}.sql"), "-- x\n")
 
-    def test_validated_migration_scope_does_not_follow_the_file_count(self):
-        """Adding migrations must never widen the claim about what was verified.
-
-        The generated text used to read `0001`-`00{numbered}`, derived from the
-        live count, so every newly added numbered migration silently asserted it
-        had been part of the one recorded scratch-database run. The validated
-        scope is a fact about a run that happened; it is pinned, not counted.
-        """
+    def test_migration_evidence_links_to_canonical_source_not_live_file_count(self):
+        """Generated registry points to canonical evidence without inventing scope."""
         self._seed_migrations(120)
         self.fx.run()
         text = self.fx.registry()
-        self.assertIn("`0001`–`0094`", text)
-        self.assertNotIn("`0001`–`0120`", text)
+        self.assertIn("[`supabase/migrations/README.md`](supabase/migrations/README.md)", text)
+        self.assertIn("rather than duplicating dated run IDs", text)
         self.assertIn("| `supabase/migrations/*.sql` | 123 ", text)
-        self.assertIn("no run has covered", text)
+        self.assertNotIn("no run has covered", text)
+        self.assertNotIn("The 26 files added since", text)
 
-    def test_files_added_after_the_validated_scope_are_counted_as_unvalidated(self):
-        """The unvalidated remainder counts numbered files too, not just timestamped ones."""
+    def test_migration_evidence_pointer_is_stable_as_inventory_grows(self):
+        """New migration files must not change the canonical evidence pointer."""
         self._seed_migrations(100, timestamped=2)
         self.fx.run()
         text = self.fx.registry()
-        # 102 total - 94 validated = 8 unvalidated (6 numbered + 2 timestamped),
-        # so counting only the timestamped ones would understate it as 2.
-        self.assertIn("The 8 files added since", text)
+        self.assertIn("[`supabase/migrations/README.md`](supabase/migrations/README.md)", text)
+        self.assertIn("| `supabase/migrations/*.sql` | 102 ", text)
+        self.assertNotIn("The 8 files added since", text)
 
 
 class TestDriftGate(unittest.TestCase):

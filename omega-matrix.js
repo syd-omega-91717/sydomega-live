@@ -64,30 +64,23 @@ window.omegaCompleteTask = async function(taskName, taskType, description, optio
     });
     if(r.error) throw r.error;
     var d=r.data||{};
-    /* Update UI live */
+    if(d.ok!==true){
+      return {ok:false,error:d.error||'task_not_applied',data:d};
+    }
+    /* Update UI only from the authoritative RPC response. */
     if(window.__omegaPopulate && d.new_profile){
       window.__omegaPopulate(d.new_profile, window.__omegaUser);
     }
-    /* Emit event (server returns axis_a/axis_b/axis_c, authority) */
     document.dispatchEvent(new CustomEvent('omega:task',{detail:{
-      task:taskName, axis:axis, points:STEP,
+      task:taskName, axis:axis, points:Number(d.points||0),
       new_a:d.axis_a, new_b:d.axis_b, new_c:d.axis_c, auth:d.authority
     }}));
     return {ok:true, data:d};
   }catch(e){
-    /* Graceful offline fallback: update display optimistically */
-    var pr=window.__omegaProfile||{};
-    var na=Number(pr.axis_a||GENESIS);
-    var nb=Number(pr.axis_b||GENESIS);
-    var nc=Number(pr.axis_c||GENESIS);
-    if(axis==='a') na=Math.min(APEX,na+STEP);
-    if(axis==='b') nb=Math.min(APEX,nb+STEP);
-    if(axis==='c') nc=Math.min(APEX,nc+STEP);
-    var auth=calcAuth(na,nb,nc);
-    document.querySelectorAll('[id^="user-auth"],[id^="ph-auth"],[id^="pf-auth"]').forEach(function(el){
-      el.textContent=auth.toFixed(4);
-    });
-    return {ok:false, offline:true, error:e.message};
+    /* Progression is server-authoritative. Never paint an optimistic axis
+       value when the RPC fails or returns an invalid response. */
+    console.warn('[OmegaMatrix] complete_task unavailable:', e && (e.message || e));
+    return {ok:false, offline:true, error:(e && e.message) || 'progression_unavailable'};
   }
 };
 

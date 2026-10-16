@@ -35,7 +35,7 @@ class VercelProductionDispatchContract(unittest.TestCase):
         guard = "Refuse production promotion from non-main manual dispatch"
         self.assertIn(guard, WORKFLOW)
         guard_pos = WORKFLOW.index(guard)
-        deployment_pos = WORKFLOW.index("Deploy to Vercel Production")
+        deployment_pos = WORKFLOW.index("Deploy prebuilt production artifact")
         self.assertLess(guard_pos, deployment_pos)
         self.assertIn(
             "github.event_name == 'workflow_dispatch' && "
@@ -47,7 +47,7 @@ class VercelProductionDispatchContract(unittest.TestCase):
     def test_missing_credentials_fail_when_production_deploy_is_requested(self):
         guard = "Controlled state when token is unavailable"
         guard_pos = WORKFLOW.index(guard)
-        deployment_pos = WORKFLOW.index("Deploy to Vercel Production")
+        deployment_pos = WORKFLOW.index("Deploy prebuilt production artifact")
         block = WORKFLOW[guard_pos:deployment_pos]
         self.assertIn("DEPLOY_REQUESTED:", block)
         self.assertIn(
@@ -60,12 +60,13 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn("do not treat artifact validation as a production deployment", block)
 
     def test_production_smoke_runs_after_a_requested_successful_deploy(self):
-        deploy_pos = WORKFLOW.index("Deploy to Vercel Production")
+        deploy_pos = WORKFLOW.index("Deploy prebuilt production artifact")
         smoke_pos = WORKFLOW.index("Verify production domain smoke routes")
         self.assertLess(deploy_pos, smoke_pos)
         self.assertIn("run: bash scripts/vercel-production-smoke.sh", WORKFLOW)
         self.assertIn("OMEGA_PRODUCTION_BASE_URL: https://sydomega.com", WORKFLOW)
         self.assertIn("EXPECTED_RELEASE_SHA: ${{ github.sha }}", WORKFLOW)
+        script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
         self.assertIn("served_commit_mismatch", script)
 
     def test_smoke_script_checks_successful_html_routes(self):

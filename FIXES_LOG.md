@@ -23545,3 +23545,32 @@ Applied live; the ledger recorded `20261016223949`, the file carries it.
 **Still broken, not changed (§8.1 class 6c):** `authenticated` holds **no INSERT** on
 `omega_platform_events` though `omega_platform_events_insert_own` (`auth.uid() = actor_user_id`)
 exists, so invoker `omega_record_world_action` still fails 42501 (`GAP_ANALYSIS.md`).
+
+## 2026-10-16 — world actions failed 42501 since 2026-09-30; fixed as a definer, not a grant
+
+**Found (live):** `public.omega_record_world_action` was SECURITY INVOKER and `authenticated` had
+no INSERT on `omega_platform_events`, so every member call failed 42501 (§8.1 class 6c). Root
+cause, read from the live ledger's `statements`: `20260930090758`
+(`harden_user_rpc_security_invoker`) ran `alter function … omega_record_world_action … security
+invoker` and created policy `omega_platform_events_insert_own`, with no grant. Its SQL never
+reached the repo (`20260930090758_historical_security_invoker_alias.sql` is a no-op), so a fresh
+replay kept the canonical `security definer` from `20260929172000` — silent live/repo drift.
+
+**Why not the requested grant:** with table-level INSERT any member could post rows of any
+`event_type` / `actor_type` / `source` for themselves over REST. `private.omega_complete_mission`
+accepts member-owned rows as mission evidence; all 9 missions require only `action_started` with
+`{"district": X}`, which the RPC already lets a member self-attest — so no new reward path, but the
+audit log would become forgeable. Owner chose the definer option after that was laid out.
+
+**Fix:** `20261016225535` sets SECURITY DEFINER (matching the canonical source), re-pins
+`search_path = ''`, revokes PUBLIC/anon and grants EXECUTE to `authenticated`. No grant on the table.
+
+**Verified live, impersonating member `023a2c20…` (`SET LOCAL ROLE authenticated` + JWT claims), in
+one DO block rolled back by a deliberate raise:** call → row 16, `action_started`, actor = member,
+district `academy`, `event_id` set; same idempotency key → same id; direct `insert into
+omega_platform_events` as the member → **42501**. Afterwards 7 rows, 0 probe rows. anon EXECUTE
+false; authenticated INSERT on the table still false.
+
+**Same defect, not changed:** `20260930090758` did the identical thing to
+`public.omega_record_simulation_run` / `omega_simulation_runs` — invoker, insert policy, no grant;
+0 rows ever (`GAP_ANALYSIS.md`).

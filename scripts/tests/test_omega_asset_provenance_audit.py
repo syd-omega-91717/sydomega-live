@@ -54,8 +54,7 @@ class AssetProvenanceAuditTests(unittest.TestCase):
             self.assertEqual(report["summary"]["video_count"], 1)
             self.assertEqual(report["remote_references"][0]["source_state"], "REMOTE_REFERENCE_ONLY")
             self.assertEqual(report["remote_references"][0]["availability_state"], "UNVERIFIED")
-            self.assertTrue(any("does not prove" in rule.lower() for rule in
-                                [report["remote_references"][0]["truth_rule"]]))
+            self.assertIn("does_not_prove", report["remote_references"][0]["truth_rule"].lower())
 
     def test_output_file_is_valid_json(self):
         with tempfile.TemporaryDirectory() as temp:

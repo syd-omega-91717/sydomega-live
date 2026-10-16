@@ -25,6 +25,8 @@ class ContentClientRollbackTests(unittest.TestCase):
     def test_upload_never_overwrites_existing_object_before_registration(self):
         js = (ROOT / "upload.js").read_text()
         self.assertIn("upload(path,file,{upsert:false", js)
+        self.assertIn("item.name===path", js)
+        self.assertIn("Storage deletion was not confirmed.", js)
 
     def test_unexpected_upload_and_download_errors_are_handled(self):
         js = (ROOT / "omega-content-tasks.js").read_text()

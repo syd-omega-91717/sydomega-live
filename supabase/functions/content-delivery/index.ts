@@ -5,9 +5,10 @@ const url = Deno.env.get("SUPABASE_URL")!;
 const adminKey = secretKey();
 const publicKey = publishableKey();
 const admin = adminKey ? createClient(url, adminKey) : null;
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
+  status,
+  headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+});
 
 async function callerId(req: Request): Promise<string | null> {
   const auth = req.headers.get("Authorization");
@@ -28,7 +29,9 @@ Deno.serve(async (req: Request) => {
   try {
     const body = await req.json();
     const fileId = body?.file_id;
-    if (typeof fileId !== "string" || !fileId) return json({ error: "file_id_required" }, 400);
+    if (typeof fileId !== "string" || !fileId || fileId.length > 128) {
+      return json({ error: "file_id_required" }, 400);
+    }
 
     const { data: file, error: fileError } = await admin
       .from("storage_files")
@@ -67,7 +70,7 @@ Deno.serve(async (req: Request) => {
       expires_at: new Date(Date.now() + 900000).toISOString(),
       delivery_state: "SIGNED",
     });
-  } catch (error) {
-    return json({ error: error instanceof Error ? error.message : "content_delivery_failed" }, 500);
+  } catch {
+    return json({ error: "content_delivery_failed" }, 500);
   }
 });

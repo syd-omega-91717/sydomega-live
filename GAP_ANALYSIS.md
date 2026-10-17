@@ -17,9 +17,14 @@ project's own established convention (security/data-integrity first).
 - **OPEN 2026-10-17 — page sprawl against real use.** 239 pages; **70** opened ever
   (`platform_events`), ~70% of views on `dashboard`, one account behind all of them; **202 of
   281** public tables hold 0 rows; `client_errors` (8,972) outnumbers `platform_events` (7,977).
-  First consolidation shipped: `orrery.html` folds signs/gods/elements/agents/gates/houses
-  (`nav.js` `'folded'` entries). Next cores proposed: COMMAND (`dashboard`), VAULT, ASCEND,
-  IDENTITY. No page is deleted until its core replaces it and the owner signs off.
+  Target: **22 pages** — 13 cores + 9 system, every page assigned in `config/page-cores.json`
+  (gated by `scripts/tests/test_page_cores.py`). BUILT: COSMOS (`orrery.html`), COMMAND
+  (`dashboard.html` + `omega-command-dock.js`). Next by leverage: LADDER (26 pages, mostly the
+  same `profiles` read), INTEL (8 `graph-*` pages on 4 tables), LIFE (17 LOCAL_ONLY trackers —
+  moving them to Postgres is the largest real-data gain). No page is deleted until its core
+  replaces it and the owner signs off.
+- **OPEN 2026-10-17 — `omega_notifications` has never held a row.** Delivery is scheduled every
+  minute; nothing produces notifications. The inbox is a working pipe with no source.
 - **OPEN 2026-10-17 — production serves a build older than 2026-10-09.** `client_errors` still
   receives `catch is not a function` from `omega-telemetry.js:61/75`/`omega-recommend.js:24`
   today, code fixed in `b7bf8a9f`. Every UI change waits on the owner restoring Vercel deploys

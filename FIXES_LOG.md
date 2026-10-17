@@ -23865,3 +23865,47 @@ undefined), `security` (1.91:1 contrast). The same four fail identically on unmo
 `origin/main` (worktree run), so none is introduced here; the stricter stub surfaced no new
 uncaught error on any page. CI's 13 capability entrypoints are unaffected. Recorded as open, not
 fixed in this change.
+
+## 2026-10-17 — COMMAND dock; the estate's 22-page target; card hover spun instead of tilting
+
+**COMMAND (`omega-command-dock.js`, mounted on `dashboard.html`).** The dashboard holds ~70% of all
+views (`platform_events`), so the dock goes where members already are. It is three tabs, each on a
+contract already proven elsewhere:
+- **ASK:** `functions.invoke('concierge')`, `{message, context}` (chatbot.html's shape). It
+  handles `{enabled:false}` and renders replies as text.
+- **POINTS:** `rpc('my_matrix')` axes, plus own `task_completions` (last 50). A null
+  `points_earned` shows blank; `points.html` rendered it as `+0.001`.
+- **INBOX:** own delivered in-app `omega_notifications`; mark-read writes `read_at` and checks
+  `.error` first.
+
+`nav.js` folds `search` (Ctrl/Cmd K), `notifications`, `chatbot` and `points`.
+
+**Verified (headless, 1440 and 375 wide, stub with 3 ledger rows, 2 unread rows and a concierge
+reply):** the dock opens on INBOX when unread; one click → exactly one update and the badge drops
+2→1. Axes read 4.20/2.70/1.10. The ASK chip sent `{sign:'Aries', agent:'Sentinel', a,b,c}`, and a
+`<b>` in the reply rendered as text (0 `<b>` nodes). 0 page errors, no overflow.
+
+**Found: the inbox has never held a row.** `omega_notifications` is empty live (all channels, all
+time). The delivery cron runs every minute, but nothing produces notifications. The dock says
+"INBOX CLEAR" and invents nothing. `notifications.html` seeds two fake system messages into
+localStorage instead.
+
+**Bug — `omega-motion.js` spun every hovered card.** Its pointer "tilt" wrote `style.rotate =
+'<n>deg'`. A single-angle `rotate` is an in-plane spin, so each hovered `.card`/`.kpi`/`.kpi-card`
+on every page turned like a clock hand. On the 1,287px dock card that slanted the right edge ~45px,
+one row: each point value read against the row below it. It now writes an axis,
+`rotate: -dy dx 0 <a>deg`, and honours bg.js's `omg-no-tilt` opt-out, which it ignored.
+Before/after on the same 1,287px dashboard card: `rotate: -0.29deg` → `-0.003 0.84 0 2.02deg`
+(original pinned with `git show HEAD:omega-motion.js`).
+
+**The 22-page target (`config/page-cores.json`).** Every one of the 240 pages is assigned to
+exactly one of 13 cores, or to 9 system pages (auth, legal, offline, health).
+- **BUILT:** COMMAND, COSMOS.
+- **PLANNED:** LADDER, ACADEMY, ARENA, LIFE, VAULT, IDENTITY, ORDER, MEDIA, INTEL, SERVICES, OWNER.
+
+The grouping follows shared data, not names. The 8 `graph-*` pages read the same 4 tables. The
+ladder pages (grades/levels/phases/kings/triads/grid/gates) read only `profiles`. 17 of the 20
+LIFE pages store nothing in Postgres. `scripts/tests/test_page_cores.py`:
+- every page must belong somewhere (a planted unassigned page fails it);
+- no page sits in two cores;
+- a `'folded'` nav entry must belong to a BUILT core.

@@ -132,6 +132,8 @@
 
     <!-- DAILY THREE: the member's daily loop (omega-daily.js) -->
     <div class="pad" style="padding-bottom:0"><div data-omega-daily></div></div>
+    <!-- COMMAND DOCK: concierge, points and inbox folded in (omega-command-dock.js) -->
+    <div class="pad" style="padding-bottom:0"><section data-omega-command-dock aria-label="Command dock"></section></div>
 
     <!-- PLATFORM HEALTH BAR -->
     <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:87%;background:var(--green)"></div></div>
@@ -917,6 +919,7 @@ window.setTab=setTab;
 window.askAI=askAI;
 </script>
 <script src="/omega-sparkline.js" defer></script>
+<script type="module" src="/omega-command-dock.js"></script>
 <script src="/omega-constellation.js" defer></script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';

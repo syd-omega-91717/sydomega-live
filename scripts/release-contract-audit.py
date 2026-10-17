@@ -75,7 +75,8 @@ for branch_pattern in ("*", "**", "main"):
 
 workflow = read(".github/workflows/vercel-production.yml")
 for required in (
-    "push:\\n    branches: [main]",
+    "push:",
+    "branches: [main]",
     "Controlled state when token is unavailable",
     "DEPLOY_REQUESTED:",
     "needs.credentials.outputs.ready == 'true'",

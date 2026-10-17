@@ -5,7 +5,7 @@
   "status": "OPEN_AUDIT_QUEUE",
   "principle": "EVERY_PAGE_HAS_AUDIT_WORK",
   "task_contract": "config/omega-task-contract.json",
-  "task_count": 239,
+  "task_count": 240,
   "states": [
     "OPEN",
     "READY",
@@ -2885,6 +2885,24 @@
       "task_type": "AUDIT",
       "page": "order",
       "path": "order.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
+      "next_action": "Review direct source evidence and populate only independently proven contract fields."
+    },
+    {
+      "task_id": "PAGE::orrery::REVIEW",
+      "task_type": "AUDIT",
+      "page": "orrery",
+      "path": "orrery.html",
       "state": "OPEN",
       "role": "UNVERIFIED",
       "capability": [

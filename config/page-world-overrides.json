@@ -172,6 +172,7 @@
     "invest": "exchange",
     "order": "heritage",
     "security": "genesis",
-    "standing-dashboard": "genesis"
+    "standing-dashboard": "genesis",
+    "orrery": "void"
   }
 }

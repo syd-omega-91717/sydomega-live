@@ -14,6 +14,16 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-10-17 — page sprawl against real use.** 239 pages; **70** opened ever
+  (`platform_events`), ~70% of views on `dashboard`, one account behind all of them; **202 of
+  281** public tables hold 0 rows; `client_errors` (8,972) outnumbers `platform_events` (7,977).
+  First consolidation shipped: `orrery.html` folds signs/gods/elements/agents/gates/houses
+  (`nav.js` `'folded'` entries). Next cores proposed: COMMAND (`dashboard`), VAULT, ASCEND,
+  IDENTITY. No page is deleted until its core replaces it and the owner signs off.
+- **OPEN 2026-10-17 — production serves a build older than 2026-10-09.** `client_errors` still
+  receives `catch is not a function` from `omega-telemetry.js:61/75`/`omega-recommend.js:24`
+  today, code fixed in `b7bf8a9f`. Every UI change waits on the owner restoring Vercel deploys
+  (CLAUDE.md §8.2).
 - **OPEN 2026-10-12 — owner decisions recorded, legal review pending.** Owner chose the 12-tier `omega-canon.json` ladder (subscriptions.html now renders it), adult-only owner-granted family access (HIGH-RISK build in review: `docs/decisions/family-access/`), and dormant non-cash points for every money item. `docs/COUNSEL_BRIEF.md` lists the questions for counsel in Lebanon, UAE/GCC, US and EU/UK; no flag changes until answered. 8 blueprint items still need the owner (provenance marks 66/166, succession 73/652/969/N155, tier permanence 266, model per tier 289).
 
 - **OPEN 2026-10-16 — `service_role` reaches 32 of 281 public tables live.** `20260903015535`

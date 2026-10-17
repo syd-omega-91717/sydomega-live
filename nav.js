@@ -13,7 +13,7 @@
     profile:'identity',settings:'identity',security:'identity',
     ascend:'ascend',ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
     honors:'achieve',trophies:'achieve',exam:'ascend',contributions:'ascend',
-    agents:'cosmos','agent-operations':'govern',pantheons:'cosmos',elements:'cosmos',
+    agents:'cosmos','agent-operations':'govern',pantheons:'cosmos',elements:'cosmos',orrery:'cosmos',
     media:'media','visual-atlas':'media',
     blockchain:'vault',marketplace:'vault',income:'vault',
     family:'order',hall:'order',
@@ -85,9 +85,13 @@
           ['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],
           ['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#AB82F2',
-     sub:[['cosmos','COSMOS HUB','/cosmos.html'],['cosmic-ledger','SOLAR SYSTEM LEDGER','/cosmic-ledger.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['realms','18 REALMS','/realms.html'],
-          ['horoscope','HOROSCOPE','/cosmos.html#horoscope'],['agents','AGENTS','/agents.html'],['elements','THE NINE ELEMENTS','/elements.html'],
-          ['pantheons','PANTHEONS','/pantheons.html'],['gates-alias-1','12 GATES','/elements.html#gates'],['houses','ASTRAL HOUSES','/houses.html'],
+     /* ORRERY folds signs, gods, elements, agents, gates and houses into one
+        wheel. A 4th field 'folded' keeps an entry in search (Ctrl/Cmd K), the
+        owner deck and the reachability gate, but out of the sidebar and the
+        mobile drawer: the wheel is the door, its facets deep-link here. */
+     sub:[['orrery','ORRERY','/orrery.html'],['cosmos','COSMOS HUB','/cosmos.html'],['cosmic-ledger','SOLAR SYSTEM LEDGER','/cosmic-ledger.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['realms','18 REALMS','/realms.html'],
+          ['horoscope','HOROSCOPE','/cosmos.html#horoscope','folded'],['agents','AGENTS','/agents.html','folded'],['elements','THE NINE ELEMENTS','/elements.html','folded'],
+          ['pantheons','PANTHEONS','/pantheons.html','folded'],['gates-alias-1','12 GATES','/elements.html#gates','folded'],['houses','ASTRAL HOUSES','/houses.html','folded'],
           ['kings-alias-1','28 KINGS','/elements.html#kings'],['chronicle','CHRONICLE','/chronicle.html'],['dna','SOVEREIGN DNA','/dna.html'],
           ['graph','CONSTELLATION GRAPH','/graph.html'],['map','STAR MAP','/map.html'],['mirror','SOVEREIGN MIRROR','/mirror.html'],
           ['oracle','ORACLE','/oracle.html'],['realm','REALM','/realm.html'],['rune','RUNES','/rune.html'],
@@ -358,7 +362,7 @@
     identity:['profile','security'],
     life:['life'],
     ascend:['ascend','academy','focus','evolution','contributions'],
-    cosmos:['cosmos','agents','elements','horoscope','world-atlas'],
+    cosmos:['orrery','cosmos','sculpture','realms','world-atlas'],
     vault:['vault','wallet','subscriptions','payments','marketplace','blockchain'],
     order:['order','family','approvals','hall'],
     services:['services','creation-studio','consultancy','contracts','publishing'],
@@ -374,7 +378,7 @@
     var wanted=COMPACT[sec.key]||[];
     var byKey={};sec.sub.forEach(function(x){byKey[x[0]]=x;});
     var out=[];
-    wanted.forEach(function(k){if(byKey[k])out.push(byKey[k]);});
+    wanted.forEach(function(k){if(byKey[k]&&byKey[k][3]!=='folded')out.push(byKey[k]);});
     var active=null;
     sec.sub.forEach(function(x){if(x[0]===dp)active=x;});
     if(active && !out.some(function(x){return x[0]===active[0];}))out.push(active);
@@ -624,7 +628,7 @@
     var DRAWER_SECTIONS=SECTIONS.map(function(sec){
       return {
         icon:sec.icon,label:sec.label,col:sec.col,href:sec.href,key:sec.key,
-        links:sec.sub.map(function(sub){return [sub[1],sub[2],sub[3]==='owner'];})
+        links:sec.sub.filter(function(sub){return sub[3]!=='folded';}).map(function(sub){return [sub[1],sub[2],sub[3]==='owner'];})
       };
     });
 

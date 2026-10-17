@@ -37,8 +37,12 @@ function chain(state){
       : {data:[],error:null,count:0,status:200};
     return Promise.resolve(payload).then(res,rej);
   };
-  self.catch=(f)=>Promise.resolve({data:state.single?PROFILE:[],error:null}).catch(f);
-  self.finally=(f)=>Promise.resolve({data:state.single?PROFILE:[],error:null}).finally(f);
+  /* NO .catch / .finally. The real builder (vendor/supabase-js.js) is a bare
+     thenable: 'typeof from(t).insert(x).catch' is 'undefined', measured
+     2026-10-17. With both shims here, '.insert(...).catch(...)' passed every
+     headless run while production threw 'catch is not a function' 3,600+ times
+     (client_errors, 2026-07-27..10-17). A stub kinder than the client hides
+     exactly the bug class it should surface (CLAUDE.md 8.1 class 1). */
   return self;
 }
 

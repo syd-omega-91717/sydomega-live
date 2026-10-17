@@ -23815,3 +23815,53 @@ shape; the fix is not to re-grant). `supabase/live-grants.json`: `S-U-` → `S--
 updates **42501**; member still reads own row (1); service_role upsert on `(member_id, feature_id)`
 — product-orchestrator v8's write — still succeeds. After apply: authenticated SELECT only;
 service_role SELECT/INSERT/UPDATE. No page or RPC writes the table (repo grep).
+
+## 2026-10-17 — ORRERY: six COSMOS pages folded into one wheel; two platform bugs found building it
+
+**Why (live, `platform_events`, all time):** of 239 pages, **70** were ever opened; `dashboard`
+took 5,671 of ~8,000 views; every view came from one account (9 profiles, 4 approved, 2 active in
+30 days). `elements`/`pantheons`/`houses`/`agents` drew 186/39/36/8 views, each a static
+rendering of the same 12 canon tracks plus one `profiles` read.
+
+**Change.** `orrery.html` + `omega-orrery.js` (a src= module: `csp-inline-ratchet.py` refuses new inline script; district `void` in `config/page-world-overrides.json`) — one wheel of the 12 tracks; a lens bar relabels every node as
+SIGN/GOD/ELEMENT/AGENT/GATE/HOUSE; the 5 physical elements filter it (the 3 class-based and THE ALL
+render disabled, since no sign maps to them); drag spins it and snaps, arrow keys turn it. The panel
+deep-links each facet to its old page. All values come from their owners (`OmegaCanon`,
+`OmegaCanon.elementFor`, `omega-agents.json`, `OmegaEmblem.color`). The member strip is
+`rpc('my_matrix')` (authority, lattice node, axes), own `sovereign_points_ledger` rows (total +
+daily series through `omega-sparkline.js`, which draws nothing under two days) and head counts of
+own `evolution_events`/`task_completions` — all `S---` for `authenticated` in
+`live-grants.json`. `nav.js`: a 4th field `'folded'` keeps an entry in search, the owner deck and
+`reachability-contract.py` but out of the sidebar tooltip and the mobile drawer; COSMOS's six
+entries now are, and `COMPACT.cosmos` leads with `orrery`.
+
+**Verified (headless Chromium, member stub with realistic `my_matrix`/ledger rows, 1440 and
+375 wide):** 12 nodes, 12 emblems filled, 0 page errors, no horizontal overflow; GODS lens → core
+reads "Apollo" for Leo; ArrowRight → Virgo/"Athena"; WATER → 9 of 12 dimmed; a 90° drag → Gemini
+on both widths; authority 6.4321, points 60, evolutions 7, sparkline drawn. `verify-runtime.js
+--pages orrery.html` PASS; `reachability-contract.py` OK.
+
+**Bug 1 — `omega-legal.js` made the content column a third of the screen.** With no `<footer>` on
+the page it appended its footer to `#app`, which is the `.shell` flex ROW holding `#omega-side`
+(CLAUDE.md §4): the footer became a 789px column and `main` measured **555px** of a 1440px
+viewport. It now takes the first of `main`/`.main`/`#app` that does not contain `#omega-side`.
+After: `main` **1344px**, equal to `houses.html`.
+
+**Bug 2 — the browser harness stub was kinder than the client.** `sbstub.js` gave every query
+builder `.catch`/`.finally`. The vendored client's builder is a bare thenable (`typeof
+from('t').insert({}).catch` → `'undefined'`, measured in node against `vendor/supabase-js.js`), so
+`.insert(...).catch(...)` passed every headless run while production logged it **1,872**
+(`from().insert().catch`) + **1,774** (`rpc().catch`) + **836** (`upsert().catch`) times
+(`client_errors`, 2026-07-27 → 2026-10-17). Both shims removed.
+
+**Found, not fixed here — production is stale.** Those errors still arrive today (18:28 UTC) from
+`omega-telemetry.js:61/75` and `omega-recommend.js:24`, code `b7bf8a9f` fixed on 2026-10-09; a
+static scan of the tree for a `.catch` chained onto a builder finds 0 sites. sydomega.com is
+serving a build older than that commit — the Vercel block in CLAUDE.md §8.2.
+
+**Whole-estate check of this change (`verify-runtime.js --all`, strict stub):** 240 pages, **4**
+fail — `creation-studio` (import outside module), `govern` (duplicate ids), `media` (`.items` of
+undefined), `security` (1.91:1 contrast). The same four fail identically on unmodified
+`origin/main` (worktree run), so none is introduced here; the stricter stub surfaced no new
+uncaught error on any page. CI's 13 capability entrypoints are unaffected. Recorded as open, not
+fixed in this change.

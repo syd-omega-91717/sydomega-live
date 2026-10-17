@@ -50,7 +50,8 @@ project's own established convention (security/data-integrity first).
   functions call SQL keywords as `pg_catalog` functions (42883).** `create_consult_intake`,
   `create_service_order`, `omega_watchlist_upsert`, `omega_runtime_dispatch` rewritten from their
   stored bodies (`pg_catalog.btrim`); the migration asserts 0 such calls remain anywhere. Guarded
-  by a new rule in `supabase-migration-security-audit.py` (applied hits baselined).
+  by a new rule in `supabase-migration-security-audit.py` (applied hits baselined). The fresh replay also
+  exposed live-only drift in `omega_private.record_stripe_payment`, captured by `20261017095439`.
 
 - **CLOSED 2026-10-17 (`20261017092002`, service_role-only public delegates; verified live) — was:
   `omega-notification-worker` failed every call (PGRST202).** Its RPCs lived only in the unexposed

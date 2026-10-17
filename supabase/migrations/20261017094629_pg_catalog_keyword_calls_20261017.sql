@@ -18,8 +18,10 @@
 -- rewritten from the function's own stored definition rather than retyped,
 -- so nothing else can change; CREATE OR REPLACE keeps owner, ACL, SECURITY
 -- DEFINER and search_path. Idempotent: an already-fixed body is left alone.
--- The final check fails the migration if any function outside the system
--- schemas still calls a SQL keyword through pg_catalog.
+-- The final check fails the migration if any of the four still calls a SQL
+-- keyword through pg_catalog. (A global check lives in the next migration: on
+-- a fresh replay omega_private.record_stripe_payment is still broken here,
+-- because its live body was never recorded until 20261017 captured it.)
 
 begin;
 
@@ -45,16 +47,14 @@ begin
 
   if exists (
     select 1
-      from pg_catalog.pg_proc p
-      join pg_catalog.pg_namespace n on n.oid = p.pronamespace
-     where n.nspname not in ('pg_catalog', 'information_schema')
-       and n.nspname not like 'pg\_%'
-       -- CASE, not AND: pg_get_functiondef raises on aggregates, and the
-       -- planner may evaluate a WHERE clause's conjuncts in any order.
-       and case when p.prokind in ('f', 'p')
-                then pg_catalog.pg_get_functiondef(p.oid)
-                     operator(pg_catalog.~*) 'pg_catalog\.(trim|coalesce|nullif|greatest|least)\s*\('
-                else false end
+      from pg_catalog.unnest(array[
+        'omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text)',
+        'omega_private.create_service_order(uuid,text,text,jsonb)',
+        'private.omega_watchlist_upsert(uuid,text,text,text,text,jsonb)',
+        'public.omega_runtime_dispatch(uuid,text,jsonb)'
+      ]::regprocedure[]) f
+     where pg_catalog.pg_get_functiondef(f)
+           operator(pg_catalog.~*) 'pg_catalog\.(trim|coalesce|nullif|greatest|least)\s*\('
   ) then
     raise exception 'sql_keyword_called_as_pg_catalog_function_remains';
   end if;

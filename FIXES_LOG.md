@@ -23747,3 +23747,27 @@ UNREAD 3 / TOTAL 4 with 2 local seeds; a click with the update forced to `{error
 unread (UNREAD 3, opacity 1); a successful click dims it (opacity 0.5, UNREAD 2) and the update payload
 is `{read_at}` only. `grant-contract.py` fails both writes against the pre-change grants snapshot and
 passes after. `verify-runtime.js --pages notifications.html`: PASS.
+
+## 2026-10-17 — the three orchestrators could not write, and product's flag upsert would freeze
+
+**Found (live):** concierge-, growth- and product-orchestrator write with a service-role client.
+`service_role` held no privilege on `autonomous_decisions` or `member_feature_flags` (default
+privileges revoked by `20260903015535`), so every write would fail 42501 — `GAP_ANALYSIS.md` had
+listed this, but as INSERT only; `.insert().select("id")` also needs SELECT. Separately,
+product-orchestrator's `.upsert()` on `member_feature_flags` named no `onConflict`, so PostgREST
+targets the primary key `id`, which the payload never carries, while the real key is unique
+`(member_id, feature_id)`: the first write per flag succeeds, every later change raises 23505
+(§8.1 class 7). Dormant: all three return 503 while `autonomous_agents_enabled` is false (it is),
+and both tables hold 0 rows.
+
+**Fix:** `20261017104020` — `grant select, insert` on `autonomous_decisions` and
+`grant select, insert, update` on `member_feature_flags` to `service_role`; nothing to
+anon/authenticated, no DELETE. product-orchestrator → `onConflict: "member_id,feature_id"`,
+deployed **v8** (`verify_jwt` true, unchanged), ezbr `e107a563…d42d`.
+
+**Verified live (one transaction, rolled back):** as `service_role` before the grant, insert →
+**42501**; after it, the decision insert returns its id; the fixed upsert shape run twice leaves one
+row updated in place (`enabled` true → false); the old shape (`on conflict (id)`) on the second
+write → **23505**. After apply: service_role SELECT/INSERT (+UPDATE on flags), anon nothing.
+v8 answers an anon-JWT POST with **503 `{"error":"disabled"}`** — it boots and stays gated.
+`service_role` also holds TRUNCATE on both tables; that predates this change and was left as is.

@@ -437,7 +437,7 @@
    "table": "SI-D"
   },
   "member_feature_flags": {
-   "table": "S-U-"
+   "table": "S---"
   },
   "member_perks": {
    "table": "S---"

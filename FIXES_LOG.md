@@ -23823,7 +23823,7 @@ took 5,671 of ~8,000 views; every view came from one account (9 profiles, 4 appr
 30 days). `elements`/`pantheons`/`houses`/`agents` drew 186/39/36/8 views, each a static
 rendering of the same 12 canon tracks plus one `profiles` read.
 
-**Change.** `orrery.html` — one wheel of the 12 tracks; a lens bar relabels every node as
+**Change.** `orrery.html` + `omega-orrery.js` (a src= module: `csp-inline-ratchet.py` refuses new inline script; district `void` in `config/page-world-overrides.json`) — one wheel of the 12 tracks; a lens bar relabels every node as
 SIGN/GOD/ELEMENT/AGENT/GATE/HOUSE; the 5 physical elements filter it (the 3 class-based and THE ALL
 render disabled, since no sign maps to them); drag spins it and snaps, arrow keys turn it. The panel
 deep-links each facet to its old page. All values come from their owners (`OmegaCanon`,
@@ -23858,3 +23858,10 @@ from('t').insert({}).catch` → `'undefined'`, measured in node against `vendor/
 `omega-telemetry.js:61/75` and `omega-recommend.js:24`, code `b7bf8a9f` fixed on 2026-10-09; a
 static scan of the tree for a `.catch` chained onto a builder finds 0 sites. sydomega.com is
 serving a build older than that commit — the Vercel block in CLAUDE.md §8.2.
+
+**Whole-estate check of this change (`verify-runtime.js --all`, strict stub):** 240 pages, **4**
+fail — `creation-studio` (import outside module), `govern` (duplicate ids), `media` (`.items` of
+undefined), `security` (1.91:1 contrast). The same four fail identically on unmodified
+`origin/main` (worktree run), so none is introduced here; the stricter stub surfaced no new
+uncaught error on any page. CI's 13 capability entrypoints are unaffected. Recorded as open, not
+fixed in this change.

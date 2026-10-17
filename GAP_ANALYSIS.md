@@ -249,10 +249,13 @@ open, recorded in `FIXES_LOG.md`:
   `FIXES_LOG.md`, "Backend privileges"). Since `20260903015535`, `service_role` has had
   no default privilege on public tables. Granted since: `platform_settings` SELECT,
   `get_platform_flag` EXECUTE, the two graph-ingest RPCs, and
-  `apply_subscription_event`. **Before turning `autonomous_agents_enabled` on**, grant
-  what the orchestrators write, or they fail at their first write:
-  - `autonomous_decisions` INSERT (all three);
-  - `member_feature_flags` INSERT, UPDATE (product-orchestrator upserts).
+  `apply_subscription_event`. **Orchestrators: DONE 2026-10-17** (`20261017104020`):
+  `autonomous_decisions` SELECT+INSERT (`.insert().select("id")` needs both) and
+  `member_feature_flags` SELECT+INSERT+UPDATE; product-orchestrator v8 also names
+  `onConflict: member_id,feature_id` (it upserted on the PK, so a flag's second write
+  would have raised 23505). Still dormant until `autonomous_agents_enabled` is on.
+  `upsert-conflict-check.py` scans only root `*.js`/`*.html`, which is how the Edge
+  Function upsert escaped it.
 
   **Before deploying** `checkout`, `rankings`, `snapshot-leaderboard`, `weekly-digest` or
   `graphify-ai-query`, grant each one the table operations it uses. A small script

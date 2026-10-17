@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 240,
-  "open_task_count": 3230,
+  "page_count": 241,
+  "open_task_count": 3244,
   "pages": [
     {
       "page_id": "404",
@@ -4079,6 +4079,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-command-dock.js",
           "/omega-constellation.js",
           "/omega-daily.js",
           "/omega-sparkline.js",
@@ -8691,6 +8692,73 @@
         "PAGE::lab::MISSING::TRACEABILITY",
         "PAGE::lab::MISSING::TRUTH_STATES",
         "PAGE::lab::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "ladder",
+      "path": "ladder.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; LADDER",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-ladder.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 1,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::ladder::MISSING::ACCESSIBILITY",
+        "PAGE::ladder::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::ladder::MISSING::AUTHORIZATION",
+        "PAGE::ladder::MISSING::DATA_SOURCES",
+        "PAGE::ladder::MISSING::DOMAIN",
+        "PAGE::ladder::MISSING::EVENTS",
+        "PAGE::ladder::MISSING::FAILURE_PATHS",
+        "PAGE::ladder::MISSING::PRIMARY_ROLE",
+        "PAGE::ladder::MISSING::PURPOSE",
+        "PAGE::ladder::MISSING::RESPONSIVE",
+        "PAGE::ladder::MISSING::TASKS",
+        "PAGE::ladder::MISSING::TRACEABILITY",
+        "PAGE::ladder::MISSING::TRUTH_STATES",
+        "PAGE::ladder::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

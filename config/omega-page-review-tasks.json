@@ -5,7 +5,7 @@
   "status": "OPEN_AUDIT_QUEUE",
   "principle": "EVERY_PAGE_HAS_AUDIT_WORK",
   "task_contract": "config/omega-task-contract.json",
-  "task_count": 240,
+  "task_count": 241,
   "states": [
     "OPEN",
     "READY",
@@ -2255,6 +2255,24 @@
       "task_type": "AUDIT",
       "page": "lab",
       "path": "lab.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
+      "next_action": "Review direct source evidence and populate only independently proven contract fields."
+    },
+    {
+      "task_id": "PAGE::ladder::REVIEW",
+      "task_type": "AUDIT",
+      "page": "ladder",
+      "path": "ladder.html",
       "state": "OPEN",
       "role": "UNVERIFIED",
       "capability": [

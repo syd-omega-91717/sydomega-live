@@ -131,7 +131,7 @@
 <script>
 var SIGNS=['ARIES','TAURUS','GEMINI','CANCER','LEO','VIRGO','LIBRA','SCORPIO','SAGITT.','CAPRIC.','AQUAR.','PISCES'];
 var GATES=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
-var THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+var THRESH=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
 function buildGrid(auth){
   var head=document.getElementById('grd-head');
   if(head){SIGNS.forEach(function(s){var div=document.createElement('div');div.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);padding:7px 4px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap';div.textContent=s;head.appendChild(div);});}
@@ -184,7 +184,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
-    var THRESH2=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+    var THRESH2=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
     var GATES2=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
     var gateIdx=THRESH2.findIndex(function(t){return auth<t;});
     if(gateIdx<0)gateIdx=11;else if(gateIdx>0)gateIdx=gateIdx-1;

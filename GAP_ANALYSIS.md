@@ -19,8 +19,8 @@ project's own established convention (security/data-integrity first).
   281** public tables hold 0 rows; `client_errors` (8,972) outnumbers `platform_events` (7,977).
   Target: **22 pages** — 13 cores + 9 system, every page assigned in `config/page-cores.json`
   (gated by `scripts/tests/test_page_cores.py`). BUILT: COSMOS (`orrery.html`), COMMAND
-  (`dashboard.html` + `omega-command-dock.js`). Next by leverage: LADDER (26 pages, mostly the
-  same `profiles` read), INTEL (8 `graph-*` pages on 4 tables), LIFE (17 LOCAL_ONLY trackers —
+  (`dashboard.html` + `omega-command-dock.js`), LADDER (`ladder.html`; also ended a second,
+  divergent gate curve in 22 files). Next by leverage: INTEL (8 `graph-*` pages on 4 tables), LIFE (17 LOCAL_ONLY trackers —
   moving them to Postgres is the largest real-data gain). No page is deleted until its core
   replaces it and the owner signs off.
 - **OPEN 2026-10-17 — `omega_notifications` has never held a row.** Delivery is scheduled every

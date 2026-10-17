@@ -23962,3 +23962,37 @@ more values only the retired curve has.
   neighbouring rung.
 
 `verify-runtime.js` on all 19 touched pages: PASS.
+
+## 2026-10-17 — INSIGHT: six graph pages become four lenses on one graph
+
+**Why:** `graph-explorer`, `graph-timeline`, `graph-centrality`, `graph-anomalies`,
+`graph-evidence` and `graphify` all read the same four tables (`graph_entities`,
+`graph_relationships`, `graph_events`, `graph_evidence`) with `select('*')`.
+- **Live (2026-10-17):** 18 entities, 17 links, 17 events and 17 evidence rows, all from one
+  member and updated today.
+- **The source:** `project_task_completion_to_graph()` (`20261004082748`) projects every task
+  completion into an `event` entity linked to its progression-axis `concept`, with one evidence
+  row and one event. It is real, append-only data, and nothing in it is invented.
+- **Access:** RLS returns own rows or, for the owner, all rows.
+
+**Change.** `insight.html` + `omega-insight.js` draw the same nodes in four layouts, and a lens
+switch animates them between:
+- **GRAPH:** axis hubs, each with its events around it.
+- **TIMELINE:** first-seen date on x, one lane per axis.
+- **CENTRALITY:** nodes sized and ordered by degree.
+- **ANOMALIES:** flagged nodes on the left. The flags are rules, not a score: orphan, unverified,
+  confidence < 0.5, evidence not human-reviewed.
+
+Each node opens a panel with its links, evidence text and events. Search dims non-matches.
+Nothing writes. `graph-admin.html` (the owner's verify/delete tool) and `intelligence.html` stay
+separate. Six `nav.js` entries are `'folded'`, and `config/page-cores.json` marks INTEL BUILT.
+
+**Verified (headless, 1440 and 375 mobile, stub shaped like the projection):**
+- **Data:** 3 axis concepts, 8 linked events, 1 orphan with confidence 0.3 and unverified, and
+  8 evidence rows with 2 reviewed.
+- **Counts:** KPIs 12/8/8/8·2 reviewed; FLAGGED 7, which is 6 unreviewed plus the orphan.
+- **Lenses and selection:** every lens moves the nodes. Selecting axis A lights exactly its 3
+  edges, and "cipher" dims 9 of 12 nodes.
+- **Errors:** 0 page errors and no overflow.
+- **Empty state:** "NO GRAPH YET" showed over real data, because `.ins-empty{display:flex}` beats
+  the `hidden` attribute. `[hidden]{display:none}` fixes it.

@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 241,
-  "open_task_count": 3244,
+  "page_count": 242,
+  "open_task_count": 3258,
   "pages": [
     {
       "page_id": "404",
@@ -7779,6 +7779,73 @@
         "PAGE::index::MISSING::TRACEABILITY",
         "PAGE::index::MISSING::TRUTH_STATES",
         "PAGE::index::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "insight",
+      "path": "insight.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; INSIGHT",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-insight.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 1,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::insight::MISSING::ACCESSIBILITY",
+        "PAGE::insight::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::insight::MISSING::AUTHORIZATION",
+        "PAGE::insight::MISSING::DATA_SOURCES",
+        "PAGE::insight::MISSING::DOMAIN",
+        "PAGE::insight::MISSING::EVENTS",
+        "PAGE::insight::MISSING::FAILURE_PATHS",
+        "PAGE::insight::MISSING::PRIMARY_ROLE",
+        "PAGE::insight::MISSING::PURPOSE",
+        "PAGE::insight::MISSING::RESPONSIVE",
+        "PAGE::insight::MISSING::TASKS",
+        "PAGE::insight::MISSING::TRACEABILITY",
+        "PAGE::insight::MISSING::TRUTH_STATES",
+        "PAGE::insight::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

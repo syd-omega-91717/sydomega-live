@@ -255,10 +255,11 @@
     },
     {
       "core": "intel",
-      "host": "intelligence",
-      "state": "PLANNED",
-      "is": "One graph explorer with lenses (8 graph-* pages read the same 4 tables) plus research tools",
+      "host": "insight",
+      "state": "BUILT",
+      "is": "Your evidence graph in one view: GRAPH, TIMELINE, CENTRALITY and ANOMALIES lenses over the same nodes, plus research tools",
       "pages": [
+        "insight",
         "intelligence",
         "intel",
         "graph-admin",

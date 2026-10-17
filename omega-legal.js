@@ -152,7 +152,15 @@
     });
     /* If no footer exists yet, inject one at the bottom of #app or body */
     if(!injected){
-      var target = document.getElementById('app') || document.querySelector('.main') || document.body;
+      /* Never the shell itself: `.shell`/#app is a flex ROW holding #omega-side,
+         so a footer appended there became a third column ~790px wide and
+         squeezed the content column (orrery.html measured main at 555px of a
+         1440px viewport). The content column is the host; CLAUDE.md section 4. */
+      var target = null, cands = [document.querySelector('main'), document.querySelector('.main'), document.getElementById('app')];
+      for (var ci = 0; ci < cands.length; ci++) {
+        if (cands[ci] && !cands[ci].querySelector('#omega-side')) { target = cands[ci]; break; }
+      }
+      target = target || document.body;
       if(target && !target.querySelector('.omega-legal-footer')){
         var lf2 = document.createElement('div');
         lf2.className = 'omega-legal-footer';

@@ -462,9 +462,9 @@ are listed in rough order of how often they have recurred.
    table that has a non-PK unique constraint is worse, because PostgREST then
    defaults to the primary key — and if the payload does not carry it, the
    write succeeds once and raises `23505` forever after, so the feature freezes
-   at its first value. Four places had this. `scripts/upsert-conflict-check.py`
-   gates it, but only against the SQL bag: a constraint the bag declares and
-   live lacks (`ai_memory`) is invisible to it.
+   at its first value. Five places had this. `scripts/upsert-conflict-check.py`
+   gates pages and Edge Functions against the SQL bag only: a key just the bag
+   has (`ai_memory`) is invisible to it.
 8. **Two divergent copies of one canonical table.** The 12 signs/elements/gods
    and the 12 labors were each duplicated across many files and had drifted;
    in the worst case the live onboarding flow assigned the wrong god and agent

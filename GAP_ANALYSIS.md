@@ -254,8 +254,10 @@ open, recorded in `FIXES_LOG.md`:
   `member_feature_flags` SELECT+INSERT+UPDATE; product-orchestrator v8 also names
   `onConflict: member_id,feature_id` (it upserted on the PK, so a flag's second write
   would have raised 23505). Still dormant until `autonomous_agents_enabled` is on.
-  `upsert-conflict-check.py` scans only root `*.js`/`*.html`, which is how the Edge
-  Function upsert escaped it.
+  **Worker reads: DONE 2026-10-17** (`20261017105203`): `omega_platform_evidence` SELECT
+  (evidence-graph), and column SELECT on `omega_knowledge_chunks (id, content)` and
+  `omega_provider_registry (id, provider_key, status, secret_ref)` for the embedding and
+  provider workers. `upsert-conflict-check.py` now scans `supabase/functions/` and exits 1.
 
   **Before deploying** `checkout`, `rankings`, `snapshot-leaderboard`, `weekly-digest` or
   `graphify-ai-query`, grant each one the table operations it uses. A small script

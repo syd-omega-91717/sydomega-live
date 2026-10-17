@@ -23771,3 +23771,29 @@ row updated in place (`enabled` true → false); the old shape (`on conflict (id
 write → **23505**. After apply: service_role SELECT/INSERT (+UPDATE on flags), anon nothing.
 v8 answers an anon-JWT POST with **503 `{"error":"disabled"}`** — it boots and stays gated.
 `service_role` also holds TRUNCATE on both tables; that predates this change and was left as is.
+
+## 2026-10-17 — three deployed functions could not read; the upsert gate never scanned Edge Functions and never failed
+
+**Found (live):** `service_role` had no SELECT on three tables that deployed functions read through
+`ctx.supabaseAdmin` — `omega_platform_evidence` (evidence-graph), `omega_knowledge_chunks` and
+`omega_provider_registry` (omega-knowledge-embedding-worker, omega-provider-worker). Each read →
+**42501**, measured as `service_role` in a rolled-back block. `authenticated` already holds table
+SELECT on all three, so the server role could see less than a member.
+
+**Fix:** `20261017105203` — table SELECT on `omega_platform_evidence` (evidence-graph runs
+`select('*', {count, head})`, which needs it); column SELECT on `omega_knowledge_chunks (id, content)`
+and `omega_provider_registry (id, provider_key, status, secret_ref)` — exactly the columns read or
+filtered on. Read-only; the workers write through their completion RPCs.
+
+**Verified live (rolled back, then applied):** before, all three reads 42501; after, every query the
+three functions make succeeds (16 evidence rows counted), while unread columns stay denied
+(`registry.metadata`, `chunks.embedding` → 42501). After apply: `has_column_privilege` true for the
+granted columns, false for `embedding`/`metadata`; no INSERT.
+
+**Gate (`scripts/upsert-conflict-check.py`):** two gaps let product-orchestrator's flag upsert (fixed in
+`20261017104020`) through. (1) It scanned only root `*.js`/`*.html`; it now also scans
+`supabase/functions/**/*.ts` and reports repo-relative paths. (2) It always exited 0, although `ci.yml`
+and `ci-local.sh` run it as a blocking step — a finding printed and the merge passed. It now exits 1.
+Run against product-orchestrator at `69ef98f~1` it reports `index.ts:138 member_feature_flags [23505]`
+and exits 1; against the fix, 0 findings and exit 0. Two tests added; the planted Edge Function
+violator fails against the old gate.

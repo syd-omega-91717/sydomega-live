@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — INSIGHT · your evidence graph as one living view: graph, timeline, centrality, anomalies">
+<title>&#937; SYD OMEGA 91717 &mdash; INSIGHT</title>
+
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+</head>
+<body>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="insight" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar">
+      <div class="t">INSIGHT<small>INTEL &middot; YOUR EVIDENCE GRAPH &middot; FOUR LENSES</small></div>
+    </div>
+
+    <div class="pad ins">
+      <div class="ins-bar">
+        <div class="ins-lens" role="tablist" aria-label="Lens" id="ins-lens"></div>
+        <input class="inp ins-find" id="ins-find" type="search" placeholder="Find a node" aria-label="Find a node" autocomplete="off">
+      </div>
+      <div class="ins-kpis" id="ins-kpis"></div>
+
+      <div class="ins-grid">
+        <section class="ins-stage" aria-label="Evidence graph">
+          <svg id="ins-svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Evidence graph">
+            <g id="ins-axes"></g><g id="ins-edges"></g><g id="ins-nodes"></g>
+          </svg>
+          <div class="ins-labels" id="ins-labels" aria-hidden="true"></div>
+          <div class="ins-empty" id="ins-empty" hidden>NO GRAPH YET &mdash; COMPLETE A TASK AND IT APPEARS HERE</div>
+        </section>
+        <section class="card ins-panel" id="ins-panel" aria-live="polite"></section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<style>
+.ins{display:flex;flex-direction:column;gap:14px}
+.ins-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.ins-lens{display:flex;gap:6px;flex-wrap:wrap}
+.ins-lens button{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;background:rgba(255,255,255,.03);color:var(--muted);
+  border:1px solid rgba(255,255,255,.1);border-radius:2px;cursor:pointer}
+.ins-lens button[aria-selected="true"]{color:var(--cyan);border-color:var(--cyan);background:rgba(0,229,255,.08)}
+.ins-find{max-width:240px}
+.ins-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.ins-kpi{padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:2px}
+.ins-kpi b{display:block;font-family:var(--D);font-size:24px;color:var(--ink)}
+.ins-kpi span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.ins-kpi.warn b{color:#FF9800}
+.ins-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+.ins-stage{position:relative;border:1px solid rgba(255,255,255,.06);border-radius:2px;background:rgba(0,0,0,.25)}
+#ins-svg{display:block;width:100%;height:auto}
+.ins-node{cursor:pointer;transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.ins-node circle{stroke:rgba(0,0,0,.6);stroke-width:2;transition:r .6s,fill .4s}
+.ins-node:hover circle,.ins-node:focus-visible circle{stroke:#fff}
+.ins-node.sel circle{stroke:var(--gold);stroke-width:4}
+.ins-node.dim{opacity:.15}
+.ins-node.flag circle{stroke:#FF9800;stroke-width:4;stroke-dasharray:5 4}
+#ins-edges line{stroke:rgba(0,229,255,.25);stroke-width:1.5;transition:opacity .5s}
+#ins-edges line.hot{stroke:var(--gold);stroke-width:3}
+#ins-edges.off line{opacity:0}
+#ins-axes line{stroke:rgba(255,255,255,.08)}
+.ins-labels{position:absolute;inset:0;pointer-events:none}
+.ins-lbl{position:absolute;transform:translate(-50%,-50%);font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);
+  white-space:nowrap;text-shadow:0 1px 6px #000;transition:left .8s cubic-bezier(.2,.8,.2,1),top .8s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.ins-lbl.axis{color:var(--muted)}
+.ins-empty[hidden]{display:none}   /* display:flex below would beat the hidden attribute */
+.ins-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);text-align:center;padding:20px}
+.ins-panel{padding:16px;display:flex;flex-direction:column;gap:10px}
+.ins-panel h3{margin:0;font-family:var(--D);font-size:20px;color:var(--gold);font-weight:400}
+.ins-tag{display:inline-block;font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 8px;border:1px solid rgba(255,255,255,.15);border-radius:10px;margin-right:6px;color:var(--muted)}
+.ins-tag.ok{border-color:#3fb27f;color:#3fb27f}
+.ins-tag.warn{border-color:#FF9800;color:#FF9800}
+.ins-row{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px;font-family:var(--R);font-size:14px}
+.ins-row em{font-style:normal;font-family:var(--M);font-size:12px;color:var(--muted);letter-spacing:1px}
+.ins-list{display:flex;flex-direction:column;gap:4px;max-height:280px;overflow:auto}
+.ins-li{display:flex;justify-content:space-between;gap:8px;padding:6px 8px;border:1px solid rgba(255,255,255,.06);border-radius:2px;font-family:var(--R);font-size:14px;
+  background:none;color:var(--ink);text-align:left;cursor:pointer;width:100%}
+.ins-li:hover{border-color:var(--cyan)}
+.ins-li em{font-style:normal;font-family:var(--M);font-size:12px;color:var(--muted)}
+@media (max-width:900px){.ins-grid{grid-template-columns:1fr}}
+@media (max-width:480px){.ins-lbl{display:none}.ins-lbl.axis{display:block}}
+@media (prefers-reduced-motion:reduce){.ins-node,.ins-lbl,.ins-node circle{transition:none}}
+</style>
+
+<script type="module" src="/omega-insight.js"></script>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
+</html>

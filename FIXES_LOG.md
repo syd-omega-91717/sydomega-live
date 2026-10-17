@@ -23714,3 +23714,36 @@ a payment function that could never settle, even with `20261017093316` applied.
   after it was applied live (its ledger statements keep the global form, which passed live); the
   rewrite logic is unchanged and live state is unaffected. Recorded here because applied migrations
   are otherwise immutable.
+
+## 2026-10-17 — server notifications were never delivered and never shown
+
+**Found (live):** `omega_private.enqueue_notification` queues rows in `public.omega_notifications`
+(service-order activation, certificate issuance), but nothing moved them on and nothing displayed
+them. (1) No `cron.job` existed (0 rows), and a scheduled HTTP call to `omega-notification-worker`
+cannot authenticate: it accepts only the server secret key and no key is in Vault (0 secrets).
+(2) `notifications.html` read only `localStorage` (`omega_notifications` key, line 122) plus two
+hard-coded seeds — no page queried the table. (3) Policy `omega_notifications_owner_update` existed
+with no UPDATE grant, so a member could never mark a row read (§8.1 class 6c).
+
+**Fix (owner chose "make the inbox real"):**
+- `20261017100555` — `omega_private.deliver_in_app_notifications(p_limit)`: the worker's in_app loop
+  (claim SKIP LOCKED, mark delivered, mark failed on error), definer, `search_path=''`, EXECUTE
+  service_role only; pg_cron job `omega-in-app-notification-delivery` every minute (upsert by name);
+  `grant update (read_at)` to authenticated — every other column stays server-owned.
+- `notifications.html` loads the member's `in_app` rows with `status='delivered'` (RLS: own rows),
+  never caches them in localStorage, and shows one read only after `.update({read_at})` resolves
+  without `.error`; "mark all read" does the same in one call. `supabase/live-grants.json` records
+  the column grant.
+
+**Verified live (dry run in one transaction, rolled back):** two enqueued notifications → `delivered=2`,
+second run `0`; as the member (`SET LOCAL ROLE authenticated` + JWT claims) 2 rows visible, `read_at`
+update 1 row, `status` update **42501**. After apply: job 1 scheduled as `postgres`, runs every minute,
+`succeeded` each time (runs 10–14 checked); authenticated UPDATE on `read_at` true, on `status` false;
+anon/authenticated EXECUTE on the delivery function false.
+
+**Verified in Chromium** (harness stub answering `omega_notifications` with two rows): the query is
+`select(…).eq(user_id).eq(channel,in_app).eq(status,delivered).order(created_at desc).limit(100)`;
+UNREAD 3 / TOTAL 4 with 2 local seeds; a click with the update forced to `{error}` leaves the row
+unread (UNREAD 3, opacity 1); a successful click dims it (opacity 0.5, UNREAD 2) and the update payload
+is `{read_at}` only. `grant-contract.py` fails both writes against the pre-change grants snapshot and
+passes after. `verify-runtime.js --pages notifications.html`: PASS.

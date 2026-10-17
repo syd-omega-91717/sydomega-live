@@ -127,6 +127,29 @@ var reminders=JSON.parse(localStorage.getItem(RK2)||'[]');
 
 function save(){localStorage.setItem(NK,JSON.stringify(notifs));localStorage.setItem(RK2,JSON.stringify(reminders));}
 
+/* Server notifications (public.omega_notifications): queued by the platform
+   (service activation, certificates), marked delivered every minute by the
+   omega-in-app-notification-delivery pg_cron job. RLS returns only the
+   member's own rows. Never cached in localStorage -- the table is the record. */
+var serverNotifs=[];
+var UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function serverType(r){
+  var t=String(r.notification_type||'');
+  if(/certificate|achievement|badge|honor/.test(t))return 'achievement';
+  if(r.severity==='high'||r.severity==='critical')return 'alert';
+  return 'system';
+}
+async function loadServerNotifs(uid){
+  var r=await sb.from('omega_notifications')
+    .select('notification_id,notification_type,title,body,severity,read_at,created_at')
+    .eq('user_id',uid).eq('channel','in_app').eq('status','delivered')
+    .order('created_at',{ascending:false}).limit(100);
+  if(r.error){console.warn('[notifications] server inbox unavailable:',r.error.message);return;}
+  serverNotifs=(r.data||[]).filter(function(x){return UUID_RE.test(x.notification_id);}).map(function(x){
+    return {sid:x.notification_id,type:serverType(x),title:x.title,body:x.body,read:!!x.read_at,date:String(x.created_at||'').slice(0,10)};
+  });
+}
+
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var PRIO_COL={low:'var(--muted)',medium:'var(--gold)',high:'#FF9800',critical:'#FF4444'};
 var today=new Date().toISOString().slice(0,10);
@@ -141,22 +164,24 @@ function seedSystemNotifs(){
 }
 
 function calcKPIs(){
-  var unread=notifs.filter(function(n){return !n.read;}).length;
-  var sys=notifs.filter(function(n){return n.type==='system';}).length;
+  var all=notifs.concat(serverNotifs);
+  var unread=all.filter(function(n){return !n.read;}).length;
+  var sys=all.filter(function(n){return n.type==='system';}).length;
   var due=reminders.filter(function(r){return !r.done&&r.date<=today;}).length;
   document.getElementById('k-unread').textContent=unread;
-  document.getElementById('k-total').textContent=notifs.length;
+  document.getElementById('k-total').textContent=all.length;
   document.getElementById('k-reminders').textContent=due;
   document.getElementById('k-system').textContent=sys;
 }
 
 function renderNotifs(){
   var el=document.getElementById('notif-list');
-  if(!notifs.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:30px">INBOX CLEAR — SOVEREIGN MIND UNCLUTTERED</div>';return;}
+  if(!notifs.length&&!serverNotifs.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:30px">INBOX CLEAR — SOVEREIGN MIND UNCLUTTERED</div>';return;}
   var TYPE_COL={system:'#00E5FF',reminder:'#C9A84C',achievement:'#9B6BF0',alert:'#FF4444'};
-  el.innerHTML=[].concat(notifs).reverse().map(function(n,i){
+  el.innerHTML=serverNotifs.concat([].concat(notifs).reverse()).map(function(n,i){
     var col=TYPE_COL[n.type]||'var(--gold)';
-    return '<div style="border:1px solid var(--line);border-left:3px solid '+col+(n.read?';opacity:.5':'')+';background:rgba(10,10,15,'+(n.read?'.3':'.55')+');padding:11px 12px;border-radius:2px;cursor:pointer" onclick="markRead('+notifs.indexOf(n)+')">'
+    var click=n.sid?"markServerRead('"+n.sid+"')":'markRead('+notifs.indexOf(n)+')';
+    return '<div style="border:1px solid var(--line);border-left:3px solid '+col+(n.read?';opacity:.5':'')+';background:rgba(10,10,15,'+(n.read?'.3':'.55')+');padding:11px 12px;border-radius:2px;cursor:pointer" onclick="'+click+'">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
       +(n.read?'':'<div style="width:6px;height:6px;border-radius:50%;background:'+col+';flex-shrink:0"></div>')
       +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+((n.type||'system').toUpperCase())+'</div>'
@@ -192,7 +217,25 @@ function renderReminders(){
 }
 
 window.markRead=function(idx){notifs[idx].read=true;save();calcKPIs();renderNotifs();};
-window.markAllRead=function(){notifs.forEach(function(n){n.read=true;});save();calcKPIs();renderNotifs();};
+/* Server rows: shown read only once the write succeeds (Supabase resolves to
+   {error}, it does not throw -- CLAUDE.md §9). Members may update read_at only. */
+window.markServerRead=async function(id){
+  var n=serverNotifs.find(function(x){return x.sid===id;});
+  if(!n||n.read||!UUID_RE.test(id))return;
+  var r=await sb.from('omega_notifications').update({read_at:new Date().toISOString()}).eq('notification_id',id);
+  if(r.error){console.warn('[notifications] mark read failed:',r.error.message);return;}
+  n.read=true;calcKPIs();renderNotifs();
+};
+window.markAllRead=async function(){
+  notifs.forEach(function(n){n.read=true;});save();
+  var ids=serverNotifs.filter(function(n){return !n.read;}).map(function(n){return n.sid;});
+  if(ids.length){
+    var r=await sb.from('omega_notifications').update({read_at:new Date().toISOString()}).in('notification_id',ids);
+    if(r.error)console.warn('[notifications] mark all read failed:',r.error.message);
+    else serverNotifs.forEach(function(n){n.read=true;});
+  }
+  calcKPIs();renderNotifs();
+};
 window.clearAll=function(){if(!confirm('Clear all notifications?'))return;notifs=[];save();calcKPIs();renderNotifs();};
 window.addReminder=function(){
   var t=document.getElementById('r-text').value.trim();if(!t)return;
@@ -229,6 +272,7 @@ window.requestNotifPermission=function(){
     document.getElementById('hdr-auth').textContent=auth.toFixed(4);
     seedSystemNotifs();
     calcKPIs();renderNotifs();renderReminders();
+    loadServerNotifs(s.user.id).then(function(){calcKPIs();renderNotifs();}).catch(function(e){console.warn(e);});
     if('Notification' in window){document.getElementById('notif-status').textContent='Status: '+Notification.permission.toUpperCase();}
     else{document.getElementById('notif-status').textContent='Status: NOT SUPPORTED';}
     document.querySelectorAll('.tab').forEach(function(btn){

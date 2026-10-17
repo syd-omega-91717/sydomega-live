@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-17T09:56:00.000Z",
+  "_captured": "2026-10-17T10:08:00.000Z",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated provider query)",
-  "remoteMigrationCount": 396,
-  "latestRemoteMigration": "20261017095439",
+  "remoteMigrationCount": 397,
+  "latestRemoteMigration": "20261017100555",
   "versions": [
     "0001",
     "0002",
@@ -399,7 +399,8 @@
     "20261017093038",
     "20261017093316",
     "20261017094629",
-    "20261017095439"
+    "20261017095439",
+    "20261017100555"
   ],
   "migrations": [
     {
@@ -1982,6 +1983,10 @@
     {
       "version": "20261017095439",
       "name": "capture_record_stripe_payment_20261017"
+    },
+    {
+      "version": "20261017100555",
+      "name": "in_app_notification_delivery_20261017"
     }
   ]
 }

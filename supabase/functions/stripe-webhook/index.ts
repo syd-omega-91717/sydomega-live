@@ -80,7 +80,9 @@ async function recordStripePayment(admin: ReturnType<typeof createClient>, args:
   providerReference: string; payloadHash: string;
 }) {
   if (!Number.isSafeInteger(args.amountMinor) || args.amountMinor <= 0) return { ok: true as const, skipped: "no_positive_amount" };
-  const { data: transactionId, error } = await admin.schema("omega_private").rpc("record_stripe_payment", {
+  // public delegate of omega_private.record_stripe_payment (20261017): PostgREST
+  // does not expose omega_private, so .schema("omega_private") returned PGRST106.
+  const { data: transactionId, error } = await admin.rpc("record_stripe_payment", {
     p_event_id: args.eventId,
     p_event_type: args.eventType,
     p_user_id: args.uid,

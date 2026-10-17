@@ -34,13 +34,23 @@ project's own established convention (security/data-integrity first).
   narrow `GRANT INSERT … TO authenticated` (the policy already scopes rows to `auth.uid()`) —
   an owner decision, since it opens a client write path to the audit table.
 
-- **OPEN 2026-10-17 — `stripe-webhook` cannot record a payment.** It calls
-  `admin.schema("omega_private").rpc("record_stripe_payment")`; PostgREST exposes only `public`,
-  `graphql_public` (probed: **406 PGRST106**) and `service_role` has no USAGE on `omega_private`.
-  0 Stripe events ever received, so nothing is lost yet; the first paid checkout will fail to reach
-  the ledger. Fix shape is proven by `20261017092002` (a service_role-only `public` definer
-  delegate) — payment code, so an owner decision. Exposing `omega_private` in API settings is the
-  wrong fix: it publishes the whole private schema.
+- **CLOSED 2026-10-17 (`20261017093038` + `20261017093316`, `stripe-webhook` v6; verified live
+  in rolled-back transactions) — was: `stripe-webhook` cannot record a payment.** Two defects on
+  one path: the unexposed `omega_private` schema (406 PGRST106), then
+  `post_ledger_transaction` calling `pg_catalog.trim(`/`pg_catalog.coalesce(` (42883), so the
+  ledger could never post.
+
+- **OPEN 2026-10-17 — `STRIPE_WEBHOOK_SECRET` is not set (owner action).** The deployed
+  `stripe-webhook` answers every request 503 `webhook_not_configured` before any other check, so
+  Stripe has never been able to deliver an event (0 rows in `stripe_webhook_events`). Set it with
+  `supabase secrets set STRIPE_WEBHOOK_SECRET=…` (and confirm `STRIPE_SECRET_KEY`, which the
+  checkout path needs for its subscription lookup), then send a Stripe test event.
+
+- **OPEN 2026-10-17 — four more live functions call SQL keywords as `pg_catalog` functions
+  (42883 at runtime).** `omega_private.create_consult_intake` (`pg_catalog.trim` ×6),
+  `omega_private.create_service_order` (×2), `private.omega_watchlist_upsert` (×2),
+  `public.omega_runtime_dispatch` (×5). Same fix as `20261017093316` (`btrim`). Found by scanning
+  live bodies for `pg_catalog\.(coalesce|nullif|greatest|least|trim)\(`; no static gate yet.
 
 - **CLOSED 2026-10-17 (`20261017092002`, service_role-only public delegates; verified live) — was:
   `omega-notification-worker` failed every call (PGRST202).** Its RPCs lived only in the unexposed

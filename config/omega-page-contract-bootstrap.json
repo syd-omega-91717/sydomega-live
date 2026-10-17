@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 239,
-  "open_task_count": 3216,
+  "page_count": 240,
+  "open_task_count": 3230,
   "pages": [
     {
       "page_id": "404",
@@ -78,7 +78,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Academy",
-        "h1": [],
+        "h1": [
+          "ACADEMY DATA UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -95,7 +97,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -4013,6 +4015,7 @@
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
+          "certificates",
           "profiles"
         ],
         "supabase_rpcs": [],
@@ -5133,7 +5136,8 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-exam-engine.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/omega-srs.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -5834,7 +5838,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; GATES",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -5850,7 +5856,7 @@
           "buttons": 7,
           "forms": 0,
           "inputs": 2,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -6810,7 +6816,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; GRID",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -6826,7 +6834,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -8693,7 +8701,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Leaderboard",
-        "h1": [],
+        "h1": [
+          "LEADERBOARD ACCESS UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/leaderboard.js",
@@ -8708,7 +8718,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -8826,7 +8836,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; LEVELS",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -8842,7 +8854,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -10435,6 +10447,7 @@
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
+          "omega_notifications",
           "profiles"
         ],
         "supabase_rpcs": [],
@@ -11107,6 +11120,74 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
+      "page_id": "orrery",
+      "path": "orrery.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; ORRERY",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-orrery.js",
+          "/omega-sparkline.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 3,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::orrery::MISSING::ACCESSIBILITY",
+        "PAGE::orrery::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::orrery::MISSING::AUTHORIZATION",
+        "PAGE::orrery::MISSING::DATA_SOURCES",
+        "PAGE::orrery::MISSING::DOMAIN",
+        "PAGE::orrery::MISSING::EVENTS",
+        "PAGE::orrery::MISSING::FAILURE_PATHS",
+        "PAGE::orrery::MISSING::PRIMARY_ROLE",
+        "PAGE::orrery::MISSING::PURPOSE",
+        "PAGE::orrery::MISSING::RESPONSIVE",
+        "PAGE::orrery::MISSING::TASKS",
+        "PAGE::orrery::MISSING::TRACEABILITY",
+        "PAGE::orrery::MISSING::TRUTH_STATES",
+        "PAGE::orrery::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
       "page_id": "pantheons",
       "path": "pantheons.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -11252,8 +11333,7 @@
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
-          "profiles",
-          "task_completions"
+          "profiles"
         ],
         "supabase_rpcs": [],
         "capability_candidates": [],
@@ -11590,7 +11670,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Points",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -11607,7 +11689,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -12004,6 +12086,7 @@
           "/upload.js"
         ],
         "supabase_tables": [
+          "certificates",
           "character_records",
           "evolution_events",
           "profiles"
@@ -12694,7 +12777,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Realm",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -12710,7 +12795,7 @@
           "buttons": 13,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -13766,14 +13851,14 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 4,
+          "buttons": 8,
           "forms": 0,
           "inputs": 0,
           "links": 1
         },
         "media_counts": {
           "images": 0,
-          "video": 0,
+          "video": 1,
           "audio": 0,
           "iframes": 0
         }
@@ -15219,7 +15304,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; TREASURY",
-        "h1": [],
+        "h1": [
+          "TREASURY DATA UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -15236,7 +15323,7 @@
           "buttons": 14,
           "forms": 0,
           "inputs": 12,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -16045,7 +16132,7 @@
           "buttons": 10,
           "forms": 0,
           "inputs": 7,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,

@@ -6,6 +6,7 @@ deployment success, or that the production aliases serve the expected commit.
 """
 
 from pathlib import Path
+import json
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -84,6 +85,16 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn('if [[ "$effective_host" != "$EXPECTED_HOST" ]]; then', script)
         self.assertIn("redirect_left_expected_host", script)
         self.assertIn('EXPECTED_HOST="${EXPECTED_HOST%%/*}"', script)
+
+    def test_git_auto_deploy_is_disabled_in_favor_of_controlled_release(self):
+        vercel = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+        deployment_enabled = vercel.get("git", {}).get("deploymentEnabled", {})
+        for pattern in ("*", "**", "main"):
+            self.assertIs(deployment_enabled.get(pattern), False, pattern)
+        self.assertIn("Controlled state when token is unavailable", WORKFLOW)
+        self.assertIn("DEPLOY_REQUESTED:", WORKFLOW)
+        self.assertIn("needs.credentials.outputs.ready == 'true'", WORKFLOW)
+        self.assertIn('npx --yes vercel@59.6.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"', WORKFLOW)
 
     def test_deployment_uses_the_validated_workflow_path(self):
         self.assertIn("needs: validate", WORKFLOW)

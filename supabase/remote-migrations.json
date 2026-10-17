@@ -1,7 +1,7 @@
 {
-  "_captured": "2026-10-17T11:08:00.000Z",
+  "_captured": "2026-10-17T11:28:53.997Z",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated provider query)",
-  "remoteMigrationCount": 400,
+  "remoteMigrationCount": 401,
   "latestRemoteMigration": "20261017110604",
   "versions": [
     "0001",
@@ -389,6 +389,7 @@
     "20261015220000",
     "20261016174416",
     "20261016193000",
+    "20261016193700",
     "20261016194804",
     "20261016213149",
     "20261016221059",
@@ -1942,6 +1943,10 @@
     {
       "version": "20261016193000",
       "name": "revoke_anon_member_preferences_rpc_20261016"
+    },
+    {
+      "version": "20261016193700",
+      "name": "progression_rpc_guardrails_20261016"
     },
     {
       "version": "20261016194804",

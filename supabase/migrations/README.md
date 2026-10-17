@@ -78,3 +78,10 @@ New schema changes must be created as new migrations. Existing applied migration
 ## Background
 
 Earlier consolidation work established this directory by synchronizing the loose SQL files into an ordered migration history. Some original SQL bundles contained stale implementations, so the canonical migration files were re-synced to the current loose-file bodies rather than blindly replaying the old bundle. Later timestamped files capture production reconciliation changes. The detailed historical analysis remains in the repository's consolidation reports and `FIXES_LOG.md`.
+
+
+## 2026-10-17 — restore the applied progression migration ledger alias
+
+A fresh authenticated production migration-list query on 2026-10-17 returned **401 applied versions**, latest `20261017110604`. The `main` tree before this repair contained **400 local migration files**; the sole production-only version was `20261016193700` (`progression_rpc_guardrails_20261016`). The canonical progression guardrail SQL is already tracked and recorded under `20261016194804`. The earlier version was removed from the repository while its production ledger row remained, causing Supabase's preview check to fail with `Remote migration versions not found in local migrations directory`.
+
+This repair restores `20261016193700_progression_rpc_guardrails_20261016.sql` as an intentionally empty compatibility alias. It preserves the applied version in replay history without executing the progression changes twice. The production ledger snapshot was refreshed from the authenticated provider result and now records 401 versions. Its per-migration records are normalized to an array, matching the schema consumed by the migration contracts; the local migration directory has 401 unique versions after the alias is restored. The generated registry census is updated accordingly (107 numbered and 294 timestamped files). This is ledger reconciliation, not a production schema change. The migration replay and Supabase Preview check must pass on the PR head before merge.

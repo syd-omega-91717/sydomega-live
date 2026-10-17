@@ -1,13 +1,16 @@
 -- Ω SYD OMEGA 91717 — member-owned RPC write amplification guardrails
 --
--- Keep the narrow SECURITY DEFINER write boundary because authenticated
--- clients intentionally have no direct INSERT privilege on the global event
--- ledger or simulation history. Pin the search path, enforce caller identity,
--- validate the current model contract, serialize per-member writes, and cap
--- per-member write rates.
+-- Keep privileged write implementations in the non-exposed omega_private schema.
+-- Public RPC names remain SECURITY INVOKER wrappers for client compatibility.
+-- Authenticated clients have no direct INSERT privilege on either backing table.
+-- Pin search_path, enforce auth.uid(), validate the model contract, serialize
+-- writes, and cap per-member rates.
 BEGIN;
 
-CREATE OR REPLACE FUNCTION public.omega_record_simulation_run(
+CREATE SCHEMA IF NOT EXISTS omega_private;
+GRANT USAGE ON SCHEMA omega_private TO authenticated;
+
+CREATE OR REPLACE FUNCTION omega_private.omega_record_simulation_run(
   p_model_key text,
   p_model_version text,
   p_deterministic_seed bigint,
@@ -138,12 +141,43 @@ BEGIN
 END;
 $function$;
 
+REVOKE EXECUTE ON FUNCTION omega_private.omega_record_simulation_run(text, text, bigint, jsonb, jsonb) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION omega_private.omega_record_simulation_run(text, text, bigint, jsonb, jsonb) TO authenticated;
+COMMENT ON FUNCTION omega_private.omega_record_simulation_run(text, text, bigint, jsonb, jsonb) IS
+  'Private SECURITY DEFINER implementation: auth.uid enforced, pinned search_path, strict current simulation model/input/result validation, 20 runs per member per hour. No production balance or entitlement mutation.';
+
+CREATE OR REPLACE FUNCTION public.omega_record_simulation_run(
+  p_model_key text,
+  p_model_version text,
+  p_deterministic_seed bigint,
+  p_input_snapshot jsonb,
+  p_result_snapshot jsonb
+)
+RETURNS public.omega_simulation_runs
+LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = ''
+AS $wrapper$
+DECLARE
+  v_row public.omega_simulation_runs;
+BEGIN
+  v_row := omega_private.omega_record_simulation_run(
+    p_model_key,
+    p_model_version,
+    p_deterministic_seed,
+    p_input_snapshot,
+    p_result_snapshot
+  );
+  RETURN v_row;
+END;
+$wrapper$;
+
 REVOKE EXECUTE ON FUNCTION public.omega_record_simulation_run(text, text, bigint, jsonb, jsonb) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.omega_record_simulation_run(text, text, bigint, jsonb, jsonb) TO authenticated;
 COMMENT ON FUNCTION public.omega_record_simulation_run(text, text, bigint, jsonb, jsonb) IS
-  'Intentional narrow SECURITY DEFINER write boundary: auth.uid enforced, pinned search_path, strict current simulation model/input/result validation, 20 runs per member per hour. No production balance or entitlement mutation.';
+  'SECURITY INVOKER PostgREST wrapper. Privileged validation and writes are implemented in the non-exposed omega_private schema.';
 
-CREATE OR REPLACE FUNCTION public.omega_record_world_action(
+CREATE OR REPLACE FUNCTION omega_private.omega_record_world_action(
   p_district text,
   p_action text,
   p_route text,
@@ -252,9 +286,35 @@ BEGIN
 END;
 $function$;
 
+REVOKE EXECUTE ON FUNCTION omega_private.omega_record_world_action(text, text, text, text) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION omega_private.omega_record_world_action(text, text, text, text) TO authenticated;
+COMMENT ON FUNCTION omega_private.omega_record_world_action(text, text, text, text) IS
+  'Private SECURITY DEFINER implementation: auth.uid enforced, pinned search_path, district/route validation, serialized idempotency, and 120 action-start events per member per minute. It cannot award XP, money, authority, or achievements.';
+
+CREATE OR REPLACE FUNCTION public.omega_record_world_action(
+  p_district text,
+  p_action text,
+  p_route text,
+  p_idempotency_key text DEFAULT NULL::text
+)
+RETURNS bigint
+LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = ''
+AS $wrapper$
+BEGIN
+  RETURN omega_private.omega_record_world_action(
+    p_district,
+    p_action,
+    p_route,
+    p_idempotency_key
+  );
+END;
+$wrapper$;
+
 REVOKE EXECUTE ON FUNCTION public.omega_record_world_action(text, text, text, text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.omega_record_world_action(text, text, text, text) TO authenticated;
 COMMENT ON FUNCTION public.omega_record_world_action(text, text, text, text) IS
-  'Intentional narrow SECURITY DEFINER write boundary: auth.uid enforced, pinned search_path, district/route validation, serialized idempotency, and 120 action-start events per member per minute. It cannot award XP, money, authority, or achievements.';
+  'SECURITY INVOKER PostgREST wrapper. Privileged validation and writes are implemented in the non-exposed omega_private schema.';
 
 COMMIT;

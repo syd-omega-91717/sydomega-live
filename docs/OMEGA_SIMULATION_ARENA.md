@@ -45,6 +45,6 @@ The pending migration `20261017114500_member_rpc_write_guardrails_20261017.sql` 
 - Validate the deterministic seed, input ranges, output metrics, and trace length/range on the server.
 - Limit saved simulation runs to 20 per authenticated member per hour.
 - Serialize world-action writes per member, make duplicate retries race-safe, and cap action-start events at 120 per member per minute.
-- Preserve the existing narrow `SECURITY DEFINER` boundary, pinned empty `search_path`, explicit `auth.uid()` checks, and deny-by-default direct table writes.
+- Move privileged function bodies into the non-exposed `omega_private` schema; keep public RPC names as `SECURITY INVOKER` wrappers for compatibility. Private bodies retain pinned empty `search_path`, explicit `auth.uid()` checks, and deny-by-default direct table writes.
 
 **Release status:** this migration is registered as `PENDING_REVIEW / NOT_APPLIED` and blocks production until reviewed, replayed, and explicitly applied. The repository record is not evidence that production has these new limits yet.

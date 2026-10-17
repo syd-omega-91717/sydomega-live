@@ -23909,3 +23909,56 @@ LIFE pages store nothing in Postgres. `scripts/tests/test_page_cores.py`:
 - every page must belong somewhere (a planted unassigned page fails it);
 - no page sits in two cores;
 - a `'folded'` nav entry must belong to a BUILT core.
+
+## 2026-10-17 — LADDER; one gate curve instead of two
+
+**The bug (§8.1 class 8):** `omega-canon.json` defines the 12 gates as `structure.gate_thresholds`,
+equal to `authority.gates`: 2.3197, 4.6394, 6.9592, 9.2789 … 27.8367. **22 files** hard-coded a
+second curve instead: 2.32, **3.98, 5.95, 8.29**, 11, 13.92, 17.21, 20.87, 24.01, 25.9, 27.1,
+27.8367.
+- **Which files:** 17 pages including `profile` (363 views), 4 shared modules, and
+  `leaderboard.js`.
+- **What the member saw:** a different gate for the same authority depending on the page. At
+  4.0 they were SCHOLAR on `profile`/`grades`/`grid` and ACOLYTE on `dashboard`/`gates`/`vault`.
+- **No server tie-breaker:** the database has no gate function (`pg_proc` searched), so the
+  canon is the only authority.
+
+**The sweep:**
+- The array literal in 19 places, the `thr:` fields in `levels`/`phases`, `grades.html`'s
+  threshold markup and its "Auth ≥" list, and the two prose passages in `chronicle`/`oracle` now
+  carry the canon values.
+- No i18n pack carried the numbers.
+- `levels.html` still names its rungs NOVICE/ADEPT/MASTER, which match neither
+  `authority.gate_names` nor the other pages. It is folded into LADDER, not fixed.
+
+**The guard:** `scripts/tests/test_gate_curve.py` fails any root page or module holding three or
+more values only the retired curve has.
+- It reported 22 offenders on the pre-sweep tree (stash run).
+- It found `leaderboard.js` after the first sweep missed it; the grep covered only `omega-*.js`.
+- The current tree passes.
+- It also asserts `gate_thresholds == authority.gates`.
+
+**LADDER (`ladder.html` + `omega-ladder.js`)** folds `grades`, `levels`, `phases`, `ascension` and
+`grid`:
+- **Rungs:** 12 rungs whose heights are the canon thresholds, and a YOU line at
+  `my_matrix.authority`.
+- **Panel:** the gate and the distance to the next one, plus each rung's medal/trophy/certificate
+  names from `OmegaCanon.tracks[n]`, lit only where the member's own `medals.medal_num` /
+  `trophies.trophy_num` / `certificates.cert_num` row exists.
+- **WHAT IF:** three sliders recompute authority with the canon formula
+  (√(A³+B³+C³)·φ/e, from `structure.authority_phi/_e`) and draw a dashed ghost marker. It is
+  labelled SIMULATED and writes nothing.
+- **Loader:** `omega-canon.js` now exposes `authority`, so gate names come from their owner.
+
+**Verified (headless, stub authority 6.4321, medals 1–2, trophy 1, certificate 1), both widths:**
+- **Ladder:** 12 rungs, 2 lit, rung 3 next; "GATE 2 · ACOLYTE", "0.5271 TO SCHOLAR"; honors
+  2/1/1.
+- **Rung 1:** shows 3 honors earned and "Reached."
+- **Simulator:** A=B=9 → 22.7389, "GATE 9 HERALD" (√1459.331·φ/e = 22.74 by hand); the real
+  value stays 6.4321.
+- **Mobile:** 12 rungs × the 44px tap-target floor overlapped (each started 19px after the
+  last). The ladder now scrolls inside its stage, with no page overflow.
+- **Tilt:** rungs carry `omg-no-tilt`, because bg.js's translateZ lift made a click land on the
+  neighbouring rung.
+
+`verify-runtime.js` on all 19 touched pages: PASS.

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SYD OMEGA 91717 — LADDER · the 12 gates of authority, where you stand, and what moves you up">
+<title>&#937; SYD OMEGA 91717 &mdash; LADDER</title>
+
+<link rel="manifest" href="/manifest.json">
+<script src="/bg.js" defer></script>
+</head>
+<body>
+<a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
+<div class="shell" id="app" style="display:none">
+  <aside class="side" id="omega-side" data-page="ladder" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar">
+      <div class="t">LADDER<small>ACHIEVE &middot; 12 GATES &middot; ONE CLIMB</small></div>
+    </div>
+
+    <div class="pad lad">
+      <!-- WHERE YOU STAND -->
+      <section class="lad-now">
+        <div class="lad-auth"><b id="lad-auth">&ndash;</b><span>AUTHORITY</span></div>
+        <div class="lad-gate"><b id="lad-gate">&ndash;</b><span id="lad-next">&nbsp;</span>
+          <div class="bar-track"><div class="bar-fill" id="lad-prog" style="width:0"></div></div></div>
+        <div class="lad-honors" id="lad-honors"></div>
+      </section>
+
+      <!-- THE LADDER: 12 rungs, heights are the canon thresholds -->
+      <section class="lad-stage" aria-label="The 12 gates">
+        <div class="lad-track">
+          <div class="lad-rungs" id="lad-rungs" role="group"></div>
+          <div class="lad-mark" id="lad-mark" aria-hidden="true"><span>YOU</span></div>
+          <div class="lad-mark ghost" id="lad-ghost" aria-hidden="true" hidden><span>SIM</span></div>
+        </div>
+      </section>
+
+      <div class="lad-grid">
+        <!-- SELECTED RUNG -->
+        <section class="card lad-panel" id="lad-panel" aria-live="polite"></section>
+
+        <!-- WHAT-IF: drag the three axes, watch the gate move -->
+        <section class="card lad-sim" aria-label="Simulate your axes">
+          <div class="lad-sim-h"><b>WHAT IF</b>
+            <button class="btn" type="button" id="lad-reset" data-omega-task-id="ladder.sim.reset">RESET</button></div>
+          <div id="lad-sliders"></div>
+          <div class="lad-sim-out"><b id="lad-sim-auth">&ndash;</b><span id="lad-sim-gate">&nbsp;</span></div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<style>
+.lad{display:flex;flex-direction:column;gap:16px}
+.lad-now{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:22px;align-items:center}
+.lad-auth b{display:block;font-family:var(--D);font-size:clamp(30px,5vw,46px);color:var(--gold);line-height:1}
+.lad-auth span,.lad-gate span,.lad-sim-out span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.lad-gate b{display:block;font-family:var(--D);font-size:22px;color:var(--ink)}
+.lad-gate .bar-track{height:6px;margin-top:8px}
+.lad-honors{display:flex;gap:8px}
+.lad-honors div{text-align:center;padding:8px 12px;border:1px solid rgba(255,255,255,.08);border-radius:2px;min-width:72px}
+.lad-honors b{display:block;font-family:var(--D);font-size:20px}
+.lad-honors span{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
+.lad-stage{height:calc(clamp(220px,38vh,340px) + 30px);overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+/* 12 rungs keep the 44px tap target a shared rule gives every button; below
+   ~600px the ladder scrolls inside its stage instead of overlapping. */
+.lad-track{position:relative;height:clamp(220px,38vh,340px);min-width:600px;margin:0 4px;border-bottom:1px solid rgba(201,168,76,.25)}
+.lad-rungs{position:absolute;inset:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;align-items:end}
+.lad-rungs .lad-rung{overflow:visible}   /* a shared button rule clips; the gate name sits below the rung */
+.lad-rung{position:relative;height:var(--h);border:1px solid rgba(255,255,255,.1);border-bottom:0;border-radius:2px 2px 0 0;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01));cursor:pointer;padding:0;color:var(--muted);
+  transition:background .3s,border-color .3s,transform .2s}
+.lad-rung:hover,.lad-rung:focus-visible{transform:translateY(-3px);border-color:var(--gold)}
+.lad-rung.done{background:linear-gradient(180deg,rgba(201,168,76,.55),rgba(201,168,76,.12));border-color:rgba(201,168,76,.6);color:#05070a}
+.lad-rung.here{animation:lad-pulse 2.4s ease-in-out infinite}
+.lad-rung[aria-pressed="true"]{outline:2px solid var(--cyan);outline-offset:2px}
+.lad-rung b{position:absolute;left:0;right:0;top:6px;font-family:var(--M);font-size:12px;text-align:center}
+.lad-rung i{position:absolute;left:0;right:0;bottom:-22px;font-style:normal;font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden}
+@keyframes lad-pulse{50%{box-shadow:0 0 18px rgba(201,168,76,.55)}}
+.lad-mark{position:absolute;left:0;right:0;bottom:var(--y,0);height:0;border-top:2px solid var(--cyan);transition:bottom .6s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.lad-mark span{position:absolute;right:0;top:-20px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan)}
+.lad-mark.ghost{border-top:2px dashed #E86A3A}
+.lad-mark.ghost span{color:#E86A3A;right:auto;left:0}
+.lad-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;margin-top:18px}
+.lad-panel,.lad-sim{padding:16px;display:flex;flex-direction:column;gap:12px}
+.lad-p-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.lad-p-h b{font-family:var(--D);font-size:24px;color:var(--gold)}
+.lad-p-h span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.lad-gap{font-family:var(--R);font-size:16px;color:var(--ink)}
+.lad-trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lad-hon{padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:2px;opacity:.45}
+.lad-hon.won{opacity:1;border-color:var(--gold);box-shadow:0 0 14px rgba(201,168,76,.18)}
+.lad-hon b{display:block;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
+.lad-hon span{font-family:var(--R);font-size:14px;line-height:1.3}
+.lad-sim-h{display:flex;justify-content:space-between;align-items:center}
+.lad-sim-h b{font-family:var(--M);font-size:12px;letter-spacing:2px;color:#E86A3A}
+.lad-sl{display:grid;grid-template-columns:110px minmax(0,1fr) 46px;gap:10px;align-items:center;font-family:var(--M);font-size:12px;color:var(--muted)}
+.lad-sl input{width:100%;accent-color:var(--gold)}
+.lad-sl output{text-align:right;color:var(--ink)}
+.lad-sim-out b{display:block;font-family:var(--D);font-size:28px;color:#E86A3A}
+@media (max-width:900px){.lad-grid{grid-template-columns:1fr}.lad-now{grid-template-columns:1fr 1fr}.lad-honors{grid-column:1/-1}}
+@media (max-width:480px){.lad-rung b{font-size:12px;top:2px}.lad-rung i{display:none}.lad-trio{grid-template-columns:1fr}.lad-sl{grid-template-columns:90px minmax(0,1fr) 40px}}
+@media (prefers-reduced-motion:reduce){.lad-rung.here{animation:none}.lad-mark{transition:none}}
+</style>
+
+<script type="module" src="/omega-ladder.js"></script>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
+</html>

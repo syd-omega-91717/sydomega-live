@@ -65,10 +65,11 @@
     },
     {
       "core": "ladder",
-      "host": "honors",
-      "state": "PLANNED",
-      "is": "One lattice with lenses: grades, levels, phases, kings, triads, grid, gates, trophies",
+      "host": "ladder",
+      "state": "BUILT",
+      "is": "One climb: the 12 canon gates, where you stand, the honors at each rung, and a what-if for your axes",
       "pages": [
+        "ladder",
         "honors",
         "achieve",
         "achievements",

@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 240,
+  "page_count": 241,
   "contracts": [
     {
       "page_id": "404",
@@ -8410,6 +8410,86 @@
       }
     },
     {
+      "page_id": "ladder",
+      "path": "ladder.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; LADDER",
+      "data_sources": {
+        "supabase_tables": [
+          "certificates",
+          "medals",
+          "profiles",
+          "trophies"
+        ],
+        "supabase_rpcs": [
+          "my_matrix"
+        ]
+      },
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::ladder::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "ladder.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-ladder.js",
+          "/omega-analytics-init.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "certificates",
+            "medals",
+            "profiles",
+            "trophies"
+          ],
+          "supabase_rpcs": [
+            "my_matrix"
+          ]
+        },
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 1,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
       "page_id": "leaderboard",
       "path": "leaderboard.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -16082,8 +16162,8 @@
     }
   ],
   "audit_summary": {
-    "page_count": 240,
-    "source_audited_pages": 240,
+    "page_count": 241,
+    "source_audited_pages": 241,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true
   }

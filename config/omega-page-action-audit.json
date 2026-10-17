@@ -2,11 +2,11 @@
   "schema_version": 1,
   "name": "Ω Page Action / Task Audit",
   "status": "SOURCE_EVIDENCE_ONLY",
-  "page_count": 240,
-  "action_count": 1350,
+  "page_count": 241,
+  "action_count": 1351,
   "counts": {
     "AVAILABLE_WITHOUT_MUTATION": 14,
-    "GOVERNED": 16,
+    "GOVERNED": 17,
     "UNAVAILABLE": 0,
     "UNMAPPED": 1320
   },
@@ -13702,6 +13702,27 @@
       },
       "page": "lab",
       "path": "lab.html"
+    },
+    {
+      "action_id": 1,
+      "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "ladder.sim.reset",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "ladder",
+      "path": "ladder.html"
     },
     {
       "action_id": 1,

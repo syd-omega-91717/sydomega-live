@@ -31,7 +31,7 @@
        highlighted on any of them -- including gateway, the page whose whole
        purpose is to be the way in. Reachability (a link in SECTIONS) and active
        state (a key here) are separate concerns and had drifted apart. */
-    points:'achieve',houses:'cosmos',evolution:'ascend',
+    points:'achieve',ladder:'achieve',houses:'cosmos',evolution:'ascend',
     ledger:'vault',subscriptions:'vault',advertising:'vault','ad-network':'vault',
     'sovereign-covenant':'vault',
     billing:'vault', 'vault-settings':'vault',
@@ -138,10 +138,10 @@
           ['wallet','WALLET','/wallet.html'],['revenue','REVENUE','/revenue.html'],['income','INCOME','/income.html'],['budget','BUDGET','/budget.html'],
           ['expenses','EXPENSES','/expenses.html'],['wealth','WEALTH','/wealth.html'],['ledger','ASSET LEDGER','/ledger.html'],['payments','PAYMENTS','/payments.html'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html']]},
     {key:'achieve',icon:'\u265A', label:'ACHIEVE', href:'/achieve.html', col:'#C9A84C',
-     sub:[['achieve-home','ACHIEVE HOME','/achieve.html'],['achievements','ACHIEVEMENTS','/achievements.html'],['leaderboard','LEADERBOARD','/leaderboard.html'],['quest-progress','QUEST PROGRESS','/quest-progress.html'],['my-quests','MY QUESTS','/my-quests.html'],['cosmetics','COSMETICS','/cosmetics.html'],['domain-mastery','DOMAIN MASTERY','/domain-mastery.html'],['covenant','MONTHLY COVENANT','/covenant.html'],['seasonal-events','SEASONAL EVENTS','/seasonal-events.html'],['gates','AUTHORITY GATES','/gates.html'],
-          ['grades','GRADES','/grades.html'],['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html'],
-          ['ascension','ASCENSION','/ascension.html'],['kings','KINGS LATTICE','/kings.html'],['triads','TRIADS','/triads.html'],
-          ['grid','LATTICE GRID','/grid.html'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html'],['trophies','TROPHIES','/trophies.html']]},
+     sub:[['achieve-home','ACHIEVE HOME','/achieve.html'],['ladder','LADDER','/ladder.html'],['achievements','ACHIEVEMENTS','/achievements.html'],['leaderboard','LEADERBOARD','/leaderboard.html'],['quest-progress','QUEST PROGRESS','/quest-progress.html'],['my-quests','MY QUESTS','/my-quests.html'],['cosmetics','COSMETICS','/cosmetics.html'],['domain-mastery','DOMAIN MASTERY','/domain-mastery.html'],['covenant','MONTHLY COVENANT','/covenant.html'],['seasonal-events','SEASONAL EVENTS','/seasonal-events.html'],['gates','AUTHORITY GATES','/gates.html'],
+          ['grades','GRADES','/grades.html','folded'],['levels','LEVELS','/levels.html','folded'],['phases','PHASES','/phases.html','folded'],
+          ['ascension','ASCENSION','/ascension.html','folded'],['kings','KINGS LATTICE','/kings.html'],['triads','TRIADS','/triads.html'],
+          ['grid','LATTICE GRID','/grid.html','folded'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html'],['trophies','TROPHIES','/trophies.html']]},
     {key:'archive',icon:'\u2735', label:'ARCHIVE', href:'/archive.html',     col:'#3fb27f',
      sub:[['archive','ARCHIVE WORKSPACE','/archive.html'],['heritage','HERITAGE','/heritage.html'],['bloodline','BLOODLINE','/bloodline.html'],['character','CHARACTER','/character.html'],
           ['identity','IDENTITY','/identity.html'],['passport','PASSPORT','/passport.html'],['kyc','KYC','/kyc.html'],
@@ -373,7 +373,8 @@
     arena:['arena','sovereign-ai','agent-network','analytics'],
     govern:['govern','control-center','observatory','enterprise','knowledge-loom','architecture'],
     invest:['invest','investment','portfolio','treasury','revenue'],
-    achieve:['achieve','achievements','my-quests','leaderboard','gates'],
+    /* grades, levels, phases, ascension and grid are folded into ladder.html. */
+    achieve:['ladder','achieve','achievements','my-quests','gates'],
     archive:['archive','heritage','credentials','kyc','membership'],
     media:['media','cinema','movies','series','publications','visual-atlas']
   };

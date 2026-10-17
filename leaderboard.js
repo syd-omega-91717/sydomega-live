@@ -2,7 +2,7 @@
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 var PHI=1.6180339887,EU=2.7182818285;
-var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+var GATE_THRESH=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
 var GATE_NAMES=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(Number(a)||0,3)+Math.pow(Number(b)||0,3)+Math.pow(Number(c)||0,3))*PHI/EU;}

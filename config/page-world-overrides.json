@@ -173,6 +173,7 @@
     "order": "heritage",
     "security": "genesis",
     "standing-dashboard": "genesis",
-    "orrery": "void"
+    "orrery": "void",
+    "ladder": "academy"
   }
 }

@@ -23668,3 +23668,32 @@ check precedes everything, so a signed end-to-end delivery cannot be run. It pro
 `omega_private.create_service_order` (×2), `private.omega_watchlist_upsert` (×2),
 `public.omega_runtime_dispatch` (×5) — found by scanning every live function body for
 `pg_catalog.(coalesce|nullif|greatest|least|trim)(` (`GAP_ANALYSIS.md`).
+
+## 2026-10-17 — consult intake, service orders, watchlists, referral codes and module reads never worked (42883)
+
+**Found (live):** the scan that found the ledger defect (`20261017093316`) found the same one in
+four more functions — 15 single-argument `pg_catalog.trim(x)` calls. TRIM is SQL syntax, not a
+catalog function; plpgsql resolves a body only when it runs, so CREATE succeeded and each call
+raised **42883**. Affected, all via `omega-runtime-gateway` → `public.omega_runtime_dispatch`:
+`omega_private.create_consult_intake` (×6), `omega_private.create_service_order` (×2),
+`private.omega_watchlist_upsert` (×2), and the dispatcher itself (×5: `module_manifest`,
+`module_state`, `module_read` incl. `watchlist.read`, `issue_referral_code`). 0 rows ever in
+`omega_investment_watchlists`, `omega_service_orders`, `omega_referral_codes`.
+
+**Fix:** `20261017094629` rewrites each of the four from its own `pg_get_functiondef` with
+`pg_catalog.trim(` → `pg_catalog.btrim(` (the function TRIM(x) compiles to) — no retyping, so
+nothing else can change; idempotent. It then raises if any function outside the system schemas
+still calls `pg_catalog.(trim|coalesce|nullif|greatest|least)(`; it applied, so live has 0.
+
+**Verified live (rolled back by a deliberate raise):** one transaction measured BEFORE — consult,
+order, watchlist, manifest each **42883** — then applied the rewrite and drove AFTER: consult
+intake created and replay-idempotent, service order created, watchlist ` aapl ` → `AAPL` and
+read back by `module_read watchlist.read`, manifest returned, referral code `PROBE2026` issued.
+After the real apply: the same paths again (`MSFT`, `module_state`, `PROBE2027`), a 5-char
+message still → `message_too_short`; owner, SECURITY DEFINER, `search_path=''` and EXECUTE
+grants unchanged (service_role, or owner-only for the watchlist helper).
+
+**Recurrence guard:** `supabase-migration-security-audit.py` (blocking) gains the rule
+"SQL keyword called as a pg_catalog function". Its 37 hits sit in 8 applied 2026-10-02 files and
+are baselined (99 findings, 28 files); any new occurrence fails. Two tests added; with the rule
+removed both the planted violator and the real-tree baseline test fail.

@@ -46,11 +46,11 @@ project's own established convention (security/data-integrity first).
   `supabase secrets set STRIPE_WEBHOOK_SECRET=…` (and confirm `STRIPE_SECRET_KEY`, which the
   checkout path needs for its subscription lookup), then send a Stripe test event.
 
-- **OPEN 2026-10-17 — four more live functions call SQL keywords as `pg_catalog` functions
-  (42883 at runtime).** `omega_private.create_consult_intake` (`pg_catalog.trim` ×6),
-  `omega_private.create_service_order` (×2), `private.omega_watchlist_upsert` (×2),
-  `public.omega_runtime_dispatch` (×5). Same fix as `20261017093316` (`btrim`). Found by scanning
-  live bodies for `pg_catalog\.(coalesce|nullif|greatest|least|trim)\(`; no static gate yet.
+- **CLOSED 2026-10-17 (`20261017094629`; verified live, rolled back) — was: four more live
+  functions call SQL keywords as `pg_catalog` functions (42883).** `create_consult_intake`,
+  `create_service_order`, `omega_watchlist_upsert`, `omega_runtime_dispatch` rewritten from their
+  stored bodies (`pg_catalog.btrim`); the migration asserts 0 such calls remain anywhere. Guarded
+  by a new rule in `supabase-migration-security-audit.py` (applied hits baselined).
 
 - **CLOSED 2026-10-17 (`20261017092002`, service_role-only public delegates; verified live) — was:
   `omega-notification-worker` failed every call (PGRST202).** Its RPCs lived only in the unexposed

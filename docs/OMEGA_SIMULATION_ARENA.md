@@ -36,3 +36,15 @@ No localStorage state, no client-side achievement grants, no permission mutation
 `SPECIFIED → IMPLEMENTED → PERSISTED → SECURED → TESTED`
 
 Deployment and live browser verification remain separate evidence requirements.
+
+
+## Server-side write guardrails — pending review
+
+The pending migration `20261017114500_member_rpc_write_guardrails_20261017.sql` tightens the current RPC contract without changing the UI's simulation semantics:
+- Accept only the three shipped model keys and model version `1.0.0`.
+- Validate the deterministic seed, input ranges, output metrics, and trace length/range on the server.
+- Limit saved simulation runs to 20 per authenticated member per hour.
+- Serialize world-action writes per member, make duplicate retries race-safe, and cap action-start events at 120 per member per minute.
+- Preserve the existing narrow `SECURITY DEFINER` boundary, pinned empty `search_path`, explicit `auth.uid()` checks, and deny-by-default direct table writes.
+
+**Release status:** this migration is registered as `PENDING_REVIEW / NOT_APPLIED` and blocks production until reviewed, replayed, and explicitly applied. The repository record is not evidence that production has these new limits yet.

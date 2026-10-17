@@ -620,7 +620,12 @@
    "table": "S---"
   },
   "omega_notifications": {
-   "table": "S---"
+   "table": "S---",
+   "columns": {
+    "UPDATE": [
+     "read_at"
+    ]
+   }
   },
   "omega_payment_events": {
    "table": "----"

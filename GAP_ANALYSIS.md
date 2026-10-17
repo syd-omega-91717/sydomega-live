@@ -55,7 +55,9 @@ project's own established convention (security/data-integrity first).
 
 - **CLOSED 2026-10-17 (`20261017092002`, service_role-only public delegates; verified live) — was:
   `omega-notification-worker` failed every call (PGRST202).** Its RPCs lived only in the unexposed
-  `omega_private`. Still open beside it: no `cron.job` invokes the worker.
+  `omega_private`. Delivery is now scheduled: `20261017100555` runs the same in_app loop in the
+  database every minute (pg_cron `omega-in-app-notification-delivery`; the worker's HTTP route would
+  need a secret key in Vault), and `notifications.html` shows each member's delivered rows.
 
 - **CLOSED 2026-10-16 (`20261016231606`, SECURITY DEFINER; verified by member impersonation) — was: `omega_record_simulation_run` cannot write (42501), 0 rows ever.** Same
   root cause as world actions: live-only `20260930090758` made it SECURITY INVOKER and added

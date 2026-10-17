@@ -23668,3 +23668,49 @@ check precedes everything, so a signed end-to-end delivery cannot be run. It pro
 `omega_private.create_service_order` (×2), `private.omega_watchlist_upsert` (×2),
 `public.omega_runtime_dispatch` (×5) — found by scanning every live function body for
 `pg_catalog.(coalesce|nullif|greatest|least|trim)(` (`GAP_ANALYSIS.md`).
+
+## 2026-10-17 — consult intake, service orders, watchlists, referral codes and module reads never worked (42883)
+
+**Found (live):** the scan that found the ledger defect (`20261017093316`) found the same one in
+four more functions — 15 single-argument `pg_catalog.trim(x)` calls. TRIM is SQL syntax, not a
+catalog function; plpgsql resolves a body only when it runs, so CREATE succeeded and each call
+raised **42883**. Affected, all via `omega-runtime-gateway` → `public.omega_runtime_dispatch`:
+`omega_private.create_consult_intake` (×6), `omega_private.create_service_order` (×2),
+`private.omega_watchlist_upsert` (×2), and the dispatcher itself (×5: `module_manifest`,
+`module_state`, `module_read` incl. `watchlist.read`, `issue_referral_code`). 0 rows ever in
+`omega_investment_watchlists`, `omega_service_orders`, `omega_referral_codes`.
+
+**Fix:** `20261017094629` rewrites each of the four from its own `pg_get_functiondef` with
+`pg_catalog.trim(` → `pg_catalog.btrim(` (the function TRIM(x) compiles to) — no retyping, so
+nothing else can change; idempotent. It then raises if any function outside the system schemas
+still calls `pg_catalog.(trim|coalesce|nullif|greatest|least)(`; it applied, so live has 0.
+
+**Verified live (rolled back by a deliberate raise):** one transaction measured BEFORE — consult,
+order, watchlist, manifest each **42883** — then applied the rewrite and drove AFTER: consult
+intake created and replay-idempotent, service order created, watchlist ` aapl ` → `AAPL` and
+read back by `module_read watchlist.read`, manifest returned, referral code `PROBE2026` issued.
+After the real apply: the same paths again (`MSFT`, `module_state`, `PROBE2027`), a 5-char
+message still → `message_too_short`; owner, SECURITY DEFINER, `search_path=''` and EXECUTE
+grants unchanged (service_role, or owner-only for the watchlist helper).
+
+**Recurrence guard:** `supabase-migration-security-audit.py` (blocking) gains the rule
+"SQL keyword called as a pg_catalog function". Its 37 hits sit in 8 applied 2026-10-02 files and
+are baselined (99 findings, 28 files); any new occurrence fails. Two tests added; with the rule
+removed both the planted violator and the real-tree baseline test fail.
+
+**Addendum (same day) — the fresh replay caught live-only drift in `record_stripe_payment`.**
+CI's full migration replay failed at `20261017094629` with
+`sql_keyword_called_as_pg_catalog_function_remains`: on a database built from migrations,
+`omega_private.record_stripe_payment` still had `pg_catalog.trim(`/`pg_catalog.coalesce(`. Its last
+recorded body is `20261002072345` (`20261002080728` only sets `search_path`); the live body — bare
+`trim`/`coalesce`, richer ledger/payment/reconciliation metadata — was set outside the migration
+history (no ledger row's statements contain it). So any rebuilt database (branch, preview, DR) had
+a payment function that could never settle, even with `20261017093316` applied.
+- `20261017095439` captures the live body verbatim (`pg_get_functiondef` md5
+  `7f396d7625cd84f4d981a382dd63b40a` before and after applying it; grants unchanged) and carries the
+  global "no keyword called through pg_catalog" assertion, which passed live.
+- `20261017094629`'s own assertion was narrowed to the four functions it rewrites: on a replay that
+  check runs before the capture, so the global form could never pass there. The file was edited
+  after it was applied live (its ledger statements keep the global form, which passed live); the
+  rewrite logic is unchanged and live state is unaffected. Recorded here because applied migrations
+  are otherwise immutable.

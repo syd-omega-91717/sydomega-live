@@ -30,6 +30,11 @@ RULES = [
     (re.compile(r"\bgrant\s+(?:truncate|references|trigger)(?:\s*,\s*(?:truncate|references|trigger))*\b[^;]*\bto\s+authenticated\b", re.I | re.S), "unsafe non-DML privilege grant to authenticated"),
     (re.compile(r"\balter\s+default\s+privileges\b[^;]*\bgrant\s+(?:all|truncate|references|trigger)\b[^;]*\bto\s+(?:anon|authenticated|public)\b", re.I | re.S), "unsafe client default privilege grant"),
     (re.compile(r"\bdisable\s+row\s+level\s+security\b", re.I), "RLS is being disabled"),
+    # TRIM, COALESCE, NULLIF, GREATEST and LEAST are SQL syntax, not pg_catalog
+    # functions. A plpgsql body is only resolved when it runs, so CREATE succeeds
+    # and every call fails 42883; five live functions -- the payment ledger among
+    # them -- had never worked (20261017093316, 20261017094629). Use btrim().
+    (re.compile(r"\bpg_catalog\s*\.\s*(?:trim|coalesce|nullif|greatest|least)\s*\(", re.I), "SQL keyword called as a pg_catalog function (42883 at runtime)"),
     (re.compile(r"\bsecurity\s+definer\b(?![^;]{0,800}\bset\s+search_path\s*(?:=|\bto\b))", re.I | re.S), "SECURITY DEFINER function without explicit search_path"),
 ]
 

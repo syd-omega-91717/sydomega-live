@@ -23595,3 +23595,35 @@ PUBLIC/anon and granted to `authenticated`. No table grant. Applied live; ledger
 row owned by the member and visible to them via `select_own`; a 13000-byte snapshot →
 `input_snapshot_too_large` (22023); direct `insert into omega_simulation_runs` → **42501**.
 Afterwards 0 rows; prosecdef true; anon EXECUTE false; authenticated INSERT false.
+
+## 2026-10-17 — notification worker could never claim anything: its RPCs were unreachable
+
+**Found (live, Edge Function audit):** `omega-notification-worker` (deployed v191) calls
+`ctx.supabaseAdmin.rpc('claim_notifications' | 'mark_notification_delivered' |
+'mark_notification_failed')` with no schema, so PostgREST resolves them in `public`. They exist
+only in `omega_private` (`20261002080219`, `20261002029000`). Probed through pg_net with the
+publishable key: `public` → **404 PGRST202** "Could not find the function
+public.claim_notifications"; `Content-Profile: omega_private` → **406 PGRST106** "Only the
+following schemas are exposed: public, graphql_public". `service_role` also has **no USAGE** on
+`omega_private`, so its EXECUTE grants there were unusable either way. No `cron.job` row calls the
+worker, which is why nobody saw it fail; `omega_notifications` holds 0 rows.
+
+**Fix:** `20261017092002` — `public.claim_notifications` / `mark_notification_delivered` /
+`mark_notification_failed`, same signatures and defaults, each a one-line SECURITY DEFINER
+(`search_path=''`) delegate to the `omega_private` function, which keeps every check. Definer is
+required: an invoker wrapper would still need USAGE on `omega_private`. EXECUTE revoked from
+PUBLIC/anon/authenticated (public's default ACL grants both) and granted to `service_role` only.
+Registered as `service_only` in `config/omega-rpc-security-policy.json` (68 → 71). No worker code
+change; no redeploy.
+
+**Verified live:** anon `POST /rest/v1/rpc/claim_notifications` → **401 42501** (resolves, denied;
+was PGRST202). As `service_role` in a block rolled back by a deliberate raise: two enqueued
+`in_app` notifications → `claimed=2`, `mark_notification_delivered` → `delivered`,
+`mark_notification_failed` → `failed`. prosecdef true; anon/authenticated EXECUTE false. The
+deployed worker itself was not invoked (needs the secret key, not available to this session).
+
+**Same root cause, not changed (payments):** `stripe-webhook:83` calls
+`admin.schema("omega_private").rpc("record_stripe_payment")` → the same **406 PGRST106**, so the
+first paid Stripe event will fail to record. Measured 0 rows in `stripe_webhook_events`,
+`omega_payment_events`, `payments` and the three `omega_ledger_*` tables — nothing lost yet.
+Left for an owner decision (`GAP_ANALYSIS.md`).

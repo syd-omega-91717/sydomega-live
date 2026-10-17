@@ -34,6 +34,18 @@ project's own established convention (security/data-integrity first).
   narrow `GRANT INSERT … TO authenticated` (the policy already scopes rows to `auth.uid()`) —
   an owner decision, since it opens a client write path to the audit table.
 
+- **OPEN 2026-10-17 — `stripe-webhook` cannot record a payment.** It calls
+  `admin.schema("omega_private").rpc("record_stripe_payment")`; PostgREST exposes only `public`,
+  `graphql_public` (probed: **406 PGRST106**) and `service_role` has no USAGE on `omega_private`.
+  0 Stripe events ever received, so nothing is lost yet; the first paid checkout will fail to reach
+  the ledger. Fix shape is proven by `20261017092002` (a service_role-only `public` definer
+  delegate) — payment code, so an owner decision. Exposing `omega_private` in API settings is the
+  wrong fix: it publishes the whole private schema.
+
+- **CLOSED 2026-10-17 (`20261017092002`, service_role-only public delegates; verified live) — was:
+  `omega-notification-worker` failed every call (PGRST202).** Its RPCs lived only in the unexposed
+  `omega_private`. Still open beside it: no `cron.job` invokes the worker.
+
 - **CLOSED 2026-10-16 (`20261016231606`, SECURITY DEFINER; verified by member impersonation) — was: `omega_record_simulation_run` cannot write (42501), 0 rows ever.** Same
   root cause as world actions: live-only `20260930090758` made it SECURITY INVOKER and added
   `omega_simulation_runs_insert_own` with no INSERT grant; the repo's alias of that migration is a

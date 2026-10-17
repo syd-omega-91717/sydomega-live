@@ -18,7 +18,10 @@
       "trg_award_exam_points",
       "trg_award_matrix_points",
       "trg_award_task_points",
-      "omega_elemental_runtime"
+      "omega_elemental_runtime",
+      "claim_notifications",
+      "mark_notification_delivered",
+      "mark_notification_failed"
     ],
     "owner_or_admin": [
       "academy_promote",
@@ -87,6 +90,6 @@
     "public_read_candidate": "must be SECURITY INVOKER or moved to a private schema before anonymous/public execution is considered."
   },
   "coverage": {
-    "expectedSecurityDefinerPublicFunctions": 68
+    "expectedSecurityDefinerPublicFunctions": 71
   }
 }

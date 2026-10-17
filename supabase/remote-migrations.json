@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-17T10:58:00.000Z",
+  "_captured": "2026-10-17T11:08:00.000Z",
   "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated provider query)",
-  "remoteMigrationCount": 399,
-  "latestRemoteMigration": "20261017105203",
+  "remoteMigrationCount": 400,
+  "latestRemoteMigration": "20261017110604",
   "versions": [
     "0001",
     "0002",
@@ -402,7 +402,8 @@
     "20261017095439",
     "20261017100555",
     "20261017104020",
-    "20261017105203"
+    "20261017105203",
+    "20261017110604"
   ],
   "migrations": [
     {
@@ -1997,6 +1998,10 @@
     {
       "version": "20261017105203",
       "name": "worker_service_role_reads_20261017"
+    },
+    {
+      "version": "20261017110604",
+      "name": "revoke_member_feature_flag_update_20261017"
     }
   ]
 }

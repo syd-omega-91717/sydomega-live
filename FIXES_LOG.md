@@ -23797,3 +23797,21 @@ and `ci-local.sh` run it as a blocking step — a finding printed and the merge 
 Run against product-orchestrator at `69ef98f~1` it reports `index.ts:138 member_feature_flags [23505]`
 and exits 1; against the fix, 0 findings and exit 0. Two tests added; the planted Edge Function
 violator fails against the old gate.
+
+## 2026-10-17 — no client role may edit member_feature_flags (owner-requested hardening)
+
+**Measured first (live, impersonation, rolled back):** `authenticated` held UPDATE on
+`member_feature_flags` (`20260911222734`), but policy `member_feature_flags_update` is
+`USING (is_platform_owner())`: a non-owner member's update of their own flag → **0 rows**, the
+owner's → 1 row. Members could not edit flags; an earlier report in this session that they could
+was wrong (it read the grant, not the policy). The owner chose to remove the client write path
+anyway, so loosening that policy later cannot open it.
+
+**Change:** `20261017110604` — `revoke update ... from anon, authenticated`; `COMMENT ON POLICY`
+marks `member_feature_flags_update` inert by design (a policy with no grant is the §8.1 class 6c
+shape; the fix is not to re-grant). `supabase/live-grants.json`: `S-U-` → `S---`.
+
+**Verified live (rolled back, then applied):** before, owner update 1 row; after, owner and member
+updates **42501**; member still reads own row (1); service_role upsert on `(member_id, feature_id)`
+— product-orchestrator v8's write — still succeeds. After apply: authenticated SELECT only;
+service_role SELECT/INSERT/UPDATE. No page or RPC writes the table (repo grep).

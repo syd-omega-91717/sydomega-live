@@ -34,10 +34,10 @@
     },
     "stripe-webhook": {
       "state": "DEPLOYED",
-      "version": 5,
+      "version": 6,
       "verify_jwt": false,
-      "live_sha256": "381468ae364c532a921b57f3322d3c2f7d4368c0f25901be3e00916b7a08bf4a",
-      "repository_blob_sha": "5527316e0c4f6eeac15755a4342599c562acba74"
+      "live_sha256": "888b0c30e42a7035e6084f042d75ea0734bbff99b562ae17250dda0c727073b0",
+      "repository_blob_sha": "9ac6b257acf745b50f24a152839766605d589c40"
     },
     "secrets-health": {
       "state": "DEPLOYED",

@@ -23627,3 +23627,44 @@ deployed worker itself was not invoked (needs the secret key, not available to t
 first paid Stripe event will fail to record. Measured 0 rows in `stripe_webhook_events`,
 `omega_payment_events`, `payments` and the three `omega_ledger_*` tables — nothing lost yet.
 Left for an owner decision (`GAP_ANALYSIS.md`).
+
+## 2026-10-17 — Stripe payments could not settle: unexposed schema, then a ledger that could not post
+
+**Found (live), two defects on one path, each hiding the next:**
+1. `stripe-webhook:83` called `admin.schema("omega_private").rpc("record_stripe_payment")`.
+   PostgREST exposes only `public`, `graphql_public` → **406 PGRST106**; `service_role` has no
+   USAGE on `omega_private` either. Every paid `checkout.session.completed` /
+   `invoice.payment_succeeded` would have returned 500 `settlement_error`.
+2. With (1) fixed, driving `public.record_stripe_payment` as `service_role` (rolled back) failed:
+   **42883 "function pg_catalog.trim(text) does not exist"** inside
+   `omega_private.post_ledger_transaction` (canonical `20261002072345`). TRIM and COALESCE are SQL
+   syntax, not catalog functions; the body used `pg_catalog.trim(` in its first check and
+   `pg_catalog.coalesce(` in its entry insert, so the ledger could never post anything.
+0 rows ever in `stripe_webhook_events`, `omega_payment_events` and all `omega_ledger_*` tables.
+
+**Fix:**
+- `20261017093038` — `public.record_stripe_payment`, SECURITY DEFINER (`search_path=''`) delegate
+  with the canonical signature/default; EXECUTE revoked from PUBLIC/anon/authenticated, granted to
+  `service_role`. Registered `service_only` (71 → 72).
+- `20261017093316` — `post_ledger_transaction` redefined from its live body with exactly two
+  changes: `pg_catalog.btrim` and bare `coalesce`. Owner, definer, `search_path` and the
+  service_role-only grant unchanged (restated for replay).
+- `stripe-webhook` → plain `admin.rpc("record_stripe_payment")`; deployed **v6** (`verify_jwt`
+  false, unchanged), ezbr `888b0c30…73b0`, blob `9ac6b257…`.
+
+**Verified live (each rolled back by a deliberate raise):** as `service_role` with
+`request.jwt.claims` role `service_role` — `record_stripe_payment` 1999 usd → 1 payment event,
+1 ledger transaction, 2 entries, debit 19.99 = credit 19.99; same event id again → same
+transaction id; amount 0 → `stripe_amount_required`; then `apply_subscription_event` →
+`ok:true`, webhook event `processed`, replay → `duplicate:true`. The fix was proven in one
+transaction (redefine + drive + raise) before it was applied. anon `POST
+/rest/v1/rpc/record_stripe_payment` → **401 42501**. Afterwards 0 rows in every payment table.
+
+**Not verified, and why:** the deployed v6 answered a bad-signature POST with **503
+`webhook_not_configured`** — `STRIPE_WEBHOOK_SECRET` is not set in Supabase secrets, and that
+check precedes everything, so a signed end-to-end delivery cannot be run. It proves v6 boots.
+
+**Same keyword-as-function defect, not changed:** `omega_private.create_consult_intake` (trim×6),
+`omega_private.create_service_order` (×2), `private.omega_watchlist_upsert` (×2),
+`public.omega_runtime_dispatch` (×5) — found by scanning every live function body for
+`pg_catalog.(coalesce|nullif|greatest|least|trim)(` (`GAP_ANALYSIS.md`).

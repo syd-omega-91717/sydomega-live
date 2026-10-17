@@ -21,7 +21,8 @@
       "omega_elemental_runtime",
       "claim_notifications",
       "mark_notification_delivered",
-      "mark_notification_failed"
+      "mark_notification_failed",
+      "record_stripe_payment"
     ],
     "owner_or_admin": [
       "academy_promote",
@@ -90,6 +91,6 @@
     "public_read_candidate": "must be SECURITY INVOKER or moved to a private schema before anonymous/public execution is considered."
   },
   "coverage": {
-    "expectedSecurityDefinerPublicFunctions": 71
+    "expectedSecurityDefinerPublicFunctions": 72
   }
 }

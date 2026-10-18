@@ -4,6 +4,14 @@
 'use strict';
 if (window.__omegaProjectStudio) return;
 window.__omegaProjectStudio = true;
+/* Unbiased integer in [0, n): rejection sampling on crypto.getRandomValues
+   (a bare `% n` over 2^32 over-weights the low residues). */
+function randomBelow(n) {
+if (!(window.crypto && crypto.getRandomValues)) return Date.now() % n;
+var limit = Math.floor(0x100000000 / n) * n, buf = new Uint32Array(1);
+do { crypto.getRandomValues(buf); } while (buf[0] >= limit);
+return buf[0] % n;
+}
 const GENERATORS = {
 educational_game: {
 name: 'Educational Game', fields: ['subject', 'target_age', 'learning_objectives', 'game_mechanic', 'platform'], steps: ['concept', 'mechanics', 'content', 'quiz', 'visuals', 'database', 'monetization']
@@ -34,7 +42,7 @@ core_loop: 'Player engages with content, earns points, unlocks next level.', pro
 return {
 modules: (data.modules || '5').split(',').map(function(s) {
 return s.trim();
-}), quiz_count: 3 + (window.crypto && crypto.getRandomValues ? crypto.getRandomValues(new Uint32Array(1))[0] % 5 : Date.now() % 5), difficulty_curve: 'Progressive — easy to challenging'
+}), quiz_count: 3 + randomBelow(5), difficulty_curve: 'Progressive — easy to challenging'
 };
 }, quiz: function(data) {
 return {

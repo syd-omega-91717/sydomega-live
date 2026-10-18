@@ -506,7 +506,7 @@ function populateTaskSelect(){
   var sel=document.getElementById('task-project-sel');
   var cur=sel.value;
   sel.innerHTML='<option value="">— Select project —</option>'
-    +projects.map(function(p){return '<option value="'+p.id+'"'+(p.id===cur?' selected':'')+'>'+esc(p.name)+'</option>';}).join('');
+    +projects.map(function(p){return '<option value="'+esc(p.id)+'"'+(p.id===cur?' selected':'')+'>'+esc(p.name)+'</option>';}).join('');
 }
 
 function renderTasks(){
@@ -521,8 +521,8 @@ function renderTasks(){
     +open.map(function(x){return taskItem(pid,x);}).join('')
     +'</div>'
     +'<div class="add-task-row">'
-    +'<input type="text" id="task-input" placeholder="Add task..." onkeydown="if(event.key===\'Enter\'){addTask(\''+pid+'\');event.preventDefault();}">'
-    +'<button class="add-task-btn" onclick="addTask(\''+pid+'\')">+ ADD</button>'
+    +'<input type="text" id="task-input" placeholder="Add task..." data-pid="'+esc(pid)+'" onkeydown="if(event.key===\'Enter\'){addTask(this.dataset.pid);event.preventDefault();}">'
+    +'<button class="add-task-btn" data-pid="'+esc(pid)+'" onclick="addTask(this.dataset.pid)">+ ADD</button>'
     +'</div>'
     +(done.length?'<div class="section-label" style="margin-top:20px">COMPLETED ('+done.length+')</div>'
     +'<div class="task-list">'+done.map(function(x){return taskItem(pid,x);}).join('')+'</div>':'');
@@ -531,9 +531,9 @@ function renderTasks(){
 function taskItem(pid,t){
   return '<div class="task-item">'
     +'<input type="checkbox" class="task-cb"'+(t.done?' checked':'')
-    +' onchange="toggleTask(\''+pid+'\',\''+t.id+'\')">'
+    +' data-pid="'+esc(pid)+'" data-tid="'+esc(t.id)+'" onchange="toggleTask(this.dataset.pid,this.dataset.tid)">'
     +'<div class="task-text'+(t.done?' done':'')+'">'+esc(t.text)+'</div>'
-    +'<button class="task-del" onclick="deleteTask(\''+pid+'\',\''+t.id+'\')">\xd7</button>'
+    +'<button class="task-del" data-pid="'+esc(pid)+'" data-tid="'+esc(t.id)+'" onclick="deleteTask(this.dataset.pid,this.dataset.tid)">\xd7</button>'
     +'</div>';
 }
 

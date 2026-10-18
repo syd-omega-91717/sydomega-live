@@ -125,6 +125,7 @@
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var HK='omega_heritage_profile',AK='omega_ancestors',SK='omega_heritage_stories',CK='omega_culture';
 var profile=JSON.parse(localStorage.getItem(HK)||'{}');
 var ancestors=JSON.parse(localStorage.getItem(AK)||'[]');
@@ -137,9 +138,9 @@ function renderProfile(){
   el.style.display='block';
   el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">'
     +[['ETHNIC HERITAGE',profile.ethnic],['COUNTRY OF ORIGIN',profile.country],['NATIVE LANGUAGE',profile.lang],['SURNAME ORIGIN',profile.surname],['FAMILY MOTTO',profile.motto]].filter(function(r){return r[1];}).map(function(r){
-      return '<div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:13px;color:var(--ink)">'+r[1]+'</div></div>';
+      return '<div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:13px;color:var(--ink)">'+esc(r[1])+'</div></div>';
     }).join('')+'</div>'
-    +(profile.notes?'<div style="margin-top:10px;font-size:12px;line-height:1.7;opacity:.8">'+profile.notes+'</div>':'');
+    +(profile.notes?'<div style="margin-top:10px;font-size:12px;line-height:1.7;opacity:.8">'+esc(profile.notes)+'</div>':'');
   document.getElementById('h-ethnic').value=profile.ethnic||'';
   document.getElementById('h-country').value=profile.country||'';
   document.getElementById('h-lang').value=profile.lang||'';
@@ -154,11 +155,11 @@ function renderAncestors(){
   el.innerHTML=[].concat(ancestors).reverse().map(function(a){
     return '<div class="card card-edge" style="--card-accent:var(--gold)">'
       +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:4px">'
-      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+a.name+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+a.relation+'</div>'
-      +(a.born?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">b. '+a.born+'</div>':'')
+      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+esc(a.name)+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+esc(a.relation)+'</div>'
+      +(a.born?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">b. '+esc(a.born)+'</div>':'')
       +'</div>'
-      +(a.note?'<div style="font-size:12px;opacity:.75">'+a.note+'</div>':'')
+      +(a.note?'<div style="font-size:12px;opacity:.75">'+esc(a.note)+'</div>':'')
       +'</div>';
   }).join('');
 }
@@ -169,11 +170,11 @@ function renderStories(){
   el.innerHTML=[].concat(stories).reverse().map(function(s){
     return '<div class="card" data-reveal="fade-up">'
       +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">'
-      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold);flex:1">'+s.title+'</div>'
-      +(s.who?'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+s.who+'</div>':'')
-      +(s.era?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+s.era+'</div>':'')
+      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold);flex:1">'+esc(s.title)+'</div>'
+      +(s.who?'<div style="font-family:var(--M);font-size:12px;color:var(--cyan)">'+esc(s.who)+'</div>':'')
+      +(s.era?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(s.era)+'</div>':'')
       +'</div>'
-      +'<div style="font-size:12px;line-height:1.8;opacity:.85">'+s.body.replace(/\n/g,'<br>')+'</div>'
+      +'<div style="font-size:12px;line-height:1.8;opacity:.85">'+esc(s.body).replace(/\n/g,'<br>')+'</div>'
       +'</div>';
   }).join('');
 }

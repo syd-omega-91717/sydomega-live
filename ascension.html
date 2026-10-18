@@ -196,6 +196,7 @@ var STAGES=[
 ];
 var APEX=27.8367,PHI=1.6180339887,EU=2.7182818285;
 var KEY='omega_milestones';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var milestones=JSON.parse(localStorage.getItem(KEY)||'[]');
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
@@ -259,10 +260,10 @@ function renderMilestones(){
     var colors={knowledge:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),mastery:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),contribution:'#4CAF50',stage:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')};
     return '<div style="border:1px solid var(--line);border-left:3px solid '+(colors[m.cat]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'))+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px;display:flex;gap:12px;align-items:flex-start">'
       +'<div style="flex:1">'
-      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+(colors[m.cat]||'var(--gold)')+';margin-bottom:4px">'+m.cat.toUpperCase()+'</div>'
-      +'<div style="font-size:13px">'+m.text+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+(colors[m.cat]||'var(--gold)')+';margin-bottom:4px">'+esc(m.cat.toUpperCase())+'</div>'
+      +'<div style="font-size:13px">'+esc(m.text)+'</div>'
       +'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);flex-shrink:0">'+m.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);flex-shrink:0">'+esc(m.date)+'</div>'
       +'</div>';
   }).join('');
 }

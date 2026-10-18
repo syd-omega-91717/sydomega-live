@@ -56,11 +56,13 @@
     }).join(' + ');
   }
 
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
   function lock(el, req) {
     if (el.querySelector(':scope > .omg-seal')) return;
     el.classList.add('omg-lock');
     var seal = document.createElement('div'); seal.className = 'omg-seal';
-    seal.innerHTML = '<div class="ic">&#9635;</div><div class="rq">UNLOCKS AT ' + label(req) + '</div><div class="hint">advance the matrix to reveal</div>';
+    seal.innerHTML = '<div class="ic">&#9635;</div><div class="rq">UNLOCKS AT ' + esc(label(req)) + '</div><div class="hint">advance the matrix to reveal</div>';
     el.appendChild(seal);
   }
   function unlock(el) {

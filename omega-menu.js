@@ -134,6 +134,8 @@
   var st = document.createElement('style'); st.id = 'om-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
 
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
   function fillIcons(root) {
     var els = root.querySelectorAll('.om-ic');
     function fill() {
@@ -141,7 +143,7 @@
       for (var i = 0; i < els.length; i++) {
         var el = els[i];
         if (el.__filled) continue;
-        el.innerHTML = window.OmegaEmblem.ring(el.getAttribute('data-glyph'), el.getAttribute('data-col'), {});
+        el.innerHTML = window.OmegaEmblem.ring(esc(el.getAttribute('data-glyph')), esc(el.getAttribute('data-col')), {});
         el.__filled = 1;
       }
       return true;

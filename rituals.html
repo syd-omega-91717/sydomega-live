@@ -234,6 +234,7 @@
 <script type="module">
 const RITUALS_KEY = 'omega_rituals';
 const LOGS_KEY    = 'omega_ritual_logs';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 const DEFAULT_RITUALS = [
   {id:'r1',name:'Cold Shower',desc:'90-second cold exposure (Wim Hof)',protocol:'morning',time:3,active:true},
@@ -288,13 +289,13 @@ function renderProtocol(protocol, listId, progId, barId){
   const pct = rituals.length?completedCount/rituals.length*100:0;
   document.getElementById(barId).style.width=pct+'%';
   document.getElementById(listId).innerHTML = rituals.map(r=>`
-    <div class="ritual-item ${done[r.id]?'done':''}" onclick="toggleRitual('${r.id}','${protocol}')">
+    <div class="ritual-item ${done[r.id]?'done':''}" data-id="${esc(r.id)}" onclick="toggleRitual(this.dataset.id,'${protocol}')">
       <div class="ri-check">${done[r.id]?'✓':''}</div>
       <div class="ri-info">
-        <div class="ri-name">${r.name}</div>
-        <div class="ri-desc">${r.desc}</div>
+        <div class="ri-name">${esc(r.name)}</div>
+        <div class="ri-desc">${esc(r.desc)}</div>
       </div>
-      <div class="ri-time">${r.time}m</div>
+      <div class="ri-time">${esc(r.time)}m</div>
     </div>`).join('')||'<div style="padding:16px;font-family:var(--M);font-size:12px;color:var(--muted)">NO RITUALS — ADD SOME ABOVE</div>';
 }
 
@@ -400,7 +401,7 @@ function renderConsistency(){
   }).sort((a,b)=>b.pct-a.pct);
   container.innerHTML=results.map(r=>`
     <div class="consistency-bar">
-      <div class="cb-label"><span>${r.name}</span><span>${r.pct}%</span></div>
+      <div class="cb-label"><span>${esc(r.name)}</span><span>${r.pct}%</span></div>
       <div class="cb-track"><div class="cb-fill" style="width:${r.pct}%"></div></div>
     </div>`).join('');
 }

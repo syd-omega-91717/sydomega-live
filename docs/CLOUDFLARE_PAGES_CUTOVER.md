@@ -35,16 +35,22 @@ every host.
 
 Each step has a check. Do not start the next step until the check passes.
 
-1. **Create the Pages project.** Go to dash.cloudflare.com → Workers & Pages → Create → Pages →
-   Connect to Git → `syd-omega-91717/sydomega-live`. Set:
-   - Production branch: `main`
-   - Build command: `bash scripts/vercel-build.sh`
-   - Build output directory: `public`
-   - Settings → Builds → **Build watch paths**: exclude `docs/*`, `scripts/tests/*`,
-     `supabase/*`, `*.md`. Merges land 10–40 a day; this keeps them under 500 builds a month.
+1. **Give GitHub a deploy token. This is the only Cloudflare setup.** `.github/workflows/cloudflare-pages.yml`
+   builds and deploys on every push to `main`, and creates the `sydomega` Pages project on its
+   first run. To enable it:
+   - Cloudflare → My Profile → API Tokens → Create Token → template **Edit Cloudflare Workers**.
+     It includes *Cloudflare Pages: Edit*. Then copy the token.
+   - Copy the account ID: dashboard → Workers & Pages, right column.
+   - In GitHub → repo → Settings → Secrets and variables → Actions, add `CLOUDFLARE_API_TOKEN` and
+     `CLOUDFLARE_ACCOUNT_ID`.
+   - Then Actions → **Cloudflare Pages** → Run workflow.
 
-   **Check:** the build log ends `VERCEL_BUILD=PASS` and
-   `PORTABLE_HOST_CONFIG=PASS header_rules=22`.
+   Until both secrets exist, the workflow skips with a notice and stays green. It uploads directly,
+   so it does not use Cloudflare's 500 Git builds a month, and doc-only commits are skipped by
+   `paths-ignore`.
+
+   **Check:** the run ends `CLOUDFLARE_PAGES=PASS https://sydomega.pages.dev`. If that name was
+   taken, the create step fails and says so; change `PROJECT` in the workflow.
 
 2. **Verify on `<project>.pages.dev` before touching DNS.** Sign in and open dashboard, life and
    profile.

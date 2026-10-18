@@ -1,0 +1,106 @@
+name: Cloudflare Pages
+
+# Deploys the same artifact Vercel would build (scripts/vercel-build.sh, which
+# also writes _headers/_redirects from vercel.json) to Cloudflare Pages, whose
+# free plan has unlimited requests -- the limit that paused the Vercel Hobby
+# team on 2026-10-06. Direct upload: no Cloudflare-side Git connection needed.
+#
+# Dormant until the owner adds two repository secrets:
+#   CLOUDFLARE_API_TOKEN   (Cloudflare -> My Profile -> API Tokens -> Create
+#                           Token -> "Edit Cloudflare Workers" template, which
+#                           includes Cloudflare Pages: Edit)
+#   CLOUDFLARE_ACCOUNT_ID  (Cloudflare dashboard -> Workers & Pages, right column)
+# Without them every run skips with a notice and stays green.
+#
+# Serves <project>.pages.dev only. sydomega.com moves here when its
+# nameservers point at Cloudflare: docs/CLOUDFLARE_PAGES_CUTOVER.md.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "scripts/tests/**"
+      - "supabase/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Fixed group: the newest main wins; an older deploy still in flight is moot.
+concurrency:
+  group: cloudflare-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PROJECT: sydomega
+      WRANGLER: wrangler@4.151.1
+    steps:
+      - name: Check credentials
+        id: creds
+        shell: bash
+        run: |
+          if [ -n "${CLOUDFLARE_API_TOKEN}" ] && [ -n "${CLOUDFLARE_ACCOUNT_ID}" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Cloudflare Pages deploy skipped: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set."
+          fi
+
+      - name: Checkout
+        if: steps.creds.outputs.ready == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node
+        if: steps.creds.outputs.ready == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Build artifact
+        if: steps.creds.outputs.ready == 'true'
+        shell: bash
+        run: bash scripts/vercel-build.sh
+
+      - name: Create the Pages project once
+        if: steps.creds.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if npx --yes "${WRANGLER}" pages project list 2>/dev/null | grep -qw "${PROJECT}"; then
+            echo "project ${PROJECT} exists"
+          else
+            npx --yes "${WRANGLER}" pages project create "${PROJECT}" --production-branch main
+          fi
+
+      - name: Deploy
+        if: steps.creds.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes "${WRANGLER}" pages deploy public \
+            --project-name "${PROJECT}" --branch main \
+            --commit-hash "${GITHUB_SHA}" --commit-dirty=true
+
+      - name: Smoke test the deployment
+        if: steps.creds.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://${PROJECT}.pages.dev"
+          for attempt in 1 2 3 4 5 6; do
+            code="$(curl -s -o /dev/null -w '%{http_code}' "${url}/")" || code=000
+            [ "${code}" = "200" ] && break
+            sleep 10
+          done
+          [ "${code}" = "200" ] || { echo "root returned ${code}"; exit 1; }
+          curl -sI "${url}/" | grep -qi '^content-security-policy:' || { echo "CSP header missing"; exit 1; }
+          curl -s "${url}/.well-known/omega-release.json" | grep -q "${GITHUB_SHA}" \
+            || echo "::warning::release manifest does not name ${GITHUB_SHA} yet (edge propagation)"
+          echo "CLOUDFLARE_PAGES=PASS ${url}"

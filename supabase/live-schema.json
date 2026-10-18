@@ -17,7 +17,7 @@
   "_captured": "2026-10-06",
   "_project": "ydqhzvvoyufiiqvzcjns",
   "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
-  "_table_count": 287,
+  "_table_count": 288,
   "tables": {
     "public.signups": [
       "id",
@@ -3258,6 +3258,18 @@
       "marketplace_listing_count",
       "marketplace_order_count",
       "stripe_webhook_event_count"
+    ],
+    "public.life_entries": [
+      "id",
+      "user_id",
+      "kind",
+      "day",
+      "value",
+      "note",
+      "data",
+      "source",
+      "client_ref",
+      "created_at"
     ]
   }
 }

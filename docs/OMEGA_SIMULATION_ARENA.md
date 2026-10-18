@@ -38,9 +38,9 @@ No localStorage state, no client-side achievement grants, no permission mutation
 Deployment and live browser verification remain separate evidence requirements.
 
 
-## Server-side write guardrails — pending review
+## Server-side write guardrails — applied live 2026-10-17
 
-The pending migration `20261017114500_member_rpc_write_guardrails_20261017.sql` tightens the current RPC contract without changing the UI's simulation semantics:
+The migration (live: `schema_migrations` holds the version and both RPCs carry its `pg_advisory_xact_lock`) `20261017114500_member_rpc_write_guardrails_20261017.sql` tightens the current RPC contract without changing the UI's simulation semantics:
 - Accept only the three shipped model keys and model version `1.0.0`.
 - Validate the deterministic seed, input ranges, output metrics, and trace length/range on the server.
 - Limit saved simulation runs to 20 per authenticated member per hour.

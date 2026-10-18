@@ -39,10 +39,10 @@ This scanner reads the repository. It has no database connection, so:
 | `BUILT` | 105 |
 | `PARTIAL` | 28 |
 | `LOCAL_ONLY` | 42 |
-| `STATIC` | 64 |
+| `STATIC` | 66 |
 | `BROKEN` | 0 |
 | `UNREACHABLE` | 1 |
-| **total** | **240** |
+| **total** | **242** |
 
 ## BUILT (105)
 
@@ -234,7 +234,7 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (64)
+## STATIC (66)
 
 | page | evidence |
 |---|---|
@@ -270,11 +270,13 @@ This scanner reads the repository. It has no database connection, so:
 | `healthz.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
 | `index.html` | no backend call, no stored state |
+| `insight.html` | no backend call, no stored state |
 | `intel.html` | no backend call, no stored state |
 | `invest.html` | no backend call, no stored state |
 | `investor-dashboard.html` | no backend call, no stored state |
 | `investor-gate.html` | no backend call, no stored state |
 | `knowledge-loom.html` | no backend call, no stored state |
+| `ladder.html` | no backend call, no stored state |
 | `leaderboard.html` | no backend call, no stored state |
 | `life.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
@@ -344,7 +346,7 @@ This scanner reads the repository. It has no database connection, so:
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 225 |
+| tables + views declared in `supabase/` | 226 |
 | functions declared in `supabase/` | 199 |
 | tables defined in more than one root SQL file | 46 |
 
@@ -420,7 +422,7 @@ live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 225 | 4 | 0 |
+| 226 | 4 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.

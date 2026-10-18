@@ -24321,3 +24321,60 @@ each with the member's own requests and their status, and each ending in its for
 **Reported, not changed (`GAP_ANALYSIS.md`):** the empty tables; a second "S.Y.D" profile with
 `is_owner = false` and an authority inconsistent with its axes; and six empty owner pages,
 which are deletion candidates on the owner's sign-off.
+
+## 2026-10-18 — LIFE goes live, the second owner account becomes an owner, six empty pages go
+
+**Second owner account.** The "S.Y.D" profile with "no email" was `slmndghr@gmail.com`: the
+email is in `auth.users`, which `profiles` does not carry. Live: `is_owner = false`, never
+signed in, email unconfirmed, and `platform_owners` held **one** row. So CLAUDE.md §1's "both
+accounts hold `is_owner`" (`#177`, "confirmed 2026-09-17") had been false. On the owner's
+instruction, `update profiles set is_owner = true where id = '023a2c20…'` was guarded by an
+`auth.users` email match. `sync_platform_owner` then inserted it into `platform_owners`, which
+now holds 2 rows: `s.y.dagher@gmail.com` and `slmndghr@gmail.com`, by query.
+`protect_owner_lifetime` set it to approved, tier 9. `guard_profile_privileges` lets
+service-context writes through (`auth.uid()` is null).
+
+**LIFE on.** Proved first in a rolled-back impersonation of an approved member
+(`SET LOCAL ROLE authenticated` with `request.jwt.claims`):
+- `insert into life_entries (kind, day, value)` succeeded.
+- The member saw 1 row and 0 rows belonging to anyone else.
+- `count(*)` after the rollback was 0.
+
+Then `platform_settings.life_core_enabled = true`, at 09:10:36 UTC. With the flag on, the
+client-only dormancy gap (GAP_ANALYSIS, 2026-10-17) is moot.
+
+`nav.js` folds the ten trackers the log replaces: mood, sleep, water, workout, meditate, breath,
+gratitude, body, fasting and habits. `config/page-cores.json` marks LIFE as BUILT. Journal, stoic,
+rituals, oath, targets, weekly and affirmations stay in the sidebar, because the log does not
+cover them.
+
+**Six pages deleted.** Five were 357–367-byte stubs whose only content was
+`location.href = '/dashboard.html'`: investor-dashboard, investor-gate, venture-pipeline,
+omega-visual-command and agent. The sixth, cohorts-dashboard, was a 972-byte placeholder.
+
+Each now has a permanent `vercel.json` redirect:
+- the four stubs → `/dashboard`
+- `agent` → `/agents`
+- `cohorts-dashboard` → `/control-center`
+
+They are also removed from:
+- `index.html`'s surface directory; its SURFACES stat is now 236, gated by `page-count-claims`
+- `omega-owner-deck.js` EXTRA
+- `analytics-config.json`
+- `omega-production-surface-contract.py` and `reachability-contract.py`
+- `page-world-overrides.json`, the page-contract registry, the review queue and the CSP baseline
+- `visual-page-survey.json`
+
+The counts in those files were recomputed. `omega-page-contract-bootstrap.py` was re-run, and it
+also picked up the core scripts `main` had not recorded.
+
+**Verified:**
+- `./scripts/ci-local.sh --all`: 39/39.
+- `python3 -m unittest discover -s scripts/tests`: OK.
+- `verify-runtime.js`: PASS on index, life, control-center, dashboard and agents.
+
+**Production (measured, not changed):** the last production deploy is #755 (`7d70ce14`,
+2026-10-06). `sydomega.com` answers 200 from Vercel's edge cache, with `last-modified` of
+15 Oct, and every new deploy is refused. A standby Netlify project, `sydomega-v6mo`, was created.
+Deploying to it was stopped by the session's permission policy, so nothing was deployed and DNS
+is unchanged.

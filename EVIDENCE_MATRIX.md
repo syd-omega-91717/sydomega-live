@@ -39,10 +39,10 @@ This scanner reads the repository. It has no database connection, so:
 | `BUILT` | 105 |
 | `PARTIAL` | 28 |
 | `LOCAL_ONLY` | 42 |
-| `STATIC` | 66 |
+| `STATIC` | 60 |
 | `BROKEN` | 0 |
 | `UNREACHABLE` | 1 |
-| **total** | **242** |
+| **total** | **236** |
 
 ## BUILT (105)
 
@@ -234,7 +234,7 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (66)
+## STATIC (60)
 
 | page | evidence |
 |---|---|
@@ -243,7 +243,6 @@ This scanner reads the repository. It has no database connection, so:
 | `ad-network.html` | no backend call, no stored state |
 | `agent-network.html` | no backend call, no stored state |
 | `agent-operations.html` | no backend call, no stored state |
-| `agent.html` | no backend call, no stored state |
 | `approvals.html` | no backend call, no stored state |
 | `architect.html` | no backend call, no stored state |
 | `architecture.html` | no backend call, no stored state |
@@ -251,7 +250,6 @@ This scanner reads the repository. It has no database connection, so:
 | `arena.html` | no backend call, no stored state |
 | `ascend.html` | no backend call, no stored state |
 | `characters.html` | no backend call, no stored state |
-| `cohorts-dashboard.html` | no backend call, no stored state |
 | `control-center.html` | no backend call, no stored state |
 | `control-plane.html` | no backend call, no stored state |
 | `cosmetics.html` | no backend call, no stored state |
@@ -273,8 +271,6 @@ This scanner reads the repository. It has no database connection, so:
 | `insight.html` | no backend call, no stored state |
 | `intel.html` | no backend call, no stored state |
 | `invest.html` | no backend call, no stored state |
-| `investor-dashboard.html` | no backend call, no stored state |
-| `investor-gate.html` | no backend call, no stored state |
 | `knowledge-loom.html` | no backend call, no stored state |
 | `ladder.html` | no backend call, no stored state |
 | `leaderboard.html` | no backend call, no stored state |
@@ -283,7 +279,6 @@ This scanner reads the repository. It has no database connection, so:
 | `missions.html` | no backend call, no stored state |
 | `my-quests.html` | no backend call, no stored state |
 | `omega-platform-navigator.html` | no backend call, no stored state |
-| `omega-visual-command.html` | no backend call, no stored state |
 | `ops.html` | no backend call, no stored state |
 | `order.html` | no backend call, no stored state |
 | `orrery.html` | no backend call, no stored state |
@@ -297,7 +292,6 @@ This scanner reads the repository. It has no database connection, so:
 | `sculpture.html` | no backend call, no stored state |
 | `security.html` | no backend call, no stored state |
 | `standing-dashboard.html` | no backend call, no stored state |
-| `venture-pipeline.html` | no backend call, no stored state |
 | `verify-deployment.html` | no backend call, no stored state |
 | `verify-modules.html` | no backend call, no stored state |
 | `visual-atlas.html` | no backend call, no stored state |

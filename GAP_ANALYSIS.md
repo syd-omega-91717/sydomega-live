@@ -32,11 +32,12 @@ project's own established convention (security/data-integrity first).
   readiness strip; `characters` to OWNER), and on 2026-10-18 the last four: ORDER (`hall.html`),
   MEDIA (`media.html`), SERVICES (`services.html`) and OWNER (`control-center.html`, estate
   health from live tables). All 13 cores now exist. LIFE is
-  **built and dormant**: `public.life_entries` is live (`20261017234857`, own rows only, no
-  owner read) and `life.html` carries the daily log (`omega-life-log.js`), but writes stay
-  disabled until the owner sets `platform_settings.life_core_enabled`. Its 17 tracker pages stay
-  in the sidebar until then. No page is deleted until its core replaces it and the owner signs
-  off.
+  **live**: `public.life_entries` (`20261017234857`, own rows only, no owner read) backs the daily
+  log on `life.html`, and the owner turned `life_core_enabled` on 2026-10-18 09:10 UTC after a
+  rolled-back member insert proved the write path (1 row seen by its member, 0 of anyone else's).
+  The ten trackers the log replaces (mood, sleep, water, workout, meditate, breath, gratitude,
+  body, fasting, habits) are folded; the text-heavy ones it does not cover stay in the sidebar.
+  The first page deletions, on the owner's sign-off, are the six empty owner pages (below).
 - **OPEN 2026-10-18 — community, media and services tables are empty.** `member_events`,
   `member_posts`, `event_rsvps`, `social_*`, `family_nodes`, `bloodline_nodes`, `heritage_records`,
   `publications`, `media_reservations`, `consult_requests`, `commission_contracts` and
@@ -44,17 +45,24 @@ project's own established convention (security/data-integrity first).
   state the empties and offer the action. They do not make anyone use them.
 - **OPEN 2026-10-18 — production keeps throwing errors already fixed in main.** 76
   `.catch is not a function` errors in the 24 h to 07:52 UTC (386 in 7 days), from code `main` no
-  longer contains. Production serves pre-block code (Vercel "Account is blocked"). The OWNER board
+  longer contains. Production serves pre-block code: the last production deploy is #755 (`7d70ce14`, 2026-10-06),
+  and `sydomega.com` answers 200 from Vercel's edge cache (measured 2026-10-18 09:07 UTC). Every
+  new deploy is refused ("Account is blocked"); a Netlify project (`sydomega-v6mo`) exists as the
+  standby host, undeployed — the owner's call. The OWNER board
   shows the count.
-- **OPEN 2026-10-18 — a second "S.Y.D" profile is not owner.** One `profiles` row named "S.Y.D"
-  has no email, `is_owner = false`, axes 9/9/9 and a stored `authority` of 15.588, which those axes
-  do not produce (they give 27.8367). CLAUDE.md §1 says both owner accounts carry `is_owner`.
-  This is owner privilege, so it was not changed: the owner decides.
-- **OPEN 2026-10-18 — six owner-section pages are empty.** `investor-dashboard`, `investor-gate`,
-  `venture-pipeline`, `omega-visual-command` and `agent` each only redirect to the dashboard, and
-  `cohorts-dashboard` is a 972-byte "in development" placeholder. They are candidates for deletion
-  on the owner's sign-off.
-- **OPEN 2026-10-17 — LIFE dormancy is enforced in the client only.** The RLS insert policy
+- **DONE 2026-10-18 — the second "S.Y.D" profile is the owner's second account.** It is
+  `slmndghr@gmail.com` (the email lives in `auth.users`, not `profiles`): never signed in, email
+  unconfirmed, `is_owner = false`, so `platform_owners` held one row and CLAUDE.md §1's "both
+  accounts" was false. On the owner's instruction it now has `is_owner = true`;
+  `sync_platform_owner` added it to `platform_owners` (2 rows, both emails verified by query) and
+  `protect_owner_lifetime` set it approved, tier 9. Its stored `authority` (15.588) is still not
+  what 9/9/9 gives (27.8367) — cosmetic, left as is. Its first sign-in needs the email confirmed
+  (a password reset from `reset.html` does that).
+- **DONE 2026-10-18 — six empty owner pages deleted.** `investor-dashboard`, `investor-gate`,
+  `venture-pipeline`, `omega-visual-command` (redirect stubs to the dashboard), `agent` (a stub,
+  now 301 to `/agents`) and `cohorts-dashboard` (a placeholder, now 301 to `/control-center`).
+  Each has a permanent redirect in `vercel.json`, so no old link 404s.
+- **MOOT 2026-10-18 (flag on) — LIFE dormancy was enforced in the client only.** The RLS insert policy
   checks ownership, not `life_core_enabled`, so a member calling PostgREST directly can write
   their own rows while the flag is off. They can harm only their own data. Closing it means
   replacing the policy in a new migration, which needs the owner (the connector stalls on any

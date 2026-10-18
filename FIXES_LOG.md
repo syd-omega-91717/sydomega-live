@@ -24429,3 +24429,49 @@ changes keep the next window from being exhausted the same way.
 **Verified:**
 - `./scripts/ci-local.sh --all`: 39/39.
 - `unittest`: 800 OK.
+
+## 2026-10-18 — A host that cannot run out of requests: Cloudflare Pages, made portable from vercel.json
+
+**The decision, sourced.** Vercel Hobby paused this team for Edge Requests. The two free
+alternatives compare as follows:
+
+| | requests | bandwidth | deploys | on running out |
+|---|---|---|---|---|
+| Netlify Free | 2 credits per 10k | 20 credits/GB | 15 credits each | site pauses (300 credits/month) |
+| Cloudflare Pages Free | unlimited | unlimited | 500 builds/month | — |
+
+Sources: Netlify's pricing page and the Cloudflare Pages limits page, read 2026-10-18. Pages
+also requires an apex domain to be a Cloudflare zone, so the cutover moves the nameservers.
+Steps are in `docs/CLOUDFLARE_PAGES_CUTOVER.md`.
+
+**The repo work.** `scripts/portable-host-config.py` translates `vercel.json` into
+`public/_headers` and `public/_redirects`, and `scripts/vercel-build.sh` runs it.
+- `vercel.json` stays the only source.
+- A pattern the script cannot translate fails the build rather than vanishing.
+- A literal path that overrides a pattern's header gets a `! Name` detach line. Pages joins
+  duplicate headers with a comma, which would have given `sw.js` both cache policies.
+- Redirect sources gain their `.html` twin.
+
+`scripts/tests/test_portable_host_config.py` adds 6 tests.
+
+**Measured in Cloudflare's runtime** (`wrangler pages dev` 4.151.1 on the real `public/`):
+- CSP, HSTS, `X-Frame-Options` and `Permissions-Policy` on every response.
+- `bg.js`: `public, max-age=3600, stale-while-revalidate=86400`.
+- `sw.js`: exactly `no-cache`, so the detach works.
+- `/life.html` → 308 → `/life`.
+- `/agent` and `/agent.html` → 301 → `/agents`; `/cohorts-dashboard` → 301 → `/control-center`.
+- `/admin-x` carries `x-robots-tag: noindex`.
+- 1,185 asset requests returned 200.
+- Fit: 1,141 files (limit 20,000), no file over 20 MB (limit 25 MiB), 22 header rules
+  (limit 100).
+
+**A request leak found on the way, on every host.** `omega-cache-optimizer.js` prefetched
+`/optimize/dashboard`, `/optimize/profile` and `/optimize/family`, which nothing serves. That was
+three 404s per page view, each one billed on Vercel. The prefetch is removed.
+
+The two `/_vercel/insights` and `/_vercel/speed-insights` scripts also 404 off Vercel. That is
+expected: Vercel Web Analytics stops when the site leaves Vercel.
+
+**Not done here:** the cutover itself. Creating the Pages project, moving the nameservers and
+attaching the domain are owner dashboard actions, and production DNS changes only on the owner's
+go.

@@ -27,6 +27,7 @@ CONTRACT_SRC = os.path.join(ROOT, "scripts", "vercel_static_contract.py")
 BUILD_SRC = os.path.join(ROOT, "scripts", "vercel-build.sh")
 ENHANCER_SRC = os.path.join(ROOT, "scripts", "vercel-build-enhance.mjs")
 MANIFEST_SRC = os.path.join(ROOT, "scripts", "omega-release-manifest.mjs")
+PORTABLE_SRC = os.path.join(ROOT, "scripts", "portable-host-config.py")
 
 # The contract gained two requirements after these tests were written: a
 # page-shell enhancer, and git auto-deploy switched off in vercel.json so the
@@ -66,6 +67,7 @@ class Fixture:
         shutil.copy(BUILD_SRC, os.path.join(self.dir, "scripts", "vercel-build.sh"))
         shutil.copy(ENHANCER_SRC, os.path.join(self.dir, "scripts", "vercel-build-enhance.mjs"))
         shutil.copy(MANIFEST_SRC, os.path.join(self.dir, "scripts", "omega-release-manifest.mjs"))
+        shutil.copy(PORTABLE_SRC, os.path.join(self.dir, "scripts", "portable-host-config.py"))
         self.write("index.html", "<!doctype html><html><head><title>t</title></head><body></body></html>")
         self.set_config(BASE_CONFIG)
 

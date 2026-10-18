@@ -24533,3 +24533,30 @@ owner: a registrar change cannot be made from here.
 from the dashboard's settings. Empty settings mean "publish the repo root". Verify a host cutover
 by fetching a path that must 404 (`/scripts/…`) and one that must exist (`/.well-known/…`), not
 just `/`.
+
+## 2026-10-18 — Live client_errors after the Cloudflare cutover: what is real, what is cache
+
+I read the live `client_errors` table for the last 14 days and checked each message against the
+current code.
+
+**Stale cache, not current code.** `….insert(...).catch is not a function` and
+`….rpc(...).catch is not a function` were still arriving at 18:22 and 19:01 today, from
+`omega-recommend.js:24` and `omega-telemetry.js:61/75`, on sydomega.com and www.
+- These were fixed on 10-09 in `b7bf8a9f`. Vercel froze on the 10-06 deploy, so visitors kept
+  receiving the broken files until today's cutover.
+- Cloudflare serves the fix: a Firecrawl fetch of `/omega-recommend.js` shows `.then(ok, err)`.
+- The errors come from copies the old service worker cached in browsers. They should stop once
+  `sw.js` v9 activates and deletes the old caches.
+
+**Already fixed in current code:**
+- `esc is not defined` on profile: `esc` is defined at `profile.html:1412`.
+- `renderSessionLog is not defined` on chatbot: defined and guarded.
+- `Canvas is already in use` on the dashboard: `omega-oss.js` destroys the previous chart first.
+- `reading 'glyph'` on cosmos: the index is clamped with `Math.max(0, findIndex)`.
+
+**Fixed here:** `omega-cinematic-animations-phase1.js` read `node.dataset.kineticReveal` on
+every added element. `dataset` is undefined outside the HTML and SVG namespaces, so this logged a
+TypeError on /cosmos. It is now guarded.
+
+**Rule.** After a host freeze, a fixed bug can keep reporting from browser caches. Before
+reopening it, compare the error's `source` and `line_no` with the file production actually serves.

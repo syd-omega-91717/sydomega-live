@@ -97,7 +97,9 @@
       mutations.forEach(mutation => {
         if(mutation.type === 'childList') {
           mutation.addedNodes.forEach(node => {
-            if(node.nodeType === 1 &&
+            /* node.dataset is undefined on elements outside the HTML/SVG
+               namespaces; client_errors logged the TypeError on /cosmos. */
+            if(node.nodeType === 1 && node.dataset &&
                (node.dataset.kineticReveal !== undefined ||
                 node.classList.contains('kinetic-headline'))) {
               wrapCharacters(node);

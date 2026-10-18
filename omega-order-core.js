@@ -119,14 +119,14 @@
     style();
     root.classList.add('odc');
     var r = await Promise.all([
-      sb.rpc('order_stats'),
-      sb.rpc('public_leaderboard', { p_limit: 5 }),
+      sb.rpc('order_stats').then(function (x) { return x.error || !x.data || Array.isArray(x.data) ? null : x.data; }),
+      sb.rpc('public_leaderboard', { p_limit: 5 }).then(function (x) { return x.error ? null : x.data; }),
       sb.from('member_events').select('title,event_date,format,event_type').gte('event_date', today()).order('event_date', { ascending: true }).limit(4),
       sb.from('member_posts').select('post_type,title,body,created_at').eq('status', 'published').order('created_at', { ascending: false }).limit(4)
     ]);
     root.textContent = '';
-    order(root, r[0].error || !r[0].data || Array.isArray(r[0].data) ? null : r[0].data);
-    leaders(root, r[1].error ? null : r[1].data);
+    order(root, r[0]);
+    leaders(root, r[1]);
     gatherings(root, r[2].error ? null : (r[2].data || []));
     voices(root, r[3].error ? null : (r[3].data || []));
   }

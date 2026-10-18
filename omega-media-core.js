@@ -57,16 +57,16 @@
     style();
     root.classList.add('omc');
     var r = await Promise.all([
-      sb.rpc('published_dispatches', { p_limit: 3 }),
+      sb.rpc('published_dispatches', { p_limit: 3 }).then(function (x) { return x.error ? null : (x.data || []); }),
       s && s.user ? sb.from('publications').select('kind,title,status,created_at').eq('user_id', s.user.id).order('created_at', { ascending: false }).limit(50) : Promise.resolve({ data: null, error: { message: 'signed out' } })
     ]);
     root.textContent = '';
 
     var d = el('section', 'omc-card', null, root);
     el('div', 'omc-h', 'DISPATCHES', d);
-    if (r[0].error) el('div', 'omc-empty', 'DISPATCHES UNAVAILABLE', d);
-    else if (!(r[0].data || []).length) el('div', 'omc-empty', 'NOTHING PUBLISHED YET', d);
-    else (r[0].data || []).forEach(function (x) {
+    if (r[0] === null) el('div', 'omc-empty', 'DISPATCHES UNAVAILABLE', d);
+    else if (!r[0].length) el('div', 'omc-empty', 'NOTHING PUBLISHED YET', d);
+    else r[0].forEach(function (x) {
       var li = el('div', 'omc-li', null, d);
       el('strong', null, x.title || 'Dispatch', li);
       el('p', null, String(x.body || '').slice(0, 140), li);

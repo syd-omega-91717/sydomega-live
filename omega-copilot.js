@@ -319,13 +319,57 @@
     box.style.display='flex';
   }
 
+  var MD_TAGS={P:1,BR:1,HR:1,STRONG:1,B:1,EM:1,I:1,DEL:1,S:1,CODE:1,PRE:1,BLOCKQUOTE:1,
+    UL:1,OL:1,LI:1,H1:1,H2:1,H3:1,H4:1,H5:1,H6:1,A:1,TABLE:1,THEAD:1,TBODY:1,TR:1,TH:1,TD:1,SPAN:1};
+  var MD_DROP={SCRIPT:1,STYLE:1,IFRAME:1,OBJECT:1,EMBED:1,SVG:1,MATH:1,TEMPLATE:1,NOSCRIPT:1,
+    FORM:1,INPUT:1,BUTTON:1,TEXTAREA:1,SELECT:1,LINK:1,META:1,BASE:1,FRAME:1,FRAMESET:1};
+  function sanitizeHtml(html){
+    var doc=new DOMParser().parseFromString('<body>'+String(html)+'</body>','text/html');
+    function clean(node){
+      var kids=Array.prototype.slice.call(node.childNodes);
+      for(var i=0;i<kids.length;i++){
+        var n=kids[i];
+        if(n.nodeType===3) continue;
+        if(n.nodeType!==1){node.removeChild(n);continue;}
+        var tag=n.tagName.toUpperCase();
+        if(MD_DROP[tag]){node.removeChild(n);continue;}
+        if(!MD_TAGS[tag]){
+          /* unknown element: keep its (cleaned) children, drop the element */
+          clean(n);
+          while(n.firstChild) node.insertBefore(n.firstChild,n);
+          node.removeChild(n);
+          continue;
+        }
+        var attrs=Array.prototype.slice.call(n.attributes);
+        for(var j=0;j<attrs.length;j++){
+          var an=attrs[j].name.toLowerCase(),av=attrs[j].value;
+          var keep=false;
+          if(tag==='A'&&an==='href'){
+            var h=av.replace(/[\u0000-\u0020\u007f]/g,'');
+            keep=/^(https?:|mailto:|\/(?!\/)|#)/i.test(h)||!/^[a-z][a-z0-9+.-]*:/i.test(h);
+          }else if(tag==='A'&&an==='title'){keep=true;}
+          else if(tag==='CODE'&&an==='class'){keep=/^[\w\s-]*$/.test(av);}
+          else if((tag==='TH'||tag==='TD')&&an==='align'){keep=/^(left|right|center)$/i.test(av);}
+          if(!keep) n.removeAttribute(attrs[j].name);
+        }
+        if(tag==='A'&&n.getAttribute('href')){n.setAttribute('rel','noopener noreferrer');}
+        clean(n);
+      }
+    }
+    clean(doc.body);
+    return doc.body.innerHTML;
+  }
+
   function renderMarkdown(text){
     /* Render via marked.js if available, else safe plain-text fallback */
     if(window.marked){
       try{
         var html=window.marked.parse(text,{mangle:false,headerIds:false,breaks:true});
-        /* Strip only truly dangerous tags — allow formatting */
-        return html.replace(/<script[\s\S]*?<\/script>/gi,'').replace(/on\w+\s*=/gi,'');
+        /* Sanitize by parsing, not by regex: an allowlist of formatting
+           tags survives, every attribute except a safe link href/title and
+           a code-language class is dropped, and anything else (script,
+           style, iframe, svg, form controls, event handlers) is removed. */
+        return sanitizeHtml(html);
       }catch(e){}
     }
     /* Plain fallback: escape HTML, preserve newlines */

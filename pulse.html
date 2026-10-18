@@ -312,12 +312,12 @@ function renderCrypto(coins){
     var spark=c.sparkline_in_7d&&c.sparkline_in_7d.price;
     var sparkId='spark-'+c.id;
     div.innerHTML=
-      '<div class="ac-sym">'+c.symbol.toUpperCase()+'</div>'
-      +'<div class="ac-name">'+c.name+'</div>'
-      +'<div class="ac-price">'+fmt(c.current_price,c.current_price<1?6:2).replace('$','$​')+'</div>'
+      '<div class="ac-sym">'+esc(c.symbol.toUpperCase())+'</div>'
+      +'<div class="ac-name">'+esc(c.name)+'</div>'
+      +'<div class="ac-price">'+fmt(c.current_price,c.current_price<1?6:2).replace(/\$/g,'$​')+'</div>'
       +'<div class="ac-chg '+chgClass(chg24)+'">'+pct(chg24)+' 24h</div>'
       +'<div class="ac-vol">Vol: '+fmt(c.total_volume)+'</div>'
-      +(spark?'<canvas class="ac-spark" id="'+sparkId+'" height="30"></canvas>':'');
+      +(spark?'<canvas class="ac-spark" id="'+esc(sparkId)+'" height="30"></canvas>':'');
     grid.appendChild(div);
     if(spark){
       setTimeout(function(){

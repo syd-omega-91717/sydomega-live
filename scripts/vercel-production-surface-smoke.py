@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import concurrent.futures
 import os
+import sys
 import time
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -118,4 +119,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    if "--help" in sys.argv[1:]:
+        print(__doc__ or "")
+        raise SystemExit(0)
     raise SystemExit(main())

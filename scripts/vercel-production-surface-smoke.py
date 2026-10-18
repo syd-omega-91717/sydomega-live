@@ -8,11 +8,10 @@ from __future__ import annotations
 
 import concurrent.futures
 import os
-import sys
 import time
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urljoin, urlparse
+from urllib.parse import quote, urlparse
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,7 +37,8 @@ def route_for(path: Path) -> str | None:
 
 
 def check_route(route: str, expected_host: str) -> tuple[bool, str]:
-    url = BASE_URL + route
+    encoded_route = quote(route, safe="/-._~")
+    url = BASE_URL + encoded_route
     last_error = "unknown_error"
     for attempt in range(RETRIES + 1):
         try:

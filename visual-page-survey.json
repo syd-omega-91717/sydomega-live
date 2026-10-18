@@ -244,32 +244,6 @@
     "findings": []
   },
   {
-    "page": "agent.html",
-    "title": "Ω SYD OMEGA 91717 — Agents & Entrypoint",
-    "h1": "",
-    "body_words": 0,
-    "cards": 0,
-    "sections": 0,
-    "tabs": 0,
-    "buttons": 0,
-    "links": 0,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 0,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 0,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading"
-    ]
-  },
-  {
     "page": "agents.html",
     "title": "Ω SYD OMEGA 91717 — SOVEREIGN AGENTS",
     "h1": "",
@@ -1024,32 +998,6 @@
     "findings": [
       "READABILITY: 1 declarations at >=3px letter spacing",
       "FLEXIBILITY: 2 fixed widths >=320px"
-    ]
-  },
-  {
-    "page": "cohorts-dashboard.html",
-    "title": "Ω SYD OMEGA 91717 — Cohorts Dashboard",
-    "h1": "Cohorts Dashboard",
-    "body_words": 12,
-    "cards": 0,
-    "sections": 0,
-    "tabs": 0,
-    "buttons": 0,
-    "links": 0,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 1,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 1,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "FLEXIBILITY: 1 fixed widths >=320px"
     ]
   },
   {
@@ -2941,58 +2889,6 @@
     ]
   },
   {
-    "page": "investor-dashboard.html",
-    "title": "Ω SYD OMEGA 91717 — Investor Dashboard",
-    "h1": "",
-    "body_words": 0,
-    "cards": 0,
-    "sections": 0,
-    "tabs": 0,
-    "buttons": 0,
-    "links": 0,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 0,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 0,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading"
-    ]
-  },
-  {
-    "page": "investor-gate.html",
-    "title": "Ω SYD OMEGA 91717 — Investor Access Gateway",
-    "h1": "",
-    "body_words": 0,
-    "cards": 0,
-    "sections": 0,
-    "tabs": 0,
-    "buttons": 0,
-    "links": 0,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 0,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 0,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading"
-    ]
-  },
-  {
     "page": "journal.html",
     "title": "Ω SYD OMEGA 91717 — Journal",
     "h1": "",
@@ -3931,32 +3827,6 @@
     "focus_score": 96,
     "findings": [
       "FLEXIBILITY: 7 fixed widths >=320px"
-    ]
-  },
-  {
-    "page": "omega-visual-command.html",
-    "title": "Ω SYD OMEGA 91717 — Visual Command Environment",
-    "h1": "",
-    "body_words": 0,
-    "cards": 0,
-    "sections": 0,
-    "tabs": 0,
-    "buttons": 0,
-    "links": 0,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 0,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 0,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading"
     ]
   },
   {
@@ -5815,32 +5685,6 @@
       "READABILITY: 2 declarations at >=3px letter spacing",
       "FLEXIBILITY: 2 fixed widths >=320px",
       "DENSITY: 88 card-like surfaces"
-    ]
-  },
-  {
-    "page": "venture-pipeline.html",
-    "title": "Ω SYD OMEGA 91717 — Venture Pipeline",
-    "h1": "",
-    "body_words": 0,
-    "cards": 0,
-    "sections": 0,
-    "tabs": 0,
-    "buttons": 0,
-    "links": 0,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 0,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 0,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading"
     ]
   },
   {

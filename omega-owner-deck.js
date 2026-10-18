@@ -28,11 +28,11 @@
      deck really holds every page; scripts/tests/test_owner_deck.py fails if a
      page file is ever missing from nav + registry + this list. */
   var EXTRA = [
-    ['analytics-dashboard', 'ANALYTICS'], ['cohorts-dashboard', 'COHORTS'],
+    ['analytics-dashboard', 'ANALYTICS'],
     ['segmentation-dashboard', 'SEGMENTS'], ['predictions-dashboard', 'PREDICTIONS'],
-    ['monitoring-dashboard', 'MONITORING'], ['investor-dashboard', 'INVESTOR'],
-    ['investor-gate', 'INVESTOR GATE'], ['venture-pipeline', 'VENTURE PIPELINE'],
-    ['omega-visual-command', 'VISUAL COMMAND'], ['agent', 'AGENT'],
+    ['monitoring-dashboard', 'MONITORING'],
+   
+   
     ['verify-deployment', 'VERIFY DEPLOY'], ['verify-modules', 'VERIFY MODULES'],
     ['healthz', 'HEALTH'], ['account', 'SIGN IN'], ['pending', 'PENDING'],
     ['offline', 'OFFLINE'], ['visual-atlas', 'VISUAL ATLAS'], ['index', 'FRONT DOOR']

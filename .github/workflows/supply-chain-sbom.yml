@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write
 
 concurrency:
   group: supply-chain-${{ github.ref }}
@@ -17,6 +16,9 @@ concurrency:
 
 jobs:
   scan:
+    permissions:
+      contents: read
+      security-events: write
     name: Blocking supply-chain scan
     runs-on: ubuntu-24.04
     timeout-minutes: 30

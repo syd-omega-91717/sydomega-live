@@ -526,11 +526,10 @@ Only what changes what you do in the **first minutes** stays here:
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
 - **Production went DOWN 2026-10-06: Vercel blocked the Hobby account for usage**
   (new deploys refused, commit status "Account is blocked"; the site still serves #755 of
-  10-06 from cache). Cause: 42 production deploys in ~3.5 days (every `main` push, docs-only too, at
-  ~85 MB) plus a PR-triggered Chromium crawl of **production**. `ignoreCommand` is now
-  `scripts/vercel-ignore.sh` (skips commits that ship nothing — 28/45 replayed) and that crawl
-  no longer runs on PRs. Restoring service is the owner's dashboard action (upgrade, or wait
-  for the window). Previews are off (`deploymentEnabled`: `main` only). Read a deployment
+  10-06 from cache). Cause, per the dashboard: **Edge Requests**, not deploys — one page view costs 198–392
+  requests (measured), and a Playwright run hit production on every `main` push. Fixed: that
+  run is weekly, static assets cache 1 h, `sw.js` stops revalidating (repeat view 196 → 6). The dashboard
+  offers one way back: "Upgrade to Pro to resume service" — the owner's action. Previews are off (`deploymentEnabled`: `main` only). Read a deployment
   with `web_fetch_vercel_url`, never curl (`ssoProtection` 401s a bare `*.vercel.app`).
 - **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies every
   web-extension file into `public/` minus an **exclusion** list (`scripts/`, `supabase/`, `docs/`…),

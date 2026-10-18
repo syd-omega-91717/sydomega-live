@@ -30,7 +30,7 @@
    Registered by omega-sw-register.js, which bg.js injects.
    ========================================================================== */
 
-var CACHE_VERSION = 'v8';
+var CACHE_VERSION = 'v9';
 var CACHE_NAME    = 'omega-91717-' + CACHE_VERSION;
 
 /* Static shell only. Every entry must exist in the repository — the CI
@@ -148,6 +148,11 @@ self.addEventListener('fetch', function (e) {
      bg.js propagates on the next load rather than never. */
   e.respondWith(
     caches.match(req).then(function (cached) {
+      /* Every network fetch is a billed edge request (one page view loads
+         ~200-390 assets), so a cached copy younger than an hour is served
+         with no revalidation at all. */
+      var fetched = cached && Date.parse(cached.headers.get('date') || '');
+      if (cached && fetched && Date.now() - fetched < 36e5) return cached;
       var network = fetch(req)
         .then(function (res) {
           if (res && res.status === 200 && res.type === 'basic') {

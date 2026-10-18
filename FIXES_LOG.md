@@ -24378,3 +24378,54 @@ also picked up the core scripts `main` had not recorded.
 15 Oct, and every new deploy is refused. A standby Netlify project, `sydomega-v6mo`, was created.
 Deploying to it was stopped by the session's permission policy, so nothing was deployed and DNS
 is unchanged.
+
+## 2026-10-18 — The Vercel block was Edge Requests, and a page view cost ~300 of them
+
+**The diagnosis was wrong.** CLAUDE.md §8.2 blamed 42 production deploys in about 3.5 days.
+The owner's Vercel dashboard (screenshot, 2026-10-18) says otherwise: "Paused since Oct 6, 2026
+for **Edge Requests**. Your team exceeded the Hobby fair use limits. Upgrade to Pro to resume
+service."
+
+**Measured, 2026-10-18.** Headless Chromium against a local server, service workers blocked,
+counting requests to the origin:
+
+| page | requests per view | scripts |
+|---|---|---|
+| `index.html` | 208 | 168 |
+| `dashboard.html` | 392 | 335 |
+| `life.html` | 198 | 167 |
+| `profile.html` | 206 | 177 |
+| `academy.html` | 390 | 334 |
+
+So the Hobby budget of roughly 1M a month covers only a few thousand page views.
+
+**Three leaks, all closed here:**
+- **`browser-release-evidence.yml`.** It runs Playwright against live `https://sydomega.com`
+  (about 20 pages, `retries: 1`) on every push to `main` and daily. At 10–40 merges a day, that
+  is tens of thousands of requests a day against a budget of about 33k a day. It now runs weekly
+  (Monday 06:41 UTC) and on demand.
+- **No `Cache-Control` on static assets.** Only `manifest.json` had one, so every asset was
+  revalidated on every view. `vercel.json` now sends
+  `public, max-age=3600, stale-while-revalidate=86400` for
+  js/mjs/css/json/images/fonts/video/glb, and `no-cache` for `/sw.js`.
+- **`sw.js` revalidated every cached asset on every view.** Its "cache first" branch always
+  called `fetch(req)` in the background. It now serves a cached copy younger than an hour with no
+  network call. `CACHE_VERSION` v8 → v9.
+
+**Before/after, measured:** two views of `dashboard.html` with the service worker controlling,
+counting the requests that reach the server.
+
+| | first view | repeat view |
+|---|---|---|
+| `main`'s `sw.js` | 406 | 196 |
+| this branch | 380 | **6** |
+
+**Trade-off:** a returning member can run shared JS up to an hour old after a deploy. HTML stays
+network-first.
+
+**Not fixable from code:** the pause itself. The dashboard offers only "Upgrade to Pro". These
+changes keep the next window from being exhausted the same way.
+
+**Verified:**
+- `./scripts/ci-local.sh --all`: 39/39.
+- `unittest`: 800 OK.

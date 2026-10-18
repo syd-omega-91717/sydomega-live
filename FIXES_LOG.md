@@ -24254,3 +24254,10 @@ authority 0.002 was told they held apex rank, permanent access and verified-arch
   - "GATE 3 · SCHOLAR" overflowed the avatar badge. It now shows the name, with the number in the
     title and label.
 - **Regression gate:** `scripts/tests/test_profile_hero_truth.py`.
+
+**Also fixed in this change — `security.html` enroll button at 1.91:1.** `verify-runtime.js`
+failed `security.html`: the "ENROLL TOTP AUTHENTICATOR" button was 1.91:1, under the 3:1 floor.
+Rendered, its color was `rgb(229,236,240)` on gold. The page's own `button{color:var(--void)}`
+lives in sheet 0 and loses to a later platform sheet (§4). It is now `.btn.btn-fill`, the shared
+filled primary that CLAUDE.md prescribes, and the page passes. The readiness strip now links
+members to two-factor, so this button had to be legible.

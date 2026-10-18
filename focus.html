@@ -184,6 +184,7 @@
 <script type="module">
 const STORE_KEY = 'omega_focus_sessions';
 const DIST_KEY  = 'omega_focus_distractions';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 /* ── State ─── */
 let timerInterval = null;
@@ -447,7 +448,7 @@ function renderStats(){
   const maxT=tasks[0]?.[1]||1;
   document.getElementById('task-breakdown').innerHTML=tasks.map(([t,m])=>`
     <div style="margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.7);margin-bottom:3px"><span>${t}</span><span>${m}m</span></div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.7);margin-bottom:3px"><span>${esc(t)}</span><span>${esc(m)}m</span></div>
       <div style="height:3px;background:rgba(201,168,76,.08);border-radius:2px"><div style="height:3px;width:${m/maxT*100}%;background:rgba(201,168,76,.5);border-radius:2px"></div></div>
     </div>`).join('')||'<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)">NO SESSIONS YET</div>';
 }
@@ -472,9 +473,9 @@ function renderSessions(){
       const comp=Math.round(s.duration/s.target*100);
       const dt=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       return `<div class="session-card card">
-        <div class="s-task">${s.task}</div>
-        <div class="s-dur">${dur} · ${comp}%</div>
-        <div class="s-mode">${s.mode}</div>
+        <div class="s-task">${esc(s.task)}</div>
+        <div class="s-dur">${esc(dur)} · ${esc(comp)}%</div>
+        <div class="s-mode">${esc(s.mode)}</div>
         <div class="s-date">${dt}</div>
       </div>`;
     }).join('')
@@ -521,7 +522,7 @@ function renderDistractions(){
   document.getElementById('dist-list').innerHTML=dists.length?
     dists.map(d=>{
       const dt=new Date(d.ts).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      return `<div class="dist-item"><span class="dt">${d.type}</span><span class="dd">DURING: ${d.task} · ${dt}</span></div>`;
+      return `<div class="dist-item"><span class="dt">${esc(d.type)}</span><span class="dd">DURING: ${esc(d.task)} · ${esc(dt)}</span></div>`;
     }).join('')
     :'<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:16px 0">NO DISTRACTIONS LOGGED — STAY IN FLOW</div>';
 }

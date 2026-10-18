@@ -94,6 +94,8 @@
   }
 
   /* ── HOVER PANEL ──────────────────────────────────────────────── */
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
   function createPanel(){
     if(_panel) return;
     _panel=document.createElement('div');
@@ -117,10 +119,10 @@
     var page=obj.page||null;
     /* Quick actions */
     var actions=obj.actions||['OPEN','ANALYZE','HISTORY'];
-    _panel.innerHTML='<div class="oa-panel-title">'+title.toUpperCase()+'</div>'
-      +'<div class="oa-panel-meta">OWNER: '+owner.toUpperCase()+' &middot; STATE: <span style="color:'+(state==='live'?'var(--green,#3fb27f)':state==='dormant'?'var(--muted,#8a8676)':'var(--solar,#E2C86D)')+'">'+state.toUpperCase()+'</span></div>'
+    _panel.innerHTML='<div class="oa-panel-title">'+esc(title.toUpperCase())+'</div>'
+      +'<div class="oa-panel-meta">OWNER: '+esc(owner.toUpperCase())+' &middot; STATE: <span style="color:'+(state==='live'?'var(--green,#3fb27f)':state==='dormant'?'var(--muted,#8a8676)':'var(--solar,#E2C86D)')+'">'+esc(state.toUpperCase())+'</span></div>'
       +'<div class="oa-panel-insight" id="oa-insight-text">Analysing&hellip;</div>'
-      +'<div class="oa-actions">'+actions.map(function(a){return'<button class="oa-action-btn" data-action="'+a+'"'+(page?' data-page="'+page+'"':'')+'>'+(a==='OPEN'?'&#8594; ':'')+a+'</button>';}).join('')+'</div>';
+      +'<div class="oa-actions">'+actions.map(function(a){return'<button class="oa-action-btn" data-action="'+esc(a)+'"'+(page?' data-page="'+esc(page)+'"':'')+'>'+(a==='OPEN'?'&#8594; ':'')+esc(a)+'</button>';}).join('')+'</div>';
     /* Position */
     var rect=el.getBoundingClientRect();
     var ph=_panel.offsetHeight||140;

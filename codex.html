@@ -267,7 +267,7 @@ async function doSearch(query){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',i===0);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-discover');});
   var grid=document.getElementById('discoverGrid');
-  grid.innerHTML='<div class="empty"><span class="spin"></span>SEARCHING '+activeSource.toUpperCase()+'...</div>';
+  grid.innerHTML='<div class="empty"><span class="spin"></span>SEARCHING '+esc(activeSource.toUpperCase())+'...</div>';
   if(activeSource==='wikipedia')await searchWikipedia(query,grid);
   else if(activeSource==='arxiv')await searchArxiv(query,grid);
   else await searchOpenLibrary(query,grid);
@@ -357,12 +357,12 @@ function renderResults(items,grid){
     var srcClass=item.source==='wikipedia'?'wiki':item.source==='arxiv'?'arxiv':'ol';
     var srcLabel=item.source==='wikipedia'?'WIKIPEDIA':item.source==='arxiv'?'ARXIV':'OPEN LIBRARY';
     var isBm=bookmarks.find(function(b){return b.url===item.url;});
-    return '<div class="art-card card" data-idx="'+i+'" data-src="'+item.source+'">'+
+    return '<div class="art-card card" data-idx="'+i+'" data-src="'+esc(item.source)+'">'+
       '<span class="ac-source '+srcClass+'">'+srcLabel+'</span>'+
       '<div class="ac-title">'+esc(item.title)+'</div>'+
       (item.excerpt?'<div class="ac-excerpt">'+esc(item.excerpt.slice(0,150)+(item.excerpt.length>150?'...':''))+'</div>':'')+
       (item.authors?'<div class="ac-meta">by '+esc(item.authors)+(item.published?' · '+item.published:'')+'</div>':'')+
-      '<button class="ac-bookmark'+(isBm?' saved':'')+'" data-url="'+esc(item.url)+'" data-title="'+esc(item.title)+'" data-src="'+item.source+'">'+(isBm?'★ SAVED':'☆ SAVE')+'</button>'+
+      '<button class="ac-bookmark'+(isBm?' saved':'')+'" data-url="'+esc(item.url)+'" data-title="'+esc(item.title)+'" data-src="'+esc(item.source)+'">'+(isBm?'★ SAVED':'☆ SAVE')+'</button>'+
       '</div>';
   }).join('');
 

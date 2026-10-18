@@ -60,9 +60,21 @@
     return out;
   }
 
+  // Escaping for values interpolated into the emblem markup. esc() is a full
+  // HTML escape (sign names, colours). glyphText() is the same escape except
+  // that a well-formed character reference (&#x2648; &#937; &amp;) is kept, so
+  // callers that pass a glyph as an HTML entity still render the character --
+  // but no tag, attribute or quote can survive it.
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function glyphText(s){
+    return String(s==null?'':s)
+      .replace(/&(?!(?:#[0-9]+|#[xX][0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);)/g,'&amp;')
+      .replace(/[<>"']/g,function(c){return{'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  }
+
   function svg(sign) {
     var s = SIGN[sign] || SIGN.Aries;
-    return '<span class="oe-wrap" style="--oe:' + s.c + '" title="' + sign + '">'
+    return '<span class="oe-wrap" style="--oe:' + s.c + '" title="' + esc(sign) + '">'
       + '<svg viewBox="0 0 120 120" class="oe-svg" style="filter:drop-shadow(0 0 6px ' + s.c + '55)">'
       + '<g class="oe-spin"><circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 7" opacity="0.55"/></g>'
       + '<g class="oe-spinr"><circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.3"/>' + ticks(44) + '</g>'
@@ -77,7 +89,7 @@
   // opts: { locked:boolean } dims the ring and fades the glyph for locked items.
   function ring(glyph, color, opts) {
     opts = opts || {};
-    var c = color || '#C9A84C';
+    var c = esc(color || '#C9A84C');
     var dim = opts.locked ? '.28' : '1';
     var fontSize = String(glyph).length > 2 ? 26 : 40;
     return '<span class="oe-wrap" style="--oe:' + c + ';opacity:' + dim + '">'
@@ -85,7 +97,7 @@
       + '<g class="oe-spin"><circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 7" opacity="0.55"/></g>'
       + '<g class="oe-spinr"><circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.3"/>' + ticks(44) + '</g>'
       + '<circle class="oe-pulse" cx="60" cy="60" r="34" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>'
-      + '<text class="oe-glyph" x="60" y="61" text-anchor="middle" dominant-baseline="central" font-size="' + fontSize + '" fill="currentColor" style="filter:drop-shadow(0 0 5px ' + c + ')">' + glyph + '</text>'
+      + '<text class="oe-glyph" x="60" y="61" text-anchor="middle" dominant-baseline="central" font-size="' + fontSize + '" fill="currentColor" style="filter:drop-shadow(0 0 5px ' + c + ')">' + glyphText(glyph) + '</text>'
       + '</svg></span>';
   }
 

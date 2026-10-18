@@ -333,10 +333,10 @@ function renderHistList() {
   }
   el.innerHTML = _log.slice(0,30).map(e => `
     <div class="g-hist-entry">
-      <div class="g-he-date">${e.date}</div>
+      <div class="g-he-date">${esc(e.date)}</div>
       ${(e.items||[]).map(it=>`
         <div class="g-he-item">
-          <span class="g-he-cat">${it.cat}</span>
+          <span class="g-he-cat">${esc(it.cat)}</span>
           <span class="g-he-text">${esc(it.text)}</span>
         </div>`).join('')}
       ${e.note?`<div class="g-he-note">${esc(e.note)}</div>`:''}

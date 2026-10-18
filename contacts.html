@@ -230,6 +230,7 @@ canvas{display:block;width:100%;max-width:500px;margin:0 auto}
 <div data-page-emblem="contacts" style="margin:20px auto 0"></div>
 </div>
 <script>
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
@@ -343,23 +344,23 @@ function renderContacts(){
     var lastInt=interactions.filter(function(i){return i.contactId===c.id;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
     return '<div class="contact-card card '+(c.vip?'vip':'')+' '+(due?'overdue card-edge':'')+'"'+(due?' style="--card-accent:var(--red)"':'')+'>'
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
-      +'<div class="contact-avatar" style="background:'+c.color+'22;color:'+c.color+';border:1px solid '+c.color+'44">'+initials(c.name)+'</div>'
-      +'<button class="btn-red" onclick="deleteContact('+c.id+')" style="font-size:.5rem;padding:2px 6px">&#x2715;</button>'
+      +'<div class="contact-avatar" style="background:'+esc(c.color)+'22;color:'+esc(c.color)+';border:1px solid '+esc(c.color)+'44">'+esc(initials(c.name))+'</div>'
+      +'<button class="btn-red" onclick="deleteContact('+esc(JSON.stringify(c.id))+')" style="font-size:.5rem;padding:2px 6px">&#x2715;</button>'
       +'</div>'
-      +'<div class="contact-name">'+c.name+(c.vip?' &#11088;&#65038;':'')+'</div>'
-      +'<div class="contact-role">'+(c.role||'')+(c.company?' &middot; '+c.company:'')+'</div>'
+      +'<div class="contact-name">'+esc(c.name)+(c.vip?' &#11088;&#65038;':'')+'</div>'
+      +'<div class="contact-role">'+esc(c.role||'')+(c.company?' &middot; '+esc(c.company):'')+'</div>'
       +'<div class="contact-tags">'
-      +'<span class="tag" style="color:'+(TIER_COLORS[c.tier]||'#888')+'">'+c.tier.toUpperCase()+'</span>'
-      +'<span class="tag" style="color:'+(CAT_COLORS[c.cat]||'#888')+'">'+c.cat.toUpperCase()+'</span>'
-      +(c.tags||[]).slice(0,2).map(function(t){return '<span class="tag">'+t+'</span>';}).join('')
+      +'<span class="tag" style="color:'+(TIER_COLORS[c.tier]||'#888')+'">'+esc(c.tier.toUpperCase())+'</span>'
+      +'<span class="tag" style="color:'+(CAT_COLORS[c.cat]||'#888')+'">'+esc(c.cat.toUpperCase())+'</span>'
+      +(c.tags||[]).slice(0,2).map(function(t){return '<span class="tag">'+esc(t)+'</span>';}).join('')
       +'</div>'
       +'<div class="contact-meta">'
-      +(lastInt?'<span>LAST: '+lastInt.date+'</span>':'<span>NEVER CONTACTED</span>')
-      +'<span>TOUCH EVERY: '+c.freq+' DAYS</span>'
+      +(lastInt?'<span>LAST: '+esc(lastInt.date)+'</span>':'<span>NEVER CONTACTED</span>')
+      +'<span>TOUCH EVERY: '+esc(c.freq)+' DAYS</span>'
       +'</div>'
       +(due?'<div class="due-badge due-over" style="margin-top:6px">TOUCH OVERDUE</div>':'')
       +'<div class="contact-actions">'
-      +'<button class="btn-ghost btn-sm" onclick="quickLog('+c.id+')" style="font-size:.55rem">+ LOG TOUCH</button>'
+      +'<button class="btn-ghost btn-sm" onclick="quickLog('+esc(JSON.stringify(c.id))+')" style="font-size:.55rem">+ LOG TOUCH</button>'
       +'</div>'
       +'</div>';
   }).join('');

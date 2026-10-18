@@ -229,6 +229,7 @@
 <script src="omega-ui.js"></script>
 <script src="/omega-sparkline.js" defer></script>
 <script type="module">
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 const HABITS_KEY = 'omega_habits_v2';
 const LOGS_KEY   = 'omega_habit_logs_v2';
 const CAT_ICONS  = {mind:'⌬',body:'⚡︎',wealth:'◇',social:'⊛',spirit:'✨︎',craft:'⚒'};
@@ -549,15 +550,15 @@ function renderHabitCard(habit, showAll=false){
      5-habit account) — invalid HTML, and getElementById would silently return
      whichever came first. showAll is what already distinguishes the two lists,
      so it namespaces the id. Nothing reads this id; it exists for the DOM. */
-  return `<div class="habit-card card ${done?'done-today':''}" id="hc-${showAll?'all':'today'}-${habit.id}">
-    <div class="habit-card-header" onclick="toggleHabit('${habit.id}')">
+  return `<div class="habit-card card ${done?'done-today':''}" id="hc-${showAll?'all':'today'}-${esc(habit.id)}">
+    <div class="habit-card-header" onclick="toggleHabit(${esc(JSON.stringify(String(habit.id)))})">
       <div class="hc-check">${done?'✓':''}</div>
       <div class="hc-info">
-        <div class="hc-name">${icon} ${habit.name}</div>
-        <div class="hc-meta">${habit.cue} · <span class="freq-badge">${FREQ_LABEL[habit.freq]||habit.freq}</span> · ${rate}% rate</div>
+        <div class="hc-name">${icon} ${esc(habit.name)}</div>
+        <div class="hc-meta">${esc(habit.cue)} · <span class="freq-badge">${FREQ_LABEL[habit.freq]||esc(habit.freq)}</span> · ${rate}% rate</div>
       </div>
       <div class="hc-streak">△ ${streak}d</div>
-      ${showAll?`<button class="del-btn" onclick="event.stopPropagation();deleteHabit('${habit.id}')">✕</button>`:''}
+      ${showAll?`<button class="del-btn" onclick="event.stopPropagation();deleteHabit(${esc(JSON.stringify(String(habit.id)))})">✕</button>`:''}
     </div>
     <div class="habit-streak-row">
       ${dots.map(dot=>`<div class="streak-dot ${dot.isToday?'today':''}" title="${dot.frozen?'Streak freeze applied':''}" style="background:${dot.skip?'transparent':dot.frozen?'rgba(0,229,255,.55)':dot.done?'rgba(201,168,76,.7)':'rgba(201,168,76,.08)'};${dot.skip?'border:none':dot.frozen?'border:1px solid rgba(0,229,255,.8)':''}"></div>`).join('')}
@@ -565,11 +566,11 @@ function renderHabitCard(habit, showAll=false){
     ${window.OmegaStreakFreeze?`<div class="hc-freeze-note" style="padding:0 14px 8px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(0,229,255,.6)">❄ ${window.OmegaStreakFreeze.available(habit.id)} STREAK FREEZE${window.OmegaStreakFreeze.available(habit.id)===1?'':'S'} AVAILABLE</div>`:''}
     <div class="habit-expand">
       <div class="cue-effect-row">
-        <div class="cue-box"><div class="cb-label">CUE</div><div class="cb-val">${habit.cue||'—'}</div></div>
-        <div class="cue-box"><div class="cb-label">ROUTINE</div><div class="cb-val">${habit.routine||habit.name}</div></div>
-        <div class="cue-box"><div class="cb-label">REWARD</div><div class="cb-val">${habit.reward||'—'}</div></div>
+        <div class="cue-box"><div class="cb-label">CUE</div><div class="cb-val">${esc(habit.cue||'—')}</div></div>
+        <div class="cue-box"><div class="cb-label">ROUTINE</div><div class="cb-val">${esc(habit.routine||habit.name)}</div></div>
+        <div class="cue-box"><div class="cb-label">REWARD</div><div class="cb-val">${esc(habit.reward||'—')}</div></div>
       </div>
-      ${habit.identity?`<div style="margin-top:10px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);font-style:italic">"I am ${habit.identity}"</div>`:''}
+      ${habit.identity?`<div style="margin-top:10px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);font-style:italic">"I am ${esc(habit.identity)}"</div>`:''}
     </div>
   </div>`;
 }
@@ -600,7 +601,7 @@ function renderChain(){
   const chainHtml=habits.map((h,i)=>`
     <div class="chain-node">
       <div class="cn-num">${i+1}</div>
-      <div class="cn-name">${CAT_ICONS[h.cat]||'●'} ${h.name}</div>
+      <div class="cn-name">${CAT_ICONS[h.cat]||'●'} ${esc(h.name)}</div>
       ${i<habits.length-1?'<div class="cn-arrow">→</div>':''}
     </div>`).join('');
   document.getElementById('chain-list').innerHTML=chainHtml||'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">NO DAILY HABITS YET</div>';
@@ -629,7 +630,7 @@ function renderHeatmap(){
   const today=new Date();today.setHours(0,0,0,0);
   container.innerHTML=habits.map(h=>`
     <div style="margin-bottom:16px">
-      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.6);margin-bottom:6px">${CAT_ICONS[h.cat]||'●'} ${h.name}</div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.6);margin-bottom:6px">${CAT_ICONS[h.cat]||'●'} ${esc(h.name)}</div>
       <div style="display:flex;gap:3px;flex-wrap:wrap">
         ${Array.from({length:days},(_,i)=>{
           const d=new Date(today);d.setDate(today.getDate()-(days-1-i));

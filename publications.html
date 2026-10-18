@@ -138,6 +138,7 @@ var pubs=JSON.parse(localStorage.getItem(PK)||'[]');
 
 var TYPE_COL={book:'#C9A84C',paper:'#00E5FF',article:'#4CAF50',own:'#9B6BF0'};
 var STATUS_COL={read:'var(--green)',reading:'var(--gold)',queue:'var(--muted)'};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function calcKPIs(){
   document.getElementById('k-total').textContent=pubs.length;
@@ -164,14 +165,14 @@ function renderCatalog(){
     var tc=TYPE_COL[p.type]||'#888';var sc=STATUS_COL[p.status]||'var(--muted)';
     return '<div style="border:1px solid var(--line);border-left:3px solid '+tc+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px">'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+tc+';border:1px solid '+tc+';padding:1px 5px">'+((p.type||'').toUpperCase())+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+sc+';padding:1px 5px">'+((p.status||'').toUpperCase())+'</div>'
-      +(p.domain?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+p.domain+'</div>':'')
+      +'<div style="font-family:var(--M);font-size:12px;color:'+tc+';border:1px solid '+tc+';padding:1px 5px">'+esc((p.type||'').toUpperCase())+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+sc+';padding:1px 5px">'+esc((p.status||'').toUpperCase())+'</div>'
+      +(p.domain?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(p.domain)+'</div>':'')
       +(p.rating?'<div style="font-size:12px;color:#FFD700;margin-left:auto">'+STARS[parseInt(p.rating)]+'</div>':'')
       +'</div>'
-      +'<div style="font-size:13px;font-weight:600">'+p.title+'</div>'
-      +(p.author?'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px">'+p.author+(p.year?' &middot; '+p.year:'')+'</div>':'')
-      +(p.takeaway?'<div style="font-size:12px;opacity:.75;margin-top:6px;border-top:1px solid var(--line);padding-top:6px">&#9737; '+p.takeaway+'</div>':'')
+      +'<div style="font-size:13px;font-weight:600">'+esc(p.title)+'</div>'
+      +(p.author?'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px">'+esc(p.author)+(p.year?' &middot; '+esc(p.year):'')+'</div>':'')
+      +(p.takeaway?'<div style="font-size:12px;opacity:.75;margin-top:6px;border-top:1px solid var(--line);padding-top:6px">&#9737; '+esc(p.takeaway)+'</div>':'')
       +'</div>';
   }).join('');
 }

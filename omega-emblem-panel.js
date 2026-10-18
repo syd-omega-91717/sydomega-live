@@ -47,6 +47,21 @@
     if (!markup) return;
     var parsed = new DOMParser().parseFromString(String(markup), 'image/svg+xml');
     if (parsed.querySelector('parsererror')) return;
+    // The markup is OmegaEmblem's own (its interpolated values are escaped at
+    // source), but strip anything executable before it is adopted into the
+    // page anyway: script/foreignObject elements, on* handlers, and
+    // javascript:/data: links.
+    Array.prototype.slice.call(parsed.querySelectorAll('script,foreignObject,iframe,object,embed')).forEach(function (n) {
+      if (n.parentNode) n.parentNode.removeChild(n);
+    });
+    Array.prototype.slice.call(parsed.getElementsByTagName('*')).forEach(function (n) {
+      Array.prototype.slice.call(n.attributes).forEach(function (at) {
+        var nm = at.name.toLowerCase();
+        if (nm.indexOf('on') === 0 || ((nm === 'href' || nm === 'xlink:href' || nm === 'src') && /^\s*(?:javascript|data|vbscript):/i.test(at.value))) {
+          n.removeAttribute(at.name);
+        }
+      });
+    });
     Array.prototype.slice.call(parsed.documentElement.children).forEach(function (node) {
       parent.appendChild(document.importNode(node, true));
     });

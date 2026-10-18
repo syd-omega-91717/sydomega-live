@@ -290,7 +290,7 @@ function updateDeckSelector() {
   }
   sel.innerHTML = _decks.map(d => {
     const due = dueCount(d.id);
-    return `<option value="${d.id}">${d.name} (${due} due)</option>`;
+    return `<option value="${esc(d.id)}">${esc(d.name)} (${due} due)</option>`;
   }).join('');
   if (!_activeDeckId || !_decks.find(d=>d.id===_activeDeckId)) {
     _activeDeckId = _decks[0].id;
@@ -408,7 +408,7 @@ function renderDeckList() {
   el.innerHTML = _decks.map(d => {
     const total = _cards.filter(c=>c.deckId===d.id).length;
     const due = dueCount(d.id);
-    return `<div class="deck-card card ${_activeDeckId===d.id?'selected':''}" onclick="selectDeck('${d.id}')">
+    return `<div class="deck-card card ${_activeDeckId===d.id?'selected':''}" data-id="${esc(d.id)}" onclick="selectDeck(this.dataset.id)">
       <div class="deck-hd">
         <span class="deck-name">${esc(d.name)}</span>
         <span class="deck-count">${total} CARDS</span>
@@ -416,8 +416,8 @@ function renderDeckList() {
       </div>
       ${d.desc?`<div style="font-family:var(--M);font-size:12px;color:var(--dim)">${esc(d.desc)}</div>`:''}
       <div style="margin-top:8px;display:flex;gap:6px">
-        <button class="d-btn" style="padding:4px 10px;font-size:12px" onclick="event.stopPropagation();editDeck('${d.id}')">EDIT</button>
-        <button class="d-btn" style="padding:4px 10px;font-size:12px;color:rgba(192,57,43,.6)" onclick="event.stopPropagation();delDeck('${d.id}')">DELETE</button>
+        <button class="d-btn" style="padding:4px 10px;font-size:12px" data-id="${esc(d.id)}" onclick="event.stopPropagation();editDeck(this.dataset.id)">EDIT</button>
+        <button class="d-btn" style="padding:4px 10px;font-size:12px;color:rgba(192,57,43,.6)" data-id="${esc(d.id)}" onclick="event.stopPropagation();delDeck(this.dataset.id)">DELETE</button>
       </div>
     </div>`;
   }).join('');
@@ -502,9 +502,9 @@ function renderCardList() {
     return `<div class="card-row">
       <div style="flex:1">
         <div class="card-row-front">${esc(c.front.slice(0,80))}${c.front.length>80?'…':''}</div>
-        <div class="card-row-meta">INT:${c.interval||0}d  EF:${(c.ef||2.5).toFixed(1)}  DUE:${due}  REPS:${c.reps||0}</div>
+        <div class="card-row-meta">INT:${esc(c.interval||0)}d  EF:${(c.ef||2.5).toFixed(1)}  DUE:${esc(due)}  REPS:${esc(c.reps||0)}</div>
       </div>
-      <button class="c-del" onclick="delCard('${c.id}')">×</button>
+      <button class="c-del" data-id="${esc(c.id)}" onclick="delCard(this.dataset.id)">×</button>
     </div>`;
   }).join('');
 }

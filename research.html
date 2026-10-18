@@ -215,6 +215,7 @@ document.addEventListener('DOMContentLoaded',function(){renderLabs();renderDisco
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 async function boot(){
   var sess=(await sb.auth.getSession()).data.session;
   if(!sess){window.location.href='/account.html';return;}
@@ -241,7 +242,7 @@ async function boot(){
     res.style.display='block';res.style.color='var(--solar)';res.textContent='SUBMITTING HYPOTHESIS...';
     var r=await sb.from('research_hypotheses').insert({domain:domain,title:title,body:body});
     if(r.error){res.style.color='var(--crim)';res.textContent='Could not submit: '+r.error.message;return;}
-    res.style.color='var(--green)';res.innerHTML='<b>SUBMITTED.</b> Your hypothesis has been recorded under '+domain+'. Automated Oracle review is not live yet &mdash; this is a real, saved submission.';
+    res.style.color='var(--green)';res.innerHTML='<b>SUBMITTED.</b> Your hypothesis has been recorded under '+esc(domain)+'. Automated Oracle review is not live yet &mdash; this is a real, saved submission.';
     var{count:total}=await sb.from('research_hypotheses').select('id',{count:'exact',head:true});
     var k=document.getElementById('kpi-hyp');if(k)k.textContent=total||0;
     document.getElementById('h-title').value='';document.getElementById('h-body').value='';

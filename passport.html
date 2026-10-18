@@ -264,9 +264,9 @@ function renderPassport(){
   }
   var nm=(p.name||'SOVEREIGN').toUpperCase().replace(/\s+/g,'<');
   var id2=(p.id||'OMEGA000000').toUpperCase().replace(/-/g,'');
-  document.getElementById('pp-mrz').innerHTML='P&lt;OMEGA'+nm+'&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>'+id2+'OMEGA9100101M2600101&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;6';
+  document.getElementById('pp-mrz').innerHTML='P&lt;OMEGA'+esc(nm)+'&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>'+esc(id2)+'OMEGA9100101M2600101&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;6';
   var sp=document.getElementById('pp-stamps-preview');
-  sp.innerHTML=stamps.slice(0,6).map(function(s){return '<div class="pp-stamp" style="border-color:'+s.color+';color:'+s.color+'">'+s.icon+'</div>';}).join('');
+  sp.innerHTML=stamps.slice(0,6).map(function(s){return '<div class="pp-stamp" style="border-color:'+esc(s.color)+';color:'+esc(s.color)+'">'+esc(s.icon)+'</div>';}).join('');
 }
 
 function loadEditForm(){

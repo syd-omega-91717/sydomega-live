@@ -270,7 +270,7 @@ function addTag(){
 function removeTag(t){currentTags=currentTags.filter(function(x){return x!==t;});renderCurrentTags();}
 function renderCurrentTags(){
   var el=document.getElementById('active-tags');
-  el.innerHTML=currentTags.map(function(t){return '<div class="active-tag">'+t+' <span class="rm" onclick="removeTag(\''+t+'\')">×</span></div>';}).join('');
+  el.innerHTML=currentTags.map(function(t){return '<div class="active-tag">'+esc(t)+' <span class="rm" onclick="removeTag('+esc(JSON.stringify(t))+')">×</span></div>';}).join('');
 }
 
 function ins(before,after){
@@ -335,7 +335,7 @@ function renderTagCloud(){
   var tags=Object.entries(counts).sort(function(a,b){return b[1]-a[1];}).slice(0,20);
   if(!tags.length){cloud.innerHTML='';return;}
   cloud.innerHTML=tags.map(function(e){var t=e[0],c=e[1];
-    return '<div class="filter-tag'+(activeTagFilter===t?' active':'')+'" onclick="filterByTag(\''+t+'\')" title="'+c+' notes">'+t+' <small>'+c+'</small></div>';
+    return '<div class="filter-tag'+(activeTagFilter===t?' active':'')+'" onclick="filterByTag('+esc(JSON.stringify(t))+')" title="'+c+' notes">'+esc(t)+' <small>'+c+'</small></div>';
   }).join('');
 }
 
@@ -361,14 +361,14 @@ function renderNotes(){
 function noteCard(n){
   var col=CAT_COLORS[n.cat]||'#00E5FF';
   var prev=n.body.slice(0,180).replace(/[*#`_>]/g,'');
-  return '<div class="note-card card card-edge'+(n.pinned?' pinned':'')+'" style="--card-accent:'+col+'" onclick="viewNote(\''+n.id+'\')">'
-    +'<button class="del-btn" onclick="delNote(event,\''+n.id+'\')">DEL</button>'
-    +'<button class="pin-btn'+(n.pinned?' pinned':'')+'" onclick="togglePin(event,\''+n.id+'\')">'+(n.pinned?'★':'☆')+'</button>'
+  return '<div class="note-card card card-edge'+(n.pinned?' pinned':'')+'" style="--card-accent:'+col+'" onclick="viewNote('+esc(JSON.stringify(n.id))+')">'
+    +'<button class="del-btn" onclick="delNote(event,'+esc(JSON.stringify(n.id))+')">DEL</button>'
+    +'<button class="pin-btn'+(n.pinned?' pinned':'')+'" onclick="togglePin(event,'+esc(JSON.stringify(n.id))+')">'+(n.pinned?'★':'☆')+'</button>'
     +'<div class="note-title">'+esc(n.title)+'</div>'
     +'<div class="note-preview">'+esc(prev)+(n.body.length>180?'…':'')+'</div>'
     +'<div class="note-meta">'
     +'<span class="note-date">'+new Date(n.updated||n.created).toLocaleDateString()+'</span>'
-    +'<span class="tag-chip" style="border-color:'+col+';color:'+col+'">'+n.cat.toUpperCase()+'</span>'
+    +'<span class="tag-chip" style="border-color:'+col+';color:'+col+'">'+esc(n.cat.toUpperCase())+'</span>'
     +n.tags.map(function(t){return '<span class="tag-chip">'+esc(t)+'</span>';}).join('')
     +'</div></div>';
 }
@@ -397,11 +397,11 @@ function viewNote(id){
     '<div class="note-view">'
     +'<div class="note-view-title" style="color:'+col+'">'+esc(n.title)+'</div>'
     +'<div style="font-size:12px;color:var(--muted);font-family:\'Courier New\',monospace;">'
-    +new Date(n.created).toLocaleString()+' · '+wordCount(n.body)+' words · '+n.cat.toUpperCase()
+    +new Date(n.created).toLocaleString()+' · '+wordCount(n.body)+' words · '+esc(n.cat.toUpperCase())
     +n.tags.map(function(t){return ' · <span class="tag-chip">'+esc(t)+'</span>';}).join('')+'</div>'
     +'<div class="note-view-body">'+html+'</div>'
     +'<div class="note-view-actions">'
-    +'<button class="btn-secondary" onclick="editNote(\''+id+'\')">EDIT</button>'
+    +'<button class="btn-secondary" onclick="editNote('+esc(JSON.stringify(id))+')">EDIT</button>'
     +'<button class="btn-secondary" onclick="document.getElementById(\'view-area\').innerHTML=\'\'">CLOSE</button>'
     +'</div></div>';
   document.getElementById('view-area').scrollIntoView({behavior:'smooth'});

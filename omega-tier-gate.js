@@ -57,14 +57,16 @@
   st.id = 'otg-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
 
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
   function seal(el, tierName, price, label) {
     if (el.querySelector(':scope > .otg-seal')) return;
     el.classList.add('otg-lock');
     var s = document.createElement('div');
     s.className = 'otg-seal';
     s.innerHTML = '<div class="ic">&#937;</div>'
-      + '<div class="rq">' + (tierName ? tierName.toUpperCase() + ' TIER' : 'HIGHER TIER') + ' REQUIRED</div>'
-      + '<div class="hint">' + (label || '') + '</div>'
+      + '<div class="rq">' + (tierName ? esc(tierName.toUpperCase()) + ' TIER' : 'HIGHER TIER') + ' REQUIRED</div>'
+      + '<div class="hint">' + esc(label || '') + '</div>'
       + '<div class="hint"><a href="/subscriptions.html">view membership tiers &rarr;</a></div>';
     el.appendChild(s);
   }
@@ -73,7 +75,7 @@
     if (el.querySelector(':scope > .otg-tag')) return;
     var t = document.createElement('span');
     t.className = 'otg-tag';
-    t.innerHTML = '<i></i>' + (tierName ? tierName.toUpperCase() : 'TIER') + ' FEATURE';
+    t.innerHTML = '<i></i>' + (tierName ? esc(tierName.toUpperCase()) : 'TIER') + ' FEATURE';
     t.title = 'Included from the ' + (tierName || '') + ' tier'
             + (price ? ' ($' + price + ')' : '')
             + '. Enforcement begins when the economy activates.';

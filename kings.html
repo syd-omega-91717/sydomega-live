@@ -95,6 +95,7 @@
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 var KINGS_DATA=[
   {name:'Alexander the Great',era:'356–323 BC',realm:'Macedon / Persia',color:'#C9A84C',virtue:'Vision &amp; Conquest',lesson:'Relentless expansion collapses without institutional depth. Build systems, not just campaigns.',desc:'Conquered the known world by 30. Undefeated in battle. Student of Aristotle. Forged a multicultural empire from Greece to India. His death without succession plan caused its fragmentation — the sovereign\'s ultimate lesson.'},
@@ -152,7 +153,7 @@ window.loadKingBio=function(i){
       var extract=(data.extract||'No summary available.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       var link=(data.content_urls&&data.content_urls.desktop&&data.content_urls.desktop.page)||('https://en.wikipedia.org/wiki/'+encodeURIComponent(k.name.replace(/ /g,'_')));
       el.innerHTML='<div style="font-size:12px;line-height:1.7;opacity:.8;margin-top:4px">'+extract+'</div>'
-        +'<a href="'+link+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
+        +'<a href="'+esc(link)+'" target="_blank" rel="noopener" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:6px">FULL ARTICLE &#x2192;</a>';
     })
     .catch(function(){
       el.innerHTML='<span style="font-family:var(--M);font-size:12px;color:var(--crim)">Could not reach Wikipedia.</span> '
@@ -168,12 +169,12 @@ function renderStudyNotes(){
     var col=CAT_COL[n.cat]||'var(--gold)';
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
-      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+n.king+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+n.cat.toUpperCase()+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+n.date+'</div>'
+      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+esc(n.king)+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+esc(n.cat.toUpperCase())+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+esc(n.date)+'</div>'
       +'</div>'
-      +'<div style="font-size:13px;font-weight:600;margin-bottom:4px">'+n.lesson+'</div>'
-      +(n.notes?'<div style="font-size:12px;opacity:.75">'+n.notes+'</div>':'')
+      +'<div style="font-size:13px;font-weight:600;margin-bottom:4px">'+esc(n.lesson)+'</div>'
+      +(n.notes?'<div style="font-size:12px;opacity:.75">'+esc(n.notes)+'</div>':'')
       +'</div>';
   }).join('');
 }

@@ -24168,3 +24168,45 @@ OWNER. `queue.html`'s counters were checked and are not fabricated: they read `O
 - **Doors:** FORGE 65 pts, EXAMS 1/12.
 - **Errors and layout:** 0 page errors, no overflow.
 - **Regression gate:** `scripts/tests/test_no_click_credit.py`.
+
+## 2026-10-18 — VAULT: net worth and cash flow from trackers that never shared a number
+
+**Survey.** VAULT held 20 pages.
+- **Seven are personal-finance trackers, each with its own browser store:** wallet, investment,
+  treasury, revenue, budget, expenses and wealth. `budget` and `expenses` are two separate
+  budget stores. `wealth.html` warns: "If an asset is entered there and here, it is counted
+  twice".
+- **The platform-economy pages are dormant or labelled.** Payments says "UNVERIFIED", the ad
+  network says "dormant", the tokens flag is off, and income's projections are "illustrative".
+- **Two are not money.** `sigil` (identity) moves to IDENTITY and `sovereign-covenant`
+  (governance) to ORDER.
+- **Host.** `invest.html` already called itself the "single entry point", so the core lives
+  there and VAULT's host moves from `vault` (the platform reserve) to `invest`.
+
+**Change: `omega-vault-core.js` on `invest.html`.** Two columns, NET WORTH and CASH FLOW for
+this month:
+- **Sources.** Each source row is computed from the field names its own page writes:
+  - `qty*price` for investments;
+  - treasury assets plus reserves;
+  - wealth classes net of liabilities;
+  - revenue streams with `status==='active'`;
+  - this month's expense and income entries;
+  - this month's budget entries.
+- **No blind sum.** Each row is a toggle. The sum covers only the trackers the member ticks, and
+  the choice is remembered in `omega_vault_sources`. A note appears whenever two or more count.
+- **Honest empties and currencies.** An empty store reads "no entries", never $0 shown as a
+  balance. Mixed wallet currencies are labelled "as entered".
+- **Navigation.** The seven trackers are `'folded'` and reachable from the core's links. VAULT
+  is BUILT.
+
+**Verified (headless, 1440 and 375, all seven stores seeded):**
+- **Sources:** wallet $6,000 (USD/EUR noted), investments $2,500, treasury $5,500, wealth $4,500
+  (net of a $4,000 loan), revenue $4,000 (a planned stream excluded), expenses −$900 (a 2020
+  entry excluded), budget $2,300.
+- **Toggles:** unticking wealth and budget moves $18,500 → $14,000 and $5,400 → $3,100, and the
+  sums survive a reload.
+- **Safety:** an `<img onerror>` asset name stays text.
+- **Errors and layout:** 0 page errors, no overflow.
+
+**Not done.** The seven stores are still browser-only. Merging them into Postgres means moving
+personal financial data, so it needs an owner-approved plan, as LIFE had.

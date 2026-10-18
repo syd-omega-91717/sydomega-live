@@ -24475,3 +24475,24 @@ expected: Vercel Web Analytics stops when the site leaves Vercel.
 **Not done here:** the cutover itself. Creating the Pages project, moving the nameservers and
 attaching the domain are owner dashboard actions, and production DNS changes only on the owner's
 go.
+
+## 2026-10-18 — Cloudflare Pages deploys from GitHub Actions; the owner's setup is two secrets
+
+The owner asked for the cutover to be done on their behalf. The Cloudflare connector in this session
+can reach the account (`workers_list` → 0 Workers). It exposes only D1, KV, R2, Hyperdrive and
+docs: no Pages, zone or DNS tools. The domain's registrar is reachable from nowhere in this session.
+
+So `.github/workflows/cloudflare-pages.yml` does the Cloudflare part from CI. On each push to `main`
+it:
+- builds with `scripts/vercel-build.sh`
+- creates the `sydomega` Pages project once, if it is absent
+- deploys `public/` by direct upload with `wrangler@4.151.1`
+- smoke-tests `/` for 200 and a CSP header
+
+Doc-only commits are skipped by `paths-ignore`. The concurrency group is fixed and cancels in
+progress. Actions are pinned to the SHAs the other workflows use. Without `CLOUDFLARE_API_TOKEN`
+and `CLOUDFLARE_ACCOUNT_ID` it skips with a notice and stays green.
+
+`workflow-contract-lint.py` and `workflow-contract.py` pass. `docs/CLOUDFLARE_PAGES_CUTOVER.md`
+step 1 is now "add two secrets". Steps 3–5 (zone, nameservers, custom domain) stay with the
+owner: a registrar change cannot be made from here.

@@ -24068,3 +24068,56 @@ RPCs it rewrites (`omega_record_simulation_run`, `omega_record_world_action`) ca
 `test_member_rpc_write_guardrails.py` asserts the live state, and
 `docs/OMEGA_SIMULATION_ARENA.md` says applied. The applier is not recorded (`created_by` is
 null).
+
+## 2026-10-18 — ACADEMY: study, test, courses and books on one surface
+
+**Survey first.** The 13 pages assigned to ACADEMY in `config/page-cores.json` were read
+before anything was designed:
+- **Three are not learning.** `architect.html` is static developer documentation, so it moves to
+  OWNER. `clarity.html` (a morning routine) and `focus.html` (a deep-work timer) move to LIFE.
+- **Three spaced-repetition decks never met.** These are `omega_fc_cards` (flashcard.html),
+  `omega_vocab` (vocabulary.html) and `omega_exam` (exam.html's FLASHCARDS tab). `omega-srs.js`
+  is already the single scheduler, and `omega-review.js` already interleaved the first two. The
+  third deck was outside the queue.
+- **Live data (2026-10-18):**
+  - `lesson_completions` 18, `certificates` 24 and `exam_results` 3, all from 2 members.
+  - The `academy_*` catalogue: 1 published course, 2 modules, 4 lessons, 1 exam, 0 enrollments.
+  - Writes are owner-only. `academy_questions.correct_answer` is column-revoked from
+    `authenticated` and `anon` (`has_column_privilege` = false), so the server-graded exam's key
+    does not leak.
+
+**Change:**
+- **`omega-review.js`.** `omega_exam` joins the queue as a third deck. It uses omega-srs.js's
+  `'word'` fields, as `exam.html` itself grades it. A card with no `nextReview` counts as due,
+  as `exam.html`'s `isDue()` treats it. The three decks interleave. The queue dispatches
+  `omega-review:closed`, so hosts can refresh their counts however it was dismissed (Escape
+  included).
+- **`omega-academy-core.js` on `academy.html`.** Four stat tabs (REVIEW / TEST / COURSES /
+  SHELF), each opening one panel, with nothing re-implemented:
+  - REVIEW opens the queue, with a 14-day due forecast drawn from the three stores.
+  - TEST mounts `omega-exam-engine.js` inline: the same bank, best scores and `complete_task`
+    credit.
+  - COURSES reads `academy_courses` plus the member's own `academy_enrollments`.
+  - SHELF reads the `reading`/`queued`/`completed` books and the library's want list.
+  - The existing 108-card catalogue stays below.
+- **Navigation.** `exam`, `flashcard`, `vocabulary`, `library` and `reading` are `'folded'` in
+  `nav.js`, and ACADEMY is BUILT. `courses`, `mentors`, `principles` and `skills` stay in the
+  sidebar, because no part of the core does their job yet.
+
+**Verified (headless, 1440 and 375 mobile, all three decks seeded):**
+- **Counts:** REVIEW 4 due (2 cards, 1 word, 1 exam card); TEST 1/12 sectors at 65% average;
+  COURSES 1/2 at 50%; SHELF 1 reading, 1 finished, 2 queued.
+- **Forecast:** 4, 0, 1, 1, 0, 1, … matches the seeded due dates.
+- **One session interleaves card → word → exam card → card.** Each grade is written to its
+  own store: the exam card gets `nextReview` +1 day and `repetitions` 1, and `omega_vocab_log`
+  gets +1. REVIEW then reads 0.
+- **Safety:** a `<img onerror>` card front stays text.
+- **Exams:** the engine mounts 12 tiles, and Math shows its stored 80%.
+- **Errors and layout:** 0 page errors, no overflow.
+- **Label fix:** the TEST tile first read "1/12 passed" directly above the catalogue's
+  "0 EXAMS PASSED". They count different things (sectors at ≥70% versus catalogue
+  `task_completions`), so the tile now says "sectors passed".
+
+**Not done:** every deck, best score and book still lives in `localStorage`, mirrored up only
+by `omega-member-state.js`. Moving them to Postgres is a schema change and needs a plan for
+owner approval, as LIFE had.

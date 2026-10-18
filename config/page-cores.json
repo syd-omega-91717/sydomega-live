@@ -101,8 +101,8 @@
     {
       "core": "academy",
       "host": "academy",
-      "state": "PLANNED",
-      "is": "Learn: courses, exams, flashcards, vocabulary, library, reading, mentors",
+      "state": "BUILT",
+      "is": "Learn: one review queue over every deck, the 12-sector exams inline, courses and the reading shelf",
       "pages": [
         "academy",
         "courses",
@@ -113,10 +113,7 @@
         "reading",
         "mentors",
         "principles",
-        "skills",
-        "clarity",
-        "focus",
-        "architect"
+        "skills"
       ]
     },
     {
@@ -159,7 +156,9 @@
         "stoic",
         "oath",
         "targets",
-        "weekly"
+        "weekly",
+        "clarity",
+        "focus"
       ]
     },
     {
@@ -337,7 +336,8 @@
         "omega-visual-command",
         "verify-deployment",
         "verify-modules",
-        "agent"
+        "agent",
+        "architect"
       ]
     }
   ],

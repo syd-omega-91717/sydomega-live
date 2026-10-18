@@ -20,7 +20,9 @@ project's own established convention (security/data-integrity first).
   Target: **22 pages** — 13 cores + 9 system, every page assigned in `config/page-cores.json`
   (gated by `scripts/tests/test_page_cores.py`). BUILT: COSMOS (`orrery.html`), COMMAND
   (`dashboard.html` + `omega-command-dock.js`), LADDER (`ladder.html`; also ended a second,
-  divergent gate curve in 22 files), INTEL (`insight.html`, six graph pages as four lenses). LIFE is
+  divergent gate curve in 22 files), INTEL (`insight.html`, six graph pages as four lenses), ACADEMY (`academy.html`: one
+  review queue over three decks, the 12-sector exams inline, courses, the reading shelf; five
+  pages folded; `architect` moved to OWNER, `clarity`/`focus` to LIFE). LIFE is
   **built and dormant**: `public.life_entries` is live (`20261017234857`, own rows only, no
   owner read) and `life.html` carries the daily log (`omega-life-log.js`), but writes stay
   disabled until the owner sets `platform_settings.life_core_enabled`. Its 17 tracker pages stay

@@ -14,6 +14,18 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **POSTPONED 2026-10-18 — blocked on credits, resume when renewed.** Each item is parked
+  behind one switch and nothing else depends on it, so renewing is a one-line change:
+  - **Vercel promotion.** Hobby team blocked for Edge Requests since 2026-10-06. Switch:
+    `VERCEL_PROMOTION_POSTPONED` in `.github/workflows/vercel-production.yml`. Set it to
+    `'false'` and add `VERCEL_TOKEN` to resume. While it is `'true'`, a `main` push proves that
+    sydomega.com (Cloudflare Pages) serves that commit, and fails if not. The red "Account is
+    blocked" status on PRs comes from the Vercel GitHub App, so the repo cannot silence it.
+    Disconnecting the repo in Vercel stops it, and that is reversible.
+  - **Codex PR reviews.** Every run fails on the usage limit. Treat its "Failed" summary as
+    no review, not as a finding.
+  - **Supabase leaked-password protection.** An Auth dashboard toggle (issue #375). It may need
+    the Pro plan.
 - **OPEN 2026-10-17 — page sprawl against real use.** 239 pages; **70** opened ever
   (`platform_events`), ~70% of views on `dashboard`, one account behind all of them; **202 of
   281** public tables hold 0 rows; `client_errors` (8,972) outnumbers `platform_events` (7,977).

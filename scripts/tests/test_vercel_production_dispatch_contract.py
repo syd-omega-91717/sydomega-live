@@ -106,5 +106,33 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn("node scripts/omega-release-manifest.mjs --check .vercel/output/static/.well-known/omega-release.json", WORKFLOW)
 
 
+    def test_postponed_promotion_still_proves_the_live_site(self):
+        """While Vercel credits are not renewed, promotion is postponed by one
+        flag -- and a main push must then prove sydomega.com serves the commit,
+        so postponing never turns into "nothing checks production"."""
+        self.assertIn("VERCEL_PROMOTION_POSTPONED:", WORKFLOW)
+        self.assertIn("To resume Vercel: set 'false' and configure VERCEL_TOKEN.", WORKFLOW)
+        self.assertIn(
+            "if: needs.credentials.outputs.ready != 'true' && "
+            "env.VERCEL_PROMOTION_POSTPONED != 'true'",
+            WORKFLOW,
+        )
+        live = WORKFLOW.index("Live site serves this commit (Cloudflare Pages)")
+        block = WORKFLOW[live:WORKFLOW.index("Controlled state when token is unavailable")]
+        self.assertIn('EXPECTED_RELEASE_SHA="$GITHUB_SHA" bash scripts/vercel-production-smoke.sh', block)
+        self.assertIn('git merge-base --is-ancestor "$GITHUB_SHA" "$served"', block)
+        self.assertIn("exit 1", block)
+
+    def test_build_stamps_each_deploy_into_the_service_worker(self):
+        """A fixed sw.js CACHE_VERSION kept returning members on the previous
+        deploy; the build must make every deploy a byte-different sw.js."""
+        build = (ROOT / "scripts/vercel-build.sh").read_text(encoding="utf-8")
+        sw = (ROOT / "sw.js").read_text(encoding="utf-8")
+        self.assertEqual(sw.count("\nvar CACHE_VERSION = 'v9';\n"), 1)
+        self.assertIn("VERCEL_BUILD=FAIL sw_stamp_anchor", build)
+        self.assertIn("VERCEL_BUILD=FAIL sw_stamp_missing", build)
+        self.assertIn("cache: 'reload'", sw)
+        self.assertIn("fetch(req, { cache: 'no-cache' })", sw)
+
 if __name__ == "__main__":
     unittest.main()

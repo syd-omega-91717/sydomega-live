@@ -24614,3 +24614,43 @@ This is §8.1 class 5(b) again: the guard attribute was also the element the gua
 - `check-inline-js.py`: clean.
 - `node --check` on every touched `.js`.
 - `verify-runtime.js` on dashboard plus the 23 changed pages: **PASS (24 pages)**.
+
+## 2026-10-18 — Deploys reached returning members only after their cache aged out; Vercel promotion postponed behind one switch
+
+**Symptom.** The owner reported "nothing has changed" on sydomega.com while production served
+`d7b7640e`. It was checked through `/.well-known/omega-release.json`.
+
+**Cause.** `sw.js` had a fixed `CACHE_VERSION = 'v9'`, so every deploy shipped a byte-identical
+worker. The browser never saw an update, so it never installed one and never cleared the old
+cache. A cached asset younger than an hour was served with no network request. Past that, it was
+served stale while it revalidated, through an HTTP cache that `_headers` sets to
+`max-age=3600, stale-while-revalidate=86400`.
+
+**Fix.**
+- `scripts/vercel-build.sh` stamps the release commit into the shipped worker
+  (`v9-<sha12>`). It must match exactly one anchor or the build fails.
+- Precache now uses `cache:'reload'`, and asset refetches use `cache:'no-cache'`. Otherwise the
+  new cache could be filled from the HTTP cache with the previous deploy's files.
+- The existing `SKIP_WAITING` and `controllerchange` handling does the rest: one reload, onto the
+  new code.
+
+**Measured** in headless Chromium against a local server that switches deploy A to deploy B.
+
+| sw.js | cache after B | asset the page ran |
+|---|---|---|
+| before (`origin/main`) | `omega-91717-v9-A` | `ASSET-A` |
+| after | `omega-91717-v9-B` | `ASSET-B` |
+
+The deploys were 11s apart. Inside 10s the reload-loop guard in `omega-sw-register.js` correctly
+refuses a second reload. Cost: every deploy is one revalidation pass per returning member. That
+is mostly 304s, which Cloudflare Pages does not bill per request.
+
+**Postponed.** Every `main` push left "Vercel Production" red: the "Controlled state" step exits
+1 when no `VERCEL_TOKEN` is set (run `39161977453`). `VERCEL_PROMOTION_POSTPONED: 'true'` now
+parks promotion. In its place the run proves the live site serves the pushed commit, or a later
+commit that contains it, and fails after 15 minutes if not. Resume steps are in `GAP_ANALYSIS.md`
+§S.
+
+**Gated by** `test_vercel_production_dispatch_contract.py`, with two new tests. A planted
+regression (dropping `cache:'no-cache'`) fails the test.
+

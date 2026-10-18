@@ -24210,3 +24210,47 @@ this month:
 
 **Not done.** The seven stores are still browser-only. Merging them into Postgres means moving
 personal financial data, so it needs an owner-approved plan, as LIFE had.
+
+## 2026-10-18 — IDENTITY: the profile hero told every member they were apex
+
+**Finding (static markup, no script touches it).** `profile.html`'s hero shipped to every
+member:
+- `RANK 9.9.9`;
+- four badges: OMEGA MASTER, ALL-TIME ACCESS, VERIFIED ARCHITECT and ABSOLUTE SOVEREIGN;
+- an achievements heading reading "ALL 36 SEALED AT OMEGA MASTER".
+
+`grep` finds no code that ever writes `.ph-rank` or `.phm-badges`. A newly approved member at
+authority 0.002 was told they held apex rank, permanent access and verified-architect status:
+§8.1 class 9 on the member's own identity page. The heading's i18n key already read
+"Achievements" in `T_EN` and all six packs; only the HTML fallback carried the claim.
+
+**Change: `omega-identity-core.js` on `profile.html`.**
+- **Hero, derived from the member's own `profiles` row:**
+  - The rank is the gate reached on OmegaCanon's ladder (`authority.gates` / `gate_names`).
+  - The badges are the tier (with status), the access state (approved, trial with end date, or
+    pending), and the KYC state (`none`, `submitted`, `pending`, `verified`, `rejected`).
+  - OWNER appears only when `is_owner`.
+  - The markup ships neutral, so nothing false flashes before the script runs.
+- **Readiness strip:** NAME, SIGN, TWO-FACTOR, IDENTITY and VISIBILITY, each a link to the
+  control that changes it.
+  - TWO-FACTOR reads Supabase Auth factors. While `mfa_enrolment_enabled` is off it says "not
+    offered yet" and is not counted against the member.
+  - VISIBILITY is informational.
+  - The count covers only scored items.
+- **Navigation:** `identity`, `character`, `credentials` and `kyc` are folded, because
+  `profile.html` already has those tabs with hash routes. `characters` (the page-character
+  design framework) moves to OWNER. IDENTITY is BUILT.
+
+**Verified (headless, 1440 and 375):**
+- **Member (stub authority 9.1):** "SCHOLAR" (gate 3, since 6.9592 ≤ 9.1 < 9.2789), "SOVEREIGN ·
+  ACTIVE", "APPROVED MEMBER", "ID NOT SUBMITTED", and readiness 2/3.
+- **MFA flag on with a verified factor:** readiness 3/4.
+- **Owner:** OWNER and APEX.
+- **Copy:** none of the old claims appears anywhere in `document.body.innerText`.
+- **Errors and layout:** 0 page errors, no overflow.
+- **Layout fixes caught in the render:**
+  - The readiness tiles collapsed into one row under the platform-wide
+    `a[href]{display:inline-flex}`. They now use `display:grid!important`.
+  - "GATE 3 · SCHOLAR" overflowed the avatar badge. It now shows the name, with the number in the
+    title and label.
+- **Regression gate:** `scripts/tests/test_profile_hero_truth.py`.

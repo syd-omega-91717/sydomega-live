@@ -188,15 +188,14 @@
     {
       "core": "identity",
       "host": "profile",
-      "state": "PLANNED",
-      "is": "Who you are: profile, settings, security, credentials, archive",
+      "state": "BUILT",
+      "is": "Who you are, computed: the profile hero from your real gate, tier, access and KYC, plus account readiness",
       "pages": [
         "profile",
         "settings",
         "security",
         "identity",
         "character",
-        "characters",
         "passport",
         "kyc",
         "credentials",
@@ -337,7 +336,8 @@
         "verify-modules",
         "agent",
         "architect",
-        "queue"
+        "queue",
+        "characters"
       ]
     }
   ],

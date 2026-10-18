@@ -26,7 +26,10 @@ project's own established convention (security/data-integrity first).
   mastery earned by play; catalogue click credit removed by owner decision; `sovereign-ai` to
   INTEL, `agent-network` to COSMOS, `queue` to OWNER), VAULT (`invest.html`: net worth and
   this month's cash flow from the seven browser-local trackers; the member picks which count,
-  because the stores overlap; `sigil` to IDENTITY, `sovereign-covenant` to ORDER). LIFE is
+  because the stores overlap; `sigil` to IDENTITY, `sovereign-covenant` to ORDER), IDENTITY
+  (`profile.html`: the hero's static "RANK 9.9.9 / ALL-TIME ACCESS / VERIFIED ARCHITECT /
+  ABSOLUTE SOVEREIGN" replaced by the member's real gate, tier, access and KYC, plus an account
+  readiness strip; `characters` to OWNER). LIFE is
   **built and dormant**: `public.life_entries` is live (`20261017234857`, own rows only, no
   owner read) and `life.html` carries the daily log (`omega-life-log.js`), but writes stay
   disabled until the owner sets `platform_settings.life_core_enabled`. Its 17 tracker pages stay

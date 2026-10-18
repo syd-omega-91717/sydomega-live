@@ -67,6 +67,14 @@ on:
 permissions:
   contents: read
 
+env:
+  # POSTPONED until the Vercel account's credits are renewed: the Hobby team has
+  # been blocked for Edge Requests since 2026-10-06, and production is Cloudflare
+  # Pages (Git-connected, builds every main push). While 'true' no Vercel
+  # promotion is attempted, and a main push instead verifies that the live site
+  # serves this commit. To resume Vercel: set 'false' and configure VERCEL_TOKEN.
+  VERCEL_PROMOTION_POSTPONED: 'true'
+
 concurrency:
   group: vercel-production
   cancel-in-progress: false
@@ -161,7 +169,10 @@ jobs:
           set -euo pipefail
           echo "org_resolved=${ORG:+yes}"
           echo "project_resolved=${PROJECT:+yes}"
-          if [[ -n "$TOKEN" && -n "$ORG" && -n "$PROJECT" ]]; then
+          if [[ "$VERCEL_PROMOTION_POSTPONED" == "true" ]]; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'VERCEL_CREDENTIALS=POSTPONED (VERCEL_PROMOTION_POSTPONED=true)'
+          elif [[ -n "$TOKEN" && -n "$ORG" && -n "$PROJECT" ]]; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
             echo 'VERCEL_CREDENTIALS=READY'
           else
@@ -195,8 +206,41 @@ jobs:
           echo "::error title=Production deployment refused::Manual production promotion is allowed only from refs/heads/main."
           echo "requested_ref=$GITHUB_REF"
           exit 1
+      - name: Checkout for the postponed-promotion live check
+        if: env.VERCEL_PROMOTION_POSTPONED == 'true' && (github.event_name == 'push' || inputs.deploy == true)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Live site serves this commit (Cloudflare Pages)
+        if: env.VERCEL_PROMOTION_POSTPONED == 'true' && (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '::notice title=Vercel promotion postponed::Vercel credits are not renewed; production is Cloudflare Pages. Verifying the live site instead.'
+          # Cloudflare builds this push itself (2-5 min). A later push may land
+          # first, so a served commit that CONTAINS this one also passes.
+          for attempt in $(seq 1 45); do
+            served="$(curl --silent --fail --proto '=https' --max-time 20 "$OMEGA_PRODUCTION_BASE_URL/.well-known/omega-release.json" \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})' || true)"
+            if [[ "$served" == "$GITHUB_SHA" ]]; then
+              EXPECTED_RELEASE_SHA="$GITHUB_SHA" bash scripts/vercel-production-smoke.sh
+              exit 0
+            fi
+            if [[ "$served" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "$served^{commit}" 2>/dev/null \
+               && git merge-base --is-ancestor "$GITHUB_SHA" "$served"; then
+              echo "LIVE_SITE=PASS served=$served contains=$GITHUB_SHA"
+              bash scripts/vercel-production-smoke.sh
+              exit 0
+            fi
+            echo "attempt=$attempt served=${served:-none} waiting_for=$GITHUB_SHA"
+            sleep 20
+          done
+          echo "::error title=Live site did not update::sydomega.com still serves ${served:-nothing} 15 minutes after $GITHUB_SHA reached main. Check the Cloudflare Pages build."
+          exit 1
       - name: Controlled state when token is unavailable
-        if: needs.credentials.outputs.ready != 'true'
+        if: needs.credentials.outputs.ready != 'true' && env.VERCEL_PROMOTION_POSTPONED != 'true'
         env:
           DEPLOY_REQUESTED: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true) }}
         shell: bash

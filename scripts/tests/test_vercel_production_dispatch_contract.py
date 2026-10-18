@@ -70,6 +70,17 @@ class VercelProductionDispatchContract(unittest.TestCase):
         script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
         self.assertIn("served_commit_mismatch", script)
 
+    def test_both_production_domains_and_all_built_pages_are_verified(self):
+        self.assertIn("OMEGA_PRODUCTION_BASE_URL: https://sydomega.com", WORKFLOW)
+        self.assertIn("OMEGA_PRODUCTION_BASE_URL: https://www.sydomega.com", WORKFLOW)
+        self.assertIn("Verify every built HTML route is live", WORKFLOW)
+        self.assertIn("run: python scripts/vercel-production-surface-smoke.py", WORKFLOW)
+        script = (ROOT / "scripts/vercel-production-surface-smoke.py").read_text(encoding="utf-8")
+        self.assertIn("PUBLIC.rglob(\"*.html\")", script)
+        self.assertIn("ThreadPoolExecutor", script)
+        self.assertIn("PRODUCTION_SURFACE=PASS", script)
+        self.assertIn("PRODUCTION_SURFACE=FAIL", script)
+
     def test_smoke_script_checks_successful_html_routes(self):
         script = (ROOT / "scripts/vercel-production-smoke.sh").read_text(encoding="utf-8")
         self.assertIn("curl --silent --show-error --fail --location", script)

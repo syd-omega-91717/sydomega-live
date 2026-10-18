@@ -48,6 +48,10 @@ on:
       - 'scripts/vercel-build-enhance.mjs'
       - 'scripts/release-surface-quality.py'
       - 'scripts/omega-enterprise-readiness-contract.py'
+      - 'scripts/vercel-production-smoke.sh'
+      - 'scripts/vercel-production-surface-smoke.py'
+      - 'scripts/vercel-deployment-auth-check.sh'
+      - '.github/workflows/vercel-production.yml'
       - '!supabase/**'
       - '!docs/runtime/supabase-edge-functions-live.json'
   pull_request:
@@ -296,3 +300,23 @@ jobs:
           OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
           EXPECTED_RELEASE_SHA: ${{ github.sha }}
         run: bash scripts/vercel-production-smoke.sh
+
+      - name: Verify production domain smoke routes (www)
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://www.sydomega.com
+          EXPECTED_RELEASE_SHA: ${{ github.sha }}
+        run: bash scripts/vercel-production-smoke.sh
+
+      - name: Verify every built HTML route is live
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
+          OMEGA_PUBLIC_DIR: public
+          OMEGA_SMOKE_WORKERS: '12'
+          OMEGA_SMOKE_RETRIES: '2'
+        run: python scripts/vercel-production-surface-smoke.py

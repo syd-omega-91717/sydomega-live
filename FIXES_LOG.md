@@ -24261,3 +24261,63 @@ Rendered, its color was `rgb(229,236,240)` on gold. The page's own `button{color
 lives in sheet 0 and loses to a later platform sheet (§4). It is now `.btn.btn-fill`, the shared
 filled primary that CLAUDE.md prescribes, and the page passes. The readiness strip now links
 members to two-factor, so this button had to be legible.
+
+## 2026-10-18 — The last four cores: ORDER, MEDIA, SERVICES, OWNER
+
+**Measured first.** Every table behind ORDER, MEDIA and SERVICES is empty: member events,
+posts, RSVPs, social, family, bloodline, heritage, publications, media reservations,
+consultancy, contracts and travel all hold 0 rows, and `dispatches` holds 1. The only volume is
+`client_errors` (8,997) and `platform_events` (8,033). So these cores are action-first. Each
+section states what the table holds and ends in the one action that adds to it, and none
+fabricates a sample.
+
+**OWNER — `omega-owner-core.js` on `control-center.html`.** The board renders only after
+`profiles.is_owner` is confirmed, and RLS returns those rows to the owner alone.
+- **Client errors:** the 24 h and 7-day counts, a day-by-day bar, and the five most frequent
+  messages with page counts and when each was last seen.
+- **Members:** members, approved, and waiting.
+- **Activity:** platform events in the last 24 h.
+- **Flags:** read-only, linking to `interface-omni`.
+- **Live evidence it surfaces:** the top two errors (`.insert(...).catch` / `.rpc(...).catch is
+  not a function`, 386 in 7 days, 76 in the last 24 h, last seen 07:52 UTC) come from code that
+  `main` no longer contains. Production still serves pre-block code.
+
+**ORDER — `omega-order-core.js` on `hall.html`.**
+- **Order:** `order_stats` (members, approved, element bars).
+- **Leaders:** `public_leaderboard(5)`.
+- **Gatherings:** upcoming `member_events`, with RSVP kept on `events.html`.
+- **Voices:** recent published `member_posts`.
+- **Navigation:** `sovereigns` and `order` are folded, and `interface-omni` (the owner control
+  deck) moves to OWNER.
+
+**MEDIA — `omega-media-core.js` on `media.html`.** The newest dispatches
+(`published_dispatches`) and the member's own committed works, above the Living Codex catalogue,
+which already merged the franchise lore. `cinema`, `movies`, `trailers`, `universe`, `series`,
+`creator` and `project-studio` are folded. `visual-atlas` moves to OWNER.
+
+**Also fixed: `media.html` threw on every visit.** `omega-media-boot.js` called
+`OmegaMediaNative.render()` with no argument, so `render(d)` read `d.items` of `undefined`.
+`verify-runtime.js` failed `media.html` on `main` as well as on this branch. The boot now loads
+first and renders an UNAVAILABLE state on failure, and the page passes.
+
+**SERVICES — `omega-services-core.js` on `services.html`.** Consultancy, contracts and travel,
+each with the member's own requests and their status, and each ending in its form.
+`consultancy`, `contracts` and `travel` are folded, and `health` (a wellness log) moves to LIFE.
+
+**All four cores are read-only.** The regression test fails on any
+`.from(...).insert/update/upsert/delete` in them.
+
+**Verified (headless, 1440 and 375, stubbed tables):**
+- **Owner:** 6 errors in 24 h and 40 this week, grouped, with an `<img onerror>` message kept as
+  text. A non-owner gets an empty mount.
+- **Order:** 9 members, 4 approved, Fire 3 / Wind 1 / Water 1, the leaders, "NO MEMBER EVENTS
+  SCHEDULED", and a `<b>` post kept as text.
+- **Media:** a `<script>` dispatch body stays text, and 0 works shows as "0".
+- **Services:** "1 YOURS · PENDING" plus two "NONE YET".
+- **Errors and layout:** 0 page errors and no overflow.
+- **Runtime check:** `verify-runtime.js` passes on hall, media, services and control-center.
+- **Regression gate:** `scripts/tests/test_final_four_cores.py`.
+
+**Reported, not changed (`GAP_ANALYSIS.md`):** the empty tables; a second "S.Y.D" profile with
+`is_owner = false` and an authority inconsistent with its axes; and six empty owner pages,
+which are deletion candidates on the owner's sign-off.

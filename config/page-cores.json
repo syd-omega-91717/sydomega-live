@@ -156,7 +156,8 @@
         "targets",
         "weekly",
         "clarity",
-        "focus"
+        "focus",
+        "health"
       ]
     },
     {
@@ -207,9 +208,9 @@
     },
     {
       "core": "order",
-      "host": "family",
-      "state": "PLANNED",
-      "is": "Your people: family, bloodline, factions, city, hall, social, events",
+      "host": "hall",
+      "state": "BUILT",
+      "is": "Your people on one board: the Order's members and elements, its leaders, upcoming gatherings and recent posts",
       "pages": [
         "family",
         "bloodline",
@@ -218,7 +219,6 @@
         "city",
         "hall",
         "sovereigns",
-        "interface-omni",
         "social",
         "feed",
         "events",
@@ -229,8 +229,8 @@
     {
       "core": "media",
       "host": "media",
-      "state": "PLANNED",
-      "is": "Watch and publish: cinema, series, trailers, publications, studio",
+      "state": "BUILT",
+      "is": "Read and publish: dispatches and your committed works above the Living Codex catalogue",
       "pages": [
         "media",
         "cinema",
@@ -239,7 +239,6 @@
         "movies",
         "series",
         "publications",
-        "visual-atlas",
         "studio",
         "publishing",
         "creation-studio",
@@ -284,21 +283,20 @@
     {
       "core": "services",
       "host": "services",
-      "state": "PLANNED",
-      "is": "One catalogue with request forms",
+      "state": "BUILT",
+      "is": "One catalogue: consultancy, contracts and travel with your own requests and their status",
       "pages": [
         "services",
         "consultancy",
         "contracts",
-        "health",
         "travel"
       ]
     },
     {
       "core": "owner",
       "host": "control-center",
-      "state": "PLANNED",
-      "is": "Owner deck (owner-only): operations, governance, approvals, observability",
+      "state": "BUILT",
+      "is": "Owner deck: estate health from live tables (client errors, members and approvals, activity, flags)",
       "pages": [
         "control-center",
         "govern",
@@ -337,7 +335,9 @@
         "agent",
         "architect",
         "queue",
-        "characters"
+        "characters",
+        "interface-omni",
+        "visual-atlas"
       ]
     }
   ],

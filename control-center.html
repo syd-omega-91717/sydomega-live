@@ -7,6 +7,7 @@
 <title>Ω SYD OMEGA 91717 — Control Center</title>
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
+<script src="/omega-owner-core.js" defer></script>
 <style>
 :root{--pad:clamp(16px,3vw,40px)}
 *{box-sizing:border-box}html{background:#020206}body{margin:0;background:var(--void,#020206);color:var(--ink,#eee);font-family:var(--R,system-ui);min-height:100vh}
@@ -32,6 +33,7 @@ pre{white-space:pre-wrap;word-break:break-word;color:rgba(238,238,238,.65);font-
 <div><div class="eyebrow">OMEGA CONTROL PLANE / RUNTIME</div><h1>Control Center</h1><p class="lede">One compact surface for the things that are otherwise scattered across the platform: runtime reachability, browser capabilities, deployment assets, storage state and recovery links. It reports what this browser can prove now; it never invents backend health.</p></div>
 <div class="actions"><button class="btn" id="refresh">RUN CHECK</button><a class="btn" href="/verify-deployment.html">DEPLOYMENT</a><a class="btn" href="/verify-modules.html">MODULES</a></div>
 </header>
+<section data-omega-owner-core aria-label="Estate health"></section>
 <section class="grid" aria-label="Runtime metrics">
 <div class="card"><div class="metric" id="m-runtime">--</div><div class="label">RUNTIME</div><div class="sub" id="s-runtime">Checking browser...</div></div>
 <div class="card"><div class="metric" id="m-network">--</div><div class="label">NETWORK</div><div class="sub" id="s-network">Checking...</div></div>

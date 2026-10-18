@@ -31,7 +31,16 @@ the source of truth for both hosts.
 `/_vercel/*` scripts 404, harmlessly. Nothing else changes, because the backend is Supabase on
 every host.
 
-## Owner steps, in order
+## Status (2026-10-18): done
+
+sydomega.com and www are **Active** on the `sydomega` Pages project. The project is connected to this
+repository and builds every push to `main` itself. Its settings must stay **build command
+`bash scripts/vercel-build.sh`, output `public`**. With them empty, Cloudflare publishes the raw
+repository root, which serves `/scripts/*` and drops every header and redirect (`FIXES_LOG.md`).
+`cloudflare-pages.yml` is now a manual fallback. Rollback: Pages → Deployments → **Rollback** on any
+earlier good deployment.
+
+## Owner steps, in order (as run)
 
 Each step has a check. Do not start the next step until the check passes.
 

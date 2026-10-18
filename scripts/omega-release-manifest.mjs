@@ -12,6 +12,7 @@ const expectedSha = (
   process.env.OMEGA_RELEASE_SHA ||
   process.env.GITHUB_SHA ||
   process.env.VERCEL_GIT_COMMIT_SHA ||
+  process.env.CF_PAGES_COMMIT_SHA ||
   ""
 ).toLowerCase();
 const shaPattern = /^[0-9a-f]{40}$/;
@@ -19,13 +20,16 @@ const sourceSha = expectedSha || "unknown";
 const sourceRef =
   process.env.GITHUB_REF_NAME ||
   process.env.VERCEL_GIT_COMMIT_REF ||
+  process.env.CF_PAGES_BRANCH ||
   "unknown";
 const source =
   process.env.OMEGA_RELEASE_SHA || process.env.GITHUB_SHA
     ? "github-actions"
     : process.env.VERCEL_GIT_COMMIT_SHA
       ? "vercel-git"
-      : "local";
+      : process.env.CF_PAGES_COMMIT_SHA
+        ? "cloudflare-pages-git"
+        : "local";
 
 function fail(message) {
   console.error("OMEGA_RELEASE_MANIFEST=FAIL " + message);

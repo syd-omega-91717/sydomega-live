@@ -6,13 +6,13 @@ authenticated-flow, API-contract, or visual regression testing.
 """
 from __future__ import annotations
 
+import argparse
 import concurrent.futures
+import http.client
 import os
 import time
 from pathlib import Path
-from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlparse
-from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = Path(os.environ.get("OMEGA_PUBLIC_DIR", ROOT / "public")).resolve()
@@ -38,37 +38,59 @@ def route_for(path: Path) -> str | None:
 
 def check_route(route: str, expected_host: str) -> tuple[bool, str]:
     encoded_route = quote(route, safe="/-._~")
-    url = BASE_URL + encoded_route
+    request_path = encoded_route
     last_error = "unknown_error"
     for attempt in range(RETRIES + 1):
         try:
-            request = Request(
-                url,
-                headers={
-                    "User-Agent": "SYD-OMEGA-Production-Surface-Smoke/1.0",
-                    "Accept": "text/html,application/xhtml+xml",
-                },
-            )
-            with urlopen(request, timeout=TIMEOUT) as response:
+            # Use a TLS-only connection to a validated hostname. This avoids passing
+            # an arbitrary/dynamic URL into urllib's scheme-capable URL opener.
+            connection = http.client.HTTPSConnection(expected_host, timeout=TIMEOUT)
+            try:
+                connection.request(
+                    "GET",
+                    request_path,
+                    headers={
+                        "User-Agent": "SYD-OMEGA-Production-Surface-Smoke/1.0",
+                        "Accept": "text/html,application/xhtml+xml",
+                        "Connection": "close",
+                    },
+                )
+                response = connection.getresponse()
                 status = response.status
-                content_type = response.headers.get("Content-Type", "").lower()
-                final_url = response.geturl()
+                content_type = response.getheader("Content-Type", "").lower()
                 body = response.read(256 * 1024).lower()
-            final = urlparse(final_url)
-            if final.scheme != "https" or final.hostname != expected_host:
-                return False, f"{route} redirect_host={final.hostname or 'missing'}"
+                location = response.getheader("Location")
+            finally:
+                connection.close()
+
+            if status in (301, 302, 303, 307, 308):
+                if not location:
+                    return False, f"{route} redirect_location_missing"
+                target = urlparse(location)
+                if target.scheme and target.scheme != "https":
+                    return False, f"{route} redirect_scheme={target.scheme}"
+                if target.hostname and target.hostname != expected_host:
+                    return False, f"{route} redirect_host={target.hostname}"
+                if target.port not in (None, 443):
+                    return False, f"{route} redirect_port={target.port}"
+                request_path = target.path or "/"
+                if target.query:
+                    request_path += "?" + target.query
+                if attempt == RETRIES:
+                    return False, f"{route} redirect_limit_exceeded"
+                continue
+
             if not 200 <= status < 300:
-                return False, f"{route} status={status}"
+                last_error = f"status={status}"
+                if status < 500 or attempt == RETRIES:
+                    break
+                continue
             if "text/html" not in content_type:
                 return False, f"{route} content_type={content_type or 'missing'}"
             if b"<html" not in body and b"<!doctype html" not in body:
                 return False, f"{route} html_marker_missing"
             return True, route
-        except HTTPError as exc:
-            last_error = f"status={exc.code}"
-            if exc.code < 500 or attempt == RETRIES:
-                break
-        except (URLError, TimeoutError, OSError) as exc:
+        except (OSError, http.client.HTTPException, TimeoutError) as exc:
             last_error = type(exc).__name__
         if attempt < RETRIES:
             time.sleep(min(2 ** attempt, 4))
@@ -76,6 +98,8 @@ def check_route(route: str, expected_host: str) -> tuple[bool, str]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.parse_args()
     if not BASE_URL.startswith("https://"):
         print("PRODUCTION_SURFACE=FAIL reason=https_required")
         return 2

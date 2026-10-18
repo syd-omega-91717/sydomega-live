@@ -524,13 +524,11 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **Production went DOWN 2026-10-06: Vercel blocked the Hobby account for usage**
-  (new deploys refused, commit status "Account is blocked"; the site still serves #755 of
-  10-06 from cache). Cause, per the dashboard: **Edge Requests**, not deploys — one page view costs 198–392
-  requests (measured), and a Playwright run hit production on every `main` push. Fixed: that
-  run is weekly, static assets cache 1 h, `sw.js` stops revalidating (repeat view 196 → 6). The dashboard
-  offers one way back: "Upgrade to Pro to resume service" — the owner's action. Previews are off (`deploymentEnabled`: `main` only). Read a deployment
-  with `web_fetch_vercel_url`, never curl (`ssoProtection` 401s a bare `*.vercel.app`).
+- **Production is Cloudflare Pages since 2026-10-18** (project `sydomega`, Git-connected, builds
+  every `main` push with `bash scripts/vercel-build.sh` → `public`). Vercel's Hobby team is paused
+  for **Edge Requests** (one page view costs 198–392). Empty Pages build settings publish the raw
+  repo root, dropping every header: verify by fetching `/scripts/…` (must 404). The proxy here 403s
+  the site; fetch it through Firecrawl. Runbook: `docs/CLOUDFLARE_PAGES_CUTOVER.md`.
 - **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies every
   web-extension file into `public/` minus an **exclusion** list (`scripts/`, `supabase/`, `docs/`…),
   then copies `vendor/` and `i18n/` whole — a missed directory once cost `/vendor/supabase-js.js`

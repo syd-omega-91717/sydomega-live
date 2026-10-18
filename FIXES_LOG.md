@@ -24496,3 +24496,40 @@ and `CLOUDFLARE_ACCOUNT_ID` it skips with a notice and stays green.
 `workflow-contract-lint.py` and `workflow-contract.py` pass. `docs/CLOUDFLARE_PAGES_CUTOVER.md`
 step 1 is now "add two secrets". Steps 3–5 (zone, nameservers, custom domain) stay with the
 owner: a registrar change cannot be made from here.
+
+## 2026-10-18 — sydomega.com moved to Cloudflare; a Git-connected Pages build served the raw repo
+
+**What shipped.**
+- The owner added the two secrets. The first real run of `cloudflare-pages.yml` deployed `main`
+  `db759662` and ended `CLOUDFLARE_PAGES=PASS https://sydomega.pages.dev` (job 117736859184).
+- The owner then added the `sydomega.com` zone, deleted the Vercel DNS records, and set Namecheap to
+  `mira.ns.cloudflare.com` / `norman.ns.cloudflare.com`. The first attempt had a typo
+  (`cloudflafre`), which was caught from a screenshot.
+- Both custom domains reached **Active**.
+- Proof that sydomega.com now serves the new build: its `sw.js` carries the `36e5` no-revalidate
+  branch from #993, which never reached Vercel.
+
+**The regression found after cutover.**
+- Measured from outside via Firecrawl, because this container's proxy 403s both hosts:
+  - `https://sydomega.com/scripts/vercel-build.sh` → 200
+  - `/_headers` → 404
+  - `/.well-known/omega-release.json` → 404
+- Cause: the Pages project had been connected to this repository in the dashboard with no build
+  command and no output directory. Cloudflare therefore deployed the repository root over the
+  direct upload.
+- Effect: nothing secret was exposed, since the repo is public and the secret scans are clean. But
+  the CSP, HSTS and framing headers in `_headers`, and every redirect, were gone.
+- The same dashboard flow also created a stray Worker, `sydomega-live`, whose builds fail.
+
+**Fix.**
+- Owner, in the dashboard: build command `bash scripts/vercel-build.sh`, build output `public`.
+- Repo:
+  - The Git build is now the single deploy path, so `cloudflare-pages.yml` drops its push trigger
+    and is a manual fallback only.
+  - `omega-release-manifest.mjs` reads `CF_PAGES_COMMIT_SHA` / `CF_PAGES_BRANCH`. A Cloudflare build
+    now records its commit, where before it would have written `unknown`.
+
+**Rule.** Connecting a Pages project to Git does not reuse the direct-upload artifact: it rebuilds
+from the dashboard's settings. Empty settings mean "publish the repo root". Verify a host cutover
+by fetching a path that must 404 (`/scripts/…`) and one that must exist (`/.well-known/…`), not
+just `/`.

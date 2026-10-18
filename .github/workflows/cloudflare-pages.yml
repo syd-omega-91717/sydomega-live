@@ -14,14 +14,12 @@ name: Cloudflare Pages
 #
 # Serves <project>.pages.dev only. sydomega.com moves here when its
 # nameservers point at Cloudflare: docs/CLOUDFLARE_PAGES_CUTOVER.md.
+#
+# Since 2026-10-18 the Pages project is also connected to this repository and
+# builds every push to main itself (build command `bash scripts/vercel-build.sh`,
+# output `public`), so this workflow no longer runs on push: two deploy paths
+# for one branch would race. It stays as the manual fallback.
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
-      - "scripts/tests/**"
-      - "supabase/**"
   workflow_dispatch:
 
 permissions:

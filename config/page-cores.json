@@ -60,7 +60,8 @@
         "chronicle",
         "graph",
         "cosmic-ledger",
-        "sculpture"
+        "sculpture",
+        "agent-network"
       ]
     },
     {
@@ -119,16 +120,13 @@
     {
       "core": "arena",
       "host": "gaming",
-      "state": "PLANNED",
-      "is": "Play: games, cipher, forge trials, simulation arena",
+      "state": "BUILT",
+      "is": "Play: six hosted games with mastery earned by meeting a goal, forge trials, the simulation lab, the cipher",
       "pages": [
         "gaming",
         "cipher",
         "forge",
-        "arena",
-        "sovereign-ai",
-        "agent-network",
-        "queue"
+        "arena"
       ]
     },
     {
@@ -280,7 +278,8 @@
         "atlas",
         "analytics",
         "automation",
-        "compliance"
+        "compliance",
+        "sovereign-ai"
       ]
     },
     {
@@ -337,7 +336,8 @@
         "verify-deployment",
         "verify-modules",
         "agent",
-        "architect"
+        "architect",
+        "queue"
       ]
     }
   ],

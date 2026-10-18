@@ -24121,3 +24121,50 @@ before anything was designed:
 **Not done:** every deck, best score and book still lives in `localStorage`, mirrored up only
 by `omega-member-state.js`. Moving them to Postgres is a schema change and needs a plan for
 owner approval, as LIFE had.
+
+## 2026-10-18 — ARENA: mastery earned by play; catalogue click credit removed
+
+**Finding (read from the live function, not inferred).** `private.complete_task` raises an
+axis, authority and trophies for any `p_task_name` it has not seen before. It caps at 0.12 per
+call and 0.30 per 24 h, and pays once per name. `omega-matrix.js` auto-wired every `[data-task]`
+element as a button that calls it, and both catalogue pages added a second inline handler.
+- **`gaming.html`:** 132 cards (72 `mastery` "games" such as Chess Master, Go and Shogi, plus 60
+  `knowledge`), labelled "+0.001 · CLICK TO RECORD". The platform hosts none of those games.
+- **`academy.html`:** 96 exam cards labelled "+0.003 PTS". A click recorded a pass of an exam
+  never sat.
+- **Real play already paid.** The arcade's `achieve()` and the exam engine's 70% pass both call
+  `complete_task` through `OmegaProgress.record()`, at weights 0.08 and 0.12. The catalogues
+  were a second, unearned path to the same axes.
+
+**Owner decision: earn by play.** Credit already recorded stays, because those rows are real
+history.
+- **`omega-matrix.js`** no longer auto-wires `[data-task]`.
+- **`gaming.html`:** a card click scrolls to the hosted games, and the label reads "CATALOGUE ·
+  NOT HOSTED". The hero copy now states the real rates: +0.08 per game goal and +0.12 per
+  sector at 70%+, each paid once.
+- **`academy.html`:** a card click opens the ACADEMY TEST lens, and the label reads "CATALOGUE ·
+  TEST IN ACADEMY".
+- **`omega-progress.js`** emits `omega:progress` after an applied award. It does not reuse
+  `omega:task`, which `omega-sdt.js` reacts to.
+
+**ARENA core: `omega-arena-core.js` on `gaming.html`.** A board of the six hosted games:
+- each game's goal, stated as its `achieve()` call site checks it;
+- the earned state, read only from `task_completions` rows named `arcade:<id>`;
+- the game's own best score;
+- one tap opens the game.
+
+Below it, links to FORGE (summed `omega_forge_scores` bests), EXAMS (sectors at 70%+),
+SIMULATE and CIPHER. `forge` and `cipher` are folded, and ARENA is BUILT. Three pages were not
+play: `sovereign-ai` (agent chat) moves to INTEL, `agent-network` to COSMOS, and `queue` to
+OWNER. `queue.html`'s counters were checked and are not fabricated: they read `OmegaWorkers`.
+
+**Verified (headless, 1440 and 375, with a spy on the RPC):**
+- **No click credit:** a catalogue click makes 0 RPC calls on `gaming.html` and on
+  `academy.html`.
+- **Board:** reads 1/6 from a seeded `arcade:oracle` row, with ORACLE "✓ MASTERY EARNED, BEST
+  4/6" and ASCEND "BEST 512, PLAY TO EARN".
+- **History:** Chess Master keeps "✓ RECORDED".
+- **Goal click:** opens the game (`OmegaArcade.status().open = "zodiac"`).
+- **Doors:** FORGE 65 pts, EXAMS 1/12.
+- **Errors and layout:** 0 page errors, no overflow.
+- **Regression gate:** `scripts/tests/test_no_click_credit.py`.

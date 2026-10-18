@@ -81,7 +81,7 @@
           ['academy','ACADEMY','/academy.html'],['courses','COURSES','/courses.html'],['exam','EXAMINATION','/exam.html','folded'],['gaming','GAMES & MASTERY','/gaming.html'],
           ['contributions','CONTRIBUTIONS','/contributions.html'],['evolution','EVOLUTION','/evolution.html'],
           ['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html','folded'],
-          ['focus','DEEP WORK','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html','folded'],
+          ['focus','DEEP WORK','/focus.html'],['forge','FORGE','/forge.html','folded'],['library','LIBRARY','/library.html','folded'],
           ['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html','folded'],
           ['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html','folded']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#AB82F2',
@@ -119,7 +119,7 @@
           ['automation','AUTOMATION','/automation.html'],['compliance','COMPLIANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html','folded'],
           ['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html','folded'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html','folded'],
           ['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html','folded'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html','folded'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html','folded'],
-          ['horoscope-page','HOROSCOPE','/horoscope.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],
+          ['horoscope-page','HOROSCOPE','/horoscope.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html','folded'],
           ['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],
           ['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html'],['intel','INTEL WORKSPACE','/intel.html']]},
     /* ── EXTENDED SECTIONS — deployed-page coverage ─────────────── */

@@ -104,7 +104,16 @@ def main() -> int:
         print("PRODUCTION_SURFACE=FAIL reason=https_required")
         return 2
     parsed = urlparse(BASE_URL)
-    if not parsed.hostname or parsed.username or parsed.password:
+    if (
+        parsed.scheme != "https"
+        or not parsed.hostname
+        or parsed.username
+        or parsed.password
+        or parsed.port not in (None, 443)
+        or parsed.path not in ("", "/")
+        or parsed.query
+        or parsed.fragment
+    ):
         print("PRODUCTION_SURFACE=FAIL reason=invalid_base_url")
         return 2
     if not PUBLIC.is_dir():

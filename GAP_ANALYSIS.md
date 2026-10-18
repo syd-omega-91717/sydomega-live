@@ -29,12 +29,31 @@ project's own established convention (security/data-integrity first).
   because the stores overlap; `sigil` to IDENTITY, `sovereign-covenant` to ORDER), IDENTITY
   (`profile.html`: the hero's static "RANK 9.9.9 / ALL-TIME ACCESS / VERIFIED ARCHITECT /
   ABSOLUTE SOVEREIGN" replaced by the member's real gate, tier, access and KYC, plus an account
-  readiness strip; `characters` to OWNER). LIFE is
+  readiness strip; `characters` to OWNER), and on 2026-10-18 the last four: ORDER (`hall.html`),
+  MEDIA (`media.html`), SERVICES (`services.html`) and OWNER (`control-center.html`, estate
+  health from live tables). All 13 cores now exist. LIFE is
   **built and dormant**: `public.life_entries` is live (`20261017234857`, own rows only, no
   owner read) and `life.html` carries the daily log (`omega-life-log.js`), but writes stay
   disabled until the owner sets `platform_settings.life_core_enabled`. Its 17 tracker pages stay
   in the sidebar until then. No page is deleted until its core replaces it and the owner signs
   off.
+- **OPEN 2026-10-18 — community, media and services tables are empty.** `member_events`,
+  `member_posts`, `event_rsvps`, `social_*`, `family_nodes`, `bloodline_nodes`, `heritage_records`,
+  `publications`, `media_reservations`, `consult_requests`, `commission_contracts` and
+  `travel_journeys` all hold 0 rows, and `dispatches` holds 1. The ORDER, MEDIA and SERVICES cores
+  state the empties and offer the action. They do not make anyone use them.
+- **OPEN 2026-10-18 — production keeps throwing errors already fixed in main.** 76
+  `.catch is not a function` errors in the 24 h to 07:52 UTC (386 in 7 days), from code `main` no
+  longer contains. Production serves pre-block code (Vercel "Account is blocked"). The OWNER board
+  shows the count.
+- **OPEN 2026-10-18 — a second "S.Y.D" profile is not owner.** One `profiles` row named "S.Y.D"
+  has no email, `is_owner = false`, axes 9/9/9 and a stored `authority` of 15.588, which those axes
+  do not produce (they give 27.8367). CLAUDE.md §1 says both owner accounts carry `is_owner`.
+  This is owner privilege, so it was not changed: the owner decides.
+- **OPEN 2026-10-18 — six owner-section pages are empty.** `investor-dashboard`, `investor-gate`,
+  `venture-pipeline`, `omega-visual-command` and `agent` each only redirect to the dashboard, and
+  `cohorts-dashboard` is a 972-byte "in development" placeholder. They are candidates for deletion
+  on the owner's sign-off.
 - **OPEN 2026-10-17 — LIFE dormancy is enforced in the client only.** The RLS insert policy
   checks ownership, not `life_core_enabled`, so a member calling PostgREST directly can write
   their own rows while the flag is off. They can harm only their own data. Closing it means

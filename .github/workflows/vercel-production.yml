@@ -248,7 +248,7 @@ jobs:
           needs.credentials.outputs.ready == 'true' &&
           (github.event_name == 'push' || inputs.deploy == true)
         run: npx --yes vercel@59.6.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"
-      - name: Verify production domain smoke routes (apex)
+      - name: Verify production domain smoke routes
         if: >-
           needs.credentials.outputs.ready == 'true' &&
           (github.event_name == 'push' || inputs.deploy == true)

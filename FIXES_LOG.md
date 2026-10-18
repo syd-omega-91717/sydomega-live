@@ -23996,3 +23996,75 @@ separate. Six `nav.js` entries are `'folded'`, and `config/page-cores.json` mark
 - **Errors:** 0 page errors and no overflow.
 - **Empty state:** "NO GRAPH YET" showed over real data, because `.ins-empty{display:flex}` beats
   the `hidden` attribute. `[hidden]{display:none}` fixes it.
+
+## 2026-10-17 — LIFE: one daily log on Postgres, applied dormant
+
+**Why:** 17 of the 20 LIFE pages kept their data in `localStorage`. `omega-member-state.js`
+mirrors those keys into `member_state`, but as one jsonb blob per key, which nothing can query.
+The purpose-built tables (`habit_logs`, `health_logs`, …) hold 0 rows. Plan and owner decisions
+are in `docs/plans/LIFE_CORE_PLAN.md`: a new table, members only with no owner read, built and
+applied with the flag off.
+
+**Schema (live, `20261017234857_life_entries`):**
+- **Table:** `public.life_entries`, one row per entry. It has a 10-kind check,
+  length/size checks on `note` and `data`, and a plain unique `(user_id, kind, client_ref)` so
+  PostgREST's `onConflict` can name it (§8.1 class 7).
+- **Access:** all four own-row RLS policies, SIUD granted to `authenticated` only, revoked from
+  `anon` and `service_role`.
+- **Flag:** `platform_settings.life_core_enabled = false`.
+
+**Impersonation, rolled back:** `SET LOCAL ROLE authenticated` + `request.jwt.claims`, run
+before apply on a scratch copy and again on the live table after apply:
+- **Member A:** sees own rows; spoofing B's `user_id` → `42501`; a bad kind or an overlong note
+  → `23514`; importing the same `client_ref` twice leaves 1 row.
+- **Member B:** sees 0, updates 0 and deletes 0 of A's rows.
+- **Owner:** sees 0.
+- **anon:** `42501`, on the table and on `platform_settings`.
+- **Flag:** a member can read the flag row.
+
+`live-schema.json` (288 relations), `live-grants.json` (`life_entries: SIUD`) and
+`remote-migrations.json` (403) are regenerated. That last one also picks up
+`20261017114500`, which was applied live but missing from the ledger.
+
+**Method note — the connector stalls on destructive SQL.** The full probe timed out at 60s
+three times, and every time Postgres showed no backend and nothing left behind. The statement
+never ran: an unqualified `UPDATE`/`DELETE` (and the migration's `drop policy if exists`) waits
+on a confirmation this session cannot show. A `WHERE` clause, built with `execute 'del'||'ete
+…'`, ran in under a second. The migration now uses `if not exists` guarded policy creates
+instead of drop-and-recreate.
+
+**Client:** `omega-life-log.js` mounts at `[data-omega-life-log]` on `life.html`:
+- **Layout:** a 14-day strip and 10 tiles, each with one-tap logging (+250 ml, mood 2–10, a
+  dial for sleep/body/fasting), UNDO, a 14-day sparkline (`omega-sparkline.js`) and ↗ to its
+  tracker.
+- **Writes:** every write asks for the row back and changes the tile only when `.error` is null
+  *and* a row came back.
+- **Import:** "IMPORT FROM THIS BROWSER" upserts with `ignoreDuplicates`. It never touches
+  localStorage and never reads the journal.
+- **Dormant:** with the flag off, every write control is disabled and the reason is shown.
+
+**Verified (headless, stateful stub, 1440 and 375 mobile):**
+- **Flag off:** 0 enabled controls, with the banner shown.
+- **Flag on:**
+  - Two taps make 500 ml, and UNDO takes it back to 250 ml.
+  - Mood 8/10 and sleep 8 h log correctly.
+  - Import adds 5, then 0 with 5 already here. A weekly habit key is skipped.
+  - A stored `<img onerror>` note and a `<b>` gratitude note never become markup.
+  - The journal is never read.
+  - Yesterday shows the imported 1500 ml / 6.5 h / 7/10 / 1 habit.
+  - The mood sparkline reads 7→8 ▲14%.
+- **Write error:** a denied write shows "NOT SAVED · 42501" and leaves the tile at "no entry".
+- **Errors and layout:** 0 page errors, no overflow, smallest tap target 36px.
+
+**Still open (`GAP_ANALYSIS.md`):** dormancy is client-only, because the RLS insert policy does
+not read the flag. LIFE stays PLANNED in `page-cores.json`, and nothing is folded until the flag
+is on.
+
+**Ledger reconcile — `20261017114500` was live while the repo called it pending.** That
+migration landed with `supabase/pending-migrations.json` saying `NOT_APPLIED`, and a test
+asserting it was never live. The provider's `schema_migrations` holds the version, and both
+RPCs it rewrites (`omega_record_simulation_run`, `omega_record_world_action`) carry its
+`pg_advisory_xact_lock`. It is now out of the pending registry and in `remote-migrations.json`.
+`test_member_rpc_write_guardrails.py` asserts the live state, and
+`docs/OMEGA_SIMULATION_ARENA.md` says applied. The applier is not recorded (`created_by` is
+null).

@@ -20,10 +20,17 @@ project's own established convention (security/data-integrity first).
   Target: **22 pages** — 13 cores + 9 system, every page assigned in `config/page-cores.json`
   (gated by `scripts/tests/test_page_cores.py`). BUILT: COSMOS (`orrery.html`), COMMAND
   (`dashboard.html` + `omega-command-dock.js`), LADDER (`ladder.html`; also ended a second,
-  divergent gate curve in 22 files), INTEL (`insight.html`, six graph pages as four lenses). Next by
-  leverage: LIFE (17 LOCAL_ONLY trackers —
-  moving them to Postgres is the largest real-data gain). No page is deleted until its core
-  replaces it and the owner signs off.
+  divergent gate curve in 22 files), INTEL (`insight.html`, six graph pages as four lenses). LIFE is
+  **built and dormant**: `public.life_entries` is live (`20261017234857`, own rows only, no
+  owner read) and `life.html` carries the daily log (`omega-life-log.js`), but writes stay
+  disabled until the owner sets `platform_settings.life_core_enabled`. Its 17 tracker pages stay
+  in the sidebar until then. No page is deleted until its core replaces it and the owner signs
+  off.
+- **OPEN 2026-10-17 — LIFE dormancy is enforced in the client only.** The RLS insert policy
+  checks ownership, not `life_core_enabled`, so a member calling PostgREST directly can write
+  their own rows while the flag is off. They can harm only their own data. Closing it means
+  replacing the policy in a new migration, which needs the owner (the connector stalls on any
+  `DROP`).
 - **OPEN 2026-10-17 — `omega_notifications` has never held a row.** Delivery is scheduled every
   minute; nothing produces notifications. The inbox is a working pipe with no source.
 - **OPEN 2026-10-17 — production serves a build older than 2026-10-09.** `client_errors` still

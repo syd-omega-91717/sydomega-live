@@ -24560,3 +24560,57 @@ TypeError on /cosmos. It is now guarded.
 
 **Rule.** After a host freeze, a fixed bug can keep reporting from browser caches. Before
 reopening it, compare the error's `source` and `line_no` with the file production actually serves.
+
+## 2026-10-18 — 91 open code-scanning alerts: listed, triaged, 59 fixed; dashboard KPI tiles were dead for 15 days
+
+**Listing them.** The code-scanning API returns 403 to Claude Code sessions.
+`.github/workflows/code-scanning-report.yml` (#998: `security-events: read`, no writes) prints
+every open alert into its job log, which a session can read.
+
+The run found 91 open alerts:
+- 47 CodeQL `js/xss-through-dom`
+- 9 other CodeQL alerts
+- 21 Semgrep, all in local tooling (`scripts/movies/render.js`, the verify harnesses, Python
+  scripts that call fixed URLs)
+- 14 Scorecard
+
+**Fixed in this change:**
+- **All 47 `js/xss-through-dom` sites**, across 30 pages and modules. Every value interpolated into
+  `innerHTML` that came from localStorage, the DOM or a database row is now escaped where it is
+  inserted, using a local `esc()`. Ids that used to be pasted into inline `onclick` JS now go
+  through `data-*` attributes or `esc(JSON.stringify())`. `omega-nav-handler.js` accepts only
+  same-origin `/` paths.
+- **The other client CodeQL alerts:**
+  - `omega-copilot.js`: the regex tag strip became an allowlist `DOMParser` sanitizer. This
+    covers 2× `js/incomplete-multi-character-sanitization` and `js/bad-tag-filter`.
+  - `pulse.html`: a single `'$'` replace became a global one.
+  - `omega-project-studio.js`: modulo bias replaced by rejection sampling.
+  - `trophies.html` `js/clear-text-storage-of-sensitive-data` is a **false positive**. It stores
+    catalogue numbers 1–12 only.
+- **`js/stack-trace-exposure`** in `market-price` and `weekly-digest`: they now return
+  `internal_error`. `intel-feed` has the same flaw but is deployed live, and
+  `supabase-edge-runtime-reconciliation.py` requires its source to match the deployed copy, so it
+  waits for a redeploy.
+- **Scorecard `TokenPermissions`** (4 workflows): the top level is `contents: read` and write moves
+  to the one job that needs it. **`PinnedDependencies`**: `lighthouse@13.5.0`, which was unversioned.
+
+**Found while fixing, and the bigger bug.** `omega-nav-handler.js` guarded with
+`querySelector('script[data-omega-navhandler]')`. But `bg.js` injects it *with* that attribute, so
+the guard always found the script's own tag and returned. Every `data-nav-action` element was
+inert, and those are the 46 KPI tiles on `dashboard.html` (~70% of views). This lasted from
+`612d4220` (2026-10-03) to now. The guard is now a window flag.
+
+Measured in the harness: before (`d66ec559` pinned), clicking `#kpi-auth` left the URL at
+`dashboard.html` with the flag false; after, it navigated to `evolution.html` with the flag true.
+This is §8.1 class 5(b) again: the guard attribute was also the element the guard looked for.
+
+**Not fixable from the repo:**
+- The Semgrep alerts are in tooling that never ships. They can be dismissed in the Security tab.
+- Scorecard `BranchProtection`, `CodeReview`, `SecurityPolicy`, `License`, `Fuzzing` and
+  `CIIBestPractices` are repository settings or policies.
+- `intel-feed` needs a redeploy.
+
+**Verification:**
+- `check-inline-js.py`: clean.
+- `node --check` on every touched `.js`.
+- `verify-runtime.js` on dashboard plus the 23 changed pages: **PASS (24 pages)**.

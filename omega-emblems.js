@@ -62,7 +62,7 @@
 
   // Escaping for values interpolated into the emblem markup. esc() is a full
   // HTML escape (sign names, colours). glyphText() is the same escape except
-  // that a well-formed character reference (&#x2648; &#937; &amp;) is kept, so
+  // that a well-formed character reference (e.g. &#937; or &amp;) is kept, so
   // callers that pass a glyph as an HTML entity still render the character --
   // but no tag, attribute or quote can survive it.
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}

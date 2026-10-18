@@ -3,8 +3,13 @@
    Also handles keyboard navigation (Enter/Space) on elements with data-nav-action.
    Loaded deferred by bg.js; guard: data-omega-navhandler. */
 (function(){
-  if(document.querySelector('script[data-omega-navhandler]')) return;
-  /* Only same-origin relative paths navigate ("/page.html", "/x?y#z").
+  /* The guard must not be the script's own tag: bg.js injects this file WITH
+     data-omega-navhandler, so a querySelector guard always found itself and
+     returned, and every data-nav-action element (46 dashboard KPI tiles) was
+     dead from 2026-10-03 to 2026-10-18. */
+  if(window.__omegaNavHandler) return;
+  window.__omegaNavHandler = true;
+  /* Only same-origin relative paths navigate (a leading single slash, e.g. the dashboard path).
      Absolute, protocol-relative ("//host") and scheme URLs (javascript:,
      data:, https://elsewhere) are refused, so a data-nav-action value can
      never become script execution or an off-site redirect. */

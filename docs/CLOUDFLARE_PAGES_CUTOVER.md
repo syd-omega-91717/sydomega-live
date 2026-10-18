@@ -1,0 +1,76 @@
+# Cloudflare Pages cutover: sydomega.com off the paused Vercel Hobby team
+
+**Why Cloudflare Pages.** The Vercel team is paused for **Edge Requests** (dashboard,
+2026-10-06). On Cloudflare Pages' free plan, static requests and bandwidth are **unlimited**,
+and it allows 500 builds a month. Netlify Free was ruled out: it charges 2 credits per 10k
+requests and 15 per production deploy against 300 credits a month, and pauses the site when
+they run out. That is the same failure in another place. Sources: the Cloudflare Pages limits
+page and Netlify's pricing page, read 2026-10-18.
+
+**Fit, measured 2026-10-18.**
+- 1,141 files against a limit of 20,000.
+- No file over 20 MB, against a limit of 25 MiB per file.
+- 22 `_headers` rules against a limit of 100.
+- 18 `_redirects` lines.
+
+**Parity, measured in Cloudflare's own runtime** (`wrangler pages dev` 4.151.1 serving
+`public/`):
+- CSP, HSTS, `X-Frame-Options` and `Permissions-Policy` on every response.
+- Static assets: `max-age=3600, stale-while-revalidate`.
+- `sw.js`: a single `no-cache`.
+- `/x.html` → 308 → `/x`.
+- All 301 redirects working.
+- `noindex` on `/admin*`.
+- 1,185 asset requests returned 200.
+
+The build is unchanged: `scripts/vercel-build.sh` now also writes `public/_headers` and
+`public/_redirects` from `vercel.json` (`scripts/portable-host-config.py`), so one file stays
+the source of truth for both hosts.
+
+**What changes off Vercel.** Vercel Web Analytics and Speed Insights stop: their
+`/_vercel/*` scripts 404, harmlessly. Nothing else changes, because the backend is Supabase on
+every host.
+
+## Owner steps, in order
+
+Each step has a check. Do not start the next step until the check passes.
+
+1. **Create the Pages project.** Go to dash.cloudflare.com → Workers & Pages → Create → Pages →
+   Connect to Git → `syd-omega-91717/sydomega-live`. Set:
+   - Production branch: `main`
+   - Build command: `bash scripts/vercel-build.sh`
+   - Build output directory: `public`
+   - Settings → Builds → **Build watch paths**: exclude `docs/*`, `scripts/tests/*`,
+     `supabase/*`, `*.md`. Merges land 10–40 a day; this keeps them under 500 builds a month.
+
+   **Check:** the build log ends `VERCEL_BUILD=PASS` and
+   `PORTABLE_HOST_CONFIG=PASS header_rules=22`.
+
+2. **Verify on `<project>.pages.dev` before touching DNS.** Sign in and open dashboard, life and
+   profile.
+
+   **Check:** pages render signed in, and the response headers show
+   `content-security-policy`.
+
+3. **Add `sydomega.com` as a Cloudflare zone** (Free plan). Cloudflare imports the current
+   records. Delete the imported Vercel `ALIAS`/wildcard records. Keep the three CAA records
+   (`letsencrypt.org`, `pki.goog`, `sectigo.com`); Cloudflare's certificates need one of them.
+   There are no MX records, so email is unaffected.
+
+4. **Switch the nameservers.** At the domain's registrar (not Vercel, which shows
+   `boughtAt: null`), replace `ns1/ns2.vercel-dns.com` with the two Cloudflare nameservers the
+   zone shows.
+
+   **Check:** the zone reads **Active**.
+
+5. **Attach the domain.** In the Pages project → Custom domains, add `sydomega.com`, then
+   `www.sydomega.com`.
+
+   **Check:** both serve HTTPS with the current release. Compare the commit in
+   `/.well-known/omega-release.json` with `origin/main`.
+
+6. **Stop the Vercel side.** Remove the domains from the Vercel project. Leave the Vercel
+   project itself in place until the Pages site has run a week.
+
+**Rollback.** At the registrar, put `ns1/ns2.vercel-dns.com` back. Vercel still holds the
+2026-10-06 deploy.

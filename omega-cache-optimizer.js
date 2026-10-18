@@ -59,17 +59,6 @@
     }
   };
 
-  // Prefetch critical resources
-  const prefetch = () => {
-    const links = ['dashboard', 'profile', 'family'].map(p => `/optimize/${p}`);
-    links.forEach(href => {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.href = href;
-      (document.head || document.body).appendChild(link);
-    });
-  };
-
-  if(document.readyState !== 'loading') prefetch();
-  else document.addEventListener('DOMContentLoaded', prefetch);
+  // No prefetch. This prefetched /optimize/{dashboard,profile,family}, which no
+  // host serves: three 404s on every page view, each a billed edge request.
 })();

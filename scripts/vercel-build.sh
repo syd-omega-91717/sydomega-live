@@ -144,6 +144,11 @@ done
 # upload, and the post-deploy smoke check validates the same SHA from production.
 node scripts/omega-release-manifest.mjs --write
 
+# Carry vercel.json's headers and redirects in the artifact for hosts that
+# read _headers/_redirects (Cloudflare Pages, Netlify). Fails on a rule it
+# cannot translate rather than dropping it.
+python3 scripts/portable-host-config.py || { echo 'VERCEL_BUILD=FAIL portable_host_config'; exit 1; }
+
 
 
 

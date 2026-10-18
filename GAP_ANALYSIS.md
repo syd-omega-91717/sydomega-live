@@ -47,8 +47,11 @@ project's own established convention (security/data-integrity first).
   `.catch is not a function` errors in the 24 h to 07:52 UTC (386 in 7 days), from code `main` no
   longer contains. Production serves pre-block code: the last production deploy is #755 (`7d70ce14`, 2026-10-06),
   and `sydomega.com` answers 200 from Vercel's edge cache (measured 2026-10-18 09:07 UTC). Every
-  new deploy is refused ("Account is blocked"); a Netlify project (`sydomega-v6mo`) exists as the
-  standby host, undeployed — the owner's call. The OWNER board
+  new deploy is refused ("Account is blocked"; the dashboard says the pause is for **Edge
+  Requests**). The repo is now portable to Cloudflare Pages (unlimited requests on Free):
+  the build writes `_headers`/`_redirects` from `vercel.json`, verified in `wrangler pages dev`.
+  The cutover needs owner dashboard steps, listed in `docs/CLOUDFLARE_PAGES_CUTOVER.md`. A Netlify
+  project (`sydomega-v6mo`, created and never deployed) is redundant and can be deleted. The OWNER board
   shows the count.
 - **DONE 2026-10-18 — the second "S.Y.D" profile is the owner's second account.** It is
   `slmndghr@gmail.com` (the email lives in `auth.users`, not `profiles`): never signed in, email

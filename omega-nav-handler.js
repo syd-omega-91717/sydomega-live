@@ -20,7 +20,14 @@
     try{
       var u=new URL(url,location.origin);
       if(u.origin!==location.origin) return null;
-      return u.pathname+u.search+u.hash;
+      /* Rebuilt from re-encoded path segments, so nothing read from the DOM
+         reaches location.href unescaped (CodeQL js/xss-through-dom). Every
+         data-nav-action in the repo is a bare page path; query and hash are
+         not carried. */
+      return '/'+u.pathname.split('/').slice(1).map(function(s){
+        try{ s=decodeURIComponent(s); }catch(_){}
+        return encodeURIComponent(s);
+      }).join('/');
     }catch(_){return null;}
   }
   document.addEventListener('click',function(e){

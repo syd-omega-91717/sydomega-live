@@ -78,12 +78,12 @@
     {key:'ascend',  icon:'▲', label:'ASCEND',   href:'/ascend.html',col:'#E86A3A',
      sub:[['ascend','ASCEND WORKSPACE','/ascend.html'],['ascension-alias-1','ASCENSION MAP','/honors.html#ascension'],['matrix','THE MATRIX','/matrix.html'],['triads-alias-1','12 TRIADS','/matrix.html#triads'],['grid-alias-1','THE GRID','/matrix.html#grid'],['charter-alias-1','CHARTER','/matrix.html#charter'],['achievements-alias-1','MY RECORD','/honors.html#record'],
           ['standing-dashboard','STANDING DASHBOARD','/standing-dashboard.html'],
-          ['academy','ACADEMY','/academy.html'],['courses','COURSES','/courses.html'],['exam','EXAMINATION','/exam.html'],['gaming','GAMES & MASTERY','/gaming.html'],
+          ['academy','ACADEMY','/academy.html'],['courses','COURSES','/courses.html'],['exam','EXAMINATION','/exam.html','folded'],['gaming','GAMES & MASTERY','/gaming.html'],
           ['contributions','CONTRIBUTIONS','/contributions.html'],['evolution','EVOLUTION','/evolution.html'],
-          ['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html'],
-          ['focus','DEEP WORK','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html'],
-          ['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html'],
-          ['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html']]},
+          ['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html','folded'],
+          ['focus','DEEP WORK','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html','folded'],
+          ['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html','folded'],
+          ['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html','folded']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#AB82F2',
      /* ORRERY folds signs, gods, elements, agents, gates and houses into one
         wheel. A 4th field 'folded' keeps an entry in search (Ctrl/Cmd K), the

@@ -161,19 +161,17 @@
     },
     {
       "core": "vault",
-      "host": "vault",
-      "state": "PLANNED",
-      "is": "Money in one ledger: assets, marketplace, income, payments, invest",
+      "host": "invest",
+      "state": "BUILT",
+      "is": "Money in one view: net worth and this month's cash flow from your own trackers, with the platform ledger, marketplace and billing",
       "pages": [
         "vault",
         "marketplace",
         "income",
         "blockchain",
-        "sigil",
         "ledger",
         "payments",
         "subscriptions",
-        "sovereign-covenant",
         "advertising",
         "ad-network",
         "invest",
@@ -204,7 +202,8 @@
         "credentials",
         "membership",
         "charter",
-        "archive"
+        "archive",
+        "sigil"
       ]
     },
     {
@@ -224,7 +223,8 @@
         "social",
         "feed",
         "events",
-        "order"
+        "order",
+        "sovereign-covenant"
       ]
     },
     {

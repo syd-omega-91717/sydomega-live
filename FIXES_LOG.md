@@ -24682,3 +24682,32 @@ Measured in headless Chromium with the vendored `chart.umd.min.js`: draw with
 
 The fix is a `release()` that destroys `Chart.getChart(canvas)` (or the module's own handle)
 in all four builders.
+
+## 2026-10-19 — The front door's emblem turns again (owner decision, reversing 2026-09-15)
+
+The hero mount `.ohz-hero-art[data-omega-sculpture="signet"]` kept rendering the 3-D Omega signet
+the whole time (`OmegaSculpture.status()`: live, visible, bloom and environment on). From
+2026-09-15 three additions buried it:
+- `fcdda493`: `omega-visual-runtime.js` laid a static "Omega Nexus" composition over it (monoliths,
+  a flat Ω, GAMING/CINEMA cards).
+- `8ca012fb`: `omega-home-depth-correction.css` set its canvas to `opacity:.045`.
+- `a7ad3b02`: `omega-opening-system.css` set its canvas to `opacity:.20`.
+
+`test_spatial_visual_contract.py` and `test_omega_visual_runtime_contract.py` locked that in
+("non_rotative", `opacity:.20`). On 2026-10-19 the owner asked for the rotating emblem back.
+
+**Change.**
+- The overlay installer is removed.
+- `omega-home-depth-correction.css` is deleted; nothing else loaded it.
+- The 20% rule is dropped.
+- The two tests now assert the reverse: no overlay, no dimming, and the signet's sway and orbit
+  turn present in `omega-sculpture.js`.
+- The world atlas below the hero is unchanged.
+
+**Measured** in headless Chromium (SwiftShader WebGL), 2.5 s apart. Before: a flat Ω over a dark
+collage. After: the lit gold signet. The two frames differ, so it is moving, and there are 0
+page errors.
+
+The signet still sways about ±32° rather than making a full 360° turn. A full turn shows the
+extruded Ω edge-on twice per cycle (see the comment at `omega-sculpture.js`, "A SWAY, NOT A SPIN").
+Its orbit and halo turn continuously.

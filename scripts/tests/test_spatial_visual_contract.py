@@ -36,33 +36,21 @@ class SpatialVisualContractTests(unittest.TestCase):
         self.assertIn("omega-world-game", entertainment_css)
         self.assertIn("omega-world-cinema", entertainment_css)
 
-    def test_opening_is_a_dimensional_non_rotative_omega_nexus(self):
+    def test_opening_genesis_stays_scoped_to_index(self):
         runtime = (ROOT / "omega-visual-runtime.js").read_text()
-        opening = (ROOT / "omega-opening-system.css").read_text()
         genesis = (ROOT / "omega-genesis.js").read_text()
-        self.assertIn("omega-gateway", runtime)
-        self.assertIn("omega-gateway-chamber", runtime)
-        self.assertIn("omega-gateway-portal", runtime)
-        self.assertIn("omega-gateway-monolith", runtime)
         self.assertIn("omega-opening-system.css", runtime)
-        self.assertIn("omega-gateway-core", opening)
-        self.assertIn("omega-gateway-mark", opening)
-        self.assertIn("omega-gateway-floor", opening)
-        self.assertIn("omega-nexus-drift-a", opening)
-        self.assertIn("preserve-3d", opening)
         self.assertIn("IS_INDEX", genesis)
         self.assertIn("if (!IS_INDEX) atmosphere();", genesis)
-        self.assertNotIn("rotateY(360deg)", runtime)
-        self.assertNotIn("omegaGenesisOrbit", runtime)
-        self.assertNotIn("omegaGenesisSpin", opening)
 
     def test_opening_keeps_existing_sculpture_mount(self):
         index = (ROOT / "index.html").read_text()
         runtime = (ROOT / "omega-visual-runtime.js").read_text()
         opening = (ROOT / "omega-opening-system.css").read_text()
         self.assertIn('data-omega-sculpture="signet"', index)
-        self.assertIn('.ohz-hero-art[data-omega-sculpture="signet"]', runtime)
-        self.assertIn('.ohz-hero-art canvas{opacity:.20!important', opening)
+        self.assertIn('.ohz-hero-art[data-omega-sculpture]', runtime)
+        # The turning signet is the hero; nothing may dim its canvas (2026-10-19).
+        self.assertNotIn('.ohz-hero-art canvas{opacity', opening)
 
 
 if __name__ == "__main__":

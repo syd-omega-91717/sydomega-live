@@ -13,7 +13,7 @@
 :root{--card-bg:#111;--card-border:#222;--tag-bg:#1a1a2e;--tag-active:var(--cyan)}
 .note-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative}
 .note-card:hover{border-color:var(--cyan);background:#111}
-.note-title{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:6px}
+.note-title{font-family:'Courier New',monospace;font-size:var(--fs-2,14px);color:#e0e0e0;font-weight:700;margin-bottom:6px}
 .note-preview{font-size:12px;color:var(--muted);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden}
 .note-meta{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .note-date{font-size:12px;color:var(--muted);font-family:'Courier New',monospace}
@@ -51,13 +51,13 @@
 .empty-state{text-align:center;padding:60px 20px;color:var(--muted);font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px}
 .note-view{background:#0d0d0d;border:1px solid #222;padding:24px;margin-bottom:16px}
 .note-view-title{font-family:'Courier New',monospace;font-size:16px;color:var(--cyan);margin-bottom:4px}
-.note-view-body{font-size:13px;color:#ccc;line-height:1.75;white-space:pre-wrap;margin-top:14px}
+.note-view-body{font-size:var(--fs-2,14px);color:#ccc;line-height:1.75;white-space:pre-wrap;margin-top:14px}
 .note-view-body code{background:#1a1a1a;border:1px solid #333;padding:2px 6px;font-family:'Courier New',monospace;color:#FFD700;font-size:12px}
 .note-view-body strong{color:#fff}
 .note-view-body em{color:#aaa;font-style:italic}
 .note-view-body h1,.note-view-body h2,.note-view-body h3{color:var(--cyan);font-family:'Courier New',monospace;margin:12px 0 6px}
-.note-view-body h1{font-size:15px;border-bottom:1px solid #222;padding-bottom:6px}
-.note-view-body h2{font-size:13px}
+.note-view-body h1{font-size:var(--fs-3,16px);border-bottom:1px solid #222;padding-bottom:6px}
+.note-view-body h2{font-size:var(--fs-2,14px)}
 .note-view-body h3{font-size:12px}
 .note-view-body ul,.note-view-body ol{padding-left:20px;margin:8px 0}
 .note-view-body li{margin-bottom:4px}
@@ -65,7 +65,7 @@
 .note-view-actions{display:flex;gap:8px;margin-top:16px}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
-.stat-num{font-family:'Courier New',monospace;font-size:22px;color:var(--cyan);font-weight:700}
+.stat-num{font-family:'Courier New',monospace;font-size:var(--fs-4,20px);color:var(--cyan);font-weight:700}
 .stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
 .science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--purple);padding:16px}

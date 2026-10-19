@@ -72,19 +72,19 @@
       <div class="sechead">12 PHASES &middot; THE SCIENCE</div>
       <div class="card-grid">
         <div class="card" style="--card-accent:var(--cyan)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">THE PHASE SYSTEM</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--cyan);margin-bottom:8px">THE PHASE SYSTEM</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">12 Sovereign Phases map the complete journey from Awakening to Apex. Each phase corresponds to a Gate of the lattice. Progress is gated by AUTH score, which compounds from three axes: Knowledge, Mastery, and Contribution.</div>
         </div>
         <div class="card" style="--card-accent:var(--gold)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">THE NUMBER 12</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);margin-bottom:8px">THE NUMBER 12</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">12 is the foundation of cosmic structure: 12 zodiac signs, 12 Olympian gods, 12 months, 12 hours. The Sovereign Platform mirrors this cosmic architecture with 12 tracks, 12 phases, and 12 gates — aligned with natural law.</div>
         </div>
         <div class="card" style="--card-accent:var(--purple)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">AUTHORITY GATING</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--purple);margin-bottom:8px">AUTHORITY GATING</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Phase progression requires AUTH score thresholds. AUTH = sqrt(A&#179;+B&#179;+C&#179;)×φ/e. The cubic relationship ensures that balanced growth across all three axes is rewarded with non-linear authority gains.</div>
         </div>
         <div class="card" style="--card-accent:var(--green)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">FROM INITIATE TO APEX</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--green);margin-bottom:8px">FROM INITIATE TO APEX</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Phase I (Awakening) begins the journey with AUTH ≥ 0. Phase XII (Apex) requires all three axes at 9.000 — A=B=C=9, yielding AUTH = 27.8367. The journey is the curriculum; the lattice is the school.</div>
         </div>
       </div>
@@ -139,7 +139,7 @@ function build(){
       +PHASES.map(function(p){
       return '<div class="journey-stop" style="--pc:'+p.color+'">'
         +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+p.color+';margin-bottom:3px">PHASE '+ROM[p.n-1]+' · '+p.gate+'</div>'
-        +'<div style="font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:3px">'+p.name+'</div>'
+        +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--ink);margin-bottom:3px">'+p.name+'</div>'
         +'<div style="font-size:12px;color:var(--muted)">'+p.desc+' AUTH &ge; '+p.thr+'</div>'
         +'</div>';
     }).join('');}
@@ -172,7 +172,7 @@ function updateMyPhase(auth){
   if(ring)setTimeout(function(){ring.style.setProperty('--p',Math.min(100,pct)+'%');},100);
   var det=document.getElementById('my-phase-detail');
   if(det){det.innerHTML='<div class="glass" style="--card-accent:'+p.color+'">'
-    +'<div style="font-family:var(--D);font-size:13px;color:'+p.color+';margin-bottom:8px">'+p.name+' &middot; '+p.gate+'</div>'
+    +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:'+p.color+';margin-bottom:8px">'+p.name+' &middot; '+p.gate+'</div>'
     +'<div style="font-size:12px;line-height:1.8;color:var(--muted)">'+p.desc+'</div>'
     +'<div style="margin-top:10px;font-family:var(--M);font-size:12px;color:var(--muted)">THRESHOLD: AUTH &ge; '+p.thr+' &middot; NEXT: '+(phIdx<11?PHASES[phIdx+1].name+' (AUTH &ge; '+PHASES[phIdx+1].thr+')'  :'APEX REACHED')+'</div>'
     +'</div>';}

@@ -4,27 +4,27 @@
 <title>&#937; SYD OMEGA 91717 &mdash; ANALYTICS</title>
 <style>
 .bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
-.bar-lbl{font-family:var(--M);font-size:.72rem;letter-spacing:.05em;color:var(--muted);min-width:140px;flex-shrink:0}
+.bar-lbl{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.05em;color:var(--muted);min-width:140px;flex-shrink:0}
 .bar-track{flex:1;height:7px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}
 .bar-fill{height:100%;border-radius:3px;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
-.bar-val{font-family:var(--D);font-size:.8rem;min-width:3.5rem;text-align:right;flex-shrink:0}
+.bar-val{font-family:var(--D);font-size:var(--fs-2,14px);min-width:3.5rem;text-align:right;flex-shrink:0}
 .chart-box{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:.85rem}
-.chart-head{padding:.6rem 1rem;border-bottom:1px solid var(--line);font-family:var(--M);font-size:.72rem;letter-spacing:.07em;color:var(--cyan);display:flex;align-items:center;justify-content:space-between}
+.chart-head{padding:.6rem 1rem;border-bottom:1px solid var(--line);font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.07em;color:var(--cyan);display:flex;align-items:center;justify-content:space-between}
 .chart-body{padding:1rem;position:relative}
 .apex-wrap{display:flex;align-items:center;justify-content:center;min-height:100px}
 .algo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.85rem}
 .algo-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1.1rem;border-top:2px solid transparent}
-.algo-title{font-family:var(--D);font-size:.88rem;letter-spacing:.04em;margin-bottom:.3rem}
-.algo-sub{font-family:var(--M);font-size:.7rem;letter-spacing:.05em;color:var(--muted);margin-bottom:.6rem}
-.algo-body{font-size:.8rem;color:var(--ink);opacity:.75;line-height:1.7}
+.algo-title{font-family:var(--D);font-size:var(--fs-2,14px);letter-spacing:.04em;margin-bottom:.3rem}
+.algo-sub{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.05em;color:var(--muted);margin-bottom:.6rem}
+.algo-body{font-size:var(--fs-2,14px);color:var(--ink);opacity:.75;line-height:1.7}
 .code-block{background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:.75rem 1rem;font-family:var(--M);font-size:.75rem;color:var(--solar);line-height:1.8;overflow-x:auto;margin-top:.5rem}
-.task-row{display:grid;grid-template-columns:110px 1fr 70px 80px 90px;padding:.55rem .75rem;border-bottom:1px solid rgba(201,168,76,.05);font-size:.8rem;gap:.5rem}
+.task-row{display:grid;grid-template-columns:110px 1fr 70px 80px 90px;padding:.55rem .75rem;border-bottom:1px solid rgba(201,168,76,.05);font-size:var(--fs-2,14px);gap:.5rem}
 .task-head{background:rgba(0,229,255,.04);border-bottom:1px solid rgba(0,229,255,.1)}
-.task-head span{font-family:var(--M);font-size:.68rem;letter-spacing:.07em;color:var(--cyan)}
+.task-head span{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.07em;color:var(--cyan)}
 .metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;margin-top:1rem}
 .metric-item{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.9rem 1rem}
-.metric-label{font-family:var(--M);font-size:.68rem;letter-spacing:.06em;color:var(--muted);margin-bottom:.35rem}
-.metric-val{font-family:var(--M);font-size:.8rem;line-height:1.5}
+.metric-label{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.06em;color:var(--muted);margin-bottom:.35rem}
+.metric-val{font-family:var(--M);font-size:var(--fs-2,14px);line-height:1.5}
 </style>
 </head>
 <body>
@@ -113,7 +113,7 @@
       </div>
     </div>
     <p class="sechead" style="margin-top:1rem" data-i18n="ana_algo_formula_title">FORMULA DERIVATION · COMPLETE MATHEMATICAL PROOF</p>
-    <div class="code-block" style="font-size:.78rem;line-height:2">
+    <div class="code-block" style="font-size:var(--fs-1,12px);line-height:2">
 A, B, C ∈ [0.001, 9.000] · GENESIS=0.001 · APEX=9.000 · STEP=0.001<br>
 AUTHORITY = sqrt( A³ + B³ + C³ ) × φ / e<br>
 At apex: A=B=C=9 ⟹ A³=B³=C³=729 ⟹ sum=2187<br>
@@ -157,10 +157,10 @@ i² = -1 ⟹ complex gate damping at each threshold crossing
     </div>
     <p class="sechead" style="margin-top:1rem" data-i18n="ana_data_metrics_title">LIVE PLATFORM METRICS</p>
     <div class="metrics-grid" id="live-metrics"></div>
-    <p class="sechead" style="margin-top:1rem"><span data-i18n="ana_data_actionlog_title">VERIFIED ACTION LOG</span> <button onclick="loadTaskLog()" style="font-family:var(--M);font-size:.7rem;letter-spacing:.05em;padding:.25rem .6rem;border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent;cursor:pointer;border-radius:3px;margin-left:.5rem">↻ REFRESH</button></p>
+    <p class="sechead" style="margin-top:1rem"><span data-i18n="ana_data_actionlog_title">VERIFIED ACTION LOG</span> <button onclick="loadTaskLog()" style="font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.05em;padding:.25rem .6rem;border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent;cursor:pointer;border-radius:3px;margin-left:.5rem">↻ REFRESH</button></p>
     <div id="task-log-wrap" style="background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden">
       <div class="task-row task-head"><span data-i18n="ana_table_timestamp">TIMESTAMP</span><span data-i18n="ana_table_task">TASK</span><span data-i18n="ana_table_axis">AXIS</span><span data-i18n="ana_table_points">POINTS</span><span data-i18n="ana_table_auth">AUTH AFTER</span></div>
-      <div id="task-rows" style="font-family:var(--M);font-size:.72rem;color:var(--muted);padding:.75rem;text-align:center" data-loading></div>
+      <div id="task-rows" style="font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);padding:.75rem;text-align:center" data-loading></div>
     </div>
   </div>
 </div>
@@ -286,7 +286,7 @@ var PHI=1.6180339887,EU=2.7182818285;
   if(cb){
     [{n:'A³',v:a3,m:729,c:'var(--gold)'},{n:'B³',v:b3,m:729,c:'var(--cyan)'},{n:'C³',v:c3,m:729,c:'var(--solar)'}].forEach(function(x){
       var row=document.createElement('div');row.style.cssText='margin-bottom:8px';
-      var lbl=document.createElement('div');lbl.style.cssText='display:flex;justify-content:space-between;font-family:var(--M);font-size:.7rem;color:var(--muted);margin-bottom:4px';
+      var lbl=document.createElement('div');lbl.style.cssText='display:flex;justify-content:space-between;font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);margin-bottom:4px';
       var ln=document.createElement('span');ln.textContent=x.n;
       var lv=document.createElement('span');lv.style.color=x.c;lv.textContent=x.v.toFixed(3);
       lbl.appendChild(ln);lbl.appendChild(lv);

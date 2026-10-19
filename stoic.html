@@ -43,7 +43,7 @@
 .dc-sep{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.3);text-align:center}
 .dc-out{font-family:var(--M);font-size:12px;color:rgba(200,100,100,.7);line-height:1.5}
 .practice-item{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:14px;display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
-.pi-num{font-family:var(--M);font-size:22px;color:rgba(201,168,76,.2);min-width:28px}
+.pi-num{font-family:var(--M);font-size:var(--fs-4,20px);color:rgba(201,168,76,.2);min-width:28px}
 .pi-content .pi-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:4px}
 .pi-content .pi-desc{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.6);line-height:1.7}
 .sr-dot{width:10px;height:10px;border-radius:2px;background:rgba(201,168,76,.1);display:inline-block}
@@ -66,12 +66,12 @@
       <div class="memento-card card" data-reveal="rotate-in">
         <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:8px">MEMENTO MORI</div>
         <canvas id="mementoCanvas" width="120" height="120"></canvas>
-        <div style="font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:2px;margin:8px 0" id="mementoClock">—</div>
+        <div style="font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:2px;margin:8px 0" id="mementoClock">—</div>
         <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);line-height:1.6" id="mementoSub">Set your birth year to activate</div>
       </div>
       <div class="daily-quote" data-reveal="fade-left">
         <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">TODAY'S SOVEREIGN WISDOM</div>
-        <div style="font-family:var(--M);font-size:13px;color:rgba(220,210,180,.8);line-height:1.7;font-style:italic" id="dailyQuote">—</div>
+        <div style="font-family:var(--M);font-size:var(--fs-2,14px);color:rgba(220,210,180,.8);line-height:1.7;font-style:italic" id="dailyQuote">—</div>
         <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-top:10px" id="dailyAuthor">—</div>
         <div style="margin-top:12px;display:flex;gap:8px">
           <button class="btn-gold" onclick="nextQuote()">NEXT WISDOM</button>

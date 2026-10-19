@@ -28,14 +28,14 @@
 .archetype-index{font:10px var(--M,Courier Prime,monospace);letter-spacing:3px;color:var(--accent);display:block;margin-bottom:24px}
 .archetype-name{font:22px var(--D,Cinzel,serif);color:var(--ink);display:block;margin-bottom:8px}
 .archetype-role{font:12px var(--M,Courier Prime,monospace);letter-spacing:1.4px;color:var(--accent);display:block;margin-bottom:12px}
-.archetype-desc{font-size:13px;line-height:1.65;color:var(--muted);display:block}
+.archetype-desc{font-size:var(--fs-2,14px);line-height:1.65;color:var(--muted);display:block}
 .character-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;position:relative}
 .character-action{padding:14px;border:1px solid var(--line);background:rgba(10,10,15,.62);color:var(--ink);text-decoration:none;font:12px var(--M,Courier Prime,monospace);letter-spacing:1.5px;transition:.2s}
 .character-action:hover,.character-action:focus-visible{border-color:var(--cg-cyan);color:var(--cg-cyan);outline:none}
 .character-foot{margin-top:24px;padding-top:12px;border-top:1px solid rgba(201,168,76,.12);display:flex;justify-content:space-between;gap:12px;font:10px var(--M,Courier Prime,monospace);letter-spacing:1.8px;color:var(--muted)}
 @keyframes cg-orbit{to{transform:rotate(360deg)}}
 @media(max-width:900px){.character-head{grid-template-columns:1fr}.character-orb{margin:0 auto}.archetype-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.character-realm{padding:24px 14px}.character-title{font-size:44px}.archetype-grid,.character-actions{grid-template-columns:1fr}.archetype-card{min-height:180px}.character-foot{display:block}.character-foot span{display:block;margin-top:5px}}
+@media(max-width:560px){.character-realm{padding:24px 14px}.character-title{font-size:var(--fs-6,40px)}.archetype-grid,.character-actions{grid-template-columns:1fr}.archetype-card{min-height:180px}.character-foot{display:block}.character-foot span{display:block;margin-top:5px}}
 @media(prefers-reduced-motion:reduce){.character-orb{animation:none}.archetype-card,.character-action{transition:none}.archetype-card:hover,.archetype-card:focus-visible{transform:none}}
 </style>
 </head>

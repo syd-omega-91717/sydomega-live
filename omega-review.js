@@ -89,8 +89,8 @@
       '.orv-top b{color:var(--gold,#C9A84C);font-weight:400}.orv-x{margin-left:auto}' +
       '.orv-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin:12px 0 18px;overflow:hidden}.orv-bar i{display:block;height:100%;background:var(--gold,#C9A84C)}' +
       '.orv-tag{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;color:var(--cyan,#4FC3D8)}' +
-      '.orv-front{font-family:var(--R,sans-serif);font-size:22px;color:var(--ink,#E8E2D0);margin:10px 0 16px;white-space:pre-wrap;overflow-wrap:anywhere}' +
-      '.orv-back{font-family:var(--R,sans-serif);font-size:17px;color:var(--ink,#E8E2D0);border-top:1px solid rgba(201,168,76,.2);padding-top:14px;white-space:pre-wrap;overflow-wrap:anywhere}' +
+      '.orv-front{font-family:var(--R,sans-serif);font-size:var(--fs-4,20px);color:var(--ink,#E8E2D0);margin:10px 0 16px;white-space:pre-wrap;overflow-wrap:anywhere}' +
+      '.orv-back{font-family:var(--R,sans-serif);font-size:var(--fs-3,16px);color:var(--ink,#E8E2D0);border-top:1px solid rgba(201,168,76,.2);padding-top:14px;white-space:pre-wrap;overflow-wrap:anywhere}' +
       '.orv-ex{font-style:italic;color:var(--muted,#9A968A);margin-top:8px}' +
       '.orv-btns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px}' +
       '.orv button{font-family:var(--M,monospace);font-size:12px;letter-spacing:1px;padding:10px 6px;border-radius:8px;cursor:pointer;border:1px solid rgba(201,168,76,.4);color:var(--gold,#C9A84C);background:none}' +
@@ -98,7 +98,7 @@
       '.orv .orv-btns button{display:flex!important;flex-direction:column;align-items:center;gap:3px}.orv-btns button small{opacity:.75;font-size:12px}' +
       '.orv-btns button[data-q="1"]{border-color:rgba(207,103,96,.6);color:var(--crim,#CF6760)}' +
       '.orv-show{width:100%;margin-top:6px}' +
-      '.orv-done{font-family:var(--R,sans-serif);font-size:18px;color:var(--ink,#E8E2D0);margin:8px 0 16px}';
+      '.orv-done{font-family:var(--R,sans-serif);font-size:var(--fs-4,20px);color:var(--ink,#E8E2D0);margin:8px 0 16px}';
     document.head.appendChild(s);
   }
 

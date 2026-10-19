@@ -40,7 +40,7 @@
 .metric-primary .metric-label {
   display: block;
   font-family: var(--M);
-  font-size: 11px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--muted);
@@ -88,7 +88,7 @@
 .metric-secondary .metric-label {
   display: block;
   font-family: var(--M);
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 1.4px;
   text-transform: uppercase;
   color: var(--muted);
@@ -114,7 +114,7 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--M);
-  font-size: 11px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 1.4px;
   color: var(--muted);
   margin-bottom: 8px;
@@ -148,7 +148,7 @@
 
 .tbl-dense .tbl-hcell {
   padding: 6px 12px;
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
 }
 
 /* Spacious table variant */
@@ -206,7 +206,7 @@
   position: absolute;
   right: 0;
   opacity: .3;
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
   transition: opacity .2s ease;
 }
 
@@ -270,7 +270,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 32px;
+  font-size: var(--fs-5,28px);
   opacity: .5;
   z-index: 10;
 }
@@ -413,7 +413,7 @@
 
   .tbl-dense .tbl-row {
     padding: 8px 10px;
-    font-size: 11px;
+    font-size: var(--fs-1,12px);
   }
 
   .section-header {
@@ -431,12 +431,12 @@
   }
 
   .metric-primary .metric-label {
-    font-size: 10px;
+    font-size: var(--fs-1,12px);
   }
 
   .tbl-dense .tbl-row {
     padding: 6px 8px;
-    font-size: 10px;
+    font-size: var(--fs-1,12px);
   }
 
   .section-content {

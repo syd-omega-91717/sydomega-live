@@ -9,7 +9,7 @@
 :root{--dim:rgba(138,134,118,.5)}
 
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
-.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-val{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
 .stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
@@ -109,7 +109,7 @@
       <span class="mn-label" id="b-month-lbl"></span>
       <button class="mn-btn" id="b-next-mo" aria-label="Next month">▸</button>
     </div>
-    <div class="kpi-row" id="b-kpis" data-stagger data-stagger-gap="70"></div>
+    <div class="kpi-row" id="b-kpis" data-stagger data-stagger-gap="70" data-omega-empty-guide="Nothing recorded for this month yet." data-omega-empty-cta="Add your first expense" data-omega-empty-go="#t-expenses" data-omega-empty-focus="#ex-amount"></div>
     <div class="cat-section">
       <div class="sect-title">SPENDING BY CATEGORY  ·  ACTUAL vs BUDGET</div>
       <div id="b-cat-bars"></div>
@@ -596,5 +596,6 @@ renderOverview();
 
 </script>
 <script src="omega-local-backup.js"></script>
+<script src="/omega-empty-guide.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

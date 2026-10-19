@@ -16,12 +16,12 @@
 .auth-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .auth-pct{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:4px}
 .asset-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--line);margin-bottom:6px;background:var(--surface)}
-.asset-name{font-family:var(--D);font-size:13px;color:var(--ink)}
+.asset-name{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--ink)}
 .asset-qty{font-family:var(--M);font-size:12px;color:var(--gold)}
 .asset-val{font-family:var(--M);font-size:12px;color:var(--muted)}
 .ach-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
 .ach-chip{display:flex;flex-direction:column;align-items:center;padding:12px 18px;border:1px solid var(--line);background:var(--surface);min-width:80px}
-.ach-num{font-family:var(--D);font-size:22px;color:var(--solar)}
+.ach-num{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--solar)}
 .ach-lbl{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
 .privacy-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);margin-bottom:14px;background:var(--surface)}
 .privacy-row label{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);cursor:pointer}
@@ -152,7 +152,7 @@ function renderMatrix(pr){
   [{t:'NODES EARNED',v:pr.nodes_earned||0},{t:'A³ — KNOWLEDGE',v:Math.pow(a,3)},{t:'B³ — MASTERY',v:Math.pow(b,3)},{t:'C³ — CONTRIBUTION',v:Math.pow(c,3)}].forEach(function(x){
     var card=document.createElement('div'); card.className='card';
     var title=document.createElement('div'); title.className='card-title'; title.textContent=x.t;
-    var body=document.createElement('div'); body.className='card-body'; body.style.cssText='font-family:var(--D);font-size:22px;color:var(--solar)'; body.textContent=String(x.v);
+    var body=document.createElement('div'); body.className='card-body'; body.style.cssText='font-family:var(--D);font-size:var(--fs-4,20px);color:var(--solar)'; body.textContent=String(x.v);
     card.append(title,body); matrix.appendChild(card);
   });
 

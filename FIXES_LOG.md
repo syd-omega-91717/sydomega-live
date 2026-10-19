@@ -24740,3 +24740,27 @@ COSMOS, INVEST, ACHIEVE and MEDIA tooltips list the restored hrefs; the drawer c
 `/elements.html`, `/budget.html`, `/grades.html`, `/trailers.html`, `/order.html` (226
 drawer links). `python3 -m unittest discover -s scripts/tests`: 809 OK.
 `./scripts/ci-local.sh --all`: all 39 blocking checks passed.
+
+## 2026-10-19 — Phone: two floats instead of four, a shorter dashboard, three broken glyphs
+
+**Measured at 390x700** (`position:fixed`, visible, pointer-events on): dashboard and LIFE
+carried four floats — `#omega-mob` (bottom nav), `#om-open` (all pages, top-left),
+`#cp-btn` (copilot) at **y 350, mid-screen**, and `#omega-command-hud` (a second Ω beside
+the copilot's Ω). `#om-open` duplicates the nav's MORE drawer; the HUD's six links
+(world, search, missions, notify, recovery, evidence) are all in the drawer. `#cp-btn`
+sat on the mobile ladder's 298px rung, which exists to clear four lower floats — but calm
+mode (`bg.js` `data-omega-calm`, on by default here) already hides all four.
+
+**Change (bg.js mobile ladder, ≤760px).** `#om-open` and `#omega-command-hud` step aside;
+`#cp-btn` sits at `--omega-chrome-bottom + 16px` under calm mode or when none of the four
+lower floats exists (`:has()`), else keeps the 298px rung. Desktop is untouched.
+**dashboard.html ≤560px:** the 24-portal command grid goes two columns with the icon beside
+the name and the description hidden (the card stays the link). **Glyphs:** SECURITY,
+AUTOMATE and PERSONAL OS rendered 頦 颁 箴 — decimal entity numbers written as hex escapes
+(`'頦'` for `&#9826;`). Now `♢`, `⚙︎`, `✎`; the repo-wide scan
+for `\u8xxx`/`\u9xxx`/`\u1xxxx` escapes found only these three.
+
+**Evidence.** Floats at 390x700 on dashboard/LIFE/VAULT: `#omega-mob` + `#cp-btn` at
+y 571–623 (16px above the nav at 639). Command grid 2,288 → **772px**; dashboard height
+6,427 → **4,911px**; 0 clipped cells (INTELLIGENCE overflowed 2px at first; padding
+trimmed). `brand-glyph-check.py` OK; 809 tests OK.

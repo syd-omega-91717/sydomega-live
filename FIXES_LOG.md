@@ -24784,29 +24784,3 @@ dashboard 11, VAULT 7; nothing under 12px but SVG labels. Full estate before/aft
 horizontal scroll, **0** more clipped text elements, **0** SVG text changed, 0 errors. A
 first-pass scan flagged hercules +218% height; re-measured at 1.2 s and 5 s it is 1680 →
 1683px (scan noise). `type-scale.py --check` OK; `ci-local.sh --all` 39/39; 809 tests OK.
-
-## 2026-10-19 — Motion budget: ambient loops only where the member is looking
-
-**Measured** (`document.getAnimations()` running, 6 s after load, 1440px, main build):
-dashboard **71**, LIFE **35**, VAULT **28** infinite animations at rest. The bulk was five
-blanket rules: `omgBreath` on every `.card/.tier/.node/.tile/.mod` (omega-genesis.js, 24 on
-dashboard), `omTitleGlow` on every `.t/.brand/.sechead/.hero .nm/.topbar .t/h1`
-(omega-content.js), `omegaSignSpin` on every section sign (omega-content.js, 5),
-`omega-alive-breathe` on every dock glyph (omega-alive.js, 8), and `emblem-float` inline on
-12 dashboard section icons + every `.emblem-orb`.
-
-**Change.** Each now runs only on `:hover`/`:focus-within`, on the current section's glyph
-(`.on-active`/`[aria-current]`), or — for the title glow — on the page's `h1` alone.
-Keyframes, hover rotation and reduced-motion handling are unchanged; entrance animations
-are untouched (a blanket `animation-play-state:paused` was rejected because the same
-cards run `oa-fade-up`, which would have frozen them at opacity 0).
-
-**After:** dashboard **18**, LIFE **9**, VAULT **12**. The remainder is one loop each from
-separate chrome owners (nav.js `#omega-top`, `.topbar::after` seam, `.ofx-sheen`, the
-particle canvas pulses) — left as brand chrome, not decoration per item.
-`python3 -m unittest discover -s scripts/tests`: 809 OK.
-Also removed `omega-genesis.js` `destagger()`: a random 0–11 s inline `animation-delay` on
-every card (to desync the always-on breath) plus a subtree MutationObserver. With breathing
-hover-only it would only delay a hovered card's response. Entrances were **not** affected
-(measured: in-view dashboard cards 24/24 opaque by 2 s with and without it — the reveal
-sets its own delay), so no speed-up is claimed.

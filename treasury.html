@@ -36,7 +36,7 @@
 
     <!-- OVERVIEW TAB -->
     <div class="tab-panel active pad" id="tab-overview">
-      <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi-row" data-stagger data-stagger-gap="70" data-omega-empty-guide="No assets recorded yet." data-omega-empty-cta="Add your first asset" data-omega-empty-go=".tab[data-tab='assets'] | button[onclick*='add-asset-form']" data-omega-empty-focus="#add-asset-form">
         <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-total">$0</div><div class="kpi-l">TOTAL WEALTH</div></div>
         <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-liquid">$0</div><div class="kpi-l">LIQUID</div></div>
         <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-illiquid">$0</div><div class="kpi-l">ILLIQUID</div></div>
@@ -356,5 +356,6 @@ window.addFlow=function(){
 </script>
 <script src="/omega-local-backup.js"></script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
+<script src="/omega-empty-guide.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

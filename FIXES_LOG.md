@@ -24740,3 +24740,24 @@ COSMOS, INVEST, ACHIEVE and MEDIA tooltips list the restored hrefs; the drawer c
 `/elements.html`, `/budget.html`, `/grades.html`, `/trailers.html`, `/order.html` (226
 drawer links). `python3 -m unittest discover -s scripts/tests`: 809 OK.
 `./scripts/ci-local.sh --all`: all 39 blocking checks passed.
+
+## 2026-10-19 — Motion budget: ambient loops only where the member is looking
+
+**Measured** (`document.getAnimations()` running, 6 s after load, 1440px, main build):
+dashboard **71**, LIFE **35**, VAULT **28** infinite animations at rest. The bulk was five
+blanket rules: `omgBreath` on every `.card/.tier/.node/.tile/.mod` (omega-genesis.js, 24 on
+dashboard), `omTitleGlow` on every `.t/.brand/.sechead/.hero .nm/.topbar .t/h1`
+(omega-content.js), `omegaSignSpin` on every section sign (omega-content.js, 5),
+`omega-alive-breathe` on every dock glyph (omega-alive.js, 8), and `emblem-float` inline on
+12 dashboard section icons + every `.emblem-orb`.
+
+**Change.** Each now runs only on `:hover`/`:focus-within`, on the current section's glyph
+(`.on-active`/`[aria-current]`), or — for the title glow — on the page's `h1` alone.
+Keyframes, hover rotation and reduced-motion handling are unchanged; entrance animations
+are untouched (a blanket `animation-play-state:paused` was rejected because the same
+cards run `oa-fade-up`, which would have frozen them at opacity 0).
+
+**After:** dashboard **18**, LIFE **9**, VAULT **12**. The remainder is one loop each from
+separate chrome owners (nav.js `#omega-top`, `.topbar::after` seam, `.ofx-sheen`, the
+particle canvas pulses) — left as brand chrome, not decoration per item.
+`python3 -m unittest discover -s scripts/tests`: 809 OK.

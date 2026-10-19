@@ -113,7 +113,7 @@
 }
 .ohz-brand-mark {
   font-family: var(--D, "Cinzel Decorative", Georgia, serif);
-  font-size: 30px;
+  font-size: var(--fs-5,28px);
   line-height: 1;
   color: var(--ohz-gold-bright);
   text-shadow: 0 0 22px rgba(201, 168, 76, 0.5);
@@ -133,7 +133,7 @@
   position: relative;
   padding: 6px 2px;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 11px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 0.19em;
   color: var(--ohz-dim);
   text-decoration: none;
@@ -162,7 +162,7 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.02);
   color: var(--ohz-gold-ui);
-  font-size: 13px;
+  font-size: var(--fs-2,14px);
   text-decoration: none;
   transition: border-color 0.22s ease, color 0.22s ease;
 }
@@ -196,7 +196,7 @@
   border-color: var(--ohz-gold);
   transform: translateY(-1px);
 }
-.ohz-btn-sm { padding: 9px 18px; font-size: 11px; letter-spacing: 0.16em; }
+.ohz-btn-sm { padding: 9px 18px; font-size: var(--fs-1,12px); letter-spacing: 0.16em; }
 .ohz-btn .ohz-arrow { transition: transform 0.24s ease; }
 .ohz-btn:hover .ohz-arrow { transform: translateX(4px); }
 
@@ -208,11 +208,11 @@
   gap: 12px;
   margin-bottom: 22px;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 11px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 0.28em;
   color: var(--ohz-gold-ui);
 }
-.ohz-kicker::before { content: "\25C8"; font-size: 10px; opacity: 0.85; }
+.ohz-kicker::before { content: "\25C8"; font-size: var(--fs-1,12px); opacity: 0.85; }
 .ohz-kicker::after {
   content: "";
   flex: 1;
@@ -295,7 +295,7 @@
 .ohz-stat-l {
   margin-top: 7px;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 0.19em;
   color: var(--ohz-dim);
 }
@@ -336,7 +336,7 @@
 .ohz-rail-sub {
   margin-top: 4px;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 0.2em;
   color: var(--ohz-dim);
 }
@@ -360,14 +360,14 @@
 .ohz-rail-t {
   display: block;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 11.5px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 0.15em;
   color: var(--ohz-gold-ui);
 }
 .ohz-rail-d {
   display: block;
   margin-top: 3px;
-  font-size: 12.5px;
+  font-size: var(--fs-2,14px);
   line-height: 1.45;
   color: var(--ohz-dim);
 }
@@ -401,7 +401,7 @@
 .ohz-slab-t {
   display: block;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 0.2em;
   color: var(--ohz-dim);
 }
@@ -409,7 +409,7 @@
   display: block;
   margin-top: 4px;
   font-family: var(--D, "Cinzel Decorative", Georgia, serif);
-  font-size: 15px;
+  font-size: var(--fs-3,16px);
   letter-spacing: 0.05em;
   color: var(--ohz-ink);
 }
@@ -483,20 +483,20 @@
 }
 .omega-figure-seal-ring{
   font-family:var(--D,"Cinzel Decorative",Georgia,serif);
-  font-size:44px;
+  font-size:var(--fs-6,40px);
   line-height:1;
   color:var(--ohz-gold-bright);
   text-shadow:0 0 26px rgba(201,168,76,.32);
 }
 .omega-figure-seal-code{
   font-family:var(--M,"Courier Prime",ui-monospace,monospace);
-  font-size:11px;
+  font-size:var(--fs-1,12px);
   letter-spacing:.28em;
   color:var(--ohz-ink);
 }
 .omega-figure-seal-label{
   font-family:var(--M,"Courier Prime",ui-monospace,monospace);
-  font-size:8px;
+  font-size:var(--fs-1,12px);
   letter-spacing:.16em;
   color:var(--ohz-dim);
 }
@@ -561,7 +561,7 @@
 .omega-figure-card:nth-child(7){--figure-accent:#E86A3A}
 .omega-figure-index{
   font-family:var(--M,"Courier Prime",ui-monospace,monospace);
-  font-size:9px;
+  font-size:var(--fs-1,12px);
   letter-spacing:.19em;
   color:var(--figure-accent,var(--ohz-gold));
 }
@@ -573,14 +573,14 @@
 }
 .omega-figure-card span:not(.omega-figure-index):not(.omega-figure-link){
   max-width:44ch;
-  font-size:12.5px;
+  font-size:var(--fs-2,14px);
   line-height:1.55;
   color:var(--ohz-dim);
 }
 .omega-figure-link{
   margin-top:5px;
   font-family:var(--M,"Courier Prime",ui-monospace,monospace);
-  font-size:9px;
+  font-size:var(--fs-1,12px);
   letter-spacing:.16em;
   color:var(--figure-accent,var(--ohz-gold));
 }
@@ -594,7 +594,7 @@
   gap:14px;
   margin-top:26px;
   font-family:var(--M,"Courier Prime",ui-monospace,monospace);
-  font-size:9px;
+  font-size:var(--fs-1,12px);
   letter-spacing:.18em;
   color:var(--ohz-dim);
 }
@@ -666,7 +666,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, color-mix(in srgb, var(--ohz-accent, #C9A84C) 16%, transparent), transparent 70%);
   color: var(--ohz-accent, var(--ohz-gold));
-  font-size: 21px;
+  font-size: var(--fs-4,20px);
   line-height: 1;
 }
 .ohz-tile-glyph svg {
@@ -677,7 +677,7 @@
 .ohz-tile-t {
   display: block;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 11.5px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 0.17em;
   color: var(--ohz-accent, var(--ohz-gold));
 }
@@ -706,7 +706,7 @@
 .ohz-dir-h {
   margin: 0 0 12px;
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
   font-weight: 400;
   letter-spacing: 0.2em;
   color: var(--ohz-gold-ui);
@@ -714,7 +714,7 @@
 .ohz-dir-l {
   display: block;
   padding: 5px 0;
-  font-size: 13px;
+  font-size: var(--fs-2,14px);
   line-height: 1.5;
   color: var(--ohz-dim);
   text-decoration: none;
@@ -799,7 +799,7 @@
   color:var(--ohz-ink);
 }
 .omega-discovery-card span:not(.omega-discovery-kicker){
-  font-size:12.5px;
+  font-size:var(--fs-2,14px);
   line-height:1.58;
   color:var(--ohz-dim);
 }
@@ -853,7 +853,7 @@
   padding: 26px var(--ohz-gutter) 54px;
   border-top: 1px solid var(--ohz-line);
   font-family: var(--M, "Courier Prime", ui-monospace, monospace);
-  font-size: 10.5px;
+  font-size: var(--fs-1,12px);
   letter-spacing: 0.15em;
   color: var(--ohz-dim);
 }
@@ -919,7 +919,7 @@
   .omega-figure{padding-block:38px}
   .omega-figure-head{grid-template-columns:1fr;align-items:start}
   .omega-figure-seal{width:118px;min-height:118px}
-  .omega-figure-seal-ring{font-size:36px}
+  .omega-figure-seal-ring{font-size:var(--fs-6,40px)}
   .omega-figure-grid{grid-template-columns:1fr}
   .omega-figure-card,.omega-figure-card-primary{grid-column:span 1;min-height:175px}
   .omega-figure-bottom{justify-content:flex-start}

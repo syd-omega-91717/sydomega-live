@@ -94,7 +94,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  font-size: 18px;
+  font-size: var(--fs-4,20px);
   font-weight: 600;
   background: var(--agent-context-color, var(--gold));
   color: var(--void);
@@ -165,7 +165,7 @@
 }
 
 .agent-card-role {
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
   color: var(--muted);
   opacity: 0.8;
 }
@@ -252,12 +252,12 @@
   .agent-node {
     width: 24px;
     height: 24px;
-    font-size: 10px;
+    font-size: var(--fs-1,12px);
   }
 
   .agent-card {
     padding: 10px 14px;
-    font-size: 11px;
+    font-size: var(--fs-1,12px);
   }
 }
 
@@ -271,18 +271,18 @@
   .agent-node {
     width: 20px;
     height: 20px;
-    font-size: 9px;
+    font-size: var(--fs-1,12px);
     border-width: 1px;
   }
 
   .agent-card {
     padding: 8px 12px;
-    font-size: 10px;
+    font-size: var(--fs-1,12px);
   }
 
   .btn-agent {
     padding: 6px 12px;
-    font-size: 11px;
+    font-size: var(--fs-1,12px);
   }
 }
 

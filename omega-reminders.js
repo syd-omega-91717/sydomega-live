@@ -202,7 +202,7 @@
       '#omega-reminder-card{position:fixed;right:16px;top:calc(env(safe-area-inset-top,0px) + 64px);z-index:9400;max-width:min(340px,calc(100vw - 32px));' +
         'padding:14px 16px;background:rgba(6,10,14,.94);border:1px solid rgba(201,168,76,.45);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.5);backdrop-filter:blur(10px)}' +
       '.orm-t{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;color:var(--gold,#C9A84C);text-transform:uppercase}' +
-      '.orm-b{font-family:var(--R,sans-serif);font-size:15px;color:var(--ink,#E8E2D0);margin:6px 0 10px}' +
+      '.orm-b{font-family:var(--R,sans-serif);font-size:var(--fs-3,16px);color:var(--ink,#E8E2D0);margin:6px 0 10px}' +
       '.orm-a{display:flex;gap:10px}.orm-a a,.orm-a button{font-family:var(--M,monospace);font-size:12px;letter-spacing:1px;padding:6px 12px;border-radius:6px;cursor:pointer;text-decoration:none;' +
         'border:1px solid rgba(201,168,76,.45);color:var(--gold,#C9A84C);background:none}' +
       '.orm{margin:0 0 18px;padding:18px;border:1px solid rgba(201,168,76,.22);border-radius:14px;background:rgba(255,255,255,.02)}' +
@@ -211,7 +211,7 @@
       '.orm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px}' +
       '.orm-f{display:flex;flex-direction:column;gap:6px;font-family:var(--M,monospace);font-size:12px;letter-spacing:1px;color:var(--muted,#9A968A)}' +
       '.orm-f input[type=time],.orm-f select{font:inherit;color:var(--ink,#E8E2D0);background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.25);border-radius:6px;padding:8px}' +
-      '.orm-s{font-family:var(--R,sans-serif);font-size:15px;color:var(--ink,#E8E2D0);margin-top:14px}' +
+      '.orm-s{font-family:var(--R,sans-serif);font-size:var(--fs-3,16px);color:var(--ink,#E8E2D0);margin-top:14px}' +
       '.orm-n{font-family:var(--M,monospace);font-size:12px;color:var(--muted,#9A968A);margin-top:6px;line-height:1.6}' +
       '.orm-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}' +
       '.orm-btns button{font-family:var(--M,monospace);font-size:12px;letter-spacing:1px;padding:8px 14px;border-radius:8px;cursor:pointer;border:1px solid rgba(201,168,76,.4);color:var(--gold,#C9A84C);background:none}' +

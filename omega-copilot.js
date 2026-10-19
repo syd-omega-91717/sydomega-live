@@ -267,7 +267,7 @@
       +'<div id="cp-drawer" role="dialog" aria-label="Sovereign Copilot" aria-modal="true" style="position:fixed;bottom:90px;right:24px;z-index:4500;width:min(360px,90vw);background:#0A0A0F;border:1px solid rgba(201,168,76,.3);border-radius:4px;display:none;flex-direction:column;box-shadow:0 16px 60px rgba(0,0,0,.7);overflow:hidden;animation:copilot-in .25s ease">'
         +'<div style="padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:center;justify-content:space-between;background:rgba(201,168,76,.04)">'
           +'<div><div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:#C9A84C">\u03A9 SOVEREIGN COPILOT</div><div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.6);margin-top:3px">AUTH=sqrt(A\u00B3+B\u00B3+C\u00B3)\u00d7\u03c6/e &middot; APEX=27.8367</div></div>'
-          +'<button id="cp-close" type="button" style="font-size:18px;color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;line-height:1" aria-label="Close">\u00d7</button>'
+          +'<button id="cp-close" type="button" style="font-size:var(--fs-4,20px);color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;line-height:1" aria-label="Close">\u00d7</button>'
         +'</div>'
         +'<div id="cp-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:200px;max-height:40vh;scrollbar-width:thin"></div>'
         +'<div id="cp-suggest" role="listbox" aria-label="Copilot commands" style="display:none;flex-direction:column;border-top:1px solid rgba(201,168,76,.1);max-height:30vh;overflow-y:auto"></div>'

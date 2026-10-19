@@ -102,19 +102,19 @@
       <div class="sechead">SOVEREIGN IDENTITY &middot; THE SCIENCE</div>
       <div class="card-grid">
         <div class="card" style="--card-accent:var(--gold)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">DIGITAL SOVEREIGNTY</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);margin-bottom:8px">DIGITAL SOVEREIGNTY</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Your identity is a record in the Supabase sovereign ledger, protected by Row-Level Security. Member ID is immutable once issued. Display name, cosmology, and preference data can evolve.</div>
         </div>
         <div class="card" style="--card-accent:var(--cyan)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">AUTHORITY FORMULA</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--cyan);margin-bottom:8px">AUTHORITY FORMULA</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e. Three axes — Knowledge (A), Mastery (B), Contribution (C) — each ranging 0–9. At A=B=C=9, AUTH reaches the Apex: 27.8367.</div>
         </div>
         <div class="card" style="--card-accent:var(--purple)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">ACCESS TIERS</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--purple);margin-bottom:8px">ACCESS TIERS</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">FREE → GENESIS → APEX. Higher tiers unlock exclusive content, priority access, and platform rewards. Subscription managed through Stripe. KYC required for APEX tier.</div>
         </div>
         <div class="card" style="--card-accent:var(--green)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">PRIVACY GUARANTEE</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--green);margin-bottom:8px">PRIVACY GUARANTEE</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">All identity data is encrypted at rest in Supabase with Row Level Security. Your profile is visible only to you and the platform owner. Never sold, never shared.</div>
         </div>
       </div>
@@ -220,7 +220,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     if(ac){ac.innerHTML=ACCESS_ITEMS.map(function(item){
       return '<div class="glass" style="display:flex;align-items:center;justify-content:space-between;gap:12px">'
         +'<span style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">'+item.label+'</span>'
-        +'<span style="font-family:var(--D);font-size:13px;color:'+(item.ok?'var(--green)':'var(--solar)')+'">'+item.val+'</span>'
+        +'<span style="font-family:var(--D);font-size:var(--fs-2,14px);color:'+(item.ok?'var(--green)':'var(--solar)')+'">'+item.val+'</span>'
         +'</div>';
     }).join('');}
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}

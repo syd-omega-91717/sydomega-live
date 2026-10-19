@@ -121,7 +121,7 @@ h1, h2, h3 {
 /* Card titles: geometric treatment */
 .card-title, [class*="card-title"], .tile-title {
   font-family: var(--M);
-  font-size: 11px;
+  font-size: var(--fs-1,12px);
   letter-spacing: var(--omega-label-track);
   text-transform: uppercase;
   color: var(--gold);
@@ -132,7 +132,7 @@ h1, h2, h3 {
 /* KPI labels: monospace + tracking */
 .kpi-label, .kpi-l, .stat-label {
   font-family: var(--M);
-  font-size: 11px;
+  font-size: var(--fs-1,12px);
   letter-spacing: var(--omega-label-track);
   text-transform: uppercase;
   color: var(--muted);
@@ -151,7 +151,7 @@ h1, h2, h3 {
 /* Chips: geometric micro-treatment */
 .chip {
   font-family: var(--M);
-  font-size: 10px;
+  font-size: var(--fs-1,12px);
   letter-spacing: var(--omega-chip-track);
   text-transform: uppercase;
   padding: 5px 11px;

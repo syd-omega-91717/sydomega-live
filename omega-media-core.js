@@ -32,16 +32,16 @@
     s.textContent = [
       '.omc{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:16px 0 22px}',
       '.omc-card{display:grid;gap:8px;align-content:start;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)}',
-      '.omc-h{font-family:monospace;font-size:.64rem;letter-spacing:.18em;color:var(--muted,#9aa)}',
+      '.omc-h{font-family:monospace;font-size:var(--fs-1,12px);letter-spacing:.18em;color:var(--muted,#9aa)}',
       '.omc-li{display:grid;gap:2px;padding:8px 0;border-top:1px solid rgba(255,255,255,.06)}',
       '.omc-li strong{font-family:var(--R,sans-serif);font-size:1rem;color:var(--ink,#eee)}',
-      '.omc-li p{margin:0;font-family:var(--R,sans-serif);font-size:.85rem;color:var(--muted,#9aa);overflow-wrap:anywhere}',
-      '.omc-li small{font-family:monospace;font-size:.6rem;letter-spacing:.08em;color:var(--muted,#9aa)}',
+      '.omc-li p{margin:0;font-family:var(--R,sans-serif);font-size:var(--fs-2,14px);color:var(--muted,#9aa);overflow-wrap:anywhere}',
+      '.omc-li small{font-family:monospace;font-size:var(--fs-1,12px);letter-spacing:.08em;color:var(--muted,#9aa)}',
       '.omc-big{display:flex;align-items:baseline;gap:8px}',
-      '.omc-big b{font-family:var(--R,sans-serif);font-size:1.9rem;line-height:1;color:var(--ink,#eee)}',
-      '.omc-big span{font-family:monospace;font-size:.6rem;letter-spacing:.12em;color:var(--muted,#9aa)}',
-      '.omc-empty{font-family:monospace;font-size:.64rem;letter-spacing:.1em;color:var(--muted,#9aa)}',
-      '.omc .omc-act{display:inline-flex!important;justify-self:start;align-items:center;min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid rgba(212,175,55,.5);color:var(--ink,#eee);font-family:monospace;font-size:.66rem;letter-spacing:.14em;text-decoration:none}'
+      '.omc-big b{font-family:var(--R,sans-serif);font-size:var(--fs-5,28px);line-height:1;color:var(--ink,#eee)}',
+      '.omc-big span{font-family:monospace;font-size:var(--fs-1,12px);letter-spacing:.12em;color:var(--muted,#9aa)}',
+      '.omc-empty{font-family:monospace;font-size:var(--fs-1,12px);letter-spacing:.1em;color:var(--muted,#9aa)}',
+      '.omc .omc-act{display:inline-flex!important;justify-self:start;align-items:center;min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid rgba(212,175,55,.5);color:var(--ink,#eee);font-family:monospace;font-size:var(--fs-1,12px);letter-spacing:.14em;text-decoration:none}'
     ].join('');
     document.head.appendChild(s);
   }

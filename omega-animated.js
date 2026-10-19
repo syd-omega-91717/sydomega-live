@@ -191,7 +191,7 @@
       var spin=document.createElement('div');spin.className='oa-spin';spin.style.cssText='width:16px;height:16px;border:2px solid rgba(201,168,76,.2);border-top-color:var(--gold,#C9A84C);border-radius:50%';
       box.appendChild(spin);
     } else if(type==='empty'){
-      var glyph=document.createElement('div');glyph.style.cssText='font-family:var(--D,"Cinzel Decorative",serif);font-size:32px;color:rgba(201,168,76,.15);margin-bottom:10px';glyph.textContent=icon||'◆';box.appendChild(glyph);
+      var glyph=document.createElement('div');glyph.style.cssText='font-family:var(--D,"Cinzel Decorative",serif);font-size:var(--fs-5,28px);color:rgba(201,168,76,.15);margin-bottom:10px';glyph.textContent=icon||'◆';box.appendChild(glyph);
     } else if(type==='error'){
       var title=document.createElement('div');title.style.cssText='font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:2px;color:var(--crim,#C4453C);margin-bottom:4px';title.textContent='ERROR';box.appendChild(title);
     }

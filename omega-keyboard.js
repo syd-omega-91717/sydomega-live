@@ -84,7 +84,7 @@
       +'box-shadow:0 24px 80px rgba(0,0,0,.6);max-height:85vh;overflow-y:auto';
     var head = '<div style="padding:16px 20px;border-bottom:1px solid rgba(201,168,76,.12);'
       +'display:flex;align-items:center;justify-content:space-between">'
-      +'<span style="font-family:\'Cinzel Decorative\',serif;font-size:13px;color:#C9A84C">'
+      +'<span style="font-family:\'Cinzel Decorative\',serif;font-size:var(--fs-2,14px);color:#C9A84C">'
       +'&#937; KEYBOARD SHORTCUTS</span>'
       +'<button id="omega-kb-close" style="font-family:\'Courier Prime\',monospace;font-size:12px;'
       +'color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;letter-spacing:1px"'

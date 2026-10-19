@@ -25,9 +25,9 @@
       </div>
       <div id="tab-explorer" class="tab-content">
         <div class="card-grid" data-stagger data-stagger-gap="60" style="grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
-          <div class="card" data-reveal="fade-up"><div class="card-title">Total Entities</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="entity-count" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">distinct graph nodes</div></div>
-          <div class="card" data-reveal="fade-up"><div class="card-title">Relationships</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="relationship-count" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">directed edges</div></div>
-          <div class="card" data-reveal="fade-up"><div class="card-title">Avg Confidence</div><div class="kpi-val" style="font-size: 2rem; margin: 1rem 0;"><span id="avg-confidence" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">extraction quality</div></div>
+          <div class="card" data-reveal="fade-up"><div class="card-title">Total Entities</div><div class="kpi-val" style="font-size: var(--fs-5,28px); margin: 1rem 0;"><span id="entity-count" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">distinct graph nodes</div></div>
+          <div class="card" data-reveal="fade-up"><div class="card-title">Relationships</div><div class="kpi-val" style="font-size: var(--fs-5,28px); margin: 1rem 0;"><span id="relationship-count" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">directed edges</div></div>
+          <div class="card" data-reveal="fade-up"><div class="card-title">Avg Confidence</div><div class="kpi-val" style="font-size: var(--fs-5,28px); margin: 1rem 0;"><span id="avg-confidence" data-loading>—</span></div><div class="kpi-l" style="opacity: 0.7;">extraction quality</div></div>
         </div>
         <div class="card" style="margin-bottom: 2rem;">
           <div class="card-title">Search Entities</div>
@@ -81,7 +81,7 @@
       if (!query) return;
       const { data: entities, error } = await sb.from('graph_entities').select('*').ilike('display_name', `%${query}%`).limit(20);
       if (error) { console.error(error); return; }
-      const html = (entities || []).map(e => `<div class="chip" style="margin: 0.5rem 0; padding: 1rem; background: rgba(201, 168, 76, 0.1); border-left: 3px solid var(--gold);"><div class="kpi-l"><strong>${esc(e.display_name)}</strong></div><div style="font-size: 0.85rem; opacity: 0.7; margin: 0.25rem 0;">Type: ${esc(e.entity_type)}</div><div style="font-size: 0.85rem; opacity: 0.6;">Confidence: ${(e.confidence_score * 100).toFixed(0)}%</div></div>`).join('');
+      const html = (entities || []).map(e => `<div class="chip" style="margin: 0.5rem 0; padding: 1rem; background: rgba(201, 168, 76, 0.1); border-left: 3px solid var(--gold);"><div class="kpi-l"><strong>${esc(e.display_name)}</strong></div><div style="font-size: var(--fs-2,14px); opacity: 0.7; margin: 0.25rem 0;">Type: ${esc(e.entity_type)}</div><div style="font-size: var(--fs-2,14px); opacity: 0.6;">Confidence: ${(e.confidence_score * 100).toFixed(0)}%</div></div>`).join('');
       document.getElementById('search-results').innerHTML = html || '<p style="opacity: 0.5;">No entities found</p>';
     };
     window.executeQuery = async function() {

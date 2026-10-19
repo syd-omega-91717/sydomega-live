@@ -20,7 +20,7 @@
 .rule-card .r-icon{width:36px;height:36px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:rgba(201,168,76,.06)}
 .rule-card .r-body{flex:1;min-width:0}
 .rule-card .r-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar);margin-bottom:4px}
-.rule-card .r-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.6}
+.rule-card .r-desc{font-size:var(--fs-2,14px);font-weight:300;color:var(--muted);line-height:1.6}
 .rule-card .r-trigger{font-family:var(--M);font-size:12px;color:var(--cyan);margin-top:8px}
 .rule-card .r-action{font-family:var(--M);font-size:12px;color:var(--green);margin-top:3px}
 .rule-card .r-meta{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
@@ -113,7 +113,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
 <!-- BUILDER TAB -->
 <div class="tab-panel" id="tab-builder">
   <div class="sechead">BUILD A SOVEREIGN RULE</div>
-  <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:20px;max-width:68ch">Compose an IF&#x2192;THEN protocol. Define the trigger condition and the action it executes. Rules are saved to your automation chain and evaluated continuously by the engine.</p>
+  <p style="color:var(--muted);font-size:var(--fs-2,14px);line-height:1.7;margin-bottom:20px;max-width:68ch">Compose an IF&#x2192;THEN protocol. Define the trigger condition and the action it executes. Rules are saved to your automation chain and evaluated continuously by the engine.</p>
   <div class="card" style="padding:22px">
     <div class="builder-grid">
       <div class="if-block">
@@ -157,7 +157,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
 <!-- LOG TAB -->
 <div class="tab-panel" id="tab-log">
   <div class="sechead">LIVE EVENT LOG</div>
-  <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:16px">Real-time feed of automation events drawn from task completions and system activities. Each entry reflects a fired rule trigger.</p>
+  <p style="color:var(--muted);font-size:var(--fs-2,14px);line-height:1.7;margin-bottom:16px">Real-time feed of automation events drawn from task completions and system activities. Each entry reflects a fired rule trigger.</p>
   <div style="border:1px solid var(--line);background:var(--surface)">
     <div id="log-feed"></div>
   </div>
@@ -169,7 +169,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
   <div class="card-grid" style="--cols:1">
     <div class="card">
       <div class="card-title">HOW THE ENGINE WORKS</div>
-      <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
+      <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:var(--fs-2,14px)">
         <div data-omega-more>
           <p class="omi-lead">A rule interpreter that watches platform events and fires actions silently — no manual step needed.</p>
           <div class="omi-full" hidden>

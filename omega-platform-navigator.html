@@ -71,7 +71,7 @@
     }
 
     .brand-statement .tagline {
-      font-size: 1.1rem;
+      font-size: var(--fs-3,16px);
       color: var(--cyan);
       font-style: italic;
       margin-bottom: 0.5rem;
@@ -81,7 +81,7 @@
       max-width: 700px;
       margin: 0.5rem auto;
       color: var(--ink);
-      font-size: 0.95rem;
+      font-size: var(--fs-3,16px);
     }
 
     .nav-bar {
@@ -135,7 +135,7 @@
 
     .section-title {
       font-family: var(--D);
-      font-size: 2rem;
+      font-size: var(--fs-5,28px);
       color: var(--gold);
       margin-bottom: 2rem;
       text-align: center;
@@ -191,7 +191,7 @@
 
     .product-name {
       font-family: var(--D);
-      font-size: 1.3rem;
+      font-size: var(--fs-4,20px);
       color: var(--gold);
       margin: 0;
     }
@@ -215,7 +215,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: var(--fs-4,20px);
       margin-bottom: 0.5rem;
     }
 
@@ -226,14 +226,14 @@
 
     .product-description {
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: var(--fs-3,16px);
       margin-bottom: 1rem;
       line-height: 1.5;
     }
 
     .product-features {
       list-style: none;
-      font-size: 0.85rem;
+      font-size: var(--fs-2,14px);
       color: var(--ink);
       margin-bottom: 1rem;
     }
@@ -282,7 +282,7 @@
     }
 
     .agent-icon {
-      font-size: 2rem;
+      font-size: var(--fs-5,28px);
       width: 60px;
       height: 60px;
       display: flex;
@@ -295,7 +295,7 @@
 
     .agent-title {
       font-family: var(--D);
-      font-size: 1.8rem;
+      font-size: var(--fs-5,28px);
       color: var(--gold);
       letter-spacing: 1px;
     }
@@ -303,7 +303,7 @@
     .agent-domain {
       color: var(--cyan);
       font-style: italic;
-      font-size: 0.95rem;
+      font-size: var(--fs-3,16px);
     }
 
     /* Tier Comparison */
@@ -326,13 +326,13 @@
 
     .tier-name {
       font-family: var(--D);
-      font-size: 1.2rem;
+      font-size: var(--fs-4,20px);
       color: var(--gold);
       margin-bottom: 0.5rem;
     }
 
     .tier-price {
-      font-size: 1.4rem;
+      font-size: var(--fs-4,20px);
       color: var(--cyan);
       font-weight: bold;
       margin-bottom: 1rem;
@@ -340,7 +340,7 @@
 
     .tier-features {
       list-style: none;
-      font-size: 0.85rem;
+      font-size: var(--fs-2,14px);
       color: var(--muted);
       text-align: left;
     }
@@ -357,7 +357,7 @@
     /* Responsive Design */
     @media (max-width: 1200px) {
       .section-title {
-        font-size: 1.6rem;
+        font-size: var(--fs-5,28px);
       }
 
       .products-grid {
@@ -372,11 +372,11 @@
       }
 
       .brand-statement h1 {
-        font-size: 1.8rem;
+        font-size: var(--fs-5,28px);
       }
 
       .section-title {
-        font-size: 1.4rem;
+        font-size: var(--fs-4,20px);
         margin-bottom: 1.5rem;
       }
 
@@ -387,7 +387,7 @@
 
       .filter-btn {
         padding: 0.6rem 1rem;
-        font-size: 0.85rem;
+        font-size: var(--fs-2,14px);
       }
 
       .products-grid {
@@ -405,7 +405,7 @@
       }
 
       .product-name {
-        font-size: 1.1rem;
+        font-size: var(--fs-3,16px);
       }
 
       .agent-header {
@@ -414,7 +414,7 @@
       }
 
       .agent-title {
-        font-size: 1.4rem;
+        font-size: var(--fs-4,20px);
       }
 
       .container {
@@ -428,17 +428,17 @@
       }
 
       .brand-statement h1 {
-        font-size: 1.4rem;
+        font-size: var(--fs-4,20px);
         margin-bottom: 0.5rem;
       }
 
       .section-title {
-        font-size: 1.2rem;
+        font-size: var(--fs-4,20px);
       }
 
       .filter-btn {
         padding: 0.5rem 0.8rem;
-        font-size: 0.8rem;
+        font-size: var(--fs-2,14px);
       }
 
       .product-header {
@@ -1346,15 +1346,15 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
           <div style="text-align: center; padding: 1rem; background: rgba(201, 168, 76, 0.1); border-radius: 8px; border: 1px solid var(--void2);">
             <h4 style="color: var(--gold); font-family: var(--D); margin-bottom: 0.5rem;">36 Products</h4>
-            <p style="color: var(--muted); font-size: 0.9rem;">Across 12 domains</p>
+            <p style="color: var(--muted); font-size: var(--fs-2,14px);">Across 12 domains</p>
           </div>
           <div style="text-align: center; padding: 1rem; background: rgba(0, 188, 212, 0.1); border-radius: 8px; border: 1px solid var(--void2);">
             <h4 style="color: var(--cyan); font-family: var(--D); margin-bottom: 0.5rem;">9 Tiers</h4>
-            <p style="color: var(--muted); font-size: 0.9rem;">Free to enterprise</p>
+            <p style="color: var(--muted); font-size: var(--fs-2,14px);">Free to enterprise</p>
           </div>
           <div style="text-align: center; padding: 1rem; background: rgba(76, 175, 80, 0.1); border-radius: 8px; border: 1px solid var(--void2);">
             <h4 style="color: var(--green); font-family: var(--D); margin-bottom: 0.5rem;">4 Elements</h4>
-            <p style="color: var(--muted); font-size: 0.9rem;">Fire, Water, Earth, Air</p>
+            <p style="color: var(--muted); font-size: var(--fs-2,14px);">Fire, Water, Earth, Air</p>
           </div>
         </div>
       </div>

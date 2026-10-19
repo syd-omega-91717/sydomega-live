@@ -24654,3 +24654,31 @@ commit that contains it, and fails after 15 minutes if not. Resume steps are in 
 **Gated by** `test_vercel_production_dispatch_contract.py`, with two new tests. A planted
 regression (dropping `cache:'no-cache'`) fails the test.
 
+
+## 2026-10-19 — After #1002: browsers did move to the new code; `omega-chart.js` could still collide on a shared canvas
+
+**Deploy reached the member (verified live).** `telemetry_events` had **0 rows ever**. Every
+build since 10-06 ran the old `.insert(...).catch(...)`, which throws before the request is
+sent. From 2026-10-19 00:44 UTC it has 37 rows across 4 dashboard sessions. That is the
+fixed code running in the member's browser after #1002's per-deploy service worker.
+
+The last old-code errors were `omega-recommend.js:24` at 04:23:31 and a Chart.js
+"Canvas is already in use" at 04:22:44. Both arrived after clean sessions, with no new
+`page_view` in between. They fit a tab that stayed open since before the deploy: recommend
+fires on `visibilitychange`, and the chart guard in `omega-oss.js` is from 10-09, after the
+10-06 build. The live `omega-telemetry.js` was fetched and is the fixed file.
+
+**Real remaining defect.** `omega-chart.js` destroyed only `canvas._omegaChart`, the charts
+it had drawn itself. A chart drawn on the same canvas by `OmegaOSS.chart` still throws
+"Canvas is already in use".
+
+Measured in headless Chromium with the vendored `chart.umd.min.js`: draw with
+`OmegaOSS.chart`, then call `OmegaChart.line` on the same canvas.
+
+| version | errors | chart left on the canvas |
+|---|---|---|
+| before (`origin/main`) | the exact production message | `bar` |
+| after | none | `line` |
+
+The fix is a `release()` that destroys `Chart.getChart(canvas)` (or the module's own handle)
+in all four builders.

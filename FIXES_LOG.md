@@ -24711,3 +24711,32 @@ page errors.
 The signet still sways about ±32° rather than making a full 360° turn. A full turn shows the
 extruded Ω edge-on twice per cycle (see the comment at `omega-sculpture.js`, "A SWAY, NOT A SPIN").
 Its orbit and halo turn continuously.
+
+## 2026-10-19 — 25 folded pages return to the menu (owner decision)
+
+**What the owner asked.** "We lost some perfect good visual design pages." None were
+deleted: each was a `nav.js` entry carrying a 4th field `'folded'`, which keeps a page in
+search and the owner deck but drops it from the desktop dock and the phone drawer. The
+owner approved the 25 pre-ticked picks in the page atlas ("Go").
+
+**A second, quieter cause.** The desktop dock renders `COMPACT[section]` filtered by
+`!=='folded'` (`nav.js` `compactSub`). `COMPACT` still named `investment`, `treasury`,
+`revenue`, `consultancy`, `contracts` and `order`, so the dock *intended* to show them
+and the fold silently removed them — VAULT/INVEST had no data-entry page reachable from
+the menu, which is why net worth stayed at $0.
+
+**Change.** Removed `'folded'` from 24 entries (elements, pantheons, houses, agents,
+ascension, phases, levels, grid, grades, travel, consultancy, contracts, forge, cipher,
+sovereigns, order, trailers, investment, treasury, wallet, revenue, budget, expenses,
+wealth). COSMOS's `horoscope` alias pointed at `/cosmos.html#horoscope`; it now points at
+the real `/horoscope.html`. Added the restored keys to `COMPACT` for cosmos, invest,
+achieve, ascend, intel, order, media and services so the desktop dock shows them, not
+only the phone drawer. Still folded (18): the academy, identity, media and graph pages
+and the 10 LIFE trackers — the trackers' designs are to be merged into LIFE separately.
+
+**Evidence.** All 25 files exist; none is redirected (the only `location.href` writes in
+them are the sign-in/pending guards). Headless render of `cosmos.html` at 1440px: the
+COSMOS, INVEST, ACHIEVE and MEDIA tooltips list the restored hrefs; the drawer contains
+`/elements.html`, `/budget.html`, `/grades.html`, `/trailers.html`, `/order.html` (226
+drawer links). `python3 -m unittest discover -s scripts/tests`: 809 OK.
+`./scripts/ci-local.sh --all`: all 39 blocking checks passed.

@@ -24740,3 +24740,24 @@ COSMOS, INVEST, ACHIEVE and MEDIA tooltips list the restored hrefs; the drawer c
 `/elements.html`, `/budget.html`, `/grades.html`, `/trailers.html`, `/order.html` (226
 drawer links). `python3 -m unittest discover -s scripts/tests`: 809 OK.
 `./scripts/ci-local.sh --all`: all 39 blocking checks passed.
+
+## 2026-10-19 — A new member's money pages showed only zeros, with no next step
+
+**Measured.** Headless render, signed-in stub with no data, 1440px: every KPI on
+`investment` (4), `treasury` (4), `wallet` (4), `revenue` (4), `budget` (4) and `wealth`
+(6) read `$0`/`0`/`0%`, and nothing on the page said what to do first.
+
+**Change.** `omega-empty-guide.js` (new, opt-in by `<script>` on those six pages). An
+element carrying `data-omega-empty-guide` gets one card after it while *every* figure in
+it (`.kpi-n .kpi-v .stat-num .nw-val`) reads zero; a MutationObserver removes the card the
+moment any figure is non-zero. The CTA clicks `data-omega-empty-go` (a `|` list, clicked
+in order: tab first, then the form's opener) and focuses the first field in
+`data-omega-empty-focus`. It reads the page's own numbers and never writes one (§8.1
+class 9). First verdict waits 1.2 s after `load` so arriving data does not flash it.
+
+**Evidence.** Render at 1440 and 390 on all six: card present, CTA lands focus on
+`h-ticker`, `a-name` (treasury), `a-name` (wallet), `s-name`, `ex-amount`, and the new
+cash input on wealth. First run had treasury/budget focus stuck on the CTA: their forms
+sit in a hidden tab, fixed by the ordered `go` list. On `wallet`, setting `#stat-assets`
+to `$1,250` removed the card; back to `$0` restored it. New
+`scripts/tests/test_empty_guide_contract.py` (3 tests). `ci-local.sh --all`: 39/39.

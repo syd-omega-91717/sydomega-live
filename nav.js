@@ -269,10 +269,10 @@
       '#omega-top{position:fixed;top:0;left:0;right:0;height:2px;z-index:10000;pointer-events:none;background:linear-gradient(90deg,transparent,#C9A84C 30%,#00E5FF 70%,transparent);background-size:200% 100%;animation:top-sc 3.5s linear infinite}',
       '.omega-workspace{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:80;padding:8px 12px;margin:0 0 12px;background:rgba(5,5,12,.88);border-bottom:1px solid rgba(201,168,76,.12);backdrop-filter:blur(14px);overflow-x:auto;scrollbar-width:none}',
       '.omega-workspace::-webkit-scrollbar{display:none}',
-      '.omega-workspace .ow-home{display:flex;align-items:center;gap:6px;flex:0 0 auto;font:600 11px/1 "Courier Prime",monospace;letter-spacing:1.4px;color:#C9A84C;text-decoration:none;padding:7px 9px;border:1px solid rgba(201,168,76,.25);border-radius:6px}',
+      '.omega-workspace .ow-home{display:flex;align-items:center;gap:6px;flex:0 0 auto;font:600 var(--fs-1,12px)/1 "Courier Prime",monospace;letter-spacing:1.4px;color:#C9A84C;text-decoration:none;padding:7px 9px;border:1px solid rgba(201,168,76,.25);border-radius:6px}',
       '.omega-workspace .ow-sep{color:rgba(133,131,123,.5);flex:0 0 auto}',
-      '.omega-workspace .ow-current{font:600 11px/1 "Courier Prime",monospace;letter-spacing:1.2px;color:var(--muted);white-space:nowrap}',
-      '.omega-workspace .ow-link{font:500 11px/1 "Courier Prime",monospace;letter-spacing:1px;color:var(--muted);text-decoration:none;white-space:nowrap;padding:7px 9px;border:1px solid transparent;border-radius:6px}',
+      '.omega-workspace .ow-current{font:600 var(--fs-1,12px)/1 "Courier Prime",monospace;letter-spacing:1.2px;color:var(--muted);white-space:nowrap}',
+      '.omega-workspace .ow-link{font:500 var(--fs-1,12px)/1 "Courier Prime",monospace;letter-spacing:1px;color:var(--muted);text-decoration:none;white-space:nowrap;padding:7px 9px;border:1px solid transparent;border-radius:6px}',
       '.omega-workspace .ow-link:hover,.omega-workspace .ow-link.ow-on{color:#C9A84C;border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.05)}',
       '@media(max-width:760px){.omega-workspace{top:0;margin-bottom:8px;padding:7px 8px}.omega-workspace .ow-link,.omega-workspace .ow-home{padding:9px 10px;font-size:12px}}',
       '@keyframes top-sc{0%{background-position:200% 0}100%{background-position:-200% 0}}',
@@ -870,7 +870,7 @@
         var ico=document.createElement('span');
         ico.textContent=x.icon||'•';ico.style.cssText='width:28px;text-align:center;color:'+(x.col||'#C9A84C')+';font-size:var(--fs-3,16px)';
         var body=document.createElement('span');body.style.cssText='min-width:0;flex:1';
-        var name=document.createElement('span');name.textContent=x.label;name.style.cssText='display:block;font:600 13px Rajdhani,sans-serif;letter-spacing:.8px';
+        var name=document.createElement('span');name.textContent=x.label;name.style.cssText='display:block;font:600 var(--fs-2,14px) Rajdhani,sans-serif;letter-spacing:.8px';
         var meta=document.createElement('span');meta.textContent=x.section+' · '+x.href;meta.style.cssText='display:block;margin-top:2px;color:rgba(255,255,255,.4);font:12px "Courier Prime",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
         body.appendChild(name);body.appendChild(meta);row.appendChild(ico);row.appendChild(body);list.appendChild(row);
         row.addEventListener('mouseenter',function(){active=i;render(input.value);});

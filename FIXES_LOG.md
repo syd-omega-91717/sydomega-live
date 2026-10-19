@@ -24761,3 +24761,26 @@ cash input on wealth. First run had treasury/budget focus stuck on the CTA: thei
 sit in a hidden tab, fixed by the ordered `go` list. On `wallet`, setting `#stat-assets`
 to `$1,250` removed the card; back to `$0` restored it. New
 `scripts/tests/test_empty_guide_contract.py` (3 tests). `ci-local.sh --all`: 39/39.
+
+## 2026-10-19 — One type scale: LIFE rendered 23 text sizes, several under 12px
+
+**Measured.** Rendered text sizes, 1440px: LIFE **23** distinct (9.92, 10, 10.56, 11,
+11.2, 11.52, 12.48, 12.8, 13, 14.4, 17.6, 23.2, 27.2px …), dashboard 14, VAULT 9. In
+source: 6,070 px/rem `font-size` declarations, ~1,400 of them off any scale, plus `font:`
+shorthands (`nav.js` `.ow-home` 11px, the module chips 10px) that the 2026-09-03 floor
+sweep (`scripts/type-scale.py`) never matched.
+
+**Change.** Six tokens in `css/omega-system.css` — `--fs-1..6` = 12/14/16/20/28/40px.
+Every off-scale px/rem size below 48px in root `.html/.js/.css` and `css/` became
+`var(--fs-N,<px>)` (1,415 `font-size` + 154 `font:` shorthand, 261 files): <12.5→12,
+<15→14, <18→16, <24→20, <34→28, <48→40. On-scale literals were left as written; ≥48px
+display sizes, canvas `ctx.font`, SVG `font-size` attributes, em/%/clamp are untouched.
+`omega-readmore.js`'s MORE pill was clipping its own label (51>42px, before and after);
+it now keeps its width (`flex:none;white-space:nowrap`).
+
+**Evidence.** After: LIFE **11** sizes (12/14/16/20/28 + clamp headings and ≥48 hero),
+dashboard 11, VAULT 7; nothing under 12px but SVG labels. Full estate before/after scan at
+390px (236 pages, `origin/main` served from a worktree vs this branch): **0** new
+horizontal scroll, **0** more clipped text elements, **0** SVG text changed, 0 errors. A
+first-pass scan flagged hercules +218% height; re-measured at 1.2 s and 5 s it is 1680 →
+1683px (scan noise). `type-scale.py --check` OK; `ci-local.sh --all` 39/39; 809 tests OK.

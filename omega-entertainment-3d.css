@@ -20,7 +20,7 @@
 .omega-world-title{position:relative;display:block;margin-top:46px;font-family:var(--D,"Cinzel Decorative",Georgia,serif);font-size:clamp(19px,1.55vw,26px);letter-spacing:.09em;color:#F2D990;text-shadow:0 2px 20px rgba(201,168,76,.18);transform:translateZ(22px)}
 .omega-world-game .omega-world-title{color:#8CECF7}
 .omega-world-meta{position:relative;display:block;margin-top:9px;font-family:var(--M,"Courier Prime",monospace);font-size:var(--fs-1,12px);line-height:1.5;letter-spacing:.13em;color:rgba(232,224,208,.58);transform:translateZ(20px);max-width:82%}
-.omega-world-arrow{position:absolute;right:18px;bottom:16px;color:var(--world-accent);font:13px var(--M,"Courier Prime",monospace);transform:translateZ(22px)}
+.omega-world-arrow{position:absolute;right:18px;bottom:16px;color:var(--world-accent);font:var(--fs-2,14px) var(--M,"Courier Prime",monospace);transform:translateZ(22px)}
 .omega-world-game::marker{content:""}
 .omega-world-game{background-image:linear-gradient(180deg,rgba(0,229,255,.035),transparent 42%),repeating-linear-gradient(90deg,transparent 0 38px,rgba(0,229,255,.018) 39px 40px)}
 .omega-world-cinema{background-image:linear-gradient(180deg,rgba(201,168,76,.045),transparent 42%),repeating-linear-gradient(0deg,transparent 0 34px,rgba(201,168,76,.018) 35px 36px)}

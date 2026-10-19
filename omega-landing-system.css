@@ -759,7 +759,7 @@
   justify-content:flex-end;
   gap:8px;
   max-width:330px;
-  font:9px/1.3 var(--M,"Courier Prime",ui-monospace,monospace);
+  font:var(--fs-1,12px)/1.3 var(--M,"Courier Prime",ui-monospace,monospace);
   letter-spacing:.15em;
   color:var(--ohz-gold-bright);
 }
@@ -789,7 +789,7 @@
   background:rgba(0,229,255,.035);
 }
 .omega-discovery-kicker{
-  font:8px/1.5 var(--M,"Courier Prime",ui-monospace,monospace);
+  font:var(--fs-1,12px)/1.5 var(--M,"Courier Prime",ui-monospace,monospace);
   letter-spacing:.15em;
   color:var(--ohz-cyan,#00E5FF);
 }
@@ -805,7 +805,7 @@
 }
 .omega-discovery-card b{
   margin-top:5px;
-  font:9px/1.3 var(--M,"Courier Prime",ui-monospace,monospace);
+  font:var(--fs-1,12px)/1.3 var(--M,"Courier Prime",ui-monospace,monospace);
   letter-spacing:.16em;
   color:var(--ohz-gold-bright);
 }

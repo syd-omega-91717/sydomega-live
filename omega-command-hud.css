@@ -1,6 +1,6 @@
 /* Ω COMMAND HUD — additive, responsive and reduced-motion safe */
 .omega-command-hud{position:fixed;right:16px;bottom:42px;z-index:9997;font-family:var(--M,'Courier Prime',monospace)}
-.omega-command-hud__toggle{width:46px;height:46px;border-radius:50%;border:1px solid rgba(201,168,76,.55);background:rgba(2,2,6,.86);color:#E8C97A;font:700 17px/1 Cinzel,serif;box-shadow:0 0 24px rgba(201,168,76,.12);backdrop-filter:blur(12px);cursor:pointer}
+.omega-command-hud__toggle{width:46px;height:46px;border-radius:50%;border:1px solid rgba(201,168,76,.55);background:rgba(2,2,6,.86);color:#E8C97A;font:700 var(--fs-3,16px)/1 Cinzel,serif;box-shadow:0 0 24px rgba(201,168,76,.12);backdrop-filter:blur(12px);cursor:pointer}
 .omega-command-hud__toggle:focus-visible{outline:2px solid #00E5FF;outline-offset:3px}
 .omega-command-hud.is-open .omega-command-hud__toggle{border-color:rgba(0,229,255,.7);box-shadow:0 0 28px rgba(0,229,255,.14)}
 .omega-command-hud__panel{position:absolute;right:0;bottom:56px;width:min(340px,calc(100vw - 28px));padding:15px;border:1px solid rgba(232,201,122,.22);border-radius:14px;background:rgba(6,7,12,.94);backdrop-filter:blur(18px) saturate(1.15);box-shadow:0 24px 70px rgba(0,0,0,.62),inset 0 1px rgba(255,255,255,.06)}

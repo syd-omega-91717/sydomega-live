@@ -24761,3 +24761,8 @@ cards run `oa-fade-up`, which would have frozen them at opacity 0).
 separate chrome owners (nav.js `#omega-top`, `.topbar::after` seam, `.ofx-sheen`, the
 particle canvas pulses) — left as brand chrome, not decoration per item.
 `python3 -m unittest discover -s scripts/tests`: 809 OK.
+Also removed `omega-genesis.js` `destagger()`: a random 0–11 s inline `animation-delay` on
+every card (to desync the always-on breath) plus a subtree MutationObserver. With breathing
+hover-only it would only delay a hovered card's response. Entrances were **not** affected
+(measured: in-view dashboard cards 24/24 opaque by 2 s with and without it — the reveal
+sets its own delay), so no speed-up is claimed.

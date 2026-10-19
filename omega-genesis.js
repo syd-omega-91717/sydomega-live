@@ -57,14 +57,13 @@
   style.textContent = css;
   (document.head || document.documentElement).appendChild(style);
 
-  function destagger() {
-    if (REDUCED) return;
-    document.querySelectorAll('.card,.tier,.node,.tile,.mod').forEach(function (el) {
-      if (el.__omgStaggered) return;
-      el.__omgStaggered = 1;
-      el.style.animationDelay = (Math.random() * 11).toFixed(2) + 's';
-    });
-  }
+  /* destagger() is gone: it put a random 0-11s inline animation-delay on every
+     card to desync the always-on breathing loop. Breathing is hover-only now
+     (motion budget, 2026-10-19), where that delay would only make a hovered card
+     wait up to 11s to respond, and there is nothing left to desync; its
+     subtree-wide MutationObserver went with it. (Entrances were not affected --
+     measured: in-view dashboard cards reach full opacity by 2s with or without
+     it, because the reveal sets its own delay.) */
 
   function reveal() {
     var v = document.createElement('div');
@@ -180,8 +179,6 @@
          Keeping the old rotating atmosphere behind it created two competing
          hero systems. Other pages retain the established living atmosphere. */
       if (!IS_INDEX) atmosphere();
-      destagger();
-      try { new MutationObserver(destagger).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
     }
   }
   if (document.body) boot();

@@ -265,7 +265,7 @@ function renderAssets(){
       +'<div style="flex:1">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
       +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+esc(a.type.toUpperCase())+'</div>'
-      +'<div style="font-size:13px;font-weight:600">'+esc(a.name)+'</div>'
+      +'<div style="font-size:var(--fs-2,14px);font-weight:600">'+esc(a.name)+'</div>'
       +'</div>'
       +(a.notes?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(a.notes)+'</div>':'')
       +'</div>'
@@ -302,7 +302,7 @@ function renderFlows(){
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
       +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+(f.type==='in'?'+':'−')+'</div>'
       +'<div style="flex:1;font-size:12px">'+esc(f.desc)+'</div>'
-      +'<div style="font-family:var(--D);font-size:13px;color:'+col+'">'+fmt(f.amount)+'</div>'
+      +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:'+col+'">'+fmt(f.amount)+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(f.date)+'</div>'
       +'</div>';
   }).join('');

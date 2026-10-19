@@ -239,7 +239,7 @@
 
 @media (max-width: 700px) {
   [data-status] {
-    font-size: 0.8125rem;
+    font-size: var(--fs-2,14px);
     padding: 3px 6px;
   }
 

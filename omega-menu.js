@@ -116,9 +116,9 @@
     '#om-open svg{width:18px;height:18px}',
     '#om-ov{position:fixed;inset:0;z-index:9600;background:radial-gradient(ellipse at 50% 30%,rgba(13,13,22,.97),rgba(2,2,6,.98));backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;overflow-y:auto;padding:64px 18px 40px}',
     '#om-ov.open{display:block}',
-    '#om-close{position:fixed;top:14px;right:16px;font-size:26px;color:#C9A84C;cursor:pointer;line-height:1;background:none;border:0}',
+    '#om-close{position:fixed;top:14px;right:16px;font-size:var(--fs-5,28px);color:#C9A84C;cursor:pointer;line-height:1;background:none;border:0}',
     '#om-inner{max-width:920px;margin:0 auto}',
-    '#om-title{text-align:center;font-family:"Cinzel Decorative",serif;color:#C9A84C;letter-spacing:3px;font-size:18px;margin:0 0 24px}',
+    '#om-title{text-align:center;font-family:"Cinzel Decorative",serif;color:#C9A84C;letter-spacing:3px;font-size:var(--fs-4,20px);margin:0 0 24px}',
     '.om-grp{margin:0 0 22px}',
     /* owner-only group: hidden unless bg.js confirms is_owner (body.omega-owner) */
     '.om-grp-owner{display:none}',

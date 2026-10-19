@@ -13,7 +13,7 @@
 .omega-glyph{font-family:"Cinzel Decorative",serif;font-size:clamp(30px,3.5vw,56px);color:var(--omega-gold-soft);text-shadow:0 0 14px rgba(201,168,76,.4);z-index:1}
 .omega-sigil-core{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--omega-cyan);box-shadow:0 0 16px var(--omega-cyan);top:8%;left:calc(50% - 4px)}
 .omega-realm-label{font-family:var(--M,"Share Tech Mono",monospace);font-size:12px;letter-spacing:1.7px;text-align:center;color:var(--omega-gold-soft);line-height:1.4}
-.omega-realm-caption{font-family:var(--M,"Share Tech Mono",monospace);font-size:10px;letter-spacing:1px;color:var(--omega-ink);text-align:center;opacity:.72}
+.omega-realm-caption{font-family:var(--M,"Share Tech Mono",monospace);font-size:var(--fs-1,12px);letter-spacing:1px;color:var(--omega-ink);text-align:center;opacity:.72}
 .omega-info{display:none;margin:18px auto 0;max-width:850px;padding:20px;border:1px solid rgba(201,168,76,.35);background:var(--omega-panel);box-shadow:0 0 40px rgba(0,0,0,.35)}
 .omega-info.is-open{display:block}
 .omega-info h2{margin:0 0 8px;color:var(--omega-gold-soft);font-family:"Cinzel Decorative",serif;font-size:clamp(18px,2vw,28px)}
@@ -21,6 +21,6 @@
 .omega-info a{color:var(--omega-cyan)}
 .omega-info-close{float:right;background:transparent;border:1px solid rgba(201,168,76,.35);color:var(--omega-gold-soft);padding:5px 9px;cursor:pointer}
 @media(max-width:1150px){.omega-realms{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:720px){.omega-realms{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.omega-realm{padding:6px 3px 10px}.omega-realm-caption{display:none}.omega-sigil{max-width:120px}.omega-realm-label{font-size:10px;letter-spacing:1px}}
+@media(max-width:720px){.omega-realms{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.omega-realm{padding:6px 3px 10px}.omega-realm-caption{display:none}.omega-sigil{max-width:120px}.omega-realm-label{font-size:var(--fs-1,12px);letter-spacing:1px}}
 @media(max-width:460px){.omega-realms{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.omega-realm{transition:none}.omega-realm:hover,.omega-realm:focus-visible{transform:none}}

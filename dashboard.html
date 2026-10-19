@@ -37,7 +37,7 @@
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold));cursor:pointer;transition:.18s;position:relative}
 .kpi:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--kc,var(--gold));line-height:1}
+.kpi-n{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--kc,var(--gold));line-height:1}
 .kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .kpi-sub{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:3px}
 /* SYSTEM GALAXY */
@@ -48,7 +48,7 @@
 .cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
 .cmd-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;--card-accent:var(--cc)}
 .cmd-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.cc-icon{font-family:var(--D);font-size:22px;color:var(--cc,var(--gold));margin-bottom:6px;line-height:1}
+.cc-icon{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--cc,var(--gold));margin-bottom:6px;line-height:1}
 .cc-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:4px}
 .cc-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;margin-bottom:6px}
 .cc-desc{font-size:12px;line-height:1.6;color:var(--ink);opacity:.6}
@@ -82,7 +82,7 @@
 @keyframes emblem-float{0%,100%{transform:translateY(0px) rotateZ(0deg)}25%{transform:translateY(-8px) rotateZ(1.5deg)}75%{transform:translateY(-4px) rotateZ(-1.5deg)}}
 @keyframes status-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.1)}}
 @keyframes 3d-tilt{0%{transform:perspective(1000px) rotateX(0deg) rotateY(0deg)}100%{transform:perspective(1000px) rotateX(2deg) rotateY(2deg)}}
-.emblem-orb{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.2),rgba(0,0,0,.4));border:2px solid var(--kc,var(--gold));animation:emblem-float 4s ease-in-out infinite;font-size:18px;box-shadow:0 0 20px rgba(201,168,76,.4);margin-right:6px;flex-shrink:0}
+.emblem-orb{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.2),rgba(0,0,0,.4));border:2px solid var(--kc,var(--gold));animation:emblem-float 4s ease-in-out infinite;font-size:var(--fs-4,20px);box-shadow:0 0 20px rgba(201,168,76,.4);margin-right:6px;flex-shrink:0}
 .emblem-orb:hover{animation:emblem-float 3s ease-in-out infinite,cinematic-glow 2s ease-in-out infinite}
 /* 8px/10px were under the repo's 12px legibility floor (scripts/type-scale.py,
    blocking). Raised to the floor; the dot keeps its smaller optical size via
@@ -113,7 +113,7 @@
         <div class="mb-item"><div class="mb-dot" id="health-dot" style="background:var(--green)"></div><span id="health-label" data-i18n="operational">OPERATIONAL</span></div>
         <div class="mb-item">&#9678; <span id="mb-time">--:--:--</span></div>
         <div class="mb-item">&#9670; <span id="mb-date">--</span></div>
-        <div class="mb-item">AUTH <span id="hdr-auth" style="color:var(--gold);font-family:var(--D);font-size:13px">--</span></div>
+        <div class="mb-item">AUTH <span id="hdr-auth" style="color:var(--gold);font-family:var(--D);font-size:var(--fs-2,14px)">--</span></div>
         <div class="mb-item">PMI <span style="color:rgba(63,178,127,.5)" id="mb-pmi">87</span></div>
       </div>
     </div>
@@ -223,7 +223,7 @@
         <!-- TWO-COL: VISION WHEEL + PERSONAL TOOLS -->
         <div class="two-col" style="align-items:start">
           <div>
-            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;animation:emblem-float 4s ease-in-out infinite;animation-delay:.8s">⊙</span><span data-i18n="life_wheel">LIFE WHEEL</span></span> &middot; 8 <span data-i18n="eight_domains">DOMAINS</span> <span class="sechead-action" onclick="location.href='/vision.html'"><span data-i18n="full_view">FULL VIEW</span> &#8594;</span></div>
+            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:var(--fs-4,20px);animation:emblem-float 4s ease-in-out infinite;animation-delay:.8s">⊙</span><span data-i18n="life_wheel">LIFE WHEEL</span></span> &middot; 8 <span data-i18n="eight_domains">DOMAINS</span> <span class="sechead-action" onclick="location.href='/vision.html'"><span data-i18n="full_view">FULL VIEW</span> &#8594;</span></div>
             <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.95);padding:10px;height:220px;display:flex;align-items:center;justify-content:center">
               <canvas id="personal-wheel" style="max-width:200px;max-height:200px"></canvas>
             </div>
@@ -286,13 +286,13 @@
         </div>
         <div class="two-col" style="align-items:start;margin-bottom:14px">
           <div>
-            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.2s">◎</span><span data-i18n="dash_axis_radar">AXIS PROGRESSION RADAR</span></span> <span class="sechead-action" data-nav-action="/analytics.html" data-i18n="dash_full_analytics">FULL ANALYTICS &#8594;</span></div>
+            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:var(--fs-4,20px);animation:emblem-float 4s ease-in-out infinite;animation-delay:1.2s">◎</span><span data-i18n="dash_axis_radar">AXIS PROGRESSION RADAR</span></span> <span class="sechead-action" data-nav-action="/analytics.html" data-i18n="dash_full_analytics">FULL ANALYTICS &#8594;</span></div>
             <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center">
               <canvas id="dash-radar" style="max-height:180px"></canvas>
             </div>
           </div>
           <div>
-            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.4s">◆</span><span data-i18n="dash_sovereign_intelligence">SOVEREIGN INTELLIGENCE</span></span> &middot; DIRECT QUERY</div>
+            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:var(--fs-4,20px);animation:emblem-float 4s ease-in-out infinite;animation-delay:1.4s">◆</span><span data-i18n="dash_sovereign_intelligence">SOVEREIGN INTELLIGENCE</span></span> &middot; DIRECT QUERY</div>
             <div style="border:1px solid rgba(201,168,76,.2);border-radius:2px;overflow:hidden;margin-bottom:14px">
               <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:12px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)" data-i18n="ai_intelligence_standby">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
               <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(201,168,76,.08);background:rgba(10,10,15,.6)">

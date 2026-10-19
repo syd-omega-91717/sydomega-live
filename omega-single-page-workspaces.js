@@ -30,12 +30,12 @@
       '.omega-module-dialog::backdrop{background:rgba(2,2,6,.78);backdrop-filter:blur(10px)}',
       '.omega-module-head{height:52px;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid rgba(201,168,76,.15);background:#0a0a0f;box-sizing:border-box}',
       '.omega-module-title{font:600 12px "Courier Prime",monospace;letter-spacing:1.5px;color:#e8c97a;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
-      '.omega-module-source{font:10px "Courier Prime",monospace;color:#85837b;white-space:nowrap}',
-      '.omega-module-close,.omega-module-open{min-height:36px;padding:0 10px;border:1px solid rgba(201,168,76,.22);background:rgba(201,168,76,.04);color:#e8c97a;font:10px "Courier Prime",monospace;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}',
+      '.omega-module-source{font:var(--fs-1,12px) "Courier Prime",monospace;color:#85837b;white-space:nowrap}',
+      '.omega-module-close,.omega-module-open{min-height:36px;padding:0 10px;border:1px solid rgba(201,168,76,.22);background:rgba(201,168,76,.04);color:#e8c97a;font:var(--fs-1,12px) "Courier Prime",monospace;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}',
       '.omega-module-frame{display:block;width:100%;height:calc(100% - 52px);border:0;background:#020206}',
       '.omega-module-picker{display:flex;gap:6px;overflow:auto;padding:8px 10px;margin:0 0 14px;border:1px solid rgba(201,168,76,.12);background:rgba(10,10,15,.48);scrollbar-width:none}',
       '.omega-module-picker::-webkit-scrollbar{display:none}',
-      '.omega-module-chip{flex:0 0 auto;min-height:38px;padding:0 11px;border:1px solid rgba(201,168,76,.16);background:transparent;color:#85837b;font:10px "Courier Prime",monospace;letter-spacing:.8px;cursor:pointer;border-radius:7px}',
+      '.omega-module-chip{flex:0 0 auto;min-height:38px;padding:0 11px;border:1px solid rgba(201,168,76,.16);background:transparent;color:#85837b;font:var(--fs-1,12px) "Courier Prime",monospace;letter-spacing:.8px;cursor:pointer;border-radius:7px}',
       '.omega-module-chip:hover,.omega-module-chip[aria-current="true"]{color:#e8c97a;border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.08)}'
     ].join('');
     document.head.appendChild(s);

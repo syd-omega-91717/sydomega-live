@@ -138,7 +138,7 @@ function renderProfile(){
   el.style.display='block';
   el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">'
     +[['ETHNIC HERITAGE',profile.ethnic],['COUNTRY OF ORIGIN',profile.country],['NATIVE LANGUAGE',profile.lang],['SURNAME ORIGIN',profile.surname],['FAMILY MOTTO',profile.motto]].filter(function(r){return r[1];}).map(function(r){
-      return '<div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:13px;color:var(--ink)">'+esc(r[1])+'</div></div>';
+      return '<div><div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:3px">'+r[0]+'</div><div style="font-size:var(--fs-2,14px);color:var(--ink)">'+esc(r[1])+'</div></div>';
     }).join('')+'</div>'
     +(profile.notes?'<div style="margin-top:10px;font-size:12px;line-height:1.7;opacity:.8">'+esc(profile.notes)+'</div>':'');
   document.getElementById('h-ethnic').value=profile.ethnic||'';

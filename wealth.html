@@ -10,7 +10,7 @@
 @media(max-width:640px){.wealth-hero{grid-template-columns:1fr}}
 .net-worth-box{grid-column:1/-1;border:1px solid rgba(201,168,76,.2);border-radius:2px;padding:28px;text-align:center}
 .net-worth-box .nw-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:8px}
-.net-worth-box .nw-val{font-family:var(--M);font-size:42px;letter-spacing:4px;color:var(--gold,var(--gold))}
+.net-worth-box .nw-val{font-family:var(--M);font-size:var(--fs-6,40px);letter-spacing:4px;color:var(--gold,var(--gold))}
 .net-worth-box .nw-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:8px}
 .asset-class-card{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px}
 .acc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -241,9 +241,9 @@
           <div class="input-row"><label>RETURN RATE (%)</label><input type="number" id="nwp-rate" value="8" step="0.1" oninput="calcNWP()"></div>
           <div class="calc-result">
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-              <div><div class="cr-label">5 YEARS</div><div class="cr-val" id="nwp-5" style="font-size:13px">—</div></div>
-              <div><div class="cr-label">10 YEARS</div><div class="cr-val" id="nwp-10" style="font-size:13px">—</div></div>
-              <div><div class="cr-label">20 YEARS</div><div class="cr-val" id="nwp-20" style="font-size:13px">—</div></div>
+              <div><div class="cr-label">5 YEARS</div><div class="cr-val" id="nwp-5" style="font-size:var(--fs-2,14px)">—</div></div>
+              <div><div class="cr-label">10 YEARS</div><div class="cr-val" id="nwp-10" style="font-size:var(--fs-2,14px)">—</div></div>
+              <div><div class="cr-label">20 YEARS</div><div class="cr-val" id="nwp-20" style="font-size:var(--fs-2,14px)">—</div></div>
             </div>
           </div>
         </div>

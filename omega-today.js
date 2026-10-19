@@ -141,7 +141,7 @@
         'background:conic-gradient(var(--gold,#C9A84C) calc(var(--p)*1turn),rgba(201,168,76,.12) 0);' +
         '}' +
       '.otd-ring b{width:42px;height:42px;border-radius:50%;background:var(--void,#08080F);display:grid;place-items:center;' +
-        'font-family:var(--M,monospace);font-size:13px;color:var(--ink,#E5ECF0)}' +
+        'font-family:var(--M,monospace);font-size:var(--fs-2,14px);color:var(--ink,#E5ECF0)}' +
       '.otd-title{font-family:var(--M,monospace);font-size:12px;letter-spacing:3px;color:var(--gold,#C9A84C)}' +
       '.otd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}' +
       '.otd-t{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border:1px solid rgba(201,168,76,.18);' +

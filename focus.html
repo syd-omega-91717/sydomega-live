@@ -9,7 +9,7 @@
 .focus-ring-wrap{position:relative;width:220px;height:220px;margin:0 auto 24px}
 #focus-ring{position:absolute;inset:0}
 .focus-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.focus-time .big{font-family:var(--M);font-size:42px;letter-spacing:4px;color:var(--gold,var(--gold))}
+.focus-time .big{font-family:var(--M);font-size:var(--fs-6,40px);letter-spacing:4px;color:var(--gold,var(--gold))}
 .focus-time .lbl{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.5)}
 .focus-controls{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center}
 .fc-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 22px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
@@ -30,7 +30,7 @@
 .session-card .s-date{color:rgba(138,134,118,.4);font-size:12px;text-align:right}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .stat-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;text-align:center}
-.stat-box .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,var(--gold))}
+.stat-box .sv{font-family:var(--M);font-size:var(--fs-4,20px);letter-spacing:2px;color:var(--gold,var(--gold))}
 .stat-box .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
 .heatmap-wrap{overflow-x:auto;margin-bottom:24px}
 #focus-heatmap{display:block}
@@ -46,7 +46,7 @@
 .dist-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
 .focus-score-ring{position:relative;width:120px;height:120px;display:inline-block}
 .score-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.score-label .sv{font-family:var(--M);font-size:22px;color:var(--gold,var(--gold))}
+.score-label .sv{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold,var(--gold))}
 .score-label .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5)}
 .interrupt-wrap{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 </style>
@@ -158,7 +158,7 @@
           <div class="stat-box card" data-reveal="fade-up"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
           <div class="stat-box card" data-reveal="fade-up"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
           <div class="stat-box card" data-reveal="fade-up"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
-          <div class="stat-box card" data-reveal="fade-up"><div class="sv" style="font-size:13px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv" style="font-size:var(--fs-2,14px)">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
         </div>
         <div class="stats-row">
           <div class="stat-box card" data-reveal="fade-up"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>

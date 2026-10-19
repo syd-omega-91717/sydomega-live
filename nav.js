@@ -255,7 +255,7 @@
       '#omega-mob ul{display:flex;list-style:none;margin:0;padding:0}',
       '#omega-mob ul li{flex:1}',
       '#omega-mob ul li a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 11px;text-decoration:none;gap:3px}',
-      '#omega-mob ul li a .mi{font-size:18px;line-height:1;transition:all .15s;color:#353330}',
+      '#omega-mob ul li a .mi{font-size:var(--fs-4,20px);line-height:1;transition:all .15s;color:#353330}',
       '#omega-mob ul li a .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted)}',
       '#omega-mob ul li a.m-on .mi,#omega-mob ul li a:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,0.6);transform:translateY(-2px)}',
       '#omega-mob ul li a.m-on .ml,#omega-mob ul li a:hover .ml{color:#C9A84C}',
@@ -583,7 +583,7 @@
          and far under 44px. The text size is left alone; only the hit area
          grows. */
       '.dss-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:5px 2px;min-height:24px;cursor:pointer;text-decoration:none}',
-      '.dss-icon{font-size:18px;color:var(--muted)}',
+      '.dss-icon{font-size:var(--fs-4,20px);color:var(--muted)}',
       '.dss-label{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:#85837b}',
       '.dss-head:hover .dss-icon,.dss-head.ds-on .dss-icon{color:#C9A84C;text-shadow:0 0 8px rgba(201,168,76,.5)}',
       '.dss-head:hover .dss-label,.dss-head.ds-on .dss-label{color:#C9A84C}',
@@ -645,11 +645,11 @@
     /* The owner's one place, first in the phone menu (the desktop dock item
        does not exist on a phone). Hidden until bg.js confirms is_owner. */
     var dOwner=document.createElement('a');dOwner.className='dss-head ds-owner';dOwner.href='/control-plane.html';
-    dOwner.style.display='none';dOwner.style.cssText+=';color:#E8C766;font-family:var(--M,"Courier Prime",monospace);font-size:13px;letter-spacing:3px;padding:14px 18px;border-bottom:1px solid rgba(232,199,102,.25)';dOwner.textContent='\u03A9 OWNER DECK \u00B7 EVERY PAGE';
+    dOwner.style.display='none';dOwner.style.cssText+=';color:#E8C766;font-family:var(--M,"Courier Prime",monospace);font-size:var(--fs-2,14px);letter-spacing:3px;padding:14px 18px;border-bottom:1px solid rgba(232,199,102,.25)';dOwner.textContent='\u03A9 OWNER DECK \u00B7 EVERY PAGE';
     drawer.appendChild(dOwner);
     var dWait=document.createElement('div');dWait.className='on-wait';dWait.style.display='none';
     var dWaitA=document.createElement('a');dWaitA.href='/approvals.html';
-    dWaitA.style.cssText='display:block;color:#E0736B;font-family:var(--M,"Courier Prime",monospace);font-size:13px;letter-spacing:3px;padding:12px 18px;border-bottom:1px solid rgba(224,115,107,.3);text-decoration:none';
+    dWaitA.style.cssText='display:block;color:#E0736B;font-family:var(--M,"Courier Prime",monospace);font-size:var(--fs-2,14px);letter-spacing:3px;padding:12px 18px;border-bottom:1px solid rgba(224,115,107,.3);text-decoration:none';
     var dWaitN=document.createElement('span');dWaitN.className='on-wait-n';
     dWaitA.appendChild(dWaitN);dWaitA.appendChild(document.createTextNode(' WAITING FOR APPROVAL'));
     dWait.appendChild(dWaitA);drawer.appendChild(dWait);
@@ -868,7 +868,7 @@
         row.setAttribute('aria-selected',String(i===active));
         row.style.cssText='display:flex;align-items:center;gap:12px;padding:11px 12px;margin:2px 0;border-radius:9px;color:#E8E8EE;text-decoration:none;cursor:pointer;background:'+(i===active?'rgba(201,168,76,.12)':'transparent');
         var ico=document.createElement('span');
-        ico.textContent=x.icon||'•';ico.style.cssText='width:28px;text-align:center;color:'+(x.col||'#C9A84C')+';font-size:17px';
+        ico.textContent=x.icon||'•';ico.style.cssText='width:28px;text-align:center;color:'+(x.col||'#C9A84C')+';font-size:var(--fs-3,16px)';
         var body=document.createElement('span');body.style.cssText='min-width:0;flex:1';
         var name=document.createElement('span');name.textContent=x.label;name.style.cssText='display:block;font:600 13px Rajdhani,sans-serif;letter-spacing:.8px';
         var meta=document.createElement('span');meta.textContent=x.section+' · '+x.href;meta.style.cssText='display:block;margin-top:2px;color:rgba(255,255,255,.4);font:12px "Courier Prime",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
@@ -928,7 +928,7 @@
        id on every page, and the style guard then read the rail as its own. */
     if(!document.getElementById('omega-context-rail-style')){
       var style=document.createElement('style');style.id='omega-context-rail-style';
-      style.textContent='.omega-context-rail{display:flex;align-items:center;gap:8px;min-height:38px;padding:7px 12px;margin:0 0 10px;border-bottom:1px solid rgba(201,168,76,.12);background:rgba(2,2,6,.52);backdrop-filter:blur(10px);font:12px "Courier Prime",monospace;letter-spacing:.7px;box-sizing:border-box;position:relative;z-index:20}.omega-context-rail a{color:rgba(232,201,122,.72);text-decoration:none;white-space:nowrap}.omega-context-rail a:hover,.omega-context-rail a:focus-visible{color:#E8C97A;text-decoration:underline}.omega-context-sep{color:rgba(255,255,255,.22)}.omega-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.omega-context-current{color:#F1F1F5;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.omega-context-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0}.omega-context-btn{min-height:32px;padding:0 9px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:rgba(232,201,122,.78);font:12px "Courier Prime",monospace;letter-spacing:.7px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer}.omega-context-btn:hover,.omega-context-btn:focus-visible{border-color:rgba(201,168,76,.55);color:#E8C97A;background:rgba(201,168,76,.09)}body>.omega-context-rail{padding-left:62px}.omega-mobile-bar{display:none}@media(max-width:760px){.omega-context-rail{padding:7px 10px}body>.omega-context-rail{padding-left:62px}.omega-context-actions .omega-context-fav-label{display:none}.omega-mobile-bar{display:flex;position:sticky;bottom:0;z-index:1900;gap:4px;padding:7px max(8px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));background:rgba(5,5,12,.94);backdrop-filter:blur(16px);border-top:1px solid rgba(201,168,76,.18);box-sizing:border-box}.omega-mobile-bar a,.omega-mobile-bar button{flex:1;min-width:0;min-height:44px;border:0;background:transparent;color:rgba(255,255,255,.68);text-decoration:none;font:12px "Courier Prime",monospace;letter-spacing:.4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:7px}.omega-mobile-bar a[aria-current="page"],.omega-mobile-bar button:hover{color:#E8C97A;background:rgba(201,168,76,.08)}.omega-mobile-glyph{font-size:17px;line-height:16px}.omega-mobile-label{font-size:12px;line-height:11px}.omega-context-rail{position:sticky;top:0}.omega-context-current{font-size:12px}}';
+      style.textContent='.omega-context-rail{display:flex;align-items:center;gap:8px;min-height:38px;padding:7px 12px;margin:0 0 10px;border-bottom:1px solid rgba(201,168,76,.12);background:rgba(2,2,6,.52);backdrop-filter:blur(10px);font:12px "Courier Prime",monospace;letter-spacing:.7px;box-sizing:border-box;position:relative;z-index:20}.omega-context-rail a{color:rgba(232,201,122,.72);text-decoration:none;white-space:nowrap}.omega-context-rail a:hover,.omega-context-rail a:focus-visible{color:#E8C97A;text-decoration:underline}.omega-context-sep{color:rgba(255,255,255,.22)}.omega-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.omega-context-current{color:#F1F1F5;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.omega-context-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0}.omega-context-btn{min-height:32px;padding:0 9px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:rgba(232,201,122,.78);font:12px "Courier Prime",monospace;letter-spacing:.7px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer}.omega-context-btn:hover,.omega-context-btn:focus-visible{border-color:rgba(201,168,76,.55);color:#E8C97A;background:rgba(201,168,76,.09)}body>.omega-context-rail{padding-left:62px}.omega-mobile-bar{display:none}@media(max-width:760px){.omega-context-rail{padding:7px 10px}body>.omega-context-rail{padding-left:62px}.omega-context-actions .omega-context-fav-label{display:none}.omega-mobile-bar{display:flex;position:sticky;bottom:0;z-index:1900;gap:4px;padding:7px max(8px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));background:rgba(5,5,12,.94);backdrop-filter:blur(16px);border-top:1px solid rgba(201,168,76,.18);box-sizing:border-box}.omega-mobile-bar a,.omega-mobile-bar button{flex:1;min-width:0;min-height:44px;border:0;background:transparent;color:rgba(255,255,255,.68);text-decoration:none;font:12px "Courier Prime",monospace;letter-spacing:.4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:7px}.omega-mobile-bar a[aria-current="page"],.omega-mobile-bar button:hover{color:#E8C97A;background:rgba(201,168,76,.08)}.omega-mobile-glyph{font-size:var(--fs-3,16px);line-height:16px}.omega-mobile-label{font-size:12px;line-height:11px}.omega-context-rail{position:sticky;top:0}.omega-context-current{font-size:12px}}';
       document.head.appendChild(style);
     }
 

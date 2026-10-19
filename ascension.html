@@ -219,7 +219,7 @@ function renderStages(auth){
       +(active?'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;background:'+s.color+';color:#000;padding:1px 5px">CURRENT</div>':'')
       +(unlocked&&!active?'<div style="font-family:var(--M);font-size:12px;color:var(--green)">&check; CLEARED</div>':'')
       +'</div>'
-      +'<div style="font-family:var(--D);font-size:13px;color:'+s.color+';margin-bottom:4px">'+s.title+'</div>'
+      +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:'+s.color+';margin-bottom:4px">'+s.title+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px">AUTH &ge; '+s.min.toFixed(4)+'</div>'
       +'<div style="font-size:12px;color:var(--ink);opacity:.75;margin-bottom:10px">'+s.desc+'</div>'
       +'<div style="background:rgba(255,255,255,.06);border-radius:2px;height:4px">'
@@ -261,7 +261,7 @@ function renderMilestones(){
     return '<div style="border:1px solid var(--line);border-left:3px solid '+(colors[m.cat]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'))+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px;display:flex;gap:12px;align-items:flex-start">'
       +'<div style="flex:1">'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+(colors[m.cat]||'var(--gold)')+';margin-bottom:4px">'+esc(m.cat.toUpperCase())+'</div>'
-      +'<div style="font-size:13px">'+esc(m.text)+'</div>'
+      +'<div style="font-size:var(--fs-2,14px)">'+esc(m.text)+'</div>'
       +'</div>'
       +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);flex-shrink:0">'+esc(m.date)+'</div>'
       +'</div>';

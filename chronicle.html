@@ -19,7 +19,7 @@
 .chronicle-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(201,168,76,.12) 0%,transparent 70%);pointer-events:none}
 .chronicle-title{font-family:var(--D);font-size:clamp(24px,5vw,52px);color:var(--solar);margin-bottom:10px;letter-spacing:2px}
 .chronicle-sub{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--muted);margin-bottom:16px}
-.chronicle-desc{font-size:13px;color:var(--ink);opacity:.7;line-height:1.8;max-width:600px;margin:0 auto}
+.chronicle-desc{font-size:var(--fs-2,14px);color:var(--ink);opacity:.7;line-height:1.8;max-width:600px;margin:0 auto}
 
 /* Navigation dots */
 .era-nav{display:flex;justify-content:center;gap:10px;padding:20px var(--pad);flex-wrap:wrap}
@@ -92,7 +92,7 @@
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="chronicle" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">SOVEREIGN CHRONICLE<small>HERITAGE DIVISION &middot; THE COMPLETE TIMELINE &middot; VOID AGE → APEX AGE</small></div><canvas id="chr-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img"></canvas><div style="font-family:var(--M);font-size:12px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
+    <div class="topbar"><div class="t">SOVEREIGN CHRONICLE<small>HERITAGE DIVISION &middot; THE COMPLETE TIMELINE &middot; VOID AGE → APEX AGE</small></div><canvas id="chr-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="solar" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img"></canvas><div style="font-family:var(--M);font-size:12px;color:var(--solar)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:var(--fs-2,14px)">--</span></div></div>
 
     <div class="chronicle-hero" data-reveal="fade-up">
       <div class="chronicle-title">SOVEREIGN CHRONICLE</div>

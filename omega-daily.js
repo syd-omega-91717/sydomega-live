@@ -144,7 +144,7 @@
       '.odl-card{border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(4,6,10,.55);padding:14px;display:flex;flex-direction:column;gap:10px;min-height:190px}' +
       '.odl-card.done{border-color:rgba(63,178,127,.45)}' +
       '.odl-k{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--odl-c,var(--gold))}' +
-      '.odl-h{font-family:var(--R);font-size:17px;font-weight:600;color:var(--ink);line-height:1.3}' +
+      '.odl-h{font-family:var(--R);font-size:var(--fs-3,16px);font-weight:600;color:var(--ink);line-height:1.3}' +
       '.odl-p{font-family:var(--R);font-size:14px;color:var(--muted);line-height:1.45}' +
       '.odl-btn{align-self:flex-start;margin-top:auto;min-height:44px;padding:0 18px;border-radius:22px;cursor:pointer;font-family:var(--M);font-size:12px;letter-spacing:1.5px;' +
       'border:1px solid var(--odl-c,var(--gold));background:transparent;color:var(--odl-c,var(--gold))}' +
@@ -152,7 +152,7 @@
       '.odl-btn:hover{background:rgba(255,255,255,.05)}.odl-btn:focus-visible,.odl-opt:focus-visible,.odl-poster:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}' +
       '.odl-ok{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--green)}' +
       '.odl-opts{display:grid;gap:8px}' +
-      '.odl-opt{min-height:44px;text-align:left;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:var(--ink);font-family:var(--R);font-size:15px;cursor:pointer}' +
+      '.odl-opt{min-height:44px;text-align:left;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:var(--ink);font-family:var(--R);font-size:var(--fs-3,16px);cursor:pointer}' +
       '.odl-opt[disabled]{cursor:default}.odl-opt.right{border-color:var(--green);background:rgba(63,178,127,.14)}.odl-opt.wrong{border-color:var(--crim);background:rgba(220,60,60,.12)}' +
       '.odl-poster{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:0;padding:0;cursor:pointer;background:#000}' +
       '.odl-poster img,.odl-card video{width:100%;height:100%;object-fit:cover;display:block;border-radius:10px}' +

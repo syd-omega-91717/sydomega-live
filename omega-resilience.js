@@ -62,7 +62,7 @@
       if(el) {
         el.textContent = '';
         const state = document.createElement('div');
-        state.style.cssText = 'padding:16px;background:rgba(139,0,0,0.1);border:1px solid #C4453C;border-radius:4px;color:#C4453C;font-size:13px';
+        state.style.cssText = 'padding:16px;background:rgba(139,0,0,0.1);border:1px solid #C4453C;border-radius:4px;color:#C4453C;font-size:var(--fs-2,14px)';
         state.textContent = String(message == null ? '' : message);
         el.appendChild(state);
       }

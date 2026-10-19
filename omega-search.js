@@ -399,7 +399,7 @@
       return '<a href="'+esc(item.u)+'" style="display:block;padding:11px 16px;text-decoration:none;border-bottom:1px solid rgba(201,168,76,.05);color:inherit;transition:background .12s" class="omega-s-hit">'
         +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">'
           +'<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:'+col+';border:1px solid;border-color:'+col+'33;padding:1px 7px;border-radius:10px;flex-shrink:0">'+item.c+'</span>'
-          +'<span style="font-family:var(--R,\'Rajdhani\',sans-serif);font-size:13px;font-weight:600">'+highlight(item.t,q)+'</span>'
+          +'<span style="font-family:var(--R,\'Rajdhani\',sans-serif);font-size:var(--fs-2,14px);font-weight:600">'+highlight(item.t,q)+'</span>'
         +'</div>'
         +'<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;color:rgba(138,134,118,.6);padding-left:60px">'+esc(item.d.slice(0,80))+'</div>'
         +'</a>';
@@ -423,8 +423,8 @@
     _ov.style.cssText='position:fixed;inset:0;z-index:9990;background:rgba(2,2,6,.93);display:flex;align-items:flex-start;justify-content:center;padding-top:10vh;backdrop-filter:blur(8px)';
     _ov.innerHTML='<div style="width:min(640px,90vw);background:#0A0A0F;border:1px solid rgba(201,168,76,.3);border-radius:4px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)">'
       +'<div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(201,168,76,.12)">'
-        +'<span style="font-family:\'Cinzel Decorative\',serif;font-size:18px;color:rgba(201,168,76,.5)">Ω</span>'
-        +'<input id="omega-s-inp" type="search" placeholder="SEARCH THE SOVEREIGN PLATFORM…" autocomplete="off" spellcheck="false" style="flex:1;background:none;border:none;outline:none;font-family:var(--M,\'Courier Prime\',monospace);font-size:13px;color:#e9e6dc;letter-spacing:1.5px" aria-label="Search">'
+        +'<span style="font-family:\'Cinzel Decorative\',serif;font-size:var(--fs-4,20px);color:rgba(201,168,76,.5)">Ω</span>'
+        +'<input id="omega-s-inp" type="search" placeholder="SEARCH THE SOVEREIGN PLATFORM…" autocomplete="off" spellcheck="false" style="flex:1;background:none;border:none;outline:none;font-family:var(--M,\'Courier Prime\',monospace);font-size:var(--fs-2,14px);color:#e9e6dc;letter-spacing:1.5px" aria-label="Search">'
         +'<kbd id="omega-s-esc" role="button" tabindex="0" aria-label="Close search" style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;color:rgba(138,134,118,.5);border:1px solid rgba(138,134,118,.2);padding:2px 6px;border-radius:2px;cursor:pointer">ESC</kbd>'
       +'</div>'
       +'<div id="omega-s-res" role="listbox" style="max-height:55vh;overflow-y:auto"></div>'

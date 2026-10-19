@@ -37,17 +37,17 @@
     s.textContent = [
       '.odc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:18px clamp(14px,3vw,36px) 22px}',
       '.odc-card{display:grid;gap:8px;align-content:start;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)}',
-      '.odc-h{font-family:var(--M,monospace);font-size:.64rem;letter-spacing:.18em;color:var(--muted,#9aa)}',
+      '.odc-h{font-family:var(--M,monospace);font-size:var(--fs-1,12px);letter-spacing:.18em;color:var(--muted,#9aa)}',
       '.odc-big{display:flex;align-items:baseline;gap:6px 14px;flex-wrap:wrap}',
-      '.odc-big b{font-family:var(--R,sans-serif);font-size:1.9rem;line-height:1;color:var(--ink,#eee)}',
-      '.odc-big span{font-family:var(--M,monospace);font-size:.6rem;letter-spacing:.12em;color:var(--muted,#9aa)}',
-      '.odc-bar{display:grid;grid-template-columns:70px 1fr auto;gap:8px;align-items:center;font-family:var(--M,monospace);font-size:.62rem;color:var(--muted,#9aa)}',
+      '.odc-big b{font-family:var(--R,sans-serif);font-size:var(--fs-5,28px);line-height:1;color:var(--ink,#eee)}',
+      '.odc-big span{font-family:var(--M,monospace);font-size:var(--fs-1,12px);letter-spacing:.12em;color:var(--muted,#9aa)}',
+      '.odc-bar{display:grid;grid-template-columns:70px 1fr auto;gap:8px;align-items:center;font-family:var(--M,monospace);font-size:var(--fs-1,12px);color:var(--muted,#9aa)}',
       '.odc-bar i{display:block;height:6px;border-radius:3px;background:var(--gold,#d4af37)}',
       '.odc-li{display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px;align-items:baseline;padding:6px 0;border-top:1px solid rgba(255,255,255,.06);font-family:var(--R,sans-serif);color:var(--ink,#eee)}',
-      '.odc-li small{font-family:var(--M,monospace);font-size:.6rem;color:var(--muted,#9aa)}',
-      '.odc-li b{font-family:var(--M,monospace);font-size:.7rem;color:var(--gold,#d4af37)}',
-      '.odc-empty{font-family:var(--M,monospace);font-size:.64rem;letter-spacing:.1em;color:var(--muted,#9aa)}',
-      '.odc .odc-act{display:inline-flex!important;justify-self:start;align-items:center;min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid rgba(212,175,55,.5);color:var(--ink,#eee);font-family:var(--M,monospace);font-size:.66rem;letter-spacing:.14em;text-decoration:none}'
+      '.odc-li small{font-family:var(--M,monospace);font-size:var(--fs-1,12px);color:var(--muted,#9aa)}',
+      '.odc-li b{font-family:var(--M,monospace);font-size:var(--fs-1,12px);color:var(--gold,#d4af37)}',
+      '.odc-empty{font-family:var(--M,monospace);font-size:var(--fs-1,12px);letter-spacing:.1em;color:var(--muted,#9aa)}',
+      '.odc .odc-act{display:inline-flex!important;justify-self:start;align-items:center;min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid rgba(212,175,55,.5);color:var(--ink,#eee);font-family:var(--M,monospace);font-size:var(--fs-1,12px);letter-spacing:.14em;text-decoration:none}'
     ].join('');
     document.head.appendChild(s);
   }

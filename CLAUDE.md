@@ -16,7 +16,7 @@ bundler.
 
 - **Owner:** `profiles.is_owner = true` grants elevated schema-wide access,
   held by two accounts of the same owner: `s.y.dagher@gmail.com` and
-  `slmndghr@gmail.com` (confirmed 2026-09-17, closing `FIXES_LOG.md` #177).
+  `slmndghr@gmail.com` (live since 2026-10-18).
 - **Members:** other accounts request access, sit in a pending/approved
   state (`access_approved`, `pending.html`, `approvals.html`), and once
   approved get full app access. This is an invite/approval-gated personal
@@ -524,14 +524,11 @@ Only what changes what you do in the **first minutes** stays here:
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
   merged `main`, in a **new** PR. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
-- **Production went DOWN 2026-10-06: Vercel blocked the Hobby account for usage**
-  (`sydomega.com` → 402 "This deployment is temporarily paused"; commit status "Account is
-  blocked"). Cause: 42 production deploys in ~3.5 days (every `main` push, docs-only too, at
-  ~85 MB) plus a PR-triggered Chromium crawl of **production**. `ignoreCommand` is now
-  `scripts/vercel-ignore.sh` (skips commits that ship nothing — 28/45 replayed) and that crawl
-  no longer runs on PRs. Restoring service is the owner's dashboard action (upgrade, or wait
-  for the window). Previews are off (`deploymentEnabled`: `main` only). Read a deployment
-  with `web_fetch_vercel_url`, never curl (`ssoProtection` 401s a bare `*.vercel.app`).
+- **Production is Cloudflare Pages since 2026-10-18** (project `sydomega`, Git-connected, builds
+  every `main` push with `bash scripts/vercel-build.sh` → `public`). Vercel's Hobby team is paused
+  for **Edge Requests** (one page view costs 198–392). Empty Pages build settings publish the raw
+  repo root, dropping every header: verify by fetching `/scripts/…` (must 404). The proxy here 403s
+  the site; fetch it through Firecrawl. Runbook: `docs/CLOUDFLARE_PAGES_CUTOVER.md`.
 - **Vercel BUILDS; it no longer serves the repo root.** `scripts/vercel-build.sh` copies every
   web-extension file into `public/` minus an **exclusion** list (`scripts/`, `supabase/`, `docs/`…),
   then copies `vendor/` and `i18n/` whole — a missed directory once cost `/vendor/supabase-js.js`

@@ -56,7 +56,7 @@
     <div class="tab-panel pad" id="tab-mypath" style="display:none">
       <div class="sechead">MY SOVEREIGN PATH</div>
       <div class="glass" style="margin-bottom:14px">
-        <div style="font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:10px">CURRENT POSITION</div>
+        <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--solar);margin-bottom:10px">CURRENT POSITION</div>
         <div style="display:flex;gap:20px;flex-wrap:wrap">
           <div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">SIGN</div><div style="font-family:var(--D);font-size:16px;color:var(--solar)" id="grd-my-sign">—</div></div>
           <div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">AUTH SCORE</div><div style="font-family:var(--D);font-size:16px;color:var(--gold)" id="grd-my-auth">—</div></div>
@@ -96,19 +96,19 @@
       <div class="sechead">THE LATTICE GRID &middot; THE SCIENCE</div>
       <div class="card-grid">
         <div class="card" style="--card-accent:var(--cyan)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">THE 12×12 LATTICE</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--cyan);margin-bottom:8px">THE 12×12 LATTICE</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">The Sovereign Lattice maps 12 zodiac signs (columns) against 12 authority gates (rows). Each intersection represents a unique evolutionary position. The complete grid has 144 cells, each containing 729 axis states.</div>
         </div>
         <div class="card" style="--card-accent:var(--gold)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">ZODIAC ALIGNMENT</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);margin-bottom:8px">ZODIAC ALIGNMENT</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Each sovereign's sign determines their column in the lattice. The sign isn't merely symbolic — it determines which energy patterns, Olympian archetypes, and elemental forces amplify each axis. Aries amplifies Axis A; Libra amplifies Axis C.</div>
         </div>
         <div class="card" style="--card-accent:var(--purple)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">GATE PROGRESSION</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--purple);margin-bottom:8px">GATE PROGRESSION</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Gates unlock sequentially as AUTH score rises. Each gate unlocks a new row in the lattice, new platform capabilities, and deeper access to sovereign content. Gate XII (Apex) is only reachable at A=B=C=9, AUTH=27.8367.</div>
         </div>
         <div class="card" style="--card-accent:var(--green)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">9³ INNER CUBE</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--green);margin-bottom:8px">9³ INNER CUBE</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Each lattice intersection has 729 internal states (9×9×9), representing all possible combinations of Axis A, B, and C (each ranging 0–9 in discrete steps). 9 is the number of completion in Pythagorean numerology.</div>
         </div>
       </div>
@@ -131,7 +131,7 @@
 <script>
 var SIGNS=['ARIES','TAURUS','GEMINI','CANCER','LEO','VIRGO','LIBRA','SCORPIO','SAGITT.','CAPRIC.','AQUAR.','PISCES'];
 var GATES=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
-var THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+var THRESH=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
 function buildGrid(auth){
   var head=document.getElementById('grd-head');
   if(head){SIGNS.forEach(function(s){var div=document.createElement('div');div.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);padding:7px 4px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap';div.textContent=s;head.appendChild(div);});}
@@ -184,7 +184,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
     sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
     sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
-    var THRESH2=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+    var THRESH2=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
     var GATES2=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
     var gateIdx=THRESH2.findIndex(function(t){return auth<t;});
     if(gateIdx<0)gateIdx=11;else if(gateIdx>0)gateIdx=gateIdx-1;

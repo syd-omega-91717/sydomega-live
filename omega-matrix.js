@@ -113,14 +113,11 @@ window.omegaTaskButton = function(el, taskName, taskType, onDone){
   });
 };
 
-/* ── Auto-wire data-task buttons on every page ───────────────────── */
-document.addEventListener('DOMContentLoaded', function(){
-  document.querySelectorAll('[data-task]').forEach(function(el){
-    var taskName=el.getAttribute('data-task');
-    var taskType=el.getAttribute('data-task-type')||'knowledge';
-    window.omegaTaskButton(el, taskName, taskType);
-  });
-});
+/* No auto-wiring of [data-task]. It made every card on gaming.html and
+   academy.html a scoring button: a click paid mastery for a game the platform
+   does not host, or knowledge for an exam never sat. Owner decision
+   2026-10-18: credit is earned by play -- the arcade's achieve() and the
+   exam engine's 70% pass both reach complete_task through OmegaProgress. */
 
 /* ── Expose ──────────────────────────────────────────────────────── */
 window.OmegaMatrix={calcAuth:calcAuth,GENESIS:GENESIS,APEX:APEX,STEP:STEP,TOTAL_NODES:TOTAL_NODES,PHI:PHI,EU:EU};

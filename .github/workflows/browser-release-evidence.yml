@@ -2,13 +2,13 @@ name: Browser Accessibility and Performance Evidence
 
 # This job tests LIVE production (OMEGA_BASE_URL below), never the PR's code,
 # so a pull_request trigger only added production traffic on a Hobby-plan
-# account that Vercel blocked for usage on 2026-10-06. It runs after main
-# changes, daily, and on demand.
+# account that Vercel blocked for usage on 2026-10-06. The block is for Edge
+# Requests: one page view here costs 198-392 requests (measured 2026-10-18), so
+# a run of ~20 pages with a retry spent ~10k of the ~1M monthly Hobby budget,
+# and it ran on every push to main as well as daily. Weekly and on demand only.
 on:
-  push:
-    branches: [main]
   schedule:
-    - cron: "41 6 * * *"
+    - cron: "41 6 * * 1"
   workflow_dispatch:
 
 permissions:

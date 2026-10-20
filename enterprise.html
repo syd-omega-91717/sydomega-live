@@ -10,7 +10,7 @@
 .tier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-bottom:20px}
 .tier-card{border:1px solid var(--line);border-top:3px solid var(--tc,var(--gold));background:var(--surface);padding:18px;position:relative;text-align:center}
 .tier-name{font-family:var(--D);font-size:12px;color:var(--tc,var(--gold));margin-bottom:5px}
-.tier-price{font-family:var(--D);font-size:26px;color:var(--ink);line-height:1;margin-bottom:3px}
+.tier-price{font-family:var(--D);font-size:var(--fs-5,28px);color:var(--ink);line-height:1;margin-bottom:3px}
 .tier-period{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
 .tier-features{list-style:none;text-align:left;margin-bottom:14px}
 .tier-features li{font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--ink);padding:4px 0;border-bottom:1px solid rgba(201,168,76,.05);opacity:.8}
@@ -182,7 +182,7 @@ function setTab(name){
             +'<div><div style="font-weight:600">'+String(a.org_name||'').replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+String(a.org_type||'').toUpperCase()+' &middot; '+String(a.contact_email||'').replace(/</g,'&lt;')+'</div></div>'
             +'<div style="font-family:var(--M);font-size:12px">'+String(a.license_type||'').toUpperCase()+'</div>'
             +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+String(a.status||'').toUpperCase()+'</div>'
-            +'<div style="font-family:var(--D);font-size:13px;color:var(--gold)">'+(a.monthly_value?'$'+Math.round(a.monthly_value):'--')+'</div>'
+            +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold)">'+(a.monthly_value?'$'+Math.round(a.monthly_value):'--')+'</div>'
             +'</div>';
         }).join('');}
       }else{sid('acc-count','0 ACCOUNTS');}

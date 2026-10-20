@@ -10,7 +10,7 @@
 .my-sign-panel{border:1px solid var(--line);border-top:3px solid var(--purple);background:var(--surface);padding:24px;margin-bottom:16px}
 .msp-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--purple);margin-bottom:10px}
 .msp-name{font-family:var(--D);font-size:clamp(20px,4vw,30px);color:var(--ink);margin-bottom:8px}
-.msp-oracle{font-size:13px;line-height:1.9;color:var(--ink);opacity:.8;margin-bottom:14px}
+.msp-oracle{font-size:var(--fs-2,14px);line-height:1.9;color:var(--ink);opacity:.8;margin-bottom:14px}
 .msp-art{display:block;width:min(220px,60vw);height:auto;margin:0 auto 14px;filter:drop-shadow(0 8px 28px rgba(155,107,240,.35))}
 .msp-art[hidden]{display:none}
 .msp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
@@ -20,15 +20,15 @@
 .sign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
 .sign-card{border:1px solid var(--line);border-top:2px solid var(--sc,var(--purple));background:var(--surface);padding:14px;transition:.14s}
 .sign-card:hover{transform:translateY(-2px)}
-.sign-sym{font-size:24px;margin-bottom:6px}
-.sign-name{font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:3px}
+.sign-sym{font-size:var(--fs-5,28px);margin-bottom:6px}
+.sign-name{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--ink);margin-bottom:3px}
 .sign-date{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
 .sign-attrs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .sign-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(155,107,240,.3);color:var(--muted)}
 .sign-oracle{font-size:12px;line-height:1.7;color:var(--muted)}
 .planet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:16px}
 .planet-card{border:1px solid var(--line);background:var(--surface);padding:14px;text-align:center}
-.planet-sym{font-size:22px;margin-bottom:5px}
+.planet-sym{font-size:var(--fs-4,20px);margin-bottom:5px}
 .planet-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px}
 .planet-sign{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .planet-role{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
@@ -62,7 +62,7 @@
          into a living, rotating canvas icon once JS sets its text below
          (childless, 1-2 chars, in its recognized icon ranges) -- so no
          aria-hidden here: that system sets its own aria-label on conversion. -->
-    <div class="omega-emblem" id="hr-sign-emblem" style="width:64px;height:64px;font-size:32px;margin-bottom:10px">—</div>
+    <div class="omega-emblem" id="hr-sign-emblem" style="width:64px;height:64px;font-size:var(--fs-5,28px);margin-bottom:10px">—</div>
     <img id="hr-sign-art" class="msp-art" alt="" hidden width="220" height="220" decoding="async">
     <div class="msp-name" id="hr-sign-name">—</div>
     <div class="msp-oracle" id="hr-sign-oracle">Detecting your sign&hellip;</div>

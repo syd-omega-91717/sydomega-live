@@ -34,14 +34,14 @@
       '.omega-page-door__sigil{display:grid;place-items:center;width:66px;height:66px;border:1px solid rgba(201,168,76,.65);border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,.12),transparent 68%);color:var(--gold,#c9a84c);text-decoration:none;transition:transform .3s,border-color .2s,box-shadow .2s;}',
       '.omega-page-door__sigil:hover,.omega-page-door__sigil:focus-visible{transform:rotate(18deg) scale(1.05);border-color:var(--cyan,#00e5ff);box-shadow:0 0 22px rgba(0,229,255,.18);outline:2px solid var(--cyan,#00e5ff);outline-offset:3px;}',
       '.omega-page-door__sigil svg{width:48px;height:48px;}',
-      '.omega-page-door__meta{min-width:0}.omega-page-door__axis{font:10px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:2px;color:var(--cyan,#00e5ff)}',
+      '.omega-page-door__meta{min-width:0}.omega-page-door__axis{font:var(--fs-1,12px)/1.4 var(--M,"Courier Prime",monospace);letter-spacing:2px;color:var(--cyan,#00e5ff)}',
       '.omega-page-door__title{margin:2px 0;font:700 clamp(15px,2vw,22px)/1.2 "Cinzel Decorative",serif;letter-spacing:1px;color:var(--gold-soft,#e8c97a)}',
-      '.omega-page-door__hint{font:10px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:1px;color:var(--muted,rgba(138,134,118,.72))}',
-      '.omega-page-door__action{font:10px var(--M,"Courier Prime",monospace);letter-spacing:1.5px;color:var(--cyan,#00e5ff);white-space:nowrap}',
-      '.omega-related-sigils{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 24px}.omega-related-sigil{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;padding:9px 11px;border:1px solid rgba(201,168,76,.13);background:rgba(0,0,0,.18);color:inherit;text-decoration:none;transition:.2s}.omega-related-sigil:hover,.omega-related-sigil:focus-visible{border-color:rgba(0,229,255,.45);transform:translateY(-2px);outline:none}.omega-related-sigil__mark{display:grid;place-items:center;width:44px;height:44px;border:1px solid rgba(201,168,76,.35);border-radius:50%;color:var(--gold,#c9a84c)}.omega-related-sigil__mark svg{width:32px;height:32px}.omega-related-sigil__axis,.omega-related-sigil__title,.omega-related-sigil__hint{display:block}.omega-related-sigil__axis{font:9px var(--M,"Courier Prime",monospace);letter-spacing:1.5px;color:var(--cyan,#00e5ff)}.omega-related-sigil__title{font:12px "Cinzel Decorative",serif;color:var(--gold-soft,#e8c97a);margin-top:2px}.omega-related-sigil__hint{font:9px var(--M,"Courier Prime",monospace);color:var(--muted);margin-top:2px}@media(max-width:620px){.omega-related-sigils{grid-template-columns:1fr}.omega-related-sigil:hover,.omega-related-sigil:focus-visible{transform:none}}',
+      '.omega-page-door__hint{font:var(--fs-1,12px)/1.4 var(--M,"Courier Prime",monospace);letter-spacing:1px;color:var(--muted,rgba(138,134,118,.72))}',
+      '.omega-page-door__action{font:var(--fs-1,12px) var(--M,"Courier Prime",monospace);letter-spacing:1.5px;color:var(--cyan,#00e5ff);white-space:nowrap}',
+      '.omega-related-sigils{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 24px}.omega-related-sigil{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;padding:9px 11px;border:1px solid rgba(201,168,76,.13);background:rgba(0,0,0,.18);color:inherit;text-decoration:none;transition:.2s}.omega-related-sigil:hover,.omega-related-sigil:focus-visible{border-color:rgba(0,229,255,.45);transform:translateY(-2px);outline:none}.omega-related-sigil__mark{display:grid;place-items:center;width:44px;height:44px;border:1px solid rgba(201,168,76,.35);border-radius:50%;color:var(--gold,#c9a84c)}.omega-related-sigil__mark svg{width:32px;height:32px}.omega-related-sigil__axis,.omega-related-sigil__title,.omega-related-sigil__hint{display:block}.omega-related-sigil__axis{font:var(--fs-1,12px) var(--M,"Courier Prime",monospace);letter-spacing:1.5px;color:var(--cyan,#00e5ff)}.omega-related-sigil__title{font:12px "Cinzel Decorative",serif;color:var(--gold-soft,#e8c97a);margin-top:2px}.omega-related-sigil__hint{font:var(--fs-1,12px) var(--M,"Courier Prime",monospace);color:var(--muted);margin-top:2px}@media(max-width:620px){.omega-related-sigils{grid-template-columns:1fr}.omega-related-sigil:hover,.omega-related-sigil:focus-visible{transform:none}}',
       '.omega-copy-wrap{position:relative}.omega-copy-compact{margin:0;max-width:68ch;line-height:1.55}',
       '',
-      '@media(max-width:620px){.omega-page-door{grid-template-columns:auto 1fr}.omega-page-door__action{display:none}.omega-page-door__sigil{width:54px;height:54px}.omega-page-door__sigil svg{width:40px;height:40px}.omega-copy-compact{font-size:13px;line-height:1.5}}',
+      '@media(max-width:620px){.omega-page-door{grid-template-columns:auto 1fr}.omega-page-door__action{display:none}.omega-page-door__sigil{width:54px;height:54px}.omega-page-door__sigil svg{width:40px;height:40px}.omega-copy-compact{font-size:var(--fs-2,14px);line-height:1.5}}',
       '@media(prefers-reduced-motion:reduce){.omega-page-door__sigil,.omega-copy-compact{transition:none}}'
     ].join('');
     (document.head||document.documentElement).appendChild(s);
@@ -57,7 +57,7 @@
     if(document.querySelector('.omega-page-door')||SYSTEM_PAGES[file()])return;
     var main=document.querySelector('main.main,main#main,main.page-shell,main,[role="main"]');if(!main)return;
     var e=emblem(), door=document.createElement('section');door.className='omega-page-door';door.setAttribute('aria-label','Page sigil entry');
-    var a=document.createElement('a');a.className='omega-page-door__sigil';a.href=location.pathname||'/';a.setAttribute('aria-label','Open '+label()+' page sigil');a.innerHTML=e&&e.svg?e.svg:'<span style="font:34px Cinzel Decorative,serif">Ω</span>';
+    var a=document.createElement('a');a.className='omega-page-door__sigil';a.href=location.pathname||'/';a.setAttribute('aria-label','Open '+label()+' page sigil');a.innerHTML=e&&e.svg?e.svg:'<span style="font:var(--fs-6,40px) Cinzel Decorative,serif">Ω</span>';
     var meta=document.createElement('div');meta.className='omega-page-door__meta';
     meta.innerHTML='<div class="omega-page-door__axis">'+escapeHtml(axis())+' / SIGIL ENTRY</div><div class="omega-page-door__title">'+escapeHtml(label().toUpperCase())+'</div><div class="omega-page-door__hint">Open the experience</div>';
     var action=document.createElement('div');action.className='omega-page-door__action';action.textContent='ENTER →';
@@ -87,7 +87,7 @@
     links.forEach(function(s){
       var f=s+'.html', e=null;try{e=window.OmegaEmblems&&window.OmegaEmblems.get?window.OmegaEmblems.get(f):null;}catch(x){}
       var a=document.createElement('a');a.className='omega-related-sigil';a.href='/'+f;
-      var mark=document.createElement('span');mark.className='omega-related-sigil__mark';mark.innerHTML=e&&e.svg?e.svg:'<span style="font:24px Cinzel Decorative,serif">Ω</span>';
+      var mark=document.createElement('span');mark.className='omega-related-sigil__mark';mark.innerHTML=e&&e.svg?e.svg:'<span style="font:var(--fs-5,28px) Cinzel Decorative,serif">Ω</span>';
       var copy=document.createElement('span');copy.innerHTML='<span class="omega-related-sigil__axis">'+escapeHtml((m.section||'REALM')+' / NEXT')+'</span><span class="omega-related-sigil__title">'+escapeHtml(String(s).replace(/[-_]+/g,' ').toUpperCase())+'</span><span class="omega-related-sigil__hint">OPEN →</span>';
       a.append(mark,copy);rail.appendChild(a);
     });

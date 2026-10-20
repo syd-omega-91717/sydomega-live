@@ -37,7 +37,7 @@
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold));cursor:pointer;transition:.18s;position:relative}
 .kpi:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--kc,var(--gold));line-height:1}
+.kpi-n{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--kc,var(--gold));line-height:1}
 .kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .kpi-sub{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:3px}
 /* SYSTEM GALAXY */
@@ -48,7 +48,7 @@
 .cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
 .cmd-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;--card-accent:var(--cc)}
 .cmd-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.cc-icon{font-family:var(--D);font-size:22px;color:var(--cc,var(--gold));margin-bottom:6px;line-height:1}
+.cc-icon{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--cc,var(--gold));margin-bottom:6px;line-height:1}
 .cc-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:4px}
 .cc-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;margin-bottom:6px}
 .cc-desc{font-size:12px;line-height:1.6;color:var(--ink);opacity:.6}
@@ -82,8 +82,10 @@
 @keyframes emblem-float{0%,100%{transform:translateY(0px) rotateZ(0deg)}25%{transform:translateY(-8px) rotateZ(1.5deg)}75%{transform:translateY(-4px) rotateZ(-1.5deg)}}
 @keyframes status-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.1)}}
 @keyframes 3d-tilt{0%{transform:perspective(1000px) rotateX(0deg) rotateY(0deg)}100%{transform:perspective(1000px) rotateX(2deg) rotateY(2deg)}}
-.emblem-orb{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.2),rgba(0,0,0,.4));border:2px solid var(--kc,var(--gold));animation:emblem-float 4s ease-in-out infinite;font-size:18px;box-shadow:0 0 20px rgba(201,168,76,.4);margin-right:6px;flex-shrink:0}
+.emblem-orb{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.2),rgba(0,0,0,.4));border:2px solid var(--kc,var(--gold));font-size:var(--fs-4,20px);box-shadow:0 0 20px rgba(201,168,76,.4);margin-right:6px;flex-shrink:0}
 .emblem-orb:hover{animation:emblem-float 3s ease-in-out infinite,cinematic-glow 2s ease-in-out infinite}
+/* Motion budget (2026-10-19): section icons float under the pointer, not all twelve at rest. */
+.sechead:hover>span>span:first-child{animation:emblem-float 4s ease-in-out infinite}
 /* 8px/10px were under the repo's 12px legibility floor (scripts/type-scale.py,
    blocking). Raised to the floor; the dot keeps its smaller optical size via
    a relative unit rather than a second absolute below it. */
@@ -113,7 +115,7 @@
         <div class="mb-item"><div class="mb-dot" id="health-dot" style="background:var(--green)"></div><span id="health-label" data-i18n="operational">OPERATIONAL</span></div>
         <div class="mb-item">&#9678; <span id="mb-time">--:--:--</span></div>
         <div class="mb-item">&#9670; <span id="mb-date">--</span></div>
-        <div class="mb-item">AUTH <span id="hdr-auth" style="color:var(--gold);font-family:var(--D);font-size:13px">--</span></div>
+        <div class="mb-item">AUTH <span id="hdr-auth" style="color:var(--gold);font-family:var(--D);font-size:var(--fs-2,14px)">--</span></div>
         <div class="mb-item">PMI <span style="color:rgba(63,178,127,.5)" id="mb-pmi">87</span></div>
       </div>
     </div>
@@ -132,6 +134,8 @@
 
     <!-- DAILY THREE: the member's daily loop (omega-daily.js) -->
     <div class="pad" style="padding-bottom:0"><div data-omega-daily></div></div>
+    <!-- COMMAND DOCK: concierge, points and inbox folded in (omega-command-dock.js) -->
+    <div class="pad" style="padding-bottom:0"><section data-omega-command-dock aria-label="Command dock"></section></div>
 
     <!-- PLATFORM HEALTH BAR -->
     <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:87%;background:var(--green)"></div></div>
@@ -177,7 +181,7 @@
         </div>
 
         <!-- SYSTEM GALAXY -->
-        <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite">♈︎</span><span data-i18n="system_galaxy">SYSTEM GALAXY</span></span> &middot; 18 <span data-i18n="sovereign_modules">SOVEREIGN MODULES</span> &middot; <span data-i18n="click_navigate">CLICK TO NAVIGATE</span> <span class="sechead-action" onclick="location.href='/ecosystem.html'">FULL MAP &#8594;</span></div>
+        <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;">♈︎</span><span data-i18n="system_galaxy">SYSTEM GALAXY</span></span> &middot; 18 <span data-i18n="sovereign_modules">SOVEREIGN MODULES</span> &middot; <span data-i18n="click_navigate">CLICK TO NAVIGATE</span> <span class="sechead-action" onclick="location.href='/ecosystem.html'">FULL MAP &#8594;</span></div>
         <div class="galaxy-wrap" style="height:clamp(240px,38vh,400px)">
           <canvas id="galaxy-canvas" role="img" aria-label="Sovereign platform module galaxy"></canvas>
           <div class="galaxy-center-label">
@@ -187,7 +191,7 @@
         </div>
 
         <!-- ACTION CENTER (merged alerts + recommendations) -->
-        <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:.2s">⚠</span><span data-i18n="action_centre">ACTION CENTRE</span></span> &middot; <span data-i18n="priority_items">PRIORITY ITEMS</span> <span class="sechead-action" onclick="location.href='/observatory.html'">OBSERVATORY &#8594;</span></div>
+        <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation-delay:.2s">⚠</span><span data-i18n="action_centre">ACTION CENTRE</span></span> &middot; <span data-i18n="priority_items">PRIORITY ITEMS</span> <span class="sechead-action" onclick="location.href='/observatory.html'">OBSERVATORY &#8594;</span></div>
         <!-- Rendered by renderActionCentre() from real state. It used to be five
              hardcoded items shown to every member: three owner ops tasks ("Run the
              SQL migrations", "Set ANTHROPIC_API_KEY in Supabase secrets", "Enable
@@ -197,7 +201,7 @@
         <div class="alert-list" id="alert-list" style="margin-bottom:16px"></div>
 
         <!-- COMMAND INDEX — 18 MODULE PORTALS -->
-        <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:.4s">♇</span><span data-i18n="command_index">COMMAND INDEX</span></span> &middot; 18 <span data-i18n="module_portals">SOVEREIGN MODULE PORTALS</span></div>
+        <div class="sechead" data-reveal="fade-up"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation-delay:.4s">♇</span><span data-i18n="command_index">COMMAND INDEX</span></span> &middot; 18 <span data-i18n="module_portals">SOVEREIGN MODULE PORTALS</span></div>
         <div class="cmd-grid" id="cmd-grid" data-omega-depth-tilt></div>
       </div>
     </div>
@@ -205,7 +209,7 @@
     <!-- LAYER: PERSONAL -->
     <div id="l-personal" class="layer-panel">
       <div class="pad">
-        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:.6s">☯</span><span data-i18n="personal_os">PERSONAL OS</span></span> &middot; <span data-i18n="sovereign_self_system">SOVEREIGN SELF-SYSTEM</span> &middot; <span data-i18n="live_from_device">LIVE FROM YOUR DEVICE</span> <span class="sechead-action" data-function-call="renderPersonalOS">&#8635; REFRESH</span></div>
+        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation-delay:.6s">☯</span><span data-i18n="personal_os">PERSONAL OS</span></span> &middot; <span data-i18n="sovereign_self_system">SOVEREIGN SELF-SYSTEM</span> &middot; <span data-i18n="live_from_device">LIVE FROM YOUR DEVICE</span> <span class="sechead-action" data-function-call="renderPersonalOS">&#8635; REFRESH</span></div>
         <!-- PERSONAL KPI ROW -->
         <div class="kpi-row" id="personal-kpis">
           <div class="kpi" style="--kc:var(--purple)" data-nav-action="/journal.html"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="kpi-n" id="pk-journal">--</div><div class="kpi-l" data-i18n="journal_entries">JOURNAL ENTRIES</div><div class="kpi-sub">SOVEREIGN VAULT</div></div><div class="emblem-orb" style="--kc:var(--purple);animation-delay:0s">▤</div></div></div>
@@ -221,7 +225,7 @@
         <!-- TWO-COL: VISION WHEEL + PERSONAL TOOLS -->
         <div class="two-col" style="align-items:start">
           <div>
-            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;animation:emblem-float 4s ease-in-out infinite;animation-delay:.8s">⊙</span><span data-i18n="life_wheel">LIFE WHEEL</span></span> &middot; 8 <span data-i18n="eight_domains">DOMAINS</span> <span class="sechead-action" onclick="location.href='/vision.html'"><span data-i18n="full_view">FULL VIEW</span> &#8594;</span></div>
+            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:var(--fs-4,20px);animation-delay:.8s">⊙</span><span data-i18n="life_wheel">LIFE WHEEL</span></span> &middot; 8 <span data-i18n="eight_domains">DOMAINS</span> <span class="sechead-action" onclick="location.href='/vision.html'"><span data-i18n="full_view">FULL VIEW</span> &#8594;</span></div>
             <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.95);padding:10px;height:220px;display:flex;align-items:center;justify-content:center">
               <canvas id="personal-wheel" style="max-width:200px;max-height:200px"></canvas>
             </div>
@@ -269,11 +273,11 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 239 PAGES &middot; 14 SECTIONS <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; 14 SECTIONS <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
         <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:12px;color:var(--muted);padding:14px 0">NO PAGES MATCH</div>
         <div id="platform-sections"></div>
-        <div class="sechead" style="margin-top:24px"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1s">◯</span><span data-i18n="dash_intelligence_engine">INTELLIGENCE ENGINE</span></span> &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
+        <div class="sechead" style="margin-top:24px"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation-delay:1s">◯</span><span data-i18n="dash_intelligence_engine">INTELLIGENCE ENGINE</span></span> &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row">
           <div class="kpi" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="kpi-n" id="ana-events">--</div><div class="kpi-l" data-i18n="kpi_events_7d">EVENTS (7d)</div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">⬡</div></div></div>
           <div class="kpi" style="--kc:var(--cyan)"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="kpi-n" id="ana-sessions">--</div><div class="kpi-l" data-i18n="kpi_sessions_7d">SESSIONS (7d)</div></div><div class="emblem-orb" style="--kc:var(--cyan);animation-delay:.2s">◆</div></div></div>
@@ -284,13 +288,13 @@
         </div>
         <div class="two-col" style="align-items:start;margin-bottom:14px">
           <div>
-            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.2s">◎</span><span data-i18n="dash_axis_radar">AXIS PROGRESSION RADAR</span></span> <span class="sechead-action" data-nav-action="/analytics.html" data-i18n="dash_full_analytics">FULL ANALYTICS &#8594;</span></div>
+            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;animation-delay:1.2s">◎</span><span data-i18n="dash_axis_radar">AXIS PROGRESSION RADAR</span></span> <span class="sechead-action" data-nav-action="/analytics.html" data-i18n="dash_full_analytics">FULL ANALYTICS &#8594;</span></div>
             <div style="border:1px solid var(--line);border-radius:2px;background:rgba(2,2,6,.8);padding:16px;height:220px;display:flex;align-items:center;justify-content:center">
               <canvas id="dash-radar" style="max-height:180px"></canvas>
             </div>
           </div>
           <div>
-            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.4s">◆</span><span data-i18n="dash_sovereign_intelligence">SOVEREIGN INTELLIGENCE</span></span> &middot; DIRECT QUERY</div>
+            <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;animation-delay:1.4s">◆</span><span data-i18n="dash_sovereign_intelligence">SOVEREIGN INTELLIGENCE</span></span> &middot; DIRECT QUERY</div>
             <div style="border:1px solid rgba(201,168,76,.2);border-radius:2px;overflow:hidden;margin-bottom:14px">
               <div id="ai-response-area" style="min-height:80px;padding:14px;font-size:12px;line-height:1.7;color:var(--ink);opacity:.8;background:rgba(2,2,6,.8)" data-i18n="ai_intelligence_standby">Intelligence standby. Ask anything about platform status, member data, or sovereign operations.</div>
               <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(201,168,76,.08);background:rgba(10,10,15,.6)">
@@ -302,7 +306,7 @@
         </div>
         <div class="sechead" data-i18n="dash_top_pages">TOP PAGES &middot; SESSION DISTRIBUTION</div>
         <div id="top-pages-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:24px" data-loading></div>
-        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.8s">⟡</span><span data-i18n="dash_sovereign_command">SOVEREIGN COMMAND</span></span> &middot; OPERATIONS &middot; AGENTS &middot; ADMINISTRATION</div>
+        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation-delay:1.8s">⟡</span><span data-i18n="dash_sovereign_command">SOVEREIGN COMMAND</span></span> &middot; OPERATIONS &middot; AGENTS &middot; ADMINISTRATION</div>
         <div class="kpi-row">
           <div class="kpi" style="--kc:var(--green)"  data-nav-action="/gaming.html"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="kpi-n" id="ops-tasks">--</div><div class="kpi-l" data-i18n="kpi_tasks_7d">TASKS (7d)</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:0s">✓</div></div></div>
           <div class="kpi" style="--kc:var(--cyan)"   data-nav-action="/automation.html"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="kpi-n" id="ops-workflows">5</div><div class="kpi-l" data-i18n="kpi_workflows_live">WORKFLOWS LIVE</div></div><div class="emblem-orb" style="--kc:var(--cyan);animation-delay:.2s">∿</div></div></div>
@@ -314,7 +318,7 @@
           <div class="kpi" style="--kc:var(--crim)"   data-nav-action="/observatory.html"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="kpi-n" id="adm-threats">--</div><div class="kpi-l" data-i18n="kpi_threats_7d">THREATS (7d)</div></div><div class="emblem-orb" style="--kc:var(--crim);animation-delay:1.4s">⚠</div></div></div>
           <div class="kpi" style="--kc:var(--solar)" data-tooltip="Estimated cost of this browser session only (AI tokens, DB reads, edge calls) -- not real billing data. See omega-finops.js." data-tooltip-placement="bottom"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="kpi-n" id="adm-finops-cost">--</div><div class="kpi-l">SESSION COST (EST.)</div></div><div class="emblem-orb" style="--kc:var(--solar);animation-delay:1.6s">◈</div></div></div>
         </div>
-        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:2s">⟡</span><span data-i18n="dash_active_workflows">ACTIVE WORKFLOWS</span></span></div>
+        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation-delay:2s">⟡</span><span data-i18n="dash_active_workflows">ACTIVE WORKFLOWS</span></span></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px">
           <div class="cmd-card card card-edge" style="--cc:var(--green)"  data-nav-action="/automation.html"><div class="cc-name" data-i18n="workflow_onboarding">ONBOARDING</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Sign &rarr; element &rarr; agent &rarr; welcome &rarr; record</div></div>
           <div class="cmd-card card card-edge" style="--cc:var(--gold)"   data-nav-action="/gates.html"><div class="cc-name" data-i18n="workflow_gate_unlock">GATE UNLOCK</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify auth &rarr; ceremony &rarr; record &rarr; notify owner</div></div>
@@ -322,9 +326,9 @@
           <div class="cmd-card card card-edge" style="--cc:var(--purple)" data-nav-action="/evolution.html"><div class="cc-name" data-i18n="workflow_dedication_award">DEDICATION AWARD</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">Verify 33,437s &rarr; award Axis C &rarr; celebrate &rarr; log</div></div>
           <div class="cmd-card card card-edge" style="--cc:var(--solar)"  data-nav-action="/privacy.html"><div class="cc-name" data-i18n="workflow_data_export">DATA EXPORT</div><div class="cc-status" style="color:var(--green)">&#9670; LIVE</div><div class="cc-desc">GDPR Art.20: collect &rarr; package &rarr; notify &rarr; deliver</div></div>
         </div>
-        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:1.6s">⊕</span><span data-i18n="dash_agent_quick_access">AGENT QUICK ACCESS</span></span> <span class="sechead-action" data-nav-action="/sovereign-ai.html" data-i18n="dash_full_command">FULL COMMAND &#8594;</span></div>
+        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation-delay:1.6s">⊕</span><span data-i18n="dash_agent_quick_access">AGENT QUICK ACCESS</span></span> <span class="sechead-action" data-nav-action="/sovereign-ai.html" data-i18n="dash_full_command">FULL COMMAND &#8594;</span></div>
         <div data-omega-constellation="agents" data-cn-title="THE TWELVE" data-cn-sub="AGENT NETWORK" style="margin-bottom:16px"></div>
-        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation:emblem-float 4s ease-in-out infinite;animation-delay:2.2s">⌘</span><span data-i18n="dash_admin_actions">ADMIN ACTIONS</span></span> &middot; OWNER CONTROLS</div>
+        <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:20px;animation-delay:2.2s">⌘</span><span data-i18n="dash_admin_actions">ADMIN ACTIONS</span></span> &middot; OWNER CONTROLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:14px">
           <button data-nav-action="/approvals.html"  style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" data-hover-bg-on="rgba(201,168,76,.08)" data-hover-bg-off="none" data-i18n="dash_approve_access">&#8594; APPROVE ACCESS REQUESTS</button>
           <button data-nav-action="/observatory.html" style="padding:12px;border:1px solid rgba(201,168,76,.2);background:none;color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:.15s;text-align:left" data-hover-bg-on="rgba(201,168,76,.08)" data-hover-bg-off="none" data-i18n="dash_sre_observatory">&#8594; SRE OBSERVATORY</button>
@@ -382,7 +386,7 @@
       </div>
     </div>
     <div data-page-emblem="dashboard" style="margin:20px auto 0"></div>
-<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 239 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
+<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
   </main>
 </div>
 
@@ -917,6 +921,7 @@ window.setTab=setTab;
 window.askAI=askAI;
 </script>
 <script src="/omega-sparkline.js" defer></script>
+<script type="module" src="/omega-command-dock.js"></script>
 <script src="/omega-constellation.js" defer></script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';

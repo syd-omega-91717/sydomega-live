@@ -2,11 +2,11 @@
   "schema_version": 1,
   "name": "Ω Page Action / Task Audit",
   "status": "SOURCE_EVIDENCE_ONLY",
-  "page_count": 239,
-  "action_count": 1343,
+  "page_count": 242,
+  "action_count": 1351,
   "counts": {
     "AVAILABLE_WITHOUT_MUTATION": 14,
-    "GOVERNED": 9,
+    "GOVERNED": 17,
     "UNAVAILABLE": 0,
     "UNMAPPED": 1320
   },
@@ -13706,6 +13706,27 @@
     {
       "action_id": 1,
       "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "ladder.sim.reset",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "ladder",
+      "path": "ladder.html"
+    },
+    {
+      "action_id": 1,
+      "kind": "button",
       "state": "UNMAPPED",
       "task_id": null,
       "capability_id": null,
@@ -18494,6 +18515,69 @@
     {
       "action_id": 1,
       "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "orrery.track.prev",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "orrery",
+      "path": "orrery.html"
+    },
+    {
+      "action_id": 2,
+      "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "orrery.track.mine",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "orrery",
+      "path": "orrery.html"
+    },
+    {
+      "action_id": 3,
+      "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "orrery.track.next",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "orrery",
+      "path": "orrery.html"
+    },
+    {
+      "action_id": 1,
+      "kind": "button",
       "state": "UNMAPPED",
       "task_id": null,
       "capability_id": null,
@@ -22664,6 +22748,90 @@
         "navigation_target": null,
         "download": false,
         "data_task_marker": false,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "series",
+      "path": "series.html"
+    },
+    {
+      "action_id": 5,
+      "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "series.houses-s1.watch",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "series",
+      "path": "series.html"
+    },
+    {
+      "action_id": 6,
+      "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "series.houses-s1.open",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "series",
+      "path": "series.html"
+    },
+    {
+      "action_id": 7,
+      "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "series.houses-s1.next",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "series",
+      "path": "series.html"
+    },
+    {
+      "action_id": 8,
+      "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "series.houses-s1.stay",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
         "data_capability_marker": false,
         "capability_registered": false
       },

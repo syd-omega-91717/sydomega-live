@@ -267,7 +267,7 @@
       +'<div id="cp-drawer" role="dialog" aria-label="Sovereign Copilot" aria-modal="true" style="position:fixed;bottom:90px;right:24px;z-index:4500;width:min(360px,90vw);background:#0A0A0F;border:1px solid rgba(201,168,76,.3);border-radius:4px;display:none;flex-direction:column;box-shadow:0 16px 60px rgba(0,0,0,.7);overflow:hidden;animation:copilot-in .25s ease">'
         +'<div style="padding:12px 16px;border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:center;justify-content:space-between;background:rgba(201,168,76,.04)">'
           +'<div><div style="font-family:\'Cinzel Decorative\',serif;font-size:12px;color:#C9A84C">\u03A9 SOVEREIGN COPILOT</div><div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.6);margin-top:3px">AUTH=sqrt(A\u00B3+B\u00B3+C\u00B3)\u00d7\u03c6/e &middot; APEX=27.8367</div></div>'
-          +'<button id="cp-close" type="button" style="font-size:18px;color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;line-height:1" aria-label="Close">\u00d7</button>'
+          +'<button id="cp-close" type="button" style="font-size:var(--fs-4,20px);color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;line-height:1" aria-label="Close">\u00d7</button>'
         +'</div>'
         +'<div id="cp-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:200px;max-height:40vh;scrollbar-width:thin"></div>'
         +'<div id="cp-suggest" role="listbox" aria-label="Copilot commands" style="display:none;flex-direction:column;border-top:1px solid rgba(201,168,76,.1);max-height:30vh;overflow-y:auto"></div>'
@@ -319,13 +319,57 @@
     box.style.display='flex';
   }
 
+  var MD_TAGS={P:1,BR:1,HR:1,STRONG:1,B:1,EM:1,I:1,DEL:1,S:1,CODE:1,PRE:1,BLOCKQUOTE:1,
+    UL:1,OL:1,LI:1,H1:1,H2:1,H3:1,H4:1,H5:1,H6:1,A:1,TABLE:1,THEAD:1,TBODY:1,TR:1,TH:1,TD:1,SPAN:1};
+  var MD_DROP={SCRIPT:1,STYLE:1,IFRAME:1,OBJECT:1,EMBED:1,SVG:1,MATH:1,TEMPLATE:1,NOSCRIPT:1,
+    FORM:1,INPUT:1,BUTTON:1,TEXTAREA:1,SELECT:1,LINK:1,META:1,BASE:1,FRAME:1,FRAMESET:1};
+  function sanitizeHtml(html){
+    var doc=new DOMParser().parseFromString('<body>'+String(html)+'</body>','text/html');
+    function clean(node){
+      var kids=Array.prototype.slice.call(node.childNodes);
+      for(var i=0;i<kids.length;i++){
+        var n=kids[i];
+        if(n.nodeType===3) continue;
+        if(n.nodeType!==1){node.removeChild(n);continue;}
+        var tag=n.tagName.toUpperCase();
+        if(MD_DROP[tag]){node.removeChild(n);continue;}
+        if(!MD_TAGS[tag]){
+          /* unknown element: keep its (cleaned) children, drop the element */
+          clean(n);
+          while(n.firstChild) node.insertBefore(n.firstChild,n);
+          node.removeChild(n);
+          continue;
+        }
+        var attrs=Array.prototype.slice.call(n.attributes);
+        for(var j=0;j<attrs.length;j++){
+          var an=attrs[j].name.toLowerCase(),av=attrs[j].value;
+          var keep=false;
+          if(tag==='A'&&an==='href'){
+            var h=av.replace(/[\u0000-\u0020\u007f]/g,'');
+            keep=/^(https?:|mailto:|\/(?!\/)|#)/i.test(h)||!/^[a-z][a-z0-9+.-]*:/i.test(h);
+          }else if(tag==='A'&&an==='title'){keep=true;}
+          else if(tag==='CODE'&&an==='class'){keep=/^[\w\s-]*$/.test(av);}
+          else if((tag==='TH'||tag==='TD')&&an==='align'){keep=/^(left|right|center)$/i.test(av);}
+          if(!keep) n.removeAttribute(attrs[j].name);
+        }
+        if(tag==='A'&&n.getAttribute('href')){n.setAttribute('rel','noopener noreferrer');}
+        clean(n);
+      }
+    }
+    clean(doc.body);
+    return doc.body.innerHTML;
+  }
+
   function renderMarkdown(text){
     /* Render via marked.js if available, else safe plain-text fallback */
     if(window.marked){
       try{
         var html=window.marked.parse(text,{mangle:false,headerIds:false,breaks:true});
-        /* Strip only truly dangerous tags — allow formatting */
-        return html.replace(/<script[\s\S]*?<\/script>/gi,'').replace(/on\w+\s*=/gi,'');
+        /* Sanitize by parsing, not by regex: an allowlist of formatting
+           tags survives, every attribute except a safe link href/title and
+           a code-language class is dropped, and anything else (script,
+           style, iframe, svg, form controls, event handlers) is removed. */
+        return sanitizeHtml(html);
       }catch(e){}
     }
     /* Plain fallback: escape HTML, preserve newlines */

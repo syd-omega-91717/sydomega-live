@@ -97,9 +97,9 @@
     "#omg-trial{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:9991;",
     "font-family:'Rajdhani',system-ui,sans-serif;background:rgba(30,10,10,.94);",
     "border:1px solid rgba(220,90,90,.5);border-radius:10px;padding:9px 18px;",
-    "color:#e88;font-size:13px;letter-spacing:1px;text-align:center;",
+    "color:#e88;font-size:var(--fs-2,14px);letter-spacing:1px;text-align:center;",
     "box-shadow:0 6px 24px rgba(0,0,0,.5)}",
-    "#omg-trial b{font-size:18px;font-variant-numeric:tabular-nums;color:#ffb4b4}",
+    "#omg-trial b{font-size:var(--fs-4,20px);font-variant-numeric:tabular-nums;color:#ffb4b4}",
     "@media(max-width:640px){#omg-chrono{left:10px;right:10px;bottom:10px;min-width:0}}",
     "@media(prefers-reduced-motion:reduce){#omg-chrono .bar i{transition:none}}"
   ].join("");

@@ -16,6 +16,36 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/investor-dashboard",
+      "destination": "/dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/investor-gate",
+      "destination": "/dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/venture-pipeline",
+      "destination": "/dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/omega-visual-command",
+      "destination": "/dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/agent",
+      "destination": "/agents",
+      "permanent": true
+    },
+    {
+      "source": "/cohorts-dashboard",
+      "destination": "/control-center",
+      "permanent": true
+    },
+    {
       "source": "/entreprise",
       "destination": "/enterprise",
       "permanent": true
@@ -47,6 +77,24 @@
     }
   ],
   "headers": [
+    {
+      "source": "/(.*)\\.(js|mjs|css|json|png|jpg|jpeg|webp|gif|svg|ico|woff2|mp4|webm|glb)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [

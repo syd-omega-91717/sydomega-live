@@ -247,18 +247,6 @@
         ]
       },
       {
-        "id": "member_cohorts",
-        "name": "Member Cohort Analysis",
-        "path": "/cohorts-dashboard.html",
-        "refreshInterval": 3600000,
-        "dimensions": [
-          "signup_date",
-          "engagement_level",
-          "feature_adoption",
-          "geography"
-        ]
-      },
-      {
         "id": "prediction_center",
         "name": "Prediction Center",
         "path": "/predictions-dashboard.html",

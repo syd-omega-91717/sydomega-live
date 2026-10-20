@@ -13,17 +13,17 @@
 .net-worth{background:linear-gradient(135deg,#0d0d0d,#111);border:1px solid #222;padding:28px;text-align:center;margin-bottom:20px;position:relative;overflow:hidden}
 .net-worth::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FFD700,#FF9800,#FFD700)}
 .nw-label{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:3px;margin-bottom:8px}
-.nw-value{font-family:'Courier New',monospace;font-size:36px;color:#FFD700;font-weight:700}
+.nw-value{font-family:'Courier New',monospace;font-size:var(--fs-6,40px);color:#FFD700;font-weight:700}
 .nw-sub{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);margin-top:6px}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
-.stat-num{font-family:'Courier New',monospace;font-size:18px;color:#FFD700;font-weight:700}
+.stat-num{font-family:'Courier New',monospace;font-size:var(--fs-4,20px);color:#FFD700;font-weight:700}
 .stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
 .accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:20px}
 .account-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:18px;position:relative}
 .account-card-type{font-family:'Courier New',monospace;font-size:12px;letter-spacing:2px;margin-bottom:6px}
-.account-card-name{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:4px}
-.account-card-bal{font-family:'Courier New',monospace;font-size:22px;font-weight:700;margin:8px 0}
+.account-card-name{font-family:'Courier New',monospace;font-size:var(--fs-2,14px);color:#e0e0e0;font-weight:700;margin-bottom:4px}
+.account-card-bal{font-family:'Courier New',monospace;font-size:var(--fs-4,20px);font-weight:700;margin:8px 0}
 .account-card-note{font-size:12px;color:var(--muted)}
 .del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px}
 .del-btn:hover{color:#FF4444}
@@ -80,7 +80,7 @@
          each headlined a net worth figure from different data (8.1 class 8). -->
     <a class="nw-sub" href="/wealth.html" style="display:inline-block;margin-top:6px;color:var(--gold)">Your net worth lives on Wealth &rarr;</a>
   </div>
-  <div class="stats-row">
+  <div class="stats-row" data-omega-empty-guide="No accounts recorded yet." data-omega-empty-cta="Add your first account" data-omega-empty-go=".tab-btn[data-tab='accounts']" data-omega-empty-focus="#tab-accounts">
     <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-accounts">0</div><div class="stat-lbl">ACCOUNTS</div></div>
     <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-assets">$0</div><div class="stat-lbl">TOTAL ASSETS</div></div>
     <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-liab">$0</div><div class="stat-lbl">LIABILITIES</div></div>
@@ -418,5 +418,6 @@ renderOverview();
 </script>
 <script src="/omega-local-backup.js"></script>
 <script src="/bg.js" defer></script>
+<script src="/omega-empty-guide.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

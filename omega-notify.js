@@ -48,7 +48,7 @@
     t.style.cssText='position:fixed;bottom:100px;right:16px;z-index:5000;min-width:240px;max-width:320px;background:#0A0A0F;border:1px solid '+col.replace('var','').replace(/[()]/g,'')+'33;border-left:3px solid '+col+';border-radius:2px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.5);animation:slideIn .25s ease';
     if(!document.getElementById('notif-kf')){var kf=document.createElement('style');kf.id='notif-kf';kf.textContent='@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}';document.head.appendChild(kf);}
     t.innerHTML='<div style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:2px;color:'+col+';margin-bottom:4px">\u03A9 NOTIFICATION</div>'
-      +'<div style="font-size:12px;color:#e9e6dc;line-height:1.5">'+msg+'</div>';
+      +'<div style="font-size:12px;color:#e9e6dc;line-height:1.5">'+esc(msg)+'</div>';
     document.body.appendChild(t);
     setTimeout(function(){if(t.parentNode)document.body.removeChild(t);},4500);
   }

@@ -26,7 +26,7 @@ jobs:
           echo "✓ Build complete ($(find public -type f | wc -l) files)"
 
       - name: Install Lighthouse
-        run: npm install -g lighthouse
+        run: npm install -g --ignore-scripts lighthouse@13.5.0
 
       - name: Start HTTP server
         run: |

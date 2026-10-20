@@ -14,6 +14,80 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **POSTPONED 2026-10-18 — blocked on credits, resume when renewed.** Each item is parked
+  behind one switch and nothing else depends on it, so renewing is a one-line change:
+  - **Vercel promotion.** Hobby team blocked for Edge Requests since 2026-10-06. Switch:
+    `VERCEL_PROMOTION_POSTPONED` in `.github/workflows/vercel-production.yml`. Set it to
+    `'false'` and add `VERCEL_TOKEN` to resume. While it is `'true'`, a `main` push proves that
+    sydomega.com (Cloudflare Pages) serves that commit, and fails if not. The red "Account is
+    blocked" status on PRs comes from the Vercel GitHub App, so the repo cannot silence it.
+    Disconnecting the repo in Vercel stops it, and that is reversible.
+  - **Codex PR reviews.** Every run fails on the usage limit. Treat its "Failed" summary as
+    no review, not as a finding.
+  - **Supabase leaked-password protection.** An Auth dashboard toggle (issue #375). It may need
+    the Pro plan.
+- **OPEN 2026-10-17 — page sprawl against real use.** 239 pages; **70** opened ever
+  (`platform_events`), ~70% of views on `dashboard`, one account behind all of them; **202 of
+  281** public tables hold 0 rows; `client_errors` (8,972) outnumbers `platform_events` (7,977).
+  Target: **22 pages** — 13 cores + 9 system, every page assigned in `config/page-cores.json`
+  (gated by `scripts/tests/test_page_cores.py`). BUILT: COSMOS (`orrery.html`), COMMAND
+  (`dashboard.html` + `omega-command-dock.js`), LADDER (`ladder.html`; also ended a second,
+  divergent gate curve in 22 files), INTEL (`insight.html`, six graph pages as four lenses), ACADEMY (`academy.html`: one
+  review queue over three decks, the 12-sector exams inline, courses, the reading shelf; five
+  pages folded; `architect` moved to OWNER, `clarity`/`focus` to LIFE), ARENA (`gaming.html`:
+  mastery earned by play; catalogue click credit removed by owner decision; `sovereign-ai` to
+  INTEL, `agent-network` to COSMOS, `queue` to OWNER), VAULT (`invest.html`: net worth and
+  this month's cash flow from the seven browser-local trackers; the member picks which count,
+  because the stores overlap; `sigil` to IDENTITY, `sovereign-covenant` to ORDER), IDENTITY
+  (`profile.html`: the hero's static "RANK 9.9.9 / ALL-TIME ACCESS / VERIFIED ARCHITECT /
+  ABSOLUTE SOVEREIGN" replaced by the member's real gate, tier, access and KYC, plus an account
+  readiness strip; `characters` to OWNER), and on 2026-10-18 the last four: ORDER (`hall.html`),
+  MEDIA (`media.html`), SERVICES (`services.html`) and OWNER (`control-center.html`, estate
+  health from live tables). All 13 cores now exist. LIFE is
+  **live**: `public.life_entries` (`20261017234857`, own rows only, no owner read) backs the daily
+  log on `life.html`, and the owner turned `life_core_enabled` on 2026-10-18 09:10 UTC after a
+  rolled-back member insert proved the write path (1 row seen by its member, 0 of anyone else's).
+  The ten trackers the log replaces (mood, sleep, water, workout, meditate, breath, gratitude,
+  body, fasting, habits) are folded; the text-heavy ones it does not cover stay in the sidebar.
+  The first page deletions, on the owner's sign-off, are the six empty owner pages (below).
+- **OPEN 2026-10-18 — community, media and services tables are empty.** `member_events`,
+  `member_posts`, `event_rsvps`, `social_*`, `family_nodes`, `bloodline_nodes`, `heritage_records`,
+  `publications`, `media_reservations`, `consult_requests`, `commission_contracts` and
+  `travel_journeys` all hold 0 rows, and `dispatches` holds 1. The ORDER, MEDIA and SERVICES cores
+  state the empties and offer the action. They do not make anyone use them.
+- **OPEN 2026-10-18 — production keeps throwing errors already fixed in main.** 76
+  `.catch is not a function` errors in the 24 h to 07:52 UTC (386 in 7 days), from code `main` no
+  longer contains. Production serves pre-block code: the last production deploy is #755 (`7d70ce14`, 2026-10-06),
+  and `sydomega.com` answers 200 from Vercel's edge cache (measured 2026-10-18 09:07 UTC). Every
+  new deploy is refused ("Account is blocked"; the dashboard says the pause is for **Edge
+  Requests**). The repo is now portable to Cloudflare Pages (unlimited requests on Free):
+  the build writes `_headers`/`_redirects` from `vercel.json`, verified in `wrangler pages dev`.
+  The cutover needs owner dashboard steps, listed in `docs/CLOUDFLARE_PAGES_CUTOVER.md`. A Netlify
+  project (`sydomega-v6mo`, created and never deployed) is redundant and can be deleted. The OWNER board
+  shows the count.
+- **DONE 2026-10-18 — the second "S.Y.D" profile is the owner's second account.** It is
+  `slmndghr@gmail.com` (the email lives in `auth.users`, not `profiles`): never signed in, email
+  unconfirmed, `is_owner = false`, so `platform_owners` held one row and CLAUDE.md §1's "both
+  accounts" was false. On the owner's instruction it now has `is_owner = true`;
+  `sync_platform_owner` added it to `platform_owners` (2 rows, both emails verified by query) and
+  `protect_owner_lifetime` set it approved, tier 9. Its stored `authority` (15.588) is still not
+  what 9/9/9 gives (27.8367) — cosmetic, left as is. Its first sign-in needs the email confirmed
+  (a password reset from `reset.html` does that).
+- **DONE 2026-10-18 — six empty owner pages deleted.** `investor-dashboard`, `investor-gate`,
+  `venture-pipeline`, `omega-visual-command` (redirect stubs to the dashboard), `agent` (a stub,
+  now 301 to `/agents`) and `cohorts-dashboard` (a placeholder, now 301 to `/control-center`).
+  Each has a permanent redirect in `vercel.json`, so no old link 404s.
+- **MOOT 2026-10-18 (flag on) — LIFE dormancy was enforced in the client only.** The RLS insert policy
+  checks ownership, not `life_core_enabled`, so a member calling PostgREST directly can write
+  their own rows while the flag is off. They can harm only their own data. Closing it means
+  replacing the policy in a new migration, which needs the owner (the connector stalls on any
+  `DROP`).
+- **OPEN 2026-10-17 — `omega_notifications` has never held a row.** Delivery is scheduled every
+  minute; nothing produces notifications. The inbox is a working pipe with no source.
+- **OPEN 2026-10-17 — production serves a build older than 2026-10-09.** `client_errors` still
+  receives `catch is not a function` from `omega-telemetry.js:61/75`/`omega-recommend.js:24`
+  today, code fixed in `b7bf8a9f`. Every UI change waits on the owner restoring Vercel deploys
+  (CLAUDE.md §8.2).
 - **OPEN 2026-10-12 — owner decisions recorded, legal review pending.** Owner chose the 12-tier `omega-canon.json` ladder (subscriptions.html now renders it), adult-only owner-granted family access (HIGH-RISK build in review: `docs/decisions/family-access/`), and dormant non-cash points for every money item. `docs/COUNSEL_BRIEF.md` lists the questions for counsel in Lebanon, UAE/GCC, US and EU/UK; no flag changes until answered. 8 blueprint items still need the owner (provenance marks 66/166, succession 73/652/969/N155, tier permanence 266, model per tier 289).
 
 - **OPEN 2026-10-16 — `service_role` reaches 32 of 281 public tables live.** `20260903015535`

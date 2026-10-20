@@ -11,7 +11,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 /* GATE */
 #gate{display:none;position:fixed;inset:0;background:rgba(2,2,6,.98);z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
 .gate-omega{font-family:var(--D);font-size:72px;color:var(--crim);text-shadow:0 0 40px rgba(139,0,0,.5)}
-.gate-title{font-family:var(--D);font-size:22px;color:var(--crim);letter-spacing:.1em}
+.gate-title{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--crim);letter-spacing:.1em}
 .gate-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);line-height:1.9;max-width:400px}
 .gate-btn{font-family:var(--M);font-size:12px;letter-spacing:3px;padding:10px 28px;border:1px solid rgba(201,168,76,.25);color:var(--muted);text-decoration:none;margin-top:8px;display:inline-block;transition:.2s}
 .gate-btn:hover{border-color:rgba(201,168,76,.5);color:var(--gold)}
@@ -21,7 +21,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
 /* TOPBAR */
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50;flex-wrap:wrap}
-.t{font-family:var(--D);font-size:.8rem;color:var(--gold);flex:1;line-height:1.3}
+.t{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);flex:1;line-height:1.3}
 .t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
 /* OWNER STRIP */
 .owner-strip{display:flex;align-items:center;gap:16px;padding:12px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(201,168,76,.07),rgba(10,10,15,.8),rgba(139,0,0,.04));flex-wrap:wrap}
@@ -70,13 +70,13 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .mc-top{display:flex;align-items:flex-start;gap:14px;padding:14px 16px}
 .mc-avatar{width:44px;height:44px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:16px;flex-shrink:0;background:rgba(10,10,15,.6)}
 .mc-info{flex:1;min-width:0}
-.mc-name{font-family:var(--D);font-size:13px;letter-spacing:.04em;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mc-name{font-family:var(--D);font-size:var(--fs-2,14px);letter-spacing:.04em;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mc-email{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px}
 .mc-uid{font-family:var(--M);font-size:12px;letter-spacing:.5px;color:rgba(138,134,118,.5)}
 .mc-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
 .mc-pill{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:3px 10px;border:1px solid;border-radius:2px;white-space:nowrap}
 /* chronometer */
-.mc-chrono{font-family:var(--D);font-size:22px;line-height:1}
+.mc-chrono{font-family:var(--D);font-size:var(--fs-4,20px);line-height:1}
 .mc-chrono-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 /* timeline section */
 .mc-timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 14px;padding:10px 16px;background:rgba(2,2,6,.4);border-top:1px solid rgba(201,168,76,.07)}
@@ -242,7 +242,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
         </div>
         <div style="margin-left:auto;text-align:right">
-          <div style="font-family:var(--D);font-size:18px;color:var(--cyan)" id="hd-auth-audit">27.8367</div>
+          <div style="font-family:var(--D);font-size:var(--fs-4,20px);color:var(--cyan)" id="hd-auth-audit">27.8367</div>
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTHORITY APEX</div>
         </div>
       </div>

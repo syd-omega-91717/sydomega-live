@@ -228,13 +228,20 @@
       var dx = (px - (r.left + r.width / 2)) / (r.width / 2);
       var dy = (py - (r.top + r.height / 2)) / (r.height / 2);
       dx = Math.max(-1, Math.min(1, dx)); dy = Math.max(-1, Math.min(1, dy));
-      current.style.rotate = (-dy * MAX_DEG).toFixed(2) + 'deg';
+      /* An AXIS, never a bare angle: `rotate: 1.9deg` is an in-plane spin, so
+         every hovered card turned like a clock hand -- a 1300px card slanted
+         ~45px, one table row (measured on the dashboard command dock,
+         2026-10-17). `rotate: x y 0 a` leans the card toward the pointer. */
+      var mag = Math.min(1, Math.sqrt(dx * dx + dy * dy));
+      current.style.rotate = mag < 0.01 ? '' :
+        (-dy).toFixed(3) + ' ' + dx.toFixed(3) + ' 0 ' + (mag * MAX_DEG).toFixed(2) + 'deg';
       current.style.perspective = '900px';
     }
 
     document.addEventListener('pointermove', function (e) {
       if (e.pointerType === 'touch') return;      /* no hover on touch; skip the work entirely */
       var el = e.target && e.target.closest ? e.target.closest(TILT_SEL) : null;
+      if (el && el.classList.contains('omg-no-tilt')) el = null;   /* bg.js's opt-out, honoured here too */
       if (el !== current) {
         if (current) { current.style.rotate = ''; current.style.perspective = ''; }
         current = el;

@@ -391,6 +391,9 @@
   "lesson_completions": {
    "table": "S---"
   },
+  "life_entries": {
+   "table": "SIUD"
+  },
   "marketplace_categories": {
    "table": "----"
   },

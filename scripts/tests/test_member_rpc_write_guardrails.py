@@ -22,14 +22,12 @@ class MemberRpcWriteGuardrailsContract(unittest.TestCase):
         cls.remote = json.loads((ROOT / "supabase" / "remote-migrations.json").read_text(encoding="utf-8"))
         cls.pending = json.loads((ROOT / "supabase" / "pending-migrations.json").read_text(encoding="utf-8"))
 
-    def test_migration_is_pending_and_never_claimed_live(self):
-        entry = next((item for item in self.pending.get("pending", []) if item.get("version") == VERSION), None)
-        self.assertIsNotNone(entry)
-        self.assertEqual(entry.get("file"), FILENAME)
-        self.assertEqual(entry.get("status"), "PENDING_REVIEW")
-        self.assertEqual(entry.get("liveStatus"), "NOT_APPLIED")
-        self.assertIs(entry.get("blocksProduction"), True)
-        self.assertNotIn(VERSION, self.remote.get("versions", []))
+    def test_migration_is_live_applied_and_no_longer_pending(self):
+        # Applied live 2026-10-17: supabase_migrations.schema_migrations holds this
+        # version, and both RPCs carry its pg_advisory_xact_lock (FIXES_LOG.md).
+        self.assertIn(VERSION, self.remote.get("versions", []))
+        self.assertIsNone(next((item for item in self.pending.get("pending", []) if item.get("version") == VERSION), None))
+        self.assertTrue((ROOT / "supabase" / "migrations" / FILENAME).is_file())
 
     def test_simulation_model_contract_matches_shipped_client(self):
         for model in ("realm_balance", "mission_route", "arena_resilience"):

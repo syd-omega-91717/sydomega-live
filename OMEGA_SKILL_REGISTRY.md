@@ -94,12 +94,12 @@ Counted at generation time. These are the numbers that kept going stale in prose
 
 | What | Count |
 |---|---|
-| `.html` pages | 239 |
-| pages loading `bg.js` | 239 of 239 |
-| `omega-*.js` modules | 238 (2098 KB) |
-| root `.js` files | 253 |
+| `.html` pages | 236 |
+| pages loading `bg.js` | 236 of 236 |
+| `omega-*.js` modules | 252 (2257 KB) |
+| root `.js` files | 267 |
 | `supabase/*.sql` (flat bag) | 127 |
-| `supabase/migrations/*.sql` | 402 (107 numbered `NNNN_`, 295 timestamped) |
+| `supabase/migrations/*.sql` | 403 (107 numbered `NNNN_`, 296 timestamped) |
 | Edge Functions | 26 |
 | skills | 23 |
 | agent definitions | 2 |
@@ -125,7 +125,7 @@ Migration replay and production migration-history evidence are maintained in
 registry links to that canonical source rather than duplicating dated run IDs,
 migration counts, or point-in-time production parity claims.
 
-**`bg.js` is loaded by all 239 pages.** It is a hard single point of
+**`bg.js` is loaded by all 236 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
 

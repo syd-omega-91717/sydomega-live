@@ -40,7 +40,7 @@ a{color:inherit;text-decoration:none}
 .tab-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 18px;cursor:pointer;border-right:1px solid var(--line);transition:all .18s;border-bottom:2px solid transparent;position:relative}
 .tab-btn:hover{background:rgba(201,168,76,0.04)}
 .tab-btn.active{border-bottom-color:var(--gold);background:rgba(201,168,76,0.05)}
-.tab-btn .tb-icon{font-size:18px;transition:transform .25s}
+.tab-btn .tb-icon{font-size:var(--fs-4,20px);transition:transform .25s}
 .tab-btn:hover .tb-icon,.tab-btn.active .tb-icon{transform:scale(1.15) rotate(5deg)}
 .tab-btn .tb-label{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);white-space:nowrap}
 .tab-btn.active .tb-label{color:var(--gold)}
@@ -63,28 +63,28 @@ a{color:inherit;text-decoration:none}
 .ag-card .ac-st{display:flex;align-items:center;gap:5px;font-family:var(--M);font-size:12px}
 .ac-dot{width:5px;height:5px;border-radius:50%}
 #agent-detail{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;margin-bottom:20px;display:none}
-.ad-name{font-family:var(--D);font-size:18px;font-weight:700;margin-bottom:5px}
+.ad-name{font-family:var(--D);font-size:var(--fs-4,20px);font-weight:700;margin-bottom:5px}
 .ad-role{font-family:var(--M);font-size:12px;letter-spacing:2px;margin-bottom:10px}
-.ad-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.8}
+.ad-desc{font-size:var(--fs-2,14px);font-weight:300;color:var(--muted);line-height:1.8}
 
 /* ---- HOROSCOPE (Tab 2) ---- */
 .sign-hero{display:flex;gap:20px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:20px;margin-bottom:20px}
 .sh-canvas{flex-shrink:0}
-.sh-meta .shm-glyph{font-family:var(--D);font-size:36px;color:var(--gold);margin-bottom:5px}
-.sh-meta .shm-name{font-family:var(--D);font-size:22px;color:var(--gold);font-weight:700;margin-bottom:3px}
+.sh-meta .shm-glyph{font-family:var(--D);font-size:var(--fs-6,40px);color:var(--gold);margin-bottom:5px}
+.sh-meta .shm-name{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);font-weight:700;margin-bottom:3px}
 .sh-meta .shm-dates{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
-.sh-meta .shm-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7;max-width:50ch}
+.sh-meta .shm-desc{font-size:var(--fs-2,14px);font-weight:300;color:var(--muted);line-height:1.7;max-width:50ch}
 .sign-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px}
 .smg-item{border:1px solid var(--line);padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s}
 .smg-item:hover,.smg-item.active{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
-.smg-item .smg-glyph{font-size:18px;display:block;margin-bottom:3px}
+.smg-item .smg-glyph{font-size:var(--fs-4,20px);display:block;margin-bottom:3px}
 .smg-item .smg-name{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 
 /* ---- ELEMENTS (Tab 3) ---- */
 .element-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
 .el-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),transparent);padding:18px;position:relative;overflow:hidden}
 .el-card::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px}
-.el-num{font-family:var(--D);font-size:36px;font-weight:700;margin-bottom:5px;opacity:.7}
+.el-num{font-family:var(--D);font-size:var(--fs-6,40px);font-weight:700;margin-bottom:5px;opacity:.7}
 .el-name{font-family:var(--D);font-size:16px;font-weight:700;margin-bottom:5px}
 .el-type{font-family:var(--M);font-size:12px;letter-spacing:3px;margin-bottom:8px}
 .el-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.6}
@@ -98,7 +98,7 @@ a{color:inherit;text-decoration:none}
 .gate-card.unlocked{border-color:rgba(63,178,127,.3)}
 .gate-card.locked{opacity:.5}
 .gc-n{font-family:var(--D);font-size:28px;font-weight:700;margin-bottom:4px}
-.gc-name{font-family:var(--D);font-size:13px;font-weight:700;margin-bottom:5px}
+.gc-name{font-family:var(--D);font-size:var(--fs-2,14px);font-weight:700;margin-bottom:5px}
 .gc-auth{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:7px}
 .gc-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.5}
 .gc-status{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:2px 7px;border:1px solid;display:inline-block;margin-top:8px}
@@ -108,21 +108,21 @@ a{color:inherit;text-decoration:none}
 /* ===== HOROSCOPE TAB RICH CONTENT (ported, styling rebuilt) ===== */
 .hero-band{display:flex;gap:1.5rem;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:1.2rem clamp(16px,3vw,40px);border:1px solid var(--line);background:linear-gradient(160deg,rgba(201,168,76,.06),rgba(10,10,15,.5));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);margin:0 clamp(16px,3vw,40px) 1rem;border-radius:2px}
 .hero-text{flex:1;min-width:220px}
-.ht-sign{font-family:var(--M);font-size:.62rem;color:var(--cyan);letter-spacing:.1em}
-.ht-title{font-family:var(--D);font-size:1.2rem;color:var(--gold);margin:.4rem 0}
-.ht-sub{font-family:var(--M);font-size:.6rem;color:var(--muted);letter-spacing:.06em;margin-bottom:.6rem}
-.ht-desc{font-size:.78rem;color:var(--muted);line-height:1.7;max-width:60ch}
+.ht-sign{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--cyan);letter-spacing:.1em}
+.ht-title{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);margin:.4rem 0}
+.ht-sub{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);letter-spacing:.06em;margin-bottom:.6rem}
+.ht-desc{font-size:var(--fs-1,12px);color:var(--muted);line-height:1.7;max-width:60ch}
 .hero-canvas-wrap{flex-shrink:0}
 
 .reading-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.7rem;padding:0 clamp(16px,3vw,40px);margin-bottom:1rem}
 .reading-panel{text-align:center;padding:.9rem .6rem;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px}
-.rp-label{font-family:var(--M);font-size:.55rem;color:var(--muted);letter-spacing:.08em}
-.rp-value{font-family:var(--D);font-size:1.1rem;margin:.4rem 0}
-.rp-sub{font-size:.62rem;color:var(--muted)}
+.rp-label{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);letter-spacing:.08em}
+.rp-value{font-family:var(--D);font-size:var(--fs-3,16px);margin:.4rem 0}
+.rp-sub{font-size:var(--fs-1,12px);color:var(--muted)}
 
 .oracle-band{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.04);border-radius:2px;padding:1rem 1.2rem}
-.ob-label{font-family:var(--M);font-size:.62rem;color:var(--gold);letter-spacing:.08em;margin-bottom:.5rem}
-.ob-text{font-size:.8rem;color:var(--ink);line-height:1.7}
+.ob-label{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--gold);letter-spacing:.08em;margin-bottom:.5rem}
+.ob-text{font-size:var(--fs-2,14px);color:var(--ink);line-height:1.7}
 .ob-loading{color:var(--muted);font-style:italic}
 
 .mandala-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.8rem;padding:0 clamp(16px,3vw,40px)}
@@ -130,19 +130,19 @@ a{color:inherit;text-decoration:none}
 .mandala-card:hover{transform:translateY(-3px);border-color:var(--gold)}
 .mandala-card.active-sign{border-color:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.15)}
 .mc-canvas{width:100%;height:70px;display:block;margin-bottom:.5rem}
-.mc-name{font-family:var(--D);font-size:.8rem}
-.mc-dates{font-family:var(--M);font-size:.5rem;color:var(--muted);margin:.3rem 0}
-.mc-el{display:inline-block;font-family:var(--M);font-size:.5rem;letter-spacing:.06em;padding:.1rem .4rem;border:1px solid;border-radius:2px;margin-bottom:.3rem}
-.mc-deity{font-size:.6rem;color:var(--muted)}
+.mc-name{font-family:var(--D);font-size:var(--fs-2,14px)}
+.mc-dates{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);margin:.3rem 0}
+.mc-el{display:inline-block;font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.06em;padding:.1rem .4rem;border:1px solid;border-radius:2px;margin-bottom:.3rem}
+.mc-deity{font-size:var(--fs-1,12px);color:var(--muted)}
 
 .omega-solar-ledger{margin:0 clamp(16px,3vw,40px) 28px;padding:18px;border:1px solid rgba(201,168,76,.18);background:radial-gradient(circle at 50% 45%,rgba(201,168,76,.08),rgba(10,10,15,.35) 55%,transparent 80%);overflow:hidden}
-.omega-solar-ledger-intro{max-width:78ch;margin:0 0 16px;color:var(--muted);font-size:.78rem;line-height:1.7}
+.omega-solar-ledger-intro{max-width:78ch;margin:0 0 16px;color:var(--muted);font-size:var(--fs-1,12px);line-height:1.7}
 .omega-solar-stage{position:relative;width:min(760px,96vw);height:min(72vw,560px);min-height:360px;margin:0 auto 18px;perspective:1100px;transform-style:preserve-3d}
 .omega-solar-stage::before{content:"";position:absolute;inset:12%;border:1px solid rgba(0,229,255,.08);border-radius:50%;transform:rotateX(68deg);box-shadow:0 0 80px rgba(0,229,255,.04)}
 .omega-solar-core{position:absolute;left:50%;top:50%;width:96px;height:96px;margin:-48px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff5b0,rgba(226,200,109,.72) 28%,rgba(201,168,76,.18) 65%,transparent 72%);box-shadow:0 0 45px rgba(226,200,109,.34);transform:translateZ(55px);z-index:5}
-.omega-solar-core span{font-family:var(--D);font-size:32px;color:#fff3bd}.omega-solar-core small{position:absolute;top:102%;font:10px var(--M);letter-spacing:2px;color:var(--muted);white-space:nowrap}
+.omega-solar-core span{font-family:var(--D);font-size:var(--fs-5,28px);color:#fff3bd}.omega-solar-core small{position:absolute;top:102%;font:var(--fs-1,12px) var(--M);letter-spacing:2px;color:var(--muted);white-space:nowrap}
 .omega-solar-orbit{position:absolute;left:50%;top:50%;border:1px solid rgba(201,168,76,.16);border-radius:50%;transform-style:preserve-3d;transform:translate(-50%,-50%) rotateX(66deg);animation:omega-solar-drift 28s linear infinite}
-.omega-solar-orbit button{position:absolute;left:50%;top:-11px;width:22px;height:22px;margin-left:-11px;border:1px solid rgba(201,168,76,.45);border-radius:50%;padding:0;background:rgba(10,10,15,.92);color:#e8c97a;font:10px var(--M);cursor:pointer;transform:rotateX(-66deg);box-shadow:0 0 12px rgba(0,0,0,.5)}
+.omega-solar-orbit button{position:absolute;left:50%;top:-11px;width:22px;height:22px;margin-left:-11px;border:1px solid rgba(201,168,76,.45);border-radius:50%;padding:0;background:rgba(10,10,15,.92);color:#e8c97a;font:var(--fs-1,12px) var(--M);cursor:pointer;transform:rotateX(-66deg);box-shadow:0 0 12px rgba(0,0,0,.5)}
 .omega-solar-orbit button:hover,.omega-solar-orbit button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .omega-solar-orbit .mercury{background:#78736a}.omega-solar-orbit .venus{background:#b98c61}.omega-solar-orbit .earth{background:#356b8a}.omega-solar-orbit .mars{background:#8b3e2d}.omega-solar-orbit .jupiter{background:#9d8065;width:34px;height:34px;margin-left:-17px;top:-17px}.omega-solar-orbit .saturn{background:#c3ab78;width:30px;height:30px;margin-left:-15px;top:-15px}.omega-solar-orbit .uranus{background:#78aeb5}.omega-solar-orbit .neptune{background:#4169a0}
 .orbit-1{width:18%;height:18%}.orbit-2{width:27%;height:27%}.orbit-3{width:37%;height:37%}.orbit-4{width:47%;height:47%}.orbit-5{width:58%;height:58%}.orbit-6{width:69%;height:69%}.orbit-7{width:80%;height:80%}.orbit-8{width:91%;height:91%}
@@ -150,26 +150,26 @@ a{color:inherit;text-decoration:none}
 .omega-solar-ledger-card{border:1px solid var(--line);background:rgba(10,10,15,.48);padding:11px;cursor:pointer;transition:border-color .18s,transform .18s}
 .omega-solar-ledger-card:hover,.omega-solar-ledger-card:focus-visible{border-color:rgba(201,168,76,.4);transform:translateY(-2px);outline:none}
 .omega-solar-ledger-card .sl-name{font:12px var(--D);letter-spacing:1px;color:var(--gold)}
-.omega-solar-ledger-card .sl-role{font:10px var(--M);letter-spacing:1.5px;color:var(--cyan);margin-top:3px}.omega-solar-ledger-card .sl-state{font-size:12px;color:var(--muted);line-height:1.5;margin-top:5px}
+.omega-solar-ledger-card .sl-role{font:var(--fs-1,12px) var(--M);letter-spacing:1.5px;color:var(--cyan);margin-top:3px}.omega-solar-ledger-card .sl-state{font-size:12px;color:var(--muted);line-height:1.5;margin-top:5px}
 @keyframes omega-solar-drift{from{transform:translate(-50%,-50%) rotateX(66deg) rotateZ(0deg)}to{transform:translate(-50%,-50%) rotateX(66deg) rotateZ(360deg)}}
 @media(prefers-reduced-motion:reduce){.omega-solar-orbit{animation:none}}
 @media(max-width:760px){.omega-solar-stage{height:390px;min-height:320px}.omega-solar-orbit button{width:20px;height:20px;margin-left:-10px}.omega-solar-orbit .jupiter,.omega-solar-orbit .saturn{transform:rotateX(-66deg) scale(.8)}}
 .planet-strip{display:flex;gap:.8rem;overflow-x:auto;padding:0 clamp(16px,3vw,40px) .5rem}
 .planet-node{flex-shrink:0;text-align:center;min-width:80px}
 .pn-canvas{width:60px;height:60px;display:block;margin:0 auto .4rem}
-.pn-name{font-family:var(--D);font-size:.68rem;color:var(--ink)}
-.pn-pos{font-family:var(--M);font-size:.5rem;color:var(--muted);margin-top:.2rem}
+.pn-name{font-family:var(--D);font-size:var(--fs-1,12px);color:var(--ink)}
+.pn-pos{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);margin-top:.2rem}
 
 .compat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.7rem;padding:0 clamp(16px,3vw,40px)}
 .compat-row{display:flex;align-items:center;gap:.7rem;padding:.7rem;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px}
 .cr-icon{width:36px;height:36px;flex-shrink:0}
 .crb-name{font-family:var(--D);font-size:.75rem}
-.crb-level{font-family:var(--M);font-size:.55rem;letter-spacing:.04em;margin-top:.2rem}
+.crb-level{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.04em;margin-top:.2rem}
 </style>
 
 <style id="omega-cosmos-native-css">
 .cosmos-native{margin:22px clamp(14px,3vw,32px);padding:18px;border:1px solid rgba(0,229,255,.18);background:linear-gradient(145deg,rgba(0,229,255,.045),rgba(10,10,15,.55));}
-.cosmos-native-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.cosmos-native-kicker{font:11px var(--M);letter-spacing:3px;color:var(--cyan)}.cosmos-native h2{font:700 20px var(--D);margin:5px 0 0}.cosmos-native-truth{font:11px var(--M);letter-spacing:2px;padding:5px 9px;border:1px solid currentColor}.cosmos-native-live{color:#00ff88}.cosmos-native-empty{color:var(--gold)}.cosmos-native-unavailable{color:#ff8a8a}.cosmos-native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin-top:15px}.cosmos-native-grid>div{border:1px solid var(--line);padding:11px;background:rgba(10,10,15,.45)}.cosmos-native-grid span{display:block;font:10px var(--M);letter-spacing:1.5px;color:var(--muted);margin-bottom:5px}.cosmos-native-grid strong{font:600 14px var(--D);color:var(--ink)}.cosmos-native-note{margin:14px 0 0;color:var(--muted);font-size:12px;line-height:1.6}
+.cosmos-native-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.cosmos-native-kicker{font:var(--fs-1,12px) var(--M);letter-spacing:3px;color:var(--cyan)}.cosmos-native h2{font:700 20px var(--D);margin:5px 0 0}.cosmos-native-truth{font:var(--fs-1,12px) var(--M);letter-spacing:2px;padding:5px 9px;border:1px solid currentColor}.cosmos-native-live{color:#00ff88}.cosmos-native-empty{color:var(--gold)}.cosmos-native-unavailable{color:#ff8a8a}.cosmos-native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin-top:15px}.cosmos-native-grid>div{border:1px solid var(--line);padding:11px;background:rgba(10,10,15,.45)}.cosmos-native-grid span{display:block;font:var(--fs-1,12px) var(--M);letter-spacing:1.5px;color:var(--muted);margin-bottom:5px}.cosmos-native-grid strong{font:600 14px var(--D);color:var(--ink)}.cosmos-native-note{margin:14px 0 0;color:var(--muted);font-size:12px;line-height:1.6}
 </style>
 </head>
 <body>

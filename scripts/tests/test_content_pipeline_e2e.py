@@ -49,7 +49,10 @@ def request(method: str, url: str, headers: dict[str, str] | None = None,
         raw = exc.read()
         status = exc.code
         content_type = exc.headers.get("Content-Type", "")
-    except URLError:
+    except (TimeoutError, URLError):
+        # A cold Edge Function can exceed the short readiness-probe timeout.
+        # Treat transient network/timeouts as not-ready so the bounded probe loop
+        # retries and ultimately reports the precise readiness failure stage.
         return 0, None, b""
     parsed = None
     if "json" in content_type.lower():

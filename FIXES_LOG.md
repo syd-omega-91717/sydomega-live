@@ -24810,3 +24810,12 @@ every card (to desync the always-on breath) plus a subtree MutationObserver. Wit
 hover-only it would only delay a hovered card's response. Entrances were **not** affected
 (measured: in-view dashboard cards 24/24 opaque by 2 s with and without it — the reveal
 sets its own delay), so no speed-up is claimed.
+
+
+## 2026-10-20 — Content pipeline E2E readiness probe retries transient timeouts
+
+**Failure observed.** Fresh Supabase migration replay passed, but the authenticated content pipeline test exited with a raw `timed out` exception during its initial `content-ingest` readiness probe. That exception bypassed the existing bounded retry loop, so the test never reached the intended readiness decision.
+
+**Fix.** `scripts/tests/test_content_pipeline_e2e.py` now treats Python socket/HTTP timeouts like transient URL errors in the probe request helper. The existing 90-second deadline remains authoritative; if the Edge Function never becomes ready, the test now reports `content_ingest_edge_runtime_not_ready` instead of aborting on the first timeout. This does not relax any auth, ownership, content-integrity, or audit assertion.
+
+**Verification status.** Patch queued for CI verification; no local Supabase stack was available in this environment.

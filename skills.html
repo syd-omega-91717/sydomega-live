@@ -12,7 +12,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
 .main{flex:1;min-width:0;overflow-x:hidden}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px var(--pad);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
-.t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1}
+.t{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);flex:1}
 .t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
 .pad{padding:var(--pad)}
 .layer-tabs{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;position:sticky;top:57px;z-index:40}
@@ -49,7 +49,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .domain-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:16px}
 .domain-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;cursor:pointer;transition:.18s;text-align:center}
 .domain-card:hover{border-color:rgba(201,168,76,.25);transform:translateY(-1px)}
-.domain-icon{font-size:22px;margin-bottom:6px}
+.domain-icon{font-size:var(--fs-4,20px);margin-bottom:6px}
 .domain-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);margin-bottom:4px}
 .domain-count{font-family:var(--M);font-size:12px;color:var(--muted)}
 /* FORM */

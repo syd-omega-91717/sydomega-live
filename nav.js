@@ -81,7 +81,7 @@
           ['academy','ACADEMY','/academy.html'],['courses','COURSES','/courses.html'],['exam','EXAMINATION','/exam.html','folded'],['gaming','GAMES & MASTERY','/gaming.html'],
           ['contributions','CONTRIBUTIONS','/contributions.html'],['evolution','EVOLUTION','/evolution.html'],
           ['architect','ARCHITECT','/architect.html'],['clarity','CLARITY','/clarity.html'],['flashcard','FLASHCARDS','/flashcard.html','folded'],
-          ['focus','DEEP WORK','/focus.html'],['forge','FORGE','/forge.html','folded'],['library','LIBRARY','/library.html','folded'],
+          ['focus','DEEP WORK','/focus.html'],['forge','FORGE','/forge.html'],['library','LIBRARY','/library.html','folded'],
           ['mentors','MENTORS','/mentors.html'],['principles','PRINCIPLES','/principles.html'],['reading','READING LIST','/reading.html','folded'],
           ['skills','SKILLS','/skills.html'],['vocabulary','VOCABULARY','/vocabulary.html','folded']]},
     {key:'cosmos',  icon:'\u2609', label:'COSMOS',   href:'/cosmos.html',   col:'#AB82F2',
@@ -90,8 +90,8 @@
         owner deck and the reachability gate, but out of the sidebar and the
         mobile drawer: the wheel is the door, its facets deep-link here. */
      sub:[['orrery','ORRERY','/orrery.html'],['cosmos','COSMOS HUB','/cosmos.html'],['cosmic-ledger','SOLAR SYSTEM LEDGER','/cosmic-ledger.html'],['sculpture','SCULPTURE HALL','/sculpture.html'],['realms','18 REALMS','/realms.html'],
-          ['horoscope','HOROSCOPE','/cosmos.html#horoscope','folded'],['agents','AGENTS','/agents.html','folded'],['elements','THE NINE ELEMENTS','/elements.html','folded'],
-          ['pantheons','PANTHEONS','/pantheons.html','folded'],['gates-alias-1','12 GATES','/elements.html#gates','folded'],['houses','ASTRAL HOUSES','/houses.html','folded'],
+          ['horoscope','HOROSCOPE','/horoscope.html'],['agents','AGENTS','/agents.html'],['elements','THE NINE ELEMENTS','/elements.html'],
+          ['pantheons','PANTHEONS','/pantheons.html'],['gates-alias-1','12 GATES','/elements.html#gates','folded'],['houses','ASTRAL HOUSES','/houses.html'],
           ['kings-alias-1','28 KINGS','/elements.html#kings'],['chronicle','CHRONICLE','/chronicle.html'],['dna','SOVEREIGN DNA','/dna.html'],
           ['graph','CONSTELLATION GRAPH','/graph.html'],['map','STAR MAP','/map.html'],['mirror','SOVEREIGN MIRROR','/mirror.html'],
           ['oracle','ORACLE','/oracle.html'],['realm','REALM','/realm.html'],['rune','RUNES','/rune.html'],
@@ -103,23 +103,23 @@
           ['ledger','ASSET LEDGER','/ledger.html'],['sigil-alias-1','SIGIL VAULT','/vault.html#nft'],['vault-settings','SYSTEM SETTINGS','/settings.html'],
           ['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html'],['sovereign-covenant','COVENANT','/sovereign-covenant.html']]},
     {key:'order',   icon:'\u22D4', label:'ORDER',    href:'/order.html',   col:'#D9B86A',
-     sub:[['order','ORDER WORKSPACE','/order.html','folded'],['family','FAMILY','/family.html'],['bloodline-alias-1','BLOODLINE','/family.html#bloodline'],['heritage-alias-1','HERITAGE','/family.html#heritage'],
-          ['hall','HALL OF THE ORDER','/hall.html'],['sovereigns','SOVEREIGNS','/sovereigns.html','folded'],['factions','FACTIONS','/factions.html'],
+     sub:[['order','ORDER WORKSPACE','/order.html'],['family','FAMILY','/family.html'],['bloodline-alias-1','BLOODLINE','/family.html#bloodline'],['heritage-alias-1','HERITAGE','/family.html#heritage'],
+          ['hall','HALL OF THE ORDER','/hall.html'],['sovereigns','SOVEREIGNS','/sovereigns.html'],['factions','FACTIONS','/factions.html'],
           ['city','CITY','/city.html'],['approvals','APPROVALS','/approvals.html'],['interface-omni','CONTROL DECK','/interface-omni.html']]},
     {key:'life', icon:'\u2665', label:'LIFE', href:'/life.html', col:'#00E5FF',
      sub:[['life','LIFE HOME','/life.html'],['body','BODY','/body.html','folded'],['physiology','PHYSIOLOGY','/physiology.html'],['workout','WORKOUT','/workout.html','folded'],['nutrition','NUTRITION','/nutrition.html'],['sleep','SLEEP','/sleep.html','folded'],['mood','MOOD','/mood.html','folded'],['meditate','MEDITATION','/meditate.html','folded'],['breath','BREATHWORK','/breath.html','folded'],['habits','HABITS','/habits.html','folded'],['journal','JOURNAL','/journal.html'],['rituals','RITUALS','/rituals.html'],['fasting','FASTING','/fasting.html','folded'],['targets','GOALS & TARGETS','/targets.html'],['weekly','WEEKLY REVIEW','/weekly.html'],['affirmations','AFFIRMATIONS','/affirmations.html'],['gratitude','GRATITUDE','/gratitude.html','folded'],['oath','OATH','/oath.html'],['stoic','STOIC PRACTICE','/stoic.html'],['water','HYDRATION','/water.html','folded']]},
     {key:'services',icon:'\u2726', label:'SERVICES', href:'/services.html',col:'#3fb27f',
-     sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html','folded'],['contracts','COMMISSIONS','/contracts.html','folded'],
+     sub:[['services','ALL SERVICES','/services.html'],['consultancy','CONSULTANCY','/consultancy.html'],['contracts','COMMISSIONS','/contracts.html'],
           ['publishing','PUBLISHING','/publishing.html'],['studio','PRODUCTION STUDIO','/studio.html'],['creation-studio','CREATION STUDIO','/creation-studio.html'],
           ['project-studio','PROJECT STUDIO','/project-studio.html','folded'],['creator','IDEA FORGE','/creator.html','folded'],['marketing','MARKETING','/marketing.html'],
-          ['news','NEWS INTELLIGENCE','/news.html'],['social','SOCIAL HUB','/social.html'],['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html','folded'],
+          ['news','NEWS INTELLIGENCE','/news.html'],['social','SOCIAL HUB','/social.html'],['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
           ['health','HEALTH SERVICE','/health.html']]},
     {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intel.html',col:'#AB82F2',
      sub:[['insight','INSIGHT','/insight.html'],['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICTION','/prediction.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
           ['automation','AUTOMATION','/automation.html'],['compliance','COMPLIANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html','folded'],
           ['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html','folded'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html','folded'],
           ['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html','folded'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html','folded'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html','folded'],
-          ['horoscope-page','HOROSCOPE','/horoscope.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html','folded'],
+          ['horoscope-page','HOROSCOPE','/horoscope.html'],['atlas','ATLAS','/atlas.html'],['cipher','CIPHER','/cipher.html'],
           ['codex','CODEX','/codex.html'],['mindmap','MIND MAP','/mindmap.html'],['nexus','NEXUS','/nexus.html'],
           ['pulse','PULSE','/pulse.html'],['sigma','SIGMA PROTOCOL','/sigma.html'],['signal','SIGNAL INTEL','/signal.html'],['intel','INTEL WORKSPACE','/intel.html']]},
     /* ── EXTENDED SECTIONS — deployed-page coverage ─────────────── */
@@ -134,14 +134,14 @@
           ['omega-platform-navigator','PLATFORM NAVIGATOR','/omega-platform-navigator.html'],['maintenance','MAINTENANCE','/maintenance.html'],['control-center','CONTROL CENTER','/control-center.html'],['platform-kernel','PLATFORM KERNEL','/platform-kernel.html'],['agent-operations','AGENT OPERATIONS','/agent-operations.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','OWNER DECK','/control-plane.html','owner'],
           ['world-shell','WORLD SHELL','/world-shell.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/invest.html',   col:'#E2C86D',
-     sub:[['invest','INVEST WORKSPACE','/invest.html'],['investment','INVESTMENT ENGINE','/investment.html','folded'],['portfolio','PORTFOLIO','/portfolio.html'],['treasury','TREASURY','/treasury.html','folded'],
-          ['wallet','WALLET','/wallet.html','folded'],['revenue','REVENUE','/revenue.html','folded'],['income','INCOME','/income.html'],['budget','BUDGET','/budget.html','folded'],
-          ['expenses','EXPENSES','/expenses.html','folded'],['wealth','WEALTH','/wealth.html','folded'],['ledger','ASSET LEDGER','/ledger.html'],['payments','PAYMENTS','/payments.html'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html']]},
+     sub:[['invest','INVEST WORKSPACE','/invest.html'],['investment','INVESTMENT ENGINE','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],['treasury','TREASURY','/treasury.html'],
+          ['wallet','WALLET','/wallet.html'],['revenue','REVENUE','/revenue.html'],['income','INCOME','/income.html'],['budget','BUDGET','/budget.html'],
+          ['expenses','EXPENSES','/expenses.html'],['wealth','WEALTH','/wealth.html'],['ledger','ASSET LEDGER','/ledger.html'],['payments','PAYMENTS','/payments.html'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html']]},
     {key:'achieve',icon:'\u265A', label:'ACHIEVE', href:'/achieve.html', col:'#C9A84C',
      sub:[['achieve-home','ACHIEVE HOME','/achieve.html'],['ladder','LADDER','/ladder.html'],['achievements','ACHIEVEMENTS','/achievements.html'],['leaderboard','LEADERBOARD','/leaderboard.html'],['quest-progress','QUEST PROGRESS','/quest-progress.html'],['my-quests','MY QUESTS','/my-quests.html'],['cosmetics','COSMETICS','/cosmetics.html'],['domain-mastery','DOMAIN MASTERY','/domain-mastery.html'],['covenant','MONTHLY COVENANT','/covenant.html'],['seasonal-events','SEASONAL EVENTS','/seasonal-events.html'],['gates','AUTHORITY GATES','/gates.html'],
-          ['grades','GRADES','/grades.html','folded'],['levels','LEVELS','/levels.html','folded'],['phases','PHASES','/phases.html','folded'],
-          ['ascension','ASCENSION','/ascension.html','folded'],['kings','KINGS LATTICE','/kings.html'],['triads','TRIADS','/triads.html'],
-          ['grid','LATTICE GRID','/grid.html','folded'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html'],['trophies','TROPHIES','/trophies.html']]},
+          ['grades','GRADES','/grades.html'],['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html'],
+          ['ascension','ASCENSION','/ascension.html'],['kings','KINGS LATTICE','/kings.html'],['triads','TRIADS','/triads.html'],
+          ['grid','LATTICE GRID','/grid.html'],['awards','AWARDS','/awards.html'],['hercules','HERCULES LABORS','/hercules.html'],['trophies','TROPHIES','/trophies.html']]},
     {key:'archive',icon:'\u2735', label:'ARCHIVE', href:'/archive.html',     col:'#3fb27f',
      sub:[['archive','ARCHIVE WORKSPACE','/archive.html'],['heritage','HERITAGE','/heritage.html'],['bloodline','BLOODLINE','/bloodline.html'],['character','CHARACTER','/character.html','folded'],
           ['identity','IDENTITY','/identity.html','folded'],['passport','PASSPORT','/passport.html'],['kyc','KYC','/kyc.html','folded'],
@@ -149,7 +149,7 @@
           ['membership','MEMBERSHIP','/membership.html']]},
     {key:'media',  icon:'\u25B6', label:'MEDIA',   href:'/media.html',       col:'#AB82F2',
      sub:[['media','CREATIVE UNIVERSE','/media.html'],['cinema','CINEMA','/cinema.html','folded'],['movies','MOVIES','/movies.html','folded'],['characters','CHARACTERS','/characters.html'],
-          ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html','folded'],['universe','UNIVERSE','/universe.html','folded'],
+          ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html'],['universe','UNIVERSE','/universe.html','folded'],
           ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html']]},
   ];
 
@@ -255,7 +255,7 @@
       '#omega-mob ul{display:flex;list-style:none;margin:0;padding:0}',
       '#omega-mob ul li{flex:1}',
       '#omega-mob ul li a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 3px 11px;text-decoration:none;gap:3px}',
-      '#omega-mob ul li a .mi{font-size:18px;line-height:1;transition:all .15s;color:#353330}',
+      '#omega-mob ul li a .mi{font-size:var(--fs-4,20px);line-height:1;transition:all .15s;color:#353330}',
       '#omega-mob ul li a .ml{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1.5px;color:var(--muted)}',
       '#omega-mob ul li a.m-on .mi,#omega-mob ul li a:hover .mi{color:#C9A84C;text-shadow:0 0 10px rgba(201,168,76,0.6);transform:translateY(-2px)}',
       '#omega-mob ul li a.m-on .ml,#omega-mob ul li a:hover .ml{color:#C9A84C}',
@@ -269,10 +269,10 @@
       '#omega-top{position:fixed;top:0;left:0;right:0;height:2px;z-index:10000;pointer-events:none;background:linear-gradient(90deg,transparent,#C9A84C 30%,#00E5FF 70%,transparent);background-size:200% 100%;animation:top-sc 3.5s linear infinite}',
       '.omega-workspace{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:80;padding:8px 12px;margin:0 0 12px;background:rgba(5,5,12,.88);border-bottom:1px solid rgba(201,168,76,.12);backdrop-filter:blur(14px);overflow-x:auto;scrollbar-width:none}',
       '.omega-workspace::-webkit-scrollbar{display:none}',
-      '.omega-workspace .ow-home{display:flex;align-items:center;gap:6px;flex:0 0 auto;font:600 11px/1 "Courier Prime",monospace;letter-spacing:1.4px;color:#C9A84C;text-decoration:none;padding:7px 9px;border:1px solid rgba(201,168,76,.25);border-radius:6px}',
+      '.omega-workspace .ow-home{display:flex;align-items:center;gap:6px;flex:0 0 auto;font:600 var(--fs-1,12px)/1 "Courier Prime",monospace;letter-spacing:1.4px;color:#C9A84C;text-decoration:none;padding:7px 9px;border:1px solid rgba(201,168,76,.25);border-radius:6px}',
       '.omega-workspace .ow-sep{color:rgba(133,131,123,.5);flex:0 0 auto}',
-      '.omega-workspace .ow-current{font:600 11px/1 "Courier Prime",monospace;letter-spacing:1.2px;color:var(--muted);white-space:nowrap}',
-      '.omega-workspace .ow-link{font:500 11px/1 "Courier Prime",monospace;letter-spacing:1px;color:var(--muted);text-decoration:none;white-space:nowrap;padding:7px 9px;border:1px solid transparent;border-radius:6px}',
+      '.omega-workspace .ow-current{font:600 var(--fs-1,12px)/1 "Courier Prime",monospace;letter-spacing:1.2px;color:var(--muted);white-space:nowrap}',
+      '.omega-workspace .ow-link{font:500 var(--fs-1,12px)/1 "Courier Prime",monospace;letter-spacing:1px;color:var(--muted);text-decoration:none;white-space:nowrap;padding:7px 9px;border:1px solid transparent;border-radius:6px}',
       '.omega-workspace .ow-link:hover,.omega-workspace .ow-link.ow-on{color:#C9A84C;border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.05)}',
       '@media(max-width:760px){.omega-workspace{top:0;margin-bottom:8px;padding:7px 8px}.omega-workspace .ow-link,.omega-workspace .ow-home{padding:9px 10px;font-size:12px}}',
       '@keyframes top-sc{0%{background-position:200% 0}100%{background-position:-200% 0}}',
@@ -364,20 +364,21 @@
     command:['dashboard','missions','projects','world','evidence'],
     identity:['profile','security'],
     life:['life'],
-    ascend:['ascend','academy','focus','evolution','contributions'],
-    cosmos:['orrery','cosmos','sculpture','realms','world-atlas'],
+    ascend:['ascend','academy','focus','evolution','contributions','forge'],
+    cosmos:['orrery','cosmos','sculpture','realms','world-atlas','elements','pantheons','houses','agents','horoscope'],
     vault:['vault','wallet','subscriptions','payments','marketplace','blockchain'],
-    order:['order','family','approvals','hall'],
-    services:['services','creation-studio','consultancy','contracts','publishing'],
+    order:['order','family','approvals','hall','sovereigns'],
+    services:['services','creation-studio','consultancy','contracts','publishing','travel'],
     /* six graph-* pages and graphify are folded into insight.html (four lenses, one graph). */
-    intel:['insight','intel','intelligence','research','knowledge-loom'],
+    intel:['insight','intel','intelligence','research','knowledge-loom','cipher'],
     arena:['arena','sovereign-ai','agent-network','analytics'],
     govern:['govern','control-center','observatory','enterprise','knowledge-loom','architecture'],
-    invest:['invest','investment','portfolio','treasury','revenue'],
-    /* grades, levels, phases, ascension and grid are folded into ladder.html. */
-    achieve:['ladder','achieve','achievements','my-quests','gates'],
+    invest:['invest','investment','portfolio','treasury','revenue','wallet','budget','expenses','wealth'],
+    /* grades, levels, phases, ascension and grid sit beside ladder.html again
+       (owner decision 2026-10-19: their own designs come back to the menu). */
+    achieve:['ladder','achieve','achievements','my-quests','gates','ascension','phases','levels','grades','grid'],
     archive:['archive','heritage','credentials','kyc','membership'],
-    media:['media','cinema','movies','series','publications','visual-atlas']
+    media:['media','cinema','movies','series','publications','visual-atlas','trailers']
   };
   function compactSub(sec){
     var wanted=COMPACT[sec.key]||[];
@@ -582,7 +583,7 @@
          and far under 44px. The text size is left alone; only the hit area
          grows. */
       '.dss-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:5px 2px;min-height:24px;cursor:pointer;text-decoration:none}',
-      '.dss-icon{font-size:18px;color:var(--muted)}',
+      '.dss-icon{font-size:var(--fs-4,20px);color:var(--muted)}',
       '.dss-label{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;color:#85837b}',
       '.dss-head:hover .dss-icon,.dss-head.ds-on .dss-icon{color:#C9A84C;text-shadow:0 0 8px rgba(201,168,76,.5)}',
       '.dss-head:hover .dss-label,.dss-head.ds-on .dss-label{color:#C9A84C}',
@@ -644,11 +645,11 @@
     /* The owner's one place, first in the phone menu (the desktop dock item
        does not exist on a phone). Hidden until bg.js confirms is_owner. */
     var dOwner=document.createElement('a');dOwner.className='dss-head ds-owner';dOwner.href='/control-plane.html';
-    dOwner.style.display='none';dOwner.style.cssText+=';color:#E8C766;font-family:var(--M,"Courier Prime",monospace);font-size:13px;letter-spacing:3px;padding:14px 18px;border-bottom:1px solid rgba(232,199,102,.25)';dOwner.textContent='\u03A9 OWNER DECK \u00B7 EVERY PAGE';
+    dOwner.style.display='none';dOwner.style.cssText+=';color:#E8C766;font-family:var(--M,"Courier Prime",monospace);font-size:var(--fs-2,14px);letter-spacing:3px;padding:14px 18px;border-bottom:1px solid rgba(232,199,102,.25)';dOwner.textContent='\u03A9 OWNER DECK \u00B7 EVERY PAGE';
     drawer.appendChild(dOwner);
     var dWait=document.createElement('div');dWait.className='on-wait';dWait.style.display='none';
     var dWaitA=document.createElement('a');dWaitA.href='/approvals.html';
-    dWaitA.style.cssText='display:block;color:#E0736B;font-family:var(--M,"Courier Prime",monospace);font-size:13px;letter-spacing:3px;padding:12px 18px;border-bottom:1px solid rgba(224,115,107,.3);text-decoration:none';
+    dWaitA.style.cssText='display:block;color:#E0736B;font-family:var(--M,"Courier Prime",monospace);font-size:var(--fs-2,14px);letter-spacing:3px;padding:12px 18px;border-bottom:1px solid rgba(224,115,107,.3);text-decoration:none';
     var dWaitN=document.createElement('span');dWaitN.className='on-wait-n';
     dWaitA.appendChild(dWaitN);dWaitA.appendChild(document.createTextNode(' WAITING FOR APPROVAL'));
     dWait.appendChild(dWaitA);drawer.appendChild(dWait);
@@ -867,9 +868,9 @@
         row.setAttribute('aria-selected',String(i===active));
         row.style.cssText='display:flex;align-items:center;gap:12px;padding:11px 12px;margin:2px 0;border-radius:9px;color:#E8E8EE;text-decoration:none;cursor:pointer;background:'+(i===active?'rgba(201,168,76,.12)':'transparent');
         var ico=document.createElement('span');
-        ico.textContent=x.icon||'•';ico.style.cssText='width:28px;text-align:center;color:'+(x.col||'#C9A84C')+';font-size:17px';
+        ico.textContent=x.icon||'•';ico.style.cssText='width:28px;text-align:center;color:'+(x.col||'#C9A84C')+';font-size:var(--fs-3,16px)';
         var body=document.createElement('span');body.style.cssText='min-width:0;flex:1';
-        var name=document.createElement('span');name.textContent=x.label;name.style.cssText='display:block;font:600 13px Rajdhani,sans-serif;letter-spacing:.8px';
+        var name=document.createElement('span');name.textContent=x.label;name.style.cssText='display:block;font:600 var(--fs-2,14px) Rajdhani,sans-serif;letter-spacing:.8px';
         var meta=document.createElement('span');meta.textContent=x.section+' · '+x.href;meta.style.cssText='display:block;margin-top:2px;color:rgba(255,255,255,.4);font:12px "Courier Prime",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
         body.appendChild(name);body.appendChild(meta);row.appendChild(ico);row.appendChild(body);list.appendChild(row);
         row.addEventListener('mouseenter',function(){active=i;render(input.value);});
@@ -927,7 +928,7 @@
        id on every page, and the style guard then read the rail as its own. */
     if(!document.getElementById('omega-context-rail-style')){
       var style=document.createElement('style');style.id='omega-context-rail-style';
-      style.textContent='.omega-context-rail{display:flex;align-items:center;gap:8px;min-height:38px;padding:7px 12px;margin:0 0 10px;border-bottom:1px solid rgba(201,168,76,.12);background:rgba(2,2,6,.52);backdrop-filter:blur(10px);font:12px "Courier Prime",monospace;letter-spacing:.7px;box-sizing:border-box;position:relative;z-index:20}.omega-context-rail a{color:rgba(232,201,122,.72);text-decoration:none;white-space:nowrap}.omega-context-rail a:hover,.omega-context-rail a:focus-visible{color:#E8C97A;text-decoration:underline}.omega-context-sep{color:rgba(255,255,255,.22)}.omega-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.omega-context-current{color:#F1F1F5;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.omega-context-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0}.omega-context-btn{min-height:32px;padding:0 9px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:rgba(232,201,122,.78);font:12px "Courier Prime",monospace;letter-spacing:.7px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer}.omega-context-btn:hover,.omega-context-btn:focus-visible{border-color:rgba(201,168,76,.55);color:#E8C97A;background:rgba(201,168,76,.09)}body>.omega-context-rail{padding-left:62px}.omega-mobile-bar{display:none}@media(max-width:760px){.omega-context-rail{padding:7px 10px}body>.omega-context-rail{padding-left:62px}.omega-context-actions .omega-context-fav-label{display:none}.omega-mobile-bar{display:flex;position:sticky;bottom:0;z-index:1900;gap:4px;padding:7px max(8px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));background:rgba(5,5,12,.94);backdrop-filter:blur(16px);border-top:1px solid rgba(201,168,76,.18);box-sizing:border-box}.omega-mobile-bar a,.omega-mobile-bar button{flex:1;min-width:0;min-height:44px;border:0;background:transparent;color:rgba(255,255,255,.68);text-decoration:none;font:12px "Courier Prime",monospace;letter-spacing:.4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:7px}.omega-mobile-bar a[aria-current="page"],.omega-mobile-bar button:hover{color:#E8C97A;background:rgba(201,168,76,.08)}.omega-mobile-glyph{font-size:17px;line-height:16px}.omega-mobile-label{font-size:12px;line-height:11px}.omega-context-rail{position:sticky;top:0}.omega-context-current{font-size:12px}}';
+      style.textContent='.omega-context-rail{display:flex;align-items:center;gap:8px;min-height:38px;padding:7px 12px;margin:0 0 10px;border-bottom:1px solid rgba(201,168,76,.12);background:rgba(2,2,6,.52);backdrop-filter:blur(10px);font:12px "Courier Prime",monospace;letter-spacing:.7px;box-sizing:border-box;position:relative;z-index:20}.omega-context-rail a{color:rgba(232,201,122,.72);text-decoration:none;white-space:nowrap}.omega-context-rail a:hover,.omega-context-rail a:focus-visible{color:#E8C97A;text-decoration:underline}.omega-context-sep{color:rgba(255,255,255,.22)}.omega-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.omega-context-current{color:#F1F1F5;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.omega-context-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0}.omega-context-btn{min-height:32px;padding:0 9px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:rgba(232,201,122,.78);font:12px "Courier Prime",monospace;letter-spacing:.7px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer}.omega-context-btn:hover,.omega-context-btn:focus-visible{border-color:rgba(201,168,76,.55);color:#E8C97A;background:rgba(201,168,76,.09)}body>.omega-context-rail{padding-left:62px}.omega-mobile-bar{display:none}@media(max-width:760px){.omega-context-rail{padding:7px 10px}body>.omega-context-rail{padding-left:62px}.omega-context-actions .omega-context-fav-label{display:none}.omega-mobile-bar{display:flex;position:sticky;bottom:0;z-index:1900;gap:4px;padding:7px max(8px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom));background:rgba(5,5,12,.94);backdrop-filter:blur(16px);border-top:1px solid rgba(201,168,76,.18);box-sizing:border-box}.omega-mobile-bar a,.omega-mobile-bar button{flex:1;min-width:0;min-height:44px;border:0;background:transparent;color:rgba(255,255,255,.68);text-decoration:none;font:12px "Courier Prime",monospace;letter-spacing:.4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:7px}.omega-mobile-bar a[aria-current="page"],.omega-mobile-bar button:hover{color:#E8C97A;background:rgba(201,168,76,.08)}.omega-mobile-glyph{font-size:var(--fs-3,16px);line-height:16px}.omega-mobile-label{font-size:12px;line-height:11px}.omega-context-rail{position:sticky;top:0}.omega-context-current{font-size:12px}}';
       document.head.appendChild(style);
     }
 

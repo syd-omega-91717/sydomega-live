@@ -20,7 +20,7 @@
 .tier-card.current::after{content:"CURRENT";position:absolute;top:12px;right:12px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);border:1px solid rgba(201,168,76,.4);padding:2px 6px}
 .tier-n{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
 .tier-name{font-family:var(--D);font-size:14px;margin-bottom:4px}
-.tier-price{font-family:var(--D);font-size:22px;line-height:1;margin-bottom:4px}
+.tier-price{font-family:var(--D);font-size:var(--fs-4,20px);line-height:1;margin-bottom:4px}
 .tier-period{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-bottom:14px}
 .tier-perks{list-style:none;padding:0}
 .tier-perks li{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:4px 0;border-bottom:1px solid rgba(201,168,76,.06);display:flex;align-items:center;gap:6px}
@@ -32,9 +32,9 @@
 .plan-key{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .plan-val{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
 .trial-band{border:1px solid rgba(201,168,76,.25);padding:16px;background:rgba(201,168,76,.04);margin-bottom:18px}
-.trial-title{font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px}
+.trial-title{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);margin-bottom:8px}
 .trial-desc{font-size:12px;color:var(--ink);opacity:.75;line-height:1.7}
-.trial-countdown{font-family:var(--D);font-size:24px;color:var(--gold);margin-top:10px}
+.trial-countdown{font-family:var(--D);font-size:var(--fs-5,28px);color:var(--gold);margin-top:10px}
 .pay-row{display:flex;align-items:center;gap:14px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.06);flex-wrap:wrap}
 .pay-row:hover{background:rgba(201,168,76,.02)}
 .pay-date{font-family:var(--M);font-size:12px;color:var(--muted);width:80px;flex-shrink:0}
@@ -56,16 +56,16 @@
     <div class="sb-stat" id="mem-tier">FREE</div>
     <div class="sb-lbl">CURRENT TIER</div>
     <div style="margin-top:10px">
-      <div class="sb-stat" style="font-size:13px;color:var(--green)" id="mem-status">LOADING</div>
+      <div class="sb-stat" style="font-size:var(--fs-2,14px);color:var(--green)" id="mem-status">LOADING</div>
       <div class="sb-lbl">ACCESS STATUS</div>
     </div>
   </div>
   <div class="sb-center"><canvas id="sub-cv" width="120" height="120" style="width:60px;height:60px;display:block"></canvas></div>
   <div class="sb-right">
-    <div class="sb-stat" id="mem-expiry" style="font-size:13px">--</div>
+    <div class="sb-stat" id="mem-expiry" style="font-size:var(--fs-2,14px)">--</div>
     <div class="sb-lbl">VALID UNTIL</div>
     <div style="margin-top:10px">
-      <div class="sb-stat" style="font-size:13px;color:var(--cyan)" id="mem-trial-cd"></div>
+      <div class="sb-stat" style="font-size:var(--fs-2,14px);color:var(--cyan)" id="mem-trial-cd"></div>
       <div id="mem-trial-cd-lbl" class="sb-lbl" style="display:none">TRIAL REMAINING</div>
     </div>
   </div>

@@ -10,6 +10,7 @@ import argparse
 import concurrent.futures
 import http.client
 import os
+import sys
 import time
 from pathlib import Path
 from urllib.parse import quote, urlparse
@@ -56,6 +57,17 @@ def check_route(route: str, expected_host: str) -> tuple[bool, str]:
                     },
                 )
                 response = connection.getresponse()
+            request = Request(
+                url,
+                headers={
+                    "User-Agent": "SYD-OMEGA-Production-Surface-Smoke/1.0",
+                    "Accept": "text/html,application/xhtml+xml",
+                },
+            )
+            # BASE_URL is refused unless it starts with https:// (main()), and every
+            # url here is BASE_URL + a route from the build; no file:// can reach this.
+            # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
+            with urlopen(request, timeout=TIMEOUT) as response:
                 status = response.status
                 content_type = response.getheader("Content-Type", "").lower()
                 body = response.read(256 * 1024).lower()
@@ -151,4 +163,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    if "--help" in sys.argv[1:]:
+        print(__doc__ or "")
+        raise SystemExit(0)
     raise SystemExit(main())

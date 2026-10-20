@@ -18,7 +18,7 @@
     '#osh-ov{position:fixed;inset:0;z-index:9600;background:rgba(2,2,6,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}',
     '#osh-ov.open{display:flex}',
     '#osh-card{width:100%;max-width:440px;border:1px solid rgba(201,168,76,.3);background:rgba(10,10,16,.98);border-radius:16px;padding:22px;font-family:"Courier Prime",monospace;color:#c8c5ba;box-shadow:0 24px 70px rgba(0,0,0,.7)}',
-    '#osh-card h3{font-family:"Cinzel Decorative",serif;color:#C9A84C;font-size:17px;margin:0 0 4px}',
+    '#osh-card h3{font-family:"Cinzel Decorative",serif;color:#C9A84C;font-size:var(--fs-3,16px);margin:0 0 4px}',
     '#osh-quote{font-size:12px;color:#8a8676;margin:0 0 16px;line-height:1.5}',
     '.osh-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}',
     '.osh-b{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1px solid rgba(201,168,76,.2);border-radius:10px;color:#d8d5cb;text-decoration:none;font-size:12px;letter-spacing:1px;cursor:pointer;background:none;transition:all .2s}',

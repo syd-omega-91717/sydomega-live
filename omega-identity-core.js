@@ -45,16 +45,16 @@
     s.textContent = [
       '.oic{display:grid;gap:10px;margin:16px 0 20px;padding:0 clamp(14px,3vw,36px)}',
       '.oic-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}',
-      '.oic-top b{font-family:var(--R,sans-serif);font-size:1.6rem;line-height:1;color:var(--ink,#eee)}',
-      '.oic-top span{font-family:var(--M,monospace);font-size:.66rem;letter-spacing:.16em;color:var(--muted,#9aa)}',
+      '.oic-top b{font-family:var(--R,sans-serif);font-size:var(--fs-5,28px);line-height:1;color:var(--ink,#eee)}',
+      '.oic-top span{font-family:var(--M,monospace);font-size:var(--fs-1,12px);letter-spacing:.16em;color:var(--muted,#9aa)}',
       '.oic-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}',
       /* !important: a platform-wide a[href]{display:inline-flex} outranks a class (GAP_ANALYSIS). */
       '.oic .oic-item{display:grid!important;align-content:start;gap:3px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);text-decoration:none;color:var(--ink,#eee);min-height:44px}',
       '.oic-item.ok{border-color:rgba(63,178,127,.55);background:rgba(63,178,127,.07)}',
       '.oic-item.todo{border-color:rgba(212,175,55,.5);background:rgba(212,175,55,.06)}',
-      '.oic-item strong{font-family:var(--M,monospace);font-size:.64rem;letter-spacing:.16em;color:var(--muted,#9aa)}',
-      '.oic-item span{font-family:var(--R,sans-serif);font-size:.95rem}',
-      '.oic-item small{font-family:var(--M,monospace);font-size:.58rem;letter-spacing:.08em;color:var(--muted,#9aa)}',
+      '.oic-item strong{font-family:var(--M,monospace);font-size:var(--fs-1,12px);letter-spacing:.16em;color:var(--muted,#9aa)}',
+      '.oic-item span{font-family:var(--R,sans-serif);font-size:var(--fs-3,16px)}',
+      '.oic-item small{font-family:var(--M,monospace);font-size:var(--fs-1,12px);letter-spacing:.08em;color:var(--muted,#9aa)}',
       '.oic-item.ok small{color:var(--green,#3fb27f)}',
       '.oic-item.todo small{color:var(--gold,#d4af37)}'
     ].join('');

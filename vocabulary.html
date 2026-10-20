@@ -14,19 +14,19 @@
 .card-title{font-size:12px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .stat{background:rgba(10,10,15,.55);border:1px solid rgba(201,168,76,.15);padding:14px;text-align:center}
-.stat-val{font-size:1.4rem;color:var(--gold);font-weight:bold;margin-bottom:4px}
-.stat-lbl{font-size:.55rem;color:#888;letter-spacing:.1em}
-label{font-size:.6rem;color:#888;letter-spacing:.08em;display:block;margin-bottom:4px}
+.stat-val{font-size:var(--fs-4,20px);color:var(--gold);font-weight:bold;margin-bottom:4px}
+.stat-lbl{font-size:var(--fs-1,12px);color:#888;letter-spacing:.1em}
+label{font-size:var(--fs-1,12px);color:#888;letter-spacing:.08em;display:block;margin-bottom:4px}
 input,select,textarea{width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .form-row.trio{grid-template-columns:1fr 1fr 1fr}
-.btn{padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:2px;font-family:inherit;transition:all .2s}
+.btn{padding:8px 20px;font-size:var(--fs-1,12px);letter-spacing:.1em;cursor:pointer;border:none;border-radius:2px;font-family:inherit;transition:all .2s}
 .btn-gold{background:var(--gold);color:#000}.btn-gold:hover{background:#e0b85c}
-.btn-sm{padding:5px 12px;font-size:.6rem}
-.btn-ghost{background:none;border:1px solid #333;color:#888;padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px;transition:all .2s}
+.btn-sm{padding:5px 12px;font-size:var(--fs-1,12px)}
+.btn-ghost{background:none;border:1px solid #333;color:#888;padding:6px 14px;font-size:var(--fs-1,12px);font-family:inherit;cursor:pointer;border-radius:2px;transition:all .2s}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.btn-red{background:#e74c3c;color:#fff;font-size:.6rem;padding:4px 10px;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
+.btn-red{background:#e74c3c;color:#fff;font-size:var(--fs-1,12px);padding:4px 10px;cursor:pointer;border:none;border-radius:2px;font-family:inherit}
 .word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .word-card{background:#111;border:1px solid #1a1a1a;border-radius:4px;padding:14px;position:relative;transition:border-color .2s}
 .word-card:hover{border-color:#333}
@@ -35,25 +35,25 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .word-card.new{--card-accent:#3498db}
 .word-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
 .word-term{font-size:1rem;color:#fff;letter-spacing:.05em}
-.word-pos{font-size:.55rem;color:var(--gold);letter-spacing:.08em;background:#1a1a1a;padding:2px 6px;border-radius:2px}
-.word-def{font-size:.7rem;color:#aaa;line-height:1.5;margin-bottom:8px}
-.word-example{font-size:.65rem;color:var(--muted);font-style:italic;line-height:1.4;margin-bottom:8px}
-.word-meta{display:flex;gap:8px;align-items:center;font-size:.55rem;color:#888}
+.word-pos{font-size:var(--fs-1,12px);color:var(--gold);letter-spacing:.08em;background:#1a1a1a;padding:2px 6px;border-radius:2px}
+.word-def{font-size:var(--fs-1,12px);color:#aaa;line-height:1.5;margin-bottom:8px}
+.word-example{font-size:var(--fs-1,12px);color:var(--muted);font-style:italic;line-height:1.4;margin-bottom:8px}
+.word-meta{display:flex;gap:8px;align-items:center;font-size:var(--fs-1,12px);color:#888}
 .word-actions{display:flex;gap:4px;margin-top:10px}
-.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:.55rem;letter-spacing:.06em}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:var(--fs-1,12px);letter-spacing:.06em}
 .badge-new{background:rgba(52,152,219,.15);color:#3498db}
 .badge-learning{background:rgba(201,168,76,.15);color:var(--gold)}
 .badge-mastered{background:rgba(39,174,96,.15);color:#27ae60}
 .drill-card{max-width:500px;margin:0 auto;text-align:center}
 .drill-front{background:#111;border:2px solid var(--gold);border-radius:8px;padding:48px 24px;margin-bottom:16px;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .3s}
-.drill-word{font-size:2rem;letter-spacing:.1em;color:#fff;margin-bottom:8px}
-.drill-hint{font-size:.65rem;color:#888;margin-top:8px}
+.drill-word{font-size:var(--fs-5,28px);letter-spacing:.1em;color:#fff;margin-bottom:8px}
+.drill-hint{font-size:var(--fs-1,12px);color:#888;margin-top:8px}
 .drill-back{display:none;margin-bottom:16px}
 .drill-back.visible{display:block}
-.drill-def{font-size:.85rem;color:#aaa;line-height:1.6;margin-bottom:12px;padding:16px;background:#111;border-radius:4px}
+.drill-def{font-size:var(--fs-2,14px);color:#aaa;line-height:1.6;margin-bottom:12px;padding:16px;background:#111;border-radius:4px}
 .drill-ex{font-size:.75rem;color:var(--muted);font-style:italic;padding:10px;background:#0a0a0a;border-radius:4px;margin-bottom:12px}
 .drill-btns{display:flex;gap:10px;justify-content:center}
-.drill-btn{padding:12px 24px;font-size:.7rem;letter-spacing:.1em;cursor:pointer;border:none;border-radius:4px;font-family:inherit}
+.drill-btn{padding:12px 24px;font-size:var(--fs-1,12px);letter-spacing:.1em;cursor:pointer;border:none;border-radius:4px;font-family:inherit}
 .drill-easy{background:#27ae60;color:#fff}
 .drill-hard{background:var(--gold);color:#000}
 .drill-fail{background:#e74c3c;color:#fff}
@@ -63,12 +63,12 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .drill-dot.current{background:var(--gold)}
 .drill-dot.fail{background:#e74c3c}
 .filter-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.filter-btn{padding:4px 12px;font-size:.6rem;letter-spacing:.08em;border:1px solid #333;background:none;color:#888;cursor:pointer;border-radius:2px;transition:all .2s}
+.filter-btn{padding:4px 12px;font-size:var(--fs-1,12px);letter-spacing:.08em;border:1px solid #333;background:none;color:#888;cursor:pointer;border-radius:2px;transition:all .2s}
 .filter-btn.active{border-color:var(--gold);color:var(--gold)}
 .source-block{border-left:2px solid var(--gold);padding:8px 14px;margin-bottom:12px;background:#111}
-.source-title{font-size:.7rem;color:#fff;margin-bottom:4px}
-.source-detail{font-size:.6rem;color:#888;line-height:1.5}
-.empty{text-align:center;color:#888;font-size:.7rem;padding:40px 0;letter-spacing:.1em}
+.source-title{font-size:var(--fs-1,12px);color:#fff;margin-bottom:4px}
+.source-detail{font-size:var(--fs-1,12px);color:#888;line-height:1.5}
+.empty{text-align:center;color:#888;font-size:var(--fs-1,12px);padding:40px 0;letter-spacing:.1em}
 @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr}.form-row.trio{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -104,7 +104,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
               <input id="w-term" type="text" placeholder="e.g. Sanguine, Ephemeral, Paradigm..." style="flex:1">
               <button type="button" class="btn-ghost" onclick="lookupWord()" id="lookup-btn" style="white-space:nowrap">LOOKUP</button>
             </div>
-            <div id="lookup-msg" style="font-size:.55rem;color:#888;margin-top:4px"></div>
+            <div id="lookup-msg" style="font-size:var(--fs-1,12px);color:#888;margin-top:4px"></div>
           </div>
           <div>
             <label>PART OF SPEECH</label>
@@ -162,7 +162,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
       </div>
       <div class="card" data-reveal="fade-up">
         <div class="card-title">SEED VOCABULARY — SOVEREIGN LEXICON</div>
-        <p style="font-size:.65rem;color:#888;margin-bottom:12px">15 HIGH-VALUE WORDS PRELOADED. ADD YOUR OWN TO EXPAND YOUR LEXICON.</p>
+        <p style="font-size:var(--fs-1,12px);color:#888;margin-bottom:12px">15 HIGH-VALUE WORDS PRELOADED. ADD YOUR OWN TO EXPAND YOUR LEXICON.</p>
         <button class="btn btn-ghost" onclick="loadSeeds()" id="seed-btn">LOAD SEED VOCABULARY</button>
       </div>
     </div>
@@ -188,7 +188,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
     <div id="tab-drill" class="tab-panel">
       <div class="drill-card card">
         <div id="drill-progress-bar" class="drill-progress"></div>
-        <div id="drill-status" style="text-align:center;font-size:.65rem;color:#888;margin-bottom:16px"></div>
+        <div id="drill-status" style="text-align:center;font-size:var(--fs-1,12px);color:#888;margin-bottom:16px"></div>
         <div id="drill-area">
           <div style="text-align:center;padding:40px 0">
             <p style="font-size:.75rem;color:#888;margin-bottom:16px">SELECT A DRILL MODE BELOW</p>
@@ -220,8 +220,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
       <div class="card" data-reveal="fade-up">
         <div class="card-title">THE SCIENCE OF VOCABULARY ACQUISITION</div>
         <div data-omega-more>
-          <p class="omi-lead" style="font-size:.7rem;color:#aaa;line-height:1.7;margin-bottom:0">Language is the operating system of thought — a larger lexicon means a higher-resolution mind.</p>
-          <div class="omi-full" hidden style="font-size:.7rem;color:#aaa;line-height:1.7;margin-bottom:16px">Language is the operating system of thought. Expanding your lexicon expands the resolution of your mind — enabling you to perceive, articulate, and act on distinctions invisible to those with smaller vocabularies.</div>
+          <p class="omi-lead" style="font-size:var(--fs-1,12px);color:#aaa;line-height:1.7;margin-bottom:0">Language is the operating system of thought — a larger lexicon means a higher-resolution mind.</p>
+          <div class="omi-full" hidden style="font-size:var(--fs-1,12px);color:#aaa;line-height:1.7;margin-bottom:16px">Language is the operating system of thought. Expanding your lexicon expands the resolution of your mind — enabling you to perceive, articulate, and act on distinctions invisible to those with smaller vocabularies.</div>
         </div>
         <div class="source-block">
           <div class="source-title">SPACED REPETITION SYSTEM — Ebbinghaus (1885) &amp; Leitner (1970)</div>
@@ -405,7 +405,7 @@ function renderLibrary(){
       ${w.synonyms?`<span>~ ${esc(w.synonyms.split(',').slice(0,2).join(', '))}</span>`:''}
     </div>
     <div class="word-actions">
-      ${w.status!=='mastered'?`<button class="btn btn-ghost" style="font-size:.55rem;padding:3px 8px" onclick="markMastered(${w.id})">MASTERED</button>`:''}
+      ${w.status!=='mastered'?`<button class="btn btn-ghost" style="font-size:var(--fs-1,12px);padding:3px 8px" onclick="markMastered(${w.id})">MASTERED</button>`:''}
       <button class="btn btn-red" onclick="deleteWord(${w.id})">X</button>
     </div>
   </div>`).join('');
@@ -430,7 +430,7 @@ function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Mat
 function renderDrillCard(){
   if(drillIndex>=drillQueue.length){
     document.getElementById('drill-area').innerHTML=`<div style="text-align:center;padding:40px 0">
-      <div style="font-size:2rem;color:var(--gold);margin-bottom:12px">SESSION COMPLETE</div>
+      <div style="font-size:var(--fs-5,28px);color:var(--gold);margin-bottom:12px">SESSION COMPLETE</div>
       <div style="font-size:.75rem;color:#888;margin-bottom:20px">${drillQueue.length} WORDS REVIEWED</div>
       <button class="btn btn-gold" onclick="startDrill('due')">DRILL AGAIN</button>
     </div>`;
@@ -443,14 +443,14 @@ function renderDrillCard(){
   document.getElementById('drill-area').innerHTML=`
     <div class="drill-front" onclick="revealDrill()">
       <div class="drill-word">${esc(w.term)}</div>
-      <div style="font-size:.65rem;color:var(--gold);margin-top:6px">${POS_LABELS[w.pos]||''}</div>
+      <div style="font-size:var(--fs-1,12px);color:var(--gold);margin-top:6px">${POS_LABELS[w.pos]||''}</div>
       <div class="drill-hint">TAP TO REVEAL DEFINITION</div>
     </div>
     <div id="drill-back" class="drill-back">
       <div class="drill-def">${esc(w.def)}</div>
       ${w.example?`<div class="drill-ex">"${esc(w.example)}"</div>`:''}
-      ${w.etym?`<div style="font-size:.6rem;color:#888;margin-bottom:8px">ETYMOLOGY: ${esc(w.etym)}</div>`:''}
-      ${w.synonyms?`<div style="font-size:.6rem;color:#888;margin-bottom:12px">SYNONYMS: ${esc(w.synonyms)}</div>`:''}
+      ${w.etym?`<div style="font-size:var(--fs-1,12px);color:#888;margin-bottom:8px">ETYMOLOGY: ${esc(w.etym)}</div>`:''}
+      ${w.synonyms?`<div style="font-size:var(--fs-1,12px);color:#888;margin-bottom:12px">SYNONYMS: ${esc(w.synonyms)}</div>`:''}
       <div class="drill-btns">
         <button class="drill-btn drill-fail" onclick="gradeWord(1)">MISS</button>
         <button class="drill-btn drill-hard" onclick="gradeWord(3)">HARD</button>
@@ -525,11 +525,11 @@ function renderWOTD(){
   const idx=parseInt(seed)%words.length;
   const w=words[idx];
   container.innerHTML=`<div style="text-align:center;padding:16px">
-    <div style="font-size:1.6rem;color:#fff;letter-spacing:.1em;margin-bottom:6px">${esc(w.term)}</div>
-    <div style="font-size:.65rem;color:var(--gold);margin-bottom:12px">${POS_LABELS[w.pos]||''} · ${esc(DOMAIN_LABELS[w.domain]||w.domain).toUpperCase()}</div>
-    <div style="font-size:.8rem;color:#aaa;line-height:1.6;max-width:400px;margin:0 auto 12px">${esc(w.def)}</div>
-    ${w.example?`<div style="font-size:.7rem;color:var(--muted);font-style:italic;max-width:400px;margin:0 auto">"${esc(w.example)}"</div>`:''}
-    ${w.etym?`<div style="font-size:.6rem;color:#888;margin-top:10px">ETYMOLOGY: ${esc(w.etym)}</div>`:''}
+    <div style="font-size:var(--fs-5,28px);color:#fff;letter-spacing:.1em;margin-bottom:6px">${esc(w.term)}</div>
+    <div style="font-size:var(--fs-1,12px);color:var(--gold);margin-bottom:12px">${POS_LABELS[w.pos]||''} · ${esc(DOMAIN_LABELS[w.domain]||w.domain).toUpperCase()}</div>
+    <div style="font-size:var(--fs-2,14px);color:#aaa;line-height:1.6;max-width:400px;margin:0 auto 12px">${esc(w.def)}</div>
+    ${w.example?`<div style="font-size:var(--fs-1,12px);color:var(--muted);font-style:italic;max-width:400px;margin:0 auto">"${esc(w.example)}"</div>`:''}
+    ${w.etym?`<div style="font-size:var(--fs-1,12px);color:#888;margin-top:10px">ETYMOLOGY: ${esc(w.etym)}</div>`:''}
   </div>`;
 }
 

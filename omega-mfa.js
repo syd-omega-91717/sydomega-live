@@ -78,7 +78,7 @@
       '.omfa{display:grid;gap:12px;max-width:520px}' +
       '.omfa-status{font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px}' +
       '.omfa-status.on{color:var(--green,#4caf50)}.omfa-status.off{color:var(--muted,#8a8676)}' +
-      '.omfa-msg{font-size:13px;min-height:1.2em}.omfa-msg.err{color:var(--crim,#e05a5a)}' +
+      '.omfa-msg{font-size:var(--fs-2,14px);min-height:1.2em}.omfa-msg.err{color:var(--crim,#e05a5a)}' +
       '.omfa-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}' +
       '.omfa-qr{width:180px;height:180px;background:#fff;padding:8px;border-radius:4px}' +
       '.omfa-secret{font-family:var(--M,monospace);font-size:12px;word-break:break-all;' +

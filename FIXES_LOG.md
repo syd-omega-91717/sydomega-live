@@ -24614,3 +24614,208 @@ This is §8.1 class 5(b) again: the guard attribute was also the element the gua
 - `check-inline-js.py`: clean.
 - `node --check` on every touched `.js`.
 - `verify-runtime.js` on dashboard plus the 23 changed pages: **PASS (24 pages)**.
+
+## 2026-10-18 — Deploys reached returning members only after their cache aged out; Vercel promotion postponed behind one switch
+
+**Symptom.** The owner reported "nothing has changed" on sydomega.com while production served
+`d7b7640e`. It was checked through `/.well-known/omega-release.json`.
+
+**Cause.** `sw.js` had a fixed `CACHE_VERSION = 'v9'`, so every deploy shipped a byte-identical
+worker. The browser never saw an update, so it never installed one and never cleared the old
+cache. A cached asset younger than an hour was served with no network request. Past that, it was
+served stale while it revalidated, through an HTTP cache that `_headers` sets to
+`max-age=3600, stale-while-revalidate=86400`.
+
+**Fix.**
+- `scripts/vercel-build.sh` stamps the release commit into the shipped worker
+  (`v9-<sha12>`). It must match exactly one anchor or the build fails.
+- Precache now uses `cache:'reload'`, and asset refetches use `cache:'no-cache'`. Otherwise the
+  new cache could be filled from the HTTP cache with the previous deploy's files.
+- The existing `SKIP_WAITING` and `controllerchange` handling does the rest: one reload, onto the
+  new code.
+
+**Measured** in headless Chromium against a local server that switches deploy A to deploy B.
+
+| sw.js | cache after B | asset the page ran |
+|---|---|---|
+| before (`origin/main`) | `omega-91717-v9-A` | `ASSET-A` |
+| after | `omega-91717-v9-B` | `ASSET-B` |
+
+The deploys were 11s apart. Inside 10s the reload-loop guard in `omega-sw-register.js` correctly
+refuses a second reload. Cost: every deploy is one revalidation pass per returning member. That
+is mostly 304s, which Cloudflare Pages does not bill per request.
+
+**Postponed.** Every `main` push left "Vercel Production" red: the "Controlled state" step exits
+1 when no `VERCEL_TOKEN` is set (run `39161977453`). `VERCEL_PROMOTION_POSTPONED: 'true'` now
+parks promotion. In its place the run proves the live site serves the pushed commit, or a later
+commit that contains it, and fails after 15 minutes if not. Resume steps are in `GAP_ANALYSIS.md`
+§S.
+
+**Gated by** `test_vercel_production_dispatch_contract.py`, with two new tests. A planted
+regression (dropping `cache:'no-cache'`) fails the test.
+
+
+## 2026-10-19 — After #1002: browsers did move to the new code; `omega-chart.js` could still collide on a shared canvas
+
+**Deploy reached the member (verified live).** `telemetry_events` had **0 rows ever**. Every
+build since 10-06 ran the old `.insert(...).catch(...)`, which throws before the request is
+sent. From 2026-10-19 00:44 UTC it has 37 rows across 4 dashboard sessions. That is the
+fixed code running in the member's browser after #1002's per-deploy service worker.
+
+The last old-code errors were `omega-recommend.js:24` at 04:23:31 and a Chart.js
+"Canvas is already in use" at 04:22:44. Both arrived after clean sessions, with no new
+`page_view` in between. They fit a tab that stayed open since before the deploy: recommend
+fires on `visibilitychange`, and the chart guard in `omega-oss.js` is from 10-09, after the
+10-06 build. The live `omega-telemetry.js` was fetched and is the fixed file.
+
+**Real remaining defect.** `omega-chart.js` destroyed only `canvas._omegaChart`, the charts
+it had drawn itself. A chart drawn on the same canvas by `OmegaOSS.chart` still throws
+"Canvas is already in use".
+
+Measured in headless Chromium with the vendored `chart.umd.min.js`: draw with
+`OmegaOSS.chart`, then call `OmegaChart.line` on the same canvas.
+
+| version | errors | chart left on the canvas |
+|---|---|---|
+| before (`origin/main`) | the exact production message | `bar` |
+| after | none | `line` |
+
+The fix is a `release()` that destroys `Chart.getChart(canvas)` (or the module's own handle)
+in all four builders.
+
+## 2026-10-19 — The front door's emblem turns again (owner decision, reversing 2026-09-15)
+
+The hero mount `.ohz-hero-art[data-omega-sculpture="signet"]` kept rendering the 3-D Omega signet
+the whole time (`OmegaSculpture.status()`: live, visible, bloom and environment on). From
+2026-09-15 three additions buried it:
+- `fcdda493`: `omega-visual-runtime.js` laid a static "Omega Nexus" composition over it (monoliths,
+  a flat Ω, GAMING/CINEMA cards).
+- `8ca012fb`: `omega-home-depth-correction.css` set its canvas to `opacity:.045`.
+- `a7ad3b02`: `omega-opening-system.css` set its canvas to `opacity:.20`.
+
+`test_spatial_visual_contract.py` and `test_omega_visual_runtime_contract.py` locked that in
+("non_rotative", `opacity:.20`). On 2026-10-19 the owner asked for the rotating emblem back.
+
+**Change.**
+- The overlay installer is removed.
+- `omega-home-depth-correction.css` is deleted; nothing else loaded it.
+- The 20% rule is dropped.
+- The two tests now assert the reverse: no overlay, no dimming, and the signet's sway and orbit
+  turn present in `omega-sculpture.js`.
+- The world atlas below the hero is unchanged.
+
+**Measured** in headless Chromium (SwiftShader WebGL), 2.5 s apart. Before: a flat Ω over a dark
+collage. After: the lit gold signet. The two frames differ, so it is moving, and there are 0
+page errors.
+
+The signet still sways about ±32° rather than making a full 360° turn. A full turn shows the
+extruded Ω edge-on twice per cycle (see the comment at `omega-sculpture.js`, "A SWAY, NOT A SPIN").
+Its orbit and halo turn continuously.
+
+## 2026-10-19 — 25 folded pages return to the menu (owner decision)
+
+**What the owner asked.** "We lost some perfect good visual design pages." None were
+deleted: each was a `nav.js` entry carrying a 4th field `'folded'`, which keeps a page in
+search and the owner deck but drops it from the desktop dock and the phone drawer. The
+owner approved the 25 pre-ticked picks in the page atlas ("Go").
+
+**A second, quieter cause.** The desktop dock renders `COMPACT[section]` filtered by
+`!=='folded'` (`nav.js` `compactSub`). `COMPACT` still named `investment`, `treasury`,
+`revenue`, `consultancy`, `contracts` and `order`, so the dock *intended* to show them
+and the fold silently removed them — VAULT/INVEST had no data-entry page reachable from
+the menu, which is why net worth stayed at $0.
+
+**Change.** Removed `'folded'` from 24 entries (elements, pantheons, houses, agents,
+ascension, phases, levels, grid, grades, travel, consultancy, contracts, forge, cipher,
+sovereigns, order, trailers, investment, treasury, wallet, revenue, budget, expenses,
+wealth). COSMOS's `horoscope` alias pointed at `/cosmos.html#horoscope`; it now points at
+the real `/horoscope.html`. Added the restored keys to `COMPACT` for cosmos, invest,
+achieve, ascend, intel, order, media and services so the desktop dock shows them, not
+only the phone drawer. Still folded (18): the academy, identity, media and graph pages
+and the 10 LIFE trackers — the trackers' designs are to be merged into LIFE separately.
+
+**Evidence.** All 25 files exist; none is redirected (the only `location.href` writes in
+them are the sign-in/pending guards). Headless render of `cosmos.html` at 1440px: the
+COSMOS, INVEST, ACHIEVE and MEDIA tooltips list the restored hrefs; the drawer contains
+`/elements.html`, `/budget.html`, `/grades.html`, `/trailers.html`, `/order.html` (226
+drawer links). `python3 -m unittest discover -s scripts/tests`: 809 OK.
+`./scripts/ci-local.sh --all`: all 39 blocking checks passed.
+
+## 2026-10-19 — A new member's money pages showed only zeros, with no next step
+
+**Measured.** Headless render, signed-in stub with no data, 1440px: every KPI on
+`investment` (4), `treasury` (4), `wallet` (4), `revenue` (4), `budget` (4) and `wealth`
+(6) read `$0`/`0`/`0%`, and nothing on the page said what to do first.
+
+**Change.** `omega-empty-guide.js` (new, opt-in by `<script>` on those six pages). An
+element carrying `data-omega-empty-guide` gets one card after it while *every* figure in
+it (`.kpi-n .kpi-v .stat-num .nw-val`) reads zero; a MutationObserver removes the card the
+moment any figure is non-zero. The CTA clicks `data-omega-empty-go` (a `|` list, clicked
+in order: tab first, then the form's opener) and focuses the first field in
+`data-omega-empty-focus`. It reads the page's own numbers and never writes one (§8.1
+class 9). First verdict waits 1.2 s after `load` so arriving data does not flash it.
+
+**Evidence.** Render at 1440 and 390 on all six: card present, CTA lands focus on
+`h-ticker`, `a-name` (treasury), `a-name` (wallet), `s-name`, `ex-amount`, and the new
+cash input on wealth. First run had treasury/budget focus stuck on the CTA: their forms
+sit in a hidden tab, fixed by the ordered `go` list. On `wallet`, setting `#stat-assets`
+to `$1,250` removed the card; back to `$0` restored it. New
+`scripts/tests/test_empty_guide_contract.py` (3 tests). `ci-local.sh --all`: 39/39.
+
+## 2026-10-19 — One type scale: LIFE rendered 23 text sizes, several under 12px
+
+**Measured.** Rendered text sizes, 1440px: LIFE **23** distinct (9.92, 10, 10.56, 11,
+11.2, 11.52, 12.48, 12.8, 13, 14.4, 17.6, 23.2, 27.2px …), dashboard 14, VAULT 9. In
+source: 6,070 px/rem `font-size` declarations, ~1,400 of them off any scale, plus `font:`
+shorthands (`nav.js` `.ow-home` 11px, the module chips 10px) that the 2026-09-03 floor
+sweep (`scripts/type-scale.py`) never matched.
+
+**Change.** Six tokens in `css/omega-system.css` — `--fs-1..6` = 12/14/16/20/28/40px.
+Every off-scale px/rem size below 48px in root `.html/.js/.css` and `css/` became
+`var(--fs-N,<px>)` (1,415 `font-size` + 154 `font:` shorthand, 261 files): <12.5→12,
+<15→14, <18→16, <24→20, <34→28, <48→40. On-scale literals were left as written; ≥48px
+display sizes, canvas `ctx.font`, SVG `font-size` attributes, em/%/clamp are untouched.
+`omega-readmore.js`'s MORE pill was clipping its own label (51>42px, before and after);
+it now keeps its width (`flex:none;white-space:nowrap`).
+
+**Evidence.** After: LIFE **11** sizes (12/14/16/20/28 + clamp headings and ≥48 hero),
+dashboard 11, VAULT 7; nothing under 12px but SVG labels. Full estate before/after scan at
+390px (236 pages, `origin/main` served from a worktree vs this branch): **0** new
+horizontal scroll, **0** more clipped text elements, **0** SVG text changed, 0 errors. A
+first-pass scan flagged hercules +218% height; re-measured at 1.2 s and 5 s it is 1680 →
+1683px (scan noise). `type-scale.py --check` OK; `ci-local.sh --all` 39/39; 809 tests OK.
+
+## 2026-10-19 — Motion budget: ambient loops only where the member is looking
+
+**Measured** (`document.getAnimations()` running, 6 s after load, 1440px, main build):
+dashboard **71**, LIFE **35**, VAULT **28** infinite animations at rest. The bulk was five
+blanket rules: `omgBreath` on every `.card/.tier/.node/.tile/.mod` (omega-genesis.js, 24 on
+dashboard), `omTitleGlow` on every `.t/.brand/.sechead/.hero .nm/.topbar .t/h1`
+(omega-content.js), `omegaSignSpin` on every section sign (omega-content.js, 5),
+`omega-alive-breathe` on every dock glyph (omega-alive.js, 8), and `emblem-float` inline on
+12 dashboard section icons + every `.emblem-orb`.
+
+**Change.** Each now runs only on `:hover`/`:focus-within`, on the current section's glyph
+(`.on-active`/`[aria-current]`), or — for the title glow — on the page's `h1` alone.
+Keyframes, hover rotation and reduced-motion handling are unchanged; entrance animations
+are untouched (a blanket `animation-play-state:paused` was rejected because the same
+cards run `oa-fade-up`, which would have frozen them at opacity 0).
+
+**After:** dashboard **18**, LIFE **9**, VAULT **12**. The remainder is one loop each from
+separate chrome owners (nav.js `#omega-top`, `.topbar::after` seam, `.ofx-sheen`, the
+particle canvas pulses) — left as brand chrome, not decoration per item.
+`python3 -m unittest discover -s scripts/tests`: 809 OK.
+Also removed `omega-genesis.js` `destagger()`: a random 0–11 s inline `animation-delay` on
+every card (to desync the always-on breath) plus a subtree MutationObserver. With breathing
+hover-only it would only delay a hovered card's response. Entrances were **not** affected
+(measured: in-view dashboard cards 24/24 opaque by 2 s with and without it — the reveal
+sets its own delay), so no speed-up is claimed.
+
+
+## 2026-10-20 — Content pipeline E2E readiness probe retries transient timeouts
+
+**Failure observed.** Fresh Supabase migration replay passed, but the authenticated content pipeline test exited with a raw `timed out` exception during its initial `content-ingest` readiness probe. That exception bypassed the existing bounded retry loop, so the test never reached the intended readiness decision.
+
+**Fix.** `scripts/tests/test_content_pipeline_e2e.py` now treats Python socket/HTTP timeouts like transient URL errors in the probe request helper. The existing 90-second deadline remains authoritative; if the Edge Function never becomes ready, the test now reports `content_ingest_edge_runtime_not_ready` instead of aborting on the first timeout. This does not relax any auth, ownership, content-integrity, or audit assertion.
+
+**Verification status.** Patch queued for CI verification; no local Supabase stack was available in this environment.

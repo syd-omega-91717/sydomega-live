@@ -36,7 +36,7 @@
 
     <!-- OVERVIEW TAB -->
     <div class="tab-panel active pad" id="tab-overview">
-      <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi-row" data-stagger data-stagger-gap="70" data-omega-empty-guide="No assets recorded yet." data-omega-empty-cta="Add your first asset" data-omega-empty-go=".tab[data-tab='assets'] | button[onclick*='add-asset-form']" data-omega-empty-focus="#add-asset-form">
         <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-total">$0</div><div class="kpi-l">TOTAL WEALTH</div></div>
         <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-liquid">$0</div><div class="kpi-l">LIQUID</div></div>
         <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-illiquid">$0</div><div class="kpi-l">ILLIQUID</div></div>
@@ -265,7 +265,7 @@ function renderAssets(){
       +'<div style="flex:1">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">'
       +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+esc(a.type.toUpperCase())+'</div>'
-      +'<div style="font-size:13px;font-weight:600">'+esc(a.name)+'</div>'
+      +'<div style="font-size:var(--fs-2,14px);font-weight:600">'+esc(a.name)+'</div>'
       +'</div>'
       +(a.notes?'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(a.notes)+'</div>':'')
       +'</div>'
@@ -302,7 +302,7 @@ function renderFlows(){
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
       +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+(f.type==='in'?'+':'−')+'</div>'
       +'<div style="flex:1;font-size:12px">'+esc(f.desc)+'</div>'
-      +'<div style="font-family:var(--D);font-size:13px;color:'+col+'">'+fmt(f.amount)+'</div>'
+      +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:'+col+'">'+fmt(f.amount)+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(f.date)+'</div>'
       +'</div>';
   }).join('');
@@ -356,5 +356,6 @@ window.addFlow=function(){
 </script>
 <script src="/omega-local-backup.js"></script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}</script>
+<script src="/omega-empty-guide.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

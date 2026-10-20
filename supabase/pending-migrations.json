@@ -13,5 +13,4 @@
       "reason": "Move privileged RPC implementations out of the exposed public schema, validate the current simulation model contract, serialize and rate-limit member-owned writes, and make idempotent retries race-safe."
     }
   ]
-  "pending": []
 }

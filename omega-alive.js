@@ -60,8 +60,11 @@
         '50%{scale:1.1;text-shadow:0 0 12px currentColor}}' +
       '.omega-alive-turn{animation:omega-alive-turn var(--alive-turn,90s) linear infinite;' +
         'transform-box:fill-box;transform-origin:50% 50%}' +
-      '.omega-alive-breathe{animation:omega-alive-breathe 5.6s ease-in-out infinite;' +
-        'animation-delay:var(--alive-delay,0s);transition:rotate .9s cubic-bezier(.2,.8,.2,1)}' +
+      /* Motion budget (2026-10-19): a mark breathes when it is the current
+         section or under the pointer, not all of them at once (8 in the dock). */
+      '.omega-alive-breathe{transition:rotate .9s cubic-bezier(.2,.8,.2,1)}' +
+      '.on-active .omega-alive-breathe,[aria-current] .omega-alive-breathe,:hover>.omega-alive-breathe,.omega-alive-breathe:hover{' +
+        'animation:omega-alive-breathe 5.6s ease-in-out infinite;animation-delay:var(--alive-delay,0s)}' +
       ':hover>.omega-alive-breathe,.omega-alive-breathe:hover{rotate:360deg}' +
       /* --alive-base carries the element's own filter so the glow adds to it:
          omega-visual-evolution.css gives every canvas contrast/saturate. */

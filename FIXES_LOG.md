@@ -24741,26 +24741,81 @@ COSMOS, INVEST, ACHIEVE and MEDIA tooltips list the restored hrefs; the drawer c
 drawer links). `python3 -m unittest discover -s scripts/tests`: 809 OK.
 `./scripts/ci-local.sh --all`: all 39 blocking checks passed.
 
-## 2026-10-19 — Phone: two floats instead of four, a shorter dashboard, three broken glyphs
+## 2026-10-19 — A new member's money pages showed only zeros, with no next step
 
-**Measured at 390x700** (`position:fixed`, visible, pointer-events on): dashboard and LIFE
-carried four floats — `#omega-mob` (bottom nav), `#om-open` (all pages, top-left),
-`#cp-btn` (copilot) at **y 350, mid-screen**, and `#omega-command-hud` (a second Ω beside
-the copilot's Ω). `#om-open` duplicates the nav's MORE drawer; the HUD's six links
-(world, search, missions, notify, recovery, evidence) are all in the drawer. `#cp-btn`
-sat on the mobile ladder's 298px rung, which exists to clear four lower floats — but calm
-mode (`bg.js` `data-omega-calm`, on by default here) already hides all four.
+**Measured.** Headless render, signed-in stub with no data, 1440px: every KPI on
+`investment` (4), `treasury` (4), `wallet` (4), `revenue` (4), `budget` (4) and `wealth`
+(6) read `$0`/`0`/`0%`, and nothing on the page said what to do first.
 
-**Change (bg.js mobile ladder, ≤760px).** `#om-open` and `#omega-command-hud` step aside;
-`#cp-btn` sits at `--omega-chrome-bottom + 16px` under calm mode or when none of the four
-lower floats exists (`:has()`), else keeps the 298px rung. Desktop is untouched.
-**dashboard.html ≤560px:** the 24-portal command grid goes two columns with the icon beside
-the name and the description hidden (the card stays the link). **Glyphs:** SECURITY,
-AUTOMATE and PERSONAL OS rendered 頦 颁 箴 — decimal entity numbers written as hex escapes
-(`'頦'` for `&#9826;`). Now `♢`, `⚙︎`, `✎`; the repo-wide scan
-for `\u8xxx`/`\u9xxx`/`\u1xxxx` escapes found only these three.
+**Change.** `omega-empty-guide.js` (new, opt-in by `<script>` on those six pages). An
+element carrying `data-omega-empty-guide` gets one card after it while *every* figure in
+it (`.kpi-n .kpi-v .stat-num .nw-val`) reads zero; a MutationObserver removes the card the
+moment any figure is non-zero. The CTA clicks `data-omega-empty-go` (a `|` list, clicked
+in order: tab first, then the form's opener) and focuses the first field in
+`data-omega-empty-focus`. It reads the page's own numbers and never writes one (§8.1
+class 9). First verdict waits 1.2 s after `load` so arriving data does not flash it.
 
-**Evidence.** Floats at 390x700 on dashboard/LIFE/VAULT: `#omega-mob` + `#cp-btn` at
-y 571–623 (16px above the nav at 639). Command grid 2,288 → **772px**; dashboard height
-6,427 → **4,911px**; 0 clipped cells (INTELLIGENCE overflowed 2px at first; padding
-trimmed). `brand-glyph-check.py` OK; 809 tests OK.
+**Evidence.** Render at 1440 and 390 on all six: card present, CTA lands focus on
+`h-ticker`, `a-name` (treasury), `a-name` (wallet), `s-name`, `ex-amount`, and the new
+cash input on wealth. First run had treasury/budget focus stuck on the CTA: their forms
+sit in a hidden tab, fixed by the ordered `go` list. On `wallet`, setting `#stat-assets`
+to `$1,250` removed the card; back to `$0` restored it. New
+`scripts/tests/test_empty_guide_contract.py` (3 tests). `ci-local.sh --all`: 39/39.
+
+## 2026-10-19 — One type scale: LIFE rendered 23 text sizes, several under 12px
+
+**Measured.** Rendered text sizes, 1440px: LIFE **23** distinct (9.92, 10, 10.56, 11,
+11.2, 11.52, 12.48, 12.8, 13, 14.4, 17.6, 23.2, 27.2px …), dashboard 14, VAULT 9. In
+source: 6,070 px/rem `font-size` declarations, ~1,400 of them off any scale, plus `font:`
+shorthands (`nav.js` `.ow-home` 11px, the module chips 10px) that the 2026-09-03 floor
+sweep (`scripts/type-scale.py`) never matched.
+
+**Change.** Six tokens in `css/omega-system.css` — `--fs-1..6` = 12/14/16/20/28/40px.
+Every off-scale px/rem size below 48px in root `.html/.js/.css` and `css/` became
+`var(--fs-N,<px>)` (1,415 `font-size` + 154 `font:` shorthand, 261 files): <12.5→12,
+<15→14, <18→16, <24→20, <34→28, <48→40. On-scale literals were left as written; ≥48px
+display sizes, canvas `ctx.font`, SVG `font-size` attributes, em/%/clamp are untouched.
+`omega-readmore.js`'s MORE pill was clipping its own label (51>42px, before and after);
+it now keeps its width (`flex:none;white-space:nowrap`).
+
+**Evidence.** After: LIFE **11** sizes (12/14/16/20/28 + clamp headings and ≥48 hero),
+dashboard 11, VAULT 7; nothing under 12px but SVG labels. Full estate before/after scan at
+390px (236 pages, `origin/main` served from a worktree vs this branch): **0** new
+horizontal scroll, **0** more clipped text elements, **0** SVG text changed, 0 errors. A
+first-pass scan flagged hercules +218% height; re-measured at 1.2 s and 5 s it is 1680 →
+1683px (scan noise). `type-scale.py --check` OK; `ci-local.sh --all` 39/39; 809 tests OK.
+
+## 2026-10-19 — Motion budget: ambient loops only where the member is looking
+
+**Measured** (`document.getAnimations()` running, 6 s after load, 1440px, main build):
+dashboard **71**, LIFE **35**, VAULT **28** infinite animations at rest. The bulk was five
+blanket rules: `omgBreath` on every `.card/.tier/.node/.tile/.mod` (omega-genesis.js, 24 on
+dashboard), `omTitleGlow` on every `.t/.brand/.sechead/.hero .nm/.topbar .t/h1`
+(omega-content.js), `omegaSignSpin` on every section sign (omega-content.js, 5),
+`omega-alive-breathe` on every dock glyph (omega-alive.js, 8), and `emblem-float` inline on
+12 dashboard section icons + every `.emblem-orb`.
+
+**Change.** Each now runs only on `:hover`/`:focus-within`, on the current section's glyph
+(`.on-active`/`[aria-current]`), or — for the title glow — on the page's `h1` alone.
+Keyframes, hover rotation and reduced-motion handling are unchanged; entrance animations
+are untouched (a blanket `animation-play-state:paused` was rejected because the same
+cards run `oa-fade-up`, which would have frozen them at opacity 0).
+
+**After:** dashboard **18**, LIFE **9**, VAULT **12**. The remainder is one loop each from
+separate chrome owners (nav.js `#omega-top`, `.topbar::after` seam, `.ofx-sheen`, the
+particle canvas pulses) — left as brand chrome, not decoration per item.
+`python3 -m unittest discover -s scripts/tests`: 809 OK.
+Also removed `omega-genesis.js` `destagger()`: a random 0–11 s inline `animation-delay` on
+every card (to desync the always-on breath) plus a subtree MutationObserver. With breathing
+hover-only it would only delay a hovered card's response. Entrances were **not** affected
+(measured: in-view dashboard cards 24/24 opaque by 2 s with and without it — the reveal
+sets its own delay), so no speed-up is claimed.
+
+
+## 2026-10-20 — Content pipeline E2E readiness probe retries transient timeouts
+
+**Failure observed.** Fresh Supabase migration replay passed, but the authenticated content pipeline test exited with a raw `timed out` exception during its initial `content-ingest` readiness probe. That exception bypassed the existing bounded retry loop, so the test never reached the intended readiness decision.
+
+**Fix.** `scripts/tests/test_content_pipeline_e2e.py` now treats Python socket/HTTP timeouts like transient URL errors in the probe request helper. The existing 90-second deadline remains authoritative; if the Edge Function never becomes ready, the test now reports `content_ingest_edge_runtime_not_ready` instead of aborting on the first timeout. This does not relax any auth, ownership, content-integrity, or audit assertion.
+
+**Verification status.** Patch queued for CI verification; no local Supabase stack was available in this environment.

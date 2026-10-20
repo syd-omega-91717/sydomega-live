@@ -38,42 +38,29 @@ def route_for(path: Path) -> str | None:
 
 
 def check_route(route: str, expected_host: str) -> tuple[bool, str]:
-    encoded_route = quote(route, safe="/-._~")
-    request_path = encoded_route
+    request_path = quote(route, safe="/-._~")
     last_error = "unknown_error"
+
     for attempt in range(RETRIES + 1):
+        connection: http.client.HTTPSConnection | None = None
         try:
-            # Use a TLS-only connection to a validated hostname. This avoids passing
-            # an arbitrary/dynamic URL into urllib's scheme-capable URL opener.
+            # A TLS-only connection to a validated hostname prevents arbitrary URL
+            # schemes and hosts from entering the request path.
             connection = http.client.HTTPSConnection(expected_host, timeout=TIMEOUT)
-            try:
-                connection.request(
-                    "GET",
-                    request_path,
-                    headers={
-                        "User-Agent": "SYD-OMEGA-Production-Surface-Smoke/1.0",
-                        "Accept": "text/html,application/xhtml+xml",
-                        "Connection": "close",
-                    },
-                )
-                response = connection.getresponse()
-            request = Request(
-                url,
+            connection.request(
+                "GET",
+                request_path,
                 headers={
                     "User-Agent": "SYD-OMEGA-Production-Surface-Smoke/1.0",
                     "Accept": "text/html,application/xhtml+xml",
+                    "Connection": "close",
                 },
             )
-            # BASE_URL is refused unless it starts with https:// (main()), and every
-            # url here is BASE_URL + a route from the build; no file:// can reach this.
-            # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
-            with urlopen(request, timeout=TIMEOUT) as response:
-                status = response.status
-                content_type = response.getheader("Content-Type", "").lower()
-                body = response.read(256 * 1024).lower()
-                location = response.getheader("Location")
-            finally:
-                connection.close()
+            response = connection.getresponse()
+            status = response.status
+            content_type = response.getheader("Content-Type", "").lower()
+            location = response.getheader("Location")
+            body = response.read(256 * 1024).lower()
 
             if status in (301, 302, 303, 307, 308):
                 if not location:
@@ -104,8 +91,13 @@ def check_route(route: str, expected_host: str) -> tuple[bool, str]:
             return True, route
         except (OSError, http.client.HTTPException, TimeoutError) as exc:
             last_error = type(exc).__name__
+        finally:
+            if connection is not None:
+                connection.close()
+
         if attempt < RETRIES:
             time.sleep(min(2 ** attempt, 4))
+
     return False, f"{route} {last_error}"
 
 

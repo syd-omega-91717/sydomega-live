@@ -59,6 +59,17 @@ class MemberRpcWriteGuardrailsContract(unittest.TestCase):
         self.assertIn("metadata ->> 'idempotency_key' = p_idempotency_key", self.sql)
         self.assertIn("world_action_rate_limited", self.sql)
 
+    def test_public_rpc_is_invoker_only_and_privileged_implementation_is_private(self):
+        self.assertIn("CREATE SCHEMA IF NOT EXISTS omega_private", self.sql)
+        self.assertIn("GRANT USAGE ON SCHEMA omega_private TO authenticated", self.sql)
+        self.assertIn("CREATE OR REPLACE FUNCTION omega_private.omega_record_simulation_run", self.sql)
+        self.assertIn("CREATE OR REPLACE FUNCTION omega_private.omega_record_world_action", self.sql)
+        self.assertIn("CREATE OR REPLACE FUNCTION public.omega_record_simulation_run", self.sql)
+        self.assertIn("CREATE OR REPLACE FUNCTION public.omega_record_world_action", self.sql)
+        self.assertGreaterEqual(self.sql.count("SECURITY INVOKER"), 2)
+        self.assertIn("SECURITY INVOKER PostgREST wrapper", self.sql)
+        self.assertNotIn("CREATE OR REPLACE FUNCTION public.omega_record_simulation_run(\n  p_model_key text,\n  p_model_version text,\n  p_deterministic_seed bigint,\n  p_input_snapshot jsonb,\n  p_result_snapshot jsonb\n)\nRETURNS public.omega_simulation_runs\nLANGUAGE plpgsql\nSECURITY DEFINER", self.sql)
+
     def test_privileged_write_boundaries_remain_narrow(self):
         self.assertGreaterEqual(self.sql.lower().count("security definer"), 2)
         self.assertGreaterEqual(self.sql.lower().count("set search_path = ''"), 2)

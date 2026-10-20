@@ -46,7 +46,7 @@
     '.otg-lock{position:relative!important}',
     '.otg-lock>*{filter:blur(6px);pointer-events:none;user-select:none}',
     '.otg-seal{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(6,6,12,.6);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:inherit;font-family:"Courier Prime",monospace;text-align:center;padding:10px}',
-    '.otg-seal .ic{font-size:24px;color:#C9A84C}',
+    '.otg-seal .ic{font-size:var(--fs-5,28px);color:#C9A84C}',
     '.otg-seal .rq{font-size:12px;letter-spacing:2px;color:#E2C86D}',
     '.otg-seal .hint{font-size:12px;letter-spacing:1px;color:#8a8676}',
     '.otg-seal a{color:#C9A84C;text-decoration:none;border-bottom:1px solid rgba(201,168,76,.4)}',

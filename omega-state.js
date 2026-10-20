@@ -50,7 +50,7 @@
     } else {
       box.style.cssText = 'padding:28px;text-align:center';
       var icon = document.createElement('div');
-      icon.style.cssText = 'font-family:var(--D,\'Cinzel Decorative\',serif);font-size:36px;color:rgba(201,168,76,.12);margin-bottom:10px';
+      icon.style.cssText = 'font-family:var(--D,\'Cinzel Decorative\',serif);font-size:var(--fs-6,40px);color:rgba(201,168,76,.12);margin-bottom:10px';
       icon.textContent = String(options.icon || 'Ω');
       var label = document.createElement('div');
       label.style.cssText = 'font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.4)';

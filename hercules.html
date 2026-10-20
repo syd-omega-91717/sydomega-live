@@ -8,27 +8,27 @@
   <style>
     .labors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
     .labor-card { padding: 1.5rem; --card-edge-w: 4px; }
-    .labor-num { font-size: 0.85rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
-    .labor-title { font-size: 1.3rem; margin: 0.5rem 0; font-family: var(--D); }
-    .labor-desc { font-size: 0.95rem; line-height: 1.6; color: var(--ink); opacity: 0.9; margin: 1rem 0; }
+    .labor-num { font-size: var(--fs-2,14px); letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+    .labor-title { font-size: var(--fs-4,20px); margin: 0.5rem 0; font-family: var(--D); }
+    .labor-desc { font-size: var(--fs-3,16px); line-height: 1.6; color: var(--ink); opacity: 0.9; margin: 1rem 0; }
     .labor-progress { margin-top: 1rem; }
     .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--gold)); transition: width 0.3s ease; }
-    .trial-meta { display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.9rem; flex-wrap: wrap; }
+    .trial-meta { display: flex; gap: 1rem; margin-top: 1rem; font-size: var(--fs-2,14px); flex-wrap: wrap; }
     .trial-tag { padding: 0.25rem 0.75rem; background: rgba(255,255,255,0.05); border-radius: 12px; }
     #labors-list { min-height: 400px; }
-    .labor-state { font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 0.75rem; }
+    .labor-state { font-size: var(--fs-2,14px); letter-spacing: 2px; text-transform: uppercase; margin-top: 0.75rem; }
     .labor-state.done { color: var(--green); }
     .labor-state.open { color: var(--muted); }
-    .labor-act { margin-top: 1rem; min-height: 24px; padding: 0.4rem 0.9rem; font-size: 0.8rem;
+    .labor-act { margin-top: 1rem; min-height: 24px; padding: 0.4rem 0.9rem; font-size: var(--fs-2,14px);
       letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;
       background: rgba(255,255,255,0.05); color: var(--ink);
       border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; }
     .labor-act[disabled] { opacity: 0.45; cursor: default; }
-    .labor-msg { font-size: 0.8rem; margin-top: 0.5rem; min-height: 1em; }
+    .labor-msg { font-size: var(--fs-2,14px); margin-top: 0.5rem; min-height: 1em; }
     .labor-msg.err { color: var(--crim); }
     .labor-card.done { opacity: 1; }
-    #labors-error { color: var(--crim); font-size: 0.9rem; }
+    #labors-error { color: var(--crim); font-size: var(--fs-2,14px); }
   </style>
 </head>
 <body data-page="hercules">
@@ -48,7 +48,7 @@
           <div class="progress-bar">
             <div id="overall-fill" class="progress-fill" style="width:0%"></div>
           </div>
-          <div id="overall-label" style="font-size:0.85rem;margin-top:0.5rem;color:var(--muted);">LOADING YOUR RECORD…</div>
+          <div id="overall-label" style="font-size:var(--fs-2,14px);margin-top:0.5rem;color:var(--muted);">LOADING YOUR RECORD…</div>
         </div>
       </div>
 

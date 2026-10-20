@@ -2,5 +2,16 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
+  "pending": [
+    {
+      "version": "20261017114500",
+      "file": "20261017114500_member_rpc_write_guardrails_20261017.sql",
+      "name": "member_rpc_write_guardrails_20261017",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Move privileged RPC implementations out of the exposed public schema, validate the current simulation model contract, serialize and rate-limit member-owned writes, and make idempotent retries race-safe."
+    }
+  ]
   "pending": []
 }

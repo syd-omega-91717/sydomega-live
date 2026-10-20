@@ -31,7 +31,7 @@
     }
 
     .agent-name {
-      font-size: 1.2rem;
+      font-size: var(--fs-4,20px);
       font-weight: 600;
       color: var(--gold);
       font-family: var(--D);
@@ -75,7 +75,7 @@
 
     .metric-label {
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: var(--fs-2,14px);
     }
 
     .metric-value {
@@ -121,7 +121,7 @@
     }
 
     .insights-title {
-      font-size: 1.4rem;
+      font-size: var(--fs-4,20px);
       font-family: var(--D);
       color: var(--gold);
       margin-bottom: 1.5rem;
@@ -154,7 +154,7 @@
       color: var(--gold);
       font-weight: 600;
       font-family: var(--M);
-      font-size: 0.85rem;
+      font-size: var(--fs-2,14px);
     }
 
     .insight-impact {
@@ -170,7 +170,7 @@
 
     .insight-recommendation {
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: var(--fs-2,14px);
       padding-top: 0.75rem;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
@@ -197,14 +197,14 @@
 
     .recommendation-text {
       color: var(--ink);
-      font-size: 0.9rem;
+      font-size: var(--fs-2,14px);
       margin-bottom: 0.75rem;
     }
 
     .estimated-impact {
       color: var(--green);
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: var(--fs-3,16px);
     }
 
     .tabs {
@@ -223,7 +223,7 @@
       cursor: pointer;
       font-weight: 600;
       font-family: var(--M);
-      font-size: 0.9rem;
+      font-size: var(--fs-2,14px);
       position: relative;
       transition: color 0.3s;
     }
@@ -283,7 +283,7 @@
       color: var(--void);
       padding: 0.25rem 0.75rem;
       border-radius: 12px;
-      font-size: 0.8rem;
+      font-size: var(--fs-2,14px);
       font-weight: 600;
     }
 
@@ -294,7 +294,7 @@
       border: 1px solid var(--cyan);
       border-radius: 4px;
       color: var(--cyan);
-      font-size: 0.8rem;
+      font-size: var(--fs-2,14px);
       font-family: var(--M);
     }
 
@@ -312,11 +312,11 @@
     }
 
     .section-icon {
-      font-size: 1.5rem;
+      font-size: var(--fs-5,28px);
     }
 
     .section-title {
-      font-size: 1.3rem;
+      font-size: var(--fs-4,20px);
       font-family: var(--D);
       color: var(--gold);
     }
@@ -333,7 +333,7 @@
 
         <!-- Agent Performance Overview -->
         <div class="section-header" style="margin-top: 2rem">
-          <h2 class="section-title" style="font-size: 1.1rem">Agent Performance</h2>
+          <h2 class="section-title" style="font-size: var(--fs-3,16px)">Agent Performance</h2>
         </div>
 
         <div class="autonomous-grid" id="agent-performance" data-stagger data-stagger-gap="60">
@@ -475,10 +475,10 @@
         card.setAttribute("data-reveal", "depth-in");
         card.innerHTML = `
           <div class="agent-header">
-            <span style="font-size: 1.5rem">${info.icon}</span>
+            <span style="font-size: var(--fs-5,28px)">${info.icon}</span>
             <div>
               <div class="agent-name">${info.name}</div>
-              <div style="color: var(--muted); font-size: 0.85rem">${info.description}</div>
+              <div style="color: var(--muted); font-size: var(--fs-2,14px)">${info.description}</div>
             </div>
             <div class="agent-status ${performanceScore > 0 ? "" : "inactive"}"></div>
           </div>

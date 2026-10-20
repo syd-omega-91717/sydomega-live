@@ -42,6 +42,10 @@
   --D:"Cinzel Decorative",serif;
   --R:"Rajdhani",sans-serif;
   --M:"Courier Prime",monospace;
+  /* TYPE SCALE — six steps, owner decision 2026-10-19 (LIFE rendered 23 sizes,
+     ~575 declarations sat under 12px). Off-scale sizes were snapped to these;
+     new rules use var(--fs-N). Hero/display sizes >=48px stay page-owned. */
+  --fs-1:12px; --fs-2:14px; --fs-3:16px; --fs-4:20px; --fs-5:28px; --fs-6:40px;
   /* SPACING — REFINED SCALE (8px base, 1.5x progression for visual harmony) */
   --sp-xs:4px; --sp-sm:8px; --sp-md:12px;
   --sp-lg:18px; --sp-xl:28px; --sp-2xl:42px;
@@ -231,7 +235,7 @@ body:has(> aside#omega-side:not([style*="display:none"]):not([hidden])){display:
 @media(prefers-reduced-motion:reduce){
   .card-title::before{transition:opacity .3s ease}
   .card:hover>.card-title::before{transform:rotate(45deg)}}
-:where(.card-body){font-size:13px;color:var(--muted);line-height:1.6}
+:where(.card-body){font-size:var(--fs-2,14px);color:var(--muted);line-height:1.6}
 
 /* ── SECTION HEADERS ────────────────────────────────────────────────────── */
 .sechead{
@@ -260,7 +264,7 @@ body:has(> aside#omega-side:not([style*="display:none"]):not([hidden])){display:
   border-bottom:1px solid rgba(201,168,76,.1)}
 .tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--solar)}
 .tbl-row{display:grid;padding:9px 12px;border-bottom:1px solid rgba(201,168,76,.05);
-  font-size:12.5px;transition:.12s}
+  font-size:var(--fs-2,14px);transition:.12s}
 .tbl-row:hover{background:rgba(201,168,76,.02)}
 .tbl-row:last-child{border-bottom:none}
 
@@ -409,7 +413,7 @@ body:has(> aside#omega-side:not([style*="display:none"]):not([hidden])){display:
 }
 @media(max-width:480px){
   .kpi-row{grid-template-columns:1fr}
-  .topbar .t{font-size:.7rem}
+  .topbar .t{font-size:var(--fs-1,12px)}
 }
 
 /* ── SCROLLBAR STYLING ──────────────────────────────────────────────────── */
@@ -958,7 +962,7 @@ button:not([class]):hover{
    than being hidden -- the label is the only thing naming what the scene is. */
 @media (max-width:700px){
   .osc-cap{ padding:10px 12px; }
-  .osc-cap span{ font-size:11px; letter-spacing:.12em; }
+  .osc-cap span{ font-size:var(--fs-1,12px); letter-spacing:.12em; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════

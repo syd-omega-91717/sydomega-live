@@ -141,7 +141,7 @@
     var title=document.createElement('div');title.className='sechead';title.textContent='ACTIVE DISTRICT · WORLD PURPOSE';
     var body=document.createElement('div');body.className='card';body.style.cssText='padding:14px;margin-bottom:16px';
     var name=document.createElement('div');name.style.cssText='font-family:var(--D);font-size:16px;color:var(--gold);margin-bottom:5px';name.dataset.focusName='true';
-    var purpose=document.createElement('div');purpose.style.cssText='font-size:13px;line-height:1.7;color:var(--muted);margin-bottom:8px';purpose.dataset.focusPurpose='true';
+    var purpose=document.createElement('div');purpose.style.cssText='font-size:var(--fs-2,14px);line-height:1.7;color:var(--muted);margin-bottom:8px';purpose.dataset.focusPurpose='true';
     var agent=document.createElement('div');agent.style.cssText='font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--cyan)';agent.dataset.focusAgent='true';
     body.appendChild(name);body.appendChild(purpose);body.appendChild(agent);host.appendChild(title);host.appendChild(body);
   }

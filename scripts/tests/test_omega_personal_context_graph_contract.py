@@ -62,6 +62,8 @@ class PersonalContextGraphContract(unittest.TestCase):
         self.assertIn("fetchAllForExport", self.client)
         self.assertIn("export_size_limit", self.client)
         self.assertIn("exportComplete:true", self.client)
+        self.assertIn("preferencesExists", self.client)
+        self.assertNotIn(".upsert(", self.client)
 
     def test_cross_surface_links_and_change_event_exist(self):
         self.assertIn('id="personal-context"', self.life)

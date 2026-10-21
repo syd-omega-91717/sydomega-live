@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import http.client
+import ssl
 import os
 import sys
 import time
@@ -46,7 +47,13 @@ def check_route(route: str, expected_host: str) -> tuple[bool, str]:
         try:
             # A TLS-only connection to a validated hostname prevents arbitrary URL
             # schemes and hosts from entering the request path.
-            connection = http.client.HTTPSConnection(expected_host, timeout=TIMEOUT)
+            # Explicit default TLS context validates the server certificate and hostname.
+            # This is a TLS-only smoke probe to a validated host, not an unencrypted HTTP request.
+            connection = http.client.HTTPSConnection(  # nosemgrep: python.lang.security.audit.httpsconnection-detected.httpsconnection-detected
+                expected_host,
+                timeout=TIMEOUT,
+                context=ssl.create_default_context(),
+            )
             connection.request(
                 "GET",
                 request_path,

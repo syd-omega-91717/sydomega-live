@@ -26,6 +26,8 @@ class CommandPaletteOwnershipContract(unittest.TestCase):
         self.assertIn("input.setAttribute('aria-activedescendant','omega-command-option-'+active)", self.nav)
         self.assertIn("row.id='omega-command-option-'+i", self.nav)
         self.assertIn("input.removeAttribute('aria-activedescendant')", self.nav)
+        self.assertIn("row.addEventListener('mouseenter',function(){setActive(i);});", self.nav)
+        self.assertNotIn("row.addEventListener('mouseenter',function(){active=i;render(input.value);});", self.nav)
 
     def test_keyboard_help_matches_the_primary_command(self):
         self.assertIn("desc:'Open quick navigation'", self.keyboard)

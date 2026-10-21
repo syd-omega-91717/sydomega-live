@@ -883,8 +883,19 @@
         var name=document.createElement('span');name.textContent=x.label;name.style.cssText='display:block;font:600 var(--fs-2,14px) Rajdhani,sans-serif;letter-spacing:.8px';
         var meta=document.createElement('span');meta.textContent=x.section+' · '+x.href;meta.style.cssText='display:block;margin-top:2px;color:rgba(255,255,255,.4);font:12px "Courier Prime",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
         body.appendChild(name);body.appendChild(meta);row.appendChild(ico);row.appendChild(body);list.appendChild(row);
-        row.addEventListener('mouseenter',function(){active=i;render(input.value);});
+        row.addEventListener('mouseenter',function(){setActive(i);});
       });
+    }
+    function setActive(index){
+      active=index;
+      var options=list.querySelectorAll('[role="option"]');
+      for(var oi=0;oi<options.length;oi++){
+        var selected=oi===active;
+        options[oi].setAttribute('aria-selected',String(selected));
+        options[oi].style.background=selected?'rgba(201,168,76,.12)':'transparent';
+      }
+      if(active>=0&&active<filtered.length)input.setAttribute('aria-activedescendant','omega-command-option-'+active);
+      else input.removeAttribute('aria-activedescendant');
     }
     function move(delta){
       if(!filtered.length)return;

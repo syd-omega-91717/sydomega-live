@@ -21,6 +21,8 @@ class LivingObjectTruthContract(unittest.TestCase):
         self.assertIn("NO VERIFIED ACTION REGISTERED", self.source)
         self.assertIn("if(act==='OPEN'&&pg){location.href=pg;return;}", self.source)
         self.assertNotIn("showToast(act+': '+title", self.source)
+        self.assertNotIn("showToast('Admin mode:'", self.source)
+        self.assertIn("location.href='/control-center.html'", self.source)
         start = self.source.index("function showContextMenu")
         end = self.source.index("function hideContextMenu", start)
         menu = self.source[start:end]
@@ -30,6 +32,8 @@ class LivingObjectTruthContract(unittest.TestCase):
     def test_unregistered_insights_do_not_invent_facts(self):
         self.assertIn("No verified object contract is registered.", self.source)
         self.assertIn("Treat values and behavior as unverified.", self.source)
+        self.assertIn("insightTarget&&insightTarget.parentNode===_panel", self.source)
+        self.assertNotIn("document.getElementById('oa-insight-text')", self.source)
         start = self.source.index("function getInsight")
         end = self.source.index("/* ── HOVER PANEL", start)
         self.assertNotIn("OmegaIntelligence.ask", self.source[start:end])

@@ -1,0 +1,48 @@
+/* Ω Personal Context Graph — accessible, private-first extension of Ω LIFE. */
+#omega-personal-context{margin-top:28px;border:1px solid rgba(201,168,76,.28);background:linear-gradient(145deg,rgba(10,10,15,.96),rgba(2,2,6,.96));padding:clamp(16px,2.5vw,28px);border-radius:14px}
+.pc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;border-bottom:1px solid rgba(201,168,76,.2);padding-bottom:16px;margin-bottom:18px}
+.pc-kicker{font:12px "Courier Prime",monospace;letter-spacing:2px;color:#00e5ff;text-transform:uppercase}
+.pc-head h2{font:600 clamp(20px,2.4vw,30px) Cinzel,serif;color:#e8c97a;margin:6px 0}
+.pc-lede,.pc-help{font:14px/1.65 "Rajdhani",sans-serif;color:#b9b6aa;max-width:900px}
+.pc-truth{font:12px "Courier Prime",monospace;color:#00e5ff;border:1px solid rgba(0,229,255,.3);padding:8px 10px;white-space:normal}
+.pc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}
+.pc-panel{border:1px solid rgba(201,168,76,.17);background:rgba(10,10,15,.58);padding:16px;min-width:0}
+.pc-panel h3{font:600 15px Cinzel,serif;color:#e8c97a;margin:0 0 12px}
+.pc-consents{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pc-consent{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid rgba(201,168,76,.16);background:rgba(0,0,0,.2);color:#e9e6dc;font:14px/1.4 "Rajdhani",sans-serif}
+.pc-consent input{margin-top:3px;accent-color:#c9a84c;width:18px;height:18px;flex:0 0 auto}
+.pc-consent small{display:block;color:#8f8c83;font-size:12px;margin-top:4px}
+.pc-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pc-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.pc-field.full{grid-column:1/-1}
+.pc-field label{font:12px "Courier Prime",monospace;color:#c9a84c;letter-spacing:.5px}
+.pc-field input,.pc-field select,.pc-field textarea{width:100%;box-sizing:border-box;background:#050508;color:#f1eee5;border:1px solid #38342a;border-radius:5px;padding:11px;font:15px/1.5 "Rajdhani",sans-serif;min-height:42px}
+.pc-field textarea{min-height:150px;resize:vertical}
+.pc-field input:focus,.pc-field select:focus,.pc-field textarea:focus{outline:2px solid #00e5ff;outline-offset:1px}
+.pc-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pc-button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 13px;background:#11100c;color:#e8c97a;border:1px solid rgba(201,168,76,.45);border-radius:5px;cursor:pointer;font:12px "Courier Prime",monospace;letter-spacing:.5px;text-decoration:none}
+.pc-button:hover{border-color:#00e5ff;color:#00e5ff}
+.pc-button:disabled{opacity:.45;cursor:not-allowed}
+.pc-button.danger{border-color:rgba(255,90,90,.45);color:#ffb2b2}
+.pc-status{min-height:24px;margin:10px 0;color:#00e5ff;font:13px/1.5 "Courier Prime",monospace}
+.pc-status[data-kind="error"]{color:#ff9b9b}
+.pc-status[data-kind="warning"]{color:#e8c97a}
+.pc-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pc-item{border:1px solid rgba(201,168,76,.18);padding:14px;background:rgba(2,2,6,.58);min-width:0}
+.pc-item h4{font:600 15px Cinzel,serif;color:#f0d98c;margin:0 0 8px;overflow-wrap:anywhere}
+.pc-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.pc-tag{font:11px "Courier Prime",monospace;color:#00e5ff;border:1px solid rgba(0,229,255,.2);padding:4px 6px}
+.pc-content{font:14px/1.6 "Rajdhani",sans-serif;color:#d0cdc3;white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto}
+.pc-item details{margin-top:10px}
+.pc-item summary{color:#e8c97a;cursor:pointer;font:12px "Courier Prime",monospace}
+.pc-item-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.pc-empty{border:1px dashed rgba(201,168,76,.2);padding:18px;color:#9e9a8f;font:14px/1.6 "Rajdhani",sans-serif;grid-column:1/-1}
+.pc-links{display:grid;gap:8px}
+.pc-link-row{display:flex;gap:10px;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(201,168,76,.12);padding:8px 0;font:13px/1.5 "Rajdhani",sans-serif;color:#d7d2c4}
+.pc-link-row span{overflow-wrap:anywhere}
+.pc-mini{font:12px/1.6 "Courier Prime",monospace;color:#8f8c83}
+.pc-summary{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.8);padding:14px;margin:14px 0}
+.pc-summary h3{font:600 15px Cinzel,serif;color:#e8c97a;margin:0 0 8px}
+.pc-summary p{font:14px/1.6 "Rajdhani",sans-serif;color:#b9b6aa;margin:0 0 10px}
+@media(max-width:760px){.pc-grid,.pc-list,.pc-consents,.pc-form{grid-template-columns:1fr}.pc-field.full{grid-column:auto}.pc-head{align-items:stretch}.pc-truth{align-self:flex-start}.pc-button{min-height:44px}}
+@media(prefers-reduced-motion:reduce){#omega-personal-context *{scroll-behavior:auto!important;transition:none!important}}

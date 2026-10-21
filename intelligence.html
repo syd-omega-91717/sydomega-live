@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>&#937; SYD OMEGA 91717 &mdash; Intelligence Engine</title>\n<meta name="description" content="Ω SYD OMEGA 91717 intelligence command surface for search, analytics, AI-assisted research and evidence.">
+<title>&#937; SYD OMEGA 91717 &mdash; Intelligence Engine</title>
+<meta name="description" content="Ω SYD OMEGA 91717 intelligence command surface for search, analytics, AI-assisted research and evidence.">
 <link rel="manifest" href="/manifest.json">
 <style>
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
@@ -63,6 +64,7 @@
 .sci-ref{font-size:12px;color:var(--muted);margin-top:8px;font-family:'Courier New',monospace}
 .data-reality{border:1px solid rgba(155,107,240,.25);background:rgba(10,10,15,.6);padding:16px;margin-bottom:20px}.data-reality-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:12px}.data-reality-head b{font-family:'Courier New',monospace;font-size:12px;letter-spacing:2px;color:#9B6BF0}.data-reality-head span{font-family:'Courier New',monospace;font-size:12px;color:var(--muted)}.data-source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.data-source-card{border:1px solid #1a1a1a;background:#0d0d0d;padding:12px;display:grid;gap:5px}.data-source-card b{font-family:'Courier New',monospace;font-size:12px;color:#e0e0e0}.data-source-card span{font-family:'Courier New',monospace;font-size:12px;color:var(--muted)}.data-source-card .data-source-state{color:#9B6BF0;letter-spacing:1px}.data-source-card small,.data-source-card p{font-size:12px;color:var(--muted);line-height:1.45;margin:0}.data-source-empty{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);padding:10px}
 </style>
+<link rel="stylesheet" href="/omega-personal-context.css">
 </head>
 <body>
 <div class="shell">
@@ -70,6 +72,7 @@
 <main class="main">
 <div class="topbar omega-signal-sweep"><div class="t">INTELLIGENCE ENGINE<small>SCAN · ANALYZE · SYNTHESIZE · DECIDE · SYD OMEGA 91717</small></div></div>
 <div style="padding:20px var(--pad,20px)">
+<section id="personal-context" class="pc-summary" aria-label="Personal context integration"><div id="omega-personal-context-summary"><h3>PERSONAL CONTEXT GRAPH</h3><p>Bring your user-authored reflections, goals, skills, knowledge and relationship context into one private workspace.</p><a class="pc-button" href="/life.html#personal-context">OPEN YOUR PRIVATE CONTEXT</a></div></section>
 
 <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "INTEL") -->
 <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
@@ -542,5 +545,6 @@ renderStats();
 window.addEventListener("DOMContentLoaded",function(){if(window.OmegaDataReality){window.OmegaDataReality.render("data-source-grid").then(function(r){var e=document.getElementById("data-reality-status");if(e)e.textContent=r.state+" · "+r.count+" source(s)";});}});
 </script>
 <script src="/bg.js" defer></script>
+<script src="/omega-personal-context.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

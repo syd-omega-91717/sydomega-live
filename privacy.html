@@ -200,6 +200,7 @@ window.updateConsent=async function(type,granted){
       return;
     }
     if(lbl)lbl.textContent=granted?'GRANTED':'NOT GRANTED';
+    document.dispatchEvent(new CustomEvent('omega:consent-changed',{detail:{type:type,granted:granted}}));
     showMsg('consent-msg',true,'CONSENT UPDATED: '+type.toUpperCase()+' = '+(granted?'GRANTED':'REVOKED'));
   }catch(e){
     if(tog)tog.checked=!granted;

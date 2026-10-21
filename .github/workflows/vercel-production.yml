@@ -211,27 +211,40 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - name: Live site serves this commit (Cloudflare Pages)
+      - name: Live site serves this commit and every built route (Cloudflare Pages)
         if: env.VERCEL_PROMOTION_POSTPONED == 'true' && (github.event_name == 'push' || inputs.deploy == true)
         env:
           OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
         shell: bash
         run: |
           set -euo pipefail
-          echo '::notice title=Vercel promotion postponed::Vercel credits are not renewed; production is Cloudflare Pages. Verifying the live site instead.'
+          echo '::notice title=Vercel promotion postponed::Vercel credits are not renewed; production is Cloudflare Pages. Verifying release identity and every built HTML route instead.'
           # Cloudflare builds this push itself (2-5 min). A later push may land
-          # first, so a served commit that CONTAINS this one also passes.
+          # first, so a served descendant is acceptable only after we check out
+          # that exact deployed commit and build the route inventory from it.
+          verify_served_release() {
+            local release_sha="$1"
+            if [[ "$release_sha" != "$GITHUB_SHA" ]]; then
+              git checkout --detach "$release_sha"
+            fi
+            EXPECTED_RELEASE_SHA="$release_sha" bash scripts/vercel-production-smoke.sh
+            EXPECTED_RELEASE_SHA="$release_sha" OMEGA_PRODUCTION_BASE_URL=https://www.sydomega.com bash scripts/vercel-production-smoke.sh
+            OMEGA_RELEASE_SHA="$release_sha" bash scripts/vercel-build.sh
+            OMEGA_PRODUCTION_BASE_URL="$OMEGA_PRODUCTION_BASE_URL" \
+              OMEGA_PUBLIC_DIR=public OMEGA_SMOKE_WORKERS=12 OMEGA_SMOKE_RETRIES=2 \
+              python scripts/vercel-production-surface-smoke.py
+          }
           for attempt in $(seq 1 45); do
             served="$(curl --silent --fail --proto '=https' --max-time 20 "$OMEGA_PRODUCTION_BASE_URL/.well-known/omega-release.json" \
               | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})' || true)"
             if [[ "$served" == "$GITHUB_SHA" ]]; then
-              EXPECTED_RELEASE_SHA="$GITHUB_SHA" bash scripts/vercel-production-smoke.sh
+              verify_served_release "$served"
               exit 0
             fi
             if [[ "$served" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "$served^{commit}" 2>/dev/null \
                && git merge-base --is-ancestor "$GITHUB_SHA" "$served"; then
               echo "LIVE_SITE=PASS served=$served contains=$GITHUB_SHA"
-              bash scripts/vercel-production-smoke.sh
+              verify_served_release "$served"
               exit 0
             fi
             echo "attempt=$attempt served=${served:-none} waiting_for=$GITHUB_SHA"

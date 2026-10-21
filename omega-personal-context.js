@@ -21,6 +21,7 @@
   function setStatus(message,kind){var e=el('pc-status');if(!e)return;e.textContent=message||'';e.dataset.kind=kind||'info';}
   function setTruth(message){var e=el('pc-truth');if(e)e.textContent=message;}
   function asDate(value){if(!value)return 'date unavailable';var d=new Date(value);return Number.isNaN(d.getTime())?'date unavailable':d.toLocaleString();}
+  function dispatchAiConsent(){document.dispatchEvent(new CustomEvent('omega:consent-changed',{detail:{type:'ai_personalization',granted:preferences.ai_personalization_enabled===true}}));}
   function dispatchChanged(){window.dispatchEvent(new CustomEvent('omega:personal-context:changed',{detail:{count:items.length,linkedCount:links.length,aiEligibleCount:getAiEligibleContext().length}}));}
   function getAiEligibleContext(){
     if(!preferences.ai_personalization_enabled)return [];
@@ -109,7 +110,7 @@
       row.append(label,del);list.appendChild(row);
     });
   }
-  function renderAll(){renderItems();renderLinkControls();renderSummary();syncPreferenceControls();updatePublicApi();dispatchChanged();}
+  function renderAll(){renderItems();renderLinkControls();renderSummary();syncPreferenceControls();updatePublicApi();dispatchChanged();dispatchAiConsent();}
   async function refresh(){
     if(!sb||!uid)return;
     var summaryOnly=!root&&!!summary;
@@ -145,6 +146,7 @@
     if(r.error){setStatus('Preference update failed. Existing saved preferences remain authoritative. Refresh and retry if another tab changed these settings.','error');return false;}
     preferencesExists=true;
     setStatus('Privacy preferences saved. AI and web research are not invoked by this page.','info');
+    dispatchAiConsent();
     return true;
   }
   function resetForm(){

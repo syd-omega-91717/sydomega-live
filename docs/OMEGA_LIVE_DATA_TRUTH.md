@@ -12,7 +12,7 @@ The shared live-data engine must distinguish a successful value from loading, a 
 - **unavailable** — the required session, source, or value is missing.
 - **error** — the provider query failed; the UI shows an em dash rather than retaining a stale value.
 
-The engine records the state in data-live-state for audit, styling, and future diagnostics. Missing authentication does not mark a binding complete, so the next profile-population event can retry. A sign-out clears member-scoped live values and refresh timers. Owner status does not inject hard-coded axes or an authority score; the score is calculated from persisted axes.
+The engine records the state in data-live-state for audit, styling, and future diagnostics. Missing authentication does not mark a binding complete, so the next profile-population event can retry. A sign-out clears member-scoped live values and refresh timers. The live binding engine does not inject hard-coded owner axes or an authority score; it calculates the presentation score from the axes supplied by the canonical profile-population path. Treat that score as calculated presentation, not server-authoritative state.
 
 Public member counts and activity tickers use the same visible loading/unavailable/error states, while keeping their data access separate from member-scoped profile bindings.
 

@@ -13,6 +13,20 @@ assert(!source.includes('hasPersonalisationConsent'), 'no stale legacy consent f
 assert(!source.includes("from('consent_records')"), 'legacy presence/activity consent must not authorize AI memory');
 const contextSource = fs.readFileSync('omega-personal-context.js', 'utf8');
 assert(contextSource.includes("type:'ai_personalization'"), 'personal context must synchronize the canonical AI consent state');
+const conciergeSource = fs.readFileSync('supabase/functions/concierge/index.ts', 'utf8');
+assert(conciergeSource.includes('from("omega_personal_context_preferences")'), 'concierge must verify the canonical AI consent server-side');
+assert(conciergeSource.includes('const safeContext = personalizationAllowed && context'), 'concierge must omit profile context unless AI consent is verified');
+const consentGateIndex = conciergeSource.indexOf('if (personalizationAllowed) {');
+const memoryRecallIndex = conciergeSource.indexOf('supabase.rpc("recall_ai_context"', consentGateIndex);
+assert(consentGateIndex >= 0 && memoryRecallIndex > consentGateIndex, 'server-side memory recall must be inside the explicit-consent branch');
+const intelligenceSource = fs.readFileSync('omega-intelligence.js', 'utf8');
+assert(!intelligenceSource.includes('MEMBER CONTEXT:'), 'intelligence must not bypass server consent through system_override');
+const omegaAiSource = fs.readFileSync('omega-ai.js', 'utf8');
+assert(!omegaAiSource.includes('system_override:(SYSTEM_PROMPT+context)'), 'Omega AI must not embed profile context in system_override');
+const agentsSource = fs.readFileSync('agents.html', 'utf8');
+assert(!agentsSource.includes("Member auth='+auth.toFixed(4)"), 'agent persona must not embed member data in system_override');
+const sovereignAiSource = fs.readFileSync('sovereign-ai.html', 'utf8');
+assert(!sovereignAiSource.includes("Member AUTH='+auth.toFixed(4)"), 'sovereign AI persona must not embed member data in system_override');
 
 function makeStorage(seed) {
   const data = new Map(Object.entries(seed || {}));

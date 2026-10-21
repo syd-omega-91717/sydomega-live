@@ -17,7 +17,7 @@ Give each authenticated member a private, editable and exportable context space 
 2. Anonymous/public access is revoked. Only the authenticated role receives the necessary table grants.
 3. Context is private by default. This feature does not create public profiles, friend/family sharing or contact discovery.
 4. Account-level AI consent and per-record AI consent are both required. Highly sensitive records additionally require the dedicated sensitive-data preference.
-5. Disabling account-level AI personalization clears every record's item-level AI consent. Re-enabling the account switch therefore does not silently reactivate earlier item consent.
+5. Disabling account-level AI personalization clears every record's item-level AI consent. Revoking highly sensitive processing clears item-level AI consent for highly sensitive records. Re-enabling either switch does not silently reactivate earlier item consent.
 6. No AI provider is called by the initial UI. Consent records permission for a future governed workflow; it does not itself trigger processing.
 7. The client imports only TXT, Markdown, CSV and JSON, with a 1 MB file limit and 200,000-character record limit. Text is read locally for review and saved only after the member submits the form. This first release does not parse PDF or binary formats.
 8. UI rendering uses DOM text nodes, not innerHTML; imported text is treated as untrusted content.

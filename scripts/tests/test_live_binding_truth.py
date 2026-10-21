@@ -20,7 +20,7 @@ class LiveBindingTruthContract(unittest.TestCase):
 
     def test_missing_auth_and_missing_data_never_leave_a_stale_placeholder(self):
         self.assertIn("setLiveState(el,'unavailable','—')", self.fetch)
-        self.assertIn("setLiveState(el,'loading','…')", self.source)
+        self.assertIn("else if(state==='loading'&&previous!=='live'&&previous!=='calculated')el.textContent='…';", self.source)
         self.assertIn("delete el.dataset.liveBound", self.source)
 
     def test_auth_score_is_calculated_from_persisted_axes(self):

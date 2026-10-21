@@ -112,7 +112,7 @@
   async function refresh(){
     if(!sb||!uid)return;
     var results=await Promise.all([
-      sb.from('omega_personal_context_items').select('id,user_id,title,context_kind,content,sensitivity,source_kind,source_label,tags,metadata,ai_processing_allowed,ai_consent_at,review_status,expires_at,created_at,updated_at').eq('user_id',uid).order('updated_at',{ascending:false}).limit(200),
+      sb.from('omega_personal_context_items').select('id,user_id,title,context_kind,content,sensitivity,source_kind,source_label,tags,metadata,ai_processing_allowed,ai_consent_at,review_status,user_confirmed,expires_at,created_at,updated_at').eq('user_id',uid).order('updated_at',{ascending:false}).limit(200),
       sb.from('omega_personal_context_preferences').select('user_id,ai_personalization_enabled,web_research_enabled,proactive_alerts_enabled,sensitive_data_processing_enabled,consent_version,consent_updated_at,updated_at').eq('user_id',uid).maybeSingle(),
       sb.from('omega_personal_context_links').select('id,user_id,from_item_id,to_item_id,relation_kind,source_kind,user_confirmed,note,created_at').eq('user_id',uid).order('created_at',{ascending:false}).limit(200)
     ]);
@@ -170,7 +170,7 @@
       user_id:uid,title:title,context_kind:el('pc-kind').value,content:content,
       sensitivity:sensitivity,source_kind:sourceKind,source_label:sourceLabel,
       tags:tags,metadata:sourceMetadata,ai_processing_allowed:aiAllowed,
-      ai_consent_at:aiAllowed?new Date().toISOString():null,review_status:'confirmed'
+      ai_consent_at:aiAllowed?new Date().toISOString():null,review_status:'confirmed',user_confirmed:true
     };
     var button=el('pc-save');button.disabled=true;
     var result=editingId?await sb.from('omega_personal_context_items').update(payload).eq('id',editingId).eq('user_id',uid):await sb.from('omega_personal_context_items').insert(payload);

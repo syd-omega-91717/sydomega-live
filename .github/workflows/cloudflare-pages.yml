@@ -51,6 +51,14 @@ jobs:
             echo "::notice::Cloudflare Pages deploy skipped: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set."
           fi
 
+      - name: Refuse production fallback deploy from non-main
+        if: steps.creds.outputs.ready == 'true' && github.ref != 'refs/heads/main'
+        shell: bash
+        run: |
+          echo "::error title=Cloudflare production deployment refused::Manual production fallback is allowed only from refs/heads/main."
+          echo "requested_ref=$GITHUB_REF"
+          exit 1
+
       - name: Checkout
         if: steps.creds.outputs.ready == 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -99,6 +107,13 @@ jobs:
           done
           [ "${code}" = "200" ] || { echo "root returned ${code}"; exit 1; }
           curl -sI "${url}/" | grep -qi '^content-security-policy:' || { echo "CSP header missing"; exit 1; }
-          curl -s "${url}/.well-known/omega-release.json" | grep -q "${GITHUB_SHA}" \
-            || echo "::warning::release manifest does not name ${GITHUB_SHA} yet (edge propagation)"
-          echo "CLOUDFLARE_PAGES=PASS ${url}"
+          served=""
+          for attempt in 1 2 3 4 5 6; do
+            served="$(curl --silent --show-error --fail --max-time 15 "${url}/.well-known/omega-release.json" \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})' || true)"
+            if [ "${served}" = "${GITHUB_SHA}" ]; then break; fi
+            echo "manifest_attempt=${attempt} served=${served:-none} expected=${GITHUB_SHA}"
+            sleep 10
+          done
+          [ "${served}" = "${GITHUB_SHA}" ] || { echo "::error title=Release manifest mismatch::Cloudflare Pages does not serve the exact commit deployed by this workflow."; exit 1; }
+          echo "CLOUDFLARE_PAGES=PASS ${url} commit=${served}"

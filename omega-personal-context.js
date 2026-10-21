@@ -226,12 +226,14 @@
         sb.from('omega_personal_context_preferences').select('user_id,ai_personalization_enabled,web_research_enabled,proactive_alerts_enabled,sensitive_data_processing_enabled,consent_version,consent_updated_at,created_at,updated_at').eq('user_id',uid).maybeSingle()
       ]);
       if(results[3].error)throw results[3].error;
+      var totalContentChars=results[0].reduce(function(total,item){return total+String(item.content||'').length;},0);
+      if(totalContentChars>10000000)throw new Error('export_size_limit');
       var data={schema:'omega-personal-context-export/v1',exportedAt:new Date().toISOString(),policyVersion:POLICY_VERSION,privacy:{privateByDefault:true,aiProviderCalled:false,exportComplete:true},preferences:results[3].data||defaultPreferences(),items:results[0],links:results[1],consentEvents:results[2]};
       var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
       var url=URL.createObjectURL(blob),a=node('a','','Download personal context export');a.href=url;a.download='omega-personal-context-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();window.setTimeout(function(){URL.revokeObjectURL(url);},1000);
       setStatus('Complete export prepared: '+results[0].length+' records, '+results[1].length+' links and '+results[2].length+' consent events. Keep the downloaded file private.','info');
     }catch(e){
-      setStatus(e&&e.message==='export_record_limit'?'Export stopped safely: more than 10,000 records were found. No partial file was downloaded.':'Export failed. No partial file was downloaded; retry when the private data source is available.','error');
+      setStatus(e&&e.message==='export_record_limit'?'Export stopped safely: more than 10,000 records were found. No partial file was downloaded.':e&&e.message==='export_size_limit'?'Export stopped safely: total text exceeds the 10 MB safety limit. Split the export into smaller sets; no partial file was downloaded.':'Export failed. No partial file was downloaded; retry when the private data source is available.','error');
     }finally{if(button)button.disabled=false;}
   }
   async function onFile(event){

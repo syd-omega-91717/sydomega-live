@@ -1,8 +1,8 @@
 /* Ω SYD OMEGA 91717 — SOVEREIGN AI MEMORY ENGINE
  *
  * Privacy boundary:
- * - Memory is opt-in through the latest explicit personalisation consent.
- * - Consent lookup fails closed.
+ * - Memory is opt-in through the canonical account-level AI-personalization preference.
+ * - Consent is re-read from Supabase for every operation and fails closed.
  * - Browser fallback keys are user-namespaced; legacy unscoped keys are never read.
  * - Reads and writes require an authenticated user and current consent.
  * - Deletion remains available after consent is revoked.

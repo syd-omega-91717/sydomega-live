@@ -9,7 +9,7 @@
    g a  → Analytics         g m  → Matrix             g p  → Profile
    g s  → Settings          g v  → Vault              g k  → Knowledge
    g x  → Exam              g q  → Gaming             g t  → Gates
-   Ctrl+K → Search          ?    → This overlay        n   → Notifications
+   Ctrl+K → Quick navigation          ?    → This overlay        n   → Notifications
    c    → Copilot           Esc  → Close overlay/panel
 
    All shortcuts are disabled when focus is inside an input, textarea, or
@@ -57,7 +57,7 @@
       {keys:['g','o'],desc:'Studio'},     {keys:['g','r'],desc:'Publishing'},
     ]},
     {group:'Actions',shortcuts:[
-      {keys:['Ctrl','K'],desc:'Open search'},
+      {keys:['Ctrl','K'],desc:'Open quick navigation'},
       {keys:['n'],       desc:'Toggle notifications'},
       {keys:['c'],       desc:'Open AI copilot'},
       {keys:['?'],       desc:'Show this help overlay'},
@@ -151,10 +151,15 @@
       return;
     }
 
-    /* Ctrl+K: search (registered here, fired by OmegaSearch too) */
-    if((e.ctrlKey||e.metaKey)&&k==='k'){
-      if(window.OmegaSearch) window.OmegaSearch.open();
-      e.preventDefault();
+    /* The global navigation palette in nav.js owns Ctrl/Cmd+K whenever it is present.
+       Do not open a second overlay from this shared keyboard engine. Retain the
+       legacy search fallback only on surfaces that do not mount the palette. */
+    if((e.ctrlKey||e.metaKey)&&k.toLowerCase()==='k'){
+      if(document.getElementById('omega-command-palette') || window.OmegaCommandPalette) return;
+      if(window.OmegaSearch&&typeof window.OmegaSearch.open==='function'){
+        window.OmegaSearch.open();
+        e.preventDefault();
+      }
       return;
     }
 

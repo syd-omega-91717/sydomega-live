@@ -86,10 +86,11 @@
 
   function resumeLiveRefreshTimers(){
     document.querySelectorAll('[data-live]').forEach(function(el){
-      if(el.__omegaLiveRefreshId) return;
+      if(!window.__omegaSb||!_uid||el.dataset.liveBound!=='1')return;
+      if(el.__omegaLiveRefreshId)return;
       var refresh=parseInt(el.dataset.liveRefresh||'0');
-      if(refresh>0) el.__omegaLiveRefreshId=setInterval(function(){
-        if(document.visibilityState==='visible') fetchLive(el,el.dataset.live,el.dataset.liveFormat||'');
+      if(refresh>0)el.__omegaLiveRefreshId=setInterval(function(){
+        if(document.visibilityState==='visible')fetchLive(el,el.dataset.live,el.dataset.liveFormat||'');
       },refresh*1000);
     });
   }

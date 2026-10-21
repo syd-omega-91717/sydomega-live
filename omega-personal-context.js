@@ -9,7 +9,7 @@
   var POLICY_VERSION='2026-10-22-v1';
   var MAX_FILE_BYTES=1000000;
   var MAX_CONTENT_CHARS=200000;
-  var sb=null,uid=null,items=[],links=[],dataAvailable=false,preferences=defaultPreferences();
+  var sb=null,uid=null,items=[],links=[],dataAvailable=false,preferencesExists=false,preferences=defaultPreferences();
   var editingId=null,sourceKind='user_authored',sourceLabel=null,sourceMetadata={};
   var root=document.getElementById('omega-personal-context');
   var summary=document.getElementById('omega-personal-context-summary');
@@ -123,8 +123,8 @@
     if(results[0].error||results[2].error){
       items=[];links=[];dataAvailable=false;renderAll();setTruth('MIGRATION PENDING OR DATA SOURCE UNAVAILABLE');setStatus('Personal context storage is not available yet. The schema migration must pass review and be applied before this feature can save or load data.','warning');return;
     }
-    if(results[1].error){setStatus('Preferences could not be loaded. AI consent remains disabled in this view.','warning');preferences=defaultPreferences();}
-    else preferences=Object.assign(defaultPreferences(),results[1].data||{});
+    if(results[1].error){setStatus('Preferences could not be loaded. AI consent remains disabled in this view.','warning');preferences=defaultPreferences();preferencesExists=false;}
+    else {preferencesExists=!!results[1].data;preferences=Object.assign(defaultPreferences(),results[1].data||{});}
     items=results[0].data||[];links=results[2].data||[];dataAvailable=true;
     setTruth('LIVE · AUTHENTICATED PRIVATE DATA');
     setStatus(items.length>=200?'Loaded 200 records. Refine your search; older records may require pagination.':'Loaded '+items.length+' private record(s). No external AI call was made.','info');
@@ -132,15 +132,18 @@
   }
   async function savePreferences(){
     if(!sb||!uid)return;
-    var r=await sb.from('omega_personal_context_preferences').upsert({
-      user_id:uid,
+    var values={
       ai_personalization_enabled:!!preferences.ai_personalization_enabled,
       web_research_enabled:!!preferences.web_research_enabled,
       proactive_alerts_enabled:!!preferences.proactive_alerts_enabled,
       sensitive_data_processing_enabled:!!preferences.sensitive_data_processing_enabled,
       consent_version:POLICY_VERSION
-    },{onConflict:'user_id'});
-    if(r.error){setStatus('Preference update failed. Existing saved preferences remain authoritative.','error');return false;}
+    };
+    var r=preferencesExists
+      ?await sb.from('omega_personal_context_preferences').update(values).eq('user_id',uid)
+      :await sb.from('omega_personal_context_preferences').insert(Object.assign({user_id:uid},values));
+    if(r.error){setStatus('Preference update failed. Existing saved preferences remain authoritative. Refresh and retry if another tab changed these settings.','error');return false;}
+    preferencesExists=true;
     setStatus('Privacy preferences saved. AI and web research are not invoked by this page.','info');
     return true;
   }

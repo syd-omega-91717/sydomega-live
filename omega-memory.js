@@ -10,7 +10,7 @@
 (function(){
   if(window.__omegaMemoryActive) return;
   window.__omegaMemoryActive=true;
-  var MEM_PREFIX='omega_mem_v2_', LEGACY_PREFIX='omega_mem_', _uid=null, _cache={}, _consentPromise=null;
+  var MEM_PREFIX='omega_mem_v2_', LEGACY_PREFIX='omega_mem_', _uid=null, _cache={};
 
   function localKey(key){return MEM_PREFIX+_uid+'_'+key;}
   function localSet(key,value,type){
@@ -48,18 +48,15 @@
 
   async function hasAiPersonalizationConsent(){
     if(!_uid||!window.__omegaSb)return false;
-    if(!_consentPromise){
-      _consentPromise=(async function(){
-        try{
-          var r=await window.__omegaSb.from('omega_personal_context_preferences')
-            .select('ai_personalization_enabled')
-            .eq('user_id',_uid)
-            .maybeSingle();
-          return !r.error&&!!r.data&&r.data.ai_personalization_enabled===true;
-        }catch(e){return false;}
-      })();
-    }
-    return _consentPromise;
+    try{
+      /* Re-read the authoritative preference for every operation. This avoids
+         stale consent in another tab after a user revokes AI personalization. */
+      var r=await window.__omegaSb.from('omega_personal_context_preferences')
+        .select('ai_personalization_enabled')
+        .eq('user_id',_uid)
+        .maybeSingle();
+      return !r.error&&!!r.data&&r.data.ai_personalization_enabled===true;
+    }catch(e){return false;}
   }
   async function permitted(){
     var ok=await hasPersonalisationConsent();
@@ -174,13 +171,12 @@
   document.addEventListener('omega:populated',function(e){
     var pr=e.detail&&e.detail.profile;
     if(!pr||!pr.id)return;
-    if(_uid!==pr.id){clearCache();_uid=pr.id;_consentPromise=null;}
+    if(_uid!==pr.id){clearCache();_uid=pr.id;}
     learnFromProfile(pr);
   });
   document.addEventListener('omega:consent-changed',function(e){
     var detail=e.detail||{};
     if(detail.type==='ai_personalization'){
-      _consentPromise=Promise.resolve(detail.granted===true);
       if(detail.granted!==true){clearCache();clearLocalUser();}
     }
   });

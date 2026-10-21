@@ -811,6 +811,10 @@
     input.spellcheck=false;
     input.placeholder='Search pages, hubs, tools…';
     input.setAttribute('aria-label','Search pages and hubs');
+    input.setAttribute('role','combobox');
+    input.setAttribute('aria-autocomplete','list');
+    input.setAttribute('aria-controls','omega-command-palette-list');
+    input.setAttribute('aria-expanded','false');
     input.style.cssText='flex:1;min-width:0;background:transparent;border:0;outline:0;color:#E8C97A;font:16px "Courier Prime",monospace;letter-spacing:.3px';
     var esc=document.createElement('kbd');
     esc.textContent='ESC';
@@ -818,7 +822,9 @@
     head.appendChild(glyph);head.appendChild(input);head.appendChild(esc);
 
     var list=document.createElement('div');
+    list.id='omega-command-palette-list';
     list.setAttribute('role','listbox');
+    list.setAttribute('aria-label','Navigation results');
     list.style.cssText='padding:8px;overflow:auto;max-height:58vh';
     var live=document.createElement('div');live.setAttribute('role','status');live.setAttribute('aria-live','polite');live.setAttribute('aria-atomic','true');live.style.cssText='position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0';live.textContent='Quick navigation ready';
 
@@ -831,13 +837,14 @@
     var active=-1, filtered=[],restoreFocus=null;
     function close(){
       wrap.style.display='none';wrap.setAttribute('aria-hidden','true');active=-1;input.value='';
+      input.setAttribute('aria-expanded','false');input.removeAttribute('aria-activedescendant');
       document.body.style.overflow='';
       if(restoreFocus&&typeof restoreFocus.focus==='function'){try{restoreFocus.focus();}catch(e){}}restoreFocus=null;
     }
     function open(){
       restoreFocus=document.activeElement;
-      wrap.style.display='flex';wrap.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
-      render('');setTimeout(function(){input.focus();},0);
+      wrap.style.display='flex';wrap.setAttribute('aria-hidden','false');input.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';
+      active=0;render('');setTimeout(function(){input.focus();},0);
     }
     function render(q){
       navIndex=buildNavIndex();all=navIndex.all;
@@ -853,6 +860,8 @@
         return true;
       }).slice(0,80);
       if(active>=filtered.length) active=filtered.length-1;
+      if(active>=0) input.setAttribute('aria-activedescendant','omega-command-option-'+active);
+      else input.removeAttribute('aria-activedescendant');
       list.innerHTML='';
       live.textContent=filtered.length ? (filtered.length+' navigation results available') : 'No navigation matches';
        if(!filtered.length){
@@ -863,6 +872,7 @@
       }
       filtered.forEach(function(x,i){
         var row=document.createElement('a');
+        row.id='omega-command-option-'+i;
         row.href=x.href;
         row.setAttribute('role','option');
         row.setAttribute('aria-selected',String(i===active));

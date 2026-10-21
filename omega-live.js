@@ -55,7 +55,30 @@
 
   function stopLiveRefreshTimers(){
     document.querySelectorAll('[data-live]').forEach(function(el){
-      if(el.__omegaLiveRefreshId){ clearInterval(el.__omegaLiveRefreshId); el.__omegaLiveRefreshId=null; }
+      if(el.__omegaLiveRefreshId){clearInterval(el.__omegaLiveRefreshId);el.__omegaLiveRefreshId=null;}
+    });
+  }
+
+  function clearMemberLiveData(){
+    stopLiveRefreshTimers();
+    _profile=null;
+    _uid=null;
+    document.querySelectorAll('[data-live]').forEach(function(el){
+      delete el.dataset.liveBound;
+      setLiveState(el,'unavailable','—');
+    });
+  }
+
+  function bindAuthStateListener(){
+    var sb=window.__omegaSb;
+    if(!sb||!sb.auth||typeof sb.auth.onAuthStateChange!=='function'||window.__omegaLiveAuthStateBound)return;
+    window.__omegaLiveAuthStateBound=true;
+    sb.auth.onAuthStateChange(function(event,session){
+      if(event==='SIGNED_OUT'){
+        clearMemberLiveData();
+      }else if(event==='SIGNED_IN'&&session&&!_uid){
+        document.querySelectorAll('[data-live]').forEach(function(el){delete el.dataset.liveBound;});
+      }
     });
   }
 
@@ -206,29 +229,42 @@
 
   /* ── C. LIVE MEMBER COUNT ─────────────────────────────────────── */
   function updateMemberCount(){
-    if(!window.__omegaSb) return;
+    var elements=document.querySelectorAll('[data-live-members]');
+    if(!elements.length)return;
+    if(!window.__omegaSb){
+      elements.forEach(function(el){setLiveState(el,'unavailable','—');});
+      return;
+    }
+    elements.forEach(function(el){setLiveState(el,'loading');});
     window.__omegaSb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true)
       .then(function(r){
-        document.querySelectorAll('[data-live-members]').forEach(function(el){
-          el.textContent=(r&&r.error)?'—':(r.count==null?'--':r.count);
+        elements.forEach(function(el){
+          if(r&&r.error){setLiveState(el,'error','—');return;}
+          if(!r||r.count==null){setLiveState(el,'unavailable','—');return;}
+          setLiveState(el,'live',String(r.count));
         });
-      }).catch(function(){});
+      }).catch(function(){elements.forEach(function(el){setLiveState(el,'error','—');});});
   }
 
   /* ── D. ACTIVITY TICKER ───────────────────────────────────────── */
   function startTicker(){
-    var tickers = document.querySelectorAll('[data-live-ticker]');
-    if(!tickers.length||!window.__omegaSb) return;
+    var tickers=document.querySelectorAll('[data-live-ticker]');
+    if(!tickers.length)return;
+    if(!window.__omegaSb){
+      tickers.forEach(function(ticker){setLiveState(ticker,'unavailable','—');});
+      return;
+    }
+    tickers.forEach(function(ticker){setLiveState(ticker,'loading');});
     window.__omegaSb.from('activity_feed')
       .select('activity_type,title,created_at')
       .eq('is_public',true)
       .order('created_at',{ascending:false})
       .limit(5)
       .then(function(r){
-        if(r&&r.error){ tickers.forEach(function(ticker){ ticker.textContent='—'; }); return; }
-        if(!r.data||!r.data.length) return;
+        if(r&&r.error){tickers.forEach(function(ticker){setLiveState(ticker,'error','—');});return;}
+        if(!r||!r.data||!r.data.length){tickers.forEach(function(ticker){setLiveState(ticker,'unavailable','—');});return;}
         tickers.forEach(function(ticker){
-          var items = r.data;
+          var items=r.data;
           var i=0;
           function next(){
             var item=items[i%items.length];i++;
@@ -237,6 +273,7 @@
               ticker.style.animation='oa-fade-in .4s ease';
               ticker.innerHTML='<span style="font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.6)">'
                 +'&#9670; '+esc(String(item.title||'').slice(0,60))+'</span>';
+              setLiveState(ticker,'live');
             });
           }
           var timerId=null;
@@ -247,7 +284,7 @@
           window.addEventListener('pagehide',stop);
           window.addEventListener('pageshow',start);
         });
-      }).catch(function(){ tickers.forEach(function(ticker){ ticker.textContent='—'; }); });
+      }).catch(function(){tickers.forEach(function(ticker){setLiveState(ticker,'error','—');});});
   }
 
   /* ── E. DATA-AUTO elements (pull data into [data-auto="table:col"]) ── */
@@ -262,12 +299,13 @@
 
   /* ── INIT ─────────────────────────────────────────────────────── */
   document.addEventListener('omega:populated', function(e){
-    _profile = e.detail&&e.detail.profile;
-    _uid = _profile&&_profile.id;
+    _profile=e.detail&&e.detail.profile;
+    _uid=_profile&&_profile.id;
+    bindAuthStateListener();
     bindLiveElements();
     createPulseIndicator();
     updateMemberCount();
-    setTimeout(startTicker, 1000);
+    setTimeout(startTicker,1000);
     injectSkeletonCSS();
   });
 

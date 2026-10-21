@@ -8,6 +8,8 @@ assert(privacySource.includes('var granted=!!(rec&&rec.granted===true);'), 'miss
 assert(!privacySource.includes('var granted=rec?rec.granted:true;'), 'privacy UI must never default missing consent to granted');
 assert(privacySource.includes('if(cr.error)throw cr.error;'), 'consent lookup errors must enter the fail-closed UI path');
 assert(source.includes("from('omega_personal_context_preferences')"), 'AI memory must use the dedicated AI personalization preference');
+assert(source.includes('hasAiPersonalizationConsent'), 'memory permission check must use the canonical consent function');
+assert(!source.includes('hasPersonalisationConsent'), 'no stale legacy consent function calls may remain');
 assert(!source.includes("from('consent_records')"), 'legacy presence/activity consent must not authorize AI memory');
 const contextSource = fs.readFileSync('omega-personal-context.js', 'utf8');
 assert(contextSource.includes("type:'ai_personalization'"), 'personal context must synchronize the canonical AI consent state');

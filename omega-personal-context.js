@@ -28,7 +28,7 @@
       if(!item.ai_processing_allowed||item.review_status!=='confirmed')return false;
       if(item.sensitivity==='highly_sensitive'&&!preferences.sensitive_data_processing_enabled)return false;
       return true;
-    }).map(function(item){return {id:item.id,title:item.title,context_kind:item.context_kind,content:item.content,tags:item.tags||[],sensitivity:item.sensitivity,source_kind:item.source_kind,updated_at:item.updated_at};});
+    }).map(function(item){return {id:item.id,title:item.title,context_kind:item.context_kind,sensitivity:item.sensitivity};});
   }
   function updatePublicApi(){
     window.OmegaPersonalContext={
@@ -112,10 +112,13 @@
   function renderAll(){renderItems();renderLinkControls();renderSummary();syncPreferenceControls();updatePublicApi();dispatchChanged();}
   async function refresh(){
     if(!sb||!uid)return;
+    var summaryOnly=!root&&!!summary;
+    var itemColumns=summaryOnly?'id,title,context_kind,sensitivity,ai_processing_allowed,review_status,updated_at':'id,user_id,title,context_kind,content,sensitivity,source_kind,source_label,tags,metadata,ai_processing_allowed,ai_consent_at,review_status,user_confirmed,expires_at,created_at,updated_at';
+    var linkColumns=summaryOnly?'id':'id,user_id,from_item_id,to_item_id,relation_kind,source_kind,user_confirmed,note,created_at';
     var results=await Promise.all([
-      sb.from('omega_personal_context_items').select('id,user_id,title,context_kind,content,sensitivity,source_kind,source_label,tags,metadata,ai_processing_allowed,ai_consent_at,review_status,user_confirmed,expires_at,created_at,updated_at').eq('user_id',uid).order('updated_at',{ascending:false}).limit(200),
+      sb.from('omega_personal_context_items').select(itemColumns).eq('user_id',uid).order('updated_at',{ascending:false}).limit(200),
       sb.from('omega_personal_context_preferences').select('user_id,ai_personalization_enabled,web_research_enabled,proactive_alerts_enabled,sensitive_data_processing_enabled,consent_version,consent_updated_at,updated_at').eq('user_id',uid).maybeSingle(),
-      sb.from('omega_personal_context_links').select('id,user_id,from_item_id,to_item_id,relation_kind,source_kind,user_confirmed,note,created_at').eq('user_id',uid).order('created_at',{ascending:false}).limit(200)
+      sb.from('omega_personal_context_links').select(linkColumns).eq('user_id',uid).order('created_at',{ascending:false}).limit(200)
     ]);
     if(results[0].error||results[2].error){
       items=[];links=[];dataAvailable=false;renderAll();setTruth('MIGRATION PENDING OR DATA SOURCE UNAVAILABLE');setStatus('Personal context storage is not available yet. The schema migration must pass review and be applied before this feature can save or load data.','warning');return;

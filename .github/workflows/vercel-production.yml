@@ -228,6 +228,7 @@ jobs:
               git checkout --detach "$release_sha"
             fi
             EXPECTED_RELEASE_SHA="$release_sha" bash scripts/vercel-production-smoke.sh
+            EXPECTED_RELEASE_SHA="$release_sha" OMEGA_PRODUCTION_BASE_URL=https://www.sydomega.com bash scripts/vercel-production-smoke.sh
             OMEGA_RELEASE_SHA="$release_sha" bash scripts/vercel-build.sh
             OMEGA_PRODUCTION_BASE_URL="$OMEGA_PRODUCTION_BASE_URL" \
               OMEGA_PUBLIC_DIR=public OMEGA_SMOKE_WORKERS=12 OMEGA_SMOKE_RETRIES=2 \

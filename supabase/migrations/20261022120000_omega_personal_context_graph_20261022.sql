@@ -130,12 +130,6 @@ CREATE POLICY omega_personal_context_preferences_update_own
   ON public.omega_personal_context_preferences FOR UPDATE TO authenticated
   USING (user_id = (SELECT auth.uid()))
   WITH CHECK (user_id = (SELECT auth.uid()));
-DROP POLICY IF EXISTS omega_personal_context_preferences_delete_own
-  ON public.omega_personal_context_preferences;
-CREATE POLICY omega_personal_context_preferences_delete_own
-  ON public.omega_personal_context_preferences FOR DELETE TO authenticated
-  USING (user_id = (SELECT auth.uid()));
-
 DROP POLICY IF EXISTS omega_personal_context_consent_events_select_own
   ON public.omega_personal_context_consent_events;
 CREATE POLICY omega_personal_context_consent_events_select_own
@@ -192,7 +186,7 @@ CREATE POLICY omega_personal_context_links_delete_own
   USING (user_id = (SELECT auth.uid()));
 
 REVOKE ALL ON TABLE public.omega_personal_context_preferences FROM PUBLIC, anon, authenticated, service_role;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.omega_personal_context_preferences TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON TABLE public.omega_personal_context_preferences TO authenticated;
 REVOKE ALL ON TABLE public.omega_personal_context_consent_events FROM PUBLIC, anon, authenticated, service_role;
 GRANT SELECT, INSERT ON TABLE public.omega_personal_context_consent_events TO authenticated;
 REVOKE ALL ON TABLE public.omega_personal_context_items FROM PUBLIC, anon, authenticated, service_role;
@@ -306,6 +300,17 @@ BEGIN
     UPDATE public.omega_personal_context_items
        SET ai_processing_allowed = false, ai_consent_at = NULL
      WHERE user_id = NEW.user_id AND ai_processing_allowed = true;
+  END IF;
+  IF TG_OP = 'UPDATE'
+     AND OLD.sensitive_data_processing_enabled
+     AND NOT NEW.sensitive_data_processing_enabled THEN
+    -- Revoking the additional sensitive-data permission clears consent only
+    -- for highly sensitive items; a later re-enable requires item re-consent.
+    UPDATE public.omega_personal_context_items
+       SET ai_processing_allowed = false, ai_consent_at = NULL
+     WHERE user_id = NEW.user_id
+       AND ai_processing_allowed = true
+       AND sensitivity = 'highly_sensitive';
   END IF;
   NEW.consent_updated_at := pg_catalog.now();
   RETURN NEW;

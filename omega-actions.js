@@ -202,8 +202,9 @@
     /* Long press */
     el.addEventListener('pointerdown',function(){
       _longTimer=setTimeout(function(){
-        if(_profile&&_profile.is_owner&&window.OmegaNotify){
-          window.OmegaNotify.showToast('Admin mode: '+el.querySelector('.kpi-l,.agent-name')?.textContent||'Object','info');
+        if(_profile&&_profile.is_owner){
+          if(window.OmegaTelemetry)window.OmegaTelemetry.track('owner_control_center_open',{source:'living_object_long_press'});
+          location.href='/control-center.html';
         }
       },800);
     });

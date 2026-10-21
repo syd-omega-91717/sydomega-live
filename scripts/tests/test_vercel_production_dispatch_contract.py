@@ -128,10 +128,16 @@ class VercelProductionDispatchContract(unittest.TestCase):
             "env.VERCEL_PROMOTION_POSTPONED != 'true'",
             WORKFLOW,
         )
-        live = WORKFLOW.index("Live site serves this commit (Cloudflare Pages)")
+        live = WORKFLOW.index("Live site serves this commit and every built route (Cloudflare Pages)")
         block = WORKFLOW[live:WORKFLOW.index("Controlled state when token is unavailable")]
-        self.assertIn('EXPECTED_RELEASE_SHA="$GITHUB_SHA" bash scripts/vercel-production-smoke.sh', block)
+        self.assertIn('verify_served_release() {', block)
+        self.assertIn('git checkout --detach "$release_sha"', block)
+        self.assertIn('EXPECTED_RELEASE_SHA="$release_sha" bash scripts/vercel-production-smoke.sh', block)
+        self.assertIn('EXPECTED_RELEASE_SHA="$release_sha" OMEGA_PRODUCTION_BASE_URL=https://www.sydomega.com bash scripts/vercel-production-smoke.sh', block)
         self.assertIn('git merge-base --is-ancestor "$GITHUB_SHA" "$served"', block)
+        self.assertIn('bash scripts/vercel-build.sh', block)
+        self.assertIn('python scripts/vercel-production-surface-smoke.py', block)
+        self.assertIn('verify_served_release "$served"', block)
         self.assertIn("exit 1", block)
 
     def test_build_stamps_each_deploy_into_the_service_worker(self):

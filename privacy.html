@@ -174,16 +174,25 @@ function showMsg(id,ok,text){
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     try{
       var cr=await sb.from('consent_records').select('consent_type,granted,granted_at').eq('user_id',s.user.id).is('revoked_at',null).order('granted_at',{ascending:false});
-      var consents=cr.data||[];
+      if(cr.error)throw cr.error;
+      var consents=Array.isArray(cr.data)?cr.data:[];
       ['analytics','recommendations','marketing','personalisation'].forEach(function(type){
         var rec=consents.find(function(c){return c.consent_type===type;});
-        var granted=rec?rec.granted:true;
+        var granted=!!(rec&&rec.granted===true);
         var tog=document.getElementById('toggle-'+type);
         var lbl=document.getElementById('lbl-'+type);
         if(tog)tog.checked=granted;
         if(lbl)lbl.textContent=granted?'GRANTED':'NOT GRANTED';
       });
-    }catch(e){}
+    }catch(e){
+      ['analytics','recommendations','marketing','personalisation'].forEach(function(type){
+        var tog=document.getElementById('toggle-'+type);
+        var lbl=document.getElementById('lbl-'+type);
+        if(tog)tog.checked=false;
+        if(lbl)lbl.textContent='UNAVAILABLE — DISABLED';
+      });
+      showMsg('consent-msg',false,'CONSENT STATUS COULD NOT BE VERIFIED. OPTIONAL CONSENT REMAINS DISABLED.');
+    }
   }catch(e){document.getElementById('app').style.display='flex';}
 })();
 

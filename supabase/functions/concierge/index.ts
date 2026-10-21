@@ -47,7 +47,7 @@ const SYSTEM_PROMPT = `You are the Concierge of SYD OMEGA 91717, a guide who hel
 
 const safeString = (value: unknown, max = 240) => {
   const raw = typeof value === "string" ? value : typeof value === "number" ? String(value) : "";
-  return raw.replace(/[\\u0000-\\u001f\\u007f]/g, " ").slice(0, max);
+  return raw.replace(/[\u0000-\u001f\u007f]/g, " ").slice(0, max);
 };
 
 const classify = (message: string) => {
@@ -199,7 +199,7 @@ Deno.serve(async (req) => {
             (item.sensitivity !== "highly_sensitive" || sensitiveProcessingAllowed)
           );
           const stopWords = new Set(["the", "and", "for", "with", "that", "this", "from", "what", "when", "where", "how", "can", "you", "your", "are", "was", "were", "have", "has", "had", "about", "into", "need", "help", "please", "tell", "me", "my", "our", "their", "they", "them", "then", "than", "not", "but", "use", "using", "its"]);
-          const queryTerms = new Set((message.toLocaleLowerCase().match(/[\\p{L}\\p{N}]{3,}/gu) ?? [])
+          const queryTerms = new Set((message.toLocaleLowerCase().match(/[\p{L}\p{N}]{3,}/gu) ?? [])
             .filter((term) => !stopWords.has(term))
             .slice(0, 60));
           const ranked = eligible.map((item) => {

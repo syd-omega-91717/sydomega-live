@@ -70,7 +70,7 @@
 
   /* ── INTELLIGENCE ENGINE for hover insights ───────────────────── */
   var _insightCache = {};
-  function getInsight(el){
+  async function getInsight(el){
     var key = el.dataset.living||el.id||el.className.split(' ')[0];
     if(_insightCache[key]) return _insightCache[key];
     var registered=OBJECTS[key];

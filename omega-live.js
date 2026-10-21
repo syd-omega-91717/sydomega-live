@@ -311,6 +311,17 @@
     injectSkeletonCSS();
   });
 
+  /* Initialize placeholders even when a visitor is signed out and no profile
+     population event will ever fire. A later authenticated population retries
+     these bindings because unavailable bindings are not marked complete. */
+  function initializeLiveShell(){
+    bindLiveElements();
+    createPulseIndicator();
+    injectSkeletonCSS();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initializeLiveShell);
+  else initializeLiveShell();
+
   /* Re-bind after dynamic content changes */
   var _bindObs = new MutationObserver(function(){ bindLiveElements(); });
   window.addEventListener('load',function(){

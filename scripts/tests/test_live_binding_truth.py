@@ -41,6 +41,9 @@ class LiveBindingTruthContract(unittest.TestCase):
     def test_public_count_and_ticker_report_empty_and_error_states(self):
         self.assertIn("function updateMemberCount()", self.source)
         self.assertIn("function startTicker()", self.source)
+        pulse = self.source[self.source.index('function createPulseIndicator'):self.source.index('function verifyPulse')]
+        self.assertIn("var dot=document.getElementById('omega-pulse')", pulse)
+        self.assertIn('verifyPulse(dot)', pulse)
         self.assertIn("setLiveState(el,'error','—')", self.source)
         self.assertIn("setLiveState(ticker,'unavailable','—')", self.source)
 

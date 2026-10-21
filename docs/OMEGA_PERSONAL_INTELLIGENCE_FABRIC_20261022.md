@@ -175,7 +175,9 @@ A capability is not implemented until:
 
 ## Current risks / open decisions
 
-- Existing omega-memory.js uses sessionStorage fallback and writes profile-derived values to ai_memory; its fallback may report success-like behavior without durable persistence. Review callers before changing semantics.
+- This branch hardens omega-memory.js: AI memory reads/writes require an explicit active personalisation consent record; lookup errors fail closed; old unscoped browser-memory keys are removed; memory caches are user-scoped; writes no longer claim success when persistence fails. The new CI regression test covers consent denial, consent lookup failure and account isolation. This is code-level evidence only until CI passes.
+- The existing Privacy Centre still initializes missing consent records as granted in its UI. That default must be corrected and verified before treating the consent experience as coherent. A failed update attempt to change that default is not counted as a completed fix.
+- The content-ingest registration currently records scan_state as UNAVAILABLE; this is not a malware/content scanning pipeline. Uploaded user files must not be used as AI context until scanning and explicit purpose approval are implemented.
 - The repository has overlapping legacy data objects and a large migration history. Do not add a second store before inspecting live schema and migration parity.
 - Auth and deployment issues are known unresolved blockers and remain release-blocking.
 - Provider retention/data-processing terms, model data residency, file scanner, retention periods and notification channels need documented decisions before sensitive-data features are enabled.

@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS public.omega_personal_context_items (
   review_status text NOT NULL DEFAULT 'confirmed' CHECK (
     review_status IN ('pending_review', 'confirmed', 'rejected')
   ),
+  user_confirmed boolean NOT NULL DEFAULT true,
   expires_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),

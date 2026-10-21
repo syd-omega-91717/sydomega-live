@@ -133,6 +133,7 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn('verify_served_release() {', block)
         self.assertIn('git checkout --detach "$release_sha"', block)
         self.assertIn('EXPECTED_RELEASE_SHA="$release_sha" bash scripts/vercel-production-smoke.sh', block)
+        self.assertIn('EXPECTED_RELEASE_SHA="$release_sha" OMEGA_PRODUCTION_BASE_URL=https://www.sydomega.com bash scripts/vercel-production-smoke.sh', block)
         self.assertIn('git merge-base --is-ancestor "$GITHUB_SHA" "$served"', block)
         self.assertIn('bash scripts/vercel-build.sh', block)
         self.assertIn('python scripts/vercel-production-surface-smoke.py', block)

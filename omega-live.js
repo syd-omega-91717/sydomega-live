@@ -184,26 +184,28 @@
 
   /* ── B. PLATFORM PULSE (real-time data connection status) ─────── */
   function createPulseIndicator(){
-    var topbar = document.querySelector('.topbar');
-    if(!topbar||document.getElementById('omega-pulse')) return;
-
-    var dot = document.createElement('div');
-    dot.id='omega-pulse';
-    dot.title='Live data status';
-    dot.setAttribute('aria-label','Live data status: '+_pulseStatus);
-    dot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--muted,#666);flex-shrink:0;animation:oa-pulse 2s ease-in-out infinite;cursor:pointer';
-    dot.addEventListener('click',function(){
-      var msg=_pulseStatus==='connected'
-        ? 'Live data connection verified.'
-        : _pulseStatus==='unavailable'
-          ? 'Live data connection is currently unavailable.'
-          : 'Live data connection is being checked.';
-      if(window.OmegaNotify)window.OmegaNotify.showToast(msg,_pulseStatus==='connected'?'success':'info');
-    });
-    var style=document.createElement('style');
-    style.textContent='@keyframes oa-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}';
-    document.head.appendChild(style);
-    topbar.appendChild(dot);
+    var topbar=document.querySelector('.topbar');
+    if(!topbar)return;
+    var dot=document.getElementById('omega-pulse');
+    if(!dot){
+      dot=document.createElement('div');
+      dot.id='omega-pulse';
+      dot.title='Live data status';
+      dot.setAttribute('aria-label','Live data status: '+_pulseStatus);
+      dot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--muted,#666);flex-shrink:0;animation:oa-pulse 2s ease-in-out infinite;cursor:pointer';
+      dot.addEventListener('click',function(){
+        var msg=_pulseStatus==='connected'
+          ? 'Live data connection verified.'
+          : _pulseStatus==='unavailable'
+            ? 'Live data connection is currently unavailable.'
+            : 'Live data connection is being checked.';
+        if(window.OmegaNotify)window.OmegaNotify.showToast(msg,_pulseStatus==='connected'?'success':'info');
+      });
+      var style=document.createElement('style');
+      style.textContent='@keyframes oa-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}';
+      document.head.appendChild(style);
+      topbar.appendChild(dot);
+    }
     verifyPulse(dot);
   }
 

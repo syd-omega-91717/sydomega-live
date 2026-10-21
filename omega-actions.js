@@ -70,36 +70,17 @@
 
   /* ── INTELLIGENCE ENGINE for hover insights ───────────────────── */
   var _insightCache = {};
-  async function getInsight(el){
+  function getInsight(el){
     var key = el.dataset.living||el.id||el.className.split(' ')[0];
     if(_insightCache[key]) return _insightCache[key];
-    /* Never generate a factual-sounding insight for an object without a contract. */
-    if(!OBJECTS[key]){
+    var registered=OBJECTS[key];
+    if(!registered){
       _insightCache[key]='No verified object contract is registered. Treat values and behavior as unverified.';
       return _insightCache[key];
     }
-    var registered=OBJECTS[key];
     var insight=registered.state==='unverified'?'UNVERIFIED — '+registered.insight:registered.insight;
     _insightCache[key]=insight;
     return insight;
-    /* Check registry first */
-    if(OBJECTS[key]) return OBJECTS[key].insight;
-    /* Generate from element content */
-    var title = el.querySelector('.kpi-l,.agent-name,.module-card .mc-name,.policy-id')
-      ||el.querySelector('[class*="label"],[class*="title"],[class*="name"]');
-    var value = el.querySelector('.kpi-n,[class*="val"]');
-    var titleText = title?title.textContent.trim():'this element';
-    var valueText = value?value.textContent.trim():'';
-    /* Ask OmegaIntelligence for micro-insight */
-    if(window.OmegaIntelligence&&_profile){
-      try{
-        var q='Give a ONE sentence operational insight about this platform metric: '+titleText+(valueText?' = '+valueText:'');
-        var r=await window.OmegaIntelligence.ask(q,[]);
-        if(r&&r.length<200){_insightCache[key]=r;return r;}
-      }catch(e){}
-    }
-    var def='Platform metric: '+titleText+(valueText?' showing '+valueText:'')+'.' ;
-    _insightCache[key]=def;return def;
   }
 
   /* ── HOVER PANEL ──────────────────────────────────────────────── */
@@ -168,7 +149,6 @@
     hideContextMenu();
     var key=el.dataset.living||el.id||'';
     var obj=OBJECTS[key]||{};
-    var title=obj.identity||(el.querySelector('.kpi-l,.agent-name,.mc-name')&&el.querySelector('.kpi-l,.agent-name,.mc-name').textContent.trim())||'Object';
     var items=[];
     if(obj.page) items.push({icon:'&#8594;',label:'OPEN',action:function(){location.href=obj.page;}});
     if(window.OmegaCopilot&&typeof window.OmegaCopilot.open==='function')

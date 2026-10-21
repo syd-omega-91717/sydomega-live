@@ -62,6 +62,7 @@
     if(itemConsent&&sensitivity&&sensitivity.value==='highly_sensitive'&&!preferences.sensitive_data_processing_enabled){itemConsent.disabled=true;var help=el('pc-item-ai-consent-help');if(help)help.textContent='Highly sensitive items require the separate sensitive-data consent above.';}
   }
   function renderItems(){
+    var count=el('pc-library-count');if(count)count.textContent=items.length+' RECORD(S) · '+links.length+' CONNECTION(S) · PRIVATE';
     var list=el('pc-items');if(!list)return;list.replaceChildren();
     var query=(el('pc-search')?.value||'').trim().toLowerCase();
     var kindFilter=el('pc-kind-filter')?.value||'';
@@ -197,7 +198,7 @@
     if(!uid)return;
     var data={schema:'omega-personal-context-export/v1',exportedAt:new Date().toISOString(),policyVersion:POLICY_VERSION,privacy:{privateByDefault:true,aiProviderCalled:false},preferences:preferences,items:items,links:links};
     var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
-    var url=URL.createObjectURL(blob),a=node('a','','Download personal context export');a.href=url;a.download='omega-personal-context-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    var url=URL.createObjectURL(blob),a=node('a','','Download personal context export');a.href=url;a.download='omega-personal-context-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();window.setTimeout(function(){URL.revokeObjectURL(url);},1000);
     setStatus('Export prepared in this browser. Keep the downloaded file private.','info');
   }
   async function onFile(event){

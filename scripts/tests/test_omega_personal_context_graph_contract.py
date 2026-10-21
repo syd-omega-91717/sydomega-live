@@ -58,6 +58,10 @@ class PersonalContextGraphContract(unittest.TestCase):
         self.assertIn("MAX_CONTENT_CHARS=200000", self.client)
         self.assertIn("Nothing is saved until you press SAVE PERSONAL CONTEXT", self.client)
         self.assertIn("JSON.parse(content)", self.client)
+        self.assertIn("consentEvents:results[2]", self.client)
+        self.assertIn("fetchAllForExport", self.client)
+        self.assertIn("export_size_limit", self.client)
+        self.assertIn("exportComplete:true", self.client)
 
     def test_cross_surface_links_and_change_event_exist(self):
         self.assertIn('id="personal-context"', self.life)

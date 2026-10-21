@@ -35,9 +35,9 @@
       policyVersion:POLICY_VERSION,
       ready:!!uid,
       refresh:refresh,
-      list:function(){return items.map(function(x){return Object.assign({},x);});},
+      listMetadata:function(){return items.map(function(x){return {id:x.id,title:x.title,context_kind:x.context_kind,sensitivity:x.sensitivity,ai_processing_allowed:!!x.ai_processing_allowed,review_status:x.review_status,updated_at:x.updated_at};});},
       getPreferences:function(){return Object.assign({},preferences);},
-      getAiEligibleContext:getAiEligibleContext,
+      getConsentedItemIds:function(){return getAiEligibleContext().map(function(x){return x.id;});},
       status:function(){return {authenticated:!!uid,items:items.length,links:links.length,aiEligible:getAiEligibleContext().length,aiPersonalizationEnabled:!!preferences.ai_personalization_enabled,webResearchEnabled:!!preferences.web_research_enabled,proactiveAlertsEnabled:!!preferences.proactive_alerts_enabled};}
     };
   }
@@ -231,8 +231,8 @@
       input.addEventListener('change',async function(){
         var previous=preferences[key];preferences[key]=input.checked;
         if(key==='ai_personalization_enabled'&&!preferences.ai_personalization_enabled){var itemConsent=el('pc-item-ai-consent');if(itemConsent)itemConsent.checked=false;}
-        var ok=await savePreferences();if(!ok){preferences[key]=previous;input.checked=previous;}
-        syncPreferenceControls();updatePublicApi();dispatchChanged();
+        var ok=await savePreferences();if(!ok){preferences[key]=previous;input.checked=previous;syncPreferenceControls();updatePublicApi();dispatchChanged();return;}
+        await refresh();syncPreferenceControls();updatePublicApi();dispatchChanged();
       });
     });
   }

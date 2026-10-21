@@ -52,3 +52,10 @@ Migration 20261022120000_omega_personal_context_graph_20261022.sql is additive a
 - OCR/PDF/media import with malware scanning, size limits, parser sandboxing and provenance.
 - Cross-domain recommendations and relationship visualizations after consent and evidence boundaries are verified.
 - Provider-independent evaluation, quality/cost/latency telemetry and fallback policy.
+
+## External engineering basis (reviewed 2026-10-22)
+
+- OWASP GenAI LLM Top 10 (2026): https://genai.owasp.org/llm-top-10/ — treat prompt injection, sensitive information disclosure, excessive agency, supply-chain risk, unbounded consumption, misinformation, hidden context exposure, vector/embedding weaknesses and improper output handling as explicit design/test categories.
+- NIST AI Risk Management Framework and Generative AI Profile: https://www.nist.gov/itl/ai-risk-management-framework — use lifecycle risk management, documented controls, evaluation and human oversight rather than treating model output as inherently reliable.
+
+These references inform the design; they do not certify this implementation or substitute for privacy/legal review.

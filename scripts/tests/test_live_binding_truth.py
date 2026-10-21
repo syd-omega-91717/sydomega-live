@@ -36,6 +36,7 @@ class LiveBindingTruthContract(unittest.TestCase):
         self.assertIn("function clearMemberLiveData()", self.source)
         self.assertIn("if(event==='SIGNED_OUT')", self.source)
         self.assertIn("stopLiveRefreshTimers()", self.source)
+        self.assertIn("if(!window.__omegaSb||!_uid||el.dataset.liveBound!=='1')return;", self.source)
         self.assertIn("delete el.dataset.liveBound", self.source)
 
     def test_public_count_and_ticker_report_empty_and_error_states(self):

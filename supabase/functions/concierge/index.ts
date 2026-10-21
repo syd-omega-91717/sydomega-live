@@ -164,13 +164,21 @@ Deno.serve(async (req) => {
     let personalContextState = personalizationAllowed ? "NO_APPROVED_ITEMS" : personalizationState;
     if (personalizationAllowed) {
       try {
-        const { data: contextItems, error: contextItemsError } = await supabase
+        const contextQuery = supabase
           .from("omega_personal_context_items")
           .select("title,context_kind,content,sensitivity,source_kind,tags,ai_processing_allowed,ai_consent_at,review_status,user_confirmed,expires_at,updated_at")
           .eq("user_id", who.data.user.id)
           .eq("ai_processing_allowed", true)
           .eq("review_status", "confirmed")
           .eq("user_confirmed", true)
+          .in("source_kind", ["user_authored", "ai_suggestion"]);
+        /* Imported and connected files stay out of model context until a real
+           scanning/provenance pipeline exists. Do not even fetch highly
+           sensitive rows unless the separate sensitive-data permission is on. */
+        const scopedContextQuery = sensitiveProcessingAllowed
+          ? contextQuery
+          : contextQuery.neq("sensitivity", "highly_sensitive");
+        const { data: contextItems, error: contextItemsError } = await scopedContextQuery
           .order("updated_at", { ascending: false })
           .limit(8);
         if (contextItemsError) {

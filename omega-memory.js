@@ -59,7 +59,7 @@
     }catch(e){return false;}
   }
   async function permitted(){
-    var ok=await hasPersonalisationConsent();
+    var ok=await hasAiPersonalizationConsent();
     if(!ok){clearCache();clearLocalUser();}
     return ok;
   }

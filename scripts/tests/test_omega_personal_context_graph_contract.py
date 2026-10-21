@@ -33,7 +33,9 @@ class PersonalContextGraphContract(unittest.TestCase):
         self.assertIn("personal_context_ai_opt_in_required", self.migration)
         self.assertIn("personal_context_sensitive_opt_in_required", self.migration)
         self.assertIn("clears every item-level", self.migration)
-        self.assertIn("SET ai_processing_allowed = false, ai_consent_at = NULL", self.migration)
+        self.assertGreaterEqual(self.migration.count("SET ai_processing_allowed = false, ai_consent_at = NULL"), 2)
+        self.assertIn("OLD.sensitive_data_processing_enabled", self.migration)
+        self.assertNotIn("omega_personal_context_preferences FOR DELETE", self.migration)
 
     def test_member_links_cannot_cross_user_boundaries(self):
         self.assertIn("FOREIGN KEY (from_item_id, user_id)", self.migration)

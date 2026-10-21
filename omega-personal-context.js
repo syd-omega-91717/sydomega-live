@@ -198,12 +198,41 @@
     if(r.error){setStatus('Connection could not be saved. Check that both records belong to your account.','error');return;}
     el('pc-link-note').value='';await refresh();setStatus('Private context connection saved.','info');
   }
-  function exportData(){
-    if(!uid)return;
-    var data={schema:'omega-personal-context-export/v1',exportedAt:new Date().toISOString(),policyVersion:POLICY_VERSION,privacy:{privateByDefault:true,aiProviderCalled:false},preferences:preferences,items:items,links:links};
-    var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
-    var url=URL.createObjectURL(blob),a=node('a','','Download personal context export');a.href=url;a.download='omega-personal-context-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();window.setTimeout(function(){URL.revokeObjectURL(url);},1000);
-    setStatus('Export prepared in this browser. Keep the downloaded file private.','info');
+  async function fetchAllForExport(table,columns,orderColumn){
+    var rows=[],offset=0,pageSize=500,maxRows=10000;
+    while(true){
+      if(offset>=maxRows){
+        var probe=await sb.from(table).select('id').eq('user_id',uid).range(offset,offset);
+        if(probe.error)throw probe.error;
+        if((probe.data||[]).length)throw new Error('export_record_limit');
+        return rows;
+      }
+      var result=await sb.from(table).select(columns).eq('user_id',uid).order(orderColumn,{ascending:false}).range(offset,Math.min(offset+pageSize-1,maxRows-1));
+      if(result.error)throw result.error;
+      var page=result.data||[];rows=rows.concat(page);
+      if(page.length<pageSize)return rows;
+      offset+=page.length;
+    }
+  }
+  async function exportData(){
+    if(!uid||!sb)return;
+    var button=el('pc-export');if(button)button.disabled=true;
+    setStatus('Preparing a complete private export. No external service is contacted.','info');
+    try{
+      var results=await Promise.all([
+        fetchAllForExport('omega_personal_context_items','id,user_id,title,context_kind,content,sensitivity,source_kind,source_label,tags,metadata,ai_processing_allowed,ai_consent_at,review_status,user_confirmed,expires_at,created_at,updated_at','updated_at'),
+        fetchAllForExport('omega_personal_context_links','id,user_id,from_item_id,to_item_id,relation_kind,source_kind,user_confirmed,note,created_at','created_at'),
+        fetchAllForExport('omega_personal_context_consent_events','id,user_id,consent_key,decision,policy_version,created_at','created_at'),
+        sb.from('omega_personal_context_preferences').select('user_id,ai_personalization_enabled,web_research_enabled,proactive_alerts_enabled,sensitive_data_processing_enabled,consent_version,consent_updated_at,created_at,updated_at').eq('user_id',uid).maybeSingle()
+      ]);
+      if(results[3].error)throw results[3].error;
+      var data={schema:'omega-personal-context-export/v1',exportedAt:new Date().toISOString(),policyVersion:POLICY_VERSION,privacy:{privateByDefault:true,aiProviderCalled:false,exportComplete:true},preferences:results[3].data||defaultPreferences(),items:results[0],links:results[1],consentEvents:results[2]};
+      var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+      var url=URL.createObjectURL(blob),a=node('a','','Download personal context export');a.href=url;a.download='omega-personal-context-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();window.setTimeout(function(){URL.revokeObjectURL(url);},1000);
+      setStatus('Complete export prepared: '+results[0].length+' records, '+results[1].length+' links and '+results[2].length+' consent events. Keep the downloaded file private.','info');
+    }catch(e){
+      setStatus(e&&e.message==='export_record_limit'?'Export stopped safely: more than 10,000 records were found. No partial file was downloaded.':'Export failed. No partial file was downloaded; retry when the private data source is available.','error');
+    }finally{if(button)button.disabled=false;}
   }
   async function onFile(event){
     var file=event.target.files&&event.target.files[0];if(!file)return;

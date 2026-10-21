@@ -47,6 +47,8 @@ class PersonalContextGraphContract(unittest.TestCase):
         self.assertNotIn("fetch(", self.client)
         self.assertNotIn("getAiEligibleContext:getAiEligibleContext", self.client)
         self.assertIn("listMetadata:function()", self.client)
+        self.assertIn("var summaryOnly=!root&&!!summary", self.client)
+        self.assertIn("itemColumns=summaryOnly?", self.client)
         self.assertIn("ai analysis", self.life.lower())
 
     def test_import_limits_and_explicit_save_are_present(self):

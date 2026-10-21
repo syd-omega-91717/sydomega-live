@@ -119,6 +119,7 @@ async function settle() { await Promise.resolve(); await new Promise(resolve => 
 
   allowed.emit('omega:populated', {profile:{id:'user-a', display_name:'A'}});
   await settle();
+  allowed.client.setAiPersonalization(false);
   allowed.emit('omega:consent-changed', {type:'ai_personalization',granted:false});
   assert.deepStrictEqual(Array.from(await allowed.api.recall(10)), [], 'revoking AI personalization must immediately block memory retrieval');
   assert.strictEqual(allowed.storage.has('omega_mem_v2_user-a_user-note'), false, 'revoking AI personalization must clear user-scoped browser memory');

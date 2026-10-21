@@ -25,7 +25,7 @@ class LiveBindingTruthContract(unittest.TestCase):
         self.assertIn("function initializeLiveShell()", self.source)
         self.assertIn("else initializeLiveShell();", self.source)
 
-    def test_auth_score_is_calculated_from_persisted_axes(self):
+    def test_auth_score_is_calculated_from_profile_axes(self):
         self.assertIn("var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*phi/euler;", self.fetch)
         self.assertIn("setLiveState(el,'calculated')", self.fetch)
         self.assertNotIn("_profile.is_owner?9", self.fetch)

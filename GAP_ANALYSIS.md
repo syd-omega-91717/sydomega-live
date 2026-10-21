@@ -1322,12 +1322,13 @@ verifying the *current* guard says nothing about what may have happened before i
      `<script>` line in `bg.js` puts that strip on all 189 pages. The subsystem is
      not one line from shipping — its entry point was never finished.
 
-  1. **The Ctrl/Cmd+K chord is already taken.** `omega-keyboard.js:155` (loaded on
-     every page) binds it to `window.OmegaSearch.open()`.
-     `omega-command-palette.js` binds the same chord and calls `preventDefault()`.
-     Both handlers would fire and two overlays would open on one keystroke. One of
-     the two has to yield, and that is a product decision about which surface owns
-     the platform's primary chord — not something to settle silently in a sweep.
+  1. **RESOLVED 2026-10-22 — Ctrl/Cmd+K has one primary owner.** The inline
+     global palette in `nav.js` is canonical. `omega-keyboard.js` now defers when
+     that palette is mounted and invokes the legacy `OmegaSearch` only on surfaces
+     without the palette. A regression contract verifies owner precedence, keyboard
+     help copy, and combobox active-option semantics. The old reference to
+     `omega-command-palette.js` was stale: the current deployed palette is owned by
+     `nav.js`.
   2. **Its guard attributes are array indices.** It injects with
      `inject('/'+x,'data-omega-'+i)` — the guard is the module's *position* in a
      literal, so `data-omega-0`, `data-omega-1`, … carry no module identity at all.

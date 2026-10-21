@@ -21,6 +21,8 @@ class LivingObjectTruthContract(unittest.TestCase):
         self.assertIn("NO VERIFIED ACTION REGISTERED", self.source)
         self.assertIn("if(act==='OPEN'&&pg){location.href=pg;return;}", self.source)
         self.assertNotIn("showToast(act+': '+title", self.source)
+        self.assertNotIn("showToast('Admin mode:'", self.source)
+        self.assertIn("location.href='/control-center.html'", self.source)
         start = self.source.index("function showContextMenu")
         end = self.source.index("function hideContextMenu", start)
         menu = self.source[start:end]

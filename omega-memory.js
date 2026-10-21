@@ -1,8 +1,8 @@
 /* Ω SYD OMEGA 91717 — SOVEREIGN AI MEMORY ENGINE
  *
  * Privacy boundary:
- * - Memory is opt-in through the latest explicit personalisation consent.
- * - Consent lookup fails closed.
+ * - Memory is opt-in through the canonical account-level AI-personalization preference.
+ * - Consent is re-read from Supabase for every operation and fails closed.
  * - Browser fallback keys are user-namespaced; legacy unscoped keys are never read.
  * - Reads and writes require an authenticated user and current consent.
  * - Deletion remains available after consent is revoked.
@@ -10,7 +10,7 @@
 (function(){
   if(window.__omegaMemoryActive) return;
   window.__omegaMemoryActive=true;
-  var MEM_PREFIX='omega_mem_v2_', LEGACY_PREFIX='omega_mem_', _uid=null, _cache={}, _consentPromise=null;
+  var MEM_PREFIX='omega_mem_v2_', LEGACY_PREFIX='omega_mem_', _uid=null, _cache={};
 
   function localKey(key){return MEM_PREFIX+_uid+'_'+key;}
   function localSet(key,value,type){
@@ -46,26 +46,20 @@
   function clearCache(){_cache={};}
   clearLegacyLocal();
 
-  async function hasPersonalisationConsent(){
+  async function hasAiPersonalizationConsent(){
     if(!_uid||!window.__omegaSb)return false;
-    if(!_consentPromise){
-      _consentPromise=(async function(){
-        try{
-          var r=await window.__omegaSb.from('consent_records')
-            .select('granted,revoked_at')
-            .eq('user_id',_uid)
-            .eq('consent_type','personalisation')
-            .is('revoked_at',null)
-            .order('granted_at',{ascending:false})
-            .limit(1);
-          return !r.error&&Array.isArray(r.data)&&r.data.length>0&&r.data[0].granted===true&&!r.data[0].revoked_at;
-        }catch(e){return false;}
-      })();
-    }
-    return _consentPromise;
+    try{
+      /* Re-read the authoritative preference for every operation. This avoids
+         stale consent in another tab after a user revokes AI personalization. */
+      var r=await window.__omegaSb.from('omega_personal_context_preferences')
+        .select('ai_personalization_enabled')
+        .eq('user_id',_uid)
+        .maybeSingle();
+      return !r.error&&!!r.data&&r.data.ai_personalization_enabled===true;
+    }catch(e){return false;}
   }
   async function permitted(){
-    var ok=await hasPersonalisationConsent();
+    var ok=await hasAiPersonalizationConsent();
     if(!ok){clearCache();clearLocalUser();}
     return ok;
   }
@@ -177,13 +171,12 @@
   document.addEventListener('omega:populated',function(e){
     var pr=e.detail&&e.detail.profile;
     if(!pr||!pr.id)return;
-    if(_uid!==pr.id){clearCache();_uid=pr.id;_consentPromise=null;}
+    if(_uid!==pr.id){clearCache();_uid=pr.id;}
     learnFromProfile(pr);
   });
   document.addEventListener('omega:consent-changed',function(e){
     var detail=e.detail||{};
-    if(detail.type==='personalisation'){
-      _consentPromise=Promise.resolve(detail.granted===true);
+    if(detail.type==='ai_personalization'){
       if(detail.granted!==true){clearCache();clearLocalUser();}
     }
   });

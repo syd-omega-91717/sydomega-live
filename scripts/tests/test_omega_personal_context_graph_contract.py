@@ -55,6 +55,8 @@ class PersonalContextGraphContract(unittest.TestCase):
 
     def test_cross_surface_links_and_change_event_exist(self):
         self.assertIn('id="personal-context"', self.life)
+        for task in ("personal-context.export", "personal-context.import", "personal-context.save", "personal-context.cancel-edit", "personal-context.link"):
+            self.assertIn(f'data-omega-task-id="{task}"', self.life)
         self.assertIn('id="omega-personal-context-summary"', self.intelligence)
         self.assertIn("omega:personal-context:changed", self.client)
         self.assertIn("PERSONAL CONTEXT", self.navigation)

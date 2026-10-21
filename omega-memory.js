@@ -46,19 +46,16 @@
   function clearCache(){_cache={};}
   clearLegacyLocal();
 
-  async function hasPersonalisationConsent(){
+  async function hasAiPersonalizationConsent(){
     if(!_uid||!window.__omegaSb)return false;
     if(!_consentPromise){
       _consentPromise=(async function(){
         try{
-          var r=await window.__omegaSb.from('consent_records')
-            .select('granted,revoked_at')
+          var r=await window.__omegaSb.from('omega_personal_context_preferences')
+            .select('ai_personalization_enabled')
             .eq('user_id',_uid)
-            .eq('consent_type','personalisation')
-            .is('revoked_at',null)
-            .order('granted_at',{ascending:false})
-            .limit(1);
-          return !r.error&&Array.isArray(r.data)&&r.data.length>0&&r.data[0].granted===true&&!r.data[0].revoked_at;
+            .maybeSingle();
+          return !r.error&&!!r.data&&r.data.ai_personalization_enabled===true;
         }catch(e){return false;}
       })();
     }
@@ -182,7 +179,7 @@
   });
   document.addEventListener('omega:consent-changed',function(e){
     var detail=e.detail||{};
-    if(detail.type==='personalisation'){
+    if(detail.type==='ai_personalization'){
       _consentPromise=Promise.resolve(detail.granted===true);
       if(detail.granted!==true){clearCache();clearLocalUser();}
     }

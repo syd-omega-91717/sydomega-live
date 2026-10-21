@@ -213,7 +213,7 @@ Deno.serve(async (req) => {
           const ranked = eligible.map((item) => {
             const corpus = [item.title, item.context_kind, ...(item.tags ?? []), (item.content ?? "").slice(0, 5000)]
               .join(" ").toLocaleLowerCase();
-            const corpusTerms = new Set(corpus.match(/[\\p{L}\\p{N}]{3,}/gu) ?? []);
+            const corpusTerms = new Set(corpus.match(/[\p{L}\p{N}]{3,}/gu) ?? []);
             let score = 0;
             for (const term of queryTerms) if (corpusTerms.has(term)) score += 1;
             return { item, score };

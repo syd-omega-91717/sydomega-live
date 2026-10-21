@@ -2,5 +2,15 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": []
+  "pending": [
+    {
+      "version": "20261021100000",
+      "file": "20261021100000_private_member_write_rpc_boundary_20261021.sql",
+      "name": "private_member_write_rpc_boundary_20261021",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Move authenticated member write RPC implementations out of the exposed public schema while preserving their validated bodies and keeping public invoker wrappers compatible. Require fresh replay, security-contract, authenticated write, and live advisor verification before production rollout."
+    }
+  ]
 }

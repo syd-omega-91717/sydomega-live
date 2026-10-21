@@ -22,6 +22,8 @@ class LiveBindingTruthContract(unittest.TestCase):
         self.assertIn("setLiveState(el,'unavailable','—')", self.fetch)
         self.assertIn("else if(state==='loading'&&previous!=='live'&&previous!=='calculated')el.textContent='…';", self.source)
         self.assertIn("delete el.dataset.liveBound", self.source)
+        self.assertIn("function initializeLiveShell()", self.source)
+        self.assertIn("else initializeLiveShell();", self.source)
 
     def test_auth_score_is_calculated_from_persisted_axes(self):
         self.assertIn("var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*phi/euler;", self.fetch)

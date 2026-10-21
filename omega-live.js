@@ -32,7 +32,7 @@
     var previous=el.dataset.liveState;
     el.dataset.liveState=state;
     if(text!==undefined)el.textContent=text;
-    else if(state==='loading'&&previous!=='live'&&previous!=='calculated')el.textContent='…';
+    else if(state==='loading'&&previous!=='live'&&previous!=='calculated'&&previous!=='canonical')el.textContent='…';
   }
 
   function bindLiveElements(){
@@ -119,7 +119,7 @@
         return;
       }
       renderValue(el,_profile[target],format);
-      setLiveState(el,'live');
+      setLiveState(el,_profile.is_owner?'canonical':'live');
       return;
     }
     if(type==='count'){

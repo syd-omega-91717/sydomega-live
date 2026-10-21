@@ -297,6 +297,15 @@ BEGIN
         CASE WHEN NEW.sensitive_data_processing_enabled THEN 'granted' ELSE 'revoked' END, NEW.consent_version);
     END IF;
   END IF;
+  IF TG_OP = 'UPDATE'
+     AND OLD.ai_personalization_enabled
+     AND NOT NEW.ai_personalization_enabled THEN
+    -- Revocation is durable: disabling global AI use clears every item-level
+    -- permission so a later re-enable never silently reactivates old consent.
+    UPDATE public.omega_personal_context_items
+       SET ai_processing_allowed = false, ai_consent_at = NULL
+     WHERE user_id = NEW.user_id AND ai_processing_allowed = true;
+  END IF;
   NEW.consent_updated_at := pg_catalog.now();
   RETURN NEW;
 END;

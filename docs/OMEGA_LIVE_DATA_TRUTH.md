@@ -7,7 +7,8 @@ The shared live-data engine must distinguish a successful value from loading, a 
 ## Runtime states
 
 - **loading** — the query or binding is in progress; first-load placeholders are replaced by an ellipsis.
-- **live** — the value came from a successful live query or the current authenticated profile.
+- **live** — the value came from a successful live query or a non-owner authenticated profile.
+- **canonical** — the value comes from the platform's fixed owner-profile contract; it is not represented as a fresh provider measurement.
 - **calculated** — the value is derived from persisted inputs; it is not an independent provider measurement.
 - **unavailable** — the required session, source, or value is missing.
 - **error** — the provider query failed; the UI shows an em dash rather than retaining a stale value.

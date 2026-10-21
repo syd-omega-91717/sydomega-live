@@ -3,6 +3,10 @@ const vm = require('vm');
 const assert = require('assert');
 
 const source = fs.readFileSync('omega-memory.js', 'utf8');
+const privacySource = fs.readFileSync('privacy.html', 'utf8');
+assert(privacySource.includes('var granted=!!(rec&&rec.granted===true);'), 'missing consent records must default to denied');
+assert(!privacySource.includes('var granted=rec?rec.granted:true;'), 'privacy UI must never default missing consent to granted');
+assert(privacySource.includes('if(cr.error)throw cr.error;'), 'consent lookup errors must enter the fail-closed UI path');
 
 function makeStorage(seed) {
   const data = new Map(Object.entries(seed || {}));

@@ -14,13 +14,13 @@ class LiveBindingTruthContract(unittest.TestCase):
         cls.fetch = cls.source[cls.source.index("function fetchLive"):cls.source.index("function renderValue")]
 
     def test_live_bindings_expose_explicit_truth_states(self):
-        for state in ("loading", "live", "calculated", "unavailable", "error"):
+        for state in ("loading", "live", "calculated", "canonical", "unavailable", "error"):
             self.assertIn("'%s'" % state, self.source)
         self.assertIn("el.dataset.liveState=state", self.source)
 
     def test_missing_auth_and_missing_data_never_leave_a_stale_placeholder(self):
         self.assertIn("setLiveState(el,'unavailable','—')", self.fetch)
-        self.assertIn("else if(state==='loading'&&previous!=='live'&&previous!=='calculated')el.textContent='…';", self.source)
+        self.assertIn("else if(state==='loading'&&previous!=='live'&&previous!=='calculated'&&previous!=='canonical')el.textContent='…';", self.source)
         self.assertIn("delete el.dataset.liveBound", self.source)
         self.assertIn("function initializeLiveShell()", self.source)
         self.assertIn("else initializeLiveShell();", self.source)
@@ -28,6 +28,7 @@ class LiveBindingTruthContract(unittest.TestCase):
     def test_auth_score_is_calculated_from_profile_axes(self):
         self.assertIn("var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*phi/euler;", self.fetch)
         self.assertIn("setLiveState(el,'calculated')", self.fetch)
+        self.assertIn("setLiveState(el,_profile.is_owner?'canonical':'live')", self.fetch)
         self.assertNotIn("_profile.is_owner?9", self.fetch)
         self.assertNotIn("27.8367", self.fetch)
         self.assertNotIn("||0.001", self.fetch)

@@ -9,7 +9,7 @@
   var POLICY_VERSION='2026-10-22-v1';
   var MAX_FILE_BYTES=1000000;
   var MAX_CONTENT_CHARS=200000;
-  var sb=null,uid=null,items=[],links=[],preferences=defaultPreferences();
+  var sb=null,uid=null,items=[],links=[],dataAvailable=false,preferences=defaultPreferences();
   var editingId=null,sourceKind='user_authored',sourceLabel=null,sourceMetadata={};
   var root=document.getElementById('omega-personal-context');
   var summary=document.getElementById('omega-personal-context-summary');
@@ -45,7 +45,8 @@
     if(!summary)return;
     summary.replaceChildren();
     var title=node('h3','', 'YOUR PERSONAL CONTEXT');
-    var p=node('p','',uid?items.length+' private record(s) · '+links.length+' connection(s) · '+getAiEligibleContext().length+' AI-consented record(s).':'Sign in to view your private context.');
+    var summaryText=!uid?'Sign in to view your private context.':!dataAvailable?'Private context storage is unavailable. No records are being treated as empty; the schema migration or authenticated data source is not ready.':items.length+' private record(s) · '+links.length+' connection(s) · '+getAiEligibleContext().length+' AI-consented record(s).';
+    var p=node('p','',summaryText);
     summary.append(title,p);
     var note=node('p','pc-mini','AI use is opt-in. No personal content is transmitted by this dashboard. Analysis requires a separately configured, governed AI route.');
     summary.appendChild(note);
@@ -117,11 +118,11 @@
       sb.from('omega_personal_context_links').select('id,user_id,from_item_id,to_item_id,relation_kind,source_kind,user_confirmed,note,created_at').eq('user_id',uid).order('created_at',{ascending:false}).limit(200)
     ]);
     if(results[0].error||results[2].error){
-      items=[];links=[];renderAll();setTruth('MIGRATION PENDING OR DATA SOURCE UNAVAILABLE');setStatus('Personal context storage is not available yet. The schema migration must pass review and be applied before this feature can save or load data.','warning');return;
+      items=[];links=[];dataAvailable=false;renderAll();setTruth('MIGRATION PENDING OR DATA SOURCE UNAVAILABLE');setStatus('Personal context storage is not available yet. The schema migration must pass review and be applied before this feature can save or load data.','warning');return;
     }
     if(results[1].error){setStatus('Preferences could not be loaded. AI consent remains disabled in this view.','warning');preferences=defaultPreferences();}
     else preferences=Object.assign(defaultPreferences(),results[1].data||{});
-    items=results[0].data||[];links=results[2].data||[];
+    items=results[0].data||[];links=results[2].data||[];dataAvailable=true;
     setTruth('LIVE · AUTHENTICATED PRIVATE DATA');
     setStatus(items.length>=200?'Loaded 200 records. Refine your search; older records may require pagination.':'Loaded '+items.length+' private record(s). No external AI call was made.','info');
     renderAll();

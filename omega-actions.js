@@ -57,15 +57,15 @@
   /* ── OBJECT REGISTRY — 11 PMI Dimensions ─────────────────────── */
   var OBJECTS = {
     /* KPI cards */
-    'auth-score':    {identity:'Authority Score',purpose:'Real-time sovereign authority',owner:'Sovereign',state:'live',actions:['VIEW GATES','COMPARE','HISTORY'],page:'/evolution.html',insight:'Your authority is computed as AUTH=sqrt(A³+B³+C³)×φ/e. Every task completion moves you closer to the next gate.'},
-    'member-count':  {identity:'Active Members',purpose:'Platform population metric',owner:'Analyst',state:'live',actions:['MANAGE','EXPORT','PREDICT'],page:'/approvals.html',insight:'Members with access_approved=true. Platform grows when the Sovereign Founder approves access requests.'},
-    'tasks-today':   {identity:'Tasks Today',purpose:'Daily axis increment activity',owner:'Tutor',state:'live',actions:['VIEW ALL','ASSIGN','AUTOMATE'],page:'/gaming.html',insight:'Each task completion increments one or more axes. 200 tasks/day is the rate limit per member.'},
-    'gate-position': {identity:'Authority Gate',purpose:'Progression milestone marker',owner:'Analyst',state:'live',actions:['NEXT GATE','SEE ALL','CELEBRATE'],page:'/gates.html',insight:'12 gates from INITIATE(2.32) to APEX(27.84). Gate unlock triggers a ceremony workflow.'},
-    'platform-health':{identity:'Platform Health',purpose:'SRE health score',owner:'Auditor',state:'live',actions:['OBSERVATORY','INCIDENTS','METRICS'],page:'/observatory.html',insight:'Composite score from SLO compliance, error budget, active incidents, and Core Web Vitals.'},
+    'auth-score':    {identity:'Authority Score',purpose:'Calculated sovereign authority',owner:'Sovereign',state:'calculated',actions:['OPEN'],page:'/evolution.html',insight:'Calculated from the member axes using AUTH=sqrt(A³+B³+C³)×φ/e; this is a derived score, not a financial balance.'},
+    'member-count':  {identity:'Approved Members',purpose:'Approved member population',owner:'Analyst',state:'live',actions:['OPEN'],page:'/approvals.html',insight:'Counts approved member accounts; approval is not the same as recent activity or an active session.'},
+    'tasks-today':   {identity:'Tasks Today',purpose:'Daily axis increment activity',owner:'Tutor',state:'live',actions:['OPEN'],page:'/gaming.html',insight:'Each task completion increments one or more axes. 200 tasks/day is the rate limit per member.'},
+    'gate-position': {identity:'Authority Gate',purpose:'Calculated progression milestone',owner:'Analyst',state:'calculated',actions:['OPEN'],page:'/gates.html',insight:'Shows the gate derived from the current authority score. A gate display is not proof that a reward or ceremony was executed.'},
+    'platform-health':{identity:'Platform Health',purpose:'Platform operations overview',owner:'Auditor',state:'unverified',actions:['OPEN'],page:'/observatory.html',insight:'The live inputs and calculation for a composite SRE health score require runtime evidence before a score can be treated as verified.'},
     /* Modules */
-    'M1-core':       {identity:'Platform Core',purpose:'Auth, identity, subscriptions',owner:'Sovereign',state:'live',actions:['OPEN','ANALYZE','CONFIGURE'],page:'/dashboard.html',insight:'Core platform: authentication, KYC, member profiles, search, payments.'},
-    'M7-blockchain': {identity:'Blockchain Layer',purpose:'Token economy and NFTs',owner:'Merchant',state:'dormant',actions:['VIEW STATUS','LEGAL CHECK','PREVIEW'],page:'/blockchain.html',insight:'ΩSYD token economy is dormant. Awaiting licensed legal counsel for securities compliance before activation.'},
-    'M17-ai':        {identity:'Intelligence Layer',purpose:'12-agent AI orchestration',owner:'Oracle',state:'live',actions:['COMMAND','QUERY','CONFIGURE'],page:'/sovereign-ai.html',insight:'12 agents active. ReAct reasoning via concierge edge function. Memory persistence enabled.'},
+    'M1-core':       {identity:'Platform Core',purpose:'Auth, identity, subscriptions',owner:'Sovereign',state:'live',actions:['OPEN'],page:'/dashboard.html',insight:'Core platform: authentication, KYC, member profiles, search, payments.'},
+    'M7-blockchain': {identity:'Blockchain Layer',purpose:'Token economy and NFTs',owner:'Merchant',state:'dormant',actions:['OPEN'],page:'/blockchain.html',insight:'ΩSYD token economy is dormant. Awaiting licensed legal counsel for securities compliance before activation.'},
+    'M17-ai':        {identity:'Intelligence Layer',purpose:'AI orchestration',owner:'Oracle',state:'unverified',actions:['OPEN'],page:'/sovereign-ai.html',insight:'Agent availability, orchestration strategy, and memory persistence must be verified against current runtime evidence before being presented as active.'},
   };
 
   /* ── INTELLIGENCE ENGINE for hover insights ───────────────────── */
@@ -73,6 +73,15 @@
   async function getInsight(el){
     var key = el.dataset.living||el.id||el.className.split(' ')[0];
     if(_insightCache[key]) return _insightCache[key];
+    /* Never generate a factual-sounding insight for an object without a contract. */
+    if(!OBJECTS[key]){
+      _insightCache[key]='No verified object contract is registered. Treat values and behavior as unverified.';
+      return _insightCache[key];
+    }
+    var registered=OBJECTS[key];
+    var insight=registered.state==='unverified'?'UNVERIFIED — '+registered.insight:registered.insight;
+    _insightCache[key]=insight;
+    return insight;
     /* Check registry first */
     if(OBJECTS[key]) return OBJECTS[key].insight;
     /* Generate from element content */
@@ -100,7 +109,8 @@
     if(_panel) return;
     _panel=document.createElement('div');
     _panel.className='oa-panel';
-    _panel.setAttribute('role','tooltip');
+    _panel.setAttribute('role','region');
+    _panel.setAttribute('aria-label','Object details and available actions');
     _panel.setAttribute('aria-live','polite');
     document.body.appendChild(_panel);
     _panel.addEventListener('mouseleave',hidePanel);
@@ -114,15 +124,16 @@
     /* Title */
     var titleEl=el.querySelector('.kpi-l,.agent-name,.mc-name,.policy-id,.sechead,.t');
     var title=obj.identity||(titleEl&&titleEl.textContent.trim())||el.title||'Object';
-    var owner=obj.owner||'Sovereign';
-    var state=obj.state||'live';
+    var owner=obj.owner||'Unassigned';
+    var state=obj.state||'unverified';
     var page=obj.page||null;
-    /* Quick actions */
-    var actions=obj.actions||['OPEN','ANALYZE','HISTORY'];
+    var stateColor=state==='live'?'var(--green,#3fb27f)':state==='calculated'?'var(--cyan,#00E5FF)':(state==='dormant'||state==='unavailable')?'var(--muted,#8a8676)':state==='simulated'?'var(--red,#8B0000)':'var(--solar,#E2C86D)';
+    /* Only navigation with a registered destination is executable here. */
+    var actions=page?['OPEN']:[];
     _panel.innerHTML='<div class="oa-panel-title">'+esc(title.toUpperCase())+'</div>'
-      +'<div class="oa-panel-meta">OWNER: '+esc(owner.toUpperCase())+' &middot; STATE: <span style="color:'+(state==='live'?'var(--green,#3fb27f)':state==='dormant'?'var(--muted,#8a8676)':'var(--solar,#E2C86D)')+'">'+esc(state.toUpperCase())+'</span></div>'
+      +'<div class="oa-panel-meta">OWNER: '+esc(owner.toUpperCase())+' &middot; STATE: <span style="color:'+stateColor+'">'+esc(state.toUpperCase())+'</span></div>'
       +'<div class="oa-panel-insight" id="oa-insight-text">Analysing&hellip;</div>'
-      +'<div class="oa-actions">'+actions.map(function(a){return'<button class="oa-action-btn" data-action="'+esc(a)+'"'+(page?' data-page="'+esc(page)+'"':'')+'>'+(a==='OPEN'?'&#8594; ':'')+esc(a)+'</button>';}).join('')+'</div>';
+      +(actions.length?'<div class="oa-actions">'+actions.map(function(a){return'<button class="oa-action-btn" data-action="'+esc(a)+'" data-page="'+esc(page)+'">&#8594; '+esc(a)+'</button>';}).join('')+'</div>':'<div class="oa-panel-meta">NO VERIFIED ACTION REGISTERED</div>');
     /* Position */
     var rect=el.getBoundingClientRect();
     var ph=_panel.offsetHeight||140;
@@ -136,9 +147,8 @@
       btn.addEventListener('click',function(){
         var act=btn.dataset.action,pg=btn.dataset.page;
         if(act==='OPEN'&&pg){location.href=pg;return;}
-        if(window.OmegaNotify)window.OmegaNotify.showToast(act+': '+title,'info');
-        if(window.OmegaTelemetry)window.OmegaTelemetry.track('quick_action',{action:act,object:key});
-        hidePanel();
+        /* Unknown actions must never degrade into success-shaped toast messages. */
+        return;
       });
     });
     /* Load AI insight asynchronously */
@@ -159,17 +169,12 @@
     var key=el.dataset.living||el.id||'';
     var obj=OBJECTS[key]||{};
     var title=obj.identity||(el.querySelector('.kpi-l,.agent-name,.mc-name')&&el.querySelector('.kpi-l,.agent-name,.mc-name').textContent.trim())||'Object';
-    var items=[
-      {icon:'&#8594;',label:'OPEN',action:function(){if(obj.page)location.href=obj.page;}},
-      {icon:'&#9670;',label:'AI ANALYSE',action:function(){if(window.OmegaCopilot)window.OmegaCopilot.open();if(window.OmegaTelemetry)window.OmegaTelemetry.track('ctx_ai_analyse',{key:key});}},
-      {sep:true},
-      {icon:'&#9650;',label:'HISTORY',action:function(){if(window.OmegaNotify)window.OmegaNotify.showToast('History for: '+title,'info');}},
-      {icon:'&#9654;',label:'EXPORT',action:function(){if(window.OmegaNotify)window.OmegaNotify.showToast('Export: '+title,'info');}},
-      {sep:true},
-      {icon:'&#9888;',label:'DEPENDENCIES',action:function(){if(window.OmegaNotify)window.OmegaNotify.showToast('Dependencies: '+title,'info');}},
-      {icon:'&#9826;',label:'PERMISSIONS',action:function(){location.href='/governance.html';}},
-    ];
-    if(_profile&&_profile.is_owner){items.push({sep:true},{icon:'&#9881;',label:'ADMIN',action:function(){location.href='/enterprise.html';}});}
+    var items=[];
+    if(obj.page) items.push({icon:'&#8594;',label:'OPEN',action:function(){location.href=obj.page;}});
+    if(window.OmegaCopilot&&typeof window.OmegaCopilot.open==='function')
+      items.push({icon:'&#9670;',label:'AI ANALYSE',action:function(){window.OmegaCopilot.open();if(window.OmegaTelemetry)window.OmegaTelemetry.track('ctx_ai_analyse',{key:key});}});
+    if(_profile&&_profile.is_owner) items.push({icon:'&#9881;',label:'ADMIN',action:function(){location.href='/enterprise.html';}});
+    if(!items.length) return;
     _ctx=document.createElement('div');
     _ctx.className='oa-ctx';
     _ctx.style.top=Math.min(y,window.innerHeight-250)+'px';

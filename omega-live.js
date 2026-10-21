@@ -29,8 +29,10 @@
   /* Usage: <div data-live="count:profiles" data-live-filter="access_approved:true"></div> */
   function setLiveState(el,state,text){
     if(!el)return;
+    var previous=el.dataset.liveState;
     el.dataset.liveState=state;
     if(text!==undefined)el.textContent=text;
+    else if(state==='loading'&&previous!=='live'&&previous!=='calculated')el.textContent='…';
   }
 
   function bindLiveElements(){

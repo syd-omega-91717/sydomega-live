@@ -7,6 +7,10 @@ const privacySource = fs.readFileSync('privacy.html', 'utf8');
 assert(privacySource.includes('var granted=!!(rec&&rec.granted===true);'), 'missing consent records must default to denied');
 assert(!privacySource.includes('var granted=rec?rec.granted:true;'), 'privacy UI must never default missing consent to granted');
 assert(privacySource.includes('if(cr.error)throw cr.error;'), 'consent lookup errors must enter the fail-closed UI path');
+assert(source.includes("from('omega_personal_context_preferences')"), 'AI memory must use the dedicated AI personalization preference');
+assert(!source.includes("from('consent_records')"), 'legacy presence/activity consent must not authorize AI memory');
+const contextSource = fs.readFileSync('omega-personal-context.js', 'utf8');
+assert(contextSource.includes("type:'ai_personalization'"), 'personal context must synchronize the canonical AI consent state');
 
 function makeStorage(seed) {
   const data = new Map(Object.entries(seed || {}));
@@ -22,8 +26,8 @@ function makeStorage(seed) {
 
 function makeClient() {
   const rows = [];
-  let consent = false;
-  let consentError = false;
+  let aiPersonalization = false;
+  let preferenceError = false;
   function query(table) {
     const q = { table, filters: {}, mode: 'select' };
     q.select = function() { this.mode = 'select'; return this; };
@@ -31,13 +35,16 @@ function makeClient() {
     q.is = function(k, v) { this.filters[k] = v; return this; };
     q.order = function() { return this; };
     q.limit = async function() {
-      if (this.table === 'consent_records') {
-        return { data: consentError ? null : (consent ? [{granted:true, revoked_at:null}] : []), error: consentError ? {message:'unavailable'} : null };
-      }
       const found = rows.filter(row => Object.entries(this.filters).every(([k,v]) => row[k] === v));
       return { data: found.slice(0, 10).map(row => ({...row})), error: null };
     };
     q.maybeSingle = async function() {
+      if (this.table === 'omega_personal_context_preferences') {
+        return {
+          data: preferenceError ? null : (aiPersonalization ? {user_id:this.filters.user_id,ai_personalization_enabled:true} : null),
+          error: preferenceError ? {message:'unavailable'} : null
+        };
+      }
       const row = rows.find(row => Object.entries(this.filters).every(([k,v]) => row[k] === v));
       return { data: row ? {...row} : null, error: null };
     };
@@ -65,8 +72,8 @@ function makeClient() {
   return {
     from: query,
     rows,
-    setConsent(v) { consent = v; consentError = false; },
-    setConsentError(v) { consentError = v; }
+    setAiPersonalization(v) { aiPersonalization = v; preferenceError = false; },
+    setPreferenceError(v) { preferenceError = v; }
   };
 }
 
@@ -98,7 +105,7 @@ async function settle() { await Promise.resolve(); await new Promise(resolve => 
   assert.strictEqual(denied.client.rows.length, 0, 'no-consent profile event must not persist profile-derived memory');
 
   const allowed = load();
-  allowed.client.setConsent(true);
+  allowed.client.setAiPersonalization(true);
   allowed.emit('omega:populated', {profile:{id:'user-a', display_name:'A'}});
   await settle();
   assert.strictEqual(await allowed.api.store('user-note', 'remember only for me'), true, 'explicitly consented write should persist');
@@ -110,8 +117,15 @@ async function settle() { await Promise.resolve(); await new Promise(resolve => 
   const bRows = Array.from(await allowed.api.recall(20));
   assert(!bRows.some(row => row.key === 'user-note' && row.content === 'remember only for me'), 'memory must not cross account boundaries');
 
+  allowed.emit('omega:populated', {profile:{id:'user-a', display_name:'A'}});
+  await settle();
+  allowed.emit('omega:consent-changed', {type:'ai_personalization',granted:false});
+  assert.deepStrictEqual(Array.from(await allowed.api.recall(10)), [], 'revoking AI personalization must immediately block memory retrieval');
+  assert.strictEqual(allowed.storage.has('omega_mem_v2_user-a_user-note'), false, 'revoking AI personalization must clear user-scoped browser memory');
+  assert.strictEqual(await allowed.api.store('after-revoke', 'blocked'), false, 'revoking AI personalization must block subsequent writes');
+
   const unavailable = load();
-  unavailable.client.setConsentError(true);
+  unavailable.client.setPreferenceError(true);
   unavailable.emit('omega:populated', {profile:{id:'user-c', display_name:'C'}});
   await settle();
   assert.strictEqual(await unavailable.api.store('blocked', 'no'), false, 'consent lookup errors must fail closed');

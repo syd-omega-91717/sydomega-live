@@ -132,10 +132,10 @@
         return;
       });
     });
-    /* Load AI insight asynchronously */
+    /* Bind async insight completion to this panel render, never a later object's panel. */
+    var insightTarget=_panel.querySelector('#oa-insight-text');
     getInsight(el).then(function(insight){
-      var el2=document.getElementById('oa-insight-text');
-      if(el2)el2.textContent=insight;
+      if(insightTarget&&insightTarget.parentNode===_panel)insightTarget.textContent=insight;
     });
   }
 

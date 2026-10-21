@@ -232,7 +232,9 @@
       var totalContentChars=results[0].reduce(function(total,item){return total+String(item.content||'').length;},0);
       if(totalContentChars>10000000)throw new Error('export_size_limit');
       var data={schema:'omega-personal-context-export/v1',exportedAt:new Date().toISOString(),policyVersion:POLICY_VERSION,privacy:{privateByDefault:true,aiProviderCalled:false,exportComplete:true},preferences:results[3].data||defaultPreferences(),items:results[0],links:results[1],consentEvents:results[2]};
-      var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+      var serialized=JSON.stringify(data,null,2);
+      if(serialized.length>20000000)throw new Error('export_size_limit');
+      var blob=new Blob([serialized],{type:'application/json;charset=utf-8'});
       var url=URL.createObjectURL(blob),a=node('a','','Download personal context export');a.href=url;a.download='omega-personal-context-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();window.setTimeout(function(){URL.revokeObjectURL(url);},1000);
       setStatus('Complete export prepared: '+results[0].length+' records, '+results[1].length+' links and '+results[2].length+' consent events. Keep the downloaded file private.','info');
     }catch(e){

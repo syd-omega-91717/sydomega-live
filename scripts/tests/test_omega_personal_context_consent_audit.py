@@ -74,6 +74,8 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
         self.assertIn("if: github.ref == 'refs/heads/main'", workflow)
         self.assertIn("CONFIRM_PRODUCTION_APPLY", workflow)
         self.assertIn("supabase db push --dry-run --linked", workflow)
+        self.assertIn('version != "20261022130000"', workflow)
+        self.assertIn("auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM NEW.user_id", workflow)
         self.assertIn("if mismatches != [(version, None)]", workflow)
         self.assertIn("supabase db push --linked --yes", workflow)
         self.assertIn("supabase migration list --linked", workflow)

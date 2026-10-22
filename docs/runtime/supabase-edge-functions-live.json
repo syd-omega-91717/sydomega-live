@@ -6,6 +6,7 @@
   "functions": {
     "concierge": {
       "state": "DEPLOYED",
+      "version": 11,
       "version": 10,
       "verify_jwt": true,
       "live_sha256": "9c82ef86478fc5308f10dc912c7bd13764334eb5db89546293b2762e5c094a90",
@@ -55,6 +56,9 @@
     },
     "evidence-graph": {
       "state": "DEPLOYED",
+      "version": 61,
+      "verify_jwt": false,
+      "live_sha256": "9e20903dc464dff6021b4571d0297447c99390ec02cb7c456d3fec64cc2570a7",
       "version": 60,
       "verify_jwt": false,
       "live_sha256": "c60ecc082391f99710a6455d9302f44e832e040b32be0b9e11dab5a398ad84dc",
@@ -62,6 +66,9 @@
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
+      "version": 240,
+      "verify_jwt": false,
+      "live_sha256": "98575e39075b2af808339eb8e5398bf86a943fd964907a7d344b9ac9d60d3ed9",
       "version": 239,
       "verify_jwt": false,
       "live_sha256": "cca3ac6d10a2f2e87fe4dc5fe66b3aed8ebb29d92fbfc6c0d6b016030e8e6127",
@@ -69,6 +76,9 @@
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
+      "version": 244,
+      "verify_jwt": true,
+      "live_sha256": "e5a9e810ddcd177372f2c42f7d28cb083c123ce2a760922002331e2c070d0cd6",
       "version": 243,
       "verify_jwt": true,
       "live_sha256": "ff531297b8a66d48c4ea76eb8e47daaf3c148189743a557712709058eacdd278",
@@ -76,6 +86,9 @@
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
+      "version": 240,
+      "verify_jwt": false,
+      "live_sha256": "f6293fe8e57faaecb9d983b1e178530f73e2fa1398d9ec513cd595b85d9eb0c1",
       "version": 239,
       "verify_jwt": false,
       "live_sha256": "b5b2149ac39618cefbe7d22f5e60bc01290a9814e91494e84615190aa859ae1e",
@@ -90,6 +103,9 @@
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
+      "version": 61,
+      "verify_jwt": false,
+      "live_sha256": "79c5cd0cc4bae7ec60b1b101fc274791a2f687d0a51beb0e0378ff1091b90f07",
       "version": 60,
       "verify_jwt": false,
       "live_sha256": "994ae9c85369ff72f1a7b44aa5ad6b9082df155bb9bfab2e9cc9590d406182de",
@@ -97,6 +113,9 @@
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
+      "version": 150,
+      "verify_jwt": false,
+      "live_sha256": "37036bcbccaf10e6a0348ecf83fd4ec5558abd49297ca0c4f4a0d32cbcd82944",
       "version": 149,
       "verify_jwt": false,
       "live_sha256": "0505b6e6cf94f70e0081c50c44d2a52fcb841a346a4a90e39d5e7235b9d2f26f",

@@ -12,10 +12,11 @@ The repository contains timestamped reconciliation migrations for changes that w
 
 ## Current provider-verified state — 2026-10-22
 
-- The live Supabase migration ledger contains **405 applied versions**; the latest recorded version is `20261022120000_omega_personal_context_graph_20261022`.
-- The local migration directory contains **406 files**, including `20261022130000_harden_personal_context_consent_audit_20261022.sql`. That final migration is explicitly pending and is **not applied to production**.
-- Until the controlled push workflow is run successfully and the live ledger confirms the exact version, keep `20261022130000` in `supabase/pending-migrations.json` and out of `supabase/remote-migrations.json`.
-- This PR adds `.github/workflows/supabase-controlled-migration-push.yml`, a manual-only, fail-closed workflow. After merge, it requires the exact pending version, explicit confirmation, configured `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD` secrets, a dry-run containing only that migration, and post-push migration-history verification.
+- The live Supabase migration ledger contains **406 applied versions**; the latest recorded version is `20261022130000_harden_personal_context_consent_audit_20261022`. This was independently queried from the connected Supabase project on 2026-10-22.
+- The local migration directory contains 406 migration files, and the current live ledger contains the same 406 versions. The registry snapshot was refreshed from the provider result; the personal-context consent-audit migration is **applied**, not pending.
+- **Repository manifest drift remains open:** `supabase/pending-migrations.json` still lists `20261022130000` as NOT_APPLIED even though the authenticated live ledger now records it as applied. The provider-derived `remote-migrations.json` snapshot has been refreshed; the pending manifest and its regression contract must be reconciled before this follow-up PR can merge. Do not rerun the migration.
+- The one-off manual workflow `.github/workflows/supabase-controlled-migration-push.yml` was written for that migration while pending. Because the migration is already applied, do not dispatch that workflow for this version.
+- Migration-history parity is a point-in-time fact. Continue to require fresh migration replay, policy/grant tests, and provider-side verification for future migrations.
 - The dated sections below are historical snapshots. Their counts and deployment states apply only to the commits and dates named in those sections; use the current ledger snapshot and pending registry above for present state.
 
 ## Verification

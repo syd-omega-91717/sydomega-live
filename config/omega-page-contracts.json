@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 236,
+  "page_count": 237,
   "contracts": [
     {
       "page_id": "404",
@@ -15890,6 +15890,95 @@
         },
         "media_evidence": {
           "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "personal-intelligence",
+      "path": "personal-intelligence.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "INTELLIGENCE",
+      "domain": "PERSONAL_INTELLIGENCE",
+      "primary_role": "AUTHENTICATED_MEMBER",
+      "purpose": "Unify member-controlled personal context, explicit life-knowledge links, governed action routing, and purpose-bound privacy status.",
+      "data_sources": {
+        "supabase_tables": [
+          "omega_personal_context_items",
+          "omega_personal_context_links",
+          "omega_personal_context_preferences"
+        ],
+        "supabase_rpcs": []
+      },
+      "capabilities": [
+        "PRIVATE_CONTEXT_METADATA_READ",
+        "EXPLICIT_LINK_METADATA_READ",
+        "CONSENT_STATE_PRESENTATION",
+        "CANONICAL_WORKSPACE_ROUTING"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::personal-intelligence::BROWSER_STATE_VERIFICATION",
+          "PAGE::personal-intelligence::ASSET_ROUTE_VERIFICATION"
+        ]
+      },
+      "authorization": "READ_ONLY_MEMBER_SCOPED_CONTEXT; PERMISSIONS CHANGED ONLY IN CANONICAL LIFE EDITOR",
+      "truth_states": [
+        "LIVE",
+        "EMPTY",
+        "UNAVAILABLE",
+        "UNVERIFIED",
+        "BLOCKED"
+      ],
+      "asset_requirements": "Uses canonical assets/omega-banner.svg and derived assets/legacy/sign-aries.webp; image routes must pass static asset checks.",
+      "events": [
+        "omega:personal-context:changed",
+        "omega:consent-changed"
+      ],
+      "failure_paths": "Sign-in required; context source unavailable; preferences unavailable; no fabricated empty state; AI advice not connected; image route unavailable.",
+      "accessibility": "Semantic sections and headings, status announcements, alt text, textContent rendering, keyboard reachable links, reduced-motion support.",
+      "responsive": "Responsive four-pillar grid, metadata nodes, consent cards, and visual assets at desktop/tablet/mobile breakpoints.",
+      "traceability": {
+        "page_source": "personal-intelligence.html",
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML/JavaScript source inspection",
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-personal-context.js",
+          "/omega-living-intelligence.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "omega_personal_context_items",
+            "omega_personal_context_links",
+            "omega_personal_context_preferences"
+          ],
+          "supabase_rpcs": []
+        },
+        "capability_registry_matches": [],
+        "domain_candidates": [
+          "PERSONAL_INTELLIGENCE"
+        ]
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 10
+        },
+        "media_evidence": {
+          "images": 2,
           "video": 0,
           "audio": 0,
           "iframes": 0

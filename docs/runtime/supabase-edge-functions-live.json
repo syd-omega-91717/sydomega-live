@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-22T00:00:01.234Z",
+  "captured_at": "2026-10-22T11:31:00Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
     "concierge": {
       "state": "DEPLOYED",
-      "version": 9,
+      "version": 11,
       "verify_jwt": true,
       "live_sha256": "e16a7587e9650225bc447c115aa868838b524e1a236768acd86abe1561c3b8f7",
       "repository_blob_sha": "609cd820b52acf1b0573183ead2bf15d52ae5651"
@@ -55,30 +55,30 @@
     },
     "evidence-graph": {
       "state": "DEPLOYED",
-      "version": 58,
+      "version": 61,
       "verify_jwt": false,
-      "live_sha256": "8210f934dc50ea42b3b266533d54b61d6362e5bfc26aa9c572bdc8bd272998f1",
-      "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
+      "live_sha256": "9e20903dc464dff6021b4571d0297447c99390ec02cb7c456d3fec64cc2570a7",
+      "repository_blob_sha": "d184dc4fa3258f23339e60e011f1c04e1e1b3e25"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 237,
+      "version": 240,
       "verify_jwt": false,
-      "live_sha256": "c7ef891a2aec5b8cd651345363fe1cf870f28c6e56b64281337f2f097446368b",
+      "live_sha256": "98575e39075b2af808339eb8e5398bf86a943fd964907a7d344b9ac9d60d3ed9",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 241,
+      "version": 244,
       "verify_jwt": true,
-      "live_sha256": "600b9e0409cae2c93aa8e1d87acbee4",
+      "live_sha256": "e5a9e810ddcd177372f2c42f7d28cb083c123ce2a760922002331e2c070d0cd6",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 237,
+      "version": 240,
       "verify_jwt": false,
-      "live_sha256": "6c630267a0ecc23b6c9c5d26257b447d83591714f9eb659f8c46fcfa94c64789",
+      "live_sha256": "f6293fe8e57faaecb9d983b1e178530f73e2fa1398d9ec513cd595b85d9eb0c1",
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc"
     },
     "intel-feed": {
@@ -90,16 +90,16 @@
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
-      "version": 58,
+      "version": 61,
       "verify_jwt": false,
-      "live_sha256": "0d35bc835bf7db31e1a40f3dd03e50ce19bbe130c22bb208a435dc10340a9acf",
+      "live_sha256": "79c5cd0cc4bae7ec60b1b101fc274791a2f687d0a51beb0e0378ff1091b90f07",
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
-      "version": 147,
+      "version": 150,
       "verify_jwt": false,
-      "live_sha256": "783ce076048ab1ee21148dc00be78b82621f4227f8e1769d4d94e9db739ab9ce",
+      "live_sha256": "37036bcbccaf10e6a0348ecf83fd4ec5558abd49297ca0c4f4a0d32cbcd82944",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
     },
     "checkout": {

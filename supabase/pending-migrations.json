@@ -2,15 +2,5 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": [
-    {
-      "version": "20261022130000",
-      "file": "20261022130000_harden_personal_context_consent_audit_20261022.sql",
-      "name": "harden_personal_context_consent_audit_20261022",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Make consent-event insertion trigger-only by hardening the postgres-owned empty-search-path trigger function and revoking direct authenticated INSERT. Requires fresh migration replay and verification that preference changes still record consent events while clients cannot forge rows."
-    }
-  ]
+  "pending": []
 }

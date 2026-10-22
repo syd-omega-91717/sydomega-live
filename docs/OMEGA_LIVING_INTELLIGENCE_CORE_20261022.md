@@ -18,7 +18,8 @@ Consolidate the experience around one member-controlled intelligence context, on
 - The current persisted schema does not yet contain a first-class confidence score or `last_verified_at`. These are declared gaps, not synthesized values. Add them only after the pending/live migration manifest contradiction is resolved and replay/security tests pass.
 
 ### Ω Action and Advice Engine
-- Route intentions to existing canonical goal, mission, and project workspaces.
+- Includes a deterministic template-based plan composer for project, research, learning, decision, report, and reminder proposals. Drafts stay in the current page DOM only; they are not AI-generated, saved, scheduled, or sent anywhere.
+- Routes intentions to existing canonical goal, mission, and project workspaces.
 - AI-generated advice, automatic reminders, and external side effects remain NOT CONNECTED until a governed provider and approval path are verified.
 - A future action service must use server-side authorization, capability allowlists, bounded inputs, source citations, risk-tiered approval, idempotency, durable event/evidence records, and explicit result state.
 

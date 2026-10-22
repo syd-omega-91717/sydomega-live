@@ -21,7 +21,7 @@
     services:'services',consultancy:'services',contracts:'services',publishing:'services',
     studio:'services',marketing:'services',health:'services',events:'services',travel:'services',
     news:'services',social:'services',
-    research:'intel',insight:'intel',prediction:'intel',intelligence:'intel',
+    research:'intel',insight:'intel',prediction:'intel',intelligence:'intel','personal-intelligence':'intel',
     automation:'intel',compliance:'intel',approvals:'intel',
     vault:'vault',sigil:'vault',cosmos:'cosmos','cosmic-ledger':'cosmos',
     /* Below: each key's final/effective value — earlier duplicate keys with a
@@ -115,7 +115,7 @@
           ['news','NEWS INTELLIGENCE','/news.html'],['social','SOCIAL HUB','/social.html'],['events','EVENTS','/events.html'],['travel','TRAVEL','/travel.html'],
           ['health','HEALTH SERVICE','/health.html']]},
     {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intel.html',col:'#AB82F2',
-     sub:[['insight','INSIGHT','/insight.html'],['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICTION','/prediction.html'],['intelligence','INTELLIGENCE','/intelligence.html'],
+     sub:[['insight','INSIGHT','/insight.html'],['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICTION','/prediction.html'],['intelligence','INTELLIGENCE','/intelligence.html'],['personal-intelligence','PERSONAL INTELLIGENCE','/personal-intelligence.html'],
           ['automation','AUTOMATION','/automation.html'],['compliance','COMPLIANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html','folded'],
           ['graph-admin','GRAPH ADMIN','/graph-admin.html'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html','folded'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html','folded'],
           ['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html','folded'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html','folded'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html','folded'],

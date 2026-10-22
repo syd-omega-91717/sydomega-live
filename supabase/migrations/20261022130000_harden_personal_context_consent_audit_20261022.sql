@@ -9,6 +9,12 @@ SECURITY DEFINER
 SET search_path = ''
 AS $function$
 BEGIN
+  -- Authenticated callers may only create audit effects for their own preference row.
+  -- Trusted server-side operations without a user JWT remain governed by database privileges.
+  IF auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM NEW.user_id THEN
+    RAISE EXCEPTION 'Consent audit actor does not match preference owner';
+  END IF;
+
   IF TG_OP = 'INSERT' THEN
     IF NEW.ai_personalization_enabled THEN
       INSERT INTO public.omega_personal_context_consent_events(user_id, consent_key, decision, policy_version)

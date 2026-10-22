@@ -26,7 +26,7 @@ class LivingIntelligenceContract(unittest.TestCase):
         self.assertIn("listLinkMetadata:function()", self.context)
 
     def test_no_fake_ai_or_automatic_side_effects(self):
-        for phrase in ("NOT CONNECTED", "does not call an AI provider", "no model is called"):
+        for phrase in ("NOT CONNECTED", "no model/provider is called", "no model is called"):
             self.assertIn(phrase.lower(), (self.page + self.script + self.doc).lower())
         self.assertNotIn("fetch(", self.script)
         self.assertNotIn("localStorage", self.script)

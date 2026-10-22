@@ -58,7 +58,7 @@
       "version": 61,
       "verify_jwt": false,
       "live_sha256": "9e20903dc464dff6021b4571d0297447c99390ec02cb7c456d3fec64cc2570a7",
-      "repository_blob_sha": "d184dc4fa3258f23339e60e011f1c04e1e1b3e25"
+      "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",

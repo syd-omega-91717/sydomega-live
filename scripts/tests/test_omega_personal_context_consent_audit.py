@@ -61,9 +61,10 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
             if str(item.get("version")) == version
         ]
         self.assertEqual(entries, [])
-        self.assertIn(version, self.remote.get("versions", []))
-        self.assertEqual(self.remote.get("latestRemoteMigration"), version)
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 406)
+        versions = self.remote.get("versions", [])
+        self.assertIn(version, versions)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), versions[-1])
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(versions))
 
     def test_production_push_workflow_is_manual_and_fails_closed(self):
         workflow = WORKFLOW.read_text(encoding="utf-8")

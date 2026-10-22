@@ -76,8 +76,10 @@ class PersonalContextGraphContract(unittest.TestCase):
 
     def test_migration_matches_provider_verified_live_history(self):
         version = "20261022120000"
+        latest_version = "20261022130000"
         self.assertIn(version, self.remote.get("versions", []))
-        self.assertEqual(self.remote.get("latestRemoteMigration"), version)
+        self.assertIn(latest_version, self.remote.get("versions", []))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), latest_version)
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote.get("versions", [])))
         match = [x for x in self.remote.get("migrations", []) if str(x.get("version")) == version]
         self.assertEqual(len(match), 1)

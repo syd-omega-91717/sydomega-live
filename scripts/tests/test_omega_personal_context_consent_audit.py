@@ -29,6 +29,8 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
         self.assertIn("security definer\nset search_path = ''", lowered)
         self.assertIn("revoke all on function omega_private.omega_personal_context_log_consent()", lowered)
         self.assertIn("where user_id = new.user_id", lowered)
+        self.assertIn("auth.uid() is not null and auth.uid() is distinct from new.user_id", lowered)
+        self.assertIn("consent audit actor does not match preference owner", lowered)
         self.assertIn("public.omega_personal_context_items", lowered)
         self.assertIn("public.omega_personal_context_consent_events", lowered)
 

@@ -29,6 +29,8 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
         self.assertIn("security definer\nset search_path = ''", lowered)
         self.assertIn("revoke all on function omega_private.omega_personal_context_log_consent()", lowered)
         self.assertIn("where user_id = new.user_id", lowered)
+        self.assertIn("auth.uid() is not null and auth.uid() is distinct from new.user_id", lowered)
+        self.assertIn("consent audit actor does not match preference owner", lowered)
         self.assertIn("public.omega_personal_context_items", lowered)
         self.assertIn("public.omega_personal_context_consent_events", lowered)
 
@@ -72,6 +74,8 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
         self.assertIn("if: github.ref == 'refs/heads/main'", workflow)
         self.assertIn("CONFIRM_PRODUCTION_APPLY", workflow)
         self.assertIn("supabase db push --dry-run --linked", workflow)
+        self.assertIn('version != "20261022130000"', workflow)
+        self.assertIn("auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM NEW.user_id", workflow)
         self.assertIn("if mismatches != [(version, None)]", workflow)
         self.assertIn("supabase db push --linked --yes", workflow)
         self.assertIn("supabase migration list --linked", workflow)

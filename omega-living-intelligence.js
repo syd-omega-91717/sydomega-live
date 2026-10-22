@@ -8,13 +8,13 @@
   function make(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n;}
   function setText(id,value){var n=el(id);if(n)n.textContent=String(value);}
   function state(id,value){var n=el(id);if(n)n.textContent=value;}
-  function renderConsent(prefs){
+  function renderConsent(prefs,available){
     var root=el('oli-consent-list');if(!root)return;root.replaceChildren();
     Object.keys(labels).forEach(function(key){
       var card=make('div','oli-consent'),body=make('div','',null),name=make('b','',labels[key]);
       var descriptions={ai_personalization_enabled:'Account-level permission; item consent remains separately required.',web_research_enabled:'Permission for a future governed web-research workflow.',proactive_alerts_enabled:'Permission for a future governed alert workflow.',sensitive_data_processing_enabled:'Additional permission required for highly sensitive context.'};
       body.append(name,make('small','',descriptions[key]));
-      card.append(body,make('span','oli-consent-state',prefs&&prefs[key]===true?'GRANTED':'DENIED'));
+      card.append(body,make('span','oli-consent-state',available?(prefs&&prefs[key]===true?'GRANTED':'DENIED'):'UNAVAILABLE'));
       root.appendChild(card);
     });
   }

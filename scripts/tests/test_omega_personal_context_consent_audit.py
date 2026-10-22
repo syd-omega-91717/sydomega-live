@@ -67,8 +67,8 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
     def test_production_push_workflow_is_manual_and_fails_closed(self):
         workflow = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("workflow_dispatch:", workflow)
-        self.assertNotIn("\\n  push:", workflow)
-        self.assertNotIn("\\n  pull_request:", workflow)
+        self.assertNotIn("\n  push:", workflow)
+        self.assertNotIn("\n  pull_request:", workflow)
         self.assertIn("if: github.ref == 'refs/heads/main'", workflow)
         self.assertIn("CONFIRM_PRODUCTION_APPLY", workflow)
         self.assertIn("supabase db push --dry-run --linked", workflow)

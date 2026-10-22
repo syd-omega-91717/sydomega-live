@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-22",
+  "purpose": "Curated public-source metadata for research and architecture benchmarking; not raw content ingestion or a claim that capabilities are implemented.",
+  "policy": {
+    "public_sources_only": true,
+    "copy_proprietary_code": false,
+    "license_review_required": true,
+    "source_content_is_untrusted": true,
+    "automatic_execution_authority": false,
+    "personal_data_collection_from_public_sources": false
+  },
+  "sources": [
+    {
+      "source_id": "nist-ai-rmf",
+      "title": "AI Risk Management Framework",
+      "publisher": "NIST",
+      "canonical_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "source_type": "government_standard_guidance",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "2026-04-07 concept note noted on official page",
+      "license_status": "public_government_document; verify reuse terms per artifact",
+      "confidence": "high",
+      "summary": "Govern, Map, Measure, Manage; risk ownership, documented intended use, evaluation and lifecycle governance.",
+      "applies_to": [
+        "ai-governance",
+        "model-evaluation",
+        "incident-response"
+      ],
+      "status": "reviewed",
+      "limitations": "Framework page notes AI RMF is being revised; monitor for new versions."
+    },
+    {
+      "source_id": "nist-800-63-4",
+      "title": "Digital Identity Guidelines SP 800-63-4",
+      "publisher": "NIST",
+      "canonical_url": "https://pages.nist.gov/800-63-4/",
+      "source_type": "government_standard_guidance",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "final July 2025",
+      "license_status": "public_government_document; verify reuse terms per artifact",
+      "confidence": "high",
+      "summary": "Risk-based identity proofing, authentication, federation and authenticator management.",
+      "applies_to": [
+        "authentication",
+        "mfa",
+        "account-recovery"
+      ],
+      "status": "reviewed",
+      "limitations": "Use as a technical reference; do not claim conformance without a control-by-control assessment."
+    },
+    {
+      "source_id": "owasp-genai-llm-top10-2026",
+      "title": "OWASP GenAI LLM Top 10 2026",
+      "publisher": "OWASP GenAI Security Project",
+      "canonical_url": "https://github.com/GenAI-Security-Project/GenAI-LLM-Top10",
+      "source_type": "official_open_source_security_project",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "2026-08-04 current release per repository",
+      "license_status": "verify repository license and individual artifact terms before redistribution",
+      "confidence": "high",
+      "summary": "Security risks for LLM apps including prompt injection, sensitive-data disclosure, unsafe output, supply chain, excessive agency, embeddings and unbounded consumption.",
+      "applies_to": [
+        "prompt-security",
+        "rag",
+        "model-budget",
+        "output-validation"
+      ],
+      "status": "reviewed",
+      "limitations": "Map each risk to local threat scenarios and tests; list adoption is not proof of security."
+    },
+    {
+      "source_id": "owasp-agentic-top10-2026",
+      "title": "OWASP Top 10 for Agentic Applications 2026",
+      "publisher": "OWASP GenAI Security Project",
+      "canonical_url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "source_type": "official_security_guidance",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "2025-12-09 page date for 2026 resource",
+      "license_status": "check the linked resource license before copying",
+      "confidence": "high",
+      "summary": "Threat model agent identity, permissions, delegated actions, tool misuse, memory integrity, observability and recovery.",
+      "applies_to": [
+        "agent-governance",
+        "tool-permissions",
+        "audit"
+      ],
+      "status": "reviewed",
+      "limitations": "Security guidance is not a certification."
+    },
+    {
+      "source_id": "owasp-agent-control-standard",
+      "title": "Agent Control Standard",
+      "publisher": "OWASP GenAI Security Project",
+      "canonical_url": "https://github.com/GenAI-Security-Project/agent-control-standard",
+      "source_type": "official_open_standard_repository",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "2026 specification v0.1.0 described by repository",
+      "license_status": "repository states Apache-2.0 code/schemas and CC BY-SA 4.0 documentation; verify current files",
+      "confidence": "high",
+      "summary": "Pre/post tool-call control hooks, allow/deny/modify/ask/defer decisions, traceability and agent inventory.",
+      "applies_to": [
+        "policy-gateway",
+        "tool-execution",
+        "agent-audit"
+      ],
+      "status": "reviewed",
+      "limitations": "Reference implementation documents an unauthenticated wire and fail-open default; never copy those defaults into production."
+    },
+    {
+      "source_id": "owasp-web-top10-2025",
+      "title": "OWASP Top 10 2025",
+      "publisher": "OWASP Foundation",
+      "canonical_url": "https://owasp.org/projects/top-ten?lang=en",
+      "source_type": "official_security_guidance",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "2025 edition",
+      "license_status": "review OWASP license and attribution requirements before redistribution",
+      "confidence": "high",
+      "summary": "Baseline web application security risks; supplement with application-specific threat modeling and tests.",
+      "applies_to": [
+        "web-security",
+        "authorization",
+        "configuration"
+      ],
+      "status": "reviewed",
+      "limitations": "Awareness baseline, not a complete security test plan."
+    },
+    {
+      "source_id": "supabase-edge-auth",
+      "title": "Securing Edge Functions",
+      "publisher": "Supabase",
+      "canonical_url": "https://supabase.com/docs/guides/functions/auth",
+      "source_type": "official_vendor_documentation",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "crawled 2026-10-22",
+      "license_status": "public documentation; do not assume permission to republish full text",
+      "confidence": "high",
+      "summary": "Separate JWT verification from handler-level identity and authorization; apply least privilege.",
+      "applies_to": [
+        "edge-functions",
+        "jwt",
+        "rls"
+      ],
+      "status": "reviewed",
+      "limitations": "Re-check docs and API behavior before changing deployed functions."
+    },
+    {
+      "source_id": "supabase-edge-headers",
+      "title": "Edge Function Authorization Headers",
+      "publisher": "Supabase",
+      "canonical_url": "https://supabase.com/docs/guides/functions/auth-headers",
+      "source_type": "official_vendor_documentation",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "crawled 2026-10-22",
+      "license_status": "public documentation; do not assume permission to republish full text",
+      "confidence": "high",
+      "summary": "Distinguish user JWT in Authorization from publishable/secret API keys in apikey; platform verify_jwt is only one authorization layer.",
+      "applies_to": [
+        "edge-functions",
+        "auth-debugging"
+      ],
+      "status": "reviewed",
+      "limitations": "Use current platform-specific settings; avoid treating API keys as user identity."
+    },
+    {
+      "source_id": "supabase-edge-secrets",
+      "title": "Edge Function Secrets",
+      "publisher": "Supabase",
+      "canonical_url": "https://supabase.com/docs/guides/functions/secrets",
+      "source_type": "official_vendor_documentation",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "crawled 2026-10-22",
+      "license_status": "public documentation; do not assume permission to republish full text",
+      "confidence": "high",
+      "summary": "Keep secret/service-role credentials in server-side secret storage; never expose bypass-RLS keys in browser code.",
+      "applies_to": [
+        "secrets",
+        "supabase-functions"
+      ],
+      "status": "reviewed",
+      "limitations": "Check exact environment and key format for the deployed project."
+    },
+    {
+      "source_id": "vercel-deployment-blocked",
+      "title": "Deployment Blocked troubleshooting",
+      "publisher": "Vercel",
+      "canonical_url": "https://vercel.com/docs/errors/deployment_blocked",
+      "source_type": "official_vendor_documentation",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "last updated 2026-08-10 per page",
+      "license_status": "public documentation; do not assume permission to republish full text",
+      "confidence": "high",
+      "summary": "Resolve deployment blocks through account status, policy, quota and official support/account process—not source-code workarounds.",
+      "applies_to": [
+        "deployment",
+        "release-management"
+      ],
+      "status": "reviewed",
+      "limitations": "Some account pauses require owner action and cannot be diagnosed from repository code."
+    },
+    {
+      "source_id": "openssf-scorecard",
+      "title": "OpenSSF Scorecard Action",
+      "publisher": "OpenSSF",
+      "canonical_url": "https://github.com/ossf/scorecard-action",
+      "source_type": "official_open_source_security_tool",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "current upstream repository",
+      "license_status": "verify repository license and pinned action release",
+      "confidence": "high",
+      "summary": "Automated repository supply-chain checks for maintenance, CI, code review and workflow risks.",
+      "applies_to": [
+        "supply-chain",
+        "github-actions",
+        "repository-security"
+      ],
+      "status": "reviewed",
+      "limitations": "Score is a signal, not a certification; use least-privilege permissions and pin reviewed action versions."
+    },
+    {
+      "source_id": "slsa-spec",
+      "title": "SLSA Supply-chain Levels for Software Artifacts",
+      "publisher": "OpenSSF / SLSA",
+      "canonical_url": "https://slsa.dev/",
+      "source_type": "official_open_standard",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "current site",
+      "license_status": "verify individual specification license",
+      "confidence": "high",
+      "summary": "Incrementally adoptable artifact provenance and build integrity practices.",
+      "applies_to": [
+        "artifact-provenance",
+        "ci-cd"
+      ],
+      "status": "reviewed",
+      "limitations": "The legacy slsa-github-generator repository reports it is no longer actively maintained; evaluate GitHub artifact attestations instead."
+    },
+    {
+      "source_id": "opentelemetry-docs",
+      "title": "OpenTelemetry Documentation",
+      "publisher": "OpenTelemetry / CNCF",
+      "canonical_url": "https://opentelemetry.io/docs/",
+      "source_type": "official_open_source_project_docs",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "current documentation",
+      "license_status": "verify current documentation and code licenses separately",
+      "confidence": "high",
+      "summary": "Vendor-neutral traces, metrics and logs for end-to-end observability.",
+      "applies_to": [
+        "observability",
+        "agent-tracing",
+        "provider-telemetry"
+      ],
+      "status": "reviewed",
+      "limitations": "Never emit raw sensitive user context or secrets into telemetry by default."
+    },
+    {
+      "source_id": "wcag-22",
+      "title": "WCAG 2 Overview",
+      "publisher": "W3C WAI",
+      "canonical_url": "https://www.w3.org/WAI/standards-guidelines/wcag/",
+      "source_type": "web_standard",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "published_or_updated": "WCAG 2.2; W3C page current",
+      "license_status": "W3C document terms apply",
+      "confidence": "high",
+      "summary": "Accessibility acceptance criteria for keyboard use, focus, labels, contrast, target size and accessible authentication.",
+      "applies_to": [
+        "accessibility",
+        "frontend-ux"
+      ],
+      "status": "reviewed",
+      "limitations": "A conformance claim requires systematic testing, not just design intent."
+    }
+  ]
+}

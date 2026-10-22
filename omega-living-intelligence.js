@@ -46,17 +46,17 @@
   function render(){
     var api=window.OmegaPersonalContext;
     if(!api||typeof api.status!=='function'){
-      setText('oli-overall-state','PRIVATE CONTEXT API UNAVAILABLE');state('oli-context-state','UNAVAILABLE');state('oli-trust-state','UNAVAILABLE');renderConsent(null);renderGraph(null);return;
+      setText('oli-overall-state','PRIVATE CONTEXT API UNAVAILABLE');state('oli-context-state','UNAVAILABLE');state('oli-trust-state','UNAVAILABLE');renderConsent(null,false);renderGraph(null,false);return;
     }
     var status=api.status(),prefs=typeof api.getPreferences==='function'?api.getPreferences():{},metadata=typeof api.listMetadata==='function'?api.listMetadata():[];
-    var authenticated=status.authenticated===true;
+    var authenticated=status.authenticated===true,sourceAvailable=status.dataAvailable===true,preferencesAvailable=status.preferencesAvailable===true;
     setText('oli-overall-state',authenticated?'PRIVATE CONTEXT CONNECTED':'SIGN IN REQUIRED');
-    state('oli-context-state',authenticated?'AUTHENTICATED':'SIGN IN REQUIRED');state('oli-trust-state',authenticated?'CONSENT READ FROM PRIVATE SOURCE':'CONSENT UNAVAILABLE');
-    setText('oli-record-count',status.items===undefined?'—':status.items);setText('oli-link-count',status.links===undefined?'—':status.links);setText('oli-consented-count',status.aiEligible===undefined?'—':status.aiEligible);
+    state('oli-context-state',!authenticated?'SIGN IN REQUIRED':sourceAvailable?'LIVE SOURCE':'SOURCE UNAVAILABLE');state('oli-trust-state',authenticated&&preferencesAvailable?'CONSENT READ FROM PRIVATE SOURCE':'CONSENT UNAVAILABLE');
+    setText('oli-record-count',!sourceAvailable?'—':status.items===undefined?'—':status.items);setText('oli-link-count',!sourceAvailable?'—':status.links===undefined?'—':status.links);setText('oli-consented-count',!sourceAvailable?'—':status.aiEligible===undefined?'—':status.aiEligible);
     setText('oli-source-count',metadata.filter(function(x){return !!(x.source_kind||x.source_label);}).length);
-    renderConsent(prefs);renderGraph(api);
+    renderConsent(prefs,preferencesAvailable);renderGraph(api,sourceAvailable);
     var advice=el('oli-advice-boundary');if(advice)advice.textContent=prefs.ai_personalization_enabled===true?'Account-level AI permission is enabled, but no model is connected here. Item consent, server-side policy, and a governed action approval are still required.':'AI personalization is denied or unavailable. No model is called; use the existing goal, mission, and project workspaces.';
-    if(!authenticated)setText('oli-overall-state','SIGN IN REQUIRED · PRIVATE DATA NOT SHOWN');
+    if(!authenticated)setText('oli-overall-state','SIGN IN REQUIRED · PRIVATE DATA NOT SHOWN');else if(!sourceAvailable)setText('oli-overall-state','SOURCE UNAVAILABLE · DATA NOT ASSUMED EMPTY');
   }
   function boot(){render();window.addEventListener('omega:personal-context:changed',render);document.addEventListener('omega:consent-changed',render);window.addEventListener('focus',render);window.setTimeout(render,350);window.setTimeout(render,1200);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();

@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MIGRATION = ROOT / "supabase/migrations/20261022130000_harden_personal_context_consent_audit_20261022.sql"
 REMOTE = ROOT / "supabase/remote-migrations.json"
 PENDING = ROOT / "supabase/pending-migrations.json"
+WORKFLOW = ROOT / ".github/workflows/supabase-controlled-migration-push.yml"
 
 
 class PersonalContextConsentAuditContract(unittest.TestCase):
@@ -62,6 +63,18 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
         self.assertEqual(entries[0].get("liveStatus"), "NOT_APPLIED")
         self.assertIs(entries[0].get("blocksProduction"), True)
         self.assertNotIn(version, self.remote.get("versions", []))
+
+    def test_production_push_workflow_is_manual_and_fails_closed(self):
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertNotIn("\\n  push:", workflow)
+        self.assertNotIn("\\n  pull_request:", workflow)
+        self.assertIn("if: github.ref == 'refs/heads/main'", workflow)
+        self.assertIn("CONFIRM_PRODUCTION_APPLY", workflow)
+        self.assertIn("supabase db push --dry-run --linked", workflow)
+        self.assertIn("if mismatches != [(version, None)]", workflow)
+        self.assertIn("supabase db push --linked --yes", workflow)
+        self.assertIn("supabase migration list --linked", workflow)
 
 
 if __name__ == "__main__":

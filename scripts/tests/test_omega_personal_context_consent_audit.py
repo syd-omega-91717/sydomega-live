@@ -54,17 +54,16 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
             lowered,
         )
 
-    def test_migration_is_explicitly_pending_until_provider_verifies_application(self):
+    def test_migration_is_recorded_as_applied_after_live_provider_verification(self):
         version = "20261022130000"
         entries = [
             item for item in self.pending.get("pending", [])
             if str(item.get("version")) == version
         ]
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].get("status"), "PENDING_REVIEW")
-        self.assertEqual(entries[0].get("liveStatus"), "NOT_APPLIED")
-        self.assertIs(entries[0].get("blocksProduction"), True)
-        self.assertNotIn(version, self.remote.get("versions", []))
+        self.assertEqual(entries, [])
+        self.assertIn(version, self.remote.get("versions", []))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), version)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 406)
 
     def test_production_push_workflow_is_manual_and_fails_closed(self):
         workflow = WORKFLOW.read_text(encoding="utf-8")

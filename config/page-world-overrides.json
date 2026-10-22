@@ -169,6 +169,7 @@
     "standing-dashboard": "genesis",
     "orrery": "void",
     "ladder": "academy",
-    "insight": "intelligence"
+    "insight": "intelligence",
+    "personal-intelligence": "intelligence"
   }
 }

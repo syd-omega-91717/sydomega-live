@@ -15975,7 +15975,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 10
+          "links": 12
         },
         "media_evidence": {
           "images": 2,
@@ -15987,8 +15987,8 @@
     }
   ],
   "audit_summary": {
-    "page_count": 236,
-    "source_audited_pages": 236,
+    "page_count": 237,
+    "source_audited_pages": 237,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true
   }

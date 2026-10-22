@@ -33,7 +33,7 @@ class LivingIntelligenceContract(unittest.TestCase):
         self.assertNotIn("innerHTML", self.script)
 
     def test_graph_gap_is_explicit(self):
-        self.assertIn("last-verification timestamps are not yet", self.page)
+        self.assertIn("last-verification timestamps are also not yet persisted", self.page)
         self.assertIn("does not yet contain a first-class confidence score", self.doc)
 
     def test_provenance_and_consent_metadata_are_exposed(self):

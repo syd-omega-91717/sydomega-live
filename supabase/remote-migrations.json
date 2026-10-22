@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-21T22:15:34.057Z",
-  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated provider query; live functions and Security Advisor also verified)",
-  "remoteMigrationCount": 404,
-  "latestRemoteMigration": "20261021100000",
+  "_captured": "2026-10-22T00:00:01.234Z",
+  "source": "Authenticated Supabase provider migration-history query for project ydqhzvvoyufiiqvzcjns; version 20261022120000 verified present on 2026-10-22.",
+  "remoteMigrationCount": 405,
+  "latestRemoteMigration": "20261022120000",
   "versions": [
     "0001",
     "0002",
@@ -407,7 +407,8 @@
     "20261017110604",
     "20261017114500",
     "20261017234857",
-    "20261021100000"
+    "20261021100000",
+    "20261022120000"
   ],
   "migrations": [
     {
@@ -2022,6 +2023,10 @@
     {
       "version": "20261021100000",
       "name": "private_member_write_rpc_boundary_20261021"
+    },
+    {
+      "version": "20261022120000",
+      "name": "omega_personal_context_graph_20261022"
     }
   ]
 }

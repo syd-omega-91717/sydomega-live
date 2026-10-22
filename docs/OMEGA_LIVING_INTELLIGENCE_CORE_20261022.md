@@ -26,9 +26,11 @@ Consolidate the experience around one member-controlled intelligence context, on
 - Sensitive context requires separate sensitive-data permission and item-level consent.
 - Uploaded files remain untrusted until real malware/content scanning is implemented; `scan_state: UNAVAILABLE` is not a clean scan result.
 
-## Generated photo / media integration
+## Existing image estate and generated-art integration
 
-No verified generated-photo set was found by repository code search in this work. Do not invent filenames or point production HTML at nonexistent image paths. For each actual generated photo, verify exact file and usage rights, stable repository path/content type, responsive formats, alt text, provenance/attribution, absence of sensitive data, mobile rendering, and CI path checks. Upload or identify the actual image files before integration; do not claim an image is integrated until the committed asset and served route are verified.
+The repository already contains branded SVG assets (`assets/omega-banner.svg`, `assets/omega-sigil.svg`, `assets/omega-divider.svg`), the derived `/assets/legacy/sign-<sign>.webp` zodiac set, and the owner collections audited in `docs/OMEGA_VISUAL_ESTATE_AUDIT_20260929.md`. That audit counted 404 raster files, 313 unique by content hash, and 91 byte-identical duplicate copies; it also recorded baked checkerboards, watermarks, and caption defects in some source collections. These are artwork assets, not proof of an earned achievement, identity, or financial value.
+
+This workspace references the canonical Omega banner and an existing derived zodiac asset rather than pretending a new photo was committed. The broader asset pass must reuse the existing visual audit and deterministic derivation strategy, avoid shipping defective source originals in new surfaces, and keep duplicate deletion/re-export of owner masters gated for owner approval. For every asset used, verify stable path/content type, responsive formats, alt text, provenance/rights, absence of sensitive data, mobile rendering, and CI path checks.
 
 ## Acceptance gates
 

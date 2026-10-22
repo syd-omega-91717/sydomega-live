@@ -40,8 +40,9 @@
       var from=byId[link.from_item_id],to=byId[link.to_item_id];
       root.appendChild(make('div','oli-edge',from.title+' —['+String(link.relation_kind||'related_to').replace(/_/g,' ')+']→ '+to.title+' · '+(link.user_confirmed===true?'CONFIRMED':'UNCONFIRMED')+' · '+(link.source_kind||'source unavailable')));
     });
+    if(!links.some(function(link){return !!(link.from_item_id&&link.to_item_id);}))root.appendChild(make('p','oli-note','Relationship endpoints are intentionally omitted from the current summary-only query. Open Ω LIFE to inspect and edit the complete member-owned graph.'));
     if(items.length>60)root.appendChild(make('p','oli-note','Showing 60 of '+items.length+' nodes. Open Ω LIFE to search and manage the full set.'));
-    state('oli-graph-state',items.length+' NODES · '+visibleEdges.length+' EXPLICIT EDGES');
+    state('oli-graph-state',items.length+' NODES · '+(visibleEdges.length?visibleEdges.length+' EXPLICIT EDGES':'EDGE DETAIL IN LIFE'));
   }
   function render(){
     var api=window.OmegaPersonalContext;
@@ -53,7 +54,7 @@
     setText('oli-overall-state',authenticated?'PRIVATE CONTEXT CONNECTED':'SIGN IN REQUIRED');
     state('oli-context-state',!authenticated?'SIGN IN REQUIRED':sourceAvailable?'LIVE SOURCE':'SOURCE UNAVAILABLE');state('oli-trust-state',authenticated&&preferencesAvailable?'CONSENT READ FROM PRIVATE SOURCE':'CONSENT UNAVAILABLE');
     setText('oli-record-count',!sourceAvailable?'—':status.items===undefined?'—':status.items);setText('oli-link-count',!sourceAvailable?'—':status.links===undefined?'—':status.links);setText('oli-consented-count',!sourceAvailable?'—':status.aiEligible===undefined?'—':status.aiEligible);
-    setText('oli-source-count',metadata.filter(function(x){return !!(x.source_kind||x.source_label);}).length);
+    var sourceCount=metadata.filter(function(x){return !!(x.source_kind||x.source_label);}).length;setText('oli-source-count',sourceCount?sourceCount:'NOT LOADED');
     renderConsent(prefs,preferencesAvailable);renderGraph(api,sourceAvailable);
     var advice=el('oli-advice-boundary');if(advice)advice.textContent=prefs.ai_personalization_enabled===true?'Account-level AI permission is enabled, but no model is connected here. Item consent, server-side policy, and a governed action approval are still required.':'AI personalization is denied or unavailable. No model is called; use the existing goal, mission, and project workspaces.';
     if(!authenticated)setText('oli-overall-state','SIGN IN REQUIRED · PRIVATE DATA NOT SHOWN');else if(!sourceAvailable)setText('oli-overall-state','SOURCE UNAVAILABLE · DATA NOT ASSUMED EMPTY');

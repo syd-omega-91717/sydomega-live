@@ -16,6 +16,7 @@ class PersonalContextGraphContract(unittest.TestCase):
         cls.intelligence = (ROOT / "intelligence.html").read_text()
         cls.navigation = (ROOT / "nav.js").read_text()
         cls.pending = json.loads((ROOT / "supabase/pending-migrations.json").read_text())
+        cls.remote = json.loads((ROOT / "supabase/remote-migrations.json").read_text())
 
     def test_all_personal_tables_are_rls_protected(self):
         for table in (
@@ -73,11 +74,15 @@ class PersonalContextGraphContract(unittest.TestCase):
         self.assertIn("omega:personal-context:changed", self.client)
         self.assertIn("PERSONAL CONTEXT", self.navigation)
 
-    def test_migration_remains_explicitly_pending(self):
-        match = [x for x in self.pending.get("pending", []) if x.get("version") == "20261022120000"]
+    def test_migration_matches_provider_verified_live_history(self):
+        version = "20261022120000"
+        self.assertIn(version, self.remote.get("versions", []))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), version)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote.get("versions", [])))
+        match = [x for x in self.remote.get("migrations", []) if str(x.get("version")) == version]
         self.assertEqual(len(match), 1)
-        self.assertTrue(match[0].get("blocksProduction"))
-        self.assertEqual(match[0].get("liveStatus"), "NOT_APPLIED")
+        self.assertEqual(match[0].get("name"), "omega_personal_context_graph_20261022")
+        self.assertFalse(any(str(x.get("version")) == version for x in self.pending.get("pending", [])))
 
 
 if __name__ == "__main__":

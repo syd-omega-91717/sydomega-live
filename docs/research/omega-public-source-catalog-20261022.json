@@ -286,6 +286,102 @@
       ],
       "status": "reviewed",
       "limitations": "A conformance claim requires systematic testing, not just design intent."
+    },
+    {
+      "source_id": "github-actions-security",
+      "title": "Security for GitHub Actions",
+      "publisher": "GitHub",
+      "canonical_url": "https://docs.github.com/en/actions/how-tos/secure-your-work",
+      "source_type": "official_vendor_security_documentation",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "license_status": "public documentation; do not republish full text",
+      "confidence": "high",
+      "summary": "Pin action dependencies to reviewed commits, use least-privilege workflow permissions, OIDC, artifact attestations and script-injection defenses.",
+      "applies_to": [
+        "ci-cd",
+        "supply-chain",
+        "deployment"
+      ],
+      "status": "reviewed",
+      "limitations": "Attestations must be verified; their existence alone does not prove an artifact is secure."
+    },
+    {
+      "source_id": "github-artifact-attestations",
+      "title": "Artifact Attestations",
+      "publisher": "GitHub",
+      "canonical_url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+      "source_type": "official_vendor_security_documentation",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "license_status": "public documentation; do not republish full text",
+      "confidence": "high",
+      "summary": "Create verifiable provenance linking artifacts to repository, workflow, environment, commit and triggering event; optionally include SBOM evidence.",
+      "applies_to": [
+        "artifact-provenance",
+        "sbom",
+        "release-integrity"
+      ],
+      "status": "reviewed",
+      "limitations": "Verification policy must still assess trusted builders, source revisions and expected workflows."
+    },
+    {
+      "source_id": "openai-agents-sdk",
+      "title": "OpenAI Agents SDK",
+      "publisher": "OpenAI",
+      "canonical_url": "https://github.com/openai/openai-agents-python",
+      "source_type": "official_open_source_repository",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "license_status": "MIT per current repository metadata; preserve notices if reusing code",
+      "confidence": "high",
+      "summary": "Study narrow agent primitives, tool guardrails, handoffs, sessions, tracing, evaluation and human-in-the-loop patterns.",
+      "applies_to": [
+        "agent-orchestration",
+        "guardrails",
+        "tracing",
+        "evaluation"
+      ],
+      "status": "reviewed",
+      "limitations": "Do not add the SDK to the existing framework-free site without an architecture decision; transfer patterns first."
+    },
+    {
+      "source_id": "google-adk",
+      "title": "Google Agent Development Kit",
+      "publisher": "Google",
+      "canonical_url": "https://github.com/google/adk-python",
+      "source_type": "official_open_source_repository",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "license_status": "Apache-2.0 per current repository metadata; preserve notices if reusing code",
+      "confidence": "high",
+      "summary": "Study graph-based agent workflows, retries, state management, human confirmation, evaluation and model/deployment portability.",
+      "applies_to": [
+        "workflow-orchestration",
+        "agent-evaluation",
+        "human-approval"
+      ],
+      "status": "reviewed",
+      "limitations": "Requires Python 3.11+ according to current repository metadata; not a drop-in dependency for the current static runtime."
+    },
+    {
+      "source_id": "mcp-auth-authorization",
+      "title": "Model Context Protocol Authorization",
+      "publisher": "Model Context Protocol",
+      "canonical_url": "https://ts.sdk.modelcontextprotocol.io/v2/serving/authorization",
+      "source_type": "official_protocol_sdk_documentation",
+      "tier": "A",
+      "retrieved_at": "2026-10-22",
+      "license_status": "public protocol/SDK documentation; verify license for code examples",
+      "confidence": "high",
+      "summary": "Treat an MCP server as an OAuth resource server, verify bearer tokens and scopes, bind auth context to each request, and challenge unauthorized operations before tool handlers execute.",
+      "applies_to": [
+        "authorized-connectors",
+        "tool-authentication",
+        "oauth-scopes"
+      ],
+      "status": "reviewed",
+      "limitations": "The URL documents a TypeScript SDK v2 serving implementation; validate against the exact MCP specification version and selected SDK before adopting."
     }
   ]
 }

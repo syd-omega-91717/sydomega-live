@@ -18,8 +18,9 @@
       root.appendChild(card);
     });
   }
-  function renderGraph(api){
+  function renderGraph(api,available){
     var root=el('oli-graph');if(!root)return;root.replaceChildren();
+    if(!available){root.appendChild(make('p','oli-empty','Private context source unavailable. Records and relationships are not being treated as empty.'));state('oli-graph-state','SOURCE UNAVAILABLE');return;}
     if(!api||typeof api.listMetadata!=='function'){root.appendChild(make('p','oli-empty','Private context API unavailable. Open Ω LIFE and verify the authenticated source.'));state('oli-graph-state','UNAVAILABLE');return;}
     var items=[],links=[];
     try{items=api.listMetadata()||[];}catch(e){}

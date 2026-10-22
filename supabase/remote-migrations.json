@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-22T00:00:01.234Z",
-  "source": "Authenticated Supabase provider migration-history query for project ydqhzvvoyufiiqvzcjns; version 20261022120000 verified present on 2026-10-22.",
-  "remoteMigrationCount": 405,
-  "latestRemoteMigration": "20261022120000",
+  "_captured": "2026-10-22T11:31:00Z",
+  "source": "Authenticated Supabase provider migration-history query for project ydqhzvvoyufiiqvzcjns; 406 versions verified present on 2026-10-22, latest 20261022130000.",
+  "remoteMigrationCount": 406,
+  "latestRemoteMigration": "20261022130000",
   "versions": [
     "0001",
     "0002",
@@ -408,7 +408,8 @@
     "20261017114500",
     "20261017234857",
     "20261021100000",
-    "20261022120000"
+    "20261022120000",
+    "20261022130000"
   ],
   "migrations": [
     {
@@ -2027,6 +2028,10 @@
     {
       "version": "20261022120000",
       "name": "omega_personal_context_graph_20261022"
+    },
+    {
+      "version": "20261022130000",
+      "name": "harden_personal_context_consent_audit_20261022"
     }
   ]
 }

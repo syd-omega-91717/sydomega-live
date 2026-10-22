@@ -110,7 +110,7 @@ jobs:
         shell: python
         run: |
           import subprocess, sys
-          sys.exit(subprocess.run(['python', '-m', 'unittest', 'scripts.tests.test_omega_public_source_catalog', '-v']).returncode)
+          sys.exit(subprocess.run(['python', 'scripts/tests/test_omega_public_source_catalog.py']).returncode)
       - name: Intelligence fabric tests
         shell: python
         run: |

@@ -5,8 +5,8 @@
 // cosmos, prediction) treats any non-200 as "use the local fallback".
 //
 // system_override is page-supplied persona/task text (agents.html, sovereign-ai.html,
-// weekly.html, omega-ai.js, omega-intelligence.js). It is appended BELOW the governed
-// system prompt as untrusted persona guidance; it never replaces the governance rules.
+// weekly.html, omega-ai.js, omega-intelligence.js). It is bounded and placed in the user
+// message at user-level authority; it is never appended to the system prompt.
 //
 // Memory is read-only here (recall_ai_context). An earlier write to ai_memory omitted
 // the NOT NULL `memory` column and never stored a row; storing member chat content is

@@ -16,3 +16,5 @@
 @media(max-width:760px){.omega-li-hero{grid-template-columns:1fr}.oli-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.oli-consent-list{grid-template-columns:1fr}.oli-asset-grid{grid-template-columns:1fr}.oli-asset-orb{max-width:190px}.oli-section-head{align-items:flex-start;flex-direction:column}}
 @media(max-width:520px){.oli-pillar-grid,.oli-action-grid,.oli-graph{grid-template-columns:1fr}.oli-metrics>div{padding:10px}.oli-metrics span{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.omega-li-main *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.oli-asset-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.oli-asset-figure{min-width:0;margin:0;padding:12px;border:1px solid rgba(201,168,76,.16);background:rgba(2,2,6,.4)}.oli-asset-figure img{display:block;width:100%;height:auto;max-height:230px;object-fit:contain;aspect-ratio:16/9}.oli-asset-figure figcaption{margin-top:9px;color:var(--oli-muted);font:11px/1.5 'Courier Prime',monospace}@media(max-width:760px){.oli-asset-grid{grid-template-columns:1fr}.oli-asset-figure img{max-height:260px}}

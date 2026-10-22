@@ -13,7 +13,8 @@ Consolidate the experience around one member-controlled intelligence context, on
 
 ### Ω Life Knowledge Graph
 - Nodes are private context items; edges are explicit rows from `omega_personal_context_links`.
-- Show source kind/label, review status, sensitivity, consent state, expiry, and update time when available.
+- The client API can expose source kind/label, review status, sensitivity, consent state, expiry, and update time without returning record content.
+- Important current limitation: the `summaryOnly` query used by the Intelligence summary intentionally selects a narrower field set and only link IDs. This dashboard therefore does not claim to display the complete graph or source provenance; it directs members to the canonical Ω LIFE editor for full relationship details. Widening that query needs a separate least-privilege review and passing privacy tests.
 - The current persisted schema does not yet contain a first-class confidence score or `last_verified_at`. These are declared gaps, not synthesized values. Add them only after the pending/live migration manifest contradiction is resolved and replay/security tests pass.
 
 ### Ω Action and Advice Engine

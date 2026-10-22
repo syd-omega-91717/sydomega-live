@@ -99,7 +99,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | `omega-*.js` modules | 253 (2286 KB) |
 | root `.js` files | 268 |
 | `supabase/*.sql` (flat bag) | 127 |
-| `supabase/migrations/*.sql` | 405 (107 numbered `NNNN_`, 298 timestamped) |
+| `supabase/migrations/*.sql` | 406 (107 numbered `NNNN_`, 299 timestamped) |
 | Edge Functions | 26 |
 | skills | 23 |
 | agent definitions | 2 |

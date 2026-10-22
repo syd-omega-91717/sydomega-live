@@ -10,6 +10,14 @@ This directory is the canonical, ordered, automatically-appliable schema history
 
 The repository contains timestamped reconciliation migrations for changes that were historically applied directly to the live database. Those files preserve the recorded migration versions so `supabase db push` does not encounter `Remote migration versions not found in local migrations directory`.
 
+## Current provider-verified state — 2026-10-22
+
+- The live Supabase migration ledger contains **405 applied versions**; the latest recorded version is `20261022120000_omega_personal_context_graph_20261022`.
+- The local migration directory contains **406 files**, including `20261022130000_harden_personal_context_consent_audit_20261022.sql`. That final migration is explicitly pending and is **not applied to production**.
+- Until the controlled push workflow is run successfully and the live ledger confirms the exact version, keep `20261022130000` in `supabase/pending-migrations.json` and out of `supabase/remote-migrations.json`.
+- This PR adds `.github/workflows/supabase-controlled-migration-push.yml`, a manual-only, fail-closed workflow. After merge, it requires the exact pending version, explicit confirmation, configured `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD` secrets, a dry-run containing only that migration, and post-push migration-history verification.
+- The dated sections below are historical snapshots. Their counts and deployment states apply only to the commits and dates named in those sections; use the current ledger snapshot and pending registry above for present state.
+
 ## Verification
 
 Run the local structural contract:

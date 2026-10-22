@@ -32,6 +32,14 @@ class LivingIntelligenceContract(unittest.TestCase):
         self.assertNotIn("localStorage", self.script)
         self.assertNotIn("innerHTML", self.script)
 
+    def test_plan_composer_is_deterministic_and_non_persistent(self):
+        self.assertIn('function renderPlanComposer()', self.script)
+        for kind in ('project:', 'research:', 'learning:', 'decision:', 'report:', 'reminder:'):
+            self.assertIn(kind, self.script)
+        self.assertIn('NOT AI-GENERATED', self.script)
+        self.assertIn('NOT PERSISTED', self.script)
+        self.assertIn('No task was created', self.script)
+
     def test_graph_gap_is_explicit(self):
         self.assertIn("last-verification timestamps are also not yet persisted", self.page)
         self.assertIn("does not yet contain a first-class confidence score", self.doc)

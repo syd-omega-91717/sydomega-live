@@ -111,6 +111,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/tests/test_omega_public_source_catalog.py']).returncode)
+      - name: Living intelligence privacy and provenance contract
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/tests/test_omega_living_intelligence_contract.py']).returncode)
       - name: Personal-context consent audit migration contract
         shell: python
         run: |

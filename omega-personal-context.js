@@ -40,7 +40,7 @@
       listLinkMetadata:function(){return links.map(function(x){return {id:x.id,from_item_id:x.from_item_id,to_item_id:x.to_item_id,relation_kind:x.relation_kind,source_kind:x.source_kind||null,user_confirmed:x.user_confirmed===true,created_at:x.created_at||null};});},
       getPreferences:function(){return Object.assign({},preferences);},
       getConsentedItemIds:function(){return getAiEligibleContext().map(function(x){return x.id;});},
-      status:function(){return {authenticated:!!uid,items:items.length,links:links.length,aiEligible:getAiEligibleContext().length,aiPersonalizationEnabled:!!preferences.ai_personalization_enabled,webResearchEnabled:!!preferences.web_research_enabled,proactiveAlertsEnabled:!!preferences.proactive_alerts_enabled};}
+      status:function(){return {authenticated:!!uid,dataAvailable:!!dataAvailable,preferencesAvailable:!!preferencesExists,items:items.length,links:links.length,aiEligible:getAiEligibleContext().length,aiPersonalizationEnabled:!!preferences.ai_personalization_enabled,webResearchEnabled:!!preferences.web_research_enabled,proactiveAlertsEnabled:!!preferences.proactive_alerts_enabled};}
     };
   }
   function renderSummary(){

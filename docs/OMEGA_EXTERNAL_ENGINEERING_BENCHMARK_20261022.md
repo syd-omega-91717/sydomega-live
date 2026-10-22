@@ -60,15 +60,20 @@ Public repositories and applications are research subjects, not trusted authorit
 9. **OpenSSF Scorecard** — automate checks for maintenance, dependency hygiene, branch protection, CI testing, dangerous workflow permissions, code review, and security policy. Treat scores as signals, not certification.  
    Source: https://github.com/ossf/scorecard-action
 
-10. **SLSA and GitHub artifact attestations** — retain verifiable build provenance and artifact identity. The SLSA GitHub Generator repository now says it is no longer actively maintained and recommends evaluating GitHub artifact attestations as its built-in replacement; do not blindly add the legacy generator.  
+10. **SLSA and GitHub artifact attestations** — retain verifiable build provenance and artifact identity. The SLSA GitHub Generator repository now says it is no longer actively maintained and recommends evaluating GitHub artifact attestations as its built-in replacement; do not blindly add the legacy generator. GitHub notes attestations must be verified and do not by themselves guarantee that an artifact is secure.  
     Sources: https://slsa.dev/  
-    https://github.com/slsa-framework/slsa-github-generator
+    https://github.com/slsa-framework/slsa-github-generator  
+    https://docs.github.com/en/actions/concepts/security/artifact-attestations
 
-11. **OpenTelemetry** — use vendor-neutral trace, metric, and log semantics for request-to-provider-to-tool-to-database observability, while excluding secrets and raw sensitive user content from default telemetry. OpenTelemetry became a CNCF Graduated project on 2026-05-11.  
+11. **Model Context Protocol (MCP) authorization** — treat connector servers as OAuth resource servers, validate bearer tokens and scopes on every request, and enforce authorization before a tool handler runs. Pin the exact specification/SDK version: the protocol has continued to evolve through 2026.  
+    Sources: https://modelcontextprotocol.io/specification/draft/changelog  
+    https://ts.sdk.modelcontextprotocol.io/v2/serving/authorization
+
+12. **OpenTelemetry** — use vendor-neutral trace, metric, and log semantics for request-to-provider-to-tool-to-database observability, while excluding secrets and raw sensitive user content from default telemetry. OpenTelemetry became a CNCF Graduated project on 2026-05-11.  
     Sources: https://opentelemetry.io/docs/  
     https://www.cncf.io/projects/opentelemetry/
 
-12. **W3C WCAG 2.2** — use as the accessibility acceptance baseline for keyboard navigation, focus visibility, target sizes, labels, contrast, error handling, and accessible authentication. WCAG 2.2 is also ISO/IEC 40500:2025.  
+13. **W3C WCAG 2.2** — use as the accessibility acceptance baseline for keyboard navigation, focus visibility, target sizes, labels, contrast, error handling, and accessible authentication. WCAG 2.2 is also ISO/IEC 40500:2025.  
     Source: https://www.w3.org/WAI/standards-guidelines/wcag/
 
 ## 3. Transferable product and engineering patterns
@@ -144,8 +149,9 @@ The state IMPLEMENTED must never imply VERIFIED; a source reference must never b
 
 ## 7. Known current external blockers and verified findings (2026-10-22)
 
-- Live Supabase concierge Edge Function version 11 was fetched directly; its index.ts content exactly matches the current repository file. This proves source parity for that function at the audit time, not end-to-end correctness of every caller.
+- Live Supabase concierge Edge Function version 11 was fetched directly; its index.ts content exactly matches the current repository file. All 16 active Edge Function entrypoints were independently compared with current main source and matched exactly. This proves entrypoint source parity at the audit time, not end-to-end correctness of every caller or shared dependency.
 - The live database records migration 20261022130000_harden_personal_context_consent_audit_20261022. The current policy inventory shows the consent-event table has a SELECT-own policy but no client INSERT policy; the migration explicitly revokes direct INSERT and preserves trigger-based audit recording.
+- Live table counts at audit time: omega_knowledge_sources = 11, omega_knowledge_documents = 0, omega_provider_registry = 13, omega_personal_context_items = 0, omega_personal_context_preferences = 0. The current source table includes two records with null canonical URLs and duplicate OpenAI Cookbook concepts. Normalize source identity before ingesting the new 19-source catalog; do not blindly insert duplicates or mark source documents as ingested.
 - Supabase Security Advisor currently reports two findings: leaked-password protection disabled (WARN) and omega_private.marketplace_listing_assets with RLS enabled but no policies (INFO). The private table requires an intentional policy/privilege review; do not blindly add a permissive policy just to silence the warning.
 - The Vercel status check on merge commit a5f03ecf5ed87afb54a029acd5908b47b78ea8af still reports failure and links to Vercel's account/deployment-blocked guidance. The fix is an authorized account/support resolution, not a source-code workaround.
 - The prior Edge Runtime Reconciliation run failed on an older head; a new run against current main is required before declaring the gate green.

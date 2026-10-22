@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-22T00:00:01.234Z",
+  "captured_at": "2026-10-22T00:25:28.718Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
     "concierge": {
       "state": "DEPLOYED",
-      "version": 9,
+      "version": 10,
       "verify_jwt": true,
-      "live_sha256": "e16a7587e9650225bc447c115aa868838b524e1a236768acd86abe1561c3b8f7",
-      "repository_blob_sha": "609cd820b52acf1b0573183ead2bf15d52ae5651"
+      "live_sha256": "9c82ef86478fc5308f10dc912c7bd13764334eb5db89546293b2762e5c094a90",
+      "repository_blob_sha": "3fc1bf525d718044d35c053de420ca0199c935f2"
     },
     "concierge-orchestrator": {
       "state": "DEPLOYED",
@@ -55,30 +55,30 @@
     },
     "evidence-graph": {
       "state": "DEPLOYED",
-      "version": 58,
+      "version": 60,
       "verify_jwt": false,
-      "live_sha256": "8210f934dc50ea42b3b266533d54b61d6362e5bfc26aa9c572bdc8bd272998f1",
+      "live_sha256": "c60ecc082391f99710a6455d9302f44e832e040b32be0b9e11dab5a398ad84dc",
       "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 237,
+      "version": 239,
       "verify_jwt": false,
-      "live_sha256": "c7ef891a2aec5b8cd651345363fe1cf870f28c6e56b64281337f2f097446368b",
+      "live_sha256": "cca3ac6d10a2f2e87fe4dc5fe66b3aed8ebb29d92fbfc6c0d6b016030e8e6127",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 241,
+      "version": 243,
       "verify_jwt": true,
-      "live_sha256": "600b9e0409cae2c93aa8e1d87acbee4",
+      "live_sha256": "ff531297b8a66d48c4ea76eb8e47daaf3c148189743a557712709058eacdd278",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 237,
+      "version": 239,
       "verify_jwt": false,
-      "live_sha256": "6c630267a0ecc23b6c9c5d26257b447d83591714f9eb659f8c46fcfa94c64789",
+      "live_sha256": "b5b2149ac39618cefbe7d22f5e60bc01290a9814e91494e84615190aa859ae1e",
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc"
     },
     "intel-feed": {
@@ -90,16 +90,16 @@
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
-      "version": 58,
+      "version": 60,
       "verify_jwt": false,
-      "live_sha256": "0d35bc835bf7db31e1a40f3dd03e50ce19bbe130c22bb208a435dc10340a9acf",
+      "live_sha256": "994ae9c85369ff72f1a7b44aa5ad6b9082df155bb9bfab2e9cc9590d406182de",
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
-      "version": 147,
+      "version": 149,
       "verify_jwt": false,
-      "live_sha256": "783ce076048ab1ee21148dc00be78b82621f4227f8e1769d4d94e9db739ab9ce",
+      "live_sha256": "0505b6e6cf94f70e0081c50c44d2a52fcb841a346a4a90e39d5e7235b9d2f26f",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
     },
     "checkout": {
@@ -144,5 +144,5 @@
       "state": "LOCAL_ONLY"
     }
   },
-  "verification_note": "All 16 functions marked DEPLOYED were fetched from the active Supabase project on 2026-10-22 and their index.ts source was compared byte-for-byte after newline normalization with main. LOCAL_ONLY classifications were preserved."
+  "verification_note": "All 16 deployed Edge Function index.ts files were compared byte-for-byte after newline normalization against repository sources on 2026-10-22; concierge was compared against the reviewed branch source and the other 15 against main. Seven changed runtime versions/hashes were refreshed from the active Supabase project."
 }

@@ -42,8 +42,10 @@ class LivingIntelligenceContract(unittest.TestCase):
         self.assertIn("CONSENT READ FROM PRIVATE SOURCE", self.script)
 
     def test_visual_asset_claim_is_truthful(self):
-        self.assertIn("did not identify a verified set of generated photos", self.page)
-        self.assertIn("No verified generated-photo set was found", self.doc)
+        self.assertIn("assets/omega-banner.svg", self.page)
+        self.assertIn("assets/legacy/sign-aries.webp", self.page)
+        self.assertIn("404 raster files", self.doc)
+        self.assertIn("313 unique by content hash", self.doc)
 
     def test_navigation_route_is_registered(self):
         self.assertIn("'personal-intelligence':'intel'", self.navigation)

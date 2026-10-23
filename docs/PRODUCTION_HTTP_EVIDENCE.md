@@ -1,12 +1,12 @@
 # Independent production HTTP evidence
 
 `scripts/production-http-evidence.py` is a read-only synthetic probe for the public
-production origins. It checks the live HTTP surface independently of build contracts
+production origins (apex, www, and the Cloudflare Pages project hostname). It checks the live HTTP surface independently of build contracts
 and the hosting provider's deployment UI.
 
 ## Run
 
-Probe both custom domains and compare them with the expected main commit:
+Probe both custom domains and the Cloudflare Pages project hostname, comparing all three with the expected main commit:
 
 ```sh
 python3 scripts/production-http-evidence.py --expected-sha "$(git rev-parse origin/main)"

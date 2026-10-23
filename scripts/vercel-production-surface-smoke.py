@@ -44,12 +44,12 @@ def route_for(path: Path) -> str | None:
 def page_identity(body: bytes | str) -> tuple[str, str]:
     """Return stable title and omega realm markers from an HTML document."""
     text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
-    title_match = re.search(r"<title\\b[^>]*>(.*?)</title\\s*>", text, re.IGNORECASE | re.DOTALL)
+    title_match = re.search(r"<title\b[^>]*>(.*?)</title\s*>", text, re.IGNORECASE | re.DOTALL)
     title = ""
     if title_match:
         raw_title = re.sub(r"<[^>]+>", " ", title_match.group(1))
         title = " ".join(html.unescape(raw_title).split()).casefold()
-    realm_match = re.search(r"\\bdata-omega-realm\\s*=\\s*['\"]([^'\"]+)['\"]", text, re.IGNORECASE)
+    realm_match = re.search(r"\bdata-omega-realm\s*=\s*['\"]([^'\"]+)['\"]", text, re.IGNORECASE)
     realm = realm_match.group(1).strip().casefold() if realm_match else ""
     return title, realm
 

@@ -24,6 +24,30 @@ class PortableHostConfigTests(unittest.TestCase):
             for h in rule["headers"]:
                 self.assertIn(f"{h['key']}: {h['value']}", self.headers, rule["source"])
 
+    def test_release_manifest_is_explicitly_non_cacheable_on_pages(self):
+        rule = next(
+            (rule for rule in self.config["headers"]
+             if rule["source"] == "/.well-known/omega-release.json"),
+            None,
+        )
+        self.assertIsNotNone(rule, "release manifest requires an exact-path cache rule")
+        cache_control = next(
+            (h["value"] for h in rule["headers"] if h["key"].lower() == "cache-control"),
+            None,
+        )
+        self.assertEqual(
+            cache_control,
+            "no-store, no-cache, must-revalidate, max-age=0",
+            "release manifest must not inherit the general static-asset cache policy",
+        )
+        block = self.headers.split("\n/.well-known/omega-release.json\n", 1)[1].split("\n/", 1)[0]
+        self.assertIn("! Cache-Control", block)
+        self.assertIn("Cache-Control: no-store, no-cache, must-revalidate, max-age=0", block)
+        self.assertLess(
+            block.index("! Cache-Control"),
+            block.index("Cache-Control: no-store, no-cache, must-revalidate, max-age=0"),
+        )
+
     def test_security_headers_apply_to_every_path(self):
         block = self.headers.split("\n/*\n", 1)[1].split("\n/", 1)[0]
         for key in ("Content-Security-Policy", "Strict-Transport-Security", "X-Frame-Options"):

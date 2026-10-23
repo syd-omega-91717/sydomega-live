@@ -28,6 +28,9 @@ SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 def fetch(url: str, timeout: float = 12.0) -> tuple[int, dict[str, str], bytes, str]:
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+        raise ValueError("only credential-free HTTPS URLs are allowed")
     request = Request(url, headers={"User-Agent": "SYD-OMEGA-Production-Evidence/1.0", "Accept": "text/html,application/json"})
     with urlopen(request, timeout=timeout) as response:
         return (

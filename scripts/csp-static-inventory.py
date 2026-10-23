@@ -14,7 +14,7 @@ from collections import Counter
 from pathlib import Path
 from urllib.parse import urlsplit
 
-URL_RE = re.compile(r"(?<![A-Za-z0-9])(?:https?|wss?)://[^\s\"'<>\\x60]+", re.I)
+URL_RE = re.compile(r"(?<![A-Za-z0-9])(?:https?|wss?)://[^\s\"'<>]+", re.I)
 SCRIPT_RE = re.compile(r"<script\b([^>]*)>(.*?)</script\s*>", re.I | re.S)
 SRC_RE = re.compile(r"\bsrc\s*=", re.I)
 EVENT_RE = re.compile(r"(?<![\w:-])on[a-z][a-z0-9_-]*\s*=", re.I)

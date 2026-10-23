@@ -78,6 +78,15 @@
   ],
   "headers": [
     {
+      "source": "/.well-known/omega-release.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, max-age=0"
+        }
+      ]
+    },
+    {
       "source": "/(.*)\\.(js|mjs|css|json|png|jpg|jpeg|webp|gif|svg|ico|woff2|mp4|webm|glb)",
       "headers": [
         {

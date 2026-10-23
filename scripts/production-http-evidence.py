@@ -38,7 +38,7 @@ def fetch(url: str, timeout: float = 12.0) -> tuple[int, dict[str, str], bytes, 
         )
 
 
-def audit_origin(base_url: str, expected_sha: str | None = None, opener=fetch) -> dict:
+def audit_origin(base_url: str, expected_sha: str | None = None, opener=fetch, allowed_hosts: set[str] | None = None) -> dict:
     base = base_url.rstrip("/")
     parsed = urlparse(base)
     result = {"origin": base, "checks": [], "failures": [], "manifest": None}
@@ -59,7 +59,11 @@ def audit_origin(base_url: str, expected_sha: str | None = None, opener=fetch) -
         final = urlparse(final_url)
         check("root_http", 200 <= status < 300, f"status={status}")
         check("redirect_stays_https", final.scheme == "https", f"final_url={final_url}")
+        permitted_hosts = allowed_hosts or {parsed.hostname.lower()}
+        check("redirect_host_allowed", bool(final.hostname and final.hostname.lower() in permitted_hosts), f"final_host={final.hostname or 'missing'}")
         check("root_html", "text/html" in headers.get("content-type", "").lower(), f"content_type={headers.get('content-type', 'missing')}")
+        html_marker = b"<!doctype html" in body.lower() or b"<html" in body.lower()
+        check("root_html_marker", html_marker, "HTML document marker present" if html_marker else "HTML document marker missing")
         for header, label in REQUIRED_HEADERS.items():
             value = headers.get(header, "")
             check("header_" + header.replace("-", "_"), bool(value), f"{label}={'present' if value else 'missing'}")
@@ -74,6 +78,8 @@ def audit_origin(base_url: str, expected_sha: str | None = None, opener=fetch) -
         final = urlparse(final_url)
         check("manifest_http", status == 200, f"status={status}")
         check("manifest_redirect_stays_https", final.scheme == "https", f"final_url={final_url}")
+        permitted_hosts = allowed_hosts or {parsed.hostname.lower()}
+        check("manifest_redirect_host_allowed", bool(final.hostname and final.hostname.lower() in permitted_hosts), f"final_host={final.hostname or 'missing'}")
         check("manifest_json", "application/json" in headers.get("content-type", "").lower(), f"content_type={headers.get('content-type', 'missing')}")
         cache = headers.get("cache-control", "").lower()
         check("manifest_not_cached", "no-store" in cache or "no-cache" in cache, f"cache_control={cache or 'missing'}")
@@ -118,11 +124,12 @@ def main(argv: list[str] | None = None) -> int:
     if expected and not SHA_RE.fullmatch(expected):
         parser.error("--expected-sha must be a 40-character hexadecimal commit SHA")
     origins = args.origins or list(DEFAULT_ORIGINS)
+    allowed_hosts = {urlparse(origin.rstrip("/")).hostname.lower() for origin in origins if urlparse(origin.rstrip("/")).hostname}
     results = []
     for origin in origins:
         def timed_fetch(url: str, timeout: float = args.timeout):
             return fetch(url, timeout=timeout)
-        results.append(audit_origin(origin, expected, timed_fetch))
+        results.append(audit_origin(origin, expected, timed_fetch, allowed_hosts=allowed_hosts))
 
     manifests = [item["manifest"] for item in results if item.get("manifest")]
     if len(results) > 1 and len(manifests) == len(results):

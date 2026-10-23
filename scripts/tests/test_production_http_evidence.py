@@ -94,6 +94,22 @@ class ProductionHttpEvidenceTests(unittest.TestCase):
         self.assertFalse(result["passed"])
         self.assertEqual(result["failures"][0]["name"], "origin_url")
 
+    def test_redirect_to_unlisted_host_fails(self):
+        def opener(url):
+            final = "https://untrusted.example/"
+            if url.endswith("/"):
+                return response(final, headers=self.root_headers, body=b"<!doctype html><html></html>")
+            return response(final, headers=self.manifest_headers, body=self.manifest)
+        result = probe.audit_origin(
+            "https://example.test",
+            opener=opener,
+            allowed_hosts={"example.test"},
+        )
+        self.assertFalse(result["passed"])
+        names = {item["name"] for item in result["failures"]}
+        self.assertIn("redirect_host_allowed", names)
+        self.assertIn("manifest_redirect_host_allowed", names)
+
     def test_unexpected_http_status_fails(self):
         def opener(url):
             if url.endswith("/"):

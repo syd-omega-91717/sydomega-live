@@ -9,6 +9,8 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import http.client
+import html
+import re
 import ssl
 import os
 import sys
@@ -38,7 +40,32 @@ def route_for(path: Path) -> str | None:
     return None
 
 
-def check_route(route: str, expected_host: str) -> tuple[bool, str]:
+
+def page_identity(body: bytes | str) -> tuple[str, str]:
+    """Return stable title and omega realm markers from an HTML document."""
+    text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
+    title_match = re.search(r"<title\\b[^>]*>(.*?)</title\\s*>", text, re.IGNORECASE | re.DOTALL)
+    title = ""
+    if title_match:
+        raw_title = re.sub(r"<[^>]+>", " ", title_match.group(1))
+        title = " ".join(html.unescape(raw_title).split()).casefold()
+    realm_match = re.search(r"\\bdata-omega-realm\\s*=\\s*['\"]([^'\"]+)['\"]", text, re.IGNORECASE)
+    realm = realm_match.group(1).strip().casefold() if realm_match else ""
+    return title, realm
+
+
+def identity_mismatch(expected_body: bytes, actual_body: bytes, route: str) -> str | None:
+    """Reject a successful HTTP response that serves a different page identity."""
+    expected_title, expected_realm = page_identity(expected_body)
+    actual_title, actual_realm = page_identity(actual_body)
+    if expected_realm and actual_realm != expected_realm:
+        return f"{route} page_realm_mismatch expected={expected_realm!r} actual={actual_realm or 'missing'!r}"
+    if expected_title and actual_title != expected_title:
+        return f"{route} page_title_mismatch expected={expected_title!r} actual={actual_title or 'missing'!r}"
+    if not expected_realm and not expected_title:
+        return f"{route} expected_page_identity_missing"
+    return None
+def check_route(route: str, expected_host: str, expected_body: bytes) -> tuple[bool, str]:
     request_path = quote(route, safe="/-._~")
     last_error = "unknown_error"
 
@@ -95,6 +122,9 @@ def check_route(route: str, expected_host: str) -> tuple[bool, str]:
                 return False, f"{route} content_type={content_type or 'missing'}"
             if b"<html" not in body and b"<!doctype html" not in body:
                 return False, f"{route} html_marker_missing"
+            mismatch = identity_mismatch(expected_body, body, route)
+            if mismatch:
+                return False, mismatch
             return True, route
         except (OSError, http.client.HTTPException, TimeoutError) as exc:
             last_error = type(exc).__name__
@@ -131,18 +161,19 @@ def main() -> int:
         print(f"PRODUCTION_SURFACE=FAIL reason=public_dir_missing path={PUBLIC}")
         return 2
 
-    routes = sorted({
-        route
-        for page in PUBLIC.rglob("*.html")
-        if (route := route_for(page)) is not None
-    })
+    route_pages: dict[str, Path] = {}
+    for page in sorted(PUBLIC.rglob("*.html")):
+        route = route_for(page)
+        if route is not None:
+            route_pages.setdefault(route, page)
+    routes = sorted(route_pages)
     if not routes:
         print("PRODUCTION_SURFACE=FAIL reason=no_html_routes_found")
         return 2
 
     failures: list[str] = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=WORKERS) as pool:
-        futures = [pool.submit(check_route, route, parsed.hostname) for route in routes]
+        futures = [pool.submit(check_route, route, parsed.hostname, route_pages[route].read_bytes()) for route in routes]
         for future in concurrent.futures.as_completed(futures):
             ok, result = future.result()
             if not ok:

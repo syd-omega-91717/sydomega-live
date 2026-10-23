@@ -8,12 +8,12 @@ signed-in flows work. Run with --expected-sha to verify a specific release.
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import re
+import ssl
 import sys
-from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
-from urllib.request import Request, urlopen
 
 DEFAULT_ORIGINS = ("https://sydomega.com", "https://www.sydomega.com", "https://sydomega.pages.dev")
 RELEASE_PATH = "/.well-known/omega-release.json"
@@ -27,18 +27,56 @@ REQUIRED_HEADERS = {
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
-def fetch(url: str, timeout: float = 12.0) -> tuple[int, dict[str, str], bytes, str]:
-    parsed = urlparse(url)
-    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
-        raise ValueError("only credential-free HTTPS URLs are allowed")
-    request = Request(url, headers={"User-Agent": "SYD-OMEGA-Production-Evidence/1.0", "Accept": "text/html,application/json"})
-    with urlopen(request, timeout=timeout) as response:
-        return (
-            int(response.status),
-            {key.lower(): value.strip() for key, value in response.headers.items()},
-            response.read(2_000_001),
-            response.geturl(),
+def fetch(
+    url: str,
+    timeout: float = 12.0,
+    allowed_hosts: set[str] | None = None,
+) -> tuple[int, dict[str, str], bytes, str]:
+    """Fetch an HTTPS URL with bounded, host-allowlisted redirects.
+
+    Using HTTPSConnection directly avoids urllib's support for file:// URLs.
+    Redirects are followed only over HTTPS and only to an explicitly permitted
+    host; callers pass the complete set of hosts being audited.
+    """
+    current = url
+    permitted = {host.lower() for host in allowed_hosts} if allowed_hosts else None
+    for _ in range(6):
+        parsed = urlparse(current)
+        if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+            raise ValueError("only credential-free HTTPS URLs are allowed")
+        permitted_hosts = permitted or {parsed.hostname.lower()}
+        if parsed.hostname.lower() not in permitted_hosts:
+            raise ValueError("request host is not allowlisted")
+        path = parsed.path or "/"
+        if parsed.query:
+            path += "?" + parsed.query
+        connection = http.client.HTTPSConnection(
+            parsed.hostname,
+            parsed.port or 443,
+            timeout=timeout,
+            context=ssl.create_default_context(),
         )
+        try:
+            connection.request(
+                "GET",
+                path,
+                headers={
+                    "User-Agent": "SYD-OMEGA-Production-Evidence/1.0",
+                    "Accept": "text/html,application/json",
+                },
+            )
+            response = connection.getresponse()
+            status = int(response.status)
+            headers = {key.lower(): value.strip() for key, value in response.getheaders()}
+            body = response.read(2_000_001)
+            location = response.getheader("Location")
+        finally:
+            connection.close()
+        if status in (301, 302, 303, 307, 308) and location:
+            current = urljoin(current, location)
+            continue
+        return status, headers, body, current
+    raise ValueError("too many HTTPS redirects")
 
 
 def audit_origin(base_url: str, expected_sha: str | None = None, opener=fetch, allowed_hosts: set[str] | None = None) -> dict:
@@ -70,7 +108,7 @@ def audit_origin(base_url: str, expected_sha: str | None = None, opener=fetch, a
         for header, label in REQUIRED_HEADERS.items():
             value = headers.get(header, "")
             check("header_" + header.replace("-", "_"), bool(value), f"{label}={'present' if value else 'missing'}")
-    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+    except (http.client.HTTPException, TimeoutError, OSError, ValueError) as exc:
         check("root_request", False, f"{type(exc).__name__}: {exc}")
         result["passed"] = False
         return result
@@ -131,7 +169,7 @@ def main(argv: list[str] | None = None) -> int:
     results = []
     for origin in origins:
         def timed_fetch(url: str, timeout: float = args.timeout):
-            return fetch(url, timeout=timeout)
+            return fetch(url, timeout=timeout, allowed_hosts=allowed_hosts)
         results.append(audit_origin(origin, expected, timed_fetch, allowed_hosts=allowed_hosts))
 
     manifests = [item["manifest"] for item in results if item.get("manifest")]

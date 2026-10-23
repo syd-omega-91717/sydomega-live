@@ -6,17 +6,17 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 
 | Domain | Required evidence | Current state |
 |---|---|---|
-| Supabase security | Security Advisor has zero actionable findings | BLOCKED — leaked-password protection is disabled on the provider side |
-| RLS performance | Advisor has zero RLS init-plan findings | PASS |
-| RPC privilege | High-risk client RPCs are invoker/search-path hardened | PASS |
-| Migration reproducibility | All local migrations replay successfully from zero | PENDING FULL 337-FILE RUN |
+| Supabase security | Security Advisor findings reviewed and provider-level controls enabled | BLOCKED — leaked-password protection is disabled (WARN). The additional INFO finding for `omega_private.marketplace_listing_assets` is consistent with the documented server-only, deny-by-default design: RLS is enabled and the migration revokes privileges from `public`, `anon`, `authenticated`, and `service_role`. Preserve this boundary; do not add a client policy merely to silence the linter. |
+| RLS performance | Advisor has zero RLS init-plan findings | PASS — latest performance/security review remains subject to repeat verification after schema changes |
+| RPC privilege | High-risk client RPCs are invoker/search-path hardened | PASS — based on existing audit evidence; re-run regression checks before release |
+| Migration reproducibility | All local migrations replay successfully from zero | PENDING FULL 407-MIGRATION RUN |
 | Payment lifecycle | Signed Stripe event → idempotency → ledger → reconciliation → entitlement → reversal | BLOCKED — live provider proof required |
 | Disaster recovery | Provider restore drill with measured RPO/RTO | BLOCKED — provider restore proof required |
 | Privacy lifecycle | Export/delete/retention exercised against controlled data | PARTIAL — implementation exists; full lifecycle evidence remains |
 | Provider credentials | Every external production provider verified and failure-tested | PARTIAL |
 | Scale | Concurrency, DB saturation, queues, Edge Functions, latency/cost limits measured | PENDING |
 | AI quality | Groundedness, retrieval quality, hallucination, latency, cost, adversarial recovery measured | PENDING |
-| Vercel production | Current main commit has a READY production deployment | BLOCKED by provider build-rate-limit status |
+| Vercel production | Current main commit has a READY production deployment | BLOCKED — current main commit has a failing Vercel status linked to account/deployment-blocked guidance; latest deployment returned by the connected Vercel integration is still on commit `7d70ce14` from 2026-10-06 |
 | Owner security | Owner MFA factor enrolled and verified | PENDING OWNER ACTION |
 
 ## Rules
@@ -31,15 +31,17 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 
 ## Automated full replay
 
-.github/workflows/supabase-full-migration-replay.yml starts an isolated Supabase stack and runs supabase db reset, which recreates the local database and applies every migration in order. The inventory contract checks that the local migration set exactly matches the committed live manifest before and after replay.
+`.github/workflows/supabase-full-migration-replay.yml` starts an isolated Supabase stack and runs `supabase db reset`, which recreates the local database and applies every migration in order. The inventory contract checks that the local migration set exactly matches the committed live manifest before and after replay.
 
-The reconciled repository/live target is 337 migrations, with the latest registered version 20261004084744_grant_read_platform_events_evidence_capabilities_20261004. Live migration journal verification and the post-change Security Advisor check were observed on 2026-10-04; the only remaining Security Advisor finding is the external leaked-password-protection setting. A successful inventory check is not itself proof that the full database replay passed; the workflow must complete the isolated reset and subsequent security/hardening tests.
+The live Supabase migration journal was queried on 2026-10-24: **407 applied versions**, first version `0001`, latest version `20261023120000`. The committed `supabase/remote-migrations.json` reports the same count and latest version. The latest migration is `20261023120000_omega_personal_context_link_fk_indexes.sql`. This verifies ledger/manifest alignment at the count and latest-version level; it does **not** prove the full isolated replay passed. The workflow must complete the reset and subsequent security/hardening tests before migration reproducibility can be marked PASS.
 
 ## Provider blockers
 
 The remaining provider-side blockers are kept explicit. Repository/SQL changes must not be represented as substitutes for provider configuration, credential rotation, owner MFA enrollment, signed payment traffic, or provider restore evidence.
 
-The canonical Vercel project remains sydomega-live. The latest mainline merge currently reports a Vercel build-rate-limit failure, so production verification remains blocked until a READY deployment for the merged main commit is independently evidenced.
+The canonical Vercel project remains `sydomega-live`. GitHub reports a failing Vercel status on current main commit `ed8113e670c76993318be694e88292eafb8a3cc7`, linking to Vercel's account/deployment-blocked guidance. The latest production deployment returned by the connected Vercel integration is commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` (2026-10-06). Production parity for the October 23 main commit is therefore **not verified** until a READY deployment for that commit and independent HTTP evidence are available.
+
+The independent read-only production probe is documented in [PRODUCTION_HTTP_EVIDENCE.md](PRODUCTION_HTTP_EVIDENCE.md). Its checks cover the public HTTP surface and release-manifest parity; they do not prove authenticated routes, Supabase authorization, payment flows, or every browser-side dependency.
 
 ## Completion standard
 

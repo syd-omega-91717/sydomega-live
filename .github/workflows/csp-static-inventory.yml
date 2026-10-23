@@ -1,0 +1,62 @@
+name: CSP Static Inventory
+
+on:
+  pull_request:
+    paths:
+      - 'vercel.json'
+      - '*.html'
+      - '*.js'
+      - 'scripts/csp-static-inventory.py'
+      - 'scripts/tests/test_csp_static_inventory.py'
+      - '.github/workflows/csp-static-inventory.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'vercel.json'
+      - '*.html'
+      - '*.js'
+      - 'scripts/csp-static-inventory.py'
+      - 'scripts/tests/test_csp_static_inventory.py'
+      - '.github/workflows/csp-static-inventory.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: csp-static-inventory-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  inventory:
+    name: Generate advisory CSP inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run inventory regression tests
+        run: python -m unittest discover -s scripts/tests -p 'test_csp_static_inventory.py' -v
+
+      - name: Generate advisory reports
+        run: |
+          python scripts/csp-static-inventory.py --format markdown > csp-static-inventory.md
+          python scripts/csp-static-inventory.py --format json > csp-static-inventory.json
+          test -s csp-static-inventory.md
+          test -s csp-static-inventory.json
+
+      - name: Upload advisory reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: csp-static-inventory-${{ github.sha }}
+          path: |
+            csp-static-inventory.md
+            csp-static-inventory.json
+          if-no-files-found: error
+          retention-days: 14

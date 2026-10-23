@@ -15,7 +15,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
-DEFAULT_ORIGINS = ("https://sydomega.com", "https://www.sydomega.com")
+DEFAULT_ORIGINS = ("https://sydomega.com", "https://www.sydomega.com", "https://sydomega.pages.dev")
 RELEASE_PATH = "/.well-known/omega-release.json"
 REQUIRED_HEADERS = {
     "content-security-policy": "CSP",

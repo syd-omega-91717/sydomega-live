@@ -253,9 +253,12 @@ function initials(name){return name.split(' ').map(function(w){return w[0];}).jo
 
 function isDue(c){
   if(!c.freq) return false;
+  /* Last touch: newest logged interaction, or a date set on network.html
+     (the same contact book since 2026-10-15), whichever is later. */
   var last=interactions.filter(function(i){return i.contactId===c.id;}).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
-  if(!last) return true;
-  var daysAgo=(Date.now()-new Date(last.date).getTime())/(86400000);
+  var lastDate=[last?last.date:'',c.lastContact||''].sort().pop();
+  if(!lastDate) return true;
+  var daysAgo=(Date.now()-new Date(lastDate).getTime())/(86400000);
   return daysAgo>=c.freq;
 }
 

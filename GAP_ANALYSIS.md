@@ -105,11 +105,7 @@ open, recorded in `FIXES_LOG.md`:
 
   Water and exam SRS were fixed 2026-10-15. **Weight, net worth (one home, others listed as not included) and credentials' certificates were fixed later the same day.**
 
-  Two remain, and they need an owner decision, not a fix:
-  - `budget`/`expenses`: 8 vs 15 categories, separate transaction logs.
-  - `contacts`/`network`: incompatible Dunbar circles.
-
-  Merging either means choosing one taxonomy. Merging URLs is also the owner's decision.
+  **The owner chose both remaining merges and they were made 2026-10-24:** Expenses is a view over Budget (fine category kept as `sub`), and Network is a view over Contacts (circles mapped) — `FIXES_LOG.md`, 2026-10-24. No second copy of a member number is known to remain. Merging page URLs is still the owner's decision.
 - **OPEN 2026-10-12 — the knowledge base is empty.** 11 approved sources, **0** chunks, 0
   embeddings: `omega_knowledge_hybrid_search` now runs and correctly returns nothing. Nothing has
   ingested source text (and `omega_knowledge_ingest_document` is in the blocked list above).

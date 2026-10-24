@@ -23422,3 +23422,39 @@ Follow-up to the water and exam fixes above, from `FEATURE_IDEAS.md` §41's "one
 - **`contacts.html` / `network.html`:** different Dunbar circles. Network's TRIBE is 15, contacts' is 50, and network has PROSPECTS.
 
 These are parallel tools, not one fact stored twice. Merging either means choosing a taxonomy and mapping the other onto it, which loses information: an owner decision, recorded in `GAP_ANALYSIS.md` §S.
+
+## Budget/Expenses and Contacts/Network merged; dashboard savings rate never computed (2026-10-24)
+
+The owner chose the merges that `FEATURE_IDEAS.md` §41 and the 2026-10-15 entry above left to them (§8.1 class 8).
+
+- **Expenses → Budget.**
+  - `expenses.html` kept its own ledger (`omega_expenses`, 15 categories) and limits (`omega_budgets`), beside `budget.html`'s `omega_budget_months`/`omega_budget_targets` with 8 groups. The same month showed two spending totals.
+  - Expenses is now a view over Budget's store. Each row keeps its fine category as `sub` (fitness → HEALTH, sub `fitness`), so no detail is lost, and `budget.html` shows it after the description.
+  - Limits are Budget's 8 targets. Old limits seed them only when Budget has none: fitness 80 + health 20 = HEALTH 100.
+  - The old keys migrate once and are removed. Backup export and import now name Budget's keys.
+  - Row text that went into `innerHTML` unescaped is now escaped.
+  - `budget.html` refilled any 0 target with its default on every load, so "no limit" snapped back to $1,500 and similar. It now fills only absent targets and saves them.
+- **Network → Contacts.**
+  - `network.html` kept a second CRM (`omega_network_contacts`/`_interactions`) with circles that do not match Contacts' (its TRIBE = 15, contacts' = 50). It is now a view over `omega_contacts`/`omega_contact_ints`.
+  - Circles map INNER_CIRCLE→inner, TRIBE→close, ALLIES→tribe, NETWORK→network, PROSPECTS→outer.
+  - Network-only fields (strength, lastContact) live on the shared record, and contacts-only fields are preserved.
+  - Migration treats the same name (case-insensitive) as the same person. Interactions are re-keyed to the shared numeric ids.
+  - `contacts.html`'s due check now honours a last-contact date set on Network.
+- **`dashboard.html`.**
+  - The savings-rate tile summed every field of each Budget row (ids, dates) instead of `amount`, so it could never be a number. Its network "due" tile read the old Network key.
+  - Both now read the shared stores. Verified with the Personal tab rendered: 3000 income and 200 spent show **93%**, and 1 contact is due.
+
+**Verified in a render.**
+- **Expenses → Budget:**
+  - legacy keys removed; the fitness row lands as HEALTH with `sub` `fitness`;
+  - income moved; targets seeded HEALTH 100 / FOOD 300;
+  - an injected `<b>` renders as text;
+  - add and delete on Expenses write Budget's store;
+  - `budget.html` fills only the missing targets.
+- **Network → Contacts:**
+  - legacy keys removed; "ada" and "Ada" merged, with CTO/email kept and strength 5 / lastContact 10-20 gained;
+  - Bob added as `outer`, his interaction re-keyed;
+  - `contacts.html` lists both.
+- **Errors:** 0 page errors on any page.
+
+Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contacts, dashboard).

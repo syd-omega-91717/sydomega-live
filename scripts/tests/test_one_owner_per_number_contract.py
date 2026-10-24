@@ -12,6 +12,11 @@ showed different values for it. Fixed 2026-10-15 (FIXES_LOG.md):
   from different stores; wealth.html is its home.
 - certificates: credentials.html marked four threshold "certificates" EARNED
   that exist in no table; it now reads the certificates table.
+- budget: expenses.html kept its own ledger and 15-category limits beside
+  budget.html's months and 8 targets; it is now a view over budget.html's
+  store, keeping each row's fine category as 'sub'.
+- contacts: network.html kept a second CRM; it now reads and writes
+  contacts.html's book, its circles mapped onto contacts' Dunbar tiers.
 """
 
 from pathlib import Path
@@ -56,6 +61,25 @@ class OneOwnerPerNumber(unittest.TestCase):
         self.assertNotIn("var CERTS=[", cred)
         self.assertNotIn("KNOWLEDGE CERTIFICATE", cred)
         self.assertNotIn("innerHTML", cred[cred.index("function renderCerts"):cred.index("function renderKYC")])
+
+    def test_expenses_is_a_view_over_budget(self):
+        exp = read("expenses.html")
+        self.assertIn("const BUDGET_MONTHS_KEY='omega_budget_months'", exp)
+        self.assertNotIn("localStorage.setItem('omega_expenses'", exp)
+        self.assertNotIn("localStorage.setItem('omega_budgets'", exp)
+        self.assertIn("sub:e.cat", exp)  # fine category kept, no detail lost
+        bud = read("budget.html")
+        self.assertIn("if (_targets[c.id] == null)", bud)  # a 0 target stays 0
+
+    def test_network_shares_the_contact_book(self):
+        net = read("network.html")
+        self.assertIn("const CONTACTS_KEY     = 'omega_contacts';", net)
+        self.assertIn("const INTERACTIONS_KEY = 'omega_contact_ints';", net)
+        self.assertNotIn("localStorage.getItem('omega_network_contacts')", read("dashboard.html"))
+        self.assertIn("c.lastContact||''", read("contacts.html"))
+
+    def test_dashboard_sums_row_amounts(self):
+        self.assertIn("function sumAmt(a)", read("dashboard.html"))
 
 
 if __name__ == "__main__":

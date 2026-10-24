@@ -259,8 +259,18 @@
    SOVEREIGN NETWORK — Relationship Intelligence System
    ═══════════════════════════════════════════════════════════════════════ */
 
-const CONTACTS_KEY     = 'omega_network_contacts';
-const INTERACTIONS_KEY = 'omega_network_interactions';
+/* One contact book: contacts.html's 'omega_contacts' + 'omega_contact_ints'.
+   This page kept a second CRM ('omega_network_contacts'/'_interactions')
+   with its own circles, so a person could be due here and not there
+   (CLAUDE.md 8.1 class 8). It is now a view over that store. Its circles
+   map onto contacts.html's Dunbar tiers; fields only this page has
+   (strength, lastContact) are kept on the shared record; fields only
+   contacts.html has (role, email, tags, ...) are preserved untouched.
+   The old keys are moved over once (same name = same person) and removed. */
+const CONTACTS_KEY     = 'omega_contacts';
+const INTERACTIONS_KEY = 'omega_contact_ints';
+const CIRCLE_TO_TIER = {INNER_CIRCLE:'inner', TRIBE:'close', ALLIES:'tribe', NETWORK:'network', PROSPECTS:'outer'};
+const TIER_TO_CIRCLE = {inner:'INNER_CIRCLE', close:'TRIBE', tribe:'ALLIES', network:'NETWORK', outer:'PROSPECTS'};
 
 const CIRCLES = [
   {id:'INNER_CIRCLE', label:'INNER CIRCLE', color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), limit:5,  freq:7},
@@ -277,12 +287,78 @@ let _editCat = 'NETWORK';
 
 /* ── STORAGE ─────────────────────────────────────────────────────────── */
 
-function load() {
-  try { _contacts     = JSON.parse(localStorage.getItem(CONTACTS_KEY))     || []; } catch { _contacts = []; }
-  try { _interactions = JSON.parse(localStorage.getItem(INTERACTIONS_KEY)) || []; } catch { _interactions = []; }
+function readArr(k) { try { const v = JSON.parse(localStorage.getItem(k)); return Array.isArray(v) ? v : []; } catch { return []; } }
+function newId(taken) { let n = Date.now(); while (taken[String(n)]) n++; taken[String(n)] = 1; return n; }
+
+function migrateLegacy() {
+  const oldC = localStorage.getItem('omega_network_contacts'), oldI = localStorage.getItem('omega_network_interactions');
+  if (oldC === null && oldI === null) return;
+  const book = readArr(CONTACTS_KEY), ints = readArr(INTERACTIONS_KEY), taken = {}, idMap = {};
+  book.forEach(c => { taken[String(c.id)] = 1; });
+  readArr('omega_network_contacts').forEach(n => {
+    if (!n || !n.name) return;
+    const same = book.find(c => String(c.name).trim().toLowerCase() === String(n.name).trim().toLowerCase());
+    if (same) {
+      idMap[n.id] = same.id;
+      if (same.strength == null && n.strength) same.strength = n.strength;
+      if (!same.lastContact && n.lastContact) same.lastContact = n.lastContact;
+      if (!same.notes && n.note) same.notes = n.note;
+    } else {
+      const id = newId(taken); idMap[n.id] = id;
+      book.push({id, name:n.name, role:'', company:'', email:'', phone:'', tier:CIRCLE_TO_TIER[n.category]||'network',
+        cat:'other', freq:n.frequency||30, tags:[], notes:n.note||'', vip:false,
+        added:new Date(n.createdAt||Date.now()).toISOString().slice(0,10), color:'#888',
+        strength:n.strength||3, lastContact:n.lastContact||''});
+    }
+  });
+  readArr('omega_network_interactions').forEach(i => {
+    const cid = idMap[i.contactId]; if (cid == null) return;
+    const c = book.find(x => x.id === cid);
+    ints.push({id:i.ts||Date.now(), contactId:cid, contactName:c?c.name:'', date:i.date, channel:i.type||'other', quality:3, note:i.note||''});
+  });
+  localStorage.setItem(CONTACTS_KEY, JSON.stringify(book));
+  localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(ints));
+  localStorage.removeItem('omega_network_contacts'); localStorage.removeItem('omega_network_interactions');
 }
-function saveContacts()     { localStorage.setItem(CONTACTS_KEY,     JSON.stringify(_contacts)); }
-function saveInteractions() { localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(_interactions)); }
+
+function load() {
+  migrateLegacy();
+  const book = readArr(CONTACTS_KEY), ints = readArr(INTERACTIONS_KEY);
+  _interactions = ints.map(i => ({contactId:String(i.contactId), date:i.date, type:i.channel||'other', note:i.note||'', ts:i.id}));
+  _contacts = book.map(c => {
+    const last = ints.filter(i => String(i.contactId) === String(c.id)).map(i => i.date).sort().pop() || '';
+    return {id:String(c.id), name:c.name, category:TIER_TO_CIRCLE[c.tier]||'NETWORK', frequency:c.freq||30,
+      lastContact:[last, c.lastContact||''].sort().pop() || '', strength:c.strength||3, note:c.notes||'',
+      createdAt:c.added ? new Date(c.added).getTime() : Date.now()};
+  });
+}
+function saveContacts() {
+  const book = readArr(CONTACTS_KEY), taken = {}, keep = {};
+  book.forEach(c => { taken[String(c.id)] = 1; });
+  _contacts.forEach(v => {
+    let c = book.find(x => String(x.id) === v.id);
+    if (!c) {
+      c = {id:newId(taken), role:'', company:'', email:'', phone:'', cat:'other', tags:[], vip:false,
+        added:new Date().toISOString().slice(0,10), color:'#888'};
+      book.push(c);
+      /* Keep this page's view and any interactions on the shared numeric id. */
+      _interactions.forEach(i => { if (i.contactId === v.id) i.contactId = String(c.id); });
+      v.id = String(c.id);
+    }
+    Object.assign(c, {name:v.name, tier:CIRCLE_TO_TIER[v.category]||'network', freq:v.frequency||30,
+      notes:v.note||'', strength:v.strength||3, lastContact:v.lastContact||''});
+    keep[String(c.id)] = 1;
+  });
+  localStorage.setItem(CONTACTS_KEY, JSON.stringify(book.filter(c => keep[String(c.id)])));
+}
+function saveInteractions() {
+  const book = readArr(CONTACTS_KEY);
+  localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(_interactions.map(i => {
+    const c = book.find(x => String(x.id) === String(i.contactId));
+    return {id:i.ts||Date.now(), contactId:c ? c.id : Number(i.contactId), contactName:c ? c.name : '',
+      date:i.date, channel:i.type||'other', quality:3, note:i.note||''};
+  })));
+}
 
 function today() { return new Date().toISOString().slice(0,10); }
 function daysSince(d) { return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 9999; }

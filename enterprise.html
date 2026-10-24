@@ -58,7 +58,7 @@
         <li>Platform access as provisioned</li><li>SLA terms defined by agreement</li>
         <li>Support terms defined by agreement</li><li>Reporting availability subject to validation</li>
       </ul>
-      <button class="tier-cta" onclick="requestTier('starter')">REQUEST DEMO</button>
+      <button class="tier-cta" data-tier-request="starter">REQUEST DEMO</button>
     </div>
     <div class="tier-card card" style="--tc:var(--gold)">
       <div class="popular-badge">POPULAR</div>
@@ -69,7 +69,7 @@
         <li>Dedicated support subject to agreement</li><li>API quota subject to validated limits</li>
         <li>Analytics availability subject to validation</li>
       </ul>
-      <button class="tier-cta" onclick="requestTier('professional')">REQUEST DEMO</button>
+      <button class="tier-cta" data-tier-request="professional">REQUEST DEMO</button>
     </div>
     <div class="tier-card card" style="--tc:var(--solar)">
       <div class="tier-name">ENTERPRISE</div>
@@ -79,7 +79,7 @@
         <li>White-label option subject to validation</li><li>Custom domain subject to hosting validation</li>
         <li>API quota defined by agreement and capacity</li><li>Residency options subject to deployment validation</li>
       </ul>
-      <button class="tier-cta" onclick="requestTier('enterprise')">CONTACT FOUNDER</button>
+      <button class="tier-cta" data-tier-request="enterprise">CONTACT FOUNDER</button>
     </div>
     <div class="tier-card card" style="--tc:var(--purple)">
       <div class="tier-name">GOVERNMENT</div>
@@ -89,7 +89,7 @@
         <li>Air-gapped deployment requires validation</li><li>Residency and sovereignty scope defined by contract</li>
         <li>Compliance mapping requires legal review</li><li>Dedicated infrastructure subject to validation</li>
       </ul>
-      <button class="tier-cta" onclick="requestTier('government')">REQUEST PROPOSAL</button>
+      <button class="tier-cta" data-tier-request="government">REQUEST PROPOSAL</button>
     </div>
   </div>
 </div>
@@ -143,12 +143,15 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function fmt(n){return n!=null?'$'+(Math.round(n)).toLocaleString():'$0';}
-window.requestTier=function(tier){
+function requestTier(tier){
   var labels={starter:'Starter',professional:'Professional',enterprise:'Enterprise',government:'Government'};
   if(!Object.prototype.hasOwnProperty.call(labels,tier))return;
   var brief='Enterprise tier inquiry for '+labels[tier]+'. Please confirm indicative pricing, service levels, API limits, deployment options, and compliance scope.';
   window.location.href='/consultancy.html?tab=book&domain=enterprise&brief='+encodeURIComponent(brief);
-};
+}
+document.querySelectorAll('[data-tier-request]').forEach(function(button){
+  button.addEventListener('click',function(){requestTier(button.getAttribute('data-tier-request'));});
+});
 window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['tiers','accounts','revenue','science'][i]===name);});

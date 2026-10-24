@@ -86,6 +86,14 @@ BEGIN
     RAISE EXCEPTION 'partial refund did not reverse the original accounts';
   END IF;
 
+  SELECT status INTO v_original_status FROM public.omega_ledger_transactions
+   WHERE transaction_id=v_original_tx;
+  SELECT status INTO v_original_recon_status FROM public.omega_payment_reconciliation
+   WHERE internal_transaction_id=v_original_tx AND provider_reference='pi_test_refund_1';
+  IF v_original_status <> 'POSTED' OR v_original_recon_status <> 'matched' THEN
+    RAISE EXCEPTION 'partial refund incorrectly finalized the original payment';
+  END IF;
+
   -- Exact event replay is idempotent.
   v_result := public.record_stripe_refund(
     'evt_test_refund_300','charge.refunded','ch_test_refund_1','pi_test_refund_1',
@@ -115,6 +123,10 @@ BEGIN
   IF (v_result->>'stale')::boolean IS DISTINCT FROM true THEN
     RAISE EXCEPTION 'stale cumulative event was not identified: %',v_result;
   END IF;
+
+  SELECT count(*) INTO v_count FROM public.omega_ledger_transactions
+   WHERE event_type='STRIPE_REFUND_REVERSAL' AND external_reference='ch_test_refund_1';
+  IF v_count <> 1 THEN RAISE EXCEPTION 'stale event created an extra reversal'; END IF;
 
   -- A second charge ID cannot make cumulative refunds exceed the original payment.
   BEGIN
@@ -158,6 +170,19 @@ BEGIN
   IF v_state_amount <> 10 OR v_original_status <> 'REVERSED' OR v_original_recon_status <> 'reversed' THEN
     RAISE EXCEPTION 'full refund did not finalize state: amount %, transaction %, reconciliation %',
       v_state_amount,v_original_status,v_original_recon_status;
+  END IF;
+
+  SELECT count(*) INTO v_count FROM public.omega_ledger_transactions
+   WHERE event_type='STRIPE_REFUND_REVERSAL' AND external_reference='ch_test_refund_1';
+  IF v_count <> 3 THEN RAISE EXCEPTION 'expected three delta reversals, found %',v_count; END IF;
+  SELECT COALESCE(sum(e.amount) FILTER (WHERE e.direction='DEBIT'),0),
+         COALESCE(sum(e.amount) FILTER (WHERE e.direction='CREDIT'),0)
+    INTO v_debits,v_credits
+    FROM public.omega_ledger_entries e
+    JOIN public.omega_ledger_transactions t ON t.transaction_id=e.transaction_id
+   WHERE t.event_type='STRIPE_REFUND_REVERSAL' AND t.external_reference='ch_test_refund_1';
+  IF v_debits <> 10 OR v_credits <> 10 THEN
+    RAISE EXCEPTION 'aggregate reversal ledger is unbalanced: debits %, credits %',v_debits,v_credits;
   END IF;
 
   -- Never invent a new reversal when the original transaction was already

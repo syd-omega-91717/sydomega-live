@@ -24,7 +24,7 @@ it to `FEATURE_IDEAS.md` and delete the line here.
 - [SHIPPED] Map every 999-blueprint point — all 413 entries (391 + 8 restored duplicates + 14 appendix Nodes) classified with reasons by scripts/blueprint-truth-map.py (2026-10-12)
 - [NEEDS_DECISION] Database backups the owner controls — the blueprint's Mars Ledger (points 9, 615) reduces to off-site backups / point-in-time restore, which needs Supabase Pro (2026-10-12)
 - [SHIPPED] Owner concept media on the Vision Board — 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today; merged in PR #883 (2026-10-13)
-- [IN_PROGRESS] Certificate PDF per earned certificate — from the Sovereign Terminal board; reuse omega-passport.js (vendored jsPDF) and the certificates profile.html already lists (2026-10-13)
+- [SHIPPED] Certificate PDF per earned certificate — from the Sovereign Terminal board; merged in #885: profile.html:1529 gives each held certificate a download button, omega-passport.js:224 `generateCertificate` draws the A5 PDF (2026-10-13; status re-checked 2026-10-24)
 - [NEEDS_DECISION] Member sticker and logo pack — from the Unified Blueprint board; no sticker surface exists in the repo (2026-10-13)
 - [REJECTED] 9x9x9 = 729-node matrix (Master Blueprint board) — conflicts with the canon 9^5 = 59,049 lattice, omega-canon.json nine_fold (2026-10-13)
 - [REJECTED] 9-stage Sand to Omega Master ladder (Sovereign Terminal board) — conflicts with the 12 canon tiers the owner chose 2026-10-12 (2026-10-13)

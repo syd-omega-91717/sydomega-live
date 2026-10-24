@@ -11,12 +11,11 @@ production serves it.
 | status | count |
 |---|---|
 | NEEDS_DECISION | 16 |
-| IN_PROGRESS | 5 |
-| PROPOSED | 18 |
+| PROPOSED | 17 |
 | PARTIAL | 56 |
 | OPEN_GAP | 18 |
 | DORMANT | 1 |
-| SHIPPED | 36 |
+| SHIPPED | 42 |
 | DECIDED | 42 |
 | CLOSED | 16 |
 | SUPERSEDED | 1 |
@@ -49,24 +48,13 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | I08 | IDEA_INTAKE.md | Member sticker and logo pack | from the Unified Blueprint board; no sticker surface exists in the repo (2026-10-13) |
 | I13 | IDEA_INTAKE.md | Align the passport PDF's 12 gate names with the canon tiers | omega-passport.js GATE_NAMES (INITIATE, ACOLYTE, SCHOLAR...) differ from omega-canon.json tiers (Initiate, Seeker, Adept...); its authority… |
 
-### IN_PROGRESS (5)
-
-| id | source | idea | evidence |
-|---|---|---|---|
-| B012 | 999 blueprint [DESIGN_CONCEPT] | Bloodline Priority: The system uses "Biological Recognition." Your wife and children are recognized as "Sover… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
-| B013 | 999 blueprint [INTELLIGENCE] | Zero-Fee Life: The billing engine has a "Nest Exception." All subscription costs for the family are hard-code… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
-| B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
-| N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | owner decision 2026-10-12: adult family members get free access granted by the owner and linked as family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md) |
-| I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; reuse omega-passport.js (vendored jsPDF) and the certificates profile.html already lists (2026-10-13) |
-
-### PROPOSED (18)
+### PROPOSED (17)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | F21 | FEATURE_IDEAS.md | Faction-style team competition layer (COSMOS / ASCEND) — proposal, needs product scoping | 'Status: proposal. Do not build as-is — see the open decisions below.' |
 | F23 | FEATURE_IDEAS.md | Event-Driven Celebration Engine Expansion (ASCEND / VAULT / INTEL / COMMAND) — proposal | title '— proposal'; no tier-scaled celebration code found |
 | B018 | 999 blueprint [PRODUCT] | Mental Profile Alignment: The system analyzes the user's sentence structure and interests. If the user likes… | opt-in interests on the profile that pick metaphors and examples; never covert text analysis |
-| B031 | 999 blueprint [INTELLIGENCE] | Descriptive Asset Naming: Assets are never named "Image1." They are named OMEGA_DOJO_LVL2_CRASH_SIM_V1, creat… | a gate that rejects generic asset names (image1, IMG_1234) under assets/ |
 | B043 | 999 blueprint [PROHIBITED_OR_REDESIGN] | 100-Year Market Crash Simulation: A recursive simulation using historical data from 1929 to 2026. Users are "… | play-money crash simulator on historical series (1929, 2008, 2020): teaching, never real trades |
 | B062 | 999 blueprint [INTELLIGENCE] | Zero-Waste Data: Every "failed" search by a user is analyzed. The system asks, "Why couldn't we fulfill this?… | log questions the copilot could not answer (opt-in, no content kept beyond review) so the owner can fill gaps |
 | B084 | 999 blueprint [DESIGN_CONCEPT] | Offline Burst Sync: As the 100% owner, your commands can be queued while you are offline. The moment you "Pin… | offline queue: actions taken offline replay on reconnect through sw.js, each write checked for .error |
@@ -172,7 +160,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (36)
+### SHIPPED (42)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -206,12 +194,18 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | F38 | FEATURE_IDEAS.md | TODAY — one view of what is due and done across the platform (COMMAND) — SHIPPED | FEATURE_IDEAS.md title |
 | F40 | FEATURE_IDEAS.md | Vertical micro-episodes, the short-drama format without the coin paywall — THE TWELVE HOUSES S1 (2026-10-14)… | FEATURE_IDEAS.md title |
 | F41 | FEATURE_IDEAS.md | Platform map: the best real product behind every nav section, and one grounded upgrade per page (2026-10-15)… | FEATURE_IDEAS.md title |
+| B012 | 999 blueprint [DESIGN_CONCEPT] | Bloodline Priority: The system uses "Biological Recognition." Your wife and children are recognized as "Sover… | owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking |
+| B013 | 999 blueprint [INTELLIGENCE] | Zero-Fee Life: The billing engine has a "Nest Exception." All subscription costs for the family are hard-code… | owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking |
+| B031 | 999 blueprint [INTELLIGENCE] | Descriptive Asset Naming: Assets are never named "Image1." They are named OMEGA_DOJO_LVL2_CRASH_SIM_V1, creat… | scripts/asset-name-contract.py:49 blocks a NEW media file with a generic camera/messenger name (IMG_1234, WhatsApp Image ...); the 170 existing exports are frozen in config/asset-name-baseline.json for the owner to rename; gate asset-name in scripts/contract-suite.py:83 |
 | B245 | 999 blueprint [ECONOMIC_R&D] | The "Weight-Calculatism" Engine: Integration of the Weight = Benefit × Probability model. The Tutor Agent (Ag… | decisions.html EXPECTED VALUE framework: weight = benefit x probability per option, highest named (renderEVResult); verified in Chromium 2026-10-12 |
 | B250 | 999 blueprint [PRODUCT] | Bayesian Belief Updating: The system tracks the user's "Rate of Forgetting" (Point 5.6) and creates a Digital… | flashcard.html implements SM-2 spaced repetition: reviews scheduled at the forgetting curve (flashcard.html:125, :202) |
+| B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking |
+| N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking |
 | I01 | IDEA_INTAKE.md | Copilot visual commands | 14 slash commands (/handwritten, /decision-matrix, /infographic, /canvas, /layers, /cycle, /diagram, /roadmap, /sketchnotes, /iceberg, /blu… |
 | I02 | IDEA_INTAKE.md | Owner two-factor deep link | settings.html#two-factor opens the enrolment section; approvals offers it on aal2_no_factor, PR #875 (2026-10-12) |
 | I04 | IDEA_INTAKE.md | Map every 999-blueprint point | all 413 entries (391 + 8 restored duplicates + 14 appendix Nodes) classified with reasons by scripts/blueprint-truth-map.py (2026-10-12) |
 | I06 | IDEA_INTAKE.md | Owner concept media on the Vision Board | 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today… |
+| I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; merged in #885: profile.html:1529 gives each held certificate a download button, omega-passport.js:224 `… |
 
 ### DECIDED (42)
 

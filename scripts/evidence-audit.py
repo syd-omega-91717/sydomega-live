@@ -93,14 +93,11 @@ PUBLIC_PAGES = {
     'guide',
 }
 
-# Edge Functions that are invoked by Stripe, pg_cron, or the Supabase
-# scheduler rather than by a browser. Zero client references is the correct
-# state for these -- not a wiring gap.
+# Verified external invocation that cannot be inferred from an in-repository caller.
+# Do not add planned or historically documented schedules here: the runtime
+# manifest and actual source call sites are the evidence for deployment/wiring.
 SERVER_INVOKED_FUNCTIONS = {
-    'stripe-webhook',        # called by Stripe's webhook delivery
-    'snapshot-leaderboard',  # scheduled snapshot job
-    'weekly-digest',         # scheduled digest job
-    'notify-access',         # called from the access-request flow / triggers
+    'stripe-webhook',  # external Stripe webhook delivery
 }
 
 # Filled in main() from omega-owner-deck.js; see owner_deck_slugs().
@@ -234,6 +231,55 @@ AUTH_RE = re.compile(
 # before they lose the cache. Worth reporting because it splits LOCAL_ONLY
 # into "recoverable by hand" and "one cache clear from gone".
 BACKUP_RE = re.compile(r'OmegaLocalBackup')
+
+
+def _strip_code_comments(source):
+    """Strip JS/TS/SQL comments while preserving quoted strings and URLs."""
+    token_or_comment = re.compile(
+        r'''("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\`(?:\\.|[^\`\\])*\`)|//[^\n]*|/\*.*?\*/''',
+        re.S,
+    )
+    return token_or_comment.sub(
+        lambda match: match.group(1) if match.group(1) is not None else " ",
+        source,
+    )
+
+
+def edge_runtime_snapshot():
+    """Return the dated deployed/local-only map; this is not a live API call."""
+    path = ROOT / "docs/runtime/supabase-edge-functions-live.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return {}, None
+    functions = data.get("functions")
+    if not isinstance(functions, dict):
+        return {}, data.get("captured_at")
+    states = {}
+    for name, record in functions.items():
+        state = str(record.get("state", "")).upper() if isinstance(record, dict) else ""
+        if state in {"DEPLOYED", "LOCAL_ONLY"}:
+            states[str(name)] = state
+    return states, data.get("captured_at") or data.get("_captured")
+
+
+def server_edge_references():
+    """Find server-side function calls plus known external webhook entry points."""
+    refs = set(SERVER_INVOKED_FUNCTIONS)
+    for path in Path("supabase/functions").glob("*/index.ts"):
+        caller = path.parent.name
+        source = _strip_code_comments(path.read_text(encoding="utf-8", errors="replace"))
+        for first, second in EDGE_RE.findall(source):
+            target = first or second
+            if target and target != caller:
+                refs.add(target)
+    # Database webhooks/queues may call Edge Functions via pg_net. Only inspect
+    # actual http_post call expressions after comments are removed, not prose.
+    for path in Path("supabase").rglob("*.sql"):
+        source = _strip_code_comments(path.read_text(encoding="utf-8", errors="replace"))
+        for call in re.finditer(r"\bnet\.http_post\s*\(([\s\S]*?)\)", source, re.I):
+            refs.update(re.findall(r"functions/v1/([a-zA-Z0-9_-]+)", call.group(1)))
+    return refs
 
 # MIRROR COVERAGE. omega-member-state.js (injected by bg.js on every page)
 # copies every localStorage key beginning "omega" up to public.member_state,
@@ -490,21 +536,48 @@ def main():
     # Edge Functions ---------------------------------------------------------
     client_edges = set()
     for path in list(Path('.').glob('*.html')) + list(Path('.').glob('*.js')):
-        text = path.read_text(encoding='utf-8', errors='replace')
-        for a, b in EDGE_RE.findall(text):
-            client_edges.add(a or b)
+        source = _strip_code_comments(path.read_text(encoding='utf-8', errors='replace'))
+        for first, second in EDGE_RE.findall(source):
+            client_edges.add(first or second)
 
+    runtime_states, edge_manifest_captured = edge_runtime_snapshot()
+    server_edges = server_edge_references()
     edge_rows = []
-    for d in sorted(p for p in Path('supabase/functions').iterdir() if p.is_dir()):
-        name = d.name
-        if name in client_edges:
-            edge_rows.append((name, 'WIRED', 'invoked from client code'))
-        elif name in SERVER_INVOKED_FUNCTIONS:
-            edge_rows.append((name, 'SERVER_INVOKED',
-                              'no client call expected (webhook/scheduled)'))
+    # Only directories with index.ts are deployable function sources; _shared
+    # is a library directory, not an Edge Function.
+    for path in sorted(Path('supabase/functions').glob('*/index.ts')):
+        name = path.parent.name
+        runtime_state = runtime_states.get(name)
+        client_call = name in client_edges
+        server_call = name in server_edges
+        referenced = client_call or server_call
+
+        if runtime_state == 'LOCAL_ONLY':
+            if referenced:
+                why = ('runtime manifest marks LOCAL_ONLY, but an invocation '
+                       'reference exists; deployment is missing')
+                edge_rows.append((name, 'MISSING_DEPLOYMENT', why))
+            else:
+                edge_rows.append((name, 'LOCAL_ONLY',
+                                  'source exists; runtime manifest marks LOCAL_ONLY and no call path was found'))
+        elif runtime_state == 'DEPLOYED':
+            if client_call:
+                why = 'deployed in runtime manifest; client invocation found'
+                if server_call:
+                    why += ' and server/external invocation also found'
+                edge_rows.append((name, 'WIRED', why))
+            elif server_call:
+                edge_rows.append((name, 'SERVER_INVOKED',
+                                  'deployed in runtime manifest; server/external invocation evidence found'))
+            else:
+                edge_rows.append((name, 'UNWIRED',
+                                  'runtime manifest marks DEPLOYED, but no client/server invocation evidence was found'))
+        elif referenced:
+            edge_rows.append((name, 'MISSING_DEPLOYMENT',
+                              'invocation reference exists, but function is absent from the runtime manifest'))
         else:
-            edge_rows.append((name, 'UNWIRED',
-                              'deployed source, but nothing in this repo calls it'))
+            edge_rows.append((name, 'UNVERIFIED',
+                              'function deployment state is absent from the runtime manifest; no invocation reference found'))
 
     dupes = {t: sorted(f) for t, f in defs.items() if len(f) > 1}
 
@@ -516,10 +589,15 @@ def main():
         print('  %-12s %3d' % (cls, n))
     print('  %-12s %3d' % ('pages total', len(rows)))
     print()
-    print('  edge functions: %d wired / %d server-invoked / %d unwired'
+    print('  edge function runtime manifest captured: %s'
+          % (edge_manifest_captured or 'MISSING'))
+    print('  edge functions: %d wired / %d server-invoked / %d deployed-unwired / %d local-only / %d missing-deployment / %d unverified'
           % (sum(1 for r in edge_rows if r[1] == 'WIRED'),
              sum(1 for r in edge_rows if r[1] == 'SERVER_INVOKED'),
-             sum(1 for r in edge_rows if r[1] == 'UNWIRED')))
+             sum(1 for r in edge_rows if r[1] == 'UNWIRED'),
+             sum(1 for r in edge_rows if r[1] == 'LOCAL_ONLY'),
+             sum(1 for r in edge_rows if r[1] == 'MISSING_DEPLOYMENT'),
+             sum(1 for r in edge_rows if r[1] == 'UNVERIFIED')))
     print('  tables/views declared in supabase/: %d' % len(rels))
     print('  functions declared in supabase/:    %d' % len(fns))
     print('  tables defined in >1 root SQL file: %d' % len(dupes))
@@ -540,17 +618,16 @@ def main():
         print('    of those, read by client code:    %d%s'
               % (len(read), '' if read else '   (none -- latent, not live)'))
     print()
-    print('  UNVERIFIED: every row above is repository evidence only. No live')
-    print('  database was reached, so no table, column, GRANT or RLS policy is')
-    print('  confirmed to exist in production by this run. The live-schema line')
-    print('  is a dated snapshot, not a connection -- regenerate it whenever')
-    print('  schema is applied live, or its findings go stale in both')
-    print('  directions (CLAUDE.md 8.1 class 2).')
+    print('  UNVERIFIED: this script did not connect to the live database. No table,')
+    print('  column, GRANT or RLS policy is verified by this run. Edge Function')
+    print('  deployment states come from the dated runtime manifest above, not a')
+    print('  live deployment query; regenerate it after provider changes. The')
+    print('  live-schema cross-check is also a dated snapshot, not a connection.')
 
     if summary_only:
         return 0
 
-    write_report(rows, by_class, edge_rows, dupes, rels, fns, gap, captured)
+    write_report(rows, by_class, edge_rows, dupes, rels, fns, gap, captured, edge_manifest_captured)
     print()
     print('wrote EVIDENCE_MATRIX.md')
 
@@ -565,7 +642,7 @@ def main():
 
 
 def write_report(rows, by_class, edge_rows, dupes, rels, fns,
-                 gap=None, captured=None):
+                 gap=None, captured=None, edge_manifest_captured=None):
     out = []
     w = out.append
 
@@ -625,6 +702,11 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns,
         w('')
 
     w('## Edge Functions')
+    w('')
+    w('Deployment state is cross-referenced to \`docs/runtime/supabase-edge-functions-live.json\`,')
+    w('captured **%s**. This is a dated provider snapshot, not a live invocation test.' % (edge_manifest_captured or 'unknown'))
+    w('\`MISSING_DEPLOYMENT\` means a source/client/server invocation exists but the runtime manifest marks the function local-only or omits it.')
+    w('\`UNWIRED\` means the manifest marks the function deployed but this scan found no client/server call path; \`LOCAL_ONLY\` means source-only with no call path.')
     w('')
     w('| function | state | evidence |')
     w('|---|---|---|')

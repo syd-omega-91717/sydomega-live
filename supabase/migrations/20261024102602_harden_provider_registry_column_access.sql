@@ -7,7 +7,7 @@
 -- restrict the visible fields. Runtime workers use server-side secrets.
 -- Live state was independently checked on 2026-10-24: authenticated users have
 -- SELECT only on id, provider_key, display_name, adapter_kind, capabilities,
--- and status. No data is rewritten by this migration.
+-- and status. This migration does not rewrite data.
 
 BEGIN;
 

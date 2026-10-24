@@ -105,9 +105,9 @@ BEGIN
   INSERT INTO public.omega_payment_events(
     provider, provider_event_id, event_type, payload_hash, status, metadata
   ) VALUES (
-    'stripe', p_event_id, p_event_type, pg_catalog.coalesce(p_payload_hash, ''),
+    'stripe', p_event_id, p_event_type, COALESCE(p_payload_hash, ''),
     'RECEIVED',
-    pg_catalog.coalesce(p_metadata, '{}'::jsonb) || pg_catalog.jsonb_build_object(
+    COALESCE(p_metadata, '{}'::jsonb) || pg_catalog.jsonb_build_object(
       'charge_id', p_charge_id,
       'payment_intent_id', p_payment_intent_id,
       'amount_minor', p_amount_minor,
@@ -176,7 +176,7 @@ BEGIN
     RAISE EXCEPTION 'stripe_refund_charge_mapping_conflict';
   END IF;
 
-  SELECT pg_catalog.coalesce(pg_catalog.sum(amount_refunded), 0)
+  SELECT COALESCE(pg_catalog.sum(amount_refunded), 0)
     INTO v_other_refunded
     FROM omega_private.stripe_refund_state
    WHERE original_transaction_id = v_original_transaction
@@ -259,7 +259,7 @@ BEGIN
       )
     ),
     p_charge_id,
-    pg_catalog.coalesce(p_metadata, '{}'::jsonb) || pg_catalog.jsonb_build_object(
+    COALESCE(p_metadata, '{}'::jsonb) || pg_catalog.jsonb_build_object(
       'stripe_event_id', p_event_id,
       'payment_intent_id', p_payment_intent_id,
       'charge_id', p_charge_id,

@@ -101,7 +101,7 @@
   </div>
   <div class="sechead" style="margin-top:20px">API KEY MANAGEMENT &middot; OWNER VIEW</div>
   <div class="tbl-wrap">
-    <div class="tbl-head" style="grid-template-columns:1fr 100px 80px 100px"><span>KEY NAME</span><span>PREFIX</span><span>TYPE</span><span>REQUESTS</span></div>
+    <div class="tbl-head" style="grid-template-columns:1fr 100px 80px 100px"><span>KEY NAME</span><span>SCOPES</span><span>STATUS</span><span>LAST USED</span></div>
     <div id="key-rows"><div style="padding:20px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)">NO API KEYS ISSUED</div></div>
   </div>
 </div>
@@ -140,7 +140,85 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-function fmt(n){return n!=null?'$'+(Math.round(n)).toLocaleString():'$0';}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+function fmt(n){return n!=null?'
+window.setTab=setTab;
+function setTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['tiers','accounts','revenue','science'][i]===name);});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+}
+
+(async function(){
+  try{
+    var s=(await sb.auth.getSession()).data.session;
+    if(!s){location.replace('/account.html');return;}
+    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
+    if(!pr.is_owner){location.replace('/dashboard.html');return;}
+    document.getElementById('app').style.display='flex';
+    if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
+
+    try{
+      var es=await sb.rpc('get_enterprise_summary');
+      if(es.data&&es.data.ok){
+        sid('k-accounts',es.data.total_accounts);
+        sid('k-active',es.data.active_accounts);
+        sid('k-seats',es.data.total_seats);
+        sid('total-mrr',fmt(es.data.total_mrr));
+        sid('arr-val',fmt((es.data.total_mrr||0)*12));
+        sid('k-mrr',Math.round(es.data.total_mrr||0));
+        sid('avg-deal',es.data.total_accounts?fmt(es.data.total_mrr/es.data.total_accounts):'$0');
+      }
+    }catch(e){}
+
+    try{
+      var accs=await sb.from('enterprise_accounts').select('*').order('created_at',{ascending:false}).limit(20);
+      if(accs.data&&accs.data.length){
+        sid('acc-count',accs.data.length+' ACCOUNTS');
+        var gov=accs.data.filter(function(a){return a.org_type==='government';}).length;
+        sid('k-gov',gov);
+        var rows=document.getElementById('acc-rows');
+        if(rows){rows.innerHTML=accs.data.map(function(a){
+          var col={active:'var(--green)',pending:'var(--solar)',suspended:'var(--crim)',expired:'var(--muted)'}[a.status]||'var(--muted)';
+          return '<div class="tbl-row" style="grid-template-columns:1fr 100px 80px 100px">'
+            +'<div><div style="font-weight:600">'+esc(a.org_name)+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(String(a.org_type||'').toUpperCase())+' &middot; '+esc(a.contact_email)+'</div></div>'
+            +'<div style="font-family:var(--M);font-size:12px">'+esc(String(a.license_type||'').toUpperCase())+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+esc(String(a.status||'').toUpperCase())+'</div>'
+            +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold)">'+(a.monthly_value?'$'+Math.round(a.monthly_value):'--')+'</div>'
+            +'</div>';
+        }).join('');}
+      }else{sid('acc-count','0 ACCOUNTS');}
+    }catch(e){}
+
+    try{
+      // Never fetch api_key/api_secret into the browser. The table stores sensitive values;
+      // this view only needs the non-secret inventory fields that actually exist in the live schema.
+      var keys=await sb.from('api_keys').select('id,name,scopes,last_used_at,expires_at,active,created_at').order('created_at',{ascending:false}).limit(10);
+      if(keys.data&&keys.data.length){
+        var kr=document.getElementById('key-rows');
+        if(kr){kr.innerHTML=keys.data.map(function(k){
+          var scopes=Array.isArray(k.scopes)?k.scopes.map(function(v){return esc(v);}).join(', '):'—';
+          var expired=Boolean(k.expires_at)&&Date.parse(k.expires_at)<=Date.now();
+          var status=expired?'EXPIRED':(k.active===true?'ACTIVE':'INACTIVE');
+          var lastUsed=k.last_used_at?new Date(k.last_used_at).toLocaleDateString():'NEVER';
+          var statusColor=status==='ACTIVE'?'var(--green)':'var(--muted)';
+          return '<div class="tbl-row" style="grid-template-columns:1fr 100px 80px 100px">'
+            +'<div style="font-family:var(--M);font-size:12px">'+esc(k.name)+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+(scopes||'—')+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:'+statusColor+'">'+status+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:var(--gold)">'+esc(lastUsed)+'</div>'
+            +'</div>';
+        }).join('');}
+      }
+    }catch(e){}
+
+    try{var seats=await sb.rpc('get_enterprise_summary');if(seats.data)sid('total-seats',seats.data.total_seats||0);}catch(e){}
+  }catch(e){document.getElementById('app').style.display='flex';}
+})();
+</script>
+<script src="/bg.js" defer></script>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
+</html>
++(Math.round(n)).toLocaleString():'$0';}
 window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['tiers','accounts','revenue','science'][i]===name);});

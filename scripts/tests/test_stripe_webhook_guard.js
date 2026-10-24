@@ -3,8 +3,10 @@ const assert = require('assert');
 
 const webhookPath = 'supabase/functions/stripe-webhook/index.ts';
 const migrationPath = 'supabase/migrations/20260915150404_reconcile_stripe_webhook_rpc_boundary.sql';
+const paymentBoundaryMigrationPath = 'supabase/migrations/20261017093038_stripe_payment_public_rpc_20261017.sql';
 const source = fs.readFileSync(webhookPath, 'utf8');
 const migration = fs.readFileSync(migrationPath, 'utf8');
+const paymentBoundaryMigration = fs.readFileSync(paymentBoundaryMigrationPath, 'utf8');
 
 assert.match(source, /if \(!secret\)\s*\{[\s\S]*?return json\(\{ error: "webhook_not_configured" \}, 503\);/, 'webhook must fail closed when signing secret is missing');
 assert.doesNotMatch(source, /configured: false/, 'webhook must not acknowledge an unconfigured endpoint');
@@ -15,7 +17,10 @@ assert.match(source, /signatures\.some\(\(candidate\) =>/, 'webhook must accept 
 
 assert.match(source, /typeof event\.id === "string"/, 'webhook must require Stripe event ID');
 assert.match(source, /admin\.rpc\("apply_subscription_event"/, 'webhook must use the canonical event RPC boundary');
-assert.match(source, /admin\.schema\("omega_private"\)\.rpc\("record_stripe_payment"/, 'webhook must call the private Stripe settlement RPC schema explicitly');
+assert.match(source, /admin\.rpc\("record_stripe_payment"/, 'webhook must call the PostgREST-exposed public delegate for the private Stripe settlement RPC');
+assert.match(paymentBoundaryMigration, /create or replace function public\.record_stripe_payment\([\s\S]*?security definer[\s\S]*?set search_path = ''/i, 'public settlement delegate must be SECURITY DEFINER with an empty search_path');
+assert.match(paymentBoundaryMigration, /revoke all on function public\.record_stripe_payment[\s\S]*?from public, anon, authenticated;/i, 'settlement delegate must revoke public/client execution');
+assert.match(paymentBoundaryMigration, /grant execute on function public\.record_stripe_payment[\s\S]*?to service_role;/i, 'settlement delegate must grant execution only to service_role');
 assert.match(source, /p_event_id: args\.eventId/, 'webhook must pass Stripe event ID');
 assert.match(source, /p_event_type: args\.eventType/, 'webhook must pass event type');
 assert.match(source, /!obj \|\| typeof obj !== "object"/, 'webhook must reject malformed event data before processing');

@@ -24950,3 +24950,15 @@ Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contact
   - `tests`: OK.
   - `./scripts/ci-local.sh`: 32/32 blocking. The registry check needed `git fetch --unshallow` first (§8.4 shallow-clone note).
 - **Open (owner):** live history keeps three rows for one logical migration. Collapsing them is a `DELETE` on `schema_migrations` and needs human confirmation (§8.2). It is harmless while the SQL stays idempotent.
+- **Follow-up (same day): the refund migration did not parse.**
+  - `20261024110000_stripe_refund_ledger_reversal.sql` failed the fresh-database replay on `main`.
+  - Cause: `b3d6f9cf` edited it with a JS-style `String.replace`, whose replacement text contained `'^[A-Z]{3}$' THEN`. In a replacement string `$'` means "text after the match", so the edit pasted the old file's tail mid-function and dropped `$' THEN`.
+  - The two later fixes (`8d5d4a22`, `0e7417bd`) edited only the pasted copy.
+  - Repaired in #1087, and ported here with `cherry-pick -x`. The repaired file is the pasted copy plus the restored token, without the stale tail.
+  - Verified on a scratch PostgreSQL 16:
+    - the old file fails at the CI token
+    - the repaired file applies, and re-applying it is idempotent
+    - both functions are `SECURITY DEFINER` with `search_path=""`
+    - authenticated is denied and service_role is allowed
+  - It is still not applied live.
+  - **Lesson for scripted edits:** never pass SQL or regex text as a `String.replace` replacement string. Use a replacer function, or escape `$` as `$$`.

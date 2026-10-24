@@ -4,8 +4,8 @@
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
   "pending": [
     {
-      "version": "20261024103000",
-      "file": "20261024103000_harden_provider_registry_column_access.sql",
+      "version": "20261024091500",
+      "file": "20261024091500_fix_stripe_zero_decimal_settlement_precision.sql",
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
@@ -17,7 +17,7 @@
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Restrict authenticated SELECT on the provider registry to non-secret catalog columns; secret_ref must remain server-only. Requires isolated replay and privilege regression tests before controlled live application."
+      "reason": "Restrict authenticated SELECT on the provider registry to non-secret catalog columns; secret_ref, metadata, and timestamps remain server-only. Requires isolated replay and privilege regression tests before controlled live application."
     }
   ]
 }

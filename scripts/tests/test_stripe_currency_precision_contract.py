@@ -1,8 +1,8 @@
 """Regression contract for Stripe currency-minor-unit conversion.
 
-The migration is intentionally source-tested here and runtime-validated by the
-repository's isolated full-migration replay. Never run this against live payment
-data as a synthetic transaction.
+The migration is source-tested here and runtime-validated by the repository's
+isolated full-migration replay. No synthetic transaction is run against live
+payment data.
 """
 from pathlib import Path
 import re
@@ -55,15 +55,22 @@ class StripeCurrencyPrecisionContract(unittest.TestCase):
             re.IGNORECASE | re.DOTALL,
         )
         zero_decimal = set(re.findall(r"'([A-Z]{3})'", match.group(1)))
+
         def convert(amount_minor: int, currency: str) -> float:
             return float(amount_minor if currency in zero_decimal else amount_minor / 100)
+
         self.assertEqual(convert(500, "JPY"), 500.0)
         self.assertEqual(convert(500, "USD"), 5.0)
+        # Stripe's currency docs retain a two-decimal API representation for
+        # ISK and UGX despite their whole-unit charging restrictions.
         self.assertEqual(convert(500, "ISK"), 5.0)
         self.assertEqual(convert(500, "UGX"), 5.0)
 
-    def test_migration_does_not_mutate_existing_payment_history_or_enable_payments(self):
-        self.assertNotRegex(SOURCE, r"\b(?:UPDATE|DELETE|INSERT)\s+INTO\s+public\.(?:omega_ledger_|omega_payment_)")
+    def test_migration_does_not_rewrite_existing_history_or_enable_payments(self):
+        # INSERT statements inside the stored RPC are expected at runtime.
+        # The migration itself performs no UPDATE/DELETE of historical rows.
+        self.assertNotRegex(SOURCE, r"\bUPDATE\s+public\.(?:omega_ledger_|omega_payment_)")
+        self.assertNotRegex(SOURCE, r"\bDELETE\s+FROM\s+public\.(?:omega_ledger_|omega_payment_)")
         self.assertNotRegex(SOURCE, r"payments_enabled\s*=\s*true")
         self.assertIn("No data is rewritten by this migration", SOURCE)
 

@@ -24890,3 +24890,24 @@ The owner chose the merges that `FEATURE_IDEAS.md` §41 and the 2026-10-15 entry
 - **Errors:** 0 page errors on any page.
 
 Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contacts, dashboard).
+
+## Weekly idea routine 2026-10-19: generic asset names are gated, and five stale statuses are corrected (2026-10-24)
+
+- **Built: blueprint point 31, descriptive asset naming.** `scripts/asset-name-contract.py` blocks any NEW committed image or video whose basename is a camera, messenger or screenshot export name (IMG_1234, IMG-20260101-WA0001, "WhatsApp Image ... AM.jpeg", DSC_, PXL_, untitled, a bare number or hash).
+  - **Measured:** 170 of the 511 tracked media files carry such names. 102 are `IMG-YYYYMMDD-WA####.jpg` and 68 are `WhatsApp Image ...jpeg`, all in the owner's art folders.
+  - **Baseline:** those 170 are frozen in `config/asset-name-baseline.json`. Renaming them is the owner's call, because a rename breaks every reference.
+  - **Wired:** the gate runs as `asset-name` in `scripts/contract-suite.py`.
+- **Verified:**
+  - `scripts/tests/test_asset_name_contract.py` (6 tests) plants `IMG_9999.png` and requires exit 1. It also confirms that 10 descriptive names already used in this repo are not flagged, and that a removed baseline entry is reported but does not fail.
+  - The first pattern missed the "WhatsApp Image" shape, because its timestamp contains dots. That test caught it, and widening the pattern found the 68 extra files.
+  - This is tooling, not UI, so there is no Chromium render to verify and no `platform_settings` flag applies.
+- **Statuses corrected, with live evidence (2026-10-24):**
+  - **I07, certificate PDF → SHIPPED.** It merged in #885. `profile.html:1529` adds the download button and `omega-passport.js:224` draws the PDF.
+  - **B012, B013, B455, N142, family access → SHIPPED.**
+    - Migration `20261012150000` is applied live: it has a `schema_migrations` row, `profiles.family_of` exists, and `grant_family_access(p_uid, p_attested_adult)` is live.
+    - `approvals.js:242` calls it.
+    - The `family-access-privacy` gate keeps family accounts off member-visible rankings.
+    - 0 family links exist yet.
+- **Found on `main`, not fixed here:** `supabase/remote-migrations.json` (a missing comma after `20261024101622`) and `supabase/pending-migrations.json` (a broken object boundary near line 13) do not parse in `origin/main`. That fails four blocking gates for every branch: migration-drift, migration-pending-boundary, migration-replay-inventory and fabric LIVE-02.
+  - `pending-migrations.json` also lists `20261024103000` as NOT_APPLIED, while live `schema_migrations` already records it.
+  - Both files are evidently mid-edit, so they are left to whoever owns that change.

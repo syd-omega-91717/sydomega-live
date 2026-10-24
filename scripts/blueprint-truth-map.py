@@ -78,8 +78,10 @@ WHY = {
                      '(subscriptions.html now renders the canon ladder)',
     'decided_family_no': 'owner decision 2026-10-12: family accounts are adults only, granted by the owner; minors, '
                          'location hiding and web-scrubbing are not built',
-    'family_build': 'owner decision 2026-10-12: adult family members get free access granted by the owner and linked as '
-                    'family; HIGH-RISK build (auth + RLS) going through grill-me-codex (docs/FAMILY_ACCESS_PLAN.md)',
+    'family_shipped': 'owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. '
+                      'Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, '
+                      'grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; '
+                      'gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking',
     'succession': 'succession is a legal instrument plus a second owner account; only 1 owner account exists live '
                   '(GAP_ANALYSIS.md S)',
 }
@@ -134,14 +136,14 @@ MAP.update(many('DECIDED', 'decided_money', 34, 35, 41, 42, 46, 48, 51, 52, 60, 
 MAP.update({266: (D, 'product: whether a tier, once reached, can ever be lowered (refunds, lapsed billing) — owner call'),
             289: (D, 'product: whether higher tiers get a stronger copilot model (supabase/functions/concierge) — owner call')})
 MAP.update(many('DECIDED', 'decided_family_no', 15, 55, 528))
-MAP.update(many('IN_PROGRESS', 'family_build', 455))
+MAP.update(many('SHIPPED', 'family_shipped', 455))
 MAP.update(many(D, 'succession', 73, 652, 969))
 MAP.update({
     166: (D, 'provenance marks on exported share cards are buildable; covert per-member tracing is surveillance — owner call'),
     66: (D, 'visible provenance on exports is buildable; a steganographic layer tracing members is surveillance — owner call'),
 })
 MAP.update({
-    12: ('IN_PROGRESS', 'family_build'),
+    12: ('SHIPPED', 'family_shipped'),
     16: (P, 'matrix.html renders the 9x9x9 = 729-node matrix from profiles.axis_a/b/c (matrix.html:266, :536)'),
     234: (P, 'matrix.html: three axes (Knowledge, Mastery, Contribution) to depth 9 = 729 nodes (matrix.html:389)'),
     235: (P, 'matrix.html axis A (Knowledge); numeracy curriculum not built'),
@@ -198,13 +200,13 @@ MAP.update({  # mapped by hand 2026-10-12 (first ledger batch), kept verbatim
     5: (P, 'the autonomous pipeline never merges to main and never flips a flag (CLAUDE.md §10); the weekly idea routine opens draft PRs only'),
     10: (P, 'web-trend-scout skill + weekly idea routine produce proposals; no 10-per-competitor-release rule'),
     11: (P, '41-gate contract suite + CI audits run on every change; not an idle-cycle agent'),
-    13: ('IN_PROGRESS', 'family_build'),
+    13: ('SHIPPED', 'family_shipped'),
     17: (P, "horoscope.html renders 12 sign profiles from the member's sign; no natal-chart mapping"),
     20: (P, 'private.omega_issue_certificate callable since migration 20261012091641, but no page calls it (grep 2026-10-12)'),
 })
 MAP.update({
     18: (Q, 'opt-in interests on the profile that pick metaphors and examples; never covert text analysis'),
-    31: (Q, 'a gate that rejects generic asset names (image1, IMG_1234) under assets/'),
+    31: (S, 'scripts/asset-name-contract.py:49 blocks a NEW media file with a generic camera/messenger name (IMG_1234, WhatsApp Image ...); the 170 existing exports are frozen in config/asset-name-baseline.json for the owner to rename; gate asset-name in scripts/contract-suite.py:83'),
     43: (Q, 'play-money crash simulator on historical series (1929, 2008, 2020): teaching, never real trades'),
     745: (Q, 'same simulator: compare the member\'s plan against 1929 / 2008 / 2020 side by side'),
     62: (Q, 'log questions the copilot could not answer (opt-in, no content kept beyond review) so the owner can fill gaps'),
@@ -224,7 +226,7 @@ APPENDIX = [
     ('N089', 89, 'Quantum-Transition Kernel', L, 'impossible'),
     ('N093', 93, 'Bio-Digital Sync', L, 'impossible'),
     ('N097', 97, 'Sovereign Chronos (own clock, no NTP)', L, 'impossible'),
-    ('N142', 142, 'Primary Beneficiary Hard-Code (family as Level-0 users)', 'IN_PROGRESS', 'family_build'),
+    ('N142', 142, 'Primary Beneficiary Hard-Code (family as Level-0 users)', 'SHIPPED', 'family_shipped'),
     ('N155', 155, 'Multi-Generational Trust Lock (trust enclaves)', D, 'succession'),
     ('N212', 212, 'Birth-Date/Horoscope Logic (sign-themed tools)', P, 'horoscope.html sign profiles; theming by sign is fine, gating by sign is not'),
     ('N238', 238, 'The Mastery Promotion Trigger (stage -> sticker + certificate)', Q, 'on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate'),

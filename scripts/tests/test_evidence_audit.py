@@ -21,6 +21,7 @@ version of the scanner, not hypotheticals:
 Run: python3 -m unittest scripts/tests/test_evidence_audit.py -v
 """
 
+import json
 import os
 import shutil
 import subprocess
@@ -48,6 +49,15 @@ class EvidenceAuditFixture(unittest.TestCase):
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, 'w', encoding='utf-8') as fh:
             fh.write(text)
+
+    def write_edge_manifest(self, states, captured='2026-10-24'):
+        self.write('docs/runtime/supabase-edge-functions-live.json', json.dumps({
+            'captured_at': captured,
+            'functions': {
+                name: {'state': state}
+                for name, state in states.items()
+            },
+        }))
 
     def run_audit(self, *args, **kwargs):
         env = dict(os.environ)
@@ -415,5 +425,5 @@ class TestHelpDoesNotRun(EvidenceAuditFixture):
             '--help must not rewrite the report as a side effect')
 
 
-if __name__ == '__main__':
+0if __name__ == '__main__':
     unittest.main()

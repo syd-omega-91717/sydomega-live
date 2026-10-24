@@ -23,6 +23,13 @@ assert.match(paymentBoundaryMigration, /revoke all on function public\.record_st
 assert.match(paymentBoundaryMigration, /grant execute on function public\.record_stripe_payment[\s\S]*?to service_role;/i, 'settlement delegate must grant execution only to service_role');
 assert.match(source, /p_event_id: args\.eventId/, 'webhook must pass Stripe event ID');
 assert.match(source, /p_event_type: args\.eventType/, 'webhook must pass event type');
+const checkoutBranch = source.split('if (eventType === "checkout.session.completed")')[1].split('if (eventType === "customer.subscription.updated")')[0];
+const invoicePaidBranch = source.split('if (eventType === "invoice.payment_succeeded")')[1].split('if (eventType === "invoice.payment_failed")')[0];
+assert.doesNotMatch(checkoutBranch, /recordStripePayment/, 'checkout completion must not post a ledger payment; invoice settlement is authoritative');
+assert.match(checkoutBranch, /status: typeof sub\.status === "string" \? sub\.status : "incomplete"/, 'checkout must use the authoritative subscription status instead of forcing active');
+assert.match(invoicePaidBranch, /recordStripePayment/, 'successful invoice payment must post the canonical ledger settlement');
+assert.match(invoicePaidBranch, /applySubscription/, 'successful invoice payment must reconcile the authoritative subscription entitlement');
+assert.match(invoicePaidBranch, /status: typeof subData\.status === "string" \? subData\.status : "active"/, 'invoice payment must apply the authoritative subscription status');
 assert.match(source, /!obj \|\| typeof obj !== "object"/, 'webhook must reject malformed event data before processing');
 
 assert.match(source, /typeof obj\.subscription === "string"/, 'checkout webhook must recognize subscription IDs');

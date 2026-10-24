@@ -5,18 +5,18 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 ## Snapshot
 
 - Audit date: 2026-10-24.
-- Main commit: `f70f2c89ee5ea50eedcb5e1db6b1e1736b6b835d`.
-- Evidence-refresh PR: [#1059](https://github.com/syd-omega-91717/sydomega-live/pull/1059), branch `docs/refresh-production-gate-evidence-20261024`. Use the PR page for its current head SHA.
+- Main commit at this refresh: `ccd049f9ae6721c5424fa0e059dce3ad727c070c`.
+- Runtime evidence refresh: [#1061](https://github.com/syd-omega-91717/sydomega-live/pull/1061), merged as `ccd049f9ae6721c5424fa0e059dce3ad727c070c`. This snapshot supersedes the earlier Stripe-only drift note.
 - Supabase project: `ydqhzvvoyufiiqvzcjns`; live project status returned `ACTIVE_HEALTHY`.
 - **Release status: BLOCKED.** Do not infer deployment parity from passing CI or a healthy Supabase project.
 
 ## Latest repository checks
 
-The previously inspected PR revision `c92648c235afa09b35e9930a3063b27948e6a14f` passed CodeQL, Gitleaks, blocking supply-chain scan, Semgrep, Trivy, fresh database replay of all migrations, runtime syntax/configuration, static contracts, workflow contracts, evidence, integrity, readiness, and Cloudflare Pages validation. After the latest documentation correction, GitHub started a new check set; at this snapshot several checks are still in progress, so do not treat that new set as complete.
+The runtime-evidence refresh PR #1061 completed its required CI, CodeQL, secret-detection, supply-chain/SBOM, full migration replay, contract, repository-integrity, capability-evidence, and Edge Runtime Reconciliation checks successfully. This is evidence for the merged revision; the Vercel provider status remains separately failing.
 
 Two release-relevant checks remain blocked:
-- **Source vs live Edge Function reconciliation fails** because `supabase/functions/stripe-webhook/index.ts` differs from the active production runtime. The job output is explicit: `EDGE_RUNTIME_RECONCILIATION=FAILED: deployed source changed without runtime reconciliation: ['stripe-webhook']`.
-- **Vercel status fails** with Vercel's account/deployment-blocked guidance. The Vercel connector currently returns 403 for team scope `syd-omega-91717s-projects`; team authorization is required before its deployment inventory can be queried again.
+- **Vercel status fails** with Vercel's account/deployment-blocked guidance. The Vercel connector returns 403 for team scope `syd-omega-91717s-projects`; team authorization is required before deployment inventory can be queried again.
+- **Supabase Edge Function source parity now passes for the audited snapshot.** On 2026-10-24, all 16 active deployed Edge Function `index.ts` files were compared byte-for-byte (normalizing CRLF and trailing newlines) against their `main` sources; all 16 matched. The runtime manifest was refreshed in PR #1061, and the reconciliation workflow passed. This does not establish end-to-end behavior or payment lifecycle completeness.
 
 The successful isolated migration replay and supply-chain checks are repository evidence, not proof of provider-side lifecycle correctness.
 
@@ -26,13 +26,13 @@ The successful isolated migration replay and supply-chain checks are repository 
 |---|---|---|
 | Canonical hosting and release parity | READY production deployment for intended main SHA, verified release manifest, independent HTTP smoke checks | **BLOCKED** — GitHub's Vercel status is failing. The last known Vercel READY deployment was reported on commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` from 2026-10-06; this is not current-SHA parity. Vercel team-scope authorization is pending. Cloudflare Pages remains the safer canonical production path while the Vercel restriction is unresolved. |
 | Supabase project health | Provider reports project healthy and public endpoints behave as expected | **PARTIAL PASS** — project status is `ACTIVE_HEALTHY`; this does not prove every function or user journey works. |
-| Auth leaked-password protection | Supabase Auth HIBP/leaked-password protection enabled and Advisor rechecked | **BLOCKED** — live Security Advisor still reports `auth_leaked_password_protection` WARN. Enable through supported Auth settings or an authorized Management API credential, never SQL. |
+| Auth leaked-password protection | Supabase Auth HIBP/leaked-password protection enabled and Advisor rechecked | **BLOCKED — PLAN LIMITATION** — the organization is on Supabase Free, and official Supabase documentation states leaked-password protection is available on Pro and above. The live Security Advisor reports `auth_leaked_password_protection` WARN. Do not attempt SQL workarounds or upgrade without explicit owner approval; retain compensating password controls and clearly document that they are not equivalent to provider-side HIBP protection. |
 | Owner MFA | Both owner accounts have verified factors before enforcement | **PENDING OWNER ACTION** — latest live aggregate check found 0 of 2 owner accounts with verified TOTP. Enrollment is enabled; enforcement remains off to avoid lockout until both owners verify. |
 | RLS and private schemas | RLS and grants match the intended deny-by-default boundary | **REVIEWED** — Advisor INFO for `omega_private.marketplace_listing_assets` is consistent with the documented server-only boundary: RLS enabled, no client policies, and client/service-role privileges revoked. Do not add a client policy just to silence the linter. |
 | RPC privilege | High-risk client RPCs are invoker/search-path hardened and regression-tested | **PASS ON EXISTING AUDIT EVIDENCE** — rerun regression checks before release. |
 | Migration reproducibility | All committed migrations replay from an empty isolated database with post-replay security checks | **PASS** — latest evidence-refresh PR replay passed migration inventory, security, hardening, family-access/privacy, and authenticated-content checks. Repeat after future migration changes. |
-| Edge Function runtime parity | Active deployed source matches reviewed repository source and reconciliation passes | **BLOCKED** — the Stripe webhook source changed, but production runtime has not been reconciled to it. Do not falsify the live manifest or bypass this gate. |
-| Payment lifecycle | Signed Stripe event → idempotency → ledger → reconciliation → entitlement → refund/reversal | **BLOCKED** — keep `payments_enabled=false`. The source now treats `invoice.payment_succeeded` as the canonical ledger settlement to avoid duplicate posting from checkout completion, but that changed source is not deployed. Refund/reversal handling and signed test-mode lifecycle evidence remain incomplete. No production charges or synthetic payment events. |
+| Edge Function runtime parity | Active deployed source matches reviewed repository source and reconciliation passes | **PASS FOR 2026-10-24 SNAPSHOT** — all 16 active deployed `index.ts` files matched `main`; manifest refreshed and reconciliation CI passed. Recheck after any subsequent function-source change. |
+| Payment lifecycle | Signed Stripe event → idempotency → ledger → reconciliation → entitlement → refund/reversal | **BLOCKED** — keep `payments_enabled=false`. The source treats `invoice.payment_succeeded` as the canonical ledger settlement to avoid duplicate posting from checkout completion, and the audited deployed source matches `main`. Refund/reversal handling and signed test-mode lifecycle evidence remain incomplete. No production charges or synthetic payment events. |
 | Disaster recovery | Restore into a non-production target; measured RPO/RTO; integrity and access checks | **BLOCKED** — no provider-level restore drill with measured RPO/RTO. Continuity checkpoints are not a database restore test. |
 | Privacy lifecycle | Controlled export, deletion, retention expiry, and recovery verification | **PARTIAL** — supporting structures exist; the complete controlled evidence bundle is missing. Use test accounts and do not expose PII in evidence. |
 | Provider credentials | Credential presence, least privilege, rotation/revocation, and failure paths verified per provider | **PARTIAL** — provider-specific evidence remains incomplete. Never print secret values into logs or reports. |
@@ -52,8 +52,8 @@ The successful isolated migration replay and supply-chain checks are repository 
 ## Required next actions
 
 1. Owner authorizes the Vercel team connection; then re-query deployments and diagnose the account restriction. Do not spend money without approval.
-2. Complete Stripe test-mode lifecycle implementation and tests, including refunds/reversals; deploy only after evidence is signed off, then update the live runtime manifest and rerun reconciliation.
-3. Enable Supabase leaked-password protection through supported provider controls and verify the Advisor finding clears.
+2. Complete Stripe test-mode lifecycle implementation and tests, including idempotent refunds/reversals; payments remain disabled until signed lifecycle evidence is reviewed. After any later Edge Function change, refresh the runtime manifest and rerun reconciliation.
+3. Resolve the leaked-password protection gate: the organization is currently on Supabase Free, while official Supabase documentation limits HIBP leaked-password protection to Pro+. Obtain explicit owner approval for any plan change; otherwise keep this gate BLOCKED and retain compensating controls without claiming equivalence.
 4. Both owners enroll and verify MFA; only then enable enforcement through the lockout-safe owner control.
 5. Run controlled privacy lifecycle and provider restore drills; record measured RPO/RTO.
 6. Run bounded scale and versioned AI-quality evaluations against non-production/test data.

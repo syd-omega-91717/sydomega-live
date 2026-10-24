@@ -69,7 +69,9 @@ class OneOwnerPerNumber(unittest.TestCase):
         self.assertNotIn("localStorage.setItem('omega_budgets'", exp)
         self.assertIn("sub:e.cat", exp)  # fine category kept, no detail lost
         bud = read("budget.html")
-        self.assertIn("if (_targets[c.id] == null)", bud)  # a 0 target stays 0
+        # only missing/invalid targets are filled, so a deliberate 0 stays 0
+        self.assertIn("!Object.prototype.hasOwnProperty.call(_targets, c.id) || _targets[c.id] == null", bud)
+        self.assertIn("if (JSON.stringify(_targets) !== before) saveTargets();", bud)
 
     def test_network_shares_the_contact_book(self):
         net = read("network.html")
@@ -79,7 +81,9 @@ class OneOwnerPerNumber(unittest.TestCase):
         self.assertIn("c.lastContact||''", read("contacts.html"))
 
     def test_dashboard_sums_row_amounts(self):
-        self.assertIn("function sumAmt(a)", read("dashboard.html"))
+        dash = read("dashboard.html")
+        # rows are {amount,...}; summing the row objects themselves gave NaN
+        self.assertIn("r&&typeof r==='object'?r.amount:r", dash)
 
 
 if __name__ == "__main__":

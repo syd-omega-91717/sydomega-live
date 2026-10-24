@@ -44,28 +44,43 @@ jobs:
             semgrep scan --config=auto --error --sarif --output=semgrep.sarif .
           fi
 
-      - name: List Semgrep findings
+      - name: Identify blocking Semgrep findings
         if: failure()
         run: |
+          IMAGE=semgrep/semgrep@sha256:d1825c2c72110b5bfbf0602ff68f7f117322597a7c33037a79dba9f897f5f1f0
+          # Re-run only for diagnostics in JSON because SARIF's level did not identify
+          # the single blocking result in the preceding run. The original scan remains
+          # the gate; this diagnostic pass cannot turn a failed scan green.
+          if docker image inspect "$IMAGE" >/dev/null 2>&1; then
+            docker run --rm -v "${PWD}:/src" "$IMAGE" semgrep scan --config=auto --error --json --output=/src/semgrep-diagnostics.json /src || true
+          else
+            if ! command -v semgrep >/dev/null 2>&1; then
+              python3 -m pip install --quiet semgrep==1.178.0
+            fi
+            semgrep scan --config=auto --error --json --output=semgrep-diagnostics.json . || true
+          fi
           python3 - <<'PY'
           import json
-          runs = json.load(open("semgrep.sarif")).get("runs", [])
-          for run in runs:
-              rules = {
-                  rule.get("id"): rule
-                  for rule in run.get("tool", {}).get("driver", {}).get("rules", [])
-              }
-              for r in run.get("results", []):
-                  loc = r["locations"][0]["physicalLocation"]
-                  path = loc["artifactLocation"]["uri"]
-                  line = loc.get("region", {}).get("startLine", 0)
-                  msg = r["message"]["text"].splitlines()[0][:160]
-                  rule = rules.get(r.get("ruleId"), {})
-                  properties = rule.get("properties", {})
-                  level = r.get("level") or rule.get("defaultConfiguration", {}).get("level", "unknown")
-                  severity = properties.get("security-severity", properties.get("severity", "unspecified"))
-                  print(f"::error file={path},line={line}::{r['ruleId']} level={level} security_severity={severity}: {msg}")
-                  print(f"{r['ruleId']}\tlevel={level}\tsecurity_severity={severity}\t{path}:{line}")
+          from pathlib import Path
+          path = Path("semgrep-diagnostics.json")
+          if not path.exists():
+              raise SystemExit("Semgrep JSON diagnostics were not produced; original scan remains failed.")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          results = data.get("results", [])
+          print(f"SEMgrep_DIAGNOSTIC_RESULTS={len(results)}")
+          for result in results:
+              extra = result.get("extra", {})
+              metadata = extra.get("metadata", {})
+              severity = extra.get("severity", "unknown")
+              rule = result.get("check_id", "unknown-rule")
+              file = result.get("path", "unknown-file")
+              start = result.get("start", {})
+              line = start.get("line", 0)
+              message = " ".join(str(extra.get("message", "")).split())[:240]
+              print(f"::error file={file},line={line}::{rule} severity={severity}: {message}")
+              print(f"SEMGREP_FINDING rule={rule} severity={severity} file={file} line={line} metadata={json.dumps(metadata, sort_keys=True)[:500]}")
+          for error in data.get("errors", []):
+              print("SEMGREP_ENGINE_ERROR=" + json.dumps(error, sort_keys=True)[:1000])
           PY
 
       - name: Upload Semgrep SARIF

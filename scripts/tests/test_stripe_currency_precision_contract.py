@@ -4,6 +4,7 @@ The migration is source-tested here and runtime-validated by the repository's
 isolated full-migration replay. No synthetic transaction is run against live
 payment data.
 """
+from decimal import Decimal
 from pathlib import Path
 import re
 import unittest
@@ -56,15 +57,16 @@ class StripeCurrencyPrecisionContract(unittest.TestCase):
         )
         zero_decimal = set(re.findall(r"'([A-Z]{3})'", match.group(1)))
 
-        def convert(amount_minor: int, currency: str) -> float:
-            return float(amount_minor if currency in zero_decimal else amount_minor / 100)
+        def convert(amount_minor: int, currency: str) -> Decimal:
+            amount = Decimal(amount_minor)
+            return amount if currency in zero_decimal else amount / Decimal(100)
 
-        self.assertEqual(convert(500, "JPY"), 500.0)
-        self.assertEqual(convert(500, "USD"), 5.0)
+        self.assertEqual(convert(500, "JPY"), Decimal("500"))
+        self.assertEqual(convert(500, "USD"), Decimal("5"))
         # Stripe's currency docs retain a two-decimal API representation for
         # ISK and UGX despite their whole-unit charging restrictions.
-        self.assertEqual(convert(500, "ISK"), 5.0)
-        self.assertEqual(convert(500, "UGX"), 5.0)
+        self.assertEqual(convert(500, "ISK"), Decimal("5"))
+        self.assertEqual(convert(500, "UGX"), Decimal("5"))
 
     def test_migration_does_not_rewrite_existing_history_or_enable_payments(self):
         # INSERT statements inside the stored RPC are expected at runtime.

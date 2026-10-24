@@ -1,58 +1,69 @@
 # Ω SYD OMEGA — Production 10/10 Gate
 
-This is an evidence gate, not a feature checklist. A domain is PASS only when deterministic evidence exists and, where applicable, the live provider independently confirms it.
+This is an evidence gate, not a feature checklist. A domain is PASS only when deterministic evidence exists and, where applicable, the live provider independently confirms it. This document deliberately distinguishes repository/CI evidence from live-provider evidence.
 
-**Audit snapshot:** 2026-10-24, main commit `af91aaff864fde2cb304f2b37568d3efb83d29c2`. This is a dated snapshot, not a claim that later commits are deployed.
+## Snapshot
 
-## Current gate
+- Audit date: 2026-10-24.
+- Main commit: `f70f2c89ee5ea50eedcb5e1db6b1e1736b6b835d`.
+- Evidence-refresh PR: [#1059](https://github.com/syd-omega-91717/sydomega-live/pull/1059), branch `docs/refresh-production-gate-evidence-20261024`. Use the PR page for its current head SHA.
+- Supabase project: `ydqhzvvoyufiiqvzcjns`; live project status returned `ACTIVE_HEALTHY`.
+- **Release status: BLOCKED.** Do not infer deployment parity from passing CI or a healthy Supabase project.
 
-| Domain | Required evidence | Current state |
+## Latest repository checks
+
+The previously inspected PR revision `c92648c235afa09b35e9930a3063b27948e6a14f` passed CodeQL, Gitleaks, blocking supply-chain scan, Semgrep, Trivy, fresh database replay of all migrations, runtime syntax/configuration, static contracts, workflow contracts, evidence, integrity, readiness, and Cloudflare Pages validation. After the latest documentation correction, GitHub started a new check set; at this snapshot several checks are still in progress, so do not treat that new set as complete.
+
+Two release-relevant checks remain blocked:
+- **Source vs live Edge Function reconciliation fails** because `supabase/functions/stripe-webhook/index.ts` differs from the active production runtime. The job output is explicit: `EDGE_RUNTIME_RECONCILIATION=FAILED: deployed source changed without runtime reconciliation: ['stripe-webhook']`.
+- **Vercel status fails** with Vercel's account/deployment-blocked guidance. The Vercel connector currently returns 403 for team scope `syd-omega-91717s-projects`; team authorization is required before its deployment inventory can be queried again.
+
+The successful isolated migration replay and supply-chain checks are repository evidence, not proof of provider-side lifecycle correctness.
+
+## Current release gate
+
+| Domain | Evidence required | Current state |
 |---|---|---|
-| Supabase security | Security Advisor findings reviewed and provider-level controls enabled | **BLOCKED** — leaked-password protection is disabled (WARN). The additional INFO finding for `omega_private.marketplace_listing_assets` is consistent with the documented server-only, deny-by-default design: RLS is enabled and grants are revoked from client roles. Preserve this boundary; do not add a client policy merely to silence the linter. |
-| RLS performance | Advisor has zero RLS init-plan findings | **PASS for the previously audited RLS init-plan category**; repeat after schema changes. The separate Performance Advisor reports 327 unused-index INFO findings. See [the workload-aware index review](SUPABASE_UNUSED_INDEX_REVIEW_20261024.md); no indexes were dropped. |
-| RPC privilege | High-risk client RPCs are invoker/search-path hardened | **PASS based on existing audit evidence**; re-run regression checks before release. |
-| Migration reproducibility | All local migrations replay successfully from zero | **PASS** — GitHub Actions run `40075211371` replayed the full migration set on a fresh isolated database on 2026-10-24 and passed migration inventory, security, hardening, family-access/privacy, and authenticated-content checks. Repeat after future migration changes. |
-| Payment lifecycle | Signed Stripe event → idempotency → ledger → reconciliation → entitlement → refund/reversal | **BLOCKED** — live `payments_enabled=false`; zero rows were observed in `stripe_webhook_events`, `omega_payment_events`, `omega_ledger_transactions`, and `omega_payment_reconciliation`. No real signed event/retry/reconciliation evidence exists. The inspected webhook has no refund/reversal event handler or matching refund RPC. Keep payments disabled until test-mode signed events prove duplicate handling, retry safety, subscription changes/cancellation, refunds/reversals, and reconciliation. |
-| Disaster recovery | Provider restore drill with measured RPO/RTO | **BLOCKED** — no provider-level restore drill or measured RPO/RTO evidence. Member continuity checkpoints are not a database backup/restore test. |
-| Privacy lifecycle | Export/delete/retention exercised against controlled data | **PARTIAL** — export/provenance and retention components exist; a complete controlled export, deletion, retention-expiry, and recovery-verification evidence bundle is still missing. |
-| Provider credentials | Every external production provider verified and failure-tested | **PARTIAL** — provider-specific credential presence, rotation, revocation, and failure-path evidence remains incomplete. Never print or copy secret values into evidence. |
-| Scale | Concurrency, DB saturation, queues, Edge Functions, latency/cost limits measured | **PENDING** — no representative, bounded load-test report with capacity thresholds and recovery behavior. Do not run a destructive stress test against production. |
-| AI quality | Groundedness, retrieval quality, hallucination, latency, cost, adversarial recovery measured | **PENDING** — require a versioned evaluation set, scoring rubric, regression thresholds, and measured latency/cost before claiming quality. |
-| Supply-chain security | Blocking SAST, filesystem/IaC scans, and validated SBOM all complete successfully | **BLOCKED** — run `40075211465` failed Semgrep with one blocking finding; Trivy filesystem/IaC scans and SBOM generation were skipped. The SARIF diagnostic output did not expose the blocking result; the workflow now performs a failure-only JSON diagnostic scan to expose rule, severity, path, line, and metadata on the next run. No rule was suppressed and no gate was bypassed. |
-| Vercel production | Current main commit has a READY production deployment and release parity is verified | **BLOCKED** — GitHub reports a failing Vercel status linked to [Vercel's deployment-blocked guidance](https://vercel.com/docs/errors/deployment_blocked). The latest production deployment returned by the connected Vercel integration is still on commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` from 2026-10-06, not the audit head. Public HTTP smoke checks pass, but they do not establish that the current main commit is deployed. The separate Vercel integration API call also returned a team-scope 403; authorization is needed for deeper project/deployment inspection. |
-| Owner security | All owner accounts have verified MFA before owner enforcement is enabled | **PENDING OWNER ACTION** — live aggregate check found 0 of 2 owner accounts with a verified MFA factor. `mfa_enrolment_enabled=true`; `owner_mfa_required=false`. Keep enforcement off until both owners independently enroll and verify factors; the server-side switch is intentionally lockout-safe. |
+| Canonical hosting and release parity | READY production deployment for intended main SHA, verified release manifest, independent HTTP smoke checks | **BLOCKED** — GitHub's Vercel status is failing. The last known Vercel READY deployment was reported on commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` from 2026-10-06; this is not current-SHA parity. Vercel team-scope authorization is pending. Cloudflare Pages remains the safer canonical production path while the Vercel restriction is unresolved. |
+| Supabase project health | Provider reports project healthy and public endpoints behave as expected | **PARTIAL PASS** — project status is `ACTIVE_HEALTHY`; this does not prove every function or user journey works. |
+| Auth leaked-password protection | Supabase Auth HIBP/leaked-password protection enabled and Advisor rechecked | **BLOCKED** — live Security Advisor still reports `auth_leaked_password_protection` WARN. Enable through supported Auth settings or an authorized Management API credential, never SQL. |
+| Owner MFA | Both owner accounts have verified factors before enforcement | **PENDING OWNER ACTION** — latest live aggregate check found 0 of 2 owner accounts with verified TOTP. Enrollment is enabled; enforcement remains off to avoid lockout until both owners verify. |
+| RLS and private schemas | RLS and grants match the intended deny-by-default boundary | **REVIEWED** — Advisor INFO for `omega_private.marketplace_listing_assets` is consistent with the documented server-only boundary: RLS enabled, no client policies, and client/service-role privileges revoked. Do not add a client policy just to silence the linter. |
+| RPC privilege | High-risk client RPCs are invoker/search-path hardened and regression-tested | **PASS ON EXISTING AUDIT EVIDENCE** — rerun regression checks before release. |
+| Migration reproducibility | All committed migrations replay from an empty isolated database with post-replay security checks | **PASS** — latest evidence-refresh PR replay passed migration inventory, security, hardening, family-access/privacy, and authenticated-content checks. Repeat after future migration changes. |
+| Edge Function runtime parity | Active deployed source matches reviewed repository source and reconciliation passes | **BLOCKED** — the Stripe webhook source changed, but production runtime has not been reconciled to it. Do not falsify the live manifest or bypass this gate. |
+| Payment lifecycle | Signed Stripe event → idempotency → ledger → reconciliation → entitlement → refund/reversal | **BLOCKED** — keep `payments_enabled=false`. The source now treats `invoice.payment_succeeded` as the canonical ledger settlement to avoid duplicate posting from checkout completion, but that changed source is not deployed. Refund/reversal handling and signed test-mode lifecycle evidence remain incomplete. No production charges or synthetic payment events. |
+| Disaster recovery | Restore into a non-production target; measured RPO/RTO; integrity and access checks | **BLOCKED** — no provider-level restore drill with measured RPO/RTO. Continuity checkpoints are not a database restore test. |
+| Privacy lifecycle | Controlled export, deletion, retention expiry, and recovery verification | **PARTIAL** — supporting structures exist; the complete controlled evidence bundle is missing. Use test accounts and do not expose PII in evidence. |
+| Provider credentials | Credential presence, least privilege, rotation/revocation, and failure paths verified per provider | **PARTIAL** — provider-specific evidence remains incomplete. Never print secret values into logs or reports. |
+| Database performance | Workload-based query plans, latency, and capacity budgets | **REVIEW REQUIRED** — Supabase Advisor reports 327 unused-index INFO findings. The workload review found no index that met the removal shortlist. Do not drop indexes without query-plan evidence, benchmarks, rollback plan, and monitoring. |
+| Scale | Representative, bounded concurrency/saturation test with latency, queue, DB, Edge and cost thresholds | **PENDING** — no qualifying load-test report. Do not run destructive stress tests against production. |
+| AI quality | Versioned evaluation set, groundedness/retrieval/hallucination scoring, adversarial recovery, latency and cost | **PENDING** — no qualifying versioned evaluation report. Do not label simulated or unverified results as live facts. |
 
-## Rules
+## Conservative recovery decisions
+
+- **Hosting:** keep Cloudflare Pages as canonical while Vercel eligibility and release parity are unresolved. Do not buy credits, upgrade plans, or change billing without explicit owner authorization. Do not attempt to bypass a provider restriction through configuration changes.
+- **Payments:** keep `payments_enabled=false`. Do not deploy the changed webhook until refund/reversal handling, signed test-mode lifecycle tests, and runtime-parity evidence pass. Test duplicate delivery, retries, subscription changes/cancellation, settlement, entitlement, refund/reversal, and reconciliation.
+- **Database:** retain all indexes until query-plan and workload evidence supports a reversible change.
+- **Temporary environments:** do not create a billable Supabase branch/project without explicit approval of the quoted cost. If approved later, use synthetic data, assign an expiry, capture evidence, and delete it.
+- **Auth:** enable leaked-password protection only through authorized provider settings/Management API. Do not enforce owner MFA until both owners have enrolled and verified factors.
+- **Release:** passing CI, static scans, and isolated migration replay are necessary but insufficient. Keep release blocked until live hosting SHA parity, Edge Function parity, payment/privacy lifecycle, DR, MFA, scale, and AI-quality evidence are complete.
+
+## Required next actions
+
+1. Owner authorizes the Vercel team connection; then re-query deployments and diagnose the account restriction. Do not spend money without approval.
+2. Complete Stripe test-mode lifecycle implementation and tests, including refunds/reversals; deploy only after evidence is signed off, then update the live runtime manifest and rerun reconciliation.
+3. Enable Supabase leaked-password protection through supported provider controls and verify the Advisor finding clears.
+4. Both owners enroll and verify MFA; only then enable enforcement through the lockout-safe owner control.
+5. Run controlled privacy lifecycle and provider restore drills; record measured RPO/RTO.
+6. Run bounded scale and versioned AI-quality evaluations against non-production/test data.
+
+## Evidence rules
 
 1. Never convert BLOCKED, PARTIAL, or PENDING into PASS through documentation.
 2. Never fabricate payment, recovery, user, achievement, balance, or provider evidence.
-3. A successful preview deployment is not production proof.
-4. A compensating password-breach control is not equivalent to the provider server-side Auth control.
-5. An unused-index warning is not sufficient evidence to drop an index; remove only indexes proven redundant or harmful under observed workload.
-6. Production migrations are immutable. New schema changes require a new migration.
-7. The target is 10/10 evidence, not 10/10 prose.
-
-## Automated full replay
-
-`.github/workflows/supabase-full-migration-replay.yml` starts an isolated Supabase stack and runs `supabase db reset`, recreating the database and applying every migration in order. The inventory contract checks the local migration set against the committed live manifest before and after replay.
-
-The live Supabase migration journal was queried on 2026-10-24: **407 applied versions**, first version `0001`, latest version `20261023120000`. The committed `supabase/remote-migrations.json` matched the count and latest version. The latest migration is `20261023120000_omega_personal_context_link_fk_indexes.sql`. Run `40075211371` subsequently passed the isolated replay and its post-replay security/hardening checks. This is reproducibility evidence for the audited repository commit; it is not a substitute for live provider evidence.
-
-## Public HTTP evidence versus deployment parity
-
-GitHub Actions run `40075211354` (`Production Smoke`) observed HTTP 200 for the apex and www homepages and their `/healthz.html` endpoints. It observed HTTP 401 from Supabase Auth and REST endpoints without credentials, which is consistent with those endpoints requiring authentication. Run `40075211363` (`Production Surface Verification`) verified the expected Omega title/canonical CSS and reported HTTP 200 for the root and CSS asset.
-
-These checks establish public transport/surface reachability at the time of the run. They do **not** prove the deployed static files correspond to audit head `af91aaff864fde2cb304f2b37568d3efb83d29c2`, nor do they prove signed-in authorization, payment processing, provider restoration, or every browser dependency. Production SHA parity remains BLOCKED until a READY production deployment for the intended main commit and independent release-manifest verification are recorded.
-
-## Provider actions
-
-- **Vercel:** authorize the connected integration for the `syd-omega-91717s-projects` team scope; inspect the account/deployment block, account standing, usage/plan limits, and Vercel notification email. Vercel documents that a blocked account or deployment may require provider action; do not attempt to bypass the restriction by changing deployment configuration.
-- **Supabase leaked-password protection:** enable the provider-level `password_hibp_enabled` setting through the supported Auth settings/Management API, then re-query the Security Advisor. The repository contains `scripts/enable-supabase-hibp.py`; it requires an authorized `SUPABASE_ACCESS_TOKEN` and fails closed if the provider does not confirm the setting.
-- **Owner MFA:** each owner must enroll a verified TOTP factor in Settings → Two-factor. Then use the Owner Deck SECURITY control to enable enforcement only after both factors are verified. Do not set the enforcement flag directly to skip the lockout-safe guard.
-- **Payments:** keep `payments_enabled=false` until a Stripe test-mode lifecycle can be exercised end to end, including signed webhook delivery, repeated event delivery, idempotency, ledger/reconciliation, entitlement transitions, and refunds/reversals.
-- **Disaster recovery:** run a controlled restore drill into a non-production target, measure restore duration and recoverable-point age, and record RTO/RPO plus storage/configuration recovery evidence.
-- **Index review:** use [the index review](SUPABASE_UNUSED_INDEX_REVIEW_20261024.md). Do not drop indexes based solely on advisor labels or a single `idx_scan=0` observation.
-
-## Completion standard
-
-The platform may be called 10/10 only after every row above is PASS, provider-side blockers are cleared, and the evidence is timestamped. A higher score cannot be claimed merely because more features were added.
+3. A preview deployment or HTTP 200 is not proof that the intended commit is live.
+4. A compensating password-breach control is not equivalent to the provider-side Auth setting.
+5. An unused-index warning or one `idx_scan=0` observation is not sufficient evidence to drop an index.
+6. Production migrations are immutable; schema changes require a new migration.
+7. The platform may be called 10/10 only when every gate is PASS, provider-side blockers are cleared, and timestamped evidence is retained.

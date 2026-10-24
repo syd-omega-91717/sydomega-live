@@ -49,46 +49,47 @@
 
 <div class="tab-panel active" id="tab-tiers">
   <div class="sechead">SOVEREIGN ENTERPRISE TIERS &middot; GLOBAL LICENSING</div>
+  <div class="card" style="border-color:rgba(201,168,76,.3);color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:14px">INDICATIVE PRICING ONLY. Checkout and payments are disabled. SLA, availability, API quotas, data residency, and support commitments require a signed agreement and a verified deployment.</div>
   <div class="tier-grid">
     <div class="tier-card card" style="--tc:var(--cyan)">
       <div class="tier-name">STARTER</div>
       <div class="tier-price">$199</div><div class="tier-period">PER MONTH &middot; UP TO 25 SEATS</div>
       <ul class="tier-features">
-        <li>Full platform access</li><li>Standard SLA (99.9%)</li>
-        <li>Email support</li><li>Monthly reports</li>
+        <li>Platform access as provisioned</li><li>SLA terms defined by agreement</li>
+        <li>Support terms defined by agreement</li><li>Reporting availability subject to validation</li>
       </ul>
-      <button class="tier-cta">REQUEST DEMO</button>
+      <button class="tier-cta" data-tier-request="starter">REQUEST DEMO</button>
     </div>
     <div class="tier-card card" style="--tc:var(--gold)">
       <div class="popular-badge">POPULAR</div>
       <div class="tier-name">PROFESSIONAL</div>
       <div class="tier-price">$999</div><div class="tier-period">PER MONTH &middot; UP TO 100 SEATS</div>
       <ul class="tier-features">
-        <li>All Starter features</li><li>Premium SLA (99.95%)</li>
-        <li>Dedicated agent</li><li>API access (60 rpm)</li>
-        <li>Advanced analytics</li>
+        <li>All Starter features</li><li>SLA terms defined by agreement</li>
+        <li>Dedicated support subject to agreement</li><li>API quota subject to validated limits</li>
+        <li>Analytics availability subject to validation</li>
       </ul>
-      <button class="tier-cta">REQUEST DEMO</button>
+      <button class="tier-cta" data-tier-request="professional">REQUEST DEMO</button>
     </div>
     <div class="tier-card card" style="--tc:var(--solar)">
       <div class="tier-name">ENTERPRISE</div>
       <div class="tier-price">$4,999</div><div class="tier-period">PER MONTH &middot; UNLIMITED SEATS</div>
       <ul class="tier-features">
-        <li>All Professional features</li><li>Elite SLA (99.99%)</li>
-        <li>White label option</li><li>Custom domain</li>
-        <li>Unlimited API access</li><li>Private data residency</li>
+        <li>All Professional features</li><li>SLA terms defined by agreement</li>
+        <li>White-label option subject to validation</li><li>Custom domain subject to hosting validation</li>
+        <li>API quota defined by agreement and capacity</li><li>Residency options subject to deployment validation</li>
       </ul>
-      <button class="tier-cta">CONTACT FOUNDER</button>
+      <button class="tier-cta" data-tier-request="enterprise">CONTACT FOUNDER</button>
     </div>
     <div class="tier-card card" style="--tc:var(--purple)">
       <div class="tier-name">GOVERNMENT</div>
       <div class="tier-price">CUSTOM</div><div class="tier-period">NATIONAL DEPLOYMENT</div>
       <ul class="tier-features">
-        <li>Ministry/department rollout</li><li>Sovereign SLA (99.999%)</li>
-        <li>Air-gapped deployment</li><li>National data sovereignty</li>
-        <li>Legislative compliance</li><li>Dedicated infrastructure</li>
+        <li>Ministry/department rollout by agreement</li><li>SLA terms defined by signed agreement</li>
+        <li>Air-gapped deployment requires validation</li><li>Residency and sovereignty scope defined by contract</li>
+        <li>Compliance mapping requires legal review</li><li>Dedicated infrastructure subject to validation</li>
       </ul>
-      <button class="tier-cta">REQUEST PROPOSAL</button>
+      <button class="tier-cta" data-tier-request="government">REQUEST PROPOSAL</button>
     </div>
   </div>
 </div>
@@ -101,7 +102,7 @@
   </div>
   <div class="sechead" style="margin-top:20px">API KEY MANAGEMENT &middot; OWNER VIEW</div>
   <div class="tbl-wrap">
-    <div class="tbl-head" style="grid-template-columns:1fr 100px 80px 100px"><span>KEY NAME</span><span>PREFIX</span><span>TYPE</span><span>REQUESTS</span></div>
+    <div class="tbl-head" style="grid-template-columns:1fr 100px 80px 100px"><span>KEY NAME</span><span>SCOPES</span><span>STATUS</span><span>LAST USED</span></div>
     <div id="key-rows"><div style="padding:20px;text-align:center;font-family:var(--M);font-size:12px;color:var(--muted)">NO API KEYS ISSUED</div></div>
   </div>
 </div>
@@ -113,22 +114,22 @@
     <div class="mrr-label">TOTAL MONTHLY RECURRING REVENUE</div>
     <div class="mrr-sub">ARR: <span id="arr-val">$0</span> &middot; SEATS: <span id="total-seats">0</span> &middot; AVG DEAL: <span id="avg-deal">$0</span></div>
   </div>
-  <div class="sechead">SLA PERFORMANCE TARGETS</div>
+  <div class="sechead">SERVICE LEVEL COMMITMENTS</div>
   <div class="tbl-wrap">
-    <div class="tbl-head" style="grid-template-columns:1fr 1fr 1fr 1fr"><span>TIER</span><span>SLA TARGET</span><span>DOWNTIME / YEAR</span><span>SUPPORT</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="color:var(--cyan)">STARTER</span><span>99.9%</span><span>8.7 hrs</span><span>Email</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="color:var(--gold)">PROFESSIONAL</span><span>99.95%</span><span>4.4 hrs</span><span>Dedicated Agent</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="color:var(--solar)">ENTERPRISE</span><span>99.99%</span><span>52 min</span><span>24/7 Priority</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="color:var(--purple)">GOVERNMENT</span><span>99.999%</span><span>5.25 min</span><span>Dedicated Team</span></div>
+    <div class="tbl-head" style="grid-template-columns:1fr 1fr 1fr 1fr"><span>TIER</span><span>CONTRACTUAL SLA</span><span>AVAILABILITY EVIDENCE</span><span>SUPPORT</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="color:var(--cyan)">STARTER</span><span>NOT CONTRACTED</span><span>NOT YET VERIFIED</span><span>BY AGREEMENT</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="color:var(--gold)">PROFESSIONAL</span><span>NOT CONTRACTED</span><span>NOT YET VERIFIED</span><span>BY AGREEMENT</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="color:var(--solar)">ENTERPRISE</span><span>NOT CONTRACTED</span><span>NOT YET VERIFIED</span><span>BY AGREEMENT</span></div>
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="color:var(--purple)">GOVERNMENT</span><span>NOT CONTRACTED</span><span>NOT YET VERIFIED</span><span>BY AGREEMENT</span></div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">ENTERPRISE ARCHITECTURE</div>
   <div class="card-grid">
-    <div class="card"><div class="card-title">GOVERNMENT SOVEREIGNTY</div><div class="card-body">The Government tier is designed for national-level deployment. Air-gapped means no internet dependency — the platform runs entirely within national infrastructure. National data sovereignty means all data stays within the country's borders. Legislative compliance packages cover GDPR, PDPA, NDMO, and custom national frameworks.</div></div>
-    <div class="card"><div class="card-title">API LICENSING MODEL</div><div class="card-body">API access is metered by tier. Starter has no API access. Professional gets 60 requests per minute. Enterprise gets unlimited. API keys are managed in the api_keys table. Each key carries a type (read, write, admin) and a request counter. Rate limiting is enforced at the edge layer before any database query.</div></div>
-    <div class="card"><div class="card-title">WHITE LABEL PROTOCOL</div><div class="card-body">Enterprise tier clients can deploy under a custom domain with their own branding. The white label removes &#937; branding from the UI while retaining the full platform capability. Custom domains use Vercel's domain alias system. The sovereign authority system, matrix, and agent infrastructure are identical across all branded deployments.</div></div>
+    <div class="card"><div class="card-title">GOVERNMENT SOVEREIGNTY</div><div class="card-body">Sovereign deployment is an architectural objective, not a verified capability claim. Air-gapped operation requires a separately tested deployment and offline dependency inventory. Data residency and legislative compliance must be assessed and contracted per jurisdiction.</div></div>
+    <div class="card"><div class="card-title">API LICENSING MODEL</div><div class="card-body">API keys are inventoried with scopes, activation state, optional expiry, and last-used metadata. Published quotas are not active until gateway enforcement is implemented and validated; limits must be agreed per tier and capacity. Secret values are not rendered in this dashboard.</div></div>
+    <div class="card"><div class="card-title">WHITE LABEL PROTOCOL</div><div class="card-body">White-label and custom-domain deployments require a validated hosting configuration and a signed scope. Do not promise Vercel alias setup or equivalent isolated infrastructure until the provider path and deployment have been verified.</div></div>
     <div class="card"><div class="card-title">REVENUE INTELLIGENCE</div><div class="card-body">The revenue dashboard reads from the enterprise_accounts table via a get_enterprise_summary RPC that aggregates MRR, active accounts, total seats, and government account count. It is owner-only: the RLS policy on enterprise_accounts restricts all rows to platform_owners. No member can access another member's enterprise data.</div></div>
   </div>
 </div>
@@ -140,7 +141,17 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function fmt(n){return n!=null?'$'+(Math.round(n)).toLocaleString():'$0';}
+function requestTier(tier){
+  var labels={starter:'Starter',professional:'Professional',enterprise:'Enterprise',government:'Government'};
+  if(!Object.prototype.hasOwnProperty.call(labels,tier))return;
+  var brief='Enterprise tier inquiry for '+labels[tier]+'. Please confirm indicative pricing, service levels, API limits, deployment options, and compliance scope.';
+  window.location.href='/consultancy.html?tab=book&domain=enterprise&brief='+encodeURIComponent(brief);
+}
+document.querySelectorAll('[data-tier-request]').forEach(function(button){
+  button.addEventListener('click',function(){requestTier(button.getAttribute('data-tier-request'));});
+});
 window.setTab=setTab;
 function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['tiers','accounts','revenue','science'][i]===name);});
@@ -179,9 +190,9 @@ function setTab(name){
         if(rows){rows.innerHTML=accs.data.map(function(a){
           var col={active:'var(--green)',pending:'var(--solar)',suspended:'var(--crim)',expired:'var(--muted)'}[a.status]||'var(--muted)';
           return '<div class="tbl-row" style="grid-template-columns:1fr 100px 80px 100px">'
-            +'<div><div style="font-weight:600">'+String(a.org_name||'').replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+String(a.org_type||'').toUpperCase()+' &middot; '+String(a.contact_email||'').replace(/</g,'&lt;')+'</div></div>'
-            +'<div style="font-family:var(--M);font-size:12px">'+String(a.license_type||'').toUpperCase()+'</div>'
-            +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+String(a.status||'').toUpperCase()+'</div>'
+            +'<div><div style="font-weight:600">'+esc(a.org_name)+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(String(a.org_type||'').toUpperCase())+' &middot; '+esc(a.contact_email)+'</div></div>'
+            +'<div style="font-family:var(--M);font-size:12px">'+esc(String(a.license_type||'').toUpperCase())+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+esc(String(a.status||'').toUpperCase())+'</div>'
             +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold)">'+(a.monthly_value?'$'+Math.round(a.monthly_value):'--')+'</div>'
             +'</div>';
         }).join('');}
@@ -189,15 +200,22 @@ function setTab(name){
     }catch(e){}
 
     try{
-      var keys=await sb.from('api_keys').select('*').order('created_at',{ascending:false}).limit(10);
+      // Never fetch api_key/api_secret into the browser. The table stores sensitive values;
+      // this view only needs the non-secret inventory fields that actually exist in the live schema.
+      var keys=await sb.from('api_keys').select('id,name,scopes,last_used_at,expires_at,active,created_at').order('created_at',{ascending:false}).limit(10);
       if(keys.data&&keys.data.length){
         var kr=document.getElementById('key-rows');
         if(kr){kr.innerHTML=keys.data.map(function(k){
+          var scopes=Array.isArray(k.scopes)?k.scopes.map(function(v){return esc(v);}).join(', '):'—';
+          var expired=Boolean(k.expires_at)&&Date.parse(k.expires_at)<=Date.now();
+          var status=expired?'EXPIRED':(k.active===true?'ACTIVE':'INACTIVE');
+          var lastUsed=k.last_used_at?new Date(k.last_used_at).toLocaleDateString():'NEVER';
+          var statusColor=status==='ACTIVE'?'var(--green)':'var(--muted)';
           return '<div class="tbl-row" style="grid-template-columns:1fr 100px 80px 100px">'
-            +'<div style="font-family:var(--M);font-size:12px">'+String(k.key_name||'').replace(/</g,'&lt;')+'</div>'
-            +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+String(k.key_prefix||'')+'&hellip;</div>'
-            +'<div style="font-family:var(--M);font-size:12px">'+String(k.key_type||'').toUpperCase()+'</div>'
-            +'<div style="font-family:var(--M);font-size:12px;color:var(--gold)">'+String(k.requests_total||0)+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px">'+esc(k.name)+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+(scopes||'—')+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:'+statusColor+'">'+status+'</div>'
+            +'<div style="font-family:var(--M);font-size:12px;color:var(--gold)">'+esc(lastUsed)+'</div>'
             +'</div>';
         }).join('');}
       }

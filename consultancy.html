@@ -101,6 +101,7 @@
 <script>
 var DOMAINS=[
   {icon:'⚔︎',name:'SOVEREIGNTY ARCHITECTURE',key:'sovereignty',desc:'Design of personal authority systems, decision frameworks, and governance structures for autonomous operators.'},
+  {icon:'⌂',name:'ENTERPRISE DEPLOYMENT',key:'enterprise',desc:'Request an assessment of enterprise licensing, hosting, API quotas, service levels, and compliance scope. Availability is subject to validated deployment and signed agreement.'},
   {icon:'⌾',name:'AUTHORITY DYNAMICS',key:'authority',desc:'Calibration of the AUTH score, gate transitions, and the mechanics of influence accumulation over time.'},
   {icon:'\u{1F701}',name:'ELEMENT MAPPING',key:'elements',desc:'Identification of elemental alignment, sign resonance, and the strategic implications of your cosmic placement.'},
   {icon:'⚿',name:'CIPHER DESIGN',key:'cipher',desc:'Construction of personal cipher systems, encoded communication protocols, and symbolic identity architecture.'},
@@ -154,13 +155,26 @@ window.submitRequest=function(){
   if(!brief){showMsg('err','Describe your objective.');return;}
   var sb=window.__omegaSb;
   if(!sb){showMsg('err','Not connected.');return;}
-  sb.from('consult_requests').insert({domain:domain,contact:contact,preferred_time:time,brief:brief}).then(function(r){
+  sb.auth.getUser().then(function(auth){
+    if(auth.error||!auth.data.user){showMsg('err','Session expired. Sign in again.');return null;}
+    return sb.from('consult_requests').insert({
+      user_id:auth.data.user.id,
+      domain:domain,
+      message:brief,
+      contact:contact,
+      preferred_time:time,
+      brief:brief
+    });
+  }).then(function(r){
+    if(!r)return;
     if(r.error){showMsg('err',r.error.message||'Error submitting.');return;}
     showMsg('ok','Request submitted. You will be contacted via the method provided.');
     document.getElementById('bk-domain').value='';
     document.getElementById('bk-contact').value='';
     document.getElementById('bk-time').value='';
     document.getElementById('bk-brief').value='';
+  }).catch(function(){
+    showMsg('err','Request could not be submitted. Please try again.');
   });
 };
 
@@ -205,6 +219,14 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
   document.getElementById('app').style.display='flex';
   buildDomains();
+  var params=new URLSearchParams(window.location.search);
+  if(params.get('tab')==='book'){
+    var requestedDomain=params.get('domain');
+    if(DOMAINS.some(function(d){return d.key===requestedDomain;}))document.getElementById('bk-domain').value=requestedDomain;
+    var requestedBrief=params.get('brief');
+    if(requestedBrief)document.getElementById('bk-brief').value=requestedBrief.slice(0,1000);
+    setTab('book');
+  }
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
 })();
 </script>

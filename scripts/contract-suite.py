@@ -186,6 +186,9 @@ GATES = [
      'every shipped file names only the Supabase project and publishable key '
      'bg.js declares -- a wrong key fails exactly like a signed-out visitor',
      ['scripts/supabase-client-key-contract.py']),
+    ('enterprise-api-key-safety',
+     'enterprise views never fetch stored API secrets and tier request forms match the live schema',
+     ['scripts/tests/test_enterprise_api_key_safety_contract.py']),
     ('identifiers',
      'sync and Creator records never use Math.random for persistent identifiers',
      ['scripts/identifier-contract.py']),

@@ -89,6 +89,13 @@ class ProductionHttpEvidenceTests(unittest.TestCase):
         self.assertFalse(result["passed"])
         self.assertIn("manifest_schema", {item["name"] for item in result["failures"]})
 
+    def test_transport_uses_verified_tls_and_allowlisted_https_redirects(self):
+        source = (ROOT / "production-http-evidence.py").read_text(encoding="utf-8")
+        self.assertIn("context=ssl.create_default_context()", source)
+        self.assertIn('parsed.scheme != "https"', source)
+        self.assertIn("parsed.hostname.lower() not in permitted_hosts", source)
+        self.assertIn("raise ValueError(\"too many HTTPS redirects\")", source)
+
     def test_non_https_origin_is_rejected_without_network(self):
         result = probe.audit_origin("http://example.test", opener=lambda _: self.fail("network must not run"))
         self.assertFalse(result["passed"])

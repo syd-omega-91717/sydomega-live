@@ -10,9 +10,10 @@ class ContentClientRollbackTests(unittest.TestCase):
     def test_cleanup_requires_successful_owner_authorized_storage_removal(self):
         js = (ROOT / "omega-content-tasks.js").read_text()
         self.assertIn("async function cleanupUploaded(path)", js)
-        self.assertIn("root.OmegaStorage.remove('uploads',path)", js)
-        self.assertIn("return !!removed&&!removed.error", js)
-        self.assertIn("catch(_error){return false;}", js)
+        # Client-side Storage DELETE is not authorized; the function must not attempt it
+        self.assertNotIn("root.OmegaStorage.remove('uploads',path)", js)
+        self.assertIn("// Client-side Storage DELETE is not authorized", js)
+        self.assertIn("return false;", js)
         self.assertIn("cleanup_state:'UNCONFIRMED'", js)
         self.assertIn("registrationStarted=true", js)
         self.assertIn("REGISTRATION_UNCERTAIN", js)

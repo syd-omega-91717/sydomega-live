@@ -51,6 +51,9 @@ jobs:
       - name: Run latest hardening contract
         run: python3 -m unittest scripts/tests/test_rls_rpc_performance_hardening.py
 
+      - name: Run Stripe refund lifecycle static contract
+        run: python3 -m unittest scripts/tests/test_stripe_refund_lifecycle_contract.py -v
+
       - name: Run Stripe refund ledger lifecycle probe
         shell: bash
         run: |

@@ -20,12 +20,12 @@ class ProviderRegistryColumnPrivilegeTests(unittest.TestCase):
         grant = LOWER.index("grant select (")
         end = LOWER.index(") on table public.omega_provider_registry to authenticated", grant)
         columns = set(re.findall(r"\b[a-z_][a-z0-9_]*\b", LOWER[grant:end]))
+        self.assertEqual(
+            columns - {"grant", "select"},
+            {"id", "provider_key", "display_name", "adapter_kind", "capabilities", "status"},
+        )
         self.assertNotIn("secret_ref", columns)
         self.assertNotIn("metadata", columns)
-        self.assertIn("provider_key", columns)
-        self.assertIn("display_name", columns)
-        self.assertIn("capabilities", columns)
-        self.assertIn("status", columns)
         self.assertIn("revoke select (secret_ref, metadata)", LOWER)
 
     def test_migration_is_privilege_only_and_does_not_change_provider_state(self):

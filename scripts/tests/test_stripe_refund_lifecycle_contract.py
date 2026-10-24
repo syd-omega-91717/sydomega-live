@@ -46,6 +46,7 @@ class StripeRefundLifecycleContract(unittest.TestCase):
 
     def test_cumulative_refund_is_monotonic_and_capped_at_original_settlement(self):
         self.assertIn("for update of t", LOWER)
+        self.assertIn("r.status in ('matched', 'reversed')", LOWER)
         self.assertRegex(LOWER, r"from omega_private\.stripe_refund_state[\s\S]*?for update")
         self.assertIn("v_new_refunded < v_state.amount_refunded", LOWER)
         self.assertIn("v_new_refunded = v_state.amount_refunded", LOWER)

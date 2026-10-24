@@ -35,10 +35,10 @@
     },
     "stripe-webhook": {
       "state": "DEPLOYED",
-      "version": 7,
+      "version": 8,
       "verify_jwt": false,
-      "live_sha256": "1ed6503c05769cebfcc748758f0d0c22acb84ac05fc6bbeea77ee59a50518045",
-      "repository_blob_sha": "9ac6b257acf745b50f24a152839766605d589c40"
+      "live_sha256": "de1bd074d6dee903be3b68b04ef72e380eccae9b532a96bde7f93c00550b7b1f",
+      "repository_blob_sha": "e82865f141b42fc4bbaf7f64b76515b91d79551a"
     },
     "secrets-health": {
       "state": "DEPLOYED",
@@ -163,5 +163,5 @@
       "state": "LOCAL_ONLY"
     }
   },
-  "verification_note": "All 16 deployed Edge Function index.ts files were compared byte-for-byte after newline normalization against repository sources on 2026-10-22; concierge was compared against the reviewed branch source and the other 15 against main. Seven changed runtime versions/hashes were refreshed from the active Supabase project."
+  "verification_note": "Snapshot initially captured 2026-10-22. On 2026-10-24, stripe-webhook live version 8 was re-read from the active Supabase project and its index.ts was compared byte-for-byte against main; both contents match. Updated live SHA-256 and repository blob SHA to the observed current values. Other function entries remain at their prior snapshot and require their own freshness verification."
 }

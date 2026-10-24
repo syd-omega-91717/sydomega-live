@@ -140,6 +140,7 @@ BEGIN
    WHERE r.provider = 'stripe'
      AND r.provider_reference = p_payment_intent_id
      AND r.currency = v_currency
+     AND r.status IN ('matched', 'reversed')
      AND t.external_reference = p_payment_intent_id
      AND t.event_type = 'STRIPE_SETTLEMENT'
    ORDER BY r.created_at DESC

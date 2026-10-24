@@ -6,7 +6,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 CREATION_STUDIO = (ROOT / "omega-creation-studio.js").read_text(encoding="utf-8")
-MIGRATION = ROOT / "supabase/migrations/20261024103000_harden_provider_registry_column_access.sql"
+MIGRATION = ROOT / "supabase/migrations/20261024102602_harden_provider_registry_column_access.sql"
 SOURCE = MIGRATION.read_text(encoding="utf-8")
 LOWER = SOURCE.lower()
 

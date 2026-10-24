@@ -13,11 +13,12 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 
 ## Latest repository checks
 
-The runtime-evidence refresh PR #1061 completed its required CI, CodeQL, secret-detection, supply-chain/SBOM, full migration replay, contract, repository-integrity, capability-evidence, and Edge Runtime Reconciliation checks successfully. This is evidence for the merged revision; the Vercel provider status remains separately failing.
+The runtime-evidence refresh PR #1061 passed its required CI, CodeQL, secret-detection, supply-chain/SBOM, full migration replay, contract, repository-integrity, capability-evidence, and Edge Runtime Reconciliation checks. PR #1063 also passed all required PR checks, including CodeQL, Gitleaks, supply-chain scanning, full migration replay, static/runtime contracts, repository integrity, and live Edge Function reconciliation. These checks validate repository state and isolated replay; the currency-precision migration remains pending and is not applied to production.
 
-Two release-relevant checks remain blocked:
+Current provider-side blockers:
 - **Vercel status fails** with Vercel's account/deployment-blocked guidance. The Vercel connector returns 403 for team scope `syd-omega-91717s-projects`; team authorization is required before deployment inventory can be queried again.
-- **Supabase Edge Function source parity now passes for the audited snapshot.** On 2026-10-24, all 16 active deployed Edge Function `index.ts` files were compared byte-for-byte (normalizing CRLF and trailing newlines) against their `main` sources; all 16 matched. The runtime manifest was refreshed in PR #1061, and the reconciliation workflow passed. This does not establish end-to-end behavior or payment lifecycle completeness.
+
+Runtime parity evidence: on 2026-10-24, all 16 active deployed Edge Function `index.ts` files were compared byte-for-byte (normalizing CRLF and trailing newlines) against their `main` sources; all 16 matched. The runtime manifest was refreshed in PR #1061, and the reconciliation workflow passed. This does not establish end-to-end behavior or payment lifecycle completeness.
 
 The successful isolated migration replay and supply-chain checks are repository evidence, not proof of provider-side lifecycle correctness.
 

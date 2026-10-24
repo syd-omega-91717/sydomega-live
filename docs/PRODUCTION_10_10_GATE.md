@@ -16,6 +16,7 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 | Provider credentials | Every external production provider verified and failure-tested | PARTIAL |
 | Scale | Concurrency, DB saturation, queues, Edge Functions, latency/cost limits measured | PENDING |
 | AI quality | Groundedness, retrieval quality, hallucination, latency, cost, adversarial recovery measured | PENDING |
+| Supply-chain security | Blocking SAST, filesystem/IaC scans, and validated SBOM all complete successfully | BLOCKED — workflow run `40070878989` failed in Semgrep SAST; Trivy filesystem/IaC scans and SBOM generation were skipped. The run reported one blocking finding but emitted multiple SARIF location annotations without severity. Isolate the blocking result before targeted repair; do not bypass the scan. |
 | Vercel production | Current main commit has a READY production deployment | BLOCKED — current main commit `fdb3f3395dd79d5a57646831fa8a2f747a647a86` has a failing Vercel status linked to account/deployment-blocked guidance; the latest deployment returned by the connected Vercel integration is still on commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` from 2026-10-06 |
 | Owner security | Owner MFA factor enrolled and verified | PENDING OWNER ACTION |
 

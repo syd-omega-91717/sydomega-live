@@ -10,14 +10,16 @@ This directory is the canonical, ordered, automatically-appliable schema history
 
 The repository contains timestamped reconciliation migrations for changes that were historically applied directly to the live database. Those files preserve the recorded migration versions so `supabase db push` does not encounter `Remote migration versions not found in local migrations directory`.
 
-## Current provider-verified state — 2026-10-22
+## Current provider-verified state — 2026-10-24
 
-- The live Supabase migration ledger contains **406 applied versions**; the latest recorded version is `20261022130000_harden_personal_context_consent_audit_20261022`. This was independently queried from the connected Supabase project on 2026-10-22.
-- The local migration directory contains 406 migration files, and the current live ledger contains the same 406 versions. The registry snapshot was refreshed from the provider result; the personal-context consent-audit migration is **applied**, not pending.
-- **Repository manifest drift remains open:** `supabase/pending-migrations.json` still lists `20261022130000` as NOT_APPLIED even though the authenticated live ledger now records it as applied. The provider-derived `remote-migrations.json` snapshot has been refreshed; the pending manifest and its regression contract must be reconciled before this follow-up PR can merge. Do not rerun the migration.
-- The one-off manual workflow `.github/workflows/supabase-controlled-migration-push.yml` was written for that migration while pending. Because the migration is already applied, do not dispatch that workflow for this version.
+- The live Supabase migration ledger contains **409 applied versions**; the latest recorded version is `20261024102602_harden_provider_registry_column_access`.
+- `supabase/remote-migrations.json` is being reconciled in the current follow-up to the provider-confirmed 409-version ledger. The local migration directory remains 409 files after renaming the provider-registry migration to its actual applied version. The pending registry is empty in this reconciliation branch; the full fresh-database replay is a required merge gate.
+- The Stripe zero-decimal settlement migration `20261024091500` and provider-registry column-access migration `20261024102602` are applied in production. The live `omega_private.record_stripe_payment` definition was verified against the currency conversion source, with service-role-only execute access.
+- The provider registry privilege boundary is live and verified: authenticated has no table-wide SELECT and can read only `id`, `provider_key`, `display_name`, `adapter_kind`, `capabilities`, and `status`. Authenticated SELECT is denied for `secret_ref`, `metadata`, `created_at`, and `updated_at`; `service_role` retains `secret_ref` SELECT for server-side workers.
+- The provider ledger briefly contained duplicate entries named `harden_provider_registry_column_access` at `20261024101622` and `20261024102602`. The earlier row was confirmed to have no persistent privilege effect and was removed by a guarded history-only repair after checking the live grants and confirming the later applied row. No application data or schema objects were changed by that repair; the current provider ledger has only `20261024102602`.
+- PR #1072 introduced a duplicate pending version and malformed source allowlist, which caused migration inventory/replay and release-readiness checks to fail. That malformed source was not applied to production. The current reconciliation restores the source file to the provider-confirmed version and requires a fresh isolated replay before it can merge.
 - Migration-history parity is a point-in-time fact. Continue to require fresh migration replay, policy/grant tests, and provider-side verification for future migrations.
-- The dated sections below are historical snapshots. Their counts and deployment states apply only to the commits and dates named in those sections; use the current ledger snapshot and pending registry above for present state.
+- The dated sections below are historical snapshots. Their counts and deployment states apply only to the commits and dates named in those sections; use this current provider-verified state for present status.
 
 ## Verification
 

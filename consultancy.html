@@ -155,13 +155,26 @@ window.submitRequest=function(){
   if(!brief){showMsg('err','Describe your objective.');return;}
   var sb=window.__omegaSb;
   if(!sb){showMsg('err','Not connected.');return;}
-  sb.from('consult_requests').insert({domain:domain,contact:contact,preferred_time:time,brief:brief}).then(function(r){
+  sb.auth.getUser().then(function(auth){
+    if(auth.error||!auth.data.user){showMsg('err','Session expired. Sign in again.');return null;}
+    return sb.from('consult_requests').insert({
+      user_id:auth.data.user.id,
+      domain:domain,
+      message:brief,
+      contact:contact,
+      preferred_time:time,
+      brief:brief
+    });
+  }).then(function(r){
+    if(!r)return;
     if(r.error){showMsg('err',r.error.message||'Error submitting.');return;}
     showMsg('ok','Request submitted. You will be contacted via the method provided.');
     document.getElementById('bk-domain').value='';
     document.getElementById('bk-contact').value='';
     document.getElementById('bk-time').value='';
     document.getElementById('bk-brief').value='';
+  }).catch(function(){
+    showMsg('err','Request could not be submitted. Please try again.');
   });
 };
 

@@ -7,7 +7,7 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 | Domain | Required evidence | Current state |
 |---|---|---|
 | Supabase security | Security Advisor findings reviewed and provider-level controls enabled | BLOCKED — leaked-password protection is disabled (WARN). The additional INFO finding for `omega_private.marketplace_listing_assets` is consistent with the documented server-only, deny-by-default design: RLS is enabled and the migration revokes privileges from `public`, `anon`, `authenticated`, and `service_role`. Preserve this boundary; do not add a client policy merely to silence the linter. |
-| RLS performance | Advisor has zero RLS init-plan findings | PASS — latest performance/security review remains subject to repeat verification after schema changes |
+| RLS performance | Advisor has zero RLS init-plan findings | PASS for the previously audited RLS init-plan category; repeat verification after schema changes. Separate performance Advisor review still reports 327 unused-index INFO findings, which require workload-aware review rather than bulk deletion. |
 | RPC privilege | High-risk client RPCs are invoker/search-path hardened | PASS — based on existing audit evidence; re-run regression checks before release |
 | Migration reproducibility | All local migrations replay successfully from zero | PENDING FULL 407-MIGRATION RUN |
 | Payment lifecycle | Signed Stripe event → idempotency → ledger → reconciliation → entitlement → reversal | BLOCKED — live provider proof required |
@@ -16,7 +16,7 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 | Provider credentials | Every external production provider verified and failure-tested | PARTIAL |
 | Scale | Concurrency, DB saturation, queues, Edge Functions, latency/cost limits measured | PENDING |
 | AI quality | Groundedness, retrieval quality, hallucination, latency, cost, adversarial recovery measured | PENDING |
-| Vercel production | Current main commit has a READY production deployment | BLOCKED — current main commit has a failing Vercel status linked to account/deployment-blocked guidance; latest deployment returned by the connected Vercel integration is still on commit `7d70ce14` from 2026-10-06 |
+| Vercel production | Current main commit has a READY production deployment | BLOCKED — current main commit `fdb3f3395dd79d5a57646831fa8a2f747a647a86` has a failing Vercel status linked to account/deployment-blocked guidance; the latest deployment returned by the connected Vercel integration is still on commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` from 2026-10-06 |
 | Owner security | Owner MFA factor enrolled and verified | PENDING OWNER ACTION |
 
 ## Rules
@@ -39,7 +39,7 @@ The live Supabase migration journal was queried on 2026-10-24: **407 applied ver
 
 The remaining provider-side blockers are kept explicit. Repository/SQL changes must not be represented as substitutes for provider configuration, credential rotation, owner MFA enrollment, signed payment traffic, or provider restore evidence.
 
-The canonical Vercel project remains `sydomega-live`. GitHub reports a failing Vercel status on current main commit `ed8113e670c76993318be694e88292eafb8a3cc7`, linking to Vercel's account/deployment-blocked guidance. The latest production deployment returned by the connected Vercel integration is commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` (2026-10-06). Production parity for the October 23 main commit is therefore **not verified** until a READY deployment for that commit and independent HTTP evidence are available.
+The canonical Vercel project remains `sydomega-live`. GitHub reports a failing Vercel status on current main commit `fdb3f3395dd79d5a57646831fa8a2f747a647a86`, linking to Vercel's account/deployment-blocked guidance. The latest production deployment returned by the connected Vercel integration is commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` (2026-10-06). Production parity for the current main commit is therefore **not verified** until a READY deployment for that commit and independent HTTP evidence are available.
 
 The independent read-only production probe is documented in [PRODUCTION_HTTP_EVIDENCE.md](PRODUCTION_HTTP_EVIDENCE.md). Its checks cover the public HTTP surface and release-manifest parity; they do not prove authenticated routes, Supabase authorization, payment flows, or every browser-side dependency.
 

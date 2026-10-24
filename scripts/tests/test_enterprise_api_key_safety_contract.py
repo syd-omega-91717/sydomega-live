@@ -39,7 +39,9 @@ class EnterpriseApiKeySafetyContract(unittest.TestCase):
     def test_tier_ctas_open_a_prefilled_consultancy_request(self):
         consultancy = (ROOT / "consultancy.html").read_text(encoding="utf-8")
         for tier in ("starter", "professional", "enterprise", "government"):
-            self.assertIn("requestTier('" + tier + "')", PAGE)
+            self.assertIn('data-tier-request="' + tier + '"', PAGE)
+        self.assertIn("function requestTier(tier)", PAGE)
+        self.assertIn("button.addEventListener('click'", PAGE)
         self.assertIn("'/consultancy.html?tab=book&domain=enterprise&brief='+encodeURIComponent(brief)", PAGE)
         self.assertIn("key:'enterprise'", consultancy)
         self.assertIn("new URLSearchParams(window.location.search)", consultancy)

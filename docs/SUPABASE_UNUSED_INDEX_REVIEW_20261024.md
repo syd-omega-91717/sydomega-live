@@ -8,8 +8,9 @@
 
 - Supabase project: `ydqhzvvoyufiiqvzcjns`.
 - Observation date: 2026-10-24.
-- The live `pg_stat_user_indexes` view contained 989 user-table indexes; 807 had `idx_scan = 0` in the statistics currently retained by PostgreSQL.
+- The live `pg_stat_user_indexes` view contained 989 user-table indexes; 807 had `idx_scan = 0` in the statistics currently retained by PostgreSQL, including 660 zero-scan indexes in `public`.
 - The live database contained 97 user tables with estimated live rows.
+- The `pg_stat_statements` extension is installed at version 1.11, enabling a deeper query-workload review. No query-text dump or destructive index operation was performed in this pass.
 - A focused candidate query looked only for zero-scan indexes in the `public` schema that were non-primary, non-unique, not backing a declared constraint, on a table with estimated live rows, and at least 64 KiB. **That query returned zero candidates.**
 - The Performance Advisor's 327 findings are a separate provider-generated set; they must not be equated with the 807 zero-scan count, which spans the broader user-index view and its current statistics window.
 - The PostgreSQL server start timestamp observed during this pass was 2026-09-08. A trustworthy `pg_stat_reset` timestamp was not established, so `idx_scan = 0` must be interpreted as zero in the currently retained statistics—not as proof the index has never been used.

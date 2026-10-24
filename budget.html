@@ -254,7 +254,10 @@ function monthLabel(m) {
 function load() {
   try { _months  = JSON.parse(localStorage.getItem(MONTHS_KEY))  || {}; } catch { _months = {}; }
   try { _targets = JSON.parse(localStorage.getItem(TARGETS_KEY)) || {}; } catch { _targets = {}; }
+  const before = JSON.stringify(_targets);
   CATS.forEach(c => { if (!Object.prototype.hasOwnProperty.call(_targets, c.id) || _targets[c.id] == null || !Number.isFinite(Number(_targets[c.id]))) _targets[c.id] = DEFAULT_TARGETS[c.id]||0; else _targets[c.id] = Number(_targets[c.id]); });
+  /* Saved, so the stored targets are the one truth expenses.html reads too. */
+  if (JSON.stringify(_targets) !== before) saveTargets();
 }
 function saveMonths()  { localStorage.setItem(MONTHS_KEY,  JSON.stringify(_months)); }
 function saveTargets() { localStorage.setItem(TARGETS_KEY, JSON.stringify(_targets)); }
@@ -355,7 +358,7 @@ function renderExpenseList() {
       const cat = CATS.find(c=>c.id===e.cat)||CATS[CATS.length-1];
       return `<div class="tx-row">
         <span class="tx-date">${e.date}</span>
-        <span class="tx-desc">${esc(e.desc)}</span>
+        <span class="tx-desc">${esc(e.desc)}${e.sub ? ' <small style="color:var(--dim)">· '+esc(String(e.sub).toUpperCase())+'</small>' : ''}</span>
         <span class="tx-cat" style="color:${cat.color};border-color:${cat.color}30">${cat.label}</span>
         <span class="tx-amt" style="color:var(--dim)">$${fmtD(e.amount)} <button class="tx-del" onclick="delExpense('${e.id}')">×</button></span>
       </div>`;

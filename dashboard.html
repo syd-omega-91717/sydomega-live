@@ -690,8 +690,11 @@ function renderPersonalOS(){
   if(pabS)pabS.textContent=(rate!=null?'SAVING '+rate+'% · ':'')+'MONTHLY OVERVIEW';
 
   /* NETWORK */
-  var contacts=[];try{contacts=JSON.parse(localStorage.getItem('omega_contacts')||'[]');}catch(e){}
-  var dueNet=contacts.filter(function(c){return daysSince(c.lastContact)>=(c.frequency||c.freq||30);}).length;
+  /* One contact book (contacts.html; network.html reads the same keys). */
+  var contacts=[],cints=[];try{contacts=JSON.parse(localStorage.getItem('omega_contacts')||'[]');cints=JSON.parse(localStorage.getItem('omega_contact_ints')||'[]');}catch(e){}
+  var dueNet=contacts.filter(function(c){var f=Number(c.freq||c.frequency)||0;if(!f)return false;
+    var last=[c.lastContact||''].concat(cints.filter(function(i){return String(i.contactId)===String(c.id);}).map(function(i){return i.date;})).sort().pop();
+    return !last||daysSince(last)>=f;}).length;
   var pkn=document.getElementById('pk-network');if(pkn)pkn.textContent=dueNet||'0';
 
   /* DECISIONS */

@@ -24844,3 +24844,49 @@ were restored by their rule context. All 76 `dashboard.html` font sizes were sna
 
 **Transferable rule.** After a merge that resolves a conflict by taking one side, re-measure the
 features the other side carried. A green merge says nothing about whether they survived.
+## Budget/Expenses and Contacts/Network merged; dashboard savings rate never computed (2026-10-24)
+
+The owner chose the merges that `FEATURE_IDEAS.md` §41 and the 2026-10-15 entry above left to them (§8.1 class 8).
+
+**Interim fixes already on `main`, and how this change reconciles them.**
+- **`92ec0f13` (2026-10-15, "reconcile finance and contact stores")** already pointed `network.html` at `omega_contacts`, but wrote Network's own shapes into the shared keys:
+  - circle ids in `category`, and in contacts.html's `cat`;
+  - every migrated person at tier `network`;
+  - interactions as `{type, ts}`, which `contacts.html` does not read.
+
+  This change keeps that commit's migration intent and replaces its storage with the mapped view below. `normaliseShared()` repairs any record it already wrote: circle → tier, a circle id in `cat` → `other`, `type`/`ts` → `channel`/`id`.
+- **`main` also fixed two things independently:**
+  - **The dashboard's savings sum:** its version, which also tolerates the legacy object shape, is kept.
+  - **Budget's NaN-safe default fill:** kept, with a save added so `expenses.html` reads the same targets.
+
+- **Expenses → Budget.**
+  - `expenses.html` kept its own ledger (`omega_expenses`, 15 categories) and limits (`omega_budgets`), beside `budget.html`'s `omega_budget_months`/`omega_budget_targets` with 8 groups. The same month showed two spending totals.
+  - Expenses is now a view over Budget's store. Each row keeps its fine category as `sub` (fitness → HEALTH, sub `fitness`), so no detail is lost, and `budget.html` shows it after the description.
+  - Limits are Budget's 8 targets. Old limits seed them only when Budget has none: fitness 80 + health 20 = HEALTH 100.
+  - The old keys migrate once and are removed. Backup export and import now name Budget's keys.
+  - Row text that went into `innerHTML` unescaped is now escaped.
+  - `budget.html` refilled any 0 target with its default on every load, so "no limit" snapped back to $1,500 and similar. It now fills only absent targets and saves them.
+- **Network → Contacts.**
+  - `network.html` kept a second CRM (`omega_network_contacts`/`_interactions`) with circles that do not match Contacts' (its TRIBE = 15, contacts' = 50). It is now a view over `omega_contacts`/`omega_contact_ints`.
+  - Circles map INNER_CIRCLE→inner, TRIBE→close, ALLIES→tribe, NETWORK→network, PROSPECTS→outer.
+  - Network-only fields (strength, lastContact) live on the shared record, and contacts-only fields are preserved.
+  - Migration treats the same name (case-insensitive) as the same person. Interactions are re-keyed to the shared numeric ids.
+  - `contacts.html`'s due check now honours a last-contact date set on Network.
+- **`dashboard.html`.**
+  - The savings-rate tile summed every field of each Budget row (ids, dates) instead of `amount`, so it could never be a number. Its network "due" tile read the old Network key.
+  - Both now read the shared stores. Verified with the Personal tab rendered: 3000 income and 200 spent show **93%**, and 1 contact is due.
+
+**Verified in a render.**
+- **Expenses → Budget:**
+  - legacy keys removed; the fitness row lands as HEALTH with `sub` `fitness`;
+  - income moved; targets seeded HEALTH 100 / FOOD 300;
+  - an injected `<b>` renders as text;
+  - add and delete on Expenses write Budget's store;
+  - `budget.html` fills only the missing targets.
+- **Network → Contacts:**
+  - legacy keys removed; "ada" and "Ada" merged, with CTO/email kept and strength 5 / lastContact 10-20 gained;
+  - Bob added as `outer`, his interaction re-keyed;
+  - `contacts.html` lists both.
+- **Errors:** 0 page errors on any page.
+
+Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contacts, dashboard).

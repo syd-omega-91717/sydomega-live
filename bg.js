@@ -1428,6 +1428,19 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
      moves until a banner is actually up. */
   var css='@media(max-width:760px){'
     +'#cp-btn{right:24px!important;bottom:calc(298px + var(--omega-transient-bottom,0px))!important}'
+    /* Phone chrome budget (2026-10-19). Measured at 390x700 on dashboard/life: four
+       floats over the content -- the bottom nav, #om-open, #cp-btn at y 350 (the
+       298px rung, mid-screen) and #omega-command-hud. Two are duplicates on a phone:
+       #om-open lists every page, as the nav's own MORE drawer does, and the HUD is a
+       second Ω float beside the copilot's Ω. Both step aside below 761px. The 298px
+       rung exists to clear the four lower floats; on a page carrying none of them
+       the copilot sits just above the bottom nav instead. Both selectors carry an
+       id plus more, so they outrank the plain #cp-btn rule above. */
+    +'html #om-open,html #omega-command-hud{display:none!important}'
+    /* Calm mode (bg.js data-omega-calm) hides all four lower floats, which is the
+       measured default here; a page without them at all gets the same seat. */
+    +'html[data-omega-calm] #cp-btn,'
+    +'html:not(:has(#omega-ded-widget,#osh-btn,#ofb-btn,#omega-voice-btn)) #cp-btn{bottom:calc(var(--omega-chrome-bottom,72px) + 16px)!important}'
     +'html #omega-ded-widget{bottom:calc(150px + var(--omega-transient-bottom,0px))!important}'
     +'html #ofb-btn{bottom:calc(150px + var(--omega-transient-bottom,0px))!important}'
     +'html #omega-voice-btn{bottom:calc(150px + var(--omega-transient-bottom,0px))!important}'

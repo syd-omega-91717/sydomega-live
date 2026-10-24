@@ -10,7 +10,7 @@
 .okr-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 @media(max-width:640px){.okr-hero{grid-template-columns:1fr 1fr}}
 .okr-stat{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
-.okr-stat .sv{font-family:var(--M);font-size:24px;letter-spacing:2px;color:var(--gold,var(--gold))}
+.okr-stat .sv{font-family:var(--M);font-size:var(--fs-5,28px);letter-spacing:2px;color:var(--gold,var(--gold))}
 .okr-stat .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .objective-card{border:1px solid rgba(201,168,76,.12);border-radius:2px;margin-bottom:16px;overflow:hidden}
 .obj-header{padding:16px 18px;border-bottom:1px solid rgba(201,168,76,.08);display:flex;align-items:flex-start;gap:12px}
@@ -281,6 +281,7 @@
 <script type="module">
 const OKR_KEY    = 'omega_okr_data';
 const REV_KEY    = 'omega_okr_reviews';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 const CAT_COLORS = {
   sovereignty:'rgba(201,168,76,.7)',wealth:'rgba(80,200,120,.7)',mastery:'rgba(100,160,220,.7)',
   health:'rgba(220,120,80,.7)',relationships:'rgba(180,100,220,.7)',impact:'rgba(240,200,60,.7)'
@@ -542,9 +543,9 @@ function renderReviewHistory(){
     reviews.map(r=>{
       const dt=new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
       return `<div style="border:1px solid rgba(201,168,76,.08);border-radius:2px;padding:14px;margin-bottom:8px">
-        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">WEEK ${r.week} · ${dt}</div>
-        ${r.wins?`<div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(201,168,76,.6);margin-bottom:4px"><strong>WINS:</strong> ${r.wins}</div>`:''}
-        ${r.insight?`<div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted)"><strong>INSIGHT:</strong> ${r.insight}</div>`:''}
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">WEEK ${esc(r.week)} · ${esc(dt)}</div>
+        ${r.wins?`<div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:rgba(201,168,76,.6);margin-bottom:4px"><strong>WINS:</strong> ${esc(r.wins)}</div>`:''}
+        ${r.insight?`<div style="font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted)"><strong>INSIGHT:</strong> ${esc(r.insight)}</div>`:''}
       </div>`;
     }).join('');
 }

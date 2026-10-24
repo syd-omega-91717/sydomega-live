@@ -165,6 +165,31 @@ class MigrationSecurityAuditTests(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("unsafe privilege grant", out)
 
+    def test_a_sql_keyword_called_through_pg_catalog_fails(self):
+        # TRIM/COALESCE are syntax: pg_catalog.trim(x) raises 42883 only when
+        # the plpgsql line runs, so CREATE succeeds and the function never works.
+        for call in ("pg_catalog.trim(p_x)", "pg_catalog.coalesce(p_x, '')", "PG_CATALOG . NULLIF (p_x, '')"):
+            fx = Fixture()
+            try:
+                fx.add("20990101000000_k.sql", f"create function f(p_x text) returns text language plpgsql as $$ begin return {call}; end $$;")
+                code, out = fx.run()
+                self.assertEqual(code, 1, call + out)
+                self.assertIn("SQL keyword called as a pg_catalog function", out)
+            finally:
+                fx.cleanup()
+
+    def test_btrim_bare_keywords_comments_and_literals_pass(self):
+        self.fx.add("20990101000000_ok.sql", """
+-- was pg_catalog.trim(p_x); comments are not code
+create function f(p_x text) returns text language plpgsql as $$
+begin
+  perform pg_catalog.replace(p_x, 'pg_catalog.trim(', 'pg_catalog.btrim(');
+  return coalesce(nullif(trim(p_x), ''), pg_catalog.btrim(p_x));
+end $$;
+""")
+        code, out = self.fx.run()
+        self.assertEqual(code, 0, out)
+
     def test_the_real_repo_baseline_matches_the_real_tree(self):
         """The committed baseline must describe this repo exactly -- a stale one
         would either block every PR or hide a real finding."""

@@ -43,14 +43,15 @@ function addNavigationEntries(){
     src=src.replace(marker,marker+",characters:'archive',movies:'media'");
   }
   const archiveAnchor="['character','CHARACTER','/profile.html#character']";
-  if(!src.includes("['characters','CHARACTERS','/characters.html']")){
+  // Prefix match: an entry may carry nav.js's 4th 'folded' field.
+  if(!src.includes("['characters','CHARACTERS','/characters.html'")){
     const at=src.indexOf(archiveAnchor);
     if(at<0) throw new Error('nav.js has no canonical identity navigation anchor; refusing unsafe edit');
     const end=at+archiveAnchor.length;
     src=src.slice(0,end)+",['characters','CHARACTERS','/characters.html']"+src.slice(end);
   }
   const mediaAnchor="['cinema','CINEMA & SAGA','/media.html']";
-  if(!src.includes("['movies','MOVIES','/movies.html']")){
+  if(!src.includes("['movies','MOVIES','/movies.html'")){
     const at=src.indexOf(mediaAnchor);
     if(at<0) throw new Error('nav.js has no canonical universe navigation anchor; refusing unsafe edit');
     const end=at+mediaAnchor.length;

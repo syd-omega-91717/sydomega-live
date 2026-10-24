@@ -62,5 +62,50 @@ class UpsertConflictKeys(unittest.TestCase):
         self.assertIn('42P10', self.run_gate())
 
 
+FN_SQL = ('create table if not exists public.flags (id uuid primary key, member_id uuid, '
+          'feature_id text, enabled boolean, constraint flags_mf_uk unique (member_id, feature_id));')
+FN_BAD = ('const { error } = await supabase.from("flags").upsert({\n'
+          '  member_id: memberId,\n  feature_id: featureId,\n  enabled: true,\n});\n')
+FN_GOOD = ('const { error } = await supabase.from("flags").upsert({\n'
+           '  member_id: memberId,\n  feature_id: featureId,\n  enabled: true,\n'
+           '}, { onConflict: "member_id,feature_id" });\n')
+
+
+class UpsertConflictEdgeFunctions(unittest.TestCase):
+    """Edge Functions were out of scope, and the gate exited 0 on findings
+    although ci.yml runs it as blocking. product-orchestrator's flag upsert
+    (no onConflict, UNIQUE(member_id, feature_id)) passed both ways (2026-10-17)."""
+
+    def setUp(self):
+        self.dir = tempfile.mkdtemp(prefix='omega-upsert-fn-')
+        os.makedirs(os.path.join(self.dir, 'scripts'))
+        os.makedirs(os.path.join(self.dir, 'supabase', 'migrations'))
+        os.makedirs(os.path.join(self.dir, 'supabase', 'functions', 'agent'))
+        for f in ('upsert-conflict-check.py', 'schema-dictionary.py'):
+            shutil.copy(os.path.join(ROOT, 'scripts', f), os.path.join(self.dir, 'scripts', f))
+        with open(os.path.join(self.dir, 'supabase', 'base.sql'), 'w') as fh:
+            fh.write(FN_SQL)
+
+    def tearDown(self):
+        shutil.rmtree(self.dir, ignore_errors=True)
+
+    def run_fn(self, src):
+        with open(os.path.join(self.dir, 'supabase', 'functions', 'agent', 'index.ts'), 'w') as fh:
+            fh.write(src)
+        return subprocess.run([sys.executable, os.path.join(self.dir, 'scripts', 'upsert-conflict-check.py')],
+                              capture_output=True, text=True, stdin=subprocess.DEVNULL)
+
+    def test_edge_function_upsert_without_on_conflict_fails_the_gate(self):
+        r = self.run_fn(FN_BAD)
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn('supabase/functions/agent/index.ts', r.stdout)
+        self.assertIn('23505', r.stdout)
+
+    def test_edge_function_upsert_naming_the_unique_key_passes(self):
+        r = self.run_fn(FN_GOOD)
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertNotIn('23505', r.stdout)
+
+
 if __name__ == '__main__':
     unittest.main()

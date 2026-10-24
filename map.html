@@ -7,18 +7,18 @@
 .map-wrap{flex:1;position:relative;min-height:400px;overflow:hidden}
 #map-container{width:100%;height:100%;min-height:400px;background:var(--void)}
 .map-controls{position:absolute;top:.75rem;right:.75rem;z-index:1000;display:flex;flex-direction:column;gap:.4rem}
-.map-btn{background:var(--surface);border:1px solid var(--line);color:var(--gold);font-family:var(--D);font-size:.72rem;letter-spacing:.06em;padding:.35rem .65rem;border-radius:4px;cursor:pointer;transition:border-color .2s}
+.map-btn{background:var(--surface);border:1px solid var(--line);color:var(--gold);font-family:var(--D);font-size:var(--fs-1,12px);letter-spacing:.06em;padding:.35rem .65rem;border-radius:4px;cursor:pointer;transition:border-color .2s}
 .map-btn:hover,.map-btn.active{border-color:var(--gold)}
-.map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-family:var(--M);font-size:.85rem;background:var(--void);z-index:999}
+.map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-family:var(--M);font-size:var(--fs-2,14px);background:var(--void);z-index:999}
 .legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;padding:1rem}
 .legend-item{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem}
 .legend-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
 .legend-text{flex:1;min-width:0}
-.legend-label{color:var(--gold);font-size:.8rem;font-family:var(--D);letter-spacing:.06em}
-.legend-desc{color:var(--muted);font-size:.74rem;margin-top:.2rem}
+.legend-label{color:var(--gold);font-size:var(--fs-2,14px);font-family:var(--D);letter-spacing:.06em}
+.legend-desc{color:var(--muted);font-size:var(--fs-1,12px);margin-top:.2rem}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem;padding:1rem}
 .stat-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1.1rem;text-align:center}
-.stat-val{color:var(--gold);font-family:var(--D);font-size:1.6rem;letter-spacing:.04em}
+.stat-val{color:var(--gold);font-family:var(--D);font-size:var(--fs-5,28px);letter-spacing:.04em}
 .stat-label{color:var(--muted);font-size:.75rem;margin-top:.3rem;letter-spacing:.06em}
 </style>
 </head>

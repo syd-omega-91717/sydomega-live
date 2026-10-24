@@ -45,7 +45,14 @@ class OneScheduler(unittest.TestCase):
     def test_pages_delegate_to_omega_srs(self):
         self.assertIn("OmegaSRS.review(card, q, 'card')", FC)
         self.assertIn("OmegaSRS.review(word,q,'word')", VO)
-        self.assertIn("window.OmegaSRS.review(list[i], q, entry.kind)", RQ)
+        self.assertIn("window.OmegaSRS.review(list[i], q, SRS_KIND[entry.kind])", RQ)
+
+    def test_exam_deck_is_scheduled_with_its_page_shape(self):
+        # exam.html grades omega_exam with the 'word' field names; the queue
+        # must write that deck back with the same shape, never as a card.
+        self.assertIn("EXAM = 'omega_exam'", RQ)
+        self.assertIn("exam: 'word'", RQ)
+        self.assertIn("OmegaSRS.review(o,g,'word')", read("exam.html"))
 
     def test_no_second_copy_of_the_ease_formula(self):
         formula = re.compile(r"0\.1\s*-\s*\(5\s*-")

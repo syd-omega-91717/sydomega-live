@@ -4,11 +4,15 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>&#937; SYD OMEGA 91717 &mdash; Academy</title>
 <script src="/bg.js" defer></script>
+<script src="/omega-srs.js" defer></script>
+<script src="/omega-review.js" defer></script>
+<script src="/omega-exam-engine.js" defer></script>
+<script src="/omega-academy-core.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
 .shell{display:flex;min-height:100vh}.side{width:80px;flex-shrink:0;background:var(--void2);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}.main{flex:1;min-width:0}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.t{font-family:var(--D);font-size:.85rem;color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.t{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);flex:1}.t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
 .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(10,10,15,.4);overflow-x:auto}
 .tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:.6rem 1.1rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s;flex-shrink:0}
 .tab-btn.on{border-bottom-color:var(--gold);color:var(--gold)}
@@ -25,7 +29,7 @@
 .ec-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 8px;border:1px solid;border-radius:2px}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;border-top:2px solid var(--kc)}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--kc)}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+.kpi-n{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--kc)}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);border-top:1px solid var(--line);flex-wrap:wrap}
 .lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 @media(max-width:700px){.exam-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}}
@@ -36,6 +40,7 @@
 <aside class="side" id="omega-side" data-page="academy"></aside>
 <main class="main">
 <div class="topbar"><div class="t">SOVEREIGN ACADEMY &middot; EXAMS<small>M12 &middot; WORLDWIDE CERTIFICATIONS &middot; 9 LEVELS &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></small></div><canvas id="acad-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas></div>
+<section data-omega-academy-core aria-label="Academy core"></section>
 <div class="tab-bar">
   <button class="tab-btn on" data-tab="overview">&#9670; OVERVIEW</button>
   <button class="tab-btn" data-tab="exams">&#9670; EXAMS</button>
@@ -61,7 +66,7 @@
   <div class="ec-desc">IMO-standard problems — all branches: algebra, geometry, combinatorics, number theory</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Physics Grand Exam" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -69,7 +74,7 @@
   <div class="ec-desc">AP/IB/A-Level physics + university-level mechanics, electrodynamics, quantum</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Chemistry Mastery" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -77,7 +82,7 @@
   <div class="ec-desc">From periodic table to organic synthesis — international standard</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Biology & Life Sciences" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -85,7 +90,7 @@
   <div class="ec-desc">Cell biology through ecology — MCAT and IB HL standard</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Statistics & Probability" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
@@ -93,7 +98,7 @@
   <div class="ec-desc">Descriptive, inferential, Bayesian — data science foundation</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Computer Science Theory" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -101,7 +106,7 @@
   <div class="ec-desc">Algorithms, complexity, automata, computability — CS foundations</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Environmental Science" data-task-type="knowledge">
   <div class="ec-level">LEVEL 5 &middot; AXIS A</div>
@@ -109,7 +114,7 @@
   <div class="ec-desc">Climate, ecosystems, energy — IPCC and scientific consensus</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Astronomy & Astrophysics" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -117,7 +122,7 @@
   <div class="ec-desc">Solar system to cosmology — Hubble constant, dark matter, black holes</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Neuroscience Basics" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
@@ -125,7 +130,7 @@
   <div class="ec-desc">Brain structure, neural networks, cognitive science</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Engineering Fundamentals" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -133,7 +138,7 @@
   <div class="ec-desc">Statics, dynamics, thermodynamics, materials science</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Data Science & ML" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -141,7 +146,7 @@
   <div class="ec-desc">Python, statistics, machine learning algorithms, model evaluation</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#00E5FF" data-task="Research Methods" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
@@ -149,7 +154,7 @@
   <div class="ec-desc">Hypothesis, experiment design, peer review, publication standards</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#00E5FF;color:#00E5FF">STEM & SCIENCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div></div>
 </div>
@@ -161,7 +166,7 @@
   <div class="ec-desc">Chartered Financial Analyst — global gold standard in investment</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="PMP Certification" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
@@ -169,7 +174,7 @@
   <div class="ec-desc">Project Management Professional — PMI standard worldwide</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="CISSP" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
@@ -177,7 +182,7 @@
   <div class="ec-desc">Certified Information Systems Security Professional</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="MBA Core Curriculum" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
@@ -185,7 +190,7 @@
   <div class="ec-desc">Strategy, finance, operations, marketing, leadership</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Lean Six Sigma" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
@@ -193,7 +198,7 @@
   <div class="ec-desc">Process improvement — Yellow through Black Belt</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Chartered Accountant" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
@@ -201,7 +206,7 @@
   <div class="ec-desc">ACCA/CPA equivalence — international accounting standards</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Architectural License" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
@@ -209,7 +214,7 @@
   <div class="ec-desc">ARE exam — architectural registration worldwide</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Engineering PE Exam" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
@@ -217,7 +222,7 @@
   <div class="ec-desc">Professional Engineer — all disciplines</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Legal Bar Equivalence" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
@@ -225,7 +230,7 @@
   <div class="ec-desc">Core legal principles — contract, tort, constitutional, international</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Medical Licensing" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS B</div>
@@ -233,7 +238,7 @@
   <div class="ec-desc">USMLE/PLAB equivalent — clinical knowledge and reasoning</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Supply Chain Management" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
@@ -241,7 +246,7 @@
   <div class="ec-desc">CSCMP/APICS — logistics, procurement, global supply chains</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Human Resources" data-task-type="knowledge">
   <div class="ec-level">LEVEL 5 &middot; AXIS B</div>
@@ -249,7 +254,7 @@
   <div class="ec-desc">SHRM/CIPD — talent management, labor law, organizational behavior</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">PROFESSIONAL</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div></div>
 </div>
@@ -261,7 +266,7 @@
   <div class="ec-desc">Classical Arabic, Modern Standard, dialectal — full linguistic mastery</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="English Proficiency" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -269,7 +274,7 @@
   <div class="ec-desc">IELTS/TOEFL/C2 — reading, writing, listening, speaking</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="French DALF C2" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -277,7 +282,7 @@
   <div class="ec-desc">Diplôme Approfondi de Langue Française — highest level</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Spanish DELE C2" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -285,7 +290,7 @@
   <div class="ec-desc">Diploma de Español como Lengua Extranjera — master level</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Mandarin HSK 7–9" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -293,7 +298,7 @@
   <div class="ec-desc">Chinese Proficiency Test — advanced level</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Latin & Ancient Greek" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -301,7 +306,7 @@
   <div class="ec-desc">Classical languages — philosophical and historical texts</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Linguistics & Phonology" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -309,7 +314,7 @@
   <div class="ec-desc">Language structure, historical linguistics, morphology</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Philosophy of Language" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -317,7 +322,7 @@
   <div class="ec-desc">Wittgenstein, Frege, Chomsky — meaning and reference</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Art History" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
@@ -325,7 +330,7 @@
   <div class="ec-desc">All movements — Paleolithic to contemporary digital art</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Music Theory Grade 8" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -333,7 +338,7 @@
   <div class="ec-desc">ABRSM — notation, harmony, counterpoint, analysis</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Creative Writing" data-task-type="knowledge">
   <div class="ec-level">LEVEL 5 &middot; AXIS A</div>
@@ -341,7 +346,7 @@
   <div class="ec-desc">Narrative structure, style, genre — workshop standard</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Rhetoric & Argumentation" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -349,7 +354,7 @@
   <div class="ec-desc">Classical and modern persuasion — Aristotle to debate theory</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">LANGUAGE & ARTS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div></div>
 </div>
@@ -361,7 +366,7 @@
   <div class="ec-desc">Entry level — matrix navigation and authority formula</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Sovereign Architect Badge" data-task-type="knowledge">
   <div class="ec-level">LEVEL 3 &middot; AXIS A+B+C</div>
@@ -369,7 +374,7 @@
   <div class="ec-desc">System design — understanding the 12-fold architecture</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Matrix Master Certificate" data-task-type="knowledge">
   <div class="ec-level">LEVEL 5 &middot; AXIS A+B+C</div>
@@ -377,7 +382,7 @@
   <div class="ec-desc">Full 9-stage progression theory and practice</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Authority Apex Achievement" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A+B+C</div>
@@ -385,7 +390,7 @@
   <div class="ec-desc">Demonstrate AUTH=27.8367 understanding across all axes</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Heritage Guardian Certificate" data-task-type="knowledge">
   <div class="ec-level">LEVEL 4 &middot; AXIS A</div>
@@ -393,7 +398,7 @@
   <div class="ec-desc">Knowledge of all civilizations in the Heritage Archive</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Elemental Mastery Badge" data-task-type="knowledge">
   <div class="ec-level">LEVEL 4 &middot; AXIS A</div>
@@ -401,7 +406,7 @@
   <div class="ec-desc">All 9 elements — properties, interactions, sovereign mapping</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Covenant Scholar" data-task-type="knowledge">
   <div class="ec-level">LEVEL 5 &middot; AXIS A+C</div>
@@ -409,7 +414,7 @@
   <div class="ec-desc">Memorize and apply all 11 Sovereign Articles</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Digital Sovereign Identity" data-task-type="knowledge">
   <div class="ec-level">LEVEL 3 &middot; AXIS B</div>
@@ -417,7 +422,7 @@
   <div class="ec-desc">KYC, credentials, identity verification mastery</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Token Economics Certificate" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS C</div>
@@ -425,7 +430,7 @@
   <div class="ec-desc">12-token system theory — utility, distribution, governance</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Olympian Path Complete" data-task-type="knowledge">
   <div class="ec-level">LEVEL 4 &middot; AXIS A</div>
@@ -433,7 +438,7 @@
   <div class="ec-desc">All 12 Olympians — mythology, attributes, sovereign mapping</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Lattice Engineer" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A+B</div>
@@ -441,7 +446,7 @@
   <div class="ec-desc">All matrix systems — 28×28 to 9×9×9 — architecture mastery</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#C9A84C" data-task="Sovereign Apex Laureate" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A+B+C</div>
@@ -449,7 +454,7 @@
   <div class="ec-desc">Complete all 12 sovereign certifications — terminal honor</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#C9A84C;color:#C9A84C">SOVEREIGN CERTIFICATIONS</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div></div>
 </div>
@@ -461,7 +466,7 @@
   <div class="ec-desc">All 8 security domains — cybersecurity gold standard</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Ethical Hacking CEH" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
@@ -469,7 +474,7 @@
   <div class="ec-desc">Certified Ethical Hacker — penetration testing methodology</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="GDPR Practitioner" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
@@ -477,7 +482,7 @@
   <div class="ec-desc">EU data protection regulation — DPO qualification</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="International Law" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -485,7 +490,7 @@
   <div class="ec-desc">UN conventions, treaties, jurisdiction, human rights law</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Contract Law Mastery" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -493,7 +498,7 @@
   <div class="ec-desc">Offer, acceptance, consideration — common and civil law</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Intellectual Property" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
@@ -501,7 +506,7 @@
   <div class="ec-desc">Patents, trademarks, copyright, trade secrets — international</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Cybersecurity Framework" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
@@ -509,7 +514,7 @@
   <div class="ec-desc">NIST, ISO 27001, SOC 2 — enterprise security standards</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Financial Crime & AML" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
@@ -517,7 +522,7 @@
   <div class="ec-desc">Anti-money laundering, KYC — FATF standards</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Privacy Law" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -525,7 +530,7 @@
   <div class="ec-desc">CCPA, GDPR, PIPL — global data privacy frameworks</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Constitutional Law" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -533,7 +538,7 @@
   <div class="ec-desc">Fundamental rights, separation of powers — comparative law</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Criminal Law" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -541,7 +546,7 @@
   <div class="ec-desc">Actus reus, mens rea, defenses — common and civil law systems</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#8B0000" data-task="Compliance & Governance" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
@@ -549,7 +554,7 @@
   <div class="ec-desc">SOX, PCAOB, regulatory frameworks — organizational compliance</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#8B0000;color:#8B0000">SECURITY & LAW</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div></div>
 </div>
@@ -561,7 +566,7 @@
   <div class="ec-desc">OOP, async, metaclasses, CPython internals — expert level</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="Algorithm Design" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
@@ -569,7 +574,7 @@
   <div class="ec-desc">Dijkstra, dynamic programming, graph theory — FAANG standard</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="Machine Learning Exam" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -577,7 +582,7 @@
   <div class="ec-desc">Supervised, unsupervised, RL — theory and implementation</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="Deep Learning Certification" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
@@ -585,7 +590,7 @@
   <div class="ec-desc">Neural networks, transformers, diffusion — state of the art</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="Database Architecture" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -593,7 +598,7 @@
   <div class="ec-desc">PostgreSQL, indexing, query optimization, sharding</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="System Design" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
@@ -601,7 +606,7 @@
   <div class="ec-desc">Distributed systems, CAP theorem, microservices, CDN</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="Cloud Architecture" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -609,7 +614,7 @@
   <div class="ec-desc">AWS/GCP/Azure — solutions architect professional level</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="Blockchain & Web3" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -617,7 +622,7 @@
   <div class="ec-desc">Consensus mechanisms, smart contracts, tokenomics</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="DevOps & SRE" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -625,7 +630,7 @@
   <div class="ec-desc">CI/CD, Kubernetes, monitoring, SLO/SLA/SLI</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="AI Ethics & Governance" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -633,7 +638,7 @@
   <div class="ec-desc">Bias, fairness, explainability, regulation — policy level</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="Quantum Computing" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
@@ -641,7 +646,7 @@
   <div class="ec-desc">Qubits, gates, algorithms — theoretical foundation</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#9B6BF0" data-task="Cryptography Advanced" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
@@ -649,7 +654,7 @@
   <div class="ec-desc">RSA, ECC, ZKP, homomorphic encryption — mathematical depth</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#9B6BF0;color:#9B6BF0">TECHNOLOGY & AI</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div></div>
 </div>
@@ -661,7 +666,7 @@
   <div class="ec-desc">All body systems — medical school first year standard</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Pharmacology" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -669,7 +674,7 @@
   <div class="ec-desc">Drug mechanisms, interactions, dosing — clinical standard</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Clinical Reasoning" data-task-type="knowledge">
   <div class="ec-level">LEVEL 9 &middot; AXIS A</div>
@@ -677,7 +682,7 @@
   <div class="ec-desc">Case-based diagnosis — USMLE Step 2 equivalent</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Public Health & Epidemiology" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -685,7 +690,7 @@
   <div class="ec-desc">Disease surveillance, outbreak response, health policy</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Mental Health Foundations" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -693,7 +698,7 @@
   <div class="ec-desc">DSM-5, psychopathology, therapeutic approaches</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Nutrition Science" data-task-type="knowledge">
   <div class="ec-level">LEVEL 5 &middot; AXIS A</div>
@@ -701,7 +706,7 @@
   <div class="ec-desc">Macronutrients, micronutrients, metabolism, therapeutic diets</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Emergency Medicine" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS B</div>
@@ -709,7 +714,7 @@
   <div class="ec-desc">ATLS/ACLS principles — triage and emergency management</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Medical Research Methods" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -717,7 +722,7 @@
   <div class="ec-desc">RCT design, meta-analysis, evidence-based medicine</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Biomedical Ethics" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -725,7 +730,7 @@
   <div class="ec-desc">Autonomy, beneficence, justice — clinical and research ethics</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Health Informatics" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
@@ -733,7 +738,7 @@
   <div class="ec-desc">EHR, medical data standards, HL7/FHIR</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Genetics & Genomics" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS A</div>
@@ -741,7 +746,7 @@
   <div class="ec-desc">Mendelian genetics through CRISPR — clinical genomics</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#3fb27f" data-task="Global Health" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS A</div>
@@ -749,7 +754,7 @@
   <div class="ec-desc">WHO frameworks, tropical diseases, health systems worldwide</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#3fb27f;color:#3fb27f">HEALTHCARE & MEDICINE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div></div>
 </div>
@@ -761,7 +766,7 @@
   <div class="ec-desc">DCF, LBO, M&A — investment banking analyst standard</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Macroeconomics" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -769,7 +774,7 @@
   <div class="ec-desc">GDP, monetary policy, trade — IMF/World Bank frameworks</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Microeconomics" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS A</div>
@@ -777,7 +782,7 @@
   <div class="ec-desc">Supply, demand, game theory, market structures</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Corporate Strategy" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS C</div>
@@ -785,7 +790,7 @@
   <div class="ec-desc">Porter, Blue Ocean, disruption theory — competitive strategy</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Venture Capital & Startups" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS C</div>
@@ -793,7 +798,7 @@
   <div class="ec-desc">Term sheets, cap tables, VC math, startup evaluation</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Real Estate Finance" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS C</div>
@@ -801,7 +806,7 @@
   <div class="ec-desc">Cap rates, DCF, development proforma — all asset classes</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="International Trade" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS C</div>
@@ -809,7 +814,7 @@
   <div class="ec-desc">WTO rules, trade finance, letters of credit, tariffs</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Accounting & IFRS" data-task-type="knowledge">
   <div class="ec-level">LEVEL 7 &middot; AXIS B</div>
@@ -817,7 +822,7 @@
   <div class="ec-desc">Financial statements, standards — IFRS and US GAAP</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Marketing & Brand" data-task-type="knowledge">
   <div class="ec-level">LEVEL 5 &middot; AXIS C</div>
@@ -825,7 +830,7 @@
   <div class="ec-desc">Consumer behavior, digital marketing, brand equity</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Operations Management" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS B</div>
@@ -833,7 +838,7 @@
   <div class="ec-desc">Supply chain, inventory, quality control — lean principles</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Entrepreneurship" data-task-type="knowledge">
   <div class="ec-level">LEVEL 6 &middot; AXIS C</div>
@@ -841,7 +846,7 @@
   <div class="ec-desc">Business model canvas, validation, scaling, fundraising</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div><div class="exam-card" style="--ec:#E2C86D" data-task="Sovereign Economics" data-task-type="knowledge">
   <div class="ec-level">LEVEL 8 &middot; AXIS C</div>
@@ -849,7 +854,7 @@
   <div class="ec-desc">Token economics, digital assets, decentralized finance</div>
   <div class="ec-meta">
     <span class="ec-tag" style="border-color:#E2C86D;color:#E2C86D">BUSINESS & FINANCE</span>
-    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">+0.003 PTS</span>
+    <span class="ec-tag" style="border-color:rgba(201,168,76,.2);color:var(--muted)">CATALOGUE · TEST IN ACADEMY</span>
   </div>
 </div></div>
 </div>
@@ -957,7 +962,10 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
         });
       }
     }catch(e){console.warn('[Omega Academy] completion history unavailable:',e);}
-    document.querySelectorAll('[data-task]').forEach(function(card){card.onclick=async function(){if(window.omegaCompleteTask){var r=await window.omegaCompleteTask(card.getAttribute('data-task'),'knowledge');if(r.ok){markDone(card);}}};});
+    /* A catalogue card no longer records a pass on click (owner decision
+       2026-10-18): knowledge is earned by passing a real sector exam, so a
+       click opens the TEST lens above. Passes already recorded stay marked. */
+    document.querySelectorAll('[data-task]').forEach(function(card){card.onclick=function(){var core=document.querySelector('[data-omega-academy-core]');if(window.OmegaAcademyCore)window.OmegaAcademyCore.setLens('test');if(core)core.scrollIntoView({behavior:'smooth',block:'start'});};});
     /* exam log */
     try{var gl=await sb.from('task_completions').select('*').eq('user_id',s.user.id).eq('task_type','knowledge').order('completed_at',{ascending:false}).limit(30);if(gl.error)throw gl.error;var log=gl.data||[];var ge=document.getElementById('exam-log');if(ge)ge.innerHTML=log.length?log.map(function(g){return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px"><span style="font-family:var(--M);font-size:12px;color:var(--muted);width:100px">'+new Date(g.completed_at).toLocaleDateString('en-GB').toUpperCase()+'</span><span>'+String(g.task_name||'').toUpperCase()+'</span><span style="font-family:var(--M);font-size:12px;color:var(--gold);margin-left:auto">+'+Number(g.points_earned||0.003).toFixed(3)+'</span></div>';}).join(''):'<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:16px">NO EXAMS COMPLETED YET. CLICK ANY EXAM CARD TO RECORD YOUR FIRST COMPLETION.</div>';}catch(e){var ge=document.getElementById('exam-log');if(ge)ge.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--amber);padding:16px">EXAM HISTORY UNAVAILABLE</div>';console.warn('[Omega Academy] exam history unavailable:',e);}
   }catch(e){var app=document.getElementById('app');if(app)app.style.display='none';var panel=document.getElementById('academy-load-error');var msg=document.getElementById('academy-load-error-message');if(panel)panel.hidden=false;if(msg)msg.textContent='The session/profile request failed. No academy content has been unlocked. Retry after checking your connection.';console.error('[Omega Academy] access verification failed; page remains locked.',e);}

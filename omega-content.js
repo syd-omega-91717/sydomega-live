@@ -21,7 +21,8 @@
     '[data-oc-glow],.token,.node,.tile,.mod,.nftcard,.tcard{transition:box-shadow .3s ease,transform .3s ease}',
     '[data-oc-glow]:hover,.token:hover,.node:hover,.tile:hover,.nftcard:hover,.tcard:hover{box-shadow:0 0 0 1px rgba(201,168,76,.35),0 0 26px -6px rgba(226,200,109,.5)}',
     '@keyframes omTitleGlow{0%,100%{text-shadow:0 0 6px rgba(201,168,76,.08)}50%{text-shadow:0 0 14px rgba(226,200,109,.28)}}',
-    '.t,.brand,.sechead,.hero .nm,.topbar .t,h1{animation:omTitleGlow 10s ease-in-out infinite}',
+    /* Motion budget: one glowing title per page (its h1), not every heading. */
+    'h1{animation:omTitleGlow 10s ease-in-out infinite}',
     '@keyframes omEmblemSpin{to{transform:rotate(360deg)}}',
     '.sechead{position:relative}',
     '@media(prefers-reduced-motion:reduce){.t,.brand,.sechead,h1{animation:none}.sechead::before{animation:none}}'
@@ -135,7 +136,8 @@
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var spin = document.createElement('style');
     spin.textContent = '@keyframes omegaSignSpin{to{transform:rotate(360deg)}}'
-      + (reduce? '' : '.omega-section-sign{animation:omegaSignSpin 16s linear infinite;transform-origin:12px 12px}');
+      + '.omega-section-sign{transform-origin:12px 12px}'
+      + (reduce? '' : ':hover>.omega-section-sign{animation:omegaSignSpin 16s linear infinite}');
     (document.head||document.documentElement).appendChild(spin);
     if (document.body) sign(); else document.addEventListener('DOMContentLoaded', sign);
     try{ new MutationObserver(sign).observe(document.body||document.documentElement,{childList:true,subtree:true}); }catch(e){}

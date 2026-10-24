@@ -13,7 +13,7 @@
 .card{background:var(--surface,#1a1a1a);border:1px solid rgba(201,168,76,.15);padding:16px;margin-bottom:16px}
 .card-title{font-size:12px;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center;background:#1a1a1a;border:1px solid #222;padding:10px;border-radius:4px}
-.tool-btn{padding:5px 12px;font-size:.6rem;letter-spacing:.08em;cursor:pointer;border:1px solid #333;background:none;color:#888;border-radius:2px;transition:all .2s;font-family:inherit}
+.tool-btn{padding:5px 12px;font-size:var(--fs-1,12px);letter-spacing:.08em;cursor:pointer;border:1px solid #333;background:none;color:#888;border-radius:2px;transition:all .2s;font-family:inherit}
 .tool-btn:hover{border-color:var(--gold);color:var(--gold)}
 .tool-btn.active{border-color:var(--gold);color:var(--gold);background:#1a1600}
 .sep{width:1px;height:24px;background:#222;flex-shrink:0}
@@ -22,34 +22,34 @@
 #map-canvas{position:absolute;top:0;left:0}
 .node-editor{position:absolute;right:16px;top:16px;background:#1a1a1a;border:1px solid var(--gold);border-radius:6px;padding:16px;width:220px;z-index:100;display:none}
 .node-editor.open{display:block}
-.ne-title{font-size:.6rem;color:var(--gold);letter-spacing:.1em;margin-bottom:10px}
-.ne-input{width:100%;background:#111;border:1px solid #333;color:#fff;padding:6px;font-family:inherit;font-size:.7rem;border-radius:2px;margin-bottom:8px}
+.ne-title{font-size:var(--fs-1,12px);color:var(--gold);letter-spacing:.1em;margin-bottom:10px}
+.ne-input{width:100%;background:#111;border:1px solid #333;color:#fff;padding:6px;font-family:inherit;font-size:var(--fs-1,12px);border-radius:2px;margin-bottom:8px}
 .ne-input:focus{outline:none;border-color:var(--gold)}
 .color-row{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
 .color-dot{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .2s}
 .color-dot.selected{border-color:#fff}
-.ne-btn{padding:5px 12px;font-size:.6rem;cursor:pointer;border:none;border-radius:2px;font-family:inherit;margin-right:4px}
+.ne-btn{padding:5px 12px;font-size:var(--fs-1,12px);cursor:pointer;border:none;border-radius:2px;font-family:inherit;margin-right:4px}
 .ne-save{background:var(--gold);color:#000}
 .ne-delete{background:#e74c3c;color:#fff}
 .map-item{display:flex;justify-content:space-between;align-items:center;background:#111;border:1px solid #1a1a1a;padding:10px 14px;border-radius:3px;margin-bottom:6px;transition:border-color .2s}
 .map-item:hover{border-color:var(--gold)}
 .map-item.active-map{border-color:var(--gold);background:#1a1600}
 .map-name{font-size:.75rem;color:#fff}
-.map-meta{font-size:.55rem;color:#888}
+.map-meta{font-size:var(--fs-1,12px);color:#888}
 .sci-block{padding:8px 14px;margin-bottom:12px;background:#111;--card-edge-w:2px}
-.sci-title{font-size:.7rem;color:#fff;margin-bottom:4px}
-.sci-body{font-size:.6rem;color:#888;line-height:1.5}
-label{font-size:.6rem;color:#888;letter-spacing:.08em;display:block;margin-bottom:4px}
+.sci-title{font-size:var(--fs-1,12px);color:#fff;margin-bottom:4px}
+.sci-body{font-size:var(--fs-1,12px);color:#888;line-height:1.5}
+label{font-size:var(--fs-1,12px);color:#888;letter-spacing:.08em;display:block;margin-bottom:4px}
 input,select{width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:inherit;font-size:.75rem;border-radius:2px;box-sizing:border-box}
 input:focus,select:focus{outline:none;border-color:var(--gold)}
 /* was .btn-gold, which is bg.js's GHOST button: its color:var(--gold) won
    and left gold text on this rule's gold background, an exactly 1:1 button.
    The shared filled component owns the colour now. */
-.btn-fill{padding:8px 20px;font-size:.65rem;letter-spacing:.1em;cursor:pointer;border-radius:2px;font-family:inherit}
-.btn-ghost{background:none;border:1px solid #333;color:#888;padding:6px 14px;font-size:.6rem;font-family:inherit;cursor:pointer;border-radius:2px}
+.btn-fill{padding:8px 20px;font-size:var(--fs-1,12px);letter-spacing:.1em;cursor:pointer;border-radius:2px;font-family:inherit}
+.btn-ghost{background:none;border:1px solid #333;color:#888;padding:6px 14px;font-size:var(--fs-1,12px);font-family:inherit;cursor:pointer;border-radius:2px}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.empty{text-align:center;color:#888;font-size:.7rem;padding:40px 0;letter-spacing:.1em}
-.help-text{font-size:.55rem;color:var(--muted);letter-spacing:.06em}
+.empty{text-align:center;color:#888;font-size:var(--fs-1,12px);padding:40px 0;letter-spacing:.1em}
+.help-text{font-size:var(--fs-1,12px);color:var(--muted);letter-spacing:.06em}
 </style>
 </head>
 <body>
@@ -69,7 +69,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
     <!-- MAP -->
     <div id="tab-map" class="tab-panel act">
       <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
-        <select id="map-select" aria-label="Select mind map" style="max-width:260px;padding:6px 10px;font-size:.65rem" onchange="loadMap(this.value)">
+        <select id="map-select" aria-label="Select mind map" style="max-width:260px;padding:6px 10px;font-size:var(--fs-1,12px)" onchange="loadMap(this.value)">
           <option value="">— SELECT MAP —</option>
         </select>
         <button class="tool-btn" onclick="switchTab('create',document.querySelector('.tab-btn[data-tab=create]'))">+ NEW MAP</button>
@@ -96,7 +96,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
           <input class="ne-input" id="ne-text" type="text" placeholder="Node label...">
           <div class="color-row" id="color-row"></div>
           <div style="margin-bottom:8px">
-            <select id="ne-shape" aria-label="Node shape" style="padding:5px;font-size:.6rem">
+            <select id="ne-shape" aria-label="Node shape" style="padding:5px;font-size:var(--fs-1,12px)">
               <option value="rect">RECT</option>
               <option value="round">ROUND RECT</option>
               <option value="ellipse">ELLIPSE</option>

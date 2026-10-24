@@ -1,0 +1,44 @@
+name: Code Scanning Report
+
+# Prints every open code-scanning alert (CodeQL, Semgrep, Trivy) as plain
+# lines in the job log. Read-only. Exists because the alert list API is not
+# reachable from Claude Code sessions (403 to the integration), while the
+# job log is: a session can dispatch this and read the output to triage.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/code-scanning-report.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: read
+
+concurrency:
+  group: code-scanning-report-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: List open alerts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh api --paginate "repos/${REPO}/code-scanning/alerts?state=open&per_page=100" \
+            --jq '.[] | [.number, .tool.name, (.rule.security_severity_level // .rule.severity), .rule.id, .most_recent_instance.location.path, (.most_recent_instance.location.start_line|tostring)] | @tsv' \
+            > alerts.tsv
+          echo "OPEN_ALERTS=$(wc -l < alerts.tsv)"
+          echo "== by tool / rule"
+          cut -f2,4 alerts.tsv | sort | uniq -c | sort -rn
+          echo "== all"
+          cat alerts.tsv

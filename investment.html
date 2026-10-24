@@ -18,7 +18,7 @@
 .pb-change{font-family:'Courier New',monospace;font-size:14px}
 .stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .stat-box{flex:1;min-width:80px;background:#0d0d0d;border:1px solid #1a1a1a;padding:12px;text-align:center}
-.stat-num{font-family:'Courier New',monospace;font-size:18px;color:#4CAF50;font-weight:700}
+.stat-num{font-family:'Courier New',monospace;font-size:var(--fs-4,20px);color:#4CAF50;font-weight:700}
 .stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
 .holding-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .holding-ticker{font-family:'Courier New',monospace;font-size:14px;color:#4CAF50;font-weight:700;min-width:56px}
@@ -84,7 +84,7 @@
           <div><div class="pb-label">RETURN</div><div class="pb-change" id="port-ret">0%</div></div>
         </div>
       </div>
-      <div class="stats-row">
+      <div class="stats-row" data-omega-empty-guide="No holdings recorded yet." data-omega-empty-cta="Add your first holding" data-omega-empty-go=".tab-btn[data-tab='add']" data-omega-empty-focus="#tab-add">
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-holdings">0</div><div class="stat-lbl">HOLDINGS</div></div>
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-winners">0</div><div class="stat-lbl">WINNERS</div></div>
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-losers">0</div><div class="stat-lbl">LOSERS</div></div>
@@ -355,5 +355,6 @@ load();renderPortfolio();
 </script>
 <script src="/omega-local-backup.js"></script>
 <script src="/bg.js" defer></script>
+<script src="/omega-empty-guide.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

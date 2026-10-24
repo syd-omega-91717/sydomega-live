@@ -21,7 +21,7 @@
 .hero{border:1px solid var(--line);background:rgba(10,10,15,.5);border-top:3px solid var(--purple);padding:clamp(20px,4vw,40px);border-radius:2px;margin-bottom:16px;text-align:center}
 .hero-title{font-family:var(--D);font-size:clamp(18px,4vw,32px);color:var(--purple);margin-bottom:10px}
 .hero-sub{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:10px}
-.hero-desc{font-size:13px;line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
+.hero-desc{font-size:var(--fs-2,14px);line-height:1.8;color:var(--ink);opacity:.75;max-width:600px;margin:0 auto}
 .lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap}.lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 
 .trl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:14px}
@@ -37,7 +37,7 @@
 .play-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:6px 12px;border:1px solid var(--purple);color:var(--purple);background:none;border-radius:1px;cursor:pointer;transition:.18s;margin-top:4px}
 .play-btn:hover{background:var(--purple);color:#000}
 .demo-row{display:flex;gap:14px;padding:12px 14px;border:1px solid var(--line);background:rgba(10,10,15,.4);border-radius:2px;margin-bottom:7px;align-items:flex-start}
-.demo-num{font-family:var(--D);font-size:22px;color:var(--purple);flex-shrink:0;width:36px;text-align:center;margin-top:2px}
+.demo-num{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--purple);flex-shrink:0;width:36px;text-align:center;margin-top:2px}
 .demo-info{}
 .demo-title{font-family:var(--R);font-size:12px;color:var(--solar);margin-bottom:3px}
 .demo-meta{font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:5px}
@@ -50,7 +50,7 @@
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="trailers" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">TRAILERS<small>M6 Media Universe &middot; PREVIEW THE SOVEREIGN UNIVERSE &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="trl-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="purple" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:12px;color:var(--purple)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:13px">--</span></div></div>
+    <div class="topbar"><div class="t">TRAILERS<small>M6 Media Universe &middot; PREVIEW THE SOVEREIGN UNIVERSE &middot; AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</small></div><canvas id="trl-ring-auth" data-omega-ring data-ring-size="44" data-ring-color="purple" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring" role="img" data-tooltip="Your sovereign authority score — visualised as a living ring. Apex = 27.8367" data-tooltip-placement="bottom"></canvas><div style="font-family:var(--M);font-size:12px;color:var(--purple)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:var(--fs-2,14px)">--</span></div></div>
     <div class="pad" data-reveal="fade-up">
       <div class="kpi-row" data-reveal="fade-up"><div class="kpi"><div class="kpi-n" id="s-auth">--</div><div class="kpi-l">AUTHORITY</div></div><div class="kpi"><div class="kpi-n" id="s-a">--</div><div class="kpi-l">AXIS A</div></div><div class="kpi"><div class="kpi-n" id="s-b">--</div><div class="kpi-l">AXIS B</div></div><div class="kpi"><div class="kpi-n" id="s-c">--</div><div class="kpi-l">AXIS C</div></div></div>
             <div class="tab-bar" role="tablist"><button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'tp-trailers')">&#9670; TRAILERS</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-demos')">&#9670; DEMOS</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-animatics')">&#9670; ANIMATICS</button><button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'tp-science')">&#9670; SCIENCE</button></div>

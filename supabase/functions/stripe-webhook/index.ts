@@ -80,7 +80,9 @@ async function recordStripePayment(admin: ReturnType<typeof createClient>, args:
   providerReference: string; payloadHash: string;
 }) {
   if (!Number.isSafeInteger(args.amountMinor) || args.amountMinor <= 0) return { ok: true as const, skipped: "no_positive_amount" };
-  const { data: transactionId, error } = await admin.schema("omega_private").rpc("record_stripe_payment", {
+  // public delegate of omega_private.record_stripe_payment (20261017): PostgREST
+  // does not expose omega_private, so .schema("omega_private") returned PGRST106.
+  const { data: transactionId, error } = await admin.rpc("record_stripe_payment", {
     p_event_id: args.eventId,
     p_event_type: args.eventType,
     p_user_id: args.uid,
@@ -95,6 +97,32 @@ async function recordStripePayment(admin: ReturnType<typeof createClient>, args:
     return { ok: false as const };
   }
   return { ok: true as const, transactionId };
+}
+
+async function recordStripeRefund(admin: ReturnType<typeof createClient>, args: {
+  eventId: string; eventType: string; chargeId: string; paymentIntentId: string;
+  amountMinor: number; amountRefundedMinor: number; currency: string; payloadHash: string;
+}) {
+  const { data: result, error } = await admin.rpc("record_stripe_refund", {
+    p_event_id: args.eventId,
+    p_event_type: args.eventType,
+    p_charge_id: args.chargeId,
+    p_payment_intent_id: args.paymentIntentId,
+    p_amount_minor: args.amountMinor,
+    p_amount_refunded_minor: args.amountRefundedMinor,
+    p_currency: args.currency,
+    p_payload_hash: args.payloadHash,
+    p_metadata: { source: "stripe-webhook" },
+  });
+  if (error) {
+    console.error("[stripe-webhook] record_stripe_refund failed:", error.code || "unknown");
+    return { ok: false as const };
+  }
+  if (!result || typeof result !== "object" || (result as Record<string, unknown>).ok !== true) {
+    console.error("[stripe-webhook] record_stripe_refund returned a non-success result");
+    return { ok: false as const };
+  }
+  return { ok: true as const, result };
 }
 
 async function applySubscription(admin: ReturnType<typeof createClient>, args: { uid: string; tier: string | null; status: string; periodEnd: string | null; customer: string | null; eventId: string; eventType: string }) {
@@ -160,18 +188,14 @@ Deno.serve(async (req) => {
       }
       const subPeriodEnd = periodEndSeconds(sub);
       const periodEnd = subPeriodEnd !== null ? new Date(subPeriodEnd * 1000).toISOString() : null;
-      const customer = typeof obj.customer === "string" ? obj.customer : null;
-      const amountMinor = typeof obj.amount_total === "number" ? obj.amount_total : 0;
-      const currency = typeof obj.currency === "string" ? obj.currency : "";
-      const providerReference = typeof obj.payment_intent === "string" ? obj.payment_intent : eventId;
-      const settled = await recordStripePayment(admin, {
-        eventId, eventType, uid, amountMinor, currency, providerReference, payloadHash,
-      });
-      if (!settled.ok) return json({ error: "settlement_error" }, 500);
+      const customer = typeof sub.customer === "string" ? sub.customer : (typeof obj.customer === "string" ? obj.customer : null);
+      // Checkout completion confirms the session, not the authoritative invoice settlement.
+      // invoice.payment_succeeded is the sole ledger-posting event to prevent double counting.
       const applied = await applySubscription(admin, {
         uid,
         tier: sub.metadata && typeof sub.metadata === "object" ? ((sub.metadata as Record<string, string>).tier || tier) : tier,
-        status: "active", periodEnd, customer, eventId, eventType,
+        status: typeof sub.status === "string" ? sub.status : "incomplete",
+        periodEnd, customer, eventId, eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
@@ -201,7 +225,7 @@ Deno.serve(async (req) => {
       if (!subId) return json({ received: true, skipped: "no_subscription" });
       const subData = await fetchStripeSubscription(subId);
       if (!subData) return json({ error: "stripe_lookup_failed" }, 503);
-      const { uid } = extractMetadata(subData);
+      const { uid, tier } = extractMetadata(subData);
       if (!uid) return json({ received: true, skipped: "no_uid_in_sub_metadata" });
       const amountMinor = typeof obj.amount_paid === "number" ? obj.amount_paid : 0;
       const currency = typeof obj.currency === "string" ? obj.currency : "";
@@ -212,7 +236,15 @@ Deno.serve(async (req) => {
         eventId, eventType, uid, amountMinor, currency, providerReference, payloadHash,
       });
       if (!settled.ok) return json({ error: "settlement_error" }, 500);
-      return json({ received: true, event: eventType, transaction_id: settled.transactionId });
+      const paidPeriodEnd = periodEndSeconds(subData);
+      const periodEnd = paidPeriodEnd !== null ? new Date(paidPeriodEnd * 1000).toISOString() : null;
+      const customer = typeof subData.customer === "string" ? subData.customer : null;
+      const applied = await applySubscription(admin, {
+        uid, tier, status: typeof subData.status === "string" ? subData.status : "active",
+        periodEnd, customer, eventId, eventType,
+      });
+      if (!applied.ok) return json({ error: "db_error" }, 500);
+      return json({ received: true, event: eventType, transaction_id: settled.transactionId, result: applied.result });
     }
     if (eventType === "invoice.payment_failed") {
       const subId = typeof obj.subscription === "string" ? obj.subscription : null;
@@ -233,6 +265,37 @@ Deno.serve(async (req) => {
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
+    }
+    if (eventType === "charge.refunded") {
+      // Use the Charge's cumulative amount_refunded as the canonical refund
+      // signal. Do not also post refund.created events, which would double-count
+      // the same refund when both event types are delivered.
+      const chargeId = typeof obj.id === "string" ? obj.id : null;
+      const paymentIntent = obj.payment_intent;
+      const paymentIntentId = typeof paymentIntent === "string"
+        ? paymentIntent
+        : (paymentIntent && typeof paymentIntent === "object" && typeof (paymentIntent as Record<string, unknown>).id === "string"
+          ? (paymentIntent as Record<string, unknown>).id as string
+          : null);
+      const amountMinor = typeof obj.amount === "number" ? obj.amount : Number.NaN;
+      const amountRefundedMinor = typeof obj.amount_refunded === "number" ? obj.amount_refunded : Number.NaN;
+      const currency = typeof obj.currency === "string" ? obj.currency : "";
+      if (
+        !chargeId || !paymentIntentId
+        || !Number.isSafeInteger(amountMinor) || amountMinor <= 0
+        || !Number.isSafeInteger(amountRefundedMinor) || amountRefundedMinor <= 0
+        || amountRefundedMinor > amountMinor
+        || !/^[A-Za-z]{3}$/.test(currency)
+      ) {
+        console.error("[stripe-webhook] charge.refunded event has invalid references or amounts");
+        return json({ error: "refund_event_invalid" }, 503);
+      }
+      const refunded = await recordStripeRefund(admin, {
+        eventId, eventType, chargeId, paymentIntentId,
+        amountMinor, amountRefundedMinor, currency, payloadHash,
+      });
+      if (!refunded.ok) return json({ error: "refund_processing_failed" }, 500);
+      return json({ received: true, event: eventType, result: refunded.result });
     }
     return json({ received: true, event: eventType, handled: false });
   } catch (e) {

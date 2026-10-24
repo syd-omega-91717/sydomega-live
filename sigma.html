@@ -14,7 +14,7 @@
 .elem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .elem-tile{border:1px solid var(--line);background:rgba(10,10,15,.6);padding:12px;text-align:center;border-radius:2px;transition:.18s;cursor:default}
 .elem-tile:hover{background:rgba(201,168,76,.06);border-color:var(--solar)}
-.elem-sigil{font-size:24px;display:block;margin-bottom:4px}
+.elem-sigil{font-size:var(--fs-5,28px);display:block;margin-bottom:4px}
 .elem-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
 .elem-count{font-family:var(--D);font-size:16px}
 .elem-pct{font-family:var(--M);font-size:12px;color:var(--muted)}
@@ -108,17 +108,17 @@
       <div>
         <label style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS A</label>
         <input id="calc-a" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
-        <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-a-val">5.000</div>
+        <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);text-align:center;margin-top:3px" id="calc-a-val">5.000</div>
       </div>
       <div>
         <label style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS B</label>
         <input id="calc-b" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
-        <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-b-val">5.000</div>
+        <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);text-align:center;margin-top:3px" id="calc-b-val">5.000</div>
       </div>
       <div>
         <label style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:5px">AXIS C</label>
         <input id="calc-c" type="range" min="0" max="10" step="0.001" value="5" style="width:100%;accent-color:var(--gold)">
-        <div style="font-family:var(--D);font-size:13px;color:var(--gold);text-align:center;margin-top:3px" id="calc-c-val">5.000</div>
+        <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);text-align:center;margin-top:3px" id="calc-c-val">5.000</div>
       </div>
     </div>
     <div style="text-align:center;margin-top:16px;padding:14px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.15);border-radius:2px">
@@ -229,7 +229,7 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 const PHI=1.6180339887,EU=2.7182818285;
-const GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+const GATE_THRESH=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
 const GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
 const SIGN_ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
 const ELEM_INFO={Fire:{sigil:'☲',color:'#FF6B35'},Water:{sigil:'☰',color:'#00B4D8'},Wind:{sigil:'☱',color:'#B0BEC5'},Metal:{sigil:'☳',color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')},Sand:{sigil:'★',color:'#FFD54F'},Soul:{sigil:'✴',color:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},Space:{sigil:'✶',color:'#7C4DFF'},Void:{sigil:'✷',color:'#334466'},'The All':{sigil:'Ω',color:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D')}};

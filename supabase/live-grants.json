@@ -391,6 +391,9 @@
   "lesson_completions": {
    "table": "S---"
   },
+  "life_entries": {
+   "table": "SIUD"
+  },
   "marketplace_categories": {
    "table": "----"
   },
@@ -437,7 +440,7 @@
    "table": "SI-D"
   },
   "member_feature_flags": {
-   "table": "S-U-"
+   "table": "S---"
   },
   "member_perks": {
    "table": "S---"
@@ -620,7 +623,12 @@
    "table": "S---"
   },
   "omega_notifications": {
-   "table": "S---"
+   "table": "S---",
+   "columns": {
+    "UPDATE": [
+     "read_at"
+    ]
+   }
   },
   "omega_payment_events": {
    "table": "----"

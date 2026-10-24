@@ -24,11 +24,11 @@
     '.oep-body{padding:20px 24px 28px}',
     '.oep-sec{margin-bottom:18px}',
     '.oep-label{font-family:"Courier Prime",monospace;font-size:12px;color:#00E5FF;letter-spacing:2px;margin-bottom:8px}',
-    '.oep-text{font-size:13px;color:#e9e6dc;font-weight:300;line-height:1.7}',
+    '.oep-text{font-size:var(--fs-2,14px);color:#e9e6dc;font-weight:300;line-height:1.7}',
     '.oep-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}',
     '.oep-stat{border:1px solid rgba(201,168,76,.12);padding:8px 10px}',
     '.oep-stat .k{font-family:"Courier Prime",monospace;font-size:12px;color:#85837b;letter-spacing:1px}',
-    '.oep-stat .v{font-family:"Cinzel Decorative",serif;font-size:13px;color:#E2C86D;margin-top:3px}',
+    '.oep-stat .v{font-family:"Cinzel Decorative",serif;font-size:var(--fs-2,14px);color:#E2C86D;margin-top:3px}',
     '.oep-actions{display:flex;flex-wrap:wrap;gap:8px}',
     '.oep-action{padding:9px 16px;border:1px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2px;cursor:pointer;display:inline-block}',
     '.oep-action:hover{background:rgba(201,168,76,.1)}',
@@ -47,6 +47,21 @@
     if (!markup) return;
     var parsed = new DOMParser().parseFromString(String(markup), 'image/svg+xml');
     if (parsed.querySelector('parsererror')) return;
+    // The markup is OmegaEmblem's own (its interpolated values are escaped at
+    // source), but strip anything executable before it is adopted into the
+    // page anyway: script/foreignObject elements, on* handlers, and
+    // javascript:/data: links.
+    Array.prototype.slice.call(parsed.querySelectorAll('script,foreignObject,iframe,object,embed')).forEach(function (n) {
+      if (n.parentNode) n.parentNode.removeChild(n);
+    });
+    Array.prototype.slice.call(parsed.getElementsByTagName('*')).forEach(function (n) {
+      Array.prototype.slice.call(n.attributes).forEach(function (at) {
+        var nm = at.name.toLowerCase();
+        if (nm.indexOf('on') === 0 || ((nm === 'href' || nm === 'xlink:href' || nm === 'src') && /^\s*(?:javascript|data|vbscript):/i.test(at.value))) {
+          n.removeAttribute(at.name);
+        }
+      });
+    });
     Array.prototype.slice.call(parsed.documentElement.children).forEach(function (node) {
       parent.appendChild(document.importNode(node, true));
     });

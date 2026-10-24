@@ -48,7 +48,7 @@ def check_pages() -> None:
         # Same unquoted-attribute blind spot: this silently skipped every id on
         # those pages, so the duplicate-id check was not running there at all.
         ids = [a or b for a, b in
-               re.findall(r'\bid=(?:["\']([^"\']+)["\']|([^\s>"\'=]+))', src, re.I)]
+               re.findall(r'(?<![\w-])id=(?:["\']([^"\']+)["\']|([^\s>"\'=]+))', src, re.I)]
         seen: set[str] = set()
         for ident in ids:
             if ident in seen:

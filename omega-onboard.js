@@ -90,7 +90,7 @@
       var det=document.getElementById('ob-detail');
       if(det){
         det.style.display='block';
-        det.innerHTML='<div style="font-family:\'Cinzel Decorative\',serif;font-size:13px;color:'+col+';margin-bottom:8px">'+z.glyph+' '+z.sign.toUpperCase()+'</div>'
+        det.innerHTML='<div style="font-family:\'Cinzel Decorative\',serif;font-size:var(--fs-2,14px);color:'+col+';margin-bottom:8px">'+z.glyph+' '+z.sign.toUpperCase()+'</div>'
           +'<div style="font-family:\'Courier Prime\',monospace;font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.6);line-height:2">'
           +'ELEMENT: <span style="color:'+col+'">'+z.el.toUpperCase()+'</span> &nbsp;&bull;&nbsp; '
           +'OLYMPIAN: <span style="color:#C9A84C">'+z.god.toUpperCase()+'</span> &nbsp;&bull;&nbsp; '

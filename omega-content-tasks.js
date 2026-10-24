@@ -33,7 +33,6 @@ async function upload(file,options){
   if(!file||typeof file.name!=='string'||typeof file.size!=='number'||!Number.isFinite(file.size)||file.size<0)
     return task('FAILED',{truth_state:'UNAVAILABLE',error:'NO_FILE'});
   if(file.size>MAX)return task('FAILED',{truth_state:'UNAVAILABLE',error:'FILE_TOO_LARGE'});
-  var uploaded=null;
   var uploaded=null,registrationStarted=false;
   try{
     var sb=await client(),s=await session(sb);
@@ -52,27 +51,6 @@ async function upload(file,options){
       size_bytes:file.size,
       requested_content_type:options.content_type||null
     });
-    if(registered.error||!registered.data||registered.data.ok!==true){
-      var error=(registered.data&&registered.data.error)||registered.error||'REGISTRATION_FAILED';
-      // Client-side Storage DELETE is not authorized by the current RLS policy.
-      // Only the privileged Edge Function's explicit compensation result can
-      // prove cleanup; otherwise surface an actionable unresolved state.
-      if(registered.data&&registered.data.rollback_state==='complete')
-        return task('ROLLED_BACK',{truth_state:'LIVE',error:error,path:uploaded.path,cleanup_state:'CONFIRMED'});
-      return task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:error,path:uploaded.path,cleanup_state:'UNCONFIRMED'});
-    }
-    return task('PENDING_REVIEW',{
-      truth_state:'LIVE',
-      content_id:registered.data.content_id||null,
-      file:registered.data.file||null,
-      rights_state:'UNVERIFIED',
-      publication_state:'UNVERIFIED',
-      entitlement_state:'UNVERIFIED',
-      scan_state:'UNAVAILABLE'
-    });
-  }catch(_error){
-    if(uploaded&&typeof uploaded.path==='string'&&uploaded.path)
-      return task('ROLLBACK_REQUIRED',{truth_state:'UNAVAILABLE',error:'UNEXPECTED_PIPELINE_ERROR',path:uploaded.path,cleanup_state:'UNCONFIRMED'});
     if(registered.data&&registered.data.ok===true){
       return task('PENDING_REVIEW',{
         truth_state:'LIVE',

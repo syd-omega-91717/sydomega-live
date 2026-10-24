@@ -135,6 +135,9 @@ async function updateMemberFeatureFlags(
   features: Record<string, boolean>
 ): Promise<void> {
   for (const [featureId, enabled] of Object.entries(features)) {
+    // onConflict must name the (member_id, feature_id) unique key: without it
+    // PostgREST conflicts on the primary key, which this payload never carries,
+    // so the second write to a flag would raise 23505 forever (CLAUDE.md 8.1 #7).
     const { error } = await supabase.from("member_feature_flags").upsert({
       member_id: memberId,
       feature_id: featureId,
@@ -142,7 +145,7 @@ async function updateMemberFeatureFlags(
       set_by_agent: true,
       set_reason: "product_agent_adaptation",
       set_timestamp: new Date().toISOString(),
-    });
+    }, { onConflict: "member_id,feature_id" });
 
     if (error) {
       console.error('Error setting feature flag %s:', featureId, error);

@@ -30,7 +30,7 @@
 .ri-time{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);flex-shrink:0}
 .streak-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .streak-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:14px;text-align:center}
-.streak-box .sv{font-family:var(--M);font-size:24px;letter-spacing:2px;color:var(--gold,var(--gold))}
+.streak-box .sv{font-family:var(--M);font-size:var(--fs-5,28px);letter-spacing:2px;color:var(--gold,var(--gold))}
 .streak-box .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:24px}
 .week-cell{text-align:center}
@@ -64,7 +64,7 @@
 .cb-track{height:4px;background:rgba(201,168,76,.08);border-radius:2px}
 .cb-fill{height:4px;background:rgba(201,168,76,.5);border-radius:2px;transition:width .3s}
 .insight-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
-.insight-icon{font-size:18px;flex-shrink:0}
+.insight-icon{font-size:var(--fs-4,20px);flex-shrink:0}
 .insight-text{font-family:var(--M);font-size:12px;letter-spacing:.8px;color:var(--muted);line-height:1.6}
 </style>
   <script src="/bg.js" defer></script>
@@ -234,6 +234,7 @@
 <script type="module">
 const RITUALS_KEY = 'omega_rituals';
 const LOGS_KEY    = 'omega_ritual_logs';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 const DEFAULT_RITUALS = [
   {id:'r1',name:'Cold Shower',desc:'90-second cold exposure (Wim Hof)',protocol:'morning',time:3,active:true},
@@ -288,13 +289,13 @@ function renderProtocol(protocol, listId, progId, barId){
   const pct = rituals.length?completedCount/rituals.length*100:0;
   document.getElementById(barId).style.width=pct+'%';
   document.getElementById(listId).innerHTML = rituals.map(r=>`
-    <div class="ritual-item ${done[r.id]?'done':''}" onclick="toggleRitual('${r.id}','${protocol}')">
+    <div class="ritual-item ${done[r.id]?'done':''}" data-id="${esc(r.id)}" onclick="toggleRitual(this.dataset.id,'${protocol}')">
       <div class="ri-check">${done[r.id]?'✓':''}</div>
       <div class="ri-info">
-        <div class="ri-name">${r.name}</div>
-        <div class="ri-desc">${r.desc}</div>
+        <div class="ri-name">${esc(r.name)}</div>
+        <div class="ri-desc">${esc(r.desc)}</div>
       </div>
-      <div class="ri-time">${r.time}m</div>
+      <div class="ri-time">${esc(r.time)}m</div>
     </div>`).join('')||'<div style="padding:16px;font-family:var(--M);font-size:12px;color:var(--muted)">NO RITUALS — ADD SOME ABOVE</div>';
 }
 
@@ -400,7 +401,7 @@ function renderConsistency(){
   }).sort((a,b)=>b.pct-a.pct);
   container.innerHTML=results.map(r=>`
     <div class="consistency-bar">
-      <div class="cb-label"><span>${r.name}</span><span>${r.pct}%</span></div>
+      <div class="cb-label"><span>${esc(r.name)}</span><span>${r.pct}%</span></div>
       <div class="cb-track"><div class="cb-fill" style="width:${r.pct}%"></div></div>
     </div>`).join('');
 }

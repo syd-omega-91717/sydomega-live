@@ -6,35 +6,35 @@
 .platforms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.85rem;padding:1rem}
 .plat-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1.1rem;transition:border-color .2s;position:relative;border-top:2px solid transparent}
 .plat-card.connected{border-top-color:var(--green)}
-.plat-icon{font-size:1.6rem;margin-bottom:.5rem}
-.plat-name{color:var(--gold);font-family:var(--D);font-size:.88rem;letter-spacing:.06em;margin-bottom:.25rem}
-.plat-desc{color:var(--muted);font-size:.78rem;line-height:1.5;margin-bottom:.75rem}
-.plat-status{font-family:var(--M);font-size:.7rem;letter-spacing:.06em;padding:.2rem .5rem;border:1px solid var(--line);border-radius:3px;display:inline-block;margin-bottom:.6rem;color:var(--muted)}
+.plat-icon{font-size:var(--fs-5,28px);margin-bottom:.5rem}
+.plat-name{color:var(--gold);font-family:var(--D);font-size:var(--fs-2,14px);letter-spacing:.06em;margin-bottom:.25rem}
+.plat-desc{color:var(--muted);font-size:var(--fs-1,12px);line-height:1.5;margin-bottom:.75rem}
+.plat-status{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.06em;padding:.2rem .5rem;border:1px solid var(--line);border-radius:3px;display:inline-block;margin-bottom:.6rem;color:var(--muted)}
 .plat-status.conn{border-color:var(--green);color:var(--green)}
 .plat-user{font-family:var(--M);font-size:.75rem;color:var(--solar);margin-bottom:.6rem;min-height:1rem}
 .plat-btns{display:flex;gap:.5rem;flex-wrap:wrap}
-.btn-plat{font-family:var(--M);font-size:.72rem;letter-spacing:.05em;padding:.35rem .7rem;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:4px;cursor:pointer;transition:border-color .2s,color .2s}
+.btn-plat{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.05em;padding:.35rem .7rem;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:4px;cursor:pointer;transition:border-color .2s,color .2s}
 .btn-plat:hover{border-color:var(--gold);color:var(--gold)}
 .btn-plat-disc{border-color:rgba(200,60,60,.4);color:var(--crim)}
 .btn-plat-disc:hover{border-color:var(--crim)}
 .composer-wrap{max-width:640px;margin:0 auto;padding:1rem 1.5rem}
 .net-toggles{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
-.net-toggle{font-family:var(--M);font-size:.72rem;letter-spacing:.05em;padding:.3rem .7rem;border:1px solid var(--line);color:var(--muted);cursor:pointer;background:transparent;border-radius:4px;transition:all .15s}
+.net-toggle{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.05em;padding:.3rem .7rem;border:1px solid var(--line);color:var(--muted);cursor:pointer;background:transparent;border-radius:4px;transition:all .15s}
 .net-toggle.sel{color:var(--void);background:var(--gold);border-color:var(--gold)}
-.broadcast-area{width:100%;padding:.75rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-family:var(--M);font-size:.85rem;resize:vertical;min-height:90px;margin-bottom:.75rem;box-sizing:border-box}
+.broadcast-area{width:100%;padding:.75rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-family:var(--M);font-size:var(--fs-2,14px);resize:vertical;min-height:90px;margin-bottom:.75rem;box-sizing:border-box}
 .broadcast-area:focus{border-color:var(--gold);outline:none}
-.sent-msg{font-family:var(--M);font-size:.8rem;color:var(--green);margin-top:.5rem;display:none}
+.sent-msg{font-family:var(--M);font-size:var(--fs-2,14px);color:var(--green);margin-top:.5rem;display:none}
 .feed-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 1.5rem .75rem}
-.feed-tab{font-family:var(--M);font-size:.72rem;letter-spacing:.05em;padding:.5rem 1rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;transition:.15s}
+.feed-tab{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.05em;padding:.5rem 1rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;transition:.15s}
 .feed-tab.on{border-bottom-color:var(--gold);color:var(--gold)}
 .feed-list{padding:0 1.5rem}
 .feed-item{border-bottom:1px solid var(--line);padding:.9rem 0;display:flex;gap:.85rem}
 .feed-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:.3rem}
 .feed-body{flex:1;min-width:0}
-.feed-header{font-family:var(--M);font-size:.72rem;color:var(--solar);margin-bottom:.3rem}
-.feed-text{font-size:.85rem;color:var(--ink);line-height:1.6}
-.feed-date{font-family:var(--M);font-size:.68rem;color:var(--muted);margin-top:.3rem}
-.feed-empty{text-align:center;color:var(--muted);padding:2rem;font-size:.83rem}
+.feed-header{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--solar);margin-bottom:.3rem}
+.feed-text{font-size:var(--fs-2,14px);color:var(--ink);line-height:1.6}
+.feed-date{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);margin-top:.3rem}
+.feed-empty{text-align:center;color:var(--muted);padding:2rem;font-size:var(--fs-2,14px)}
 .omega-mini{display:flex;justify-content:center;padding:.75rem;border-top:1px solid var(--line);margin-top:auto}
 </style>
 </head>
@@ -62,7 +62,7 @@
   <div class="composer-wrap">
     <p class="sechead">COMPOSE &mdash; SELECT CHANNELS &mdash; TRANSMIT</p>
     <textarea class="broadcast-area" id="broadcast-text" placeholder="Write your sovereign broadcast… Share your milestone, horoscope, achievement, or message across all connected platforms."></textarea>
-    <p style="font-family:var(--M);font-size:.72rem;color:var(--muted);margin-bottom:.5rem">SELECT CHANNELS:</p>
+    <p style="font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);margin-bottom:.5rem">SELECT CHANNELS:</p>
     <div class="net-toggles" id="net-toggles"></div>
     <button class="btn-gold" onclick="transmit()">TRANSMIT BROADCAST</button>
     <div class="sent-msg" id="sent-msg">&#x2713; BROADCAST QUEUED — Routes to selected platforms when provider connections are activated.</div>

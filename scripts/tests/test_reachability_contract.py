@@ -102,6 +102,21 @@ class ReachabilityContractTest(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout)
         self.assertIn("every destination page is linked", r.stdout)
 
+    def test_folded_entry_still_counts_as_reachable(self):
+        """nav.js 'folded' entries leave the sidebar but stay in search: a
+        consolidated page (orrery.html folds houses/pantheons/...) must not
+        turn the pages it absorbs into blocking findings."""
+        self.fx.page("dashboard")
+        self.fx.page("houses")
+        write(self.fx.path("nav.js"), NAV_TEMPLATE % {
+            "sub": "['dashboard','DASHBOARD','/dashboard.html'],"
+                   "['houses','ASTRAL HOUSES','/houses.html','folded']",
+            "ps": "    dashboard:'command',houses:'command',",
+        })
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertNotIn("houses.html", r.stdout)
+
     def test_help_prints_docstring_and_exits_zero(self):
         r = self.fx.run("--help")
         self.assertEqual(r.returncode, 0)

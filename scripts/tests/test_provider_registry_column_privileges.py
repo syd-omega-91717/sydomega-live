@@ -5,6 +5,7 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
+MIGRATION = ROOT / "supabase/migrations/20261024101622_harden_provider_registry_column_access.sql"
 CREATION_STUDIO = (ROOT / "omega-creation-studio.js").read_text(encoding="utf-8")
 MIGRATION = ROOT / "supabase/migrations/20261024102602_harden_provider_registry_column_access.sql"
 REMOTE = ROOT / "supabase/remote-migrations.json"

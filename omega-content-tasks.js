@@ -73,6 +73,8 @@ async function upload(file,options){
     if(registered.error&&!registered.data)
       return task('REGISTRATION_UNCERTAIN',{truth_state:'UNAVAILABLE',error:'REGISTRATION_RESPONSE_UNCONFIRMED',path:uploaded.path,cleanup_state:'NOT_ATTEMPTED',support_review_required:true});
     return cleanupTask(error,uploaded.path,await cleanupUploaded(uploaded.path));
+  }catch(_error){
+    return task('FAILED',{truth_state:'UNAVAILABLE',error:'UPLOAD_ERROR'});
   }
 }
 async function signedDownload(fileId){

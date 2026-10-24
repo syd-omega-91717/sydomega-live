@@ -2,6 +2,7 @@ import importlib.util
 import json
 import pathlib
 import unittest
+from urllib.error import URLError
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location(
@@ -88,6 +89,19 @@ class ProductionHttpEvidenceTests(unittest.TestCase):
         )
         self.assertFalse(result["passed"])
         self.assertIn("manifest_schema", {item["name"] for item in result["failures"]})
+
+    def test_manifest_transport_error_is_recorded_without_masking_exception(self):
+        def opener(url):
+            if url.endswith("/"):
+                return response(url, headers=self.root_headers, body=b"<!doctype html><html></html>")
+            raise URLError("simulated manifest transport failure")
+
+        result = probe.audit_origin("https://example.test", opener=opener)
+        self.assertFalse(result["passed"])
+        manifest_failure = next(
+            item for item in result["failures"] if item["name"] == "manifest_request"
+        )
+        self.assertIn("URLError", manifest_failure["detail"])
 
     def test_transport_uses_verified_tls_and_allowlisted_https_redirects(self):
         source = (ROOT / "production-http-evidence.py").read_text(encoding="utf-8")

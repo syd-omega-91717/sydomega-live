@@ -50,6 +50,10 @@ def fetch(
         path = parsed.path or "/"
         if parsed.query:
             path += "?" + parsed.query
+        # Narrow false-positive exception: Python 3.12 uses the default CA/hostname-verifying
+        # SSL context here; HTTPS-only URLs and allowlisted redirect hosts are enforced above.
+        # Regression tests pin these transport controls. Do not remove the explicit context.
+        # nosemgrep: python.lang.security.audit.httpsconnection-detected.httpsconnection-detected
         connection = http.client.HTTPSConnection(
             parsed.hostname,
             parsed.port or 443,

@@ -1,15 +1,14 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-22T00:25:28.718Z",
+  "captured_at": "2026-10-24T08:53:35.759Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
     "concierge": {
       "state": "DEPLOYED",
-      "version": 11,
-      "version": 10,
+      "version": 12,
       "verify_jwt": true,
-      "live_sha256": "9c82ef86478fc5308f10dc912c7bd13764334eb5db89546293b2762e5c094a90",
+      "live_sha256": "3b0faf3d5a84083d13983701d647075793bcb8e485177fd0367ffd0ff77b7f1e",
       "repository_blob_sha": "3fc1bf525d718044d35c053de420ca0199c935f2"
     },
     "concierge-orchestrator": {
@@ -56,42 +55,30 @@
     },
     "evidence-graph": {
       "state": "DEPLOYED",
-      "version": 61,
+      "version": 84,
       "verify_jwt": false,
-      "live_sha256": "9e20903dc464dff6021b4571d0297447c99390ec02cb7c456d3fec64cc2570a7",
-      "version": 60,
-      "verify_jwt": false,
-      "live_sha256": "c60ecc082391f99710a6455d9302f44e832e040b32be0b9e11dab5a398ad84dc",
+      "live_sha256": "1bfaefbf26018fb7951b4b72d4a098d568810cdc0831362d819f1c6cd9b41441",
       "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 240,
+      "version": 263,
       "verify_jwt": false,
-      "live_sha256": "98575e39075b2af808339eb8e5398bf86a943fd964907a7d344b9ac9d60d3ed9",
-      "version": 239,
-      "verify_jwt": false,
-      "live_sha256": "cca3ac6d10a2f2e87fe4dc5fe66b3aed8ebb29d92fbfc6c0d6b016030e8e6127",
+      "live_sha256": "cafc9224c989b583ff98e923a6fef1a5552601a641aa7edb16e7c571abf15d4c",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 244,
+      "version": 267,
       "verify_jwt": true,
-      "live_sha256": "e5a9e810ddcd177372f2c42f7d28cb083c123ce2a760922002331e2c070d0cd6",
-      "version": 243,
-      "verify_jwt": true,
-      "live_sha256": "ff531297b8a66d48c4ea76eb8e47daaf3c148189743a557712709058eacdd278",
+      "live_sha256": "c9f166524e74b03c7a6cda23576ecf6d561d8d2a1f0fbd2f1ddd86c6b5965936",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 240,
+      "version": 263,
       "verify_jwt": false,
-      "live_sha256": "f6293fe8e57faaecb9d983b1e178530f73e2fa1398d9ec513cd595b85d9eb0c1",
-      "version": 239,
-      "verify_jwt": false,
-      "live_sha256": "b5b2149ac39618cefbe7d22f5e60bc01290a9814e91494e84615190aa859ae1e",
+      "live_sha256": "f4ef3f033e1e4fe5d16be07a629a8267b960b49fec95f45571331c2f1df354a0",
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc"
     },
     "intel-feed": {
@@ -103,26 +90,24 @@
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
-      "version": 61,
+      "version": 84,
       "verify_jwt": false,
-      "live_sha256": "79c5cd0cc4bae7ec60b1b101fc274791a2f687d0a51beb0e0378ff1091b90f07",
-      "version": 60,
-      "verify_jwt": false,
-      "live_sha256": "994ae9c85369ff72f1a7b44aa5ad6b9082df155bb9bfab2e9cc9590d406182de",
+      "live_sha256": "e1f91cf5f0fdb1391eac1e42cb48a9351697d0cfd3fee44844a1484a7c0ab77b",
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
-      "version": 150,
+      "version": 173,
       "verify_jwt": false,
-      "live_sha256": "37036bcbccaf10e6a0348ecf83fd4ec5558abd49297ca0c4f4a0d32cbcd82944",
-      "version": 149,
-      "verify_jwt": false,
-      "live_sha256": "0505b6e6cf94f70e0081c50c44d2a52fcb841a346a4a90e39d5e7235b9d2f26f",
+      "live_sha256": "af2372cc7fa4a5169bf333a4b51c999dd91c401b57fb0a47a8179dc3c134c106",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
     },
-    "checkout": {
-      "state": "LOCAL_ONLY"
+    "content-ingest": {
+      "state": "DEPLOYED",
+      "version": 6,
+      "verify_jwt": true,
+      "live_sha256": "27fc7aeaaa293aebcf3ec638782c25960cdd4169ad3a254329a502305dfc2076",
+      "repository_blob_sha": "9f8dbddcb9901d55e20afe98e2b7794c7f2c10d7"
     },
     "content-delivery": {
       "state": "DEPLOYED",
@@ -131,12 +116,8 @@
       "live_sha256": "9f142ffa9c10f9197d3639a97272357330c664f08fa044f1f7cc5d41507f1374",
       "repository_blob_sha": "410d77e9f8267406b40291830ac85f5191a63665"
     },
-    "content-ingest": {
-      "state": "DEPLOYED",
-      "version": 6,
-      "verify_jwt": true,
-      "live_sha256": "27fc7aeaaa293aebcf3ec638782c25960cdd4169ad3a254329a502305dfc2076",
-      "repository_blob_sha": "9f8dbddcb9901d55e20afe98e2b7794c7f2c10d7"
+    "checkout": {
+      "state": "LOCAL_ONLY"
     },
     "event-ingest": {
       "state": "LOCAL_ONLY"
@@ -163,5 +144,5 @@
       "state": "LOCAL_ONLY"
     }
   },
-  "verification_note": "Snapshot initially captured 2026-10-22. On 2026-10-24, stripe-webhook live version 8 was re-read from the active Supabase project and its index.ts was compared byte-for-byte against main; both contents match. Updated live SHA-256 and repository blob SHA to the observed current values. Other function entries remain at their prior snapshot and require their own freshness verification."
+  "verification_note": "Verified 2026-10-24 against the active Supabase project and main at 97aff4b217eee78b806b8ef0931d67e932c0a881. All 16 ACTIVE deployed Edge Functions' index.ts contents were compared byte-for-byte after CRLF/trailing-newline normalization against the corresponding main source and matched. Runtime version, verify_jwt, live SHA-256, and repository Git blob SHA are refreshed for all 16. Entries marked LOCAL_ONLY are present in repository source but were not present in the active deployed function inventory at capture time. This is runtime source-parity evidence only; it does not establish end-to-end functional, payment, authorization, or production-readiness completeness."
 }

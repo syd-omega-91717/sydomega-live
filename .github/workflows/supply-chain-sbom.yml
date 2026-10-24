@@ -51,13 +51,21 @@ jobs:
           import json
           runs = json.load(open("semgrep.sarif")).get("runs", [])
           for run in runs:
+              rules = {
+                  rule.get("id"): rule
+                  for rule in run.get("tool", {}).get("driver", {}).get("rules", [])
+              }
               for r in run.get("results", []):
                   loc = r["locations"][0]["physicalLocation"]
                   path = loc["artifactLocation"]["uri"]
                   line = loc.get("region", {}).get("startLine", 0)
                   msg = r["message"]["text"].splitlines()[0][:160]
-                  print(f"::error file={path},line={line}::{r['ruleId']}: {msg}")
-                  print(f"{r['ruleId']}\t{path}:{line}")
+                  rule = rules.get(r.get("ruleId"), {})
+                  properties = rule.get("properties", {})
+                  level = r.get("level") or rule.get("defaultConfiguration", {}).get("level", "unknown")
+                  severity = properties.get("security-severity", properties.get("severity", "unspecified"))
+                  print(f"::error file={path},line={line}::{r['ruleId']} level={level} security_severity={severity}: {msg}")
+                  print(f"{r['ruleId']}\tlevel={level}\tsecurity_severity={severity}\t{path}:{line}")
           PY
 
       - name: Upload Semgrep SARIF

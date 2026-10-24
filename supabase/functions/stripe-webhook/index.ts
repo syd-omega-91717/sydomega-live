@@ -99,6 +99,32 @@ async function recordStripePayment(admin: ReturnType<typeof createClient>, args:
   return { ok: true as const, transactionId };
 }
 
+async function recordStripeRefund(admin: ReturnType<typeof createClient>, args: {
+  eventId: string; eventType: string; chargeId: string; paymentIntentId: string;
+  amountMinor: number; amountRefundedMinor: number; currency: string; payloadHash: string;
+}) {
+  const { data: result, error } = await admin.rpc("record_stripe_refund", {
+    p_event_id: args.eventId,
+    p_event_type: args.eventType,
+    p_charge_id: args.chargeId,
+    p_payment_intent_id: args.paymentIntentId,
+    p_amount_minor: args.amountMinor,
+    p_amount_refunded_minor: args.amountRefundedMinor,
+    p_currency: args.currency,
+    p_payload_hash: args.payloadHash,
+    p_metadata: { source: "stripe-webhook" },
+  });
+  if (error) {
+    console.error("[stripe-webhook] record_stripe_refund failed:", error.code || "unknown");
+    return { ok: false as const };
+  }
+  if (!result || typeof result !== "object" || (result as Record<string, unknown>).ok !== true) {
+    console.error("[stripe-webhook] record_stripe_refund returned a non-success result");
+    return { ok: false as const };
+  }
+  return { ok: true as const, result };
+}
+
 async function applySubscription(admin: ReturnType<typeof createClient>, args: { uid: string; tier: string | null; status: string; periodEnd: string | null; customer: string | null; eventId: string; eventType: string }) {
   const { data: result, error } = await admin.rpc("apply_subscription_event", {
     p_event_id: args.eventId,
@@ -239,6 +265,37 @@ Deno.serve(async (req) => {
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
+    }
+    if (eventType === "charge.refunded") {
+      // Use the Charge's cumulative amount_refunded as the canonical refund
+      // signal. Do not also post refund.created events, which would double-count
+      // the same refund when both event types are delivered.
+      const chargeId = typeof obj.id === "string" ? obj.id : null;
+      const paymentIntent = obj.payment_intent;
+      const paymentIntentId = typeof paymentIntent === "string"
+        ? paymentIntent
+        : (paymentIntent && typeof paymentIntent === "object" && typeof (paymentIntent as Record<string, unknown>).id === "string"
+          ? (paymentIntent as Record<string, unknown>).id as string
+          : null);
+      const amountMinor = typeof obj.amount === "number" ? obj.amount : Number.NaN;
+      const amountRefundedMinor = typeof obj.amount_refunded === "number" ? obj.amount_refunded : Number.NaN;
+      const currency = typeof obj.currency === "string" ? obj.currency : "";
+      if (
+        !chargeId || !paymentIntentId
+        || !Number.isSafeInteger(amountMinor) || amountMinor <= 0
+        || !Number.isSafeInteger(amountRefundedMinor) || amountRefundedMinor <= 0
+        || amountRefundedMinor > amountMinor
+        || !/^[A-Za-z]{3}$/.test(currency)
+      ) {
+        console.error("[stripe-webhook] charge.refunded event has invalid references or amounts");
+        return json({ error: "refund_event_invalid" }, 503);
+      }
+      const refunded = await recordStripeRefund(admin, {
+        eventId, eventType, chargeId, paymentIntentId,
+        amountMinor, amountRefundedMinor, currency, payloadHash,
+      });
+      if (!refunded.ok) return json({ error: "refund_processing_failed" }, 500);
+      return json({ received: true, event: eventType, result: refunded.result });
     }
     return json({ received: true, event: eventType, handled: false });
   } catch (e) {

@@ -26,7 +26,10 @@ class ProviderRegistryColumnPrivilegeTests(unittest.TestCase):
         )
         self.assertNotIn("secret_ref", columns)
         self.assertNotIn("metadata", columns)
-        self.assertIn("revoke select (secret_ref, metadata)", LOWER)
+        self.assertNotIn("created_at", columns)
+        self.assertNotIn("updated_at", columns)
+        self.assertIn("revoke select (secret_ref, metadata, created_at, updated_at)", LOWER)
+        self.assertIn("revoke select on table public.omega_provider_registry from authenticated", LOWER)
 
     def test_migration_is_privilege_only_and_does_not_change_provider_state(self):
         self.assertNotRegex(LOWER, r"\b(insert|update|delete|truncate)\s+")

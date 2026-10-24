@@ -18,6 +18,7 @@ DECLARE
   v_jpy_treasury uuid;
   v_jpy_revenue uuid;
   v_jpy_tx uuid;
+  v_previously_reversed_tx uuid;
 BEGIN
   INSERT INTO public.omega_ledger_accounts(owner_user_id,account_type,currency_code,label,metadata)
   VALUES (NULL,'TREASURY','USD','CI refund treasury','{"test_fixture":true}')
@@ -157,6 +158,52 @@ BEGIN
   IF v_state_amount <> 10 OR v_original_status <> 'REVERSED' OR v_original_recon_status <> 'reversed' THEN
     RAISE EXCEPTION 'full refund did not finalize state: amount %, transaction %, reconciliation %',
       v_state_amount,v_original_status,v_original_recon_status;
+  END IF;
+
+  -- Never invent a new reversal when the original transaction was already
+  -- reversed but no refund-state evidence exists to explain that reversal.
+  INSERT INTO public.omega_ledger_transactions(
+    idempotency_key,event_type,currency_code,external_reference,description,status,metadata
+  ) VALUES (
+    'test-stripe-refund-pre-reversed','STRIPE_SETTLEMENT','USD','pi_test_pre_reversed',
+    'CI-only previously reversed settlement','REVERSED','{"test_fixture":true}'
+  ) RETURNING transaction_id INTO v_previously_reversed_tx;
+
+  INSERT INTO public.omega_ledger_entries(transaction_id,account_id,direction,amount,currency_code,metadata)
+  VALUES
+    (v_previously_reversed_tx,v_treasury,'DEBIT',10,'USD','{"test_fixture":true}'),
+    (v_previously_reversed_tx,v_revenue,'CREDIT',10,'USD','{"test_fixture":true}');
+
+  INSERT INTO public.omega_payment_events(
+    provider,provider_event_id,event_type,payload_hash,status,transaction_id,metadata,processed_at
+  ) VALUES (
+    'stripe','evt_test_pre_reversed_original','invoice.payment_succeeded','fixture-pre-reversed',
+    'PROCESSED',v_previously_reversed_tx,'{"test_fixture":true}',now()
+  );
+
+  INSERT INTO public.omega_payment_reconciliation(
+    provider,provider_reference,internal_transaction_id,expected_amount,settled_amount,
+    currency,status,idempotency_key,evidence,reconciled_at
+  ) VALUES (
+    'stripe','pi_test_pre_reversed',v_previously_reversed_tx,10,10,'USD','reversed',
+    'stripe-reconciliation:evt_test_pre_reversed_original','{"test_fixture":true}',now()
+  );
+
+  BEGIN
+    PERFORM public.record_stripe_refund(
+      'evt_test_refund_untracked_reversed','charge.refunded','ch_test_untracked_reversed',
+      'pi_test_pre_reversed',1000,100,'usd','fixture-pre-reversed-refund','{"test_fixture":true}'
+    );
+    RAISE EXCEPTION 'refund against untracked reversed settlement unexpectedly accepted';
+  EXCEPTION WHEN OTHERS THEN
+    IF SQLERRM <> 'stripe_original_already_reversed_without_refund_state' THEN RAISE; END IF;
+  END;
+
+  IF EXISTS (
+    SELECT 1 FROM omega_private.stripe_refund_state
+     WHERE charge_id='ch_test_untracked_reversed'
+  ) THEN
+    RAISE EXCEPTION 'rejected previously reversed settlement left refund state';
   END IF;
 
   -- Zero-decimal currency amounts must remain whole major units (500 JPY, not JPY 5).

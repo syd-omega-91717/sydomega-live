@@ -36,5 +36,16 @@ class EnterpriseApiKeySafetyContract(unittest.TestCase):
         self.assertIn("Air-gapped operation requires a separately tested deployment", PAGE)
 
 
+    def test_tier_ctas_open_a_prefilled_consultancy_request(self):
+        consultancy = (ROOT / "consultancy.html").read_text(encoding="utf-8")
+        for tier in ("starter", "professional", "enterprise", "government"):
+            self.assertIn("requestTier('" + tier + "')", PAGE)
+        self.assertIn("'/consultancy.html?tab=book&domain=enterprise&brief='+encodeURIComponent(brief)", PAGE)
+        self.assertIn("key:'enterprise'", consultancy)
+        self.assertIn("new URLSearchParams(window.location.search)", consultancy)
+        self.assertIn("document.getElementById('bk-brief').value=requestedBrief.slice(0,1000)", consultancy)
+        self.assertIn("setTab('book')", consultancy)
+
+
 if __name__ == "__main__":
     unittest.main()

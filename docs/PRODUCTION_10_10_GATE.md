@@ -34,7 +34,7 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 
 `.github/workflows/supabase-full-migration-replay.yml` starts an isolated Supabase stack and runs `supabase db reset`, which recreates the local database and applies every migration in order. The inventory contract checks that the local migration set exactly matches the committed live manifest before and after replay.
 
-The live Supabase migration journal was queried on 2026-10-24: **407 applied versions**, first version `0001`, latest version `20261023120000`. The committed `supabase/remote-migrations.json` reports the same count and latest version. The latest migration is `20261023120000_omega_personal_context_link_fk_indexes.sql`. This verifies ledger/manifest alignment at the count and latest-version level; it does **not** prove the full isolated replay passed. The workflow must complete the reset and subsequent security/hardening tests before migration reproducibility can be marked PASS.
+The live Supabase migration journal was queried on 2026-10-24: **407 applied versions**, first version `0001`, latest version `20261023120000`. The committed `supabase/remote-migrations.json` reports the same count and latest version. The latest migration is `20261023120000_omega_personal_context_link_fk_indexes.sql`. The isolated replay workflow subsequently passed run `40070878936`: it recreated the database, replayed the migration set, revalidated inventory, and passed migration security, hardening, family-access/privacy, and authenticated-content checks. This is reproducibility evidence for the checked-out commit; it is not a substitute for live production provider evidence.
 
 ## Provider blockers
 

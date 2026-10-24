@@ -28,7 +28,6 @@ class ProviderRegistryColumnPrivilegeTests(unittest.TestCase):
 
     def test_migration_is_privilege_only_and_does_not_change_provider_state(self):
         self.assertNotRegex(LOWER, r"\b(insert|update|delete|truncate)\s+")
-        self.assertIn("service_role", SOURCE) if "service_role" in SOURCE else None
         self.assertIn("secret_ref", LOWER)
         self.assertIn("does not rewrite data", LOWER)
 

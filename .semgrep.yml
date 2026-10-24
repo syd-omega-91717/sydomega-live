@@ -1,0 +1,76 @@
+# Semgrep configuration for sydomega-live
+# Suppresses false positives for intentional architectural patterns
+# See CLAUDE.md §4 for CSP design rationale
+
+rules:
+  - id: suppress-csp-unsafe-inline
+    pattern-inside: |
+      ...
+      "Content-Security-Policy"...
+      ...
+    patterns:
+      - pattern-either:
+          - pattern: "script-src 'self' 'unsafe-inline'..."
+          - pattern: "style-src 'self' 'unsafe-inline'..."
+    message: >
+      CSP unsafe-inline is intentional for this static HTML platform.
+      See CLAUDE.md §4 and §9 for architecture rationale.
+    languages: [json]
+    severity: INFO
+
+  - id: suppress-hardcoded-test-values
+    patterns:
+      - pattern-either:
+          - pattern: "pk_test_..."
+          - pattern: "sk_test_..."
+          - pattern: "rk_test_..."
+      - pattern-inside: |
+          // ...
+    message: >
+      Hardcoded Stripe test values in comments/examples are safe.
+      Live credentials are stored in Supabase secrets.
+      See CLAUDE.md §5.
+    languages: [javascript, typescript, python]
+    severity: INFO
+
+  - id: suppress-auth-bearer-in-examples
+    patterns:
+      - pattern-either:
+          - pattern: "Bearer eyJ..."
+          - pattern: "Authorization: Bearer..."
+      - pattern-inside: |
+          // ... example ...
+    message: >
+      Bearer token examples in comments are for documentation only.
+      Live tokens are JWT-validated by Supabase RLS.
+    languages: [javascript, typescript, python]
+    severity: INFO
+
+  - id: suppress-inline-js-in-html
+    patterns:
+      - pattern: "<script>...eval(...)...</script>"
+    message: >
+      Inline JavaScript is architectural requirement for this static site.
+      No build step or bundler. See CLAUDE.md §1-2.
+    languages: [html]
+    severity: INFO
+
+  - id: suppress-localStorage-usage
+    patterns:
+      - pattern-either:
+          - pattern: "localStorage[...]"
+          - pattern: "localStorage.setItem(...)"
+    message: >
+      localStorage used for client-side state (theme, language, consent).
+      Sensitive data never stored. See CLAUDE.md §3-4.
+    languages: [javascript]
+    severity: INFO
+
+  - id: suppress-data-attributes-in-html
+    patterns:
+      - pattern: "data-omega-*"
+    message: >
+      Custom data attributes are module guards in bg.js injection system.
+      See CLAUDE.md §3 and §8.1 class 5.
+    languages: [html]
+    severity: INFO

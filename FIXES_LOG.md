@@ -24819,3 +24819,28 @@ sets its own delay), so no speed-up is claimed.
 **Fix.** `scripts/tests/test_content_pipeline_e2e.py` now treats Python socket/HTTP timeouts like transient URL errors in the probe request helper. The existing 90-second deadline remains authoritative; if the Edge Function never becomes ready, the test now reports `content_ingest_edge_runtime_not_ready` instead of aborting on the first timeout. This does not relax any auth, ownership, content-integrity, or audit assertion.
 
 **Verification status.** Patch queued for CI verification; no local Supabase stack was available in this environment.
+
+
+## 2026-10-24 — Two merge resolutions undid the motion budget and type scale on the dashboard
+
+**Found.** PRs #1009 (motion), #1008 (type scale) and #1013 (phone) all touched
+`dashboard.html`, and the phone branch also touched `bg.js`. The conflicts were resolved by taking
+one whole side, so on `main` at `6d745186`:
+- the 12 inline `animation:emblem-float … infinite` section icons were back, and `.emblem-orb`
+  floated at rest again (measured: 30 running animations on `dashboard.html` at rest; 9 of them
+  `emblem-float @div.emblem-orb ∞`);
+- `bg.js` had lost all 5 `var(--fs-N,…)` tokens and its pre-scale sizes (13/15px), and
+  `dashboard.html` had lost all 7. A sweep of the 272 files that held tokens at `0402bf3d` found
+  these two were the **only** losses (1569 → 1557 tokens estate-wide).
+
+**Fix.** The inline loops were removed again. The float now runs only on
+`.sechead:hover>span>span:first-child` and the existing `.emblem-orb:hover`. The 5 `bg.js` tokens
+were restored by their rule context. All 76 `dashboard.html` font sizes were snapped to the scale
+(53×12, 6×16, 13 and 18/22/20 → 14/20).
+
+**Verified** (harness Chromium, `main` vs branch):
+- running at rest: 30 → **20**;
+- desktop 1440 and phone 390: no horizontal scroll either way, clipped text 1 → 1, 0 page errors.
+
+**Transferable rule.** After a merge that resolves a conflict by taking one side, re-measure the
+features the other side carried. A green merge says nothing about whether they survived.

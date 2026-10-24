@@ -18,12 +18,10 @@ async function invoke(sb,name,body){
   return {error:null,data:r.data||null};
 }
 async function cleanupUploaded(path){
-  if(typeof path!=='string'||!path)return false;
-  if(!root.OmegaStorage||typeof root.OmegaStorage.remove!=='function')return false;
-  try{
-    var removed=await root.OmegaStorage.remove('uploads',path);
-    return !!removed&&!removed.error;
-  }catch(_error){return false;}
+  // Client-side Storage DELETE is not authorized by the current RLS policy.
+  // Only the privileged Edge Function's explicit compensation result can
+  // prove cleanup; never attempt client-side deletion.
+  return false;
 }
 function cleanupTask(error,path,confirmed){
   return confirmed

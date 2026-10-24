@@ -236,7 +236,7 @@ BACKUP_RE = re.compile(r'OmegaLocalBackup')
 def _strip_code_comments(source):
     """Strip JS/TS/SQL comments while preserving quoted strings and URLs."""
     token_or_comment = re.compile(
-        r'''("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\`(?:\\.|[^\`\\])*\`)|//[^\n]*|/\*.*?\*/''',
+        r'''("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\`(?:\\.|[^\`\\])*\`)|//[^\n]*|--[^\n]*|/\*.*?\*/''',
         re.S,
     )
     return token_or_comment.sub(
@@ -547,6 +547,8 @@ def main():
     # is a library directory, not an Edge Function.
     for path in sorted(Path('supabase/functions').glob('*/index.ts')):
         name = path.parent.name
+        if name == '_shared':
+            continue
         runtime_state = runtime_states.get(name)
         client_call = name in client_edges
         server_call = name in server_edges
@@ -572,6 +574,9 @@ def main():
             else:
                 edge_rows.append((name, 'UNWIRED',
                                   'runtime manifest marks DEPLOYED, but no client/server invocation evidence was found'))
+        elif not runtime_states and not edge_manifest_captured:
+            edge_rows.append((name, 'UNVERIFIED',
+                              'runtime manifest is missing/unreadable; deployment state cannot be determined'))
         elif referenced:
             edge_rows.append((name, 'MISSING_DEPLOYMENT',
                               'invocation reference exists, but function is absent from the runtime manifest'))

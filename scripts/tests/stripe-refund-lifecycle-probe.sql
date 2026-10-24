@@ -68,8 +68,8 @@ BEGIN
    WHERE idempotency_key='stripe-refund:ch_test_refund_1:300';
   IF v_refund_tx IS NULL THEN RAISE EXCEPTION 'partial refund transaction missing'; END IF;
 
-  SELECT pg_catalog.coalesce(sum(amount) FILTER (WHERE direction='DEBIT'),0),
-         pg_catalog.coalesce(sum(amount) FILTER (WHERE direction='CREDIT'),0)
+  SELECT COALESCE(sum(amount) FILTER (WHERE direction='DEBIT'),0),
+         COALESCE(sum(amount) FILTER (WHERE direction='CREDIT'),0)
     INTO v_debits,v_credits
     FROM public.omega_ledger_entries WHERE transaction_id=v_refund_tx;
   IF v_debits <> 3 OR v_credits <> 3 THEN

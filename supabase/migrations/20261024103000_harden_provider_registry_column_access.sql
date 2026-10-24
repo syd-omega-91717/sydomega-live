@@ -6,7 +6,7 @@
 -- Keep the existing RLS row boundary while restricting authenticated SELECT to
 -- catalog fields that clients need. `secret_ref` and internal `metadata` remain
 -- unavailable to authenticated clients. This migration changes privileges only;
--- it does not rewrite data.
+-- it does not rewrite data. RLS limits rows; these column grants limit fields.
 
 begin;
 

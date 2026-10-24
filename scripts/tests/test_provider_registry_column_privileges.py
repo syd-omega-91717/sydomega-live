@@ -17,19 +17,18 @@ class ProviderRegistryColumnPrivilegeTests(unittest.TestCase):
         self.assertLess(revoke, grant)
         self.assertIn("on table public.omega_provider_registry to authenticated", LOWER[grant:])
 
-    def test_secret_reference_is_not_in_authenticated_column_allowlist(self):
+    def test_every_non_allowlisted_authenticated_column_is_revoked(self):
         grant = LOWER.index("grant select (")
         end = LOWER.index(") on table public.omega_provider_registry to authenticated", grant)
-        columns = set(re.findall(r"\b[a-z_][a-z0-9_]*\b", LOWER[grant:end]))
+        columns = set(re.findall(r"\\b[a-z_][a-z0-9_]*\\b", LOWER[grant:end]))
         self.assertEqual(
             columns - {"grant", "select"},
             {"id", "provider_key", "display_name", "adapter_kind", "capabilities", "status"},
         )
-        self.assertNotIn("secret_ref", columns)
-        self.assertNotIn("metadata", columns)
-        self.assertNotIn("created_at", columns)
-        self.assertNotIn("updated_at", columns)
-        self.assertIn("revoke select (secret_ref, metadata, created_at, updated_at)", LOWER)
+        self.assertIn(
+            "revoke select (secret_ref, metadata, created_at, updated_at) on table public.omega_provider_registry from authenticated",
+            LOWER,
+        )
         self.assertIn("revoke select on table public.omega_provider_registry from authenticated", LOWER)
 
     def test_creation_studio_requests_only_allowlisted_provider_fields(self):
@@ -46,7 +45,7 @@ class ProviderRegistryColumnPrivilegeTests(unittest.TestCase):
         self.assertTrue(fields.isdisjoint({"secret_ref", "metadata", "created_at", "updated_at"}))
 
     def test_migration_is_privilege_only_and_does_not_change_provider_state(self):
-        self.assertNotRegex(LOWER, r"\b(insert|update|delete|truncate)\s+")
+        self.assertNotRegex(LOWER, r"\\b(insert|update|delete|truncate)\\s+")
         self.assertIn("secret_ref", LOWER)
         self.assertIn("does not rewrite data", LOWER)
 

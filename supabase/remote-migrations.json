@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-23",
-  "source": "Authenticated Supabase provider migration-history query for project ydqhzvvoyufiiqvzcjns; provider history verified during the 2026-10-23 audit, including 20261023120000_omega_personal_context_link_fk_indexes.",
-  "remoteMigrationCount": 407,
-  "latestRemoteMigration": "20261023120000",
+  "_captured": "2026-10-24",
+  "source": "Authenticated Supabase provider migration-history query for project ydqhzvvoyufiiqvzcjns; refreshed 2026-10-24. The provider history includes migration 20261024091500_fix_stripe_zero_decimal_settlement_precision, and the live omega_private.record_stripe_payment definition was verified to match its currency conversion logic and service_role-only execute grants.",
+  "remoteMigrationCount": 408,
+  "latestRemoteMigration": "20261024091500",
   "versions": [
     "0001",
     "0002",
@@ -410,7 +410,8 @@
     "20261021100000",
     "20261022120000",
     "20261022130000",
-    "20261023120000"
+    "20261023120000",
+    "20261024091500"
   ],
   "migrations": [
     {

@@ -6,19 +6,19 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 
 - Audit date: 2026-10-24.
 - Main commit: `f70f2c89ee5ea50eedcb5e1db6b1e1736b6b835d`.
-- Evidence-refresh PR: [#1059](https://github.com/syd-omega-91717/sydomega-live/pull/1059), branch `docs/refresh-production-gate-evidence-20261024`, head `c92648c235afa09b35e9930a3063b27948e6a14f`.
+- Evidence-refresh PR: [#1059](https://github.com/syd-omega-91717/sydomega-live/pull/1059), branch `docs/refresh-production-gate-evidence-20261024`. Use the PR page for its current head SHA.
 - Supabase project: `ydqhzvvoyufiiqvzcjns`; live project status returned `ACTIVE_HEALTHY`.
 - **Release status: BLOCKED.** Do not infer deployment parity from passing CI or a healthy Supabase project.
 
 ## Latest repository checks
 
-The evidence-refresh PR's latest check-run snapshot reports these checks passing: CodeQL, Gitleaks, blocking supply-chain scan, Semgrep, Trivy, fresh database replay of all migrations, runtime syntax/configuration, static contracts, workflow contracts, evidence, integrity, readiness, and Cloudflare Pages validation.
+The previously inspected PR revision `c92648c235afa09b35e9930a3063b27948e6a14f` passed CodeQL, Gitleaks, blocking supply-chain scan, Semgrep, Trivy, fresh database replay of all migrations, runtime syntax/configuration, static contracts, workflow contracts, evidence, integrity, readiness, and Cloudflare Pages validation. After the latest documentation correction, GitHub started a new check set; at this snapshot several checks are still in progress, so do not treat that new set as complete.
 
 Two release-relevant checks remain blocked:
 - **Source vs live Edge Function reconciliation fails** because `supabase/functions/stripe-webhook/index.ts` differs from the active production runtime. The job output is explicit: `EDGE_RUNTIME_RECONCILIATION=FAILED: deployed source changed without runtime reconciliation: ['stripe-webhook']`.
 - **Vercel status fails** with Vercel's account/deployment-blocked guidance. The Vercel connector currently returns 403 for team scope `syd-omega-91717s-projects`; team authorization is required before its deployment inventory can be queried again.
 
-The fresh database replay on the evidence-refresh PR passed. Supply-chain scanning also passed on the current PR. These are repository checks, not proof of provider-side lifecycle correctness.
+The successful isolated migration replay and supply-chain checks are repository evidence, not proof of provider-side lifecycle correctness.
 
 ## Current release gate
 

@@ -4,7 +4,7 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-MIGRATION = ROOT / "supabase/migrations/20261024103000_harden_provider_registry_column_access.sql"
+MIGRATION = ROOT / "supabase/migrations/20261024101622_harden_provider_registry_column_access.sql"
 SOURCE = MIGRATION.read_text(encoding="utf-8")
 LOWER = SOURCE.lower()
 

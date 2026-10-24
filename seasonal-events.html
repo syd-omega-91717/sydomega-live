@@ -10,9 +10,9 @@
   <style>
     .se-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
     .se-card { border: 1px solid rgba(168,85,247,.2); border-radius: 8px; padding: 1.5rem; background: rgba(168,85,247,.05); }
-    .se-season { font-family: var(--D); font-size: 1.2rem; color: var(--purple); margin-bottom: 0.5rem; }
+    .se-season { font-family: var(--D); font-size: var(--fs-4,20px); color: var(--purple); margin-bottom: 0.5rem; }
     .se-quest { color: var(--gold); font-weight: bold; margin: 0.75rem 0; }
-    .se-dates { font-size: 0.85rem; color: var(--muted); margin: 1rem 0; }
+    .se-dates { font-size: var(--fs-2,14px); color: var(--muted); margin: 1rem 0; }
     .se-points { display: inline-block; padding: 0.25rem 0.75rem; background: rgba(217,119,6,.2); border-radius: 4px; font-size: 0.75rem; color: var(--gold); }
     .se-active { border-color: rgba(168,85,247,.5); background: rgba(168,85,247,.1); }
     .se-empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 2rem; }
@@ -74,7 +74,7 @@
             card.innerHTML = `
               <div class="se-season">${esc(event.season_name)}</div>
               <div class="se-quest">${esc(event.title)}</div>
-              <p style="color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0;">${esc(event.description)}</p>
+              <p style="color: var(--muted); font-size: var(--fs-2,14px); margin: 0.5rem 0;">${esc(event.description)}</p>
               <div class="se-dates">
                 ${startDate.toLocaleDateString()} — ${endDate.toLocaleDateString()}
                 ${isActive ? '<br><span style="color: var(--green);">● Active Now</span>' : ''}

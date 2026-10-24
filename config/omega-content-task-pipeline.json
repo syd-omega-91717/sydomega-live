@@ -74,12 +74,12 @@
     "functions": {
       "content-ingest": {
         "status": "DEPLOYED",
-        "version": 3,
+        "version": 5,
         "verify_jwt": true
       },
       "content-delivery": {
         "status": "DEPLOYED",
-        "version": 3,
+        "version": 5,
         "verify_jwt": true
       }
     },

@@ -12,14 +12,14 @@
 .kpi-c .kpi-l{font-family:monospace;font-size:12px;letter-spacing:2px;color:#85837b;margin-top:3px}
 .rev-banner{background:linear-gradient(135deg,#0d0d0d,#0a0a14);border:1px solid #1a1a1a;padding:24px;margin-bottom:20px;position:relative;}
 .rev-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),#4CAF50,var(--cyan));}
-.rev-num{font-family:'Courier New',monospace;font-size:32px;color:var(--cyan);font-weight:700;}
+.rev-num{font-family:'Courier New',monospace;font-size:var(--fs-5,28px);color:var(--cyan);font-weight:700;}
 .rev-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;margin-bottom:4px;}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
 .stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center;}
-.stat-num{font-family:'Courier New',monospace;font-size:18px;color:var(--cyan);font-weight:700;}
+.stat-num{font-family:'Courier New',monospace;font-size:var(--fs-4,20px);color:var(--cyan);font-weight:700;}
 .stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px;}
 .stream-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:4px solid var(--cyan);padding:16px;margin-bottom:10px;position:relative;}
-.stream-name{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;}
+.stream-name{font-family:'Courier New',monospace;font-size:var(--fs-2,14px);color:#e0e0e0;font-weight:700;}
 .stream-type{font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;margin-top:2px;}
 .stream-amount{font-family:'Courier New',monospace;font-size:20px;color:var(--cyan);font-weight:700;margin:8px 0;}
 .stream-meta{display:flex;gap:10px;font-family:'Courier New',monospace;font-size:12px;color:var(--muted);flex-wrap:wrap;}
@@ -77,7 +77,7 @@
           <div><div class="rev-lbl">PASSIVE %</div><div class="rev-num" style="font-size:20px;color:#FFD700;" id="rev-passive">0%</div></div>
         </div>
       </div>
-      <div class="stats-row">
+      <div class="stats-row" data-omega-empty-guide="No income streams recorded yet." data-omega-empty-cta="Add your first stream" data-omega-empty-go=".tab-btn[data-tab='add']" data-omega-empty-focus="#tab-add">
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-streams">0</div><div class="stat-lbl">STREAMS</div></div>
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-active-s">0</div><div class="stat-lbl">ACTIVE</div></div>
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-passive-s">0</div><div class="stat-lbl">PASSIVE</div></div>
@@ -323,5 +323,6 @@ load();renderStreams();
 </script>
 <script src="/omega-local-backup.js"></script>
 <script src="/bg.js" defer></script>
+<script src="/omega-empty-guide.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

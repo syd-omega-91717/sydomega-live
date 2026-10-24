@@ -91,7 +91,8 @@ class ProgressionRpcGuardrailContract(unittest.TestCase):
     def test_migration_is_registered_as_applied_and_not_pending(self):
         version = "20261016194804"
         self.assertIn(version, self.remote.get("versions", []))
-        self.assertEqual(self.remote.get("latestRemoteMigration"), version)
+        # Applied, not necessarily the tip: later migrations land after it.
+        self.assertGreaterEqual(str(self.remote.get("latestRemoteMigration")), version)
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote.get("versions", [])))
         entry = next(
             (item for item in self.remote.get("migrations", []) if item.get("version") == version),

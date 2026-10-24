@@ -11,7 +11,7 @@
 :root{--bg:#09090b;--card:rgba(18,18,22,.95);--gold2:rgba(201,168,76,.18);--gold3:rgba(201,168,76,.06);--text:rgba(226,200,109,.85);--dim:rgba(138,134,118,.5);--S:"Space Grotesk",sans-serif;--pad:20px}
 html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height:100vh;overflow-x:hidden}
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
-.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-val{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
 .stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 .page-header{margin-bottom:24px}
 .page-title{font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:4px}
@@ -38,7 +38,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 .pattern-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px}
 .pattern-card{background:var(--card);border:1px solid rgba(201,168,76,.1);border-radius:4px;padding:16px;cursor:pointer;transition:.12s}
 .pattern-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.03)}
-.pc-icon{font-size:18px;margin-bottom:8px}
+.pc-icon{font-size:var(--fs-4,20px);margin-bottom:8px}
 .pc-name{font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:4px}
 .pc-desc{font-size:12px;letter-spacing:.5px;color:var(--dim);line-height:1.6;margin-bottom:10px}
 .pc-tags{display:flex;gap:4px;flex-wrap:wrap}

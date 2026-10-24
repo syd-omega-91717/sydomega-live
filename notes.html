@@ -13,7 +13,7 @@
 :root{--card-bg:#111;--card-border:#222;--tag-bg:#1a1a2e;--tag-active:var(--cyan)}
 .note-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative}
 .note-card:hover{border-color:var(--cyan);background:#111}
-.note-title{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;margin-bottom:6px}
+.note-title{font-family:'Courier New',monospace;font-size:var(--fs-2,14px);color:#e0e0e0;font-weight:700;margin-bottom:6px}
 .note-preview{font-size:12px;color:var(--muted);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden}
 .note-meta{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .note-date{font-size:12px;color:var(--muted);font-family:'Courier New',monospace}
@@ -51,13 +51,13 @@
 .empty-state{text-align:center;padding:60px 20px;color:var(--muted);font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px}
 .note-view{background:#0d0d0d;border:1px solid #222;padding:24px;margin-bottom:16px}
 .note-view-title{font-family:'Courier New',monospace;font-size:16px;color:var(--cyan);margin-bottom:4px}
-.note-view-body{font-size:13px;color:#ccc;line-height:1.75;white-space:pre-wrap;margin-top:14px}
+.note-view-body{font-size:var(--fs-2,14px);color:#ccc;line-height:1.75;white-space:pre-wrap;margin-top:14px}
 .note-view-body code{background:#1a1a1a;border:1px solid #333;padding:2px 6px;font-family:'Courier New',monospace;color:#FFD700;font-size:12px}
 .note-view-body strong{color:#fff}
 .note-view-body em{color:#aaa;font-style:italic}
 .note-view-body h1,.note-view-body h2,.note-view-body h3{color:var(--cyan);font-family:'Courier New',monospace;margin:12px 0 6px}
-.note-view-body h1{font-size:15px;border-bottom:1px solid #222;padding-bottom:6px}
-.note-view-body h2{font-size:13px}
+.note-view-body h1{font-size:var(--fs-3,16px);border-bottom:1px solid #222;padding-bottom:6px}
+.note-view-body h2{font-size:var(--fs-2,14px)}
 .note-view-body h3{font-size:12px}
 .note-view-body ul,.note-view-body ol{padding-left:20px;margin:8px 0}
 .note-view-body li{margin-bottom:4px}
@@ -65,7 +65,7 @@
 .note-view-actions{display:flex;gap:8px;margin-top:16px}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .stat-box{flex:1;min-width:100px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
-.stat-num{font-family:'Courier New',monospace;font-size:22px;color:var(--cyan);font-weight:700}
+.stat-num{font-family:'Courier New',monospace;font-size:var(--fs-4,20px);color:var(--cyan);font-weight:700}
 .stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
 .science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .sci-card{background:#0d0d0d;border:1px solid #1a1a1a;border-left:3px solid var(--purple);padding:16px}
@@ -270,7 +270,7 @@ function addTag(){
 function removeTag(t){currentTags=currentTags.filter(function(x){return x!==t;});renderCurrentTags();}
 function renderCurrentTags(){
   var el=document.getElementById('active-tags');
-  el.innerHTML=currentTags.map(function(t){return '<div class="active-tag">'+t+' <span class="rm" onclick="removeTag(\''+t+'\')">×</span></div>';}).join('');
+  el.innerHTML=currentTags.map(function(t){return '<div class="active-tag">'+esc(t)+' <span class="rm" onclick="removeTag('+esc(JSON.stringify(t))+')">×</span></div>';}).join('');
 }
 
 function ins(before,after){
@@ -335,7 +335,7 @@ function renderTagCloud(){
   var tags=Object.entries(counts).sort(function(a,b){return b[1]-a[1];}).slice(0,20);
   if(!tags.length){cloud.innerHTML='';return;}
   cloud.innerHTML=tags.map(function(e){var t=e[0],c=e[1];
-    return '<div class="filter-tag'+(activeTagFilter===t?' active':'')+'" onclick="filterByTag(\''+t+'\')" title="'+c+' notes">'+t+' <small>'+c+'</small></div>';
+    return '<div class="filter-tag'+(activeTagFilter===t?' active':'')+'" onclick="filterByTag('+esc(JSON.stringify(t))+')" title="'+c+' notes">'+esc(t)+' <small>'+c+'</small></div>';
   }).join('');
 }
 
@@ -361,14 +361,14 @@ function renderNotes(){
 function noteCard(n){
   var col=CAT_COLORS[n.cat]||'#00E5FF';
   var prev=n.body.slice(0,180).replace(/[*#`_>]/g,'');
-  return '<div class="note-card card card-edge'+(n.pinned?' pinned':'')+'" style="--card-accent:'+col+'" onclick="viewNote(\''+n.id+'\')">'
-    +'<button class="del-btn" onclick="delNote(event,\''+n.id+'\')">DEL</button>'
-    +'<button class="pin-btn'+(n.pinned?' pinned':'')+'" onclick="togglePin(event,\''+n.id+'\')">'+(n.pinned?'★':'☆')+'</button>'
+  return '<div class="note-card card card-edge'+(n.pinned?' pinned':'')+'" style="--card-accent:'+col+'" onclick="viewNote('+esc(JSON.stringify(n.id))+')">'
+    +'<button class="del-btn" onclick="delNote(event,'+esc(JSON.stringify(n.id))+')">DEL</button>'
+    +'<button class="pin-btn'+(n.pinned?' pinned':'')+'" onclick="togglePin(event,'+esc(JSON.stringify(n.id))+')">'+(n.pinned?'★':'☆')+'</button>'
     +'<div class="note-title">'+esc(n.title)+'</div>'
     +'<div class="note-preview">'+esc(prev)+(n.body.length>180?'…':'')+'</div>'
     +'<div class="note-meta">'
     +'<span class="note-date">'+new Date(n.updated||n.created).toLocaleDateString()+'</span>'
-    +'<span class="tag-chip" style="border-color:'+col+';color:'+col+'">'+n.cat.toUpperCase()+'</span>'
+    +'<span class="tag-chip" style="border-color:'+col+';color:'+col+'">'+esc(n.cat.toUpperCase())+'</span>'
     +n.tags.map(function(t){return '<span class="tag-chip">'+esc(t)+'</span>';}).join('')
     +'</div></div>';
 }
@@ -397,11 +397,11 @@ function viewNote(id){
     '<div class="note-view">'
     +'<div class="note-view-title" style="color:'+col+'">'+esc(n.title)+'</div>'
     +'<div style="font-size:12px;color:var(--muted);font-family:\'Courier New\',monospace;">'
-    +new Date(n.created).toLocaleString()+' · '+wordCount(n.body)+' words · '+n.cat.toUpperCase()
+    +new Date(n.created).toLocaleString()+' · '+wordCount(n.body)+' words · '+esc(n.cat.toUpperCase())
     +n.tags.map(function(t){return ' · <span class="tag-chip">'+esc(t)+'</span>';}).join('')+'</div>'
     +'<div class="note-view-body">'+html+'</div>'
     +'<div class="note-view-actions">'
-    +'<button class="btn-secondary" onclick="editNote(\''+id+'\')">EDIT</button>'
+    +'<button class="btn-secondary" onclick="editNote('+esc(JSON.stringify(id))+')">EDIT</button>'
     +'<button class="btn-secondary" onclick="document.getElementById(\'view-area\').innerHTML=\'\'">CLOSE</button>'
     +'</div></div>';
   document.getElementById('view-area').scrollIntoView({behavior:'smooth'});

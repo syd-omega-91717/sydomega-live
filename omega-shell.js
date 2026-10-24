@@ -61,12 +61,12 @@
     '@keyframes omega-shell-spin{to{transform:rotate(360deg)}}',
     '@media (prefers-reduced-motion:reduce){',
     '.omega-shell-spinner{animation:none;border-top-color:currentColor;opacity:.35}}',
-    '.omega-shell-msg{font-size:.9rem;line-height:1.5;max-width:38ch;margin:0}',
+    '.omega-shell-msg{font-size:var(--fs-2,14px);line-height:1.5;max-width:38ch;margin:0}',
     '.omega-shell-detail{font-size:.75rem;opacity:.6;max-width:52ch;margin:0;',
     'word-break:break-word}',
     '.omega-shell-retry{cursor:pointer;border:1px solid currentColor;',
     'background:transparent;color:inherit;border-radius:6px;',
-    'padding:.45rem 1.1rem;font:inherit;font-size:.85rem;opacity:.9}',
+    'padding:.45rem 1.1rem;font:inherit;font-size:var(--fs-2,14px);opacity:.9}',
     '.omega-shell-retry:hover{opacity:1}',
     '.omega-shell-retry:focus-visible{outline:2px solid currentColor;',
     'outline-offset:2px}'
@@ -289,7 +289,7 @@
         b.id = id;
         b.setAttribute('role', 'status');
         b.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;' +
-          'padding:.6rem 1rem;text-align:center;font-size:.85rem;' +
+          'padding:.6rem 1rem;text-align:center;font-size:var(--fs-2,14px);' +
           'background:rgba(0,0,0,.85);color:#fff';
         document.body.appendChild(b);
       }

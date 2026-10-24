@@ -27,10 +27,16 @@ Every one of these failed silently, because the Supabase client resolves to
 Several were additionally masked by a missing table GRANT, which rejected the
 request before Postgres ever looked at the conflict target.
 
-Findings are advisory (exit 0) because the source of truth is the flat
-supabase/*.sql bag, which does not always match the live database -- see
-CLAUDE.md section 5. Treat a finding as a candidate to verify against live,
-not a verdict.
+Scope: root *.js / *.html AND supabase/functions/**/*.ts. Edge Functions were
+out of scope until 2026-10-17, which is how product-orchestrator's flag upsert
+(no onConflict on member_feature_flags, UNIQUE(member_id, feature_id)) went
+unseen -- the 23505 shape above, one directory over.
+
+Exit 1 on any finding. ci.yml and ci-local.sh have always run this as a
+BLOCKING step, but it exited 0 regardless, so a finding printed and the merge
+passed. The unique keys come from supabase/*.sql + supabase/migrations/*.sql,
+which can drift from live (CLAUDE.md section 5): verify a finding against the
+live schema before changing code, and fix the key or the call, not the gate.
 
 WHAT THIS CANNOT CATCH, stated plainly: a constraint the SQL bag declares but
 the live database does not actually have. ai_memory was exactly that -- the bag
@@ -169,7 +175,8 @@ UPSERT_RE = re.compile(r"\.from\(\s*['\"](\w+)['\"]\s*\)\s*\.\s*upsert\s*\(", re
 
 def scan_clients(keys):
     findings = []
-    files = sorted(list(_ROOT.glob("*.js")) + list(_ROOT.glob("*.html")))
+    files = sorted(list(_ROOT.glob("*.js")) + list(_ROOT.glob("*.html"))
+                   + list((_ROOT / "supabase" / "functions").glob("**/*.ts")))
     for path in files:
         src = path.read_text(encoding="utf-8", errors="ignore")
         for m in UPSERT_RE.finditer(src):
@@ -192,7 +199,7 @@ def scan_clients(keys):
                 target = [c.strip().lower() for c in oc.group(1).split(",")]
                 if not any(sorted(target) == sorted(k) for k in all_keys):
                     findings.append((
-                        path.name, line, table, "42P10",
+                        str(path.relative_to(_ROOT)), line, table, "42P10",
                         "onConflict '%s' matches no unique key in supabase/*.sql%s"
                         % (oc.group(1),
                            (" (known keys: " +
@@ -216,7 +223,7 @@ def scan_clients(keys):
             payload = set(k.lower() for k in H._top_level_keys(body or ""))
             if payload and not set(pk).issubset(payload):
                 findings.append((
-                    path.name, line, table, "23505",
+                    str(path.relative_to(_ROOT)), line, table, "23505",
                     "no onConflict; defaults to PK (%s) which the payload does "
                     "not set, so this inserts every time and will collide with "
                     "UNIQUE(%s)" % (",".join(pk),
@@ -243,12 +250,12 @@ def main():
         print("  %s:%d — %s [%s]" % (name, line, table, code))
         print("      %s" % msg)
     print("""
-Advisory only: the flat supabase/*.sql bag is the source of truth here and does
-not always match live (CLAUDE.md section 5). Verify a finding against the live
-schema before changing code -- and remember the failure is silent, since the
-Supabase client resolves to {data, error} rather than throwing.""")
+The unique keys come from supabase/*.sql + migrations, which can drift from live
+(CLAUDE.md section 5). Verify a finding against the live schema before changing
+code -- and remember the failure is silent, since the Supabase client resolves to
+{data, error} rather than throwing.""")
     print("=" * 70)
-    return 0
+    return 1
 
 
 if __name__ == "__main__":

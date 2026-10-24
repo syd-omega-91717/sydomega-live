@@ -196,6 +196,7 @@ var STAGES=[
 ];
 var APEX=27.8367,PHI=1.6180339887,EU=2.7182818285;
 var KEY='omega_milestones';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var milestones=JSON.parse(localStorage.getItem(KEY)||'[]');
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
@@ -218,7 +219,7 @@ function renderStages(auth){
       +(active?'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;background:'+s.color+';color:#000;padding:1px 5px">CURRENT</div>':'')
       +(unlocked&&!active?'<div style="font-family:var(--M);font-size:12px;color:var(--green)">&check; CLEARED</div>':'')
       +'</div>'
-      +'<div style="font-family:var(--D);font-size:13px;color:'+s.color+';margin-bottom:4px">'+s.title+'</div>'
+      +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:'+s.color+';margin-bottom:4px">'+s.title+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:8px">AUTH &ge; '+s.min.toFixed(4)+'</div>'
       +'<div style="font-size:12px;color:var(--ink);opacity:.75;margin-bottom:10px">'+s.desc+'</div>'
       +'<div style="background:rgba(255,255,255,.06);border-radius:2px;height:4px">'
@@ -259,10 +260,10 @@ function renderMilestones(){
     var colors={knowledge:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),mastery:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),contribution:'#4CAF50',stage:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')};
     return '<div style="border:1px solid var(--line);border-left:3px solid '+(colors[m.cat]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'))+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px;display:flex;gap:12px;align-items:flex-start">'
       +'<div style="flex:1">'
-      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+(colors[m.cat]||'var(--gold)')+';margin-bottom:4px">'+m.cat.toUpperCase()+'</div>'
-      +'<div style="font-size:13px">'+m.text+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+(colors[m.cat]||'var(--gold)')+';margin-bottom:4px">'+esc(m.cat.toUpperCase())+'</div>'
+      +'<div style="font-size:var(--fs-2,14px)">'+esc(m.text)+'</div>'
       +'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);flex-shrink:0">'+m.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);flex-shrink:0">'+esc(m.date)+'</div>'
       +'</div>';
   }).join('');
 }

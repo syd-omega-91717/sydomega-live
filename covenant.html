@@ -9,7 +9,7 @@
   <script src="/nav.js" defer></script>
   <style>
     .cov-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.5rem; background: rgba(217,119,6,.1); border-radius: 8px; border: 1px solid rgba(217,119,6,.2); }
-    .cov-month { font-family: var(--D); font-size: 1.5rem; color: var(--gold); }
+    .cov-month { font-family: var(--D); font-size: var(--fs-5,28px); color: var(--gold); }
     .cov-progress { display: flex; gap: 1rem; align-items: center; }
     .cov-bar { flex: 1; min-width: 200px; }
     .cov-bar-track { width: 100%; height: 8px; background: rgba(255,255,255,.1); border-radius: 4px; overflow: hidden; }
@@ -19,7 +19,7 @@
     .cov-task:hover { border-color: rgba(217,119,6,.5); background: rgba(217,119,6,.05); }
     .cov-task.completed { opacity: 0.6; }
     .cov-task-domain { font-size: 0.75rem; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem; }
-    .cov-task-desc { color: var(--ink); margin: 0.5rem 0; font-size: 0.95rem; }
+    .cov-task-desc { color: var(--ink); margin: 0.5rem 0; font-size: var(--fs-3,16px); }
     .cov-task-points { color: var(--gold); font-weight: bold; margin-top: 0.5rem; }
     .cov-premium { background: linear-gradient(135deg, rgba(168,85,247,.1), rgba(217,119,6,.1)); border: 1px solid rgba(168,85,247,.3); }
     .cov-empty { text-align: center; color: var(--muted); padding: 3rem; grid-column: 1 / -1; }
@@ -123,7 +123,7 @@
                 <div>
                   <div class="cov-task-domain">${esc(task.domain)}</div>
                   <div class="cov-task-desc">${esc(task.description)}</div>
-                  ${task.is_premium ? '<div style="font-size: 0.7rem; color: var(--purple); margin-top: 0.5rem;">PREMIUM</div>' : ''}
+                  ${task.is_premium ? '<div style="font-size: var(--fs-1,12px); color: var(--purple); margin-top: 0.5rem;">PREMIUM</div>' : ''}
                 </div>
                 <div style="text-align: right;">
                   <div class="cov-task-points">${esc(task.points)}pt</div>

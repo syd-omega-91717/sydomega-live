@@ -32,7 +32,7 @@ async function load(){
   const [projects,assets,providers,jobs]=await Promise.all([
     sb.from('omega_creative_projects').select('id,name,description,project_type,status,truth_state,created_at,updated_at').order('created_at',{ascending:false}),
     sb.from('omega_creative_assets').select('id,project_id,asset_type,title,prompt,provider,provider_asset_id,status,truth_state,source_uri,content_sha256,license,created_at,updated_at').order('created_at',{ascending:false}),
-    sb.from('omega_provider_registry').select('id,provider_key,display_name,adapter_kind,capabilities,status,metadata').order('display_name'),
+    sb.from('omega_provider_registry').select('id,provider_key,display_name,adapter_kind,capabilities,status').order('display_name'),
     sb.from('omega_provider_jobs').select('id,provider_id,asset_id,capability,status,external_job_id,error_code,error_message,created_at,updated_at').order('created_at',{ascending:false}).limit(100)
   ]);
   for(const r of [projects,assets,providers,jobs])if(r.error)throw r.error;

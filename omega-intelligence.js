@@ -97,18 +97,11 @@
       return '- '+t.name+': '+t.desc;
     }).join('\n');
 
-    var ctx = '';
-    if(profile){
-      var a=Number(profile.axis_a||0.001),b=Number(profile.axis_b||0.001),c=Number(profile.axis_c||0.001);
-      var auth=profile.is_owner?APEX:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-      ctx='\nMEMBER CONTEXT: auth='+auth.toFixed(4)+' axis_a='+a.toFixed(3)+' axis_b='+b.toFixed(3)+' axis_c='+c.toFixed(3)+' sign='+(profile.sign||'?')+' element='+(profile.element||'?')+' is_owner='+(profile.is_owner||false);
-    }
-
     var system='You are the Sovereign Intelligence Engine of SYD OMEGA 91717.\n'
       +'CANONICAL FACTS: AUTH=sqrt(A³+B³+C³)×φ/e, φ='+PHI+', e='+EU+', apex='+APEX+', trial='+TRIAL+'s, dedication='+DEDICATION+'s, lattice=104976 nodes.\n'
       +'AVAILABLE TOOLS:\n'+toolsDesc+'\n'
       +'To call a tool respond with: TOOL:tool_name:{"arg":"val"}\n'
-      +'Keep responses concise (under 150 words). Be precise. Never fabricate numbers.'+ctx;
+      +'Keep responses concise (under 150 words). Be precise. Never fabricate numbers.';
 
     var msgs = (history||[]).slice(-4).concat([{role:'user',content:query}]);
 

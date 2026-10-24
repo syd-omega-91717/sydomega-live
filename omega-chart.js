@@ -75,13 +75,21 @@
     });
   }
 
+  /* Any chart on this canvas, not only one this module drew: omega-oss.js
+     draws onto shared canvases too, and new Chart() on a canvas that still
+     holds one throws "Canvas is already in use" (client_errors). */
+  function release(Chart, canvas){
+    var prev = (typeof Chart.getChart === 'function' && Chart.getChart(canvas)) || canvas._omegaChart;
+    if(prev) prev.destroy();
+  }
+
   var API = {};
 
   API.line = function(canvas, labels, data, opts){
     opts = opts || {};
     var col = resolveColor(opts.color||'gold');
     require(function(Chart){
-      if(canvas._omegaChart) canvas._omegaChart.destroy();
+      release(Chart, canvas);
       canvas._omegaChart = new Chart(canvas, {
         type: 'line',
         data: {
@@ -114,7 +122,7 @@
   API.bar = function(canvas, labels, datasets, opts){
     opts = opts || {};
     require(function(Chart){
-      if(canvas._omegaChart) canvas._omegaChart.destroy();
+      release(Chart, canvas);
       /* Ensure each dataset has sovereign colors */
       datasets = datasets.map(function(ds, i){
         var keys = Object.keys(COLOR);
@@ -140,7 +148,7 @@
     opts = opts || {};
     var col = resolveColor(opts.color||'cyan');
     require(function(Chart){
-      if(canvas._omegaChart) canvas._omegaChart.destroy();
+      release(Chart, canvas);
       canvas._omegaChart = new Chart(canvas, {
         type: 'radar',
         data:{
@@ -164,7 +172,7 @@
     opts = opts || {};
     var cols = ['#C9A84C','#00E5FF','#3fb27f','#9B6BF0','#C4453C'];
     require(function(Chart){
-      if(canvas._omegaChart) canvas._omegaChart.destroy();
+      release(Chart, canvas);
       canvas._omegaChart = new Chart(canvas, {
         type: 'doughnut',
         data:{

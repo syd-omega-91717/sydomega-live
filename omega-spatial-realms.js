@@ -28,7 +28,7 @@
     .omega-spatial-action{appearance:none;border:1px solid color-mix(in srgb,var(--realm) 45%,transparent);background:rgba(2,2,6,.72);color:var(--realm);padding:9px 12px;font:12px var(--M,Courier\ Prime,monospace);letter-spacing:1.5px;text-decoration:none;cursor:pointer;backdrop-filter:blur(10px)}
     .omega-spatial-action:hover,.omega-spatial-action:focus-visible{border-color:var(--realm);box-shadow:0 0 18px color-mix(in srgb,var(--realm) 18%,transparent);outline:none}
     .omega-spatial-nodes{position:absolute;inset:0;z-index:3;pointer-events:none;transform-style:preserve-3d}
-    .omega-spatial-node{position:absolute;min-width:84px;padding:8px 10px;border:1px solid color-mix(in srgb,var(--realm) 38%,transparent);background:rgba(2,2,6,.72);font:10px var(--M,Courier\ Prime,monospace);letter-spacing:1px;color:var(--ink,#e8e3d2);text-align:center;transform-style:preserve-3d;backdrop-filter:blur(8px)}
+    .omega-spatial-node{position:absolute;min-width:84px;padding:8px 10px;border:1px solid color-mix(in srgb,var(--realm) 38%,transparent);background:rgba(2,2,6,.72);font:var(--fs-1,12px) var(--M,Courier\ Prime,monospace);letter-spacing:1px;color:var(--ink,#e8e3d2);text-align:center;transform-style:preserve-3d;backdrop-filter:blur(8px)}
     .omega-spatial-node.n1{left:18%;top:28%;transform:translateZ(120px) rotateY(-12deg)}
     .omega-spatial-node.n2{right:18%;top:24%;transform:translateZ(95px) rotateY(14deg)}
     .omega-spatial-node.n3{left:24%;bottom:28%;transform:translateZ(75px) rotateY(-10deg)}

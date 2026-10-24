@@ -5,12 +5,14 @@ on:
       - fix/spatial-runtime-bootstrap
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: omega-spatial-runtime-bootstrap
   cancel-in-progress: true
 jobs:
   integrate:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

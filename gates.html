@@ -117,6 +117,7 @@ var GATES=[
 ];
 var DOMAIN_COLORS={MIND:'#9B6BF0',BODY:'#4CAF50',INTEL:'#00E5FF',WEALTH:'#C9A84C',CRAFT:'#FF9800',SOCIAL:'#00BCD4',POWER:'#E2C86D',TRIAL:'#FF4444',LEGACY:'#4CAF50',APEX:'#FFD700'};
 var KEY='omega_gates';var HKEY='omega_gate_history';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var gateData=JSON.parse(localStorage.getItem(KEY)||'{}');
 var history=JSON.parse(localStorage.getItem(HKEY)||'[]');
 
@@ -153,8 +154,8 @@ function renderGates(auth){
       +'<div style="font-family:var(--D);font-size:12px;color:'+(st==='mastered'?dc:st==='open'?'var(--gold)':'var(--muted)')+';margin-bottom:6px">'+g.title+'</div>'
       +'<div style="font-size:12px;color:var(--ink);opacity:.75;line-height:1.6;margin-bottom:8px">'+g.desc+'</div>'
       +(st!=='locked'?'<div style="display:flex;gap:8px;margin-top:6px">'
-        +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+attempts+' attempts</div>'
-        +'<div style="font-family:var(--M);font-size:12px;color:var(--green)">'+passes+' passed</div>'
+        +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(attempts)+' attempts</div>'
+        +'<div style="font-family:var(--M);font-size:12px;color:var(--green)">'+esc(passes)+' passed</div>'
         +(st==='open'?'<button onclick="masterGate('+g.id+')" style="margin-left:auto;background:rgba(63,178,127,.15);border:1px solid var(--green);color:var(--green);font-family:var(--M);font-size:12px;padding:3px 8px;cursor:pointer;letter-spacing:1px">MARK MASTERED</button>':'')
         +'</div>':'')
       +'</div>';
@@ -173,10 +174,10 @@ function renderHistory(){
     return '<div style="border:1px solid var(--line);border-left:3px solid '+(h.outcome==='pass'?'var(--green)':'#FF4444')+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
       +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">'
       +'<div style="font-family:var(--M);font-size:12px;color:'+(h.outcome==='pass'?'var(--green)':'#FF4444')+'">'+(h.outcome==='pass'?'PASSED':'FAILED')+'</div>'
-      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+h.gateTitle+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+h.date+'</div>'
+      +'<div style="font-family:var(--D);font-size:12px;color:var(--gold)">'+esc(h.gateTitle)+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+esc(h.date)+'</div>'
       +'</div>'
-      +(h.notes?'<div style="font-size:12px;color:var(--ink);opacity:.75">'+h.notes+'</div>':'')
+      +(h.notes?'<div style="font-size:12px;color:var(--ink);opacity:.75">'+esc(h.notes)+'</div>':'')
       +'</div>';
   }).join('');
 }

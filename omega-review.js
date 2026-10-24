@@ -17,13 +17,20 @@
    overwritten with a stale copy. Words reviewed are added to
    omega_vocab_log, the log vocabulary.html's stats and streak read.
 
+   A third deck joined 2026-10-18: exam.html's FLASHCARDS tab (omega_exam).
+   Its items use omega-srs.js's 'word' fields (exam.html grades them as
+   'word'), so SRS_KIND maps it there; a card with no nextReview yet is due,
+   as exam.html's own isDue() has it.
+
    Member text (card faces, words, definitions) is set with textContent only.
    ========================================================================== */
 (function () {
   'use strict';
   if (window.OmegaReview) return;
 
-  var CARDS = 'omega_fc_cards', DECKS = 'omega_fc_decks', WORDS = 'omega_vocab', VLOG = 'omega_vocab_log';
+  var CARDS = 'omega_fc_cards', DECKS = 'omega_fc_decks', WORDS = 'omega_vocab', VLOG = 'omega_vocab_log', EXAM = 'omega_exam';
+  var STORE = { card: CARDS, word: WORDS, exam: EXAM };
+  var SRS_KIND = { card: 'card', word: 'word', exam: 'word' };
   var MAX = 40;
 
   function read(k) { try { var v = localStorage.getItem(k); return v == null ? null : JSON.parse(v); } catch (e) { return null; } }
@@ -31,7 +38,7 @@
   function iso(d) { return d.toISOString().slice(0, 10); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
-  /* Due cards and due words, oldest due first within each, then alternated. */
+  /* Due cards, words and exam cards, oldest due first within each, then interleaved. */
   function build() {
     var S = window.OmegaSRS, today = iso(new Date());
     var decks = {}; (read(DECKS) || []).forEach(function (d) { if (d && d.id != null) decks[d.id] = d.name; });
@@ -41,24 +48,26 @@
     var ws = (read(WORDS) || []).filter(function (w) { return w && S.isDue(w, 'word', today); })
       .sort(function (a, b) { return String(a.nextReview).localeCompare(String(b.nextReview)); })
       .map(function (w) { return { kind: 'word', id: w.id, front: w.term, back: w.def, extra: w.example, tag: 'WORD', item: w }; });
-    var q = [];
-    for (var i = 0; q.length < MAX && (i < cs.length || i < ws.length); i++) {
-      if (i < cs.length) q.push(cs[i]);
-      if (i < ws.length && q.length < MAX) q.push(ws[i]);
+    var es = (read(EXAM) || []).filter(function (x) { return x && x.id != null && (!x.nextReview || S.isDue(x, 'word', today)); })
+      .sort(function (a, b) { return String(a.nextReview || '').localeCompare(String(b.nextReview || '')); })
+      .map(function (x) { return { kind: 'exam', id: x.id, front: x.q, back: x.a, tag: x.domain || 'EXAM', item: x }; });
+    var q = [], lists = [cs, ws, es];
+    for (var i = 0; q.length < MAX && lists.some(function (l) { return i < l.length; }); i++) {
+      lists.forEach(function (l) { if (i < l.length && q.length < MAX) q.push(l[i]); });
     }
-    return { queue: q, cards: cs.length, words: ws.length };
+    return { queue: q, cards: cs.length, words: ws.length, exams: es.length };
   }
 
-  function counts() { var b = build(); return { cards: b.cards, words: b.words, total: b.cards + b.words }; }
+  function counts() { var b = build(); return { cards: b.cards, words: b.words, exams: b.exams, total: b.cards + b.words + b.exams }; }
 
   /* Read-modify-write one item by id, so a stale copy never overwrites. */
   function commit(entry, q) {
-    var key = entry.kind === 'card' ? CARDS : WORDS;
+    var key = STORE[entry.kind];
     var list = read(key); if (!Array.isArray(list)) return false;
     var i = -1;
     for (var j = 0; j < list.length; j++) if (list[j] && String(list[j].id) === String(entry.id)) { i = j; break; }
     if (i < 0) return false;
-    window.OmegaSRS.review(list[i], q, entry.kind);
+    window.OmegaSRS.review(list[i], q, SRS_KIND[entry.kind]);
     if (!write(key, list)) return false;
     if (entry.kind === 'word') {
       var log = read(VLOG); log = Array.isArray(log) ? log : [];
@@ -80,8 +89,8 @@
       '.orv-top b{color:var(--gold,#C9A84C);font-weight:400}.orv-x{margin-left:auto}' +
       '.orv-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin:12px 0 18px;overflow:hidden}.orv-bar i{display:block;height:100%;background:var(--gold,#C9A84C)}' +
       '.orv-tag{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;color:var(--cyan,#4FC3D8)}' +
-      '.orv-front{font-family:var(--R,sans-serif);font-size:22px;color:var(--ink,#E8E2D0);margin:10px 0 16px;white-space:pre-wrap;overflow-wrap:anywhere}' +
-      '.orv-back{font-family:var(--R,sans-serif);font-size:17px;color:var(--ink,#E8E2D0);border-top:1px solid rgba(201,168,76,.2);padding-top:14px;white-space:pre-wrap;overflow-wrap:anywhere}' +
+      '.orv-front{font-family:var(--R,sans-serif);font-size:var(--fs-4,20px);color:var(--ink,#E8E2D0);margin:10px 0 16px;white-space:pre-wrap;overflow-wrap:anywhere}' +
+      '.orv-back{font-family:var(--R,sans-serif);font-size:var(--fs-3,16px);color:var(--ink,#E8E2D0);border-top:1px solid rgba(201,168,76,.2);padding-top:14px;white-space:pre-wrap;overflow-wrap:anywhere}' +
       '.orv-ex{font-style:italic;color:var(--muted,#9A968A);margin-top:8px}' +
       '.orv-btns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px}' +
       '.orv button{font-family:var(--M,monospace);font-size:12px;letter-spacing:1px;padding:10px 6px;border-radius:8px;cursor:pointer;border:1px solid rgba(201,168,76,.4);color:var(--gold,#C9A84C);background:none}' +
@@ -89,7 +98,7 @@
       '.orv .orv-btns button{display:flex!important;flex-direction:column;align-items:center;gap:3px}.orv-btns button small{opacity:.75;font-size:12px}' +
       '.orv-btns button[data-q="1"]{border-color:rgba(207,103,96,.6);color:var(--crim,#CF6760)}' +
       '.orv-show{width:100%;margin-top:6px}' +
-      '.orv-done{font-family:var(--R,sans-serif);font-size:18px;color:var(--ink,#E8E2D0);margin:8px 0 16px}';
+      '.orv-done{font-family:var(--R,sans-serif);font-size:var(--fs-4,20px);color:var(--ink,#E8E2D0);margin:8px 0 16px}';
     document.head.appendChild(s);
   }
 
@@ -100,6 +109,7 @@
     document.removeEventListener('keydown', onKey, true);
     if (state && state.done && window.OmegaToday && window.OmegaToday.render) window.OmegaToday.render();
     state = null;
+    try { document.dispatchEvent(new CustomEvent('omega-review:closed')); } catch (e) { /* old browser */ }
     if (lastFocus && lastFocus.focus) try { lastFocus.focus(); } catch (e) {}
   }
 
@@ -115,7 +125,7 @@
 
   function grade(q) {
     var entry = state.queue[state.i];
-    if (commit(entry, q)) { state.done++; state[entry.kind === 'card' ? 'doneCards' : 'doneWords']++; }
+    if (commit(entry, q)) { state.done++; state.doneBy[entry.kind]++; }
     else state.failed++;
     state.i++; state.shown = false; paint();
   }
@@ -133,7 +143,9 @@
 
     if (state.i >= n) {
       box.setAttribute('data-omega-review-state', 'done');
-      box.appendChild(el('div', 'orv-done', n ? state.done + ' reviewed — ' + state.doneCards + ' card' + (state.doneCards === 1 ? '' : 's') + ', ' + state.doneWords + ' word' + (state.doneWords === 1 ? '' : 's') + '.' : 'Nothing is due. Cards and words you study come back here on their day.'));
+      var parts = [['card', 'card'], ['word', 'word'], ['exam', 'exam card']].filter(function (p) { return state.doneBy[p[0]]; })
+        .map(function (p) { var c = state.doneBy[p[0]]; return c + ' ' + p[1] + (c === 1 ? '' : 's'); });
+      box.appendChild(el('div', 'orv-done', n ? state.done + ' reviewed' + (parts.length ? ' — ' + parts.join(', ') : '') + '.' : 'Nothing is due. Cards and words you study come back here on their day.'));
       if (state.failed) box.appendChild(el('div', 'orv-ex', state.failed + ' could not be saved — the item was removed on its page meanwhile.'));
       var rest = counts();
       if (rest.total) box.appendChild(el('div', 'orv-ex', rest.total + ' more due — the queue takes ' + MAX + ' at a time.'));
@@ -158,7 +170,7 @@
     window.OmegaSRS.BUTTONS.forEach(function (b) {
       var btn = el('button'); btn.type = 'button'; btn.setAttribute('data-q', String(b.q));
       btn.appendChild(document.createTextNode(b.label));
-      btn.appendChild(el('small', null, window.OmegaSRS.hint(e.item, b.q, e.kind)));
+      btn.appendChild(el('small', null, window.OmegaSRS.hint(e.item, b.q, SRS_KIND[e.kind])));
       btn.title = b.label + ' (key ' + b.key + ')';
       btn.addEventListener('click', function () { grade(b.q); });
       row.appendChild(btn);
@@ -173,7 +185,7 @@
     css();
     lastFocus = document.activeElement;
     var b = build();
-    state = { queue: b.queue, i: 0, shown: false, done: 0, doneCards: 0, doneWords: 0, failed: 0 };
+    state = { queue: b.queue, i: 0, shown: false, done: 0, doneBy: { card: 0, word: 0, exam: 0 }, failed: 0 };
     var o = el('div'); o.id = 'omega-review';
     o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true'); o.setAttribute('aria-label', 'Review queue');
     o.addEventListener('click', function (ev) { if (ev.target === o) close(); });

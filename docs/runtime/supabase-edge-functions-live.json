@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-16T19:38:01.341Z",
+  "captured_at": "2026-10-24T08:53:35.759Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
     "concierge": {
       "state": "DEPLOYED",
-      "version": 8,
+      "version": 12,
       "verify_jwt": true,
-      "live_sha256": "b7b8b3a8665a9fe72920fc334ba2622c43fa6a64dd88f97cc78837f180cd0bb2",
-      "repository_blob_sha": "1c32c845e716ac1d1fc702e1dc28c5b5c142ef92"
+      "live_sha256": "3b0faf3d5a84083d13983701d647075793bcb8e485177fd0367ffd0ff77b7f1e",
+      "repository_blob_sha": "3fc1bf525d718044d35c053de420ca0199c935f2"
     },
     "concierge-orchestrator": {
       "state": "DEPLOYED",
@@ -27,17 +27,17 @@
     },
     "product-orchestrator": {
       "state": "DEPLOYED",
-      "version": 7,
+      "version": 9,
       "verify_jwt": true,
-      "live_sha256": "ab1326ee6f3a8cfc76c466945715fab0208b1c9d24868c274faa2cefffceb2d2",
-      "repository_blob_sha": "8b0f55110215608545e277771bddca91510a4a29"
+      "live_sha256": "e0a3ca91e1e1ec47f5d2588fd0a590405c836936bcf59fc7573e8a9883bebf46",
+      "repository_blob_sha": "13a8b41c72143377c2ba393fdb17f9ba99fbed7d"
     },
     "stripe-webhook": {
       "state": "DEPLOYED",
-      "version": 5,
+      "version": 8,
       "verify_jwt": false,
-      "live_sha256": "381468ae364c532a921b57f3322d3c2f7d4368c0f25901be3e00916b7a08bf4a",
-      "repository_blob_sha": "5527316e0c4f6eeac15755a4342599c562acba74"
+      "live_sha256": "de1bd074d6dee903be3b68b04ef72e380eccae9b532a96bde7f93c00550b7b1f",
+      "repository_blob_sha": "e82865f141b42fc4bbaf7f64b76515b91d79551a"
     },
     "secrets-health": {
       "state": "DEPLOYED",
@@ -55,30 +55,30 @@
     },
     "evidence-graph": {
       "state": "DEPLOYED",
-      "version": 5,
+      "version": 84,
       "verify_jwt": false,
-      "live_sha256": "6d9e7825d002762d93cb1d3c96e838c8fa5229e0fc38c6c5ea553c5d8581a8de",
+      "live_sha256": "1bfaefbf26018fb7951b4b72d4a098d568810cdc0831362d819f1c6cd9b41441",
       "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 184,
+      "version": 263,
       "verify_jwt": false,
-      "live_sha256": "2bf55db2df2dd3cb2e57173e36aa98a24c0f81eaa92d7caedf3b42e2eef86de5",
+      "live_sha256": "cafc9224c989b583ff98e923a6fef1a5552601a641aa7edb16e7c571abf15d4c",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 188,
+      "version": 267,
       "verify_jwt": true,
-      "live_sha256": "975eae3408031dce32dccc1f6a17b1798053cc7bc28ea7309e0a19de9b3309ec",
+      "live_sha256": "c9f166524e74b03c7a6cda23576ecf6d561d8d2a1f0fbd2f1ddd86c6b5965936",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 184,
+      "version": 263,
       "verify_jwt": false,
-      "live_sha256": "7c269bfe0871fc8e91bd21f09cc835089e7fc0746ecb866f86351d5e4e06b501",
+      "live_sha256": "f4ef3f033e1e4fe5d16be07a629a8267b960b49fec95f45571331c2f1df354a0",
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc"
     },
     "intel-feed": {
@@ -90,34 +90,34 @@
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
-      "version": 5,
+      "version": 84,
       "verify_jwt": false,
-      "live_sha256": "5e348d1c116193b0b101378a042d639294f1db66005fb0ca1ce39fdb63546e43",
+      "live_sha256": "e1f91cf5f0fdb1391eac1e42cb48a9351697d0cfd3fee44844a1484a7c0ab77b",
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
-      "version": 94,
+      "version": 173,
       "verify_jwt": false,
-      "live_sha256": "8d6b528c33ee38b3807ebc5a247423f0e8484f86d10f86fc8a26c07aec98236f",
+      "live_sha256": "af2372cc7fa4a5169bf333a4b51c999dd91c401b57fb0a47a8179dc3c134c106",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
-    },
-    "checkout": {
-      "state": "LOCAL_ONLY"
-    },
-    "content-delivery": {
-      "state": "DEPLOYED",
-      "version": 4,
-      "verify_jwt": true,
-      "live_sha256": "3d92f6a8038d9a4fd8816da3ae031d6eb9ccc443f4bf2553becb6e9b625764f0",
-      "repository_blob_sha": "6af8faface5d678de6519be4c6a913ddd589dc7d"
     },
     "content-ingest": {
       "state": "DEPLOYED",
-      "version": 4,
+      "version": 6,
       "verify_jwt": true,
-      "live_sha256": "6267ea76df2c0649b580e002d409d7f018ed1cc2e05606aad408d796d1f4c1a6",
-      "repository_blob_sha": "cf97e6496efc9bfe5cd87b35cd5cdc03909cbef0"
+      "live_sha256": "27fc7aeaaa293aebcf3ec638782c25960cdd4169ad3a254329a502305dfc2076",
+      "repository_blob_sha": "9f8dbddcb9901d55e20afe98e2b7794c7f2c10d7"
+    },
+    "content-delivery": {
+      "state": "DEPLOYED",
+      "version": 6,
+      "verify_jwt": true,
+      "live_sha256": "9f142ffa9c10f9197d3639a97272357330c664f08fa044f1f7cc5d41507f1374",
+      "repository_blob_sha": "410d77e9f8267406b40291830ac85f5191a63665"
+    },
+    "checkout": {
+      "state": "LOCAL_ONLY"
     },
     "event-ingest": {
       "state": "LOCAL_ONLY"
@@ -143,5 +143,6 @@
     "market-price": {
       "state": "LOCAL_ONLY"
     }
-  }
+  },
+  "verification_note": "Verified 2026-10-24 against the active Supabase project and main at 97aff4b217eee78b806b8ef0931d67e932c0a881. All 16 ACTIVE deployed Edge Functions' index.ts contents were compared byte-for-byte after CRLF/trailing-newline normalization against the corresponding main source and matched. Runtime version, verify_jwt, live SHA-256, and repository Git blob SHA are refreshed for all 16. Entries marked LOCAL_ONLY are present in repository source but were not present in the active deployed function inventory at capture time. This is runtime source-parity evidence only; it does not establish end-to-end functional, payment, authorization, or production-readiness completeness."
 }

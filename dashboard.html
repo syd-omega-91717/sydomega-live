@@ -52,6 +52,10 @@
 .cc-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:4px}
 .cc-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;margin-bottom:6px}
 .cc-desc{font-size:12px;line-height:1.6;color:var(--ink);opacity:.6}
+/* Phone (2026-10-19): the 24 portals stacked one per row ran 2,288px -- about
+   three screens of navigation the dock already offers. Two columns, name + icon,
+   description dropped; the whole card stays the link. */
+@media(max-width:560px){#cmd-grid{grid-template-columns:1fr 1fr;gap:8px}#cmd-grid .cmd-card{display:flex;align-items:center;gap:8px;padding:12px 10px;min-height:48px}#cmd-grid .cc-icon{font-size:18px;margin:0;flex:none}#cmd-grid .cc-name{margin:0}#cmd-grid .cc-desc{display:none}}
 /* ALERTS + RECOMMENDATIONS */
 .alert-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
 .alert-item{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:11px 14px;border-radius:2px;display:flex;align-items:flex-start;gap:10px;--card-accent:var(--ac)}
@@ -132,6 +136,8 @@
 
     <!-- DAILY THREE: the member's daily loop (omega-daily.js) -->
     <div class="pad" style="padding-bottom:0"><div data-omega-daily></div></div>
+    <!-- COMMAND DOCK: concierge, points and inbox folded in (omega-command-dock.js) -->
+    <div class="pad" style="padding-bottom:0"><section data-omega-command-dock aria-label="Command dock"></section></div>
 
     <!-- PLATFORM HEALTH BAR -->
     <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:87%;background:var(--green)"></div></div>
@@ -269,7 +275,7 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; ALL 239 PAGES &middot; 14 SECTIONS <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; 14 SECTIONS <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
         <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:12px;color:var(--muted);padding:14px 0">NO PAGES MATCH</div>
         <div id="platform-sections"></div>
@@ -382,7 +388,7 @@
       </div>
     </div>
     <div data-page-emblem="dashboard" style="margin:20px auto 0"></div>
-<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 239 PAGES &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
+<div class="lf"><span>&#937; COMMAND BRIDGE &middot; SYD OMEGA 91717 &middot; 149 MODULES</span><span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX=27.8367 &middot; LATTICE=104,976</span></div>
   </main>
 </div>
 
@@ -587,12 +593,12 @@ var CMD_MODULES=[
   {icon:'\u2609',name:'COSMOS',desc:'Horoscope, Elements, Tribes, Oracle, Realm',col:'var(--cyan)',href:'/cosmos.html'},
   {icon:'\u25CF',name:'ENTERPRISE',desc:'Fortune 500, API, SLA, Contracts, Services',col:'var(--gold)',href:'/enterprise.html'},
   {icon:'\u265A',name:'ASCENSION',desc:'Lattice Matrix, Grades, Phases, Evolution',col:'var(--cyan)',href:'/evolution.html'},
-  {icon:'\u9826',name:'SECURITY',desc:'Guardian, Threats, SOC, Zero Trust',col:'var(--crim)',href:'/observatory.html'},
+  {icon:'\u2662',name:'SECURITY',desc:'Guardian, Threats, SOC, Zero Trust',col:'var(--crim)',href:'/observatory.html'},
   {icon:'\u2600',name:'SOCIAL',desc:'Feed, Events, News, Network, Community',col:'var(--green)',href:'/feed.html'},
-  {icon:'\u9881',name:'AUTOMATE',desc:'Workflows, Automation, Queue, Architect',col:'var(--purple)',href:'/automation.html'},
+  {icon:'\u2699\uFE0E',name:'AUTOMATE',desc:'Workflows, Automation, Queue, Architect',col:'var(--purple)',href:'/automation.html'},
   {icon:'\u25C4',name:'RESEARCH',desc:'Lab, Publications, Roadmap, Innovation',col:'var(--solar)',href:'/lab.html'},
   {icon:'\u03A9',name:'ECOSYSTEM',desc:'Roadmap, Design System, Targets, Vision',col:'var(--gold)',href:'/ecosystem.html'},
-  {icon:'\u9998',name:'PERSONAL OS',desc:'Journal, Vision, Body, Gratitude, Budget',col:'var(--purple)',href:'#',onclick:'setTab(\'personal\')'},
+  {icon:'\u270E',name:'PERSONAL OS',desc:'Journal, Vision, Body, Gratitude, Budget',col:'var(--purple)',href:'#',onclick:'setTab(\'personal\')'},
   {icon:'\u25CB',name:'COSMOS LORE',desc:'Houses, Tribes, Graph, Oracle, Sigil',col:'var(--cyan)',href:'/houses.html'},
   {icon:'\u2734',name:'STRATEGY',desc:'Vision, Decisions, Command, Targets, OKR',col:'var(--gold)',href:'/vision.html'},
   {icon:'\u25D9',name:'WELLNESS',desc:'Rituals, Meditate, Stoic, Habits, Sleep',col:'var(--green)',href:'/rituals.html'},
@@ -917,6 +923,7 @@ window.setTab=setTab;
 window.askAI=askAI;
 </script>
 <script src="/omega-sparkline.js" defer></script>
+<script type="module" src="/omega-command-dock.js"></script>
 <script src="/omega-constellation.js" defer></script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';

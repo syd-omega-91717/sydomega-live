@@ -1,8 +1,11 @@
 {
-  "_captured": "2026-10-16T19:49:18.990Z",
-  "source": "Supabase live migration history for project ydqhzvvoyufiiqvzcjns (authenticated provider query)",
-  "remoteMigrationCount": 386,
-  "latestRemoteMigration": "20261016194804",
+  "_captured": "2026-10-24",
+  "source": "Authenticated Supabase provider migration-history query on 2026-10-24. Migration 20261024101622 (harden_provider_registry_column_access) was applied through the Supabase migration tool. Post-apply verification confirmed authenticated cannot SELECT secret_ref, metadata, created_at, or updated_at, while the six allowlisted catalog columns remain selectable; the existing RLS policy and all 13 registry rows were preserved.",
+  "remoteMigrationCount": 409,
+  "latestRemoteMigration": "20261024101622",
+  "source": "Authenticated Supabase provider migration-history query for project ydqhzvvoyufiiqvzcjns; refreshed 2026-10-24. Provider history reports 409 unique versions, including 20261024091500_fix_stripe_zero_decimal_settlement_precision and 20261024102602_harden_provider_registry_column_access. Live Stripe settlement definition and service_role-only execute privileges were verified; live authenticated provider-registry column privileges were verified. This is a provider-history snapshot, not proof that every historical SQL file is byte-identical to applied SQL.",
+  "remoteMigrationCount": 409,
+  "latestRemoteMigration": "20261024102602",
   "versions": [
     "0001",
     "0002",
@@ -389,7 +392,31 @@
     "20261015220000",
     "20261016174416",
     "20261016193000",
-    "20261016194804"
+    "20261016193700",
+    "20261016194804",
+    "20261016213149",
+    "20261016221059",
+    "20261016223949",
+    "20261016225535",
+    "20261016231606",
+    "20261017092002",
+    "20261017093038",
+    "20261017093316",
+    "20261017094629",
+    "20261017095439",
+    "20261017100555",
+    "20261017104020",
+    "20261017105203",
+    "20261017110604",
+    "20261017114500",
+    "20261017234857",
+    "20261021100000",
+    "20261022120000",
+    "20261022130000",
+    "20261023120000",
+    "20261024091500",
+    "20261024101622"
+    "20261024102602"
   ],
   "migrations": [
     {
@@ -1930,8 +1957,100 @@
       "name": "revoke_anon_member_preferences_rpc_20261016"
     },
     {
+      "version": "20261016193700",
+      "name": "progression_rpc_guardrails_20261016"
+    },
+    {
       "version": "20261016194804",
       "name": "progression_rpc_guardrails_20261016"
+    },
+    {
+      "version": "20261016213149",
+      "name": "content_pipeline_service_role_grants_20261016"
+    },
+    {
+      "version": "20261016221059",
+      "name": "capture_storage_files_schema_20261016"
+    },
+    {
+      "version": "20261016223949",
+      "name": "omega_platform_events_event_id_default_20261016"
+    },
+    {
+      "version": "20261016225535",
+      "name": "world_action_security_definer_20261016"
+    },
+    {
+      "version": "20261016231606",
+      "name": "simulation_run_security_definer_20261016"
+    },
+    {
+      "version": "20261017092002",
+      "name": "notification_worker_public_rpc_20261017"
+    },
+    {
+      "version": "20261017093038",
+      "name": "stripe_payment_public_rpc_20261017"
+    },
+    {
+      "version": "20261017093316",
+      "name": "ledger_posting_keyword_calls_20261017"
+    },
+    {
+      "version": "20261017094629",
+      "name": "pg_catalog_keyword_calls_20261017"
+    },
+    {
+      "version": "20261017095439",
+      "name": "capture_record_stripe_payment_20261017"
+    },
+    {
+      "version": "20261017100555",
+      "name": "in_app_notification_delivery_20261017"
+    },
+    {
+      "version": "20261017104020",
+      "name": "orchestrator_service_role_grants_20261017"
+    },
+    {
+      "version": "20261017105203",
+      "name": "worker_service_role_reads_20261017"
+    },
+    {
+      "version": "20261017110604",
+      "name": "revoke_member_feature_flag_update_20261017"
+    },
+    {
+      "version": "20261017114500",
+      "name": "member_rpc_write_guardrails_20261017"
+    },
+    {
+      "version": "20261017234857",
+      "name": "life_entries"
+    },
+    {
+      "version": "20261021100000",
+      "name": "private_member_write_rpc_boundary_20261021"
+    },
+    {
+      "version": "20261022120000",
+      "name": "omega_personal_context_graph_20261022"
+    },
+    {
+      "version": "20261022130000",
+      "name": "harden_personal_context_consent_audit_20261022"
+    },
+    {
+      "version": "20261023120000",
+      "name": "omega_personal_context_link_fk_indexes"
+    },
+    {
+      "version": "20261024091500",
+      "name": "fix_stripe_zero_decimal_settlement_precision"
+    },
+    {
+      "version": "20261024102602",
+      "name": "harden_provider_registry_column_access"
     }
   ]
 }

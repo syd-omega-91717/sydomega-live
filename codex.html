@@ -36,7 +36,7 @@
 .ac-source.wiki{color:rgba(255,220,100,.7);border-color:rgba(255,220,100,.2);background:rgba(255,220,100,.04)}
 .ac-source.arxiv{color:rgba(0,229,255,.7);border-color:rgba(0,229,255,.2);background:rgba(0,229,255,.04)}
 .ac-source.ol{color:rgba(0,255,136,.7);border-color:rgba(0,255,136,.2);background:rgba(0,255,136,.04)}
-.ac-title{font-size:13px;color:rgba(255,255,255,.9);line-height:1.5}
+.ac-title{font-size:var(--fs-2,14px);color:rgba(255,255,255,.9);line-height:1.5}
 .ac-excerpt{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.5);line-height:1.6}
 .ac-meta{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)}
 .ac-bookmark{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:3px 10px;border:1px solid rgba(201,168,76,.15);color:rgba(201,168,76,.5);background:none;cursor:pointer;transition:.12s;align-self:flex-start}
@@ -44,7 +44,7 @@
 
 /* bookmarks */
 .bm-item{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.12);padding:12px 16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
-.bm-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.bm-icon{font-size:var(--fs-4,20px);flex-shrink:0;margin-top:2px}
 .bm-title{font-size:12px;color:rgba(255,255,255,.85);margin-bottom:4px}
 .bm-src{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)}
 .bm-rm{font-family:var(--M);font-size:12px;color:rgba(139,0,0,.6);background:none;border:none;cursor:pointer;margin-left:auto}
@@ -62,7 +62,7 @@
 .modal-title{font-size:16px;color:rgba(255,255,255,.95);line-height:1.4}
 .modal-meta{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);letter-spacing:1px}
 .modal-body{font-family:var(--M);font-size:12px;color:rgba(255,255,255,.7);line-height:1.8}
-.modal-close{position:absolute;top:14px;right:18px;background:none;border:none;color:rgba(138,134,118,.5);font-size:18px;cursor:pointer}
+.modal-close{position:absolute;top:14px;right:18px;background:none;border:none;color:rgba(138,134,118,.5);font-size:var(--fs-4,20px);cursor:pointer}
 .modal-link{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:8px 16px;border:1px solid rgba(201,168,76,.3);color:var(--gold);background:none;cursor:pointer;text-decoration:none;display:inline-block;margin-top:6px}
 .modal-link:hover{background:rgba(201,168,76,.1)}
 
@@ -156,7 +156,7 @@
   <div class="card-grid" data-stagger data-stagger-gap="60" style="--cols:1">
     <div class="card" data-reveal="fade-up">
       <div class="card-title">WHY OPEN SOURCES</div>
-      <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
+      <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:var(--fs-2,14px)">
         <div data-omega-more>
           <p class="omi-lead">Three peer-reviewed, institutionally trusted open sources &mdash; fetched live, unaltered, no paywall.</p>
           <div class="omi-full" hidden>
@@ -267,7 +267,7 @@ async function doSearch(query){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',i===0);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-discover');});
   var grid=document.getElementById('discoverGrid');
-  grid.innerHTML='<div class="empty"><span class="spin"></span>SEARCHING '+activeSource.toUpperCase()+'...</div>';
+  grid.innerHTML='<div class="empty"><span class="spin"></span>SEARCHING '+esc(activeSource.toUpperCase())+'...</div>';
   if(activeSource==='wikipedia')await searchWikipedia(query,grid);
   else if(activeSource==='arxiv')await searchArxiv(query,grid);
   else await searchOpenLibrary(query,grid);
@@ -357,12 +357,12 @@ function renderResults(items,grid){
     var srcClass=item.source==='wikipedia'?'wiki':item.source==='arxiv'?'arxiv':'ol';
     var srcLabel=item.source==='wikipedia'?'WIKIPEDIA':item.source==='arxiv'?'ARXIV':'OPEN LIBRARY';
     var isBm=bookmarks.find(function(b){return b.url===item.url;});
-    return '<div class="art-card card" data-idx="'+i+'" data-src="'+item.source+'">'+
+    return '<div class="art-card card" data-idx="'+i+'" data-src="'+esc(item.source)+'">'+
       '<span class="ac-source '+srcClass+'">'+srcLabel+'</span>'+
       '<div class="ac-title">'+esc(item.title)+'</div>'+
       (item.excerpt?'<div class="ac-excerpt">'+esc(item.excerpt.slice(0,150)+(item.excerpt.length>150?'...':''))+'</div>':'')+
       (item.authors?'<div class="ac-meta">by '+esc(item.authors)+(item.published?' · '+item.published:'')+'</div>':'')+
-      '<button class="ac-bookmark'+(isBm?' saved':'')+'" data-url="'+esc(item.url)+'" data-title="'+esc(item.title)+'" data-src="'+item.source+'">'+(isBm?'★ SAVED':'☆ SAVE')+'</button>'+
+      '<button class="ac-bookmark'+(isBm?' saved':'')+'" data-url="'+esc(item.url)+'" data-title="'+esc(item.title)+'" data-src="'+esc(item.source)+'">'+(isBm?'★ SAVED':'☆ SAVE')+'</button>'+
       '</div>';
   }).join('');
 

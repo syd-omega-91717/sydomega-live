@@ -8,12 +8,12 @@
 #nexus-canvas{width:100%;height:100%;display:block}
 .nexus-stats{position:absolute;top:12px;left:12px;z-index:10;display:flex;flex-direction:column;gap:6px}
 .nsc{background:rgba(10,10,15,.88);border:1px solid rgba(0,229,255,.15);border-radius:6px;padding:8px 12px;backdrop-filter:blur(12px)}
-.nsc-n{font-family:var(--M);font-size:18px;color:var(--cyan);line-height:1}
+.nsc-n{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--cyan);line-height:1}
 .nsc-l{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
 .nexus-feed-strip{position:absolute;bottom:10px;left:10px;right:10px;z-index:10;background:rgba(10,10,15,.9);border:1px solid rgba(0,229,255,.12);border-radius:6px;padding:8px 10px;max-height:90px;overflow:hidden;backdrop-filter:blur(12px)}
 .feed-log{font-family:var(--M);font-size:12px;color:var(--muted);line-height:2;display:flex;flex-direction:column-reverse}
 .nexus-empty{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(520px,calc(100% - 40px));padding:28px 24px;text-align:center;background:rgba(10,10,15,.9);border:1px solid rgba(0,229,255,.18);border-radius:10px;backdrop-filter:blur(14px);z-index:15}
-.nexus-empty-mark{font-family:var(--G);font-size:38px;line-height:1;color:var(--gold);text-shadow:0 0 22px rgba(201,168,76,.28);margin-bottom:12px}
+.nexus-empty-mark{font-family:var(--G);font-size:var(--fs-6,40px);line-height:1;color:var(--gold);text-shadow:0 0 22px rgba(201,168,76,.28);margin-bottom:12px}
 .nexus-empty-title{font-family:var(--G);font-size:14px;letter-spacing:2px;color:var(--gold);line-height:1.5}
 .nexus-empty-copy{max-width:440px;margin:12px auto 18px;font-family:var(--M);font-size:12px;line-height:1.8;color:var(--muted)}
 .nexus-empty-link{display:inline-block;padding:9px 14px;border:1px solid rgba(201,168,76,.28);font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);text-decoration:none}
@@ -127,7 +127,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
 
   var PHI=1.6180339887,EU=2.7182818285;
-  var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+  var GATE_THRESH=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
   var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
   var SIGN_ELEM={Aries:'Fire',Taurus:'Metal',Gemini:'Wind',Cancer:'Water',Leo:'Fire',Virgo:'Sand',Libra:'Wind',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Metal',Aquarius:'Wind',Pisces:'Water'};
   var ELEM_COLORS={Fire:'#FF6B35',Water:'#00B4D8',Wind:'#B0BEC5',Metal:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),Sand:'#FFD54F',Soul:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),Space:'#7C4DFF',Void:'#334466'};

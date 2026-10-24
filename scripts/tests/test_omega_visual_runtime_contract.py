@@ -13,20 +13,21 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
 
     def test_opening_runtime_preserves_canonical_mount(self):
         self.assertIn("if(page!=='index') return;", self.runtime)
-        self.assertIn('.ohz-hero-art[data-omega-sculpture=\"signet\"]', self.runtime)
+        self.assertIn(".ohz-hero-art[data-omega-sculpture]", self.runtime)
         self.assertIn('data-omega-sculpture=\"signet\"', self.index)
 
-    def test_opening_stage_is_architectural_3d_not_logo_rotation(self):
-        self.assertIn("perspective:1800px", self.opening)
-        self.assertIn("transform-style:preserve-3d", self.opening)
-        self.assertIn(".omega-gateway-vault", self.opening)
-        self.assertIn(".omega-gateway-monolith", self.opening)
-        self.assertIn(".omega-gateway-pillar", self.opening)
-        self.assertIn("translateZ(126px)", self.opening)
-        self.assertIn("rotateX(69deg)", self.opening)
-        self.assertNotIn("animation:omegaGenesisSpin", self.runtime)
-        self.assertNotIn("rotateY(360deg)", self.runtime)
-        self.assertIn("omega-gateway-vault", self.runtime)
+    def test_hero_emblem_is_the_turning_signet_not_covered_or_dimmed(self):
+        """Owner decision 2026-10-19: the front door's emblem is the turning
+        3-D signet again. From 2026-09-15 a static gateway composition sat on
+        top of it and two sheets dimmed its canvas to 4.5% and 20%."""
+        self.assertNotIn("installOpeningStage", self.runtime)
+        self.assertNotIn("omega-gateway-vault", self.runtime)
+        self.assertNotIn("omega-home-depth-correction", self.runtime)
+        self.assertFalse((ROOT / "omega-home-depth-correction.css").exists())
+        self.assertNotIn(".ohz-hero-art canvas{opacity", self.opening)
+        sculpture = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
+        self.assertIn("mark.rotation.y = Math.sin(t * 0.33) * swayAmp", sculpture)
+        self.assertIn("orbit.rotation.z = t * 0.30;", sculpture)
 
     def test_runtime_is_dom_timing_safe(self):
         self.assertIn("if(document.body) mount();", self.runtime)
@@ -34,10 +35,12 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
         self.assertIn("document.addEventListener('DOMContentLoaded',boot", self.runtime)
 
     def test_motion_and_interaction_are_accessible(self):
-        self.assertIn("prefers-reduced-motion: reduce", self.runtime)
+        # The runtime no longer animates the hero; the signet's motion, pointer
+        # response and reduced-motion still frame live in omega-sculpture.js.
+        sculpture = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
+        self.assertIn("prefers-reduced-motion", sculpture)
+        self.assertIn("pointermove", sculpture)
         self.assertIn("prefers-reduced-motion:reduce", self.opening)
-        self.assertIn("pointermove", self.runtime)
-        self.assertIn("pointerleave", self.runtime)
 
     def test_platform_wide_elevation_remains_additive(self):
         self.assertIn("transform-style:preserve-3d", self.elevation)

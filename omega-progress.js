@@ -95,6 +95,11 @@
           if (res.error) throw res.error;
           var d = res.data || {};
           if (d.applied && !silent && Number(d.points) > 0) toast(axis, opts.title, Number(d.points));
+          /* Its own name, not 'omega:task' (omega-matrix.js's, which omega-sdt.js
+             reacts to): hosts such as omega-arena-core.js re-read on it. */
+          if (d.applied) {
+            try { document.dispatchEvent(new CustomEvent('omega:progress', { detail: { task: String(opts.task), axis: axis, points: Number(d.points) || 0 } })); } catch (e) { /* old browser */ }
+          }
           return d;
         });
       });

@@ -31,10 +31,6 @@
   "handlers": 1,
   "scripts": 1
  },
- "agent.html": {
-  "handlers": 0,
-  "scripts": 1
- },
  "agents.html": {
   "handlers": 5,
   "scripts": 2
@@ -391,14 +387,6 @@
   "handlers": 19,
   "scripts": 2
  },
- "investor-dashboard.html": {
-  "handlers": 0,
-  "scripts": 1
- },
- "investor-gate.html": {
-  "handlers": 0,
-  "scripts": 1
- },
  "journal.html": {
   "handlers": 3,
   "scripts": 1
@@ -530,10 +518,6 @@
  "offline.html": {
   "handlers": 6,
   "scripts": 2
- },
- "omega-visual-command.html": {
-  "handlers": 0,
-  "scripts": 1
  },
  "ops.html": {
   "handlers": 0,
@@ -774,10 +758,6 @@
  "vault.html": {
   "handlers": 7,
   "scripts": 5
- },
- "venture-pipeline.html": {
-  "handlers": 0,
-  "scripts": 1
  },
  "verify-deployment.html": {
   "handlers": 1,

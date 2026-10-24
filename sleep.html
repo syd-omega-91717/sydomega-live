@@ -30,7 +30,7 @@
 .sleep-entries{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .sleep-entry{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:3px;padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .se-date{font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.6);min-width:80px}
-.se-hours{font-family:var(--M);font-size:18px;color:var(--gold)}
+.se-hours{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold)}
 .se-hrs-lbl{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)}
 .se-times{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)}
 .se-stars{color:var(--gold);font-size:12px;letter-spacing:2px}
@@ -73,7 +73,7 @@
   <div style="padding:20px var(--pad,20px)">
 
     <div style="font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-bottom:4px">IDENTITY · RESTORATION</div>
-    <h1 style="font-family:var(--M);font-size:18px;color:var(--gold);margin:0 0 16px;letter-spacing:2px">SLEEP OPTIMIZATION</h1>
+    <h1 style="font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);margin:0 0 16px;letter-spacing:2px">SLEEP OPTIMIZATION</h1>
 
     <div class="sleep-score-wrap">
       <div><canvas id="scoreRing" width="90" height="90"></canvas></div>
@@ -168,7 +168,7 @@
       </div>
       <div class="chart-box">
         <div class="chart-title">SLEEP DEBT (weekly deficit vs 8h target)</div>
-        <div style="font-family:var(--M);font-size:22px;color:var(--gold)" id="debtVal">—</div>
+        <div style="font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold)" id="debtVal">—</div>
         <div class="debt-bar-wrap"><div class="debt-bar-fill" id="debtBar" style="width:0%"></div></div>
         <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);margin-top:4px">Deficit vs 8h/night over last 7 nights</div>
       </div>

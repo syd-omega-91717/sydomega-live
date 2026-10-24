@@ -125,6 +125,11 @@ step "0b.  Release completeness gate"          python3 scripts/release-gate.py
 step "1.   JavaScript syntax"                  js_syntax
 step "1b.  Inline <script> syntax"             python3 scripts/check-inline-js.py
 step "2.   Repository audit"                   python3 scripts/audit.py
+# ci.yml's "Unified page contract audit" had no local twin: a new page with no
+# config/omega-page-contracts.json entry (orrery.html, 2026-10-17) passed every
+# step here and failed `verify` on GitHub. Read-only; the bootstrap that
+# precedes it in ci.yml rewrites a config file, so it is not run here.
+step "2a.  Unified page contract audit"        python3 scripts/omega-page-contract-audit.py
 step "2b.  Audit tooling self-tests"           python3 -m unittest discover -s scripts/tests
 step "2c.  Intelligence fabric self-tests"     python3 -m unittest discover -s tests
 step "2g.  TypeScript types from schema"       python3 scripts/types-from-schema.py

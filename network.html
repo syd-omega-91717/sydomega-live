@@ -9,7 +9,7 @@
 :root{--dim:rgba(138,134,118,.5)}
 
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
-.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-val{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
 .stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
@@ -75,7 +75,7 @@
 /* INSIGHTS */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:20px}
 .kpi{border:1px solid rgba(201,168,76,.1);padding:14px;text-align:center}
-.kpi-v{font-family:var(--M);font-size:22px;color:var(--gold);letter-spacing:1px}
+.kpi-v{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
 .kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 .n-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .n-bar-lbl{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--dim);width:90px;flex-shrink:0}
@@ -467,12 +467,12 @@ function renderContactList() {
     return `<div class="n-list-row ${od?'overdue':''}">
       <span class="n-contact-name">${esc(c.name)}${c.note?' <span style="font-size:12px;color:var(--dim);font-style:italic"> · '+esc(c.note.slice(0,30))+'</span>':''}</span>
       <span class="n-contact-cat" style="color:${circ.color}">${circ.label.replace(' ','&nbsp;')}</span>
-      <span class="n-contact-last">${c.lastContact||'—'}</span>
+      <span class="n-contact-last">${esc(c.lastContact||'—')}</span>
       <span class="n-contact-days" style="color:${dueCol}">${dueStr}</span>
       <div class="n-list-acts">
-        <button class="n-act-btn" onclick="openLog('${c.id}')">LOG</button>
-        <button class="n-act-btn" onclick="editContact('${c.id}')">EDIT</button>
-        <button class="n-act-btn" onclick="deleteContact('${c.id}')" style="color:rgba(192,57,43,.5)">DEL</button>
+        <button class="n-act-btn" onclick="openLog(${esc(JSON.stringify(String(c.id)))})">LOG</button>
+        <button class="n-act-btn" onclick="editContact(${esc(JSON.stringify(String(c.id)))})">EDIT</button>
+        <button class="n-act-btn" onclick="deleteContact(${esc(JSON.stringify(String(c.id)))})" style="color:rgba(192,57,43,.5)">DEL</button>
       </div>
     </div>`;
   }).join('');
@@ -493,13 +493,13 @@ function renderDue() {
     const od   = due < 0;
     return `<div class="due-card card ${od?'':'warn'}">
       <div class="due-name" style="color:${circ.color}">${esc(c.name)}</div>
-      <div class="due-meta">${circ.label}  ·  EVERY ${c.frequency||30} DAYS  ·  LAST: ${c.lastContact||'NEVER'}</div>
+      <div class="due-meta">${circ.label}  ·  EVERY ${esc(c.frequency||30)} DAYS  ·  LAST: ${esc(c.lastContact||'NEVER')}</div>
       <div class="due-overdue" style="color:${od?'#c0392b':'#FF9800'}">
         ${od ? Math.abs(due)+'D OVERDUE' : due===0 ? 'DUE TODAY' : 'DUE IN '+due+'D'}
       </div>
       <div style="margin-top:10px;display:flex;gap:6px">
-        <button class="n-act-btn" onclick="openLog('${c.id}');activateTab('contacts')">LOG INTERACTION</button>
-        <button class="n-act-btn" onclick="editContact('${c.id}');activateTab('contacts')">EDIT</button>
+        <button class="n-act-btn" onclick="openLog(${esc(JSON.stringify(String(c.id)))});activateTab('contacts')">LOG INTERACTION</button>
+        <button class="n-act-btn" onclick="editContact(${esc(JSON.stringify(String(c.id)))});activateTab('contacts')">EDIT</button>
       </div>
     </div>`;
   }).join('');

@@ -192,7 +192,7 @@ window.sendToAgent=async function(){
   var q=inp.value.trim();inp.value='';
   addMsg('user',q);
   var auth=_profile?(_profile.is_owner?27.8367:Math.sqrt(Math.pow(Number(_profile.axis_a||0.001),3)+Math.pow(Number(_profile.axis_b||0.001),3)+Math.pow(Number(_profile.axis_c||0.001),3))*PHI/EU):0;
-  var system='You are '+_activeAgent.name+', Sovereign Agent of SYD OMEGA 91717. Role: '+_activeAgent.role+'. Voice: '+_activeAgent.voice+'. Domain: '+((_activeAgent.domains||[]).join(', '))+'. Member AUTH='+auth.toFixed(4)+', sign='+(_profile&&_profile.sign||'?')+'. Be concise (under 100 words). Stay in character.';
+  var system='You are '+_activeAgent.name+', Sovereign Agent of SYD OMEGA 91717. Role: '+_activeAgent.role+'. Voice: '+_activeAgent.voice+'. Domain: '+((_activeAgent.domains||[]).join(', '))+'. Be concise (under 100 words). Stay in character.';
   /* concierge answers HTTP 200 {enabled:false} when ANTHROPIC_API_KEY is unset
      (supabase/functions/concierge/index.ts:45) -- a dormant feature, not a fault. */
   var dormant=false;

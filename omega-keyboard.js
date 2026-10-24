@@ -9,7 +9,7 @@
    g a  → Analytics         g m  → Matrix             g p  → Profile
    g s  → Settings          g v  → Vault              g k  → Knowledge
    g x  → Exam              g q  → Gaming             g t  → Gates
-   Ctrl+K → Search          ?    → This overlay        n   → Notifications
+   Ctrl+K → Quick navigation          ?    → This overlay        n   → Notifications
    c    → Copilot           Esc  → Close overlay/panel
 
    All shortcuts are disabled when focus is inside an input, textarea, or
@@ -57,7 +57,7 @@
       {keys:['g','o'],desc:'Studio'},     {keys:['g','r'],desc:'Publishing'},
     ]},
     {group:'Actions',shortcuts:[
-      {keys:['Ctrl','K'],desc:'Open search'},
+      {keys:['Ctrl','K'],desc:'Open quick navigation'},
       {keys:['n'],       desc:'Toggle notifications'},
       {keys:['c'],       desc:'Open AI copilot'},
       {keys:['?'],       desc:'Show this help overlay'},
@@ -84,7 +84,7 @@
       +'box-shadow:0 24px 80px rgba(0,0,0,.6);max-height:85vh;overflow-y:auto';
     var head = '<div style="padding:16px 20px;border-bottom:1px solid rgba(201,168,76,.12);'
       +'display:flex;align-items:center;justify-content:space-between">'
-      +'<span style="font-family:\'Cinzel Decorative\',serif;font-size:13px;color:#C9A84C">'
+      +'<span style="font-family:\'Cinzel Decorative\',serif;font-size:var(--fs-2,14px);color:#C9A84C">'
       +'&#937; KEYBOARD SHORTCUTS</span>'
       +'<button id="omega-kb-close" style="font-family:\'Courier Prime\',monospace;font-size:12px;'
       +'color:rgba(138,134,118,.5);background:none;border:none;cursor:pointer;letter-spacing:1px"'
@@ -151,10 +151,15 @@
       return;
     }
 
-    /* Ctrl+K: search (registered here, fired by OmegaSearch too) */
-    if((e.ctrlKey||e.metaKey)&&k==='k'){
-      if(window.OmegaSearch) window.OmegaSearch.open();
-      e.preventDefault();
+    /* The global navigation palette in nav.js owns Ctrl/Cmd+K whenever it is present.
+       Do not open a second overlay from this shared keyboard engine. Retain the
+       legacy search fallback only on surfaces that do not mount the palette. */
+    if((e.ctrlKey||e.metaKey)&&k.toLowerCase()==='k'){
+      if(document.getElementById('omega-command-palette') || window.OmegaCommandPalette) return;
+      if(window.OmegaSearch&&typeof window.OmegaSearch.open==='function'){
+        window.OmegaSearch.open();
+        e.preventDefault();
+      }
       return;
     }
 

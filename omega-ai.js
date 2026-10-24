@@ -46,7 +46,6 @@
 
   /* Send message to AI via concierge edge function */
   async function sendMessage(messages, profile){
-    var context=buildContext(profile);
     var pr=profile||{};
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
@@ -63,7 +62,7 @@
         var r=await window.__omegaSb.functions.invoke('concierge',{
           body:{
             message:userMsg.slice(0,2000),
-            system_override:(SYSTEM_PROMPT+context).slice(0,2000),
+            system_override:SYSTEM_PROMPT.slice(0,2000),
             context:{sign:pr.sign||'?',a:a.toFixed(3),b:b.toFixed(3),c:c.toFixed(3),auth:auth.toFixed(4),tier:pr.subscription_tier||'free',rank:pr.rank||'--'}
           }
         });

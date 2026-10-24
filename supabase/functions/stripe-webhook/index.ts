@@ -162,18 +162,14 @@ Deno.serve(async (req) => {
       }
       const subPeriodEnd = periodEndSeconds(sub);
       const periodEnd = subPeriodEnd !== null ? new Date(subPeriodEnd * 1000).toISOString() : null;
-      const customer = typeof obj.customer === "string" ? obj.customer : null;
-      const amountMinor = typeof obj.amount_total === "number" ? obj.amount_total : 0;
-      const currency = typeof obj.currency === "string" ? obj.currency : "";
-      const providerReference = typeof obj.payment_intent === "string" ? obj.payment_intent : eventId;
-      const settled = await recordStripePayment(admin, {
-        eventId, eventType, uid, amountMinor, currency, providerReference, payloadHash,
-      });
-      if (!settled.ok) return json({ error: "settlement_error" }, 500);
+      const customer = typeof sub.customer === "string" ? sub.customer : (typeof obj.customer === "string" ? obj.customer : null);
+      // Checkout completion confirms the session, not the authoritative invoice settlement.
+      // invoice.payment_succeeded is the sole ledger-posting event to prevent double counting.
       const applied = await applySubscription(admin, {
         uid,
         tier: sub.metadata && typeof sub.metadata === "object" ? ((sub.metadata as Record<string, string>).tier || tier) : tier,
-        status: "active", periodEnd, customer, eventId, eventType,
+        status: typeof sub.status === "string" ? sub.status : "incomplete",
+        periodEnd, customer, eventId, eventType,
       });
       if (!applied.ok) return json({ error: "db_error" }, 500);
       return json({ received: true, event: eventType, result: applied.result });
@@ -203,7 +199,7 @@ Deno.serve(async (req) => {
       if (!subId) return json({ received: true, skipped: "no_subscription" });
       const subData = await fetchStripeSubscription(subId);
       if (!subData) return json({ error: "stripe_lookup_failed" }, 503);
-      const { uid } = extractMetadata(subData);
+      const { uid, tier } = extractMetadata(subData);
       if (!uid) return json({ received: true, skipped: "no_uid_in_sub_metadata" });
       const amountMinor = typeof obj.amount_paid === "number" ? obj.amount_paid : 0;
       const currency = typeof obj.currency === "string" ? obj.currency : "";
@@ -214,7 +210,15 @@ Deno.serve(async (req) => {
         eventId, eventType, uid, amountMinor, currency, providerReference, payloadHash,
       });
       if (!settled.ok) return json({ error: "settlement_error" }, 500);
-      return json({ received: true, event: eventType, transaction_id: settled.transactionId });
+      const paidPeriodEnd = periodEndSeconds(subData);
+      const periodEnd = paidPeriodEnd !== null ? new Date(paidPeriodEnd * 1000).toISOString() : null;
+      const customer = typeof subData.customer === "string" ? subData.customer : null;
+      const applied = await applySubscription(admin, {
+        uid, tier, status: typeof subData.status === "string" ? subData.status : "active",
+        periodEnd, customer, eventId, eventType,
+      });
+      if (!applied.ok) return json({ error: "db_error" }, 500);
+      return json({ received: true, event: eventType, transaction_id: settled.transactionId, result: applied.result });
     }
     if (eventType === "invoice.payment_failed") {
       const subId = typeof obj.subscription === "string" ? obj.subscription : null;

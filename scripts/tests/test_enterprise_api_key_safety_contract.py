@@ -47,6 +47,10 @@ class EnterpriseApiKeySafetyContract(unittest.TestCase):
         self.assertIn("new URLSearchParams(window.location.search)", consultancy)
         self.assertIn("document.getElementById('bk-brief').value=requestedBrief.slice(0,1000)", consultancy)
         self.assertIn("setTab('book')", consultancy)
+        self.assertIn("sb.auth.getUser()", consultancy)
+        self.assertIn("user_id:auth.data.user.id", consultancy)
+        self.assertIn("message:brief", consultancy)
+        self.assertNotIn("insert({domain:domain,contact:contact,preferred_time:time,brief:brief})", consultancy)
 
 
 if __name__ == "__main__":

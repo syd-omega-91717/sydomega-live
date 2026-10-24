@@ -176,6 +176,12 @@ BEGIN
     RAISE EXCEPTION 'stripe_refund_charge_mapping_conflict';
   END IF;
 
+  IF v_original_status = 'REVERSED'
+     AND v_state.amount_refunded = 0
+     AND v_state.last_event_id IS NULL THEN
+    RAISE EXCEPTION 'stripe_original_already_reversed_without_refund_state';
+  END IF;
+
   SELECT COALESCE(pg_catalog.sum(amount_refunded), 0)
     INTO v_other_refunded
     FROM omega_private.stripe_refund_state

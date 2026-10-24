@@ -68,8 +68,8 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 
     <div style="border:1px solid var(--line);background:rgba(10,10,15,.4);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <div style="flex:1;min-width:220px;font-family:var(--M);font-size:12px;letter-spacing:.5px;color:var(--muted);line-height:1.5">STORED ONLY IN THIS BROWSER &mdash; NOT SYNCED TO YOUR ACCOUNT. CLEARING BROWSER DATA OR SWITCHING DEVICES LOSES IT. EXPORT A BACKUP PERIODICALLY.</div>
-      <button onclick="OmegaLocalBackup.exportKeys(['omega_budgets','omega_expenses'],'omega-expenses-backup.json')" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
-      <button onclick="OmegaLocalBackup.importKeys(['omega_budgets','omega_expenses'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.exportKeys(['omega_budget_months','omega_budget_targets'],'omega-budget-backup.json')" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;white-space:nowrap">EXPORT BACKUP</button>
+      <button onclick="OmegaLocalBackup.importKeys(['omega_budget_months','omega_budget_targets'],function(ok,n){alert(ok?('Restored '+n+' item(s). Reloading...'):'Import failed — invalid file.');if(ok)location.reload();})" style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;border:1px solid var(--cyan);background:none;color:var(--cyan);cursor:pointer;white-space:nowrap">IMPORT BACKUP</button>
     </div>
 
     <div class="stat-grid">
@@ -242,20 +242,73 @@ const CATS={
   health:'HEALTH',fitness:'FITNESS',education:'EDUCATION',
   entertainment:'ENTERTAINMENT',tech:'TECHNOLOGY',clothing:'CLOTHING',
   personal:'PERSONAL CARE',savings:'SAVINGS',business:'BUSINESS',
-  gifts:'GIFTS',travel:'TRAVEL',other:'OTHER'
+  gifts:'GIFTS',travel:'TRAVEL',other:'OTHER',
+  /* budget.html's own groups, for rows entered there */
+  growth:'GROWTH',lifestyle:'LIFESTYLE',giving:'GIVING'
 };
 const CAT_COLORS={
   housing:'#3498db',food:'#e67e22',transport:'#9b59b6',health:'#e74c3c',
   fitness:'#27ae60',education:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#c9a84c'),entertainment:'#1abc9c',tech:'#2980b9',
   clothing:'#e91e63',personal:'#ff9800',savings:'#4caf50',business:'#795548',
-  gifts:'#f06292',travel:'#00bcd4',other:'#607d8b'
+  gifts:'#f06292',travel:'#00bcd4',other:'#607d8b',
+  growth:'#5C8FD6',lifestyle:'#9C6FD6',giving:'#26C6DA'
 };
 
-var entries=JSON.parse(localStorage.getItem('omega_expenses')||'[]');
-var budgets=JSON.parse(localStorage.getItem('omega_budgets')||'{}');
+/* One store for money in and out: budget.html's 'omega_budget_months'
+   ({'YYYY-MM': {income:[...], expenses:[...]}}). This page kept its own
+   ledger ('omega_expenses') and limits ('omega_budgets') with 15 categories
+   beside budget.html's 8, so the same month showed two spending totals
+   (CLAUDE.md 8.1 class 8). It is now a view over that store: each row keeps
+   its fine category as 'sub' and counts under budget.html's group, so no
+   detail is lost. Limits are budget.html's 8 targets. The old keys are
+   moved over once and removed. */
+const BUDGET_MONTHS_KEY='omega_budget_months', BUDGET_TARGETS_KEY='omega_budget_targets';
+const TO_BUDGET={housing:'HOUSING',food:'FOOD',transport:'TRANSPORT',health:'HEALTH',fitness:'HEALTH',personal:'HEALTH',
+  education:'GROWTH',growth:'GROWTH',entertainment:'LIFESTYLE',tech:'LIFESTYLE',clothing:'LIFESTYLE',travel:'LIFESTYLE',
+  lifestyle:'LIFESTYLE',gifts:'GIVING',giving:'GIVING',business:'OTHER',savings:'OTHER',other:'OTHER'};
+const BUDGET_GROUPS=[['HOUSING','#E57373'],['TRANSPORT','#FF9800'],['FOOD','#FFCA28'],['HEALTH','#66BB6A'],
+  ['GROWTH','#5C8FD6'],['LIFESTYLE','#9C6FD6'],['GIVING','#26C6DA'],['OTHER','#90A4AE']];
+function readJSON(k,dflt){try{const v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:dflt;}catch(e){return dflt;}}
+function readMonths(){return readJSON(BUDGET_MONTHS_KEY,{});}
+function writeMonths(m){localStorage.setItem(BUDGET_MONTHS_KEY,JSON.stringify(m));}
+function monthOf(m,key){if(!m[key]||typeof m[key]!=='object')m[key]={};m[key].income=m[key].income||[];m[key].expenses=m[key].expenses||[];return m[key];}
+function toBudgetRow(e){
+  const base={id:String(e.id),amount:+e.amount,date:e.date,notes:e.notes||'',recurring:e.recurring||'none',sub:e.cat};
+  return e.type==='income'?Object.assign({source:e.desc},base):Object.assign({cat:TO_BUDGET[e.cat]||'OTHER',desc:e.desc},base);
+}
+function deriveEntries(){
+  const m=readMonths(),out=[];
+  Object.keys(m).forEach(function(k){const d=m[k]||{};
+    (d.expenses||[]).forEach(function(x){out.push({id:String(x.id),desc:x.desc||'',amount:+x.amount||0,type:'expense',cat:x.sub||String(x.cat||'OTHER').toLowerCase(),date:x.date||k+'-01',notes:x.notes||'',recurring:x.recurring||'none'});});
+    (d.income||[]).forEach(function(x){out.push({id:String(x.id),desc:x.source||'',amount:+x.amount||0,type:'income',cat:x.sub||'other',date:x.date||k+'-01',notes:x.notes||'',recurring:x.recurring||'none'});});
+  });
+  return out.sort(function(a,b){return b.date.localeCompare(a.date);});
+}
+(function migrateLegacy(){
+  const old=readJSON('omega_expenses',null);
+  if(Array.isArray(old)){
+    const m=readMonths(),have={};
+    Object.keys(m).forEach(function(k){const d=m[k]||{};(d.expenses||[]).concat(d.income||[]).forEach(function(x){have[String(x.id)]=1;});});
+    old.forEach(function(e){
+      if(!e||!e.date||!(+e.amount>0)||have[String(e.id)])return;
+      const md=monthOf(m,String(e.date).slice(0,7));
+      (e.type==='income'?md.income:md.expenses).push(toBudgetRow(e));
+    });
+    writeMonths(m);localStorage.removeItem('omega_expenses');
+  }
+  const lim=readJSON('omega_budgets',null);
+  if(lim&&!Array.isArray(lim)){
+    /* Budget's own targets win; the old limits only seed them if none were set. */
+    if(localStorage.getItem(BUDGET_TARGETS_KEY)===null){
+      const t={};Object.keys(lim).forEach(function(k){const g=TO_BUDGET[k]||'OTHER';t[g]=(t[g]||0)+(+lim[k]||0);});
+      if(Object.keys(t).length)localStorage.setItem(BUDGET_TARGETS_KEY,JSON.stringify(t));
+    }
+    localStorage.removeItem('omega_budgets');
+  }
+})();
+var entries=deriveEntries();
+var budgets=readJSON(BUDGET_TARGETS_KEY,{});
 var activeFilter='all';
-
-function save(){localStorage.setItem('omega_expenses',JSON.stringify(entries));}
 
 function addEntry(){
   var desc=document.getElementById('e-desc').value.trim();
@@ -266,8 +319,10 @@ function addEntry(){
   var notes=document.getElementById('e-notes').value.trim();
   var recurring=document.getElementById('e-recurring').value;
   if(!desc||isNaN(amount)||amount<=0||!date){alert('Fill description, amount, and date.');return;}
-  entries.unshift({id:Date.now(),desc:desc,amount:amount,type:type,cat:cat,date:date,notes:notes,recurring:recurring});
-  save();
+  var m=readMonths(),md=monthOf(m,date.slice(0,7));
+  var row=toBudgetRow({id:Date.now(),desc:desc,amount:amount,type:type,cat:cat,date:date,notes:notes,recurring:recurring});
+  (type==='income'?md.income:md.expenses).unshift(row);
+  writeMonths(m);entries=deriveEntries();
   document.getElementById('e-desc').value='';
   document.getElementById('e-amount').value='';
   document.getElementById('e-notes').value='';
@@ -275,8 +330,11 @@ function addEntry(){
 }
 
 function deleteEntry(id){
-  entries=entries.filter(function(e){return String(e.id)!==String(id);});
-  save();
+  var m=readMonths();
+  Object.keys(m).forEach(function(k){var d=m[k]||{};
+    if(d.expenses)d.expenses=d.expenses.filter(function(x){return String(x.id)!==String(id);});
+    if(d.income)d.income=d.income.filter(function(x){return String(x.id)!==String(id);});});
+  writeMonths(m);entries=deriveEntries();
   updateAll();
 }
 
@@ -396,42 +454,40 @@ function renderLedger(){
 }
 
 function renderBudget(){
+  /* Limits are budget.html's monthly targets, one per group. */
   var editor=document.getElementById('budget-editor');
-  editor.innerHTML=Object.entries(CATS).map(function(kv){
-    var k=kv[0],v=kv[1];
+  editor.innerHTML=BUDGET_GROUPS.map(function(g){
+    var k=g[0];
     return '<div style="display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:center;margin-bottom:8px">'
-      +'<label style="font-size:var(--fs-1,12px);color:'+(CAT_COLORS[k]||'#888')+'">'+v+'</label>'
-      +'<input type="number" data-budget-category="'+k+'" min="0" step="10" placeholder="0 = no limit" value="'+(budgets[k]||'')+'" style="max-width:120px">'
+      +'<label style="font-size:var(--fs-1,12px);color:'+g[1]+'">'+k+'</label>'
+      +'<input type="number" data-budget-category="'+k+'" min="0" step="10" placeholder="0 = no limit" value="'+(+budgets[k]||'')+'" style="max-width:120px">'
       +'</div>';
   }).join('');
-
   var bars=document.getElementById('budget-bars');
   var now=new Date();
   document.getElementById('budget-month-label').textContent=now.toLocaleString('default',{month:'long',year:'numeric'});
-  var me=getMonthEntries().filter(function(e){return e.type==='expense';});
   var actuals={};
-  me.forEach(function(e){actuals[e.cat]=(actuals[e.cat]||0)+e.amount;});
-  var hasBudget=Object.keys(budgets).filter(function(k){return budgets[k]>0;});
-  if(!hasBudget.length){bars.innerHTML='<div style="font-size:var(--fs-1,12px);color:var(--d);padding:10px 0">SET BUDGET LIMITS ABOVE TO SEE PROGRESS</div>';return;}
-  bars.innerHTML=hasBudget.map(function(k){
-    var limit=budgets[k];
-    var actual=actuals[k]||0;
+  getMonthEntries().filter(function(e){return e.type==='expense';}).forEach(function(e){var g=TO_BUDGET[e.cat]||'OTHER';actuals[g]=(actuals[g]||0)+e.amount;});
+  var withLimit=BUDGET_GROUPS.filter(function(g){return +budgets[g[0]]>0;});
+  if(!withLimit.length){bars.innerHTML='<div style="font-size:var(--fs-1,12px);color:var(--d);padding:10px 0">SET BUDGET LIMITS ABOVE TO SEE PROGRESS</div>';return;}
+  bars.innerHTML=withLimit.map(function(g){
+    var k=g[0],limit=+budgets[k],actual=actuals[k]||0;
     var pct=Math.min(100,(actual/limit)*100);
     var cls=pct>=100?'over':pct>=80?'warn':'ok';
     return '<div class="budget-row">'
-      +'<div class="budget-cat"><span class="budget-cat-name" style="color:'+(CAT_COLORS[k]||'#888')+'">'+(CATS[k]||k)+'</span><span class="budget-cat-nums">$'+actual.toFixed(0)+' / $'+limit+'</span></div>'
+      +'<div class="budget-cat"><span class="budget-cat-name" style="color:'+g[1]+'">'+k+'</span><span class="budget-cat-nums">$'+actual.toFixed(0)+' / $'+limit+'</span></div>'
       +'<div class="budget-bar"><div class="budget-fill '+cls+'" style="width:'+pct+'%"></div></div>'
       +'</div>';
   }).join('');
 }
 
 function saveBudgets(){
-  Object.keys(CATS).forEach(function(k){
-    var input=document.querySelector('[data-budget-category="'+k+'"]');
+  BUDGET_GROUPS.forEach(function(g){
+    var input=document.querySelector('[data-budget-category="'+g[0]+'"]');
     var v=parseFloat(input ? input.value : '');
-    if(v>0) budgets[k]=v; else delete budgets[k];
+    budgets[g[0]]=v>0?v:0;
   });
-  localStorage.setItem('omega_budgets',JSON.stringify(budgets));
+  localStorage.setItem(BUDGET_TARGETS_KEY,JSON.stringify(budgets));
   renderBudget();
   alert('BUDGETS SAVED');
 }

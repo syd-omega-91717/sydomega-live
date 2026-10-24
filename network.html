@@ -259,10 +259,18 @@
    SOVEREIGN NETWORK — Relationship Intelligence System
    ═══════════════════════════════════════════════════════════════════════ */
 
+/* One contact book: contacts.html's 'omega_contacts' + 'omega_contact_ints'.
+   This page kept a second CRM ('omega_network_contacts'/'_interactions')
+   with its own circles, so a person could be due here and not there
+   (CLAUDE.md 8.1 class 8). It is now a view over that store. Its circles
+   map onto contacts.html's Dunbar tiers; fields only this page has
+   (strength, lastContact) are kept on the shared record; fields only
+   contacts.html has (role, email, tags, ...) are preserved untouched.
+   The old keys are moved over once (same name = same person) and removed. */
 const CONTACTS_KEY     = 'omega_contacts';
 const INTERACTIONS_KEY = 'omega_contact_ints';
-const LEGACY_CONTACTS_KEY = 'omega_network_contacts';
-const LEGACY_INTERACTIONS_KEY = 'omega_network_interactions';
+const CIRCLE_TO_TIER = {INNER_CIRCLE:'inner', TRIBE:'close', ALLIES:'tribe', NETWORK:'network', PROSPECTS:'outer'};
+const TIER_TO_CIRCLE = {inner:'INNER_CIRCLE', close:'TRIBE', tribe:'ALLIES', network:'NETWORK', outer:'PROSPECTS'};
 
 const CIRCLES = [
   {id:'INNER_CIRCLE', label:'INNER CIRCLE', color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), limit:5,  freq:7},
@@ -279,43 +287,104 @@ let _editCat = 'NETWORK';
 
 /* ── STORAGE ─────────────────────────────────────────────────────────── */
 
-function load() {
-  try { _contacts = JSON.parse(localStorage.getItem(CONTACTS_KEY)) || []; } catch { _contacts = []; }
-  try { _interactions = JSON.parse(localStorage.getItem(INTERACTIONS_KEY)) || []; } catch { _interactions = []; }
-  let legacyContacts=[], legacyInteractions=[];
-  try { legacyContacts = JSON.parse(localStorage.getItem(LEGACY_CONTACTS_KEY)) || []; } catch {}
-  try { legacyInteractions = JSON.parse(localStorage.getItem(LEGACY_INTERACTIONS_KEY)) || []; } catch {}
-  const idMap = {};
-  let nextId = Math.max(Date.now(), ..._contacts.map(c => Number(c.id)||0)) + 1;
-  legacyContacts.forEach(n => {
+function readArr(k) { try { const v = JSON.parse(localStorage.getItem(k)); return Array.isArray(v) ? v : []; } catch { return []; } }
+function newId(taken) { let n = Date.now(); while (taken[String(n)]) n++; taken[String(n)] = 1; return n; }
+
+function migrateLegacy() {
+  const oldC = localStorage.getItem('omega_network_contacts'), oldI = localStorage.getItem('omega_network_interactions');
+  if (oldC === null && oldI === null) return;
+  const book = readArr(CONTACTS_KEY), ints = readArr(INTERACTIONS_KEY), taken = {}, idMap = {};
+  book.forEach(c => { taken[String(c.id)] = 1; });
+  readArr('omega_network_contacts').forEach(n => {
     if (!n || !n.name) return;
-    const existing = _contacts.find(c => String(c.id)===String(n.id) || String(c.name||'').trim().toLowerCase()===String(n.name).trim().toLowerCase());
-    if (existing) { idMap[String(n.id)] = existing.id; return; }
-    const id = nextId++;
-    idMap[String(n.id)] = id;
-    _contacts.push({id, name:String(n.name), category:n.category||n.cat||'other', cat:n.cat||n.category||'other',
-      frequency:Number(n.frequency||n.freq)||30, freq:Number(n.freq||n.frequency)||30,
-      lastContact:n.lastContact||'', strength:Number(n.strength)||3, note:n.note||n.notes||'', notes:n.notes||n.note||'',
-      tier:n.tier||'network', role:n.role||'', company:n.company||'', email:n.email||'', phone:n.phone||'',
-      tags:Array.isArray(n.tags)?n.tags:[], vip:!!n.vip, added:n.added||new Date().toISOString().slice(0,10)});
-  });
-  legacyInteractions.forEach(i => {
-    if (!i) return;
-    const mapped = idMap[String(i.contactId)];
-    const target = mapped!=null ? mapped : (_contacts.find(c => String(c.id)===String(i.contactId))||{}).id;
-    if (target==null) return;
-    const date = i.date || new Date(i.ts||Date.now()).toISOString().slice(0,10);
-    if (!_interactions.some(x => String(x.contactId)===String(target) && x.date===date && String(x.note||'')===String(i.note||''))) {
-      _interactions.push({contactId:target, date, type:i.type||i.channel||'other', note:i.note||'', ts:i.ts||Date.now()});
+    const same = book.find(c => String(c.name).trim().toLowerCase() === String(n.name).trim().toLowerCase());
+    if (same) {
+      idMap[n.id] = same.id;
+      if (same.strength == null && n.strength) same.strength = n.strength;
+      if (!same.lastContact && n.lastContact) same.lastContact = n.lastContact;
+      if (!same.notes && n.note) same.notes = n.note;
+    } else {
+      const id = newId(taken); idMap[n.id] = id;
+      book.push({id, name:n.name, role:'', company:'', email:'', phone:'', tier:CIRCLE_TO_TIER[n.category]||'network',
+        cat:'other', freq:n.frequency||30, tags:[], notes:n.note||'', vip:false,
+        added:new Date(n.createdAt||Date.now()).toISOString().slice(0,10), color:'#888',
+        strength:n.strength||3, lastContact:n.lastContact||''});
     }
   });
-  _contacts = _contacts.map(c => ({...c, category:c.category||c.cat||'other', cat:c.cat||c.category||'other',
-    frequency:Number(c.frequency||c.freq)||30, freq:Number(c.freq||c.frequency)||30,
-    note:c.note||c.notes||'', notes:c.notes||c.note||'', strength:Number(c.strength)||3}));
-  saveContacts(); saveInteractions();
+  readArr('omega_network_interactions').forEach(i => {
+    const cid = idMap[i.contactId]; if (cid == null) return;
+    const c = book.find(x => x.id === cid);
+    ints.push({id:i.ts||Date.now(), contactId:cid, contactName:c?c.name:'', date:i.date, channel:i.type||'other', quality:3, note:i.note||''});
+  });
+  localStorage.setItem(CONTACTS_KEY, JSON.stringify(book));
+  localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(ints));
+  localStorage.removeItem('omega_network_contacts'); localStorage.removeItem('omega_network_interactions');
 }
-function saveContacts()     { localStorage.setItem(CONTACTS_KEY,     JSON.stringify(_contacts)); }
-function saveInteractions() { localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(_interactions)); }
+
+/* An interim version of this page (on main 2026-10-16..24) wrote this page's
+   own shapes into the shared keys: circle ids in 'category' (and in
+   contacts.html's 'cat'), every migrated person at tier 'network', and
+   interactions as {type, ts}. Normalise those once so both pages agree. */
+function normaliseShared() {
+  const book = readArr(CONTACTS_KEY), ints = readArr(INTERACTIONS_KEY);
+  let changed = false;
+  book.forEach(c => {
+    if (c && c.category != null) {
+      if (CIRCLE_TO_TIER[c.category]) c.tier = CIRCLE_TO_TIER[c.category];
+      if (CIRCLE_TO_TIER[c.cat]) c.cat = 'other';
+      if (c.frequency != null && c.freq == null) c.freq = Number(c.frequency) || 30;
+      if (c.note && !c.notes) c.notes = c.note;
+      delete c.category; delete c.frequency; delete c.note;
+      changed = true;
+    }
+  });
+  ints.forEach(i => {
+    if (i && i.channel == null && i.type != null) { i.channel = i.type; delete i.type; changed = true; }
+    if (i && i.id == null && i.ts != null) { i.id = i.ts; delete i.ts; changed = true; }
+    if (i && !i.contactName) { const c = book.find(x => String(x.id) === String(i.contactId)); if (c) { i.contactName = c.name; changed = true; } }
+  });
+  if (changed) { localStorage.setItem(CONTACTS_KEY, JSON.stringify(book)); localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(ints)); }
+}
+
+function load() {
+  migrateLegacy();
+  normaliseShared();
+  const book = readArr(CONTACTS_KEY), ints = readArr(INTERACTIONS_KEY);
+  _interactions = ints.map(i => ({contactId:String(i.contactId), date:i.date, type:i.channel||'other', note:i.note||'', ts:i.id}));
+  _contacts = book.map(c => {
+    const last = ints.filter(i => String(i.contactId) === String(c.id)).map(i => i.date).sort().pop() || '';
+    return {id:String(c.id), name:c.name, category:TIER_TO_CIRCLE[c.tier]||'NETWORK', frequency:c.freq||30,
+      lastContact:[last, c.lastContact||''].sort().pop() || '', strength:c.strength||3, note:c.notes||'',
+      createdAt:c.added ? new Date(c.added).getTime() : Date.now()};
+  });
+}
+function saveContacts() {
+  const book = readArr(CONTACTS_KEY), taken = {}, keep = {};
+  book.forEach(c => { taken[String(c.id)] = 1; });
+  _contacts.forEach(v => {
+    let c = book.find(x => String(x.id) === v.id);
+    if (!c) {
+      c = {id:newId(taken), role:'', company:'', email:'', phone:'', cat:'other', tags:[], vip:false,
+        added:new Date().toISOString().slice(0,10), color:'#888'};
+      book.push(c);
+      /* Keep this page's view and any interactions on the shared numeric id. */
+      _interactions.forEach(i => { if (i.contactId === v.id) i.contactId = String(c.id); });
+      v.id = String(c.id);
+    }
+    Object.assign(c, {name:v.name, tier:CIRCLE_TO_TIER[v.category]||'network', freq:v.frequency||30,
+      notes:v.note||'', strength:v.strength||3, lastContact:v.lastContact||''});
+    keep[String(c.id)] = 1;
+  });
+  localStorage.setItem(CONTACTS_KEY, JSON.stringify(book.filter(c => keep[String(c.id)])));
+}
+function saveInteractions() {
+  const book = readArr(CONTACTS_KEY);
+  localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(_interactions.map(i => {
+    const c = book.find(x => String(x.id) === String(i.contactId));
+    return {id:i.ts||Date.now(), contactId:c ? c.id : Number(i.contactId), contactName:c ? c.name : '',
+      date:i.date, channel:i.type||'other', quality:3, note:i.note||''};
+  })));
+}
 
 function today() { return new Date().toISOString().slice(0,10); }
 function daysSince(d) { return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 9999; }

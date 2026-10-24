@@ -24819,3 +24819,95 @@ sets its own delay), so no speed-up is claimed.
 **Fix.** `scripts/tests/test_content_pipeline_e2e.py` now treats Python socket/HTTP timeouts like transient URL errors in the probe request helper. The existing 90-second deadline remains authoritative; if the Edge Function never becomes ready, the test now reports `content_ingest_edge_runtime_not_ready` instead of aborting on the first timeout. This does not relax any auth, ownership, content-integrity, or audit assertion.
 
 **Verification status.** Patch queued for CI verification; no local Supabase stack was available in this environment.
+
+
+## 2026-10-24 — Two merge resolutions undid the motion budget and type scale on the dashboard
+
+**Found.** PRs #1009 (motion), #1008 (type scale) and #1013 (phone) all touched
+`dashboard.html`, and the phone branch also touched `bg.js`. The conflicts were resolved by taking
+one whole side, so on `main` at `6d745186`:
+- the 12 inline `animation:emblem-float … infinite` section icons were back, and `.emblem-orb`
+  floated at rest again (measured: 30 running animations on `dashboard.html` at rest; 9 of them
+  `emblem-float @div.emblem-orb ∞`);
+- `bg.js` had lost all 5 `var(--fs-N,…)` tokens and its pre-scale sizes (13/15px), and
+  `dashboard.html` had lost all 7. A sweep of the 272 files that held tokens at `0402bf3d` found
+  these two were the **only** losses (1569 → 1557 tokens estate-wide).
+
+**Fix.** The inline loops were removed again. The float now runs only on
+`.sechead:hover>span>span:first-child` and the existing `.emblem-orb:hover`. The 5 `bg.js` tokens
+were restored by their rule context. All 76 `dashboard.html` font sizes were snapped to the scale
+(53×12, 6×16, 13 and 18/22/20 → 14/20).
+
+**Verified** (harness Chromium, `main` vs branch):
+- running at rest: 30 → **20**;
+- desktop 1440 and phone 390: no horizontal scroll either way, clipped text 1 → 1, 0 page errors.
+
+**Transferable rule.** After a merge that resolves a conflict by taking one side, re-measure the
+features the other side carried. A green merge says nothing about whether they survived.
+## Budget/Expenses and Contacts/Network merged; dashboard savings rate never computed (2026-10-24)
+
+The owner chose the merges that `FEATURE_IDEAS.md` §41 and the 2026-10-15 entry above left to them (§8.1 class 8).
+
+**Interim fixes already on `main`, and how this change reconciles them.**
+- **`92ec0f13` (2026-10-15, "reconcile finance and contact stores")** already pointed `network.html` at `omega_contacts`, but wrote Network's own shapes into the shared keys:
+  - circle ids in `category`, and in contacts.html's `cat`;
+  - every migrated person at tier `network`;
+  - interactions as `{type, ts}`, which `contacts.html` does not read.
+
+  This change keeps that commit's migration intent and replaces its storage with the mapped view below. `normaliseShared()` repairs any record it already wrote: circle → tier, a circle id in `cat` → `other`, `type`/`ts` → `channel`/`id`.
+- **`main` also fixed two things independently:**
+  - **The dashboard's savings sum:** its version, which also tolerates the legacy object shape, is kept.
+  - **Budget's NaN-safe default fill:** kept, with a save added so `expenses.html` reads the same targets.
+
+- **Expenses → Budget.**
+  - `expenses.html` kept its own ledger (`omega_expenses`, 15 categories) and limits (`omega_budgets`), beside `budget.html`'s `omega_budget_months`/`omega_budget_targets` with 8 groups. The same month showed two spending totals.
+  - Expenses is now a view over Budget's store. Each row keeps its fine category as `sub` (fitness → HEALTH, sub `fitness`), so no detail is lost, and `budget.html` shows it after the description.
+  - Limits are Budget's 8 targets. Old limits seed them only when Budget has none: fitness 80 + health 20 = HEALTH 100.
+  - The old keys migrate once and are removed. Backup export and import now name Budget's keys.
+  - Row text that went into `innerHTML` unescaped is now escaped.
+  - `budget.html` refilled any 0 target with its default on every load, so "no limit" snapped back to $1,500 and similar. It now fills only absent targets and saves them.
+- **Network → Contacts.**
+  - `network.html` kept a second CRM (`omega_network_contacts`/`_interactions`) with circles that do not match Contacts' (its TRIBE = 15, contacts' = 50). It is now a view over `omega_contacts`/`omega_contact_ints`.
+  - Circles map INNER_CIRCLE→inner, TRIBE→close, ALLIES→tribe, NETWORK→network, PROSPECTS→outer.
+  - Network-only fields (strength, lastContact) live on the shared record, and contacts-only fields are preserved.
+  - Migration treats the same name (case-insensitive) as the same person. Interactions are re-keyed to the shared numeric ids.
+  - `contacts.html`'s due check now honours a last-contact date set on Network.
+- **`dashboard.html`.**
+  - The savings-rate tile summed every field of each Budget row (ids, dates) instead of `amount`, so it could never be a number. Its network "due" tile read the old Network key.
+  - Both now read the shared stores. Verified with the Personal tab rendered: 3000 income and 200 spent show **93%**, and 1 contact is due.
+
+**Verified in a render.**
+- **Expenses → Budget:**
+  - legacy keys removed; the fitness row lands as HEALTH with `sub` `fitness`;
+  - income moved; targets seeded HEALTH 100 / FOOD 300;
+  - an injected `<b>` renders as text;
+  - add and delete on Expenses write Budget's store;
+  - `budget.html` fills only the missing targets.
+- **Network → Contacts:**
+  - legacy keys removed; "ada" and "Ada" merged, with CTO/email kept and strength 5 / lastContact 10-20 gained;
+  - Bob added as `outer`, his interaction re-keyed;
+  - `contacts.html` lists both.
+- **Errors:** 0 page errors on any page.
+
+Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contacts, dashboard).
+
+## Weekly idea routine 2026-10-19: generic asset names are gated, and five stale statuses are corrected (2026-10-24)
+
+- **Built: blueprint point 31, descriptive asset naming.** `scripts/asset-name-contract.py` blocks any NEW committed image or video whose basename is a camera, messenger or screenshot export name (IMG_1234, IMG-20260101-WA0001, "WhatsApp Image ... AM.jpeg", DSC_, PXL_, untitled, a bare number or hash).
+  - **Measured:** 170 of the 511 tracked media files carry such names. 102 are `IMG-YYYYMMDD-WA####.jpg` and 68 are `WhatsApp Image ...jpeg`, all in the owner's art folders.
+  - **Baseline:** those 170 are frozen in `config/asset-name-baseline.json`. Renaming them is the owner's call, because a rename breaks every reference.
+  - **Wired:** the gate runs as `asset-name` in `scripts/contract-suite.py`.
+- **Verified:**
+  - `scripts/tests/test_asset_name_contract.py` (6 tests) plants `IMG_9999.png` and requires exit 1. It also confirms that 10 descriptive names already used in this repo are not flagged, and that a removed baseline entry is reported but does not fail.
+  - The first pattern missed the "WhatsApp Image" shape, because its timestamp contains dots. That test caught it, and widening the pattern found the 68 extra files.
+  - This is tooling, not UI, so there is no Chromium render to verify and no `platform_settings` flag applies.
+- **Statuses corrected, with live evidence (2026-10-24):**
+  - **I07, certificate PDF → SHIPPED.** It merged in #885. `profile.html:1529` adds the download button and `omega-passport.js:224` draws the PDF.
+  - **B012, B013, B455, N142, family access → SHIPPED.**
+    - Migration `20261012150000` is applied live: it has a `schema_migrations` row, `profiles.family_of` exists, and `grant_family_access(p_uid, p_attested_adult)` is live.
+    - `approvals.js:242` calls it.
+    - The `family-access-privacy` gate keeps family accounts off member-visible rankings.
+    - 0 family links exist yet.
+- **Found on `main`, not fixed here:** `supabase/remote-migrations.json` (a missing comma after `20261024101622`) and `supabase/pending-migrations.json` (a broken object boundary near line 13) do not parse in `origin/main`. That fails four blocking gates for every branch: migration-drift, migration-pending-boundary, migration-replay-inventory and fabric LIVE-02.
+  - `pending-migrations.json` also lists `20261024103000` as NOT_APPLIED, while live `schema_migrations` already records it.
+  - Both files are evidently mid-edit, so they are left to whoever owns that change.

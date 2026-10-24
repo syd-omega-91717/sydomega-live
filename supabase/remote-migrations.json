@@ -1,8 +1,8 @@
 {
   "_captured": "2026-10-24",
-  "source": "Authenticated Supabase provider migration-history query for project ydqhzvvoyufiiqvzcjns; refreshed 2026-10-24. The provider history includes the Stripe zero-decimal settlement migration 20261024091500 and the provider-registry column-access migration 20261024102602. Live privileges were verified: authenticated has only the six catalog-column SELECT grants, while service_role retains secret_ref SELECT. An orphaned duplicate history record 20261024101622 was removed after verifying that the persistent privilege state is represented by 20261024102602.",
-  "remoteMigrationCount": 409,
-  "latestRemoteMigration": "20261024102602",
+  "source": "Authenticated Supabase query of supabase_migrations.schema_migrations for project ydqhzvvoyufiiqvzcjns, 2026-10-24: 411 unique versions, latest 20261024103000. harden_provider_registry_column_access is recorded under three versions (20261024101622, 20261024102602, 20261024103000); 101622 and 103000 hold identical statements, 102602 differs only in comments, and all three are idempotent privilege changes. Live end state verified the same day: authenticated holds column SELECT on exactly id, provider_key, display_name, adapter_kind, capabilities, status and no table-level SELECT; service_role keeps its 20261017105203 column grant (id, provider_key, status, secret_ref). This is a provider-history snapshot, not proof that every historical SQL file is byte-identical to applied SQL.",
+  "remoteMigrationCount": 411,
+  "latestRemoteMigration": "20261024103000",
   "versions": [
     "0001",
     "0002",
@@ -412,7 +412,9 @@
     "20261022130000",
     "20261023120000",
     "20261024091500",
-    "20261024102602"
+    "20261024101622",
+    "20261024102602",
+    "20261024103000"
   ],
   "migrations": [
     {
@@ -2041,7 +2043,19 @@
       "name": "omega_personal_context_link_fk_indexes"
     },
     {
+      "version": "20261024091500",
+      "name": "fix_stripe_zero_decimal_settlement_precision"
+    },
+    {
+      "version": "20261024101622",
+      "name": "harden_provider_registry_column_access"
+    },
+    {
       "version": "20261024102602",
+      "name": "harden_provider_registry_column_access"
+    },
+    {
+      "version": "20261024103000",
       "name": "harden_provider_registry_column_access"
     }
   ]

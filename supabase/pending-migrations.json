@@ -10,6 +10,14 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "Correct Stripe zero-decimal currency conversion in the private ledger settlement RPC. Requires review and isolated full-migration replay before any live deployment."
+    },
+    {
+      "version": "20261024103000",
+      "file": "20261024103000_harden_provider_registry_column_access.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Restrict authenticated SELECT on the provider registry to non-secret catalog columns; secret_ref must remain server-only. Requires isolated replay and privilege regression tests before controlled live application."
     }
   ]
 }

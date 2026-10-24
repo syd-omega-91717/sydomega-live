@@ -9,13 +9,14 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 | Supabase security | Security Advisor findings reviewed and provider-level controls enabled | BLOCKED — leaked-password protection is disabled (WARN). The additional INFO finding for `omega_private.marketplace_listing_assets` is consistent with the documented server-only, deny-by-default design: RLS is enabled and the migration revokes privileges from `public`, `anon`, `authenticated`, and `service_role`. Preserve this boundary; do not add a client policy merely to silence the linter. |
 | RLS performance | Advisor has zero RLS init-plan findings | PASS for the previously audited RLS init-plan category; repeat verification after schema changes. Separate performance Advisor review still reports 327 unused-index INFO findings, which require workload-aware review rather than bulk deletion. |
 | RPC privilege | High-risk client RPCs are invoker/search-path hardened | PASS — based on existing audit evidence; re-run regression checks before release |
-| Migration reproducibility | All local migrations replay successfully from zero | PENDING FULL 407-MIGRATION RUN |
+| Migration reproducibility | All local migrations replay successfully from zero | PASS — GitHub Actions run `40070878936` completed the isolated fresh-database replay on 2026-10-24; migration inventory, security audit, latest hardening contract, family-access/privacy probes, and authenticated content pipeline all passed. Re-run after future migration changes. |
 | Payment lifecycle | Signed Stripe event → idempotency → ledger → reconciliation → entitlement → reversal | BLOCKED — live provider proof required |
 | Disaster recovery | Provider restore drill with measured RPO/RTO | BLOCKED — provider restore proof required |
 | Privacy lifecycle | Export/delete/retention exercised against controlled data | PARTIAL — implementation exists; full lifecycle evidence remains |
 | Provider credentials | Every external production provider verified and failure-tested | PARTIAL |
 | Scale | Concurrency, DB saturation, queues, Edge Functions, latency/cost limits measured | PENDING |
 | AI quality | Groundedness, retrieval quality, hallucination, latency, cost, adversarial recovery measured | PENDING |
+| Supply-chain security | Blocking SAST, filesystem/IaC scans, and validated SBOM all complete successfully | BLOCKED — workflow run `40070878989` failed in Semgrep SAST (reported one blocking finding); Trivy filesystem/IaC scans and SBOM generation were skipped. The run emitted multiple SARIF location annotations, so the precise blocking result must be isolated before making a targeted repair. No scan gate was bypassed. |
 | Vercel production | Current main commit has a READY production deployment | BLOCKED — current main commit `fdb3f3395dd79d5a57646831fa8a2f747a647a86` has a failing Vercel status linked to account/deployment-blocked guidance; the latest deployment returned by the connected Vercel integration is still on commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28` from 2026-10-06 |
 | Owner security | Owner MFA factor enrolled and verified | PENDING OWNER ACTION |
 
@@ -33,7 +34,7 @@ This is an evidence gate, not a feature checklist. A domain is PASS only when de
 
 `.github/workflows/supabase-full-migration-replay.yml` starts an isolated Supabase stack and runs `supabase db reset`, which recreates the local database and applies every migration in order. The inventory contract checks that the local migration set exactly matches the committed live manifest before and after replay.
 
-The live Supabase migration journal was queried on 2026-10-24: **407 applied versions**, first version `0001`, latest version `20261023120000`. The committed `supabase/remote-migrations.json` reports the same count and latest version. The latest migration is `20261023120000_omega_personal_context_link_fk_indexes.sql`. This verifies ledger/manifest alignment at the count and latest-version level; it does **not** prove the full isolated replay passed. The workflow must complete the reset and subsequent security/hardening tests before migration reproducibility can be marked PASS.
+The live Supabase migration journal was queried on 2026-10-24: **407 applied versions**, first version `0001`, latest version `20261023120000`. The committed `supabase/remote-migrations.json` reports the same count and latest version. The latest migration is `20261023120000_omega_personal_context_link_fk_indexes.sql`. The isolated replay workflow subsequently passed run `40070878936`: it recreated the database, replayed the migration set, revalidated inventory, and passed the migration security, hardening, family-access/privacy, and authenticated-content checks. This is reproducibility evidence for the checked-out commit; it is not a substitute for live production provider evidence.
 
 ## Provider blockers
 

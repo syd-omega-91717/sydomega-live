@@ -2,6 +2,17 @@
 
 This is an evidence gate, not a feature checklist. A domain is PASS only when deterministic evidence exists and, where applicable, the live provider independently confirms it.
 
+## Autonomous recovery decisions (2026-10-24)
+
+These conservative decisions protect production data, account access, and financial integrity while provider-side blockers remain unresolved.
+
+- **Canonical hosting:** retain Cloudflare Pages as the current production source of truth while Vercel eligibility and release parity are unresolved. Do not purchase credits, upgrade plans, or change billing without explicit owner authorization. Vercel is not considered recovered until a READY deployment matches the intended main SHA and independent HTTP checks pass.
+- **Payment safety:** keep `payments_enabled=false`. Do not deploy the changed Stripe webhook while runtime parity fails and refund/reversal handling plus signed test-mode lifecycle evidence are incomplete. Do not create real charges or synthetic payment events in production.
+- **Database safety:** do not drop any of the 327 unused-index candidates based on advisor counts alone. Require query-plan evidence, workload benchmarks, and a rollback plan first.
+- **Cost containment:** do not create a billable Supabase branch or project without explicit approval of the quoted cost. Any temporary test environment must use synthetic data, have an owner and expiry, and be deleted after evidence is captured.
+- **Auth hardening:** leaked-password protection remains an open provider setting. Enable it through authorized Supabase Auth settings or an authorized Management API credential; never use SQL to change provider configuration. Do not enforce owner MFA until both owners have verified factors.
+- **Release evidence:** passing CI, Semgrep/Trivy/SBOM, and isolated migration replay are necessary but not sufficient. Keep release readiness blocked until hosting SHA parity, Edge Function parity, payment/privacy lifecycle tests, disaster-recovery evidence, owner MFA, and representative scale/AI-quality evaluation are documented.
+
 ## Current gate
 
 **Evidence snapshot:** 2026-10-24. Main commit `f70f2c89ee5ea50eedcb5e1db6b1e1736b6b835d` is not yet verified in Vercel production; do not treat passing CI or a ready older deployment as release parity.

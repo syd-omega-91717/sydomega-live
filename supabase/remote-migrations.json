@@ -1,11 +1,8 @@
 {
   "_captured": "2026-10-24",
-  "source": "Authenticated Supabase provider migration-history query on 2026-10-24. Migration 20261024101622 (harden_provider_registry_column_access) was applied through the Supabase migration tool. Post-apply verification confirmed authenticated cannot SELECT secret_ref, metadata, created_at, or updated_at, while the six allowlisted catalog columns remain selectable; the existing RLS policy and all 13 registry rows were preserved.",
-  "remoteMigrationCount": 409,
-  "latestRemoteMigration": "20261024101622",
-  "source": "Authenticated Supabase provider migration-history query for project ydqhzvvoyufiiqvzcjns; refreshed 2026-10-24. Provider history reports 409 unique versions, including 20261024091500_fix_stripe_zero_decimal_settlement_precision and 20261024102602_harden_provider_registry_column_access. Live Stripe settlement definition and service_role-only execute privileges were verified; live authenticated provider-registry column privileges were verified. This is a provider-history snapshot, not proof that every historical SQL file is byte-identical to applied SQL.",
-  "remoteMigrationCount": 409,
-  "latestRemoteMigration": "20261024102602",
+  "source": "Authenticated Supabase query of supabase_migrations.schema_migrations for project ydqhzvvoyufiiqvzcjns, 2026-10-24: 411 unique versions, latest 20261024103000. harden_provider_registry_column_access is recorded under three versions (20261024101622, 20261024102602, 20261024103000); 101622 and 103000 hold identical statements, 102602 differs only in comments, and all three are idempotent privilege changes. Live end state verified the same day: authenticated holds column SELECT on exactly id, provider_key, display_name, adapter_kind, capabilities, status and no table-level SELECT; service_role keeps its 20261017105203 column grant (id, provider_key, status, secret_ref). This is a provider-history snapshot, not proof that every historical SQL file is byte-identical to applied SQL.",
+  "remoteMigrationCount": 411,
+  "latestRemoteMigration": "20261024103000",
   "versions": [
     "0001",
     "0002",
@@ -415,8 +412,9 @@
     "20261022130000",
     "20261023120000",
     "20261024091500",
-    "20261024101622"
-    "20261024102602"
+    "20261024101622",
+    "20261024102602",
+    "20261024103000"
   ],
   "migrations": [
     {
@@ -2049,7 +2047,15 @@
       "name": "fix_stripe_zero_decimal_settlement_precision"
     },
     {
+      "version": "20261024101622",
+      "name": "harden_provider_registry_column_access"
+    },
+    {
       "version": "20261024102602",
+      "name": "harden_provider_registry_column_access"
+    },
+    {
+      "version": "20261024103000",
       "name": "harden_provider_registry_column_access"
     }
   ]

@@ -24911,3 +24911,54 @@ Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contact
 - **Found on `main`, not fixed here:** `supabase/remote-migrations.json` (a missing comma after `20261024101622`) and `supabase/pending-migrations.json` (a broken object boundary near line 13) do not parse in `origin/main`. That fails four blocking gates for every branch: migration-drift, migration-pending-boundary, migration-replay-inventory and fabric LIVE-02.
   - `pending-migrations.json` also lists `20261024103000` as NOT_APPLIED, while live `schema_migrations` already records it.
   - Both files are evidently mid-edit, so they are left to whoever owns that change.
+
+## Migration history JSONs repaired from live; provider-registry test restored; upload catch restored (2026-10-24, PR #1080)
+
+- **Symptom.** On `origin/main` f3d933d, `scripts/tests` reported 1 failure and 12 errors. Two blocking gate families were red for every branch.
+- **Cause 1: conflict resolutions committed both sides.**
+  - `supabase/remote-migrations.json` and `supabase/pending-migrations.json` did not parse. `json.load` stopped at line 419 col 5 and line 13 col 7 respectively.
+  - `remote-migrations.json` carried two `source`/`remoteMigrationCount`/`latestRemoteMigration` keys and claimed 409 versions.
+  - PR #1080 claimed the duplicate history row `20261024101622` "was removed". Live disagrees.
+- **Live truth.** Queried `supabase_migrations.schema_migrations` on `ydqhzvvoyufiiqvzcjns`, 2026-10-24.
+  - It holds **411** unique versions, latest `20261024103000`.
+  - `harden_provider_registry_column_access` is recorded under **three** versions: `101622`, `102602` and `103000`.
+  - The live statement md5 of `101622` equals that of `103000` (`a85f9607…`), and `102602` differs (`99cf466f…`). That is the same split the three repo files show: `101622` and `103000` are byte-identical, and `102602` differs only in comments.
+  - All three are idempotent privilege changes, and every applied version keeps its source file (§5). So all three files stay, and none is renumbered.
+- **Live end state.**
+  - authenticated has column SELECT on exactly `id, provider_key, display_name, adapter_kind, capabilities, status`, and no table-level SELECT.
+  - service_role has `id, provider_key, status, secret_ref`. That comes from `20261017105203` and is deliberate, not a regression.
+- **Fix: the snapshot is rebuilt from live.**
+  - `remote-migrations.json` is regenerated, giving 411 versions.
+  - The PR's own side had also dropped `20261024091500` from `migrations` while keeping it in `versions`.
+  - Verified by digest: `md5(string_agg(version, ',' order by version))` is `dba1f8d6…`, and `md5(string_agg(version||':'||coalesce(name,'') …))` is `226ed436…`. Live and the file agree on both.
+  - `pending-migrations.json` now holds only `20261024110000` (the Stripe refund reversal), which is absent from live.
+- **Cause 2: a deleted security test.**
+  - PR #1080 deleted `test_secret_reference_is_not_in_authenticated_column_allowlist`.
+  - Main's copy of the test file had duplicated methods, so the second definition silently shadowed the first. It also had `re.findall(r"\\b…")`, a raw string that can never match a word boundary.
+  - Rewritten so every check runs against all three applied files (subTests). The `secret_ref` exclusion check is restored.
+  - The snapshot test now asserts unique versions, `versions == migrations`, latest is the max, and applied ∩ pending = ∅.
+  - Planted `secret_ref` into `102602`'s allowlist and the test failed for `version='20261024102602'`. Restored, and it passed.
+- **Cause 3: a "syntax fix" deleted the correct handler.**
+  - `268f1a0` removed `upload()`'s real `catch` in `omega-content-tasks.js` as "unreachable". The actual stray catch sat earlier in the function.
+  - `6731cef` then added `catch → FAILED/'UPLOAD_ERROR'`, which drops `uploaded.path`. An object already in Storage, or a registration in flight, was reported as a plain failure with no rollback signal (§8.1 class 1).
+  - The original handler is restored. A node harness exercised all three paths:
+    - throw before upload → `FAILED UNEXPECTED_PIPELINE_ERROR`
+    - throw during registration → `REGISTRATION_UNCERTAIN`, with the path, `NOT_ATTEMPTED`
+    - happy path → `PENDING_REVIEW`
+- **Verified.**
+  - `scripts/tests`: 907 tests, OK (main: failures=1, errors=12).
+  - `tests`: OK.
+  - `./scripts/ci-local.sh`: 32/32 blocking. The registry check needed `git fetch --unshallow` first (§8.4 shallow-clone note).
+- **Open (owner):** live history keeps three rows for one logical migration. Collapsing them is a `DELETE` on `schema_migrations` and needs human confirmation (§8.2). It is harmless while the SQL stays idempotent.
+- **Follow-up (same day): the refund migration did not parse.**
+  - `20261024110000_stripe_refund_ledger_reversal.sql` failed the fresh-database replay on `main`.
+  - Cause: `b3d6f9cf` edited it with a JS-style `String.replace`, whose replacement text contained `'^[A-Z]{3}$' THEN`. In a replacement string `$'` means "text after the match", so the edit pasted the old file's tail mid-function and dropped `$' THEN`.
+  - The two later fixes (`8d5d4a22`, `0e7417bd`) edited only the pasted copy.
+  - Repaired in #1087, and ported here with `cherry-pick -x`. The repaired file is the pasted copy plus the restored token, without the stale tail.
+  - Verified on a scratch PostgreSQL 16:
+    - the old file fails at the CI token
+    - the repaired file applies, and re-applying it is idempotent
+    - both functions are `SECURITY DEFINER` with `search_path=""`
+    - authenticated is denied and service_role is allowed
+  - It is still not applied live.
+  - **Lesson for scripted edits:** never pass SQL or regex text as a `String.replace` replacement string. Use a replacer function, or escape `$` as `$$`.

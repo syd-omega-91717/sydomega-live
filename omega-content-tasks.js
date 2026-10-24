@@ -74,7 +74,12 @@ async function upload(file,options){
       return task('REGISTRATION_UNCERTAIN',{truth_state:'UNAVAILABLE',error:'REGISTRATION_RESPONSE_UNCONFIRMED',path:uploaded.path,cleanup_state:'NOT_ATTEMPTED',support_review_required:true});
     return cleanupTask(error,uploaded.path,await cleanupUploaded(uploaded.path));
   }catch(_error){
-    return task('FAILED',{truth_state:'UNAVAILABLE',error:'UPLOAD_ERROR'});
+    if(uploaded&&typeof uploaded.path==='string'&&uploaded.path){
+      if(registrationStarted)
+        return task('REGISTRATION_UNCERTAIN',{truth_state:'UNAVAILABLE',error:'REGISTRATION_RESPONSE_UNCONFIRMED',path:uploaded.path,cleanup_state:'NOT_ATTEMPTED',support_review_required:true});
+      return cleanupTask('UNEXPECTED_PIPELINE_ERROR',uploaded.path,await cleanupUploaded(uploaded.path));
+    }
+    return task('FAILED',{truth_state:'UNAVAILABLE',error:'UNEXPECTED_PIPELINE_ERROR'});
   }
 }
 async function signedDownload(fileId){

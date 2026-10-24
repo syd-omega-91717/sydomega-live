@@ -4,12 +4,6 @@
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
   "pending": [
     {
-      "version": "20261024103000",
-      "file": "20261024103000_harden_provider_registry_column_access.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Restrict authenticated SELECT on the provider registry to non-secret catalog columns; secret_ref must remain server-only. Requires isolated replay and privilege regression tests before controlled live application."
       "version": "20261024110000",
       "file": "20261024110000_stripe_refund_ledger_reversal.sql",
       "status": "PENDING_REVIEW",

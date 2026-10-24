@@ -8,8 +8,7 @@
 BEGIN;
 
 REVOKE SELECT ON TABLE public.omega_provider_registry FROM authenticated;
-REVOKE SELECT (secret_ref, metadata, created_at, updated_at)
-  ON TABLE public.omega_provider_registry FROM authenticated;
+REVOKE SELECT (secret_ref, metadata, created_at, updated_at) ON TABLE public.omega_provider_registry FROM authenticated;
 
 GRANT SELECT (
   id,

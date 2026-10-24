@@ -1,3 +1,4 @@
+"""Static security contract for the provider registry's column privilege boundary."""
 """Security contract for the provider registry's column privilege boundary."""
 from pathlib import Path
 import re
@@ -17,6 +18,15 @@ class ProviderRegistryColumnPrivilegeTests(unittest.TestCase):
         self.assertLess(revoke, grant)
         self.assertIn("on table public.omega_provider_registry to authenticated", LOWER[grant:])
 
+    def test_secret_reference_is_not_in_authenticated_column_allowlist(self):
+        grant = LOWER.index("grant select (")
+        end = LOWER.index(") on table public.omega_provider_registry to authenticated", grant)
+        columns = set(re.findall(r"\b[a-z_][a-z0-9_]*\b", LOWER[grant:end]))
+        self.assertNotIn("secret_ref", columns)
+        self.assertIn("provider_key", columns)
+        self.assertIn("display_name", columns)
+        self.assertIn("capabilities", columns)
+        self.assertIn("status", columns)
     def test_every_non_allowlisted_authenticated_column_is_revoked(self):
         grant = LOWER.index("grant select (")
         end = LOWER.index(") on table public.omega_provider_registry to authenticated", grant)

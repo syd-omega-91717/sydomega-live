@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 239,
-  "open_task_count": 3216,
+  "page_count": 236,
+  "open_task_count": 3174,
   "pages": [
     {
       "page_id": "404",
@@ -78,11 +78,17 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Academy",
-        "h1": [],
+        "h1": [
+          "ACADEMY DATA UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
+          "/omega-academy-core.js",
           "/omega-analytics-init.js",
-          "/omega-speed-insights-init.js"
+          "/omega-exam-engine.js",
+          "/omega-review.js",
+          "/omega-speed-insights-init.js",
+          "/omega-srs.js"
         ],
         "supabase_tables": [
           "profiles",
@@ -95,7 +101,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -708,70 +714,6 @@
         "PAGE::agent-operations::MISSING::TRACEABILITY",
         "PAGE::agent-operations::MISSING::TRUTH_STATES",
         "PAGE::agent-operations::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
-      "page_id": "agent",
-      "path": "agent.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Agents &amp; Entrypoint",
-        "h1": [],
-        "scripts": [
-          "/bg.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::agent::MISSING::ACCESSIBILITY",
-        "PAGE::agent::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::agent::MISSING::AUTHORIZATION",
-        "PAGE::agent::MISSING::DATA_SOURCES",
-        "PAGE::agent::MISSING::DOMAIN",
-        "PAGE::agent::MISSING::EVENTS",
-        "PAGE::agent::MISSING::FAILURE_PATHS",
-        "PAGE::agent::MISSING::PRIMARY_ROLE",
-        "PAGE::agent::MISSING::PURPOSE",
-        "PAGE::agent::MISSING::RESPONSIVE",
-        "PAGE::agent::MISSING::TASKS",
-        "PAGE::agent::MISSING::TRACEABILITY",
-        "PAGE::agent::MISSING::TRUTH_STATES",
-        "PAGE::agent::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
@@ -2833,72 +2775,6 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
-      "page_id": "cohorts-dashboard",
-      "path": "cohorts-dashboard.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Cohorts Dashboard",
-        "h1": [
-          "Cohorts Dashboard"
-        ],
-        "scripts": [
-          "/bg.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::cohorts-dashboard::MISSING::ACCESSIBILITY",
-        "PAGE::cohorts-dashboard::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::cohorts-dashboard::MISSING::AUTHORIZATION",
-        "PAGE::cohorts-dashboard::MISSING::DATA_SOURCES",
-        "PAGE::cohorts-dashboard::MISSING::DOMAIN",
-        "PAGE::cohorts-dashboard::MISSING::EVENTS",
-        "PAGE::cohorts-dashboard::MISSING::FAILURE_PATHS",
-        "PAGE::cohorts-dashboard::MISSING::PRIMARY_ROLE",
-        "PAGE::cohorts-dashboard::MISSING::PURPOSE",
-        "PAGE::cohorts-dashboard::MISSING::RESPONSIVE",
-        "PAGE::cohorts-dashboard::MISSING::TASKS",
-        "PAGE::cohorts-dashboard::MISSING::TRACEABILITY",
-        "PAGE::cohorts-dashboard::MISSING::TRUTH_STATES",
-        "PAGE::cohorts-dashboard::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
       "page_id": "command",
       "path": "command.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -3326,7 +3202,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/control-center-runtime.js"
+          "/control-center-runtime.js",
+          "/omega-owner-core.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -4013,6 +3890,7 @@
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
+          "certificates",
           "profiles"
         ],
         "supabase_rpcs": [],
@@ -4076,6 +3954,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-command-dock.js",
           "/omega-constellation.js",
           "/omega-daily.js",
           "/omega-sparkline.js",
@@ -5133,7 +5012,8 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-exam-engine.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/omega-srs.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -5760,6 +5640,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-arcade.js",
+          "/omega-arena-core.js",
           "/omega-spatial-realms.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5834,7 +5715,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; GATES",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -5850,7 +5733,7 @@
           "buttons": 7,
           "forms": 0,
           "inputs": 2,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -6810,7 +6693,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; GRID",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -6826,7 +6711,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -7020,6 +6905,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-order-core.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -7728,7 +7614,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 61
+          "links": 56
         },
         "media_counts": {
           "images": 0,
@@ -7770,6 +7656,73 @@
         "PAGE::index::MISSING::TRACEABILITY",
         "PAGE::index::MISSING::TRUTH_STATES",
         "PAGE::index::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "insight",
+      "path": "insight.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; INSIGHT",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-insight.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 1,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::insight::MISSING::ACCESSIBILITY",
+        "PAGE::insight::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::insight::MISSING::AUTHORIZATION",
+        "PAGE::insight::MISSING::DATA_SOURCES",
+        "PAGE::insight::MISSING::DOMAIN",
+        "PAGE::insight::MISSING::EVENTS",
+        "PAGE::insight::MISSING::FAILURE_PATHS",
+        "PAGE::insight::MISSING::PRIMARY_ROLE",
+        "PAGE::insight::MISSING::PURPOSE",
+        "PAGE::insight::MISSING::RESPONSIVE",
+        "PAGE::insight::MISSING::TASKS",
+        "PAGE::insight::MISSING::TRACEABILITY",
+        "PAGE::insight::MISSING::TRUTH_STATES",
+        "PAGE::insight::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
@@ -7997,7 +7950,8 @@
           "/bg.js",
           "/omega-invest-boot.js",
           "/omega-invest-native.js",
-          "/omega-invest-shell-boot.js"
+          "/omega-invest-shell-boot.js",
+          "/omega-vault-core.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -8136,134 +8090,6 @@
         "PAGE::investment::MISSING::TRACEABILITY",
         "PAGE::investment::MISSING::TRUTH_STATES",
         "PAGE::investment::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
-      "page_id": "investor-dashboard",
-      "path": "investor-dashboard.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Investor Dashboard",
-        "h1": [],
-        "scripts": [
-          "/bg.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::investor-dashboard::MISSING::ACCESSIBILITY",
-        "PAGE::investor-dashboard::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::investor-dashboard::MISSING::AUTHORIZATION",
-        "PAGE::investor-dashboard::MISSING::DATA_SOURCES",
-        "PAGE::investor-dashboard::MISSING::DOMAIN",
-        "PAGE::investor-dashboard::MISSING::EVENTS",
-        "PAGE::investor-dashboard::MISSING::FAILURE_PATHS",
-        "PAGE::investor-dashboard::MISSING::PRIMARY_ROLE",
-        "PAGE::investor-dashboard::MISSING::PURPOSE",
-        "PAGE::investor-dashboard::MISSING::RESPONSIVE",
-        "PAGE::investor-dashboard::MISSING::TASKS",
-        "PAGE::investor-dashboard::MISSING::TRACEABILITY",
-        "PAGE::investor-dashboard::MISSING::TRUTH_STATES",
-        "PAGE::investor-dashboard::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
-      "page_id": "investor-gate",
-      "path": "investor-gate.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Investor Access Gateway",
-        "h1": [],
-        "scripts": [
-          "/bg.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::investor-gate::MISSING::ACCESSIBILITY",
-        "PAGE::investor-gate::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::investor-gate::MISSING::AUTHORIZATION",
-        "PAGE::investor-gate::MISSING::DATA_SOURCES",
-        "PAGE::investor-gate::MISSING::DOMAIN",
-        "PAGE::investor-gate::MISSING::EVENTS",
-        "PAGE::investor-gate::MISSING::FAILURE_PATHS",
-        "PAGE::investor-gate::MISSING::PRIMARY_ROLE",
-        "PAGE::investor-gate::MISSING::PURPOSE",
-        "PAGE::investor-gate::MISSING::RESPONSIVE",
-        "PAGE::investor-gate::MISSING::TASKS",
-        "PAGE::investor-gate::MISSING::TRACEABILITY",
-        "PAGE::investor-gate::MISSING::TRUTH_STATES",
-        "PAGE::investor-gate::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
@@ -8687,13 +8513,82 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
+      "page_id": "ladder",
+      "path": "ladder.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; LADDER",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-ladder.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 1,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::ladder::MISSING::ACCESSIBILITY",
+        "PAGE::ladder::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::ladder::MISSING::AUTHORIZATION",
+        "PAGE::ladder::MISSING::DATA_SOURCES",
+        "PAGE::ladder::MISSING::DOMAIN",
+        "PAGE::ladder::MISSING::EVENTS",
+        "PAGE::ladder::MISSING::FAILURE_PATHS",
+        "PAGE::ladder::MISSING::PRIMARY_ROLE",
+        "PAGE::ladder::MISSING::PURPOSE",
+        "PAGE::ladder::MISSING::RESPONSIVE",
+        "PAGE::ladder::MISSING::TASKS",
+        "PAGE::ladder::MISSING::TRACEABILITY",
+        "PAGE::ladder::MISSING::TRUTH_STATES",
+        "PAGE::ladder::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
       "page_id": "leaderboard",
       "path": "leaderboard.html",
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Leaderboard",
-        "h1": [],
+        "h1": [
+          "LEADERBOARD ACCESS UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/leaderboard.js",
@@ -8708,7 +8603,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -8826,7 +8721,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; LEVELS",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -8842,7 +8739,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -8965,11 +8862,13 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
+          "/omega-life-log.js",
           "/omega-life-native-systems.js",
           "/omega-life-surface.js",
           "/omega-life.js",
           "/omega-product-reality.js",
-          "/omega-relearn-sigil-mana.js"
+          "/omega-relearn-sigil-mana.js",
+          "/omega-sparkline.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -9403,6 +9302,7 @@
           "/omega-content-fabric.js",
           "/omega-demo-video.js",
           "/omega-media-boot.js",
+          "/omega-media-core.js",
           "/omega-media-native.js",
           "/omega-speed-insights-init.js"
         ],
@@ -10435,6 +10335,7 @@
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
+          "omega_notifications",
           "profiles"
         ],
         "supabase_rpcs": [],
@@ -10840,70 +10741,6 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
-      "page_id": "omega-visual-command",
-      "path": "omega-visual-command.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Visual Command Environment",
-        "h1": [],
-        "scripts": [
-          "/bg.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::omega-visual-command::MISSING::ACCESSIBILITY",
-        "PAGE::omega-visual-command::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::omega-visual-command::MISSING::AUTHORIZATION",
-        "PAGE::omega-visual-command::MISSING::DATA_SOURCES",
-        "PAGE::omega-visual-command::MISSING::DOMAIN",
-        "PAGE::omega-visual-command::MISSING::EVENTS",
-        "PAGE::omega-visual-command::MISSING::FAILURE_PATHS",
-        "PAGE::omega-visual-command::MISSING::PRIMARY_ROLE",
-        "PAGE::omega-visual-command::MISSING::PURPOSE",
-        "PAGE::omega-visual-command::MISSING::RESPONSIVE",
-        "PAGE::omega-visual-command::MISSING::TASKS",
-        "PAGE::omega-visual-command::MISSING::TRACEABILITY",
-        "PAGE::omega-visual-command::MISSING::TRUTH_STATES",
-        "PAGE::omega-visual-command::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
       "page_id": "ops",
       "path": "ops.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -11107,6 +10944,74 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
+      "page_id": "orrery",
+      "path": "orrery.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; ORRERY",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-orrery.js",
+          "/omega-sparkline.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 3,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::orrery::MISSING::ACCESSIBILITY",
+        "PAGE::orrery::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::orrery::MISSING::AUTHORIZATION",
+        "PAGE::orrery::MISSING::DATA_SOURCES",
+        "PAGE::orrery::MISSING::DOMAIN",
+        "PAGE::orrery::MISSING::EVENTS",
+        "PAGE::orrery::MISSING::FAILURE_PATHS",
+        "PAGE::orrery::MISSING::PRIMARY_ROLE",
+        "PAGE::orrery::MISSING::PURPOSE",
+        "PAGE::orrery::MISSING::RESPONSIVE",
+        "PAGE::orrery::MISSING::TASKS",
+        "PAGE::orrery::MISSING::TRACEABILITY",
+        "PAGE::orrery::MISSING::TRUTH_STATES",
+        "PAGE::orrery::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
       "page_id": "pantheons",
       "path": "pantheons.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -11252,8 +11157,7 @@
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
-          "profiles",
-          "task_completions"
+          "profiles"
         ],
         "supabase_rpcs": [],
         "capability_candidates": [],
@@ -11590,7 +11494,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Points",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -11607,7 +11513,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -12000,10 +11906,12 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-identity-core.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
         "supabase_tables": [
+          "certificates",
           "character_records",
           "evolution_events",
           "profiles"
@@ -12694,7 +12602,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Realm",
-        "h1": [],
+        "h1": [
+          "ACCESS VERIFICATION UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -12710,7 +12620,7 @@
           "buttons": 13,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -13766,14 +13676,14 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 4,
+          "buttons": 8,
           "forms": 0,
           "inputs": 0,
           "links": 1
         },
         "media_counts": {
           "images": 0,
-          "video": 0,
+          "video": 1,
           "audio": 0,
           "iframes": 0
         }
@@ -13823,6 +13733,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-services-core.js",
           "/omega-services-native.js",
           "/omega-speed-insights-init.js"
         ],
@@ -15219,7 +15130,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; TREASURY",
-        "h1": [],
+        "h1": [
+          "TREASURY DATA UNAVAILABLE"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -15236,7 +15149,7 @@
           "buttons": 14,
           "forms": 0,
           "inputs": 12,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -15622,70 +15535,6 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
-      "page_id": "venture-pipeline",
-      "path": "venture-pipeline.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Venture Pipeline",
-        "h1": [],
-        "scripts": [
-          "/bg.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::venture-pipeline::MISSING::ACCESSIBILITY",
-        "PAGE::venture-pipeline::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::venture-pipeline::MISSING::AUTHORIZATION",
-        "PAGE::venture-pipeline::MISSING::DATA_SOURCES",
-        "PAGE::venture-pipeline::MISSING::DOMAIN",
-        "PAGE::venture-pipeline::MISSING::EVENTS",
-        "PAGE::venture-pipeline::MISSING::FAILURE_PATHS",
-        "PAGE::venture-pipeline::MISSING::PRIMARY_ROLE",
-        "PAGE::venture-pipeline::MISSING::PURPOSE",
-        "PAGE::venture-pipeline::MISSING::RESPONSIVE",
-        "PAGE::venture-pipeline::MISSING::TASKS",
-        "PAGE::venture-pipeline::MISSING::TRACEABILITY",
-        "PAGE::venture-pipeline::MISSING::TRUTH_STATES",
-        "PAGE::venture-pipeline::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
       "page_id": "verify-deployment",
       "path": "verify-deployment.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -15840,14 +15689,14 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 12,
+          "buttons": 13,
           "forms": 0,
           "inputs": 5,
           "links": 0
         },
         "media_counts": {
-          "images": 0,
-          "video": 0,
+          "images": 3,
+          "video": 6,
           "audio": 0,
           "iframes": 0
         }
@@ -16045,7 +15894,7 @@
           "buttons": 10,
           "forms": 0,
           "inputs": 7,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,

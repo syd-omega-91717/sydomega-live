@@ -149,6 +149,7 @@ import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var CK='omega_contributions',GK='omega_gifts',GTK='omega_giving_target';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var contribs=JSON.parse(localStorage.getItem(CK)||'[]');
 var gifts=JSON.parse(localStorage.getItem(GK)||'[]');
 /* the fallback must be valid JSON -- unquoted keys made JSON.parse throw at
@@ -179,12 +180,12 @@ function renderContribs(){
     var col=TYPE_COL[c.type]||'#888';
     return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.45);padding:12px;border-radius:2px">'
       +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+c.type.toUpperCase()+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">SCALE '+c.scale+' — '+SCALE[parseInt(c.scale)]+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:'+col+';border:1px solid '+col+';padding:1px 5px">'+esc(c.type.toUpperCase())+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">SCALE '+esc(c.scale)+' — '+esc(SCALE[parseInt(c.scale)])+'</div>'
       +(c.people?'<div style="font-family:var(--M);font-size:12px;color:var(--green)">'+Number(c.people).toLocaleString()+' people</div>':'')
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+c.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-left:auto">'+esc(c.date)+'</div>'
       +'</div>'
-      +'<div style="font-size:12px;line-height:1.5">'+c.text+'</div>'
+      +'<div style="font-size:12px;line-height:1.5">'+esc(c.text)+'</div>'
       +'</div>';
   }).join('');
 }
@@ -212,9 +213,9 @@ function renderGifts(){
   if(!gifts.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO GIFTS LOGGED</div>';return;}
   el.innerHTML=[].concat(gifts).reverse().map(function(g){
     return '<div style="border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
-      +'<div style="flex:1;font-size:12px">'+g.org+'</div>'
+      +'<div style="flex:1;font-size:12px">'+esc(g.org)+'</div>'
       +'<div style="font-family:var(--D);font-size:14px;color:var(--gold)">'+fmt(g.amount)+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+g.date+'</div>'
+      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(g.date)+'</div>'
       +'</div>';
   }).join('');
 }

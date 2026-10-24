@@ -24,7 +24,7 @@ def main():
     for marker in ("verify_blockchain_ownership","create_media_job","upsert_investment_watchlist","elemental_cosmology_read","elemental_interpretation_read","elemental_simulation_run","omega_elemental_runtime","cosmology.read","interpretation.read","simulation.run","createSupabaseContext","auth: 'user'"):
         if marker not in gateway: return fail(f"gateway missing {marker}")
     worker=(ROOT/"supabase/functions/omega-media-worker/index.ts").read_text(encoding="utf-8")
-    for marker in ("OMEGA_MEDIA_PROVIDER_URL","OMEGA_MEDIA_PROVIDER_SECRET","claim_media_jobs","complete_media_job","BLOCKED_PROVIDER"):
+    for marker in ("OMEGA_MEDIA_PROVIDER_URL","OMEGA_MEDIA_PROVIDER_SECRET","claim_media_jobs","complete_media_job","BLOCKED_PROVIDER","safeProviderEndpoint","readLimitedText","MAX_PROVIDER_RESPONSE_BYTES","redirect: 'error'","cache: 'no-store'","provider_endpoint_rejected","provider_response_too_large"):
         if marker not in worker: return fail(f"media worker missing {marker}")
     migration="\n".join(p.read_text(encoding="utf-8") for p in sorted((ROOT/"supabase/migrations").glob("20261002*runtime_frontier*.sql")) + sorted((ROOT/"supabase/migrations").glob("20261002*media_job_worker*.sql")) + sorted((ROOT/"supabase/migrations").glob("20261002*elemental_runtime*.sql")))
     for marker in ("omega_media_jobs","omega_investment_watchlists","omega_legal_documents","omega_blockchain_ownership_verifications","omega_elemental_runtime","record_blockchain_ownership_verification"):

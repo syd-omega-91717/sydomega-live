@@ -42,7 +42,7 @@
 .bio-ring::before{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(0,229,255,.2);animation:bio-spin 4s linear infinite}
 .bio-ring::after{content:"";position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(201,168,76,.15);animation:bio-spin 6s linear infinite reverse}
 @keyframes bio-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.bio-glyph{font-family:serif;font-size:36px;color:var(--gold);text-shadow:0 0 30px rgba(201,168,76,.7)}
+.bio-glyph{font-family:serif;font-size:var(--fs-6,40px);color:var(--gold);text-shadow:0 0 30px rgba(201,168,76,.7)}
 .bio-scan-line{width:160px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:12px 0;animation:scan-move 1.5s linear infinite}
 @keyframes scan-move{0%{opacity:0;transform:translateY(-50px)}50%{opacity:1}100%{opacity:0;transform:translateY(50px)}}
 .bio-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:4px}
@@ -90,7 +90,7 @@
 .proto-sub{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--dim);margin-top:4px}
 /* Science */
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
-.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-val{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
 .stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 /* The four layer tabs had no rule at all, so they rendered as the browser's
    default grey system buttons (rgb 107,107,107) -- measured at 4.46:1 and

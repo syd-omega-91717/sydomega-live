@@ -51,6 +51,17 @@ jobs:
       - name: Run latest hardening contract
         run: python3 -m unittest scripts/tests/test_rls_rpc_performance_hardening.py
 
+      - name: Run Stripe refund lifecycle static contract
+        run: python3 -m unittest scripts/tests/test_stripe_refund_lifecycle_contract.py -v
+
+      - name: Run Stripe refund ledger lifecycle probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          db_url="$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')"
+          test -n "$db_url"
+          psql "$db_url" -v ON_ERROR_STOP=1 -f scripts/tests/stripe-refund-lifecycle-probe.sql
+
       - name: Run family-access authorization and privacy probes
         shell: bash
         run: |
@@ -58,6 +69,10 @@ jobs:
           db_url="$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')"
           test -n "$db_url"
           psql "$db_url" -v ON_ERROR_STOP=1 -f scripts/tests/family-access-migration-probe.sql
+
+      - name: Run authenticated content pipeline end-to-end
+        shell: bash
+        run: python3 scripts/tests/test_content_pipeline_e2e.py
 
       - name: Stop isolated Supabase stack
         if: always()

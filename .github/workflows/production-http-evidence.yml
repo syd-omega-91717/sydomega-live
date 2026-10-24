@@ -1,0 +1,77 @@
+name: Production HTTP Evidence
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-http-evidence
+  cancel-in-progress: true
+
+jobs:
+  synthetic-production-probe:
+    name: Probe public production release
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Refuse non-main dispatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Production evidence must be run against main; got $GITHUB_REF"
+            exit 1
+          fi
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Runner diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${RUNNER_NAME:-}"
+          test -n "${RUNNER_OS:-}"
+          test -n "${RUNNER_ARCH:-}"
+          echo "runner=${RUNNER_NAME}"
+          echo "runner_os=${RUNNER_OS}"
+          echo "runner_arch=${RUNNER_ARCH}"
+          echo "run=${GITHUB_RUN_ID}"
+          echo "attempt=${GITHUB_RUN_ATTEMPT}"
+      - name: Probe domains and compare with this main commit
+        id: probe
+        shell: bash
+        run: |
+          set -uo pipefail
+          python3 scripts/production-http-evidence.py --expected-sha "$GITHUB_SHA" --json > production-http-evidence.json
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          cat production-http-evidence.json
+          exit 0
+      - name: Preserve evidence report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: production-http-evidence-${{ github.run_id }}
+          path: production-http-evidence.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Fail if production evidence is not clean
+        if: steps.probe.outputs.exit_code != '0'
+        shell: bash
+        run: |
+          echo "::error title=Production HTTP evidence failed::Review the uploaded JSON artifact for per-origin findings."
+          exit 1
+      - name: Execution marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PRODUCTION_HTTP_EVIDENCE_EXECUTED=true"
+          echo "PRODUCTION_HTTP_EVIDENCE_RUN_ID=${GITHUB_RUN_ID}"
+          echo "PRODUCTION_HTTP_EVIDENCE_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}"

@@ -44,7 +44,9 @@
   var css = [
     '@keyframes omgBreath{0%,100%{box-shadow:0 0 0 1px rgba(201,168,76,.04),0 0 16px -8px rgba(201,168,76,.07)}50%{box-shadow:0 0 0 1px rgba(201,168,76,.09),0 0 24px -6px rgba(226,200,109,.14)}}',
     '.card,.panel,.tier,.node,.sb,.metric,.box,.glass,.tile,.mod,.qa,.krow,.stat{backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease,border-color .3s ease}',
-    '.card,.tier,.node,.tile,.mod{animation:omgBreath 11s ease-in-out infinite}',
+    /* Motion budget (2026-10-19): ambient loops only where the member is looking.
+       Was every .card/.tier/.node/.tile/.mod, forever: 24 on dashboard alone. */
+    '.card:hover,.card:focus-within,.tier:hover,.node:hover,.tile:hover,.mod:hover{animation:omgBreath 11s ease-in-out infinite}',
     '.card:hover,.tier:hover,.node:hover,.tile:hover,.mod:hover,.qa:hover{transform:translateY(-3px) scale(1.006)}',
     '#omega-atmosphere-mask{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}',
     '#omega-atmosphere{position:absolute;inset:0}',
@@ -55,14 +57,13 @@
   style.textContent = css;
   (document.head || document.documentElement).appendChild(style);
 
-  function destagger() {
-    if (REDUCED) return;
-    document.querySelectorAll('.card,.tier,.node,.tile,.mod').forEach(function (el) {
-      if (el.__omgStaggered) return;
-      el.__omgStaggered = 1;
-      el.style.animationDelay = (Math.random() * 11).toFixed(2) + 's';
-    });
-  }
+  /* destagger() is gone: it put a random 0-11s inline animation-delay on every
+     card to desync the always-on breathing loop. Breathing is hover-only now
+     (motion budget, 2026-10-19), where that delay would only make a hovered card
+     wait up to 11s to respond, and there is nothing left to desync; its
+     subtree-wide MutationObserver went with it. (Entrances were not affected --
+     measured: in-view dashboard cards reach full opacity by 2s with or without
+     it, because the reveal sets its own delay.) */
 
   function reveal() {
     var v = document.createElement('div');
@@ -178,8 +179,6 @@
          Keeping the old rotating atmosphere behind it created two competing
          hero systems. Other pages retain the established living atmosphere. */
       if (!IS_INDEX) atmosphere();
-      destagger();
-      try { new MutationObserver(destagger).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
     }
   }
   if (document.body) boot();

@@ -11,7 +11,7 @@
 .id-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:14px}
 .id-field{margin-bottom:10px}
 .id-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
-.id-value{font-family:var(--M);font-size:13px;color:var(--cyan)}
+.id-value{font-family:var(--M);font-size:var(--fs-2,14px);color:var(--cyan)}
 .id-value.gold{color:var(--gold)}
 .id-value.green{color:var(--green)}
 .id-value.purple{color:var(--purple)}
@@ -19,19 +19,19 @@
 .element-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
 .elem-card{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:12px;text-align:center;transition:border-color .18s,background .18s}
 .elem-card.active{border-color:rgba(0,229,255,.5);background:rgba(0,229,255,.06)}
-.elem-glyph{font-size:22px;margin-bottom:5px;line-height:1}
+.elem-glyph{font-size:var(--fs-4,20px);margin-bottom:5px;line-height:1}
 .elem-name{font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:2px}
 .elem-role{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .axis-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1rem}
 .axis-cell{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:16px;text-align:center}
 .axis-letter{font-size:28px;color:var(--ac,var(--cyan));line-height:1;margin-bottom:4px}
-.axis-val{font-family:var(--M);font-size:18px;color:var(--ink);margin-bottom:6px}
+.axis-val{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--ink);margin-bottom:6px}
 .axis-name{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
 .axis-bar{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:8px}
 .axis-fill{height:100%;border-radius:2px;background:var(--ac,var(--cyan))}
 .token-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:1rem}
 .token-card{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:12px;border-top:2px solid var(--tc,var(--cyan))}
-.token-sym{font-size:18px;margin-bottom:5px}
+.token-sym{font-size:var(--fs-4,20px);margin-bottom:5px}
 .token-name{font-family:var(--M);font-size:12px;color:var(--ink);margin-bottom:2px}
 .token-type{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
 .lore-panel{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:18px;margin-bottom:1rem}
@@ -97,7 +97,7 @@
         <div class="id-field"><div class="id-label">AXIS A · KNOWLEDGE</div><div class="id-value" id="chr-axis-a">--</div></div>
         <div class="id-field"><div class="id-label">AXIS B · MASTERY</div><div class="id-value" id="chr-axis-b">--</div></div>
         <div class="id-field"><div class="id-label">AXIS C · CONTRIBUTION</div><div class="id-value" id="chr-axis-c">--</div></div>
-        <div class="id-field"><div class="id-label">AUTHORITY</div><div class="id-value solar" style="font-size:18px" id="chr-auth">--</div></div>
+        <div class="id-field"><div class="id-label">AUTHORITY</div><div class="id-value solar" style="font-size:var(--fs-4,20px)" id="chr-auth">--</div></div>
         <div class="id-field"><div class="id-label">GRADE</div><div class="id-value purple" id="chr-grade">--</div></div>
         <div class="id-field"><div class="id-label">LATTICE NODES</div><div class="id-value gold">104,976</div></div>
       </div>
@@ -298,7 +298,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   var ELEMS=['Fire ☲','Metal ☳','Wind ☱','Water ☰','Fire ☲','Sand ★','Wind ☱','Water ☰','Fire ☲','Metal ☳','Wind ☱','Water ☰'];
   var ELEM_IDS=['fire','metal','wind','water','fire','sand','wind','water','fire','metal','wind','water'];
   var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
-  var THRESHOLDS=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+  var THRESHOLDS=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
   var LORE_MAP={
     Aries:'Aries — the first sovereign of the lattice. Ruled by Ares, the war god, the Aries character embodies decisive force and primordial fire. Their journey begins at the Gate of the Initiate, igniting the chain that leads to the Apex.',
     Taurus:'Taurus — the sovereign of beauty and endurance. Guided by Aphrodite through the metal of the second gate, the Taurus character builds slowly and resolutely, forging bonds across element lines that outlast empires.',

@@ -140,6 +140,35 @@ done
 
 [ "${missing_refs}" -eq 0 ] || { echo "VERCEL_BUILD=FAIL unreachable_assets=${missing_refs}"; exit 1; }
 
+# Embed the exact source commit in the public artifact. CI validates it before
+# upload, and the post-deploy smoke check validates the same SHA from production.
+node scripts/omega-release-manifest.mjs --write
+
+# Stamp the same commit into the shipped service worker's cache version, so
+# each deploy is a new sw.js and returning browsers drop the old cache on their
+# next visit instead of serving it for up to an hour. Exactly one match, or fail:
+# a silent no-op here looks identical to success.
+# Only where a worker ships (the build tests' fixture repo has none).
+if [ -f public/sw.js ]; then
+  release_sha="$(node -e 'process.stdout.write(String(JSON.parse(require("fs").readFileSync("public/.well-known/omega-release.json","utf8")).commit_sha||""))')"
+  # A local build has no host SHA in the manifest ("unknown"); fall back to the
+  # checkout's HEAD, then (no git at all, e.g. a test copy) to a hash of the
+  # built files -- still a new value whenever shipped content changes.
+  [[ "${release_sha}" =~ ^[0-9a-f]{40}$ ]] || release_sha="$(git rev-parse HEAD 2>/dev/null || true)"
+  [[ "${release_sha}" =~ ^[0-9a-f]{40}$ ]] || release_sha="$(find public -type f ! -path public/sw.js -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -c1-40)"
+  sw_stamp="v9-${release_sha:0:12}"
+  [ "$(grep -c "^var CACHE_VERSION = 'v9';$" public/sw.js)" -eq 1 ] || { echo 'VERCEL_BUILD=FAIL sw_stamp_anchor'; exit 1; }
+  sed -i.bak "s/^var CACHE_VERSION = 'v9';$/var CACHE_VERSION = '${sw_stamp}';/" public/sw.js && rm -f public/sw.js.bak
+  grep -q "^var CACHE_VERSION = '${sw_stamp}';$" public/sw.js || { echo 'VERCEL_BUILD=FAIL sw_stamp_missing'; exit 1; }
+  echo "sw_cache_version=${sw_stamp}"
+fi
+
+# Carry vercel.json's headers and redirects in the artifact for hosts that
+# read _headers/_redirects (Cloudflare Pages, Netlify). Fails on a rule it
+# cannot translate rather than dropping it.
+python3 scripts/portable-host-config.py || { echo 'VERCEL_BUILD=FAIL portable_host_config'; exit 1; }
+
+
 
 
 html_count="$(find public -type f -name '*.html' | wc -l | tr -d ' ')"

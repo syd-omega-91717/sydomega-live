@@ -54,19 +54,19 @@
       <div class="sechead">EVOLUTION ROADMAP &middot; THE SCIENCE</div>
       <div class="card-grid" data-stagger data-stagger-gap="70">
         <div class="card" data-reveal="depth-in" style="--card-accent:var(--green)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--green);margin-bottom:8px">HORIZON METHODOLOGY</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--green);margin-bottom:8px">HORIZON METHODOLOGY</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Four planning horizons (H1–H4) cover Foundation (0–6 months), Growth (6–18 months), Global Expansion (18 months–5 years), and Civilisation-Grade Sovereignty (5–25 years). Each horizon compounds on the last.</div>
         </div>
         <div class="card" data-reveal="depth-in" style="--card-accent:var(--gold)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--gold);margin-bottom:8px">IMPACT × EFFORT MATRIX</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);margin-bottom:8px">IMPACT × EFFORT MATRIX</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Priorities are classified by two axes: impact (Critical/High/Strategic/Future) and effort (Low/Medium/High). The upper-left quadrant (high impact, low effort) contains the most valuable immediate actions — run migrations, deploy Edge Functions, rotate credentials.</div>
         </div>
         <div class="card" data-reveal="depth-in" style="--card-accent:var(--cyan)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--cyan);margin-bottom:8px">MATURITY SCORING</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--cyan);margin-bottom:8px">MATURITY SCORING</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">12 platform dimensions scored 0–100. Architecture (92), Security (89), Compliance (90) lead. Business (82) and Observability (81) are growth areas. The composite score (87/100) reflects a production-ready platform awaiting market activation.</div>
         </div>
         <div class="card" data-reveal="depth-in" style="--card-accent:var(--purple)">
-          <div style="font-family:var(--D);font-size:13px;color:var(--purple);margin-bottom:8px">100-YEAR THINKING</div>
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--purple);margin-bottom:8px">100-YEAR THINKING</div>
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">Horizon 4 (5–25 years) envisions quantum-resistant cryptography, IoT sovereign cities, neural interfaces, interplanetary sovereignty, and Open Sovereign Standard for third-party platform forks. The architecture is designed to evolve into civilisation-grade infrastructure.</div>
         </div>
       </div>
@@ -101,7 +101,7 @@ var PRIORITIES=[
 ];
 var MATURITY=[
   {d:'Architecture',s:92,n:'Modular static HTML + Supabase + Edge Functions. Clean separation.'},
-  {d:'Engineering',s:88,n:'0 JS errors. 0 div imbalance. 239 PAGES. 149 omega-* modules. 126 SQL files.'},
+  {d:'Engineering',s:88,n:'0 JS errors. 0 div imbalance. 149 omega-* modules. 126 SQL files.'},
   {d:'AI Integration',s:84,n:'12 agents, RAG concierge, memory engine, ReAct reasoning, voice.'},
   {d:'Security',s:89,n:'Zero Trust guardian, RLS on all tables, OWASP ASVS, SOC alerts.'},
   {d:'UX/Design',s:86,n:'Sovereign palette. Fluid typography. 200+ line global design system.'},
@@ -118,7 +118,7 @@ function build(){
   if(hg){hg.innerHTML=HORIZONS.map(function(h){
     return '<div class="card" data-reveal="depth-in" style="--card-accent:'+h.col+'">'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:'+h.col+';margin-bottom:6px">'+h.label+'</div>'
-      +'<div style="font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:10px">'+h.title+'</div>'
+      +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--ink);margin-bottom:10px">'+h.title+'</div>'
       +'<ul style="list-style:none">'
       +h.items.map(function(i){return '<li style="font-family:var(--M);font-size:12px;color:var(--muted);padding:4px 0;border-bottom:1px solid rgba(201,168,76,.04);line-height:1.5"><span style="color:'+h.col+'">⬡ </span>'+i+'</li>';}).join('')
       +'</ul></div>';
@@ -127,7 +127,7 @@ function build(){
   if(pg){pg.innerHTML=PRIORITIES.map(function(p){
     return '<div class="card card-edge" data-reveal="rotate-in" style="--card-accent:'+p.col+'">'
       +'<div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:'+p.col+';margin-bottom:5px">'+p.badge+'</div>'
-      +'<div style="font-family:var(--D);font-size:13px;color:var(--ink);margin-bottom:5px">'+p.title+'</div>'
+      +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--ink);margin-bottom:5px">'+p.title+'</div>'
       +'<div style="font-size:12px;line-height:1.65;color:var(--muted);margin-bottom:8px">'+p.desc+'</div>'
       +'<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)">'+p.meta+'</div>'
       +'</div>';

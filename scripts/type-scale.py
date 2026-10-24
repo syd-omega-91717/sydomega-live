@@ -42,6 +42,13 @@ reaching for `!important`. The declarations have to be edited where they live.
 
 THE SCALE
 
+    2026-10-19 (owner decision): above the floor, sizes now also SNAP to a six-step
+    scale owned in css/omega-system.css -- --fs-1..6 = 12/14/16/20/28/40px; >=48px
+    display sizes stay page-owned. 1,569 off-scale px/rem declarations (incl. the
+    `font:` shorthand) became var(--fs-N,<px>). This script still gates the floor
+    only; the paragraph below describes the original 2026-09-03 sweep.
+
+
 Sizes only ever go UP, and nothing at or above the floor moves at all, so no
 two sizes can swap order and every relationship above 12px is preserved exactly.
 Display type, headings and the large numerals are untouched -- this is a floor,

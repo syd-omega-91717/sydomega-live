@@ -211,7 +211,9 @@
       var GATES=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
       var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX'];
       var pr=window.__omegaCurrentProfile;
-      var prev_auth=pr?Number(pr.is_owner?27.8367:ctx.auth-(ctx.axis_result&&ctx.axis_result.applied?Number(ctx.weight||0.12):0)):0;
+      var appliedDelta = Number(ctx.axis_result && ctx.axis_result.points);
+      if(!Number.isFinite(appliedDelta)||appliedDelta<0) appliedDelta=0;
+      var prev_auth=pr?Number(pr.is_owner?27.8367:ctx.auth-(ctx.axis_result&&ctx.axis_result.applied?appliedDelta:0)):0;
       var new_auth=ctx.auth;
       var crossed=[];
       for(var i=0;i<GATES.length;i++){

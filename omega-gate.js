@@ -22,7 +22,7 @@
     '.omg-lock{position:relative!important}',
     '.omg-lock>*{filter:blur(6px);pointer-events:none;user-select:none}',
     '.omg-seal{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(6,6,12,.55);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:inherit;font-family:"Courier Prime",monospace;text-align:center;padding:10px}',
-    '.omg-seal .ic{font-size:26px;color:#C9A84C}',
+    '.omg-seal .ic{font-size:var(--fs-5,28px);color:#C9A84C}',
     '.omg-seal .rq{font-size:12px;letter-spacing:2px;color:#E2C86D}',
     '.omg-seal .hint{font-size:12px;letter-spacing:1px;color:#8a8676}'
   ].join('');
@@ -56,11 +56,13 @@
     }).join(' + ');
   }
 
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
   function lock(el, req) {
     if (el.querySelector(':scope > .omg-seal')) return;
     el.classList.add('omg-lock');
     var seal = document.createElement('div'); seal.className = 'omg-seal';
-    seal.innerHTML = '<div class="ic">&#9635;</div><div class="rq">UNLOCKS AT ' + label(req) + '</div><div class="hint">advance the matrix to reveal</div>';
+    seal.innerHTML = '<div class="ic">&#9635;</div><div class="rq">UNLOCKS AT ' + esc(label(req)) + '</div><div class="hint">advance the matrix to reveal</div>';
     el.appendChild(seal);
   }
   function unlock(el) {

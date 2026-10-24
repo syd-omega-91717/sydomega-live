@@ -13,12 +13,12 @@
 :root{--grn:#4CAF50;--prp:var(--purple)}
 .stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .stat-box{flex:1;min-width:90px;background:#0d0d0d;border:1px solid #1a1a1a;padding:14px;text-align:center}
-.stat-num{font-family:'Courier New',monospace;font-size:22px;color:var(--gold);font-weight:700}
+.stat-num{font-family:'Courier New',monospace;font-size:var(--fs-4,20px);color:var(--gold);font-weight:700}
 .stat-lbl{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:4px}
 .proj-card{background:#0d0d0d;border:1px solid #1a1a1a;padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color .2s;position:relative;--card-edge-w:4px}
 .proj-card:hover{border-color:var(--gold)}
 .proj-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
-.proj-name{font-family:'Courier New',monospace;font-size:13px;color:#e0e0e0;font-weight:700;flex:1}
+.proj-name{font-family:'Courier New',monospace;font-size:var(--fs-2,14px);color:#e0e0e0;font-weight:700;flex:1}
 .status-badge{padding:2px 8px;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;border:1px solid;white-space:nowrap}
 .badge-active{color:var(--gold);border-color:var(--gold)}
 .badge-complete{color:var(--grn);border-color:var(--grn)}
@@ -506,7 +506,7 @@ function populateTaskSelect(){
   var sel=document.getElementById('task-project-sel');
   var cur=sel.value;
   sel.innerHTML='<option value="">— Select project —</option>'
-    +projects.map(function(p){return '<option value="'+p.id+'"'+(p.id===cur?' selected':'')+'>'+esc(p.name)+'</option>';}).join('');
+    +projects.map(function(p){return '<option value="'+esc(p.id)+'"'+(p.id===cur?' selected':'')+'>'+esc(p.name)+'</option>';}).join('');
 }
 
 function renderTasks(){
@@ -521,8 +521,8 @@ function renderTasks(){
     +open.map(function(x){return taskItem(pid,x);}).join('')
     +'</div>'
     +'<div class="add-task-row">'
-    +'<input type="text" id="task-input" placeholder="Add task..." onkeydown="if(event.key===\'Enter\'){addTask(\''+pid+'\');event.preventDefault();}">'
-    +'<button class="add-task-btn" onclick="addTask(\''+pid+'\')">+ ADD</button>'
+    +'<input type="text" id="task-input" placeholder="Add task..." data-pid="'+esc(pid)+'" onkeydown="if(event.key===\'Enter\'){addTask(this.dataset.pid);event.preventDefault();}">'
+    +'<button class="add-task-btn" data-pid="'+esc(pid)+'" onclick="addTask(this.dataset.pid)">+ ADD</button>'
     +'</div>'
     +(done.length?'<div class="section-label" style="margin-top:20px">COMPLETED ('+done.length+')</div>'
     +'<div class="task-list">'+done.map(function(x){return taskItem(pid,x);}).join('')+'</div>':'');
@@ -531,9 +531,9 @@ function renderTasks(){
 function taskItem(pid,t){
   return '<div class="task-item">'
     +'<input type="checkbox" class="task-cb"'+(t.done?' checked':'')
-    +' onchange="toggleTask(\''+pid+'\',\''+t.id+'\')">'
+    +' data-pid="'+esc(pid)+'" data-tid="'+esc(t.id)+'" onchange="toggleTask(this.dataset.pid,this.dataset.tid)">'
     +'<div class="task-text'+(t.done?' done':'')+'">'+esc(t.text)+'</div>'
-    +'<button class="task-del" onclick="deleteTask(\''+pid+'\',\''+t.id+'\')">\xd7</button>'
+    +'<button class="task-del" data-pid="'+esc(pid)+'" data-tid="'+esc(t.id)+'" onclick="deleteTask(this.dataset.pid,this.dataset.tid)">\xd7</button>'
     +'</div>';
 }
 

@@ -1,0 +1,13 @@
+#!/bin/bash
+# Pre-commit hook: validate .semgrep.yml YAML syntax before commit
+set -e
+
+# Validate .semgrep.yml is valid YAML
+if [ -f .semgrep.yml ]; then
+  python3 -c "import yaml; yaml.safe_load(open('.semgrep.yml'))" || {
+    echo "ERROR: .semgrep.yml contains invalid YAML syntax"
+    exit 1
+  }
+fi
+
+exit 0

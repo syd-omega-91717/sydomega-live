@@ -34,7 +34,7 @@
 .daily-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
 @media(max-width:600px){.daily-summary{grid-template-columns:1fr 1fr}}
 .ds-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:12px;text-align:center}
-.ds-box .dv{font-family:var(--M);font-size:18px;letter-spacing:1px;color:var(--gold,var(--gold))}
+.ds-box .dv{font-family:var(--M);font-size:var(--fs-4,20px);letter-spacing:1px;color:var(--gold,var(--gold))}
 .ds-box .dl{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:3px}
 .ds-box .dt{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:2px}
 .food-log-item{display:grid;grid-template-columns:1fr 55px 55px 55px 55px 30px;gap:8px;padding:9px 12px;border:1px solid rgba(201,168,76,.07);border-radius:2px;margin-bottom:5px;align-items:center;font-family:var(--M);font-size:12px}
@@ -476,7 +476,7 @@ function renderTrends(){
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
       ${[{l:'AVG CALORIES',v:avgCal,t:TARGETS.cal},{l:'AVG PROTEIN',v:avgPro+'g',t:TARGETS.pro+'g'},{l:'HYDRATION',v:(getWater()[todayKey()]||0)+'/8',t:'2L'},{l:'LOGGING DAYS',v:Object.keys(log).filter(k=>log[k].length>0).length,t:''}].map(s=>`
         <div style="border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:12px;text-align:center">
-          <div style="font-family:var(--M);font-size:18px;color:var(--gold)">${s.v}</div>
+          <div style="font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold)">${s.v}</div>
           <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:3px">${s.l}</div>
         </div>`).join('')}
     </div>`;

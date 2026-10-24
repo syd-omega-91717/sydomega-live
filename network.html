@@ -9,7 +9,7 @@
 :root{--dim:rgba(138,134,118,.5)}
 
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
-.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-val{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
 .stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 
 .layer-tabs{display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap}
@@ -75,7 +75,7 @@
 /* INSIGHTS */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:20px}
 .kpi{border:1px solid rgba(201,168,76,.1);padding:14px;text-align:center}
-.kpi-v{font-family:var(--M);font-size:22px;color:var(--gold);letter-spacing:1px}
+.kpi-v{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
 .kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 .n-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .n-bar-lbl{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--dim);width:90px;flex-shrink:0}
@@ -321,8 +321,34 @@ function migrateLegacy() {
   localStorage.removeItem('omega_network_contacts'); localStorage.removeItem('omega_network_interactions');
 }
 
+/* An interim version of this page (on main 2026-10-16..24) wrote this page's
+   own shapes into the shared keys: circle ids in 'category' (and in
+   contacts.html's 'cat'), every migrated person at tier 'network', and
+   interactions as {type, ts}. Normalise those once so both pages agree. */
+function normaliseShared() {
+  const book = readArr(CONTACTS_KEY), ints = readArr(INTERACTIONS_KEY);
+  let changed = false;
+  book.forEach(c => {
+    if (c && c.category != null) {
+      if (CIRCLE_TO_TIER[c.category]) c.tier = CIRCLE_TO_TIER[c.category];
+      if (CIRCLE_TO_TIER[c.cat]) c.cat = 'other';
+      if (c.frequency != null && c.freq == null) c.freq = Number(c.frequency) || 30;
+      if (c.note && !c.notes) c.notes = c.note;
+      delete c.category; delete c.frequency; delete c.note;
+      changed = true;
+    }
+  });
+  ints.forEach(i => {
+    if (i && i.channel == null && i.type != null) { i.channel = i.type; delete i.type; changed = true; }
+    if (i && i.id == null && i.ts != null) { i.id = i.ts; delete i.ts; changed = true; }
+    if (i && !i.contactName) { const c = book.find(x => String(x.id) === String(i.contactId)); if (c) { i.contactName = c.name; changed = true; } }
+  });
+  if (changed) { localStorage.setItem(CONTACTS_KEY, JSON.stringify(book)); localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(ints)); }
+}
+
 function load() {
   migrateLegacy();
+  normaliseShared();
   const book = readArr(CONTACTS_KEY), ints = readArr(INTERACTIONS_KEY);
   _interactions = ints.map(i => ({contactId:String(i.contactId), date:i.date, type:i.channel||'other', note:i.note||'', ts:i.id}));
   _contacts = book.map(c => {
@@ -365,7 +391,7 @@ function daysSince(d) { return d ? Math.floor((Date.now() - new Date(d).getTime(
 function daysUntilDue(c) { return (c.frequency||30) - daysSince(c.lastContact); }
 function isOverdue(c) { return daysUntilDue(c) < 0; }
 function circleOf(id) { return CIRCLES.find(c=>c.id===id)||CIRCLES[3]; }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function uid() { return Date.now() + Math.floor(Math.random()*1000); }
 
 function updateTopMeta() {
   const od = _contacts.filter(isOverdue).length;
@@ -403,7 +429,7 @@ function clearForm() {
 
 window.editContact=editContact;
 function editContact(id) {
-  const c = _contacts.find(x=>x.id===id); if(!c) return;
+  const c = _contacts.find(x=>String(x.id)===String(id)); if(!c) return;
   document.getElementById('n-edit-id').value    = c.id;
   document.getElementById('nf-name').value      = c.name;
   document.getElementById('nf-note').value      = c.note||'';
@@ -422,7 +448,7 @@ function saveContact() {
   if (!name) { document.getElementById('nf-name').focus(); return; }
   const eid  = document.getElementById('n-edit-id').value;
   const entry = {
-    id: eid || uid(),
+    id: eid ? ((_contacts.find(c=>String(c.id)===String(eid))||{}).id) : uid(),
     name,
     category:    _editCat,
     frequency:   +document.getElementById('nf-freq').value,
@@ -432,7 +458,7 @@ function saveContact() {
     createdAt:   Date.now()
   };
   if (eid) {
-    const idx = _contacts.findIndex(c=>c.id===eid);
+    const idx = _contacts.findIndex(c=>String(c.id)===String(eid));
     if (idx>=0) _contacts[idx] = {..._contacts[idx], ...entry};
   } else {
     _contacts.push(entry);
@@ -446,8 +472,8 @@ function saveContact() {
 window.deleteContact=deleteContact;
 function deleteContact(id) {
   if (!confirm('Remove this contact?')) return;
-  _contacts = _contacts.filter(c=>c.id!==id);
-  _interactions = _interactions.filter(i=>i.contactId!==id);
+  _contacts = _contacts.filter(c=>String(c.id)!==String(id));
+  _interactions = _interactions.filter(i=>String(i.contactId)!==String(id));
   saveContacts(); saveInteractions();
   renderContactList(); updateTopMeta();
 }
@@ -470,9 +496,9 @@ function saveLog() {
   const date = document.getElementById('nl-date').value || today();
   const type = document.getElementById('nl-type').value;
   const note = document.getElementById('nl-note').value.trim();
-  _interactions.push({contactId:cid, date, type, note, ts:Date.now()});
+  _interactions.push({contactId:(_contacts.find(c=>String(c.id)===String(cid))||{}).id||cid, date, type, note, ts:Date.now()});
   // Update lastContact on the contact
-  const idx = _contacts.findIndex(c=>c.id===cid);
+  const idx = _contacts.findIndex(c=>String(c.id)===String(cid));
   if (idx>=0 && date >= (_contacts[idx].lastContact||'')) {
     _contacts[idx].lastContact = date;
     saveContacts();
@@ -510,12 +536,12 @@ function renderContactList() {
     return `<div class="n-list-row ${od?'overdue':''}">
       <span class="n-contact-name">${esc(c.name)}${c.note?' <span style="font-size:12px;color:var(--dim);font-style:italic"> · '+esc(c.note.slice(0,30))+'</span>':''}</span>
       <span class="n-contact-cat" style="color:${circ.color}">${circ.label.replace(' ','&nbsp;')}</span>
-      <span class="n-contact-last">${c.lastContact||'—'}</span>
+      <span class="n-contact-last">${esc(c.lastContact||'—')}</span>
       <span class="n-contact-days" style="color:${dueCol}">${dueStr}</span>
       <div class="n-list-acts">
-        <button class="n-act-btn" onclick="openLog('${c.id}')">LOG</button>
-        <button class="n-act-btn" onclick="editContact('${c.id}')">EDIT</button>
-        <button class="n-act-btn" onclick="deleteContact('${c.id}')" style="color:rgba(192,57,43,.5)">DEL</button>
+        <button class="n-act-btn" onclick="openLog(${esc(JSON.stringify(String(c.id)))})">LOG</button>
+        <button class="n-act-btn" onclick="editContact(${esc(JSON.stringify(String(c.id)))})">EDIT</button>
+        <button class="n-act-btn" onclick="deleteContact(${esc(JSON.stringify(String(c.id)))})" style="color:rgba(192,57,43,.5)">DEL</button>
       </div>
     </div>`;
   }).join('');
@@ -536,13 +562,13 @@ function renderDue() {
     const od   = due < 0;
     return `<div class="due-card card ${od?'':'warn'}">
       <div class="due-name" style="color:${circ.color}">${esc(c.name)}</div>
-      <div class="due-meta">${circ.label}  ·  EVERY ${c.frequency||30} DAYS  ·  LAST: ${c.lastContact||'NEVER'}</div>
+      <div class="due-meta">${circ.label}  ·  EVERY ${esc(c.frequency||30)} DAYS  ·  LAST: ${esc(c.lastContact||'NEVER')}</div>
       <div class="due-overdue" style="color:${od?'#c0392b':'#FF9800'}">
         ${od ? Math.abs(due)+'D OVERDUE' : due===0 ? 'DUE TODAY' : 'DUE IN '+due+'D'}
       </div>
       <div style="margin-top:10px;display:flex;gap:6px">
-        <button class="n-act-btn" onclick="openLog('${c.id}');activateTab('contacts')">LOG INTERACTION</button>
-        <button class="n-act-btn" onclick="editContact('${c.id}');activateTab('contacts')">EDIT</button>
+        <button class="n-act-btn" onclick="openLog(${esc(JSON.stringify(String(c.id)))});activateTab('contacts')">LOG INTERACTION</button>
+        <button class="n-act-btn" onclick="editContact(${esc(JSON.stringify(String(c.id)))});activateTab('contacts')">EDIT</button>
       </div>
     </div>`;
   }).join('');

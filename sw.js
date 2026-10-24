@@ -30,7 +30,12 @@
    Registered by omega-sw-register.js, which bg.js injects.
    ========================================================================== */
 
-var CACHE_VERSION = 'v8';
+/* The build rewrites this to 'v9-<commit>' (scripts/vercel-build.sh), so every
+   deploy ships a byte-different sw.js: the browser installs it on the next
+   visit, activate deletes the previous deploy's cache, and the page reloads
+   once onto the new code. A fixed version string meant a deploy reached a
+   returning member only after the cached copy aged out. */
+var CACHE_VERSION = 'v9';
 var CACHE_NAME    = 'omega-91717-' + CACHE_VERSION;
 
 /* Static shell only. Every entry must exist in the repository — the CI
@@ -76,7 +81,9 @@ self.addEventListener('install', function (e) {
       // allSettled + per-asset catch: one missing file must not abort install.
       return Promise.allSettled(
         CORE_ASSETS.map(function (url) {
-          return cache.add(url).catch(function (err) {
+          /* cache:'reload' -- the HTTP cache holds assets for an hour, so a
+             plain add() could store the PREVIOUS deploy's file in the new cache. */
+          return cache.add(new Request(url, { cache: 'reload' })).catch(function (err) {
             console.warn('[sw] precache failed:', url, err && err.message);
           });
         })
@@ -148,7 +155,14 @@ self.addEventListener('fetch', function (e) {
      bg.js propagates on the next load rather than never. */
   e.respondWith(
     caches.match(req).then(function (cached) {
-      var network = fetch(req)
+      /* Every network fetch is a billed edge request (one page view loads
+         ~200-390 assets), so a cached copy younger than an hour is served
+         with no revalidation at all. */
+      var fetched = cached && Date.parse(cached.headers.get('date') || '');
+      if (cached && fetched && Date.now() - fetched < 36e5) return cached;
+      /* no-cache revalidates against the server (a 304 when unchanged) instead
+         of accepting the HTTP cache's copy, which may predate this deploy. */
+      var network = fetch(req, { cache: 'no-cache' })
         .then(function (res) {
           if (res && res.status === 200 && res.type === 'basic') {
             var clone = res.clone();

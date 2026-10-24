@@ -21,6 +21,7 @@ version of the scanner, not hypotheticals:
 Run: python3 -m unittest scripts/tests/test_evidence_audit.py -v
 """
 
+import json
 import os
 import shutil
 import subprocess
@@ -48,6 +49,15 @@ class EvidenceAuditFixture(unittest.TestCase):
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, 'w', encoding='utf-8') as fh:
             fh.write(text)
+
+    def write_edge_manifest(self, states, captured='2026-10-24'):
+        self.write('docs/runtime/supabase-edge-functions-live.json', json.dumps({
+            'captured_at': captured,
+            'functions': {
+                name: {'state': state}
+                for name, state in states.items()
+            },
+        }))
 
     def run_audit(self, *args, **kwargs):
         env = dict(os.environ)
@@ -413,6 +423,81 @@ class TestHelpDoesNotRun(EvidenceAuditFixture):
         self.assertFalse(
             os.path.exists(os.path.join(self.dir, 'EVIDENCE_MATRIX.md')),
             '--help must not rewrite the report as a side effect')
+
+
+class TestEdgeRuntimeManifest(EvidenceAuditFixture):
+    def _function(self, name, source="export {};"):
+        self.write(f"supabase/functions/{name}/index.ts", source)
+
+    def test_client_reference_to_local_only_function_is_missing_deployment(self):
+        self.write('nav.js', "var PS={'price':'X'};")
+        self.write('price.html', "<script>fetch('/functions/v1/market-price')</script>")
+        self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
+        self._function('market-price')
+        self.write_edge_manifest({'market-price': 'LOCAL_ONLY'})
+        self.audit_stdout()
+        report = self.report()
+        row = next(line for line in report.splitlines() if 'market-price' in line)
+        self.assertIn('MISSING_DEPLOYMENT', row)
+        self.assertIn('deployment is missing', row)
+
+    def test_deployed_client_reference_is_wired(self):
+        self.write('nav.js', "var PS={'price':'X'};")
+        self.write('price.html', "<script>fetch('/functions/v1/market-price')</script>")
+        self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
+        self._function('market-price')
+        self.write_edge_manifest({'market-price': 'DEPLOYED'})
+        out = self.audit_stdout()
+        self.assertIn('1 wired', out)
+        row = next(line for line in self.report().splitlines() if 'market-price' in line)
+        self.assertIn('WIRED', row)
+
+    def test_server_to_server_invoke_is_detected(self):
+        self.write('nav.js', "var PS={};")
+        self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
+        self._function('orchestrator', "await supabase.functions.invoke('worker', {body: {}});")
+        self._function('worker')
+        self.write_edge_manifest({'orchestrator': 'DEPLOYED', 'worker': 'DEPLOYED'})
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines() if 'worker' in line)
+        self.assertIn('SERVER_INVOKED', row)
+
+    def test_sql_http_post_to_local_only_function_is_missing_deployment(self):
+        self.write('nav.js', "var PS={};")
+        self.write('supabase/a.sql', "select net.http_post(url := 'https://example.test/functions/v1/notify-access', headers := '{}');")
+        self._function('notify-access')
+        self.write_edge_manifest({'notify-access': 'LOCAL_ONLY'})
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines() if 'notify-access' in line)
+        self.assertIn('MISSING_DEPLOYMENT', row)
+
+    def test_unreferenced_local_only_function_is_local_only(self):
+        self.write('nav.js', "var PS={};")
+        self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
+        self._function('checkout')
+        self.write_edge_manifest({'checkout': 'LOCAL_ONLY'})
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines() if 'checkout' in line)
+        self.assertIn('LOCAL_ONLY', row)
+        self.assertNotIn('WIRED', row)
+
+    def test_missing_manifest_is_unverified_not_assumed_deployed(self):
+        self.write('nav.js', "var PS={'price':'X'};")
+        self.write('price.html', "<script>fetch('/functions/v1/market-price')</script>")
+        self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
+        self._function('market-price')
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines() if 'market-price' in line)
+        self.assertIn('UNVERIFIED', row)
+        self.assertIn('edge function runtime manifest captured: MISSING', self.audit_stdout('--summary'))
+
+    def test_shared_directory_is_not_counted_as_a_function(self):
+        self.write('nav.js', "var PS={};")
+        self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
+        self._function('_shared')
+        self.write_edge_manifest({'_shared': 'DEPLOYED'})
+        self.audit_stdout()
+        self.assertFalse(any('_shared' in line for line in self.report().splitlines() if 'Edge Functions' in line or 'WIRED' in line or 'LOCAL_ONLY' in line))
 
 
 if __name__ == '__main__':

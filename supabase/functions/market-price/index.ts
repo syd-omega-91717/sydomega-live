@@ -49,6 +49,7 @@ Deno.serve(async (req) => {
       { "Cache-Control": "public, max-age=60" },
     );
   } catch (e) {
-    return json({ error: String(e) }, 500);
+    console.error("[market-price]", e);
+    return json({ error: "internal_error" }, 500);
   }
 });

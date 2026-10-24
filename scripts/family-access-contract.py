@@ -18,6 +18,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MIGRATION = ROOT / "supabase/migrations/20261012150000_omega_family_access.sql"
 EDGE = ROOT / "supabase/functions/snapshot-leaderboard/index.ts"
+LEADERBOARD_WRAPPER_MIGRATION = ROOT / "supabase/migrations/20261015220000_restore_points_leaderboard_invoker_wrapper.sql"
 
 
 def function_sql(source: str, name: str) -> str:
@@ -43,6 +44,9 @@ def function_body(source: str, name: str) -> str:
 def main() -> int:
     migration = MIGRATION.read_text(encoding="utf-8")
     edge = EDGE.read_text(encoding="utf-8")
+    wrapper_migration = LEADERBOARD_WRAPPER_MIGRATION.read_text(encoding="utf-8")
+    wrapper_definition = function_sql(wrapper_migration, "public.get_points_leaderboard")
+    wrapper_body = function_body(wrapper_migration, "public.get_points_leaderboard")
     checks = {
         "public leaderboard excludes linked family": "family_of is null" in function_body(migration, "private.public_leaderboard"),
         "points leaderboard excludes other linked family": "p.family_of is null or p.id = v_uid" in function_body(migration, "private.get_points_leaderboard"),
@@ -50,9 +54,19 @@ def main() -> int:
             "security definer" in function_sql(migration, "private.get_points_leaderboard")
             and bool(re.search(r"set search_path\s*=\s*''", function_sql(migration, "private.get_points_leaderboard")))
         ),
-        "public points RPC remains an invoker wrapper": (
-            "select * from private.get_points_leaderboard($1)" in function_body(migration, "public.get_points_leaderboard")
-            and "security definer" not in function_sql(migration, "public.get_points_leaderboard")
+        "original family migration defines a narrow private points projection": (
+            "security definer" in function_sql(migration, "private.get_points_leaderboard")
+            and bool(re.search(r"set search_path\s*(?:=|\bto\b)\s*''", function_sql(migration, "private.get_points_leaderboard")))
+            and "p.family_of is null or p.id = v_uid" in function_body(migration, "private.get_points_leaderboard")
+        ),
+        "latest public points RPC is an invoker wrapper": (
+            "security invoker" in wrapper_definition
+            and "security definer" not in wrapper_definition
+            and " ".join(wrapper_body.split()) == "select * from private.get_points_leaderboard($1);"
+        ),
+        "latest public points RPC revokes anon and grants authenticated": (
+            "revoke all on function public.get_points_leaderboard(integer) from public, anon" in wrapper_migration.lower()
+            and "grant execute on function public.get_points_leaderboard(integer) to authenticated" in wrapper_migration.lower()
         ),
         "private points projection is authenticated-only": (
             "revoke all on function private.get_points_leaderboard(integer) from public, anon" in migration.lower()

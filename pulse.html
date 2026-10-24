@@ -12,7 +12,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse-dot 1.5s ease-in-out infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
 .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
-.stat-val{font-family:var(--M);font-size:18px;color:var(--gold);letter-spacing:1px}
+.stat-val{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
 .stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 .page-header{margin-bottom:20px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .page-title{font-size:12px;letter-spacing:3px;color:var(--gold)}
@@ -53,7 +53,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 .ac-spark{display:block;width:100%;margin-top:8px}
 /* Weather card */
 .weather-main{text-align:center;padding:12px 0}
-.wt-icon{font-size:36px;margin-bottom:6px}
+.wt-icon{font-size:var(--fs-6,40px);margin-bottom:6px}
 .wt-temp{font-size:28px;color:var(--gold);margin-bottom:4px;font-weight:300}
 .wt-desc{font-size:12px;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
 .wt-row{display:flex;justify-content:space-around;margin-top:14px;border-top:1px solid rgba(201,168,76,.08);padding-top:12px}
@@ -77,7 +77,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 /* Commodity */
 .cmd-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(201,168,76,.05)}
 .cmd-name{font-size:12px;letter-spacing:1.5px;color:rgba(200,190,160,.8);flex:1}
-.cmd-price{font-size:13px;color:var(--gold)}
+.cmd-price{font-size:var(--fs-2,14px);color:var(--gold)}
 .cmd-unit{font-size:12px;color:var(--dim);margin-left:3px}
 .cmd-chg{font-size:12px;min-width:55px;text-align:right}
 .cmd-chg.up{color:var(--green)}.cmd-chg.dn{color:var(--red)}
@@ -312,12 +312,12 @@ function renderCrypto(coins){
     var spark=c.sparkline_in_7d&&c.sparkline_in_7d.price;
     var sparkId='spark-'+c.id;
     div.innerHTML=
-      '<div class="ac-sym">'+c.symbol.toUpperCase()+'</div>'
-      +'<div class="ac-name">'+c.name+'</div>'
-      +'<div class="ac-price">'+fmt(c.current_price,c.current_price<1?6:2).replace('$','$​')+'</div>'
+      '<div class="ac-sym">'+esc(c.symbol.toUpperCase())+'</div>'
+      +'<div class="ac-name">'+esc(c.name)+'</div>'
+      +'<div class="ac-price">'+fmt(c.current_price,c.current_price<1?6:2).replace(/\$/g,'$​')+'</div>'
       +'<div class="ac-chg '+chgClass(chg24)+'">'+pct(chg24)+' 24h</div>'
       +'<div class="ac-vol">Vol: '+fmt(c.total_volume)+'</div>'
-      +(spark?'<canvas class="ac-spark" id="'+sparkId+'" height="30"></canvas>':'');
+      +(spark?'<canvas class="ac-spark" id="'+esc(sparkId)+'" height="30"></canvas>':'');
     grid.appendChild(div);
     if(spark){
       setTimeout(function(){

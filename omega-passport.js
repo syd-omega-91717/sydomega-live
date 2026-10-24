@@ -9,7 +9,7 @@
 'use strict';
 
 var GATE_NAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
-var GATE_THRESH=[2.32,3.98,5.95,8.29,11,13.92,17.21,20.87,24.01,25.9,27.1,27.8367];
+var GATE_THRESH=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
 var SIGN_ELEM={Aries:'Fire ☲',Taurus:'Metal ☳',Gemini:'Wind ☱',Cancer:'Water ☰',Leo:'Fire ☲',Virgo:'Sand ★',Libra:'Wind ☱',Scorpio:'Water ☰',Sagittarius:'Fire ☲',Capricorn:'Metal ☳',Aquarius:'Wind ☱',Pisces:'Water ☰'};
 var SIGN_GOD={Aries:'Ares',Taurus:'Aphrodite',Gemini:'Hermes',Cancer:'Artemis',Leo:'Apollo',Virgo:'Athena',Libra:'Hera',Scorpio:'Demeter',Sagittarius:'Zeus',Capricorn:'Hestia',Aquarius:'Hephaestus',Pisces:'Poseidon'};
 

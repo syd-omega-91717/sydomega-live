@@ -12,14 +12,14 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 SYSTEM = {
-    "offline.html","404.html","healthz.html","agent.html","omega-visual-command.html",
-    "pending.html","investor-dashboard.html","investor-gate.html",
-    "verify-deployment.html","verify-modules.html","venture-pipeline.html",
+    "offline.html","404.html","healthz.html",
+    "pending.html",
+    "verify-deployment.html","verify-modules.html",
     "frontend/platform/platform.html","root/audit-report.html",
     "root/dashboard/dashboard.html","root/portal.html",
     "web/templates/admin_console.html","web/templates/leaderboard.html",
     "web/templates/sovereign_health.html","web/templates/system_health.html",
-    "cohorts-dashboard.html","monitoring-dashboard.html","predictions-dashboard.html",
+    "monitoring-dashboard.html","predictions-dashboard.html",
 }
 # Diagnostic, health, fallback, template and gateway artifacts are valid
 # production surfaces but do not share the member-page semantic shell. They

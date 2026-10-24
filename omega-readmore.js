@@ -47,7 +47,7 @@
     st.id = 'orm-style';
     st.textContent =
       '.orm-clamp{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}' +
-      '.orm-btn{display:inline-flex;align-items:center;gap:6px;margin:6px 0 2px;min-height:32px;padding:0 12px;' +
+      '.orm-btn{display:inline-flex;align-items:center;gap:6px;flex:none;width:auto;max-width:none;white-space:nowrap;overflow:visible;margin:6px 0 2px;min-height:32px;padding:0 12px;' +
       'border:1px solid rgba(201,168,76,.28);border-radius:999px;background:rgba(201,168,76,.06);color:var(--gold,#C9A84C);' +
       'font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;cursor:pointer;transition:border-color .18s,background .18s}' +
       '.orm-btn:hover,.orm-btn:focus-visible{border-color:rgba(201,168,76,.7);background:rgba(201,168,76,.12);outline:none}' +

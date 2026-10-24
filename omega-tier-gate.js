@@ -46,7 +46,7 @@
     '.otg-lock{position:relative!important}',
     '.otg-lock>*{filter:blur(6px);pointer-events:none;user-select:none}',
     '.otg-seal{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(6,6,12,.6);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:inherit;font-family:"Courier Prime",monospace;text-align:center;padding:10px}',
-    '.otg-seal .ic{font-size:24px;color:#C9A84C}',
+    '.otg-seal .ic{font-size:var(--fs-5,28px);color:#C9A84C}',
     '.otg-seal .rq{font-size:12px;letter-spacing:2px;color:#E2C86D}',
     '.otg-seal .hint{font-size:12px;letter-spacing:1px;color:#8a8676}',
     '.otg-seal a{color:#C9A84C;text-decoration:none;border-bottom:1px solid rgba(201,168,76,.4)}',
@@ -57,14 +57,16 @@
   st.id = 'otg-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
 
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
   function seal(el, tierName, price, label) {
     if (el.querySelector(':scope > .otg-seal')) return;
     el.classList.add('otg-lock');
     var s = document.createElement('div');
     s.className = 'otg-seal';
     s.innerHTML = '<div class="ic">&#937;</div>'
-      + '<div class="rq">' + (tierName ? tierName.toUpperCase() + ' TIER' : 'HIGHER TIER') + ' REQUIRED</div>'
-      + '<div class="hint">' + (label || '') + '</div>'
+      + '<div class="rq">' + (tierName ? esc(tierName.toUpperCase()) + ' TIER' : 'HIGHER TIER') + ' REQUIRED</div>'
+      + '<div class="hint">' + esc(label || '') + '</div>'
       + '<div class="hint"><a href="/subscriptions.html">view membership tiers &rarr;</a></div>';
     el.appendChild(s);
   }
@@ -73,7 +75,7 @@
     if (el.querySelector(':scope > .otg-tag')) return;
     var t = document.createElement('span');
     t.className = 'otg-tag';
-    t.innerHTML = '<i></i>' + (tierName ? tierName.toUpperCase() : 'TIER') + ' FEATURE';
+    t.innerHTML = '<i></i>' + (tierName ? esc(tierName.toUpperCase()) : 'TIER') + ' FEATURE';
     t.title = 'Included from the ' + (tierName || '') + ' tier'
             + (price ? ' ($' + price + ')' : '')
             + '. Enforcement begins when the economy activates.';

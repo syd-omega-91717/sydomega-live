@@ -13,14 +13,14 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .side{width:80px;flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
 .topbar{background:rgba(10,10,15,.97);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,36px);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px}
-.t{font-family:var(--D);font-size:.82rem;color:var(--gold);flex:1}
+.t{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);flex:1}
 .t small{display:block;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:2px}
 .tab-bar{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;flex-shrink:0;position:sticky;top:0;z-index:40}
 .tab-bar::-webkit-scrollbar{display:none}
 .tab-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 20px;cursor:pointer;border-right:1px solid var(--line);transition:all .18s;border-bottom:3px solid transparent;background:none;color:var(--muted);font-family:var(--M);font-size:12px;letter-spacing:1.5px;white-space:nowrap;border-top:none;border-left:none}
 .tab-btn:hover{color:var(--gold);background:rgba(201,168,76,.04)}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,168,76,.06)}
-.tab-icon{font-size:18px;line-height:1}
+.tab-icon{font-size:var(--fs-4,20px);line-height:1}
 .tab-panels{flex:1;overflow-y:auto}
 .tab-panel{display:none;padding:clamp(14px,3vw,36px)}
 .tab-panel.active{display:block}
@@ -29,7 +29,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .sechead-purple{color:var(--purple)}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold))}
-.kpi-n{font-family:var(--D);font-size:22px;color:var(--kc,var(--gold));line-height:1}
+.kpi-n{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--kc,var(--gold));line-height:1}
 .kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 .reserve-hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
 .rh-block{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5)}
@@ -45,7 +45,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .token-card{border:1px solid rgba(201,168,76,.18);background:rgba(10,10,15,.5);padding:12px;border-radius:2px;text-align:center;transition:.18s}
 .token-card:hover{border-color:rgba(201,168,76,.35)}
 .tk-sym{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
-.tk-bal{font-family:var(--D);font-size:18px;color:var(--gold);line-height:1;margin-bottom:3px}
+.tk-bal{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);line-height:1;margin-bottom:3px}
 .tk-name{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)}
 .nft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px}
 .nft-card{border:1px solid rgba(155,107,240,.2);background:rgba(10,10,15,.5);padding:14px;border-radius:2px;transition:.18s}
@@ -278,7 +278,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
       <div class="sechead sechead-gold" data-i18n="vault_science_formula_title">AUTHORITY FORMULA &middot; LIVE CALCULATION ENGINE</div>
       <div style="border:1px solid rgba(201,168,76,.2);padding:20px;border-radius:2px;background:rgba(10,10,15,.8);margin-bottom:20px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;line-height:2.2;color:var(--muted)">
-        <div style="font-family:var(--D);font-size:18px;color:var(--gold);margin-bottom:12px">AUTH = &radic;(A&#179; + B&#179; + C&#179;) &times; &phi; / e</div>
+        <div style="font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);margin-bottom:12px">AUTH = &radic;(A&#179; + B&#179; + C&#179;) &times; &phi; / e</div>
         A = KNOWLEDGE &middot; Axis A tracks learning events<br>
         B = MASTERY &middot; Axis B tracks demonstrated skills<br>
         C = CONTRIBUTION &middot; Axis C tracks what you give to the Order<br>

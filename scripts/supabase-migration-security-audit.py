@@ -30,7 +30,12 @@ RULES = [
     (re.compile(r"\bgrant\s+(?:truncate|references|trigger)(?:\s*,\s*(?:truncate|references|trigger))*\b[^;]*\bto\s+authenticated\b", re.I | re.S), "unsafe non-DML privilege grant to authenticated"),
     (re.compile(r"\balter\s+default\s+privileges\b[^;]*\bgrant\s+(?:all|truncate|references|trigger)\b[^;]*\bto\s+(?:anon|authenticated|public)\b", re.I | re.S), "unsafe client default privilege grant"),
     (re.compile(r"\bdisable\s+row\s+level\s+security\b", re.I), "RLS is being disabled"),
-    (re.compile(r"\bsecurity\s+definer\b(?![^;]{0,800}\bset\s+search_path\s*=)", re.I | re.S), "SECURITY DEFINER function without explicit search_path"),
+    # TRIM, COALESCE, NULLIF, GREATEST and LEAST are SQL syntax, not pg_catalog
+    # functions. A plpgsql body is only resolved when it runs, so CREATE succeeds
+    # and every call fails 42883; five live functions -- the payment ledger among
+    # them -- had never worked (20261017093316, 20261017094629). Use btrim().
+    (re.compile(r"\bpg_catalog\s*\.\s*(?:trim|coalesce|nullif|greatest|least)\s*\(", re.I), "SQL keyword called as a pg_catalog function (42883 at runtime)"),
+    (re.compile(r"\bsecurity\s+definer\b(?![^;]{0,800}\bset\s+search_path\s*(?:=|\bto\b))", re.I | re.S), "SECURITY DEFINER function without explicit search_path"),
 ]
 
 # Known-safe migration infrastructure statements may use public grants for
@@ -75,6 +80,69 @@ def load_baseline() -> dict[str, int]:
     return {k: v for k, v in data.get("findings", {}).items()}
 
 
+def mask_sql_comments_and_literals(text: str) -> str:
+    """Mask SQL comments and single-quoted literals without confusing their contents.
+
+    In particular, '--' inside a quoted COMMENT string must not start a SQL
+    comment and hide the executable statements that follow it. Newlines are
+    preserved so reported line numbers remain stable.
+    """
+    out = list(text)
+    size = len(text)
+    i = 0
+
+    def mask(start: int, end: int) -> None:
+        for pos in range(start, end):
+            if out[pos] != "\n":
+                out[pos] = " "
+
+    while i < size:
+        if text[i] == "'":
+            start = i
+            # PostgreSQL E'...' strings use backslash escapes. Standard strings
+            # use doubled quotes; supporting both avoids leaving quote state
+            # open when an escaped quote appears.
+            prefix_is_e = (
+                i > 0 and text[i - 1] in "eE"
+                and (i < 2 or not (text[i - 2].isalnum() or text[i - 2] == "_"))
+            )
+            i += 1
+            while i < size:
+                if prefix_is_e and text[i] == "\\" and i + 1 < size:
+                    i += 2
+                elif text[i] == "'":
+                    if i + 1 < size and text[i + 1] == "'":
+                        i += 2
+                    else:
+                        i += 1
+                        break
+                else:
+                    i += 1
+            mask(start, i)
+        elif text.startswith("--", i):
+            start = i
+            while i < size and text[i] != "\n":
+                i += 1
+            mask(start, i)
+        elif text.startswith("/*", i):
+            start = i
+            i += 2
+            depth = 1
+            while i < size and depth:
+                if text.startswith("/*", i):
+                    depth += 1
+                    i += 2
+                elif text.startswith("*/", i):
+                    depth -= 1
+                    i += 2
+                else:
+                    i += 1
+            mask(start, i)
+        else:
+            i += 1
+    return "".join(out)
+
+
 def main() -> int:
     if not ROOT.exists():
         print("SUPABASE_MIGRATION_SECURITY_AUDIT=SKIPPED (no migrations directory)")
@@ -83,7 +151,11 @@ def main() -> int:
     findings: list[tuple[str, str, str]] = []
     for path in sorted(ROOT.glob("*.sql")):
         text = path.read_text(encoding="utf-8", errors="replace")
-        normalized = re.sub(r"--[^\n]*", "", text).lower()
+        # Mask comments and string literals in a single lexical pass. Removing
+        # line comments before masking strings is unsafe: '--' inside a quoted
+        # COMMENT value can otherwise consume the rest of the file and hide
+        # executable security declarations.
+        normalized = mask_sql_comments_and_literals(text).lower()
         for pattern, message in RULES:
             for match in pattern.finditer(normalized):
                 fragment = normalized[max(0, match.start()-80):match.end()+80]

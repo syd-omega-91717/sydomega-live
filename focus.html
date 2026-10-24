@@ -9,7 +9,7 @@
 .focus-ring-wrap{position:relative;width:220px;height:220px;margin:0 auto 24px}
 #focus-ring{position:absolute;inset:0}
 .focus-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.focus-time .big{font-family:var(--M);font-size:42px;letter-spacing:4px;color:var(--gold,var(--gold))}
+.focus-time .big{font-family:var(--M);font-size:var(--fs-6,40px);letter-spacing:4px;color:var(--gold,var(--gold))}
 .focus-time .lbl{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.5)}
 .focus-controls{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center}
 .fc-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 22px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
@@ -30,7 +30,7 @@
 .session-card .s-date{color:rgba(138,134,118,.4);font-size:12px;text-align:right}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 .stat-box{border:1px solid rgba(201,168,76,.1);border-radius:2px;padding:16px;text-align:center}
-.stat-box .sv{font-family:var(--M);font-size:22px;letter-spacing:2px;color:var(--gold,var(--gold))}
+.stat-box .sv{font-family:var(--M);font-size:var(--fs-4,20px);letter-spacing:2px;color:var(--gold,var(--gold))}
 .stat-box .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
 .heatmap-wrap{overflow-x:auto;margin-bottom:24px}
 #focus-heatmap{display:block}
@@ -46,7 +46,7 @@
 .dist-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.4)}
 .focus-score-ring{position:relative;width:120px;height:120px;display:inline-block}
 .score-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.score-label .sv{font-family:var(--M);font-size:22px;color:var(--gold,var(--gold))}
+.score-label .sv{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold,var(--gold))}
 .score-label .sk{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5)}
 .interrupt-wrap{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 </style>
@@ -158,7 +158,7 @@
           <div class="stat-box card" data-reveal="fade-up"><div class="sv">27.8367</div><div class="sk">APEX AUTH</div></div>
           <div class="stat-box card" data-reveal="fade-up"><div class="sv">1.6180</div><div class="sk">PHI &phi;</div></div>
           <div class="stat-box card" data-reveal="fade-up"><div class="sv">2.7183</div><div class="sk">EULER e</div></div>
-          <div class="stat-box card" data-reveal="fade-up"><div class="sv" style="font-size:13px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
+          <div class="stat-box card" data-reveal="fade-up"><div class="sv" style="font-size:var(--fs-2,14px)">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="sk">AUTH FORMULA</div></div>
         </div>
         <div class="stats-row">
           <div class="stat-box card" data-reveal="fade-up"><div class="sv">0.001</div><div class="sk">INITIATE GATE</div></div>
@@ -184,6 +184,7 @@
 <script type="module">
 const STORE_KEY = 'omega_focus_sessions';
 const DIST_KEY  = 'omega_focus_distractions';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 /* ── State ─── */
 let timerInterval = null;
@@ -447,7 +448,7 @@ function renderStats(){
   const maxT=tasks[0]?.[1]||1;
   document.getElementById('task-breakdown').innerHTML=tasks.map(([t,m])=>`
     <div style="margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.7);margin-bottom:3px"><span>${t}</span><span>${m}m</span></div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(201,168,76,.7);margin-bottom:3px"><span>${esc(t)}</span><span>${esc(m)}m</span></div>
       <div style="height:3px;background:rgba(201,168,76,.08);border-radius:2px"><div style="height:3px;width:${m/maxT*100}%;background:rgba(201,168,76,.5);border-radius:2px"></div></div>
     </div>`).join('')||'<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4)">NO SESSIONS YET</div>';
 }
@@ -472,9 +473,9 @@ function renderSessions(){
       const comp=Math.round(s.duration/s.target*100);
       const dt=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       return `<div class="session-card card">
-        <div class="s-task">${s.task}</div>
-        <div class="s-dur">${dur} · ${comp}%</div>
-        <div class="s-mode">${s.mode}</div>
+        <div class="s-task">${esc(s.task)}</div>
+        <div class="s-dur">${esc(dur)} · ${esc(comp)}%</div>
+        <div class="s-mode">${esc(s.mode)}</div>
         <div class="s-date">${dt}</div>
       </div>`;
     }).join('')
@@ -521,7 +522,7 @@ function renderDistractions(){
   document.getElementById('dist-list').innerHTML=dists.length?
     dists.map(d=>{
       const dt=new Date(d.ts).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      return `<div class="dist-item"><span class="dt">${d.type}</span><span class="dd">DURING: ${d.task} · ${dt}</span></div>`;
+      return `<div class="dist-item"><span class="dt">${esc(d.type)}</span><span class="dd">DURING: ${esc(d.task)} · ${esc(dt)}</span></div>`;
     }).join('')
     :'<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:16px 0">NO DISTRACTIONS LOGGED — STAY IN FLOW</div>';
 }

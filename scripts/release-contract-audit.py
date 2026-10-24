@@ -61,8 +61,30 @@ if vercel.get("outputDirectory") != "public":
     errors.append("vercel.json outputDirectory must remain public")
 if vercel.get("buildCommand") != "bash scripts/vercel-build.sh":
     errors.append("vercel.json buildCommand no longer points to the canonical static build")
-if vercel.get("git", {}).get("deploymentEnabled", {}).get("main") is not True:
-    errors.append("main deployment is no longer explicitly enabled")
+# Git-triggered Vercel deployments are intentionally disabled after the
+# provider account block and deployment-budget incident. The only authorized
+# production path is the validated GitHub Actions workflow below, which
+# requires a project-scoped VERCEL_TOKEN and checks the served release SHA.
+deployment_enabled = vercel.get("git", {}).get("deploymentEnabled", {})
+for branch_pattern in ("*", "**", "main"):
+    if deployment_enabled.get(branch_pattern) is not False:
+        errors.append(
+            f"Vercel Git auto-deployment for {branch_pattern!r} must remain disabled; "
+            "production promotion is owned by the validated workflow"
+        )
+
+workflow = read(".github/workflows/vercel-production.yml")
+for required in (
+    "push:",
+    "branches: [main]",
+    "Controlled state when token is unavailable",
+    "DEPLOY_REQUESTED:",
+    "needs.credentials.outputs.ready == 'true'",
+    'npx --yes vercel@59.6.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"',
+    "Verify production domain smoke routes",
+):
+    if required not in workflow:
+        errors.append(f"controlled Vercel production workflow missing invariant: {required}")
 
 # 3. Security headers are release invariants.
 headers = json.dumps(vercel.get("headers", []))

@@ -7,7 +7,7 @@
   ],
   "purpose": "Canonical page-to-world action map. It assigns every deployed HTML page a role, purpose bridge, action set, outcome, district and existing navigation destinations without inventing backend state.",
   "sourceOfTruth": "The page implementation remains authoritative for actual behavior; this registry is a navigation/gameplay contract only.",
-  "pageCount": 223,
+  "pageCount": 217,
   "pages": [
     {
       "page": "404.html",
@@ -178,25 +178,6 @@
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
       "entry": "/agent-operations.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
-      "page": "agent.html",
-      "slug": "agent",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/agent.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -738,25 +719,6 @@
       "district": "academy",
       "districtName": "THE ACADEMY CAMPUS",
       "entry": "/codex.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
-      "page": "cohorts-dashboard.html",
-      "slug": "cohorts-dashboard",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/cohorts-dashboard.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -2044,44 +2006,6 @@
       "reward": "/achievements.html"
     },
     {
-      "page": "investor-dashboard.html",
-      "slug": "investor-dashboard",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/investor-dashboard.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
-      "page": "investor-gate.html",
-      "slug": "investor-gate",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/investor-gate.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
       "page": "journal.html",
       "slug": "journal",
       "archetype": "command",
@@ -2714,25 +2638,6 @@
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
       "entry": "/offline.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
-      "page": "omega-visual-command.html",
-      "slug": "omega-visual-command",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/omega-visual-command.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },
@@ -3987,25 +3892,6 @@
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
       "entry": "/vault.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
-      "page": "venture-pipeline.html",
-      "slug": "venture-pipeline",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/venture-pipeline.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },

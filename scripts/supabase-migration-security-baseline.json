@@ -20,10 +20,12 @@
   "here fails the audit, and a listed file whose count changes fails as drift --",
   "an applied migration changing at all is itself the defect.",
   "",
-  "Regenerate ONLY when a file legitimately leaves supabase/migrations/."
+  "When scanner semantics change, review every fingerprint delta with regression tests; do not edit applied migrations to satisfy the audit.",
+  "This 2026-10-16 recalibration removes false positives caused by quoted -- text and recognizes SET search_path TO syntax.",
+  "2026-10-17: rule 'SQL keyword called as a pg_catalog function' added; its 37 hits sit in 8 applied 2026-10-02 files and are baselined here. Live has 0 such calls (asserted by 20261017094629)."
  ],
- "_captured": "2026-09-05",
- "_total": 67,
+ "_captured": "2026-10-17",
+ "_total": 99,
  "findings": {
   "0001_omega_master_deploy.sql::SECURITY DEFINER function without explicit search_path": 17,
   "0018_trial_access.sql::SECURITY DEFINER function without explicit search_path": 3,
@@ -43,11 +45,15 @@
   "0078_omega_formula_patch.sql::SECURITY DEFINER function without explicit search_path": 3,
   "0090_omega_extend_trial_fix.sql::SECURITY DEFINER function without explicit search_path": 1,
   "0092_omega_notify_triggers.sql::SECURITY DEFINER function without explicit search_path": 5,
-  "0093_omega_apply_subscription_fix.sql::SECURITY DEFINER function without explicit search_path": 1,
-  "0094_omega_complete_task_dedup_fix.sql::SECURITY DEFINER function without explicit search_path": 1,
-  "0099_omega_live_schema_reconciliation.sql::SECURITY DEFINER function without explicit search_path": 1,
-  "20260817231834_consolidate_my_matrix_my_lattice_onto_compute_authority.sql::SECURITY DEFINER function without explicit search_path": 2,
+  "20260817231834_consolidate_my_matrix_my_lattice_onto_compute_authority.sql::SECURITY DEFINER function without explicit search_path": 1,
   "20260818141500_omega_graphify_schema.sql::SECURITY DEFINER function without explicit search_path": 2,
-  "20260818224748_omega_task_and_achievement_notifications.sql::SECURITY DEFINER function without explicit search_path": 1
+  "20261002072345_reconcile_omega_financial_ledger_and_stripe_settlement.sql::SQL keyword called as a pg_catalog function (42883 at runtime)": 7,
+  "20261002084512_omega_unified_product_runtime_contract_20261002.sql::SQL keyword called as a pg_catalog function (42883 at runtime)": 3,
+  "20261002084553_omega_unified_product_runtime_adapters_20261002.sql::SQL keyword called as a pg_catalog function (42883 at runtime)": 5,
+  "20261002084948_omega_product_runtime_adapters_wave2_20261002.sql::SQL keyword called as a pg_catalog function (42883 at runtime)": 5,
+  "20261002085421_omega_service_order_creation_boundary_20261002.sql::SQL keyword called as a pg_catalog function (42883 at runtime)": 8,
+  "20261002085641_omega_consultancy_intake_idempotency_boundary_20261002.sql::SQL keyword called as a pg_catalog function (42883 at runtime)": 6,
+  "20261002090705_runtime_frontier_20261002.sql::SQL keyword called as a pg_catalog function (42883 at runtime)": 2,
+  "20261002094212_omega_elemental_runtime_20261002.sql::SQL keyword called as a pg_catalog function (42883 at runtime)": 1
  }
 }

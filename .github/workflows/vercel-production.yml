@@ -48,6 +48,12 @@ on:
       - 'scripts/vercel-build-enhance.mjs'
       - 'scripts/release-surface-quality.py'
       - 'scripts/omega-enterprise-readiness-contract.py'
+      - 'scripts/vercel-production-smoke.sh'
+      - 'scripts/vercel-production-surface-smoke.py'
+      - 'scripts/vercel-deployment-auth-check.sh'
+      - '.github/workflows/vercel-production.yml'
+      - '!supabase/**'
+      - '!docs/runtime/supabase-edge-functions-live.json'
   pull_request:
     branches: [main]
     paths:
@@ -60,6 +66,14 @@ on:
 
 permissions:
   contents: read
+
+env:
+  # POSTPONED until the Vercel account's credits are renewed: the Hobby team has
+  # been blocked for Edge Requests since 2026-10-06, and production is Cloudflare
+  # Pages (Git-connected, builds every main push). While 'true' no Vercel
+  # promotion is attempted, and a main push instead verifies that the live site
+  # serves this commit. To resume Vercel: set 'false' and configure VERCEL_TOKEN.
+  VERCEL_PROMOTION_POSTPONED: 'true'
 
 concurrency:
   group: vercel-production
@@ -94,6 +108,8 @@ jobs:
         run: python scripts/vercel_static_contract.py
       - name: Vercel production dispatch regression contract
         run: python -m unittest scripts/tests/test_vercel_production_dispatch_contract.py
+      - name: Production page identity regression contract
+        run: python -m unittest scripts/tests/test_vercel_production_surface_identity.py
       - name: Release surface quality
         run: python scripts/release-surface-quality.py
       - name: Build artifact
@@ -131,6 +147,8 @@ jobs:
           set -euo pipefail
           test -s public/index.html
           test -f public/vendor/supabase-js.js
+          test -s public/.well-known/omega-release.json
+          OMEGA_RELEASE_SHA="$GITHUB_SHA" node scripts/omega-release-manifest.mjs --check public/.well-known/omega-release.json
           test "$(find public -type f -name '*.html' | wc -l)" -gt 0
           echo 'VERCEL_PRODUCTION_ARTIFACT=PASS'
 
@@ -153,7 +171,10 @@ jobs:
           set -euo pipefail
           echo "org_resolved=${ORG:+yes}"
           echo "project_resolved=${PROJECT:+yes}"
-          if [[ -n "$TOKEN" && -n "$ORG" && -n "$PROJECT" ]]; then
+          if [[ "$VERCEL_PROMOTION_POSTPONED" == "true" ]]; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'VERCEL_CREDENTIALS=POSTPONED (VERCEL_PROMOTION_POSTPONED=true)'
+          elif [[ -n "$TOKEN" && -n "$ORG" && -n "$PROJECT" ]]; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
             echo 'VERCEL_CREDENTIALS=READY'
           else
@@ -187,13 +208,67 @@ jobs:
           echo "::error title=Production deployment refused::Manual production promotion is allowed only from refs/heads/main."
           echo "requested_ref=$GITHUB_REF"
           exit 1
-      - name: Controlled state when token is unavailable
-        if: needs.credentials.outputs.ready != 'true'
+      - name: Checkout for the postponed-promotion live check
+        if: env.VERCEL_PROMOTION_POSTPONED == 'true' && (github.event_name == 'push' || inputs.deploy == true)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Live site serves this commit and every built route (Cloudflare Pages)
+        if: env.VERCEL_PROMOTION_POSTPONED == 'true' && (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
+        shell: bash
         run: |
+          set -euo pipefail
+          echo '::notice title=Vercel promotion postponed::Vercel credits are not renewed; production is Cloudflare Pages. Verifying release identity and every built HTML route instead.'
+          # Cloudflare builds this push itself (2-5 min). A later push may land
+          # first, so a served descendant is acceptable only after we check out
+          # that exact deployed commit and build the route inventory from it.
+          verify_served_release() {
+            local release_sha="$1"
+            if [[ "$release_sha" != "$GITHUB_SHA" ]]; then
+              git checkout --detach "$release_sha"
+            fi
+            EXPECTED_RELEASE_SHA="$release_sha" bash scripts/vercel-production-smoke.sh
+            EXPECTED_RELEASE_SHA="$release_sha" OMEGA_PRODUCTION_BASE_URL=https://www.sydomega.com bash scripts/vercel-production-smoke.sh
+            OMEGA_RELEASE_SHA="$release_sha" bash scripts/vercel-build.sh
+            OMEGA_PRODUCTION_BASE_URL="$OMEGA_PRODUCTION_BASE_URL" \
+              OMEGA_PUBLIC_DIR=public OMEGA_SMOKE_WORKERS=12 OMEGA_SMOKE_RETRIES=2 \
+              python scripts/vercel-production-surface-smoke.py
+          }
+          for attempt in $(seq 1 45); do
+            served="$(curl --silent --fail --proto '=https' --max-time 20 "$OMEGA_PRODUCTION_BASE_URL/.well-known/omega-release.json" \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})' || true)"
+            if [[ "$served" == "$GITHUB_SHA" ]]; then
+              verify_served_release "$served"
+              exit 0
+            fi
+            if [[ "$served" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "$served^{commit}" 2>/dev/null \
+               && git merge-base --is-ancestor "$GITHUB_SHA" "$served"; then
+              echo "LIVE_SITE=PASS served=$served contains=$GITHUB_SHA"
+              verify_served_release "$served"
+              exit 0
+            fi
+            echo "attempt=$attempt served=${served:-none} waiting_for=$GITHUB_SHA"
+            sleep 20
+          done
+          echo "::error title=Live site did not update::sydomega.com still serves ${served:-nothing} 15 minutes after $GITHUB_SHA reached main. Check the Cloudflare Pages build."
+          exit 1
+      - name: Controlled state when token is unavailable
+        if: needs.credentials.outputs.ready != 'true' && env.VERCEL_PROMOTION_POSTPONED != 'true'
+        env:
+          DEPLOY_REQUESTED: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true) }}
+        shell: bash
+        run: |
+          set -euo pipefail
           echo 'VERCEL_PRODUCTION_DEPLOYMENT=CONTROLLED'
           echo 'Artifact validation passed; production promotion is waiting for VERCEL_TOKEN.'
           echo 'No provider mutation was attempted.'
-          echo '::warning title=Production promotion pending::VERCEL_TOKEN is not configured. Artifact and deployment contracts are green, but this run cannot promote the production alias.'
+          echo '::warning title=Production promotion pending::VERCEL_TOKEN is not configured. Artifact validation passed, but this run cannot promote the production alias.'
+          if [[ "$DEPLOY_REQUESTED" == "true" ]]; then
+            echo "::error title=Production promotion blocked::A production deploy was requested, but VERCEL_TOKEN is unavailable. Configure valid deployment credentials; do not treat artifact validation as a production deployment."
+            exit 1
+          fi
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: needs.credentials.outputs.ready == 'true'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -212,8 +287,51 @@ jobs:
       - name: Verify Vercel token and project authority
         if: needs.credentials.outputs.ready == 'true'
         run: bash scripts/vercel-deployment-auth-check.sh
-      - name: Deploy to Vercel Production
+      - name: Pull Vercel production settings
         if: >-
           needs.credentials.outputs.ready == 'true' &&
           (github.event_name == 'push' || inputs.deploy == true)
-        run: npx --yes vercel@59.6.0 deploy --prod --yes --token "$VERCEL_TOKEN"
+        run: npx --yes vercel@59.6.0 pull --yes --environment=production --token "$VERCEL_TOKEN"
+      - name: Build immutable production artifact
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_RELEASE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          npx --yes vercel@59.6.0 build --prod --yes --token "$VERCEL_TOKEN"
+          node scripts/omega-release-manifest.mjs --check .vercel/output/static/.well-known/omega-release.json
+      - name: Deploy prebuilt production artifact
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        run: npx --yes vercel@59.6.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"
+      - name: Verify production domain smoke routes
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
+          EXPECTED_RELEASE_SHA: ${{ github.sha }}
+        run: bash scripts/vercel-production-smoke.sh
+
+      - name: Verify production domain smoke routes (www)
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://www.sydomega.com
+          EXPECTED_RELEASE_SHA: ${{ github.sha }}
+        run: bash scripts/vercel-production-smoke.sh
+
+      - name: Verify every built HTML route is live
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
+          OMEGA_PUBLIC_DIR: public
+          OMEGA_SMOKE_WORKERS: '12'
+          OMEGA_SMOKE_RETRIES: '2'
+        run: python scripts/vercel-production-surface-smoke.py

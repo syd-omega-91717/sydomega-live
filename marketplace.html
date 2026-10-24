@@ -12,7 +12,7 @@
 .mkt-kind{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
 .mkt-title{font-family:var(--D);font-size:14px;color:var(--solar);margin-bottom:5px;line-height:1.3}
 .mkt-desc{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:10px}
-.mkt-price{font-family:var(--D);font-size:18px;color:var(--gold)}
+.mkt-price{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold)}
 .mkt-meta{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
 .mkt-mine{position:absolute;top:10px;right:10px;font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);border:1px solid rgba(0,229,255,.3);padding:2px 6px}
 .mkt-fav{position:absolute;top:10px;right:10px;background:none;border:1px solid var(--line);color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:4px 7px;border-radius:2px}
@@ -22,8 +22,8 @@
 .form-input{width:100%;font-family:var(--M);font-size:12px;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:8px 10px;outline:none}
 .form-input:focus{border-color:rgba(0,229,255,.4)}
 .howit-step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
-.howit-num{font-family:var(--D);font-size:22px;color:var(--gold);min-width:32px;flex-shrink:0}
-.howit-body .ht{font-family:var(--D);font-size:13px;color:var(--solar);margin-bottom:4px}
+.howit-num{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);min-width:32px;flex-shrink:0}
+.howit-body .ht{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--solar);margin-bottom:4px}
 .howit-body p{font-size:12px;color:var(--muted);line-height:1.65}
 </style>
 </head>
@@ -80,15 +80,15 @@
   <div class="sechead">SOVEREIGN EXCHANGE ARCHITECTURE</div>
   <div class="card-grid" data-stagger data-stagger-gap="60">
     <div class="card" data-reveal="fade-up"><div class="card-title">THE OMEGA ECONOMY</div><div class="card-body">The marketplace is part of the internal &#937; economy. Transactions use Omega tokens — not fiat currencies. All listings are denominated in &#937;. The platform takes a 17% commission on each sale (consistent with 91717). The commission is intended to feed the sovereign treasury. The &#937; token economy is dormant &mdash; it stays off behind <code>platform_settings.tokens_enabled</code> (currently false), so no commission is charged, collected or owed today.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">SELLER TIERS</div><div class="card-body">Marketplace access is tier-gated. Free members can browse. Sovereign tier members can list. (Buying isn't built yet — see EARN ON SALE below.) The OmegaCanon.tierUnlocks() function evaluates this at listing time — the tier guard runs entirely in the client against the member's profile.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">File listings are stored in Supabase Storage via OmegaStorage.upload() and the path is recorded in marketplace_listings. There is no purchase step yet, so there's nothing to gate delivery on — this is upload/listing only, not a buy-then-receive flow.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">CONTRIBUTION CREDIT</div><div class="card-body">Listing an item in the marketplace earns Contribution XP (axis C). Completing a sale earns additional XP. The marketplace is not just commerce — it is the sovereign economy layer of the contribution axis, recognising economic action as an act of sovereignty.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">SELLER TIERS</div><div class="card-body">Marketplace access currently requires an approved account. The intended Sovereign-tier restriction is not enforced server-side yet, so client-side tier labels are not an authorization control. Buying and checkout are not built.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">File uploads go to the private uploads bucket. A database trigger moves each valid object path into server-only metadata and clears it from the public listing row. Purchase-gated signed delivery is not implemented; files are not purchasable or downloadable through the marketplace yet.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">CONTRIBUTION CREDIT</div><div class="card-body">Listing an item in the marketplace earns Contribution XP (axis C). Sale-related XP is planned, not available: no sale can complete because the purchase and payment flow is not implemented.</div></div>
   </div>
   <div class="sechead" style="margin-top:24px">LISTING PROCESS</div>
   <div class="glass">
     <div class="howit-step"><div class="howit-num">01</div><div class="howit-body"><div class="ht">PREPARE YOUR WORK</div><p>A listing can be a document, report, service, code, or any sovereign creation. Title and description are the primary discovery mechanism — make them precise.</p></div></div>
     <div class="howit-step"><div class="howit-num">02</div><div class="howit-body"><div class="ht">SET YOUR PRICE</div><p>Price in Omega tokens. Set to 0 for a free listing. Free listings still contribute to your Contribution axis. All prices are visible to all members.</p></div></div>
-    <div class="howit-step"><div class="howit-num">03</div><div class="howit-body"><div class="ht">UPLOAD (OPTIONAL)</div><p>Attach a file. OmegaStorage handles upload, compression, and secure delivery. The path is stored in the listing but never exposed publicly.</p></div></div>
+    <div class="howit-step"><div class="howit-num">03</div><div class="howit-body"><div class="ht">UPLOAD (OPTIONAL)</div><p>Attach a file. OmegaStorage uploads it to the private bucket; the database keeps the object path in server-only metadata, not in the listing row. Purchase-gated signed delivery is not implemented yet.</p></div></div>
     <div class="howit-step"><div class="howit-num">04</div><div class="howit-body"><div class="ht">EARN ON SALE &mdash; PLANNED</div><p>An 83%/17% seller/platform split is designed but not yet built — there is no buy step, no payment processing, and no revenue split anywhere in the platform today. Listings are visible and priced, not yet purchasable.</p></div></div>
   </div>
 </div>
@@ -150,7 +150,7 @@ async function toggleFavorite(listingId,btn){
 
 async function load(){
   var grid=document.getElementById('grid');
-  var r=await sb.from('marketplace_listings').select('*').eq('status','active').order('created_at',{ascending:false}).limit(60);
+  var r=await sb.from('marketplace_listings').select('id,seller_id,title,kind,price_omega,description,status,created_at,user_id').eq('status','active').order('created_at',{ascending:false}).limit(60);
   var rows=r.data||[];
   document.getElementById('count').textContent=rows.length+' ACTIVE';
   grid.replaceChildren();if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='NO LISTINGS YET. BE THE FIRST TO LIST A SOVEREIGN WORK.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,it.seller_id===uid));});
@@ -158,15 +158,39 @@ async function load(){
 
 async function loadMine(){
   var grid=document.getElementById('my-grid');
-  var r=await sb.from('marketplace_listings').select('*').eq('seller_id',uid).order('created_at',{ascending:false}).limit(30);
+  var r=await sb.from('marketplace_listings').select('id,seller_id,title,kind,price_omega,description,status,created_at,user_id').eq('seller_id',uid).order('created_at',{ascending:false}).limit(30);
   var rows=r.data||[];
   grid.replaceChildren();if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='YOU HAVE NO ACTIVE LISTINGS. USE THE SELL TAB TO CREATE YOUR FIRST.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,true));});
 }
 
 async function loadFavorites(){
   var grid=document.getElementById('fav-grid');
-  var r=await sb.from('marketplace_favorites').select('marketplace_listings(*)').eq('profile_id',uid).order('created_at',{ascending:false});
+  var r=await sb.from('marketplace_favorites').select('marketplace_listings(id,seller_id,title,kind,price_omega,description,status,created_at,user_id)').eq('profile_id',uid).order('created_at',{ascending:false});
   grid.replaceChildren();if(r.error){var e=document.createElement('div');e.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';e.textContent='COULD NOT LOAD FAVORITES ('+String(r.error.message||'unknown error')+')';grid.appendChild(e);return;}var rows=(r.data||[]).map(function(f){return f.marketplace_listings;}).filter(Boolean);if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='NO FAVORITES YET. STAR A LISTING FROM THE LISTINGS TAB.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,it.seller_id===uid));});
+}
+
+function showListingStatusUnknown(msg,file_path){
+  msg.style.display='block';msg.style.color='var(--crim)';
+  msg.textContent=file_path
+    ?'LISTING STATUS UNKNOWN — FILE PRESERVED TO AVOID DATA LOSS. Refresh MY LISTINGS before retrying.'
+    :'LISTING STATUS UNKNOWN. Refresh MY LISTINGS before retrying to avoid a duplicate.';
+}
+
+async function reconcileListingInsertFailure(ins,file_path,msg){
+  if(!ins){showListingStatusUnknown(msg,file_path);return;}
+  if(!ins.error)return;
+  var code=ins.error&&typeof ins.error.code==='string'?ins.error.code:'';
+  if(!/^[0-9A-Z]{5}$/.test(code)){
+    showListingStatusUnknown(msg,file_path);
+    return;
+  }
+  msg.style.display='block';msg.style.color='var(--crim)';
+  if(!file_path){msg.textContent='LISTING REJECTED ('+code+'). No file was uploaded.';return;}
+  var cleanup;
+  try{cleanup=await window.OmegaStorage.remove('uploads',file_path);}catch(_){cleanup={error:'cleanup_exception'};}
+  msg.textContent=cleanup&&!cleanup.error
+    ?'LISTING REJECTED ('+code+'). UPLOAD ROLLED BACK.'
+    :'LISTING REJECTED ('+code+'). FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED.';
 }
 
 document.getElementById('btn-pub').addEventListener('click',async function(){
@@ -185,8 +209,16 @@ document.getElementById('btn-pub').addEventListener('click',async function(){
     file_path=up.path||up.fullPath||up.key||null;
     if(!file_path){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='UPLOAD FAILED: storage returned no path -- nothing was listed.';return;}
   }
-  var ins=await sb.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
-  if(ins.error){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='ERROR: '+ins.error.message;return;}
+  try{
+    var ins=await sb.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
+  }catch(_){
+    showListingStatusUnknown(msg,file_path);
+    return;
+  }
+  if(!ins || ins.error){
+    await reconcileListingInsertFailure(ins,file_path,msg);
+    return;
+  }
   window.OmegaProgress&&OmegaProgress.record({kind:'marketplace',task:'listed:'+title,axis:'c',title:'Marketplace Listing'});
   msg.style.display='block';msg.style.color='var(--green)';msg.textContent='&#x2713; LISTED — Your work is now visible in the marketplace.';
   document.getElementById('f-title').value='';document.getElementById('f-desc').value='';

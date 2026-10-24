@@ -45,15 +45,15 @@
   .panel{text-align:center;padding:40px 0 30px}
   .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:6px;color:var(--cyan);margin-bottom:16px}
   h1{font-family:var(--display);font-weight:700;letter-spacing:2px;font-size:clamp(24px,4vw,38px);color:var(--gold)}
-  .panel p.sub{font-weight:300;color:var(--muted);max-width:52ch;margin:18px auto 0;font-size:15px}
+  .panel p.sub{font-weight:300;color:var(--muted);max-width:52ch;margin:18px auto 0;font-size:var(--fs-3,16px)}
   /* Form */
   .form{margin:30px auto 0;max-width:360px;display:flex;flex-direction:column;gap:14px;text-align:left}
   label{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--muted)}
-  input,select{font-family:var(--mono);font-size:15px;color:var(--ink);background:var(--void-2);border:1px solid var(--line);padding:13px 15px;width:100%;color-scheme:dark}
+  input,select{font-family:var(--mono);font-size:var(--fs-3,16px);color:var(--ink);background:var(--void-2);border:1px solid var(--line);padding:13px 15px;width:100%;color-scheme:dark}
   input:focus,select:focus{outline:none;border-color:var(--cyan)}
   /* colour and background come from .btn-fill in bg.js: a bare .btn rule here
      is the same specificity as bg.js's ghost .btn and loses to it. */
-  .btn{font-family:var(--mono);letter-spacing:3px;font-size:13px;padding:15px 26px;cursor:pointer;transition:all .25s ease;width:100%}
+  .btn{font-family:var(--mono);letter-spacing:3px;font-size:var(--fs-2,14px);padding:15px 26px;cursor:pointer;transition:all .25s ease;width:100%}
   .btn:hover,.btn:focus{background:transparent;color:var(--gold);outline:none}
   .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
   .btn:disabled{opacity:.5;cursor:default}
@@ -68,7 +68,7 @@
   .glyph{font-family:var(--display);font-size:clamp(48px,10vw,80px);color:var(--gold);line-height:1;text-shadow:0 0 50px rgba(201,168,76,.35)}
   .sign{font-family:var(--display);font-weight:700;font-size:clamp(20px,4vw,32px);color:var(--ink);letter-spacing:2px;margin-top:10px}
   .range{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:2px;margin-top:8px}
-  .character{font-weight:300;color:var(--gold);max-width:54ch;margin:16px auto 0;text-align:center;font-size:15px}
+  .character{font-weight:300;color:var(--gold);max-width:54ch;margin:16px auto 0;text-align:center;font-size:var(--fs-3,16px)}
   .chain{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:24px 0;font-family:var(--mono);font-size:12px;letter-spacing:1px}
   .chain span{border:1px solid var(--line);padding:9px 14px;color:var(--ink)}
   .chain b{color:var(--gold);font-weight:400}
@@ -79,7 +79,7 @@
   .coords{display:flex;flex-wrap:wrap;gap:20px;align-items:baseline}
   .coord{font-family:var(--mono)}
   .coord .lbl{font-size:12px;letter-spacing:2px;color:var(--muted);display:block}
-  .coord .num{font-family:var(--display);font-weight:700;color:var(--gold);font-size:24px}
+  .coord .num{font-family:var(--display);font-weight:700;color:var(--gold);font-size:var(--fs-5,28px)}
   .radar-wrap{display:flex;justify-content:center;margin:20px 0 4px}
   #d-radar{width:200px;height:200px;max-width:80%}
   .rdr-guide{fill:none;stroke:var(--line);stroke-width:1}
@@ -107,7 +107,7 @@
   .certs .kicker{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--cyan);margin-bottom:12px}
   .seals{display:flex;flex-wrap:wrap;gap:12px}
   .seal{border:1px solid var(--gold);background:linear-gradient(180deg,rgba(201,168,76,0.08),transparent);padding:14px 16px;min-width:180px;flex:1}
-  .seal .s-mark{font-family:var(--display);color:var(--gold);font-size:18px;letter-spacing:1px}
+  .seal .s-mark{font-family:var(--display);color:var(--gold);font-size:var(--fs-4,20px);letter-spacing:1px}
   .seal .s-title{font-family:var(--mono);font-size:12px;color:var(--ink);letter-spacing:1px;margin-top:6px;line-height:1.5}
   .seal .s-date{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:6px}
   .certs .empty{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px}
@@ -132,13 +132,13 @@
   /* Cosmology / science tabs */
   .sign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:16px}
   .sign-card{border:1px solid var(--line);padding:14px;background:rgba(0,0,0,.2)}
-  .sign-card .sg-glyph{font-size:22px;color:var(--gold);margin-bottom:6px}
+  .sign-card .sg-glyph{font-size:var(--fs-4,20px);color:var(--gold);margin-bottom:6px}
   .sign-card .sg-name{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--gold)}
   .sign-card .sg-range{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--muted);margin-top:2px}
   .sign-card .sg-elem{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--cyan);margin-top:6px}
   .sign-card .sg-agent{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:rgba(200,190,160,.6);margin-top:2px}
   .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
-  .stat-val{font-family:var(--mono);font-size:18px;color:var(--gold);letter-spacing:1px}
+  .stat-val{font-family:var(--mono);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
   .stat-lbl{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
 </head>

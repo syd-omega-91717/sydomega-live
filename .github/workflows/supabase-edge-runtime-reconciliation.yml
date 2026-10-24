@@ -15,7 +15,13 @@ jobs:
     name: Source vs live Edge Function reconciliation
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      # On pull requests, reconcile the currently deployed main source with
+      # the live snapshot. The proposed PR source is checked by syntax and
+      # contract jobs; after merge, the push run compares new main to the
+      # deployed snapshot and blocks release until runtime evidence is refreshed.
+      - name: Checkout deployed-source baseline
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
       - name: Validate Edge Function reconciliation
         run: python3 scripts/supabase-edge-runtime-reconciliation.py

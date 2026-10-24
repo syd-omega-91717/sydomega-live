@@ -21,9 +21,9 @@
 .el-canvas-wrap canvas{width:100%;height:100%;display:block}
 .el-body{padding:18px 20px 20px}
 .el-tier{font-family:var(--M);font-size:12px;letter-spacing:3px;margin-bottom:8px}
-.el-name{font-family:var(--D);font-size:22px;font-weight:700;margin-bottom:4px}
+.el-name{font-family:var(--D);font-size:var(--fs-4,20px);font-weight:700;margin-bottom:4px}
 .el-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
-.el-desc{font-size:13px;font-weight:300;color:var(--ink);line-height:1.75;margin-bottom:14px}
+.el-desc{font-size:var(--fs-2,14px);font-weight:300;color:var(--ink);line-height:1.75;margin-bottom:14px}
 .el-signs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .el-sign{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:3px 8px;border:1px solid}
 .el-unlock{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:6px 12px;border:1px solid;display:inline-block;margin-top:6px}
@@ -32,9 +32,9 @@
 .mine-badge{position:absolute;top:12px;right:12px;font-family:var(--M);font-size:12px;letter-spacing:2px;padding:3px 8px;color:var(--void);background:var(--cyan);z-index:2}
 .apex-ring{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
 .apex-tag{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:5px 6px;text-align:center;border:1px solid rgba(201,168,76,.3);color:var(--gold)}
-.intro{font-size:.85rem;color:var(--muted);line-height:1.85;max-width:80ch;margin-bottom:1.2rem}
+.intro{font-size:var(--fs-2,14px);color:var(--muted);line-height:1.85;max-width:80ch;margin-bottom:1.2rem}
 .intro b{color:var(--ink)}
-.mstat{font-family:var(--M);font-size:.7rem;color:var(--cyan);letter-spacing:.06em;margin-bottom:1.2rem;padding:.6rem 1rem;border:1px solid var(--line);background:rgba(0,229,255,.04)}
+.mstat{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--cyan);letter-spacing:.06em;margin-bottom:1.2rem;padding:.6rem 1rem;border:1px solid var(--line);background:rgba(0,229,255,.04)}
 .gates,.kings{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
 .gate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.5rem;padding:1rem .7rem;border:1px solid var(--line);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));cursor:pointer;transition:all .25s}
 .gate.open{border-color:rgba(63,178,127,.4)}
@@ -42,9 +42,9 @@
 .gate.sealed{opacity:.55}
 .gate:hover{transform:translateY(-3px);border-color:var(--gold)}
 .gate .body{width:100%}
-.gate .gname{font-family:var(--D);font-size:.78rem;color:var(--ink)}
-.gate .gess{font-family:var(--M);font-size:.55rem;color:var(--muted);letter-spacing:.04em;margin-top:.35rem;line-height:1.5}
-.gate .state{font-family:var(--M);font-size:.55rem;letter-spacing:.1em;padding:.15rem .5rem;border:1px solid var(--line);color:var(--muted)}
+.gate .gname{font-family:var(--D);font-size:var(--fs-1,12px);color:var(--ink)}
+.gate .gess{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);letter-spacing:.04em;margin-top:.35rem;line-height:1.5}
+.gate .state{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.1em;padding:.15rem .5rem;border:1px solid var(--line);color:var(--muted)}
 .gate.open .state{color:var(--green);border-color:rgba(63,178,127,.4)}
 .gate.current .state{color:var(--gold);border-color:rgba(201,168,76,.4)}
 .king{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.35rem;padding:1rem .7rem;border:1px solid var(--line);background:linear-gradient(160deg,rgba(201,168,76,.05),rgba(10,10,15,.4));transition:all .25s}
@@ -52,11 +52,11 @@
 .king.next{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,229,255,.12)}
 .king.locked{opacity:.5}
 .king:hover{transform:translateY(-3px)}
-.king .crown{font-size:1.2rem;color:var(--gold)}
-.king .num{font-family:var(--M);font-size:.55rem;color:var(--muted);letter-spacing:.08em}
-.king .nm{font-family:var(--D);font-size:.78rem;color:var(--ink)}
-.king .dm{font-family:var(--M);font-size:.55rem;color:var(--cyan);letter-spacing:.06em}
-.king .th{font-family:var(--M);font-size:.55rem;color:var(--muted);margin-top:.3rem}
+.king .crown{font-size:var(--fs-4,20px);color:var(--gold)}
+.king .num{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);letter-spacing:.08em}
+.king .nm{font-family:var(--D);font-size:var(--fs-1,12px);color:var(--ink)}
+.king .dm{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--cyan);letter-spacing:.06em}
+.king .th{font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);margin-top:.3rem}
 .king.crowned .th{color:var(--green)}
 
 /* science table */
@@ -80,7 +80,7 @@
 
 <!-- ELEMENTS TAB -->
 <div class="tab-panel active" id="tab-elements">
-  <p style="font-weight:300;color:var(--muted);max-width:72ch;margin-bottom:20px;font-size:15px;line-height:1.7">Five elements govern the physical world through your birth sign. Four transcendent elements unlock as your authority ascends through the matrix. All nine are alive in you &mdash; only the higher ones require awakening.</p>
+  <p style="font-weight:300;color:var(--muted);max-width:72ch;margin-bottom:20px;font-size:var(--fs-3,16px);line-height:1.7">Five elements govern the physical world through your birth sign. Four transcendent elements unlock as your authority ascends through the matrix. All nine are alive in you &mdash; only the higher ones require awakening.</p>
 
   <div class="legend-strip" id="legend-strip">
     <div class="leg" style="color:#E86A3A;border-color:rgba(232,106,58,.4)">FIRE &middot; PHYSICAL</div>
@@ -131,7 +131,7 @@
   <div class="card-grid" data-stagger data-stagger-gap="60" style="--cols:1">
     <div class="card" data-reveal="fade-up">
       <div class="card-title">THE NINE-ELEMENT FRAMEWORK</div>
-      <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:13px">
+      <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:var(--fs-2,14px)">
         <div data-omega-more>
           <p class="omi-lead">Nine archetypal forces — five assigned at birth, four unlocked through authority progression.</p>
           <div class="omi-full" hidden>

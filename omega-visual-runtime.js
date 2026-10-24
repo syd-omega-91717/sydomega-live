@@ -1,6 +1,6 @@
-/* Ω VISUAL RUNTIME — opening composition and visual-universe bridge.
-   Additive only. The existing omega-sculpture renderer remains the dimensional
-   object; the landing gateway and atlas are presentation layers.
+/* Ω VISUAL RUNTIME — visual-universe bridge and the front door's world atlas.
+   Additive only. The omega-sculpture renderer owns the hero emblem; this module
+   adds the atlas below it and never covers or dims it.
    No route, component, renderer or page contract is replaced. */
 (function(){
   'use strict';
@@ -34,45 +34,15 @@
   markRuntime();
   if(page!=='index') return;
   addSheet('omega-opening-system-css','omega-opening-system.css');
-  addSheet('omega-home-depth-correction-css','omega-home-depth-correction.css');
   addSheet('omega-entertainment-3d-css','omega-entertainment-3d.css');
   addSheet('omega-world-atmosphere-css','omega-world-atmosphere.css');
   addSheet('omega-world-atlas-css','omega-world-atlas.css');
-  function installOpeningStage(){
-    var mount=document.querySelector('.ohz-hero-art[data-omega-sculpture="signet"]') || document.querySelector('.ohz-hero-art[data-omega-sculpture]');
-    if(!mount || mount.dataset.omegaGatewayInstalled==='1') return !!mount;
-    mount.dataset.omegaGatewayInstalled='1';
-    mount.setAttribute('aria-label','SYD OMEGA 91717 sovereign genesis dimensional gateway');
-    mount.setAttribute('data-sculpt-label','Omega Nexus architectural gateway connecting intelligence, gaming and cinema');
-    var reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var scene=document.createElement('div'); scene.className='omega-gateway';
-    scene.innerHTML='<div class="omega-gateway-chamber" aria-hidden="true">'
-      +'<div class="omega-gateway-monolith left"></div><div class="omega-gateway-monolith right"></div>'
-      +'<div class="omega-gateway-pillar left"></div><div class="omega-gateway-pillar right"></div>'
-      +'<div class="omega-gateway-portal"><div class="omega-gateway-vault"></div>'
-      +'<div class="omega-gateway-ring r1"></div><div class="omega-gateway-ring r2"></div><div class="omega-gateway-ring r3"></div><div class="omega-gateway-ring r4"></div>'
-      +'<div class="omega-gateway-core"><div class="omega-gateway-mark">Ω</div></div></div>'
-      +'<div class="omega-gateway-beam"></div><div class="omega-gateway-floor"></div>'
-      +'<i class="omega-gateway-node"></i><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i><i class="omega-gateway-node"></i>'
-      +'<div class="omega-gateway-code">91717 · GENESIS FIELD</div><div class="omega-gateway-caption">THE CODE · THE FREQUENCY · THE LEGACY</div>'
-      +'<div class="omega-gateway-worlds" aria-label="Entertainment worlds">'
-      +'<a class="omega-world-card omega-world-game" href="/gaming.html" aria-label="Enter the gaming universe"><span class="omega-world-depth"></span><span class="omega-world-glyph" aria-hidden="true">◈</span><span class="omega-world-index">WORLD 01</span><span class="omega-world-title">GAMING</span><span class="omega-world-meta">ARENA · CHARACTERS · REWARDS</span><span class="omega-world-arrow" aria-hidden="true">→</span></a>'
-      +'<a class="omega-world-card omega-world-cinema" href="/cinema.html" aria-label="Enter sovereign cinema"><span class="omega-world-depth"></span><span class="omega-world-glyph" aria-hidden="true">▶</span><span class="omega-world-index">WORLD 02</span><span class="omega-world-title">CINEMA</span><span class="omega-world-meta">SAGA · SERIES · UNIVERSE</span><span class="omega-world-arrow" aria-hidden="true">→</span></a>'
-      +'</div>'
-      +'<div class="omega-gateway-spine" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'
-      +'</div>';
-    mount.appendChild(scene);
-    if(!reduced){
-      mount.addEventListener('pointermove',function(ev){
-        var rect=mount.getBoundingClientRect();
-        var nx=((ev.clientX-rect.left)/Math.max(rect.width,1)-.5)*2;
-        var ny=((ev.clientY-rect.top)/Math.max(rect.height,1)-.5)*2;
-        scene.style.transform='translate3d('+(nx*4).toFixed(2)+'px,'+(ny*3).toFixed(2)+'px,0)';
-      },{passive:true});
-      mount.addEventListener('pointerleave',function(){scene.style.transform='translate3d(0,0,0)';},{passive:true});
-    }
-    return true;
-  }
+  /* The hero emblem is the turning 3-D signet that omega-sculpture.js draws
+     into .ohz-hero-art. From 2026-09-15 this module laid a static "gateway"
+     composition over it and two sheets dimmed its canvas to 4.5% and 20%, so
+     the platform's own emblem stopped reading as the front door. The owner
+     asked for the rotating emblem back (2026-10-19): nothing here covers or
+     dims that mount any more. */
   function installWorldAtlas(){
     if(document.querySelector('[data-omega-world-atlas]')) return true;
     var anchor=document.querySelector('.ohz-hero-art[data-omega-sculpture]');
@@ -124,7 +94,6 @@
     return true;
   }
   function boot(){
-    if(!installOpeningStage()) { var tries=0; var timer=setInterval(function(){if(installOpeningStage() || ++tries>=40) clearInterval(timer);},100); }
     if(!installWorldAtlas()) { var atlasTries=0; var atlasTimer=setInterval(function(){if(installWorldAtlas() || ++atlasTries>=40) clearInterval(atlasTimer);},100); }
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();

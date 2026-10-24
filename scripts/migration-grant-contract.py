@@ -51,25 +51,31 @@ GRANT = re.compile(
     r'grant\s+(.*?)\s+on\s+(?:table\s+)?((?:(?:"?public"?\.)?"?[a-z_][a-z0-9_]*"?\s*,\s*)*'
     r'(?:"?public"?\.)?"?[a-z_][a-z0-9_]*"?)\s+to\s+([^;]*);', re.S)
 TO_ROLES = re.compile(r'\bto\s+([a-z_,\s]+?)(?:\busing\b|\bwith\b|$)', re.S)
+# A policy whose every clause is literally (false) admits no row to anyone: it
+# documents deny-by-default (storage_files, 20261016221059), so it implies no
+# client GRANT. Any other expression in either clause still counts.
+FALSE_CLAUSE = re.compile(r'\b(?:using|with\s+check)\s*\(\s*false\s*\)', re.S)
+
+
+def deny_only(tail):
+    if not FALSE_CLAUSE.search(tail):
+        return False
+    rest = FALSE_CLAUSE.sub(' ', tail)
+    return not re.search(r'\busing\b|\bwith\s+check\b', rest)
 
 # Baseline measured live on 2026-10-06, each cross-checked with
 # has_table_privilege(). A ratchet: a NEW table in this state fails, and an
 # entry here that stops being a finding fails too, so the list only shrinks.
+# 2026-10-16: 7 entries left once deny-only policies (every clause false) stopped
+# counting as needing a GRANT -- each had only such policies for client roles.
 LOCKED_OUT = 'policies, no client grant live; read by no page -- GAP_ANALYSIS.md S'
 GRANTED_BY_HAND = 'granted live by a statement no migration file holds'
 KNOWN = {
     'ai_memory_embeddings': LOCKED_OUT,
-    'omega_achievement_verifications': LOCKED_OUT,
-    'omega_agent_tool_grants': LOCKED_OUT,
     'omega_audit_log': LOCKED_OUT,
-    'omega_fraud_signals': LOCKED_OUT,
-    'omega_payment_events': LOCKED_OUT,
     'omega_referral_attributions': LOCKED_OUT,
-    'omega_referral_clicks': LOCKED_OUT,
     'omega_referral_codes': LOCKED_OUT,
-    'omega_referral_conversions': LOCKED_OUT,
     'omega_referral_rewards': LOCKED_OUT,
-    'stripe_webhook_events': LOCKED_OUT,
 }
 
 
@@ -110,6 +116,8 @@ def scan(migrations_dir):
             for t in DROP_TABLE.findall(sql):
                 dropped[t] = version
         for t, tail in CREATE_POLICY.findall(sql):
+            if deny_only(tail):
+                continue
             needs.setdefault(t, set()).update(policy_roles(tail))
         for _privs, tables, roles in GRANT.findall(sql):
             role_set = {r.strip() for r in roles.split(',')}

@@ -25,6 +25,32 @@ class PageActionNavigationTests(unittest.TestCase):
     def test_unknown_capability_marker_does_not_govern(self):
         action=self.parse("<input type=\"file\" data-omega-capability-id=\"made-up-capability\">")
         self.assertEqual(action["state"],"UNMAPPED"); self.assertFalse(action["evidence"]["capability_registered"])
+    def test_unmapped_delta_identifies_page_and_controls(self):
+        baseline = {"actions": [
+            {"page": "wallet", "state": "UNMAPPED"},
+            {"page": "home", "state": "UNMAPPED"},
+        ]}
+        current = {"actions": [
+            {"page": "wallet", "state": "UNMAPPED", "action_id": 1, "kind": "button",
+             "path": "wallet.html", "evidence": {"onclick": True}},
+            {"page": "home", "state": "UNMAPPED"},
+            {"page": "wallet", "state": "UNMAPPED", "action_id": 2, "kind": "form",
+             "path": "wallet.html", "evidence": {"onsubmit": True}},
+        ]}
+        delta = module.unmapped_page_delta(current, baseline)
+        self.assertEqual(len(delta), 1)
+        self.assertEqual(delta[0]["page"], "wallet")
+        self.assertEqual(delta[0]["delta"], 1)
+        self.assertEqual([row["action_id"] for row in delta[0]["actions"]], [1, 2])
+
+    def test_html_documents_have_no_content_after_closing_html(self):
+        for path in sorted(ROOT.glob("*.html")):
+            source = path.read_text(encoding="utf-8", errors="ignore")
+            closing = source.lower().find("</html>")
+            self.assertGreaterEqual(closing, 0, f"{path.name} has no closing html tag")
+            trailing = source[closing + len("</html>"):].strip()
+            self.assertEqual(trailing, "", f"{path.name} has content after </html>")
+
     def test_estate_is_within_the_unmapped_ceiling(self):
         data=module.audit_estate()
         self.assertLessEqual(data["counts"].get("UNMAPPED",0), module.UNMAPPED_CEILING)

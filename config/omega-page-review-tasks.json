@@ -5,7 +5,7 @@
   "status": "OPEN_AUDIT_QUEUE",
   "principle": "EVERY_PAGE_HAS_AUDIT_WORK",
   "task_contract": "config/omega-task-contract.json",
-  "task_count": 239,
+  "task_count": 237,
   "states": [
     "OPEN",
     "READY",
@@ -185,24 +185,6 @@
       "task_type": "AUDIT",
       "page": "agent-operations",
       "path": "agent-operations.html",
-      "state": "OPEN",
-      "role": "UNVERIFIED",
-      "capability": [
-        "UNVERIFIED"
-      ],
-      "authorization": "UNVERIFIED",
-      "truth_state": "UNVERIFIED",
-      "evidence_required": true,
-      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
-      "owner": "UNASSIGNED",
-      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
-      "next_action": "Review direct source evidence and populate only independently proven contract fields."
-    },
-    {
-      "task_id": "PAGE::agent::REVIEW",
-      "task_type": "AUDIT",
-      "page": "agent",
-      "path": "agent.html",
       "state": "OPEN",
       "role": "UNVERIFIED",
       "capability": [
@@ -743,24 +725,6 @@
       "task_type": "AUDIT",
       "page": "codex",
       "path": "codex.html",
-      "state": "OPEN",
-      "role": "UNVERIFIED",
-      "capability": [
-        "UNVERIFIED"
-      ],
-      "authorization": "UNVERIFIED",
-      "truth_state": "UNVERIFIED",
-      "evidence_required": true,
-      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
-      "owner": "UNASSIGNED",
-      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
-      "next_action": "Review direct source evidence and populate only independently proven contract fields."
-    },
-    {
-      "task_id": "PAGE::cohorts-dashboard::REVIEW",
-      "task_type": "AUDIT",
-      "page": "cohorts-dashboard",
-      "path": "cohorts-dashboard.html",
       "state": "OPEN",
       "role": "UNVERIFIED",
       "capability": [
@@ -2035,6 +1999,24 @@
       "next_action": "Review direct source evidence and populate only independently proven contract fields."
     },
     {
+      "task_id": "PAGE::insight::REVIEW",
+      "task_type": "AUDIT",
+      "page": "insight",
+      "path": "insight.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
+      "next_action": "Review direct source evidence and populate only independently proven contract fields."
+    },
+    {
       "task_id": "PAGE::intel::REVIEW",
       "task_type": "AUDIT",
       "page": "intel",
@@ -2113,42 +2095,6 @@
       "path": "investment.html",
       "state": "OPEN",
       "role": "Decision support",
-      "capability": [
-        "UNVERIFIED"
-      ],
-      "authorization": "UNVERIFIED",
-      "truth_state": "UNVERIFIED",
-      "evidence_required": true,
-      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
-      "owner": "UNASSIGNED",
-      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
-      "next_action": "Review direct source evidence and populate only independently proven contract fields."
-    },
-    {
-      "task_id": "PAGE::investor-dashboard::REVIEW",
-      "task_type": "AUDIT",
-      "page": "investor-dashboard",
-      "path": "investor-dashboard.html",
-      "state": "OPEN",
-      "role": "UNVERIFIED",
-      "capability": [
-        "UNVERIFIED"
-      ],
-      "authorization": "UNVERIFIED",
-      "truth_state": "UNVERIFIED",
-      "evidence_required": true,
-      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
-      "owner": "UNASSIGNED",
-      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
-      "next_action": "Review direct source evidence and populate only independently proven contract fields."
-    },
-    {
-      "task_id": "PAGE::investor-gate::REVIEW",
-      "task_type": "AUDIT",
-      "page": "investor-gate",
-      "path": "investor-gate.html",
-      "state": "OPEN",
-      "role": "UNVERIFIED",
       "capability": [
         "UNVERIFIED"
       ],
@@ -2255,6 +2201,24 @@
       "task_type": "AUDIT",
       "page": "lab",
       "path": "lab.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
+      "next_action": "Review direct source evidence and populate only independently proven contract fields."
+    },
+    {
+      "task_id": "PAGE::ladder::REVIEW",
+      "task_type": "AUDIT",
+      "page": "ladder",
+      "path": "ladder.html",
       "state": "OPEN",
       "role": "UNVERIFIED",
       "capability": [
@@ -2827,24 +2791,6 @@
       "next_action": "Review direct source evidence and populate only independently proven contract fields."
     },
     {
-      "task_id": "PAGE::omega-visual-command::REVIEW",
-      "task_type": "AUDIT",
-      "page": "omega-visual-command",
-      "path": "omega-visual-command.html",
-      "state": "OPEN",
-      "role": "UNVERIFIED",
-      "capability": [
-        "UNVERIFIED"
-      ],
-      "authorization": "UNVERIFIED",
-      "truth_state": "UNVERIFIED",
-      "evidence_required": true,
-      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
-      "owner": "UNASSIGNED",
-      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
-      "next_action": "Review direct source evidence and populate only independently proven contract fields."
-    },
-    {
       "task_id": "PAGE::ops::REVIEW",
       "task_type": "AUDIT",
       "page": "ops",
@@ -2885,6 +2831,24 @@
       "task_type": "AUDIT",
       "page": "order",
       "path": "order.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
+      "next_action": "Review direct source evidence and populate only independently proven contract fields."
+    },
+    {
+      "task_id": "PAGE::orrery::REVIEW",
+      "task_type": "AUDIT",
+      "page": "orrery",
+      "path": "orrery.html",
       "state": "OPEN",
       "role": "UNVERIFIED",
       "capability": [
@@ -4069,24 +4033,6 @@
       "next_action": "Review direct source evidence and populate only independently proven contract fields."
     },
     {
-      "task_id": "PAGE::venture-pipeline::REVIEW",
-      "task_type": "AUDIT",
-      "page": "venture-pipeline",
-      "path": "venture-pipeline.html",
-      "state": "OPEN",
-      "role": "UNVERIFIED",
-      "capability": [
-        "UNVERIFIED"
-      ],
-      "authorization": "UNVERIFIED",
-      "truth_state": "UNVERIFIED",
-      "evidence_required": true,
-      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
-      "owner": "UNASSIGNED",
-      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
-      "next_action": "Review direct source evidence and populate only independently proven contract fields."
-    },
-    {
       "task_id": "PAGE::verify-deployment::REVIEW",
       "task_type": "AUDIT",
       "page": "verify-deployment",
@@ -4319,6 +4265,27 @@
       "owner": "UNASSIGNED",
       "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
       "next_action": "Review direct source evidence and populate only independently proven contract fields."
+    },
+    {
+      "task_id": "PAGE::personal-intelligence::REVIEW",
+      "task_type": "AUDIT",
+      "page": "personal-intelligence",
+      "path": "personal-intelligence.html",
+      "state": "OPEN",
+      "role": "AUTHENTICATED_MEMBER",
+      "capability": [
+        "PRIVATE_CONTEXT_METADATA_READ",
+        "EXPLICIT_LINK_METADATA_READ",
+        "CONSENT_STATE_PRESENTATION",
+        "CANONICAL_WORKSPACE_ROUTING"
+      ],
+      "authorization": "READ_ONLY_MEMBER_SCOPED_CONTEXT; PERMISSIONS CHANGED ONLY IN CANONICAL LIFE EDITOR",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_BROWSER_AUTHORIZATION_TRUTH_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Repository source contract exists, but authenticated browser states, live source behavior, asset routes, authorization behavior, and production evidence still require independent verification.",
+      "next_action": "Verify signed-out, authenticated-empty, authenticated-with-data, consent-denied, source-unavailable, and mobile states against the live preview; record only observed evidence."
     }
   ]
 }

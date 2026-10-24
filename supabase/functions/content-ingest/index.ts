@@ -7,7 +7,10 @@ const publicKey = publishableKey();
 const admin = adminKey ? createClient(url, adminKey) : null;
 
 const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+  });
 
 async function callerId(req: Request): Promise<string | null> {
   const auth = req.headers.get("Authorization");
@@ -16,12 +19,35 @@ async function callerId(req: Request): Promise<string | null> {
     const caller = createClient(url, publicKey, { global: { headers: { Authorization: auth } } });
     const { data, error } = await caller.auth.getUser();
     return error || !data?.user ? null : data.user.id;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
 function safeName(value: unknown): string {
-  if (typeof value !== "string" || !value.trim() || value.length > 255) throw new Error("invalid_filename");
-  return value.replace(/[^A-Za-z0-9._-]+/g, "_");
+  if (typeof value !== "string" || !value.trim() || value.length > 255) {
+    throw new Error("invalid_filename");
+  }
+  const cleaned = value.replace(/[^A-Za-z0-9._-]+/g, "_");
+  if (!cleaned || cleaned === "." || cleaned === "..") throw new Error("invalid_filename");
+  return cleaned;
+}
+
+function parseOwnedPath(value: unknown, userId: string): { path: string; folder: string; objectName: string } {
+  if (typeof value !== "string" || !value || value.length > 1024) throw new Error("invalid_path");
+  const parts = value.split("/");
+  if (parts[0] !== userId) throw new Error("path_not_owned");
+  if (
+    parts.length < 2 ||
+    parts.some((part) =>
+      !part || part === "." || part === ".." || part.length > 255 ||
+      part.includes("\\") || /[\u0000-\u001f\u007f]/.test(part)
+    )
+  ) throw new Error("invalid_path");
+
+  const objectName = parts[parts.length - 1];
+  const folder = parts.slice(0, -1).join("/");
+  return { path: value, folder, objectName };
 }
 
 Deno.serve(async (req: Request) => {
@@ -32,27 +58,30 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body = await req.json();
-    const bucket = body?.bucket;
-    const path = body?.path;
+    if (body?.bucket !== "uploads") return json({ error: "unsupported_bucket" }, 400);
+
     const filename = safeName(body?.filename);
-    const mimeType = typeof body?.mime_type === "string" && body.mime_type.length <= 255 ? body.mime_type : null;
-    const sizeBytes = Number.isSafeInteger(body?.size_bytes) && body.size_bytes >= 0 ? body.size_bytes : null;
+    const ownedPath = parseOwnedPath(body?.path, userId);
+    const { path, folder, objectName } = ownedPath;
+    const storage = admin.storage.from("uploads");
 
-    if (bucket !== "uploads") return json({ error: "unsupported_bucket" }, 400);
-    if (typeof path !== "string" || !path || path.length > 1024) return json({ error: "invalid_path" }, 400);
-    if (!path.startsWith(userId + "/")) return json({ error: "path_not_owned" }, 403);
-
-    const slash = path.indexOf("/");
-    const objectName = path.slice(slash + 1);
-    const folder = userId;
-
-    const { data: objects, error: listError } = await admin.storage.from(bucket).list(folder, {
+    // Storage.list() is scoped to one folder. Resolve the actual parent folder
+    // so valid nested object paths do not fail or accidentally match a sibling.
+    const { data: objects, error: listError } = await storage.list(folder, {
       limit: 100,
       search: objectName,
     });
     if (listError) throw listError;
-    const object = (objects || []).find((entry) => entry.name === objectName);
+    const object = (objects || []).find((entry) => entry.name === objectName && entry.id);
     if (!object) return json({ error: "object_not_found" }, 404);
+
+    // Client-supplied size and MIME are advisory and are deliberately ignored.
+    const actualSize = object.metadata?.size;
+    const sizeBytes = typeof actualSize === "number" && Number.isSafeInteger(actualSize) && actualSize >= 0
+      ? actualSize
+      : null;
+    const actualMime = object.metadata?.mimetype;
+    const mimeType = typeof actualMime === "string" && actualMime.length <= 255 ? actualMime : null;
 
     const { data: existing, error: existingError } = await admin
       .from("storage_files")
@@ -76,12 +105,12 @@ Deno.serve(async (req: Request) => {
       .from("storage_files")
       .insert({
         owner_id: userId,
-        folder,
+        folder: userId,
         filename,
         storage_path: path,
         mime_type: mimeType,
         extension: filename.includes(".") ? filename.split(".").pop() : null,
-        size_bytes: sizeBytes ?? object.metadata?.size ?? null,
+        size_bytes: sizeBytes,
         checksum: null,
         visibility: "private",
       })
@@ -90,6 +119,8 @@ Deno.serve(async (req: Request) => {
     if (insertError) throw insertError;
 
     const { error: eventError } = await admin.from("omega_platform_events").insert({
+      // event_id is NOT NULL with no default live (20261002073936).
+      event_id: crypto.randomUUID(),
       event_type: "evidence_recorded",
       route: "/content",
       actor_user_id: userId,
@@ -105,7 +136,24 @@ Deno.serve(async (req: Request) => {
         scan_state: "UNAVAILABLE",
       },
     });
-    if (eventError) throw eventError;
+
+    if (eventError) {
+      // Registration is not complete until its audit event exists. Compensate
+      // both writes and the already-uploaded object; report partial rollback in
+      // server logs without leaking provider/database errors to the caller.
+      const rollback = await admin.from("storage_files").delete().eq("id", file.id).eq("owner_id", userId);
+      const objectRollback = await storage.remove([path]);
+      const rollbackState = !rollback.error && !objectRollback.error ? "complete" : "partial";
+      console.error(JSON.stringify({
+        event: "CONTENT_INGEST_ROLLBACK",
+        content_id: "storage_files:" + file.id,
+        path,
+        rollback_state: rollbackState,
+        metadata_rollback_failed: Boolean(rollback.error),
+        object_rollback_failed: Boolean(objectRollback.error),
+      }));
+      return json({ error: "content_registration_failed", rollback_state: rollbackState }, 500);
+    }
 
     return json({
       ok: true,
@@ -116,7 +164,23 @@ Deno.serve(async (req: Request) => {
     }, 201);
   } catch (error) {
     const message = error instanceof Error ? error.message : "content_ingest_failed";
-    const clientErrors = new Set(["invalid_filename", "unsupported_bucket", "invalid_path", "path_not_owned"]);
-    return json({ error: clientErrors.has(message) ? message : "content_ingest_failed" }, clientErrors.has(message) ? 400 : 500);
+    // Supabase errors are plain objects, not Error instances: log their code so a
+    // 500 names its cause server-side. Never returned to the caller.
+    const detail = error as { code?: unknown; message?: unknown } | null;
+    console.error(JSON.stringify({
+      event: "CONTENT_INGEST_FAILED",
+      code: typeof detail?.code === "string" ? detail.code : null,
+      detail: typeof detail?.message === "string" ? detail.message.slice(0, 300) : null,
+    }));
+    const clientErrors = new Set([
+      "invalid_filename",
+      "unsupported_bucket",
+      "invalid_path",
+      "path_not_owned",
+    ]);
+    return json(
+      { error: clientErrors.has(message) ? message : "content_ingest_failed" },
+      clientErrors.has(message) ? (message === "path_not_owned" ? 403 : 400) : 500,
+    );
   }
 });

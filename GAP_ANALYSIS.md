@@ -14,7 +14,129 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **POSTPONED 2026-10-18 — blocked on credits, resume when renewed.** Each item is parked
+  behind one switch and nothing else depends on it, so renewing is a one-line change:
+  - **Vercel promotion.** Hobby team blocked for Edge Requests since 2026-10-06. Switch:
+    `VERCEL_PROMOTION_POSTPONED` in `.github/workflows/vercel-production.yml`. Set it to
+    `'false'` and add `VERCEL_TOKEN` to resume. While it is `'true'`, a `main` push proves that
+    sydomega.com (Cloudflare Pages) serves that commit, and fails if not. The red "Account is
+    blocked" status on PRs comes from the Vercel GitHub App, so the repo cannot silence it.
+    Disconnecting the repo in Vercel stops it, and that is reversible.
+  - **Codex PR reviews.** Every run fails on the usage limit. Treat its "Failed" summary as
+    no review, not as a finding.
+  - **Supabase leaked-password protection.** An Auth dashboard toggle (issue #375). It may need
+    the Pro plan.
+- **OPEN 2026-10-17 — page sprawl against real use.** 239 pages; **70** opened ever
+  (`platform_events`), ~70% of views on `dashboard`, one account behind all of them; **202 of
+  281** public tables hold 0 rows; `client_errors` (8,972) outnumbers `platform_events` (7,977).
+  Target: **22 pages** — 13 cores + 9 system, every page assigned in `config/page-cores.json`
+  (gated by `scripts/tests/test_page_cores.py`). BUILT: COSMOS (`orrery.html`), COMMAND
+  (`dashboard.html` + `omega-command-dock.js`), LADDER (`ladder.html`; also ended a second,
+  divergent gate curve in 22 files), INTEL (`insight.html`, six graph pages as four lenses), ACADEMY (`academy.html`: one
+  review queue over three decks, the 12-sector exams inline, courses, the reading shelf; five
+  pages folded; `architect` moved to OWNER, `clarity`/`focus` to LIFE), ARENA (`gaming.html`:
+  mastery earned by play; catalogue click credit removed by owner decision; `sovereign-ai` to
+  INTEL, `agent-network` to COSMOS, `queue` to OWNER), VAULT (`invest.html`: net worth and
+  this month's cash flow from the seven browser-local trackers; the member picks which count,
+  because the stores overlap; `sigil` to IDENTITY, `sovereign-covenant` to ORDER), IDENTITY
+  (`profile.html`: the hero's static "RANK 9.9.9 / ALL-TIME ACCESS / VERIFIED ARCHITECT /
+  ABSOLUTE SOVEREIGN" replaced by the member's real gate, tier, access and KYC, plus an account
+  readiness strip; `characters` to OWNER), and on 2026-10-18 the last four: ORDER (`hall.html`),
+  MEDIA (`media.html`), SERVICES (`services.html`) and OWNER (`control-center.html`, estate
+  health from live tables). All 13 cores now exist. LIFE is
+  **live**: `public.life_entries` (`20261017234857`, own rows only, no owner read) backs the daily
+  log on `life.html`, and the owner turned `life_core_enabled` on 2026-10-18 09:10 UTC after a
+  rolled-back member insert proved the write path (1 row seen by its member, 0 of anyone else's).
+  The ten trackers the log replaces (mood, sleep, water, workout, meditate, breath, gratitude,
+  body, fasting, habits) are folded; the text-heavy ones it does not cover stay in the sidebar.
+  The first page deletions, on the owner's sign-off, are the six empty owner pages (below).
+- **OPEN 2026-10-18 — community, media and services tables are empty.** `member_events`,
+  `member_posts`, `event_rsvps`, `social_*`, `family_nodes`, `bloodline_nodes`, `heritage_records`,
+  `publications`, `media_reservations`, `consult_requests`, `commission_contracts` and
+  `travel_journeys` all hold 0 rows, and `dispatches` holds 1. The ORDER, MEDIA and SERVICES cores
+  state the empties and offer the action. They do not make anyone use them.
+- **OPEN 2026-10-18 — production keeps throwing errors already fixed in main.** 76
+  `.catch is not a function` errors in the 24 h to 07:52 UTC (386 in 7 days), from code `main` no
+  longer contains. Production serves pre-block code: the last production deploy is #755 (`7d70ce14`, 2026-10-06),
+  and `sydomega.com` answers 200 from Vercel's edge cache (measured 2026-10-18 09:07 UTC). Every
+  new deploy is refused ("Account is blocked"; the dashboard says the pause is for **Edge
+  Requests**). The repo is now portable to Cloudflare Pages (unlimited requests on Free):
+  the build writes `_headers`/`_redirects` from `vercel.json`, verified in `wrangler pages dev`.
+  The cutover needs owner dashboard steps, listed in `docs/CLOUDFLARE_PAGES_CUTOVER.md`. A Netlify
+  project (`sydomega-v6mo`, created and never deployed) is redundant and can be deleted. The OWNER board
+  shows the count.
+- **DONE 2026-10-18 — the second "S.Y.D" profile is the owner's second account.** It is
+  `slmndghr@gmail.com` (the email lives in `auth.users`, not `profiles`): never signed in, email
+  unconfirmed, `is_owner = false`, so `platform_owners` held one row and CLAUDE.md §1's "both
+  accounts" was false. On the owner's instruction it now has `is_owner = true`;
+  `sync_platform_owner` added it to `platform_owners` (2 rows, both emails verified by query) and
+  `protect_owner_lifetime` set it approved, tier 9. Its stored `authority` (15.588) is still not
+  what 9/9/9 gives (27.8367) — cosmetic, left as is. Its first sign-in needs the email confirmed
+  (a password reset from `reset.html` does that).
+- **DONE 2026-10-18 — six empty owner pages deleted.** `investor-dashboard`, `investor-gate`,
+  `venture-pipeline`, `omega-visual-command` (redirect stubs to the dashboard), `agent` (a stub,
+  now 301 to `/agents`) and `cohorts-dashboard` (a placeholder, now 301 to `/control-center`).
+  Each has a permanent redirect in `vercel.json`, so no old link 404s.
+- **MOOT 2026-10-18 (flag on) — LIFE dormancy was enforced in the client only.** The RLS insert policy
+  checks ownership, not `life_core_enabled`, so a member calling PostgREST directly can write
+  their own rows while the flag is off. They can harm only their own data. Closing it means
+  replacing the policy in a new migration, which needs the owner (the connector stalls on any
+  `DROP`).
+- **OPEN 2026-10-17 — `omega_notifications` has never held a row.** Delivery is scheduled every
+  minute; nothing produces notifications. The inbox is a working pipe with no source.
+- **OPEN 2026-10-17 — production serves a build older than 2026-10-09.** `client_errors` still
+  receives `catch is not a function` from `omega-telemetry.js:61/75`/`omega-recommend.js:24`
+  today, code fixed in `b7bf8a9f`. Every UI change waits on the owner restoring Vercel deploys
+  (CLAUDE.md §8.2).
 - **OPEN 2026-10-12 — owner decisions recorded, legal review pending.** Owner chose the 12-tier `omega-canon.json` ladder (subscriptions.html now renders it), adult-only owner-granted family access (HIGH-RISK build in review: `docs/decisions/family-access/`), and dormant non-cash points for every money item. `docs/COUNSEL_BRIEF.md` lists the questions for counsel in Lebanon, UAE/GCC, US and EU/UK; no flag changes until answered. 8 blueprint items still need the owner (provenance marks 66/166, succession 73/652/969/N155, tier permanence 266, model per tier 289).
+
+- **OPEN 2026-10-16 — `service_role` reaches 32 of 281 public tables live.** `20260903015535`
+  revoked default table privileges from it, so every newer table an Edge Function touches through
+  the service-role client fails 42501. Only `content-ingest`/`content-delivery` were granted
+  (`20261016213149`, owner chose the narrow fix). The other Edge Functions are unaudited against
+  it — next step is a per-function table audit, then per-table grants (`FIXES_LOG.md`, 2026-10-16).
+- **CLOSED 2026-10-16 (`20261016223949`, default `gen_random_uuid()`, verified live) — was: `omega_platform_events.event_id` is NOT NULL with no default live.** 7 rows,
+  newest 2026-09-29: every writer omitting `event_id` has failed since `20261002073936`. The content
+  functions now send one; restoring `DEFAULT gen_random_uuid()` would fix all writers at once and is
+  an owner decision. Also: live ledger row `20261016193700` has no local file.
+  `storage_files` itself had no migration until `20261016221059` (captured from live, 2026-10-16);
+  other live-only tables may exist — `live-schema.json` vs migrations has not been diffed for them.
+
+- **CLOSED 2026-10-16 (`20261016225535`, SECURITY DEFINER; verified by member impersonation) — was: `omega_record_world_action` cannot write its event (42501).** It is
+  SECURITY INVOKER and inserts into `omega_platform_events` as the member; `authenticated` has no
+  INSERT grant although policy `omega_platform_events_insert_own` exists (§8.1 class 6c). Fix is a
+  narrow `GRANT INSERT … TO authenticated` (the policy already scopes rows to `auth.uid()`) —
+  an owner decision, since it opens a client write path to the audit table.
+
+- **CLOSED 2026-10-17 (`20261017093038` + `20261017093316`, `stripe-webhook` v6; verified live
+  in rolled-back transactions) — was: `stripe-webhook` cannot record a payment.** Two defects on
+  one path: the unexposed `omega_private` schema (406 PGRST106), then
+  `post_ledger_transaction` calling `pg_catalog.trim(`/`pg_catalog.coalesce(` (42883), so the
+  ledger could never post.
+
+- **OPEN 2026-10-17 — `STRIPE_WEBHOOK_SECRET` is not set (owner action).** The deployed
+  `stripe-webhook` answers every request 503 `webhook_not_configured` before any other check, so
+  Stripe has never been able to deliver an event (0 rows in `stripe_webhook_events`). Set it with
+  `supabase secrets set STRIPE_WEBHOOK_SECRET=…` (and confirm `STRIPE_SECRET_KEY`, which the
+  checkout path needs for its subscription lookup), then send a Stripe test event.
+
+- **CLOSED 2026-10-17 (`20261017094629`; verified live, rolled back) — was: four more live
+  functions call SQL keywords as `pg_catalog` functions (42883).** `create_consult_intake`,
+  `create_service_order`, `omega_watchlist_upsert`, `omega_runtime_dispatch` rewritten from their
+  stored bodies (`pg_catalog.btrim`); the migration asserts 0 such calls remain anywhere. Guarded
+  by a new rule in `supabase-migration-security-audit.py` (applied hits baselined). The fresh replay also
+  exposed live-only drift in `omega_private.record_stripe_payment`, captured by `20261017095439`.
+
+- **CLOSED 2026-10-17 (`20261017092002`, service_role-only public delegates; verified live) — was:
+  `omega-notification-worker` failed every call (PGRST202).** Its RPCs lived only in the unexposed
+  `omega_private`. Delivery is now scheduled: `20261017100555` runs the same in_app loop in the
+  database every minute (pg_cron `omega-in-app-notification-delivery`; the worker's HTTP route would
+  need a secret key in Vault), and `notifications.html` shows each member's delivered rows.
+
+- **CLOSED 2026-10-16 (`20261016231606`, SECURITY DEFINER; verified by member impersonation) — was: `omega_record_simulation_run` cannot write (42501), 0 rows ever.** Same
+  root cause as world actions: live-only `20260930090758` made it SECURITY INVOKER and added
+  `omega_simulation_runs_insert_own` with no INSERT grant; the repo's alias of that migration is a
+  no-op, so live and a fresh replay differ. Read its body before choosing definer vs grant.
 
 Nothing below is a bug masquerading as done. Each has an explicit reason it is
 open, recorded in `FIXES_LOG.md`:
@@ -197,10 +319,15 @@ open, recorded in `FIXES_LOG.md`:
   `FIXES_LOG.md`, "Backend privileges"). Since `20260903015535`, `service_role` has had
   no default privilege on public tables. Granted since: `platform_settings` SELECT,
   `get_platform_flag` EXECUTE, the two graph-ingest RPCs, and
-  `apply_subscription_event`. **Before turning `autonomous_agents_enabled` on**, grant
-  what the orchestrators write, or they fail at their first write:
-  - `autonomous_decisions` INSERT (all three);
-  - `member_feature_flags` INSERT, UPDATE (product-orchestrator upserts).
+  `apply_subscription_event`. **Orchestrators: DONE 2026-10-17** (`20261017104020`):
+  `autonomous_decisions` SELECT+INSERT (`.insert().select("id")` needs both) and
+  `member_feature_flags` SELECT+INSERT+UPDATE; product-orchestrator v8 also names
+  `onConflict: member_id,feature_id` (it upserted on the PK, so a flag's second write
+  would have raised 23505). Still dormant until `autonomous_agents_enabled` is on.
+  **Worker reads: DONE 2026-10-17** (`20261017105203`): `omega_platform_evidence` SELECT
+  (evidence-graph), and column SELECT on `omega_knowledge_chunks (id, content)` and
+  `omega_provider_registry (id, provider_key, status, secret_ref)` for the embedding and
+  provider workers. `upsert-conflict-check.py` now scans `supabase/functions/` and exits 1.
 
   **Before deploying** `checkout`, `rankings`, `snapshot-leaderboard`, `weekly-digest` or
   `graphify-ai-query`, grant each one the table operations it uses. A small script
@@ -717,9 +844,11 @@ open, recorded in `FIXES_LOG.md`:
   was rejected: no stable client secret exists, and it changes no trust boundary
   — `health_logs`, `ai_memory`, `family_nodes`, `heritage_records` already hold
   comparable data under the same tested RLS.
-- **No DELETE policy on `storage.objects`** (live 2026-08-31): writes scoped to
-  own `<uid>/`, but deleting one's own upload is 42501. No client offers a
-  delete — a gap, and a product decision.
+- **CLOSED 2026-10-16 — `storage.objects` DELETE exists live.** `pg_policies` now
+  returns `uploads delete` / `avatars delete` (authenticated, own `<uid>/` folder) and
+  `uploads owner delete` (`private.is_platform_owner()`), from
+  `20260926083157_..._allow_member_owned_storage_delete.sql`. The 2026-08-31 "42501"
+  note went stale and a branch built on it broke `main` (`FIXES_LOG.md`, 2026-10-16).
 - **`.mp4` (3.7 MB) and `.docx` committed, no LFS.** Asked and declined;
   `.vercelignore` keeps both out of the deploy. A fix needs a history rewrite.
 - **Member location is not collected** (live 2026-08-29): `profiles.country`
@@ -1189,12 +1318,13 @@ verifying the *current* guard says nothing about what may have happened before i
      `<script>` line in `bg.js` puts that strip on all 189 pages. The subsystem is
      not one line from shipping — its entry point was never finished.
 
-  1. **The Ctrl/Cmd+K chord is already taken.** `omega-keyboard.js:155` (loaded on
-     every page) binds it to `window.OmegaSearch.open()`.
-     `omega-command-palette.js` binds the same chord and calls `preventDefault()`.
-     Both handlers would fire and two overlays would open on one keystroke. One of
-     the two has to yield, and that is a product decision about which surface owns
-     the platform's primary chord — not something to settle silently in a sweep.
+  1. **RESOLVED 2026-10-22 — Ctrl/Cmd+K has one primary owner.** The inline
+     global palette in `nav.js` is canonical. `omega-keyboard.js` now defers when
+     that palette is mounted and invokes the legacy `OmegaSearch` only on surfaces
+     without the palette. A regression contract verifies owner precedence, keyboard
+     help copy, and combobox active-option semantics. The old reference to
+     `omega-command-palette.js` was stale: the current deployed palette is owned by
+     `nav.js`.
   2. **Its guard attributes are array indices.** It injects with
      `inject('/'+x,'data-omega-'+i)` — the guard is the module's *position* in a
      literal, so `data-omega-0`, `data-omega-1`, … carry no module identity at all.

@@ -53,4 +53,14 @@ assert.match(migration, /subscription_profile_not_found/, 'missing profile must 
 assert.match(migration, /REVOKE ALL ON FUNCTION public\.apply_subscription_event/, 'event RPC must not be publicly executable');
 assert.match(migration, /GRANT EXECUTE ON FUNCTION public\.apply_subscription_event[\s\S]*TO service_role;/, 'event RPC must be callable by the server-side service role');
 
+const refundBranch = source
+  .split('if (eventType === "charge.refunded")')[1]
+  .split('return json({ received: true, event: eventType, handled: false });')[0];
+assert.match(source, /async function recordStripeRefund[\\s\\S]*?admin\\.rpc\\("record_stripe_refund"/, 'refund accounting must use the restricted server-side RPC');
+assert.match(refundBranch, /Number\\.isSafeInteger\\(amountRefundedMinor\\)/, 'refund cumulative amount must be an integer');
+assert.match(refundBranch, /amountRefundedMinor > amountMinor/, 'refund amount must not exceed the charge amount');
+assert.match(refundBranch, /recordStripeRefund\\(admin/, 'charge.refunded must invoke canonical ledger reversal processing');
+assert.match(refundBranch, /return json\\(\\{ error: "refund_processing_failed" \\}, 500\\);/, 'refund database failures must remain retryable');
+assert.doesNotMatch(source, /if \\(eventType === "refund\\.created"\\)/, 'refund.created must not independently post the same cumulative refund');
+
 console.log('Stripe webhook guard: PASS');

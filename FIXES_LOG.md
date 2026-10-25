@@ -25120,6 +25120,47 @@ native browser capabilities the platform did not use; a browser without them ren
   three veils deferring; and the dark first paint. `test_text_contrast.py` now strips the block before
   reading a page's own first `<style>`.
 
+## Ω SENSE: element-tuned interaction tones and haptics (2026-10-25)
+
+New module `omega-sense.js`, injected by `bg.js` under its own guard `data-omega-sense`.
+- **Before.**
+  - Interaction sound was one fixed 458.5Hz sine on click, in `omega-9d.js`.
+  - Haptics were three unrelated `navigator.vibrate()` calls: `omega-sdt.js`, `omega-arcade.js` and `omega-page-features.js`.
+- **Voices.**
+  - FIRE, WATER, WIND, METAL and SAND each get a distinct synthesized voice at 458.5Hz.
+  - The element is read from `localStorage.omega_theme_element`, which `theme.js` publishes via
+    `OmegaCanon.elementFor()`. The module keeps no copy of the sign table.
+- **Cues.**
+
+  | cue | tone | haptic |
+  |---|---|---|
+  | press | one short note | none |
+  | success | rising fifth | `[12,40,18]` |
+  | error | falling minor third | `[30,40,30]` |
+  | unlock | four-note arpeggio | `[20,30,20,30,60]` |
+  | navigate | one soft low note | none |
+- **Wired automatically.**
+  - press: `pointerdown` on the shared action surfaces.
+  - error: `omegaToast(msg,'error')`, wrapped rather than observed by a document-wide `MutationObserver`.
+  - unlock: `omega-sdt.js`'s gate celebration, which keeps its raw vibrate only as a fallback.
+- **Never wired: success.** `bg.js` echoes a gold toast with the button's label on SAVE/SUBMIT/… clicks
+  before any write resolves, so a success cue on it would assert a success that may not exist
+  (§8.1 class 1). Pages call `OmegaSense.cue('success')` after checking `.error`.
+- **One engine.** `omega-9d.js`'s click chime returns when `OmegaSense` is loaded.
+- **Gates.**
+  - Sound only when `omega_sound === 'on'`, the opt-in 9d already used. The platform-wide default stays
+    the open owner decision in `GAP_ANALYSIS.md`.
+  - Haptics unless `omega_haptics === 'off'`; `OmegaSense.haptics(false)` sets it. No settings toggle yet.
+  - Reduced motion silences both.
+- **Verified in Chromium** with recording stubs for `AudioContext` and `navigator.vibrate`:
+  - Voices: FIRE `triangle:431` (bending to 459); WATER sine 486 gliding down plus its LFO; WIND sines
+    459 and 462; METAL partials 459, 1265, 2476; SAND `square:459`.
+  - A real button click produced exactly one oscillator, so 9d stood aside.
+  - Toasts: an error toast gave 6 oscillators plus `[30,40,30]`; the gold `SAVE` echo gave 0.
+  - Settings: sound unset gave 0 oscillators. Under reduced motion every cue was silent with no vibration.
+- `scripts/tests/test_omega_sense_contract.py` pins the guard, the element source, success-never-inferred,
+  the gates, the 9d/sdt hand-offs, and no haptic on press.
+
 ## The approval guard trusts this tab's recent approval (owner decision, 2026-10-25)
 
 - **Why.** On every page, the guard (§3) hid `#app`/`.shell`/`main.main` until the profile check

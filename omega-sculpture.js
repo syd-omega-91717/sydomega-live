@@ -19,6 +19,7 @@
        <div data-omega-sculpture="agents"></div>     the 12 executors in orbit
        <div data-omega-sculpture="matrix"></div>     the 9x9x9 lattice, 729 nodes
        <div data-omega-sculpture="gates"></div>      the twelve gates, in depth
+       <div data-omega-sculpture="sky"></div>        the member's own records as stars
 
    Optional: data-sculpt-height (CSS length, default 420px / 300px mobile),
    data-sculpt-accent (hex, default the brand gold), data-sculpt-label.
@@ -1021,6 +1022,162 @@
     }};
   };
 
+  /* ── SKY ──────────────────────────────────────────────────────────────
+     The member's own record, as a sky. Every star is one real row the member
+     owns: a task completion, a lesson completion or a certificate. Nothing
+     else is drawn as a star -- no decorative starfield in this scene -- so
+     the sky cannot show progress that does not exist (CLAUDE.md 8.1 class 9).
+
+     Placement encodes the data: longitude is the record's date across the
+     member's own span (oldest to today), latitude is its kind (tasks on the
+     equator, lessons above, certificates highest), and a small offset from a
+     hash of the row id keeps two same-day records apart deterministically, so
+     the sky is the same on every visit. Records of one kind are joined in
+     date order: a constellation per practice.
+
+     Queries filter user_id = the signed-in member EXPLICITLY. RLS alone is
+     not enough: task_completions and certificates also pass
+     private.is_platform_owner() (measured live 2026-10-25), so for the owner
+     an unfiltered read is every member's rows. Each read checks .error; a
+     failed read is reported as unavailable, never drawn as an empty sky. */
+  var SKY_KINDS = {
+    task:        { lat: 0,  colour: 'cyan',   size: 0.09,  href: '/missions.html',     word: 'Task' },
+    lesson:      { lat: 26, colour: 'bright', size: 0.10,  href: '/academy.html',      word: 'Lesson' },
+    certificate: { lat: 50, colour: 'gold',   size: 0.17,  href: '/achievements.html', word: 'Certificate' }
+  };
+  var SKY_CAP = 400;
+
+  function skyHash(s) {
+    var h = 2166136261;
+    s = String(s);
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return ((h >>> 0) % 1000) / 1000;
+  }
+
+  function skyRecords() {
+    if (!window.OmegaSB || !window.OmegaSB.get) return Promise.reject(new Error('no client'));
+    return window.OmegaSB.get().then(function (sb) {
+      return sb.auth.getSession().then(function (r) {
+        var uid = r && r.data && r.data.session && r.data.session.user && r.data.session.user.id;
+        if (!uid) return { signedOut: true, rows: [] };
+        var q = [
+          sb.from('task_completions').select('id,task_name,task,completed_at').eq('user_id', uid)
+            .order('completed_at', { ascending: false }).limit(SKY_CAP),
+          sb.from('lesson_completions').select('id,lesson,completed_at').eq('user_id', uid)
+            .order('completed_at', { ascending: false }).limit(SKY_CAP),
+          sb.from('certificates').select('id,cert_name,title,issued_at').eq('user_id', uid)
+            .order('issued_at', { ascending: false }).limit(SKY_CAP)
+        ];
+        return Promise.all(q).then(function (res) {
+          var failed = res.filter(function (x) { return !x || x.error; }).length;
+          var rows = [];
+          (res[0].data || []).forEach(function (d) {
+            rows.push({ kind: 'task', id: d.id, at: d.completed_at, name: d.task_name || d.task || 'Task' });
+          });
+          (res[1].data || []).forEach(function (d) {
+            rows.push({ kind: 'lesson', id: d.id, at: d.completed_at, name: d.lesson || 'Lesson' });
+          });
+          (res[2].data || []).forEach(function (d) {
+            rows.push({ kind: 'certificate', id: d.id, at: d.issued_at, name: d.title || d.cert_name || 'Certificate' });
+          });
+          rows = rows.filter(function (x) { return x.at && !isNaN(Date.parse(x.at)); });
+          rows.sort(function (a, b) { return Date.parse(a.at) - Date.parse(b.at); });
+          return { rows: rows.slice(-SKY_CAP), failed: failed, capped: rows.length > SKY_CAP };
+        });
+      });
+    });
+  }
+
+  function skyNote(el, text) {
+    if (!el) return;
+    var n = el.querySelector('.osc-sky-note');
+    if (!n) {
+      n = document.createElement('div');
+      n.className = 'osc-sky-note';
+      n.style.cssText = 'position:absolute;left:0;right:0;top:12px;text-align:center;pointer-events:none;' +
+        'font:12px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.14em;text-transform:uppercase;' +
+        'color:var(--muted,#9a988f);z-index:3;padding:0 16px';
+      el.appendChild(n);
+    }
+    n.textContent = text;
+  }
+
+  SCENES.sky = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(40, 1, 0.1, 100);
+    cam.position.set(0, 1.2, 11);
+    rig(T, scene, p);
+
+    var R = 4.2;
+    var sphere = new T.Group();
+    scene.add(sphere);
+
+    /* "you": the centre the record turns around. Not a record, and drawn
+       unlike one (a soft glow, not a star). */
+    var core = new T.Mesh(new T.SphereGeometry(0.26, 24, 16),
+      new T.MeshBasicMaterial({ color: p.cyan, transparent: true, opacity: 0.35 }));
+    scene.add(core);
+
+    var links = [], stars = [];
+    var out = { scene: scene, camera: cam, links: links, count: 0 };
+
+    out.ready = skyRecords().then(function (res) {
+      if (res.signedOut) { skyNote(opt && opt.el, 'Sign in to see your sky'); return; }
+      var rows = res.rows;
+      out.count = rows.length;
+      if (!rows.length) {
+        skyNote(opt && opt.el, res.failed ? 'Your record could not be read just now'
+          : 'No records yet — your first completion becomes your first star');
+        return;
+      }
+      var t0 = Date.parse(rows[0].at), t1 = Math.max(Date.now(), Date.parse(rows[rows.length - 1].at));
+      var span = Math.max(1, t1 - t0);
+      var byKind = {};
+      rows.forEach(function (row) {
+        var k = SKY_KINDS[row.kind];
+        var f = (Date.parse(row.at) - t0) / span;
+        var lon = (f * 300 - 150 + (skyHash(row.id) - 0.5) * 6) * Math.PI / 180;
+        var lat = (k.lat + (skyHash(row.id + ':lat') - 0.5) * 10) * Math.PI / 180;
+        var pos = new T.Vector3(R * Math.cos(lat) * Math.sin(lon), R * Math.sin(lat) - 1.2, R * Math.cos(lat) * Math.cos(lon));
+        var col = p[k.colour];
+        var star = new T.Mesh(
+          row.kind === 'certificate' ? new T.OctahedronGeometry(k.size, 0) : new T.SphereGeometry(k.size, 12, 8),
+          new T.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.9, metalness: 0.4, roughness: 0.3 }));
+        star.position.copy(pos);
+        sphere.add(star);
+        stars.push({ mesh: star, seed: skyHash(row.id) * 6.28 });
+        (byKind[row.kind] = byKind[row.kind] || []).push(pos);
+        links.push({ object: star, href: k.href,
+          label: k.word + ' · ' + String(row.name).slice(0, 48) + ' · ' + String(row.at).slice(0, 10) });
+      });
+      Object.keys(byKind).forEach(function (kind) {
+        var pts = byKind[kind];
+        if (pts.length < 2) return;
+        var line = new T.Line(new T.BufferGeometry().setFromPoints(pts),
+          new T.LineBasicMaterial({ color: p[SKY_KINDS[kind].colour], transparent: true, opacity: 0.28 }));
+        sphere.add(line);
+      });
+      skyNote(opt && opt.el, rows.length + (rows.length === 1 ? ' record' : ' records') +
+        (res.capped ? ' (the most recent ' + SKY_CAP + ')' : '') +
+        (res.failed ? ' · part of your record could not be read' : ''));
+    }).catch(function () {
+      skyNote(opt && opt.el, 'Your record could not be read just now');
+    });
+
+    out.update = function (t, px, py) {
+      sphere.rotation.y = t * 0.06 + px * 0.5;
+      sphere.rotation.x = py * 0.12;
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        if (!s.mesh.userData.omegaHovered) s.mesh.scale.setScalar(1 + Math.sin(t * 1.6 + s.seed) * 0.12);
+      }
+      core.material.opacity = 0.28 + Math.sin(t * 0.8) * 0.08;
+      cam.lookAt(0, 0.2, 0);
+    };
+    return out;
+  };
+
   /* ══════════════════════════════════════════════════════════════════════
      2-D FALLBACK — drawn when WebGL is unavailable or three.js fails to load
 
@@ -1592,7 +1749,7 @@
 
     loadThree().then(function (T) {
       ensureRenderer(T);
-      m.scene = SCENES[kind](T, { accent: accent, state: m.state });
+      m.scene = SCENES[kind](T, { accent: accent, state: m.state, el: el });
       /* The metal's other half (see environment()). Set on the scene, not per
          material, so every MeshStandardMaterial in it picks the map up and any
          MeshBasicMaterial correctly ignores it. */
@@ -1600,6 +1757,13 @@
       if (envTex && m.scene && m.scene.scene) m.scene.scene.environment = envTex;
       sizeMount(m);
       wireNavigation(m);
+      /* A scene whose content arrives later (sky: the member's records)
+         exposes `ready`. wireNavigation() returns early on an empty link
+         list, so it is wired again once the content exists, and a reduced-
+         motion still is redrawn with it. */
+      if (m.scene && m.scene.ready && m.scene.ready.then) {
+        m.scene.ready.then(function () { wireNavigation(m); if (REDUCED && m.ready) renderStill(m); });
+      }
       if (REDUCED) { m.ready = true; renderStill(m); return; }
       /* Compile the scene's shaders BEFORE its first frame. three.js otherwise
          compiles them inside the first render(), synchronously. compileAsync
@@ -1647,7 +1811,8 @@
     var wrap = document.createElement('nav');
     wrap.className = 'omega-sculpt-links';
     wrap.setAttribute('aria-label', (m.kind === 'agents' ? 'The twelve executors'
-      : m.kind === 'gates' ? 'The twelve gates' : 'Destinations') + ' in this sculpture');
+      : m.kind === 'gates' ? 'The twelve gates' : m.kind === 'sky' ? 'Your records'
+      : 'Destinations') + ' in this sculpture');
     wrap.style.cssText = 'position:absolute;left:0;right:0;top:0;bottom:0;' +
       'pointer-events:none;overflow:hidden';
     var seen = {};
@@ -1770,6 +1935,7 @@
     agents: 'The twelve agent executors in orbit around the Omega core',
     matrix: 'The nine by nine by nine matrix of 729 nodes, with the Crystal-Omega at its centre',
     gates:  'The twelve gates receding into depth toward the Crystal-Omega',
+    sky:    'Your own record as a sky: one star for each task, lesson and certificate you have completed',
     'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'
   };
 
@@ -1838,6 +2004,7 @@
         return { kind: m.kind, state: m.state, live: !!m.scene && !m.dead, fallback: m.dead,
                  visible: m.visible, buffer: m.bw + 'x' + m.bh, box: m.w + 'x' + m.h,
                  links: (m.scene && m.scene.links) ? m.scene.links.length : 0,
+                 records: (m.scene && typeof m.scene.count === 'number') ? m.scene.count : undefined,
                  bloom: !!m.bloom, env: !!_env,
                  hover: m.hover ? m.hover.label : null };
       });

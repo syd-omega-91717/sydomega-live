@@ -25160,3 +25160,39 @@ New module `omega-sense.js`, injected by `bg.js` under its own guard `data-omega
   - Settings: sound unset gave 0 oscillators. Under reduced motion every cue was silent with no vibration.
 - `scripts/tests/test_omega_sense_contract.py` pins the guard, the element source, success-never-inferred,
   the gates, the 9d/sdt hand-offs, and no haptic on press.
+
+## Ω SKY: the member's own record as a 3-D sky on achievements.html (2026-10-25)
+
+New `sky` scene in `omega-sculpture.js`, mounted on `achievements.html` under the XP banner
+(`data-omega-sculpture="sky"`).
+- **Data, real only.** Every star is one row the member owns: `task_completions`, `lesson_completions`
+  or `certificates`.
+  - Live 2026-10-25: 21, 18 and 24 rows. `habit_logs` had 0 completed rows and is not drawn.
+  - Grants: SELECT on all three (`live-grants.json`). RLS on all three.
+  - The scene has no decorative starfield and no `Math.random`. Per-star offsets come from a hash of
+    the row id, so the sky is identical on every visit.
+- **Encoding.**
+  - Longitude is the date, across the member's own span from oldest to today.
+  - Latitude is the kind: tasks on the equator, lessons +26°, certificates +50°.
+  - Same-kind records are joined in date order.
+- **Owner leak avoided.**
+  - `task_completions_own` and `certificates_own` are `uid = user_id OR private.is_platform_owner()`
+    (read live from `pg_policy`). Without a filter, the owner's sky would draw every member's records
+    as theirs.
+  - All three reads carry `.eq('user_id', uid)`. Verified in the harness: each recorded query chain
+    includes `eq(user_id,<viewer>)`.
+- **States.**
+  - Records: "32 records" for a 21/9/2 stub.
+  - Zero: "No records yet — your first completion becomes your first star".
+  - Read error: "Your record could not be read just now". Never an empty sky presented as fact (§8.1 classes 1 and 9).
+  - Signed out: a sign-in note.
+- **Late-arriving content.** `wireNavigation()` returns early on an empty link list and was called
+  once, so a scene whose links arrive later would never get hover or its `<a>` list. Scenes may now
+  expose `ready`. The mount re-wires navigation, and redraws the reduced-motion still, when it resolves.
+  `opt.el` passes the mount so the scene can write its status note.
+- **Verified in the harness.**
+  - Status: `live:true`, `records:32`, `links:32`, buffer equals box (1076×294). No page errors.
+  - A certificate titled `<img src=x onerror=…>` renders as text (labels use `textContent`).
+  - `verify-runtime.js --pages achievements.html` passes, with no new contrast advisory.
+- `scripts/tests/test_omega_sky_contract.py` pins the per-table user filter, error reporting, no
+  decorative stars, late wiring, and the mount.

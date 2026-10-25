@@ -91,8 +91,11 @@
         o.start(t); o.stop(t + (dur || 0.18));
       } catch (e) {}
     }
-    // a soft 9.17-tuned chime on primary actions
+    // a soft 9.17-tuned chime on primary actions -- unless omega-sense.js is
+    // loaded: it owns interaction sound (element-tuned, on pointerdown), and
+    // two engines on one click would sound twice.
     document.addEventListener('click', function (e) {
+      if (window.OmegaSense) return;
       var t = e.target.closest && e.target.closest('button, .btn, a.card, .om-card, .osh-b');
       if (t) tone(458.5, 0.16, 0.035); // ~9.17 x 50
     }, true);

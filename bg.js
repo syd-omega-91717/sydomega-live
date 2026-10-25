@@ -2773,6 +2773,8 @@ setTimeout(function(){
      than omega-cinematic.js above on purpose (CLAUDE.md bug class 5b: two
      modules sharing one data-omega-* guard means only the first ever loads). */
   if(!document.querySelector('script[data-omega-cinematic-system]')){var _ocsy=document.createElement('script');_ocsy.src='/omega-cinematic-system.js';_ocsy.setAttribute('data-omega-cinematic-system','1');_ocsy.defer=true;__omegaAppend(_ocsy);}
+  /* Ω SENSE — element-tuned interaction tones and haptics (omega-sense.js header). */
+  if(!document.querySelector('script[data-omega-sense]')){var _osns=document.createElement('script');_osns.src='/omega-sense.js';_osns.setAttribute('data-omega-sense','1');_osns.defer=true;__omegaAppend(_osns);}
   /* WCAG 2.1 AA — skip links, focus trap, live region, landmark ARIA */
   if(!document.querySelector('script[data-omega-a11y]')){var _oa11y=document.createElement('script');_oa11y.src='/omega-a11y.js';_oa11y.setAttribute('data-omega-a11y','1');_oa11y.defer=true;__omegaAppend(_oa11y);}
   /* Sovereign chart system — Chart.js auto-mount via [data-omega-chart] */

@@ -53,8 +53,10 @@
   /* Gate index is display state only. Unlock celebrations require a server-authored event. */
   function celebrateGate(gi){
     if(gi<0||gi>=GATE_NAMES.length) return;
-    /* Haptic feedback (mobile, Apple HIG pattern) */
-    if(navigator.vibrate) navigator.vibrate([40,30,60,30,80]);
+    /* Haptic + tone through omega-sense.js (element-tuned, honours the
+       member's sound/haptics settings); the raw pattern only without it. */
+    if(window.OmegaSense) window.OmegaSense.cue('unlock');
+    else if(navigator.vibrate) navigator.vibrate([40,30,60,30,80]);
     /* Visual celebration */
     var overlay=document.createElement('div');
     overlay.id='omega-gate-celebrate';

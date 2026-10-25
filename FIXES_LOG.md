@@ -25023,3 +25023,26 @@ Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contact
   - `docs/runtime/supabase-edge-functions-live.json` refreshed for 17 deployed functions. `supabase-edge-runtime-reconciliation.py` now PASSes; it had been red on `main` since #1080.
   - `CLAUDE.md` §2 and §8.2 record the standing fact.
 - **Owner, still open.** Set `RESEND_API_KEY`. Verify `sydomega.com` in Resend, then set `MEMBER_EMAIL_FROM`. Decide `STRIPE_WEBHOOK_SECRET`; setting it now also turns on refunds.
+
+## APPROVE grants permanent access; RENEW TRIAL no longer demotes permanent members (2026-10-25)
+
+- **Owner decision.** APPROVE in `approvals.html` called `approve_member`, which grants `trial_length()`
+  (live `00:09:10.302`). Every one of the 11 trials ever granted had expired (`access_audit`: 11
+  `trial_granted`, 11 `trial_expired`). `approve()` in `approvals.js` now returns `grantPermanent(uid)`:
+  the confirm dialog, the `OmegaGuardian` admin gate, then `grant_permanent_access`. RECONSIDER on a
+  rejected member uses the same action. Both RPCs still require `is_platform_owner()` and AAL2; neither
+  changed.
+- **Trial kept as its own action.** `grantTrial()` calls `approve_member`, wired through the
+  `approvals-ui.js` `ACTIONS` allow-list (`data-action="grantTrial"`), labelled with its window.
+- **Bug removed.** A permanent member's card showed RENEW TRIAL, which called `approve` →
+  `approve_member` and would have demoted them to a 9-minute trial. The button is gone.
+- **Bug fixed on the way.** The trial toast called a bare `t(...)`, which is local to the card renderer, so
+  at top level it resolved to whatever global `t` existed. In the harness this threw
+  `t(...).replace is not a function` after a successful grant, which skipped `load()` and logged a
+  `report_client_error`. The same line was on `main`. It now resolves `OmegaI18n.t` with a fallback.
+- **i18n.** New key `btn_approve` in `T_EN` and all six packs; the registry now counts 1190 keys per pack.
+- **Verified.** Headless render through `.claude/skills/verify-in-browser/harness` with an owner stub:
+  pending card shows APPROVE / TRIAL / REJECT; the permanent card shows only REVOKE and GRANT FAMILY.
+  RPC log: APPROVE → `check_gate`, `grant_permanent_access`; TRIAL → `approve_member` (no page error);
+  RECONSIDER → `check_gate`, `grant_permanent_access`.
+  `scripts/tests/test_approve_grants_permanent_contract.py` pins all four facts.

@@ -1187,5 +1187,6 @@
   "dash_hud_gates": "PUERTAS ALCANZADAS",
   "courses_heading": "CATÁLOGO DE CURSOS",
   "ui_read_more": "MÁS",
-  "ui_read_less": "MENOS"
+  "ui_read_less": "MENOS",
+  "btn_approve": "APROBAR"
 }

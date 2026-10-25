@@ -89,16 +89,16 @@ function buildCard(m){
 
   /* action buttons */
   var btns='';
+  var btnApprove=t('btn_approve');
   var btnGrantTrial=t('btn_grant_trial');
   var btnPermanent=t('btn_grant_permanent');
   var btnReject=window.OmegaI18n?window.OmegaI18n.t('reject','en'):'REJECT';
   var btnExtend=t('btn_extend_trial');
   var btnRevoke=t('btn_revoke_access');
-  var btnRenew=t('btn_renew_trial');
   var btnReconsider=t('btn_reconsider');
   if(isPending||isExpired){
-    btns+='<button class="ac approve" data-uid="'+esc(m.id)+'" data-action="approve">&#10003; '+btnGrantTrial+'<br><small style="font-size:12px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9M 17S WINDOW</small></button>';
-    btns+='<button class="ac permanent" data-uid="'+esc(m.id)+'" data-action="grantPermanent">&#8734; '+btnPermanent+'</button>';
+    btns+='<button class="ac approve" data-uid="'+esc(m.id)+'" data-action="approve">&#10003; '+btnApprove+'</button>';
+    btns+='<button class="ac extend" data-uid="'+esc(m.id)+'" data-action="grantTrial">&#8987;&#65038; '+btnGrantTrial+'<br><small style="font-size:12px;letter-spacing:.5px;display:block;margin-top:2px;opacity:.7">9M 17S WINDOW</small></button>';
     btns+='<button class="ac reject" data-uid="'+esc(m.id)+'" data-action="reject">&#10005; '+btnReject+'</button>';
   }
   if(isActive){
@@ -107,7 +107,6 @@ function buildCard(m){
     btns+='<button class="ac revoke" data-uid="'+esc(m.id)+'" data-action="revoke">&#9632; '+btnRevoke+'</button>';
   }
   if(isPermanent){
-    btns+='<button class="ac extend" data-uid="'+esc(m.id)+'" data-action="approve">&#8635; '+btnRenew+'</button>';
     btns+='<button class="ac revoke" data-uid="'+esc(m.id)+'" data-action="revoke">&#9632; '+btnRevoke+'</button>';
   }
   if(isRejected&&!isExpired){
@@ -236,7 +235,11 @@ async function rpcOnce(name,args){try{var r=await sb.rpc(name,args),d=r&&r.data;
 function loadMfa(){if(window.OmegaMFA)return Promise.resolve(window.OmegaMFA);return new Promise(function(done){var s=document.querySelector('script[data-omega-mfa-mod]');if(!s){s=document.createElement('script');s.src='/omega-mfa.js';s.setAttribute('data-omega-mfa-mod','1');document.head.appendChild(s);}s.addEventListener('load',function(){done(window.OmegaMFA||null);});s.addEventListener('error',function(){done(null);});setTimeout(function(){done(window.OmegaMFA||null);},8000);});}
 async function rpcResult(name,args){var r=await rpcOnce(name,args);if(r.ok||r.error!=='aal2_required')return r;var mfa=await loadMfa();var up=mfa&&mfa.stepUp?await mfa.stepUp():false;if(up===true)return rpcOnce(name,args);return{ok:false,error:'aal2_no_factor',code:''};}
 function explainActionError(prefix,result){var reason=(result&&result.error)||'unknown_error';if(reason==='aal2_no_factor'&&confirm('Owner actions need two-factor sign-in, and this account has no authenticator yet.\n\nOpen Settings now to set one up? (Account tab \u2192 Turn on two-factor)')){location.href='/settings.html#two-factor';return;}var msg=reason==='aal2_no_factor'?'TWO-FACTOR REQUIRED — owner actions need your authenticator code. Enter it when asked; if you have no authenticator yet, set one up in Settings → Two-factor sign-in, then retry.':reason==='aal2_required'?'TWO-FACTOR NOT CONFIRMED — enter your authenticator code when asked, then retry.':reason==='forbidden'||reason==='Not authorised: only a platform owner may grant trial access.'?'OWNER AUTHORIZATION REQUIRED — this action is restricted to the platform owner.':prefix+' — '+reason;toast(msg,'var(--crim)');}
-async function approve(uid){var result=await rpcResult('approve_member',{p_uid:uid});if(result.ok)toast(t('toast_trial_granted').replace('{TIME}','9 MINUTES 17 SECONDS'),'var(--green)');else explainActionError('COULD NOT GRANT TRIAL ACCESS',result);load();}
+/* APPROVE grants permanent access (owner decision 2026-10-25). approve_member grants
+   trial_length() (9m10s live), so every trial ever granted had expired within minutes;
+   the 9-minute trial stays available as its own, explicitly labelled action. */
+async function approve(uid){return grantPermanent(uid);}
+async function grantTrial(uid){var result=await rpcResult('approve_member',{p_uid:uid});if(result.ok){var tr=window.OmegaI18n?window.OmegaI18n.t:function(k){return k;};toast(String(tr('toast_trial_granted')).replace('{TIME}','9 MINUTES 17 SECONDS'),'var(--green)');}else explainActionError('COULD NOT GRANT TRIAL ACCESS',result);load();}
 async function grantPermanent(uid){if(!confirm('Grant PERMANENT lifetime access to this member?'))return;try{if(window.OmegaGuardian&&window.OmegaGuardian.gate){await window.OmegaGuardian.gate('admin',async function(){var result=await rpcResult('grant_permanent_access',{p_uid:uid});if(result.ok)toast(t('toast_permanent_granted'),'var(--gold)');else explainActionError('COULD NOT GRANT PERMANENT ACCESS',result);load();},{action:'grant_permanent_access',member:uid});}else{var result=await rpcResult('grant_permanent_access',{p_uid:uid});if(result.ok)toast(t('toast_permanent_granted'),'var(--gold)');else explainActionError('COULD NOT GRANT PERMANENT ACCESS',result);load();}}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
 async function ownerGated(action,uid,rpc,okKey,okCol,errPrefix,extraArgs){var run=async function(){var args=Object.assign({p_uid:uid},extraArgs||{});var result=await rpcResult(rpc,args);if(result.ok)toast(t(okKey),okCol);else if(result.error==='minor_by_dob')toast(t('error_family_minor'),'var(--crim)');else explainActionError(errPrefix,result);load();};try{if(window.OmegaGuardian&&window.OmegaGuardian.gate)return await window.OmegaGuardian.gate('admin',run,{action:action,member:uid});return await run();}catch(err){toast('SECURITY GATE DENIED ACTION — '+(err&&err.message?err.message:'unknown_error'),'var(--crim)');}}
 async function grantFamily(uid){if(!confirm(t('confirm_family_adult')))return;await ownerGated('grant_family_access',uid,'grant_family_access','toast_family_granted','var(--gold)','COULD NOT GRANT FAMILY ACCESS',{p_attested_adult:true});}
@@ -395,6 +398,7 @@ async function sendDispatch(){
 /* ── EXPOSE TO WINDOW (for) ── */
 window.load=load;
 window.approve=approve;
+window.grantTrial=grantTrial;
 window.grantPermanent=grantPermanent;
 window.grantFamily=grantFamily;
 window.unlinkFamily=unlinkFamily;

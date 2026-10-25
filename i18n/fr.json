@@ -1187,5 +1187,6 @@
   "dash_hud_gates": "PORTES ATTEINTES",
   "courses_heading": "CATALOGUE DES COURS",
   "ui_read_more": "PLUS",
-  "ui_read_less": "MOINS"
+  "ui_read_less": "MOINS",
+  "btn_approve": "APPROUVER"
 }

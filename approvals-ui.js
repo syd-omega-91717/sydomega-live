@@ -55,6 +55,7 @@ window.filterClick=function(cell,f){
     kycIntake:function(el){if(window.kycIntake)window.kycIntake(el.dataset.on==='true');},
     sendDispatch:function(){if(window.sendDispatch)window.sendDispatch();},
     approve:function(el){if(window.approve)window.approve(el.dataset.uid);},
+    grantTrial:function(el){if(window.grantTrial)window.grantTrial(el.dataset.uid);},
     grantPermanent:function(el){if(window.grantPermanent)window.grantPermanent(el.dataset.uid);},
     grantFamily:function(el){if(window.grantFamily)window.grantFamily(el.dataset.uid);},
     unlinkFamily:function(el){if(window.unlinkFamily)window.unlinkFamily(el.dataset.uid);},

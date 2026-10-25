@@ -2773,6 +2773,10 @@ setTimeout(function(){
      than omega-cinematic.js above on purpose (CLAUDE.md bug class 5b: two
      modules sharing one data-omega-* guard means only the first ever loads). */
   if(!document.querySelector('script[data-omega-cinematic-system]')){var _ocsy=document.createElement('script');_ocsy.src='/omega-cinematic-system.js';_ocsy.setAttribute('data-omega-cinematic-system','1');_ocsy.defer=true;__omegaAppend(_ocsy);}
+  /* Ω FLOW — compositor-driven scroll beam in the page's axis colour, and
+     Speculation Rules prefetch so view transitions land without a network wait
+     (omega-flow.js header: prefetch, never prerender). */
+  if(!document.querySelector('script[data-omega-flow]')){var _oflw=document.createElement('script');_oflw.src='/omega-flow.js';_oflw.setAttribute('data-omega-flow','1');_oflw.defer=true;__omegaAppend(_oflw);}
   /* Ω SENSE — element-tuned interaction tones and haptics (omega-sense.js header). */
   if(!document.querySelector('script[data-omega-sense]')){var _osns=document.createElement('script');_osns.src='/omega-sense.js';_osns.setAttribute('data-omega-sense','1');_osns.defer=true;__omegaAppend(_osns);}
   /* WCAG 2.1 AA — skip links, focus trap, live region, landmark ARIA */

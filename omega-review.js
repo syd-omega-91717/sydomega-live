@@ -207,7 +207,7 @@
     if (location.hash !== '#review') return;
     var tries = 0;
     (function wait() {
-      if (document.body && document.body.classList.contains('omega-approved') && window.OmegaSRS) { open(); return; }
+      if (document.body && document.body.classList.contains('omega-approval-confirmed') && window.OmegaSRS) { open(); return; }
       if (++tries < 40) setTimeout(wait, 250);
     })();
   }

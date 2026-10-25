@@ -25234,3 +25234,27 @@ New `sky` scene in `omega-sculpture.js`, mounted on `achievements.html` under th
 - `scripts/tests/test_guard_trust_contract.py` pins: per-tab storage, 30 minutes, uid bound to the
   stored session, expiry, only the real check writing the flag, revoke on every failure path, and the
   public list.
+
+## Guard trust hardened: fails closed, cancellable reveal, own "confirmed" marker (2026-10-25)
+
+A code review of #1095 found that the trusted reveal could outlive a failed check. Fixed in `bg.js`:
+- **Queued reveal could not be cancelled.** With `bg.js` loaded synchronously in `<head>`, the trusted
+  `__omegaApprove(true)` queued its class add for `DOMContentLoaded`. A revoke before then found no body
+  and left the queued add to fire, so the page was revealed after a failed check. `__omegaRevoke()` now
+  sets `revoked` and removes the pending listener, and the queued add checks `revoked`.
+- **Fail-open when the check could not run.** If the client import, `OmegaSB.get()`, `getSession()` or
+  the profile request rejected, nothing revoked: the chain ended in `.catch(function(){})` and had no
+  rejection handlers. Every stage now revokes. A profile request that resolves with `error` is retried
+  once before revoking, so one network blip does not pull away a page in use.
+- **Expired trial flashed.** The check approved, and recorded trust, before testing trial expiry. Expiry
+  is now decided first.
+- **Future timestamps passed forever.** The age check now needs `0 <= age < 30 min`. The window is an idle
+  timeout since the last confirmed check, by design.
+- **Session shape.** The key is built from one `SB_REF`. It also reads a separate `-user` entry, so a
+  supabase-js storage change fails closed instead of silently.
+- **`omega-approved` no longer means "checked".** Trust can set it before the check runs, so only a
+  completed check adds `omega-approval-confirmed`. `omega-reminders.js` `approved()` and
+  `omega-review.js`'s `#review` auto-open read that marker now.
+- CLAUDE.md §3 is updated to the new reveal rule. `test_guard_trust_contract.py` now pins the fail-closed
+  chain, the cancellable reveal, expiry-before-approve, the age lower bound and the marker readers.
+  Browser verification is in the PR.

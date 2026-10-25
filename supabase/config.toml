@@ -24,6 +24,11 @@ verify_jwt = true
 [functions.intel-feed]
 verify_jwt = false
 
+# Called by the database (pg_net), not a member: it checks its own Vault-backed
+# x-omega-webhook-secret instead (migration 20261025100000).
+[functions.notify-access]
+verify_jwt = false
+
 [functions.omega-knowledge-embedding-worker]
 verify_jwt = false
 

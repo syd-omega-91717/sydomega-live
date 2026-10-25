@@ -60,7 +60,7 @@ supabase/functions/  Edge Functions (Deno/TypeScript) — 11: checkout,
                      stripe-webhook, concierge (Anthropic-backed), notify-
                      access, weekly-digest, and the pg_cron jobs (rankings,
                      snapshot-leaderboard, …). Full map: the `edge-functions`
-                     skill. Deployed by hand via the Supabase CLI, not CI.
+                     skill. Merging to `main` deploys them (§8.2).
 core/                The Ω Intelligence Fabric — provider-neutral Python
                      primitives (execution boundary, policy firewall, model
                      router, proof engine, skill/evidence registries). Never
@@ -513,10 +513,12 @@ Only what changes what you do in the **first minutes** stays here:
   responsible for regenerating `supabase/live-schema.json` in the same change.
   Connector limits: big `apply_migration` payloads time out (split them); any `DROP`
   needs human confirmation — the owner's job.
-- **The Vercel integration merges estate-wide PRs that leave `main` red** — twice in one hour
-  (#250, #252), adding modules and a script tag to ~193 pages without regenerating the census.
-  Remedy: `python3 scripts/omega-registry.py`. Never auto-commit it in CI — that gate is the
-  only one that notices a third party editing the estate.
+- **Merging to `main` deploys to production.** The Supabase GitHub integration applies new
+  `migrations/` and redeploys every function in `supabase/config.toml` within ~1 min (measured
+  2026-10-25 on #1080 and #1088). `pending-migrations.json` means *unmerged*, not *safe*:
+  review a migration as live before merging. A function absent from `config.toml` never deploys.
+- **Vercel's integration once merged estate-wide PRs leaving `main` red** (#250, #252); remedy
+  `python3 scripts/omega-registry.py`, never auto-committed in CI.
 - **Once a PR is open, its head is frozen — never amend or force-push it.** GitHub merges
   the head it had when it computed the merge, so a force-push loses exactly what an extra
   trailing commit does. Measured twice: four PRs lost their trailing commit, then #267 merged

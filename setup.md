@@ -35,10 +35,10 @@ How it is wired (migration `20261025100000_access_request_alerts.sql`):
 Optional overrides: `NOTIFY_OWNER_TO` (owner address) and `NOTIFY_FROM`
 (sender for owner alerts).
 
-## Deploy (done by a session, not by hand)
+## Deploy
 
-    supabase functions deploy notify-access --no-verify-jwt
-
+Deployed (v1, 2026-10-25). Merges to `main` redeploy it automatically through the Supabase
+GitHub integration, because it is listed in `supabase/config.toml` with `verify_jwt = false`.
 JWT verification is off because the caller is the database, not a member. The
 function rejects any request whose `x-omega-webhook-secret` header does not
 match the Vault secret.

@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-24",
-  "source": "Authenticated Supabase query of supabase_migrations.schema_migrations for project ydqhzvvoyufiiqvzcjns, 2026-10-24: 411 unique versions, latest 20261024103000. harden_provider_registry_column_access is recorded under three versions (20261024101622, 20261024102602, 20261024103000); 101622 and 103000 hold identical statements, 102602 differs only in comments, and all three are idempotent privilege changes. Live end state verified the same day: authenticated holds column SELECT on exactly id, provider_key, display_name, adapter_kind, capabilities, status and no table-level SELECT; service_role keeps its 20261017105203 column grant (id, provider_key, status, secret_ref). This is a provider-history snapshot, not proof that every historical SQL file is byte-identical to applied SQL.",
-  "remoteMigrationCount": 411,
-  "latestRemoteMigration": "20261024103000",
+  "_captured": "2026-10-25",
+  "source": "Authenticated Supabase query of supabase_migrations.schema_migrations for project ydqhzvvoyufiiqvzcjns, 2026-10-25: 413 unique versions, latest 20261025100000. 20261024110000 and 20261025100000 were applied by the Supabase GitHub integration when #1080 and #1088 merged to main, not by the controlled-push workflow. harden_provider_registry_column_access is recorded under three versions (20261024101622, 20261024102602, 20261024103000), all idempotent privilege changes. This is a provider-history snapshot, not proof that every historical SQL file is byte-identical to applied SQL.",
+  "remoteMigrationCount": 413,
+  "latestRemoteMigration": "20261025100000",
   "versions": [
     "0001",
     "0002",
@@ -414,7 +414,9 @@
     "20261024091500",
     "20261024101622",
     "20261024102602",
-    "20261024103000"
+    "20261024103000",
+    "20261024110000",
+    "20261025100000"
   ],
   "migrations": [
     {
@@ -2057,6 +2059,14 @@
     {
       "version": "20261024103000",
       "name": "harden_provider_registry_column_access"
+    },
+    {
+      "version": "20261024110000",
+      "name": "stripe_refund_ledger_reversal"
+    },
+    {
+      "version": "20261025100000",
+      "name": "access_request_alerts"
     }
   ]
 }

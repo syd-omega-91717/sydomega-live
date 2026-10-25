@@ -25196,3 +25196,41 @@ New `sky` scene in `omega-sculpture.js`, mounted on `achievements.html` under th
   - `verify-runtime.js --pages achievements.html` passes, with no new contrast advisory.
 - `scripts/tests/test_omega_sky_contract.py` pins the per-table user filter, error reporting, no
   decorative stars, late wiring, and the mount.
+
+## The approval guard trusts this tab's recent approval (owner decision, 2026-10-25)
+
+- **Why.** On every page, the guard (§3) hid `#app`/`.shell`/`main.main` until the profile check
+  resolved, so each page change went dark for one profile round trip. The Ω MORPH transition
+  (entry above) therefore landed on a hidden page. The owner chose to let the guard trust the previous
+  page's confirmed approval.
+- **Why it is safe enough.** The guard is presentational. The HTML is a public static file, and RLS is
+  the access boundary (§5). Trusting a cached approval exposes no row. The worst case is a member
+  revoked in the last few minutes who sees an empty page shell until the real check hides it and
+  redirects.
+- **Rule (`bg.js`, guard block).** A page opens without hiding when all of these hold:
+  - `sessionStorage['omega_approval_trust']` holds `{uid, exp, t}`. It is per tab and is written only
+    by the real check's `__omegaApprove(true,{uid,exp})`.
+  - It is under 30 minutes old.
+  - The uid equals the user in supabase-js's own stored session (`sb-<ref>-auth-token`). Sign-out
+    removes that, so signing out, or another account signing in, ends the trust with no extra hook.
+  - A trial's `trial_expires_at` has not passed.
+
+  It is applied in the same task that inserts the hiding rule, so a trusted page is never hidden.
+  The public list is unchanged.
+- **Undo.** `__omegaRevoke()` clears the flag and removes `omega-approved`. It runs when there is no
+  session or no profile row (the old "never reveal on an incomplete check" rule), and before each of the
+  check's redirects: `/pending`, `/terms`, and an expired trial.
+- **Verified (harness).**
+  - First page: hidden until the check passes, then the flag is set.
+  - Next page: `omega-approved` is already present when `#omega-approval-guard` is inserted (`true`).
+    On `main` that reads `false`.
+  - Stored session for another user: `false`, so the page hides as before.
+  - Profile revoked on the next page: ends on `/pending.html` with `omega-approved` removed and the flag
+    cleared.
+  - Not measured here: the production gain. The stub answers the check in ~2 frames, while production
+    waits for a real profile request.
+  - Not caused by the guard: a ~1s fade from dark after each navigation, seen on `main` too. The page is
+    approved and laid out at 243ms (probe), so it is the pages' own entrance animations.
+- `scripts/tests/test_guard_trust_contract.py` pins: per-tab storage, 30 minutes, uid bound to the
+  stored session, expiry, only the real check writing the flag, revoke on every failure path, and the
+  public list.

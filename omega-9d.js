@@ -65,6 +65,11 @@
       var href = a.getAttribute('href');
       if (!href || href[0] === '#' || a.target === '_blank' || href.indexOf('http') === 0 || href.indexOf('mailto') === 0) return;
       if (a.hasAttribute('data-no-transition')) return;
+      /* The native cross-document View Transition owns page changes where it
+         runs (bg.js sets __omegaNativeVT; scripts/omega-morph-sync.py). This
+         veil, bg.js's #omega-veil and omega-cinematic.js's curtain each held
+         the click 340-480ms and blacked out the frame the native snapshot takes. */
+      if (window.__omegaNativeVT || (('onpagereveal' in window) && document.getElementById('omega-vt'))) return;
       e.preventDefault();
       veil.classList.add('on');
       setTimeout(function () { location.href = href; }, 480);

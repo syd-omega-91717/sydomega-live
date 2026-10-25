@@ -2320,8 +2320,10 @@ setTimeout(function(){
      upside where it activates -- unsupported browsers (Safari/Firefox
      today) simply ignore the unknown at-rule and navigate exactly as
      before.
-     IMPORTANT, and the reason the manual #omega-veil transition below stays
-     UNCONDITIONAL rather than being feature-detected off: this session
+     SUPERSEDED 2026-10-25 (FIXES_LOG.md, "Ω MORPH"): the native transition
+     does activate on real pages (an earlier probe read a shared sessionStorage
+     key), and the veil now stands aside where it runs -- see NATIVE_VT below.
+     The original reasoning, kept for the record: this session
      verified the rule is present and parses correctly (CSSViewTransitionRule)
      on real pages in this repo's own headless harness (Chromium 141), and
      confirmed zero errors/regressions from adding it -- but could NOT get a
@@ -2399,7 +2401,17 @@ setTimeout(function(){
    Now only this dock is visible; the other two still run their real engines
    underneath it (audio playback, string translation). ===== */
 (function(){if(!document.querySelector('script[data-omega-controls]')){var s=document.createElement('script');s.src='/omega-controls.js';s.setAttribute('data-omega-controls','1');__omegaAppend(s);}})();
-  if(!REDUCE){
+  /* Ω MORPH: where the browser runs cross-document View Transitions and this
+     page carries the inline opt-in (scripts/omega-morph-sync.py), the native
+     transition is the page change, so the veil stands aside. The veil held
+     every internal click for 340ms and faded the outgoing frame to black,
+     which is what the native snapshot then captured; measured 2026-10-25, the
+     incoming page never had the opt-in in time anyway (bg.js is deferred), so
+     no real navigation here had ever run the native transition. Browsers
+     without it (no `onpagereveal`) keep the veil exactly as before. */
+  var NATIVE_VT=('onpagereveal' in window)&&!!document.getElementById('omega-vt');
+  window.__omegaNativeVT=NATIVE_VT;
+  if(!REDUCE&&!NATIVE_VT){
     /* arrive: fade up from void */
     requestAnimationFrame(function(){veil.classList.add('show');setTimeout(function(){veil.classList.remove('show');},40);});
     document.addEventListener('click',function(e){

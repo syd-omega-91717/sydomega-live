@@ -25078,6 +25078,48 @@ native browser capabilities the platform did not use; a browser without them ren
   structured pattern, the invisible rest state, and that the module does not shadow `window.CSS`
   (a first draft did).
 
+## Ω MORPH: native page transitions run, with a shared element; three click veils stand aside (2026-10-25)
+
+- **Measured before.**
+  - Every internal click passed through up to three interceptors, each with its own hold:
+    - `bg.js` `#omega-veil`: capture listener, faded to black, navigated after 340ms.
+    - `omega-9d.js` `#om9-veil`: capture listener, 480ms.
+    - `omega-cinematic.js` curtain: 380ms; it only ran when neither veil had already called `preventDefault`.
+  - The native cross-document view transition did run (`pagereveal` `viewTransition` present on `main`),
+    but it snapshotted a blacked-out frame.
+  - Click → commit on `main`, headless harness: dashboard→ 780ms, academy→dashboard 506ms,
+    missions→dashboard 660ms.
+  - The incoming page also painted one frame on the browser's default white: screencast brightness
+    245–255 between two dark pages, on `main` too.
+  - Correction to this file's own `bg.js` comment and to this session's first probe: the native
+    transition does activate on real pages. That probe read one shared `sessionStorage` key, which the
+    outgoing page's own load had written `false`. A matrix with per-page keys read `true` on all six pairs.
+- **Changed.**
+  - `scripts/omega-morph-sync.py` keeps one identical block at the top of every root page's `<head>`
+    (237 pages). It holds an inline `<style>` with the opt-in, the morph timing, reduced-motion,
+    and `:where(html){background-color:#0A0A0F;color-scheme:dark}`, then a synchronous
+    `<script src="/omega-morph.js">`.
+  - The script is external so `csp-inline-ratchet.py` keeps moving one way. An inline first draft
+    added a `<script>` block to every page and failed it.
+  - Where `onpagereveal` exists and the page carries the block, all three veils return early.
+    Browsers without it keep them unchanged.
+  - `omega-morph.js`, outgoing page: on `pageswap`, names the clicked card (or link) `omega-morph`.
+  - `omega-morph.js`, incoming page: on `pagereveal`, names the page's `<h1>`. When no `<h1>` is
+    visible at first paint, it names a transparent full-viewport layer instead, so the card zooms out to
+    fill the screen. Sampled 40 pages: 11 have a visible `<h1>` then; 22 have no visible title.
+- **Measured after.**
+  - Click → commit: 278 / 238 / 186ms.
+  - `getAnimations({subtree:true})` on the incoming page lists `::view-transition-group`, `-old` and
+    `-new(omega-morph)` on all four navigations sampled, so the two sides pair.
+  - No white frame in two screencast runs.
+- **Limit, open.** The approval guard (§3) hides the incoming page's content until the profile check
+  resolves, so the morph lands on a mostly dark page and the content appears afterwards (about 1s in the
+  stubbed harness). Lifting the guard early from the previous page's confirmed approval would make the
+  morph land on content, but that is an access-gate change, left for the owner.
+- `scripts/tests/test_omega_morph_contract.py` pins: the block on every page, ahead of any script; all
+  three veils deferring; and the dark first paint. `test_text_contrast.py` now strips the block before
+  reading a page's own first `<style>`.
+
 ## Ω SENSE: element-tuned interaction tones and haptics (2026-10-25)
 
 New module `omega-sense.js`, injected by `bg.js` under its own guard `data-omega-sense`.

@@ -61,7 +61,10 @@ class Tokens(unittest.TestCase):
 
 class Pages(unittest.TestCase):
     def test_entry_tabs_are_styled(self):
-        css = read("enter.html").split("</style>")[0]
+        # The page's own first <style>, not the shared omega-morph block that
+        # scripts/omega-morph-sync.py places ahead of it in every <head>.
+        page = re.sub(r"<!-- omega-morph:start -->.*?<!-- omega-morph:end -->", "", read("enter.html"), flags=re.S)
+        css = page.split("</style>")[0]
         self.assertRegex(css, r"\.lt\{[^}]*background:none")
         self.assertIn(".lt.active", css)
 

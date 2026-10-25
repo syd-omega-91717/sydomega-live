@@ -25046,3 +25046,34 @@ Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contact
   RPC log: APPROVE → `check_gate`, `grant_permanent_access`; TRIAL → `approve_member` (no page error);
   RECONSIDER → `check_gate`, `grant_permanent_access`.
   `scripts/tests/test_approve_grants_permanent_contract.py` pins all four facts.
+
+## Ω FLOW: scroll beam and Speculation Rules prefetch (2026-10-25)
+
+New module `omega-flow.js`, injected by `bg.js` under its own guard `data-omega-flow`. It adds two
+native browser capabilities the platform did not use; a browser without them renders the page as before.
+- **Scroll beam.**
+  - A 3px top-edge bar in the page's axis colour (`--page-accent`), driven by
+    `animation-timeline: scroll(root block)`. The compositor moves it; no JS runs per frame.
+  - It rests at `scaleX(0)`, so a browser without scroll timelines, or a page that cannot scroll, shows nothing.
+  - Measured on `academy.html`: `transform` reads `scaleX` 0 → 0.50 → 1.00 at 0/50/100% scroll. At 60% the
+    top-row pixels are the orange→white beam up to x≈768 of 1280, then the existing cyan scan line.
+  - Placement: that edge already carries two ambient 2px scan lines, nav.js `#omega-top` and theme.js
+    `#omega-status-bar`, both at z-index 10000, and the first draft at z 9001 rendered under them. The
+    beam sits at 10001, and both scan lines are left as they are.
+  - The root element is the scroller on every page sampled (`dashboard`, `profile`, `academy`,
+    `sculpture`). The only inner scroller is nav.js's `.on-sections` drawer.
+- **Speculation Rules prefetch.**
+  - Eagerness `moderate`: Chrome fetches a same-origin page's HTML when the pointer rests on its
+    link, so bg.js's cross-document view transition plays without the network wait.
+  - Prefetch, never prerender: a prerendered page runs its scripts, and pages here write on load.
+  - Measured: 82 candidate links on `dashboard.html`. Hovering `/profile.html` gave CDP
+    `Preload.prefetchStatusUpdated` `Ready`, and clicking it arrived with
+    `PerformanceNavigationTiming.deliveryType === 'navigational-prefetch'`.
+  - Bug found before shipping: the string pattern `'/*\\?*'`, meant to exclude query strings, matches
+    every link, so its negation left 0 candidates. A structured `{pathname:'/*.html', search:''}` gives
+    82, plus `/`, with `?x=1` links and `.mp4` excluded.
+  - Cost: one GET of a static file per hovered link. Cloudflare Pages serves static requests without
+    the per-request billing that paused Vercel.
+- `scripts/tests/test_omega_flow_contract.py` pins the guard, prefetch-not-prerender, the
+  structured pattern, the invisible rest state, and that the module does not shadow `window.CSS`
+  (a first draft did).

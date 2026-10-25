@@ -160,6 +160,9 @@
   /* Intercept internal anchor clicks for transition */
   document.addEventListener('click', function(e){
     if(REDUCE) return;
+    /* The native cross-document View Transition owns page changes where it
+       runs (bg.js sets __omegaNativeVT; scripts/omega-morph-sync.py). */
+    if(window.__omegaNativeVT || (('onpagereveal' in window) && document.getElementById('omega-vt'))) return;
     /* Never hijack modifier-clicks (open in new tab/window) or non-primary
        buttons (middle-click) -- the browser's own new-tab behavior must win */
     if(e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;

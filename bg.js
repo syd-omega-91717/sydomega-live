@@ -639,6 +639,7 @@ function __omegaAppend(el){
     var path = (location.pathname || '/').replace(/\.html$/,'');
     for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
 
+    var TRUST_KEY='omega_approval_trust', TRUST_MS=30*60*1000;
     var s=document.createElement('style');
     s.id='omega-approval-guard';
     s.textContent='body:not(.omega-approved) #app,'+
@@ -652,12 +653,53 @@ function __omegaAppend(el){
        before <body> was parsed -- a page that loads bg.js synchronously in
        <head> behind a large stylesheet (omega-platform-navigator) then stayed
        blank for an approved member. Queue instead (CLAUDE.md 8.1 class 5a). */
-    window.__omegaApprove = function(ok){
+    window.__omegaApprove = function(ok, who){
       if (!ok) return;
+      /* `who` comes only from the real check below: remember the approval for
+         this tab so the NEXT page can open without hiding (see TRUST below). */
+      if (who && who.uid) {
+        try { sessionStorage.setItem(TRUST_KEY, JSON.stringify({ uid: who.uid, exp: who.exp || null, t: Date.now() })); } catch (e) {}
+      }
       var add = function(){ document.body.classList.add('omega-approved'); };
       if (document.body) add();
       else document.addEventListener('DOMContentLoaded', add, { once: true });
     };
+    /* The real check failed or could not complete: hide again, forget the
+       approval. Called before every redirect the check makes, and when it
+       finds no session or no profile -- the same "never reveal on an
+       incomplete check" rule the guard has always had. */
+    window.__omegaRevoke = function(){
+      try { sessionStorage.removeItem(TRUST_KEY); } catch (e) {}
+      if (document.body) document.body.classList.remove('omega-approved');
+    };
+
+    /* TRUST (owner decision 2026-10-25). Between two pages the guard used to
+       hide everything until the profile check resolved again, so every page
+       change went dark for ~0.3-1s and the view-transition morph landed on
+       black (FIXES_LOG.md, "Ω MORPH"). The guard is presentational -- the
+       HTML is a public static file and RLS is the access boundary (CLAUDE.md
+       5) -- so a page may open at once when THIS tab confirmed approval
+       recently, for the SAME user:
+         * sessionStorage (per tab) holds {uid, exp, t} from a real check;
+         * under 30 minutes old;
+         * the uid equals the user in supabase-js's own stored session
+           (sb-<ref>-auth-token), which sign-out removes -- so signing out,
+           or another account signing in, ends the trust with no extra hook;
+         * a trial's expiry has not passed.
+       The real check still runs on every page and __omegaRevoke() undoes
+       this the moment it disagrees. Applied in the same task that installs
+       the hiding rule above, so a trusted page is never hidden at all. */
+    var trusted = (function(){
+      try {
+        var f = JSON.parse(sessionStorage.getItem(TRUST_KEY) || 'null');
+        if (!f || !f.uid || !(Date.now() - f.t < TRUST_MS)) return false;
+        if (f.exp && !(Date.parse(f.exp) > Date.now())) return false;
+        var tok = JSON.parse(localStorage.getItem('sb-ydqhzvvoyufiiqvzcjns-auth-token') || 'null');
+        var u = tok && (tok.user || (tok.currentSession && tok.currentSession.user));
+        return !!(u && u.id === f.uid);
+      } catch (e) { return false; }
+    })();
+    if (trusted) window.__omegaApprove(true);
   }catch(e){}
 })();
 
@@ -1968,14 +2010,16 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     return m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
   })).then(function(sb){
     sb.auth.getSession().then(function(res){
-      var s=res.data.session;if(!s)return;
+      var revoke=function(){ if(window.__omegaRevoke) window.__omegaRevoke(); };
+      var s=res.data.session;if(!s){revoke();return;}
       sb.from('profiles').select('sign,terms_accepted,access_approved,is_owner,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle().then(function(pr){
-        if(!pr.data)return;
+        if(!pr.data){revoke();return;}
         var d=pr.data;
-        if(d.access_approved===false && !d.is_owner && !d.is_trial){safeRedirect('/pending.html');return;}
-        if(d.sign&&!d.terms_accepted){safeRedirect('/terms.html');return;}
-        /* Approval confirmed -- release the guard so #app may render. */
-        if(window.__omegaApprove) window.__omegaApprove(true);
+        if(d.access_approved===false && !d.is_owner && !d.is_trial){revoke();safeRedirect('/pending.html');return;}
+        if(d.sign&&!d.terms_accepted){revoke();safeRedirect('/terms.html');return;}
+        /* Approval confirmed -- release the guard so #app may render, and
+           remember it for this tab's next page (TRUST, above). */
+        if(window.__omegaApprove) window.__omegaApprove(true,{uid:s.user.id,exp:(d.is_trial&&!d.is_owner)?d.trial_expires_at:null});
         if(d.is_trial&&!d.is_owner&&d.trial_expires_at){
           var expiresAt=new Date(d.trial_expires_at).getTime();
           var remaining=expiresAt-Date.now();
@@ -1984,7 +2028,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
              expired page either way. The wall clock says the trial is over, so
              ending the session is right regardless -- but a failed write is now
              recorded, and the next load retries expire_trial. */
-          if(remaining<=0){sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);safeRedirect('/pending.html?t=expired');});return;}
+          if(remaining<=0){revoke();sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);safeRedirect('/pending.html?t=expired');});return;}
           injectTrialBanner(expiresAt,s.user.id,sb);
         }
         startTimeSovereignPing(sb);

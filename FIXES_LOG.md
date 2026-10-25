@@ -24962,3 +24962,36 @@ Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contact
     - authenticated is denied and service_role is allowed
   - It is still not applied live.
   - **Lesson for scripted edits:** never pass SQL or regex text as a `String.replace` replacement string. Use a replacer function, or escape `$` as `$$`.
+
+## Access-request alerts: owner alert and member welcome built; one inbox (2026-10-25)
+
+- **Symptom.** 4 access requests have been pending since as early as 2026-06-17, and the owner was never told.
+  - `notify-access` existed but was `LOCAL_ONLY`. It needed a manual Database Webhook, plus a webhook secret the owner would have to generate, and nothing called it.
+  - Separately, the dashboard dock showed an empty inbox, while the bell on every page had rows.
+- **Live evidence (2026-10-25).**
+  - `profiles`: 9 profiles; 4 pending (oldest `access_requested_at` 2026-06-17); 1 `is_rejected`.
+  - `public.notifications`: 12 rows, with 10 server writers.
+  - `omega_notifications`: 0 rows. Its only writer, `omega_private.enqueue_notification`, has no caller.
+  - `trial_length()` = `00:09:10.302`.
+- **Corrections to this session's first report.** It said "5 pending", which counted the rejected row. It said "0 notifications ever", which measured only `omega_notifications`.
+- **Built.**
+  - **Migration `20261025100000_access_request_alerts.sql`, pending:**
+    - an owner in-app `access_requested` row in `public.notifications`;
+    - `private._dispatch_access_email()`, which posts through `pg_net` on INSERT (`access_requested`) and on the start of permanent access (`access_granted`), never on a trial;
+    - a webhook secret generated into Vault in SQL;
+    - the service_role-only `public.omega_notify_access_secret()`, which lets the function read that secret, so no person handles it.
+  - **Dormant by default.** With no `notify_access_url` in Vault (any fresh replay), the dispatch returns at once.
+  - **Never blocks the write.** Each side effect sits in `exception when others → raise warning`.
+  - **`notify-access` rewritten:**
+    - It authenticates before parsing the body, with a constant-time compare.
+    - All interpolated fields are HTML-escaped.
+    - The member email is dormant until `MEMBER_EMAIL_FROM` names a sender on a verified domain. Resend's test sender delivers only to the account owner.
+  - **`omega-command-dock.js`.** INBOX reads `public.notifications`, the bell's table.
+- **Bug caught before commit.** A first draft gated `omega_notify_access_secret()` on `current_user <> 'service_role'`. Inside `SECURITY DEFINER`, `current_user` is the owner, so that check would always have refused. It now reads `auth.role()`, behind an EXECUTE grant to service_role only.
+- **Verified.**
+  - `tsc --strict` on `notify-access` + `_shared/keys.ts`: 0 errors.
+  - `test_access_request_alerts_contract.py` (8 tests). A planted unescaped `name` fails it.
+  - `scripts/tests`: 915 tests (one was fixed: `test_env_example` now expects the new secret names).
+  - `contract-suite`: 56/56.
+  - `migration-replay-contract`: PASS with the migration registered as pending.
+- **Not verified yet.** A rollback-only live run of the triggers against the real `profiles` triggers. The connector's confirmation prompt timed out unanswered, and a follow-up query confirmed nothing was created live (0 triggers, 0 functions, 0 test users, 0 Vault rows). Not applied, not deployed.

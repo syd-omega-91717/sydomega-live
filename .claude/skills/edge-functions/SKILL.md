@@ -51,8 +51,9 @@ runtime verification as three different states.
 - Any DB-writing function must authenticate the actor and enforce ownership
   server-side; request-body `user_id` is never an authority boundary.
 - Webhooks with `verify_jwt=false` require their own cryptographic/shared-secret
-  verification. `notify-access` therefore requires
-  `NOTIFY_ACCESS_WEBHOOK_SECRET` and the `x-omega-webhook-secret` header.
+  verification. `notify-access` requires the `x-omega-webhook-secret` header to
+  match the Vault secret `notify_access_webhook_secret`, read through the
+  service_role-only `public.omega_notify_access_secret()`.
 - Monetizable or externally metered functions remain secret-gated and,
   where appropriate, feature-flagged.
 - Never expose `service_role` or provider keys to browser code.
@@ -62,8 +63,9 @@ runtime verification as three different states.
 ## Secrets
 
 Expected function secrets are checked by `scripts/check-secrets.sh`.
-The script reports names only and never prints values. `notify-access` now
-requires both `RESEND_API_KEY` and `NOTIFY_ACCESS_WEBHOOK_SECRET`.
+The script reports names only and never prints values. `notify-access` needs only
+`RESEND_API_KEY`; its webhook secret lives in Vault, and `MEMBER_EMAIL_FROM`
+(a verified-domain sender) turns member emails on.
 
 ## Rules for changing one
 

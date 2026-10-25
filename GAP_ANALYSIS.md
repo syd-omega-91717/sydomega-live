@@ -84,6 +84,13 @@ project's own established convention (security/data-integrity first).
   `DROP`).
 - **OPEN 2026-10-17 — `omega_notifications` has never held a row.** Delivery is scheduled every
   minute; nothing produces notifications. The inbox is a working pipe with no source.
+- **CORRECTION 2026-10-25 — the working notification table is `public.notifications`, not `omega_notifications`.**
+  Live: 12 rows (11 `task_complete`, 1 `member_revoked`), 10 server writers (`private.complete_task`,
+  `approve_member`, `grant_permanent_access`, `reject_member`, `revoke_member`, `extend_trial`,
+  `grant_family_access`, `notify_member` and the two owner triggers), read by the bell on every
+  page (`omega-notify.js`). `omega_notifications` has no writer, so the dashboard dock showed an
+  empty inbox beside a populated bell. The dock now reads `public.notifications`
+  (`omega-command-dock.js`); `omega_notifications` and its per-minute delivery job stay idle.
 - **OPEN 2026-10-17 — production serves a build older than 2026-10-09.** `client_errors` still
   receives `catch is not a function` from `omega-telemetry.js:61/75`/`omega-recommend.js:24`
   today, code fixed in `b7bf8a9f`. Every UI change waits on the owner restoring Vercel deploys
@@ -155,6 +162,16 @@ open, recorded in `FIXES_LOG.md`:
   external probe (e.g. a scheduled check of `sydomega.com`) writing real rows — an owner
   choice of provider, not a page change.
 - **UPDATE 2026-10-15:** still 4 pending (77–121 days) and 0 `cron.job` rows, measured live. The owner now sees an **N WAITING** dock item and phone-drawer entry on every page (`bg.js` count → `nav.js`; `FIXES_LOG.md`, 2026-10-15). Email is still undeployed.
+- **IN REVIEW 2026-10-25 — owner alerts and member welcome email built, not yet live.** Migration
+  `20261025100000_access_request_alerts` (pending) adds an owner in-app alert on every new request
+  and a Vault-gated `pg_net` dispatch to a rewritten `notify-access`. The function sends an owner email
+  per request, and a member email on **permanent** access only, once `MEMBER_EMAIL_FROM` is set.
+  Live 2026-10-25: 4 pending (oldest 2026-06-17), 1 rejected. Remaining: the owner sets `RESEND_API_KEY`
+  (`setup.md`); a rollback-only live trigger test; then apply and deploy.
+- **OPEN 2026-10-25 — APPROVE grants a 9-minute trial.** `approve_member` sets
+  `trial_expires_at = now() + trial_length()`, live `00:09:10.302`. `access_audit`: 11 `trial_granted`,
+  11 `trial_expired`, 1 `permanent_granted`. An approved member is locked out minutes later unless the
+  owner also presses GRANT PERMANENT. Product decision for the owner; not changed.
 - **OPEN 2026-10-09 — access requests go unanswered; the owner is never emailed.**
   `notify-access` (emails the owner on a new request) is `LOCAL_ONLY` — 9 of 25 functions are
   (`docs/runtime/supabase-edge-functions-live.json`; `list_edge_functions` returns 16). Live:

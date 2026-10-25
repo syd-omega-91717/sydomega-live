@@ -1187,5 +1187,6 @@
   "dash_hud_gates": "已到达的大门",
   "courses_heading": "课程目录",
   "ui_read_more": "更多",
-  "ui_read_less": "收起"
+  "ui_read_less": "收起",
+  "btn_approve": "批准"
 }

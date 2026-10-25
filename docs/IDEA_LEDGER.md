@@ -13,11 +13,11 @@ production serves it.
 | NEEDS_DECISION | 16 |
 | PROPOSED | 18 |
 | PARTIAL | 56 |
-| OPEN_GAP | 19 |
+| OPEN_GAP | 18 |
 | DORMANT | 1 |
 | SHIPPED | 42 |
 | DECIDED | 42 |
-| CLOSED | 16 |
+| CLOSED | 17 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
 | REJECTED | 118 |
@@ -132,7 +132,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (19)
+### OPEN_GAP (18)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -146,7 +146,6 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | G11 | GAP_ANALYSIS.md S | `STRIPE_WEBHOOK_SECRET` is not set (owner action). The deployed | GAP_ANALYSIS.md section S |
 | G15 | GAP_ANALYSIS.md S | production is frozen at the 2026-10-06 build. Vercel's newest | GAP_ANALYSIS.md section S |
 | G16 | GAP_ANALYSIS.md S | nothing measures uptime or service health. Live: `incidents`, | GAP_ANALYSIS.md section S |
-| G17 | GAP_ANALYSIS.md S | APPROVE grants a 9-minute trial. `approve_member` sets | GAP_ANALYSIS.md section S |
 | G18 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
 | G19 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
 | G23 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
@@ -256,7 +255,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
-### CLOSED (16)
+### CLOSED (17)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -266,6 +265,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | G12 | GAP_ANALYSIS.md S | was: four more live | GAP_ANALYSIS.md section S |
 | G13 | GAP_ANALYSIS.md S | was: | GAP_ANALYSIS.md section S |
 | G14 | GAP_ANALYSIS.md S | was: `omega_record_simulation_run` cannot write (42501), 0 rows ever. Same | GAP_ANALYSIS.md section S |
+| G17 | GAP_ANALYSIS.md S | APPROVE granted a 9-minute trial. `approve_member` sets | GAP_ANALYSIS.md section S |
 | G20 | GAP_ANALYSIS.md S | `profile.html`'s owner access panel now changes access. It wrote | GAP_ANALYSIS.md section S |
 | G21 | GAP_ANALYSIS.md S | 12 client-called RPCs failed 42501 for everyone, the owner included. | GAP_ANALYSIS.md section S |
 | G22 | GAP_ANALYSIS.md S | 19 of the 23 remaining blocked RPCs restored by 20261012091641 after | GAP_ANALYSIS.md section S |

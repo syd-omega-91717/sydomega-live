@@ -173,10 +173,11 @@ open, recorded in `FIXES_LOG.md`:
   Every new signup now writes the owner in-app alert and calls the function. **Owner:** set
   `RESEND_API_KEY` to start sending. Member welcome emails also need `sydomega.com` verified in Resend and
   `MEMBER_EMAIL_FROM` (`setup.md`). Still 4 pending since 2026-06-17; the alert covers new requests only.
-- **OPEN 2026-10-25 — APPROVE grants a 9-minute trial.** `approve_member` sets
-  `trial_expires_at = now() + trial_length()`, live `00:09:10.302`. `access_audit`: 11 `trial_granted`,
-  11 `trial_expired`, 1 `permanent_granted`. An approved member is locked out minutes later unless the
-  owner also presses GRANT PERMANENT. Product decision for the owner; not changed.
+- **CLOSED 2026-10-25 — APPROVE granted a 9-minute trial.** `approve_member` sets
+  `trial_expires_at = now() + trial_length()`, live `00:09:10.302`; `access_audit` had 11 `trial_granted`,
+  11 `trial_expired`, 1 `permanent_granted`. Owner decision: APPROVE (and RECONSIDER) now call
+  `grant_permanent_access`; the trial is a separate, labelled button. Client-only change; the RPCs are
+  unchanged (`FIXES_LOG.md`, "APPROVE grants permanent access").
 - **OPEN 2026-10-09 — access requests go unanswered; the owner is never emailed.**
   `notify-access` (emails the owner on a new request) is `LOCAL_ONLY` — 9 of 25 functions are
   (`docs/runtime/supabase-edge-functions-live.json`; `list_edge_functions` returns 16). Live:

@@ -1187,5 +1187,6 @@
   "dash_hud_gates": "BEREIKTE POORTEN",
   "courses_heading": "CURSUSCATALOGUS",
   "ui_read_more": "MEER",
-  "ui_read_less": "MINDER"
+  "ui_read_less": "MINDER",
+  "btn_approve": "GOEDKEUREN"
 }

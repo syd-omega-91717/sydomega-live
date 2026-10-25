@@ -892,6 +892,7 @@ var T_EN={
 "dispatch_category_market_signal":"MARKET SIGNAL",
 "dispatch_category_heritage_note":"HERITAGE NOTE",
 "dispatch_category_announcement":"ORDER ANNOUNCEMENT",
+"btn_approve":"APPROVE",
 "btn_grant_trial":"GRANT TRIAL",
 "btn_grant_permanent":"GRANT PERM",
 "btn_extend_trial":"EXTEND",

@@ -65,6 +65,13 @@
 .sci-ref{font-size:12px;color:var(--muted);margin-top:8px;font-family:'Courier New',monospace;}
 .notification{position:fixed;top:20px;right:20px;background:#1a1a2e;border:1px solid var(--purple);padding:14px 20px;font-family:'Courier New',monospace;font-size:12px;color:var(--purple);z-index:1000;display:none;animation:slidein .3s ease;}
 @keyframes slidein{from{transform:translateX(100px);opacity:0}to{transform:none;opacity:1}}
+.sky-card{margin:0 0 18px;padding:14px 16px 12px;position:relative}
+.sky-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:6px}
+.sky-head h2{margin:0;font-family:var(--M);font-size:13px;letter-spacing:.22em;color:var(--gold)}
+.sky-head span{font-family:var(--M);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.sky-key{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-family:var(--M);font-size:12px;letter-spacing:.16em;color:var(--muted);margin-top:8px}
+.sky-key i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.sky-key .k-task{background:var(--cyan)}.sky-key .k-lesson{background:var(--gold-bright,#F7E0A0)}.sky-key .k-cert{background:var(--gold);border-radius:1px;transform:rotate(45deg)}
 </style>
 </head>
 <body>
@@ -98,6 +105,11 @@
           </div>
         </div>
       </div>
+      <section class="card sky-card" aria-labelledby="sky-h">
+        <div class="sky-head"><h2 id="sky-h">YOUR SKY</h2><span>one star per task, lesson and certificate you have completed &middot; left to right, oldest to today</span></div>
+        <div class="osc-stage" data-omega-sculpture="sky" data-sculpt-height="clamp(260px,42vh,420px)"></div>
+        <div class="sky-key" aria-hidden="true"><i class="k-task"></i>TASKS <i class="k-lesson"></i>LESSONS <i class="k-cert"></i>CERTIFICATES</div>
+      </section>
       <div class="stats-row">
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-total-xp">0</div><div class="stat-lbl">TOTAL XP</div></div>
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-unlocked">0</div><div class="stat-lbl">UNLOCKED</div></div>

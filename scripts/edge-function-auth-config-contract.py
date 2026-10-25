@@ -93,7 +93,11 @@ def main() -> int:
                 errors.append(f"{name}: SHARED_SECRET requires verify_jwt=false plus application-level secret auth")
             adapter_secret = "withSupabase({ auth: 'secret' }" in source or 'withSupabase({ auth: "secret" }' in source
             header_secret = "OMEGA_PROVIDER_WORKER_SECRET" in source and "x-omega-worker-secret" in source
-            if not (adapter_secret or header_secret):
+            # Vault-backed webhook secret (notify-access): read through a
+            # service_role-only RPC, compared before the body, 401 otherwise.
+            vault_secret = ("x-omega-webhook-secret" in source and "omega_notify_access_secret" in source
+                            and '"unauthorized" }, 401' in source)
+            if not (adapter_secret or header_secret or vault_secret):
                 errors.append(f"{name}: no recognized application-level shared-secret check")
         elif mode == "STRIPE_SIGNATURE":
             required = ("verifyStripeSignature", "stripe-signature", "STRIPE_WEBHOOK_SECRET")

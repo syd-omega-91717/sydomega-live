@@ -42,6 +42,11 @@
       "auth_mode": "PUBLIC_READONLY",
       "rationale": "Public GET-only Hacker News industry feed; no privileged database writes."
     },
+    "notify-access": {
+      "verify_jwt": false,
+      "auth_mode": "SHARED_SECRET",
+      "rationale": "Called by the database through pg_net, never by a member. Requires x-omega-webhook-secret to match the Vault secret notify_access_webhook_secret, read through the server-only RPC public.omega_notify_access_secret(); rejects any other caller with 401 (migration 20261025100000)."
+    },
     "omega-knowledge-embedding-worker": {
       "verify_jwt": false,
       "auth_mode": "SHARED_SECRET",

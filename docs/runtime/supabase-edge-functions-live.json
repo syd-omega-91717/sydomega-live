@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-24T08:53:35.759Z",
+  "captured_at": "2026-10-25T10:55:00Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
@@ -34,10 +34,10 @@
     },
     "stripe-webhook": {
       "state": "DEPLOYED",
-      "version": 8,
+      "version": 9,
       "verify_jwt": false,
-      "live_sha256": "de1bd074d6dee903be3b68b04ef72e380eccae9b532a96bde7f93c00550b7b1f",
-      "repository_blob_sha": "e82865f141b42fc4bbaf7f64b76515b91d79551a"
+      "live_sha256": "228690e20bf889951e4f5a10620f95256a97e96bdac67cf07febb5d8b52cae0e",
+      "repository_blob_sha": "0e31e2a14aef211a11f7b489c5d09cd2730ff2e1"
     },
     "secrets-health": {
       "state": "DEPLOYED",
@@ -55,30 +55,30 @@
     },
     "evidence-graph": {
       "state": "DEPLOYED",
-      "version": 84,
+      "version": 98,
       "verify_jwt": false,
-      "live_sha256": "1bfaefbf26018fb7951b4b72d4a098d568810cdc0831362d819f1c6cd9b41441",
+      "live_sha256": "48a83ec987a5d0f4ac315c50c9b7b965d664fea185fcfd15dfbadba75ed06562",
       "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 263,
+      "version": 277,
       "verify_jwt": false,
-      "live_sha256": "cafc9224c989b583ff98e923a6fef1a5552601a641aa7edb16e7c571abf15d4c",
+      "live_sha256": "ed77a71aaf8036ac5a10849f26f39d3494c7f53233d4dfd5e9997daefa262939",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 267,
+      "version": 281,
       "verify_jwt": true,
-      "live_sha256": "c9f166524e74b03c7a6cda23576ecf6d561d8d2a1f0fbd2f1ddd86c6b5965936",
+      "live_sha256": "5d875ecd37a145db16efe9d96ee7e6b1df23589cb5e0573c88b9a1555b540f68",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 263,
+      "version": 277,
       "verify_jwt": false,
-      "live_sha256": "f4ef3f033e1e4fe5d16be07a629a8267b960b49fec95f45571331c2f1df354a0",
+      "live_sha256": "0ed69f07292b8bbabd5934cf4ee9c1d863a7542a3e30df060a7d0611f5f0f7c7",
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc"
     },
     "intel-feed": {
@@ -90,16 +90,16 @@
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
-      "version": 84,
+      "version": 98,
       "verify_jwt": false,
-      "live_sha256": "e1f91cf5f0fdb1391eac1e42cb48a9351697d0cfd3fee44844a1484a7c0ab77b",
+      "live_sha256": "5d2c1c12438217367fcda11b50e617ce9ccda074be918dca9a8ed1696cffb6ee",
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
-      "version": 173,
+      "version": 187,
       "verify_jwt": false,
-      "live_sha256": "af2372cc7fa4a5169bf333a4b51c999dd91c401b57fb0a47a8179dc3c134c106",
+      "live_sha256": "efa2f6669495ca36726757aae558577d25a4d0256dd789094a53deafcc92aad7",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
     },
     "content-ingest": {
@@ -123,7 +123,11 @@
       "state": "LOCAL_ONLY"
     },
     "notify-access": {
-      "state": "LOCAL_ONLY"
+      "state": "DEPLOYED",
+      "version": 1,
+      "verify_jwt": false,
+      "live_sha256": "521834a4ded779880eb1b37c46b87412008db20f474f139b236eb2affe0d25be",
+      "repository_blob_sha": "0e25cc5286c7d5a1d093fb9c637f90088d450308"
     },
     "rankings": {
       "state": "LOCAL_ONLY"
@@ -144,5 +148,5 @@
       "state": "LOCAL_ONLY"
     }
   },
-  "verification_note": "Verified 2026-10-24 against the active Supabase project and main at 97aff4b217eee78b806b8ef0931d67e932c0a881. All 16 ACTIVE deployed Edge Functions' index.ts contents were compared byte-for-byte after CRLF/trailing-newline normalization against the corresponding main source and matched. Runtime version, verify_jwt, live SHA-256, and repository Git blob SHA are refreshed for all 16. Entries marked LOCAL_ONLY are present in repository source but were not present in the active deployed function inventory at capture time. This is runtime source-parity evidence only; it does not establish end-to-end functional, payment, authorization, or production-readiness completeness."
+  "verification_note": "Refreshed 2026-10-25 from list_edge_functions on the active project after the Supabase GitHub integration redeployed functions on the #1080 (2026-10-24 23:41 UTC) and #1088 (2026-10-25 00:45 UTC) merges to main. Versions, verify_jwt and live SHA-256 are read live for all 17 ACTIVE functions; repository_blob_sha is the main source at e2deed3a. notify-access v1 was deployed by a session from main source and verified live through pg_net (401 without the secret, 200 resend_api_key_not_configured with it). stripe-webhook v9 source was read live and carries main's charge.refunded handler; the other redeployed functions were not byte-compared this pass, so their parity rests on the integration deploying main. LOCAL_ONLY entries are present in repository source but absent from the active deployed inventory. Runtime source-parity evidence only."
 }

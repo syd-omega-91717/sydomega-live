@@ -2,22 +2,5 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": [
-    {
-      "version": "20261024110000",
-      "file": "20261024110000_stripe_refund_ledger_reversal.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Add cumulative, idempotent charge.refunded ledger reversals and refund reconciliation. Requires isolated SQL integration tests and signed Stripe test-mode lifecycle evidence before controlled deployment."
-    },
-    {
-      "version": "20261025100000",
-      "file": "20261025100000_access_request_alerts.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Owner in-app alert and notify-access email dispatch for new access requests and permanent grants. Dormant until the notify_access_url Vault secret is set live; needs a rollback-only live trigger test (owner approval) before controlled application."
-    }
-  ]
+  "pending": []
 }

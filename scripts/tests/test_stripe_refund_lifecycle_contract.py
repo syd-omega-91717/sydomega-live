@@ -84,18 +84,17 @@ class StripeRefundLifecycleContract(unittest.TestCase):
         self.assertNotIn('if (eventType === "refund.created")', WEBHOOK_SOURCE)
         self.assertIn('return json({ error: "refund_processing_failed" }, 500);', WEBHOOK_SOURCE)
 
-    def test_new_migration_is_pending_and_release_blocking_not_in_remote_history(self):
+    def test_migration_is_recorded_as_applied_live_and_never_also_pending(self):
+        # Applied by the Supabase GitHub integration when #1080 merged (2026-10-24
+        # 23:41 UTC; FIXES_LOG.md 2026-10-25). A version is either live or pending.
         pending = json.loads(PENDING.read_text(encoding="utf-8"))["pending"]
         remote = json.loads(REMOTE.read_text(encoding="utf-8"))
-        entry = next((item for item in pending if item["version"] == "20261024110000"), None)
-        self.assertIsNotNone(entry)
-        self.assertEqual(entry["file"], MIGRATION.name)
-        self.assertEqual(entry["liveStatus"], "NOT_APPLIED")
-        self.assertTrue(entry["blocksProduction"])
-        self.assertNotIn("20261024110000", {str(version) for version in remote["versions"]})
+        self.assertNotIn("20261024110000", {str(item["version"]) for item in pending})
+        self.assertIn("20261024110000", {str(version) for version in remote["versions"]})
+        names = {str(m["version"]): m.get("name") for m in remote["migrations"]}
+        self.assertEqual(names["20261024110000"], MIGRATION.stem.split("_", 1)[1])
         self.assertEqual(remote["remoteMigrationCount"], len(remote["versions"]))
         self.assertEqual({str(v) for v in remote["versions"]}, {str(m["version"]) for m in remote["migrations"]})
-
 
 if __name__ == "__main__":
     unittest.main()

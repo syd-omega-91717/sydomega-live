@@ -121,6 +121,11 @@ project's own established convention (security/data-integrity first).
   `post_ledger_transaction` calling `pg_catalog.trim(`/`pg_catalog.coalesce(` (42883), so the
   ledger could never post.
 
+- **LIVE 2026-10-24 23:41 UTC — `stripe-webhook` v9 with `charge.refunded` ledger reversal, plus migration
+  `20261024110000`.** Deployed by the Supabase GitHub integration when #1080 merged, not by an owner release
+  decision. No effect yet: the webhook still refuses every event without `STRIPE_WEBHOOK_SECRET`, and live has
+  0 Stripe events in 7 days, 0 ledger transactions and 0 refund rows. Setting that secret now switches on the
+  refund path too. CI's fresh replay ran the refund lifecycle probe green before merge.
 - **OPEN 2026-10-17 — `STRIPE_WEBHOOK_SECRET` is not set (owner action).** The deployed
   `stripe-webhook` answers every request 503 `webhook_not_configured` before any other check, so
   Stripe has never been able to deliver an event (0 rows in `stripe_webhook_events`). Set it with
@@ -162,12 +167,12 @@ open, recorded in `FIXES_LOG.md`:
   external probe (e.g. a scheduled check of `sydomega.com`) writing real rows — an owner
   choice of provider, not a page change.
 - **UPDATE 2026-10-15:** still 4 pending (77–121 days) and 0 `cron.job` rows, measured live. The owner now sees an **N WAITING** dock item and phone-drawer entry on every page (`bg.js` count → `nav.js`; `FIXES_LOG.md`, 2026-10-15). Email is still undeployed.
-- **IN REVIEW 2026-10-25 — owner alerts and member welcome email built, not yet live.** Migration
-  `20261025100000_access_request_alerts` (pending) adds an owner in-app alert on every new request
-  and a Vault-gated `pg_net` dispatch to a rewritten `notify-access`. The function sends an owner email
-  per request, and a member email on **permanent** access only, once `MEMBER_EMAIL_FROM` is set.
-  Live 2026-10-25: 4 pending (oldest 2026-06-17), 1 rejected. Remaining: the owner sets `RESEND_API_KEY`
-  (`setup.md`); a rollback-only live trigger test; then apply and deploy.
+- **LIVE 2026-10-25, except the email itself — owner alerts on new access requests.** Migration
+  `20261025100000` applied (by the merge of #1088); `notify-access` v1 deployed; `notify_access_url` set in
+  Vault. Verified live through `pg_net`: 401 without the secret, 200 `resend_api_key_not_configured` with it.
+  Every new signup now writes the owner in-app alert and calls the function. **Owner:** set
+  `RESEND_API_KEY` to start sending. Member welcome emails also need `sydomega.com` verified in Resend and
+  `MEMBER_EMAIL_FROM` (`setup.md`). Still 4 pending since 2026-06-17; the alert covers new requests only.
 - **OPEN 2026-10-25 — APPROVE grants a 9-minute trial.** `approve_member` sets
   `trial_expires_at = now() + trial_length()`, live `00:09:10.302`. `access_audit`: 11 `trial_granted`,
   11 `trial_expired`, 1 `permanent_granted`. An approved member is locked out minutes later unless the

@@ -24995,3 +24995,31 @@ Contract: `scripts/tests/test_one_owner_per_number_contract.py` (budget, contact
   - `contract-suite`: 56/56.
   - `migration-replay-contract`: PASS with the migration registered as pending.
 - **Not verified yet.** A rollback-only live run of the triggers against the real `profiles` triggers. The connector's confirmation prompt timed out unanswered, and a follow-up query confirmed nothing was created live (0 triggers, 0 functions, 0 test users, 0 Vault rows). Not applied, not deployed.
+
+## Merging to main deploys to production; access alerts are live, short of the email itself (2026-10-25)
+
+- **Finding.** This file, `CLAUDE.md` §2 and `pending-migrations.json` all assumed migrations and Edge Functions reach production by hand. Live timestamps show that the Supabase GitHub integration does it on every merge to `main`:
+  - **#1080** merged 2026-10-24 23:40:10 UTC. `stripe-webhook` v9 was deployed at 23:41:05, and `20261024110000_stripe_refund_ledger_reversal` was recorded in `schema_migrations`.
+  - **#1088** merged 2026-10-25 00:44:59 UTC. The `notify_access_webhook_secret` Vault row was created at 00:45:44, which the migration's own `DO $vault$` block does. Seven `config.toml` functions were redeployed at 00:45:51.
+  - Only functions listed in `supabase/config.toml` deploy. `notify-access` was absent, so it stayed undeployed.
+- **What this cost.**
+  - The refund migration and the v9 webhook went live without the owner release decision their pending entry required ("isolated SQL integration tests and signed Stripe test-mode lifecycle evidence"). CI's fresh replay had run `stripe-refund-lifecycle-probe.sql` green, so the SQL was tested, but the decision was skipped.
+  - Payments are unaffected so far. The webhook refuses every event without `STRIPE_WEBHOOK_SECRET`, and live shows 0 Stripe events in 7 days, 0 ledger transactions and 0 refund rows.
+- **A misread to avoid.** After the rollback-only live test of `20261025100000`, its triggers, functions and Vault secret were found live, which looked as if the test had leaked. It had not. Its test users, profiles, notifications and test URL were all gone. The objects predated it, created by the #1088 merge. `schema_migrations` held a `20261025100000` row and the Vault `created_at` was 00:45:44. **Before blaming a rollback, check `schema_migrations` and object creation times.**
+- **The live test (2026-10-25), all as designed.**
+  - A signup through `auth.users` → `handle_new_user` → every existing profile trigger completed.
+  - Dormant with no URL: 0 queued.
+  - The signup queued one `access_requested` request with a 64-char secret header, plus 2 owner in-app rows (both owner accounts).
+  - A trial approval queued nothing; the permanent grant queued `access_granted`; name and `is_rejected` edits queued nothing.
+  - `omega_notify_access_secret()` is executable by service_role only.
+  - Earlier attempts timed out on the connector's confirmation prompt. Replacing `DROP TRIGGER` with `CREATE OR REPLACE TRIGGER`, and dropping the temp table's `ON COMMIT DROP`, removed the prompt.
+- **Activated.**
+  - `notify-access` v1 is deployed (`verify_jwt=false`) and added to `config.toml`, so the next merge keeps that setting.
+  - Probed through `pg_net` from the database, because this sandbox's proxy blocks `supabase.co`. With no header or a wrong header: 401, so the RPC secret read works (a failure there would be 503). With the Vault secret: 200 `resend_api_key_not_configured`.
+  - `notify_access_url` is set in Vault.
+- **Repo reconciled to live.**
+  - `remote-migrations.json`: 413 versions. Digests match live (`48aa699f…` versions, `288ff221…` versions plus names).
+  - `pending-migrations.json` is empty.
+  - `docs/runtime/supabase-edge-functions-live.json` refreshed for 17 deployed functions. `supabase-edge-runtime-reconciliation.py` now PASSes; it had been red on `main` since #1080.
+  - `CLAUDE.md` §2 and §8.2 record the standing fact.
+- **Owner, still open.** Set `RESEND_API_KEY`. Verify `sydomega.com` in Resend, then set `MEMBER_EMAIL_FROM`. Decide `STRIPE_WEBHOOK_SECRET`; setting it now also turns on refunds.

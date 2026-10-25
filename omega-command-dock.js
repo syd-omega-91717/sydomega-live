@@ -6,7 +6,8 @@
 
      ASK     the concierge Edge Function     (was chatbot.html)
      POINTS  own task_completions + my_matrix (was points.html)
-     INBOX   own delivered in_app omega_notifications (was notifications.html)
+     INBOX   own public.notifications, the table the bell on every page reads
+             (omega-notify.js) and every server writer fills (was notifications.html)
 
    Rules this module keeps, each a bug class this repo has shipped:
    - every write checks .error before the UI changes (CLAUDE.md 8.1 class 1);
@@ -175,14 +176,17 @@ import { createClient } from '/vendor/supabase-js.js';
   }
 
   /* ── INBOX ───────────────────────────────────────────────────────── */
+  // public.notifications carries a type, not a severity: tint the ones that ask
+  // for action (a request waiting, access ending); everything else stays muted.
+  var TONE = { access_requested: 'var(--gold)', trial_expired: '#FF9800', member_revoked: '#FF4444' };
   function paintInbox(pane) {
     if (!S.inbox.length) { pane.appendChild(el('div', 'ocd-empty', 'INBOX CLEAR')); return; }
     var rows = el('div', 'ocd-rows');
     S.inbox.forEach(function (n) {
       var r = el(n.read_at ? 'div' : 'button', 'ocd-row' + (n.read_at ? '' : ' unread'));
       if (!n.read_at) { r.type = 'button'; r.setAttribute('data-omega-task-id', 'dashboard.dock.inbox-read'); r.onclick = function () { markRead(n); }; }
-      var sev = { critical: '#FF4444', high: '#FF9800', medium: 'var(--gold)' }[n.severity] || 'var(--muted)';
-      r.innerHTML = '<i style="background:' + sev + '"></i><span><b>' + esc(n.title) + '</b> ' + esc(n.body || '') + '</span><em></em><em>' + ago(n.created_at) + '</em>';
+      var sev = TONE[n.notification_type] || 'var(--muted)';
+      r.innerHTML = '<i style="background:' + sev + '"></i><span><b>' + esc(n.title) + '</b> ' + esc(n.message || '') + '</span><em></em><em>' + ago(n.created_at) + '</em>';
       rows.appendChild(r);
     });
     pane.appendChild(rows);
@@ -190,7 +194,7 @@ import { createClient } from '/vendor/supabase-js.js';
 
   async function markRead(n) {
     var at = new Date().toISOString();
-    var r = await sb.from('omega_notifications').update({ read_at: at }).eq('notification_id', n.notification_id);
+    var r = await sb.from('notifications').update({ read_at: at }).eq('id', n.id);
     if (r.error) { console.warn('[command-dock] mark read failed:', r.error.message); return; }
     n.read_at = at; paint();
   }
@@ -204,8 +208,8 @@ import { createClient } from '/vendor/supabase-js.js';
       sb.rpc('my_matrix'),
       sb.from('task_completions').select('task_name,description,task,axis_type,points_earned,completed_at')
         .eq('user_id', S.uid).order('completed_at', { ascending: false }).limit(50),
-      sb.from('omega_notifications').select('notification_id,title,body,severity,read_at,created_at')
-        .eq('user_id', S.uid).eq('channel', 'in_app').eq('status', 'delivered').order('created_at', { ascending: false }).limit(30),
+      sb.from('notifications').select('id,title,message,notification_type,read_at,created_at')
+        .eq('user_id', S.uid).order('created_at', { ascending: false }).limit(30),
       fetch('/omega-agents.json').then(function (r) { return r.json(); }).catch(function () { return null; })
     ]);
     if (!res[0].error && res[0].data) S.profile = res[0].data;

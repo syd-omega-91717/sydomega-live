@@ -26,7 +26,7 @@ declare -A REQUIRED
 REQUIRED["concierge"]="ANTHROPIC_API_KEY"
 REQUIRED["checkout"]="STRIPE_SECRET_KEY STRIPE_PRICE_MAP SITE_URL"
 REQUIRED["stripe-webhook"]="STRIPE_WEBHOOK_SECRET STRIPE_SECRET_KEY"
-REQUIRED["notify-access"]="RESEND_API_KEY NOTIFY_ACCESS_WEBHOOK_SECRET"
+REQUIRED["notify-access"]="RESEND_API_KEY"  # webhook secret is in Vault; MEMBER_EMAIL_FROM optional
 REQUIRED["market-price"]="TWELVE_DATA_API_KEY"
 # intel-feed uses only Hacker News public API — no secrets required
 

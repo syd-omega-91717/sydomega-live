@@ -7,6 +7,10 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 FUNCTIONS = ROOT / "supabase" / "functions"
 ALLOWLIST = {"stripe-webhook", "weekly-digest"}
+# Webhooks with no member caller: the database calls them, so auth.getUser has
+# nothing to check. They are exempt ONLY while the source still rejects a request
+# without the shared-secret header, returning 401 (migration 20261025100000).
+WEBHOOK_SECRET = {"notify-access": "x-omega-webhook-secret"}
 
 def main() -> int:
     if "--help" in sys.argv or "-h" in sys.argv:
@@ -25,6 +29,12 @@ def main() -> int:
         checked += 1
         name = path.parent.name
         if name in ALLOWLIST:
+            continue
+        if name in WEBHOOK_SECRET:
+            header = WEBHOOK_SECRET[name]
+            if f'req.headers.get("{header}")' in source and re.search(r'"unauthorized"\s*\}\s*,\s*401', source):
+                continue
+            failures.append(f"{name}: webhook no longer rejects a request without {header}")
             continue
         has_identity_check = bool(re.search(r"auth\.getUser\s*\(", source))
         has_authorization = "Authorization" in source

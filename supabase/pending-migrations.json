@@ -10,6 +10,14 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "Add cumulative, idempotent charge.refunded ledger reversals and refund reconciliation. Requires isolated SQL integration tests and signed Stripe test-mode lifecycle evidence before controlled deployment."
+    },
+    {
+      "version": "20261025100000",
+      "file": "20261025100000_access_request_alerts.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Owner in-app alert and notify-access email dispatch for new access requests and permanent grants. Dormant until the notify_access_url Vault secret is set live; needs a rollback-only live trigger test (owner approval) before controlled application."
     }
   ]
 }

@@ -25234,3 +25234,32 @@ New `sky` scene in `omega-sculpture.js`, mounted on `achievements.html` under th
 - `scripts/tests/test_guard_trust_contract.py` pins: per-tab storage, 30 minutes, uid bound to the
   stored session, expiry, only the real check writing the flag, revoke on every failure path, and the
   public list.
+
+## Overlay collisions: Home under "All pages", copilot under the HUD, world-shell bar over the sidebar (2026-10-25)
+
+Found from the owner's screenshot, then swept with an occlusion scan. For every visible control on
+all 237 pages at 1280×800, the scan checks whether the top element at the control's centre is another
+fixed or interactive element; pointer-events:none layers and full-viewport backdrops are excluded.
+- **Sidebar Home covered (owner screenshot).**
+  - `omega-menu.js`'s `#om-open` ("All pages", fixed 12,10, 44×40, z-index 9000) sat exactly on
+    nav.js's `.on-btn` ⌂ (6,10, 44×44), so Home could not be clicked on any page with the sidebar.
+  - Phones already hide `#om-open` as a duplicate of the nav's drawer. The desktop sidebar is the same
+    duplicate (it reaches every page, ALL SERVICES included), so the button now steps aside wherever
+    the sidebar is rendered. This is measured on resize and through a ResizeObserver, because nav.js
+    renders later and some pages hide the sidebar. Pages without the sidebar keep the button.
+- **`#om-open`'s own icon was a dot.**
+  - It has an id but no class, so `bg.js`'s fallback skin for bare buttons (`button:not([class])`)
+    gave it 20px side padding. That left 4px for the icon, and `max-width:100%` drew the four-square
+    grid at 2×18px. That is the dot in the screenshot.
+  - Fix: `padding:0` and `flex:none`. The icon now measures 18×18.
+- **Copilot covered on 233/237 pages.**
+  - `omega-command-hud.css` put the 46px Ω at right 16 / bottom 42 and z-index 9997, on top of
+    `#cp-btn` (right 24 / bottom 36, 52px, z-index 4500).
+  - The HUD now takes its own rung in `bg.js`'s desktop ladder: right 88 (24 + 52 + 12) and bottom 39
+    (centre-aligned), plus the transient-banner offset. Measured: HUD x 1146–1192, copilot x 1204–1256.
+  - Phones still hide the HUD.
+- **world-shell.html.** Its full-width fixed bar (z-index 9000, 61px) covered the sidebar header. It now
+  starts at the rendered sidebar's right edge.
+- **Not a bug, after measuring.** gateway's EXAM tile and ladder's RESET sit under the copilot only at
+  scroll 0; scrolled, they clear (RESET at y 238–278). A first probe said otherwise and was wrong. A
+  clearance spacer was built, measured, and reverted as unneeded.

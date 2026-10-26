@@ -10,7 +10,7 @@
      Keeps the cinematic gold/cyan identity fully intact. */
   var DUSK_CSS=`
     :root {
-      --void:#08080F;
+      --void:#0A0A0F;
       --abyss:#0A0A16;
       --panel:#0E0E1C;
       --p2:#131328;

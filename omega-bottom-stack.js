@@ -164,6 +164,25 @@
     for (var j = 0; trans && j < trans.length; j++) { try { _ro.observe(trans[j]); } catch (e) {} }
   }
 
+  /* Only a mutation that adds or removes bottom chrome (or a banner) can move
+     the stack; a size change of one already on screen is ResizeObserver's job.
+     Scheduling on EVERY childList mutation in the body re-ran measure() --
+     getComputedStyle + getBoundingClientRect, a forced layout -- once a frame
+     on any page that updates text: measured on dashboard.html, measure() and
+     its querySelectorAll were the platform's largest DOM-query cost, driven by
+     the clock and the live tickers, none of which are bottom chrome. */
+  var WATCH = CHROME + ', ' + TRANSIENT;
+  function touchesStack(n) {
+    return n.nodeType === 1 && (n.matches(WATCH) || !!n.querySelector(WATCH));
+  }
+  function onMutations(recs) {
+    for (var i = 0; i < recs.length; i++) {
+      var r = recs[i], k;
+      for (k = 0; k < r.addedNodes.length; k++) if (touchesStack(r.addedNodes[k])) return schedule();
+      for (k = 0; k < r.removedNodes.length; k++) if (touchesStack(r.removedNodes[k])) return schedule();
+    }
+  }
+
   function start() {
     measure();
     addEventListener('resize', schedule, { passive: true });
@@ -177,11 +196,11 @@
       if (document.readyState === 'loading') {
         // Don't observe mutations during initial load — defer until DOMContentLoaded
         document.addEventListener('DOMContentLoaded', function initObserver() {
-          new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+          new MutationObserver(onMutations).observe(document.body, { childList: true, subtree: true });
         }, { once: true });
       } else {
         // If we're already past DOMContentLoaded, observe immediately
-        new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+        new MutationObserver(onMutations).observe(document.body, { childList: true, subtree: true });
       }
     }
   }

@@ -214,11 +214,22 @@
   /**
    * Apply glow intensity to constellation nodes
    */
+  /* Last value each apply* wrote. animationLoop() starts on load and runs every
+     frame for the life of the page, streaming or not, so at idle it re-queried
+     every emblem and rewrote the same styles 60 times a second -- including a
+     fresh `filter` on the 3-D sculpture, which re-rasterises it each frame.
+     Writing only on change keeps the behaviour and drops the idle cost. */
+  var lastGlow = null, lastBloom = null;
   function applyGlowIntensity(intensity) {
     if(prefersReduced) return;
+    var key = intensity.toFixed(2);
+    if(key === lastGlow) return;
 
     try {
       var nodes = document.querySelectorAll('.ocn-node, [data-omega-emblem]');
+      /* Memoise only once something received it, or a node that mounts later
+         would never get the value. */
+      if(nodes.length) lastGlow = key;
       nodes.forEach(function(node) {
         var baseGlow = 'rgba(201,168,76,0.15)';  /* Default gold glow */
         var intensifiedGlow = 'rgba(201,168,76,' + (0.15 * intensity) + ')';
@@ -245,10 +256,13 @@
    */
   function applyBloomIntensity(intensity) {
     if(prefersReduced) return;
+    var key = intensity.toFixed(3);
+    if(key === lastBloom) return;
 
     try {
       var sculptureElement = document.querySelector('[data-omega-sculpture]');
       if(sculptureElement) {
+        lastBloom = key;
         var filterValue = 'blur(' + (1 - intensity) + 'px) brightness(' + (0.9 + (intensity * 0.1)) + ')';
         sculptureElement.style.filter = filterValue;
       }

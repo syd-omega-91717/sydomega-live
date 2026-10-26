@@ -25258,3 +25258,29 @@ A code review of #1095 found that the trusted reveal could outlive a failed chec
 - CLAUDE.md §3 is updated to the new reveal rule. `test_guard_trust_contract.py` now pins the fail-closed
   chain, the cancellable reveal, expiry-before-approve, the age lower bound and the marker readers.
   Browser verification is in the PR.
+
+## Phone bottom chrome: a hidden second nav bar, and the end of every page under the copilot button (2026-10-26)
+
+Found by a bottom-reachability scan (390×844, signed-in stub, every root page): scroll to the very end and
+flag any control still topped by fixed chrome. Unlike an at-rest occlusion scan, that is a control no
+scrolling can ever uncover. The first run reported **58** pages with MORE under `#cp-btn` and **29** with
+COMMAND/SEARCH/AI/MORE under `#omega-mob`. A false-positive pass followed (CLAUDE.md §8.4): the first
+scanner waited 400ms after `scrollTo`, and smooth scrolling had not finished, so it measured short of the
+end (academy: scrollY 1506 + 844 < docH 2511). The scanner now scrolls with `behavior:'instant'`.
+
+- **Two phone bars.** `nav.js` builds `#omega-mob` (fixed, z-9990) and, later, `#omega-mobile-bar`
+  (sticky, z-1900, bottom 0). On every phone render the second sat directly beneath the first, so its
+  SEARCH / AI / MORE (the command palette) could never be tapped. `#omega-mobile-bar` is now built only
+  where `#omega-mob` does not exist. Search, concierge and the palette are folded out of the drawer's
+  section lists, so the drawer gets a quick row (`.drawer-quick`) with all three, 44px targets. Verified in a
+  render: the row is topmost at all three centres, COMMAND opens the palette (`display:flex`,
+  `aria-hidden=false`) and closes the drawer, with no page errors.
+- **The last 68px of every phone page under `#cp-btn`.** The body reserved 66px, the dock only. The copilot
+  rests `--omega-chrome-bottom + 16px` above the floor and is 52px tall. Both phone rules in `nav.js` now
+  reserve `calc(var(--omega-chrome-bottom,66px) + 76px)`.
+- **family.html and security.html** still put the legal footer under the dock: `omega-accessibility-audit.css`
+  (loaded by those two pages only) set `body{padding:8px}` / `{padding:12px}` under 700px / 900px, and the
+  shorthand reset the bottom. It now sets the top and side padding only.
+- After the fix, the instant-scroll scan finds 0 on family, security, academy, agents and events. The only
+  remaining hits are `#omega-consent` over the footer on enter.html and reset.html. That banner is
+  transient by design and sits above the dock (measured: consent 550–781, dock 781–844).

@@ -550,19 +550,33 @@ function setTab(name){
     /* Freeze the animation, not the render, under prefers-reduced-motion: the
        galaxy still draws its full structure, it just stops moving. */
     if(!_galaxyReduce) t++;
-    requestAnimationFrame(draw);
+    if(!_galaxyReduce) requestAnimationFrame(tick);
+  }
+  /* Frame budget: the galaxy sits below the fold on a phone and was the single
+     largest JS cost on this page (draw() was top of a 4x-throttled profile),
+     redrawing at 60fps while nobody could see it. Draw only while on screen,
+     at 30fps; motion reads the clock, so its speed does not change. Under
+     reduced motion draw() renders once and stops, as the comment above says. */
+  var _gOn=true,_gLast=0;
+  function tick(now){
+    if(!_gOn||now-_gLast<1000/30-1){requestAnimationFrame(tick);return;}
+    _gLast=now;draw();
+  }
+  if(window.IntersectionObserver){
+    new IntersectionObserver(function(es){_gOn=es[es.length-1].isIntersecting;},{rootMargin:'64px'}).observe(cv);
   }
   cv.addEventListener('mousemove',function(e){
     var rect=cv.getBoundingClientRect();var mx=e.clientX-rect.left,my=e.clientY-rect.top;
     hovered=null;
     nodes.forEach(function(n,i){var dx=mx-n.x,dy=my-n.y;if(dx*dx+dy*dy<196)hovered=i;});
     cv.style.cursor=hovered!==null?'pointer':'default';
+    if(_galaxyReduce)draw();
   });
   cv.addEventListener('click',function(e){
     if(hovered!==null&&nodes[hovered]){location.href=nodes[hovered].mod.href;}
   });
-  cv.addEventListener('mouseleave',function(){hovered=null;});
-  window.addEventListener('resize',function(){resize();layout();});
+  cv.addEventListener('mouseleave',function(){hovered=null;if(_galaxyReduce)draw();});
+  window.addEventListener('resize',function(){resize();layout();if(_galaxyReduce)draw();});
   /* bg.js's approval guard hides #app/.shell until the profile is confirmed
      approved, so this runs while the canvas has no layout box: offsetWidth is
      0, cv.width is set to 0, and a canvas with a zero drawing buffer can never
@@ -572,7 +586,7 @@ function setTab(name){
      the element actually gets a size, whatever reveals it. */
   if(window.ResizeObserver){
     var _ro=new ResizeObserver(function(){
-      if(cv.offsetWidth&&cv.offsetWidth!==cv.width){resize();layout();}
+      if(cv.offsetWidth&&cv.offsetWidth!==cv.width){resize();layout();if(_galaxyReduce)draw();}
     });
     _ro.observe(cv);
   }

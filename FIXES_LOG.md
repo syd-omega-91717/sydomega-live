@@ -25429,3 +25429,84 @@ Gates: `./scripts/ci-local.sh` 32 blocking passed. `node scripts/verify-runtime.
   LOADING → their empty states.
 - The same all-pages scan found **0 broken images** and **0 horizontally overflowing pages**, at both
   390×844 and 1280×800.
+
+## Frame budget: idle loops and page-wide rescans that ran for nothing (2026-10-26)
+
+The owner asked for the dashboard's 176-script load to become a DAG-based lazy loader. Measured first,
+on dashboard.html at 390×844 under 4× CPU throttle (headless Chromium, CDP sampling profiler). The load
+order is **not** the cost: all 177 script requests have started by ~5.8s unthrottled, and script was
+only ~15% of main-thread time. A dependency loader changes when code runs, not how much of it runs.
+The cost was work that repeated every frame or on every DOM change. Five sites were fixed, each with
+a cited before/after.
+
+- **A retired background loop that never stopped** (`bg.js`, legacy `#omega-bg`). Ω-FX's
+  `retireLegacy()` removes this canvas, but its `loop()` kept running for the life of the tab. It is an
+  O(n²) particle-link pass with `shadowBlur`, drawing into a detached canvas. `loop()` now exits once
+  the canvas is disconnected.
+- **Icon emblems redrawn off screen** (`bg.js`, `__omegaIcons`). Up to 70 glyph canvases, each with
+  `shadowBlur`, were redrawn at 60fps. On dashboard.html at 390×844, **61 of 70** were off screen.
+  Only on-screen emblems now draw (IntersectionObserver, 64px margin), capped at 30fps. Motion reads
+  the clock, so its speed is unchanged.
+- **The dashboard galaxy drawn below the fold** (`dashboard.html`). `draw()` was the single largest
+  JS cost in the throttled profile. It now runs only while on screen, at 30fps. Under reduced motion
+  it renders once and redraws on resize and hover, rather than looping a still frame at 60fps.
+- **Bottom-stack measured on every DOM mutation** (`omega-bottom-stack.js`). A `childList` observer
+  on the whole body scheduled `measure()` for any change, clock and ticker text included. Each run is
+  a `getComputedStyle` plus `getBoundingClientRect`, so a forced layout every frame. It was the
+  page's largest `querySelectorAll` caller. It now schedules only when an added or removed node is,
+  or contains, bottom chrome or a banner; size changes stay with the existing ResizeObserver.
+  A/B on 4 pages, injecting nested furniture, then a banner, then removing both: the published
+  `--omega-chrome-bottom` / `--omega-transient-bottom` were identical before and after at every step
+  (63/0 → 180/0 → 180/270 → 63/0).
+- **Cinematic activation re-run on text changes** (`bg.js`, Phase C/D). The same body-wide observer
+  re-ran four document-wide scans (one `[class*="card"]`) plus five modules' passes on every batch.
+  Batches that add no element are now skipped. A card, a button and a sigil inserted after load
+  were all still wired.
+- **Voice-responsive styles rewritten 60×/s at idle** (`omega-voice-responsive.js`). The loop starts
+  on load whether or not anything streams. Every frame it re-queried every emblem and rewrote the same
+  `box-shadow` and the sculpture's `filter`, which forces a re-raster. Writes now happen only when the
+  value changes, and only after something actually received it.
+
+A/B, BEFORE = `origin/main` copies pinned through the harness, 4× CPU, 390×844:
+
+| page | load event | long tasks | TBT | rAF fps (10s, after load) |
+|---|---|---|---|---|
+| dashboard (2 runs each) | 17.4–21.7s → 8.2–9.2s | 156–181 → 96–101 | 17.6–20.6s → 13.3–14.5s | 3.7–3.8 → 5.2–5.3 |
+| vault | 14.1 → 8.3s | 120 → 83 | 16.7 → 15.3s | 3.0 → 3.6 |
+| missions | 8.8 → 4.5s | 132 → 111 | 9.8 → 9.5s | 5.0 → 6.9 |
+| cosmos | 20.3 → 8.9s | 173 → 85 | 19.7 → 14.8s | 3.0 → 3.9 |
+
+Steady-state main-thread task time went **up** (dashboard 7.2–8.9s → 9.6–10.6s per 10s). This is not
+a regression: frame rate rose ~40% in the same window, so more frames got painted. Script time in
+the window was flat (~1.3–1.6s).
+
+**What remains, and why it was left alone.** Layer attribution after the fix (toggling one layer at
+a time, dashboard, 4×, two passes) showed the main thread still saturated (task ≈ 95%). Hiding
+`#omega-fx` alone took it to ≈ 48%; hiding every canvas took fps from 4.6–5.6 to 9.2–14.4. Hiding
+`backdrop-filter`, the noise overlay or the atmosphere changed nothing measurable.
+
+Ω-FX's own JS is cheap; the cost is rasterising a full-viewport DPR-2 canvas. Headless Chromium
+rasterises in software here, so that share will be smaller on a phone GPU, and this harness cannot
+say by how much. Ω-FX is visible (a red-backing test shows it through 10–22% of the viewport on
+vault/cosmos/missions). A first test read 0.01% on the dashboard, but that was invalid: the
+first-run Shepherd tour overlay dimmed the red below the detector's threshold, which the screenshot
+showed. Capping it means re-timing ~12 per-frame increments, so it is a design call for the owner,
+not a silent change.
+
+**Follow-up, same day: the owner chose the 30fps cap.** All 11 per-frame steps in Ω-FX's `frame()`
+(star drift, node and mote angles, flare decay and rise, arc/beam/pulse lifetimes, the intro ramp,
+the clock) are now multiplied by `K`, the number of 60Hz frames that actually elapsed (clamped to 3).
+Its three per-frame lerps go through `ease(a) = 1-(1-a)^K`. Measured on vault.html at 320×240,
+where headless Chromium can reach 60fps: Ω-FX canvas updates 60.5 → 30.5/s and 59.3 → 29.8/s,
+while the page's own rAF stayed at ~60/s. The animation clock advanced 0.963 → 0.960 units/s, so
+speed is unchanged.
+
+At full phone size this harness renders the dashboard at only ~5fps (software raster), below the
+cap, so the cap does not engage there. A dashboard A/B at 4× showed no difference (fps 5.2–5.4 →
+5.3–5.6). The saving applies on devices that actually reach 60fps, and it can't be quantified here.
+
+Palette: `theme.js` (the live owner, sheet 19) set `--void:#08080F` while `css/omega-system.css` set
+`#0A0A0F`, the owner's stated standard. Both now say `#0A0A0F`. `--gold` was already `#C9A84C` in
+both. The visible page base is not `--void` at all: it is omega-backdrop.js's per-element tint
+(`html` rgb(12,8,6) plus a warm radial gradient on `body` for this stub member). CLAUDE.md §4 calls
+that tint a feature, so it is unchanged.

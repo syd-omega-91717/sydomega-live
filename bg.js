@@ -644,8 +644,20 @@ function __omegaAppend(el){
     /* Coalesced to one run per frame. Unthrottled, a page that renders a list
        ran the full document-wide querySelectorAll once per inserted node. */
     var queued = false;
-    var observer = new MutationObserver(function(){
-      if (queued) return;
+    /* Only an inserted ELEMENT can be something to activate. A batch that adds
+       nothing but text -- a clock tick, a live counter, any textContent write --
+       re-ran four document-wide selector scans (one of them [class*="card"])
+       plus five modules' passes for nothing; on dashboard.html that made this
+       the second-largest querySelectorAll caller on the page. */
+    function addsElement(recs){
+      for (var i = 0; i < recs.length; i++){
+        var a = recs[i].addedNodes;
+        for (var k = 0; k < a.length; k++) if (a[k].nodeType === 1) return true;
+      }
+      return false;
+    }
+    var observer = new MutationObserver(function(recs){
+      if (queued || !addsElement(recs)) return;
       queued = true;
       (window.requestAnimationFrame || setTimeout)(function(){
         queued = false;
@@ -1099,9 +1111,12 @@ function __omegaAppend(el){
   function aurora(){var cx=W*0.5,cy=H*0.42,rad=Math.max(W,H)*0.55;var ax=cx+Math.cos(t*0.6)*W*0.22,ay=cy+Math.sin(t*0.5)*H*0.18;var g1=ctx.createRadialGradient(ax,ay,10,ax,ay,rad);g1.addColorStop(0,'rgba(201,168,76,0.075)');g1.addColorStop(0.5,'rgba(201,168,76,0.022)');g1.addColorStop(1,'rgba(7,7,11,0)');ctx.fillStyle=g1;ctx.fillRect(0,0,W,H);var bx=cx+Math.cos(-t*0.45+2.1)*W*0.26,by=cy+Math.sin(-t*0.55+1.3)*H*0.2;var g2=ctx.createRadialGradient(bx,by,10,bx,by,rad*0.9);g2.addColorStop(0,'rgba(0,229,255,0.05)');g2.addColorStop(0.5,'rgba(0,229,255,0.015)');g2.addColorStop(1,'rgba(7,7,11,0)');ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);var ex=W*0.82,ey=H*0.82;var g3=ctx.createRadialGradient(ex,ey,10,ex,ey,rad*0.6);g3.addColorStop(0,'rgba(139,0,0,0.05)');g3.addColorStop(1,'rgba(7,7,11,0)');ctx.fillStyle=g3;ctx.fillRect(0,0,W,H);}
   function ring(){var cx=W*0.5,cy=H*0.4,R=Math.min(W,H)*0.32;ctx.save();ctx.translate(cx,cy);ctx.rotate(t*0.25);for(var k=0;k<2;k++){ctx.beginPath();ctx.ellipse(0,0,R*(1+k*0.16),R*0.34*(1+k*0.16),0,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,'+(0.05-k*0.018).toFixed(3)+')';ctx.lineWidth=1;ctx.stroke();}ctx.restore();}
   function draw(){ctx.clearRect(0,0,W,H);aurora();if(!reduce)ring();var i,j;if(!reduce){for(i=0;i<P.length;i++){var p=P[i];p.x+=p.vx;p.y+=p.vy;if(p.x<-10)p.x=W+10;if(p.x>W+10)p.x=-10;if(p.y<-10)p.y=H+10;if(p.y>H+10)p.y=-10;}}ctx.lineWidth=0.5;for(i=0;i<P.length;i++){for(j=i+1;j<P.length;j++){var a=P[i],b=P[j];var dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy;if(d2<13000){var al=(1-d2/13000)*0.11*Math.min(a.d,b.d);ctx.strokeStyle='rgba(201,168,76,'+al.toFixed(3)+')';ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}}for(i=0;i<P.length;i++){var q=P[i];var tw=reduce?1:(0.55+0.45*Math.sin(t*2.2+q.ph));ctx.beginPath();ctx.fillStyle=q.gold?'rgba(201,168,76,'+((0.45*q.d+0.15)*tw).toFixed(3)+')':'rgba(0,229,255,'+((0.4*q.d+0.1)*tw).toFixed(3)+')';ctx.shadowColor=q.gold?'rgba(201,168,76,0.5)':'rgba(0,229,255,0.45)';ctx.shadowBlur=7*q.d;ctx.arc(q.x,q.y,q.r,0,Math.PI*2);ctx.fill();}ctx.shadowBlur=0;}
-  function loop(){t+=0.004;draw();raf=requestAnimationFrame(loop);}
+  /* retireLegacy() (Ω-FX, below) removes this canvas once its successor mounts,
+     and nothing stopped the loop: an O(n^2) particle field with shadowBlur kept
+     drawing into a detached canvas on every page for the life of the tab. */
+  function loop(){if(!cv.isConnected){raf=null;return;}t+=0.004;draw();raf=requestAnimationFrame(loop);}
   function start(){resize();init();if(reduce){draw();}else{if(raf)cancelAnimationFrame(raf);loop();}}
-  window.addEventListener('resize',function(){resize();init();if(reduce)draw();});
+  window.addEventListener('resize',function(){if(!cv.isConnected)return;resize();init();if(reduce)draw();});
   attach();
 })();
 
@@ -1686,6 +1701,9 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   /* ---- retire the legacy flat aurora ---- */
   function retireLegacy(){var o=document.getElementById('omega-bg');if(o)o.remove();}
   retireLegacy(); setTimeout(retireLegacy,400); setTimeout(retireLegacy,1200);
+  /* Frames of 60Hz elapsed since the last draw; see loop(). 1 under reduced motion. */
+  var K=1;
+  function ease(a){return K===1?a:1-Math.pow(1-a,K);}
 
   /* ============================================================ CANVAS */
   var cv=document.createElement('canvas');
@@ -1766,7 +1784,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     var px=(mx-0.5),py=(my-0.42);
     for(var i=0;i<stars.length;i++){
       var s=stars[i];
-      if(!REDUCE){s.x+=s.dx;s.y+=s.dy;
+      if(!REDUCE){s.x+=s.dx*K;s.y+=s.dy*K;
         if(s.x<-8)s.x=W+8;if(s.x>W+8)s.x=-8;if(s.y<-8)s.y=H+8;if(s.y>H+8)s.y=-8;}
       var ox=px*40*s.z,oy=py*40*s.z;
       var tw=REDUCE?0.85:(0.5+0.5*Math.sin(t*1.8*s.sp+s.ph));
@@ -1799,7 +1817,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     var rot=ringRot(R),N=set.length;
     for(var i=0;i<N;i++){
       var nd=set[i];
-      if(!REDUCE)nd.ang+=nd.spd*0.016;
+      if(!REDUCE)nd.ang+=nd.spd*0.016*K;
       var ex=Math.cos(nd.ang)*R.r*breathe,ey=Math.sin(nd.ang)*R.r*R.flat*breathe;
       nd.x=CX+o.x+ex*Math.cos(rot)-ey*Math.sin(rot);
       nd.y=CY+o.y+ex*Math.sin(rot)+ey*Math.cos(rot);
@@ -1807,9 +1825,9 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
       nd.scale=0.45+nd.depth;
       var lit=REDUCE?1:Math.max(0,Math.min(1,(ig-(i/N)*0.6)/0.18));
       nd.lit=lit;
-      if(nd.flare>0)nd.flare-=0.02;
+      if(nd.flare>0)nd.flare-=0.02*K;
       var dxm=nd.x-mx*W,dym=nd.y-my*H;
-      if(!REDUCE&&(dxm*dxm+dym*dym)<8100)nd.flare=Math.min(1,nd.flare+0.06);
+      if(!REDUCE&&(dxm*dxm+dym*dym)<8100)nd.flare=Math.min(1,nd.flare+0.06*K);
     }
   }
 
@@ -1855,7 +1873,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   }
   function drawArcs(){
     for(var i=arcs.length-1;i>=0;i--){
-      var ar=arcs[i];ar.life+=0.02;if(ar.life>=1){arcs.splice(i,1);continue;}
+      var ar=arcs[i];ar.life+=0.02*K;if(ar.life>=1){arcs.splice(i,1);continue;}
       var A=ar.a,B=ar.b;
       var mxp=(A.x+B.x)/2+ar.bow*(A.y-B.y)*0.32,myp=(A.y+B.y)/2-ar.bow*(A.x-B.x)*0.32;
       var fade=Math.sin(ar.life*Math.PI);
@@ -1872,7 +1890,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   function drawMotes(breathe,o){
     for(var i=0;i<motes.length;i++){
       var m=motes[i],R=RINGS[m.ring];if(!R)continue;
-      if(!REDUCE)m.ang+=m.spd*0.016;
+      if(!REDUCE)m.ang+=m.spd*0.016*K;
       var rot=ringRot(R);
       var ex=Math.cos(m.ang)*R.r*breathe,ey=Math.sin(m.ang)*R.r*R.flat*breathe;
       var x=CX+o.x+ex*Math.cos(rot)-ey*Math.sin(rot);
@@ -1891,7 +1909,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     if(!BROADCAST_ON||REDUCE)return;
     if(t-lastBeam>2.2&&beams.length<3){beams.push({life:0,a:Math.random()*6.283});lastBeam=t;}
     for(var i=beams.length-1;i>=0;i--){
-      var bm=beams[i];bm.life+=0.018;if(bm.life>=1){beams.splice(i,1);continue;}
+      var bm=beams[i];bm.life+=0.018*K;if(bm.life>=1){beams.splice(i,1);continue;}
       var fade=Math.sin(bm.life*Math.PI),len=Math.max(W,H)*0.6*bm.life;
       var x2=CX+o.x+Math.cos(bm.a)*len,y2=CY+o.y+Math.sin(bm.a)*len*0.6;
       var g=ctx.createLinearGradient(CX+o.x,CY+o.y,x2,y2);
@@ -1905,7 +1923,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   function heartbeat(o){
     if(!REDUCE&&t-lastHeart>5.5&&ig>0.96){pulses.push({life:0});lastHeart=t;}
     for(var i=pulses.length-1;i>=0;i--){
-      var p=pulses[i];p.life+=0.012;if(p.life>=1){pulses.splice(i,1);continue;}
+      var p=pulses[i];p.life+=0.012*K;if(p.life>=1){pulses.splice(i,1);continue;}
       var R=Math.min(W,H)*0.5*p.life,fade=(1-p.life)*0.18;
       ctx.beginPath();ctx.arc(CX+o.x,CY+o.y,R,0,6.283);
       ctx.strokeStyle='rgba('+GOLD+','+fade.toFixed(3)+')';ctx.lineWidth=1;ctx.stroke();
@@ -1937,10 +1955,10 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 
   function frame(){
     ctx.clearRect(0,0,W,H);
-    if(!REDUCE&&ig<1)ig=Math.min(1,ig+0.0075);
-    mx+=(tmx-mx)*0.05;my+=(tmy-my)*0.05;
-    scrollSpin+=((window.__ofxScrollSpin||0)-scrollSpin)*0.06;
-    recede+=(((window.__ofxRecede)||1)-recede)*0.06;
+    if(!REDUCE&&ig<1)ig=Math.min(1,ig+0.0075*K);
+    mx+=(tmx-mx)*ease(0.05);my+=(tmy-my)*ease(0.05);
+    scrollSpin+=((window.__ofxScrollSpin||0)-scrollSpin)*ease(0.06);
+    recede+=(((window.__ofxRecede)||1)-recede)*ease(0.06);
     var breathe=(REDUCE?1:(1+Math.sin(t*0.9)*0.02))*recede;
     var o=gOff();
     nebula();starfield();
@@ -1959,7 +1977,20 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     core(o,breathe);
   }
 
-  function loop(){if(!hidden){t+=0.016;frame();}raf=requestAnimationFrame(loop);}
+  /* 30fps cap (owner decision, 2026-10-26). This full-viewport canvas was the
+     largest remaining main-thread cost: hiding it alone took dashboard.html from
+     ~95% to ~48% busy at 4x CPU. Every per-frame step above is multiplied by K,
+     the number of 60Hz frames that actually elapsed, and every per-frame lerp
+     goes through ease(), so the field moves at the same speed at any rate. */
+  var FRAME_MS=1000/30,lastT=0;
+  function loop(now){
+    raf=requestAnimationFrame(loop);
+    if(hidden){lastT=0;return;}
+    now=now||performance.now();
+    if(lastT&&now-lastT<FRAME_MS-1)return;
+    K=lastT?Math.min(3,(now-lastT)/(1000/60)):1;lastT=now;
+    t+=0.016*K;frame();
+  }
   function attach(){
     if(!document.body){requestAnimationFrame(attach);return;}
     document.body.appendChild(cv);resize();buildAll();
@@ -2361,6 +2392,11 @@ setTimeout(function(){
            cp===0x03A9||cp===0x20BF;
   }
   var items=[], hidden=false;
+  /* An emblem drawn while off-screen is work nobody sees. Without
+     IntersectionObserver every item stays on, exactly as before. */
+  var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){
+    for(var i=0;i<es.length;i++){var it=es[i].target.__omegaIconItem;if(it)it.on=es[i].isIntersecting;}
+  },{rootMargin:'64px'}):null;
   function hash(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h);}
   /* A PURE-BLACK READING IS AN UNRESOLVED ONE, NOT A CHOICE. collect() reads
      getComputedStyle(el).color once, and many of these glyphs are inserted by
@@ -2392,8 +2428,10 @@ setTimeout(function(){
       var ctx=cvs.getContext('2d');ctx.setTransform(DPR,0,0,DPR,0,0);
       el.setAttribute('aria-label',txt);
       el.textContent='';el.appendChild(cvs);el.__omegaIcon=1;
-      items.push({ctx:ctx,sz:sz,glyph:txt,col:rgbOf(cs.color),motif:hash(txt)%4,
-                  ph:Math.random()*6.283,fs:Math.min(fs,sz*0.62),isOmega:cp===0x03A9});
+      var it={ctx:ctx,sz:sz,glyph:txt,col:rgbOf(cs.color),motif:hash(txt)%4,
+              ph:Math.random()*6.283,fs:Math.min(fs,sz*0.62),isOmega:cp===0x03A9,on:!io};
+      items.push(it);
+      if(io){cvs.__omegaIconItem=it;io.observe(cvs);}
     }
   }
 
@@ -2428,7 +2466,18 @@ setTimeout(function(){
     ctx.restore();ctx.shadowBlur=0;
   }
 
-  function loop(t){if(!hidden){var ti=t*0.001;for(var i=0;i<items.length;i++)drawOne(items[i],ti);}requestAnimationFrame(loop);}
+  /* Frame budget. Measured on dashboard.html (390x844, 4x CPU): this loop was
+     the third-largest JS cost on the page, redrawing every collected glyph --
+     each with a shadowBlur -- 60 times a second, most of them scrolled out of
+     view. Now only on-screen emblems draw, at 30fps; motion is driven by the
+     clock, not a frame counter, so the speed is unchanged. */
+  var FRAME_MS=1000/30,last=0;
+  function loop(t){
+    requestAnimationFrame(loop);
+    if(hidden||t-last<FRAME_MS-1)return;
+    last=t;var ti=t*0.001;
+    for(var i=0;i<items.length;i++)if(items[i].on)drawOne(items[i],ti);
+  }
   function start(){collect();if(!items.length)return;if(REDUCE){for(var i=0;i<items.length;i++)drawOne(items[i],0);return;}requestAnimationFrame(loop);}
   document.addEventListener('visibilitychange',function(){hidden=document.hidden;});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();

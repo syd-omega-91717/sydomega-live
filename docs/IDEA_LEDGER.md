@@ -6,7 +6,7 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**504 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 35, IDEA_INTAKE.md 14.
+**505 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 35, IDEA_INTAKE.md 15.
 
 | status | count |
 |---|---|
@@ -15,7 +15,7 @@ production serves it.
 | PARTIAL | 56 |
 | OPEN_GAP | 18 |
 | DORMANT | 1 |
-| SHIPPED | 42 |
+| SHIPPED | 43 |
 | DECIDED | 42 |
 | CLOSED | 17 |
 | SUPERSEDED | 1 |
@@ -69,7 +69,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
-| I14 | IDEA_INTAKE.md | Rendered-image alt-text check | a verify-runtime.js assertion that every visible <img> on a rendered page has an alt attribute (alt="" allowed for decoration). Grounded 20… |
+| I15 | IDEA_INTAKE.md | Honour prefers-reduced-transparency on the glass layers | when a member's OS asks for reduced transparency, replace backdrop-filter blur with an opaque surface. Grounded 2026-10-26: 15 backdrop-fil… |
 
 ### PARTIAL (56)
 
@@ -161,7 +161,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (42)
+### SHIPPED (43)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -207,6 +207,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | I04 | IDEA_INTAKE.md | Map every 999-blueprint point | all 413 entries (391 + 8 restored duplicates + 14 appendix Nodes) classified with reasons by scripts/blueprint-truth-map.py (2026-10-12) |
 | I06 | IDEA_INTAKE.md | Owner concept media on the Vision Board | 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today… |
 | I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; merged in #885: profile.html:1529 gives each held certificate a download button, omega-passport.js:224 `… |
+| I14 | IDEA_INTAKE.md | Rendered-image alt-text check | built 2026-10-26: scripts/verify-runtime.js:203 collects painted <img> with no alt attribute and :547 fails the page; 0 across all 237 page… |
 
 ### DECIDED (42)
 

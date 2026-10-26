@@ -25386,3 +25386,19 @@ Not fixed, and why:
   (https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
 
 Gates: `./scripts/ci-local.sh` 32 blocking passed. `node scripts/verify-runtime.js` PASS (13 pages).
+
+## Dashboard poster weight, and the empty context bar on every section hub (2026-10-26)
+
+- **Film-of-the-day poster (`omega-daily.js`).** The card rendered the 1280×720 `franchise-NN.jpg`
+  (75–90KB each, 942KB for the twelve) at 323–376px wide. It is the dashboard's LCP element at desktop
+  size (measured in #1100's entry). Added 640w and 960w WebP for each film (`*-640.webp` avg 9KB,
+  `*-960.webp` avg 15KB) and a `srcset`/`sizes` on the `<img>`. The jpg stays the fallback and the
+  `<video>` poster. Rendered: a 1280×800 and a 1440×900 viewport, both at DPR 1, loaded
+  `franchise-10-640.webp`; a phone viewport at DPR 2 loaded `-960.webp`. Every image decoded. No other
+  page references these files.
+- **Empty bar under the dock on section hubs.** `#omega-context-rail` (38px, tinted, blurred) drops its
+  parent link on a section's own hub (nav.js) and keeps the page name screen-reader only. Calm mode
+  (default since 2026-10-04) hides `.omega-context-actions`. On every hub the bar painted with nothing in
+  it. Calm mode now also hides a rail that holds no link
+  (`.omega-context-rail:not(:has(a))`). Rendered at 1280×800: hidden on dashboard, vault and cosmos
+  (0 links); still shown on missions and focus (2 links each, "COMMAND › MISSIONS", "ASCEND › DEEP WORK").

@@ -1073,6 +1073,11 @@ function __omegaAppend(el){
       'html[data-omega-calm] #ofb-btn,html[data-omega-calm] #osh-btn,html[data-omega-calm] #omega-voice-btn,'+
       'html[data-omega-calm] .omega-context-actions,html[data-omega-calm] #omega-ded-widget,'+
       'html[data-omega-calm] #omega-value-layer,html[data-omega-calm] #omega-page-world,html[data-omega-calm] #omega-kbd-hint{display:none!important}'+
+      /* On a section hub nav.js omits the rail's parent link and its title is
+         screen-reader only; with the actions hidden above, what remained was an
+         empty 38px tinted bar under the dock. Hide the rail only when it holds
+         no link. */
+      'html[data-omega-calm] .omega-context-rail:not(:has(a)){display:none!important}'+
       '@media (min-width:901px){html[data-omega-calm] #omega-tb-nav{display:none!important}}';
     (document.head||root).appendChild(st);
   }

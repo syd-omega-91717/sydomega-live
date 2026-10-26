@@ -204,6 +204,11 @@ a.skip-link:hover, a.skip-link:active {
 button, [role="button"], a[href], .clickable {
   min-height: var(--a11y-touch-min);
   min-width: var(--a11y-touch-min);
+  /* An explicit min-width replaces a flex item's automatic min-content
+     floor, so in a no-wrap row every text link could shrink to 44px and
+     overprint its neighbours: 535 squeezed controls on 124 pages at 390px
+     (2026-10-26). flex-shrink:0 keeps the 44px floor and the label width. */
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;

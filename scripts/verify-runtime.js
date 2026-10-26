@@ -194,6 +194,18 @@ const CHECK_JS = `(() => {
   const seen = new Set(), dup = new Set();
   document.querySelectorAll('[id]').forEach(el => { if (seen.has(el.id)) dup.add(el.id); seen.add(el.id); });
   out.dupIds = [...dup];
+  /* IMAGE TEXT ALTERNATIVE (WCAG 1.1.1). A rendered <img> with no alt
+     attribute at all is announced by its file name. alt="" is the correct
+     mark for decoration and passes. Measured on the render, not the source:
+     every static <img> in the root pages already carried alt (2026-10-24),
+     but modules create images at runtime and nothing checked those. Only
+     images that paint (non-zero box, not visibility:hidden) count. */
+  out.imgNoAlt = [...document.images].filter(im => {
+    if (im.hasAttribute('alt')) return false;
+    const r = im.getBoundingClientRect(), cs = getComputedStyle(im);
+    return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden';
+  }).slice(0, 8).map(im => (im.id ? '#' + im.id : (im.className && typeof im.className === 'string' ? '.' + im.className.trim().split(/\s+/)[0] : 'img')) +
+    ' ' + String(im.getAttribute('src') || '').split('/').pop().slice(0, 40));
   /* CANVAS RESOLUTION.
      A canvas has TWO sizes -- the drawing buffer (canvas.width/height) and
      the box it is displayed in -- and nothing in the platform keeps them
@@ -532,6 +544,7 @@ async function main() {
       if (realErrs.length) problems.push(realErrs.length + ' uncaught error(s): ' + realErrs.slice(0, 3).join(' | '));
       if (info.overflow) problems.push('horizontal overflow');
       if (info.dupIds && info.dupIds.length) problems.push('duplicate ids: ' + info.dupIds.join(', '));
+      if (info.imgNoAlt && info.imgNoAlt.length) problems.push('image without an alt attribute (WCAG 1.1.1): ' + info.imgNoAlt.join(', '));
       /* A zero drawing buffer BLOCKS: that canvas can never paint anything,
          whatever else is right. A low-resolution one is advisory -- it does
          paint, just softer than its box -- so it reports without failing a

@@ -117,7 +117,15 @@
     }
     var t = 0, hidden = false;
     document.addEventListener('visibilitychange', function () { hidden = document.hidden; });
-    function frame() {
+    /* 30fps, motion unchanged: t and particle drift advance by the 60Hz frames
+       that actually elapsed (K). A third full-viewport canvas animating at
+       60fps (beside Omega-FX and the particle field) for a layer drawn at
+       opacity 0.18. */
+    var K = 1, last = 0;
+    function frame(now) {
+      now = now || performance.now();
+      if (last && now - last < 1000 / 30 - 1) { requestAnimationFrame(frame); return; }
+      K = last ? Math.min(3, (now - last) / (1000 / 60)) : 1; last = now;
       if (!hidden) {
         var pal = STATE.pal;
         ctx.clearRect(0, 0, W, H);
@@ -141,14 +149,14 @@
         ctx.font = (base * 0.34).toFixed(0) + 'px "Cinzel Decorative", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.globalAlpha = 0.10 + 0.05 * (0.5 + 0.5 * Math.sin(t * 0.0016)); ctx.fillStyle = 'rgba(' + pal.core + ',1)'; ctx.fillText(STATE.glyph, 0, 0); ctx.globalAlpha = 1; ctx.restore();
         for (var j = 0; j < P.length; j++) {
-          var p = P[j]; p.x += p.vx; p.y += p.vy;
+          var p = P[j]; p.x += p.vx * K; p.y += p.vy * K;
           if (p.x < 0) p.x = W; else if (p.x > W) p.x = 0;
           if (p.y < 0) p.y = H; else if (p.y > H) p.y = 0;
           var tw = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * 0.002 + p.ph));
           ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fillStyle = 'rgba(' + pal.p[p.ci] + ',' + (0.5 * tw).toFixed(3) + ')'; ctx.fill();
         }
       }
-      t += 16; requestAnimationFrame(frame);
+      t += 16 * K; requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
   }

@@ -542,9 +542,16 @@
   /* Rotating Omega brand */
   (function(){
     var cv=document.getElementById('on-bcv');if(!cv)return;
-    var ctx=cv.getContext('2d'),t=0;
-    function f(){
-      t+=.022;ctx.clearRect(0,0,88,88);
+    var ctx=cv.getContext('2d'),t=0,on=true,last=0;
+    /* It drew at 60fps with a shadowBlur for the life of every page -- also on
+       phones, where the sidebar is hidden and this canvas is 0x0. Now it draws
+       only while on screen, at 30fps; t advances by elapsed time, so the turn
+       keeps its speed. */
+    if(window.IntersectionObserver)new IntersectionObserver(function(es){on=es[es.length-1].isIntersecting;}).observe(cv);
+    function f(now){
+      now=now||performance.now();
+      if(!on||(last&&now-last<1000/30-1)){requestAnimationFrame(f);return;}
+      t+=.022*(last?Math.min(3,(now-last)/(1000/60)):1);last=now;ctx.clearRect(0,0,88,88);
       ctx.save();ctx.translate(44,44);
       ctx.save();ctx.rotate(t*.5);ctx.beginPath();ctx.arc(0,0,38,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=1;ctx.stroke();ctx.restore();
       ctx.save();ctx.rotate(-t*.8);ctx.beginPath();ctx.ellipse(0,0,36,13,0,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.12)';ctx.lineWidth=0.8;ctx.stroke();ctx.restore();

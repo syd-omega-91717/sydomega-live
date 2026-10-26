@@ -25314,6 +25314,22 @@ end (academy: scrollY 1506 + 844 < docH 2511). The scanner now scrolls with `beh
   remaining hits are `#omega-consent` over the footer on enter.html and reset.html. That banner is
   transient by design and sits above the dock (measured: consent 550–781, dock 781–844).
 
+## Weekly idea routine 2026-10-26: rendered images are checked for alt text (2026-10-26)
+
+- **Built: I14, rendered-image alt-text check (WCAG 1.1.1).** `scripts/verify-runtime.js` now collects every painted `<img>` (non-zero box, not `visibility:hidden`) that has no `alt` attribute, and fails the page. `alt=""` passes, because that is the correct mark for decoration.
+  - **Why:** all 24 static `<img>` tags already carried alt (2026-10-24), but `omega-*.js` modules create images at runtime and nothing checked the rendered result.
+- **Verified in headless Chromium:**
+  - `node scripts/verify-runtime.js --all`: 237 pages, **0** images without alt.
+  - **Planted violator:** a probe page with one bare `<img>` and one `alt=""` image FAILS with `image without an alt attribute (WCAG 1.1.1): img icon-192.png`. Only the bare one is reported. The probe was deleted afterwards.
+  - `./scripts/ci-local.sh`: all 32 blocking checks pass.
+- **Seen but not caused by this change:** `--all` fails 2 pages identically with `main`'s own verifier.
+  - `creation-studio.html`: "Cannot use import statement outside a module".
+  - `govern.html`: duplicate ids `omega-approval-guard`, `ocl-css` and `omega-desktop-pointer-recovery`.
+  - Neither page is among the 13 capability entrypoints CI renders, so CI is unaffected.
+- **Harness note:** Playwright now expects browser revision 1248. The `runtime-verify` skill's symlink bridge, applied to 1248, makes `/opt/pw-browsers` (revision 1194) usable.
+- **Statuses re-checked:** B168, member-chosen density, stays PROPOSED. `omega-archetype-surfaces.js` sets `cardDensity` per page archetype; nothing lets the member choose it.
+- **New proposal:** honour `prefers-reduced-transparency` on the glass layers (`docs/IDEA_INTAKE.md`). There are 15 `backdrop-filter` declarations, and no first-party file queries the preference.
+
 ## Production telemetry audit: dashboard main-thread cost, a shared parallax attribute, a false INP failure (2026-10-26)
 
 Started from live data, not a scan. `public.client_errors` had 9,072 rows and none after 2026-10-19 04:34.

@@ -512,30 +512,60 @@ function __omegaAppend(el){
 
       /* Scroll-reactive parallax on cards */
       if(el.classList.contains('card') || el.classList.contains('kpi') || el.classList.contains('kpi-card')){
-        el.setAttribute('data-parallax', '1');
+        el.setAttribute('data-omg-tilt', '1');
       }
     });
 
     /* 7. SCROLL-REACTIVE 3D PARALLAX ON CARDS */
-    var parallaxElements = document.querySelectorAll('[data-parallax="1"]');
+    var parallaxElements = document.querySelectorAll('[data-omg-tilt="1"]');
     /* Bind once. This sat inside the activation, so every DOM insertion added
        another scroll listener, each one walking every parallax element on every
        scroll event. */
     if(parallaxElements.length > 0 && window.requestAnimationFrame && !window.__omgCdScrollBound){
       window.__omgCdScrollBound = 1;
-      window.addEventListener('scroll', function(){
-        parallaxElements = document.querySelectorAll('[data-parallax="1"]');
-        var scrollY = window.scrollY || 0;
-        parallaxElements.forEach(function(el){
-          var rect = el.getBoundingClientRect();
-          var elementCenter = rect.top + rect.height / 2;
-          var screenCenter = window.innerHeight / 2;
-          var distance = (screenCenter - elementCenter) / window.innerHeight;
+      /* Layout thrash, fixed 2026-10-26: this ran on EVERY scroll event, re-ran
+         querySelectorAll over the page, and alternated getBoundingClientRect
+         (read) with style.transform (write) per card -- one forced layout per
+         card per event. Now: one pass per frame, only cards on screen
+         (IntersectionObserver), all reads before any write.
+         Its own attribute, data-omg-tilt: this used to be data-parallax="1",
+         which omega-cinematic.js and omega-cinematic-animations-phase2.js read
+         as a SPEED (translateY(scrollY * 1)) and answered with will-change on
+         every card -- ~70 GPU layers on dashboard.html -- all of it cancelled
+         by Simple UI's `.card{transform:none!important}`. And under Simple UI,
+         the default surface, this tilt is cancelled the same way, so it does
+         no work there at all. */
+      var pxOn = new Set(), pxRaf = 0, pxIO = null;
+      var pxTrack = function(){
+        document.querySelectorAll('[data-omg-tilt="1"]').forEach(function(el){
+          if(el.__omgPx) return; el.__omgPx = 1;
+          if(pxIO) pxIO.observe(el); else pxOn.add(el);
+        });
+      };
+      if(window.IntersectionObserver){
+        pxIO = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){ if(en.isIntersecting) pxOn.add(en.target); else pxOn.delete(en.target); });
+        });
+      }
+      pxTrack();
+      window.__omgPxTrack = pxTrack;
+      var pxApply = function(){
+        pxRaf = 0;
+        if(document.body && document.body.classList.contains('omega-simple')) return;
+        var vh = window.innerHeight || 1, els = [], rects = [];
+        pxOn.forEach(function(el){ if(el.isConnected){ els.push(el); rects.push(el.getBoundingClientRect()); } else pxOn.delete(el); });
+        for(var i = 0; i < els.length; i++){
+          var distance = (vh / 2 - (rects[i].top + rects[i].height / 2)) / vh;
           var rotX = Math.max(-6, Math.min(6, distance * 12));
           var scale = 1 + Math.abs(distance) * 0.04;
-          el.style.transform = 'perspective(800px) rotateX('+rotX.toFixed(2)+'deg) scale('+scale.toFixed(3)+')';
-        });
+          els[i].style.transform = 'perspective(800px) rotateX('+rotX.toFixed(2)+'deg) scale('+scale.toFixed(3)+')';
+        }
+      };
+      window.addEventListener('scroll', function(){
+        if(!pxRaf) pxRaf = requestAnimationFrame(pxApply);
       }, {passive: true});
+    } else if(window.__omgPxTrack){
+      window.__omgPxTrack();   /* re-activation after a DOM insertion: track new cards */
     }
 
     /* 8. EMBLEM ANIMATION ON PAGE (if Ω sigil exists, spin it) */

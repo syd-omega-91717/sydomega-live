@@ -25329,3 +25329,60 @@ end (academy: scrollY 1506 + 844 < docH 2511). The scanner now scrolls with `beh
 - **Harness note:** Playwright now expects browser revision 1248. The `runtime-verify` skill's symlink bridge, applied to 1248, makes `/opt/pw-browsers` (revision 1194) usable.
 - **Statuses re-checked:** B168, member-chosen density, stays PROPOSED. `omega-archetype-surfaces.js` sets `cardDensity` per page archetype; nothing lets the member choose it.
 - **New proposal:** honour `prefers-reduced-transparency` on the glass layers (`docs/IDEA_INTAKE.md`). There are 15 `backdrop-filter` declarations, and no first-party file queries the preference.
+
+## Production telemetry audit: dashboard main-thread cost, a shared parallax attribute, a false INP failure (2026-10-26)
+
+Started from live data, not a scan. `public.client_errors` had 9,072 rows and none after 2026-10-19 04:34.
+That looked like a broken reporter after the Cloudflare cutover, and it is not: `report_client_error`
+inserts when called as a member (`SET LOCAL ROLE authenticated` + jwt claims, rolled back, returned
+`{"ok":true}`). Forcing an error in a harness render made `bg.js`'s reporter call it. The last two weeks
+before the stop were 568 reports of `.catch is not a function` on Supabase calls (telemetry inserts), and
+`telemetry_events` begins on 10-19. Those bugs were fixed, and the zero is real. Traffic is one account:
+53 page views in 7 days.
+
+`telemetry_events` (`web_vitals`, `slo_breach`) gave the real findings:
+
+- **Dashboard LCP p75 8.78s** over 24 real loads, against 0.4–3.3s on every other page. The
+  `dashboard` capability SLO (500ms) was breached 12 of 15 times (1.1–3.3s).
+- A harness render (390×844) put **9.4s of long tasks in a 12s window** on this machine's
+  unthrottled CPU. At CPU 4× (phone-class) the page did not reach `domcontentloaded` in 90s. A CPU
+  profile attributed the largest script cost to `omega-sculpture.js` `frame()`: 2.1s self time plus
+  0.57s in three.js, then 0.69s in its `drawImage` blit (attributed by walking each native node to its
+  nearest scripted caller).
+
+Fixed:
+
+1. **`omega-sculpture.js`: frame budget.** The loop drew at the display rate. It now draws at most 30fps
+   and, once warmed up, drops bloom if a frame averages over 12ms (the step drei's `PerformanceMonitor`
+   takes). `status()` reports `fpsCap`, `frameMs`, `degraded`. Headless here renders in software at
+   ~6–15fps, so the cap barely moves this environment's profile (frame 2.16s → 1.88s). Its effect is on
+   real 60/120Hz devices and is not measured here.
+2. **`bg.js` card tilt: layout thrash, and another module's attribute.** On every scroll event it re-ran
+   `querySelectorAll` and alternated `getBoundingClientRect` with `style.transform` per card. It also tagged
+   cards `data-parallax="1"`, which `omega-cinematic.js` and `omega-cinematic-animations-phase2.js` read as a
+   speed (their CSS documents 0.1–0.9), so they wrote `translateY(scrollY*1)`. Measured with Simple UI off:
+   a card at scrollY 400 computed `matrix(1,0,0,1,0,400)`, frozen in the viewport while the page scrolled.
+   Simple UI (the default, `bg.js:197`) hid it with `.card{transform:none!important}`. The writes still ran
+   on every frame. The tilt now has its own attribute (`data-omg-tilt`, CLAUDE.md 8.1 class 5b), runs one
+   rAF pass over on-screen cards (IntersectionObserver), does reads before writes, and is skipped under
+   Simple UI, whose rule already cancels it. Wheel-scroll benchmark (30 notches, dashboard, two runs each):
+   style recalcs 1843/1865 → 317/318, layout 0.23/0.29s → 0.17/0.17s, script 4.72/4.71s → 4.39/3.48s.
+   Card positions match the original on vault and analytics-dashboard. On dashboard 34 `.kpi.oa-reveal`
+   cards differ by 32px, and the sign flips with the settle time (722/690, then 690/722). That is the
+   reveal animation's timing; both versions compute `transform:none`. With Simple UI off, the fix
+   writes `rotateX(-4.03deg)` where the original wrote the 400px slide.
+3. **`omega-metrics.js`: INP stored as failed when unmeasured.** `inp_pass:_inp>0&&_inp<=200` wrote
+   `false` for no interaction. 17 of 17 zero-INP rows carried `inp_pass:false`. It is now `null` when
+   unmeasured. `monitoring-dashboard.html` already read 0 as "Not measured".
+
+Not fixed, and why:
+- `will-change:transform` stayed at 97 elements on dashboard after the fix. The promotions come from other
+  rules, not from `[data-parallax]`, so no layer reduction is claimed.
+- The dashboard LCP element at 1280×800 is `assets/movies/franchise-10.jpg` (1280×720 shown at 323×181,
+  `loading=lazy`, top 703). It is below the fold on a phone, where lazy is right. No change without a
+  responsive `srcset` decision.
+- Leaked-password protection is off (security advisor `auth_leaked_password_protection`). It is a
+  Supabase Auth setting for the owner, not settable from SQL
+  (https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+
+Gates: `./scripts/ci-local.sh` 32 blocking passed. `node scripts/verify-runtime.js` PASS (13 pages).

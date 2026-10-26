@@ -87,8 +87,9 @@ comes entirely from `bg.js`, which every page loads via `<script src="/bg.js">`
 1. `bg.js` injects the global CSS design system (design tokens under
    `:root` — colors, fonts, spacing — see §4) as a `<style>` tag.
 2. It injects an "approval guard": a CSS rule that hides `#app`/`.shell`/
-   `main.main` by default, lifted only once the session is confirmed
-   *and* the profile is approved (`body.omega-approved`). This exists
+   `main.main` until session and approval are confirmed (`body.omega-approved`,
+   or this tab's <30 min approval; a completed check adds
+   `omega-approval-confirmed`). This exists
    specifically because per-page auth checks used to have a timing gap
    between "session exists" and "profile approved" — see the comment
    block at the top of `bg.js`. A fixed list of public pages

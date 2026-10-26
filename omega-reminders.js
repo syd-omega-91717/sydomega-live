@@ -135,7 +135,9 @@
     s[kind] = Date.now(); write(SK, s); return true;
   }
 
-  function approved() { return !!(document.body && document.body.classList.contains('omega-approved')); }
+  /* omega-approval-confirmed, not omega-approved: the latter can come from
+     bg.js's cached trust before this page's check has run. */
+  function approved() { return !!(document.body && document.body.classList.contains('omega-approval-confirmed')); }
   function canDeliver() { return permission() === 'granted' || document.visibilityState === 'visible'; }
 
   function evaluate() {

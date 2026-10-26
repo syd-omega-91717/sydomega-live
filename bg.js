@@ -639,7 +639,7 @@ function __omegaAppend(el){
     var path = (location.pathname || '/').replace(/\.html$/,'');
     for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
 
-    var TRUST_KEY='omega_approval_trust', TRUST_MS=30*60*1000;
+    var TRUST_KEY='omega_approval_trust', TRUST_MS=30*60*1000, SB_REF='ydqhzvvoyufiiqvzcjns';
     var s=document.createElement('style');
     s.id='omega-approval-guard';
     s.textContent='body:not(.omega-approved) #app,'+
@@ -653,24 +653,42 @@ function __omegaAppend(el){
        before <body> was parsed -- a page that loads bg.js synchronously in
        <head> behind a large stylesheet (omega-platform-navigator) then stayed
        blank for an approved member. Queue instead (CLAUDE.md 8.1 class 5a). */
+    /* A reveal queued for DOMContentLoaded must be cancellable: a revoke that
+       runs before <body> exists (bg.js loaded synchronously in <head>) found no
+       body to strip and left the queued reveal to fire later -- revealing a
+       page whose check had failed (review of #1095). `revoked` is checked when
+       the queued reveal runs. */
+    var revoked = false, pendingAdd = null;
     window.__omegaApprove = function(ok, who){
       if (!ok) return;
+      revoked = false;
       /* `who` comes only from the real check below: remember the approval for
-         this tab so the NEXT page can open without hiding (see TRUST below). */
+         this tab so the NEXT page can open without hiding (see TRUST below),
+         and mark the approval CONFIRMED -- body.omega-approved alone may now
+         come from trust, so code that needs a completed check reads
+         omega-approval-confirmed (omega-reminders.js, omega-review.js). */
       if (who && who.uid) {
         try { sessionStorage.setItem(TRUST_KEY, JSON.stringify({ uid: who.uid, exp: who.exp || null, t: Date.now() })); } catch (e) {}
       }
-      var add = function(){ document.body.classList.add('omega-approved'); };
+      var confirmed = !!(who && who.uid);
+      var add = function(){
+        pendingAdd = null;
+        if (revoked) return;
+        document.body.classList.add('omega-approved');
+        if (confirmed) document.body.classList.add('omega-approval-confirmed');
+      };
       if (document.body) add();
-      else document.addEventListener('DOMContentLoaded', add, { once: true });
+      else { pendingAdd = add; document.addEventListener('DOMContentLoaded', add, { once: true }); }
     };
     /* The real check failed or could not complete: hide again, forget the
        approval. Called before every redirect the check makes, and when it
        finds no session or no profile -- the same "never reveal on an
        incomplete check" rule the guard has always had. */
     window.__omegaRevoke = function(){
+      revoked = true;
       try { sessionStorage.removeItem(TRUST_KEY); } catch (e) {}
-      if (document.body) document.body.classList.remove('omega-approved');
+      if (pendingAdd) { document.removeEventListener('DOMContentLoaded', pendingAdd); pendingAdd = null; }
+      if (document.body) document.body.classList.remove('omega-approved', 'omega-approval-confirmed');
     };
 
     /* TRUST (owner decision 2026-10-25). Between two pages the guard used to
@@ -692,10 +710,22 @@ function __omegaAppend(el){
     var trusted = (function(){
       try {
         var f = JSON.parse(sessionStorage.getItem(TRUST_KEY) || 'null');
-        if (!f || !f.uid || !(Date.now() - f.t < TRUST_MS)) return false;
+        /* age >= 0: a recorded time in the future (clock moved back, or an
+           edited value) must not pass forever. The window is 30 minutes since
+           the LAST confirmed check -- each real approval refreshes t, so it
+           is an idle timeout by design. */
+        if (!f || !f.uid) return false;
+        var age = Date.now() - f.t;
+        if (!(age >= 0 && age < TRUST_MS)) return false;
         if (f.exp && !(Date.parse(f.exp) > Date.now())) return false;
-        var tok = JSON.parse(localStorage.getItem('sb-ydqhzvvoyufiiqvzcjns-auth-token') || 'null');
-        var u = tok && (tok.user || (tok.currentSession && tok.currentSession.user));
+        /* supabase-js's default storage key is sb-<project ref>-auth-token
+           (the ref is the first label of the project URL). Newer releases can
+           keep the user under a separate '-user' key; read both shapes, so a
+           client upgrade fails closed (no trust) rather than silently. */
+        var key = 'sb-' + SB_REF + '-auth-token';
+        var tok = JSON.parse(localStorage.getItem(key) || 'null');
+        var usr = JSON.parse(localStorage.getItem(key + '-user') || 'null');
+        var u = (tok && (tok.user || (tok.currentSession && tok.currentSession.user))) || (usr && (usr.user || usr));
         return !!(u && u.id === f.uid);
       } catch (e) { return false; }
     })();
@@ -2013,22 +2043,33 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   }
   /* shared singleton -- each extra createClient registers another GoTrueClient
      competing for the same auth-token storage key */
+  /* Fail closed. With trust (see the guard block) a page may already be
+     showing, so EVERY way this check can fail to complete -- the client import
+     or OmegaSB.get() rejecting, getSession() or the profile request rejecting,
+     no session, no profile row -- must revoke, not just the redirects. A
+     profile request that resolves with an error is retried once first, so one
+     network blip does not pull away a page the member is using. */
+  var revoke=function(){ if(window.__omegaRevoke) window.__omegaRevoke(); };
   (window.OmegaSB?window.OmegaSB.get():import('/vendor/supabase-js.js').then(function(m){
     return m.createClient("https://ydqhzvvoyufiiqvzcjns.supabase.co","sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q");
   })).then(function(sb){
     sb.auth.getSession().then(function(res){
-      var revoke=function(){ if(window.__omegaRevoke) window.__omegaRevoke(); };
-      var s=res.data.session;if(!s){revoke();return;}
-      sb.from('profiles').select('sign,terms_accepted,access_approved,is_owner,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle().then(function(pr){
-        if(!pr.data){revoke();return;}
+      var s=res&&res.data&&res.data.session;if(!s){revoke();return;}
+      var profile=function(){return sb.from('profiles').select('sign,terms_accepted,access_approved,is_owner,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle();};
+      profile().then(function(pr){ return (pr&&pr.error)?profile():pr; }).then(function(pr){
+        if(!pr||!pr.data){revoke();return;}
         var d=pr.data;
         if(d.access_approved===false && !d.is_owner && !d.is_trial){revoke();safeRedirect('/pending.html');return;}
         if(d.sign&&!d.terms_accepted){revoke();safeRedirect('/terms.html');return;}
+        var trialEnds=(d.is_trial&&!d.is_owner&&d.trial_expires_at)?new Date(d.trial_expires_at).getTime():null;
+        /* An expired trial is decided BEFORE approving, so it is never
+           revealed or recorded (it used to approve, then revoke, in one task). */
+        if(trialEnds!==null&&trialEnds<=Date.now()){revoke();sb.rpc('expire_trial',{p_uid:s.user.id}).then(function(r){window.__omegaWriteFail('expire_trial',r);safeRedirect('/pending.html?t=expired');},function(){safeRedirect('/pending.html?t=expired');});return;}
         /* Approval confirmed -- release the guard so #app may render, and
            remember it for this tab's next page (TRUST, above). */
         if(window.__omegaApprove) window.__omegaApprove(true,{uid:s.user.id,exp:(d.is_trial&&!d.is_owner)?d.trial_expires_at:null});
-        if(d.is_trial&&!d.is_owner&&d.trial_expires_at){
-          var expiresAt=new Date(d.trial_expires_at).getTime();
+        if(trialEnds!==null){
+          var expiresAt=trialEnds;
           var remaining=expiresAt-Date.now();
           /* The callback MUST take the result: a no-arg .then() cannot tell
              success from {data:null,error}, and the member is sent to the
@@ -2039,9 +2080,9 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
           injectTrialBanner(expiresAt,s.user.id,sb);
         }
         startTimeSovereignPing(sb);
-      });
-    });
-  }).catch(function(){});
+      },revoke);
+    },revoke);
+  }).catch(revoke);
   function startTimeSovereignPing(sb){
     if(window.__omegaTSping)return; window.__omegaTSping=1;
     /* The try/catch here caught nothing: an rpc that fails resolves, it does

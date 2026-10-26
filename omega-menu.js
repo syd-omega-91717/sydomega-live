@@ -111,9 +111,13 @@
   ];
 
   var css = [
-    '#om-open{position:fixed;top:10px;left:12px;z-index:9000;height:34px;width:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(201,168,76,.28);background:rgba(10,10,15,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9A84C;border-radius:10px;cursor:pointer}',
+    '#om-open{position:fixed;top:10px;left:12px;z-index:9000;height:34px;width:38px;padding:0;display:flex;align-items:center;justify-content:center;border:1px solid rgba(201,168,76,.28);background:rgba(10,10,15,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9A84C;border-radius:10px;cursor:pointer}',
     '#om-open:hover{border-color:rgba(201,168,76,.6);color:#E2C86D}',
-    '#om-open svg{width:18px;height:18px}',
+    /* padding:0 above is load-bearing: #om-open has an id but no class, so
+       bg.js's fallback skin for bare buttons (button:not([class])) gave it
+       20px side padding, leaving 4px for this icon -- max-width:100% then drew
+       the four-square grid as a 2x18px dot (measured 2026-10-25). */
+    '#om-open svg{width:18px;height:18px;flex:none}',
     '#om-ov{position:fixed;inset:0;z-index:9600;background:radial-gradient(ellipse at 50% 30%,rgba(13,13,22,.97),rgba(2,2,6,.98));backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;overflow-y:auto;padding:64px 18px 40px}',
     '#om-ov.open{display:block}',
     '#om-close{position:fixed;top:14px;right:16px;font-size:var(--fs-5,28px);color:#C9A84C;cursor:pointer;line-height:1;background:none;border:0}',
@@ -175,6 +179,37 @@
     ov.innerHTML = html;
     fillIcons(ov);
     document.body.appendChild(ov);
+
+    /* Desktop collision (2026-10-25, owner screenshot). #om-open is fixed at
+       12,10 (44x40, z-9000), which is exactly where nav.js's sidebar draws its
+       own Home button (.on-btn, 6,10, 44x44) -- so on every page with the
+       sidebar, Home was covered and could not be clicked. Phones already hide
+       #om-open as a duplicate of the nav's own drawer (bg.js, "Phone chrome
+       budget"); the desktop sidebar is the same duplicate (it reaches every
+       page, ALL SERVICES included), so the button steps aside wherever the
+       sidebar is actually rendered, and stays wherever there is no sidebar
+       (public pages, pages that hide it). Measured, not assumed: nav.js renders
+       after this file and some pages hide the sidebar, so it is re-checked on
+       resize and whenever the sidebar's box changes. The overlay itself is
+       untouched and still opens from code. */
+    function syncWithSidebar() {
+      var side = document.getElementById('omega-side');
+      var r = side && side.getBoundingClientRect();
+      btn.style.display = (r && r.width > 0 && r.height > 0) ? 'none' : '';
+    }
+    syncWithSidebar();
+    window.addEventListener('resize', syncWithSidebar, { passive: true });
+    (function watch() {
+      var side = document.getElementById('omega-side');
+      if (side && window.ResizeObserver) { new ResizeObserver(syncWithSidebar).observe(side); return; }
+      if (!side && window.MutationObserver) {
+        var mo = new MutationObserver(function () {
+          if (document.getElementById('omega-side')) { mo.disconnect(); syncWithSidebar(); watch(); }
+        });
+        mo.observe(document.body, { childList: true, subtree: true });
+        setTimeout(function () { mo.disconnect(); }, 15000);
+      }
+    })();
 
     btn.onclick = function () { ov.classList.add('open'); };
     ov.querySelector('#om-close').onclick = function () { ov.classList.remove('open'); };

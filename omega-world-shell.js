@@ -144,6 +144,22 @@ document.body.insertBefore(compass, document.body.firstChild);
 setTimeout(function() {
 shell.classList.add('visible');
 }, 100);
+/* The shell is a full-width fixed bar at z-index 9000, so on desktop it
+   covered nav.js's sidebar header -- Home included (occlusion scan,
+   2026-10-25). It starts where the rendered sidebar ends instead; measured,
+   because nav.js renders after this file and phones hide the sidebar. */
+function alignToSidebar() {
+var side = document.getElementById('omega-side');
+var r = side && side.getBoundingClientRect();
+shell.style.left = (r && r.width > 0 && r.height > 0) ? Math.round(r.right) + 'px' : '';
+}
+alignToSidebar();
+window.addEventListener('resize', alignToSidebar, { passive: true });
+setTimeout(function() {
+var side = document.getElementById('omega-side');
+if (side && window.ResizeObserver) new ResizeObserver(alignToSidebar).observe(side);
+alignToSidebar();
+}, 600);
 var toggle = document.getElementById('shell-compass-toggle');
 if (toggle) {
 toggle.addEventListener('click', function() {

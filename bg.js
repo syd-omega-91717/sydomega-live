@@ -1384,6 +1384,13 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   var _tb = ' + var(--omega-transient-bottom,0px))';
   var css='@media(min-width:761px){'
     +'#cp-btn{right:24px!important;bottom:calc(36px'+_tb+'!important}'
+    /* omega-command-hud.css placed the HUD's 46px Ω at right:16/bottom:42 --
+       on top of #cp-btn (right:24/bottom:36, 52px) at z-index 9997 vs 4500,
+       so the copilot could not be clicked on 233/237 pages at 1280x800
+       (occlusion scan, 2026-10-25). It takes the rung beside the copilot
+       instead: 24 + 52 + 12px gap = 88, bottoms aligned on the centre line
+       (36 + (52-46)/2 = 39). Phones still hide it (below). */
+    +'html #omega-command-hud{right:88px!important;bottom:calc(39px'+_tb+'!important}'
     +'#osh-btn{right:24px!important;bottom:calc(98px'+_tb+'!important}'
     +'#omega-ded-widget{right:24px!important;bottom:calc(146px'+_tb+'!important}'
     /* 238, and this rung has now been wrong twice for the same reason: it is

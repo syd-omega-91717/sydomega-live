@@ -25493,6 +25493,18 @@ first-run Shepherd tour overlay dimmed the red below the detector's threshold, w
 showed. Capping it means re-timing ~12 per-frame increments, so it is a design call for the owner,
 not a silent change.
 
+**Follow-up, same day: the owner chose the 30fps cap.** All 11 per-frame steps in Ω-FX's `frame()`
+(star drift, node and mote angles, flare decay and rise, arc/beam/pulse lifetimes, the intro ramp,
+the clock) are now multiplied by `K`, the number of 60Hz frames that actually elapsed (clamped to 3).
+Its three per-frame lerps go through `ease(a) = 1-(1-a)^K`. Measured on vault.html at 320×240,
+where headless Chromium can reach 60fps: Ω-FX canvas updates 60.5 → 30.5/s and 59.3 → 29.8/s,
+while the page's own rAF stayed at ~60/s. The animation clock advanced 0.963 → 0.960 units/s, so
+speed is unchanged.
+
+At full phone size this harness renders the dashboard at only ~5fps (software raster), below the
+cap, so the cap does not engage there. A dashboard A/B at 4× showed no difference (fps 5.2–5.4 →
+5.3–5.6). The saving applies on devices that actually reach 60fps, and it can't be quantified here.
+
 Palette: `theme.js` (the live owner, sheet 19) set `--void:#08080F` while `css/omega-system.css` set
 `#0A0A0F`, the owner's stated standard. Both now say `#0A0A0F`. `--gold` was already `#C9A84C` in
 both. The visible page base is not `--void` at all: it is omega-backdrop.js's per-element tint

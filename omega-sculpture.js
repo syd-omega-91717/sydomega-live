@@ -1603,8 +1603,36 @@
     ctx.globalAlpha = 1;
   }
 
+  /* FRAME BUDGET. Uncapped, this loop drew at the display rate (60, or 120 on
+     ProMotion phones), and a CPU profile of dashboard.html (390x844, 12s) put
+     frame() at 2.1s self time plus 0.57s in three.js -- the largest script
+     cost on the page -- while production web_vitals reported dashboard LCP
+     p75 8.8s (telemetry_events, 2026-10-26). Decorative motion reads the same
+     at 30fps, so draws are capped there. Then the same step drei's
+     PerformanceMonitor takes: if a drawn frame still averages over
+     DEGRADE_MS once warmed up, bloom (a full-resolution blur composite per
+     mount) is dropped for the rest of this page view. status() reports both. */
+  var FRAME_MS = 1000 / 30, DEGRADE_MS = 12, WARM_FRAMES = 20;
+  var _lastDraw = -1e9, _cost = 0, _drawn = 0, _degraded = false;
+
   function frame(ms) {
     _raf = requestAnimationFrame(frame);
+    if (ms - _lastDraw < FRAME_MS - 1) return;
+    _lastDraw = ms;
+    var t0 = performance.now();
+    drawAll(ms);
+    var spent = performance.now() - t0;
+    if (spent > 0.05) {
+      _drawn++;
+      _cost = _drawn === 1 ? spent : _cost * 0.9 + spent * 0.1;
+      if (!_degraded && _drawn > WARM_FRAMES && _cost > DEGRADE_MS) {
+        _degraded = true;
+        for (var k = 0; k < _mounts.length; k++) _mounts[k].bloom = false;
+      }
+    }
+  }
+
+  function drawAll(ms) {
     var t = ms / 1000;
     var maxW = 1, maxH = 1, any = false;
     for (var i = 0; i < _mounts.length; i++) {
@@ -2006,6 +2034,7 @@
                  links: (m.scene && m.scene.links) ? m.scene.links.length : 0,
                  records: (m.scene && typeof m.scene.count === 'number') ? m.scene.count : undefined,
                  bloom: !!m.bloom, env: !!_env,
+                 fpsCap: Math.round(1000 / FRAME_MS), frameMs: +_cost.toFixed(1), degraded: _degraded,
                  hover: m.hover ? m.hover.label : null };
       });
     }

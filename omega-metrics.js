@@ -52,7 +52,9 @@
       /* PASS/FAIL per Google thresholds */
       lcp_pass:_lcp>0&&_lcp<=2500,
       cls_pass:_cls<=0.1,
-      inp_pass:_inp>0&&_inp<=200,
+      /* null = no interaction measured, not a failure: 17 of 17 zero-INP rows
+         in telemetry_events were stored as inp_pass:false (2026-10-26). */
+      inp_pass:_inp>0?_inp<=200:null,
       ts:new Date().toISOString()
     };
 

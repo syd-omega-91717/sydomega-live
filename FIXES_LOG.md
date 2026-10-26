@@ -25386,3 +25386,46 @@ Not fixed, and why:
   (https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
 
 Gates: `./scripts/ci-local.sh` 32 blocking passed. `node scripts/verify-runtime.js` PASS (13 pages).
+
+## Dashboard poster weight, and the empty context bar on every section hub (2026-10-26)
+
+- **Film-of-the-day poster (`omega-daily.js`).** The card rendered the 1280×720 `franchise-NN.jpg`
+  (75–90KB each, 942KB for the twelve) at 323–376px wide. It is the dashboard's LCP element at desktop
+  size (measured in #1100's entry). Added 640w and 960w WebP for each film (`*-640.webp` avg 9KB,
+  `*-960.webp` avg 15KB) and a `srcset`/`sizes` on the `<img>`. The jpg stays the fallback and the
+  `<video>` poster. Rendered: a 1280×800 and a 1440×900 viewport, both at DPR 1, loaded
+  `franchise-10-640.webp`; a phone viewport at DPR 2 loaded `-960.webp`. Every image decoded. No other
+  page references these files.
+- **Empty bar under the dock on section hubs.** `#omega-context-rail` (38px, tinted, blurred) drops its
+  parent link on a section's own hub (nav.js) and keeps the page name screen-reader only. Calm mode
+  (default since 2026-10-04) hides `.omega-context-actions`. On every hub the bar painted with nothing in
+  it. Calm mode now also hides a rail that holds no link
+  (`.omega-context-rail:not(:has(a))`). Rendered at 1280×800: hidden on dashboard, vault and cosmos
+  (0 links); still shown on missions and focus (2 links each, "COMMAND › MISSIONS", "ASCEND › DEEP WORK").
+
+## Squeezed text links site-wide, and a Creation Studio that never ran (2026-10-26)
+
+- **Text links overprinting each other in flex rows.** `omega-accessibility-audit.css` (bg.js injects
+  it on every page) gives `button, [role=button], a[href], .clickable` `min-width:44px`. An explicit
+  min-width replaces a flex item's automatic min-content floor. So in a no-wrap row each text link could
+  shrink to 44px and spill into its neighbours. The phone dashboard's workspace row
+  (`#omega-workspace`) drew MISSIONS / PROJECTS / OMEGA WORLD at 44px each over 54–87px labels. A scan at
+  390×844 over every root page counted controls narrower than their own text: **535 on 124 pages**.
+  Three candidates were compared:
+  - adding `flex-shrink:0` left **1** squeezed control (index.html, 3px) and 224 text controls under
+    44px, against 222 with the current rule;
+  - `min-width:auto` also left 1 squeezed control, but raised text controls under 44px to 280;
+  - horizontal page overflow measured 0 on all 237 pages under both the current rule and
+    `flex-shrink:0`.
+
+  `flex-shrink:0` was chosen. In the rendered workspace row, MISSIONS is 88px and OMEGA WORLD 112px,
+  and the row scrolls (`overflow-x:auto`) instead of overprinting.
+- **creation-studio.html loaded an ES module as a classic script.** `omega-creation-studio.js` opens with
+  `import { createClient } from '/vendor/supabase-js.js'`. The page has loaded it with
+  `<script src=… defer>` since it was added (ea5ca9d5, 2026-10-06). Every version since parses as a
+  module and throws "Cannot use import statement outside a module", so none of it ran: the page sat at
+  LOADING / CONNECTING. The tag is now `type="module"`. The page has no inline handlers; the module binds
+  its own. Render, before → after: errors 1 → 0; live state CONNECTING → AUTHENTICATED; lists
+  LOADING → their empty states.
+- The same all-pages scan found **0 broken images** and **0 horizontally overflowing pages**, at both
+  390×844 and 1280×800.

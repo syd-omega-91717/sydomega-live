@@ -322,6 +322,11 @@
     poster.setAttribute('aria-label', 'Play ' + FILMS[idx]);
     var img = el('img'); img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
     img.setAttribute('data-no-alive', '');   /* a play target, not ambient art */
+    /* The card shows the 1280x720 jpg (~80KB) at ~320-360px wide, and it is the
+       dashboard's LCP element at desktop size. 640/960w WebP (~10/15KB) cover 1x-3x
+       screens; the jpg stays the fallback and the <video> poster. */
+    img.srcset = dir + 'franchise-' + nn + '-640.webp 640w, ' + dir + 'franchise-' + nn + '-960.webp 960w, ' + dir + 'franchise-' + nn + '.jpg 1280w';
+    img.sizes = '(max-width: 760px) 92vw, 360px';
     img.src = dir + 'franchise-' + nn + '.jpg';
     poster.appendChild(img);
     poster.appendChild(el('span', 'odl-play', S.film ? '▶\uFE0E WATCH AGAIN' : '▶\uFE0E PLAY · 12 S'));

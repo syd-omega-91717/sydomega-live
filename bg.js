@@ -76,14 +76,25 @@ function __omegaAppend(el){
      insertion, so the page's static tags have been parsed by then. No caller
      attaches onload/onerror to what it passes in (all 136 checked), so a
      skipped element loses nothing. */
+  /* Each <script> element's pathname is parsed once and remembered. This used
+     to re-parse every script on the page for every insertion -- ~170 inserts
+     against a growing list, ~29,000 URL parses per page load, and the
+     platform's third-largest JS cost measured across 40 pages (2026-10-26). */
   function dup(){
     if(!el || el.tagName!=='SCRIPT' || !el.src) return false;
     var want; try{ want=new URL(el.src, location.href).pathname; }catch(e){ return false; }
+    var seen=__omegaAppend.seen||(__omegaAppend.seen={el:new WeakSet(),path:Object.create(null)});
     var all=document.getElementsByTagName('script');
     for(var i=0;i<all.length;i++){
-      var s=all[i]; if(s===el || !s.src) continue;
-      try{ if(new URL(s.src, location.href).pathname===want) return true; }catch(e){}
+      var s=all[i]; if(s===el || seen.el.has(s)) continue;
+      seen.el.add(s);
+      if(!s.src) continue;
+      try{ var pth=new URL(s.src, location.href).pathname; (seen.path[pth]||(seen.path[pth]=[])).push(s); }catch(e){}
     }
+    /* Still in the document, as the old full scan required: a script that
+       was removed again no longer counts as loaded-by-tag. */
+    var list=seen.path[want]||[];
+    for(var k=0;k<list.length;k++) if(list[k]!==el && list[k].isConnected) return true;
     return false;
   }
   if(document.body){ if(!dup()) document.body.appendChild(el); return; }
@@ -1930,6 +1941,31 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     }
   }
 
+  /* The core glyph was fillText + shadowBlur every frame, with the font
+     re-set each time: measured across 40 pages it was the second-largest JS
+     function on the platform (core(), after the 3-D sculpture's drawAll).
+     The blurred glyph is now rendered once per (size, blur) into a sprite and
+     blitted. Same pixels: the fill alpha that used to scale glyph and shadow
+     together is globalAlpha on the blit, and source-over composites the same
+     way in either order. Blur is quantised to 2px, below what the eye reads
+     on a pulsing glow. Not cached until the brand face can paint, or the
+     fallback serif would be kept for the life of the page. */
+  var omegaSprites={},omegaSpriteN=0;
+  if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',function(){omegaSprites={};omegaSpriteN=0;});
+  function omegaSprite(px,blur){
+    var key=px+'_'+blur,sp=omegaSprites[key];if(sp)return sp;
+    var font='700 '+px+'px "Cinzel Decorative", Georgia, serif';
+    var size=Math.ceil(px*1.6+blur*3+8);
+    var c=document.createElement('canvas');c.width=c.height=Math.ceil(size*DPR);
+    var g=c.getContext('2d');g.setTransform(DPR,0,0,DPR,0,0);
+    g.font=font;g.textAlign='center';g.textBaseline='middle';
+    g.shadowColor='rgba('+GOLD+',0.9)';g.shadowBlur=blur;g.fillStyle='rgb('+GOLD+')';
+    g.fillText('\u03A9',size/2,size/2+1);
+    sp={c:c,size:size};
+    var ready=true;try{ready=!document.fonts||document.fonts.check(font);}catch(e){}
+    if(ready){if(omegaSpriteN>64){omegaSprites={};omegaSpriteN=0;}omegaSprites[key]=sp;omegaSpriteN++;}
+    return sp;
+  }
   function core(o,breathe){
     var halo=REDUCE?0.75:(0.7+0.3*Math.sin(t*1.4));
     var flare=ig<1?Math.max(0,1-Math.abs(ig-0.92)/0.08):0;
@@ -1938,13 +1974,11 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     hg.addColorStop(0,'rgba('+GOLD+','+((0.22*halo+flare*0.4)*ig).toFixed(3)+')');
     hg.addColorStop(1,'rgba('+GOLD+',0)');
     ctx.fillStyle=hg;ctx.beginPath();ctx.arc(CX+o.x,CY+o.y,hr,0,6.283);ctx.fill();
+    var sp=omegaSprite(Math.round(30*breathe),Math.round((18+flare*22)*halo/2)*2);
     ctx.save();
-    ctx.font='700 '+Math.round(30*breathe)+'px "Cinzel Decorative", Georgia, serif';
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor='rgba('+GOLD+',0.9)';ctx.shadowBlur=(18+flare*22)*halo;
-    ctx.fillStyle='rgba('+GOLD+','+((0.7+0.3*halo)*ig).toFixed(3)+')';
-    ctx.fillText('\u03A9',CX+o.x,CY+o.y+1);
-    ctx.restore();ctx.shadowBlur=0;
+    ctx.globalAlpha=Math.max(0,Math.min(1,(0.7+0.3*halo)*ig));
+    ctx.drawImage(sp.c,CX+o.x-sp.size/2,CY+o.y-sp.size/2,sp.size,sp.size);
+    ctx.restore();
     /* lens label -- name the active system */
     if(ig>0.9){
       ctx.font='600 10px "Courier Prime", monospace';

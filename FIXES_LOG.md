@@ -25510,3 +25510,57 @@ Palette: `theme.js` (the live owner, sheet 19) set `--void:#08080F` while `css/o
 both. The visible page base is not `--void` at all: it is omega-backdrop.js's per-element tint
 (`html` rgb(12,8,6) plus a warm radial gradient on `body` for this stub member). CLAUDE.md §4 calls
 that tint a feature, so it is unchanged.
+
+## Estate-wide hot spots: a quadratic de-dup, a re-blurred glyph, scans that re-ran on text (2026-10-26)
+
+**Method.** I profiled 40 randomly sampled pages (390×844, 2× CPU, 8s each, CDP sampling profiler),
+summing self time per function across the estate rather than per page. Six sites were fixed. The
+3-D sculpture's `drawAll` (14% of JS) was left alone: it is already capped and gated (PR #1100).
+
+- **`__omegaAppend`'s `dup()` was quadratic** (`bg.js`). Each of ~170 injected scripts re-parsed
+  the URL of every `<script>` already present: ~29,000 `new URL()` calls per page load. Each
+  element's path is now parsed once and remembered. Removal semantics are kept: a match must
+  still be `isConnected`.
+- **The Ω core glyph was re-blurred every frame** (`bg.js`, Ω-FX `core()`). It used
+  `fillText` + `shadowBlur`, with the font re-set each frame. It is now rendered once per
+  (size, 2px-quantised blur) into a sprite and blitted with `globalAlpha`. Sprites are not cached
+  until `document.fonts.check()` says the brand face can paint, and the cache is cleared on
+  `loadingdone` and capped at 64. On a deterministic reduced-motion still frame (seeded
+  `Math.random`), before vs before differs by 0; before vs after differs by at most 11/255 per
+  channel, with a mean of 0.33, and 174 of 32,400 pixels in the core crop are off by more than 8.
+- **nav.js's rotating brand mark** drew at 60fps with `shadowBlur` on every page. On a phone its
+  canvas is 0×0. It now draws only while intersecting, at 30fps, with time-scaled rotation.
+  Draws/s on leaderboard.html at 390×844: 11.2 → 0.
+- **The touch-target pass re-measured every passing control** (`omega-a11y.js`). Only failures
+  were marked, so each re-scan (debounced 300ms after any mutation) re-ran `getComputedStyle` +
+  `getBoundingClientRect` on every control. Passing controls now go in a WeakSet; a control not
+  yet laid out is never recorded. The observer also ignores text-only batches.
+- **omega-alive rescanned on text** (`omega-alive.js`). `addedNodes.length` counts text nodes,
+  so a clock tick re-ran the scan every 400ms. It now reacts to inserted elements only. This is
+  safe: an empty glyph element is marked `skip` on its first scan, so text written into it
+  later never made it eligible before either.
+- **Genesis atmosphere** (`omega-genesis.js`), a third full-viewport animated canvas at
+  opacity 0.18, is capped at 30fps with time-scaled `t` and drift.
+
+**Measured.** Estate A/B: the same 16 pages, two rounds, before and after run concurrently so
+contention is shared. Total JS self time went 38,341 / 38,308 → 34,626 / 34,781 ms (−9.5%), with
+15 of 16 pages lower. By function: `dup` 1,779 → 331 ms (−81%), `core` 3,570 → 868 ms (−76%).
+
+Steady state, leaderboard.html, 8s after load, two sequential runs per side (inclusive ms):
+
+| file | before | after |
+|---|---|---|
+| omega-a11y.js | 52–53 | 0–5 |
+| omega-alive.js | 39–53 | 11–15 |
+| nav.js | 6–11 | 0 |
+| bg.js | 276–309 | 264–272 |
+| omega-genesis.js | 30–37 | 48–69 |
+
+Genesis rose by ~3ms/s, and draws/s were unchanged (11.2 → 11.0), so the extra cost is per draw,
+not more draws. The cause was not isolated. One candidate: this harness runs at ~11fps, below the
+cap, so `K` clamps at 3 and the drift now advances ~3× per draw where the per-frame step
+previously ran in slow motion.
+
+**Behaviour, 8 pages at 390×844, before = after:** 0 controls under 24px, the same
+`data-alive` counts (15–17), the same script counts (170–176, so the de-dup outcome is
+identical), and 0 page errors.

@@ -493,18 +493,25 @@
   var TOUCH_MIN = 24;
   var touchMQ = window.matchMedia ? window.matchMedia('(max-width:760px)') : null;
 
+  /* Controls already measured at or above the floor. Only failures were
+     marked before, so every re-scan re-measured every passing control --
+     a getComputedStyle and a layout read each -- and the observer below
+     re-scans after any insertion: across 40 pages this pass was the
+     platform's fourth-largest JS cost. A control that has not been laid out
+     yet is never recorded, so it is still measured once it renders. */
+  var touchOk = (typeof WeakSet === 'function') ? new WeakSet() : { has: function(){ return false; }, add: function(){} };
   function raiseTouchTargets(){
     if(!touchMQ || !touchMQ.matches) return;
     var sel = 'a[href],button,[role=button],[onclick],summary,' +
               'input:not([type=hidden]),select,textarea';
     var raised = 0;
     document.querySelectorAll(sel).forEach(function(el){
-      if(el.hasAttribute('data-omega-touch')) return;
+      if(el.hasAttribute('data-omega-touch') || touchOk.has(el)) return;
       var cs = getComputedStyle(el);
       if(cs.display === 'none' || cs.visibility === 'hidden') return;
       var b = el.getBoundingClientRect();
       if(!b.width || !b.height) return;                 /* not laid out */
-      if(b.width >= TOUCH_MIN && b.height >= TOUCH_MIN) return;
+      if(b.width >= TOUCH_MIN && b.height >= TOUCH_MIN){ touchOk.add(el); return; }
       /* min-height does not apply to a non-replaced inline box, so an inline
          <span onclick> or <a> has to become inline-level-flex first. Only the
          ones that are actually inline are converted -- turning a block or a
@@ -541,8 +548,16 @@
      applies. */
   if(window.MutationObserver && touchMQ){
     var _touchTimer = null;
-    var _mo = new MutationObserver(function(){
+    var _mo = new MutationObserver(function(recs){
       if(!touchMQ.matches) return;
+      /* A batch that inserts no element (a clock tick, a live counter) cannot
+         add a control. */
+      var el = false;
+      for(var i = 0; i < recs.length && !el; i++){
+        var a = recs[i].addedNodes;
+        for(var k = 0; k < a.length; k++) if(a[k].nodeType === 1){ el = true; break; }
+      }
+      if(!el) return;
       clearTimeout(_touchTimer);
       _touchTimer = setTimeout(raiseTouchTargets, 300);
     });

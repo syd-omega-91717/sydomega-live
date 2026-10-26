@@ -231,8 +231,11 @@
     setTimeout(stillPass, 9000);
     if (typeof MutationObserver === 'function') {
       new MutationObserver(function (muts) {
+        /* An inserted ELEMENT, not any node: addedNodes also holds text, so a
+           clock tick or a live counter re-ran the whole scan every 400ms. */
         for (var i = 0; i < muts.length; i++) {
-          if (muts[i].addedNodes.length) { schedule(); return; }
+          var a = muts[i].addedNodes;
+          for (var k = 0; k < a.length; k++) if (a[k].nodeType === 1) { schedule(); return; }
         }
       }).observe(document.body, { childList: true, subtree: true });
       /* The approval guard reveals the page with a class on <body>; marks

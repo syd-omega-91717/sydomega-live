@@ -263,7 +263,10 @@
       'html.omega-desktop-pointer body{padding-bottom:0!important}',
       'html.omega-desktop-pointer aside.omega-side,html.omega-desktop-pointer aside.side{display:flex!important}',
       'html.omega-desktop-pointer .shell{flex-direction:row!important}',
-      '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}aside.omega-side,aside.side{display:none!important}}',
+      /* +76px: #cp-btn rests 16px above the dock and is 52px tall, so with only
+         the dock reserved the last 68px of every phone page (the legal footer on
+         17 pages) sat under it at full scroll. Measured 2026-10-25. */
+      '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:calc(var(--omega-chrome-bottom,66px) + 76px)}aside.omega-side,aside.side{display:none!important}}',
       '@media(min-width:761px){#omega-mob{display:none}}',
       /* Top scan line */
       '#omega-top{position:fixed;top:0;left:0;right:0;height:2px;z-index:10000;pointer-events:none;background:linear-gradient(90deg,transparent,#C9A84C 30%,#00E5FF 70%,transparent);background-size:200% 100%;animation:top-sc 3.5s linear infinite}',
@@ -591,7 +594,7 @@
       '.ds-link{font-family:"Courier Prime",monospace;font-size:12px;color:var(--muted);text-decoration:none;padding:9px 6px;min-height:24px;border-left:2px solid transparent;transition:all .13s;letter-spacing:1px}',
       '.ds-link:hover,.ds-link.dl-on{color:#C9A84C;border-left-color:#C9A84C;background:rgba(201,168,76,.04);padding-left:8px}',
       '@media(min-width:761px){#omega-mob{display:none!important}#omega-drawer{display:none!important}}',
-      '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:66px}}',
+      '@media(max-width:760px){#omega-mob{display:block}body{padding-bottom:calc(var(--omega-chrome-bottom,66px) + 76px)}}',
       /* ===== MOBILE HARDENING -- no sideways scroll, tables + media fit ===== */
       '@media(max-width:760px){',
         'html,body{overflow-x:hidden;max-width:100vw}',
@@ -653,6 +656,17 @@
     var dWaitN=document.createElement('span');dWaitN.className='on-wait-n';
     dWaitA.appendChild(dWaitN);dWaitA.appendChild(document.createTextNode(' WAITING FOR APPROVAL'));
     dWait.appendChild(dWaitA);drawer.appendChild(dWait);
+    /* DRAWER QUICK — search, concierge and the command palette are folded out
+       of the section lists, so on a phone this row is their only entry. */
+    var dq=document.createElement('div');dq.className='drawer-quick';
+    dq.style.cssText='display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid rgba(201,168,76,.15)';
+    [['/search.html','⌕ SEARCH'],['/chatbot.html','✦ CONCIERGE'],[null,'⌘ COMMAND']].forEach(function(q){
+      var el=document.createElement(q[0]?'a':'button');el.className='ds-link drawer-quick-item';el.textContent=q[1];
+      el.style.cssText='flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:1px solid rgba(201,168,76,.22);border-radius:7px;background:rgba(201,168,76,.05);color:#E8C97A;font:12px "Courier Prime",monospace;letter-spacing:1px;text-decoration:none;cursor:pointer';
+      if(q[0])el.href=q[0];else{el.type='button';el.addEventListener('click',function(){closeDrawer();if(window.OmegaCommandPalette)window.OmegaCommandPalette.open();});}
+      dq.appendChild(el);
+    });
+    drawer.appendChild(dq);
     var dsgrid=document.createElement('div');dsgrid.className='drawer-sections';
     DRAWER_SECTIONS.forEach(function(sec){
       var ds=document.createElement('div');ds.className='ds-section';
@@ -990,7 +1004,11 @@
       fav.addEventListener('click',function(){var next=fav.getAttribute('aria-pressed')!=='true';fav.setAttribute('aria-pressed',String(next));fav.lastChild.textContent=next?'★':'☆';fav.title=next?'Unpin on this device':'Pin on this device';try{window.localStorage.setItem(pinKey,next?'1':'0');}catch(e){}});
     }catch(e){fav.disabled=true;fav.title='Device pinning unavailable';}
 
-    if(!document.getElementById('omega-mobile-bar')){
+    /* Not where #omega-mob exists: this sticky bar sat at z-1900 directly
+       beneath that fixed z-9990 dock on every phone render, so its SEARCH/
+       AI/MORE could never be tapped. Its destinations live in the drawer's
+       quick row instead (see DRAWER QUICK below). */
+    if(!document.getElementById('omega-mobile-bar')&&!document.getElementById('omega-mob')){
       var mb=document.createElement('nav');mb.id='omega-mobile-bar';mb.className='omega-mobile-bar';mb.setAttribute('aria-label','Mobile navigation');
       var mobileItems=[[sec.href,sec.icon||'Ω',sec.label],[ '/dashboard.html','⌘','COMMAND'],['/search.html','⌕','SEARCH'],['/chatbot.html','✦','AI']];
       mobileItems.forEach(function(it){var a=document.createElement('a');a.href=it[0];a.innerHTML='<span class="omega-mobile-glyph">'+it[1]+'</span><span class="omega-mobile-label">'+it[2]+'</span>';if(it[0].split('#')[0]===location.pathname)a.setAttribute('aria-current','page');mb.appendChild(a);});

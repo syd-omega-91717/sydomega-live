@@ -25573,3 +25573,22 @@ identical), and 0 page errors.
 10 days back: 43 / 58 / 19 on 10-17..19, then 1 on 10-27, so the earlier flood ended with the
 Cloudflare cutover and this is the only live signature. Fix: `Promise.resolve(getInsight(el)).then(...)`
 (`omega-actions.js:138`). `node --check omega-actions.js` passes. Not yet verified in a render.
+
+## 2026-10-27 — retired three pages with no recorded views: analytics-dashboard, predictions-dashboard, segmentation-dashboard
+
+Owner-approved in-session. Candidates were non-host core members with 0 rows ever in `platform_events`
+(one account; see the caveat in `config/page-cores.json` `evidence`). **Correction to the earlier
+"zero inbound references" claim:** that scan only matched `<page>.html`, and `omega-owner-deck.js` lists
+all three by bare slug, so the deck would have linked to three 404s. References removed:
+`omega-owner-deck.js` EXTRA (2 lines), `scripts/reachability-contract.py` allowlist (3),
+`config/page-cores.json` (3), `config/page-world-overrides.json` (3), `index.html` stat row 237 -> 234.
+`config/page-estate.generated.json` regenerated with `scripts/build-content-registry.py`.
+Verified: `contract-suite.py` 56 gates, 0 failing (it failed `page-world` and `page-count-claims` until
+the overrides and the stat row were fixed); `python3 -m unittest discover -s scripts/tests` 948 OK;
+`omega-page-action-audit.py --check` passes unregenerated. NOT done, on purpose: regenerating
+`omega-page-action-audit.json` / `omega-page-contract-bootstrap.json` pulled in unrelated drift (their
+committed `page_count` was 242 vs 237 real), so they were left as on `main`. Inert orphan entries remain in
+`config/page-world-actions.json`, `omega-page-contracts.json`, `omega-page-review-tasks.json` (keyed by page,
+never read for a missing page) and three unconsumed configs (`analytics-config.json`,
+`streaming-analytics-config.json`, `multi-region-config.json`). No runtime/browser check was run.
+`scripts/omega-production-surface-contract.py` still lists `predictions-dashboard.html` in an exemption set (harmless).

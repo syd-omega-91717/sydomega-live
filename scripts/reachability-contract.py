@@ -77,10 +77,7 @@ SYSTEM_PAGES = {
     'verify-modules':      'owner module-load diagnostic, not member navigation',
     # Phase 5 autonomous systems dashboards — pending feature launch, not yet
     # wired into primary navigation; part of autonomous-insights suite
-    'analytics-dashboard': 'Phase 5 autonomous analytics, pending nav wiring',
     'monitoring-dashboard': 'Phase 5 autonomous monitoring, pending nav wiring',
-    'predictions-dashboard': 'Phase 5 autonomous predictions, pending nav wiring',
-    'segmentation-dashboard': 'Phase 5 autonomous segmentation, pending nav wiring',
     # Infrastructure pages not member-facing
     'agent':               'agent configuration page, infrastructure only',
     'healthz':             'health check endpoint, not a member destination',

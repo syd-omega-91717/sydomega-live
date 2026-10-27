@@ -25582,7 +25582,7 @@ Owner-approved in-session. Candidates were non-host core members with 0 rows eve
 all three by bare slug, so the deck would have linked to three 404s. References removed:
 `omega-owner-deck.js` EXTRA (2 lines), `scripts/reachability-contract.py` allowlist (3),
 `config/page-cores.json` (3), `config/page-world-overrides.json` (3), `index.html` stat row 237 -> 234.
-`config/page-estate.generated.json` regenerated with `scripts/build-content-registry.py`.
+`config/page-estate.generated.json` is gitignored (rebuilt in CI), so nothing to commit.
 Verified: `contract-suite.py` 56 gates, 0 failing (it failed `page-world` and `page-count-claims` until
 the overrides and the stat row were fixed); `python3 -m unittest discover -s scripts/tests` 948 OK;
 `omega-page-action-audit.py --check` passes unregenerated. NOT done, on purpose: regenerating

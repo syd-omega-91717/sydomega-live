@@ -25578,3 +25578,12 @@ NOT made here, so no CSS value changed. Verified it can fail: mutating `--gold` 
 locally); `python3 -m unittest discover -s scripts/tests` 948 tests OK. CLAUDE.md §8.3 still quotes
 "42 gates"/"907 tests" and was not edited. Parser reads only the first `:root` block of each file;
 later blocks (e.g. `--gvp-*`) are out of scope.
+
+## 2026-10-27 — `getInsight(...).then is not a function` on /dashboard (§8.1 class 4 family: a contract one side never kept)
+
+`omega-actions.js` `getInsight()` returns a plain string (cache hit or computed), but `showPanel` called
+`.then` on it. Found by `select ... from client_errors where created_at > now() - interval '7 days'`
+(project `ydqhzvvoyufiiqvzcjns`): 1 row in 7 days, `/dashboard`, `unhandledrejection`. Daily counts
+10 days back: 43 / 58 / 19 on 10-17..19, then 1 on 10-27, so the earlier flood ended with the
+Cloudflare cutover and this is the only live signature. Fix: `Promise.resolve(getInsight(el)).then(...)`
+(`omega-actions.js:138`). `node --check omega-actions.js` passes. Not yet verified in a render.

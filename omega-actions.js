@@ -135,7 +135,7 @@
     });
     /* Bind async insight completion to this panel render, never a later object's panel. */
     var insightTarget=_panel.querySelector('#oa-insight-text');
-    getInsight(el).then(function(insight){
+    Promise.resolve(getInsight(el)).then(function(insight){
       if(insightTarget&&insightTarget.parentNode===_panel)insightTarget.textContent=insight;
     });
   }

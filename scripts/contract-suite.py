@@ -59,6 +59,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # (id, what it protects, argv). Order is cheapest-first only for readability;
 # every gate runs regardless, so the order carries no meaning.
 GATES = [
+    ('token-parity',
+     'theme.js and css/omega-system.css agree on every shared palette token, except recorded drift',
+     ['scripts/token-parity-contract.py']),
     ('extreme-evolution',
      'major and extreme evolution priorities remain structurally governed and evidence-bound',
      ['scripts/omega-extreme-evolution-contract.py']),

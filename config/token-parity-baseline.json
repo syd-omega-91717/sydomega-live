@@ -1,0 +1,17 @@
+{
+  "_note": "token -> [theme.js, css/omega-system.css]; see scripts/token-parity-contract.py",
+  "divergences": {
+    "--ink": [
+      "#e5ecf0",
+      "#e9e6dc"
+    ],
+    "--line": [
+      "rgba(201,168,76,0.13)",
+      "rgba(201,168,76,0.15)"
+    ],
+    "--muted": [
+      "#8796a1",
+      "#8a8676"
+    ]
+  }
+}

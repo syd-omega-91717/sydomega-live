@@ -25564,3 +25564,12 @@ previously ran in slow motion.
 **Behaviour, 8 pages at 390×844, before = after:** 0 controls under 24px, the same
 `data-alive` counts (15–17), the same script counts (170–176, so the de-dup outcome is
 identical), and 0 page errors.
+
+## 2026-10-27 — `getInsight(...).then is not a function` on /dashboard (§8.1 class 4 family: a contract one side never kept)
+
+`omega-actions.js` `getInsight()` returns a plain string (cache hit or computed), but `showPanel` called
+`.then` on it. Found by `select ... from client_errors where created_at > now() - interval '7 days'`
+(project `ydqhzvvoyufiiqvzcjns`): 1 row in 7 days, `/dashboard`, `unhandledrejection`. Daily counts
+10 days back: 43 / 58 / 19 on 10-17..19, then 1 on 10-27, so the earlier flood ended with the
+Cloudflare cutover and this is the only live signature. Fix: `Promise.resolve(getInsight(el)).then(...)`
+(`omega-actions.js:138`). `node --check omega-actions.js` passes. Not yet verified in a render.

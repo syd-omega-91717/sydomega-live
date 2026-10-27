@@ -25587,3 +25587,48 @@ later blocks (e.g. `--gvp-*`) are out of scope.
 10 days back: 43 / 58 / 19 on 10-17..19, then 1 on 10-27, so the earlier flood ended with the
 Cloudflare cutover and this is the only live signature. Fix: `Promise.resolve(getInsight(el)).then(...)`
 (`omega-actions.js:138`). `node --check omega-actions.js` passes. Not yet verified in a render.
+
+## 2026-10-27 — retired three pages with no recorded views: analytics-dashboard, predictions-dashboard, segmentation-dashboard
+
+Owner-approved in-session. Candidates were non-host core members with 0 rows ever in `platform_events`
+(one account; see the caveat in `config/page-cores.json` `evidence`). **Correction to the earlier
+"zero inbound references" claim:** that scan only matched `<page>.html`, and `omega-owner-deck.js` lists
+all three by bare slug, so the deck would have linked to three 404s. References removed:
+`omega-owner-deck.js` EXTRA (2 lines), `scripts/reachability-contract.py` allowlist (3),
+`config/page-cores.json` (3), `config/page-world-overrides.json` (3), `index.html` stat row 237 -> 234.
+`config/page-estate.generated.json` is gitignored (rebuilt in CI), so nothing to commit.
+Verified: `contract-suite.py` 56 gates, 0 failing (it failed `page-world` and `page-count-claims` until
+the overrides and the stat row were fixed); `python3 -m unittest discover -s scripts/tests` 948 OK;
+`omega-page-action-audit.py --check` passes unregenerated. NOT done, on purpose: regenerating
+`omega-page-action-audit.json` / `omega-page-contract-bootstrap.json` pulled in unrelated drift (their
+committed `page_count` was 242 vs 237 real), so they were left as on `main`. Inert orphan entries remain in
+`config/page-world-actions.json`, `omega-page-contracts.json`, `omega-page-review-tasks.json` (keyed by page,
+never read for a missing page) and three unconsumed configs (`analytics-config.json`,
+`streaming-analytics-config.json`, `multi-region-config.json`). No runtime/browser check was run.
+`scripts/omega-production-surface-contract.py` still lists `predictions-dashboard.html` in an exemption set (harmless).
+
+**Correction to the entry above (same day, Cloudflare Pages build failed on PR #1106).** The "inert orphans" were
+not inert for the build: `scripts/vercel-build.sh` scans every shipped `.json`/`.html`/`.js` for absolute
+local references and fails on any that does not resolve. Reproduced locally:
+`VERCEL_BUILD=FAIL unreachable_asset=/analytics-dashboard.html` (and the other two, 3 total). The sources were
+`analytics-config.json` (a dashboard channel and the whole `dashboards[]` list, now `[]`),
+`streaming-analytics-config.json` (two widgets), `multi-region-config.json` (one cache pattern) and
+`config/page-world-actions.json` (3 page entries; `pageCount` 217 -> 214). Removed; `VERCEL_BUILD=PASS`,
+`contract-suite.py` 56 gates 0 failing, `scripts/tests` 948 OK. Lesson: run `bash scripts/vercel-build.sh`
+before any page deletion; it is the check that sees references the contract gates do not. Still referencing the
+slugs, and passing the build: `omega-page-contracts.json`, `omega-page-review-tasks.json`, the action-audit and
+bootstrap JSON, `scripts/omega-production-surface-contract.py` (an exemption set).
+
+**Second correction, same PR (CI on head `edf40f2`: `integrity`, `readiness`, `Validate production artifact`, `verify`,
+Cloudflare Pages all red).** Two distinct causes, not one. (1) The unreachable-asset build failure above. (2) `verify`
+stopped at "Unified page contract audit": `config/omega-page-contracts.json` still declared the three pages
+(`ERROR declared page or alias is not shipped by the static build`), and every later `verify` step was SKIPPED, so
+more failures were hidden behind it. Fixed by removing the 3 contracts and 3 tasks from `omega-page-contracts.json` /
+`omega-page-review-tasks.json` (both round-trip byte-exact through `json.dump(indent=2)`, so the diff is only the
+removals) and setting `page_count`, `audit_summary.page_count` and `audit_summary.source_audited_pages` to 234, which
+`omega-page-contract-remediation-contract.py` checks. `scripts/omega-registry.py` then needed regenerating (237 -> 234 in
+`OMEGA_SKILL_REGISTRY.md`); it refuses on a shallow clone, so the clone was unshallowed first.
+Verified: `./scripts/ci-local.sh` ALL 32 BLOCKING CHECKS PASSED (it had reported 2 failing), `bash scripts/vercel-build.sh`
+VERCEL_BUILD=PASS, `scripts/tests` 948 OK. Regenerating the bootstrap/action-audit JSON was again deliberately skipped
+(unrelated drift); CI regenerates the bootstrap itself. Method: after a failure, read the job's STEP list and
+run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not only the step that failed.

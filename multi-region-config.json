@@ -62,11 +62,6 @@
           "audience": "authenticated"
         },
         {
-          "pattern": "/analytics-dashboard.html",
-          "ttl": 300,
-          "audience": "owner"
-        },
-        {
           "pattern": "/**/*.js",
           "ttl": 86400,
           "audience": "public"

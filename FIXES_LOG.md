@@ -25565,6 +25565,20 @@ previously ran in slow motion.
 `data-alive` counts (15–17), the same script counts (170–176, so the de-dup outcome is
 identical), and 0 page errors.
 
+## 2026-10-27 — token-parity gate: theme.js and css/omega-system.css had silently drifted (§4, "change both owners or it does not ship")
+
+CLAUDE.md §4 names two owners for every palette token and says to change both; nothing enforced it.
+`scripts/token-parity-contract.py` compares the first `:root` block of each (comments stripped,
+whitespace/case/leading-zero normalised): 9 shared tokens, **3 already divergent** — `--ink`
+(`#e5ecf0` vs `#e9e6dc`), `--muted` (`#8796a1` vs `#8a8676`), `--line` (`rgba(201,168,76,0.13)` vs
+`.15`). It is a ratchet: those three are recorded in `config/token-parity-baseline.json` and tolerated;
+a new divergence, a moved value or a stale entry fails. Which value is intended is a design call and is
+NOT made here, so no CSS value changed. Verified it can fail: mutating `--gold` in `theme.js` gave
+`NEW --gold`, exit 1; restored, exit 0. Wired into `scripts/contract-suite.py` (57 gates, 0 failing
+locally); `python3 -m unittest discover -s scripts/tests` 948 tests OK. CLAUDE.md §8.3 still quotes
+"42 gates"/"907 tests" and was not edited. Parser reads only the first `:root` block of each file;
+later blocks (e.g. `--gvp-*`) are out of scope.
+
 ## 2026-10-27 — `getInsight(...).then is not a function` on /dashboard (§8.1 class 4 family: a contract one side never kept)
 
 `omega-actions.js` `getInsight()` returns a plain string (cache hit or computed), but `showPanel` called

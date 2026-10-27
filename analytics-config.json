@@ -169,10 +169,6 @@
       },
       "channels": [
         {
-          "type": "dashboard",
-          "url": "/analytics-dashboard.html"
-        },
-        {
           "type": "email",
           "recipients": ["s.y.dagher@gmail.com"],
           "frequency": "daily"
@@ -233,31 +229,7 @@
         }
       ]
     },
-    "dashboards": [
-      {
-        "id": "analytics_main",
-        "name": "Analytics Overview",
-        "path": "/analytics-dashboard.html",
-        "refreshInterval": 300000,
-        "metrics": [
-          "active_members",
-          "engagement_avg",
-          "churn_rate",
-          "feature_adoption"
-        ]
-      },
-      {
-        "id": "prediction_center",
-        "name": "Prediction Center",
-        "path": "/predictions-dashboard.html",
-        "refreshInterval": 86400000,
-        "models": [
-          "churn_prediction",
-          "feature_recommendation",
-          "engagement_score"
-        ]
-      }
-    ]
+    "dashboards": []
   },
   "supermetrics": {
     "version": "1.0",

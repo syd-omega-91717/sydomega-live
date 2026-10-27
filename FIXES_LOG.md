@@ -25592,3 +25592,15 @@ committed `page_count` was 242 vs 237 real), so they were left as on `main`. Ine
 never read for a missing page) and three unconsumed configs (`analytics-config.json`,
 `streaming-analytics-config.json`, `multi-region-config.json`). No runtime/browser check was run.
 `scripts/omega-production-surface-contract.py` still lists `predictions-dashboard.html` in an exemption set (harmless).
+
+**Correction to the entry above (same day, Cloudflare Pages build failed on PR #1106).** The "inert orphans" were
+not inert for the build: `scripts/vercel-build.sh` scans every shipped `.json`/`.html`/`.js` for absolute
+local references and fails on any that does not resolve. Reproduced locally:
+`VERCEL_BUILD=FAIL unreachable_asset=/analytics-dashboard.html` (and the other two, 3 total). The sources were
+`analytics-config.json` (a dashboard channel and the whole `dashboards[]` list, now `[]`),
+`streaming-analytics-config.json` (two widgets), `multi-region-config.json` (one cache pattern) and
+`config/page-world-actions.json` (3 page entries; `pageCount` 217 -> 214). Removed; `VERCEL_BUILD=PASS`,
+`contract-suite.py` 56 gates 0 failing, `scripts/tests` 948 OK. Lesson: run `bash scripts/vercel-build.sh`
+before any page deletion; it is the check that sees references the contract gates do not. Still referencing the
+slugs, and passing the build: `omega-page-contracts.json`, `omega-page-review-tasks.json`, the action-audit and
+bootstrap JSON, `scripts/omega-production-surface-contract.py` (an exemption set).

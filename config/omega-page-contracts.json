@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 237,
+  "page_count": 234,
   "contracts": [
     {
       "page_id": "404",
@@ -731,79 +731,6 @@
           "buttons": 5,
           "forms": 0,
           "inputs": 1,
-          "links": 1
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
-      "page_id": "analytics-dashboard",
-      "path": "analytics-dashboard.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Analytics Dashboard",
-      "data_sources": {
-        "supabase_tables": [
-          "top_pages"
-        ],
-        "supabase_rpcs": [
-          "engagement_report",
-          "membership_report"
-        ]
-      },
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::analytics-dashboard::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "analytics-dashboard.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/omega-analytics-init.js"
-        ],
-        "data_evidence": {
-          "supabase_tables": [
-            "top_pages"
-          ],
-          "supabase_rpcs": [
-            "engagement_report",
-            "membership_report"
-          ]
-        },
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 5,
-          "forms": 0,
-          "inputs": 0,
           "links": 1
         },
         "media_evidence": {
@@ -11355,63 +11282,6 @@
       }
     },
     {
-      "page_id": "predictions-dashboard",
-      "path": "predictions-dashboard.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Predictions",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::predictions-dashboard::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "predictions-dashboard.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
       "page_id": "principles",
       "path": "principles.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -13155,74 +13025,6 @@
         },
         "media_evidence": {
           "images": 1,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
-      "page_id": "segmentation-dashboard",
-      "path": "segmentation-dashboard.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Member Segmentation Dashboard",
-      "data_sources": {
-        "supabase_tables": [],
-        "supabase_rpcs": [
-          "get_all_members"
-        ]
-      },
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::segmentation-dashboard::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "segmentation-dashboard.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js"
-        ],
-        "data_evidence": {
-          "supabase_tables": [],
-          "supabase_rpcs": [
-            "get_all_members"
-          ]
-        },
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 4,
-          "forms": 0,
-          "inputs": 0,
-          "links": 1
-        },
-        "media_evidence": {
-          "images": 0,
           "video": 0,
           "audio": 0,
           "iframes": 0
@@ -15987,8 +15789,8 @@
     }
   ],
   "audit_summary": {
-    "page_count": 237,
-    "source_audited_pages": 237,
+    "page_count": 234,
+    "source_audited_pages": 234,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true
   }

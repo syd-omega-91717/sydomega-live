@@ -25604,3 +25604,17 @@ local references and fails on any that does not resolve. Reproduced locally:
 before any page deletion; it is the check that sees references the contract gates do not. Still referencing the
 slugs, and passing the build: `omega-page-contracts.json`, `omega-page-review-tasks.json`, the action-audit and
 bootstrap JSON, `scripts/omega-production-surface-contract.py` (an exemption set).
+
+**Second correction, same PR (CI on head `edf40f2`: `integrity`, `readiness`, `Validate production artifact`, `verify`,
+Cloudflare Pages all red).** Two distinct causes, not one. (1) The unreachable-asset build failure above. (2) `verify`
+stopped at "Unified page contract audit": `config/omega-page-contracts.json` still declared the three pages
+(`ERROR declared page or alias is not shipped by the static build`), and every later `verify` step was SKIPPED, so
+more failures were hidden behind it. Fixed by removing the 3 contracts and 3 tasks from `omega-page-contracts.json` /
+`omega-page-review-tasks.json` (both round-trip byte-exact through `json.dump(indent=2)`, so the diff is only the
+removals) and setting `page_count`, `audit_summary.page_count` and `audit_summary.source_audited_pages` to 234, which
+`omega-page-contract-remediation-contract.py` checks. `scripts/omega-registry.py` then needed regenerating (237 -> 234 in
+`OMEGA_SKILL_REGISTRY.md`); it refuses on a shallow clone, so the clone was unshallowed first.
+Verified: `./scripts/ci-local.sh` ALL 32 BLOCKING CHECKS PASSED (it had reported 2 failing), `bash scripts/vercel-build.sh`
+VERCEL_BUILD=PASS, `scripts/tests` 948 OK. Regenerating the bootstrap/action-audit JSON was again deliberately skipped
+(unrelated drift); CI regenerates the bootstrap itself. Method: after a failure, read the job's STEP list and
+run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not only the step that failed.

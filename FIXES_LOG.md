@@ -25632,3 +25632,14 @@ Verified: `./scripts/ci-local.sh` ALL 32 BLOCKING CHECKS PASSED (it had reported
 VERCEL_BUILD=PASS, `scripts/tests` 948 OK. Regenerating the bootstrap/action-audit JSON was again deliberately skipped
 (unrelated drift); CI regenerates the bootstrap itself. Method: after a failure, read the job's STEP list and
 run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not only the step that failed.
+
+## 2026-10-31 — launcher overlay had no way to open on 2 of 2 layouts; `mobile/` Expo shell; WinSCP mirror script
+
+**Found.** `omega-menu.js` built the all-pages overlay but its only opener, `#om-open`, is hidden below 761px (`bg.js:1579`, "Phone chrome budget") and beside the desktop sidebar (`omega-menu.js` `syncWithSidebar`), and nothing else called it — so the overlay was unreachable wherever the sidebar or bottom nav rendered. Button icon was a 4-square grid, not a hamburger.
+
+**Changed.** `omega-menu.js`: hamburger icon; `window.OmegaMenu.{open,close,toggle,isOpen}` (the missing handle); search field (filters cards, hides emptied groups, Enter follows first match); `role=dialog`/`aria-modal`/`aria-expanded`; scroll lock; focus into search on open, restored on close; Tab kept inside. The button's phone/sidebar hiding is deliberately unchanged.
+`mobile/` (new): Expo WebView shell around the live site, no data/keys/logic of its own; `scripts/vercel-build.sh` now has `! -path './mobile/*'` — without it the extension-based copy shipped 3 files from it (measured: 3 without, 0 with). Site URL `sydomega.pages.dev` is INFERRED from the Pages project name, not verified.
+`scripts/winscp-mirror.ps1` (new): uploads built `public/` only to a secondary SFTP/FTP host; preview unless `-Apply`; no delete unless `-Delete`; creds from env; host-key fingerprint required. Production stays Git-driven.
+
+**Verified.** Headless Chromium at 1280x800 and 390x700, 19 assertions each, 0 page errors: opens/closes, aria-expanded tracks state, scroll lock set and cleared, focus restored, filter 74 -> 1 card, empty message, clear restores 74, Esc closes. Enter navigation was first reported as a pass by an assertion ending `|| true` (vacuous), then FAILED on `about:blank` (relative URL cannot resolve); re-run from an http origin: PASS, with a no-match negative control. `audit.py` 0 critical / 7 warnings; `module-contract`, `brand-glyph-check`, `check-inline-js`, `context-budget` pass.
+**Not verified:** the Expo app has never been run (no `npm install`, no device/simulator); the WinSCP script has never run (no WinSCP, no host); the overlay was tested standalone, not inside a full page with bg.js/nav.js; `omega-registry.py --check` refused on the shallow clone; `ci-local.sh` was not run.

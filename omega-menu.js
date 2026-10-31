@@ -133,6 +133,11 @@
     '.om-card:hover{border-color:rgba(201,168,76,.6);background:rgba(201,168,76,.08);color:#E2C86D;transform:translateY(-2px)}',
     '.om-ic{width:40px;height:40px;display:inline-block}',
     '.om-card:hover .om-ic{filter:brightness(1.3)}',
+    '#om-q{display:block;width:100%;max-width:420px;margin:0 auto 24px;box-sizing:border-box;padding:11px 14px;min-height:44px;border:1px solid rgba(201,168,76,.28);background:rgba(255,255,255,.04);color:#d8d5cb;border-radius:10px;font-family:"Courier Prime",monospace;font-size:16px;letter-spacing:1px}',
+    '#om-q:focus{outline:2px solid #00E5FF;outline-offset:2px;border-color:rgba(201,168,76,.6)}',
+    '.om-grp[hidden],.om-card[hidden],#om-empty[hidden]{display:none!important}',
+    '#om-empty{text-align:center;color:#A9C2D8;font-family:"Courier Prime",monospace;letter-spacing:1px}',
+    'body.om-lock{overflow:hidden}',
     '@media(max-width:760px){#om-ov{padding-top:58px}.om-cards{grid-template-columns:repeat(3,1fr)}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'om-css'; st.textContent = css;
@@ -162,11 +167,14 @@
 
   function build() {
     var btn = document.createElement('button'); btn.id = 'om-open'; btn.type = 'button'; btn.setAttribute('aria-label', 'All pages');
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>';
+    btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
     document.body.appendChild(btn);
 
     var ov = document.createElement('div'); ov.id = 'om-ov';
-    var html = '<button id="om-close" aria-label="Close">\u00D7</button><div id="om-inner"><div id="om-title">SYD OMEGA 91717</div>';
+    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'All pages');
+    var html = '<button id="om-close" aria-label="Close">\u00D7</button><div id="om-inner"><div id="om-title">SYD OMEGA 91717</div>' +
+      '<input id="om-q" type="search" placeholder="Search pages" aria-label="Search pages" autocomplete="off" spellcheck="false">';
     GROUPS.forEach(function (g) {
       var ownerCls = g[3] ? ' om-grp-owner' : '';
       html += '<div class="om-grp' + ownerCls + '"><h4>' + g[0] + '</h4><div class="om-cards">';
@@ -175,7 +183,7 @@
       });
       html += '</div></div>';
     });
-    html += '</div>';
+    html += '<p id="om-empty" hidden>No pages match.</p></div>';
     ov.innerHTML = html;
     fillIcons(ov);
     document.body.appendChild(ov);
@@ -211,10 +219,64 @@
       }
     })();
 
-    btn.onclick = function () { ov.classList.add('open'); };
-    ov.querySelector('#om-close').onclick = function () { ov.classList.remove('open'); };
-    ov.addEventListener('click', function (e) { if (e.target === ov) ov.classList.remove('open'); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ov.classList.remove('open'); });
+    /* Search: filters cards by label, hides groups left empty. Enter follows the
+       first visible card, so a member can type and go without touching the grid. */
+    var q = ov.querySelector('#om-q'), empty = ov.querySelector('#om-empty');
+    function filter() {
+      var term = q.value.trim().toLowerCase(), shown = 0;
+      ov.querySelectorAll('.om-grp').forEach(function (g) {
+        var any = 0;
+        g.querySelectorAll('.om-card').forEach(function (c) {
+          var hit = !term || c.textContent.toLowerCase().indexOf(term) !== -1;
+          c.hidden = !hit; if (hit) any++;
+        });
+        g.hidden = !any; shown += any;
+      });
+      empty.hidden = shown > 0;
+    }
+    q.addEventListener('input', filter);
+    q.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      var first = ov.querySelector('.om-grp:not([hidden]) .om-card:not([hidden])');
+      if (first) location.href = first.getAttribute('href');
+    });
+
+    /* Open/close with focus handling: scroll lock, focus into the search field,
+       focus restored to whatever opened it, aria-expanded kept true to state. */
+    var returnTo = null;
+    function isOpen() { return ov.classList.contains('open'); }
+    function open() {
+      if (isOpen()) return;
+      returnTo = document.activeElement;
+      ov.classList.add('open'); document.body.classList.add('om-lock');
+      btn.setAttribute('aria-expanded', 'true');
+      q.value = ''; filter();
+      setTimeout(function () { try { q.focus(); } catch (_) {} }, 0);
+    }
+    function close() {
+      if (!isOpen()) return;
+      ov.classList.remove('open'); document.body.classList.remove('om-lock');
+      btn.setAttribute('aria-expanded', 'false');
+      try { if (returnTo && returnTo.focus) returnTo.focus(); } catch (_) {}
+    }
+    btn.onclick = open;
+    ov.querySelector('#om-close').onclick = close;
+    ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+      /* Tab stays inside the dialog while it is open. */
+      if (e.key === 'Tab' && isOpen()) {
+        var f = ov.querySelectorAll('button,input,a[href]:not([hidden])');
+        var items = Array.prototype.filter.call(f, function (n) { return !n.closest('[hidden]'); });
+        if (!items.length) return;
+        var a = items[0], z = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+        else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+      }
+    });
+    /* Public handle: the button is hidden on phones and beside the desktop
+       sidebar (above), which left this overlay with no way to open at all. */
+    window.OmegaMenu = { open: open, close: close, toggle: function () { (isOpen() ? close : open)(); }, isOpen: isOpen };
   }
   if (document.body) build(); else document.addEventListener('DOMContentLoaded', build);
 })();

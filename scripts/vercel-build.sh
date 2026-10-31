@@ -29,6 +29,7 @@ find . -type f \
   ! -path './.claude/*' \
   ! -path './supabase/*' \
   ! -path './core/*' \
+  ! -path './mobile/*' \
   ! -path './docs/*' \
   ! -path './config/omega-implementation-ledger.json' \
   ! -path './config/*' \

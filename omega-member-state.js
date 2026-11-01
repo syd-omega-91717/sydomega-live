@@ -122,6 +122,22 @@
     omega_last_gate: 1, omega_genesis_seen: 1
   };
 
+  /* NEVER MIRRORED TO THE SERVER. The seven finance pages (wealth, wallet, treasury, revenue,
+     investment, expenses, budget) are localStorage-only on purpose: the data is more sensitive
+     than the rest of the platform's (CLAUDE.md 8.2, the header of omega-local-backup.js). This
+     mirror uploads every `omega*` key not in SKIP, and these keys were not in SKIP, so the first
+     member to use a finance page would have had it copied to public.member_state, defeating that
+     decision (docs/legal/LEGAL_GAP_AUDIT.md, finding 4). Kept apart from SKIP on purpose: SKIP is
+     also what omega-local-backup.js reads to decide what "export everything" includes, and a
+     member's own export file SHOULD still carry their finance data. This list only stops the
+     upload. A new finance key must be added here (member-state-finance.test covers the 14). */
+  var NO_MIRROR = {
+    omega_wealth_assets: 1, omega_wealth_snapshots: 1, omega_wallet: 1, omega_wallet_targets: 1,
+    omega_treasury_assets: 1, omega_treasury_reserves: 1, omega_treasury_flows: 1,
+    omega_investments: 1, omega_revenue: 1, omega_rev_goal: 1,
+    omega_expenses: 1, omega_budgets: 1, omega_budget_months: 1, omega_budget_targets: 1
+  };
+
   var state = {
     enabled: false, reason: 'not initialised', pending: 0,
     lastError: null, lastSync: null, mirrored: 0
@@ -147,7 +163,7 @@
   }
 
   function mirrored(k) {
-    return typeof k === 'string' && k.indexOf(PREFIX) === 0 && !SKIP[k] &&
+    return typeof k === 'string' && k.indexOf(PREFIX) === 0 && !SKIP[k] && !NO_MIRROR[k] &&
            k.indexOf('omega_analytics_') !== 0;
   }
 
@@ -283,6 +299,7 @@
        hand-kept copy of PREFIX/SKIP would drift the moment a page adds a key. */
     prefix: PREFIX,
     skip: SKIP,
+    noMirror: NO_MIRROR,
     isMemberKey: function (k) {
       return typeof k === 'string' && k.indexOf(PREFIX) === 0 && !SKIP[k];
     },

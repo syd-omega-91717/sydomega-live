@@ -25794,3 +25794,16 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Known test flakiness, not a regression:** `drawer-test.js` shows the same 4 failures (ALL PAGES topmost / overlay opens / drawer closed / search focused) on the original code as on mine, and passes 13/13 on some runs of either, depending on when the product-tour modal appears in this harness.
 
 **Not verified:** a real signed-in session, Safari/Firefox, a page that truly renders without a sidebar (the floating button was only checked for its computed style), and a screen reader on the bracketed pills.
+
+
+### 197 — The member-state mirror no longer uploads the finance pages' keys (audit finding 4)
+
+**Defect.** The seven finance pages are localStorage-only on purpose (CLAUDE.md §8.2). `omega-member-state.js` (on every page) uploads every `omega*` key not in `SKIP`, and the 14 finance keys were not in it, so the first member to use a finance page would have had it copied to `public.member_state`. Live count at the time: 0 finance rows (9 profiles), so nothing had been uploaded yet.
+
+**Fix.** A separate `NO_MIRROR` map (the 14 keys), applied **only** in the sync-up predicate `mirrored()`. Deliberately not added to `SKIP`: `omega-local-backup.js` reads `SKIP` to decide what "export everything" includes, and a member's own export file should still carry their finance data. Exposed as `OmegaMemberState.noMirror`.
+
+**Proven with a real before/after** (headless, signed-in stub, upsert intercepted, `syncNow()`): BEFORE (the `origin/main` file) uploaded all 14 finance keys; AFTER uploads 0, still uploads the two non-finance probe keys, and `OmegaLocalBackup.memberKeys()` still returns all 14 for the local export.
+
+**Guard.** `scripts/tests/test_member_state_finance.py` derives the finance key list from the seven pages themselves (not a hand copy), fails if a page stores a key missing from `NO_MIRROR`, fails on stale entries, and checks the exclusion sits on the upload path only. Negative control: removing `omega_expenses` made it fail naming `expenses.html`.
+
+**Not verified:** against the real Supabase server (stub only); whether any browser already holds finance rows uploaded by an earlier build (live count was 0).

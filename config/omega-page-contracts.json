@@ -11789,7 +11789,9 @@
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
           "/omega-identity-core.js",
+          "/omega-mfa.js",
           "/omega-morph.js",
+          "/omega-profile-settings.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -11823,9 +11825,9 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 11,
+          "buttons": 30,
           "forms": 0,
-          "inputs": 6,
+          "inputs": 10,
           "links": 13
         },
         "media_evidence": {
@@ -13342,9 +13344,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/nav.js",
-          "/omega-morph.js",
-          "/omega-security.js"
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -13361,13 +13361,13 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 3,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 1,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
-          "images": 1,
+          "images": 0,
           "video": 0,
           "audio": 0,
           "iframes": 0
@@ -13525,16 +13525,7 @@
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
       "purpose": "&#937; SYD OMEGA 91717 &mdash; Settings",
-      "data_sources": {
-        "supabase_tables": [
-          "profiles"
-        ],
-        "supabase_rpcs": [
-          "deactivate_account",
-          "delete_account",
-          "set_profile_visibility"
-        ]
-      },
+      "data_sources": "UNVERIFIED",
       "capabilities": [
         "import-export"
       ],
@@ -13558,22 +13549,9 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-mfa.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js",
-          "/upload.js"
+          "/omega-morph.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "profiles"
-          ],
-          "supabase_rpcs": [
-            "deactivate_account",
-            "delete_account",
-            "set_profile_visibility"
-          ]
-        },
+        "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [
           "import-export"
         ],
@@ -13585,10 +13563,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 25,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 4,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,

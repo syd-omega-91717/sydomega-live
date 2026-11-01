@@ -74,7 +74,7 @@
           ['quotes','WISDOM','/quotes.html','folded'],['time','TIME TRACKER','/time.html','folded'],['vision','VISION BOARD','/vision.html','folded']]},
     {key:'identity',icon:'\u25C8', label:'IDENTITY', href:'/profile.html', col:'#00E5FF',
      sub:[['identity-alias-1','IDENTITY HUB','/profile.html#identity','folded'],['profile','PROFILE','/profile.html'],['life','Ω LIFE','/life.html','folded'],['personal-context','PERSONAL CONTEXT','/life.html#personal-context','folded'],['passport-alias-1','PASSPORT','/profile.html#passport','folded'],
-          ['kyc-alias-1','KYC VERIFY','/profile.html#kyc','folded'],['character-alias-1','CHARACTER','/profile.html#character','folded'],['portfolio-alias-1','PORTFOLIO','/profile.html#portfolio','folded'],['settings','SETTINGS','/profile.html#settings'],['security','SECURITY CENTER','/security.html']]},
+          ['kyc-alias-1','KYC VERIFY','/profile.html#kyc','folded'],['character-alias-1','CHARACTER','/profile.html#character','folded'],['portfolio-alias-1','PORTFOLIO','/profile.html#portfolio','folded'],['settings','SETTINGS','/profile.html#settings','folded'],['security','SECURITY','/security.html','folded']]},
     {key:'ascend',  icon:'▲', label:'ASCEND',   href:'/ascend.html',col:'#E86A3A',
      sub:[['ascend','ASCEND WORKSPACE','/ascend.html'],['ascension-alias-1','ASCENSION MAP','/honors.html#ascension','folded'],['matrix','THE MATRIX','/matrix.html','folded'],['triads-alias-1','12 TRIADS','/matrix.html#triads','folded'],['grid-alias-1','THE GRID','/matrix.html#grid','folded'],['charter-alias-1','CHARTER','/matrix.html#charter','folded'],['achievements-alias-1','MY RECORD','/honors.html#record','folded'],
           ['standing-dashboard','STANDING DASHBOARD','/standing-dashboard.html','folded'],

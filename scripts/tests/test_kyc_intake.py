@@ -119,7 +119,7 @@ GUARD = read("supabase", "migrations", "20260927143525_guard_profile_trial_expir
 NOTIF = read("supabase", "migrations", "20260927143903_notifications_fill_required.sql")
 UPLOAD = read("upload.js")
 PRIVACY = read("privacy.html")
-SETTINGS = read("settings.html")
+SETTINGS = read("omega-profile-settings.js")  # the delete/deactivate code moved here from settings.html (FIXES_LOG 203)
 UI = read("approvals-ui.js")
 
 
@@ -189,7 +189,8 @@ class Client3(unittest.TestCase):
         self.assertIn("return sb.rpc('request_account_erasure');", PRIVACY)
         self.assertIn("clearIdentityDocThen(call)", PRIVACY)
         self.assertIn("clearIdentityDocThen(call)", SETTINGS)
-        for page in (PRIVACY, SETTINGS):
+        # settings moved into the profile page: the page that hosts the delete button must load the helper's file
+        for page in (PRIVACY, read("profile.html")):
             self.assertIn('<script src="/upload.js"></script>', page)
 
     def test_privacy_notice_states_the_rule(self):

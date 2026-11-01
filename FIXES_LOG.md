@@ -25855,3 +25855,16 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Measured (headless, signed-in stub).** 9 tiles, 3 columns desktop / 1 phone, no horizontal overflow, no page errors; every tile filled. The stub answers every query, so "11/11" proves wiring, not production health.
 
 **Not verified:** a real signed-in session against live RLS (the owner tiles are the ones that could differ), Safari/Firefox, a screen reader.
+
+
+### 202 — Navigation simplified: duplicates folded, each section shows its main pages (step 1 of the "easier to surf" request)
+
+**Measured before.** `nav.js` listed 248 sub-entries across 15 sections (avg 17, COMMAND 26) with 37 folded. The same destination appeared up to 7 times: `/profile.html` 7x in IDENTITY (hash-tab aliases), `/vault.html` and `/matrix.html` 4x, `/elements.html` and `/family.html` 3x; income, payments, ledger and subscriptions sat in both VAULT and INVEST; 12 labels (PASSPORT, CHARACTER, PORTFOLIO, WALLET, HOROSCOPE...) appeared twice.
+
+**Changed.** One mechanism, already in the file: the 4th field `'folded'`, which hides an entry from the sidebar and drawer and keeps it in Ctrl/Cmd+K search (`buildNavIndex` dedupes by href). Every section now shows 3-10 primary pages (111 visible, 138 folded, from ~211 visible); every alias and cross-section duplicate is folded. Where a page lived in two sections it stays in the one that owns it (income/ledger in INVEST; subscriptions/payments in VAULT). `movies` is unfolded so the Media Hub carousel is reachable. No page deleted, no URL changed, no contract edited; one owner-gated entry (`control-plane`) left as it was.
+
+**Measured after (headless, signed-in stub).** Dashboard renders the sidebar at desktop and phone with no page errors; Ctrl+K still finds folded pages (`beacon`, `ledger`, `passport` each returned their page). 111 visible entries; the only repeated destination is `/profile.html` (PROFILE and its `#settings` tab, deliberately two entries for one page with two tabs). All 33 `ci-local.sh` blocking checks pass.
+
+**Not done, on purpose.** Step 2 (merge the overlapping command pages into one) is separate. This does not shorten any page's own contents. The primary-page choice per section is my judgement from names and the page-cores plan, not usage data (the repo has view data only for the dashboard); the owner should confirm it.
+
+**Not verified:** a real member session on the phone drawer, Safari/Firefox, and whether a member can find a folded page without knowing about search.

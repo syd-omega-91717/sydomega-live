@@ -23,8 +23,8 @@
     '.card:hover,.g-card:hover,.film-card:hover,.sg-card:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 14px 40px -12px rgba(0,0,0,.6)}',
     '@media(min-width:1600px){.wrap,.shell,main{max-width:1280px;margin-inline:auto}}',
     '@media(max-width:1024px){.wrap,.shell{padding-left:18px;padding-right:18px}}',
-    '@media(max-width:760px){.grid,.slots,.om-cards{grid-template-columns:repeat(2,1fr) !important}.hero .cur{font-size:40px}}',
-    '@media(max-width:430px){.grid,.slots,.om-cards{grid-template-columns:1fr !important}.topbar .t{font-size:20px}.stats3{grid-template-columns:repeat(3,1fr)}}',
+    '@media(max-width:760px){.grid,.slots{grid-template-columns:repeat(2,1fr) !important}.hero .cur{font-size:40px}}',
+    '@media(max-width:430px){.grid,.slots{grid-template-columns:1fr !important}.topbar .t{font-size:20px}.stats3{grid-template-columns:repeat(3,1fr)}}',
     '@media(max-width:360px){.wrap{padding-left:12px;padding-right:12px}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'omega-components-css'; st.textContent = css;

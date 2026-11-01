@@ -57,7 +57,7 @@
     roadmap:'govern',series:'media',sovereign_ai:'arena',
     treasury:'invest',trailers:'media',triads:'achieve',
     universe:'media',wallet:'invest',council:'govern',hercules:'achieve',
-    'sovereign-ai':'arena','design-system':'govern','agent-network':'arena','design-showcase':'govern',
+    'sovereign-ai':'arena','design-system':'govern','agent-network':'arena','design-showcase':'govern','design-lab':'govern',
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
@@ -130,7 +130,7 @@
      sub:[['govern','GOVERN WORKSPACE','/govern.html'],['council','DECISION ENGINE','/council.html'],['governance','GOVERNANCE','/governance.html'],['observatory','OBSERVATORY','/observatory.html'],
           ['autonomous-insights','AGENT INSIGHTS','/autonomous-insights.html'],['enterprise','ENTERPRISE','/enterprise.html'],['privacy','PRIVACY','/privacy.html'],
           ['roadmap','ROADMAP','/roadmap.html'],['lab','INNOVATION LAB','/lab.html'],['design-system','DESIGN SYSTEM','/design-system.html'],
-          ['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['knowledge-loom','KNOWLEDGE LOOM','/knowledge-loom.html'],
+          ['design-showcase','DESIGN SHOWCASE','/design-showcase.html'],['design-lab','DESIGN LAB','/design-lab.html'],['ecosystem','ECOSYSTEM','/ecosystem.html'],['knowledge','KNOWLEDGE GRAPH','/knowledge.html'],['knowledge-loom','KNOWLEDGE LOOM','/knowledge-loom.html'],
           ['omega-platform-navigator','PLATFORM NAVIGATOR','/omega-platform-navigator.html'],['maintenance','MAINTENANCE','/maintenance.html'],['control-center','CONTROL CENTER','/control-center.html'],['platform-kernel','PLATFORM KERNEL','/platform-kernel.html'],['agent-operations','AGENT OPERATIONS','/agent-operations.html'],['ops','OPS','/ops.html'],['architecture','ARCHITECTURE','/architecture.html'],['control-plane','OWNER DECK','/control-plane.html','owner'],
           ['world-shell','WORLD SHELL','/world-shell.html']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/invest.html',   col:'#E2C86D',
@@ -305,19 +305,6 @@
     section: function (key) {
       for (var i = 0; i < SECTIONS.length; i++) if (SECTIONS[i].key === key) return SECTIONS[i];
       return null;
-    },
-    /* Every page this nav can reach, flat: [{label, href, section, key, col, owner}].
-       omega-menu.js merges it into the searchable launcher, so the launcher reads
-       the page map from its one owner instead of keeping a second hand-typed copy
-       (CLAUDE.md 8.1 class 8). A fresh array each call; callers may not mutate nav. */
-    pages: function () {
-      var out = [];
-      SECTIONS.forEach(function (sec) {
-        sec.sub.forEach(function (sub) {
-          out.push({ label: sub[1], href: sub[2], section: sec.label, key: sec.key, col: sec.col, owner: sub[3] === 'owner' });
-        });
-      });
-      return out;
     },
     colourOf: function (slug) {
       var sec = this.section(this.sectionOf(slug));

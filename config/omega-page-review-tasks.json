@@ -5,7 +5,7 @@
   "status": "OPEN_AUDIT_QUEUE",
   "principle": "EVERY_PAGE_HAS_AUDIT_WORK",
   "task_contract": "config/omega-task-contract.json",
-  "task_count": 234,
+  "task_count": 235,
   "states": [
     "OPEN",
     "READY",
@@ -4232,6 +4232,24 @@
       "owner": "UNASSIGNED",
       "blocker": "Repository source contract exists, but authenticated browser states, live source behavior, asset routes, authorization behavior, and production evidence still require independent verification.",
       "next_action": "Verify signed-out, authenticated-empty, authenticated-with-data, consent-denied, source-unavailable, and mobile states against the live preview; record only observed evidence."
+    },
+    {
+      "task_id": "PAGE::design-lab::REVIEW",
+      "task_type": "AUDIT",
+      "page": "design-lab",
+      "path": "design-lab.html",
+      "state": "OPEN",
+      "role": "UNVERIFIED",
+      "capability": [
+        "UNVERIFIED"
+      ],
+      "authorization": "UNVERIFIED",
+      "truth_state": "UNVERIFIED",
+      "evidence_required": true,
+      "evidence_status": "PENDING_SEMANTIC_AUTHORIZATION_TRUTH_AUDIT",
+      "owner": "UNASSIGNED",
+      "blocker": "Source evidence exists, but semantic role, authorization, production truth, assets, events, failure paths and accessibility remain unverified.",
+      "next_action": "Review direct source evidence and populate only independently proven contract fields."
     }
   ]
 }

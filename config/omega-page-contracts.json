@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 234,
+  "page_count": 235,
   "contracts": [
     {
       "page_id": "404",
@@ -3980,6 +3980,65 @@
         "method": "direct HTML source inspection",
         "interactive_evidence": {
           "buttons": 3,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "design-lab",
+      "path": "design-lab.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Design Lab",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::design-lab::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "design-lab.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/design-lab.js",
+          "/omega-morph.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
           "forms": 0,
           "inputs": 0,
           "links": 0
@@ -15789,8 +15848,8 @@
     }
   ],
   "audit_summary": {
-    "page_count": 234,
-    "source_audited_pages": 234,
+    "page_count": 235,
+    "source_audited_pages": 235,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true
   }

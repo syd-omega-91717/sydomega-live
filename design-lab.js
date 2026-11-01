@@ -206,6 +206,42 @@
     .then(function (d) { if (!d || !Array.isArray(d.movies)) throw new Error('no movies in catalog'); renderMedia(d.movies); })
     .catch(function (e) { fail('dl-media', 'The film catalog could not be read (' + e.message + ').'); });
 
+  /* Canon definitions from omega-canon.json. No member standing, no prices: what a tier costs
+     is subscriptions.html's job (live Stripe), not a number copied here. */
+  function hexOk(h) { return /^#[0-9a-f]{3,8}$/i.test(String(h || '')); }
+  function renderCanon(c) {
+    var th = document.getElementById('dl-tiers'), eh = document.getElementById('dl-elems'), hh = document.getElementById('dl-hons');
+    th.textContent = ''; eh.textContent = ''; hh.textContent = '';
+    (c.tiers || []).forEach(function (t, i) {
+      var a = el('a', { 'class': 'dl-tier', href: '/subscriptions.html' });
+      if (hexOk(t.color)) a.style.setProperty('--dl-ac', t.color);
+      a.appendChild(el('b', null, String(t.name || '')));
+      a.appendChild(el('span', null, 'TIER ' + (i + 1) + ' · ' + String(t.mat || '')));
+      var nu = t.unlocks ? t.unlocks.length : 0;
+      a.appendChild(el('span', null, nu + (nu === 1 ? ' unlock' : ' unlocks')));
+      th.appendChild(a);
+    });
+    (c.elements || []).forEach(function (e) {
+      var d = el('div', { 'class': 'dl-el' }, String(e.name || ''));
+      if (hexOk(e.hex)) d.style.setProperty('--dl-ac', e.hex);
+      d.appendChild(el('i', null, String(e.type || '')));
+      eh.appendChild(d);
+    });
+    (c.tracks || []).forEach(function (t) {
+      var d = el('div', { 'class': 'dl-hon' });
+      d.appendChild(el('b', null, String(t.sign || '') + ' · ' + String(t.god || '')));
+      d.appendChild(el('span', null, [t.certificate, t.medal, t.trophy].filter(Boolean).join(' · ')));
+      hh.appendChild(d);
+    });
+    if (!th.children.length) fail('dl-tiers', 'The canon had no tiers.');
+    if (!eh.children.length) fail('dl-elems', 'The canon had no elements.');
+    if (!hh.children.length) fail('dl-hons', 'The canon had no honours.');
+  }
+  fetch('/omega-canon.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(renderCanon)
+    .catch(function (e) { ['dl-tiers', 'dl-elems', 'dl-hons'].forEach(function (id) { fail(id, 'The canon could not be read (' + e.message + ').'); }); });
+
   waitAxis(function (A) {
     if (!A) { ['dl-metrics', 'dl-bars', 'dl-flow'].forEach(function (id) { fail(id, 'The navigation page map did not load.'); }); return; }
     state.axis = A; tryRender();

@@ -36,6 +36,21 @@
 /* GRID SYSTEMS */
 .pad{padding:var(--pad)}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+/* Platform KPI grid: five even columns, the authority tile spanning two rows, so no row is
+   ragged. Surfaces use tonal depth (lit panel + hairline), not extra hue. Scoped to #kpi-platform
+   (an id outranks the global .kpi sheets). Data, ids and queries are untouched. */
+#kpi-platform{grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;gap:12px}
+#kpi-platform .kpi{display:flex;flex-direction:column;justify-content:center;min-height:104px;border-radius:12px;
+  border:1px solid rgba(201,168,76,.28);border-top:2px solid var(--kc,var(--gold));
+  background:linear-gradient(165deg,#2C2822,#1B1914);
+  box-shadow:inset 0 1px 0 rgba(247,224,160,.14),0 6px 18px rgba(0,0,0,.35)}
+#kpi-platform #kpi-auth{grid-row:span 2;justify-content:flex-start}
+#kpi-platform .kpi:hover{border-color:rgba(201,168,76,.5)}
+@media(max-width:1100px){#kpi-platform{grid-template-columns:repeat(3,minmax(0,1fr))}#kpi-platform #kpi-auth{grid-row:auto;grid-column:1/-1}}
+@media(max-width:560px){#kpi-platform{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#timeline-section .tl-item{position:relative;padding:8px 0 8px 2px}
+#timeline-section .tl-item:not(:last-child)::before{content:"";position:absolute;left:5px;top:20px;bottom:-8px;width:1px;background:linear-gradient(180deg,rgba(201,168,76,.4),rgba(201,168,76,.06))}
+#timeline-section .tl-dot{width:10px;height:10px;margin-top:6px;box-shadow:0 0 0 3px rgba(0,0,0,.35),0 0 10px var(--td,var(--muted))}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold));cursor:pointer;transition:.18s;position:relative}
 .kpi:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .kpi-n{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--kc,var(--gold));line-height:1}
@@ -156,7 +171,7 @@
     <div id="l-overview" class="layer-panel active">
       <div class="pad" data-reveal="fade-up">
         <!-- SOVEREIGN KPIs -->
-        <div class="kpi-row" data-stagger data-stagger-gap="70" data-omega-depth-tilt>
+        <div class="kpi-row" id="kpi-platform" data-stagger data-stagger-gap="70" data-omega-depth-tilt>
           <div class="kpi" id="kpi-auth" role="link" tabindex="0" data-reveal="fade-up" data-glow-pulse data-nav-action="/evolution.html" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" aria-label="My authority score" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-auth" data-countup>--</div><div class="kpi-l" data-i18n="my_authority">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div><div data-omega-spark id="dash-tasks-spark" data-spark-label="MY TASKS/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">♈︎</div></div></div>
           <div class="kpi" data-reveal="fade-up" data-living="member-count" data-tooltip="Members whose access has been approved by the owner. Pending members are not counted here." data-nav-action="/approvals.html" style="--kc:var(--cyan)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-members" data-live-members data-countup>--</div><div class="kpi-l" data-i18n="active_members">ACTIVE MEMBERS</div><div class="kpi-sub" data-i18n="access_approved">ACCESS APPROVED</div></div><div class="emblem-orb" style="--kc:var(--cyan);animation-delay:.2s">♓︎</div></div></div>
           <div class="kpi" data-reveal="fade-up" data-tooltip="Members with an active session right now, synced every 30s." style="--kc:var(--green)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-online" data-countup>--</div><div class="kpi-l" data-i18n="online_now">ONLINE NOW</div><div class="kpi-sub" data-i18n="live_presence">LIVE PRESENCE</div></div><div class="emblem-orb" style="--kc:var(--green);animation-delay:.4s">♈︎</div></div></div>

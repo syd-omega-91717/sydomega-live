@@ -3,11 +3,12 @@ import { BackHandler, Linking, Platform, View, ActivityIndicator, Text, Pressabl
 import { StatusBar } from 'expo-status-bar';
 import { WebView } from 'react-native-webview';
 import Constants from 'expo-constants';
+import { hostOf, isInternal, isOpenableExternally } from './navigation';
 
 // The app is a shell around the live site. All auth, approval and data access
 // stay in the web app (Supabase RLS is the boundary); nothing is stored here.
 const SITE = (Constants.expoConfig && Constants.expoConfig.extra && Constants.expoConfig.extra.siteUrl) || 'https://sydomega.pages.dev';
-const HOST = SITE.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+const HOST = hostOf(SITE); // throws at startup if siteUrl is not https
 const BG = '#0a0a0f';
 
 export default function App() {
@@ -24,12 +25,11 @@ export default function App() {
     return () => sub.remove();
   }, [canGoBack]);
 
-  // Keep navigation on the site's own origin; anything else opens externally.
+  // Keep navigation on the site's own https origin; hand only web/mail/tel links
+  // to the OS and drop everything else (data:, javascript:, intent:, file:). See navigation.js.
   const onShouldStart = useCallback((req) => {
-    const m = /^https?:\/\/([^/:?#]+)/i.exec(req.url);
-    if (!m) { return req.url.startsWith('about:') || req.url.startsWith('blob:') || req.url.startsWith('data:'); }
-    if (m[1] === HOST) return true;
-    Linking.openURL(req.url).catch(() => {});
+    if (isInternal(req.url, HOST)) return true;
+    if (isOpenableExternally(req.url)) Linking.openURL(req.url).catch(() => {});
     return false;
   }, []);
 

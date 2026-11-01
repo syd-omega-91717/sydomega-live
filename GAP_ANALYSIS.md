@@ -18,9 +18,8 @@ project's own established convention (security/data-integrity first).
   all measured live: (1) `request_account_erasure()` only soft-deletes and promises permanent
   deletion in 30 days, and `cron.job` holds one job, none of it erasure; (2) of 130 `public` tables
   with a `user_id` column at most one cascades on user delete, so `delete_account()` leaves most
-  personal data behind; (3) the member-state mirror's skip list omits the finance pages' `omega_*`
-  keys, so the "browser only" finance design is defeated the moment a member uses one (0 rows
-  today). Also: processors undisclosed, consent not wired to analytics, thin terms. Needs counsel;
+  personal data behind; (3) ~~the member-state mirror's skip list omits the finance pages' `omega_*` keys~~ — **fixed
+  2026-11-01** (FIXES_LOG 197; 0 rows were ever uploaded). Also: processors undisclosed, consent not wired to analytics, thin terms. Needs counsel;
   none of it is closed. Function go-live conditions: `docs/legal/FUNCTION_GO_LIVE.md`.
 - **POSTPONED 2026-10-18 — blocked on credits, resume when renewed.** Each item is parked
   behind one switch and nothing else depends on it, so renewing is a one-line change:

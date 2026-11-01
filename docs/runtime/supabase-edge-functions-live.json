@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-25T10:55:00Z",
+  "captured_at": "2026-11-01T19:00:00Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
@@ -130,10 +130,18 @@
       "repository_blob_sha": "0e25cc5286c7d5a1d093fb9c637f90088d450308"
     },
     "rankings": {
-      "state": "LOCAL_ONLY"
+      "state": "DEPLOYED",
+      "version": 1,
+      "verify_jwt": true,
+      "live_sha256": "09f676e00630e3e068b947aab56dc6ea9ae0be1d1ad986b5e6a66f8da08bb56b",
+      "repository_blob_sha": "bdb535d5a6f4334ba03535411fcc637a6d20cbb3"
     },
     "snapshot-leaderboard": {
-      "state": "LOCAL_ONLY"
+      "state": "DEPLOYED",
+      "version": 1,
+      "verify_jwt": true,
+      "live_sha256": "b0924e0be4405d1da53d13c8f256943019091e7aa3e3f128c2f8430e7aa34c2c",
+      "repository_blob_sha": "02321e42cdc0b227aac08b52719c309cce46369e"
     },
     "weekly-digest": {
       "state": "LOCAL_ONLY"
@@ -145,8 +153,12 @@
       "state": "LOCAL_ONLY"
     },
     "market-price": {
-      "state": "LOCAL_ONLY"
+      "state": "DEPLOYED",
+      "version": 2,
+      "verify_jwt": false,
+      "live_sha256": "87f11d3f467cf1b51dcc15d5abebffd9206168f1a44edf7829d15429e0274647",
+      "repository_blob_sha": "926d9a9a7394a59407b1cd580782dcfd8c77556f"
     }
   },
-  "verification_note": "Refreshed 2026-10-25 from list_edge_functions on the active project after the Supabase GitHub integration redeployed functions on the #1080 (2026-10-24 23:41 UTC) and #1088 (2026-10-25 00:45 UTC) merges to main. Versions, verify_jwt and live SHA-256 are read live for all 17 ACTIVE functions; repository_blob_sha is the main source at e2deed3a. notify-access v1 was deployed by a session from main source and verified live through pg_net (401 without the secret, 200 resend_api_key_not_configured with it). stripe-webhook v9 source was read live and carries main's charge.refunded handler; the other redeployed functions were not byte-compared this pass, so their parity rests on the integration deploying main. LOCAL_ONLY entries are present in repository source but absent from the active deployed inventory. Runtime source-parity evidence only."
+  "verification_note": "Refreshed 2026-10-25 from list_edge_functions on the active project after the Supabase GitHub integration redeployed functions on the #1080 (2026-10-24 23:41 UTC) and #1088 (2026-10-25 00:45 UTC) merges to main. Versions, verify_jwt and live SHA-256 are read live for all 17 ACTIVE functions; repository_blob_sha is the main source at e2deed3a. notify-access v1 was deployed by a session from main source and verified live through pg_net (401 without the secret, 200 resend_api_key_not_configured with it). stripe-webhook v9 source was read live and carries main's charge.refunded handler; the other redeployed functions were not byte-compared this pass, so their parity rests on the integration deploying main. LOCAL_ONLY entries are present in repository source but absent from the active deployed inventory. Runtime source-parity evidence only. 2026-11-01: rankings v1, snapshot-leaderboard v1 and market-price v2 were deployed from this session with the Supabase deploy tool and read back with list_edge_functions (version, verify_jwt and ezbr_sha256 recorded here are the live values). They were uploaded as individual files, so live_sha256 will differ from the one the GitHub integration produces when it redeploys main; refresh it after the next integration deploy. market-price answered configured:false on a live GET. rankings and snapshot-leaderboard were not called (the sandbox proxy blocks supabase.co and both require a user JWT), so their runtime behavior is unverified. graphify-ai-query, graphify-ai-ingest, checkout, weekly-digest and event-ingest remain LOCAL_ONLY on purpose (docs/legal/FUNCTION_GO_LIVE.md)."
 }

@@ -2,8 +2,7 @@
 // Computes AUTH = sqrt(A³+B³+C³)×φ/e for all approved members,
 // ranks them, and upserts a daily row into leaderboard_snapshots.
 //
-// Meant to run on a daily schedule (e.g. Supabase cron at 00:05 UTC).
-// Also callable on-demand by the owner (used by leaderboard.html tier 2).
+// Callable on-demand by the owner (used by leaderboard.html tier 2). No schedule runs it yet.
 //
 // Contract: POST {}
 //   → 200 { ok: true, rows_written: number, snapshot_date: string }
@@ -53,20 +52,15 @@ Deno.serve(async (req) => {
     return json({ enabled: false, message: "snapshot-leaderboard not configured." }, 200);
   }
 
-  // Require caller to be authenticated as the owner, or be the scheduled cron
-  // job calling with the service_role key directly. The previous check only
-  // verified an Authorization header was present -- not that it was valid or
-  // belonged to the owner -- so any authenticated member could trigger this.
+  // Owner-only: the caller must present a valid session whose profile has is_owner.
+  // The earlier "bearer equals the service key" path for a cron caller was removed
+  // before this function was first deployed: comparing a bearer to the admin key is
+  // not timing-safe (legacy-key-migration PLAN.md, Phase 1 flagged it "REDESIGN BEFORE
+  // DEPLOY"), and no scheduled job calls this function. A schedule can be added later
+  // with its own design (pg_cron + a dedicated, timing-safe shared secret).
   const authHeader = req.headers.get("Authorization") || "";
-  const bearer = authHeader.replace(/^Bearer\s+/i, "");
-  if (!bearer) return json({ error: "unauthorized" }, 401);
-
-  // REDESIGN BEFORE DEPLOY (legacy-key-migration PLAN.md, Phase 1): comparing a
-  // bearer to the admin key is not timing-safe, and with an sb_secret_ key it
-  // only passes through the gateway's Bearer-equals-apikey compatibility rule.
-  // Move to an apikey header + timing-safe compare before this is deployed.
-  const isServiceCall = bearer === serviceKey;
-  if (!isServiceCall) {
+  if (!authHeader.replace(/^Bearer\s+/i, "")) return json({ error: "unauthorized" }, 401);
+  {
     const anonKey = publishableKey() || "";
     try {
       const callerClient = createClient(supabaseUrl, anonKey, {

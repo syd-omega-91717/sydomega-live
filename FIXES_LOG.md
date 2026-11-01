@@ -25762,3 +25762,20 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **`investment.html`:** a non-2xx from `market-price` now reads "The price service is unavailable right now" instead of the misleading "No quote found". `pulse.html` already shows "—" and never a made-up value.
 
 **Not verified:** the functions themselves are still undeployed (next change); the calls above were intercepted, not answered by the real function.
+
+### 195 — Three Edge Functions deployed; five held; legal gap audit (2026-11-01)
+
+**Live check (read-only, then deliberate production deploys the owner asked for).** `list_edge_functions`: 17 ACTIVE = exactly `config.toml`. Source had 24. `leaderboard_snapshots` had **0 rows**, so the leaderboard page was empty in production because `rankings` (its source) was never deployed.
+
+**Deployed and read back live:** `rankings` v1 (`verify_jwt` true), `snapshot-leaderboard` v1 (true), `market-price` v2 (false). Uploaded as files with the Supabase deploy tool, so their `live_sha256` will differ from what the GitHub integration builds on merge; the snapshot says so.
+- `snapshot-leaderboard`: its own source said "REDESIGN BEFORE DEPLOY" (bearer compared to the admin key is not timing-safe). With no cron job calling it, that path was **removed**, leaving the owner-session check.
+- `market-price`: `edge-function-auth-config-contract` classes a public function `PUBLIC_READONLY` and requires GET-only; it also took POST. Tightened to GET (the pages only GET) and redeployed as v2.
+- Verified on the live endpoint through Firecrawl (the sandbox proxy blocks supabase.co): `market-price` answers `{"configured":false,…}`. **Not verified:** `rankings` and `snapshot-leaderboard` behaviour (both need a user JWT).
+
+**Held:** `graphify-ai-query/-ingest` (undisclosed Anthropic processing), `checkout`, `weekly-digest`, `event-ingest` — conditions in `docs/legal/FUNCTION_GO_LIVE.md`.
+
+**Records changed together (the contract locks them):** `supabase/config.toml`, `config/omega-edge-function-auth.json`, `docs/runtime/supabase-edge-functions-live.json`; `index.html` "SERVICES" 17 → 20 (`page-count-claims`).
+
+**Legal audit:** `docs/legal/LEGAL_GAP_AUDIT.md` (17 ranked findings with evidence; not legal advice). Headline: the privacy page's 30-day erasure promise is not implemented (soft delete only, no job), `delete_account` leaves rows in most of 130 user tables, and the finance pages' keys are mirrored to the server despite the browser-only design (0 rows today). Scale: 9 profiles, no ID documents, no erasure requests.
+
+**Not verified:** consent vs analytics in a browser; `export_my_data` completeness; Supabase backup retention; any national law.

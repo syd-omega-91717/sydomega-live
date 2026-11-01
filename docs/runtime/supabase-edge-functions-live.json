@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-11-01T19:00:00Z",
+  "captured_at": "2026-11-01T20:00:00Z",
   "project_ref": "ydqhzvvoyufiiqvzcjns",
   "source_directory": "supabase/functions",
   "functions": {
@@ -55,30 +55,30 @@
     },
     "evidence-graph": {
       "state": "DEPLOYED",
-      "version": 98,
+      "version": 130,
       "verify_jwt": false,
-      "live_sha256": "48a83ec987a5d0f4ac315c50c9b7b965d664fea185fcfd15dfbadba75ed06562",
+      "live_sha256": "c79bfa8926168c9616c7b55c2f676798b6e67b8d2b443a0ea57c81c2ab60b875",
       "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 277,
+      "version": 309,
       "verify_jwt": false,
-      "live_sha256": "ed77a71aaf8036ac5a10849f26f39d3494c7f53233d4dfd5e9997daefa262939",
+      "live_sha256": "d2a127ad4f6035864e4d4694ff360b5aaf75e319ae5d69547767a46cdb7d89e7",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 281,
+      "version": 313,
       "verify_jwt": true,
-      "live_sha256": "5d875ecd37a145db16efe9d96ee7e6b1df23589cb5e0573c88b9a1555b540f68",
+      "live_sha256": "27344b9f790370ae9ca17d863c096965294da80373ad69fca33baeda72b401df",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 277,
+      "version": 309,
       "verify_jwt": false,
-      "live_sha256": "0ed69f07292b8bbabd5934cf4ee9c1d863a7542a3e30df060a7d0611f5f0f7c7",
+      "live_sha256": "516676f8faa934b0a6c48eabb1110762cab5de5b0edf3bdacde78f042c88ead4",
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc"
     },
     "intel-feed": {
@@ -90,16 +90,16 @@
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
-      "version": 98,
+      "version": 130,
       "verify_jwt": false,
-      "live_sha256": "5d2c1c12438217367fcda11b50e617ce9ccda074be918dca9a8ed1696cffb6ee",
+      "live_sha256": "a87f7b345866a7b931ddb2640c959554845939053c3280ffcfc2a96d59449614",
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
-      "version": 187,
+      "version": 219,
       "verify_jwt": false,
-      "live_sha256": "efa2f6669495ca36726757aae558577d25a4d0256dd789094a53deafcc92aad7",
+      "live_sha256": "3b899f2661fc96cec4920fd1f23d42ee4d6a1d3b96ecbca9dffd277d1f921026",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181"
     },
     "content-ingest": {
@@ -131,16 +131,16 @@
     },
     "rankings": {
       "state": "DEPLOYED",
-      "version": 1,
+      "version": 2,
       "verify_jwt": true,
-      "live_sha256": "09f676e00630e3e068b947aab56dc6ea9ae0be1d1ad986b5e6a66f8da08bb56b",
+      "live_sha256": "bb36deef818752b0e9147f277f77069f45278f96091a225e03e629fe7009a729",
       "repository_blob_sha": "bdb535d5a6f4334ba03535411fcc637a6d20cbb3"
     },
     "snapshot-leaderboard": {
       "state": "DEPLOYED",
-      "version": 1,
+      "version": 2,
       "verify_jwt": true,
-      "live_sha256": "b0924e0be4405d1da53d13c8f256943019091e7aa3e3f128c2f8430e7aa34c2c",
+      "live_sha256": "7c9fb4400121d28b187885f6e78bb67293f0aa502f823939813c503803493a13",
       "repository_blob_sha": "02321e42cdc0b227aac08b52719c309cce46369e"
     },
     "weekly-digest": {
@@ -154,11 +154,11 @@
     },
     "market-price": {
       "state": "DEPLOYED",
-      "version": 2,
+      "version": 3,
       "verify_jwt": false,
-      "live_sha256": "87f11d3f467cf1b51dcc15d5abebffd9206168f1a44edf7829d15429e0274647",
+      "live_sha256": "309970822c939541faa68a7eb2d3261c4b0556d3977dac59c81e09598e6847ef",
       "repository_blob_sha": "926d9a9a7394a59407b1cd580782dcfd8c77556f"
     }
   },
-  "verification_note": "Refreshed 2026-10-25 from list_edge_functions on the active project after the Supabase GitHub integration redeployed functions on the #1080 (2026-10-24 23:41 UTC) and #1088 (2026-10-25 00:45 UTC) merges to main. Versions, verify_jwt and live SHA-256 are read live for all 17 ACTIVE functions; repository_blob_sha is the main source at e2deed3a. notify-access v1 was deployed by a session from main source and verified live through pg_net (401 without the secret, 200 resend_api_key_not_configured with it). stripe-webhook v9 source was read live and carries main's charge.refunded handler; the other redeployed functions were not byte-compared this pass, so their parity rests on the integration deploying main. LOCAL_ONLY entries are present in repository source but absent from the active deployed inventory. Runtime source-parity evidence only. 2026-11-01: rankings v1, snapshot-leaderboard v1 and market-price v2 were deployed from this session with the Supabase deploy tool and read back with list_edge_functions (version, verify_jwt and ezbr_sha256 recorded here are the live values). They were uploaded as individual files, so live_sha256 will differ from the one the GitHub integration produces when it redeploys main; refresh it after the next integration deploy. market-price answered configured:false on a live GET. rankings and snapshot-leaderboard were not called (the sandbox proxy blocks supabase.co and both require a user JWT), so their runtime behavior is unverified. graphify-ai-query, graphify-ai-ingest, checkout, weekly-digest and event-ingest remain LOCAL_ONLY on purpose (docs/legal/FUNCTION_GO_LIVE.md)."
+  "verification_note": "Refreshed 2026-10-25 from list_edge_functions on the active project after the Supabase GitHub integration redeployed functions on the #1080 (2026-10-24 23:41 UTC) and #1088 (2026-10-25 00:45 UTC) merges to main. Versions, verify_jwt and live SHA-256 are read live for all 17 ACTIVE functions; repository_blob_sha is the main source at e2deed3a. notify-access v1 was deployed by a session from main source and verified live through pg_net (401 without the secret, 200 resend_api_key_not_configured with it). stripe-webhook v9 source was read live and carries main's charge.refunded handler; the other redeployed functions were not byte-compared this pass, so their parity rests on the integration deploying main. LOCAL_ONLY entries are present in repository source but absent from the active deployed inventory. Runtime source-parity evidence only. 2026-11-01: rankings v1, snapshot-leaderboard v1 and market-price v2 were deployed from this session with the Supabase deploy tool and read back with list_edge_functions (version, verify_jwt and ezbr_sha256 recorded here are the live values). They were uploaded as individual files, so live_sha256 will differ from the one the GitHub integration produces when it redeploys main; refresh it after the next integration deploy. market-price answered configured:false on a live GET. rankings and snapshot-leaderboard were not called (the sandbox proxy blocks supabase.co and both require a user JWT), so their runtime behavior is unverified. graphify-ai-query, graphify-ai-ingest, checkout, weekly-digest and event-ingest remain LOCAL_ONLY on purpose (docs/legal/FUNCTION_GO_LIVE.md). 2026-11-01 (refresh after #1118 merged): list_edge_functions shows the GitHub integration redeployed every function in config.toml. rankings v2, market-price v3 and snapshot-leaderboard v2 now carry the integration's file:///app/supabase/functions entrypoint (so the repository source is what runs, replacing the files uploaded from a session). Version and live_sha256 were refreshed for the nine entries whose live version had changed (those three plus evidence-graph, omega-notification-worker, omega-runtime-gateway, omega-media-worker, omega-provider-worker, omega-knowledge-embedding-worker); the other entries kept their recorded values because their live versions were unchanged. Hashes were transcribed from the tool output and not independently byte-compared against source."
 }

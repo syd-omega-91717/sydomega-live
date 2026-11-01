@@ -25809,6 +25809,14 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Not verified:** against the real Supabase server (stub only); whether any browser already holds finance rows uploaded by an earlier build (live count was 0).
 
 
+**195a — correction (2026-11-01).** Entry 195 and the legal audit said "130 tables with a `user_id` column". The measured figure is **105** tables with `user_id`; 130 is the number of tables carrying any of `user_id`, `owner_id` or `member_id` (my first query counted the union). The finding is unchanged, because "at most one table cascades on user delete" was measured over the larger set and so holds for the smaller one. Corrected in `docs/legal/LEGAL_GAP_AUDIT.md` and `GAP_ANALYSIS.md` §S.
+
+### 198 — Live snapshot refreshed after the integration redeploy (2026-11-01)
+
+`list_edge_functions` after #1118 merged: the GitHub integration redeployed every function in `config.toml`. `rankings` is v2, `market-price` v3, `snapshot-leaderboard` v2, all with the integration's `file:///app/supabase/functions/...` entrypoint, so the repository source is now what runs (the files uploaded from a session in 195 are gone, as predicted). Nine snapshot entries had a changed live version and were refreshed (version and `live_sha256`): those three plus `evidence-graph` (98 → 130), `omega-notification-worker` (277 → 309), `omega-runtime-gateway` (281 → 313), `omega-media-worker` (277 → 309), `omega-provider-worker` (98 → 130), `omega-knowledge-embedding-worker` (187 → 219). The six older entries show the snapshot had already drifted before this session; the other 11 entries match the live versions and were left alone. `edge-function-auth-config-contract` PASS (20 functions), contract suite 57/57.
+
+**Not verified:** the hashes were transcribed from tool output and not byte-compared against source; `rankings` and `snapshot-leaderboard` runtime behaviour (both need a signed-in session).
+
 ### 199 — enter.html becomes the vault gateway (concept image 5), and loses a false security claim
 
 **Removed (defect, not style).** `enter.html` ran a scripted "PALM_PRINT / RETINAL_SCAN_MATCH" biometric sequence behind the ENTER button. No scan existed; it asserted a security check that never happened, then redirected to sign-in regardless. Removed with its CSS and markup (`bio-overlay`). The button's aria-label now says what it does: "Open the gateway. This leads to sign-in; no scan is performed."

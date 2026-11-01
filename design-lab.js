@@ -182,6 +182,31 @@
     });
   }
 
+  var ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+  /* Posters come from assets/movies/franchise-NN-640.webp, keyed by the catalog's
+     own film number. Captions show film number, god, sign and element only: the
+     catalog's `title` ("The Ocean of Dreams") and the title painted into the art
+     ("OCEAN SOVEREIGN") disagree for the same film, so neither is printed here. */
+  function renderMedia(movies) {
+    var host = document.getElementById('dl-media'); host.textContent = '';
+    movies.forEach(function (m) {
+      var n = Number(m.n); if (!(n >= 1 && n <= 12)) return;
+      var nn = ('0' + n).slice(-2);
+      var a = el('a', { 'class': 'dl-film', href: '/movies.html' });
+      a.appendChild(el('img', { src: '/assets/movies/franchise-' + nn + '-640.webp', width: '640', height: '360',
+        loading: 'lazy', decoding: 'async', alt: '' }));
+      var cap = el('div', { 'class': 'dl-film-cap' });
+      cap.appendChild(el('b', null, 'FILM ' + ROMAN[n]));
+      cap.appendChild(el('span', null, [m.god, m.sign, m.element].filter(Boolean).join(' \u00B7 ')));
+      a.appendChild(cap); host.appendChild(a);
+    });
+    if (!host.children.length) fail('dl-media', 'The film catalog was empty.');
+  }
+  fetch('/omega-catalog.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (d) { if (!d || !Array.isArray(d.movies)) throw new Error('no movies in catalog'); renderMedia(d.movies); })
+    .catch(function (e) { fail('dl-media', 'The film catalog could not be read (' + e.message + ').'); });
+
   waitAxis(function (A) {
     if (!A) { ['dl-metrics', 'dl-bars', 'dl-flow'].forEach(function (id) { fail(id, 'The navigation page map did not load.'); }); return; }
     state.axis = A; tryRender();

@@ -123,6 +123,10 @@
     '#om-close{position:fixed;top:14px;right:16px;font-size:var(--fs-5,28px);color:#C9A84C;cursor:pointer;line-height:1;background:none;border:0}',
     '#om-inner{max-width:920px;margin:0 auto}',
     '#om-title{text-align:center;font-family:"Cinzel Decorative",serif;color:#C9A84C;letter-spacing:3px;font-size:var(--fs-4,20px);margin:0 0 24px}',
+    /* Member status line: only fields the profile really has (display_name, sign, element, is_owner). */
+    '#om-status{text-align:center;margin:-14px 0 20px;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#B8B29F}',
+    '#om-status[hidden]{display:none}',
+    '#om-status b{color:#E2C86D;font-weight:400}',
     '.om-grp{margin:0 0 22px}',
     /* owner-only group: hidden unless bg.js confirms is_owner (body.omega-owner) */
     '.om-grp-owner{display:none}',
@@ -185,7 +189,7 @@
 
     var ov = document.createElement('div'); ov.id = 'om-ov';
     ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'All pages');
-    var html = '<button id="om-close" aria-label="Close">\u00D7</button><div id="om-inner"><div id="om-title">SYD OMEGA 91717</div>' +
+    var html = '<button id="om-close" aria-label="Close">\u00D7</button><div id="om-inner"><div id="om-title">SYD OMEGA 91717</div><div id="om-status" hidden></div>' +
       '<input id="om-q" type="search" placeholder="Search pages" aria-label="Search pages" autocomplete="off" spellcheck="false">';
     GROUPS.forEach(function (g) {
       var ownerCls = g[3] ? ' om-grp-owner' : '';
@@ -238,6 +242,21 @@
     /* OmegaAxis.pages() shape: {key: slug, label, href (path, no hash), section: section KEY,
        sectionLabel, col, owner}. Group and title by sectionLabel. Merge every page nav.js can reach that the curated grid lacks. nav.js loads
        after this file, so this runs on open and retries until it has published. */
+    /* Status line. Reads window.__omegaProfile (also delivered as omega:user-loaded's
+       detail.profile). Text only, nothing guessed: with no profile the line stays hidden. */
+    var st = ov.querySelector('#om-status');
+    function paintStatus(p) {
+      p = p || window.__omegaProfile;
+      if (!p || typeof p !== 'object') { st.hidden = true; return; }
+      var parts = [p.sign, p.element].filter(function (v) { return typeof v === 'string' && v; });
+      st.textContent = '';
+      if (typeof p.display_name === 'string' && p.display_name) { var b = document.createElement('b'); b.textContent = p.display_name; st.appendChild(b); }
+      if (parts.length) st.appendChild(document.createTextNode((st.firstChild ? ' \u00B7 ' : '') + parts.join(' \u00B7 ')));
+      if (p.is_owner === true) st.appendChild(document.createTextNode((st.firstChild ? ' \u00B7 ' : '') + 'OWNER'));
+      st.hidden = !st.firstChild;
+    }
+    window.addEventListener('omega:user-loaded', function (e) { paintStatus(e && e.detail && e.detail.profile); });
+
     var merged = false;
     function mergeNavPages() {
       if (merged || !window.OmegaAxis || typeof window.OmegaAxis.pages !== 'function') return;
@@ -292,6 +311,7 @@
       ov.classList.add('open'); document.body.classList.add('om-lock');
       btn.setAttribute('aria-expanded', 'true');
       mergeNavPages();
+      paintStatus();
       q.value = ''; filter();
       setTimeout(function () { try { q.focus(); } catch (_) {} }, 0);
     }

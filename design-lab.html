@@ -24,10 +24,6 @@
     background:radial-gradient(120% 90% at 0% 0%,rgba(201,168,76,.12),transparent 55%),
                linear-gradient(165deg,#2e2a23 0%,#1c1a15 100%);
     box-shadow:inset 0 1px 0 rgba(247,224,160,.16),0 0 28px rgba(201,168,76,.08),0 12px 32px rgba(0,0,0,.5)}
-  .dl .dl-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:stretch;
-    background:radial-gradient(90% 130% at 100% 0%,rgba(168,26,54,.30),transparent 62%),
-               radial-gradient(120% 90% at 0% 0%,rgba(201,168,76,.13),transparent 55%),
-               linear-gradient(165deg,#2e2a23 0%,#1c1a15 100%)}
   .dl .dl-stage{position:relative;min-height:280px;border-radius:10px;overflow:hidden;
     background:radial-gradient(70% 70% at 50% 45%,rgba(201,168,76,.16),transparent 70%),#0d0c0a}
   .dl .dl-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:start}
@@ -88,9 +84,49 @@
   @media (max-width:860px){
     .dl .dl-flow-svg{display:none}
     .dl .dl-flow-list{display:block}
-    .dl .dl-hero{grid-template-columns:minmax(0,1fr)}
   }
   @media (max-width:480px){.dl .dl-bar{grid-template-columns:minmax(70px,110px) minmax(0,1fr) 36px;gap:8px}}
+
+  /* Bento: a 12-column grid of unequal slabs. Pieces span 7 + 5, stack on narrow screens. */
+  .dl .dl-bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px;align-items:stretch}
+  .dl .dl-b7{grid-column:span 7}.dl .dl-b5{grid-column:span 5}
+  .dl .dl-capline{margin:0 0 12px}
+  .dl .dl-medal{margin:0;padding:0;overflow:hidden}
+  .dl .dl-medal img{display:block;width:100%;max-width:100%;height:auto}
+  .dl .dl-medal figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 18px 12px;
+    background:linear-gradient(180deg,rgba(13,12,10,0),rgba(13,12,10,.92))}
+  /* The pulse: a slow gold halo behind the medallion's plate, a network heartbeat.
+     Decorative only (it reports nothing); stops under prefers-reduced-motion. */
+  .dl .dl-halo{position:absolute;left:52%;top:57%;width:54%;aspect-ratio:1;transform:translate(-50%,-50%);
+    border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+    background:radial-gradient(circle,rgba(247,224,160,.30),rgba(201,168,76,.10) 45%,rgba(201,168,76,0) 68%);
+    animation:dl-beat 2.6s ease-in-out infinite}
+  @keyframes dl-beat{0%,100%{opacity:.45;transform:translate(-50%,-50%) scale(.93)}
+    18%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}36%{opacity:.6;transform:translate(-50%,-50%) scale(.98)}}
+  @media (prefers-reduced-motion:reduce){.dl .dl-halo{animation:none;opacity:.7}}
+  .dl .dl-stage-slab{display:flex;flex-direction:column}
+  .dl .dl-stage-slab .dl-stage{flex:1 1 auto;min-height:320px}
+
+  /* Media grid: auto-fit tiles, metallic hairline, dark glass, glow on hover. */
+  .dl .dl-media{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .dl a.dl-film{display:block;min-height:0;padding:0;overflow:hidden;box-sizing:border-box;text-decoration:none;color:var(--dl-text);
+    border:1px solid rgba(201,168,76,.34);border-radius:10px;
+    background:linear-gradient(165deg,#2c2822,#15130f);box-shadow:inset 0 1px 0 rgba(247,224,160,.14);
+    transition:transform .25s,box-shadow .25s,border-color .25s}
+  .dl a.dl-film img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;
+    filter:saturate(.95) brightness(.9);transition:filter .25s}
+  .dl a.dl-film:hover,.dl a.dl-film:focus-visible{transform:translateY(-3px);border-color:rgba(247,224,160,.7);
+    box-shadow:inset 0 1px 0 rgba(247,224,160,.25),0 0 26px rgba(201,168,76,.28)}
+  .dl a.dl-film:hover img,.dl a.dl-film:focus-visible img{filter:saturate(1.1) brightness(1.05)}
+  .dl .dl-film-cap{padding:10px 12px 12px}
+  .dl .dl-film-cap b{display:block;font-family:var(--D,"Cinzel Decorative",serif);font-size:13px;letter-spacing:.14em;
+    color:var(--dl-gold-hi);font-weight:400}
+  .dl .dl-film-cap span{display:block;margin-top:3px;font-family:var(--M,"Courier Prime",monospace);font-size:12px;
+    letter-spacing:.1em;color:var(--dl-mute);text-transform:uppercase}
+
+  /* Last in the sheet on purpose: the 7/5 spans above would otherwise win this tie. */
+  @media (max-width:860px){.dl .dl-b7,.dl .dl-b5{grid-column:1/-1}.dl .dl-stage-slab .dl-stage{min-height:300px}}
+  .dl .dl-lede code{white-space:nowrap}
 </style>
 </head>
 <body data-page="design-lab">
@@ -104,24 +140,38 @@
     </div>
 
     <div class="dl">
-      <div class="dl-lede">
-        A prototype of the concept art&rsquo;s tonal depth. Built only from the page map in
-        <code>nav.js</code> and <code>omega-agents.json</code>. No token or reserve figures.
-      </div>
+      <div class="dl-lede">Built from <code>nav.js</code>, <code>omega-agents.json</code> and <code>omega-catalog.json</code>. No token or reserve figures.</div>
 
-      <div class="dl-slab dl-hero">
-        <div class="dl-stage" data-omega-sculpture="signet" data-sculpt-height="300px"
-             data-sculpt-label="The Omega signet, lit in gold"></div>
-        <div class="dl-metrics" id="dl-metrics" aria-live="polite">
-          <p class="dl-err" style="grid-column:1/-1;color:var(--dl-mute)">Reading the page map&hellip;</p>
+      <div class="dl-bento">
+        <figure class="dl-slab dl-medal dl-b7">
+          <img src="/assets/concept/medallion-01-1200.webp"
+               srcset="/assets/concept/medallion-01-640.webp 640w, /assets/concept/medallion-01-1200.webp 1200w"
+               sizes="(max-width:860px) 92vw, 56vw" width="1200" height="743" decoding="async"
+               alt="Painted concept art: a gold medallion with a winged lion over an Omega, on a carved stone plinth, with blue and gold energy rising from it.">
+          <span class="dl-halo" aria-hidden="true"></span>
+          <figcaption><span class="dl-cap">Concept art &middot; the medallion</span></figcaption>
+        </figure>
+        <div class="dl-slab dl-b5">
+          <div class="dl-metrics" id="dl-metrics" aria-live="polite">
+            <p class="dl-err" style="grid-column:1/-1;color:var(--dl-mute)">Reading the page map&hellip;</p>
+          </div>
+        </div>
+        <div class="dl-slab dl-b7">
+          <div class="dl-cap dl-capline">Destinations per section</div>
+          <div class="dl-bars" id="dl-bars"></div>
+        </div>
+        <div class="dl-slab dl-stage-slab dl-b5">
+          <div class="dl-cap dl-capline">The signet &middot; drawn live in your browser</div>
+          <div class="dl-stage" data-omega-sculpture="signet" data-sculpt-height="420px"
+               data-sculpt-label="The Omega signet, lit in gold"></div>
         </div>
       </div>
 
-      <div class="dl-note">&#9670; Destinations per section</div>
-      <div class="dl-slab"><div class="dl-bars" id="dl-bars"></div></div>
-
       <div class="dl-note">&#9670; Sections to agents, through the Omega</div>
       <div class="dl-slab" id="dl-flow"></div>
+
+      <div class="dl-note">&#9670; The Creative Universe</div>
+      <div class="dl-media" id="dl-media" aria-live="polite"></div>
 
       <div class="dl-note">&#9670; The twelve agents</div>
       <div class="dl-agents" id="dl-agents"></div>

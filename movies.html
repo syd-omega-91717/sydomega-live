@@ -32,6 +32,31 @@
 .omv-lb-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .omv-x{flex:none;min-width:44px;min-height:44px;border:1px solid rgba(201,168,76,.35);background:none;color:var(--gold);font-size:20px;line-height:1;cursor:pointer;border-radius:4px}
 .omv-x:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+/* MEDIA HUB 3-D CAROUSEL (FIXES_LOG 200). id-scoped: a page <style> is sheet 0 and every global sheet outranks it. */
+#mh3d{position:relative;margin:14px 0 6px;min-width:0}
+#mh3d .mh-stage{position:relative;height:clamp(250px,46vw,430px);perspective:1300px;perspective-origin:50% 45%;overflow:hidden;touch-action:pan-y;cursor:grab;border:1px solid rgba(201,168,76,.16);border-radius:4px;background:radial-gradient(ellipse at 50% 100%,rgba(201,168,76,.12),rgba(4,5,10,.0) 62%),#04050a;user-select:none;-webkit-user-select:none}
+#mh3d .mh-stage.is-drag{cursor:grabbing}
+#mh3d .mh-stage:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#mh3d .mh-card{position:absolute;left:50%;top:50%;width:min(64vw,520px);aspect-ratio:16/9;margin:0;padding:0;border-radius:6px!important;overflow:hidden;background:#000!important;border:1px solid var(--omv-c,#C9A84C)!important;box-shadow:0 18px 50px rgba(0,0,0,.65),0 0 24px -6px var(--omv-c,#C9A84C);will-change:transform,opacity;transform-style:preserve-3d;backface-visibility:hidden}
+#mh3d .mh-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+#mh3d .mh-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,0) 30%,rgba(0,0,0,.8));pointer-events:none}
+#mh3d .mh-em{position:absolute;left:10px;top:10px;width:54px;height:54px;color:var(--omv-c,#C9A84C);z-index:2;pointer-events:none}
+#mh3d .mh-num{position:absolute;right:12px;top:10px;font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--omv-c,#C9A84C);text-shadow:0 0 8px #000;z-index:2}
+#mh3d .mh-cap{position:absolute;left:12px;right:12px;bottom:10px;z-index:2;font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:#fff;text-shadow:0 1px 6px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mh3d .mh-cap b{font-weight:400;color:var(--omv-c,#C9A84C)}
+#mh3d .mh-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+#mh3d .mh-btn{min-width:44px;min-height:44px;border:1px solid rgba(201,168,76,.35);background:rgba(0,0,0,.4);color:var(--gold);font-family:var(--M);font-size:14px;line-height:1;cursor:pointer;border-radius:4px;padding:0 12px}
+#mh3d .mh-btn:hover{background:rgba(201,168,76,.12)}
+#mh3d .mh-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+#mh3d .mh-now{flex:1 1 220px;min-width:0;text-align:center;font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted)}
+#mh3d .mh-now b{font-weight:400;color:var(--gold)}
+#mh3d .mh-dots{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+#mh3d .mh-dot{width:24px;height:24px;border:0;background:none;padding:0;cursor:pointer;position:relative}
+#mh3d .mh-dot::before{content:"";position:absolute;left:8px;top:8px;width:8px;height:8px;border-radius:50%;background:rgba(201,168,76,.3)}
+#mh3d .mh-dot[aria-current="true"]::before{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+#mh3d .mh-dot:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+.mh-h{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--muted);margin:18px 0 0;font-weight:400}
+@media (max-width:560px){#mh3d .mh-em{width:40px;height:40px}}
 @media (prefers-reduced-motion:reduce){.omv-hit img,.omv-hit video,.omv-play{transition:none}.omv-tile:hover .omv-hit img{transform:none}}
 </style>
 <script src="/omega-spatial-realms.js" data-omega-spatial-realms-js defer></script>
@@ -43,6 +68,17 @@
 <header class="topbar">
   <div class="topbar-title">MOVIES<span class="topbar-sub">12 FRANCHISE FILMS</span></div>
 </header>
+<section id="mh3d" aria-label="Franchise films, 3-D carousel">
+  <div class="mh-stage" id="mh-stage" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Twelve franchise films. Drag or swipe to rotate, arrow keys to move, Enter to play."></div>
+  <div class="mh-bar">
+    <button class="mh-btn" type="button" id="mh-prev" aria-label="Previous film">&#9664;</button>
+    <div class="mh-now" id="mh-now" aria-live="polite"></div>
+    <button class="mh-btn" type="button" id="mh-next" aria-label="Next film">&#9654;</button>
+    <button class="mh-btn" type="button" id="mh-auto" aria-pressed="true" aria-label="Pause automatic rotation">PAUSE</button>
+  </div>
+  <div class="mh-dots" id="mh-dots"></div>
+</section>
+<h2 class="mh-h">ALL TWELVE</h2>
 <section class="omv-wall" aria-label="Franchise films">
     <figure class="omv-tile card" style="--omv-c:#E86A3A" data-film="01">
       <button class="omv-hit" type="button" data-title="ARES &middot; WAR SOVEREIGN" aria-label="Play War Sovereign, Ares &middot; Aries, franchise I">
@@ -204,6 +240,101 @@
       openFilm(tile,btn);
     });
   });
+  /* MEDIA HUB 3-D CAROUSEL: built from the 12 tiles above, so titles, art and the player stay single-sourced. */
+  (function(){
+    var stage=document.getElementById('mh-stage');if(!stage)return;
+    var tiles=[].slice.call(document.querySelectorAll('.omv-tile'));var N=tiles.length;if(!N)return;
+    var cards=[],dots=[],pos=0,target=0,raf=0,drag=null,moved=false,hover=false,autoOn=!isReduced(),timer=0,idle=0;
+    var now=document.getElementById('mh-now'),dotsEl=document.getElementById('mh-dots'),autoBtn=document.getElementById('mh-auto');
+    tiles.forEach(function(t,i){
+      var btn=t.querySelector('.omv-hit'),lab=btn.getAttribute('aria-label')||'',m=/,\s*([^,]+?)\s*\u00B7\s*([A-Za-z]+),\s*franchise/.exec(lab);
+      var god=m?m[1]:'',sign=m?m[2]:'',n=(i<9?'0':'')+(i+1),c=t.style.getPropertyValue('--omv-c')||'#C9A84C';
+      var el=document.createElement('div');el.className='mh-card';el.style.setProperty('--omv-c',c);
+      el.setAttribute('role','group');el.setAttribute('aria-roledescription','slide');
+      var ttl=(btn.getAttribute('data-title')||'').replace(/\s+/g,' ');
+      el.setAttribute('aria-label',(i+1)+' of '+N+': '+ttl);
+      var img=document.createElement('img');img.alt='';img.decoding='async';img.draggable=false;img.src='/assets/movies/franchise-'+n+'-960.webp';
+      var em=document.createElement('span');em.className='mh-em';em.setAttribute('aria-hidden','true');if(sign)em.setAttribute('data-omega-emblem',sign);
+      var nm=document.createElement('span');nm.className='mh-num';nm.setAttribute('aria-hidden','true');nm.textContent=(t.querySelector('.omv-num')||{}).textContent||'';
+      var cap=document.createElement('div');cap.className='mh-cap';cap.innerHTML=t.querySelector('.omv-cap').innerHTML;
+      el.appendChild(img);el.appendChild(em);el.appendChild(nm);el.appendChild(cap);
+      el.__i=i;stage.appendChild(el);cards.push(el);
+      var d=document.createElement('button');d.type='button';d.className='mh-dot';d.setAttribute('aria-label','Film '+(i+1)+': '+ttl);
+      d.addEventListener('click',function(){go(i);poke();});dotsEl.appendChild(d);dots.push(d);
+    });
+    function wrap(x){x=((x%N)+N)%N;return x>N/2?x-N:x;}
+    function cur(){return ((Math.round(pos)%N)+N)%N;}
+    function paint(){
+      var W=cards[0].offsetWidth||400;
+      for(var i=0;i<N;i++){
+        var d=wrap(i-pos),a=Math.abs(d),e=cards[i];
+        if(a>3.6){e.style.visibility='hidden';continue;}
+        e.style.visibility='visible';
+        var rot=Math.max(-62,Math.min(62,-d*40));
+        e.style.transform='translate(-50%,-50%) translate3d('+(d*W*0.6).toFixed(1)+'px,0,'+(-a*130).toFixed(1)+'px) rotateY('+rot.toFixed(1)+'deg) scale('+(1-Math.min(a,3)*0.05).toFixed(3)+')';
+        e.style.opacity=String(Math.max(0,1-a*0.27).toFixed(3));
+        e.style.zIndex=String(100-Math.round(a*10));
+        e.style.filter=a<0.5?'none':'brightness('+(1-Math.min(a,3)*0.18).toFixed(2)+')';
+        e.setAttribute('aria-hidden',a<0.5?'false':'true');
+      }
+      var k=cur();
+      dots.forEach(function(b,j){if(j===k)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});
+      var cp=cards[k].querySelector('.mh-cap');var roman=(tiles[k].querySelector('.omv-num')||{}).textContent||'';
+      var txt=roman+' \u00B7 '+(cp?cp.innerHTML:'');if(now.__t!==txt){now.__t=txt;now.innerHTML=txt;}
+    }
+    function tick(){
+      raf=0;
+      var diff=target-pos;
+      if(isReduced()||Math.abs(diff)<0.002){pos=target;paint();return;}
+      pos+=diff*0.14;paint();raf=requestAnimationFrame(tick);
+    }
+    function kick(){if(!raf)raf=requestAnimationFrame(tick);}
+    function go(i){var k=cur(),d=wrap(i-k);target=Math.round(pos)+d;kick();}
+    function step(n){target=Math.round(target)+n;kick();}
+    function poke(){/* any human input pauses auto-rotation for a while */idle=Date.now()+12000;}
+    function open(){var k=cur();openFilm(tiles[k],tiles[k].querySelector('.omv-hit'));}
+    stage.addEventListener('pointerdown',function(e){
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      drag={x:e.clientX,p:pos,t:Date.now(),id:e.pointerId};moved=false;poke();
+    });
+    stage.addEventListener('pointermove',function(e){
+      if(!drag)return;var dx=e.clientX-drag.x;
+      if(!moved&&Math.abs(dx)>6){moved=true;stage.classList.add('is-drag');try{stage.setPointerCapture(drag.id);}catch(_){}}
+      if(moved){var W=cards[0].offsetWidth||400;pos=drag.p-dx/(W*0.6);target=pos;paint();}
+    });
+    function end(e){
+      if(!drag)return;var was=moved;
+      if(was){var dt=Math.max(1,Date.now()-drag.t),v=(drag.p-pos)/dt*1000;target=Math.round(pos+Math.max(-2,Math.min(2,v*0.25)));kick();}
+      drag=null;stage.classList.remove('is-drag');
+      if(was){setTimeout(function(){moved=false;},0);}
+    }
+    stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
+    stage.addEventListener('click',function(e){
+      if(moved)return;var c=e.target.closest&&e.target.closest('.mh-card');if(!c)return;
+      var i=c.__i;poke();if(i===cur())open();else go(i);
+    });
+    stage.addEventListener('keydown',function(e){
+      if(e.key==='ArrowRight'){step(1);poke();e.preventDefault();}
+      else if(e.key==='ArrowLeft'){step(-1);poke();e.preventDefault();}
+      else if(e.key==='Home'){go(0);poke();e.preventDefault();}
+      else if(e.key==='End'){go(N-1);poke();e.preventDefault();}
+      else if(e.key==='Enter'||e.key===' '){open();e.preventDefault();}
+    });
+    document.getElementById('mh-prev').addEventListener('click',function(){step(-1);poke();});
+    document.getElementById('mh-next').addEventListener('click',function(){step(1);poke();});
+    function syncAuto(){autoBtn.setAttribute('aria-pressed',autoOn?'true':'false');autoBtn.textContent=autoOn?'PAUSE':'PLAY';autoBtn.setAttribute('aria-label',autoOn?'Pause automatic rotation':'Start automatic rotation');}
+    autoBtn.addEventListener('click',function(){autoOn=!autoOn;syncAuto();});
+    stage.addEventListener('pointerenter',function(e){if(e.pointerType!=='touch')hover=true;});
+    stage.addEventListener('pointerleave',function(){hover=false;});
+    syncAuto();
+    timer=setInterval(function(){
+      if(!autoOn||isReduced()||hover||drag||document.hidden||Date.now()<idle||stage.contains(document.activeElement))return;
+      step(1);
+    },4500);
+    if(window.ResizeObserver)new ResizeObserver(function(){paint();}).observe(stage);
+    window.addEventListener('resize',paint);
+    paint();
+  })();
 })();
 </script>
 <script type="module">

@@ -25733,3 +25733,19 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Known and left alone:** `PLATFORM PMI 87` comes from a hand-scored table in `omega-pml.js` (`var PLATFORM_PMI = 87`), an editorial score and not a measurement. `SLO UPTIME 99.9%` is labelled "TARGET · NOT MONITORED" already. Neither was changed here; both are candidates to hide or relabel as "editorial" if the owner wants every number to be measured.
 
 **Not verified:** live data in the tiles (stubbed Supabase returns zeros), Safari/Firefox, and the timeline with real `activity_feed` rows.
+
+
+### 193 — family.html: tree by generation, plus two defects found on the way (Gemini concept set 2, image 1)
+
+**What the data allows.** `public.family_nodes` has `name, relation, sign, is_heir` and nothing else: no parent/child or spouse links, and `relation` is a fixed list chosen in a dropdown. A true inheritance tree cannot be drawn from it, so none is claimed. `family-tree.js` groups the member's own rows into generations from `relation` (grandparents, parents, your generation with a YOU node from the profile name, children, grandchildren; unknown relations go to "OTHER RELATIONS", never guessed) and joins generations with a spine, not individuals. A caption says so. Heirs use the real `is_heir` flag (gold badge). No percentages, shares or vault figures: the page's static SUCCESSION table (51% / 25.5% / 8.5%) is an older, separate block and was left untouched.
+
+**Defects fixed here.**
+1. `buildMemberCards` wrote `m.name`, `m.relation` and `m.sign` into `innerHTML` unescaped (§8.1 class stored XSS; names are free text). The page's `esc()` lives in a *different* module script, so calling it would have thrown a ReferenceError and emptied the registry; a module-local `esc` was added instead. The new tree uses `textContent` only.
+2. The owner constellation's `TIER` map lacked `Cousin`, so cousins defaulted to the children's tier; now `Cousin:0`.
+3. Race: `family-tree.js` is deferred and the boot module can finish first, losing the event. The page now stores `window.__famNodes` before dispatching and the module renders from it on load. Found by the page's own boot leaving the tree on "Loading", not by the synthetic test.
+
+**Measured (stub, 1280 and 390):** with 8 injected rows the tree shows PARENTS / YOUR GENERATION / CHILDREN / OTHER RELATIONS, 9 nodes, 2 heirs, 1 YOU, Cousin in your generation; a name of `<img src=x onerror=...>` renders as text (0 `<img>`, handler flag untouched); no overflow, no page errors; boot alone yields the empty state. Contract suite 57/57, `audit.py` 0 critical, `module-contract.py` PASSED, `type-scale` 0 rescaled.
+
+**Not verified:** real `family_nodes` rows (stub returns none), the escaping inside `buildMemberCards` directly (it is module-scoped; covered only by reading the diff), Safari/Firefox. **Not changed:** the owner canvas draws its labels at 6–7px (unreadable, canvas text is outside the CSS type-scale gate).
+
+**193a — my own slip, caught by `ci-local.sh` 2b before pushing:** the tree CSS was first inserted before the file's *first* `</style>`, which closes the shared `omega-morph` block every page must carry verbatim (`test_omega_morph_contract`: "1 page(s) missing or drifted: family.html"). Moved into the page's own `<style>`; the morph contract passes and the render is unchanged. Lesson for the next page edit: insert at the first `<style>` that is not `#omega-vt`, never at the first `</style>`.

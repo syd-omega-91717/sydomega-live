@@ -141,6 +141,28 @@
   .stat-card{border:1px solid rgba(201,168,76,.1);padding:14px;background:rgba(0,0,0,.2);text-align:center}
   .stat-val{font-family:var(--mono);font-size:var(--fs-4,20px);color:var(--gold);letter-spacing:1px}
   .stat-lbl{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
+  /* Member-access card: visual only. #view-auth selectors (1,x,x) beat the global
+     [class*="panel"] skins; ids, labels and handlers below are untouched. */
+  #view-auth{max-width:460px;margin:24px auto 0;padding:30px 28px 26px;border-radius:14px;
+    border:1px solid rgba(201,168,76,.38);box-shadow:inset 0 1px 0 rgba(247,224,160,.16),0 18px 48px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.4);
+    background:linear-gradient(165deg,#2C2822,#1B1914)}
+  #view-auth .ac-orbit{display:block;margin:0 auto 10px;overflow:visible}
+  #view-auth .ac-ring{fill:none;stroke:rgba(201,168,76,.32);stroke-width:1;stroke-dasharray:3 7}
+  #view-auth .ac-r2{stroke:rgba(93,175,181,.4)}
+  #view-auth .ac-dot{fill:#E2C86D}
+  #view-auth .ac-dim{fill:#5DAFB5}
+  #view-auth .ac-om{font-family:var(--D,"Cinzel Decorative",serif);font-size:44px;fill:#E2C86D;
+    filter:drop-shadow(0 0 10px rgba(201,168,76,.55))}
+  #view-auth .ac-spin{transform-origin:100px 100px;transform-box:view-box;animation:ac-turn 26s linear infinite}
+  #view-auth .ac-s2{animation-duration:17s;animation-direction:reverse}
+  @keyframes ac-turn{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){#view-auth .ac-spin{animation:none}}
+  #view-auth .eyebrow{margin-bottom:10px}
+  #view-auth .sub{margin-top:12px}
+  #view-auth .form{margin-top:22px;max-width:none}
+  #view-auth input{border-radius:8px;background:rgba(0,0,0,.28);border-color:rgba(201,168,76,.28)}
+  #view-auth input:focus{border-color:#5DAFB5;box-shadow:0 0 0 3px rgba(93,175,181,.18)}
+  @media (max-width:480px){#view-auth{margin-top:8px;padding:24px 18px 20px}}
 </style>
 </head>
 <body>
@@ -163,9 +185,16 @@
 
       <!-- AUTH VIEW -->
       <section class="panel" id="view-auth" style="display:none">
+        <svg class="ac-orbit" viewBox="0 0 200 200" width="132" height="132" aria-hidden="true" focusable="false">
+          <circle class="ac-ring ac-r1" cx="100" cy="100" r="86"/>
+          <circle class="ac-ring ac-r2" cx="100" cy="100" r="62"/>
+          <g class="ac-spin ac-s1"><circle class="ac-dot" cx="100" cy="14" r="4"/><circle class="ac-dot ac-dim" cx="186" cy="100" r="2.5"/></g>
+          <g class="ac-spin ac-s2"><circle class="ac-dot" cx="100" cy="38" r="3"/><circle class="ac-dot ac-dim" cx="38" cy="100" r="2"/></g>
+          <text class="ac-om" x="100" y="119" text-anchor="middle">&#937;</text>
+        </svg>
         <div class="eyebrow" data-i18n="account_member_access">MEMBER ACCESS</div>
         <h1 data-i18n="account_join">Join the Order</h1>
-        <p class="sub">Create your account to claim a permanent place. Your cosmology and your evolving matrix position are saved to your sovereign profile -- waiting for you each time you return.</p>
+        <p class="sub">Create an account to claim your place. Your cosmology and matrix position are saved to your profile.</p>
         <div class="form">
           <label for="au-email">EMAIL</label>
           <input type="email" id="au-email" placeholder="you@example.com" autocomplete="email" />

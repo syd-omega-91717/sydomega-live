@@ -25779,3 +25779,18 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Legal audit:** `docs/legal/LEGAL_GAP_AUDIT.md` (17 ranked findings with evidence; not legal advice). Headline: the privacy page's 30-day erasure promise is not implemented (soft delete only, no job), `delete_account` leaves rows in most of 130 user tables, and the finance pages' keys are mirrored to the server despite the browser-only design (0 rows today). Scale: 9 profiles, no ID documents, no erasure requests.
 
 **Not verified:** consent vs analytics in a browser; `export_my_data` completeness; Supabase backup retention; any national law.
+
+
+### 196 — The hamburger, built correctly (concept set 3; images taken as the visual authority)
+
+**Why it felt wrong, from the code.** `#om-open` (the only hamburger) was hidden everywhere the sidebar renders (`omega-menu.js` `syncWithSidebar`, to avoid covering the sidebar's Home) and hidden on phones by `bg.js` (`html #om-open{display:none!important}`). So on nearly every page there was no visible hamburger at all; the launcher was reachable only through a drawer row ("ALL PAGES") or code.
+
+**Built.** (1) `nav.js`: a real `<button id="on-menu">` as the **first control of the desktop rail** (the design puts it top-left), in flow so it cannot collide with Home; opens `OmegaMenu.open()`, falling back to `/search.html` if the launcher has not loaded. (2) Phone: the bottom bar's last item is now the ☰ glyph labelled MENU (was ✦ MORE); same drawer behaviour. (3) `omega-menu.js` skin, additive CSS under `#om-ov` so no earlier behaviour rule changed: glowing Ω mark, gold-hairline tonal-depth cards (`#2C2822→#1B1914`), Cinzel section headings with a gold rule, a pill member line, and a **bracketed primary strip** ([Dashboard] [Matrix] [Factions] [Governance] [Security] [Settings]) that marks the current page `aria-current` and hides while searching. Every strip link is an existing page. The floating `#om-open` (pages with no sidebar) got the same skin.
+
+**Slips caught before shipping:** the Ω escape was written with a double backslash, which would have rendered the text "u03A9" (found by reading the file back, fixed); the strip's closing "]" dropped below each pill because a global `::after` rule beat my pseudo-element, so brackets moved into markup (`aria-hidden`); the card radius read 4px and the card containers had a global background, both overridden with `!important` on those two properties only.
+
+**Measured (headless, signed-in stub).** Desktop: hamburger at (6,10) 67×44, no overlap with Home (y 62); click opens the dialog, focus lands in search, Escape closes and focus returns to `#on-menu`; 6 strip links, Dashboard current; search hides the strip; computed Ω content `"Ω"`; card radius 12px; 0 page errors. Phone (390): bar shows ☰ MENU; overlay has no horizontal overflow; close button 44×44; strip in 2 rows. `signout.js` (all assertions) and `status.js` (including the hostile-name test) still pass. Gates: contract suite 57/57, type-scale 0 rescaled, brand-glyph, dupe-keys, module-contract, audit all pass.
+
+**Known test flakiness, not a regression:** `drawer-test.js` shows the same 4 failures (ALL PAGES topmost / overlay opens / drawer closed / search focused) on the original code as on mine, and passes 13/13 on some runs of either, depending on when the product-tour modal appears in this harness.
+
+**Not verified:** a real signed-in session, Safari/Firefox, a page that truly renders without a sidebar (the floating button was only checked for its computed style), and a screen reader on the bracketed pills.

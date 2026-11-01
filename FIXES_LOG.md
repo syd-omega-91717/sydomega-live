@@ -25698,3 +25698,16 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Doc corrections:** CLAUDE.md §7 item 3 (ESLint claim), §8.3 `ci-local.sh` 31 → 33 blocking checks; a verbose §4 sentence trimmed to stay under the 16,000-token budget (15,985).
 
 **Not verified:** sign-out against a real Supabase server (stubbed client only, so server-side revocation and the other-device token lifetime are unobserved); the Expo app on any device or emulator; `scripts/winscp-mirror.ps1` (no PowerShell here, so it is not even parsed); the lint gate's first run on GitHub's runner (it needs network for `npx`); whether the owner prefers the three dead-text variants.
+
+
+### 190 — Design Lab: canon tiers, elements, honours (Gemini concept set 2, 8 images)
+
+**Decision.** The eight new concept images mostly show a $1.5 M "vault", a $41.3 M portfolio, wallet balances, a "97% diagnosis probability", "51% verified", face photos and a hand-built card form. None is data this platform holds (§8.1 class 9), tokens are dormant (`tokens_enabled=false`), and the owner earlier chose "Skip them" for vault/reserve/token panels, so none was built. Image 4's nine tiers at $9–$999 contradict `omega-canon.json`'s twelve. Image text artefacts ("#F0EDE8", "Syed Omega", "Sync, Inc.") are generator errors.
+
+**Built (design-lab.html/.js, GOVERN → DESIGN LAB):** three sections read only from `omega-canon.json` — 12 tiers (name, material, canon colour, unlock count, link to `subscriptions.html`; no price, that is live Stripe's job), 9 elements (name, type, canon hex), 12 honours (sign · god · certificate · medal · trophy). Labelled as definitions, not a member's standing. Each fails visibly if the canon cannot be read.
+
+**Measured (headless render, 1280 and 390 wide):** 12/9/12 items, 0 `.dl-err`, no horizontal overflow, 9-column element strip collapses to 3 on phone.
+
+**Not built / open:** orbit-particle login on `account.html`/`enter.html`, KPI tiles + activity timeline for `dashboard.html`, inheritance tree on `family.html`, intent search with domain chips on `intelligence.html` — each needs a real data source confirmed first. Money, medical-probability and biometric panels need an owner decision.
+
+**190a — follow-up:** PR #1113's `Static contract gates` failed on `type-scale` (the only failing gate of 57): the new Design Lab CSS used 11px ×2 and 10px ×1, below the 12px floor. Raised all three to 12px. Reproduced with `python3 scripts/type-scale.py` ("3 rescaled" before, "0 rescaled" after); `python3 scripts/contract-suite.py` now 57 gates, 0 failing; render re-checked at 1280 and 390 (12/9/12, no overflow). My earlier local `ci-local.sh` "1 blocking failed" was this same gate.

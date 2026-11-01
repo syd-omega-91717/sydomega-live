@@ -2,7 +2,23 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8"/>
-<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}#fam-tree{position:relative}
+#fam-tree .ft-sum{margin:0 0 12px;font-family:var(--M);font-size:12px;letter-spacing:.14em;color:var(--muted)}
+#fam-tree .ft-row{position:relative;margin:0 0 6px;padding:0 0 22px}
+#fam-tree .ft-row:not(:last-of-type)::after{content:"";position:absolute;left:50%;bottom:2px;height:18px;width:1px;background:linear-gradient(180deg,rgba(201,168,76,.5),rgba(201,168,76,.08))}
+#fam-tree h3{margin:0 0 10px;text-align:center;font-family:var(--M);font-size:12px;font-weight:400;letter-spacing:.2em;color:var(--gold)}
+#fam-tree .ft-line{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+#fam-tree .ft-n{box-sizing:border-box;min-width:170px;max-width:240px;padding:12px 16px;text-align:center;border-radius:12px;
+  border:1px solid rgba(201,168,76,.28);background:linear-gradient(165deg,#2C2822,#1B1914);
+  box-shadow:inset 0 1px 0 rgba(247,224,160,.14),0 6px 18px rgba(0,0,0,.35);overflow-wrap:anywhere}
+#fam-tree .ft-n b{display:block;font-family:var(--D);font-size:15px;color:var(--ink)}
+#fam-tree .ft-n span{display:block;margin-top:4px;font-family:var(--M);font-size:12px;letter-spacing:.1em;color:#B8B29F}
+#fam-tree .ft-n em{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:999px;font-style:normal;font-family:var(--M);font-size:12px;letter-spacing:.14em;color:#1B1914;background:#E2C86D}
+#fam-tree .ft-heir{border-color:rgba(226,200,109,.7);box-shadow:inset 0 1px 0 rgba(247,224,160,.2),0 0 18px rgba(201,168,76,.22)}
+#fam-tree .ft-you{border-color:rgba(93,175,181,.6)}
+#fam-tree .ft-you b{color:#5DAFB5}
+#fam-tree .ft-empty,#fam-tree .ft-note{margin:10px 0 0;text-align:center;font-family:var(--M);font-size:12px;letter-spacing:.06em;color:var(--muted);line-height:1.7}
+</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Family Vault</title>
 <meta name="description" content="The family sanctuary: bloodline constellation, heritage archive, and daily care status, held under the Order charter."/>
@@ -297,6 +313,12 @@ a{color:inherit;text-decoration:none}
     </div>
 
     </div>
+    <!-- FAMILY TREE BY GENERATION (family-tree.js) -->
+    <div class="sechead" data-reveal="fade-up" id="tree-sechead">FAMILY TREE &middot; BY GENERATION</div>
+    <div class="pad" data-reveal="fade-up">
+      <div id="fam-tree" aria-live="polite"><p class="ft-empty">Loading your registry&hellip;</p></div>
+    </div>
+
     <!-- FAMILY CONSTELLATION NODES -->
     <div class="sechead" data-reveal="fade-up" id="nodes-sechead">FAMILY NODES -- YOUR REGISTRY <span data-canon-lattice="nine"></span></div>
     <div class="pad" data-reveal="fade-up">
@@ -496,7 +518,7 @@ function drawConstellation(mems){
   const center={x:CX,y:CY,name:'SLEIMAN',role:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),isRoot:true};
   const COLS={Wife:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),Son:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),Daughter:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),Mother:'#D9B86A',Father:'#D9B86A',Brother:'#C7CDD6',Sister:'#A9C2D8'};
   /* GENEALOGY TIERS: ancestors above, peers beside, descendants below */
-  const TIER={Grandfather:-2,Grandmother:-2,Father:-1,Mother:-1,Wife:0,Husband:0,Brother:0,Sister:0,Son:1,Daughter:1,Grandson:2,Granddaughter:2};
+  const TIER={Grandfather:-2,Grandmother:-2,Father:-1,Mother:-1,Wife:0,Husband:0,Brother:0,Sister:0,Cousin:0,Son:1,Daughter:1,Grandson:2,Granddaughter:2};
   const ROWY={'-2':CY-96,'-1':CY-58,'0':CY,'1':CY+62,'2':CY+118};
   const tiers={}; mems.forEach(m=>{const tk=(TIER[m.relation]!=null?TIER[m.relation]:1);(tiers[tk]=tiers[tk]||[]).push(m);});
   const nodes=[center];
@@ -527,12 +549,14 @@ function drawConstellation(mems){
     requestAnimationFrame(frame);}frame();
 }
 
+/* Module-local: the page's other esc() lives in a different module script. Names are free text. */
+function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function buildMemberCards(rows){
   const g=document.getElementById('member-grid');g.innerHTML='';
   if(!rows.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-family:var(--M);font-size:12px;color:var(--muted)">No family nodes registered yet. Add your first bloodline node below.</div>';return;}
   rows.forEach(m=>{
     const c=document.createElement('div');c.className='mc card'+(m.is_heir?' card-edge heir':'');if(m.is_heir)c.style.setProperty('--card-accent','var(--gold)');c.id='node-'+m.id;
-    c.innerHTML='<div class="mc-rel">'+((m.relation||'FAMILY').toUpperCase())+'</div><div class="mc-name">'+m.name+'</div><div class="mc-sign">'+(m.sign||'SIGN NOT SET')+'</div><div class="mc-actions"><button class="mc-btn mc-heir-btn">'+((m.is_heir?'REVOKE HEIR':'SET HEIR'))+'</button><button class="mc-btn mc-del">REMOVE</button></div>';
+    c.innerHTML='<div class="mc-rel">'+esc((m.relation||'FAMILY').toUpperCase())+'</div><div class="mc-name">'+esc(m.name)+'</div><div class="mc-sign">'+esc(m.sign||'SIGN NOT SET')+'</div><div class="mc-actions"><button class="mc-btn mc-heir-btn">'+((m.is_heir?'REVOKE HEIR':'SET HEIR'))+'</button><button class="mc-btn mc-del">REMOVE</button></div>';
     const heirBtn=c.querySelector('.mc-heir-btn');heirBtn.dataset.id=m.id;heirBtn.dataset.heir=m.is_heir?1:0;
     const delBtn=c.querySelector('.mc-del');delBtn.dataset.id=m.id;
     heirBtn.addEventListener('click',async e=>{const id=e.target.dataset.id;const h=e.target.dataset.heir==='1';let err=null;if(!h){err=(await sb.from('family_nodes').update({is_heir:false}).eq('user_id',uid)).error;if(!err)err=(await sb.from('family_nodes').update({is_heir:true}).eq('id',id).eq('user_id',uid)).error;}else{err=(await sb.from('family_nodes').update({is_heir:false}).eq('id',id).eq('user_id',uid)).error;}if(err)alert('Could not update heir status. Try again.');boot();});
@@ -570,6 +594,9 @@ async function boot(){
   const familyRowsRes=await sb.from('family_nodes').select('*').eq('user_id',uid).order('created_at',{ascending:true}); if(familyRowsRes.error)throw familyRowsRes.error; const rows=familyRowsRes.data||[];
   members=rows||[];
   buildMemberCards(members);
+  /* Stored first: family-tree.js is deferred and may register its listener after this runs. */
+  window.__famNodes={rows:members,name:name};
+  document.dispatchEvent(new CustomEvent('family:nodes',{detail:window.__famNodes}));
   if(isOwner) requestAnimationFrame(()=>drawConstellation(members));
 }
 function fillRing(el, glyph, col, locked){
@@ -858,7 +885,7 @@ function callWhenReady(fnName){
   }
 })();
 </script>
-<script src="/nav.js" defer></script><script src="/bg.js" defer></script><script src="/omega-demo-video.js" defer></script>
+<script src="/nav.js" defer></script><script src="/bg.js" defer></script><script src="/family-tree.js" defer></script><script src="/omega-demo-video.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script>
 </body>
 </html>

@@ -124,6 +124,7 @@ step "0.   Workflow contract"                  python3 scripts/workflow-contract
 step "0b.  Release completeness gate"          python3 scripts/release-gate.py
 step "1.   JavaScript syntax"                  js_syntax
 step "1b.  Inline <script> syntax"             python3 scripts/check-inline-js.py
+step "1c.  Duplicate keys and cases"         python3 scripts/check-dupe-keys.py
 step "2.   Repository audit"                   python3 scripts/audit.py
 # ci.yml's "Unified page contract audit" had no local twin: a new page with no
 # config/omega-page-contracts.json entry (orrery.html, 2026-10-17) passed every

@@ -53,6 +53,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/check-inline-js.py']).returncode)
+      - name: Duplicate keys and cases (ESLint)
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/check-dupe-keys.py']).returncode)
       - name: Repository audit
         shell: python
         run: |

@@ -54,7 +54,6 @@
     'collections.html': 'library',
     'archive.html': 'library',
     'references.html': 'library',
-    'vault.html': 'library',
 
     // EXCHANGE: Transactions and trading
     'transactions.html': 'exchange',

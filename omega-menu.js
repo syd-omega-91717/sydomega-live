@@ -126,6 +126,17 @@
     /* Member status line: only fields the profile really has (display_name, sign, element, is_owner). */
     '#om-status{text-align:center;margin:-14px 0 20px;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#B8B29F}',
     '#om-status[hidden]{display:none}',
+    /* Security block: real session controls, shown only when signed in. */
+    '#om-sec{margin:34px auto 0;max-width:560px;padding:16px 18px;border:1px solid rgba(224,115,107,.4);border-radius:12px;background:rgba(196,69,60,.07)}',
+    '#om-sec[hidden],#om-sec-confirm[hidden]{display:none}',
+    '#om-sec h3{margin:0 0 8px;font:12px "Courier Prime",monospace;letter-spacing:3px;color:#E0736B;font-weight:400}',
+    '#om-sec p{margin:0 0 12px;font-family:Rajdhani,sans-serif;font-size:15px;line-height:1.45;color:#D8D5CB}',
+    '#om-ov .om-sec-row{display:flex;flex-wrap:wrap;gap:10px}',
+    '#om-ov button.om-sec-btn{min-height:44px;padding:0 16px;border:1px solid rgba(201,168,76,.45);background:rgba(255,255,255,.04);color:#E2C86D;border-radius:10px;font:12px "Courier Prime",monospace;letter-spacing:.14em;cursor:pointer}',
+    '#om-ov button.om-sec-danger{border-color:rgba(224,115,107,.65);color:#E0736B}',
+    '#om-ov button.om-sec-btn:disabled{opacity:.5;cursor:default}',
+    '#om-sec-confirm{margin-top:14px}',
+    '#om-sec-status{margin:12px 0 0;min-height:1.2em}',
     '#om-status b{color:#E2C86D;font-weight:400}',
     '.om-grp{margin:0 0 22px}',
     /* owner-only group: hidden unless bg.js confirms is_owner (body.omega-owner) */
@@ -199,7 +210,16 @@
       });
       html += '</div></div>';
     });
-    html += '<p id="om-empty" hidden>No pages match.</p></div>';
+    html += '<p id="om-empty" hidden>No pages match.</p>' +
+      '<div id="om-sec" hidden><h3>SECURITY</h3>' +
+      '<p>Lost a device? Sign out every other device and stay signed in here.</p>' +
+      '<div class="om-sec-row">' +
+      '<button type="button" class="om-sec-btn" data-scope="others">SIGN OUT OTHER DEVICES</button>' +
+      '<button type="button" class="om-sec-btn om-sec-danger" data-scope="global">SIGN OUT EVERYWHERE</button></div>' +
+      '<div id="om-sec-confirm" role="group" aria-label="Confirm sign out" hidden><p id="om-sec-msg"></p>' +
+      '<div class="om-sec-row"><button type="button" class="om-sec-btn om-sec-danger" id="om-sec-yes">CONFIRM</button>' +
+      '<button type="button" class="om-sec-btn" id="om-sec-no">CANCEL</button></div></div>' +
+      '<p id="om-sec-status" role="status" aria-live="polite"></p></div></div>';
     ov.innerHTML = html;
     fillIcons(ov);
     document.body.appendChild(ov);
@@ -255,7 +275,58 @@
       if (p.is_owner === true) st.appendChild(document.createTextNode((st.firstChild ? ' \u00B7 ' : '') + 'OWNER'));
       st.hidden = !st.firstChild;
     }
+    function paintSecurity() { sec.hidden = !(window.__omegaProfile && window.OmegaSB && typeof window.OmegaSB.get === 'function'); }
     window.addEventListener('omega:user-loaded', function (e) { paintStatus(e && e.detail && e.detail.profile); });
+
+    /* SECURITY: sign out other devices / everywhere. The existing LOG OUT already calls
+       signOut() whose default scope is 'global'; what was missing was 'others' (keep this
+       device) and an explicit, confirmed everywhere. Uses the shared client OmegaSB.get()
+       like nav.js does (a second client would be a different GoTrueClient on the same storage
+       key). Supabase resolves {error} instead of throwing, so the result is checked before any
+       success text is shown. Other devices keep working until their current access token
+       expires: the copy says so rather than promising instant revocation. */
+    var sec = ov.querySelector('#om-sec'), secConfirm = ov.querySelector('#om-sec-confirm'),
+        secMsg = ov.querySelector('#om-sec-msg'), secStatus = ov.querySelector('#om-sec-status'),
+        secYes = ov.querySelector('#om-sec-yes'), secNo = ov.querySelector('#om-sec-no'), secPending = null;
+    var SEC_COPY = {
+      others: {
+        ask: 'Sign out every other device? This device stays signed in. Other devices lose access when their current session expires, typically within an hour.',
+        ok: 'Other devices are signed out. This device stays signed in.'
+      },
+      global: {
+        ask: 'Sign out of all devices, including this one? You will need to sign in again here. Other devices lose access when their current session expires, typically within an hour.',
+        ok: 'Signed out of all devices. Returning to sign-in\u2026'
+      }
+    };
+    function secBusy(b) { sec.querySelectorAll('button').forEach(function (x) { x.disabled = b; }); }
+    function secReset() { secPending = null; secConfirm.hidden = true; secStatus.textContent = ''; secBusy(false); }
+    sec.querySelectorAll('[data-scope]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        secPending = btn.getAttribute('data-scope');
+        secMsg.textContent = SEC_COPY[secPending].ask; secStatus.textContent = '';
+        secConfirm.hidden = false; secNo.focus();            // safe default: Cancel has focus
+      });
+    });
+    secNo.addEventListener('click', function () { secPending = null; secConfirm.hidden = true; });
+    secYes.addEventListener('click', function () {
+      var scope = secPending; if (scope !== 'others' && scope !== 'global') return;
+      if (!window.OmegaSB || typeof window.OmegaSB.get !== 'function') {
+        secConfirm.hidden = true; secStatus.textContent = 'The sign-in service is not available on this page. Nothing was changed.'; return;
+      }
+      secBusy(true); secConfirm.hidden = true; secStatus.textContent = 'Working\u2026';
+      Promise.resolve().then(function () { return window.OmegaSB.get(); })
+        .then(function (sb) { return sb.auth.signOut({ scope: scope }); })
+        .then(function (res) {
+          if (res && res.error) throw res.error;
+          secStatus.textContent = SEC_COPY[scope].ok;
+          if (scope === 'global') setTimeout(function () { location.href = '/account.html'; }, 700);
+          else { secPending = null; secBusy(false); }
+        })
+        .catch(function (e) {
+          secStatus.textContent = 'Could not sign out: ' + (e && e.message ? e.message : 'unknown error') + '. Try again.';
+          secBusy(false);
+        });
+    });
 
     var merged = false;
     function mergeNavPages() {
@@ -312,6 +383,7 @@
       btn.setAttribute('aria-expanded', 'true');
       mergeNavPages();
       paintStatus();
+      secReset(); paintSecurity();
       q.value = ''; filter();
       setTimeout(function () { try { q.focus(); } catch (_) {} }, 0);
     }

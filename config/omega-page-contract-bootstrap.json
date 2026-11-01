@@ -3,7 +3,7 @@
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
   "page_count": 236,
-  "open_task_count": 3176,
+  "open_task_count": 3177,
   "pages": [
     {
       "page_id": "404",
@@ -12154,7 +12154,9 @@
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
           "/omega-identity-core.js",
+          "/omega-mfa.js",
           "/omega-morph.js",
+          "/omega-profile-settings.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -12180,9 +12182,9 @@
         ],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 11,
+          "buttons": 30,
           "forms": 0,
-          "inputs": 6,
+          "inputs": 10,
           "links": 13
         },
         "media_counts": {
@@ -13789,14 +13791,10 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "Ω SYD OMEGA 91717 — Security Center",
-        "h1": [
-          "Protect the account."
-        ],
+        "h1": [],
         "scripts": [
           "/bg.js",
-          "/nav.js",
-          "/omega-morph.js",
-          "/omega-security.js"
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -13808,13 +13806,13 @@
           }
         ],
         "interactive_counts": {
-          "buttons": 3,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 1,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
-          "images": 1,
+          "images": 0,
           "video": 0,
           "audio": 0,
           "iframes": 0
@@ -14007,29 +14005,19 @@
         "h1": [],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-mfa.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js",
-          "/upload.js"
+          "/omega-morph.js"
         ],
-        "supabase_tables": [
-          "profiles"
-        ],
-        "supabase_rpcs": [
-          "deactivate_account",
-          "delete_account",
-          "set_profile_visibility"
-        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
         "capability_candidates": [
           "import-export"
         ],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 25,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 4,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -14046,6 +14034,7 @@
         "accessibility",
         "asset_requirements",
         "authorization",
+        "data_sources",
         "domain",
         "events",
         "failure_paths",
@@ -14061,6 +14050,7 @@
         "PAGE::settings::MISSING::ACCESSIBILITY",
         "PAGE::settings::MISSING::ASSET_REQUIREMENTS",
         "PAGE::settings::MISSING::AUTHORIZATION",
+        "PAGE::settings::MISSING::DATA_SOURCES",
         "PAGE::settings::MISSING::DOMAIN",
         "PAGE::settings::MISSING::EVENTS",
         "PAGE::settings::MISSING::FAILURE_PATHS",

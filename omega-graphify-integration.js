@@ -116,29 +116,16 @@
     }
   }
 
-  // Call graphify-ai-query Edge Function
+  /* INERT ON PURPOSE. This used to POST each new activity row to a relative
+     /functions/v1/graphify-ai-query, which the static site does not serve (404), and the
+     function has no 'auto_extract' mode anyway. Pointing it at the real function would
+     silently send every member's activity text to a third-party AI processor in the
+     background, on every event, with no consent step and no cost control. That is a
+     product and privacy decision (see docs/legal/LEGAL_GAP_AUDIT.md), not a bug fix, so it
+     stays off until someone makes it. Members can still ingest and query on demand from
+     graphify.html and intelligence.html. */
   async function extractFromActivity(content, activity) {
-    try {
-      const resp = await fetch('/functions/v1/graphify-ai-query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: currentUser,
-          query_type: 'auto_extract',
-          content: content,
-          source_type: 'activity_feed',
-          source_id: activity.id,
-        }),
-      });
-
-      if (!resp.ok) throw new Error(`Edge Function error: ${resp.status}`);
-
-      const data = await resp.json();
-      return data.extraction || null;
-    } catch (err) {
-      console.error('[Graphify Integration] Extract error:', err);
-      return null;
-    }
+    return null;
   }
 
   // Upsert extracted entities into graph_entities table

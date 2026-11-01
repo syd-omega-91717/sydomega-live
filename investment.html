@@ -258,14 +258,14 @@ function fetchLivePrice(){
   if(type==='equity'||type==='etf'){
     btn.disabled=true;btn.textContent='...';msg.textContent='Looking up "'+ticker+'" quote...';
     fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/market-price?symbol='+encodeURIComponent(ticker))
-      .then(function(r){return r.json();})
+      .then(function(r){if(!r.ok)throw new Error('price service HTTP '+r.status);return r.json();})
       .then(function(data){
         if(data.configured===false){msg.textContent='Stock/ETF live price lookup is not configured on this platform yet — enter the price manually.';return;}
         if(data.error||data.price==null){msg.textContent='No quote found for "'+ticker+'" — enter the price manually.';return;}
         document.getElementById('h-price').value=data.price;
         msg.textContent=data.symbol+' — live price loaded: $'+data.price;
       })
-      .catch(function(){msg.textContent='Could not reach the price service — check your connection and try again, or enter the price manually.';})
+      .catch(function(){msg.textContent='The price service is unavailable right now — try again later, or enter the price manually.';})
       .finally(function(){btn.disabled=false;btn.textContent='LIVE PRICE';});
     return;
   }

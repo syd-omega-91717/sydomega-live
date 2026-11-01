@@ -523,7 +523,8 @@ async function startGraphIngestion(){
        call work; without it the function answers 401 by design. */
     var sess=(await sb.auth.getSession()).data.session;
     if(!sess){statusEl.textContent='ERROR: session expired — sign in again';return;}
-    var res=await fetch('/functions/v1/graphify-ai-ingest',{
+    /* Absolute origin: the static site has no /functions/v1 proxy, so the relative path 404s. */
+    var res=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/graphify-ai-ingest',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+sess.access_token},
       body:JSON.stringify({})

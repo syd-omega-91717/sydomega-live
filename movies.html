@@ -244,7 +244,7 @@
   (function(){
     var stage=document.getElementById('mh-stage');if(!stage)return;
     var tiles=[].slice.call(document.querySelectorAll('.omv-tile'));var N=tiles.length;if(!N)return;
-    var cards=[],dots=[],pos=0,target=0,raf=0,drag=null,moved=false,hover=false,autoOn=!isReduced(),timer=0,idle=0;
+    var ART='/assets/movies/',cards=[],dots=[],pos=0,target=0,raf=0,drag=null,moved=false,hover=false,autoOn=!isReduced(),timer=0,idle=0;
     var now=document.getElementById('mh-now'),dotsEl=document.getElementById('mh-dots'),autoBtn=document.getElementById('mh-auto');
     tiles.forEach(function(t,i){
       var btn=t.querySelector('.omv-hit'),lab=btn.getAttribute('aria-label')||'',m=/,\s*([^,]+?)\s*\u00B7\s*([A-Za-z]+),\s*franchise/.exec(lab);
@@ -253,7 +253,7 @@
       el.setAttribute('role','group');el.setAttribute('aria-roledescription','slide');
       var ttl=(btn.getAttribute('data-title')||'').replace(/\s+/g,' ');
       el.setAttribute('aria-label',(i+1)+' of '+N+': '+ttl);
-      var img=document.createElement('img');img.alt='';img.decoding='async';img.draggable=false;img.src='/assets/movies/franchise-'+n+'-960.webp';
+      var img=document.createElement('img');img.alt='';img.decoding='async';img.draggable=false;img.src=ART+'franchise-'+n+'-960.webp';
       var em=document.createElement('span');em.className='mh-em';em.setAttribute('aria-hidden','true');if(sign)em.setAttribute('data-omega-emblem',sign);
       var nm=document.createElement('span');nm.className='mh-num';nm.setAttribute('aria-hidden','true');nm.textContent=(t.querySelector('.omv-num')||{}).textContent||'';
       var cap=document.createElement('div');cap.className='mh-cap';cap.innerHTML=t.querySelector('.omv-cap').innerHTML;

@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 235,
+  "page_count": 236,
   "contracts": [
     {
       "page_id": "404",
@@ -45,6 +45,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -109,8 +110,13 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-academy-core.js",
           "/omega-analytics-init.js",
-          "/omega-speed-insights-init.js"
+          "/omega-exam-engine.js",
+          "/omega-morph.js",
+          "/omega-review.js",
+          "/omega-speed-insights-init.js",
+          "/omega-srs.js"
         ],
         "data_evidence": {
           "supabase_tables": [
@@ -131,7 +137,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -183,6 +189,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-password-guard.js",
           "/omega-speed-insights-init.js"
         ],
@@ -253,7 +260,8 @@
           "/bg.js",
           "/nav.js",
           "/omega-achieve-boot.js",
-          "/omega-achieve-native.js"
+          "/omega-achieve-native.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -326,6 +334,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -398,6 +407,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -463,6 +473,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -528,6 +539,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -589,6 +601,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -647,7 +660,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-agent-operations.js"
+          "/omega-agent-operations.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -711,6 +725,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -784,6 +799,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -856,6 +872,7 @@
           "/approvals.js",
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -917,6 +934,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -977,6 +995,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-architecture-runtime.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -1035,7 +1054,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -1093,6 +1113,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-simulation-arena.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -1151,7 +1172,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-ascend-native.js"
+          "/omega-ascend-native.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -1215,6 +1237,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -1279,6 +1302,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -1346,6 +1370,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -1417,7 +1442,8 @@
         "page_source": "autonomous-insights.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js"
         ],
         "data_evidence": {
           "supabase_tables": [
@@ -1488,6 +1514,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -1558,6 +1585,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -1630,6 +1658,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -1706,6 +1735,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -1770,6 +1800,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -1830,6 +1861,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -1890,6 +1922,8 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-local-backup.js",
           "omega-ui.js"
@@ -1959,6 +1993,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2030,7 +2065,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-cinematic-system.js"
+          "/omega-cinematic-system.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -2094,6 +2130,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -2158,6 +2195,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2227,6 +2265,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2296,6 +2335,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-spatial-realms.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2366,6 +2406,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2436,6 +2477,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-living-city.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2500,6 +2542,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2566,6 +2609,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2588,6 +2632,67 @@
           "forms": 0,
           "inputs": 1,
           "links": 1
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "command-center",
+      "path": "command-center.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Command Center",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::command-center::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "command-center.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-command-center.js",
+          "/omega-morph.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
         },
         "media_evidence": {
           "images": 0,
@@ -2631,6 +2736,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-review.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js",
@@ -2699,6 +2805,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2769,6 +2876,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2839,6 +2947,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2905,6 +3014,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -2975,6 +3085,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -3039,7 +3150,9 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/control-center-runtime.js"
+          "/control-center-runtime.js",
+          "/omega-morph.js",
+          "/omega-owner-core.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -3097,6 +3210,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -3157,6 +3271,7 @@
           "/bg.js",
           "/cosmetics.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -3216,6 +3331,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-cosmic-ledger.js",
+          "/omega-morph.js",
           "/omega-sculpture.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -3283,6 +3399,7 @@
           "/omega-analytics-init.js",
           "/omega-cosmos-native.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -3347,6 +3464,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -3419,6 +3537,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-morph.js",
           "/vendor/marked.min.js"
         ],
         "data_evidence": {
@@ -3496,7 +3615,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "data_evidence": {
           "supabase_tables": [
@@ -3561,7 +3681,8 @@
           "/bg.js",
           "/omega-content-import.js",
           "/omega-content-tasks.js",
-          "/omega-creation-studio.js"
+          "/omega-creation-studio.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -3619,6 +3740,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -3655,6 +3777,7 @@
       "purpose": "&#937; SYD OMEGA 91717 &mdash; Credentials",
       "data_sources": {
         "supabase_tables": [
+          "certificates",
           "profiles"
         ],
         "supabase_rpcs": []
@@ -3683,10 +3806,12 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
           "supabase_tables": [
+            "certificates",
             "profiles"
           ],
           "supabase_rpcs": []
@@ -3766,8 +3891,10 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-command-dock.js",
           "/omega-constellation.js",
           "/omega-daily.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -3848,6 +3975,7 @@
           "/bg.js",
           "/nav.js",
           "/omega-data-observatory.js",
+          "/omega-morph.js",
           "/omega-product-reality.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -3907,6 +4035,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -3923,65 +4052,6 @@
           "buttons": 19,
           "forms": 0,
           "inputs": 18,
-          "links": 0
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
-      "page_id": "design-showcase",
-      "path": "design-showcase.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Design Showcase",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::design-showcase::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "design-showcase.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-speed-insights-init.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 3,
-          "forms": 0,
-          "inputs": 0,
           "links": 0
         },
         "media_evidence": {
@@ -4044,6 +4114,66 @@
           "links": 0
         },
         "media_evidence": {
+          "images": 1,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "design-showcase",
+      "path": "design-showcase.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Design Showcase",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::design-showcase::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "design-showcase.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-morph.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 3,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
+        },
+        "media_evidence": {
           "images": 0,
           "video": 0,
           "audio": 0,
@@ -4090,6 +4220,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -4159,6 +4290,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -4227,7 +4359,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "data_evidence": {
           "supabase_tables": [
@@ -4301,6 +4434,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -4370,6 +4504,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -4434,6 +4569,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -4451,10 +4587,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 8,
+          "buttons": 9,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 11
         },
         "media_evidence": {
           "images": 0,
@@ -4507,6 +4643,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -4579,7 +4716,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-eternity-engine.js"
+          "/omega-eternity-engine.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -4645,6 +4783,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -4710,7 +4849,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-evidence-graph.js"
+          "/omega-evidence-graph.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -4776,6 +4916,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -4843,7 +4984,9 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-exam-engine.js",
-          "/omega-speed-insights-init.js"
+          "/omega-morph.js",
+          "/omega-speed-insights-init.js",
+          "/omega-srs.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -4903,6 +5046,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -4968,6 +5112,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -5039,9 +5184,11 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/family-tree.js",
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -5116,6 +5263,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5184,6 +5332,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -5253,6 +5402,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js",
           "omega-ui.js"
@@ -5319,6 +5469,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -5389,6 +5540,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -5460,6 +5612,8 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-arcade.js",
+          "/omega-arena-core.js",
+          "/omega-morph.js",
           "/omega-spatial-realms.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5536,6 +5690,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -5556,7 +5711,7 @@
           "buttons": 7,
           "forms": 0,
           "inputs": 2,
-          "links": 1
+          "links": 2
         },
         "media_evidence": {
           "images": 0,
@@ -5601,6 +5756,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-gateway.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -5663,6 +5819,7 @@
           "/omega-govern-boot.js",
           "/omega-govern-native.js",
           "/omega-govern-product-reality.js",
+          "/omega-morph.js",
           "/omega-product-reality.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -5732,6 +5889,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -5806,6 +5964,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -5878,6 +6037,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -5951,6 +6111,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6022,6 +6183,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6093,6 +6255,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6164,6 +6327,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6234,6 +6398,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6303,6 +6468,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6375,6 +6541,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-graphify.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6441,6 +6608,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -6507,6 +6675,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6527,7 +6696,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_evidence": {
           "images": 0,
@@ -6572,6 +6741,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-guide.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -6639,6 +6809,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -6716,6 +6887,8 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
+          "/omega-order-core.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -6789,6 +6962,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -6853,7 +7027,8 @@
         "page_source": "healthz.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -6912,6 +7087,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -6976,6 +7152,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -7050,6 +7227,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -7122,6 +7300,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -7196,6 +7375,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -7265,6 +7445,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -7339,6 +7520,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -7404,6 +7586,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-cinematic-system.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-visual-runtime.js"
         ],
@@ -7420,7 +7603,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 61
+          "links": 56
         },
         "media_evidence": {
           "images": 0,
@@ -7439,16 +7622,7 @@
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
       "purpose": "&#937; SYD OMEGA 91717 &mdash; INSIGHT",
-      "data_sources": {
-        "supabase_tables": [
-          "graph_entities",
-          "graph_events",
-          "graph_evidence",
-          "graph_relationships",
-          "profiles"
-        ],
-        "supabase_rpcs": []
-      },
+      "data_sources": "UNVERIFIED",
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -7472,20 +7646,12 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-insight.js",
           "/omega-analytics-init.js",
+          "/omega-insight.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "graph_entities",
-            "graph_events",
-            "graph_evidence",
-            "graph_relationships",
-            "profiles"
-          ],
-          "supabase_rpcs": []
-        },
+        "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -7498,7 +7664,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 1,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -7543,7 +7709,8 @@
           "/bg.js",
           "/nav.js",
           "/omega-intel-fabric.js",
-          "/omega-intel-native.js"
+          "/omega-intel-native.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -7610,6 +7777,8 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-data-reality.js",
+          "/omega-morph.js",
+          "/omega-personal-context.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -7633,7 +7802,7 @@
           "buttons": 16,
           "forms": 0,
           "inputs": 9,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -7687,6 +7856,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -7755,7 +7925,9 @@
           "/bg.js",
           "/omega-invest-boot.js",
           "/omega-invest-native.js",
-          "/omega-invest-shell-boot.js"
+          "/omega-invest-shell-boot.js",
+          "/omega-morph.js",
+          "/omega-vault-core.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -7819,7 +7991,9 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -7884,6 +8058,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -7949,6 +8124,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -8013,7 +8189,8 @@
         "script_evidence": [
           "/bg.js",
           "/nav.js",
-          "/omega-knowledge-loom.js"
+          "/omega-knowledge-loom.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -8082,6 +8259,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -8156,6 +8334,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -8220,6 +8399,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -8254,17 +8434,7 @@
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
       "purpose": "&#937; SYD OMEGA 91717 &mdash; LADDER",
-      "data_sources": {
-        "supabase_tables": [
-          "certificates",
-          "medals",
-          "profiles",
-          "trophies"
-        ],
-        "supabase_rpcs": [
-          "my_matrix"
-        ]
-      },
+      "data_sources": "UNVERIFIED",
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -8288,21 +8458,12 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-ladder.js",
           "/omega-analytics-init.js",
+          "/omega-ladder.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "certificates",
-            "medals",
-            "profiles",
-            "trophies"
-          ],
-          "supabase_rpcs": [
-            "my_matrix"
-          ]
-        },
+        "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -8315,7 +8476,7 @@
           "buttons": 1,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -8360,6 +8521,7 @@
           "/bg.js",
           "/leaderboard.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -8375,7 +8537,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -8424,6 +8586,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -8493,6 +8656,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -8513,7 +8677,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_evidence": {
           "images": 0,
@@ -8557,6 +8721,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -8617,11 +8782,15 @@
         "script_evidence": [
           "/bg.js",
           "/nav.js",
+          "/omega-life-log.js",
           "/omega-life-native-systems.js",
           "/omega-life-surface.js",
           "/omega-life.js",
+          "/omega-morph.js",
+          "/omega-personal-context.js",
           "/omega-product-reality.js",
-          "/omega-relearn-sigil-mana.js"
+          "/omega-relearn-sigil-mana.js",
+          "/omega-sparkline.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -8633,10 +8802,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
+          "buttons": 4,
+          "forms": 2,
+          "inputs": 17,
+          "links": 5
         },
         "media_evidence": {
           "images": 0,
@@ -8685,6 +8854,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -8759,6 +8929,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -8829,6 +9000,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -8902,6 +9074,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -8983,6 +9156,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -9054,7 +9228,9 @@
           "/omega-content-fabric.js",
           "/omega-demo-video.js",
           "/omega-media-boot.js",
+          "/omega-media-core.js",
           "/omega-media-native.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -9119,6 +9295,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -9184,6 +9361,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -9248,6 +9426,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -9307,6 +9486,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -9371,6 +9551,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -9436,6 +9617,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -9494,7 +9676,8 @@
         "page_source": "monitoring-dashboard.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -9553,6 +9736,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -9619,6 +9803,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-cinematic-audio.js",
+          "/omega-morph.js",
           "/omega-spatial-realms.js",
           "/omega-speed-insights-init.js"
         ],
@@ -9637,7 +9822,7 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 13,
+          "buttons": 16,
           "forms": 0,
           "inputs": 0,
           "links": 0
@@ -9685,6 +9870,7 @@
           "/bg.js",
           "/my-quests.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -9744,6 +9930,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -9812,6 +9999,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -9891,6 +10079,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -9963,6 +10152,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -10005,6 +10195,7 @@
       "purpose": "&#937; SYD OMEGA 91717 &mdash; Notifications",
       "data_sources": {
         "supabase_tables": [
+          "omega_notifications",
           "profiles"
         ],
         "supabase_rpcs": []
@@ -10033,10 +10224,12 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
           "supabase_tables": [
+            "omega_notifications",
             "profiles"
           ],
           "supabase_rpcs": []
@@ -10102,6 +10295,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -10168,6 +10362,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -10244,6 +10439,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -10314,6 +10510,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -10373,6 +10570,7 @@
         "script_evidence": [
           "/bg.js",
           "/nav.js",
+          "/omega-morph.js",
           "/omega-platform-filters.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -10432,6 +10630,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -10498,6 +10697,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -10561,7 +10761,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -10595,17 +10796,7 @@
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
       "purpose": "&#937; SYD OMEGA 91717 &mdash; ORRERY",
-      "data_sources": {
-        "supabase_tables": [
-          "evolution_events",
-          "profiles",
-          "sovereign_points_ledger",
-          "task_completions"
-        ],
-        "supabase_rpcs": [
-          "my_matrix"
-        ]
-      },
+      "data_sources": "UNVERIFIED",
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -10629,22 +10820,13 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-sparkline.js",
-          "/omega-orrery.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
+          "/omega-orrery.js",
+          "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "evolution_events",
-            "profiles",
-            "sovereign_points_ledger",
-            "task_completions"
-          ],
-          "supabase_rpcs": [
-            "my_matrix"
-          ]
-        },
+        "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -10657,7 +10839,7 @@
           "buttons": 3,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -10706,6 +10888,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -10770,6 +10953,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -10806,8 +10990,7 @@
       "purpose": "&#937; SYD OMEGA 91717 &mdash; Payments",
       "data_sources": {
         "supabase_tables": [
-          "profiles",
-          "task_completions"
+          "profiles"
         ],
         "supabase_rpcs": []
       },
@@ -10835,12 +11018,12 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
           "supabase_tables": [
-            "profiles",
-            "task_completions"
+            "profiles"
           ],
           "supabase_rpcs": []
         },
@@ -10911,6 +11094,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -10935,6 +11119,70 @@
         },
         "media_evidence": {
           "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "personal-intelligence",
+      "path": "personal-intelligence.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "INTELLIGENCE",
+      "domain": "PERSONAL_INTELLIGENCE",
+      "primary_role": "AUTHENTICATED_MEMBER",
+      "purpose": "Ω SYD OMEGA 91717 — Personal Intelligence Core",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "PRIVATE_CONTEXT_METADATA_READ",
+        "EXPLICIT_LINK_METADATA_READ",
+        "CONSENT_STATE_PRESENTATION",
+        "CANONICAL_WORKSPACE_ROUTING"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::personal-intelligence::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "personal-intelligence.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-living-intelligence.js",
+          "/omega-morph.js",
+          "/omega-personal-context.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 12
+        },
+        "media_evidence": {
+          "images": 2,
           "video": 0,
           "audio": 0,
           "iframes": 0
@@ -10980,6 +11228,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -11044,6 +11293,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -11103,6 +11353,7 @@
         "script_evidence": [
           "/bg.js",
           "/nav.js",
+          "/omega-morph.js",
           "/omega-platform-kernel.js",
           "/platform-kernel-runtime.js"
         ],
@@ -11169,6 +11420,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -11190,7 +11442,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -11240,6 +11492,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -11310,6 +11563,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -11374,6 +11628,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -11443,6 +11698,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-export.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -11489,6 +11745,7 @@
       "purpose": "&#937; SYD OMEGA 91717 &mdash; Profile",
       "data_sources": {
         "supabase_tables": [
+          "certificates",
           "character_records",
           "evolution_events",
           "profiles"
@@ -11531,11 +11788,14 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-identity-core.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
         "data_evidence": {
           "supabase_tables": [
+            "certificates",
             "character_records",
             "evolution_events",
             "profiles"
@@ -11609,6 +11869,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -11676,6 +11937,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -11753,6 +12015,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -11825,6 +12088,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -11892,6 +12156,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -11955,7 +12220,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "data_evidence": {
           "supabase_tables": [
@@ -12025,6 +12291,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -12090,6 +12357,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -12150,6 +12418,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -12215,6 +12484,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -12235,7 +12505,7 @@
           "buttons": 13,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -12278,6 +12548,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-sigil-system.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -12336,6 +12607,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-recovery.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -12394,6 +12666,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-temporal-replay.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -12459,6 +12732,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -12534,6 +12808,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-password-guard.js",
           "/omega-speed-insights-init.js"
         ],
@@ -12594,7 +12869,9 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -12654,6 +12931,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -12720,6 +12998,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -12791,6 +13070,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -12853,7 +13133,8 @@
         "page_source": "sculpture.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -12917,6 +13198,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -12996,7 +13278,8 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "data_evidence": {
           "supabase_tables": [
@@ -13060,6 +13343,7 @@
         "script_evidence": [
           "/bg.js",
           "/nav.js",
+          "/omega-morph.js",
           "/omega-security.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -13129,6 +13413,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -13146,14 +13431,14 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 4,
+          "buttons": 8,
           "forms": 0,
           "inputs": 0,
           "links": 1
         },
         "media_evidence": {
           "images": 0,
-          "video": 0,
+          "video": 1,
           "audio": 0,
           "iframes": 0
         }
@@ -13198,6 +13483,8 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
+          "/omega-services-core.js",
           "/omega-services-native.js",
           "/omega-speed-insights-init.js"
         ],
@@ -13273,6 +13560,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-mfa.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -13349,6 +13637,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -13418,6 +13707,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -13487,6 +13777,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -13556,6 +13847,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-ui.js"
         ],
@@ -13616,6 +13908,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -13683,6 +13976,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -13762,6 +14056,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -13836,6 +14131,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -13905,6 +14201,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -13968,6 +14265,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-standing-dashboard.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -14027,6 +14325,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -14093,6 +14392,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14163,6 +14463,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14238,6 +14539,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -14310,6 +14612,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14374,6 +14677,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -14439,6 +14743,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14514,6 +14819,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14584,7 +14890,9 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14605,7 +14913,7 @@
           "buttons": 14,
           "forms": 0,
           "inputs": 12,
-          "links": 1
+          "links": 2
         },
         "media_evidence": {
           "images": 0,
@@ -14654,6 +14962,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14723,6 +15032,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14795,6 +15105,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14867,6 +15178,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
@@ -14940,6 +15252,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-vault-native.js"
         ],
@@ -15011,6 +15324,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -15070,6 +15384,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -15129,6 +15444,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -15188,6 +15504,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-visual-atlas.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -15247,6 +15564,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js"
@@ -15308,7 +15626,9 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -15324,7 +15644,7 @@
           "buttons": 10,
           "forms": 0,
           "inputs": 7,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -15368,6 +15688,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -15429,6 +15750,8 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-local-backup.js",
@@ -15491,6 +15814,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-today.js",
           "omega-ui.js"
@@ -15552,6 +15876,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -15611,6 +15936,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-world-atlas.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -15669,6 +15995,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": "UNVERIFIED",
@@ -15730,6 +16057,7 @@
           "/omega-achievement-evidence-chain.js",
           "/omega-capability-provenance.js",
           "/omega-legacy-constellation.js",
+          "/omega-morph.js",
           "/omega-world-engine.js",
           "/omega-world-progression.js",
           "/omega-world-realtime.js"
@@ -15756,100 +16084,11 @@
           "iframes": 0
         }
       }
-    },
-    {
-      "page_id": "personal-intelligence",
-      "path": "personal-intelligence.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "INTELLIGENCE",
-      "domain": "PERSONAL_INTELLIGENCE",
-      "primary_role": "AUTHENTICATED_MEMBER",
-      "purpose": "Unify member-controlled personal context, explicit life-knowledge links, governed action routing, and purpose-bound privacy status.",
-      "data_sources": {
-        "supabase_tables": [
-          "omega_personal_context_items",
-          "omega_personal_context_links",
-          "omega_personal_context_preferences"
-        ],
-        "supabase_rpcs": []
-      },
-      "capabilities": [
-        "PRIVATE_CONTEXT_METADATA_READ",
-        "EXPLICIT_LINK_METADATA_READ",
-        "CONSENT_STATE_PRESENTATION",
-        "CANONICAL_WORKSPACE_ROUTING"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::personal-intelligence::BROWSER_STATE_VERIFICATION",
-          "PAGE::personal-intelligence::ASSET_ROUTE_VERIFICATION"
-        ]
-      },
-      "authorization": "READ_ONLY_MEMBER_SCOPED_CONTEXT; PERMISSIONS CHANGED ONLY IN CANONICAL LIFE EDITOR",
-      "truth_states": [
-        "LIVE",
-        "EMPTY",
-        "UNAVAILABLE",
-        "UNVERIFIED",
-        "BLOCKED"
-      ],
-      "asset_requirements": "Uses canonical assets/omega-banner.svg and derived assets/legacy/sign-aries.webp; image routes must pass static asset checks.",
-      "events": [
-        "omega:personal-context:changed",
-        "omega:consent-changed"
-      ],
-      "failure_paths": "Sign-in required; context source unavailable; preferences unavailable; no fabricated empty state; AI advice not connected; image route unavailable.",
-      "accessibility": "Semantic sections and headings, status announcements, alt text, textContent rendering, keyboard reachable links, reduced-motion support.",
-      "responsive": "Responsive four-pillar grid, metadata nodes, consent cards, and visual assets at desktop/tablet/mobile breakpoints.",
-      "traceability": {
-        "page_source": "personal-intelligence.html",
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML/JavaScript source inspection",
-        "script_evidence": [
-          "/bg.js",
-          "/nav.js",
-          "/omega-personal-context.js",
-          "/omega-living-intelligence.js"
-        ],
-        "data_evidence": {
-          "supabase_tables": [
-            "omega_personal_context_items",
-            "omega_personal_context_links",
-            "omega_personal_context_preferences"
-          ],
-          "supabase_rpcs": []
-        },
-        "capability_registry_matches": [],
-        "domain_candidates": [
-          "PERSONAL_INTELLIGENCE"
-        ]
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 12
-        },
-        "media_evidence": {
-          "images": 2,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
     }
   ],
   "audit_summary": {
-    "page_count": 235,
-    "source_audited_pages": 235,
+    "page_count": 236,
+    "source_audited_pages": 236,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true
   }

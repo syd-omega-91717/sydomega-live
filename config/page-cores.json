@@ -10,6 +10,7 @@
       "is": "Today, concierge, points, inbox, missions, projects, search",
       "pages": [
         "dashboard",
+        "command-center",
         "chatbot",
         "points",
         "notifications",

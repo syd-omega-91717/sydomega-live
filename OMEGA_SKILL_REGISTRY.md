@@ -26,7 +26,7 @@ effectively invisible unless invoked by exact name.
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
 | `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
 | `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |
-| `image-pipeline` | yes | — | 1,400 | CLAUDE.md, README.md | 2026-08-30 |
+| `image-pipeline` | yes | — | 1,463 | CLAUDE.md, README.md | 2026-08-30 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
 | `omega-cinematic-system` | yes | — | 1,046 | CLAUDE.md | 2026-09-10 |
 | `omega-orchestrator` | yes | — | 1,300 | **nothing** | 2026-09-10 |
@@ -39,10 +39,10 @@ effectively invisible unless invoked by exact name.
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-server` | yes | — | 5,099 | CLAUDE.md, README.md | 2026-10-02 |
 | `verify-in-browser` | yes | 4 | 2,457 | CLAUDE.md, README.md | 2026-09-27 |
-| `visual-assets` | yes | — | 1,582 | CLAUDE.md, README.md | 2026-08-30 |
+| `visual-assets` | yes | — | 1,603 | CLAUDE.md, README.md | 2026-08-30 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
-**23 skills, ~38,932 tokens** if every SKILL.md were read in one
+**23 skills, ~39,016 tokens** if every SKILL.md were read in one
 session. They are loaded on demand, so that total is a ceiling, not a per-session cost.
 
 > **3 skill(s) named in no reference doc:** `omega-orchestrator`, `omega-production-verification`, `present-concept-build`. Reachable by description-matching, but a reader of `CLAUDE.md` or
@@ -96,7 +96,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 235 |
 | pages loading `bg.js` | 235 of 235 |
-| `omega-*.js` modules | 257 (2338 KB) |
+| `omega-*.js` modules | 257 (2339 KB) |
 | root `.js` files | 273 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 413 (107 numbered `NNNN_`, 306 timestamped) |

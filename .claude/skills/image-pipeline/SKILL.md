@@ -5,12 +5,13 @@ description: Produce, add, or change imagery for sydomega-live — procedural SV
 
 # IMAGE PIPELINE
 
-## The constraint: this repo ships almost no raster
+## Interface graphics are procedural; the media art is raster
 
-13 SVGs under `assets/` and four PWA raster files
-(`icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, `favicon.ico`).
-That's it. Every other "image" the platform shows is **generated at runtime
-in the browser**, not stored:
+Measured 2026-11-01. `assets/` ships film and series art (`movies/` 19 MB, `series/` 15 MB:
+per item a 1280x720 JPG, 640/960 WebP and an MP4), concept boards and reels (`concept/`, 6.6 MB,
+plus `medallion-01-640/1200.webp`), `realms/`, `legacy/` and the SVGs, plus the four PWA raster
+files. An earlier version of this skill said the repo had 13 SVGs and no raster; that was wrong.
+The **interface** graphics, though, are generated at runtime in the browser, not stored:
 
 | Source | Output | Module |
 |---|---|---|

@@ -54,8 +54,8 @@ drift rather than adding a fourth value.
 
 ## Asset rules (no-build, CSP, noindex)
 
-- **SVG only, and either inline or under `assets/`.** The repo ships 13 SVGs
-  and zero raster files. `scripts/production-contract.py` and `ci-local.sh`'s
+- **UI marks are SVG, inline or under `assets/`.** Media art (film/series stills, concept
+  boards) is committed raster under `assets/` as JPG plus 640/960 WebP; see `image-pipeline`. `scripts/production-contract.py` and `ci-local.sh`'s
   broken-asset check fail on any `src=`/`href=` that doesn't resolve to a
   committed file — no hotlinking, no CDN images, no `<img>` to an external
   host. See the `image-pipeline` skill before adding any raster asset.

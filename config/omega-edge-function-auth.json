@@ -42,6 +42,11 @@
       "auth_mode": "PUBLIC_READONLY",
       "rationale": "Public GET-only Hacker News industry feed; no privileged database writes."
     },
+    "market-price": {
+      "verify_jwt": false,
+      "auth_mode": "PUBLIC_READONLY",
+      "rationale": "Public GET-only stock/ETF quote proxy; dormant (configured:false) until TWELVE_DATA_API_KEY is set; no privileged database access."
+    },
     "notify-access": {
       "verify_jwt": false,
       "auth_mode": "SHARED_SECRET",
@@ -77,10 +82,20 @@
       "auth_mode": "SUPABASE_JWT",
       "rationale": "Authenticated orchestration endpoint."
     },
+    "rankings": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Authenticated member leaderboard; caller rank derives only from the verified JWT, body user_id is never trusted."
+    },
     "secrets-health": {
       "verify_jwt": true,
       "auth_mode": "SUPABASE_JWT",
       "rationale": "Authenticated operational health endpoint."
+    },
+    "snapshot-leaderboard": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Owner-only on-demand snapshot; the function re-checks profiles.is_owner. The service-key bearer path was removed before deploy (not timing-safe)."
     },
     "stripe-webhook": {
       "verify_jwt": false,

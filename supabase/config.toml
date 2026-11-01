@@ -52,3 +52,17 @@ verify_jwt = true
 
 [functions.stripe-webhook]
 verify_jwt = false
+
+# Registered 2026-11-01. Deployed from a session first and read back live (see
+# docs/runtime/supabase-edge-functions-live.json), so this file, the auth registry and the live
+# snapshot agree. Held back on purpose, not registered: graphify-ai-query, graphify-ai-ingest,
+# checkout, weekly-digest, event-ingest (docs/legal/FUNCTION_GO_LIVE.md).
+[functions.market-price]
+verify_jwt = false
+
+[functions.rankings]
+verify_jwt = true
+
+# Owner-only inside the function (profiles.is_owner). No schedule runs it yet.
+[functions.snapshot-leaderboard]
+verify_jwt = true

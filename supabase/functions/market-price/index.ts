@@ -17,21 +17,21 @@
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, content-type, apikey",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
 };
 const json = (b: unknown, s = 200, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json", ...extra } });
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+  // Public and read-only: GET only (config/omega-edge-function-auth.json, PUBLIC_READONLY).
+  if (req.method !== "GET") return json({ error: "method_not_allowed" }, 405);
   try {
     const apiKey = Deno.env.get("TWELVE_DATA_API_KEY");
     if (!apiKey) return json({ configured: false, message: "Stock/ETF price lookup not configured yet." });
 
     const reqUrl = new URL(req.url);
-    const symbol = (req.method === "POST"
-      ? (await req.json().catch(() => ({})))?.symbol
-      : reqUrl.searchParams.get("symbol")) as string | undefined;
+    const symbol = reqUrl.searchParams.get("symbol");
     if (!symbol || !/^[A-Za-z0-9.\-]{1,12}$/.test(symbol)) {
       return json({ error: "invalid_symbol" }, 400);
     }

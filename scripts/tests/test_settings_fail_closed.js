@@ -15,7 +15,10 @@ const mod = read("omega-profile-settings.js");
 
 // 1. The old pages are redirect shims: no protected control may live in them.
 for (const [name, html] of [["settings.html", settingsShim], ["security.html", securityShim]]) {
-  assert.match(html, /location\.replace\('\/profile\.html'/, name + " must redirect into the profile");
+  // settings.html redirects in script (it must keep the #two-factor fragment); security.html uses a meta refresh,
+  // which carries its fragment itself and adds no inline script (csp-inline-ratchet).
+  assert.ok(/location\.replace\('\/profile\.html'/.test(html) || /http-equiv="refresh"[^>]*url=\/profile\.html#/.test(html),
+    name + " must redirect into the profile");
   assert.doesNotMatch(html, /btn-delete|btn-deactivate|btn-logout|data-omega-mfa/, name + " must not carry protected controls");
 }
 assert.match(settingsShim, /#two-factor/, "the two-factor deep link (approvals.js, owner deck) must survive the redirect");

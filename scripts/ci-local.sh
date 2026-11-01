@@ -36,6 +36,18 @@ step() {
   fi
 }
 
+# The eight node contract tests ci.yml runs one step each. ci-local ran none of them, so a regression in
+# test_settings_fail_closed.js reached GitHub red while this script was green (FIXES_LOG 203).
+node_contract_tests() {
+  local bad=0
+  for t in test_contacts_network_migration test_omega_execution_program test_omega_memory_consent \
+           test_omega_password_guard test_settings_fail_closed test_stripe_checkout_guard \
+           test_stripe_checkout_subscription_guard test_stripe_webhook_guard; do
+    node "scripts/tests/$t.js" >/dev/null 2>&1 || { echo "  FAILED: scripts/tests/$t.js"; bad=1; }
+  done
+  return $bad
+}
+
 js_syntax() {
   local bad=0
   for f in *.js; do
@@ -146,6 +158,7 @@ step "2q.  Edge service-role authorization"     python3 scripts/edge-service-rol
 step "2r.  Edge Function census"               python3 scripts/edge-function-census.py
 step "2s.  Copilot behaviour contract"         node scripts/copilot-contract.js
 step "2t.  Grant contract (live grants)"       python3 scripts/grant-contract.py
+step "2u.  Node contract tests (ci.yml)"        node_contract_tests
 step "3.   Static contract suite"              python3 scripts/contract-suite.py
 step "4.   Broken local asset refs"            broken_assets
 step "4b.  Repository integrity (local refs)"  python3 scripts/repository_integrity_audit.py

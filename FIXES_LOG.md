@@ -25749,3 +25749,16 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Not verified:** real `family_nodes` rows (stub returns none), the escaping inside `buildMemberCards` directly (it is module-scoped; covered only by reading the diff), Safari/Firefox. **Not changed:** the owner canvas draws its labels at 6–7px (unreadable, canvas text is outside the CSS type-scale gate).
 
 **193a — my own slip, caught by `ci-local.sh` 2b before pushing:** the tree CSS was first inserted before the file's *first* `</style>`, which closes the shared `omega-morph` block every page must carry verbatim (`test_omega_morph_contract`: "1 page(s) missing or drifted: family.html"). Moved into the page's own `<style>`; the morph contract passes and the render is unchanged. Lesson for the next page edit: insert at the first `<style>` that is not `#omega-vt`, never at the first `</style>`.
+
+
+### 194 — Client calls to Edge Functions that the static site cannot serve (live check, 2026-11-01)
+
+**Found by** a read-only comparison of the live project's function list (`list_edge_functions`: 17 ACTIVE, exactly the 17 in `supabase/config.toml`) against the 24 functions in `supabase/functions/` and every client call site. Eight functions have source but were never deployed (`checkout`, `rankings`, `market-price`, `graphify-ai-query`, `graphify-ai-ingest`, `event-ingest`, `snapshot-leaderboard`, `weekly-digest`): a function absent from `config.toml` never deploys (CLAUDE.md §8.2).
+
+**Defect (§8.1 class 1, a call that silently does nothing).** `graphify.html` (4 sites) and `intelligence.html` called the *relative* path `/functions/v1/graphify-ai-*`. Neither Vercel nor Cloudflare config proxies `/functions/v1/*`, so the request went to the static site and 404'd even though a valid bearer token was attached. Pinned BEFORE (original `graphify.html` served locally): `http://localhost:8765/functions/v1/graphify-ai-query`. AFTER: `https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/graphify-ai-query` with `Authorization: Bearer …`. Both pages now use the project's own origin.
+
+**`omega-graphify-integration.js` made inert, deliberately.** `bg.js` loads it on every page; it POSTed each new `activity_feed` row to the same relative URL with `query_type:'auto_extract'`, a mode `graphify-ai-query` does not have (0 matches in the source), and with no Authorization header. Pointing it at the real function would silently send every member's activity text to a third-party AI processor on every event, with no consent step and no cost control. That is a privacy/product decision, not a bug fix, so `extractFromActivity` now returns `null` and says why. On-demand ingest and query from the two pages still work.
+
+**`investment.html`:** a non-2xx from `market-price` now reads "The price service is unavailable right now" instead of the misleading "No quote found". `pulse.html` already shows "—" and never a made-up value.
+
+**Not verified:** the functions themselves are still undeployed (next change); the calls above were intercepted, not answered by the real function.

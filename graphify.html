@@ -70,7 +70,8 @@
     async function functionFetch(path, body) {
       const token = await sessionToken();
       if (!token) throw new Error('Authentication required. Sign in again.');
-      return fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(body) });
+      /* The static site serves no /functions/v1 proxy, so a relative path 404s. Call the project's own origin. */
+      return fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co' + path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(body) });
     }
 
     window.switchTab = function(tab) {

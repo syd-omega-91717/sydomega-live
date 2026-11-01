@@ -135,10 +135,22 @@
     '.om-card:hover .om-ic{filter:brightness(1.3)}',
     '#om-q{display:block;width:100%;max-width:420px;margin:0 auto 24px;box-sizing:border-box;padding:11px 14px;min-height:44px;border:1px solid rgba(201,168,76,.28);background:rgba(255,255,255,.04);color:#d8d5cb;border-radius:10px;font-family:"Courier Prime",monospace;font-size:16px;letter-spacing:1px}',
     '#om-q:focus{outline:2px solid #00E5FF;outline-offset:2px;border-color:rgba(201,168,76,.6)}',
-    '.om-grp[hidden],.om-card[hidden],#om-empty[hidden]{display:none!important}',
+    '.om-grp[hidden],.om-card[hidden],.om-chip[hidden],#om-empty[hidden]{display:none!important}',
     '#om-empty{text-align:center;color:#A9C2D8;font-family:"Courier Prime",monospace;letter-spacing:1px}',
     'body.om-lock{overflow:hidden}',
-    '@media(max-width:760px){#om-ov{padding-top:58px}.om-cards{grid-template-columns:repeat(3,1fr)}}'
+    /* Pages the curated grid above does not list, merged in from nav.js. Compact
+       chips, not emblem cards: ~170 cards would be a ~15,000px scroll. */
+    '.om-chips{display:flex;flex-wrap:wrap;gap:8px}',
+    '.om-chip{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;padding:0 12px;border:1px solid rgba(201,168,76,.22);background:rgba(255,255,255,.02);border-radius:10px;color:#d8d5cb;text-decoration:none;font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px}',
+    '.om-chip:hover,.om-chip:focus-visible{border-color:rgba(201,168,76,.6);background:rgba(201,168,76,.08);color:#E2C86D}',
+    /* a[href] in omega-accessibility-audit.css (0,1,1) outranks a lone class, so both the
+       owner gate and [hidden] need !important or the chip paints anyway (measured). */
+    'body:not(.omega-owner) .om-chip-owner{display:none!important}',
+    /* The phone bottom nav (z 9990) sits above this overlay (z 9600) and would cover the last row;
+       omega-bottom-stack.js publishes its measured height. omega-components.js used to force
+       .om-cards to 1 column here with !important (measured 390px: 74 full-width cards). */
+    '@media(max-width:760px){#om-ov{padding-top:58px;padding-bottom:calc(var(--omega-chrome-bottom,72px) + 24px)}.om-cards{grid-template-columns:repeat(3,1fr)}}',
+    '@media(max-width:340px){.om-cards{grid-template-columns:repeat(2,1fr)}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'om-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
@@ -222,12 +234,39 @@
     /* Search: filters cards by label, hides groups left empty. Enter follows the
        first visible card, so a member can type and go without touching the grid. */
     var q = ov.querySelector('#om-q'), empty = ov.querySelector('#om-empty');
+
+    /* Merge every page nav.js can reach that the curated grid lacks. nav.js loads
+       after this file, so this runs on open and retries until it has published. */
+    var merged = false;
+    function mergeNavPages() {
+      if (merged || !window.OmegaAxis || typeof window.OmegaAxis.pages !== 'function') return;
+      var have = {};
+      GROUPS.forEach(function (g) { g[2].forEach(function (p) { have[p[2]] = 1; }); });
+      var bySec = {}, order = [];
+      window.OmegaAxis.pages().forEach(function (p) {
+        if (!p || typeof p.href !== 'string' || p.href.charAt(0) !== '/' || p.href.charAt(1) === '/' || have[p.href]) return;
+        have[p.href] = 1;
+        (bySec[p.section] = bySec[p.section] || (order.push(p.section), [])).push(p);
+      });
+      var inner = ov.querySelector('#om-inner'), html = '';
+      order.forEach(function (name) {
+        html += '<div class="om-grp"><h4>' + esc(name) + '</h4><div class="om-chips">';
+        bySec[name].forEach(function (p) {
+          html += '<a class="om-chip' + (p.owner ? ' om-chip-owner' : '') + '" href="' + esc(p.href) + '" data-q="' + esc((p.label + ' ' + name).toLowerCase()) + '">' + esc(p.label) + '</a>';
+        });
+        html += '</div></div>';
+      });
+      if (!html) return;
+      merged = true;
+      var holder = document.createElement('div'); holder.innerHTML = html;
+      while (holder.firstChild) inner.insertBefore(holder.firstChild, empty);
+    }
     function filter() {
       var term = q.value.trim().toLowerCase(), shown = 0;
       ov.querySelectorAll('.om-grp').forEach(function (g) {
         var any = 0;
-        g.querySelectorAll('.om-card').forEach(function (c) {
-          var hit = !term || c.textContent.toLowerCase().indexOf(term) !== -1;
+        g.querySelectorAll('.om-card,.om-chip').forEach(function (c) {
+          var hit = !term || (c.getAttribute('data-q') || c.textContent).toLowerCase().indexOf(term) !== -1;
           c.hidden = !hit; if (hit) any++;
         });
         g.hidden = !any; shown += any;
@@ -237,7 +276,7 @@
     q.addEventListener('input', filter);
     q.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter') return;
-      var first = ov.querySelector('.om-grp:not([hidden]) .om-card:not([hidden])');
+      var first = ov.querySelector('.om-grp:not([hidden]) .om-card:not([hidden]),.om-grp:not([hidden]) .om-chip:not([hidden])');
       if (first) location.href = first.getAttribute('href');
     });
 
@@ -250,6 +289,7 @@
       returnTo = document.activeElement;
       ov.classList.add('open'); document.body.classList.add('om-lock');
       btn.setAttribute('aria-expanded', 'true');
+      mergeNavPages();
       q.value = ''; filter();
       setTimeout(function () { try { q.focus(); } catch (_) {} }, 0);
     }

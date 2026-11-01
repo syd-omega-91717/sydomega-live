@@ -306,6 +306,19 @@
       for (var i = 0; i < SECTIONS.length; i++) if (SECTIONS[i].key === key) return SECTIONS[i];
       return null;
     },
+    /* Every page this nav can reach, flat: [{label, href, section, key, col, owner}].
+       omega-menu.js merges it into the searchable launcher, so the launcher reads
+       the page map from its one owner instead of keeping a second hand-typed copy
+       (CLAUDE.md 8.1 class 8). A fresh array each call; callers may not mutate nav. */
+    pages: function () {
+      var out = [];
+      SECTIONS.forEach(function (sec) {
+        sec.sub.forEach(function (sub) {
+          out.push({ label: sub[1], href: sub[2], section: sec.label, key: sec.key, col: sec.col, owner: sub[3] === 'owner' });
+        });
+      });
+      return out;
+    },
     colourOf: function (slug) {
       var sec = this.section(this.sectionOf(slug));
       return sec ? sec.col : '#C9A84C';
@@ -674,6 +687,14 @@
       dq.appendChild(el);
     });
     drawer.appendChild(dq);
+    /* ALL PAGES — omega-menu.js's searchable launcher. Its own hamburger button
+       is hidden on a phone (bg.js, "Phone chrome budget"), so without this row the
+       launcher had no way to open there. Hidden if the module did not load. */
+    var dAll=document.createElement('button');dAll.type='button';dAll.className='drawer-allpages';dAll.id='drawer-allpages';
+    dAll.setAttribute('aria-label','Search all pages');dAll.textContent='☰  ALL PAGES';
+    dAll.style.cssText='display:block;width:calc(100% - 28px);min-height:44px;margin:10px 14px 0;padding:0 4px;border:1px solid rgba(201,168,76,.22);border-radius:7px;background:rgba(201,168,76,.05);color:#E8C97A;font:12px "Courier Prime",monospace;letter-spacing:2px;cursor:pointer;-webkit-text-fill-color:currentColor';
+    dAll.addEventListener('click',function(){closeDrawer();if(window.OmegaMenu)window.OmegaMenu.open();});
+    drawer.appendChild(dAll);
     var dsgrid=document.createElement('div');dsgrid.className='drawer-sections';
     DRAWER_SECTIONS.forEach(function(sec){
       var ds=document.createElement('div');ds.className='ds-section';

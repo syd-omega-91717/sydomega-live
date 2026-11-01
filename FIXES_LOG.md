@@ -25832,6 +25832,16 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Not verified:** real Supabase session, Safari/Firefox, screen reader. The red "DATA DID NOT LOAD" toast in screenshots is the harness stub's data-guard.
 
 
+### 200 — Movies page gets a 3-D rotating carousel (Media Hub, concept image 1)
+
+**Built.** `movies.html` now opens with a CSS-3D coverflow of the 12 franchise films: perspective stage, cards rotate in depth, each carries its living zodiac emblem (`data-omega-emblem`, derived from the tile's own aria-label, so sign and god stay single-sourced), roman numeral and title. Slide by drag/swipe (with momentum), arrow buttons, dots, or Left/Right/Home/End; Enter or a click on the front card opens the existing lightbox player; a click on a side card brings it forward. Auto-rotation every 4.5s pauses on hover, focus, drag and for 12s after any input, has a visible PAUSE/PLAY button (WCAG 2.2.2) and is off under `prefers-reduced-motion`. The 12-tile grid stays below as "ALL TWELVE". No new module, no new inline `<script>` block (code added to the page's existing one; csp-inline-ratchet passes), no new asset (reuses `franchise-NN-960.webp`).
+
+**Data.** Titles, art and films are the page's own; nothing invented. The page already read no film data from Supabase, so there is no empty state to show.
+
+**Measured (headless, signed-in stub).** Desktop 1280 and phone 390: 12 cards, 12 emblems, 12 dots, no horizontal overflow, no page errors; next button, ArrowRight/Left, End, Home and a mouse drag each moved to the expected film; Enter opened the lightbox on the front film. **Slip caught:** a first keyboard run looked broken (keys "ignored"); the cause was the test waiting 0.8s for a lerp that headless frame rates stretch, not the code. Re-run with 2.5s settle: all correct.
+
+**Not verified:** a real touch device (drag was tested with a mouse), Safari/Firefox, a screen reader on the carousel semantics, video playback (the stub serves no media).
+
 ### 201 — Command Center (concept image 3): a nine-tile owner board that shows only what the database says
 
 **Built.** New `command-center.html` + `omega-command-center.js`: the image's 3x3 board (gauge, big numbers, ledger, bars, status list) in the platform's glass/gold language, wired into nav (`COMMAND` section, after COMMAND BRIDGE), the `command` core, the `genesis` world district, the page-contract registry (regenerated with `omega-page-contract-bootstrap.py --promote`) and the `index.html` surface count (235 -> 236).

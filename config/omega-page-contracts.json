@@ -9822,7 +9822,7 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 13,
+          "buttons": 16,
           "forms": 0,
           "inputs": 0,
           "links": 0

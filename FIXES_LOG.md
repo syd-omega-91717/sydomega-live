@@ -25720,3 +25720,16 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Measured (signed-out stub, 1280 and 390):** card 460px / 310px wide, no horizontal overflow, all five auth ids present, orbit animation running, no MORE button; clicking LOG IN with empty fields still yields the page's own "Enter your email and password." (handler wired). Computed radius is 8px, not the 14px written: a global `[class*="panel"]` rule wins; left as is.
 
 **Not built (deliberately):** the image's Google/Apple buttons (no provider is configured in this repo, a button that cannot sign in is the §8.1 class 1 shape) and "Biometric Handshake" (no WebAuthn flow exists; a fake one would claim a security property it lacks). **Not verified:** a real sign-in/sign-up against Supabase (stub only), and the card in Safari/Firefox.
+
+
+### 192 — dashboard.html: platform KPI grid and timeline (Gemini concept set 2, image 7)
+
+**Finding first.** The dashboard already shows real data: every tile in the platform row is a live Supabase count (`profiles` access_approved, `member_presence`, `task_completions`, `platform_events`, `risk_register`) and the timeline reads `activity_feed` (`is_public`, 8 rows). Nothing needed inventing, and the concept image's "$18.5M/$25.0M", "99.98%" and "729/1200" were not added. The real defects were visual: the tall authority tile left the first row ragged with a dead gap under four tiles, and tiles were flat dark panels.
+
+**Changed (CSS + one id, `#kpi-platform`):** five even columns with the authority tile spanning two rows (3 columns ≤1100px with the authority tile full-width, 2 columns ≤560px); tonal-depth tile surface (`#2C2822→#1B1914`, gold hairline, inset highlight); timeline gets a connecting rail and glowing dots. No query, id, `data-*` hook or label changed.
+
+**Measured (stub, 1280 and 390):** no horizontal overflow, 9 tiles, tile background is the new gradient; timeline rail present on non-last items and absent on the last, dot 10px (checked by injecting three rows, as the stub returns none). `type-scale` 0 rescaled; contract suite 57/57.
+
+**Known and left alone:** `PLATFORM PMI 87` comes from a hand-scored table in `omega-pml.js` (`var PLATFORM_PMI = 87`), an editorial score and not a measurement. `SLO UPTIME 99.9%` is labelled "TARGET · NOT MONITORED" already. Neither was changed here; both are candidates to hide or relabel as "editorial" if the owner wants every number to be measured.
+
+**Not verified:** live data in the tiles (stubbed Supabase returns zeros), Safari/Firefox, and the timeline with real `activity_feed` rows.

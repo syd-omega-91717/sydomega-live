@@ -165,6 +165,34 @@
        omega-bottom-stack.js publishes its measured height. omega-components.js used to force
        .om-cards to 1 column here with !important (measured 390px: 74 full-width cards). */
     '@media(max-width:760px){#om-ov{padding-top:58px;padding-bottom:calc(var(--omega-chrome-bottom,72px) + 24px)}.om-cards{grid-template-columns:repeat(3,1fr)}}',
+    /* ---- v2 skin (concept set 3): tonal depth, gold hairline, Cinzel, bracketed primary nav ----
+       Additive. #om-ov selectors (1,1,0) beat the global a[href] (0,1,1) and [class*="card"] skins
+       without !important, so behaviour rules above (owner gate, [hidden]) are untouched. */
+    '#om-open{width:42px;height:42px;border-radius:12px;border-color:rgba(201,168,76,.42);background:linear-gradient(165deg,#2C2822,#1B1914);box-shadow:inset 0 1px 0 rgba(247,224,160,.14),0 4px 14px rgba(0,0,0,.4);color:#E2C86D}',
+    '#om-open:hover{box-shadow:inset 0 1px 0 rgba(247,224,160,.22),0 0 18px rgba(201,168,76,.28)}',
+    '#om-ov{background:radial-gradient(ellipse at 16% 0%,rgba(201,168,76,.11),transparent 46%),radial-gradient(ellipse at 92% 100%,rgba(93,175,181,.07),transparent 42%),linear-gradient(180deg,#07070C,#030306)}',
+    '#om-inner{max-width:1040px}',
+    '#om-ov #om-title{display:flex;align-items:center;justify-content:center;gap:16px;font-size:22px;letter-spacing:.22em;color:#E2C86D;margin:0 0 14px}',
+    '#om-ov #om-title::before{content:"\u03A9";font-size:48px;line-height:1;letter-spacing:0;color:#F2D98A;text-shadow:0 0 24px rgba(226,200,109,.6),0 0 3px rgba(255,244,200,.8)}',
+    '#om-ov #om-status{display:table;margin:0 auto 22px;padding:6px 18px;border:1px solid rgba(201,168,76,.32);border-radius:999px;background:rgba(201,168,76,.06)}',
+    '#om-ov #om-status[hidden]{display:none}',
+    '#om-ov #om-q{max-width:540px;border-radius:999px;padding:0 22px;border-color:rgba(201,168,76,.42);background:rgba(20,18,14,.72);box-shadow:inset 0 1px 0 rgba(247,224,160,.08)}',
+    '#om-ov #om-close{width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;border:1px solid rgba(201,168,76,.42);border-radius:12px;background:linear-gradient(165deg,#2C2822,#1B1914);color:#E2C86D;box-shadow:inset 0 1px 0 rgba(247,224,160,.14)}',
+    '#om-primary{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1000px;margin:0 auto 30px}',
+    '#om-primary[hidden]{display:none}',
+    '#om-ov a.om-pill{position:relative;display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box;padding:0 18px;border:1px solid rgba(201,168,76,.32);border-radius:10px;background:linear-gradient(165deg,#2C2822,#1B1914);box-shadow:inset 0 1px 0 rgba(247,224,160,.12);color:#E2C86D;font:600 15px Rajdhani,sans-serif;letter-spacing:.08em;text-decoration:none;transition:border-color .2s,box-shadow .2s,transform .2s}',
+    '#om-ov a.om-pill i{font-style:normal;opacity:.5;margin:0 7px}',
+    '#om-ov a.om-pill:hover,#om-ov a.om-pill:focus-visible{border-color:rgba(226,200,109,.75);box-shadow:inset 0 1px 0 rgba(247,224,160,.2),0 0 18px rgba(201,168,76,.22);transform:translateY(-2px)}',
+    '#om-ov a.om-pill[aria-current="page"]{border-color:rgba(226,200,109,.8);background:linear-gradient(165deg,#3B3424,#221E15);box-shadow:inset 3px 0 0 #E2C86D,inset 0 1px 0 rgba(247,224,160,.2)}',
+    '#om-ov .om-grp h4{display:flex;align-items:center;gap:14px;font-family:"Cinzel Decorative",serif;font-size:13px;letter-spacing:.24em;color:#E2C86D;opacity:1;margin:0 0 12px}',
+    '#om-ov .om-grp h4::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.5),transparent)}',
+    '#om-ov .om-cards{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important}',
+    '#om-ov a.om-card{border-radius:12px!important;border:1px solid rgba(201,168,76,.34);background:linear-gradient(165deg,#2C2822,#1B1914);box-shadow:inset 0 1px 0 rgba(247,224,160,.14),0 6px 16px rgba(0,0,0,.35);transition:border-color .2s,box-shadow .2s,transform .2s}',
+    '#om-ov a.om-card:hover,#om-ov a.om-card:focus-visible{border-color:rgba(226,200,109,.78);background:linear-gradient(165deg,#3B3424,#221E15);box-shadow:inset 0 1px 0 rgba(247,224,160,.22),0 0 22px rgba(201,168,76,.22),0 8px 22px rgba(0,0,0,.45);transform:translateY(-3px)}',
+    '#om-ov a.om-chip{border-radius:10px;border:1px solid rgba(201,168,76,.28);background:linear-gradient(165deg,#2A2620,#1A1813);box-shadow:inset 0 1px 0 rgba(247,224,160,.1)}',
+    '#om-ov a.om-chip:hover,#om-ov a.om-chip:focus-visible{border-color:rgba(226,200,109,.7);background:linear-gradient(165deg,#3B3424,#221E15)}',
+    '@media (prefers-reduced-motion:reduce){#om-ov a.om-pill,#om-ov a.om-card{transition:none}#om-ov a.om-pill:hover,#om-ov a.om-card:hover{transform:none}}',
+    '@media(max-width:760px){#om-ov #om-title{font-size:18px;gap:12px}#om-ov #om-title::before{font-size:38px}#om-primary{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-bottom:24px}#om-ov a.om-pill{justify-content:center;padding:0 8px;font-size:14px}#om-ov a.om-pill i{margin:0 4px}}',
     '@media(max-width:340px){.om-cards{grid-template-columns:repeat(2,1fr)}}'
   ].join('');
   var st = document.createElement('style'); st.id = 'om-css'; st.textContent = css;
@@ -192,6 +220,19 @@
     }, 150);
   }
 
+  /* The platform's core destinations as a bracketed strip, the way the design sets its primary
+     nav ([Dashboard] [Nodes] ...). Real pages only: each href is a file that exists, and the page
+     the member is on is marked aria-current. Hidden while a search is active. */
+  var PRIMARY = [['Dashboard', '/dashboard.html'], ['Matrix', '/matrix.html'], ['Factions', '/factions.html'],
+    ['Governance', '/governance.html'], ['Security', '/security.html'], ['Settings', '/settings.html']];
+  function primaryHtml() {
+    var here = location.pathname.replace(/\/+$/, '') || '/';
+    return '<nav id="om-primary" aria-label="Primary pages">' + PRIMARY.map(function (p) {
+      var cur = here === p[1] ? ' aria-current="page"' : '';
+      return '<a class="om-pill" href="' + p[1] + '"' + cur + '><i aria-hidden="true">[</i>' + p[0] + '<i aria-hidden="true">]</i></a>';
+    }).join('') + '</nav>';
+  }
+
   function build() {
     var btn = document.createElement('button'); btn.id = 'om-open'; btn.type = 'button'; btn.setAttribute('aria-label', 'All pages');
     btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
@@ -201,7 +242,8 @@
     var ov = document.createElement('div'); ov.id = 'om-ov';
     ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'All pages');
     var html = '<button id="om-close" aria-label="Close">\u00D7</button><div id="om-inner"><div id="om-title">SYD OMEGA 91717</div><div id="om-status" hidden></div>' +
-      '<input id="om-q" type="search" placeholder="Search pages" aria-label="Search pages" autocomplete="off" spellcheck="false">';
+      '<input id="om-q" type="search" placeholder="Search pages" aria-label="Search pages" autocomplete="off" spellcheck="false">' +
+      primaryHtml();
     GROUPS.forEach(function (g) {
       var ownerCls = g[3] ? ' om-grp-owner' : '';
       html += '<div class="om-grp' + ownerCls + '"><h4>' + g[0] + '</h4><div class="om-cards">';
@@ -364,6 +406,7 @@
         g.hidden = !any; shown += any;
       });
       empty.hidden = shown > 0;
+      var strip = ov.querySelector('#om-primary'); if (strip) strip.hidden = !!term;
     }
     q.addEventListener('input', filter);
     q.addEventListener('keydown', function (e) {

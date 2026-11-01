@@ -166,7 +166,10 @@
       '.side{width:80px!important}',
       /* Icon dock */
       '.omega-side{width:80px;flex-shrink:0;background:#08080F;display:flex;flex-direction:column;align-items:center;padding:10px 0 14px;position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:visible;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.35) transparent;z-index:200;border-right:1px solid rgba(201,168,76,0.12)}','.omega-side::-webkit-scrollbar{width:4px}','.omega-side::-webkit-scrollbar-thumb{background:rgba(201,168,76,.35);border-radius:2px}',
-      '.on-hb{display:flex;gap:4px;margin-bottom:8px;padding:0 6px 10px;border-bottom:1px solid rgba(201,168,76,0.1);width:100%;justify-content:center}',
+      '.on-hb{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;padding:0 6px 10px;border-bottom:1px solid rgba(201,168,76,0.1);width:100%;justify-content:center}',
+      '#omega-side .on-menu{flex:0 0 100%;box-sizing:border-box;height:44px;margin:0 0 4px;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(201,168,76,.42);border-radius:12px;background:linear-gradient(165deg,#2C2822,#1B1914);box-shadow:inset 0 1px 0 rgba(247,224,160,.14);color:#E2C86D;transition:box-shadow .2s,border-color .2s}',
+      '#omega-side .on-menu:hover{border-color:rgba(226,200,109,.8);box-shadow:inset 0 1px 0 rgba(247,224,160,.22),0 0 18px rgba(201,168,76,.28)}',
+      '#omega-side .on-menu:focus-visible{outline:2px solid #5DAFB5;outline-offset:2px}',
       '.on-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px;width:34px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(201,168,76,0.2);color:#85837b;background:transparent;transition:all .14s;text-decoration:none}',
       '.on-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,0.5)}',
       '.on-brand{width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:8px;flex-shrink:0;text-decoration:none}',
@@ -395,6 +398,9 @@
   }
   var h='';
   h+='<div class="on-hb">';
+  /* The hamburger: first control in the rail (the design puts it top-left). In flow, so it cannot
+     collide with Home the way the floating #om-open did; opens the full launcher. */
+  h+='<button type="button" class="on-menu" id="on-menu" aria-label="Open the full menu" aria-haspopup="dialog" title="Menu"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>';
   h+='<a class="on-btn" href="/dashboard.html" title="Home">&#x2302;</a>';
   h+='<div class="on-btn" id="on-back" title="Back">&#x2190;</div>';
   h+='</div>';
@@ -517,6 +523,10 @@
   }
 
   /* Back btn */
+  document.getElementById('on-menu')?.addEventListener('click',function(){
+    if(window.OmegaMenu&&typeof window.OmegaMenu.open==='function')window.OmegaMenu.open();
+    else location.href='/search.html';   /* launcher not loaded yet: search reaches every page */
+  });
   document.getElementById('on-back')?.addEventListener('click',function(){
     window.history.length>1?window.history.back():location.href='/dashboard.html';
   });
@@ -621,7 +631,7 @@
       {icon:'\u25B2',label:'ASCEND',href:'/honors.html#ascension',key:'ascend'},
       {icon:'\u03A9',label:'VAULT',href:'/vault.html',key:'vault'},
       {icon:'\u2609',label:'COSMOS',href:'/cosmos.html',key:'cosmos'},
-      {icon:'\u2726',label:'MORE',key:'menu',isMenu:true},
+      {icon:'\u2630',label:'MENU',key:'menu',isMenu:true},
     ];
 
     var mob=document.createElement('nav');mob.id='omega-mob';

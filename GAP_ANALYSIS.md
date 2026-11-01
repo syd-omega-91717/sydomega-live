@@ -16,7 +16,7 @@ project's own established convention (security/data-integrity first).
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
 - **Legal gaps, opened 2026-11-01 — evidence pack in `docs/legal/LEGAL_GAP_AUDIT.md`.** Top three,
   all measured live: (1) `request_account_erasure()` only soft-deletes and promises permanent
-  deletion in 30 days, and `cron.job` holds one job, none of it erasure; (2) of 130 `public` tables
+  deletion in 30 days, and `cron.job` holds one job, none of it erasure; (2) of 105 `public` tables
   with a `user_id` column at most one cascades on user delete, so `delete_account()` leaves most
   personal data behind; (3) ~~the member-state mirror's skip list omits the finance pages' `omega_*` keys~~ — **fixed
   2026-11-01** (FIXES_LOG 197; 0 rows were ever uploaded). Also: processors undisclosed, consent not wired to analytics, thin terms. Needs counsel;

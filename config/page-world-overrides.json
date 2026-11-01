@@ -168,6 +168,7 @@
     "orrery": "void",
     "ladder": "academy",
     "insight": "intelligence",
-    "personal-intelligence": "intelligence"
+    "personal-intelligence": "intelligence",
+    "command-center": "genesis"
   }
 }

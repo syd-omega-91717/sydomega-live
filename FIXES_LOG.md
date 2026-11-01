@@ -25830,3 +25830,18 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Measured (headless, signed-in-false stub).** Six hexes inside the 620px door; STATUS switches tab; ENTER → "OPENING THE GATEWAY..." → `/account.html`; no page errors; countdown T-PLUS.
 
 **Not verified:** real Supabase session, Safari/Firefox, screen reader. The red "DATA DID NOT LOAD" toast in screenshots is the harness stub's data-guard.
+
+
+### 201 — Command Center (concept image 3): a nine-tile owner board that shows only what the database says
+
+**Built.** New `command-center.html` + `omega-command-center.js`: the image's 3x3 board (gauge, big numbers, ledger, bars, status list) in the platform's glass/gold language, wired into nav (`COMMAND` section, after COMMAND BRIDGE), the `command` core, the `genesis` world district, the page-contract registry (regenerated with `omega-page-contract-bootstrap.py --promote`) and the `index.html` surface count (235 -> 236).
+
+**Tiles, each a real read.** FEED INTEGRITY (n of N of this page's own queries that answered, labelled as such, not a security score), MEMBERS (approved / pending / online now), OPERATIONS (tasks 7d and today, AI queries 7d), PAYMENTS (reads `platform_settings.payments_enabled`, says OFF), ACTIVITY LEDGER (public `activity_feed`), MY AXES (the dashboard's own authority formula), MY TASKS (14-day bars from the member's own completions), FEED STATUS (measured latency per query, FAILED when a read errors), RISK & THREATS (owner tables; a member's read is RLS-denied and shows an em dash). Queries are the ones `dashboard.html` already runs, so column names are proven.
+
+**Deliberately not built, and why.** The image's "99.98% ZENITH", "15,171,922 Ω" ticker, "$18.5M/$25M" Stripe flow, "729 nodes", faction counts (722/120/55), the world map with "Node 712 Z4", "Level 9.9.9" and the CPU/memory/Kafka sparklines: nothing in the database or on this platform backs any of them, so each tile with no data source became an honest tile (payments flag, feed latency) rather than an invented number. Tokens and payments stay off by owner decision.
+
+**Slips caught.** (1) The platform's page-hero injected itself into the tile grid as two extra cells because the grid was the `<main>`; fixed by wrapping the grid in its own `<main class="main">`. (2) Tile ids collided with inner list ids (`cc-risk`, `cc-ledger`, `cc-status`); the production contract caught it, tiles now `cct-*`. (3) A first `--promote` rewrote `traceability` on 234 existing contracts: not a bug in this change, the stored registry was stale (it lacked `/omega-morph.js` in every page's script evidence); the tool corrected it.
+
+**Measured (headless, signed-in stub).** 9 tiles, 3 columns desktop / 1 phone, no horizontal overflow, no page errors; every tile filled. The stub answers every query, so "11/11" proves wiring, not production health.
+
+**Not verified:** a real signed-in session against live RLS (the owner tiles are the ones that could differ), Safari/Firefox, a screen reader.

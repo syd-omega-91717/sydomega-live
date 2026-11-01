@@ -3,7 +3,7 @@
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
   "page_count": 236,
-  "open_task_count": 3174,
+  "open_task_count": 3176,
   "pages": [
     {
       "page_id": "404",
@@ -16,6 +16,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -86,6 +87,7 @@
           "/omega-academy-core.js",
           "/omega-analytics-init.js",
           "/omega-exam-engine.js",
+          "/omega-morph.js",
           "/omega-review.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js"
@@ -159,6 +161,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-password-guard.js",
           "/omega-speed-insights-init.js"
         ],
@@ -235,7 +238,8 @@
           "/bg.js",
           "/nav.js",
           "/omega-achieve-boot.js",
-          "/omega-achieve-native.js"
+          "/omega-achieve-native.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -311,6 +315,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -392,6 +397,7 @@
         ],
         "scripts": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -458,6 +464,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -525,6 +532,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -595,6 +603,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -662,7 +671,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/omega-agent-operations.js"
+          "/omega-agent-operations.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -728,6 +738,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -784,75 +795,6 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
-      "page_id": "analytics-dashboard",
-      "path": "analytics-dashboard.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Analytics Dashboard",
-        "h1": [
-          "ANALYTICS DASHBOARD"
-        ],
-        "scripts": [
-          "/omega-analytics-init.js"
-        ],
-        "supabase_tables": [
-          "top_pages"
-        ],
-        "supabase_rpcs": [
-          "engagement_report",
-          "membership_report"
-        ],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 5,
-          "forms": 0,
-          "inputs": 0,
-          "links": 1
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::analytics-dashboard::MISSING::ACCESSIBILITY",
-        "PAGE::analytics-dashboard::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::analytics-dashboard::MISSING::AUTHORIZATION",
-        "PAGE::analytics-dashboard::MISSING::DOMAIN",
-        "PAGE::analytics-dashboard::MISSING::EVENTS",
-        "PAGE::analytics-dashboard::MISSING::FAILURE_PATHS",
-        "PAGE::analytics-dashboard::MISSING::PRIMARY_ROLE",
-        "PAGE::analytics-dashboard::MISSING::PURPOSE",
-        "PAGE::analytics-dashboard::MISSING::RESPONSIVE",
-        "PAGE::analytics-dashboard::MISSING::TASKS",
-        "PAGE::analytics-dashboard::MISSING::TRACEABILITY",
-        "PAGE::analytics-dashboard::MISSING::TRUTH_STATES",
-        "PAGE::analytics-dashboard::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
       "page_id": "analytics",
       "path": "analytics.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -863,6 +805,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -939,6 +882,7 @@
           "/approvals.js",
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -1009,6 +953,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -1078,6 +1023,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-architecture-runtime.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -1145,7 +1091,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -1212,6 +1159,7 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-simulation-arena.js"
         ],
         "supabase_tables": [],
@@ -1279,7 +1227,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/omega-ascend-native.js"
+          "/omega-ascend-native.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -1345,6 +1294,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -1411,6 +1361,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -1478,6 +1429,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -1546,7 +1498,8 @@
           "Autonomous System Insights"
         ],
         "scripts": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [
           "agent_experiments",
@@ -1614,6 +1567,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -1680,6 +1634,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -1747,6 +1702,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -1825,6 +1781,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -1893,6 +1850,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -1960,6 +1918,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -2027,6 +1986,8 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-local-backup.js",
           "omega-ui.js"
@@ -2095,6 +2056,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -2175,7 +2137,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/omega-cinematic-system.js"
+          "/omega-cinematic-system.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -2251,6 +2214,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -2317,6 +2281,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -2383,6 +2348,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -2449,6 +2415,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-spatial-realms.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2516,6 +2483,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -2583,6 +2551,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-living-city.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -2649,6 +2618,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2718,6 +2688,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -2775,6 +2746,74 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
+      "page_id": "command-center",
+      "path": "command-center.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; Command Center",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-command-center.js",
+          "/omega-morph.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::command-center::MISSING::ACCESSIBILITY",
+        "PAGE::command-center::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::command-center::MISSING::AUTHORIZATION",
+        "PAGE::command-center::MISSING::DATA_SOURCES",
+        "PAGE::command-center::MISSING::DOMAIN",
+        "PAGE::command-center::MISSING::EVENTS",
+        "PAGE::command-center::MISSING::FAILURE_PATHS",
+        "PAGE::command-center::MISSING::PRIMARY_ROLE",
+        "PAGE::command-center::MISSING::PURPOSE",
+        "PAGE::command-center::MISSING::RESPONSIVE",
+        "PAGE::command-center::MISSING::TASKS",
+        "PAGE::command-center::MISSING::TRACEABILITY",
+        "PAGE::command-center::MISSING::TRUTH_STATES",
+        "PAGE::command-center::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
       "page_id": "command",
       "path": "command.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -2787,6 +2826,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-review.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js",
@@ -2857,6 +2897,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -2923,6 +2964,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -3000,6 +3042,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -3067,6 +3110,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -3134,6 +3178,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -3203,6 +3248,7 @@
         "scripts": [
           "/bg.js",
           "/control-center-runtime.js",
+          "/omega-morph.js",
           "/omega-owner-core.js"
         ],
         "supabase_tables": [],
@@ -3270,6 +3316,7 @@
         ],
         "scripts": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -3339,6 +3386,7 @@
           "/bg.js",
           "/cosmetics.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -3407,6 +3455,7 @@
         "scripts": [
           "/bg.js",
           "/omega-cosmic-ledger.js",
+          "/omega-morph.js",
           "/omega-sculpture.js"
         ],
         "supabase_tables": [],
@@ -3476,6 +3525,7 @@
           "/omega-analytics-init.js",
           "/omega-cosmos-native.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -3544,6 +3594,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -3609,6 +3660,7 @@
         "h1": [],
         "scripts": [
           "/bg.js",
+          "/omega-morph.js",
           "/vendor/marked.min.js"
         ],
         "supabase_tables": [
@@ -3685,7 +3737,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [
           "covenant_progress"
@@ -3754,7 +3807,8 @@
           "/bg.js",
           "/omega-content-import.js",
           "/omega-content-tasks.js",
-          "/omega-creation-studio.js"
+          "/omega-creation-studio.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -3821,6 +3875,7 @@
         ],
         "scripts": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -3887,6 +3942,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -3957,6 +4013,7 @@
           "/omega-command-dock.js",
           "/omega-constellation.js",
           "/omega-daily.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -4041,6 +4098,7 @@
           "/bg.js",
           "/nav.js",
           "/omega-data-observatory.js",
+          "/omega-morph.js",
           "/omega-product-reality.js"
         ],
         "supabase_tables": [],
@@ -4107,6 +4165,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -4164,6 +4223,74 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
+      "page_id": "design-lab",
+      "path": "design-lab.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; Design Lab",
+        "h1": [
+          "&#937; DESIGN LAB"
+        ],
+        "scripts": [
+          "/bg.js",
+          "/design-lab.js",
+          "/omega-morph.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
+        },
+        "media_counts": {
+          "images": 1,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::design-lab::MISSING::ACCESSIBILITY",
+        "PAGE::design-lab::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::design-lab::MISSING::AUTHORIZATION",
+        "PAGE::design-lab::MISSING::DATA_SOURCES",
+        "PAGE::design-lab::MISSING::DOMAIN",
+        "PAGE::design-lab::MISSING::EVENTS",
+        "PAGE::design-lab::MISSING::FAILURE_PATHS",
+        "PAGE::design-lab::MISSING::PRIMARY_ROLE",
+        "PAGE::design-lab::MISSING::PURPOSE",
+        "PAGE::design-lab::MISSING::RESPONSIVE",
+        "PAGE::design-lab::MISSING::TASKS",
+        "PAGE::design-lab::MISSING::TRACEABILITY",
+        "PAGE::design-lab::MISSING::TRUTH_STATES",
+        "PAGE::design-lab::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
       "page_id": "design-showcase",
       "path": "design-showcase.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -4176,6 +4303,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -4242,6 +4370,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -4308,6 +4437,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -4375,7 +4505,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [
           "domain_mastery"
@@ -4451,6 +4582,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -4517,6 +4649,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -4583,6 +4716,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -4595,10 +4729,10 @@
           }
         ],
         "interactive_counts": {
-          "buttons": 8,
+          "buttons": 9,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 11
         },
         "media_counts": {
           "images": 0,
@@ -4659,6 +4793,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -4740,7 +4875,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/omega-eternity-engine.js"
+          "/omega-eternity-engine.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -4806,6 +4942,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -4875,7 +5012,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/omega-evidence-graph.js"
+          "/omega-evidence-graph.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -4941,6 +5079,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -5012,6 +5151,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-exam-engine.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js"
         ],
@@ -5080,6 +5220,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5147,6 +5288,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -5212,9 +5354,11 @@
         "h1": [],
         "scripts": [
           "/bg.js",
+          "/family-tree.js",
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -5298,6 +5442,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5365,6 +5510,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -5438,6 +5584,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js",
           "omega-ui.js"
@@ -5506,6 +5653,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -5573,6 +5721,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -5641,6 +5790,7 @@
           "/omega-analytics-init.js",
           "/omega-arcade.js",
           "/omega-arena-core.js",
+          "/omega-morph.js",
           "/omega-spatial-realms.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5721,6 +5871,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -5790,6 +5941,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-gateway.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -5861,6 +6013,7 @@
           "/omega-govern-boot.js",
           "/omega-govern-native.js",
           "/omega-govern-product-reality.js",
+          "/omega-morph.js",
           "/omega-product-reality.js"
         ],
         "supabase_tables": [],
@@ -5937,6 +6090,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6013,6 +6167,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6079,6 +6234,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6150,6 +6306,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6219,6 +6376,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6288,6 +6446,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6357,6 +6516,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6426,6 +6586,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6492,6 +6653,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6561,6 +6723,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-graphify.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6629,6 +6792,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -6699,6 +6863,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -6768,6 +6933,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-guide.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -6834,6 +7000,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -6905,6 +7072,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-order-core.js",
           "/omega-speed-insights-init.js"
         ],
@@ -6975,6 +7143,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -7043,7 +7212,8 @@
           "Ω SYD OMEGA 91717"
         ],
         "scripts": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -7111,6 +7281,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -7177,6 +7348,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -7247,6 +7419,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -7316,6 +7489,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -7392,6 +7566,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -7458,6 +7633,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -7534,6 +7710,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -7603,6 +7780,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-cinematic-system.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-visual-runtime.js"
         ],
@@ -7671,6 +7849,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-insight.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -7740,7 +7919,8 @@
           "/bg.js",
           "/nav.js",
           "/omega-intel-fabric.js",
-          "/omega-intel-native.js"
+          "/omega-intel-native.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -7807,6 +7987,8 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-data-reality.js",
+          "/omega-morph.js",
+          "/omega-personal-context.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -7822,7 +8004,7 @@
           "buttons": 16,
           "forms": 0,
           "inputs": 9,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -7878,6 +8060,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -7951,6 +8134,7 @@
           "/omega-invest-boot.js",
           "/omega-invest-native.js",
           "/omega-invest-shell-boot.js",
+          "/omega-morph.js",
           "/omega-vault-core.js"
         ],
         "supabase_tables": [],
@@ -8027,7 +8211,9 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -8104,6 +8290,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -8171,6 +8358,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -8239,7 +8427,8 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
-          "/omega-knowledge-loom.js"
+          "/omega-knowledge-loom.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -8315,6 +8504,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -8391,6 +8581,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -8457,6 +8648,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -8524,6 +8716,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-ladder.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -8593,6 +8786,7 @@
           "/bg.js",
           "/leaderboard.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -8659,6 +8853,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -8727,6 +8922,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -8793,6 +8989,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -8866,6 +9063,8 @@
           "/omega-life-native-systems.js",
           "/omega-life-surface.js",
           "/omega-life.js",
+          "/omega-morph.js",
+          "/omega-personal-context.js",
           "/omega-product-reality.js",
           "/omega-relearn-sigil-mana.js",
           "/omega-sparkline.js"
@@ -8875,10 +9074,10 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
+          "buttons": 4,
+          "forms": 2,
+          "inputs": 17,
+          "links": 5
         },
         "media_counts": {
           "images": 0,
@@ -8934,6 +9133,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -9010,6 +9210,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -9076,6 +9277,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -9144,6 +9346,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -9227,6 +9430,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -9304,6 +9508,7 @@
           "/omega-media-boot.js",
           "/omega-media-core.js",
           "/omega-media-native.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -9380,6 +9585,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -9447,6 +9653,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -9513,6 +9720,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -9579,6 +9787,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -9645,6 +9854,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -9712,6 +9922,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -9779,7 +9990,8 @@
           "⚡︎ Performance Monitoring Dashboard"
         ],
         "scripts": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -9845,6 +10057,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -9913,6 +10126,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-cinematic-audio.js",
+          "/omega-morph.js",
           "/omega-spatial-realms.js",
           "/omega-speed-insights-init.js"
         ],
@@ -9983,6 +10197,7 @@
           "/bg.js",
           "/my-quests.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -10049,6 +10264,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -10116,6 +10332,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -10195,6 +10412,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -10265,6 +10483,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -10332,6 +10551,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -10409,6 +10629,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -10476,6 +10697,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -10543,6 +10765,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -10617,6 +10840,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -10685,6 +10909,7 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
+          "/omega-morph.js",
           "/omega-platform-filters.js"
         ],
         "supabase_tables": [],
@@ -10751,6 +10976,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -10821,6 +11047,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -10888,7 +11115,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -10954,6 +11182,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-orrery.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
@@ -11022,6 +11251,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -11088,6 +11318,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -11154,6 +11385,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -11231,6 +11463,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -11287,6 +11520,76 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
+      "page_id": "personal-intelligence",
+      "path": "personal-intelligence.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "Ω SYD OMEGA 91717 — Personal Intelligence Core",
+        "h1": [
+          "ONE LIVING INTELLIGENCE.  UNDER YOUR CONTROL."
+        ],
+        "scripts": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-living-intelligence.js",
+          "/omega-morph.js",
+          "/omega-personal-context.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 12
+        },
+        "media_counts": {
+          "images": 2,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::personal-intelligence::MISSING::ACCESSIBILITY",
+        "PAGE::personal-intelligence::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::personal-intelligence::MISSING::AUTHORIZATION",
+        "PAGE::personal-intelligence::MISSING::DATA_SOURCES",
+        "PAGE::personal-intelligence::MISSING::DOMAIN",
+        "PAGE::personal-intelligence::MISSING::EVENTS",
+        "PAGE::personal-intelligence::MISSING::FAILURE_PATHS",
+        "PAGE::personal-intelligence::MISSING::PRIMARY_ROLE",
+        "PAGE::personal-intelligence::MISSING::PURPOSE",
+        "PAGE::personal-intelligence::MISSING::RESPONSIVE",
+        "PAGE::personal-intelligence::MISSING::TASKS",
+        "PAGE::personal-intelligence::MISSING::TRACEABILITY",
+        "PAGE::personal-intelligence::MISSING::TRUTH_STATES",
+        "PAGE::personal-intelligence::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
       "page_id": "phases",
       "path": "phases.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -11297,6 +11600,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -11363,6 +11667,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -11431,6 +11736,7 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
+          "/omega-morph.js",
           "/omega-platform-kernel.js",
           "/platform-kernel-runtime.js"
         ],
@@ -11500,6 +11806,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -11567,6 +11874,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -11634,6 +11942,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -11690,70 +11999,6 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
-      "page_id": "predictions-dashboard",
-      "path": "predictions-dashboard.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Predictions",
-        "h1": [],
-        "scripts": [
-          "/bg.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::predictions-dashboard::MISSING::ACCESSIBILITY",
-        "PAGE::predictions-dashboard::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::predictions-dashboard::MISSING::AUTHORIZATION",
-        "PAGE::predictions-dashboard::MISSING::DATA_SOURCES",
-        "PAGE::predictions-dashboard::MISSING::DOMAIN",
-        "PAGE::predictions-dashboard::MISSING::EVENTS",
-        "PAGE::predictions-dashboard::MISSING::FAILURE_PATHS",
-        "PAGE::predictions-dashboard::MISSING::PRIMARY_ROLE",
-        "PAGE::predictions-dashboard::MISSING::PURPOSE",
-        "PAGE::predictions-dashboard::MISSING::RESPONSIVE",
-        "PAGE::predictions-dashboard::MISSING::TASKS",
-        "PAGE::predictions-dashboard::MISSING::TRACEABILITY",
-        "PAGE::predictions-dashboard::MISSING::TRUTH_STATES",
-        "PAGE::predictions-dashboard::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
       "page_id": "principles",
       "path": "principles.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -11764,6 +12009,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -11831,6 +12077,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-export.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -11907,6 +12154,7 @@
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
           "/omega-identity-core.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -11992,6 +12240,7 @@
         ],
         "scripts": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -12058,6 +12307,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -12137,6 +12387,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -12203,6 +12454,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -12272,6 +12524,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -12339,7 +12592,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [
           "quest_completions"
@@ -12405,6 +12659,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -12472,6 +12727,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -12539,6 +12795,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -12608,6 +12865,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -12675,6 +12933,7 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-sigil-system.js"
         ],
         "supabase_tables": [],
@@ -12742,6 +13001,7 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-recovery.js"
         ],
         "supabase_tables": [],
@@ -12809,6 +13069,7 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-temporal-replay.js"
         ],
         "supabase_tables": [],
@@ -12875,6 +13136,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -12963,6 +13225,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-password-guard.js",
           "/omega-speed-insights-init.js"
         ],
@@ -13030,7 +13293,9 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -13097,6 +13362,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -13165,6 +13431,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -13235,6 +13502,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -13301,7 +13569,8 @@
           "&#937; THE SCULPTURE HALL"
         ],
         "scripts": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -13367,6 +13636,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -13456,7 +13726,8 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
         "supabase_tables": [
           "seasonal_events"
@@ -13524,6 +13795,7 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
+          "/omega-morph.js",
           "/omega-security.js"
         ],
         "supabase_tables": [],
@@ -13590,73 +13862,6 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
-      "page_id": "segmentation-dashboard",
-      "path": "segmentation-dashboard.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Member Segmentation Dashboard",
-        "h1": [
-          "MEMBER SEGMENTATION DASHBOARD"
-        ],
-        "scripts": [
-          "/bg.js",
-          "/omega-analytics-init.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [
-          "get_all_members"
-        ],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 4,
-          "forms": 0,
-          "inputs": 0,
-          "links": 1
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::segmentation-dashboard::MISSING::ACCESSIBILITY",
-        "PAGE::segmentation-dashboard::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::segmentation-dashboard::MISSING::AUTHORIZATION",
-        "PAGE::segmentation-dashboard::MISSING::DOMAIN",
-        "PAGE::segmentation-dashboard::MISSING::EVENTS",
-        "PAGE::segmentation-dashboard::MISSING::FAILURE_PATHS",
-        "PAGE::segmentation-dashboard::MISSING::PRIMARY_ROLE",
-        "PAGE::segmentation-dashboard::MISSING::PURPOSE",
-        "PAGE::segmentation-dashboard::MISSING::RESPONSIVE",
-        "PAGE::segmentation-dashboard::MISSING::TASKS",
-        "PAGE::segmentation-dashboard::MISSING::TRACEABILITY",
-        "PAGE::segmentation-dashboard::MISSING::TRUTH_STATES",
-        "PAGE::segmentation-dashboard::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
       "page_id": "series",
       "path": "series.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -13667,6 +13872,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -13733,6 +13939,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-services-core.js",
           "/omega-services-native.js",
           "/omega-speed-insights-init.js"
@@ -13802,6 +14009,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-mfa.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
         ],
@@ -13877,6 +14085,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -13943,6 +14152,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -14009,6 +14219,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -14085,6 +14296,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-ui.js"
         ],
@@ -14154,6 +14366,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -14221,6 +14434,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
         ],
@@ -14304,6 +14518,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -14380,6 +14595,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -14446,6 +14662,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -14511,6 +14728,7 @@
         "h1": [],
         "scripts": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-standing-dashboard.js"
         ],
         "supabase_tables": [],
@@ -14577,6 +14795,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -14644,6 +14863,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -14711,6 +14931,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -14787,6 +15008,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -14858,6 +15080,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -14924,6 +15147,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -14991,6 +15215,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -15067,6 +15292,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -15136,7 +15362,9 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -15203,6 +15431,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -15269,6 +15498,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -15335,6 +15565,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -15404,6 +15635,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -15470,6 +15702,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-vault-native.js"
         ],
@@ -15547,6 +15780,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -15615,6 +15849,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -15681,6 +15916,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -15749,6 +15985,7 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-visual-atlas.js"
         ],
         "supabase_tables": [],
@@ -15815,6 +16052,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js"
@@ -15883,7 +16121,9 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
           "/omega-local-backup.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -15950,6 +16190,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -16018,6 +16259,8 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-empty-guide.js",
+          "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
           "omega-local-backup.js",
@@ -16087,6 +16330,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-today.js",
           "omega-ui.js"
@@ -16155,6 +16399,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
         ],
@@ -16223,6 +16468,7 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-morph.js",
           "/omega-world-atlas.js"
         ],
         "supabase_tables": [],
@@ -16290,6 +16536,7 @@
         ],
         "scripts": [
           "/omega-analytics-init.js",
+          "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [],
@@ -16360,6 +16607,7 @@
           "/omega-achievement-evidence-chain.js",
           "/omega-capability-provenance.js",
           "/omega-legacy-constellation.js",
+          "/omega-morph.js",
           "/omega-world-engine.js",
           "/omega-world-progression.js",
           "/omega-world-realtime.js"

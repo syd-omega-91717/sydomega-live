@@ -235,7 +235,8 @@
        first visible card, so a member can type and go without touching the grid. */
     var q = ov.querySelector('#om-q'), empty = ov.querySelector('#om-empty');
 
-    /* Merge every page nav.js can reach that the curated grid lacks. nav.js loads
+    /* OmegaAxis.pages() shape: {key: slug, label, href (path, no hash), section: section KEY,
+       sectionLabel, col, owner}. Group and title by sectionLabel. Merge every page nav.js can reach that the curated grid lacks. nav.js loads
        after this file, so this runs on open and retries until it has published. */
     var merged = false;
     function mergeNavPages() {
@@ -246,7 +247,8 @@
       window.OmegaAxis.pages().forEach(function (p) {
         if (!p || typeof p.href !== 'string' || p.href.charAt(0) !== '/' || p.href.charAt(1) === '/' || have[p.href]) return;
         have[p.href] = 1;
-        (bySec[p.section] = bySec[p.section] || (order.push(p.section), [])).push(p);
+        var sk = p.sectionLabel || p.section;
+        (bySec[sk] = bySec[sk] || (order.push(sk), [])).push(p);
       });
       var inner = ov.querySelector('#om-inner'), html = '';
       order.forEach(function (name) {

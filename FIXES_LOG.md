@@ -25709,3 +25709,5 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Measured (headless render, 1280 and 390 wide):** 12/9/12 items, 0 `.dl-err`, no horizontal overflow, 9-column element strip collapses to 3 on phone.
 
 **Not built / open:** orbit-particle login on `account.html`/`enter.html`, KPI tiles + activity timeline for `dashboard.html`, inheritance tree on `family.html`, intent search with domain chips on `intelligence.html` — each needs a real data source confirmed first. Money, medical-probability and biometric panels need an owner decision.
+
+**190a — follow-up:** PR #1113's `Static contract gates` failed on `type-scale` (the only failing gate of 57): the new Design Lab CSS used 11px ×2 and 10px ×1, below the 12px floor. Raised all three to 12px. Reproduced with `python3 scripts/type-scale.py` ("3 rescaled" before, "0 rescaled" after); `python3 scripts/contract-suite.py` now 57 gates, 0 failing; render re-checked at 1280 and 390 (12/9/12, no overflow). My earlier local `ci-local.sh` "1 blocking failed" was this same gate.

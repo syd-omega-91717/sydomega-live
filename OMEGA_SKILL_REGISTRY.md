@@ -26,7 +26,7 @@ effectively invisible unless invoked by exact name.
 | `feature-architect` | yes | — | 1,789 | CLAUDE.md, README.md | 2026-08-22 |
 | `grill-me-codex` | yes | 1 | 2,735 | CLAUDE.md, README.md | 2026-08-24 |
 | `i18n` | yes | — | 1,048 | CLAUDE.md, README.md | 2026-08-30 |
-| `image-pipeline` | yes | — | 1,463 | CLAUDE.md, README.md | 2026-08-30 |
+| `image-pipeline` | yes | — | 1,463 | CLAUDE.md, README.md | 2026-11-01 |
 | `interface-guidelines` | yes | — | 1,122 | CLAUDE.md, README.md | 2026-08-23 |
 | `omega-cinematic-system` | yes | — | 1,046 | CLAUDE.md | 2026-09-10 |
 | `omega-orchestrator` | yes | — | 1,300 | **nothing** | 2026-09-10 |
@@ -39,7 +39,7 @@ effectively invisible unless invoked by exact name.
 | `supabase-postgres-best-practices` | yes | 35 | 807 | CLAUDE.md, README.md | 2026-08-30 |
 | `supabase-server` | yes | — | 5,099 | CLAUDE.md, README.md | 2026-10-02 |
 | `verify-in-browser` | yes | 4 | 2,457 | CLAUDE.md, README.md | 2026-09-27 |
-| `visual-assets` | yes | — | 1,603 | CLAUDE.md, README.md | 2026-08-30 |
+| `visual-assets` | yes | — | 1,603 | CLAUDE.md, README.md | 2026-11-01 |
 | `web-trend-scout` | yes | — | 1,090 | CLAUDE.md, README.md | 2026-08-11 |
 
 **23 skills, ~39,016 tokens** if every SKILL.md were read in one

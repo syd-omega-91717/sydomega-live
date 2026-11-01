@@ -36,18 +36,55 @@
    the last fixed-widget collision left after bg.js's desktop ladder. 60px
    clears the dock's top edge; both are centred, so only the height matters. */
 .ecg-freq{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.4);z-index:51}
-/* Biometric overlay */
-#bio-overlay{position:fixed;inset:0;z-index:200;background:rgba(9,9,11,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .5s}
-#bio-overlay.show{opacity:1;pointer-events:all}
-.bio-ring{width:160px;height:160px;border-radius:50%;border:2px solid rgba(201,168,76,.3);position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-.bio-ring::before{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(0,229,255,.2);animation:bio-spin 4s linear infinite}
-.bio-ring::after{content:"";position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(201,168,76,.15);animation:bio-spin 6s linear infinite reverse}
-@keyframes bio-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.bio-glyph{font-family:serif;font-size:var(--fs-6,40px);color:var(--gold);text-shadow:0 0 30px rgba(201,168,76,.7)}
-.bio-scan-line{width:160px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:12px 0;animation:scan-move 1.5s linear infinite}
-@keyframes scan-move{0%{opacity:0;transform:translateY(-50px)}50%{opacity:1}100%{opacity:0;transform:translateY(50px)}}
-.bio-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:4px}
-.bio-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim)}
+/* Vault gateway (concept image 5). Brass-on-steel door, six real controls, an honest entry button.
+   Selectors start at #tab-gateway (1,1,0) so the global a[href] and button skins (0,1,1) cannot win. */
+#tab-gateway .vt-stage{position:relative;margin:6px auto 22px;max-width:640px;padding:18px 10px 8px;border-radius:20px;
+  background:linear-gradient(90deg,transparent 0,rgba(226,200,109,.07) 3%,transparent 4.5%,transparent 95.5%,rgba(226,200,109,.07) 97%,transparent 100%),
+  radial-gradient(ellipse at 50% 38%,rgba(201,168,76,.10),transparent 62%)}
+#tab-gateway .vt-door{position:relative;width:100%;aspect-ratio:1/1}
+#tab-gateway .vt-art{position:absolute;inset:0;width:100%;height:100%;display:block;filter:drop-shadow(0 18px 30px rgba(0,0,0,.65))}
+#tab-gateway .vt-ring{transform-origin:300px 300px;transform-box:view-box}
+#tab-gateway .vt-word{position:absolute;left:0;right:0;top:19%;text-align:center;pointer-events:none}
+#tab-gateway .vt-word b{display:block;font-family:"Cinzel Decorative",serif;font-weight:700;font-size:clamp(17px,4.8vw,32px);letter-spacing:.12em;color:#E2C86D;text-shadow:0 0 18px rgba(226,200,109,.45)}
+#tab-gateway .vt-word span{display:block;margin-top:4px;font-family:var(--M);font-size:12px;letter-spacing:.3em;color:#B8B29F}
+#tab-gateway .vt-core{position:absolute;left:50%;top:50%;width:25%;aspect-ratio:1/1;transform:translate(-50%,-50%);padding:0;border-radius:50%;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#E2C86D;
+  border:3px solid #C9A84C;background:radial-gradient(circle at 50% 38%,#1b1912,#050506);box-shadow:0 0 0 5px #0b0b0e,0 0 26px rgba(226,200,109,.35),inset 0 0 22px rgba(0,0,0,.8);transition:box-shadow .25s,transform .25s}
+#tab-gateway .vt-core:hover,#tab-gateway .vt-core:focus-visible{box-shadow:0 0 0 5px #0b0b0e,0 0 44px rgba(226,200,109,.6),inset 0 0 22px rgba(0,0,0,.8);transform:translate(-50%,-50%) scale(1.04);outline:none}
+#tab-gateway .vt-core:focus-visible{outline:2px solid #5DAFB5;outline-offset:6px}
+#tab-gateway .vt-core svg{width:62%;height:62%;filter:drop-shadow(0 0 6px rgba(226,200,109,.7))}
+#tab-gateway .vt-core i{font-style:normal;font-family:var(--M);font-size:12px;letter-spacing:.24em;color:#E2C86D}
+#tab-gateway .vt-hex{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;margin:0;background:none;border:0;cursor:pointer;text-decoration:none;color:#E2C86D;min-width:44px;min-height:44px}
+#tab-gateway .vt-hx{display:flex;align-items:center;justify-content:center;width:clamp(50px,12.5vw,76px);aspect-ratio:1/1.1547;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(160deg,#F2D98A,#8a6a1c);transition:filter .2s}
+#tab-gateway .vt-hx::before{content:"";position:absolute;width:clamp(50px,12.5vw,76px);aspect-ratio:1/1.1547;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);transform:scale(.92);background:linear-gradient(165deg,#2C2822,#121110)}
+#tab-gateway .vt-hx svg{position:relative;width:46%;height:46%}
+#tab-gateway .vt-hex b{font-family:Rajdhani,sans-serif;font-weight:600;font-size:12px;letter-spacing:.16em;color:#E2C86D;text-shadow:0 1px 6px #000;white-space:nowrap}
+#tab-gateway .vt-hex:hover .vt-hx,#tab-gateway .vt-hex:focus-visible .vt-hx{filter:drop-shadow(0 0 10px rgba(226,200,109,.7)) brightness(1.15)}
+#tab-gateway .vt-hex:focus-visible{outline:2px solid #5DAFB5;outline-offset:4px;border-radius:10px}
+#tab-gateway .vt-msg{margin:10px 0 0;text-align:center;font-family:var(--M);font-size:12px;letter-spacing:.14em;color:#B8B29F;min-height:1.4em}
+#tab-gateway .vt-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 0 18px}
+#tab-gateway .vt-links a{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1px solid rgba(201,168,76,.3);border-radius:10px;background:linear-gradient(165deg,#2C2822,#1B1914);color:#E2C86D;font-family:var(--M);font-size:12px;letter-spacing:.18em;text-decoration:none}
+#tab-gateway .vt-links a:hover{border-color:rgba(226,200,109,.75);box-shadow:0 0 16px rgba(201,168,76,.22)}
+@keyframes vt-turn{to{transform:rotate(360deg)}}
+@keyframes vt-turn-rev{to{transform:rotate(-360deg)}}
+#tab-gateway .vt-r1{animation:vt-turn 90s linear infinite}
+#tab-gateway .vt-r2{animation:vt-turn-rev 140s linear infinite}
+#tab-gateway .vt-door.vt-open .vt-r1{animation:vt-turn 1.2s cubic-bezier(.5,0,.2,1) 1}
+#tab-gateway .vt-door.vt-open .vt-r2{animation:vt-turn-rev 1.2s cubic-bezier(.5,0,.2,1) 1}
+#tab-gateway .vt-door.vt-open .vt-art{filter:drop-shadow(0 0 40px rgba(226,200,109,.45)) brightness(1.18)}
+@media (prefers-reduced-motion:reduce){#tab-gateway .vt-r1,#tab-gateway .vt-r2,#tab-gateway .vt-door.vt-open .vt-r1,#tab-gateway .vt-door.vt-open .vt-r2{animation:none}}
+#tab-gateway .vt-legend{display:none;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0 0}
+#tab-gateway .vt-legend a,#tab-gateway .vt-legend button{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border:1px solid rgba(201,168,76,.3);border-radius:10px;background:linear-gradient(165deg,#2C2822,#1B1914);color:#E2C86D;font:600 13px Rajdhani,sans-serif;letter-spacing:.12em;text-decoration:none;cursor:pointer}
+/* Phone: a 290px door cannot hold six labelled hexagons and a wordmark. Icons stay (labels remain in
+   the accessible name), the wordmark shrinks, and the same six destinations get a labelled row below. */
+@media (max-width:560px){
+  #tab-gateway .vt-hex b{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  #tab-gateway .vt-hx,#tab-gateway .vt-hx::before{width:44px}
+  #tab-gateway .vt-word{top:15%}
+  #tab-gateway .vt-word b{font-size:15px;letter-spacing:.08em}
+  #tab-gateway .vt-word span{display:none}
+  #tab-gateway .vt-legend{display:flex}
+}
 /* Gateway content */
 .gw-canvas-wrap{display:flex;justify-content:center;margin-bottom:20px}
 .countdown{font-family:var(--M);margin-bottom:20px;text-align:center}
@@ -127,6 +164,37 @@
         <canvas id="omega-canvas" width="400" height="280" style="width:200px;height:140px"></canvas>
       </div>
 
+      <section class="vt-stage" aria-label="Vault gateway">
+        <div class="vt-door" id="vt-door">
+          <svg class="vt-art" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+            <defs>
+              <radialGradient id="vtSteel" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#4A4A52"/><stop offset=".55" stop-color="#26262B"/><stop offset="1" stop-color="#101013"/></radialGradient>
+              <linearGradient id="vtBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6DE93"/><stop offset=".45" stop-color="#C9A84C"/><stop offset="1" stop-color="#6E5316"/></linearGradient>
+              <radialGradient id="vtGlass" cx="50%" cy="40%" r="65%"><stop offset="0" stop-color="#201d14"/><stop offset="1" stop-color="#050506"/></radialGradient>
+            </defs>
+            <rect x="6" y="6" width="588" height="588" rx="28" fill="url(#vtSteel)" stroke="#6b6144" stroke-opacity=".55" stroke-width="2"/>
+            <circle cx="30" cy="30" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="300" cy="26" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="570" cy="30" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="26" cy="300" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="574" cy="300" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="30" cy="570" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="300" cy="574" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="570" cy="570" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="110" cy="26" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="490" cy="26" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="110" cy="574" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="490" cy="574" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="26" cy="110" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="26" cy="490" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="574" cy="110" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/><circle cx="574" cy="490" r="6" fill="url(#vtBrass)" stroke="#2a2210" stroke-width="1.5"/>
+            <rect x="12" y="150" width="20" height="70" rx="5" fill="url(#vtBrass)"/><rect x="12" y="380" width="20" height="70" rx="5" fill="url(#vtBrass)"/>
+            <rect x="566" y="276" width="26" height="48" rx="6" fill="url(#vtBrass)"/>
+            <circle cx="300" cy="300" r="262" fill="url(#vtSteel)" stroke="url(#vtBrass)" stroke-width="9"/>
+            <circle cx="300" cy="300" r="246" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="2"/>
+            <g class="vt-ring vt-r1"><circle cx="300" cy="300" r="232" fill="none" stroke="url(#vtBrass)" stroke-opacity=".55" stroke-width="7" stroke-dasharray="2 10"/></g>
+            <g class="vt-ring vt-r2"><circle cx="300" cy="300" r="212" fill="none" stroke="#6a6a72" stroke-opacity=".7" stroke-width="14" stroke-dasharray="16 9"/></g>
+            <circle cx="300" cy="300" r="194" fill="url(#vtGlass)" stroke="url(#vtBrass)" stroke-width="3"/>
+            <circle cx="300" cy="300" r="176" fill="none" stroke="url(#vtBrass)" stroke-opacity=".45" stroke-width="1"/>
+            <circle cx="300" cy="300" r="118" fill="none" stroke="url(#vtBrass)" stroke-opacity=".55" stroke-width="2" stroke-dasharray="1 7"/>
+          </svg>
+          <div class="vt-word"><b>SYD OMEGA</b><span>SOVEREIGN ACCESS</span></div>
+          <a class="vt-hex" style="left:17.96%;top:31.5%" href="/account.html"><span class="vt-hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 4h8v16h-8"/><path d="M3 12h11"/><path d="M10 8l4 4-4 4"/></svg></span><b>SIGN IN</b></a><a class="vt-hex" style="left:13%;top:50%" href="/security.html"><span class="vt-hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="6" y="11" width="12" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><b>SECURITY</b></a><a class="vt-hex" style="left:17.96%;top:68.5%" href="/reset.html"><span class="vt-hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="8" cy="12" r="3.5"/><path d="M11.5 12H21"/><path d="M18 12v3"/><path d="M15 12v2.2"/></svg></span><b>RECOVER KEY</b></a><a class="vt-hex" style="left:82.04%;top:31.5%" href="/settings.html"><span class="vt-hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7.5" stroke-dasharray="3 2.3"/></svg></span><b>SETTINGS</b></a><button class="vt-hex" style="left:87%;top:50%" type="button" data-go-tab="status"><span class="vt-hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg></span><b>STATUS</b></button><button class="vt-hex" style="left:82.04%;top:68.5%" type="button" data-go-tab="protocol"><span class="vt-hx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6"/><path d="M10 16h6"/></svg></span><b>PROTOCOL</b></button>
+          <button type="button" class="vt-core" id="btn-enter" aria-label="Open the gateway. This leads to sign-in; no scan is performed.">
+            <svg viewBox="-40 -40 80 80" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false"><g><circle r="5" stroke-dasharray="18 13" transform="rotate(0)"/><circle r="9.5" stroke-dasharray="42 18" transform="rotate(40)"/><circle r="14" stroke-dasharray="60 28" transform="rotate(110)"/><circle r="18.5" stroke-dasharray="78 30" transform="rotate(200)"/><circle r="23" stroke-dasharray="96 34" transform="rotate(20)"/><circle r="27.5" stroke-dasharray="112 40" transform="rotate(150)"/><circle r="32" stroke-dasharray="128 46" transform="rotate(260)"/></g></svg>
+            <i>ENTER</i>
+          </button>
+        </div>
+        <p class="vt-msg" id="vt-msg" role="status" aria-live="polite">PRESS ENTER TO CONTINUE TO SIGN-IN</p>
+        <nav class="vt-legend" aria-label="Gateway destinations"><a href="/account.html">SIGN IN</a><a href="/security.html">SECURITY</a><a href="/reset.html">RECOVER KEY</a><a href="/settings.html">SETTINGS</a><button type="button" data-go-tab="status">STATUS</button><button type="button" data-go-tab="protocol">PROTOCOL</button></nav>
+      </section>
+
       <div class="countdown">
         <div class="cd-label">T-MINUS &mdash; NEXT GENESIS EVENT</div>
         <div class="cd-row">
@@ -140,12 +208,11 @@
         </div>
       </div>
 
-      <div class="action-row">
-        <button class="action-btn primary" id="btn-enter">ENTER THE GATEWAY</button>
-        <button class="action-btn secondary" onclick="location.href='/account.html'">NETWORK_MANIFEST</button>
-        <button class="action-btn secondary" onclick="location.href='/dashboard.html'">SOVEREIGN_RESERVE</button>
-        <button class="action-btn secondary" onclick="location.href='/compliance.html'">CRYPTOGRAPHIC_COMMAND</button>
-      </div>
+      <nav class="vt-links" aria-label="Gateway links">
+        <a href="/dashboard.html">DASHBOARD</a>
+        <a href="/compliance.html">COMPLIANCE</a>
+        <a href="/terms.html">TERMS</a>
+      </nav>
 
       <div class="pqc-strip">
         <span>&#169; SYD OMEGA 9 1 7 1 7</span>
@@ -237,14 +304,6 @@
 </main>
 </div>
 
-<!-- Biometric overlay -->
-<div id="bio-overlay">
-  <div class="bio-ring"><div class="bio-glyph">&#937;</div></div>
-  <div class="bio-scan-line"></div>
-  <div class="bio-label" id="bio-label">INITIATING_BIOLOGICAL_SYNC</div>
-  <div class="bio-sub" id="bio-sub">SCANNING SOVEREIGN CREDENTIALS...</div>
-</div>
-
 <!-- ECG bar -->
 <div class="ecg-bar"><canvas id="ecg-canvas"></canvas></div>
 <div class="ecg-freq">NETWORK_RESONANCE: 9.17Hz</div>
@@ -271,11 +330,15 @@ function clock(){
 }
 clock(); setInterval(clock,1000);
 
-/* Countdown to Genesis event Sept 17, 2026 */
+/* Genesis date: 17 Sep 2026. Before it, a countdown; after it, the time elapsed since the date. (The
+   old version clamped at zero, so once the date passed it showed 00:00:00:00 and "NEXT GENESIS EVENT"
+   forever.) It claims nothing about whether an event took place, only the date arithmetic. */
 function countdown(){
   var target=new Date('2026-09-17T09:17:17Z').getTime();
+  var lbl=document.querySelector('.cd-label');
   function tick(){
-    var diff=Math.max(0,target-Date.now());
+    var now=Date.now(),past=now>=target,diff=Math.abs(target-now);
+    if(lbl)lbl.innerHTML=past?'T-PLUS &mdash; SINCE THE GENESIS DATE, 17 SEP 2026':'T-MINUS &mdash; NEXT GENESIS EVENT';
     document.getElementById('cd-d').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
     document.getElementById('cd-h').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
     document.getElementById('cd-m').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
@@ -437,21 +500,22 @@ countdown();
   })();
 })();
 
-/* Enter gateway: biometric sequence */
+/* Enter the gateway. HONEST: no biometric check exists on this platform, so none is shown. The door
+   turns, then sign-in opens (the first version printed PALM_PRINT: VERIFIED / RETINAL_SCAN_MATCH on a
+   timer for every visitor: a security claim with nothing behind it). */
 document.getElementById('btn-enter').addEventListener('click',function(){
-  var overlay=document.getElementById('bio-overlay');
-  overlay.classList.add('show');
-  var labels=['SCANNING SOVEREIGN CREDENTIALS...','PALM_PRINT: VERIFIED','RETINAL_SCAN_MATCH','BIOMETRIC_DATA_HASH: CONFIRMED','INITIATING VAULT ACCESS...'];
-  var step=0;
-  var interval=setInterval(function(){
-    step++;
-    if(step<labels.length){
-      document.getElementById('bio-sub').textContent=labels[step];
-    } else {
-      clearInterval(interval);
-      window.location.href='/account.html';
-    }
-  },700);
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var msg=document.getElementById('vt-msg');
+  if(msg)msg.textContent='OPENING THE GATEWAY...';
+  if(reduce){window.location.href='/account.html';return;}
+  var door=document.getElementById('vt-door');if(door)door.classList.add('vt-open');
+  setTimeout(function(){window.location.href='/account.html';},1200);
+});
+document.querySelectorAll('[data-go-tab]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.querySelector('.lt[data-tab="'+b.getAttribute('data-go-tab')+'"]');
+    if(t){t.click();window.scrollTo({top:0,behavior:'smooth'});}
+  });
 });
 </script>
 <script src="/bg.js" defer></script>

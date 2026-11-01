@@ -25816,3 +25816,17 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 `list_edge_functions` after #1118 merged: the GitHub integration redeployed every function in `config.toml`. `rankings` is v2, `market-price` v3, `snapshot-leaderboard` v2, all with the integration's `file:///app/supabase/functions/...` entrypoint, so the repository source is now what runs (the files uploaded from a session in 195 are gone, as predicted). Nine snapshot entries had a changed live version and were refreshed (version and `live_sha256`): those three plus `evidence-graph` (98 → 130), `omega-notification-worker` (277 → 309), `omega-runtime-gateway` (281 → 313), `omega-media-worker` (277 → 309), `omega-provider-worker` (98 → 130), `omega-knowledge-embedding-worker` (187 → 219). The six older entries show the snapshot had already drifted before this session; the other 11 entries match the live versions and were left alone. `edge-function-auth-config-contract` PASS (20 functions), contract suite 57/57.
 
 **Not verified:** the hashes were transcribed from tool output and not byte-compared against source; `rankings` and `snapshot-leaderboard` runtime behaviour (both need a signed-in session).
+
+### 199 — enter.html becomes the vault gateway (concept image 5), and loses a false security claim
+
+**Removed (defect, not style).** `enter.html` ran a scripted "PALM_PRINT / RETINAL_SCAN_MATCH" biometric sequence behind the ENTER button. No scan existed; it asserted a security check that never happened, then redirected to sign-in regardless. Removed with its CSS and markup (`bio-overlay`). The button's aria-label now says what it does: "Open the gateway. This leads to sign-in; no scan is performed."
+
+**Fixed.** The genesis countdown clamped at zero and sat there after 2026-09-17. It now switches to "T-PLUS since the genesis date" and counts up (45 days at time of writing). The date itself is the owner's; the wording needs owner review.
+
+**Built.** The brass-ring door from the image as inline SVG with six hex controls (SIGN IN, SECURITY, RECOVER KEY, SETTINGS, STATUS, PROTOCOL) wired to the existing tabs; the door animation plays only on ENTER, is skipped under `prefers-reduced-motion`, and the redirect to `/account.html` is unchanged. Phone variant (≤560px): icon-only hexes plus a labelled legend row, because labels collided at 290px. Scoped to `#tab-gateway`; CSS sits in the page's own style block (omega-morph contract).
+
+**Not rendered, on purpose.** The image's "51% vault lock", "99.98%" and "Level 9.9.9" figures: no data backs them.
+
+**Measured (headless, signed-in-false stub).** Six hexes inside the 620px door; STATUS switches tab; ENTER → "OPENING THE GATEWAY..." → `/account.html`; no page errors; countdown T-PLUS.
+
+**Not verified:** real Supabase session, Safari/Firefox, screen reader. The red "DATA DID NOT LOAD" toast in screenshots is the harness stub's data-guard.

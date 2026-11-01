@@ -59,11 +59,11 @@
     /* Client-side checks improve UX only. They do not authorize writes. */
     if(c.authorization&&c.authorization.default==='deny'&&a.permission==='none'){
       a.status='DENIED';
-      emit('omega:action:denied',{action:a.action,actionId:a.id,action:a});
+      emit('omega:action:denied',{actionId:a.id,action:a});
       return {ok:false,status:a.status,action:a,error:'permission-required'};
     }
     a.status='CLIENT_VALIDATED';
-    emit('omega:action:client_validated',{action:a.action,actionId:a.id,action:a});
+    emit('omega:action:client_validated',{actionId:a.id,action:a});
     try{
       if(typeof input.execute!=='function'){
         a.status='UNKNOWN';
@@ -71,15 +71,15 @@
         return {ok:false,status:a.status,action:a,error:'no-executor'};
       }
       a.status='RUNNING';
-      emit('omega:action:running',{action:a.action,actionId:a.id,action:a});
+      emit('omega:action:running',{actionId:a.id,action:a});
       var result=await input.execute(a);
       a.status='SUCCEEDED';
-      emit('omega:action:succeeded',{action:a.action,actionId:a.id,action:a,result:result});
+      emit('omega:action:succeeded',{actionId:a.id,action:a,result:result});
       return {ok:true,status:a.status,action:a,result:result};
     }catch(error){
       a.status='FAILED';
       var safe={name:error&&error.name||'Error',message:error&&error.message||'Action failed'};
-      emit('omega:action:failed',{action:a.action,actionId:a.id,action:a,error:safe});
+      emit('omega:action:failed',{actionId:a.id,action:a,error:safe});
       if(window.omegaRuntime&&typeof window.omegaRuntime.record==='function')
         window.omegaRuntime.record('omega_action_failed',{action:a.action,status:a.status});
       return {ok:false,status:a.status,action:a,error:safe};

@@ -6,7 +6,8 @@
    "sign": "Aries",
    "element": "Fire",
    "god": "Ares",
-   "title": "The Ram's Awakening",
+   "title": "WAR SOVEREIGN",
+   "saga": "The Ram's Awakening",
    "logline": "A fire-forged saga under Ares, unlocked at Grade 1.",
    "requires": {
     "grade": 1
@@ -115,7 +116,8 @@
    "sign": "Taurus",
    "element": "Metal",
    "god": "Aphrodite",
-   "title": "The Golden Bull",
+   "title": "LOVE SOVEREIGN",
+   "saga": "The Golden Bull",
    "logline": "A metal-forged saga under Aphrodite, unlocked at Grade 2.",
    "requires": {
     "grade": 2
@@ -224,7 +226,8 @@
    "sign": "Gemini",
    "element": "Wind",
    "god": "Hermes",
-   "title": "The Twin Currents",
+   "title": "MESSENGER SOVEREIGN",
+   "saga": "The Twin Currents",
    "logline": "A wind-forged saga under Hermes, unlocked at Grade 3.",
    "requires": {
     "grade": 3
@@ -333,7 +336,8 @@
    "sign": "Cancer",
    "element": "Water",
    "god": "Artemis",
-   "title": "Tides of the Moon",
+   "title": "HUNT SOVEREIGN",
+   "saga": "Tides of the Moon",
    "logline": "A water-forged saga under Artemis, unlocked at Grade 4.",
    "requires": {
     "grade": 4
@@ -442,7 +446,8 @@
    "sign": "Leo",
    "element": "Fire",
    "god": "Apollo",
-   "title": "The Solar Crown",
+   "title": "LIGHT SOVEREIGN",
+   "saga": "The Solar Crown",
    "logline": "A fire-forged saga under Apollo, unlocked at Grade 5.",
    "requires": {
     "grade": 5
@@ -551,7 +556,8 @@
    "sign": "Virgo",
    "element": "Sand",
    "god": "Athena",
-   "title": "The Sovereign Harvest",
+   "title": "WISDOM SOVEREIGN",
+   "saga": "The Sovereign Harvest",
    "logline": "A sand-forged saga under Athena, unlocked at Grade 6.",
    "requires": {
     "grade": 6
@@ -660,7 +666,8 @@
    "sign": "Libra",
    "element": "Wind",
    "god": "Hera",
-   "title": "The Balance of Realms",
+   "title": "QUEEN SOVEREIGN",
+   "saga": "The Balance of Realms",
    "logline": "A wind-forged saga under Hera, unlocked at Grade 7.",
    "requires": {
     "grade": 7
@@ -769,7 +776,8 @@
    "sign": "Scorpio",
    "element": "Water",
    "god": "Demeter",
-   "title": "The Deep Transmutation",
+   "title": "EARTH SOVEREIGN",
+   "saga": "The Deep Transmutation",
    "logline": "A water-forged saga under Demeter, unlocked at Grade 8.",
    "requires": {
     "grade": 8
@@ -878,7 +886,8 @@
    "sign": "Sagittarius",
    "element": "Fire",
    "god": "Zeus",
-   "title": "The Infinite Arrow",
+   "title": "THUNDER SOVEREIGN",
+   "saga": "The Infinite Arrow",
    "logline": "A fire-forged saga under Zeus, unlocked at Grade 9.",
    "requires": {
     "grade": 9
@@ -987,7 +996,8 @@
    "sign": "Capricorn",
    "element": "Metal",
    "god": "Hestia",
-   "title": "The Summit Throne",
+   "title": "HEARTH SOVEREIGN",
+   "saga": "The Summit Throne",
    "logline": "A metal-forged saga under Hestia, unlocked at Grade 10.",
    "requires": {
     "grade": 10
@@ -1096,7 +1106,8 @@
    "sign": "Aquarius",
    "element": "Wind",
    "god": "Hephaestus",
-   "title": "The Aether Network",
+   "title": "FORGE SOVEREIGN",
+   "saga": "The Aether Network",
    "logline": "A wind-forged saga under Hephaestus, unlocked at Grade 11.",
    "requires": {
     "grade": 11
@@ -1205,7 +1216,8 @@
    "sign": "Pisces",
    "element": "Water",
    "god": "Poseidon",
-   "title": "The Ocean of Dreams",
+   "title": "OCEAN SOVEREIGN",
+   "saga": "The Ocean of Dreams",
    "logline": "A water-forged saga under Poseidon, unlocked at Grade 12.",
    "requires": {
     "grade": 12

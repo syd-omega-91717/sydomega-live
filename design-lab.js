@@ -183,10 +183,9 @@
   }
 
   var ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-  /* Posters come from assets/movies/franchise-NN-640.webp, keyed by the catalog's
-     own film number. Captions show film number, god, sign and element only: the
-     catalog's `title` ("The Ocean of Dreams") and the title painted into the art
-     ("OCEAN SOVEREIGN") disagree for the same film, so neither is printed here. */
+  /* Posters come from assets/movies/franchise-NN-640.webp, keyed by the catalog's own film
+     number. The caption prints the catalog's `title` (OCEAN SOVEREIGN...), which now matches the
+     title painted into the art and used by movies.html; the older saga name lives in `saga`. */
   function renderMedia(movies) {
     var host = document.getElementById('dl-media'); host.textContent = '';
     movies.forEach(function (m) {
@@ -196,8 +195,8 @@
       a.appendChild(el('img', { src: '/assets/movies/franchise-' + nn + '-640.webp', width: '640', height: '360',
         loading: 'lazy', decoding: 'async', alt: '' }));
       var cap = el('div', { 'class': 'dl-film-cap' });
-      cap.appendChild(el('b', null, 'FILM ' + ROMAN[n]));
-      cap.appendChild(el('span', null, [m.god, m.sign, m.element].filter(Boolean).join(' \u00B7 ')));
+      cap.appendChild(el('b', null, String(m.title || 'FILM ' + ROMAN[n])));
+      cap.appendChild(el('span', null, ['FILM ' + ROMAN[n], m.god, m.sign].filter(Boolean).join(' \u00B7 ')));
       a.appendChild(cap); host.appendChild(a);
     });
     if (!host.children.length) fail('dl-media', 'The film catalog was empty.');

@@ -67,7 +67,6 @@
     gaming:       'MASTERY ENGINE — 144 games. Every stage moves the axes. Mastery is earned, not given.',
     evolution:    'PROGRESSION ENGINE — Axis A, B, C. Authority formula. Gate progression. All visible, all live.',
     agents:       'AGENT COUNCIL — 12 sovereign agents. Each bound to a sign, element, and domain.',
-    roadmap:      'EVOLUTION STRATEGY — Where the platform is going. Priority matrix. Health score. Horizon.',
     enterprise:   'ENTERPRISE CONTROL — Fortune 500 accounts. API licensing. Revenue intelligence. SLAs.',
     investment:   'INVESTMENT ENGINE — Portfolio, crypto, income. Every allocation tracked and scored.',
     leaderboard:  'AUTHORITY RANKING — The sovereign order by authority score. Where do you stand?',

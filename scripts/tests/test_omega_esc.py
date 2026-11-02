@@ -75,15 +75,19 @@ class EveryAdopter(unittest.TestCase):
         self.assertGreaterEqual(len(self.pages()), 50)
 
     def test_loaded_once_before_the_alias_and_no_local_copy(self):
-        alias = re.compile(r"(?:const|var) esc = \(window\.OmegaEsc && OmegaEsc\.esc\) \|\|")
+        # The local name may differ (escH, escHtml, escapeHTML, escOFF keep their names so no call site changes), and a
+        # page whose helper lived in two script blocks binds it once per block (`var`, so redeclaring is legal).
+        alias = re.compile(r"(?:const|var) [A-Za-z_$][\w$]* = \(window\.OmegaEsc && OmegaEsc\.esc\) \|\|")
+        block = re.compile(r"<script(?:\s[^>]*)?>(.*?)</script\s*>", re.S | re.I)
         for p in self.pages():
             s = p.read_text(encoding="utf-8")
             self.assertEqual(s.count('<script src="/omega-esc.js"></script>'), 1, p.name)
             tag, m = s.index('<script src="/omega-esc.js"></script>'), alias.search(s)
             self.assertIsNotNone(m, p.name + " loads the helper but never binds it")
             self.assertLess(tag, m.start(), p.name)
-            self.assertNotRegex(s, r"(?m)^function esc\s*\(", p.name + " still has a local copy")
-            self.assertEqual(len(alias.findall(s)), 1, p.name)
+            self.assertNotRegex(s, r"(?m)^\s*function esc\s*\(", p.name + " still has a local copy")
+            for b in block.finditer(s):
+                self.assertLessEqual(len(alias.findall(b.group(1))), 1, p.name + ": one block binds it twice")
 
     def test_the_alias_fails_closed_never_open(self):
         for p in self.pages():

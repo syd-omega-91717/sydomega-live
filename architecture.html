@@ -68,7 +68,9 @@
 </main>
   </div>
   <script src="/omega-architecture-runtime.js"></script>
-  <script>
+  <script src="/omega-esc.js"></script>
+<script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
   (function(){
     'use strict';
     /* Titles live here because the runtime keys are slugs; the runtime stays the
@@ -81,7 +83,6 @@
       'security-identity':'SECURITY &amp; IDENTITY','ai-llm-gateway':'AI GATEWAY',
       'vector-search-rag':'VECTOR SEARCH &middot; RAG'};
 
-    function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
     /* Built once, then patched in place. The probes in the runtime resolve
        over several seconds and each one emits, so rebuilding innerHTML per

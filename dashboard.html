@@ -613,8 +613,9 @@
   </main>
 </div>
 
+<script src="/omega-esc.js"></script>
 <script>
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 /* ── YOUR ELEMENT SPHERE (lazy-mount, real element from window._dashProfile
    set in the async load block below -- not omega-realm.js's own
    omega:user-loaded auto-mount path, which derives element from zodiac
@@ -1175,6 +1176,7 @@ window.askAI=askAI;
 <script type="module" src="/omega-command-dock.js"></script>
 <script src="/omega-constellation.js" defer></script>
 <script type="module">
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 var PHI=1.6180339887,EU=2.7182818285;
@@ -1200,7 +1202,6 @@ function sid(id,v){
      owner's operational backlog is real work, but it is the owner's -- it is
      rendered only when pr.is_owner, matching the is_owner gating this page
      already uses for its analytics and risk sections. */
-  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   /* The owner's items are read live, never typed here. Three were once
      hardcoded ("apply pending schema", "set ANTHROPIC_API_KEY", "enable
      pgvector") and outlived the work: on 2026-09-26 the migration ledger

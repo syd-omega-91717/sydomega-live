@@ -226,7 +226,9 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 </main>
 <div data-page-emblem="expenses" style="margin:20px auto 0"></div>
 </div>
+<script src="/omega-esc.js"></script>
 <script>
+var escapeHTML = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
@@ -402,11 +404,6 @@ function renderRecent(){
   list.innerHTML=recent.map(function(e){return itemHTML(e);}).join('');
 }
 
-function escapeHTML(value){
-  return String(value==null?'':value).replace(/[&<>\"']/g,function(ch){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch];
-  });
-}
 
 function itemHTML(e){
   var id=escapeHTML(String(e.id));

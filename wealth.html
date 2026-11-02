@@ -358,7 +358,9 @@
 
 <script src="omega-ui.js"></script>
 <script src="/omega-sparkline.js" defer></script>
+<script src="/omega-esc.js"></script>
 <script type="module">
+var escHtml = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 const ASSETS_KEY    = 'omega_wealth_assets';
 const SNAPSHOT_KEY  = 'omega_wealth_snapshots';
 
@@ -393,7 +395,6 @@ const MILESTONES = [
 
 function getAssets(){ try{const v=JSON.parse(localStorage.getItem(ASSETS_KEY)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch{return{};} }
 function getSnapshots(){ try{const v=JSON.parse(localStorage.getItem(SNAPSHOT_KEY)||'[]');return Array.isArray(v)?v.filter(s=>s&&typeof s==='object'):[];}catch{return[];} }
-function escHtml(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function safeNum(v,fallback=0){const n=Number(v);return Number.isFinite(n)?n:fallback;}
 
 function fmt(n){

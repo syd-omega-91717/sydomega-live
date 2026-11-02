@@ -54,7 +54,9 @@
       <div data-page-emblem="graphify" style="margin:20px auto 0"></div>
     </main>
   </div>
-  <script type="module">
+  <script src="/omega-esc.js"></script>
+<script type="module">
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
     const { createClient } = await import('/vendor/supabase-js.js');
     const SUPABASE_URL = 'https://ydqhzvvoyufiiqvzcjns.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
@@ -156,7 +158,6 @@
       const avgConf = entities?.length ? (entities.reduce((a, e) => a + e.confidence_score, 0) / entities.length).toFixed(2) : '—';
       document.getElementById('entity-count').textContent = entityCount || '0'; document.getElementById('relationship-count').textContent = relCount || '0'; document.getElementById('avg-confidence').textContent = avgConf;
     }
-    function esc(str){return String(str==null?'':str).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
     loadGraphStats();
   </script>
   <style>

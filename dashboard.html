@@ -214,19 +214,19 @@
     <div class="pad" style="padding-bottom:0"><section data-omega-command-dock aria-label="Command dock"></section></div>
 
     <!-- PLATFORM HEALTH BAR -->
-    <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:87%;background:var(--green)"></div></div>
+    <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:100%;background:var(--line,rgba(201,168,76,.15))"></div></div>
 
     <!-- 4-TAB SYSTEM -->
     <div class="layer-tabs" role="tablist">
-      <button class="ltab active" role="tab" aria-selected="true"  data-tab-action="overview" data-i18n="tab_overview">&#9650; OVERVIEW</button>
-      <button class="ltab"        role="tab" aria-selected="false" data-tab-action="today">&#9670; TODAY</button>
+      <button class="ltab active" role="tab" aria-selected="true"  data-tab-action="today" data-i18n="tab_today">&#9670; TODAY</button>
+      <button class="ltab"        role="tab" aria-selected="false" data-tab-action="overview" data-i18n="tab_overview">&#9650; OVERVIEW</button>
       <button class="ltab"        role="tab" aria-selected="false" data-tab-action="personal" data-i18n="tab_personal">&#9670; PERSONAL</button>
       <button class="ltab"        role="tab" aria-selected="false" data-tab-action="platform" data-i18n="tab_platform">&#9654; PLATFORM</button>
       <button class="ltab"        role="tab" aria-selected="false" data-tab-action="science" data-i18n="tab_science">&#8982; SCIENCE</button>
     </div>
 
     <!-- LAYER: OVERVIEW -->
-    <div id="l-overview" class="layer-panel active">
+    <div id="l-overview" class="layer-panel">
       <div class="pad" data-reveal="fade-up">
         <!-- SOVEREIGN KPIs -->
         <div class="kpi-row" id="kpi-platform" data-stagger data-stagger-gap="70" data-omega-depth-tilt>
@@ -285,7 +285,7 @@
 
     <!-- LAYER: PERSONAL -->
     <!-- LAYER: TODAY (the former command.html: daily brief) -->
-    <div id="l-today" class="layer-panel">
+    <div id="l-today" class="layer-panel active">
       <div class="pad">
 <div class="cmd-hero">
       <div class="cmd-clock">
@@ -473,7 +473,7 @@
         <div class="heatmap-wrap"><div id="contribution-heatmap"></div></div>
 
         <!-- PERSONAL TOOL GRID -->
-        <div class="sechead" style="margin-top:16px" data-i18n="dash_personal_tools">PERSONAL SOVEREIGN TOOLS &middot; ALL 8 MODULES</div>
+        <div class="sechead" style="margin-top:16px" data-i18n="dash_personal_tools">PERSONAL SOVEREIGN TOOLS</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px">
           <div class="cmd-card card card-edge" style="--cc:var(--purple)" data-nav-action="/journal.html"><div class="cc-icon" style="color:var(--purple)">&#9998;</div><div class="cc-name">SOVEREIGN JOURNAL</div><div class="cc-desc">AES-256 encrypted private journal. Insights, mood, streak.</div></div>
           <div class="cmd-card card card-edge" style="--cc:var(--green)"  data-nav-action="/vision.html"><div class="cc-icon" style="color:var(--green)">&#11088;&#65038;</div><div class="cc-name">VISION BOARD</div><div class="cc-desc">Life wheel, values, manifesto &amp; 8-domain targets.</div></div>
@@ -490,7 +490,7 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
-        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX &middot; 14 SECTIONS <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
+        <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
         <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);padding:14px 0">NO PAGES MATCH</div>
         <div id="platform-sections"></div>
@@ -642,7 +642,7 @@ document.addEventListener('omega:fetch-settled',renderFeedHealth);
 
 /* ── TAB SWITCHER ────────────────────────────────────────────── */
 function setTab(name){
-  var tabs=['overview','today','personal','platform','science'];
+  var tabs=['today','overview','personal','platform','science'];   /* DOM order of .ltab; the member opens on TODAY */
   document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
   document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.toggle('active',p.id==='l-'+name);});
   if(name==='today'&&!window.__briefLoading){window.__briefLoading=true;var bs=document.createElement('script');bs.src='/omega-daily-brief.js';document.head.appendChild(bs);}
@@ -1169,7 +1169,7 @@ function renderPlatformSections(){
 }
 
 window.setTab=setTab;
-(function(){var m={overview:'overview',today:'today',personal:'personal',platform:'platform',science:'science'};var h=(location.hash||'').replace('#','');if(m[h])setTab(m[h]);})();
+(function(){var m={overview:'overview',today:'today',personal:'personal',platform:'platform',science:'science'};var h=(location.hash||'').replace('#','');setTab(m[h]||'today');})();
 window.askAI=askAI;
 </script>
 <script src="/omega-sparkline.js" defer></script>

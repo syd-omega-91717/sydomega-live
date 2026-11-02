@@ -358,6 +358,9 @@ async function load(){
     document.getElementById('achievements-grid').innerHTML='<div class="empty"><strong>ACHIEVEMENT DATA UNAVAILABLE</strong><br><span>'+esc(e&&e.message||'Persisted achievement sources could not be read. No state is inferred.')+'</span></div>';
   }
 }
+/* The whole script is inside this IIFE, so switchTab was private and omega-tab-handler.js (which calls window.switchTab)
+   could not reach it: the BOARD / LOG / SCIENCE buttons did nothing. */
+window.switchTab=switchTab;
 load();
 })();
 </script>

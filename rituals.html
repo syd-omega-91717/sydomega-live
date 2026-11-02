@@ -232,10 +232,11 @@
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-esc.js"></script>
 <script type="module">
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 const RITUALS_KEY = 'omega_rituals';
 const LOGS_KEY    = 'omega_ritual_logs';
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 const DEFAULT_RITUALS = [
   {id:'r1',name:'Cold Shower',desc:'90-second cold exposure (Wim Hof)',protocol:'morning',time:3,active:true},

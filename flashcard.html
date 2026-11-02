@@ -232,8 +232,9 @@
 
 <script src="omega-ui.js"></script>
 <script src="/omega-srs.js"></script>
+<script src="/omega-esc.js"></script>
 <script type="module">
-
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 /* ═══════════════════════════════════════════════════════════════════════
    SOVEREIGN FLASHCARDS — SM-2 Spaced Repetition System
    ═══════════════════════════════════════════════════════════════════════ */
@@ -569,7 +570,6 @@ function renderProgress() {
 
 /* ── HELPERS ─────────────────────────────────────────────────────────── */
 
-function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function updateTopMeta() {
   const due = _cards.filter(c=>!c.due||c.due<=today()).length;

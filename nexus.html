@@ -108,13 +108,14 @@
 <div data-page-emblem="nexus" style="margin:20px auto 0"></div>
 </div>
 
+<script src="/omega-esc.js"></script>
 <script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 function setTab(name){
   var tabs=['nexus','members','legend','science'];
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 </script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';

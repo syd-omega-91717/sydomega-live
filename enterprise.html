@@ -137,12 +137,13 @@
 <div data-page-emblem="enterprise" style="margin:20px auto 0"></div>
 </div>
 
+<script src="/omega-esc.js"></script>
 <script type="module">
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'--':v);}
-function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function fmt(n){return n!=null?'$'+(Math.round(n)).toLocaleString():'$0';}
 function requestTier(tier){
   var labels={starter:'Starter',professional:'Professional',enterprise:'Enterprise',government:'Government'};

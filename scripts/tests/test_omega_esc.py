@@ -64,6 +64,33 @@ class Pilot(unittest.TestCase):
         self.assertNotIn("omega-esc", (ROOT / "bg.js").read_text(encoding="utf-8"))
 
 
+class EveryAdopter(unittest.TestCase):
+    """Every page that loads the shared helper must load it once, before the script that binds the alias, and must not
+    keep a local copy (50 pages were migrated in bulk; this is what keeps a bad edit from slipping in)."""
+
+    def pages(self):
+        return [p for p in sorted(ROOT.glob("*.html")) if "/omega-esc.js" in p.read_text(encoding="utf-8", errors="ignore")]
+
+    def test_a_meaningful_number_of_pages_adopted_it(self):
+        self.assertGreaterEqual(len(self.pages()), 50)
+
+    def test_loaded_once_before_the_alias_and_no_local_copy(self):
+        alias = re.compile(r"(?:const|var) esc = \(window\.OmegaEsc && OmegaEsc\.esc\) \|\|")
+        for p in self.pages():
+            s = p.read_text(encoding="utf-8")
+            self.assertEqual(s.count('<script src="/omega-esc.js"></script>'), 1, p.name)
+            tag, m = s.index('<script src="/omega-esc.js"></script>'), alias.search(s)
+            self.assertIsNotNone(m, p.name + " loads the helper but never binds it")
+            self.assertLess(tag, m.start(), p.name)
+            self.assertNotRegex(s, r"(?m)^function esc\s*\(", p.name + " still has a local copy")
+            self.assertEqual(len(alias.findall(s)), 1, p.name)
+
+    def test_the_alias_fails_closed_never_open(self):
+        for p in self.pages():
+            s = p.read_text(encoding="utf-8")
+            self.assertTrue("|| (() => '');" in s or "|| (function () { return ''; });" in s, p.name)
+
+
 def load_ratchet(files, baseline=None):
     spec = importlib.util.spec_from_file_location("ecr", RATCHET)
     m = importlib.util.module_from_spec(spec)

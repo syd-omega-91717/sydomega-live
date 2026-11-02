@@ -254,8 +254,9 @@
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-esc.js"></script>
 <script type="module">
-
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 /* ═══════════════════════════════════════════════════════════════════════
    SOVEREIGN NETWORK — Relationship Intelligence System
    ═══════════════════════════════════════════════════════════════════════ */
@@ -716,9 +717,6 @@ function renderInsights() {
 
 /* ── HELPERS ─────────────────────────────────────────────────────────── */
 
-function esc(t) {
-  return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
-}
 
 /* ── TAB ROUTER ──────────────────────────────────────────────────────── */
 

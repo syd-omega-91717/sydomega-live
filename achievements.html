@@ -240,17 +240,14 @@
 <div data-page-emblem="achievements" style="margin:20px auto 0"></div>
 </div>
 
+<script src="/omega-esc.js"></script>
 <script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 (function(){
 'use strict';
 
 var state={profile:null,tasks:[],trophies:[],medals:[],certificates:[],records:[],loaded:false};
 
-function esc(v){
-  return String(v==null?'':v).replace(/[&<>"']/g,function(ch){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
-  });
-}
 function client(){
   if(window.OmegaSB&&typeof window.OmegaSB.get==='function')return window.OmegaSB.get();
   if(window.__omegaSb)return window.__omegaSb;

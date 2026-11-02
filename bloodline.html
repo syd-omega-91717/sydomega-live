@@ -131,11 +131,12 @@
 .sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
+<script src="/omega-esc.js"></script>
 <script type="module">
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 var LK='omega_lineage',TK='omega_traits',DK2='omega_dynasty';
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var lineage=JSON.parse(localStorage.getItem(LK)||'[]');
 var traits=JSON.parse(localStorage.getItem(TK)||'{}');
 var dynasty=JSON.parse(localStorage.getItem(DK2)||'{}');

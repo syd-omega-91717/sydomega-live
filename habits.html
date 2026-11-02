@@ -229,8 +229,9 @@
 
 <script src="omega-ui.js"></script>
 <script src="/omega-sparkline.js" defer></script>
+<script src="/omega-esc.js"></script>
 <script type="module">
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 const HABITS_KEY = 'omega_habits_v2';
 const LOGS_KEY   = 'omega_habit_logs_v2';
 const CAT_ICONS  = {mind:'⌬',body:'⚡︎',wealth:'◇',social:'⊛',spirit:'✨︎',craft:'⚒'};

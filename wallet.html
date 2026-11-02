@@ -219,7 +219,9 @@
 <div data-page-emblem="wallet" style="margin:20px auto 0"></div>
 </div>
 
+<script src="/omega-esc.js"></script>
 <script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
@@ -247,7 +249,6 @@ function save(){
   localStorage.setItem('omega_wallet_targets',JSON.stringify(targets));
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function fmt(v){return '$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 
 function calcTotals(){

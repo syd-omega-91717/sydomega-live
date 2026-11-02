@@ -334,6 +334,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -1237,6 +1238,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -1585,6 +1587,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -1735,6 +1738,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2131,6 +2135,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2610,6 +2615,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2939,6 +2945,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
@@ -3006,6 +3013,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -3077,6 +3085,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
@@ -3529,6 +3538,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/vendor/marked.min.js"
         ],
@@ -4283,6 +4293,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -4636,6 +4647,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -4776,6 +4788,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -4909,6 +4922,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5395,6 +5409,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-srs.js",
@@ -5462,6 +5477,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -5683,6 +5699,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -6030,6 +6047,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -6601,6 +6619,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
@@ -6802,6 +6821,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
@@ -6880,6 +6900,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-order-core.js",
           "/omega-speed-insights-init.js"
@@ -7145,6 +7166,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -7770,6 +7792,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-data-reality.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-personal-context.js",
           "/omega-sparkline.js",
@@ -7985,6 +8008,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-empty-guide.js",
+          "/omega-esc.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -8051,6 +8075,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -8117,6 +8142,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -8392,6 +8418,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -8514,6 +8541,7 @@
           "/bg.js",
           "/leaderboard.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -8993,6 +9021,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/upload.js"
@@ -9067,6 +9096,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -9923,6 +9953,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -9992,6 +10023,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -10072,6 +10104,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -10145,6 +10178,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -10217,6 +10251,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -10946,6 +10981,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -11286,6 +11322,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -11932,6 +11969,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -12010,6 +12048,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -12151,6 +12190,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -12727,6 +12767,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -12865,6 +12906,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-empty-guide.js",
+          "/omega-esc.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -12926,6 +12968,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
@@ -13678,6 +13721,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -14434,6 +14478,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -14863,6 +14908,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-empty-guide.js",
+          "/omega-esc.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -15004,6 +15050,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -15416,6 +15463,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -15536,6 +15584,7 @@
         "script_evidence": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
@@ -15599,6 +15648,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-empty-guide.js",
+          "/omega-esc.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"

@@ -25963,3 +25963,25 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **What the number is not.** It is syntactic and **not a vulnerability count**. A random 30-piece sample was roughly a third to a half real data fields; the rest were static tables, loop variables and counts (`s.col`, `k`, `done`). The 4 left in the fixed daily brief are such false positives. Unverified leads from the sample, not traced to a source: `decisions.html` status, `budget.html` label, `targets.html` title, `breath.html` technique, `signal.html` `url`.
 
 **Not done.** No existing file was changed and no legacy piece was fixed. No shared `OmegaEsc` exists; adding one means loading it through `bg.js` (the platform's single point of failure), so it is proposed, not built. CSP `'unsafe-inline'` is untouched. Inline `<script>` and attribute sinks (`setAttribute('href', …)`, `javascript:` URLs) are not covered.
+
+## 2026-11-02 — weekly ideas: glass layers honour `prefers-reduced-transparency` (I15); new proposal I16
+
+**Built (I15, LOW-RISK CSS).** `css/omega-system.css:1284` adds an `@media (prefers-reduced-transparency: reduce)` block. It removes every `backdrop-filter` with a universal selector and `!important`, because 43 page-local declarations would otherwise survive. It also gives the shared glass surfaces that carried the blur an opaque base colour (`--void2`): `.topbar`, `.glass`, `.glass-cyan`, `.card`, `.kpi`, `.kpi-card`, `.panel`, `.module`, `.tile`, `.widget`, `.modal`, `.drawer`. It sets `--gvp-glass-bg` to `--void` for inputs and buttons. Only `background-color` changes, so each surface's gradients and borders still paint. No flag is involved: this is a member's own OS setting, not a feature.
+
+**Verified in headless Chromium.** The preference was emulated through CDP `Emulation.setEmulatedMedia`, with a fresh context per run. Before = HEAD's `css/omega-system.css`, pinned via `gitShow`. Counts are elements with a computed `backdrop-filter` other than `none`:
+
+| page | HEAD + reduce | new + no-preference | new + reduce |
+|---|---|---|---|
+| dashboard | 57 | 57 | **0** |
+| profile | 57 | 57 | **0** |
+| social | 37 | 37 | **0** |
+
+In the same runs a sample card went from `rgba(8,10,17,.58)` to `rgb(2,2,6)`. There were 0 page errors. The no-preference column matching HEAD shows the block changes nothing for anyone who has not asked for it. `./scripts/ci-local.sh`: all 35 blocking checks pass.
+
+**Statuses re-checked.**
+- No merged change since 2026-10-26 touches a PROPOSED row.
+- No SHIPPED row cites one of the five files deleted this week (`analytics-`, `predictions-`, `segmentation-dashboard.html`, `omega-command-center.js`, `omega-standing-dashboard.js`).
+
+**New proposal (I16).** Replace the 5 first-party `transition:max-height` expand hacks with per-component `interpolate-size`. It is Chromium 129+ only per MDN, so the max-height rules stay as the fallback.
+
+**Not done.** `config/omega-page-contract-bootstrap.json` is tracked on `main` and unchanged by CI, so it was left in place, as last week.

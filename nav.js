@@ -66,7 +66,7 @@
 
   var SECTIONS=[
     {key:'command', icon:'\u2316', label:'COMMAND', href:'/dashboard.html',  col:'#C9A84C',
-     sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','COMMAND BRIDGE','/dashboard.html'],['command-center','COMMAND CENTER','/command-center.html'],['beacon','BEACON','/beacon.html','folded'],
+     sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','COMMAND BRIDGE','/dashboard.html'],['command-center','COMMAND CENTER','/command-center.html','folded'],['beacon','BEACON','/beacon.html','folded'],
           ['search','SEARCH','/search.html','folded'],['data-observatory','DATA OBSERVATORY','/data-observatory.html','folded'],['notifications','NOTIFICATIONS','/notifications.html','folded'],['chatbot','CONCIERGE','/chatbot.html','folded'],
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['world-atlas','CIVILIZATION ATLAS','/world-atlas.html','folded'],['eternity','CONTINUITY','/eternity.html','folded'],['replay','REPLAY','/replay.html','folded'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html','folded'],['command','COMMAND BRIEF','/command.html','folded'],
           ['contacts','CONTACTS','/contacts.html','folded'],['decisions','DECISIONS','/decisions.html','folded'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html','folded'],

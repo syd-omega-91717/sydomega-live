@@ -65,9 +65,10 @@ class Today(unittest.TestCase):
             self.assertTrue(os.path.exists(os.path.join(ROOT, href)), href)
 
     def test_mounted_on_the_command_brief(self):
-        html = read("command.html")
+        # the daily brief is the TODAY tab of dashboard.html (FIXES_LOG 204); its module loads the panels' scripts
+        html = read("dashboard.html")
         self.assertIn("<div data-omega-today></div>", html)
-        self.assertIn('<script src="/omega-today.js" defer></script>', html)
+        self.assertIn("'/omega-today.js'", read("omega-daily-brief.js"))
 
 
 if __name__ == "__main__":
@@ -121,7 +122,7 @@ class Week(unittest.TestCase):
     def test_mounted_on_weekly_and_command(self):
         self.assertIn("<div data-omega-week></div>", read("weekly.html"))
         self.assertIn('<script src="/omega-today.js" defer></script>', read("weekly.html"))
-        self.assertIn("<div data-omega-readiness></div>", read("command.html"))
+        self.assertIn("<div data-omega-readiness></div>", read("dashboard.html"))
 
 
 class StreakFreeze(unittest.TestCase):

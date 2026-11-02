@@ -119,6 +119,63 @@
 .heatmap-legend{display:flex;gap:4px;align-items:center;font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:1px;color:rgba(138,134,118,.4);margin-top:8px}
 .heatmap-legend-dot{width:10px;height:10px;border-radius:1px}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.two-col{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}.mission-bar{flex-wrap:wrap;height:auto;padding:8px var(--pad)}}
+
+/* TODAY tab (moved from command.html, FIXES_LOG 204): every selector scoped to #l-today */
+#l-today{--dim:rgba(201,168,76,.15)}
+#l-today .cmd-hero{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+#l-today .cmd-clock{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#l-today .clock-time{font-family:var(--M);font-size:52px;letter-spacing:4px;color:var(--gold);line-height:1}
+#l-today .clock-date{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(138,134,118,.5);margin-top:8px}
+#l-today .clock-day{font-family:var(--M);font-size:12px;letter-spacing:4px;color:rgba(201,168,76,.4);margin-top:4px}
+#l-today .weather-panel{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:18px}
+#l-today .wx-loc{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.35);margin-bottom:12px}
+#l-today .wx-temp{font-family:var(--M);font-size:28px;color:var(--gold)}
+#l-today .wx-desc{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
+#l-today .wx-detail{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:8px;line-height:1.8}
+#l-today .layer-tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--dim);padding-bottom:8px;flex-wrap:wrap}
+#l-today .tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.2px;padding:5px 12px;background:none;border:1px solid transparent;border-radius:2px;color:rgba(138,134,118,.5);cursor:pointer;transition:.12s}
+#l-today .tab-btn.active{color:var(--gold);border-color:var(--dim)}
+#l-today .tab-pane{display:none}
+#l-today .tab-pane.active{display:block}
+#l-today .priorities-section{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:18px;margin-bottom:16px}
+#l-today .sec-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-bottom:14px}
+#l-today .priority-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.06)}
+#l-today .priority-item:last-child{border-bottom:none}
+#l-today .p-num{font-family:var(--M);font-size:var(--fs-5,28px);color:rgba(201,168,76,.2);min-width:28px}
+#l-today .p-input{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(201,168,76,.15);padding:4px 0;color:rgba(220,210,180,.8);font-family:var(--M);font-size:var(--fs-2,14px);outline:none;transition:.15s}
+#l-today .p-input:focus{border-bottom-color:rgba(201,168,76,.4)}
+#l-today .p-input.done{text-decoration:line-through;color:rgba(138,134,118,.3)}
+#l-today .p-check{width:18px;height:18px;border:1px solid rgba(201,168,76,.25);border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold);font-size:12px;background:none;transition:.12s}
+#l-today .p-check.done{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.4)}
+#l-today .schedule-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+#l-today .time-block{display:flex;gap:12px;align-items:center;background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:2px;padding:8px 12px}
+#l-today .tb-time{font-family:var(--M);font-size:12px;color:rgba(201,168,76,.5);min-width:50px;flex-shrink:0}
+#l-today .tb-input{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(201,168,76,.1);padding:3px 0;color:rgba(220,210,180,.7);font-family:var(--M);font-size:12px;outline:none}
+#l-today .tb-del{font-family:var(--M);font-size:12px;color:rgba(201,168,76,.25);cursor:pointer;background:none;border:none}
+#l-today .btn-gold{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:7px 16px;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:2px;cursor:pointer;transition:.12s}
+#l-today .btn-gold:hover{background:rgba(201,168,76,.08)}
+#l-today .review-q{padding:14px 0;border-bottom:1px solid rgba(201,168,76,.06)}
+#l-today .review-q label{display:block;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.6);margin-bottom:6px}
+#l-today .review-q textarea{width:100%;background:rgba(0,0,0,.2);border:1px solid var(--dim);border-radius:2px;padding:8px;color:rgba(220,210,180,.7);font-family:var(--M);font-size:12px;box-sizing:border-box;resize:vertical;height:64px}
+#l-today .streak-dots{display:flex;gap:3px;flex-wrap:wrap;margin-top:6px}
+#l-today .sd{width:10px;height:10px;border-radius:2px;background:rgba(201,168,76,.1)}
+#l-today .sd.done{background:rgba(201,168,76,.6)}
+#l-today .sd.today{outline:1px solid rgba(201,168,76,.5)}
+#l-today .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+#l-today .kpi{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:3px;padding:10px 12px}
+#l-today .kpi .lv{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5)}
+#l-today .kpi .vv{font-family:var(--M);font-size:var(--fs-4,20px);color:var(--gold);margin-top:3px}
+#l-today .add-block-row{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
+#l-today .add-block-row input[type=time]{background:rgba(0,0,0,.3);border:1px solid var(--dim);border-radius:2px;padding:6px 10px;color:rgba(220,210,180,.7);font-family:var(--M);font-size:12px}
+#l-today .intent-box{background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:16px;margin-bottom:16px}
+#l-today .intent-text{font-family:var(--M);font-size:14px;color:rgba(220,210,180,.8);width:100%;background:transparent;border:none;outline:none;resize:none;line-height:1.5}
+#l-today .quote-card{background:rgba(201,168,76,.04);padding:14px 18px;margin-bottom:16px;border-radius:0 4px 4px 0;--card-accent:rgba(201,168,76,.3)}
+#l-today .pb-entry{background:rgba(201,168,76,.03);border:1px solid var(--dim);border-radius:3px;padding:12px 16px;margin-bottom:8px}
+#l-today .pb-date{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(201,168,76,.5);margin-bottom:6px}
+#l-today .pb-snippet{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)}
+@media(max-width:600px){#l-today .cmd-hero{grid-template-columns:1fr}
+#l-today .kpi-row{grid-template-columns:1fr 1fr}
+#l-today .clock-time{font-size:var(--fs-6,40px)}}
 </style>
 </head>
 <body>
@@ -162,6 +219,7 @@
     <!-- 4-TAB SYSTEM -->
     <div class="layer-tabs" role="tablist">
       <button class="ltab active" role="tab" aria-selected="true"  data-tab-action="overview" data-i18n="tab_overview">&#9650; OVERVIEW</button>
+      <button class="ltab"        role="tab" aria-selected="false" data-tab-action="today">&#9670; TODAY</button>
       <button class="ltab"        role="tab" aria-selected="false" data-tab-action="personal" data-i18n="tab_personal">&#9670; PERSONAL</button>
       <button class="ltab"        role="tab" aria-selected="false" data-tab-action="platform" data-i18n="tab_platform">&#9654; PLATFORM</button>
       <button class="ltab"        role="tab" aria-selected="false" data-tab-action="science" data-i18n="tab_science">&#8982; SCIENCE</button>
@@ -226,6 +284,146 @@
     </div>
 
     <!-- LAYER: PERSONAL -->
+    <!-- LAYER: TODAY (the former command.html: daily brief) -->
+    <div id="l-today" class="layer-panel">
+      <div class="pad">
+<div class="cmd-hero">
+      <div class="cmd-clock">
+        <div class="clock-time" id="clockTime">00:00:00</div>
+        <div class="clock-date" id="clockDate">—</div>
+        <div class="clock-day" id="clockDay">—</div>
+      </div>
+      <div class="weather-panel">
+        <div class="wx-loc" id="wxLoc">LOCAL WEATHER IS OFF</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:var(--fs-6,40px)" id="wxIcon">☀︎</span>
+          <div>
+            <div class="wx-temp" id="wxTemp">—°</div>
+            <div class="wx-desc" id="wxDesc" style="min-height:9px" data-loading></div>
+          </div>
+        </div>
+        <div class="wx-detail" id="wxDetail">Wind — · Humidity — · UV —</div>
+        <button class="btn-gold" id="wxOn" type="button" style="margin-top:10px">SHOW WEATHER FOR MY AREA</button>
+        <div class="wx-detail" id="wxNote">Asks your browser for your location and sends it, rounded to about 11 km, to Open-Meteo (open-meteo.com). Nothing is sent unless you press the button.</div>
+      </div>
+    </div>
+
+    <div data-omega-readiness></div>
+    <div data-omega-today></div>
+
+    
+
+    <div class="kpi-row" data-stagger data-stagger-gap="70">
+      <div class="kpi" data-reveal="fade-up"><div class="lv">DAY SCORE</div><div class="vv" id="kpiDay">—</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="lv">PRIORITIES DONE</div><div class="vv" id="kpiPri">—</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="lv">PLANNING STREAK</div><div class="vv" id="kpiStreak">—</div></div>
+      <div class="kpi" data-reveal="fade-up"><div class="lv">FOCUS SESSIONS</div><div class="vv" id="kpiSess">—</div></div>
+    </div>
+
+    <div class="intent-box">
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-bottom:6px">TODAY'S SOVEREIGN INTENT</div>
+      <textarea class="intent-text" id="intentText" rows="2" placeholder="Set your sovereign intent for today…"></textarea>
+    </div>
+
+    <div class="layer-tabs">
+      <button class="tab-btn active" data-brief-tab="priorities">&#9670; PRIORITIES</button>
+      <button class="tab-btn" data-brief-tab="schedule">&#9670; SCHEDULE</button>
+      <button class="tab-btn" data-brief-tab="review">&#9670; REVIEW</button>
+      <button class="tab-btn" data-brief-tab="science">&#9670; SCIENCE</button>
+    </div>
+
+    <!-- PRIORITIES -->
+    <div class="tab-pane active" id="tab-priorities">
+      <div class="priorities-section">
+        <div class="sec-title">THREE SOVEREIGN PRIORITIES</div>
+        <div class="priority-item"><div class="p-num">1</div><input class="p-input" id="p1" placeholder="Most important task…"><button class="p-check" id="c1" data-brief-act="togglePri" data-brief-arg="1" aria-label="Toggle priority 1"></button></div>
+        <div class="priority-item"><div class="p-num">2</div><input class="p-input" id="p2" placeholder="Second priority…"><button class="p-check" id="c2" data-brief-act="togglePri" data-brief-arg="2" aria-label="Toggle priority 2"></button></div>
+        <div class="priority-item"><div class="p-num">3</div><input class="p-input" id="p3" placeholder="Third priority…"><button class="p-check" id="c3" data-brief-act="togglePri" data-brief-arg="3" aria-label="Toggle priority 3"></button></div>
+        <div style="margin-top:14px;display:flex;gap:10px">
+          <button class="btn-gold" data-brief-act="savePriorities">LOCK PRIORITIES</button>
+          <button class="btn-gold" style="border-color:rgba(201,168,76,.15);color:rgba(138,134,118,.5)" data-brief-act="clearPriorities">CLEAR</button>
+        </div>
+      </div>
+
+      <div class="quote-card card card-edge">
+        <div style="font-family:var(--M);font-size:var(--fs-2,14px);color:rgba(220,210,180,.8);line-height:1.7;font-style:italic" id="quoteText">—</div>
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.5);margin-top:10px" id="quoteAttr">—</div>
+      </div>
+
+      <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px">
+        <div class="sec-title">30-DAY PLANNING STREAK</div>
+        <div class="streak-dots" id="streakDots"></div>
+        <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);margin-top:8px" id="streakLabel">—</div>
+      </div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="tab-pane" id="tab-schedule">
+      <div class="sec-title">TODAY'S TIME BLOCKS</div>
+      <div class="schedule-grid" id="scheduleGrid"></div>
+      <div class="add-block-row">
+        <input type="time" id="blockTime" aria-label="Time block start time" value="09:00">
+        <input class="p-input" id="blockTask" style="flex:1;min-width:180px" placeholder="Block description…">
+        <button class="btn-gold" data-brief-act="addBlock">+ ADD BLOCK</button>
+        <button class="btn-gold" id="blocksIcs" title="Download today's blocks as a calendar file">⤓ CALENDAR</button>
+      </div>
+      <div style="background:rgba(201,168,76,.04);border:1px solid var(--dim);border-radius:4px;padding:14px;margin-top:16px">
+        <div class="sec-title">TIME BLOCK PHILOSOPHY</div>
+        <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.6);line-height:1.8">Time blocking forces you to confront the finite nature of your day. Every hour given to one thing is taken from another. Schedule deep work in the first 4 hours when willpower and focus peak. Batch communications into 2 fixed windows. Leave buffer blocks — they will be consumed. Review at midday and adjust for reality.</div>
+      </div>
+    </div>
+
+    <!-- REVIEW -->
+    <div class="tab-pane" id="tab-review">
+      <div class="priorities-section">
+        <div class="sec-title">EVENING SOVEREIGN REVIEW</div>
+        <div class="review-q"><label>WHAT DID YOU ACCOMPLISH TODAY?</label><textarea id="rq1" placeholder="List wins, completed priorities, unexpected progress…"></textarea></div>
+        <div class="review-q"><label>WHERE DID YOU FALL SHORT?</label><textarea id="rq2" placeholder="What didn't get done? Why? What got in the way?"></textarea></div>
+        <div class="review-q"><label>WHAT WAS YOUR ENERGY LIKE?</label><textarea id="rq3" placeholder="High focus periods, crashes, mood, sleep quality impact…"></textarea></div>
+        <div class="review-q"><label>THREE GRATITUDES</label><textarea id="rq4" placeholder="Three specific things you are grateful for today…"></textarea></div>
+        <div class="review-q"><label>TOMORROW'S SOVEREIGN INTENT</label><textarea id="rq5" placeholder="Set the direction for tomorrow before you sleep…"></textarea></div>
+        <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);flex:1">Rate your day:</div>
+          <div style="font-family:var(--M);font-size:20px;color:var(--gold)" id="dayScoreDisplay">7/10</div>
+          <input type="range" id="dayScore" min="1" max="10" value="7" style="accent-color:var(--gold)">
+          <button class="btn-gold" data-brief-act="saveReview">SEAL THE DAY</button>
+        </div>
+      </div>
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin:20px 0 10px;border-top:1px solid var(--dim);padding-top:16px">PAST BRIEFS</div>
+      <div id="pastBriefs"></div>
+    </div>
+
+    <!-- SCIENCE -->
+    <div class="tab-pane" id="tab-science">
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="lv">APEX AUTH</div><div class="vv">27.8367</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="lv">PHI &phi;</div><div class="vv">1.6180</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="lv">EULER e</div><div class="vv">2.7183</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="lv">AUTH FORMULA</div><div class="vv" style="font-size:12px">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div></div>
+      </div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="lv">INITIATE GATE</div><div class="vv">0.001</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="lv">SOVEREIGN GATE</div><div class="vv">1.618</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="lv">PRIME GATE</div><div class="vv">2.718</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="lv">APEX GATE</div><div class="vv">9.000</div></div>
+      </div>
+      <div class="priorities-section">
+        <div class="sec-title">THE SCIENCE OF DAILY COMMAND</div>
+        <div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.6);line-height:1.8">
+          <strong style="color:rgba(201,168,76,.7)">PREFRONTAL CORTEX DEPLETION</strong> — Decision-making quality degrades ~2% per decision. Batch trivial decisions in morning routines. Reserve peak prefrontal bandwidth (7–11am) for strategic priorities.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">IMPLEMENTATION INTENTIONS</strong> — Research shows "I will do X at time Y in location Z" increases follow-through by 91% vs vague intentions. The command brief forces this specificity.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">ULTRADIAN RHYTHMS</strong> — The brain cycles through 90-minute rest-activity rhythms. Schedule deep work in 90-min blocks. Use natural dip (1–3pm) for admin, communication, and light tasks.<br><br>
+          <strong style="color:rgba(201,168,76,.7)">PLANNING STREAK EFFECT</strong> — Consistent daily planning creates meta-cognitive loops that increase self-awareness, reduce reactive behavior, and build sovereign identity over time.
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div data-page-emblem="command" style="margin:20px auto 0"></div>
+<div class="lf"><span>&#937; DAILY COMMAND BRIEF &middot; SYD OMEGA 91717</span>
+      </div>
+    </div>
+
     <div id="l-personal" class="layer-panel">
       <div class="pad">
         <div class="sechead"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:var(--fs-4,20px)">☯</span><span data-i18n="personal_os">PERSONAL OS</span></span> &middot; <span data-i18n="sovereign_self_system">SOVEREIGN SELF-SYSTEM</span> &middot; <span data-i18n="live_from_device">LIVE FROM YOUR DEVICE</span> <span class="sechead-action" data-function-call="renderPersonalOS">&#8635; REFRESH</span></div>
@@ -296,6 +494,12 @@
         <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
         <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);padding:14px 0">NO PAGES MATCH</div>
         <div id="platform-sections"></div>
+        <div class="sechead" style="margin-top:24px">DATA FEEDS &middot; THIS PAGE</div>
+        <div class="kpi-row" id="feed-health">
+          <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="fh-ok">--</div><div class="kpi-l">ANSWERED</div><div class="kpi-sub">Backend reads that succeeded</div></div>
+          <div class="kpi" style="--kc:var(--crim)"><div class="kpi-n" id="fh-bad">--</div><div class="kpi-l">FAILED</div><div class="kpi-sub">Network errors and server 5xx</div></div>
+          <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="fh-fly">--</div><div class="kpi-l">IN FLIGHT</div><div class="kpi-sub">Counted by bg.js, not estimated</div></div>
+        </div>
         <div class="sechead" style="margin-top:24px"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:var(--fs-4,20px)">◯</span><span data-i18n="dash_intelligence_engine">INTELLIGENCE ENGINE</span></span> &middot; ANALYTICS &middot; RADAR &middot; AI QUERY</div>
         <div class="kpi-row">
           <div class="kpi" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="kpi-n" id="ana-events">--</div><div class="kpi-l" data-i18n="kpi_events_7d">EVENTS (7d)</div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">⬡</div></div></div>
@@ -426,13 +630,23 @@ function mountDashRealm(){
   window.OmegaRealm.mount(canvas,(window._dashProfile&&window._dashProfile.element)||'Void');
 }
 
+/* DATA FEEDS: the counters bg.js's fetch recorder already keeps for this page (window.__omegaData). No extra
+   queries; a 4xx is a real answer and is not counted as a failure (see bg.js). */
+function renderFeedHealth(){
+  var W=window.__omegaData||{ok:0,failed:0,inflight:0};
+  function put(id,v){var e=document.getElementById(id);if(e)e.textContent=String(v==null?'\u2014':v);}
+  put('fh-ok',W.ok);put('fh-bad',W.failed);put('fh-fly',W.inflight);
+}
+document.addEventListener('omega:fetch-settled',renderFeedHealth);
+
 /* ── TAB SWITCHER ────────────────────────────────────────────── */
 function setTab(name){
-  var tabs=['overview','personal','platform','science'];
+  var tabs=['overview','today','personal','platform','science'];
   document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
   document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.toggle('active',p.id==='l-'+name);});
+  if(name==='today'&&!window.__briefLoading){window.__briefLoading=true;var bs=document.createElement('script');bs.src='/omega-daily-brief.js';document.head.appendChild(bs);}
   if(name==='personal'){renderPersonalOS();mountDashRealm();}
-  if(name==='platform'){setTimeout(function(){renderPlatformSections();if(window._dashProfile)renderRadarChart(window._dashProfile);},100);}
+  if(name==='platform'){renderFeedHealth();setTimeout(function(){renderPlatformSections();if(window._dashProfile)renderRadarChart(window._dashProfile);},100);}
 }
 
 /* ── SYSTEM GALAXY CANVAS ─────────────────────────────────── */
@@ -954,6 +1168,7 @@ function renderPlatformSections(){
 }
 
 window.setTab=setTab;
+(function(){var m={overview:'overview',today:'today',personal:'personal',platform:'platform',science:'science'};var h=(location.hash||'').replace('#','');if(m[h])setTab(m[h]);})();
 window.askAI=askAI;
 </script>
 <script src="/omega-sparkline.js" defer></script>

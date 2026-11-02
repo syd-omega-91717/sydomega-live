@@ -6,127 +6,13 @@
 <meta name="description" content="SYD OMEGA 91717 — Standing Dashboard · Authority Score · Progression Gates">
 <title>&#937; SYD OMEGA 91717 &mdash; Standing Dashboard</title>
 <link rel="manifest" href="/manifest.json">
-<script src="/bg.js" defer></script>
-<style>
-:root{--pad:clamp(14px,3vw,36px)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
-.shell{display:flex;min-height:100vh}
-.side{width:clamp(60px,7vw,80px);flex-shrink:0;background:var(--void2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-.main{flex:1;min-width:0;overflow-x:hidden}
-.mission-bar{background:rgba(2,2,6,.98);border-bottom:1px solid rgba(201,168,76,.12);padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:16px;height:44px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
-.mb-title{font-family:var(--D);font-size:clamp(.7rem,.9vw,.9rem);color:var(--gold)}
-.mb-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.mb-item{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:rgba(138,134,118,.5);display:flex;align-items:center;gap:6px;white-space:nowrap}
-.status-strip{background:rgba(2,2,6,.7);border-bottom:1px solid rgba(201,168,76,.06);padding:6px var(--pad);display:flex;gap:clamp(10px,2vw,24px);overflow-x:auto;scrollbar-width:none;align-items:center}
-.status-strip::-webkit-scrollbar{display:none}
-.ss-item{flex-shrink:0;display:flex;align-items:center;gap:7px}
-.ss-label{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.45)}
-.ss-val{font-family:var(--D);font-size:12px;color:var(--vc,var(--gold))}
-.pad{padding:var(--pad)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
-.kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--kc,var(--gold));cursor:pointer;transition:.18s;position:relative}
-.kpi:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
-.kpi-n{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--kc,var(--gold));line-height:1}
-.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-.kpi-sub{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5);margin-top:3px}
-.sechead{font-family:var(--M);font-size:12px;letter-spacing:4px;color:var(--cyan);padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.emblem-orb{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.2),rgba(0,0,0,.4));border:2px solid var(--kc,var(--gold));animation:emblem-float 4s ease-in-out infinite;font-size:var(--fs-4,20px);box-shadow:0 0 20px rgba(201,168,76,.4);margin-right:6px;flex-shrink:0}
-.omega-depth-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;--tier-accent:var(--gold)}
-.tier-number{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--tier-accent);font-weight:bold}
-.tier-info{flex:1;margin:0 12px}
-.tier-name{font-family:var(--D);font-size:12px;color:var(--ink);margin-bottom:3px}
-.tier-progress{font-family:var(--M);font-size:12px;color:rgba(138,134,118,.5)}
-.progress-bar{height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin-bottom:14px}
-.progress-bar-fill{height:100%;background:var(--tier-accent,var(--gold));border-radius:2px;transition:width 1.2s ease}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.lf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px var(--pad);border-top:1px solid var(--line);flex-wrap:wrap;margin-bottom:28px}
-.lf span{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes cinematic-glow{0%{box-shadow:0 0 20px rgba(201,168,76,.3),inset 0 0 20px rgba(201,168,76,.1)}50%{box-shadow:0 0 40px rgba(201,168,76,.6),inset 0 0 30px rgba(201,168,76,.2)}100%{box-shadow:0 0 20px rgba(201,168,76,.3),inset 0 0 20px rgba(201,168,76,.1)}}
-@keyframes emblem-float{0%,100%{transform:translateY(0px) rotateZ(0deg)}25%{transform:translateY(-8px) rotateZ(1.5deg)}75%{transform:translateY(-4px) rotateZ(-1.5deg)}}
-@keyframes status-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.1)}}
-@media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.two-col{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}.mission-bar{flex-wrap:wrap;height:auto;padding:8px var(--pad)}}
-</style>
+<meta http-equiv="refresh" content="0;url=/dashboard.html#overview"/>
 </head>
-<body data-page="standing-dashboard">
-<div class="shell">
-<nav class="side" id="omega-side"></nav>
-<main class="main" id="app">
-<div class="mission-bar" data-reveal="fade-up">
-<div class="mb-title">STANDING & AUTHORITY</div>
-<div class="mb-meta">
-<div class="mb-item"><span class="emblem-orb" id="auth-sigil">◆</span><span>Authority Score: <strong id="auth-score">0.00</strong></span></div>
-<div class="mb-item"><span id="tier-name">INITIATE</span></div>
-</div>
-</div>
-
-<div class="status-strip" data-reveal="fade-up">
-<div class="ss-item">
-<span class="ss-label">TIER</span>
-<span class="ss-val" id="status-tier">1 · INITIATE</span>
-</div>
-<div class="ss-item">
-<span class="ss-label">ELEMENT</span>
-<span class="ss-val" id="status-element">—</span>
-</div>
-<div class="ss-item">
-<span class="ss-label">SIGN</span>
-<span class="ss-val" id="status-sign">—</span>
-</div>
-<div class="ss-item">
-<span class="ss-label">PERSONA</span>
-<span class="ss-val" id="status-persona">—</span>
-</div>
-</div>
-
-<div class="pad">
-<div class="sechead" data-reveal="fade-up">THE THREE PILLARS</div>
-<div class="kpi-row" data-reveal="fade-up">
-<div class="kpi" style="--kc:var(--cyan)">
-<div class="kpi-n" id="kpi-knowledge">0</div>
-<div class="kpi-l">KNOWLEDGE</div>
-<div class="kpi-sub">Axis A</div>
-</div>
-<div class="kpi" style="--kc:var(--gold)">
-<div class="kpi-n" id="kpi-mastery">0</div>
-<div class="kpi-l">MASTERY</div>
-<div class="kpi-sub">Axis B</div>
-</div>
-<div class="kpi" style="--kc:var(--green)">
-<div class="kpi-n" id="kpi-contribution">0</div>
-<div class="kpi-l">CONTRIBUTION</div>
-<div class="kpi-sub">Axis C</div>
-</div>
-</div>
-
-<div class="sechead" data-reveal="fade-up">AUTHORITY SCORE</div>
-<div class="two-col" data-reveal="fade-up">
-<div class="kpi" style="--kc:var(--gold)">
-<div class="kpi-n" id="score-numeric">0.00</div>
-<div class="kpi-l">CURRENT SCORE</div>
-<div class="kpi-sub" id="score-range">0.00 — 27.84</div>
-</div>
-<div class="kpi" style="--kc:var(--cyan)">
-<div class="kpi-n" id="score-tier-num">1</div>
-<div class="kpi-l">CURRENT TIER</div>
-<div class="kpi-sub" id="score-tier-name">INITIATE</div>
-</div>
-</div>
-
-<div class="progress-bar" data-reveal="fade-up">
-<div class="progress-bar-fill" id="progress-to-next" style="width:0%"></div>
-</div>
-
-<div class="sechead" data-reveal="fade-up">PROGRESSION GATES</div>
-<div id="tier-gates" data-reveal="fade-up"></div>
-
-<div class="lf">
-<span>Standing Dashboard · Phase 5.1 · Authority Computation</span>
-<span>Unified System</span>
-</div>
+<body>
+<aside id="omega-side" data-page="standing-dashboard"></aside>
+<main class="main">
+<p style="font-family:Rajdhani,sans-serif;color:#C9A84C;text-align:center;margin:20vh 16px 0">Standing and authority now lives in the dashboard. <a href="/dashboard.html#overview" style="color:#00E5FF">Continue to the dashboard</a>.</p>
 </main>
-</div>
-
-<script src="/omega-standing-dashboard.js" data-omega-standing-dashboard defer></script>
+<script src="/bg.js" defer></script>
 </body>
 </html>

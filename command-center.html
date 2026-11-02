@@ -7,50 +7,13 @@
 <title>&#937; SYD OMEGA 91717 &mdash; Command Center</title>
 <meta name="description" content="Owner command center: nine live tiles, each reading a real table or an honest empty state."/>
 <meta name="theme-color" content="#C9A84C"/>
-<style>
-#cc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:14px 0 24px;min-width:0}
-#cc .cc-t.card{position:relative;margin:0;padding:14px 16px 16px;min-width:0;min-height:190px;border-radius:6px!important;background:rgba(10,12,18,.82)!important;border:1px solid rgba(201,168,76,.28)!important;overflow:hidden}
-#cc .cc-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px;font-family:var(--D);font-size:14px;letter-spacing:2px;font-weight:400;color:var(--ink)}
-#cc .cc-h small{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)}
-#cc .cc-big{font-family:var(--D);font-size:34px;line-height:1.1;color:var(--gold)}
-#cc .cc-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
-#cc .cc-row{display:flex;align-items:center;gap:16px;min-width:0}
-#cc .cc-empty{font-family:var(--R);font-size:14px;color:var(--muted);line-height:1.4}
-#cc .cc-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-#cc .cc-list li{display:flex;gap:10px;align-items:baseline;min-width:0;font-family:var(--R);font-size:14px;color:var(--ink)}
-#cc .cc-list li span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#cc .cc-list li time{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);flex:none}
-#cc .cc-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
-#cc .cc-dot.bad{background:var(--crim);box-shadow:0 0 8px var(--crim)}
-#cc .cc-dot.off{background:var(--muted);box-shadow:none}
-#cc .cc-ax{display:grid;gap:8px}
-#cc .cc-ax div{display:grid;grid-template-columns:22px 1fr 54px;align-items:center;gap:8px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)}
-#cc .cc-bar{height:6px;border-radius:3px;background:rgba(201,168,76,.15);overflow:hidden}
-#cc .cc-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--solar,#E2C86D))}
-#cc svg{display:block;max-width:100%}
-@media (max-width:1100px){#cc{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:680px){#cc{grid-template-columns:minmax(0,1fr)}}
-</style>
+<meta http-equiv="refresh" content="0;url=/dashboard.html#platform"/>
 </head>
 <body>
 <aside id="omega-side" data-page="command-center"></aside>
-<div class="page-shell" id="app" style="display:none">
-<header class="topbar"><div class="topbar-title">COMMAND CENTER<span class="topbar-sub" id="cc-sync">LIVE &middot; NOT YET SYNCED</span></div></header>
-<main class="main" aria-label="Command center"><div id="cc" role="region" aria-label="Command center tiles">
-<article class="cc-t card" id="cct-feeds" aria-labelledby="cct-feeds-h"><h2 class="cc-h" id="cct-feeds-h">FEED INTEGRITY<small>THIS PAGE</small></h2><div class="cc-row"><div id="cc-gauge" role="img" aria-label="Data feeds answering"></div><div><div class="cc-big" id="cc-feeds-n">--</div><div class="cc-sub">FEEDS ANSWERING</div></div></div><div class="cc-sub" id="cc-feeds-sub">Measured from this page&rsquo;s own queries, not a security score.</div></article>
-<article class="cc-t card" id="cct-members" aria-labelledby="cct-members-h"><h2 class="cc-h" id="cct-members-h">MEMBERS<small>LIVE</small></h2><div class="cc-big" id="cc-mem">--</div><div class="cc-sub">ACCESS APPROVED</div><div class="cc-sub" id="cc-pend">PENDING --</div><div class="cc-sub" id="cc-online">ONLINE NOW --</div></article>
-<article class="cc-t card" id="cct-ops" aria-labelledby="cct-ops-h"><h2 class="cc-h" id="cct-ops-h">OPERATIONS<small>7 DAYS</small></h2><div class="cc-big" id="cc-tasks7">--</div><div class="cc-sub">TASKS COMPLETED, ALL MEMBERS</div><div class="cc-sub" id="cc-tasks1">TODAY --</div><div class="cc-sub" id="cc-ai">AI QUERIES 7D --</div></article>
-<article class="cc-t card" id="cct-flow" aria-labelledby="cct-flow-h"><h2 class="cc-h" id="cct-flow-h">PAYMENTS<small>FLAG</small></h2><div class="cc-big" id="cc-pay">--</div><div class="cc-empty" id="cc-pay-s">Reading the payments flag.</div></article>
-<article class="cc-t card" id="cct-ledger" aria-labelledby="cct-ledger-h"><h2 class="cc-h" id="cct-ledger-h">ACTIVITY LEDGER<small>PUBLIC FEED</small></h2><ul class="cc-list" id="cc-ledger"><li><span class="cc-empty">Loading.</span></li></ul></article>
-<article class="cc-t card" id="cct-asc" aria-labelledby="cct-asc-h"><h2 class="cc-h" id="cct-asc-h">MY AXES<small>AUTHORITY</small></h2><div class="cc-big" id="cc-auth">--</div><div class="cc-sub">AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="cc-ax" id="cc-axes"></div></article>
-<article class="cc-t card" id="cct-spark" aria-labelledby="cct-spark-h"><h2 class="cc-h" id="cct-spark-h">MY TASKS<small>14 DAYS</small></h2><div id="cc-bars" role="img" aria-label="My tasks per day, last 14 days"></div><div class="cc-sub" id="cc-bars-s">--</div></article>
-<article class="cc-t card" id="cct-status" aria-labelledby="cct-status-h"><h2 class="cc-h" id="cct-status-h">FEED STATUS<small>LATENCY</small></h2><ul class="cc-list" id="cc-status"><li><span class="cc-empty">Measuring.</span></li></ul></article>
-<article class="cc-t card" id="cct-risk" aria-labelledby="cct-risk-h"><h2 class="cc-h" id="cct-risk-h">RISK &amp; THREATS<small>OWNER</small></h2><div class="cc-big" id="cc-risk">--</div><div class="cc-sub">OPEN RISK ITEMS</div><div class="cc-sub" id="cc-thr">THREAT EVENTS 7D --</div><div class="cc-empty" id="cc-risk-s"></div></article>
-</div></main>
-<div data-page-emblem="command-center" style="margin:8px auto 0"></div>
-</div>
-<script src="/omega-command-center.js" type="module"></script>
+<main class="main">
+<p style="font-family:Rajdhani,sans-serif;color:#C9A84C;text-align:center;margin:20vh 16px 0">The command center now lives in the dashboard. <a href="/dashboard.html#platform" style="color:#00E5FF">Continue to the dashboard</a>.</p>
+</main>
 <script src="/bg.js" defer></script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script>
 </body>
 </html>

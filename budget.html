@@ -252,8 +252,28 @@ function monthLabel(m) {
 
 /* ── STORAGE ─────────────────────────────────────────────────────────── */
 
+/* The ledger also holds data restored from a backup or the cloud, so each entry is coerced to the types the
+   renderers assume: amount a number, id/date/text strings. A string amount used to be summed into the KPI markup
+   (String#toLocaleString ignores its arguments) and date/id went into innerHTML and inline handlers raw. */
+function normaliseMonths(raw) {
+  const out = {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
+  const str = v => String(v == null ? '' : v);
+  const rows = (a, f) => (Array.isArray(a) ? a : []).filter(x => x && typeof x === 'object').map(x => Object.assign({}, x, f(x)));
+  Object.keys(raw).forEach(k => {
+    if (k === '__proto__') return;
+    const m = raw[k] && typeof raw[k] === 'object' ? raw[k] : {};
+    out[k] = Object.assign({}, m, {
+      expenses: rows(m.expenses, e => ({ id: str(e.id), cat: str(e.cat), desc: str(e.desc), date: str(e.date), amount: Number(e.amount) || 0 })),
+      income:   rows(m.income,   i => ({ id: str(i.id), source: str(i.source), date: str(i.date), amount: Number(i.amount) || 0 }))
+    });
+  });
+  return out;
+}
+
 function load() {
   try { _months  = JSON.parse(localStorage.getItem(MONTHS_KEY))  || {}; } catch { _months = {}; }
+  _months = normaliseMonths(_months);
   try { _targets = JSON.parse(localStorage.getItem(TARGETS_KEY)) || {}; } catch { _targets = {}; }
   const before = JSON.stringify(_targets);
   CATS.forEach(c => { if (!Object.prototype.hasOwnProperty.call(_targets, c.id) || _targets[c.id] == null || !Number.isFinite(Number(_targets[c.id]))) _targets[c.id] = DEFAULT_TARGETS[c.id]||0; else _targets[c.id] = Number(_targets[c.id]); });
@@ -272,8 +292,8 @@ function totalIncome(m)   { return (monthData(m).income||[]).reduce((s,i)=>s+i.a
 function totalExpenses(m) { return (monthData(m).expenses||[]).reduce((s,e)=>s+e.amount,0); }
 function byCat(m, catId)  { return (monthData(m).expenses||[]).filter(e=>e.cat===catId).reduce((s,e)=>s+e.amount,0); }
 
-function fmt(n) { return n.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}); }
-function fmtD(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmt(n) { n = Number(n) || 0; return n.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}); }
+function fmtD(n){ n = Number(n) || 0; return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
 function updateTopMeta() {
   const inc = totalIncome(_curMonth);
@@ -358,10 +378,10 @@ function renderExpenseList() {
     exps.map(e => {
       const cat = CATS.find(c=>c.id===e.cat)||CATS[CATS.length-1];
       return `<div class="tx-row">
-        <span class="tx-date">${e.date}</span>
+        <span class="tx-date">${esc(e.date)}</span>
         <span class="tx-desc">${esc(e.desc)}${e.sub ? ' <small style="color:var(--dim)">· '+esc(String(e.sub).toUpperCase())+'</small>' : ''}</span>
         <span class="tx-cat" style="color:${cat.color};border-color:${cat.color}30">${cat.label}</span>
-        <span class="tx-amt" style="color:var(--dim)">$${fmtD(e.amount)} <button class="tx-del" onclick="delExpense('${e.id}')">×</button></span>
+        <span class="tx-amt" style="color:var(--dim)">$${fmtD(e.amount)} <button class="tx-del" data-b-del="expense" data-id="${esc(e.id)}">×</button></span>
       </div>`;
     }).join('');
 }
@@ -398,10 +418,10 @@ function renderIncomeList() {
   }
   el.innerHTML = incs.map(i =>
     `<div class="tx-row">
-      <span class="tx-date">${i.date}</span>
+      <span class="tx-date">${esc(i.date)}</span>
       <span class="tx-desc">${esc(i.source)}</span>
       <span class="tx-cat" style="color:var(--gold);border-color:rgba(201,168,76,.2)">INCOME</span>
-      <span class="tx-amt" style="color:#66BB6A">$${fmtD(i.amount)} <button class="tx-del" onclick="delIncome('${i.id}')">×</button></span>
+      <span class="tx-amt" style="color:#66BB6A">$${fmtD(i.amount)} <button class="tx-del" data-b-del="income" data-id="${esc(i.id)}">×</button></span>
     </div>`
   ).join('');
 }
@@ -424,6 +444,14 @@ window.delIncome = id => {
   saveMonths(); updateTopMeta();
   renderIncomeList(); renderOverview();
 };
+
+/* The delete buttons carry the entry id as a data attribute. It used to sit inside an inline click handler's JS
+   string, where an HTML-escaped quote is decoded back to ' before the handler is parsed, so no escaping was enough. */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-b-del]'); if (!b) return;
+  if (b.dataset.bDel === 'expense') window.delExpense(b.dataset.id);
+  else if (b.dataset.bDel === 'income') window.delIncome(b.dataset.id);
+});
 
 /* ── TARGETS TAB ─────────────────────────────────────────────────────── */
 
@@ -450,7 +478,7 @@ function saveTargetValues() {
 let _trendYear = new Date().getFullYear();
 
 function renderTrends() {
-  const years = [...new Set(Object.keys(_months).map(m=>m.slice(0,4)))].sort();
+  const years = [...new Set(Object.keys(_months).map(m=>m.slice(0,4)).filter(y=>/^\d{4}$/.test(y)))].sort();
   const curYear = String(_trendYear);
   document.getElementById('b-yr-select').innerHTML = years.map(y=>
     `<button class="trend-yr-btn ${y===curYear?'on':''}" onclick="setTrendYear(${y})">${y}</button>`

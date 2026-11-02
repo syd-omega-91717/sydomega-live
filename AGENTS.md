@@ -590,6 +590,54 @@ Needs from the other agent: <specific asks>
 §9.3 block. A proposal that is honestly labelled costs one review. A change that
 claims verification it does not have costs a production incident.
 
+
+## 11. Review guidelines
+
+*What a reviewer should flag on a pull request here: Codex, Copilot, Claude, or a human. Codex reads this section
+when it reviews a PR (on open, on "ready for review", or on a `@codex review` comment).*
+
+**Flag only what would hurt production: P0 and P1.** Something that breaks a page or the platform, leaks or loses
+data, reports success for a write that did nothing, widens access, or breaks a rule in §5. Do **not** comment on style,
+naming, formatting, comment wording or typos: this repo's gates already handle what they can, and a review full of
+nits hides the one finding that matters. Cite the file and line and the concrete input that fails. If you could not
+verify a claim, say so rather than assert it.
+
+**Check these, in rough order of how often they have shipped a real bug here** (full history: `FIXES_LOG.md`, then
+`docs/fixes/`):
+
+1. **A write that silently does nothing** (§4.4). Every non-read `.from()`/`.rpc()` must check `.error` before a
+   success toast, an optimistic update, or advancing a flow. A `try/catch` around it catches nothing.
+2. **A column or conflict target that does not exist** (§4.5). Compare names with `supabase/live-schema.json`; an
+   `upsert` `onConflict` must match a real unique index, and omitting it on a table with a non-PK unique constraint is
+   worse.
+3. **A policy and a privilege that do not meet.** An RLS policy on a table with no table-level `GRANT` never runs; a
+   `GRANT` narrower than the default `EXECUTE ... TO PUBLIC` does nothing until that default is revoked;
+   `WITH CHECK (true)` on a table with a `user_id` is a spoofing gap; a `SECURITY DEFINER` function needs a pinned
+   `search_path`.
+4. **Unescaped stored or third-party values in markup.** Anything reaching `innerHTML`, `insertAdjacentHTML` or
+   `document.write` must go through the shared escaper, and a value never goes inside an inline `onclick=` (use a
+   `data-` attribute and a delegated listener). Pages load `/omega-esc.js` with a plain tag and bind it once; **modules
+   look `window.OmegaEsc` up at call time and never bind it at load** (a module can run first and would lock in a blank
+   fallback). `bg.js` carries one verbatim bootstrap copy, proved identical by a test: change both or neither.
+5. **Edits to `bg.js` or `nav.js`** (single points of failure: a parse error takes every page down). Ask for evidence:
+   a clean parse, and a real render of at least one page. The fetch recorder must stay the first thing `bg.js` does.
+6. **Invented numbers rendered as fact** (§4.9): `Math.random()`, a hard-coded count, percentage, revenue or date shown
+   to a member as if measured. Show the real value or an honest empty state.
+7. **A hard stop from §5**: a `platform_settings` flag set to `true`, Stripe code touched, a `service_role` key, a new
+   build step or dependency, a deleted page/table/column, an applied migration rewritten, schema living only in
+   `supabase/*.sql`, or a check disabled to reach green.
+8. **Shared-owner collisions** (§4.1, §4.2): a second owner for something that has one (a page-local `:root` token, a
+   hand-rolled auth check, two modules behind one `data-omega-*` guard attribute, a global only one page assigns).
+9. **A string that exists in one place** (§4.6): user-facing text must be in the markup, `T_EN` and all six packs.
+10. **Documentation that will go stale**: a fix with no `docs/fixes/<date>-<slug>.md` entry (`scripts/new-fix-entry.py`);
+    an edit to the frozen `FIXES_LOG.md`; a per-PR count added to `CLAUDE.md`.
+
+**A review does not replace the gates.** CI results, `./scripts/ci-local.sh`, and a real render are evidence;
+a review is a second pair of eyes on what they cannot see.
+
+**When the external reviewer is unavailable** (usage limit reached, or the job failed), the author reviews its own diff
+against this list and says so in the PR body. A review that did not run is not a review that found nothing.
+
 ---
 
 *Companion documents: `CLAUDE.md` (Claude Code's operating context — read it, do

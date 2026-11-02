@@ -174,6 +174,15 @@
       '.on-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,0.5)}',
       '.on-brand{width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:8px;flex-shrink:0;text-decoration:none}',
       '.on-sections{display:flex;flex-direction:column;gap:2px;align-items:center;width:100%;flex:1;overflow-y:auto;scrollbar-width:none}',
+      '#omega-side:not(.on-all) .on-item.on-more-item{display:none!important}',
+      '#omega-side .on-more{background:none;font:inherit;color:inherit;cursor:pointer;width:68px}',
+      '#omega-side .on-more-wrap{display:flex;justify-content:center;width:100%;flex-shrink:0;margin-top:2px}',
+      /* A short window (<=760px tall) cannot hold the header, seven sections, MORE and LOG OUT: the section list is 57px short at
+         700px and the seventh section sat behind a hidden scrollbar. The brand emblem duplicates Home just above it, so it goes here. */
+      '@media (max-height:760px){#omega-side .on-brand{display:none!important}#omega-side .on-icon{padding:6px 4px 4px}}',
+      '#omega-side .on-more:focus-visible{outline:2px solid #5DAFB5;outline-offset:2px}',
+      '#omega-side .on-lbl-less,#omega-side.on-all .on-lbl-more{display:none}',
+      '#omega-side.on-all .on-lbl-less{display:inline}',
       '.on-sections::-webkit-scrollbar{display:none}',
       /* Each icon cell: icon + permanent label */
       '.on-item{position:relative;width:100%;display:flex;flex-direction:column;align-items:center}',
@@ -396,6 +405,14 @@
     if(active && !out.some(function(x){return x[0]===active[0];}))out.push(active);
     return out;
   }
+  /* PROGRESSIVE DISCLOSURE. 15 sections and ~107 links on every page is more doors than a member can hold in
+     their head (measured 2026-11-02). The dock leads with the seven that carry the platform's purpose -- home,
+     growth, body, money, people, the cosmic identity, the profile -- and folds the other eight behind MORE.
+     Nothing is removed: the folded sections stay in search, the full menu, the phone drawer and the owner deck, and
+     the section you are IN is always shown, so you never lose where you are. A member who wants everything taps
+     MORE once; the choice is remembered (omega_nav_all). */
+  var CORE_SECTIONS=['command','ascend','life','vault','order','cosmos','identity'];
+  var NAV_ALL=false; try{NAV_ALL=localStorage.getItem('omega_nav_all')==='1';}catch(e){}
   var h='';
   h+='<div class="on-hb">';
   /* The hamburger: first control in the rail (the design puts it top-left). In flow, so it cannot
@@ -415,7 +432,7 @@
   h+='<div class="on-sections">';
   SECTIONS.forEach(function(sec){
     var isAct=sec.key===activeSection;
-    h+='<div class="on-item">';
+    h+='<div class="on-item'+(CORE_SECTIONS.indexOf(sec.key)<0&&!isAct?' on-more-item':'')+'">';
     h+='<a class="on-icon'+(isAct?' on-active':'')+'" href="'+sec.href+'" style="--col:'+sec.col+'">';
     h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'var(--muted)')+'">'+sec.icon+'</span>';
     h+='<span class="on-lbl" data-i18n="nav_sec_'+sec.key+'">'+sec.label+'</span>';
@@ -439,6 +456,11 @@
     h+='</div></div>';
   });
   h+='</div>';
+  /* MORE is pinned OUTSIDE the scrolling section list (beside LOG OUT): inside it, a 700px-tall window pushed it below
+     the fold behind a hidden scrollbar, which hides the one control the folding depends on. */
+  h+='<div class="on-item on-more-wrap"><button type="button" class="on-icon on-more" id="on-more" aria-expanded="'+(NAV_ALL?'true':'false')+'" aria-label="Show or hide the other sections">';
+  h+='<span class="on-glyph" style="color:var(--muted)">\u22EF</span>';
+  h+='<span class="on-lbl on-lbl-more" data-i18n="nav_more">MORE</span><span class="on-lbl on-lbl-less" data-i18n="nav_less">LESS</span></button></div>';
   /* Owner-only: the one place that reaches every page. Hidden until bg.js
      confirms is_owner (body.omega-owner). An inline display:none, not the
      hidden attribute: .on-icon sets display itself and would override it.
@@ -454,8 +476,16 @@
 
   injectWorkspaceRail();
 
-  el.className='omega-side';
+  el.className='omega-side'+(NAV_ALL?' on-all':'');
   el.innerHTML=h;
+  (function(){
+    var b=document.getElementById('on-more'); if(!b) return;
+    b.addEventListener('click',function(){
+      var on=el.classList.toggle('on-all');
+      b.setAttribute('aria-expanded',on?'true':'false');
+      try{localStorage.setItem('omega_nav_all',on?'1':'0');}catch(e){}   /* a blocked store only costs the memory */
+    });
+  })();
 
   /* Reveal owner-only entries once bg.js marks the owner. It adds the class
      after an async profile read, so watch for it rather than check once. */
@@ -596,6 +626,9 @@
       '.drawer-sections{display:grid;grid-template-columns:1fr 1fr;gap:0}',
       '.ds-section{border-right:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);padding:14px 16px}',
       '.ds-section:nth-child(2n){border-right:none}',
+      '#omega-drawer:not(.ds-all) .ds-section.ds-more{display:none}',
+      '#omega-drawer .dm-less,#omega-drawer.ds-all .dm-more{display:none}',
+      '#omega-drawer.ds-all .dm-less{display:inline}',
       /* padding here is what carries these to a real touch size: the drawer is
          the ONLY navigation on a phone (the desktop aside is display:none
          below 761px), and measured at 375px every one of its 82 links and 11
@@ -694,7 +727,7 @@
     drawer.appendChild(dAll);
     var dsgrid=document.createElement('div');dsgrid.className='drawer-sections';
     DRAWER_SECTIONS.forEach(function(sec){
-      var ds=document.createElement('div');ds.className='ds-section';
+      var ds=document.createElement('div');ds.className='ds-section'+(CORE_SECTIONS.indexOf(sec.key)<0&&sec.key!==activeSection?' ds-more':'');
       var head=document.createElement('a');head.className='dss-head'+(sec.key===activeSection?' ds-on':'');head.href=sec.href;
       var emblemHTML='';if(window.OmegaEmblems&&window.OmegaEmblems[sec.key]){emblemHTML='<span class="dss-emblem" style="color:'+sec.col+';font-size:20px;display:inline-block;margin-right:8px;">'+window.OmegaEmblems[sec.key]+'</span>';}
       head.innerHTML=emblemHTML+'<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
@@ -709,7 +742,19 @@
       });
       ds.appendChild(links);dsgrid.appendChild(ds);
     });
-    drawer.appendChild(dsgrid);document.body.appendChild(drawer);
+    drawer.appendChild(dsgrid);
+    /* Same rule as the desktop dock: the seven core sections first, the rest one tap away, the choice remembered. */
+    var dMore=document.createElement('button');dMore.type='button';dMore.id='drawer-more';dMore.className='drawer-more';
+    dMore.innerHTML='<span class="dm-more" data-i18n="nav_more_sections">MORE SECTIONS</span><span class="dm-less" data-i18n="nav_fewer_sections">FEWER SECTIONS</span>';
+    dMore.setAttribute('aria-expanded',NAV_ALL?'true':'false');
+    dMore.style.cssText='display:block;width:calc(100% - 28px);min-height:44px;margin:12px 14px 14px;padding:0 4px;border:1px solid rgba(201,168,76,.22);border-radius:7px;background:rgba(201,168,76,.05);color:#E8C966;font-family:var(--M,"Courier Prime",monospace);font-size:var(--fs-2,14px);letter-spacing:2px;cursor:pointer';
+    if(NAV_ALL)drawer.classList.add('ds-all');
+    dMore.addEventListener('click',function(){
+      var on=drawer.classList.toggle('ds-all');
+      dMore.setAttribute('aria-expanded',on?'true':'false');
+      try{localStorage.setItem('omega_nav_all',on?'1':'0');}catch(e){}
+    });
+    drawer.appendChild(dMore);document.body.appendChild(drawer);
     if(window.__omegaRevealOwner)window.__omegaRevealOwner();
     if(window.__omegaPaintWaiting)window.__omegaPaintWaiting();
 

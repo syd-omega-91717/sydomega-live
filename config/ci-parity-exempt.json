@@ -1,0 +1,10 @@
+{
+  "_doc": "Scripts a PR-triggered workflow runs that ci-local.sh deliberately does not. Each needs a reason a local checkout cannot satisfy. Verified by running each on 2026-11-02. scripts/ci-parity-contract.py fails on a stale entry.",
+  "evidence-audit.py": "Rewrites EVIDENCE_MATRIX.md on every run (measured: 98-line diff on a clean tree); the workflow only regenerates a report, so a local run would dirty the tree without adding an assertion. Use `evidence-audit.py --summary` by hand.",
+  "omega-page-census.py": "Creates config/omega-page-census.json on every run (measured: untracked file on a clean tree); a report generator, not an assertion.",
+  "integrate-spatial-realms.js": "A materializer: the spatial-* workflows run it to rewrite files, then commit. Not a check.",
+  "tests/test_content_pipeline_e2e.py": "Needs the `supabase` CLI and a database (FileNotFoundError: 'supabase' locally); runs in supabase-full-migration-replay.yml.",
+  "vercel-deployment-auth-check.sh": "Needs a valid VERCEL_TOKEN secret (exits VERCEL_AUTH=FAIL without one); the deploy path is postponed anyway (see vercel-production.yml env).",
+  "vercel-production-smoke.sh": "Fetches the live production site over the network; its result depends on what is deployed, not on the diff.",
+  "vercel-production-surface-smoke.py": "Fetches the live production site over the network (64 s locally); depends on what is deployed, not on the diff."
+}

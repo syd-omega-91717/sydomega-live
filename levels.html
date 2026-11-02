@@ -132,18 +132,21 @@
 .lv-card:hover{transform:translateY(-2px)}
 </style>
 <script>
+/* Names and thresholds are the canon's (OmegaCanon.authority.gate_names / .gates, omega-canon.json); this page used to
+   carry NOVICE/ADEPT/MASTER and shift every name by one or two rungs (FIXES_LOG 205). scripts/ladder-copy-contract.py
+   fails if this table stops matching the canon. */
 var LVLS=[
-  {n:1,name:'NOVICE',     thr:2.3197,  col:'#C9A84C'},
-  {n:2,name:'INITIATE',   thr:4.6394,  col:'#E2C86D'},
-  {n:3,name:'ACOLYTE',    thr:6.9592,  col:'#C9A84C'},
-  {n:4,name:'SCHOLAR',    thr:9.2789,  col:'#00E5FF'},
-  {n:5,name:'ADEPT',      thr:11.5986,  col:'#3fb27f'},
-  {n:6,name:'KEEPER',     thr:13.9183, col:'#E86A3A'},
-  {n:7,name:'MASTER',     thr:16.2381, col:'#9B6BF0'},
-  {n:8,name:'ARCHITECT',  thr:18.5578, col:'#C9A84C'},
-  {n:9,name:'SOVEREIGN',  thr:20.8775, col:'#E2C86D'},
-  {n:10,name:'VANGUARD',  thr:23.1972,  col:'#00E5FF'},
-  {n:11,name:'HERALD',    thr:25.517,  col:'#3fb27f'},
+  {n:1,name:'INITIATE',     thr:2.3197,  col:'#C9A84C'},
+  {n:2,name:'ACOLYTE',   thr:4.6394,  col:'#E2C86D'},
+  {n:3,name:'SCHOLAR',    thr:6.9592,  col:'#C9A84C'},
+  {n:4,name:'KEEPER',    thr:9.2789,  col:'#00E5FF'},
+  {n:5,name:'GUARDIAN',      thr:11.5986,  col:'#3fb27f'},
+  {n:6,name:'ARCHITECT',     thr:13.9183, col:'#E86A3A'},
+  {n:7,name:'SOVEREIGN',     thr:16.2381, col:'#9B6BF0'},
+  {n:8,name:'VANGUARD',  thr:18.5578, col:'#C9A84C'},
+  {n:9,name:'HERALD',  thr:20.8775, col:'#E2C86D'},
+  {n:10,name:'ORACLE',  thr:23.1972,  col:'#00E5FF'},
+  {n:11,name:'PRIME',    thr:25.517,  col:'#3fb27f'},
   {n:12,name:'APEX',      thr:27.8367,col:'#E2C86D'},
 ];
 function build(){

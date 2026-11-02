@@ -139,7 +139,7 @@
           ['expenses','EXPENSES','/expenses.html','folded'],['wealth','WEALTH','/wealth.html'],['ledger','ASSET LEDGER','/ledger.html'],['payments','PAYMENTS','/payments.html','folded'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html','folded']]},
     {key:'achieve',icon:'\u265A', label:'ACHIEVE', href:'/achieve.html', col:'#C9A84C',
      sub:[['achieve-home','ACHIEVE HOME','/achieve.html'],['ladder','LADDER','/ladder.html'],['achievements','ACHIEVEMENTS','/achievements.html'],['leaderboard','LEADERBOARD','/leaderboard.html'],['quest-progress','QUEST PROGRESS','/quest-progress.html'],['my-quests','MY QUESTS','/my-quests.html'],['cosmetics','COSMETICS','/cosmetics.html','folded'],['domain-mastery','DOMAIN MASTERY','/domain-mastery.html','folded'],['covenant','MONTHLY COVENANT','/covenant.html','folded'],['seasonal-events','SEASONAL EVENTS','/seasonal-events.html','folded'],['gates','AUTHORITY GATES','/gates.html','folded'],
-          ['grades','GRADES','/grades.html','folded'],['levels','LEVELS','/levels.html'],['phases','PHASES','/phases.html','folded'],
+          ['grades','GRADES','/grades.html','folded'],['levels','LEVELS','/levels.html','folded'],['phases','PHASES','/phases.html','folded'],
           ['ascension','ASCENSION','/ascension.html','folded'],['kings','KINGS LATTICE','/kings.html','folded'],['triads','TRIADS','/triads.html','folded'],
           ['grid','LATTICE GRID','/grid.html','folded'],['awards','AWARDS','/awards.html','folded'],['hercules','HERCULES LABORS','/hercules.html'],['trophies','TROPHIES','/trophies.html','folded']]},
     {key:'archive',icon:'\u2735', label:'ARCHIVE', href:'/archive.html',     col:'#3fb27f',

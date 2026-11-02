@@ -1987,6 +1987,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-empty-guide.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-local-backup.js",
@@ -4154,6 +4155,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -14198,6 +14200,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -14986,6 +14989,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"

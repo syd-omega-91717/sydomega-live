@@ -429,15 +429,35 @@ function renderHistory(){
     var d=new Date(l.ts);
     var t=TECHNIQUES.find(function(t){return t.name===l.technique;})||{color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')};
     var div=document.createElement('div'); div.className='log-card card';
-    div.innerHTML='<div><div class="log-name" style="color:'+t.color+'">'+l.technique+'</div>'+
-      '<div class="log-meta">'+l.cycles+' cycles · '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</div></div>'+
-      '<div class="log-dur">'+fmtDur(l.duration)+'</div>';
+    var left=document.createElement('div');
+    var nm=document.createElement('div'); nm.className='log-name'; nm.style.color=t.color; nm.textContent=l.technique;
+    var meta=document.createElement('div'); meta.className='log-meta';
+    meta.textContent=l.cycles+' cycles · '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    left.appendChild(nm); left.appendChild(meta);
+    var dur=document.createElement('div'); dur.className='log-dur'; dur.textContent=fmtDur(l.duration);
+    div.appendChild(left); div.appendChild(dur);
     bl.appendChild(div);
   });
 }
 
 function fmtDur(s){var m=Math.floor(s/60);var sec=s%60;return m>0?m+'m '+sec+'s':sec+'s';}
-function loadLogs(){try{return JSON.parse(localStorage.getItem(BREATH_KEY)||'[]');}catch(e){return[];}}
+/* The log also holds data restored from a backup or the cloud, so every entry is coerced to the types the renderers
+   assume (cycles/duration numbers, technique/ts strings). A string cycles used to be summed straight into the stats
+   markup and technique went into innerHTML. */
+function loadLogs(){
+  try{
+    var a=JSON.parse(localStorage.getItem(BREATH_KEY)||'[]');
+    if(!Array.isArray(a)) return [];
+    return a.filter(function(l){return l&&typeof l==='object';}).map(function(l){
+      return Object.assign({},l,{
+        ts:typeof l.ts==='string'?l.ts:new Date(0).toISOString(),
+        technique:String(l.technique==null?'':l.technique),
+        cycles:Number(l.cycles)||0,
+        duration:Number(l.duration)||0
+      });
+    });
+  }catch(e){return[];}
+}
 function saveLogs(l){localStorage.setItem(BREATH_KEY,JSON.stringify(l));}
 function updateMeta(){document.getElementById('tb-sessions').textContent='── SESSIONS: '+loadLogs().length;}
 

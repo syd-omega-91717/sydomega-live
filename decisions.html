@@ -701,17 +701,17 @@ function renderJournal() {
     return `<div class="dec-card card">
       <div class="dec-hd">
         <span class="dec-title">${esc(d.title)}</span>
-        <span class="dec-status" style="color:${col};border-color:${col}">${(d.status||'DRAFT').toUpperCase()}</span>
+        <span class="dec-status" style="color:${col};border-color:${col}">${esc(String(d.status||'DRAFT').toUpperCase())}</span>
       </div>
-      <div class="dec-meta">${d.decidedAt||'DRAFT'}  ·  ${d.urgency?.toUpperCase()||''}  ·  ${FRAMEWORKS.find(f=>f.id===d.framework)?.name||''}</div>
+      <div class="dec-meta">${esc(d.decidedAt||'DRAFT')}  ·  ${esc(String(d.urgency||'').toUpperCase())}  ·  ${FRAMEWORKS.find(f=>f.id===d.framework)?.name||''}</div>
       ${(()=>{const q=quadrant(d); return q?`<div class="dec-quad" style="color:${QUADRANTS[q].col};border-color:${QUADRANTS[q].col}">${q} · ${QUADRANTS[q].act}</div>`:'';})()}
       ${d.chosenOption?`<div class="dec-chosen">→ CHOSE: ${esc(d.chosenOption)}</div>`:''}
       ${d.commitStmt?`<div class="dec-outcome">"${esc(d.commitStmt)}"</div>`:''}
       ${d.outcome?`<div class="dec-outcome" style="border-color:rgba(102,187,106,.3)"><b style="color:rgba(102,187,106,.7)">OUTCOME:</b> ${esc(d.outcome)}</div>`:''}
       <div class="dec-acts">
-        <button class="dec-act" onclick="editDecision('${d.id}')">EDIT</button>
-        ${d.status==='decided'?`<button class="dec-act" onclick="addOutcome('${d.id}')">LOG OUTCOME</button>`:''}
-        <button class="dec-act" onclick="delDecision('${d.id}')" style="color:rgba(192,57,43,.5)">DELETE</button>
+        <button class="dec-act" data-dec-act="edit" data-id="${esc(d.id)}">EDIT</button>
+        ${d.status==='decided'?`<button class="dec-act" data-dec-act="outcome" data-id="${esc(d.id)}">LOG OUTCOME</button>`:''}
+        <button class="dec-act" data-dec-act="del" data-id="${esc(d.id)}" style="color:rgba(192,57,43,.5)">DELETE</button>
       </div>
     </div>`;
   }).join('');
@@ -766,6 +766,14 @@ window.activateTab = function(name) {
 
 ['new','journal','frameworks','science'].forEach(t=>{
   document.getElementById('t-'+t).addEventListener('click',()=>activateTab(t));
+});
+
+/* Journal buttons carry the decision id as a data attribute. It used to sit inside an inline click handler's JS string:
+   an HTML-escaped quote is decoded back to ' before that handler is parsed, so no escaping could make it safe. */
+document.getElementById('d-journal-list').addEventListener('click', e => {
+  const b = e.target.closest('[data-dec-act]'); if (!b) return;
+  const fn = { edit: window.editDecision, outcome: window.addOutcome, del: window.delDecision }[b.dataset.decAct];
+  if (fn) fn(b.dataset.id);
 });
 
 /* ── FILTER BUTTONS ──────────────────────────────────────────────────── */

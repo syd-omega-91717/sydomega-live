@@ -9,12 +9,7 @@ const SUPABASE_KEY = 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
 
 const sb = window.__omegaSb || (window.__omegaSb = createClient(SUPABASE_URL, SUPABASE_KEY));
 
-function escapeHtml(value) {
-  return String(value == null ? '' : value)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+function escapeHtml(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 
 function state(label, detail, kind) {
   return '<div class="vault-native-state vault-native-' + kind.toLowerCase() + '">' +

@@ -135,6 +135,23 @@ class T(unittest.TestCase):
         arrow = "const h = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');\n"
         self.assertEqual(n(arrow + "el.innerHTML='<b>'+h(x)+'</b>';"), 0)
 
+    def test_call_time_wrapper_of_the_shared_helper_is_an_escaper(self):
+        # modules may run before omega-esc.js has executed, so they look it up at call time instead of binding once
+        wrap = "function esc(v){ return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }\n"
+        dash = "function esc(v){ return v == null ? '—' : (window.OmegaEsc ? OmegaEsc.esc(v) : ''); }\n"
+        arrow = "const esc = (v) => (window.OmegaEsc ? OmegaEsc.esc(v) : '');\n"
+        for helper in (wrap, dash, arrow):
+            self.assertEqual(n(helper + "el.innerHTML='<b>'+esc(x)+'</b>';"), 0, helper)
+            self.assertEqual(n(helper + "el.innerHTML='<b>'+esc(x)+y+'</b>';"), 1, helper)   # partial is still a finding
+
+    def test_a_long_function_that_escapes_one_field_is_not_an_escaper(self):
+        long_fn = ("function render(r){ const t = OmegaEsc.esc(r.title); var out = '<li>' + t + '</li>'; "
+                   "out += '<i>' + r.note + '</i>'; out += '<u>' + r.more + '</u>'; return out; }\n")
+        self.assertEqual(n(long_fn + "el.innerHTML='<ul>'+render(x)+'</ul>';"), 1)
+        # short, but it builds markup: still a renderer, not an escaper
+        short_fn = "function row(v){ return '<b>' + OmegaEsc.esc(v) + '</b>' + v.raw; }\n"
+        self.assertEqual(n(short_fn + "el.innerHTML='<ul>'+row(x)+'</ul>';"), 1)
+
     def test_help_exits_zero(self):
         self.assertEqual(subprocess.run([sys.executable, SRC, '--help'], capture_output=True).returncode, 0)
 

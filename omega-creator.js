@@ -4,7 +4,7 @@
 'use strict';
 if (window.__omegaCreator) return;
 window.__omegaCreator = true;
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 const IDEA_TYPES = [ 'concept', 'content', 'game', 'course', 'quiz', 'media', 'service', 'product', 'feature', 'investment' ];
 const STAGES = [ {
 key: 'idea', label: 'IDEA', color: 'var(--gold)', desc: 'Initial proposal'

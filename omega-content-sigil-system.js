@@ -68,7 +68,7 @@
     while(anchor&&anchor.parentNode!==main)anchor=anchor.parentNode;
     if(anchor&&anchor!==door)main.insertBefore(door,anchor);else main.prepend(door);
   }
-  function escapeHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function escapeHtml(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
   /* The "SECTION / NEXT . PAGE . OPEN ->" card is opt-in too
      (<body data-omega-related>): with the door gone it became the first thing
      on every page, text whose job the sidebar and the hubs already do. */

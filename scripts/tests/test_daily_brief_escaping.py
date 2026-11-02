@@ -5,15 +5,20 @@ from pathlib import Path
 import re
 import unittest
 
-SRC = (Path(__file__).resolve().parents[2] / "omega-daily-brief.js").read_text(encoding="utf-8")
+ROOT = Path(__file__).resolve().parents[2]
+SRC = (ROOT / "omega-daily-brief.js").read_text(encoding="utf-8")
 
 
 class Escaping(unittest.TestCase):
     def test_helper_escapes_the_five_characters(self):
-        m = re.search(r"function esc\(s\)\{.*?\n", SRC)
-        self.assertIsNotNone(m)
+        # esc() is a call-time wrapper of the shared helper (a module may run before omega-esc.js, so it never binds
+        # it at load); the five characters are escaped by that helper, which test_omega_esc.py executes.
+        m = re.search(r"function esc\(v\) \{[^\n]*\}", SRC)
+        self.assertIsNotNone(m, "esc() is no longer the call-time wrapper")
+        self.assertIn("window.OmegaEsc ? OmegaEsc.esc(v) : ''", m.group(0))
+        shared = (ROOT / "omega-esc.js").read_text(encoding="utf-8")
         for ch in ("&amp;", "&lt;", "&gt;", "&quot;", "&#39;"):
-            self.assertIn(ch, m.group(0))
+            self.assertIn(ch, shared)
 
     def test_stored_values_are_escaped_where_they_reach_html(self):
         for expr in ("esc(b.date)", "esc(b.dayScore)", "esc(b.intent||'No intent set')",

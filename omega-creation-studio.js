@@ -8,7 +8,7 @@ const sb=window.__omegaSb||(window.__omegaSb=createClient(SUPABASE_URL,SUPABASE_
 const $=id=>document.getElementById(id);
 const state={user:null,projects:[],assets:[],providers:[],jobs:[]};
 
-function esc(v){const m={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};return String(v??'').replace(/[&<>"']/g,c=>m[c]);}
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function msg(id,text,kind='note'){$(id).className=kind;$(id).textContent=text;}
 function err(e){return e?.message||e?.details||e?.hint||'Operation failed';}
 function statusClass(s){return ['FAILED','CANCELLED','DISABLED','DEGRADED'].includes(s)?'bad':['UNCONFIGURED','DESIGNED','DRAFT','QUEUED'].includes(s)?'warn':'';}

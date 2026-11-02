@@ -10,10 +10,7 @@ const sb = window.__omegaSb || (window.__omegaSb = createClient(SUPABASE_URL, SU
 const $ = (id) => document.getElementById(id);
 const state = { user:null, missions:[], quests:[], missionStates:[], questStates:[], events:[], transitions:[], missionTasks:[] };
 
-function esc(value){
-  const map={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
-  return String(value ?? '').replace(/[&<>"']/g,function(ch){return map[ch];});
-}
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function reality(label,note){
   return '<div class="oms" data-omega-mission-state>'+
     '<div class="oms-title">MISSION STATE</div>'+

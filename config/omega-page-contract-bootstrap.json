@@ -239,6 +239,7 @@
           "/nav.js",
           "/omega-achieve-boot.js",
           "/omega-achieve-native.js",
+          "/omega-esc.js",
           "/omega-morph.js"
         ],
         "supabase_tables": [],
@@ -3525,6 +3526,7 @@
           "/omega-analytics-init.js",
           "/omega-cosmos-native.js",
           "/omega-demo-video.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -8153,6 +8155,7 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-esc.js",
           "/omega-invest-boot.js",
           "/omega-invest-native.js",
           "/omega-invest-shell-boot.js",
@@ -9534,6 +9537,7 @@
           "/omega-analytics-init.js",
           "/omega-content-fabric.js",
           "/omega-demo-video.js",
+          "/omega-esc.js",
           "/omega-media-boot.js",
           "/omega-media-core.js",
           "/omega-media-native.js",

@@ -81,6 +81,12 @@ ESCAPING_BODY = re.compile(r"&amp;|&lt;|createTextNode|textContent|&#")
 # The shared helper (omega-esc.js). Only esc and num count as "escaped"; url() alone can still carry a quote.
 SHARED_CALL = re.compile(r"^(?:window\.)?OmegaEsc\.(?:esc|num)$")
 SHARED_ALIAS = re.compile(r"(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*[^;\n]*OmegaEsc\.(?:esc|num)\b")
+# A module-side wrapper that looks the shared helper up at CALL time (a module may run before omega-esc.js has
+# executed, so it must never bind the helper once at load): `function esc(v){ return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }`.
+# Deliberately short: a long render function that escapes one of its fields is not an escaper.
+SHARED_WRAPPER_BODY = re.compile(r"OmegaEsc\.(?:esc|num)\s*\(")
+MAX_WRAPPER_BODY = 120
+MARKUP_LITERAL = re.compile(r"""['"`]\s*<""")      # a body that builds markup is a renderer, never a plain escaper
 LITERAL = re.compile(r"""^(?:'[^'\\]*'|"[^"\\]*"|\d+(?:\.\d+)?|`[^`$\\]*`)$""")
 EXEMPT = re.compile(r"xss-ok:\s*(\S[^\n*]{7,})")
 MAX_STATEMENT = 8000
@@ -128,7 +134,9 @@ def helpers(text: str) -> set[str]:
     """Names of functions in this file whose own body escapes or text-nodes."""
     out = set()
     for m in FUNC.finditer(text):
-        if ESCAPING_BODY.search(function_body(text, m.end())):
+        body = function_body(text, m.end())
+        if ESCAPING_BODY.search(body) or (len(body) <= MAX_WRAPPER_BODY and SHARED_WRAPPER_BODY.search(body)
+                                          and not MARKUP_LITERAL.search(body)):
             out.add(m.group(1) or m.group(2))
     for m in SHARED_ALIAS.finditer(text):   # const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '')
         out.add(m.group(1))

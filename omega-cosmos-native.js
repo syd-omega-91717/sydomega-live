@@ -8,9 +8,7 @@ const sb = window.__omegaSb || (window.__omegaSb = createClient(SUPABASE_URL, SU
 const root = document.querySelector('[data-cosmos-native-state]');
 if (!root) throw new Error('COSMOS native state mount missing');
 
-const esc = (value) => String(value ?? '—').replace(/[&<>"']/g, (c) => ({
-  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-}[c]));
+const esc = (v) => (v == null ? '—' : (window.OmegaEsc ? OmegaEsc.esc(v) : ''));
 
 function render(state, payload = {}) {
   const labels = {

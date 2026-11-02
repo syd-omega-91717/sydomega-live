@@ -27,7 +27,7 @@ var EXTRA=[
 ];
 var S={tracks:[],agents:{},lens:0,sel:0,rot:0,el:null,mine:-1};
 var $=function(id){return document.getElementById(id);};
-function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function cap(s){s=String(s||'');return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();}
 function colorOf(sign){return window.OmegaEmblem?window.OmegaEmblem.color(sign):'#C9A84C';}
 function elementOf(tr){return (window.OmegaCanon.elementFor(tr.sign)||tr.element||'').toUpperCase();}

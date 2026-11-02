@@ -28,7 +28,7 @@ import { createClient } from '/vendor/supabase-js.js';
   var S = { tab: 'ask', uid: null, profile: {}, agent: null, inbox: [], log: [], matrix: null, busy: false };
   var host;
 
-  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function ago(iso) {
     var s = (Date.now() - new Date(iso).getTime()) / 1000;

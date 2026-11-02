@@ -139,7 +139,7 @@ window.downloadBlocksIcs=downloadBlocksIcs;
 (function(){var b=document.getElementById('blocksIcs');if(b)b.addEventListener('click',downloadBlocksIcs);})();
 /* Everything that reaches innerHTML below came from localStorage, which also holds data restored from a backup
    file or the cloud: treat it as untrusted text (CodeQL js/xss-through-dom, FIXES_LOG 204). */
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function renderSchedule(){
   var el=document.getElementById('scheduleGrid'),blocks=todayBrief.schedule||[];
   if(!blocks.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:8px 0">No time blocks yet.</div>';return;}

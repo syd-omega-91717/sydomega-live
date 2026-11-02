@@ -108,7 +108,7 @@
     });
   }
 
-  function escapeHtml(v){return v==null?'':String(v).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
+  function escapeHtml(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
   function escapeAttr(v){return String(v).replace(/[^a-zA-Z0-9_\-./#?=&]/g,'');}
 
   async function boot(){

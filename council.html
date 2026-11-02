@@ -428,7 +428,9 @@
 </main>
   </div>
 
-  <script>
+  <script src="/omega-esc.js"></script>
+<script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
     const sb = window.OmegaSupabase?.sb;
     if (!sb) {
       document.getElementById('roleAnalysisPanel').innerHTML = '<div class="empty-state">SUPABASE NOT READY</div>';
@@ -630,9 +632,6 @@
       }
     }
 
-    function esc(str) {
-      return String(str==null?'':str).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
-    }
 
     document.addEventListener('DOMContentLoaded', initCouncil);
   </script>

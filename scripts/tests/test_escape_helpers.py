@@ -81,8 +81,11 @@ class EscapeHelperContract(unittest.TestCase):
 
     def test_every_helper_escapes_all_five_characters(self):
         helpers = list(extract_helpers())
-        # Guard against a broken extractor reporting a vacuous pass.
-        self.assertGreater(len(helpers), 40, "extractor found too few helpers")
+        # Guard against a broken extractor reporting a vacuous pass. The floor follows the esc-copy ratchet baseline
+        # (it was a fixed 40 while ~100 local copies existed; each migration to omega-esc.js legitimately lowers it).
+        with open(os.path.join(ROOT, "scripts", "esc-copy-baseline.json"), encoding="utf-8") as fh:
+            copies = sum(v for k, v in json.load(fh).items() if not k.startswith("_"))
+        self.assertGreaterEqual(len(helpers), int(copies * 0.5), "extractor found too few helpers")
         self.assertEqual(self.run_probe(helpers), [])
 
     def test_probe_catches_known_bad_shapes(self):

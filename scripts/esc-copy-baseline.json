@@ -1,15 +1,6 @@
 {
  "_doc": "Local copies of the HTML escaper, per root file. May only fall; migrate to omega-esc.js (see scripts/esc-copy-ratchet.py).",
  "approvals.js": 1,
- "architecture.html": 1,
- "council.html": 1,
- "covenant.html": 1,
- "dashboard.html": 2,
- "domain-mastery.html": 1,
- "expenses.html": 1,
- "family.html": 2,
- "graphify.html": 1,
- "nutrition.html": 1,
  "omega-achieve-native.js": 1,
  "omega-actions.js": 1,
  "omega-ascend-native.js": 1,
@@ -40,10 +31,5 @@
  "omega-tier-gate.js": 1,
  "omega-vault-native.js": 1,
  "omega-world-engine.js": 1,
- "platform-kernel-runtime.js": 1,
- "profile.html": 1,
- "quest-progress.html": 1,
- "seasonal-events.html": 1,
- "skills.html": 1,
- "wealth.html": 1
+ "platform-kernel-runtime.js": 1
 }

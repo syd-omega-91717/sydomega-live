@@ -1024,6 +1024,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-architecture-runtime.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -3593,6 +3594,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -3738,6 +3740,7 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
+          "/omega-esc.js",
           "/omega-morph.js"
         ],
         "supabase_tables": [
@@ -4013,6 +4016,7 @@
           "/omega-command-dock.js",
           "/omega-constellation.js",
           "/omega-daily.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
@@ -4508,6 +4512,7 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
+          "/omega-esc.js",
           "/omega-morph.js"
         ],
         "supabase_tables": [
@@ -5224,6 +5229,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
@@ -5363,6 +5369,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -6731,6 +6738,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-graphify.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -10655,6 +10663,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -12181,6 +12190,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-esc.js",
           "/omega-identity-core.js",
           "/omega-mfa.js",
           "/omega-morph.js",
@@ -12626,6 +12636,7 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
+          "/omega-esc.js",
           "/omega-morph.js"
         ],
         "supabase_tables": [
@@ -13763,6 +13774,7 @@
         "scripts": [
           "/bg.js",
           "/nav.js",
+          "/omega-esc.js",
           "/omega-morph.js"
         ],
         "supabase_tables": [
@@ -14322,6 +14334,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-ui.js"
@@ -16292,6 +16305,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-empty-guide.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",

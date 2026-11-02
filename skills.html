@@ -314,7 +314,9 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 </div>
 <div data-page-emblem="skills" style="margin:20px auto 0"></div>
 
+<script src="/omega-esc.js"></script>
 <script>
+var escH = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 var SKILLS_KEY   = 'omega_skills';
 var SESSIONS_KEY = 'omega_skill_sessions';
 
@@ -705,7 +707,6 @@ function saveSession(){
 }
 
 /* ── UTIL ─────────────────────────────────────────────────── */
-function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 /* ── INIT ─────────────────────────────────────────────────── */
 renderOverview();

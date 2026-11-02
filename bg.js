@@ -46,6 +46,34 @@
   };
 })();
 
+/* -- SHARED HTML ESCAPER, BOOTSTRAP COPY (omega-esc.js is the canonical definition) ---------------------
+   Modules call window.OmegaEsc at CALL time and fail closed to '' when it is missing, so it must exist before
+   any of them. Scripts injected below run in no fixed order, and a page's own module tags can run before this
+   file reaches the injection, so a file-level load cannot guarantee it: it is defined HERE, inline and
+   synchronous, for the same reason as the fetch recorder above.
+   This is a deliberate second copy. scripts/tests/test_omega_esc.py runs it beside omega-esc.js and fails on
+   any difference in source or behaviour: change both or neither. omega-esc.js keeps its `if (window.OmegaEsc)
+   return;` guard, so a page that also loads it directly simply gets whichever ran first -- identical. */
+/* omega-esc-bootstrap:begin */
+(function () {
+  'use strict';
+  if (window.OmegaEsc) return;
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function num(v, fallback) {
+    var n = Number(v);
+    return isFinite(n) ? n : (fallback == null ? 0 : fallback);
+  }
+  function url(v) {
+    v = String(v == null ? '' : v).trim();
+    return /^https?:\/\//i.test(v) ? v : '';
+  }
+  window.OmegaEsc = Object.freeze({ esc: esc, num: num, url: url, version: 1 });
+})();
+/* omega-esc-bootstrap:end */
 /* -- BODY-APPEND QUEUE (defined before every injection below) --------------
    Each dynamic injection in this file guarded its append with
    `if(document.body)` and SILENTLY DID NOTHING when body was absent. That is

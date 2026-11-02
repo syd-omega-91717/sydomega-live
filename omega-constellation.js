@@ -220,9 +220,7 @@
   }
 
   /* ── RENDER ─────────────────────────────────────────────────────────── */
-  function esc(s) {
-    return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
-  }
+  function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 
   /* Navigation targets are data, not code. Constellation links are intended
      to stay inside the SYD OMEGA platform; reject javascript:/data:/vbscript:

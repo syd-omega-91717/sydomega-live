@@ -1,11 +1,7 @@
 (function(){
 'use strict';
 
-function esc(value){
-  return String(value==null?'':value).replace(/[&<>"']/g,function(c){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-  });
-}
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 
 function render(state){
   var capabilities=state.capabilities||[];

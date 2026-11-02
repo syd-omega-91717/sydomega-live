@@ -50,6 +50,10 @@ def extract_helpers():
 
 PROBE = r"""
 const helpers = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+// Module-side helpers are call-time wrappers of the shared helper (`window.OmegaEsc ? OmegaEsc.esc(v) : ''`): give them
+// a browser-like global where window IS the global object and omega-esc.js has run, exactly as bg.js leaves a page.
+global.window = global;
+new Function(require('fs').readFileSync(process.env.OMEGA_ESC_JS, 'utf8'))();
 const out = [];
 for (const [file, line, name, body] of helpers) {
   const where = file + ':' + line;
@@ -76,7 +80,8 @@ process.stdout.write(JSON.stringify(out));
 class EscapeHelperContract(unittest.TestCase):
     def run_probe(self, helpers):
         res = subprocess.run(["node", "-e", PROBE], input=json.dumps(helpers),
-                             capture_output=True, text=True, check=True)
+                             capture_output=True, text=True, check=True,
+                             env=dict(os.environ, OMEGA_ESC_JS=os.path.join(ROOT, "omega-esc.js")))
         return json.loads(res.stdout)
 
     def test_every_helper_escapes_all_five_characters(self):

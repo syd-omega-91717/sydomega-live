@@ -60,7 +60,7 @@ async function run(){
   out.truth_state='LIVE';
   return out;
 }
-function esc(v){return String(v==null?'—':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function esc(v) { return v == null ? '—' : (window.OmegaEsc ? OmegaEsc.esc(v) : ''); }
 function render(data){
   var rootEl=document.getElementById('govern-native-state');
   if(!rootEl)return;

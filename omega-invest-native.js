@@ -15,7 +15,7 @@ async function load(){
  for(var i=0;i<specs.length;i++){try{var n=await count(sb,specs[i][1],specs[i][2],uid);out[specs[i][0]]={truth_state:n?'LIVE':'EMPTY',count:n};}catch(e){out[specs[i][0]]={truth_state:'UNAVAILABLE',count:null,error:String(e&&e.message||e)};}}
  return out;
 }
-function esc(v){return String(v==null?'—':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function esc(v) { return v == null ? '—' : (window.OmegaEsc ? OmegaEsc.esc(v) : ''); }
 function render(d){var el=document.getElementById('invest-native-state');if(!el)return;var s=d.subscription||{};var cards=[['SUBSCRIPTION',s.status||'NO STATUS',s.truth_state],['WALLET ACCOUNTS',d.wallet_accounts.count,d.wallet_accounts.truth_state],['WALLET TRANSACTIONS',d.wallet_transactions.count,d.wallet_transactions.truth_state],['TOKEN BALANCE RECORDS',d.token_balances.count,d.token_balances.truth_state],['INVESTMENT WATCHLISTS',d.investment_watchlists.count,d.investment_watchlists.truth_state],['PAYMENT RECORDS',d.payments.count,d.payments.truth_state]];el.innerHTML='<div class="native-grid">'+cards.map(function(c){return '<div class="native-card"><b>'+esc(c[1])+'</b><span>'+c[0]+'</span><em>'+esc(c[2])+'</em></div>';}).join('')+'</div><p class="native-boundary">LIVE means an authenticated canonical record was readable. This projection never converts a record count into a balance, price, valuation, reserve, profit or investment recommendation.</p>';}
 root.OmegaInvestNative={load:load,render:render};
 })(globalThis);

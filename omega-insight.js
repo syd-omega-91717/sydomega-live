@@ -29,7 +29,7 @@ var LENSES = [['graph', 'GRAPH'], ['time', 'TIMELINE'], ['central', 'CENTRALITY'
 var COL = { concept: '#C9A84C', event: '#00E5FF' };
 var S = { lens: 'graph', ents: [], rels: [], evts: [], evid: [], byId: {}, deg: {}, flags: {}, pos: {}, sel: null, find: '' };
 var $ = function (id) { return document.getElementById(id); };
-function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function day(iso) { return iso ? String(iso).slice(0, 10) : '–'; }
 function name(e) { return e.display_name || e.canonical_name || 'Unnamed'; }
 /* Hubs sit close together in the tighter lenses; the full name stays in the panel. */

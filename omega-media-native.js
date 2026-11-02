@@ -7,7 +7,7 @@ async function load(){
  if(result.truth_state==='UNAVAILABLE'&&result.errors&&result.errors.indexOf('SIGN_IN_REQUIRED')>=0)throw new Error('SIGN_IN_REQUIRED');
  return {truth_state:result.truth_state,items:result.items||[],errors:result.errors||[]};
 }
-function esc(v){return String(v==null?'—':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function esc(v) { return v == null ? '—' : (window.OmegaEsc ? OmegaEsc.esc(v) : ''); }
 function render(d){
  var el=document.getElementById('media-native-state');if(!el)return;
  var items=d.items||[], live=items.length;

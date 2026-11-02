@@ -14,11 +14,20 @@ Per root *.html / *.js file (omega-esc.js itself excluded), every function or ar
   - whose own body (the next 300 characters) escapes `&`, `<` and a quote (`&quot;`, `&#39;`, `&#x27;`, `&apos;`).
 A bare `const esc = ... OmegaEsc.esc ...` alias is not a copy and is not counted.
 
-HOW TO MIGRATE A FILE
-  1. add <script src="/omega-esc.js"></script> before the script that uses it (not via bg.js: see omega-esc.js);
+HOW TO MIGRATE A PAGE
+  1. add <script src="/omega-esc.js"></script> before the script that uses it;
   2. replace the local definition with, at the TOP of the same script block (a const is not hoisted):
          const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
   3. run this script with --update so the baseline falls.
+
+HOW TO MIGRATE A MODULE (a root omega-*.js file)
+  A module may run before omega-esc.js has executed, so it must NEVER bind the helper once at load (that would lock in
+  the blank fallback). Look it up at CALL time, keep the name and the hoisting:
+         function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
+  bg.js defines window.OmegaEsc itself, before it injects anything, so the lookup always finds it.
+
+THE ONE ALLOWED COPY: bg.js carries a verbatim bootstrap copy of omega-esc.js (see ALLOWED below). It is a deliberate
+exception, enforced by scripts/tests/test_omega_esc.py, which executes both and fails on any difference.
 
 A file may not exceed its baseline and a file absent from it must be at 0. --update refuses while anything is over.
 
@@ -45,13 +54,21 @@ FUNC = re.compile(
 )
 NAME = re.compile(r"^(?:esc[A-Za-z]*|escape[A-Za-z]*|sanitize[A-Za-z]*|h|e|E|S|x)$")
 QUOTE = ("&quot;", "&#39;", "&#x27;", "&apos;")
+# Files allowed to carry exactly this many copies, and why. bg.js holds the bootstrap copy of omega-esc.js so that
+# window.OmegaEsc exists before any injected module runs; test_omega_esc.py proves it identical to omega-esc.js.
+ALLOWED = {"bg.js": 1}
 
 
 def count(text: str) -> int:
     n = 0
-    for m in FUNC.finditer(text):
+    found = list(FUNC.finditer(text))
+    for i, m in enumerate(found):
         name = m.group(1) or m.group(2)
-        body = text[m.end():m.end() + 300]
+        # The function's own body: at most 300 characters, and never past the next named function. Looking at the next
+        # 300 characters alone read the NEIGHBOUR: a short wrapper `esc()` sitting above `glyphText()` was counted as a
+        # copy because glyphText's body escapes (the same bug xss-sink-ratchet.py fixed in FIXES_LOG 211).
+        stop = found[i + 1].start() if i + 1 < len(found) else len(text)
+        body = text[m.end():min(m.end() + 300, stop)]
         if NAME.match(name) and "&amp;" in body and "&lt;" in body and any(q in body for q in QUOTE):
             n += 1
     return n
@@ -62,7 +79,7 @@ def counts() -> dict[str, int]:
     for p in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("*.js")):
         if p.name == "omega-esc.js":
             continue
-        n = count(p.read_text(encoding="utf-8", errors="ignore"))
+        n = max(0, count(p.read_text(encoding="utf-8", errors="ignore")) - ALLOWED.get(p.name, 0))
         if n:
             out[p.name] = n
     return out

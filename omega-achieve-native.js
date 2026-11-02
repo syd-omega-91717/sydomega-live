@@ -22,7 +22,7 @@ async function load(){
  for(var i=0;i<results.length;i++)if(results[i].error)throw results[i].error;
  return {truth_state:'LIVE',tasks:results[0].data||[],evolution:results[1].data||[],definitions:results[2].data||[],achievements:results[3].data||[],certificates:results[4].data||[],evidence:results[5].data||[]};
 }
-function esc(v){return String(v==null?'—':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function esc(v) { return v == null ? '—' : (window.OmegaEsc ? OmegaEsc.esc(v) : ''); }
 function render(d){
  var el=document.getElementById('achieve-native-state');if(!el)return;
  var cards=[['TASK EVIDENCE',d.tasks.length],['EVOLUTION EVENTS',d.evolution.length],['ACTIVE DEFINITIONS',d.definitions.filter(function(x){return String(x.lifecycle||'').toLowerCase()==='active';}).length],['USER ACHIEVEMENTS',d.achievements.length],['VERIFIED ACHIEVEMENTS',d.achievements.filter(function(x){return !!x.verified_at;}).length],['CERTIFICATES',d.certificates.length],['PLATFORM EVIDENCE',d.evidence.length]];

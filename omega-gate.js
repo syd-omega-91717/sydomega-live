@@ -56,7 +56,7 @@
     }).join(' + ');
   }
 
-  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 
   function lock(el, req) {
     if (el.querySelector(':scope > .omg-seal')) return;

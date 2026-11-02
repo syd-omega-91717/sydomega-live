@@ -59,9 +59,87 @@ class Pilot(unittest.TestCase):
             self.assertRegex(s[tag:alias], r'^<script src="/omega-esc.js"></script>\n(?:<script[^>]*>\n)?', name)
             self.assertNotRegex(s, r"(?m)^function esc\(", name + " still has its own copy")
 
-    def test_bg_js_does_not_inject_the_helper(self):
-        # bg.js is the single point of failure and injects after page scripts start; pages load the helper directly
-        self.assertNotIn("omega-esc", (ROOT / "bg.js").read_text(encoding="utf-8"))
+    def test_bg_js_does_not_inject_the_helper_file(self):
+        # An injected script runs in no fixed order, so injecting the file cannot guarantee it exists before a module
+        # looks it up. bg.js defines the helper inline instead (BootstrapParity); pages that want it earlier still
+        # load it with a plain <script> tag.
+        s = (ROOT / "bg.js").read_text(encoding="utf-8")
+        self.assertNotRegex(s, r"""\.src\s*=\s*['"]/omega-esc\.js""")
+
+
+def bootstrap_source():
+    s = (ROOT / "bg.js").read_text(encoding="utf-8")
+    m = re.search(r"/\* omega-esc-bootstrap:begin \*/\n(.*?)/\* omega-esc-bootstrap:end \*/", s, re.S)
+    assert m, "bg.js lost its omega-esc bootstrap markers"
+    return s, m.group(1)
+
+
+def canonical_source():
+    s = (ROOT / "omega-esc.js").read_text(encoding="utf-8")
+    return s[s.index("(function () {"):].rstrip() + "\n"
+
+
+def run_source(src, expr):
+    js = ("const vm=require('vm');const ctx=vm.createContext({});vm.runInContext('this.window=this',ctx);"
+          "vm.runInContext(%s,ctx);const O=ctx.OmegaEsc;console.log(JSON.stringify(%s));" % (json.dumps(src), expr))
+    return json.loads(subprocess.run([NODE, "-e", js], capture_output=True, text=True, check=True).stdout)
+
+
+@unittest.skipUnless(NODE, "node not installed")
+class BootstrapParity(unittest.TestCase):
+    """bg.js carries a verbatim second copy of omega-esc.js so window.OmegaEsc exists before ANY module runs (a module
+    may execute before an injected file, so call-time lookup alone is not enough). That is the one allowed duplicate;
+    this is what keeps it from drifting."""
+
+    BATTERY = ("[O.esc(`<a href=\"x\" t='y'>&</a>`),O.esc(null),O.esc(undefined),O.esc(0),O.esc(12.5),O.esc('&amp;'),"
+               "O.num('7.5'),O.num('x'),O.num(null),O.num(undefined,9),O.url(' https://ok.test/a '),O.url('javascript:alert(1)'),"
+               "O.url('//evil.test'),O.url(null),O.version,Object.isFrozen(O),Object.keys(O).sort()]")
+
+    def test_the_source_is_identical(self):
+        _, boot = bootstrap_source()
+        norm = lambda t: re.sub(r"\s+", " ", t).strip()
+        self.assertEqual(norm(boot), norm(canonical_source()))
+
+    def test_the_behaviour_is_identical(self):
+        _, boot = bootstrap_source()
+        self.assertEqual(run_source(boot, self.BATTERY), run_source(canonical_source(), self.BATTERY))
+
+    def test_it_sits_after_the_fetch_recorder_and_before_any_injection(self):
+        s, _ = bootstrap_source()
+        a, b, c = s.index("DATA-FETCH RECORDER"), s.index("omega-esc-bootstrap:begin"), s.index("function __omegaAppend(el){")
+        self.assertLess(a, b)
+        self.assertLess(b, c)
+        self.assertEqual(s.count("omega-esc-bootstrap:begin"), 1)
+
+    def test_a_page_that_loads_omega_esc_first_is_unaffected(self):
+        # the helper file guards with `if (window.OmegaEsc) return;`, so whichever copy ran first wins and they match
+        _, boot = bootstrap_source()
+        both = boot + "\n" + canonical_source()
+        self.assertEqual(run_source(both, self.BATTERY), run_source(canonical_source(), self.BATTERY))
+
+
+class ModulesLookItUpAtCallTime(unittest.TestCase):
+    """A module can run before omega-esc.js has executed. Binding the helper once at load would lock in the blank
+    fail-closed fallback for the life of the page (the page alias is fine: pages load the file with a plain tag)."""
+
+    BIND_AT_LOAD = re.compile(r"(?:const|let|var)\s+[A-Za-z_$][\w$]*\s*=\s*\(?\s*window\.OmegaEsc\s*&&\s*OmegaEsc\.esc\s*\)?\s*\|\|")
+
+    def test_no_root_module_binds_the_helper_at_load(self):
+        for p in sorted(ROOT.glob("*.js")):
+            if p.name in ("omega-esc.js", "bg.js", "sw.js"):
+                continue
+            self.assertNotRegex(p.read_text(encoding="utf-8", errors="ignore"), self.BIND_AT_LOAD,
+                                p.name + " binds window.OmegaEsc once at load; look it up at call time")
+
+    def test_the_wrapper_fails_closed_and_follows_the_helper_once_it_arrives(self):
+        wrap = "function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }"
+        js = ("const vm=require('vm');const ctx=vm.createContext({});vm.runInContext('this.window=this',ctx);"
+              "vm.runInContext(%s,ctx);const before=vm.runInContext(\"esc('<b>')\",ctx);"
+              "vm.runInContext(%s,ctx);const after=vm.runInContext(\"esc('<b>')\",ctx);"
+              "console.log(JSON.stringify([before,after]));") % (json.dumps(wrap), json.dumps(canonical_source()))
+        if NODE:
+            out = json.loads(subprocess.run([NODE, "-e", js], capture_output=True, text=True, check=True).stdout)
+            self.assertEqual(out, ["", "&lt;b&gt;"])
 
 
 class EveryAdopter(unittest.TestCase):
@@ -83,8 +161,13 @@ class EveryAdopter(unittest.TestCase):
             s = p.read_text(encoding="utf-8")
             self.assertEqual(s.count('<script src="/omega-esc.js"></script>'), 1, p.name)
             tag, m = s.index('<script src="/omega-esc.js"></script>'), alias.search(s)
-            self.assertIsNotNone(m, p.name + " loads the helper but never binds it")
-            self.assertLess(tag, m.start(), p.name)
+            if m is None:
+                # loads the helper only so a root module it hosts finds it (modules look it up at call time, and a
+                # module tag can run before bg.js): the module tag must come AFTER the helper
+                self.assertRegex(s[tag:], r'<script\b[^>]*\bsrc="/(?:omega-[\w-]+|approvals|platform-kernel-runtime)\.js"',
+                                 p.name + " loads the helper but neither binds it nor hosts a module that uses it")
+            else:
+                self.assertLess(tag, m.start(), p.name)
             self.assertNotRegex(s, r"(?m)^\s*function esc\s*\(", p.name + " still has a local copy")
             for b in block.finditer(s):
                 self.assertLessEqual(len(alias.findall(b.group(1))), 1, p.name + ": one block binds it twice")
@@ -92,6 +175,8 @@ class EveryAdopter(unittest.TestCase):
     def test_the_alias_fails_closed_never_open(self):
         for p in self.pages():
             s = p.read_text(encoding="utf-8")
+            if not re.search(r"OmegaEsc && OmegaEsc\.esc\) \|\|", s):
+                continue            # a module host: the module's own call-time wrapper fails closed (tested separately)
             self.assertTrue("|| (() => '');" in s or "|| (function () { return ''; });" in s, p.name)
 
 
@@ -137,6 +222,20 @@ class CopyRatchet(unittest.TestCase):
 
     def test_the_helper_itself_is_excluded(self):
         self.assertEqual(load_ratchet({"omega-esc.js": COPY}, {}).main([]), 0)
+
+    def test_a_short_wrapper_above_a_different_sanitiser_is_not_a_copy(self):
+        # omega-emblems.js: esc() is a call-time wrapper and glyphText() directly below it escapes. The old
+        # 'next 300 characters' window read the neighbour and counted the wrapper as a copy.
+        src = ("function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }\n"
+               "function glyphText(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\"/g,'&quot;');}\n")
+        self.assertEqual(load_ratchet({}).count(src), 0)
+        # and a real copy followed by something else is still found
+        self.assertEqual(load_ratchet({}).count(COPY + "function other(){return 1;}\n"), 1)
+
+    def test_bg_js_may_carry_exactly_one_bootstrap_copy(self):
+        self.assertEqual(load_ratchet({"bg.js": COPY}, {}).main([]), 0)              # the allowed one
+        self.assertEqual(load_ratchet({"bg.js": COPY + COPY}, {}).main([]), 1)       # a second is not
+        self.assertEqual(load_ratchet({"other.js": COPY}, {}).main([]), 1)           # nobody else gets one
 
     def test_update_never_raises_and_creates_a_missing_baseline(self):
         self.assertEqual(load_ratchet({"a.js": COPY + COPY}, {"a.js": 1}).main(["--update"]), 1)

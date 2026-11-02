@@ -22,7 +22,7 @@
   var _profile = null;
   var _retries = {};
   var _pulseStatus = 'checking';
-  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 
   /* ── A. DECLARATIVE DATA BINDING ──────────────────────────────── */
   /* Usage: <span data-live="profile:axis_a" data-live-format="fixed:3"></span> */

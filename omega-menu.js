@@ -198,7 +198,7 @@
   var st = document.createElement('style'); st.id = 'om-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
 
-  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 
   function fillIcons(root) {
     var els = root.querySelectorAll('.om-ic');

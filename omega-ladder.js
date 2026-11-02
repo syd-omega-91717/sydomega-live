@@ -21,7 +21,7 @@ var sb = window.__omegaSb || (window.__omegaSb = createClient(
 
 var S = { th: [], names: [], tracks: [], phi: 0, e: 0, apex: 0, axes: [], me: null, sim: null, sel: 0, won: { medal: {}, trophy: {}, certificate: {} } };
 var $ = function (id) { return document.getElementById(id); };
-function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 
 /* authority = sqrt(A^3 + B^3 + C^3) x phi / e -- the canon's formula, the one
    compute_authority() implements server-side. Used only for the simulation;

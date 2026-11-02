@@ -369,9 +369,7 @@
   /* Results go through .innerHTML. The hardcoded INDEX above is static and
      safe, but addItems()/harvestNav() feed it text read out of the DOM, so
      escape before highlighting rather than trusting every future caller. */
-  function esc(s) {
-    return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
-  }
+  function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
   function highlight(t,q){
     t=String(t==null?'':t);
     if(!q)return esc(t);

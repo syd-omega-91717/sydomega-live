@@ -4,7 +4,7 @@
 var PHI=1.6180339887,E=2.7182818285,APEX=27.8367;
 var TH=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
 var GN=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
-function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function state(s){var e=document.getElementById('oac-state');if(e){e.textContent=s;e.className=String(s).toLowerCase();}}
 function run(sb){
  sb.auth.getSession().then(async function(res){

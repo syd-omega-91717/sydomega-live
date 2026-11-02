@@ -65,7 +65,7 @@
   // that a well-formed character reference (e.g. &#937; or &amp;) is kept, so
   // callers that pass a glyph as an HTML entity still render the character --
   // but no tag, attribute or quote can survive it.
-  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
   function glyphText(s){
     return String(s==null?'':s)
       .replace(/&(?!(?:#[0-9]+|#[xX][0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);)/g,'&amp;')

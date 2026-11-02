@@ -48,6 +48,77 @@ node_contract_tests() {
   return $bad
 }
 
+# Scripts that PR-triggered workflows run (ci.yml, contracts.yml, vercel-production.yml, production-contract.yml,
+# omega-release-readiness.yml, ...) and that this script never ran: a change could be green here and red on GitHub
+# (FIXES_LOG 203a, 207). Arguments are the workflows' own. scripts/ci-parity-contract.py fails if a PR workflow gains a
+# script that is neither named here/contract-suite.py nor in config/ci-parity-exempt.json.
+# Output is shown only for a failure; each of these exits 0 on main (measured 2026-11-02, ~15s total).
+workflow_gates() {
+  local bad=0 line
+  for line in \
+    "architecture-contract.py" \
+    "architecture-readiness.py" \
+    "audit-information-architecture.py" \
+    "audit-webgl-ownership.py" \
+    "capability-evidence-freshness.py" \
+    "check-js-syntax.py" \
+    "control_center_contract.py" \
+    "csp-static-inventory.py --format json" \
+    "omega-achievement-referral-contract.py" \
+    "omega-agent-tool-contract.py" \
+    "omega-canon-agent-contract.py" \
+    "omega-capability-contract.py" \
+    "omega-capability-provenance-contract.py" \
+    "omega-convergence-audit.py --json" \
+    "omega-enterprise-readiness-contract.py" \
+    "omega-eternity-contract.py" \
+    "omega-event-fabric-contract.py" \
+    "omega-evidence-graph-contract.py" \
+    "omega-execution-program.py" \
+    "omega-gameful-contract.py" \
+    "omega-module-runtime-contract.py" \
+    "omega-notification-worker-contract.py" \
+    "omega-page-action-audit.py --check" \
+    "omega-page-contract-bootstrap.py" \
+    "omega-platform-contract.py" \
+    "omega-product-catalog-contract.py" \
+    "omega-production-chain-contract.py" \
+    "omega-responsive-surface-contract.py" \
+    "omega-rpc-security-policy-contract.py" \
+    "omega-runtime-frontier-contract.py" \
+    "omega-runtime-gateway-contract.py" \
+    "omega-scale-readiness.py" \
+    "omega-schema-evidence.py" \
+    "omega-seo-contract.py" \
+    "omega-source-canon-contract.py" \
+    "omega_fabric_platform_gate.py" \
+    "omega_release_readiness.py" \
+    "platform-kernel-contract.py" \
+    "production-proof-contract.py" \
+    "release-surface-quality.py" \
+    "rpc-consolidation-gate.py" \
+    "schema-consolidation-gate.py" \
+    "security-definer-audit.py" \
+    "security-headers-contract.py" \
+    "supabase-edge-runtime-reconciliation.py" \
+    "tests/test_csp_static_inventory.py" \
+    "tests/test_omega_living_intelligence_contract.py" \
+    "tests/test_omega_personal_context_consent_audit.py" \
+    "tests/test_omega_public_source_catalog.py" \
+    "validate-monitoring.py"; do
+    # shellcheck disable=SC2086
+    set -- $line
+    local s="$1"; shift
+    local out
+    case "$s" in
+      *.py) out=$(python3 "scripts/$s" "$@" 2>&1) ;;
+      *.js) out=$(node "scripts/$s" "$@" 2>&1) ;;
+      *)    out=$(bash "scripts/$s" "$@" 2>&1) ;;
+    esac || { echo "  FAILED: scripts/$s $*"; printf '%s\n' "$out" | tail -8 | sed 's/^/    /'; bad=1; }
+  done
+  return $bad
+}
+
 js_syntax() {
   local bad=0
   for f in *.js; do
@@ -159,6 +230,7 @@ step "2r.  Edge Function census"               python3 scripts/edge-function-cen
 step "2s.  Copilot behaviour contract"         node scripts/copilot-contract.js
 step "2t.  Grant contract (live grants)"       python3 scripts/grant-contract.py
 step "2u.  Node contract tests (ci.yml)"        node_contract_tests
+step "2v.  PR-workflow gates (ci/contracts/vercel-production/…)" workflow_gates
 step "3.   Static contract suite"              python3 scripts/contract-suite.py
 step "4.   Broken local asset refs"            broken_assets
 step "4b.  Repository integrity (local refs)"  python3 scripts/repository_integrity_audit.py

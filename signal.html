@@ -166,7 +166,9 @@ function setTab(name){
 }
 </script>
 
+<script src="/omega-esc.js"></script>
 <script type="module">
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 (async function(){
@@ -190,7 +192,6 @@ function timeAgo(ts){
   if(diff<86400) return Math.floor(diff/3600)+'H AGO';
   return Math.floor(diff/86400)+'D AGO';
 }
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 /* These cards link to third-party feeds (Hacker News, GitHub, dev.to). The URL used to be esc()'d into
    an inline click handler, as a JS string literal: an HTML-escaped quote is decoded back to ' before that handler
    is parsed, so a story URL containing ');...// ran as script. It now travels as a data attribute and only http(s) is opened. */

@@ -20,7 +20,9 @@ Per root *.html / *.js file, every dynamic piece written into an HTML sink:
 A piece is SAFE (not counted) when it is
   - one whole call to an escape helper -- a function defined in the SAME file
     whose own body replaces `&`/`<` or builds a text node (a name like `h` or
-    `e` is not trusted: they are often event arguments or heights);
+    `e` is not trusted: they are often event arguments or heights), or the
+    shared helper from omega-esc.js: `OmegaEsc.esc(...)`/`OmegaEsc.num(...)`,
+    or a local alias bound to them (`const esc = ... OmegaEsc.esc ...`);
   - Number()/parseInt()/parseFloat()/Math.*(), a `.length`, `.toFixed()`, or a
     digit literal;
   - a conditional whose two branches are both string/number literals.
@@ -76,17 +78,60 @@ FUNC = re.compile(
     r"(?:function\s*\(|\([^)]*\)\s*=>|[A-Za-z_$][\w$]*\s*=>))"
 )
 ESCAPING_BODY = re.compile(r"&amp;|&lt;|createTextNode|textContent|&#")
+# The shared helper (omega-esc.js). Only esc and num count as "escaped"; url() alone can still carry a quote.
+SHARED_CALL = re.compile(r"^(?:window\.)?OmegaEsc\.(?:esc|num)$")
+SHARED_ALIAS = re.compile(r"(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*[^;\n]*OmegaEsc\.(?:esc|num)\b")
 LITERAL = re.compile(r"""^(?:'[^'\\]*'|"[^"\\]*"|\d+(?:\.\d+)?|`[^`$\\]*`)$""")
 EXEMPT = re.compile(r"xss-ok:\s*(\S[^\n*]{7,})")
 MAX_STATEMENT = 8000
+
+
+def _close(text: str, i: int, open_ch: str, close_ch: str) -> int:
+    """Index of the bracket that closes the one opening at text[i] (literals skipped), or len(text)."""
+    d = 0
+    n = len(text)
+    while i < n:
+        c = text[i]
+        if c in "'\"`":
+            i = skip_literal(text, i)
+            continue
+        if c == open_ch:
+            d += 1
+        elif c == close_ch:
+            d -= 1
+            if d == 0:
+                return i
+        i += 1
+    return n
+
+
+def function_body(text: str, end: int) -> str:
+    """The function's OWN body, given the index just after what FUNC matched (`function f(`, `function (` or `=>`).
+    Looking at the next N characters instead read the neighbouring function: timeAgo() sitting above esc() was
+    classed as an escaper, and the miscount only showed when esc() was removed."""
+    n = len(text)
+    i = end
+    if text[end - 1] == "(":                      # parameters are still open
+        i = _close(text, end - 1, "(", ")") + 1
+    while i < n and text[i] in " \t\r\n":
+        i += 1
+    if text[i:i + 2] == "=>":
+        i += 2
+        while i < n and text[i] in " \t\r\n":
+            i += 1
+    if i < n and text[i] == "{":
+        return text[i:_close(text, i, "{", "}") + 1]
+    return statement(text, i)                       # expression-bodied arrow
 
 
 def helpers(text: str) -> set[str]:
     """Names of functions in this file whose own body escapes or text-nodes."""
     out = set()
     for m in FUNC.finditer(text):
-        if ESCAPING_BODY.search(text[m.end():m.end() + 400]):
+        if ESCAPING_BODY.search(function_body(text, m.end())):
             out.add(m.group(1) or m.group(2))
+    for m in SHARED_ALIAS.finditer(text):   # const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '')
+        out.add(m.group(1))
     return out
 
 
@@ -291,7 +336,7 @@ def pieces(rhs: str, names: set[str]) -> list[str]:
 
 def whole_call(expr: str, names: set[str]) -> bool:
     m = re.match(r"^([A-Za-z_$][\w$.]*)\s*\(", expr)
-    if not m or m.group(1).split(".")[-1] not in names:
+    if not m or not (m.group(1).split(".")[-1] in names or SHARED_CALL.match(m.group(1))):
         return False
     d = 0
     for k in range(m.end() - 1, len(expr)):

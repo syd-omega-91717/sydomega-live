@@ -111,6 +111,30 @@ class T(unittest.TestCase):
         # stored values straight into innerHTML: the shape CodeQL flagged in omega-daily-brief.js
         self.assertEqual(n("el.innerHTML='<div>'+b.intent+'</div><span>'+b.date+'</span>';"), 2)
 
+    def test_shared_helper_calls_and_aliases_count_as_escaped(self):
+        self.assertEqual(n("el.innerHTML='<b>'+OmegaEsc.esc(x)+'</b>';"), 0)
+        self.assertEqual(n("el.innerHTML='<b>'+window.OmegaEsc.num(x)+'</b>';"), 0)
+        alias = "const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');\n"
+        self.assertEqual(n(alias + "el.innerHTML='<b>'+esc(x)+'</b>';"), 0)
+
+    def test_url_alone_is_not_enough_and_an_undeclared_esc_still_counts(self):
+        self.assertEqual(n("el.innerHTML='<b>'+OmegaEsc.url(x)+'</b>';"), 1)
+        self.assertEqual(n("el.innerHTML='<b>'+esc(x)+'</b>';"), 1)
+        self.assertEqual(n("el.innerHTML='<b>'+OmegaEsc.esc(x)+y+'</b>';"), 1)
+
+    def test_a_neighbouring_escaper_does_not_make_a_function_one(self):
+        # timeAgo() sat directly above esc(); looking at the next N characters read esc()'s body and classed timeAgo
+        # as an escaper, so the miscount only appeared once esc() was removed (FIXES_LOG 211).
+        above = "function timeAgo(d){return d+'m';}\n"
+        esc = "function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}\n"
+        self.assertEqual(n(above + esc + "el.innerHTML='<b>'+timeAgo(x)+'</b>';"), 1)
+        self.assertEqual(n(above + esc + "el.innerHTML='<b>'+esc(x)+'</b>';"), 0)
+        self.assertEqual(n(above + "el.innerHTML='<b>'+timeAgo(x)+'</b>';"), 1)
+
+    def test_expression_bodied_arrow_escaper_is_recognised(self):
+        arrow = "const h = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');\n"
+        self.assertEqual(n(arrow + "el.innerHTML='<b>'+h(x)+'</b>';"), 0)
+
     def test_help_exits_zero(self):
         self.assertEqual(subprocess.run([sys.executable, SRC, '--help'], capture_output=True).returncode, 0)
 

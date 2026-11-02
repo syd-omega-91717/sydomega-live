@@ -279,10 +279,11 @@
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-esc.js"></script>
 <script type="module">
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 const OKR_KEY    = 'omega_okr_data';
 const REV_KEY    = 'omega_okr_reviews';
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 const CAT_COLORS = {
   sovereignty:'rgba(201,168,76,.7)',wealth:'rgba(80,200,120,.7)',mastery:'rgba(100,160,220,.7)',
   health:'rgba(220,120,80,.7)',relationships:'rgba(180,100,220,.7)',impact:'rgba(240,200,60,.7)'

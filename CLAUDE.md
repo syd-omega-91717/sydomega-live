@@ -577,7 +577,7 @@ entries (which were accurate when written):
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/module-contract.py` | 0 broken; **164** contracts. Publisher must exist **and be reachable** — the conjunction; half of it passes on the tree that shipped 160 (162) |
 | `python3 scripts/evidence-audit.py --summary` | 107 BUILT / 27 PARTIAL / 42 LOCAL_ONLY / 48 STATIC / 0 BROKEN / **0** UNREACHABLE (224 pages; the owner deck reaches the 13 nav.js omits); **0 read relations absent live** (snapshot 2026-10-04; keys are `public.`-qualified — strip it) |
-| `./scripts/ci-local.sh` | **34** blocking checks, all passing (`contract-suite.py` holds **42** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93–104) |
+| `./scripts/ci-local.sh` | **34** blocking checks, all passing (`contract-suite.py` holds **58** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93–104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |

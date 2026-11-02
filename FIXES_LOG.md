@@ -26015,3 +26015,5 @@ In the same runs a sample card went from `rgba(8,10,17,.58)` to `rgb(2,2,6)`. Th
 **New proposal (I16).** Replace the 5 first-party `transition:max-height` expand hacks with per-component `interpolate-size`. It is Chromium 129+ only per MDN, so the max-height rules stay as the fallback.
 
 **Not done.** `config/omega-page-contract-bootstrap.json` is tracked on `main` and unchanged by CI, so it was left in place, as last week.
+
+### TEST-b — throwaway entry b

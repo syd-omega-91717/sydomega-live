@@ -196,11 +196,6 @@
       </div>
     </div>
 
-    <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "COMMAND") -->
-    <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
-         data-sculpt-accent="#C9A84C" data-sculpt-bloom="off"
-         data-sculpt-label="The Omega signet, tinted to the Command realm"></div>
-
     <!-- STATUS STRIP -->
     <div class="status-strip" role="status" aria-label="Platform status">
       <div class="ss-item"><div class="ss-label" data-i18n="active_members">MEMBERS</div><div class="ss-val" id="ss-members" data-live-members>--</div></div>
@@ -228,6 +223,11 @@
     <!-- LAYER: OVERVIEW -->
     <div id="l-overview" class="layer-panel">
       <div class="pad" data-reveal="fade-up">
+        <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "COMMAND").
+             Lives on OVERVIEW, not above the Daily Three: it is 220px of decoration, and TODAY should open on the member's own loop. -->
+        <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
+             data-sculpt-accent="#C9A84C" data-sculpt-bloom="off"
+             data-sculpt-label="The Omega signet, tinted to the Command realm"></div>
         <!-- SOVEREIGN KPIs -->
         <div class="kpi-row" id="kpi-platform" data-stagger data-stagger-gap="70" data-omega-depth-tilt>
           <div class="kpi" id="kpi-auth" role="link" tabindex="0" data-reveal="fade-up" data-glow-pulse data-nav-action="/evolution.html" data-living="auth-score" data-tooltip="AUTH = sqrt(A³+B³+C³)×φ/e · Scale 0→27.8367 · Advance axes through tasks to increase authority" aria-label="My authority score" style="--kc:var(--gold)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="kpi-n" id="k-auth" data-countup>--</div><div class="kpi-l" data-i18n="my_authority">MY AUTHORITY</div><div class="kpi-sub" id="k-gate-sub">&mdash;</div><div data-omega-spark id="dash-tasks-spark" data-spark-label="MY TASKS/DAY, LAST 14 DAYS" data-spark-trend="off" hidden style="margin-top:4px"></div></div><div class="emblem-orb" style="--kc:var(--gold);animation-delay:0s">♈︎</div></div></div>

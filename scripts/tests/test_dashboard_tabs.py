@@ -109,5 +109,21 @@ class NoCountsInHeadings(unittest.TestCase):
             self.assertTrue(json.loads(pack.read_text(encoding="utf-8")).get("tab_today"), pack.name)
 
 
+class DailyThreeIsNotPushedDown(unittest.TestCase):
+    """The 220px signet hero sat above the Daily Three, so on a 900px desktop the member's own loop started at y=509
+    (measured). It is decoration and lives on OVERVIEW; it only paints when scrolled into view (IntersectionObserver)."""
+    HTML = read("dashboard.html")
+
+    def test_the_signet_hero_is_inside_the_overview_panel_only(self):
+        self.assertEqual(self.HTML.count('data-omega-sculpture="signet"'), 1)
+        i_hero = self.HTML.index('data-omega-sculpture="signet"')
+        self.assertGreater(i_hero, self.HTML.index('<div id="l-overview"'))
+        self.assertLess(i_hero, self.HTML.index('<div id="l-today"'))
+
+    def test_nothing_tall_precedes_the_daily_three(self):
+        head = self.HTML[:self.HTML.index("data-omega-daily")]
+        self.assertNotIn("osc-stage", head.split("</style>", 1)[1])
+
+
 if __name__ == "__main__":
     unittest.main()

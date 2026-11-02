@@ -23,3 +23,4 @@ CLAUDE.md text eol=lf
 # approx_tokens(), which normalises before counting; this pin is hygiene on top.
 .claude/skills/**/*.md text eol=lf
 .claude/agents/*.md text eol=lf
+FIXES_LOG.md merge=union

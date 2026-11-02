@@ -260,7 +260,7 @@
     {
       target: '#omega-side, .side',
       title: 'NAVIGATION SPINE',
-      text: 'Click any icon to navigate. Or press <kbd style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);padding:0 5px;border-radius:2px">g</kbd> then a letter — try <kbd style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);padding:0 5px;border-radius:2px">g d</kbd> for Dashboard.',
+      text: 'Click any icon to navigate. Or press <kbd style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);padding:0 5px;border-radius:2px">g</kbd> then a letter — try <kbd style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);padding:0 5px;border-radius:2px">g d</kbd> for Dashboard. The rest of the platform is one tap away under <b>MORE</b>.',
       placement: 'right'
     },
     {

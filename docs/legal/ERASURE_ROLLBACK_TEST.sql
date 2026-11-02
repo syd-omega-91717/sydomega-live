@@ -1,43 +1,48 @@
 -- ============================================================================================
--- ERASURE PIPELINE: ROLLBACK TEST  (docs/legal/ERASURE_ROLLBACK_TEST.md explains how to run it)
+-- ERASURE PIPELINE: ROLLBACK TEST, v2   (docs/legal/ERASURE_ROLLBACK_TEST.md explains how to run it)
 --
--- Run this whole file ONCE in the Supabase SQL editor (project ydqhzvvoyufiiqvzcjns).
--- It creates the dormant erasure pipeline, builds two SYNTHETIC accounts (one ordinary, one owner, both on
--- @invalid.test addresses), runs the purge on them, and then ends with a deliberate error so the database
--- rolls everything back. The error message IS the result: it starts ERASURE_TEST_RESULT and carries a JSON
--- document. It touches no real member and not your real owner account.
+-- Run this whole file ONCE in the Supabase SQL editor of project ydqhzvvoyufiiqvzcjns.
 --
--- The whole script is ONE statement (a single DO block), so Postgres applies it all or not at all, whichever way
--- the SQL editor submits it: the final error undoes every object, row and account it created.
--- It does NOT schedule the cron job (that stays in the migration, after the test passes).
+-- WHAT CHANGED FROM v1, AND WHY. v1 stopped at "permission denied to set parameter session_replication_role": the
+-- editor's postgres role is not a superuser. v1 also never ran against the real triggers; reading them showed it
+-- could not have worked even with that privilege (handle_new_user() already creates the profile, so v1's own
+-- profile insert would have been a duplicate key; enforce_access_defaults() forces is_owner=false on insert).
+-- v2 needs NO special privilege: it inserts the synthetic accounts into auth.users, lets the real
+-- handle_new_user() make their profiles, then UPDATEs them (the privilege guard lets SQL-editor sessions through
+-- because auth.uid() is null there).
+--
+-- IT REFUSES TO RUN, before changing anything, if (a) the two owner accounts are not in this database (wrong
+-- project), or (b) erasure_worker_enabled is already true (the queue would then act on real members).
+--
+-- IT STILL ENDS WITH A DELIBERATE ERROR so Postgres undoes everything: the whole file is ONE statement (a DO block).
+-- The error text IS the result: it starts ERASURE_TEST_RESULT and carries a JSON document with a "checks" object.
+-- The "new access request" email that profile creation triggers is queued in net.http_request_queue INSIDE the
+-- transaction; a rolled-back insert is never seen by the pg_net worker, so nothing is sent. The result reports how
+-- many such requests were queued during the test so you can see it happened and was discarded.
+--
+-- A NOTE ON WHAT IT PROVES. Every member table CASCADEs from auth.users / profiles, so "the rows are gone afterwards"
+-- is true even if the purge deleted nothing. v2 therefore judges the purge by the counts the purge itself returns
+-- (rows_deleted, tables_touched), taken before the final auth.users delete, and reports separately what the cascade
+-- does to the retained consent_records row.
 -- ============================================================================================
-
--- Ω erasure pipeline (dormant). docs/legal/LEGAL_GAP_AUDIT.md findings 1-3.
---
--- WHY: request_account_erasure() only soft-deletes and promises permanent deletion within 30
--- days, delete_account() wipes six tables, and nothing is scheduled. Of 105 public tables with a
--- user_id column, at most one cascades on user delete (live, 2026-11-01).
---
--- WHAT THIS ADDS (nothing runs until the owner flips public.platform_settings erasure_worker_enabled):
---   private.erasure_policy   which tables are RETAINED instead of deleted, each with a reason
---   private.erasure_log      that a purge ran (hashed id, counts), never the data
---   private.purge_user_data  deletes every row whose user_id/profile_id/member_id is the member,
---                            driven by the catalogue so a new table is covered without editing a list
---   private.run_erasure_queue  the scheduled entry point; no-op while the flag is false
---   cron 'omega-erasure-worker' daily 03:17 UTC
---
--- NOT DONE HERE, on purpose (see docs/legal/ERASURE_GO_LIVE.md): storage objects (the avatars bucket
--- is PUBLIC; deleting storage.objects rows in SQL does not remove the file, the Storage API must),
--- columns that point at a member without being theirs (owner_id, author_id, actor_id, created_by,
--- sender_id), and the retention exceptions, which are a lawyer's decision.
 
 do $t$
 declare
   uid uuid := gen_random_uuid();
   owner_uid uuid := gen_random_uuid();
-  res jsonb; res_owner jsonb; res_norequest jsonb; res_queue jsonb; out jsonb;
-  c_family int; c_heritage int; c_state int; c_consent int; c_auth int; c_prof int; c_owner_prof int;
+  res jsonb; res_owner jsonb; res_norequest jsonb; res_queue jsonb; out jsonb; checks jsonb;
+  b_prof int; b_family int; b_heritage int; b_state int; b_consent int; owner_flag boolean;
+  c_family int; c_heritage int; c_state int; c_consent int; c_auth int; c_prof int; c_owner_prof int; c_owner_auth int;
+  webhooks_queued int := 0; notifs_created int := 0;
 begin
+  -- 0. guards: stop before changing anything if this is the wrong database or the worker is already on
+  if not exists (select 1 from auth.users where email in ('s.y.dagher@gmail.com', 'slmndghr@gmail.com')) then
+    raise exception 'WRONG DATABASE: the Omega owner accounts are not in this database. Open project ydqhzvvoyufiiqvzcjns and run again. Nothing was changed.';
+  end if;
+  if exists (select 1 from public.platform_settings where key = 'erasure_worker_enabled' and bool_value is true) then
+    raise exception 'erasure_worker_enabled is already TRUE: run_erasure_queue() would act on real members. Nothing was changed.';
+  end if;
+
 create schema if not exists private;
 
 -- 1. policy: delete is the default; a table listed here as 'retain' is skipped and reported.
@@ -200,21 +205,41 @@ $fn$;
 revoke all on function private.purge_user_data(uuid) from public, anon, authenticated;
 revoke all on function private.run_erasure_queue() from public, anon, authenticated;
 
-  perform set_config('session_replication_role', 'replica', true);   -- no profile triggers/emails in the test
+  -- 1. two synthetic accounts. The real handle_new_user() trigger creates each profile.
   insert into auth.users (id, aud, role, email) values (uid, 'authenticated', 'authenticated', 'erasure-test-' || uid || '@invalid.test');
-  insert into public.profiles (id, email, display_name, erasure_requested_at) values (uid, 'erasure-test@invalid.test', 'ERASURE TEST', now() - interval '20 days');
   insert into auth.users (id, aud, role, email) values (owner_uid, 'authenticated', 'authenticated', 'erasure-test-owner-' || owner_uid || '@invalid.test');
-  insert into public.profiles (id, email, display_name, is_owner, erasure_requested_at) values (owner_uid, 'erasure-test-owner@invalid.test', 'ERASURE TEST OWNER', true, now() - interval '20 days');
+  select count(*) into b_prof from public.profiles where id in (uid, owner_uid);
+  if b_prof <> 2 then
+    raise exception 'handle_new_user() did not create both profiles (found %): the test setup does not match this database. Nothing was changed.', b_prof;
+  end if;
+
+  -- what the profile triggers did inside this transaction (all of it is rolled back below)
+  begin
+    select count(*) into webhooks_queued from net.http_request_queue where convert_from(body, 'UTF8') like '%erasure-test%';
+  exception when others then webhooks_queued := -1;     -- not readable by this role: reported as -1, not a failure
+  end;
+  select count(*) into notifs_created from public.notifications where content like '%' || uid::text || '%';
+
+  -- 2. mark them as erasure-requested 20 days ago; the second one is an OWNER (inserts cannot make owners:
+  --    enforce_access_defaults() forces is_owner=false, so it is set by UPDATE, which the editor session may do)
+  update public.profiles set display_name = 'ERASURE TEST', erasure_requested_at = now() - interval '20 days' where id = uid;
+  update public.profiles set display_name = 'ERASURE TEST OWNER', is_owner = true, erasure_requested_at = now() - interval '20 days' where id = owner_uid;
+  select is_owner into owner_flag from public.profiles where id = owner_uid;
+
+  -- 3. the member's own data, one row in each of four tables
   insert into public.family_nodes (id, user_id, name, relation) values (990000001, uid, 'Test Relative', 'Son');
   insert into public.heritage_records (user_id, title) values (uid, 'test');
   insert into public.member_state (user_id, key, value) values (uid, 'omega_test', '{}'::jsonb);
   insert into public.consent_records (user_id, consent_type, granted) values (uid, 'analytics', true);
-  perform set_config('session_replication_role', 'origin', true);
+  select count(*) into b_family   from public.family_nodes     where user_id = uid;
+  select count(*) into b_heritage from public.heritage_records where user_id = uid;
+  select count(*) into b_state    from public.member_state     where user_id = uid;
+  select count(*) into b_consent  from public.consent_records  where user_id = uid;
 
-  res_queue := private.run_erasure_queue();                              -- flag is false: must be a no-op
-  select count(*) into c_family from public.family_nodes where user_id = uid;  -- still 1 after the no-op queue
-  res_owner := private.purge_user_data(owner_uid);                       -- must refuse
-  res_norequest := private.purge_user_data(gen_random_uuid());           -- no such request: must refuse
+  -- 4. the three refusals, then the real purge
+  res_queue     := private.run_erasure_queue();                  -- flag is false: must be a no-op
+  res_owner     := private.purge_user_data(owner_uid);           -- synthetic OWNER: must refuse
+  res_norequest := private.purge_user_data(gen_random_uuid());   -- nobody asked to be erased: must refuse
   select count(*) into c_owner_prof from public.profiles where id = owner_uid;
 
   res := private.purge_user_data(uid);
@@ -224,11 +249,32 @@ revoke all on function private.run_erasure_queue() from public, anon, authentica
   select count(*) into c_consent  from public.consent_records  where user_id = uid;
   select count(*) into c_auth     from auth.users              where id = uid;
   select count(*) into c_prof     from public.profiles         where id = uid;
+  select count(*) into c_owner_auth from auth.users            where id = owner_uid;
 
-  out := jsonb_build_object('queue_when_flag_off', res_queue, 'owner', res_owner, 'no_request', res_norequest,
-    'purge', res, 'after', jsonb_build_object('family', c_family, 'heritage', c_heritage, 'member_state', c_state,
-    'consent_retained', c_consent, 'auth_users', c_auth, 'profiles', c_prof, 'owner_profile_intact', c_owner_prof),
-    'log_rows', (select count(*) from private.erasure_log), 'log_has_uid', (select count(*) from private.erasure_log where member_hash = uid::text));
+  checks := jsonb_build_object(
+    'flag_off_is_noop',            res_queue = '{"enabled": false}'::jsonb,
+    'owner_refused',               res_owner ->> 'error' = 'owner_protected',
+    'no_request_refused',          res_norequest ->> 'error' = 'erasure_not_requested',
+    'purge_ok',                    coalesce((res ->> 'ok')::boolean, false),
+    'purge_deleted_3_rows_in_3_tables', (res ->> 'rows_deleted') = '3' and (res ->> 'tables_touched') = '3',
+    'nothing_blocked',             res -> 'blocked' = '[]'::jsonb,
+    'retained_tables_skipped',     coalesce(res -> 'retained', '[]'::jsonb) @> '["consent_records", "sovereign_events"]'::jsonb,
+    'account_and_profile_gone',    c_auth = 0 and c_prof = 0,
+    'owner_survived',              c_owner_prof = 1 and c_owner_auth = 1,
+    'log_holds_a_hash_not_the_id', (select count(*) from private.erasure_log where member_hash = uid::text) = 0
+                                   and (select count(*) from private.erasure_log) = 1,
+    'setup_matched_expectations',  owner_flag is true and b_family = 1 and b_heritage = 1 and b_state = 1 and b_consent = 1);
+
+  out := jsonb_build_object(
+    'ALL_CHECKS_PASS', not exists (select 1 from jsonb_each(checks) where value <> 'true'::jsonb),
+    'checks', checks,
+    'queue_when_flag_off', res_queue, 'owner', res_owner, 'no_request', res_norequest, 'purge', res,
+    'before_purge', jsonb_build_object('family', b_family, 'heritage', b_heritage, 'member_state', b_state, 'consent', b_consent),
+    'after_purge', jsonb_build_object('family', c_family, 'heritage', c_heritage, 'member_state', c_state,
+                   'consent_records_row_left', c_consent, 'auth_users', c_auth, 'profiles', c_prof),
+    'FINDING_consent_cascade', case when c_consent = 0 then 'consent_records was skipped by the purge but its row is GONE: it cascades from profiles, so deleting the profile destroys the retained row' else 'consent_records row survived' end,
+    'side_effects_inside_the_transaction_all_rolled_back', jsonb_build_object('webhook_requests_queued', webhooks_queued, 'owner_notifications_created', notifs_created),
+    'log_rows', (select count(*) from private.erasure_log));
   raise exception 'ERASURE_TEST_RESULT %', out::text;
 end
 $t$;

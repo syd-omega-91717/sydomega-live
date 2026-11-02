@@ -137,18 +137,21 @@ function downloadBlocksIcs(){
 }
 window.downloadBlocksIcs=downloadBlocksIcs;
 (function(){var b=document.getElementById('blocksIcs');if(b)b.addEventListener('click',downloadBlocksIcs);})();
+/* Everything that reaches innerHTML below came from localStorage, which also holds data restored from a backup
+   file or the cloud: treat it as untrusted text (CodeQL js/xss-through-dom, FIXES_LOG 204). */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function renderSchedule(){
   var el=document.getElementById('scheduleGrid'),blocks=todayBrief.schedule||[];
   if(!blocks.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:rgba(138,134,118,.4);padding:8px 0">No time blocks yet.</div>';return;}
   var nowMin=(function(){var n=new Date();return n.getHours()*60+n.getMinutes();})();
   el.innerHTML=blocks.map(function(b){
-    var[bh,bm]=b.time.split(':').map(Number),bMin=bh*60+bm;
+    var[bh,bm]=String(b.time).split(':').map(Number),bMin=(bh||0)*60+(bm||0);
     var active=nowMin>=bMin&&nowMin<bMin+90,past=nowMin>=bMin+90;
     return '<div class="time-block" style="'+(active?'border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.06)':'')+(past?'opacity:.5':'')+'">'
-      +'<div class="tb-time">'+b.time+'</div>'
-      +'<input class="tb-input" value="'+b.task.replace(/"/g,'&quot;')+'" data-brief-change="updateBlock" data-brief-arg="'+b.id+'">'
+      +'<div class="tb-time">'+esc(b.time)+'</div>'
+      +'<input class="tb-input" value="'+esc(b.task)+'" data-brief-change="updateBlock" data-brief-arg="'+esc(b.id)+'">'
       +(active?'<span style="font-family:var(--M);font-size:12px;color:var(--gold);letter-spacing:1px">NOW</span>':'')
-      +'<button class="tb-del" data-brief-act="deleteBlock" data-brief-arg="'+b.id+'" aria-label="Delete this block">✕</button></div>';
+      +'<button class="tb-del" data-brief-act="deleteBlock" data-brief-arg="'+esc(b.id)+'" aria-label="Delete this block">✕</button></div>';
   }).join('');
 }
 
@@ -212,8 +215,8 @@ function renderArchive(){
   el.innerHTML=sorted.map(function(b){
     var done=b.priorities?b.priorities.filter(function(p){return p.done;}).length:0;
     var total=b.priorities?b.priorities.filter(function(p){return p.text;}).length:0;
-    return '<div class="pb-entry"><div class="pb-date">'+b.date+(b.dayScore?' · SCORE '+b.dayScore+'/10':'')+(b.date===todayKey?' · TODAY':'')+'</div>'
-      +'<div class="pb-snippet">'+(b.intent||'No intent set')+' — '+done+'/'+total+' priorities</div></div>';
+    return '<div class="pb-entry"><div class="pb-date">'+esc(b.date)+(b.dayScore?' · SCORE '+esc(b.dayScore)+'/10':'')+(b.date===todayKey?' · TODAY':'')+'</div>'
+      +'<div class="pb-snippet">'+esc(b.intent||'No intent set')+' — '+done+'/'+total+' priorities</div></div>';
   }).join('');
 }
 

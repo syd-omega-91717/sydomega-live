@@ -96,7 +96,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 236 |
 | pages loading `bg.js` | 236 of 236 |
-| `omega-*.js` modules | 259 (2373 KB) |
+| `omega-*.js` modules | 259 (2374 KB) |
 | root `.js` files | 276 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 413 (107 numbered `NNNN_`, 306 timestamped) |
@@ -112,13 +112,13 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 
 | Source | Keys |
 |---|---|
-| `T_EN` (English, inlined in `i18n.js`) | 1194 |
-| `i18n/ar.json` | 1194 |
-| `i18n/es.json` | 1194 |
-| `i18n/fr.json` | 1194 |
-| `i18n/hi.json` | 1194 |
-| `i18n/nl.json` | 1194 |
-| `i18n/zh.json` | 1194 |
+| `T_EN` (English, inlined in `i18n.js`) | 1195 |
+| `i18n/ar.json` | 1195 |
+| `i18n/es.json` | 1195 |
+| `i18n/fr.json` | 1195 |
+| `i18n/hi.json` | 1195 |
+| `i18n/nl.json` | 1195 |
+| `i18n/zh.json` | 1195 |
 
 Migration replay and production migration-history evidence are maintained in
 [`supabase/migrations/README.md`](supabase/migrations/README.md). This generated

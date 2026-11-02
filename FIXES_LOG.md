@@ -25932,6 +25932,18 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **Not done / not verified.** The other ~30 ladder copies are untouched (the gate holds them at today's count). Other pages' present-tense claims are not audited. Render checks used the signed-in stub; no real session, no Safari/Firefox, no screen reader. `courses.html` calls `submit_exam_attempt`; I did not verify that function exists live.
 
 
+### 206 — Erasure pipeline: a rollback-test pack you can run in the SQL editor (the connector prompt timed out four times)
+
+**Why.** The Supabase connector asks for confirmation on SQL that mentions `delete from auth.users`; the prompt expired unanswered (60 s) four times, so the dormant erasure pipeline (`LEGAL_GAP_AUDIT.md` findings 1-3) was never proven. Decision with the owner: run it by hand in the SQL editor. `docs/legal/ERASURE_ROLLBACK_TEST.sql` + `ERASURE_ROLLBACK_TEST.md` (steps, a read-only before/after check, the expected result table, what to do if anything differs). Docs only: no migration, nothing deployed, flag stays off.
+
+**A defect in my own first version, found by dry-running it.** It was several statements ending in a deliberate error. Run statement by statement (as `psql` does), the early `create` statements committed and survived: after the run `private` held 2 tables and `platform_settings` 2 rows. Whether the SQL editor submits one transaction is not something I can verify, so the script is now **one `DO` block**: a single statement is all-or-nothing however it is submitted. Re-run locally: result JSON matched every expected value and the state was identical before and after (`0|1|1|0|0|0` both).
+
+**Local dry run (throwaway Postgres 16, stand-in schema; not the live database).** owner refused (`owner_protected`), non-requester refused (`erasure_not_requested`), flag-off queue is a no-op, member rows deleted, retained table kept, one log row holding a hash. A parent table sorting before its child (blocked on pass 1) was purged on the retry pass (`blocked: []`).
+
+**Safety change.** The test no longer uses the real owner account to prove the owner guard; it builds a second synthetic owner (`@invalid.test`).
+
+**Not verified:** anything against the live database (constraints, triggers, the real 100+ tables, whether the editor role may set `session_replication_role`). That is what the owner's run is for. The cron job is deliberately not in the test.
+
 ### 207 — CI parity gate: 50 workflow scripts `ci-local.sh` never ran (2026-11-02)
 
 **Measured, then corrected twice.** First count (74 of 105 workflow scripts "unmirrored") was a name match that required the `.py` extension while `ci-local.sh` spells stems, so it over-counted; the second (64) still included push-only workflows. Final: of 104 scripts invoked by workflows that trigger on `pull_request`, **57 were named in neither `ci-local.sh` nor `contract-suite.py`**. I ran all 57 locally on `main`: 53 exit 0, 4 do not (`vercel-production-smoke.sh`, `vercel-production-surface-smoke.py` hit the live site; `vercel-deployment-auth-check.sh` needs a Vercel token; `tests/test_content_pipeline_e2e.py` needs the `supabase` CLI). Two of the 53 *write files* on every run (`evidence-audit.py` rewrote 98 lines of `EVIDENCE_MATRIX.md`; `omega-page-census.py` created `config/omega-page-census.json`) and one is a materializer (`integrate-spatial-realms.js`), so mirroring them would dirty every tree. That leaves **50 mirrored** (new `workflow_gates` in `ci-local.sh`, step 2v, using each workflow's own arguments, e.g. `omega-page-action-audit.py --check`) and **7 exempted with a measured reason** in `config/ci-parity-exempt.json`.

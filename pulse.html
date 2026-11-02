@@ -232,11 +232,12 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
   </div>
 </div>
 
+<script src="/omega-esc.js"></script>
 <script type="module">
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 /* ── Data cache ── */
 var cache={crypto:{},forex:{},weather:{},fng:null,lastFetch:0};
 var REFRESH_MS=60000;
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 /* ── Tab switching ── */
 document.querySelectorAll('.tab').forEach(function(t){

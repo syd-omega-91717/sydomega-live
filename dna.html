@@ -204,9 +204,9 @@
 <div data-page-emblem="dna" style="margin:20px auto 0"></div>
 </div>
 
+<script src="/omega-esc.js"></script>
 <script>
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 var ELEMENTS={
   fire:  {name:'FIRE',  sigil:'☲',color:'#FF4500',attrs:{willpower:95,adaptability:40,creativity:70,precision:60,endurance:50,intuition:65,vision:75,discipline:55}},
   water: {name:'WATER', sigil:'☰',color:'#00BFFF',attrs:{willpower:55,adaptability:95,creativity:65,precision:70,endurance:80,intuition:85,vision:70,discipline:60}},

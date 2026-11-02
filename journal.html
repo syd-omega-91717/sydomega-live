@@ -239,8 +239,9 @@
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-esc.js"></script>
 <script type="module">
-
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 /* ═══════════════════════════════════════════════════════════════════════
    SOVEREIGN JOURNAL — AES-256-GCM ENCRYPTED PRIVATE JOURNAL
    ═══════════════════════════════════════════════════════════════════════ */
@@ -666,9 +667,6 @@ async function importBackup(file) {
 
 /* ── HELPERS ─────────────────────────────────────────────────────────── */
 
-function esc(t) {
-  return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}).replace(/\n/g,'<br>');
-}
 
 function calcStreak() {
   if (!_entries.length) return 0;

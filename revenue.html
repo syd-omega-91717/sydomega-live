@@ -184,7 +184,9 @@ function switchTab(id,btn){
   if(id==='chart')renderChart();
 }
 </script>
+<script src="/omega-esc.js"></script>
 <script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 var streams=[];
 var goal=10000;
 var streamFilter='all';
@@ -196,7 +198,6 @@ function load(){
 }
 function save(){localStorage.setItem('omega_revenue',JSON.stringify(streams));localStorage.setItem('omega_rev_goal',goal);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function fmt(v){return '$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 
 function toMonthly(amount,freq){

@@ -110,7 +110,9 @@
 <div data-page-emblem="evolution" style="margin:20px auto 0"></div>
 </div>
 
+<script src="/omega-esc.js"></script>
 <script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 var PHI=1.6180339887,EU=2.7182818285,APEX=27.8367;
 var THRESHOLDS=[2.3197,4.6394,6.9592,9.2789,11.5986,13.9183,16.2381,18.5578,20.8775,23.1972,25.517,27.8367];
 var GNAMES=['INITIATE','ACOLYTE','SCHOLAR','KEEPER','GUARDIAN','ARCHITECT','SOVEREIGN','VANGUARD','HERALD','ORACLE','PRIME','APEX SOVEREIGN'];
@@ -142,7 +144,6 @@ function renderAxes(a,b,c){
   document.getElementById('ax-b-bar').style.width=pct(b);
   document.getElementById('ax-c-bar').style.width=pct(c);
 }
-function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function renderEvents(evs){
   var list=document.getElementById('ev-list');
   if(!evs||!evs.length){list.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">No events recorded yet.</div>';return;}

@@ -131,7 +131,9 @@
 .rc-books{font-size:12px;line-height:1.8;opacity:.8}
 .star-btn{padding:4px 8px;font-size:12px}
 </style>
+<script src="/omega-esc.js"></script>
 <script type="module">
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 var PK='omega_publications';
@@ -139,7 +141,6 @@ var pubs=JSON.parse(localStorage.getItem(PK)||'[]');
 
 var TYPE_COL={book:'#C9A84C',paper:'#00E5FF',article:'#4CAF50',own:'#9B6BF0'};
 var STATUS_COL={read:'var(--green)',reading:'var(--gold)',queue:'var(--muted)'};
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function calcKPIs(){
   document.getElementById('k-total').textContent=pubs.length;

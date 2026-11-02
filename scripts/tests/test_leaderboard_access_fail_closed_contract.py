@@ -29,7 +29,7 @@ class LeaderboardAccessFailClosedContract(unittest.TestCase):
     def test_visible_error_has_retry_navigation_outside_hidden_app(self):
         self.assertIn('id="leaderboard-load-error" hidden role="alert"', HTML)
         self.assertIn('id="leaderboard-load-retry" href="/leaderboard.html"', HTML)
-        self.assertLess(HTML.index('id="leaderboard-load-error"'), HTML.index('<script>\nfunction setTab(name)'))
+        self.assertLess(HTML.index('id="leaderboard-load-error"'), HTML.index('function setTab(name)'))
 
 
 if __name__ == "__main__":

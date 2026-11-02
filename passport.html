@@ -226,7 +226,9 @@ function switchTab(id,btn){
   if(id==='stamps')renderStamps();
 }
 </script>
+<script src="/omega-esc.js"></script>
 <script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 var passport={};
 var stamps=[];
 
@@ -239,7 +241,6 @@ function save(){
   localStorage.setItem('omega_stamps',JSON.stringify(stamps));
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function renderPassport(){
   var p=passport;

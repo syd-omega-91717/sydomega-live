@@ -225,7 +225,9 @@ canvas{display:block;width:100%;max-width:700px;margin:0 auto}
 </main>
 <div data-page-emblem="physiology" style="margin:20px auto 0"></div>
 </div>
+<script src="/omega-esc.js"></script>
 <script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
@@ -326,7 +328,6 @@ function updateStrip(){
   }
 }
 
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function renderHistory(){
   var tbody=document.getElementById('history-body');
   var cols='grid-template-columns:120px 100px 60px 60px 80px 60px 70px 60px 60px 70px';

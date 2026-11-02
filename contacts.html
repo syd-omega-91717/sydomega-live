@@ -230,8 +230,9 @@ canvas{display:block;width:100%;max-width:500px;margin:0 auto}
 </main>
 <div data-page-emblem="contacts" style="margin:20px auto 0"></div>
 </div>
+<script src="/omega-esc.js"></script>
 <script>
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});

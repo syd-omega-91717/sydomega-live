@@ -93,10 +93,11 @@
 .sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
+<script src="/omega-esc.js"></script>
 <script type="module">
+const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 var KINGS_DATA=[
   {name:'Alexander the Great',era:'356–323 BC',realm:'Macedon / Persia',color:'#C9A84C',virtue:'Vision &amp; Conquest',lesson:'Relentless expansion collapses without institutional depth. Build systems, not just campaigns.',desc:'Conquered the known world by 30. Undefeated in battle. Student of Aristotle. Forged a multicultural empire from Greece to India. His death without succession plan caused its fragmentation — the sovereign\'s ultimate lesson.'},

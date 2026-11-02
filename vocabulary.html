@@ -256,7 +256,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 <div data-page-emblem="vocabulary" style="margin:20px auto 0"></div>
 </div>
 <script src="/omega-srs.js"></script>
+<script src="/omega-esc.js"></script>
 <script>
+var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('act');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('act');});
@@ -272,7 +274,6 @@ const DOMAIN_LABELS={general:'GENERAL',philosophy:'PHILOS',science:'SCIENCE',bus
 
 /* Member text (term, definition, example, etymology, synonyms) reaches three
    innerHTML templates below; every one goes through esc(). */
-function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 let words=JSON.parse(localStorage.getItem('omega_vocab')||'[]');
 let reviewLog=JSON.parse(localStorage.getItem('omega_vocab_log')||'[]');
 let libFilter='all';

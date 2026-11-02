@@ -87,7 +87,7 @@ class ServiceWorker(unittest.TestCase):
 
 class Calendar(unittest.TestCase):
     def test_blocks_ics_escapes_and_folds(self):
-        c = read("command.html")
+        c = read("omega-daily-brief.js")  # moved from command.html (FIXES_LOG 204)
         self.assertIn(".replace(/;/g,'\\\\;')", c)
         self.assertIn(".replace(/,/g,'\\\\,')", c)
         self.assertIn("join('\\r\\n ')", c)

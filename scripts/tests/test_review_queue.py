@@ -63,8 +63,10 @@ class OneScheduler(unittest.TestCase):
     def test_pages_load_it_before_use(self):
         self.assertLess(FC.index('src="/omega-srs.js"'), FC.index('<script type="module">'))
         self.assertLess(VO.index('src="/omega-srs.js"'), VO.index("\n<script>\n"))
-        c = read("command.html")
-        self.assertLess(c.index('src="/omega-srs.js"'), c.index('src="/omega-review.js"'))
+        # command.html became the dashboard TODAY tab (FIXES_LOG 204): its module injects them in order
+        c = read("omega-daily-brief.js")
+        self.assertLess(c.index("'/omega-srs.js'"), c.index("'/omega-review.js'"))
+        self.assertIn("s.async=false", c)  # dynamic scripts are async by default; without this the order is not kept
 
 
 class Grades(unittest.TestCase):

@@ -2674,10 +2674,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-command-center.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -2692,7 +2689,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -2735,13 +2732,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-review.js",
-          "/omega-speed-insights-init.js",
-          "/omega-srs.js",
-          "/omega-today.js",
-          "omega-ui.js"
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -2753,10 +2744,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 13,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 13,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -3927,9 +3918,9 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 12,
+          "buttons": 26,
           "forms": 0,
-          "inputs": 2,
+          "inputs": 14,
           "links": 8
         },
         "media_evidence": {
@@ -14243,8 +14234,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
-          "/omega-morph.js",
-          "/omega-standing-dashboard.js"
+          "/omega-morph.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -14259,7 +14249,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_evidence": {
           "images": 0,

@@ -2755,10 +2755,7 @@
         "h1": [],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-command-center.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -2768,7 +2765,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -2820,28 +2817,20 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Daily Command Brief",
-        "h1": [
-          "DAILY COMMAND BRIEF"
-        ],
+        "h1": [],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-review.js",
-          "/omega-speed-insights-init.js",
-          "/omega-srs.js",
-          "/omega-today.js",
-          "omega-ui.js"
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 13,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 13,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -4038,9 +4027,9 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 12,
+          "buttons": 26,
           "forms": 0,
-          "inputs": 2,
+          "inputs": 14,
           "links": 8
         },
         "media_counts": {
@@ -14718,8 +14707,7 @@
         "h1": [],
         "scripts": [
           "/bg.js",
-          "/omega-morph.js",
-          "/omega-standing-dashboard.js"
+          "/omega-morph.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -14729,7 +14717,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,

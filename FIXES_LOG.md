@@ -6,6 +6,12 @@ the byte content below is identical to what §8 held, so every internal
 "see above" / "the entry above" reference inside it still resolves correctly
 against its neighbours here.
 
+## Frozen: new entries are files (2026-11-02)
+
+Entries 1 to 211 live below. **Do not append here.** Every PR appended to the end of this file, so any two open PRs
+conflicted (all 12 of the last 12 merges touched it). A new entry is its own file under `docs/fixes/`
+(`python3 scripts/new-fix-entry.py <slug>`); see `docs/fixes/README.md`. `scripts/fixes-log-frozen.py` enforces it.
+
 ## Why it moved
 
 CLAUDE.md is loaded into the context of every session in this repository,

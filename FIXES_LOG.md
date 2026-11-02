@@ -25963,3 +25963,21 @@ run the failing step AND everything it skipped (`./scripts/ci-local.sh`), not on
 **What the number is not.** It is syntactic and **not a vulnerability count**. A random 30-piece sample was roughly a third to a half real data fields; the rest were static tables, loop variables and counts (`s.col`, `k`, `done`). The 4 left in the fixed daily brief are such false positives. Unverified leads from the sample, not traced to a source: `decisions.html` status, `budget.html` label, `targets.html` title, `breath.html` technique, `signal.html` `url`.
 
 **Not done.** No existing file was changed and no legacy piece was fixed. No shared `OmegaEsc` exists; adding one means loading it through `bg.js` (the platform's single point of failure), so it is proposed, not built. CSP `'unsafe-inline'` is untouched. Inline `<script>` and attribute sinks (`setAttribute('href', …)`, `javascript:` URLs) are not covered.
+
+### 209 — Five XSS leads traced: four real (one remote), one false positive; four pages fixed (2026-11-02)
+
+**Method.** The leads were five spots the XSS ratchet's sample (208) listed but nobody had traced. Each was followed from where the value is produced to where it lands, then reproduced in a headless browser with hostile values **before** any change (`window.__pwn` counts executions), and re-run with the same script after.
+
+| lead | verdict | before (main) → after |
+|---|---|---|
+| `decisions.html` status | **real**: `status`, `decidedAt`, `urgency` from `localStorage` raw in the journal card; `id` inside an inline click handler's JS string | 1 execution on render, 2 after a click → **0 / 0** |
+| `budget.html` label | **false positive**: `c` is always a row of the static `CATS` table (or its fallback); no code adds categories | not changed |
+| `targets.html` title | **real**: `title`, `desc`, `cat`, `kr.title/unit/start/current/target` from `localStorage` raw, although `esc()` is defined in the file; `kr.current` also broke out of the `value="…"` attribute | 7 executions → **0** |
+| `breath.html` technique | **real**: log `technique` into `innerHTML`; `cycles` is also summed (a string concatenates) into the stats markup, a second path | 3 executions → **0** |
+| `signal.html` url | **real, and remote**: Hacker News / GitHub / dev.to URLs went through `esc()` into `onclick="window.open('<url>')"`. An HTML-escaped `'` is decoded back to `'` before that handler is parsed, so a story URL containing `');…//` runs script on click | 1 execution + window opened → **0** (opens the literal URL; `javascript:` refused) |
+
+**Fixes.** decisions: status/date/urgency escaped; the three buttons carry `data-dec-act` + `data-id="${esc(d.id)}"` with one delegated listener (3 inline handlers removed). targets: all stored text/number fields escaped with the file's own `esc`. breath: `loadLogs()` coerces every entry (`cycles`/`duration` numbers, `technique`/`ts` strings, non-objects dropped), and the log card is built with `textContent`. signal: the four cards carry `data-open-url="<esc(safeHttpUrl(url))>"`; `safeHttpUrl` accepts only `http(s)://`; one delegated handler opens with `noopener,noreferrer` (the old call also handed third-party pages a `window.opener`). Verified in a render with benign data: titles, buttons, stats and the opened URL are right, and EDIT still calls `editDecision('d1')`. `test_stored_value_escaping.py` (10 tests) fails 10/10 on the pre-fix pages (9 failures, 1 error) and passes on the fixed ones. Ratchets: XSS baseline 2,088 → 2,068; CSP inline handlers `decisions.html` 20 → 17, `signal.html` 8 → 4 (26 files lowered in all, none raised).
+
+**Behaviour change.** `targets.html` titles/descriptions that contained HTML (e.g. `<b>`) now show it literally instead of rendering it.
+
+**Not fixed, found while tracing.** `budget.html` has the same defect on other fields: `${e.date}` and `${i.date}` raw, and `delExpense('${e.id}')` / `delIncome('${i.id}')` in inline handler strings (stored month data, backup-restorable). Not among the five leads, so left. The scanner's other ~2,000 pieces are untraced; this entry says nothing about them. `signal.html`'s count did not fall because the scanner cannot see that `url` now holds an escaped value. Not covered: real signed-in sessions (stub only), Safari/Firefox, whether the HN/GitHub/dev.to APIs return what the repro stubs.

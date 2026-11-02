@@ -350,10 +350,10 @@ function renderOKRs(){
       <div class="obj-header">
         <div class="obj-num">O${oi+1}</div>
         <div class="obj-body">
-          <div class="obj-title" style="color:${color}">${CAT_ICONS[obj.cat]||'●'} ${obj.title}</div>
-          ${obj.desc?`<div class="obj-desc">${obj.desc}</div>`:''}
+          <div class="obj-title" style="color:${color}">${CAT_ICONS[obj.cat]||'●'} ${esc(obj.title)}</div>
+          ${obj.desc?`<div class="obj-desc">${esc(obj.desc)}</div>`:''}
           <div class="obj-meta">
-            <span class="obj-tag">${obj.cat.toUpperCase()}</span>
+            <span class="obj-tag">${esc(String(obj.cat).toUpperCase())}</span>
             <span class="obj-tag">${avgKR}% PROGRESS</span>
             <span class="obj-tag">SCORE: ${(avgKR/100).toFixed(2)}</span>
           </div>
@@ -366,10 +366,10 @@ function renderOKRs(){
           return `<div class="kr-item">
             <div style="font-family:var(--M);font-size:12px;color:var(--muted);width:28px;flex-shrink:0">KR${ki+1}</div>
             <div class="kr-info">
-              <div class="kr-name">${kr.title}</div>
+              <div class="kr-name">${esc(kr.title)}</div>
               <div class="kr-progress">
                 <div class="kr-bar-track"><div class="kr-bar-fill" style="width:${pct}%;background:${getKRColor(pct)}"></div></div>
-                <div class="kr-val">${kr.unit}${kr.start} → <input class="kr-input" type="number" value="${kr.current}" onchange="updateKR('${qkey}',${oi},${ki},this.value)"> / ${kr.unit}${kr.target}</div>
+                <div class="kr-val">${esc(kr.unit)}${esc(kr.start)} → <input class="kr-input" type="number" value="${esc(kr.current)}" onchange="updateKR('${qkey}',${oi},${ki},this.value)"> / ${esc(kr.unit)}${esc(kr.target)}</div>
               </div>
             </div>
             <div class="kr-pct" style="color:${getKRColor(pct)}">${pct}%</div>
@@ -377,7 +377,7 @@ function renderOKRs(){
         }).join('')}
       </div>
       <div class="obj-score">
-        <span style="color:var(--muted)">QUARTERLY TARGET: ${obj.title.slice(0,40)}${obj.title.length>40?'...':''}</span>
+        <span style="color:var(--muted)">QUARTERLY TARGET: ${esc(String(obj.title).slice(0,40))}${String(obj.title).length>40?'...':''}</span>
         <span style="color:${getKRColor(avgKR)}">OKR SCORE: ${(avgKR/100).toFixed(2)}</span>
       </div>
     </div>`;

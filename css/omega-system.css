@@ -1273,3 +1273,18 @@ a[href]:hover:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
     font-size:12px
   }
 }
+
+/* ── REDUCED TRANSPARENCY (I15) ─────────────────────────────────────
+   A member whose OS asks for reduced transparency gets opaque glass: no
+   backdrop blur anywhere (page-local rules included, hence the universal
+   selector + !important), and the shared surfaces that carried the blur
+   get an opaque base colour. Only the colour layer changes, so each
+   surface's own gradients and borders still paint. Not Baseline yet:
+   where the query is unsupported this block never applies. */
+@media (prefers-reduced-transparency: reduce){
+  :root{--gvp-glass-bg:var(--void,#0A0A0F)}
+  *,*::before,*::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+  .topbar,.glass,.glass-cyan,.card,.kpi,.kpi-card,.panel,.module,.tile,.widget,.modal,.drawer{
+    background-color:var(--void2,#020206)!important
+  }
+}

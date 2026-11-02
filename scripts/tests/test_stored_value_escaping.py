@@ -81,5 +81,40 @@ class Signal(unittest.TestCase):
         self.assertEqual(out.strip(), '["","","","","","","https://ok.test/a?b=1","http://x.test/a\');b"]')
 
 
+class Budget(unittest.TestCase):
+    S = src("budget.html")
+
+    def test_dates_are_escaped_and_ids_leave_inline_handlers(self):
+        self.assertIn("${esc(e.date)}", self.S)
+        self.assertIn("${esc(i.date)}", self.S)
+        for raw in ("${e.date}", "${i.date}", "delExpense('${", "delIncome('${"):
+            self.assertNotIn(raw, self.S, raw)
+        self.assertEqual(len(re.findall(r'data-id="\$\{esc\([ei]\.id\)\}"', self.S)), 2)
+        self.assertIn("[data-b-del]", self.S)
+
+    def test_trend_years_must_be_four_digits(self):
+        self.assertIn("filter(y=>/^\\d{4}$/.test(y))", self.S)
+
+    def test_load_normalises_the_ledger(self):
+        self.assertIn("_months = normaliseMonths(_months);", self.S)
+        self.assertIn("if (k === '__proto__') return;", self.S)
+
+    @unittest.skipUnless(shutil.which("node"), "node not installed")
+    def test_normaliser_and_formatters_run_correctly(self):
+        norm = re.search(r"function normaliseMonths\(raw\) \{.*?\n\}\n", self.S, re.S).group(0)
+        fmt = re.search(r"function fmt\(n\) \{.*?\}\n", self.S).group(0)
+        fmtd = re.search(r"function fmtD\(n\)\{.*?\}\n", self.S).group(0)
+        js = norm + fmt + fmtd + """
+const hostile = '<img src=x onerror=1>';
+const r = normaliseMonths({ '2026-11': { expenses: [{ id: 7, cat: 'FOOD', desc: 'd', amount: hostile, date: hostile, sub: 'keep' }, null, 5],
+  income: [{ id: 'a', source: 's', amount: '12.5', date: '2026-11-01' }] }, '2026-10': 'junk', '__proto__': { expenses: [1] } });
+console.log(JSON.stringify([r['2026-11'].expenses.length, r['2026-11'].expenses[0].amount, r['2026-11'].expenses[0].id,
+  r['2026-11'].expenses[0].sub, r['2026-11'].income[0].amount, r['2026-10'].expenses, Object.keys(r).sort(),
+  normaliseMonths(null), normaliseMonths([]), fmt(hostile), fmtD(hostile), fmt('1250'), fmtD(12.5), fmt(undefined)]));
+"""
+        out = subprocess.run(["node", "-e", js], capture_output=True, text=True, check=True).stdout.strip()
+        self.assertEqual(out, '[1,0,"7","keep",12.5,[],["2026-10","2026-11"],{},{},"$0","0.00","$1,250","12.50","$0"]')
+
+
 if __name__ == "__main__":
     unittest.main()

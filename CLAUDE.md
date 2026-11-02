@@ -523,7 +523,7 @@ Only what changes what you do in the **first minutes** stays here:
   trailing commit does. Measured twice: four PRs lost their trailing commit, then #267 merged
   as `df6fa6c2` while an amend to `0ae2f7a2` was in flight and the fix did not land
   (`FIXES_LOG.md` 93a). Follow-up work is a **new** commit on a branch restarted from the
-  merged `main`, in a **new** PR. Always confirm with
+  merged `main`, in a **new** PR. Merge `main` in with `scripts/merge-main.py` before every push. Always confirm with
   `git merge-base --is-ancestor <sha> origin/main`, never from a merge notification.
 - **Production is Cloudflare Pages since 2026-10-18** (project `sydomega`, Git-connected, builds
   every `main` push with `bash scripts/vercel-build.sh` → `public`). Vercel's Hobby team is paused
@@ -558,8 +558,8 @@ entries (which were accurate when written):
 | check | current baseline |
 |---|---|
 | `python3 scripts/audit.py` | 0 critical / **8** warnings — **4 `.js`** unloaded (`GAP_ANALYSIS.md` §S), 0 `.css`. Checks 7/8 read `migrations/` too; a matching count is not the baseline met — check composition (186). **A warning is not a null finding**, nor a delete-on-sight: `omega-bottom-stack.js` sat there inert 8 days and was load-bearing (160) |
-| `python3 -m unittest discover -s scripts/tests` | **1025** tests, 0 failing (`FIXES_LOG.md`: provider-registry history) |
-| `python3 -m unittest discover -s tests` | **23** tests — the Ω Intelligence Fabric's own; both CI paths run them |
+| `python3 -m unittest discover -s scripts/tests` | 0 failing |
+| `python3 -m unittest discover -s tests` | 0 failing — the Ω Intelligence Fabric's own tests; both CI paths run them |
 | `python3 scripts/omega_fabric_audit.py` | `VERIFIED=8 UNVERIFIED=1`, 12 agents, 60 governed skills; RND-01 stays UNVERIFIED without a browser **by design** |
 | `python3 scripts/check-inline-js.py` | clean |
 | `python3 scripts/schema-dictionary.py` | **0** findings (the `map.html` gap was fixed in `3f8a17d7`) |
@@ -577,7 +577,7 @@ entries (which were accurate when written):
 | `python3 scripts/reachability-contract.py` | 0 unreachable |
 | `python3 scripts/module-contract.py` | 0 broken; **164** contracts. Publisher must exist **and be reachable** — the conjunction; half of it passes on the tree that shipped 160 (162) |
 | `python3 scripts/evidence-audit.py --summary` | 107 BUILT / 27 PARTIAL / 42 LOCAL_ONLY / 48 STATIC / 0 BROKEN / **0** UNREACHABLE (224 pages; the owner deck reaches the 13 nav.js omits); **0 read relations absent live** (snapshot 2026-10-04; keys are `public.`-qualified — strip it) |
-| `./scripts/ci-local.sh` | **35** blocking checks, all passing (`contract-suite.py` holds **61** gates). **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93–104) |
+| `./scripts/ci-local.sh` | every blocking check passing. **Its non-blocking tail is not advisory** — those **seven** audits block on GitHub and are all green. Mirror every blocking gate, from every workflow (`FIXES_LOG.md` 93–104) |
 | `python3 scripts/resilience-audit.py` | 0 findings; 1 warning (the single CI runner) |
 | broken asset references | 0 |
 | service-role key scan | clean |
@@ -779,7 +779,7 @@ entries (which were accurate when written):
   resolving/adding a term in the taxonomy's pending-terminology list all
   mean one of these five is now stale. Update the specific section that
   changed rather than rewriting the file. **A fixed bug's evidence-cited
-  entry goes in `FIXES_LOG.md`, appended at the end — not in §8**, which
+  entry is its own file (`scripts/new-fix-entry.py` → `docs/fixes/`; `FIXES_LOG.md` is frozen) — not in §8**, which
   stays short on purpose: it is loaded into every session, and it was 88% of
   this file before the split. Add to §8 only when the fix changes a
   *standing* fact: a new recurring bug class (§8.1), an item opening or

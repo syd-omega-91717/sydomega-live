@@ -1,0 +1,126 @@
+name: Supabase Staging Deploy
+
+# Manual only. Applies supabase/migrations/ to the STAGING project, and optionally deploys the
+# Edge Functions registered in supabase/config.toml. It can never target production: the project
+# ref comes from the repository variable STAGING_PROJECT_REF and is refused if it equals the
+# production ref, and it uses STAGING_* secrets that are separate from the production ones.
+# Runbook, one-time setup and what is not verified: docs/STAGING_ENVIRONMENT.md
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_staging_apply:
+        description: Confirm applying all pending migrations to the STAGING project
+        required: true
+        type: boolean
+        default: false
+      deploy_functions:
+        description: Also deploy the Edge Functions listed in supabase/config.toml to staging
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-staging-deploy
+  cancel-in-progress: false
+
+env:
+  PRODUCTION_PROJECT_REF: ydqhzvvoyufiiqvzcjns
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: supabase-staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.119.0
+
+      - name: Refuse anything that is not clearly staging
+        env:
+          STAGING_PROJECT_REF: ${{ vars.STAGING_PROJECT_REF }}
+          STAGING_SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+          STAGING_SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_SUPABASE_DB_PASSWORD }}
+          CONFIRM: ${{ inputs.confirm_staging_apply }}
+        run: |
+          set -euo pipefail
+          test "${CONFIRM}" = "true" || { echo "::error::Explicit staging confirmation is required."; exit 1; }
+          test -n "${STAGING_PROJECT_REF}" || { echo "::error::Repository variable STAGING_PROJECT_REF is not set."; exit 1; }
+          printf '%s' "${STAGING_PROJECT_REF}" | grep -Eq '^[a-z0-9]{20}$' || { echo "::error::STAGING_PROJECT_REF is not a 20-character project ref."; exit 1; }
+          test "${STAGING_PROJECT_REF}" != "${PRODUCTION_PROJECT_REF}" || { echo "::error::STAGING_PROJECT_REF is the PRODUCTION project. Refusing."; exit 1; }
+          test -n "${STAGING_SUPABASE_ACCESS_TOKEN}" || { echo "::error::Missing STAGING_SUPABASE_ACCESS_TOKEN secret."; exit 1; }
+          test -n "${STAGING_SUPABASE_DB_PASSWORD}" || { echo "::error::Missing STAGING_SUPABASE_DB_PASSWORD secret."; exit 1; }
+          echo "Target is a non-production project ref: ${STAGING_PROJECT_REF}"
+
+      - name: Local migration structure
+        run: python3 scripts/migration-history-contract.py --local
+
+      - name: Link the staging project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+          STAGING_PROJECT_REF: ${{ vars.STAGING_PROJECT_REF }}
+          STAGING_SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          supabase link --project-ref "${STAGING_PROJECT_REF}" --password "${STAGING_SUPABASE_DB_PASSWORD}"
+          # Belt and braces: the CLI's own record of what it linked must still not be production.
+          test "$(cat supabase/.temp/project-ref)" != "${PRODUCTION_PROJECT_REF}"
+
+      - name: Dry run (nothing is applied)
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          supabase migration list --linked | tee "${RUNNER_TEMP}/before.txt"
+          supabase db push --dry-run --linked 2>&1 | tee "${RUNNER_TEMP}/dry-run.txt"
+
+      - name: Apply migrations (never --include-seed)
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          supabase db push --linked --yes
+
+      - name: Verify staging history matches the repository
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          supabase migration list --linked | tee "${RUNNER_TEMP}/after.txt"
+          python3 scripts/migration-history-contract.py --remote-output "${RUNNER_TEMP}/after.txt"
+          python3 - <<'PY'
+          import os, pathlib, re, sys
+          rows = []
+          for line in pathlib.Path(os.environ["RUNNER_TEMP"], "after.txt").read_text().splitlines():
+              m = re.match(r"^\s*(\d{4,14})?\s*[│|]\s*(\d{4,14})?\s*[│|]", line)
+              if m and (m.group(1) or m.group(2)):
+                  rows.append((m.group(1) or None, m.group(2) or None))
+          local = len(list(pathlib.Path("supabase/migrations").glob("*.sql")))
+          bad = [r for r in rows if r[0] != r[1]]
+          if not rows or bad:
+              sys.exit(f"Staging history is not fully reconciled: {bad[:5]!r}")
+          if len(rows) != local:
+              sys.exit(f"Staging records {len(rows)} versions but the repository has {local} files.")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as s:
+              s.write(f"## Staging migrations\n\n{len(rows)} versions applied and matching the repository.\n")
+          PY
+
+      - name: Deploy Edge Functions to staging (optional)
+        if: ${{ inputs.deploy_functions }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+          STAGING_PROJECT_REF: ${{ vars.STAGING_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          supabase functions deploy --project-ref "${STAGING_PROJECT_REF}" --use-api

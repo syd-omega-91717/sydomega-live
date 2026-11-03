@@ -17,8 +17,11 @@ deploys to production, so "go live" is always a reviewed PR that also updates
 | `market-price` | false | Public, GET-only (`PUBLIC_READONLY`), no privileged key. Answers `configured:false` until `TWELVE_DATA_API_KEY` is set. |
 
 **Before setting `TWELVE_DATA_API_KEY`:** the endpoint is public and each call spends the key's
-quota. Add a per-IP limit or a longer server-side cache first, and confirm Twelve Data's terms
-allow displaying its quotes to your members (and what disclaimer they require).
+quota. ~~Add a per-IP limit or a longer server-side cache first~~ — **source done 2026-11-03**
+(5-min per-symbol cache, 30/min per-IP limit, 6/min upstream budget; `docs/fixes/2026-11-03-market-price-quota-protection.md`).
+Those limits are per isolate, so they are best-effort; not live until the integration redeploys
+main. **Still open:** confirm Twelve Data's terms allow displaying its quotes to your members
+(and what disclaimer they require), then have `pulse.html`/`investment.html` show `as_of`.
 
 ## Held on purpose
 

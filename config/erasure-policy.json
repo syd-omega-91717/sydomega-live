@@ -1,0 +1,811 @@
+{
+ "_comment": "Erasure classification (docs/legal/ERASURE_PLAN.md). Every public table that carries a member column (user_id, profile_id, member_id) or a reference column (owner_id, author_id, actor_id, created_by, sender_id, recipient_id, granted_by) must be listed. action: delete | anonymise | retain | pending_decision. reviewed=false means a human has not confirmed the row. scripts/erasure-policy-contract.py enforces completeness in CI; --gate must pass before erasure_worker_enabled is ever set to true.",
+ "_source": "supabase/live-schema.json captured 2026-10-06",
+ "tables": {
+  "academy_access": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "academy_enrollments": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "academy_exam_results": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "academy_progress": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "access_audit": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "activity_feed": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "activity_logs": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "agent_threads": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "ai_agents": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "ai_conversations": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "ai_documents": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "ai_jobs": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "ai_memory": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "ai_memory_embeddings": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "ai_prompts": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "ai_workspace_members": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "ai_workspaces": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "analytics_events": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "api_keys": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "approval_requests": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "automation_rules": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "autonomous_decisions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "billing_invoices": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Financial record: tax and accounting retention usually applies. D1 (counsel). Proposed: anonymise, never delete."
+  },
+  "bloodline_nodes": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "calendars": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "certificates": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "character_records": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "client_errors": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "codex_bookmarks": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "commission_contracts": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Contract record between parties. D1 (counsel); the other party may have a retention interest."
+  },
+  "consent_records": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Privacy page promises 10 years as proof of consent. D2 (counsel): minimal evidence record vs delete. Cascades from profiles today, so retention is not actually possible as built."
+  },
+  "consult_requests": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "content_recommendations": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "content_versions": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "contribution_log": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "conversations": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "council_deliberations": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "covenant_progress": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "creator_proposals": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "daily_engagement": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "data_export_requests": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "devices": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "digest_preferences": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "dispatches": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "domain_mastery": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "enterprise_audit": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "event_rsvps": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "evolution_events": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "exam_results": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "family_nodes": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "feedback": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "focus_sessions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "founder_dashboard_events": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "gate_evaluations": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "graph_entities": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "graph_events": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "graph_evidence": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "graph_relationships": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "habit_logs": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "health_logs": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "heritage_records": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "incidents": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "interest_signals": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "knowledge_documents": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "knowledge_spaces": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "leaderboard_entries": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "leaderboard_snapshots": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "lesson_completions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "life_entries": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "marketplace_favorites": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "marketplace_listings": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "matrix_progress": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "medals": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "media_reservations": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "meeting_participants": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_agent_interactions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_events": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_feature_flags": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_perks": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_posts": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_preferences": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_presence": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_quests": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "member_state": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "messages": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "notification_queue": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "notifications": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "oaths": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "okr_key_results": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "okr_objectives": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_agent_operations": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_agent_tasks": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_blockchain_ownership_verifications": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_certificates": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_creative_assets": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "omega_creative_projects": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "omega_entitlements": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_experience_definitions": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "omega_experience_runs": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_fraud_signals": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_investment_watchlists": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_knowledge_documents": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "omega_media_jobs": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_member_life_surface": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_member_mission_state": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_member_mission_tasks": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_member_product_reality": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_member_quest_state": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_mission_task_transitions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_mission_transitions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_notifications": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_recovery_checkpoints": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_service_orders": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Order record for a paid service. D1 (counsel). Proposed: anonymise."
+  },
+  "omega_simulation_runs": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_user_achievements": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "organization_members": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "organizations": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "payments": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Financial record: tax and accounting retention usually applies. D1 (counsel). Proposed: anonymise, never delete."
+  },
+  "platform_events": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Platform event log; privacy page promises a 5-year event log. D2 (counsel)."
+  },
+  "platform_owners": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "policy_eval_log": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "project_activity": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "project_members": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "projects": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "publication_comments": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "publications": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "quest_completions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "research_hypotheses": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "search_index": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "security_policies": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "session_heartbeats": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "sessions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "settings": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "signal_saves": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "social_broadcasts": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "social_connections": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "sovereign_events": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Privacy page promises a 5-year event log; event_data may hold personal data. D2 (counsel)."
+  },
+  "sovereign_points_ledger": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Points ledger: an accounting-style record of awards. D1 (owner): anonymise vs delete."
+  },
+  "storage_files": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "subscriptions": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Financial record: billing history. D1 (counsel). Proposed: anonymise."
+  },
+  "task_attachments": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "task_comments": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "task_completions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "team_members": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "team_messages": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "teams": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "telemetry_events": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "threat_events": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Security log; may be needed for fraud and abuse handling. D2 (counsel)."
+  },
+  "token_balances": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "travel_journeys": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "trophies": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "user_assets": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "user_dedication": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "user_journeys": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "wallet_accounts": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "wallet_transactions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "wealth_snapshots": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "webhooks": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  },
+  "weekly_digest_queue": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "workflow_executions": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "workflows": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
+  }
+ }
+}

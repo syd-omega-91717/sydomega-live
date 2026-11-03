@@ -107,5 +107,91 @@ class MigrationHistoryContractTests(unittest.TestCase):
         self.assertIn("duplicate", out)
 
 
+class RemoteOutputTests(unittest.TestCase):
+    """The `--remote-output` path compares `supabase migration list` with the local files.
+
+    It had no tests, and parse_remote() counted a row whose REMOTE column is blank as applied
+    remotely (it fell back to the LOCAL column), so a migration that existed only locally was
+    reported as "exactly synchronized". Every passing case here is paired with a violator.
+    """
+
+    HEADER = "        LOCAL      \u2502     REMOTE     \u2502     TIME (UTC)\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
+
+    def setUp(self):
+        self.fx = Fixture()
+        for name in ("0001_baseline.sql", "20260902_reset_migration_state.sql", "20261001000000_a.sql", "20261002000000_b.sql"):
+            self.fx.add(name)
+        self.out = os.path.join(self.fx.dir, "list.txt")
+
+    def tearDown(self):
+        self.fx.cleanup()
+
+    @staticmethod
+    def row(local, remote, time="2026-10-02 00:00:00"):
+        return f"  {local or '':>14} \u2502 {remote or '':<14} \u2502 {time}\n"
+
+    def check(self, rows, header=True):
+        text = (self.HEADER if header else "") + "".join(self.row(l, r) for l, r in rows)
+        with open(self.out, "w", encoding="utf-8") as fh:
+            fh.write(text)
+        return self.fx.run("--remote-output", self.out)
+
+    ALL = [("0001", "0001"), ("20260902", "20260902"), ("20261001000000", "20261001000000"), ("20261002000000", "20261002000000")]
+
+    def test_fully_synchronized_passes(self):
+        code, out = self.check(self.ALL)
+        self.assertEqual(code, 0, out)
+        self.assertIn("exactly synchronized", out)
+
+    def test_a_local_only_row_fails(self):
+        """VIOLATOR, the reported bug: blank REMOTE column means NOT applied remotely."""
+        rows = self.ALL[:-1] + [("20261002000000", None)]
+        code, out = self.check(rows)
+        self.assertEqual(code, 1, out)
+        self.assertIn("missing remotely", out)
+        self.assertIn("20261002000000", out)
+
+    def test_a_remote_only_row_fails(self):
+        """VIOLATOR. A version applied remotely with no local file."""
+        code, out = self.check(self.ALL + [(None, "20261003000000")])
+        self.assertEqual(code, 1, out)
+        self.assertIn("missing locally", out)
+        self.assertIn("20261003000000", out)
+
+    def test_a_local_file_absent_from_the_output_fails(self):
+        """VIOLATOR. Truncated output must not read as synchronized."""
+        code, out = self.check(self.ALL[:-1])
+        self.assertEqual(code, 1, out)
+        self.assertIn("missing remotely", out)
+
+    def test_the_time_column_is_not_read_as_a_version(self):
+        """A remote-only row used to leak its '2026' time-column digits into the remote set."""
+        code, out = self.check(self.ALL + [(None, "20261003000000")])
+        self.assertEqual(code, 1, out)
+        self.assertNotIn("\n  2026\n", out)
+
+    def test_an_unparseable_row_fails_closed(self):
+        """VIOLATOR. A separator-and-digits line that is not a recognised row is an error,
+        not something to skip and then report 'synchronized'."""
+        with open(self.out, "w", encoding="utf-8") as fh:
+            fh.write(self.HEADER + "".join(self.row(l, r) for l, r in self.ALL) + "garbled | 20261009000000 text\n")
+        code, out = self.fx.run("--remote-output", self.out)
+        self.assertEqual(code, 1, out)
+        self.assertIn("could not parse", out)
+
+    def test_empty_output_fails(self):
+        with open(self.out, "w", encoding="utf-8") as fh:
+            fh.write("")
+        code, out = self.fx.run("--remote-output", self.out)
+        self.assertEqual(code, 1, out)
+
+    def test_ascii_pipe_separators_are_accepted(self):
+        text = "   Local | Remote | Time\n" + "".join(f"   {l} | {r} | 2026-10-02 00:00:00\n" for l, r in self.ALL)
+        with open(self.out, "w", encoding="utf-8") as fh:
+            fh.write(text)
+        code, out = self.fx.run("--remote-output", self.out)
+        self.assertEqual(code, 0, out)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -103,7 +103,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 <div class="shell">
 <aside class="side" id="omega-side" data-page="pulse"></aside>
 <main class="main">
-  <div class="topbar"><div class="t">PULSE<small>SOVEREIGN MARKET SIGNAL &middot; SYD OMEGA 91717</small></div><div class="live-dot" style="margin-left:auto"></div><span style="font-size:12px;letter-spacing:1px;color:var(--green);margin-left:4px">LIVE</span><span style="font-size:12px;letter-spacing:1px;color:var(--dim);margin-left:8px" id="ts-label">--</span></div>
+  <div class="topbar"><div class="t">PULSE<small>SOVEREIGN MARKET SIGNAL &middot; SYD OMEGA 91717</small></div><div class="live-dot" style="margin-left:auto"></div><span id="live-label" style="font-size:12px;letter-spacing:1px;color:var(--dim);margin-left:4px">CONNECTING</span><span style="font-size:12px;letter-spacing:1px;color:var(--dim);margin-left:8px" id="ts-label">--</span></div>
   <div style="font-size:12px;letter-spacing:1px;color:var(--dim);padding:4px var(--pad,20px) 0">* Shown only when the configured market-price provider returns a quote; otherwise &mdash;. Nothing on this page is simulated. Crypto, forex and weather come from free live sources.</div>
 
 <!-- Ticker strip -->
@@ -295,10 +295,17 @@ async function fetchCrypto(){
     var r=await fetch(url);
     if(!r.ok)throw new Error('CoinGecko '+r.status);
     var coins=await r.json();
+    if(!Array.isArray(coins)||!coins.length)throw new Error('CoinGecko returned no coins');
     cache.crypto.coins=coins;
     renderCrypto(coins);
+    return true;
   }catch(e){
-    document.getElementById('crypto-grid').innerHTML='<div style="grid-column:1/-1;font-size:12px;letter-spacing:1px;color:var(--dim);padding:20px;text-align:center">Market data temporarily unavailable — CoinGecko rate limit. Retrying...</div>';
+    /* Say what happened, not a guessed cause. Keep whatever was already drawn: it is older data, and the
+       header time (set only on success) shows how old. */
+    if(!cache.crypto.coins){
+      document.getElementById('crypto-grid').innerHTML='<div style="grid-column:1/-1;font-size:12px;letter-spacing:1px;color:var(--dim);padding:20px;text-align:center">Crypto prices could not be loaded ('+esc(e&&e.message||'network error')+'). Trying again in a minute.</div>';
+    }
+    return false;
   }
 }
 
@@ -307,8 +314,8 @@ function renderCrypto(coins){
   if(!grid||!coins||!coins.length)return;
   grid.innerHTML='';
   coins.forEach(function(c){
-    var chg24=c.price_change_percentage_24h||0;
-    var up=chg24>=0;
+    var chg24=c.price_change_percentage_24h;
+    var up=chg24>=0;   /* null change prints '--' via pct() */
     var div=document.createElement('div');
     div.className='asset-card card';
     var spark=c.sparkline_in_7d&&c.sparkline_in_7d.price;
@@ -341,13 +348,13 @@ function renderCrypto(coins){
   var capList=document.getElementById('cap-list');
   if(capList){
     capList.innerHTML=coins.slice(0,6).map(function(c,i){
-      var chg=c.price_change_percentage_24h||0;
+      var chg=c.price_change_percentage_24h;   /* null stays null: pct() prints '--' */
       var bar=Math.min(100,Math.round(c.market_cap/coins[0].market_cap*100));
       return '<div style="margin-bottom:8px">'
         +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">'
         +'<div style="font-size:12px;letter-spacing:1px;color:var(--gold);min-width:40px">'+(i+1)+'. '+c.symbol.toUpperCase()+'</div>'
         +'<div style="flex:1;height:3px;background:rgba(201,168,76,.08);border-radius:2px"><div style="width:'+bar+'%;height:100%;background:rgba(201,168,76,.5);border-radius:2px;transition:width .4s"></div></div>'
-        +'<div style="font-size:12px;letter-spacing:.5px;color:'+(chg>=0?'var(--green)':'var(--red)')+'">'+pct(chg)+'</div>'
+        +'<div style="font-size:12px;letter-spacing:.5px;color:'+(chg==null?'var(--dim)':chg>=0?'var(--green)':'var(--red)')+'">'+pct(chg)+'</div>'
         +'</div></div>';
     }).join('');
   }
@@ -390,11 +397,16 @@ async function fetchForex(){
     if(!r.ok)throw new Error('ERApi '+r.status);
     var data=await r.json();
     var rates=data.rates||{};
+    if(!rates||!Object.keys(rates).length)throw new Error('no rates in response');
     cache.forex=rates;
     renderForex(rates);
+    return true;
   }catch(e){
-    var el=document.getElementById('fx-major');
-    if(el)el.innerHTML='<div style="font-size:12px;color:var(--dim);padding:10px">Forex data unavailable</div>';
+    if(!cache.forex){
+      var el=document.getElementById('fx-major');
+      if(el)el.innerHTML='<div style="font-size:12px;color:var(--dim);padding:10px">Exchange rates could not be loaded. Trying again in a minute.</div>';
+    }
+    return false;
   }
 }
 
@@ -411,11 +423,12 @@ function renderForex(rates){
     {pair:'USD/JOD',code:'JOD',inv:false},{pair:'USD/KWD',code:'KWD',inv:false},
   ];
   function fxRow(item){
-    var raw=rates[item.code]||1;
-    var rate=item.inv?1/raw:raw;
+    var raw=rates[item.code];
+    var have=typeof raw==='number'&&isFinite(raw)&&raw>0;
+    var rate=have?(item.inv?1/raw:raw):null;
     var bar=100;
     return '<div class="fx-row"><div class="fx-pair">'+item.pair+'</div>'
-      +'<div class="fx-rate">'+rate.toFixed(item.code==='JPY'||item.code==='LBP'?0:4)+'</div>'
+      +'<div class="fx-rate">'+(have?rate.toFixed(item.code==='JPY'||item.code==='LBP'?0:4):'—')+'</div>'
       +'<div class="fx-bar"><div class="fx-bar-fill" style="width:'+bar+'%"></div></div>'
       +'</div>';
   }
@@ -608,11 +621,18 @@ async function fetchNews(){
 
 /* ── Main refresh loop ── */
 async function refresh(){
-  var now=new Date();
-  document.getElementById('refresh-ts').textContent=now.toTimeString().slice(0,8);
-  document.getElementById('ts-label').textContent=now.toTimeString().slice(0,8);
-  await Promise.all([fetchCrypto(),fetchForex(),fetchCommodities(),fetchFNG()]);
-  cache.lastFetch=Date.now();
+  var res=await Promise.all([fetchCrypto(),fetchForex(),fetchCommodities(),fetchFNG()]);
+  /* Stamp the time only if a source actually answered. It used to be stamped BEFORE the fetches, so a total
+     outage still read "updated 14:03:22" over old or empty data. */
+  if(res[0]===true||res[1]===true){
+    var now=new Date();
+    document.getElementById('refresh-ts').textContent=now.toTimeString().slice(0,8);
+    document.getElementById('ts-label').textContent=now.toTimeString().slice(0,8);
+    cache.lastFetch=Date.now();
+  }
+  /* LIVE only while a source is answering; STALE after a failed refresh (what is on screen is then older data). */
+  var ll=document.getElementById('live-label');
+  if(ll){var ok=res[0]===true||res[1]===true;ll.textContent=ok?'LIVE':'STALE';ll.style.color=ok?'var(--green)':'var(--crim)';}
 }
 
 /* Lazy-load weather/news when science tab is clicked */

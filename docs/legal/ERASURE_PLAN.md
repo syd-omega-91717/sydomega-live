@@ -78,10 +78,10 @@ External processors (Stripe, Resend, Anthropic), provider backups, and the priva
 
 Success = for a synthetic member with rows in every classified table, after a purge: `delete` tables have 0 rows, `anonymise` tables have rows with no member id and no free-text personal columns, `retain` tables are as classified, `auth.users` and `profiles` are gone, a log row holds a hash only, and an injected failure leaves the member **fully intact** and unlogged.
 
-## Note on the staging project's name
+## Note on the staging project
 
-The project the owner called staging (`nvgedlxlkdzvcelimbvq`) is the lookalike named
-`ydqhzvvoyufiiqvzcjns / sydomega` recorded in `ERASURE_ROLLBACK_TEST.md`: another organisation,
-us-east-1, 0 users. It is safe to use as staging, but its **name contains the production ID**, which has
-already misled one dashboard session. Rename it (for example `sydomega-staging`) before anyone runs
-destructive tests in it, and always confirm by Project ID.
+The project the owner first named as staging (`nvgedlxlkdzvcelimbvq`) is the lookalike named
+`ydqhzvvoyufiiqvzcjns / sydomega` recorded in `ERASURE_ROLLBACK_TEST.md`. Inspected read-only on
+2026-11-03 it is **not clean**: 83 recorded migrations, 24 of them with no file in the repo, 354 repo
+migrations never applied, and its name contains the production ID. Use a **new empty project**
+(`docs/STAGING_ENVIRONMENT.md`) for the gate in step 2 above, and always confirm by Project ID.

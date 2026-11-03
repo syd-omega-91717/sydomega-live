@@ -11,17 +11,34 @@ Treat the first run as the test.
 
 ## One-time setup (owner steps, in GitHub)
 
-Staging project ref: `nvgedlxlkdzvcelimbvq` (supplied by the owner 2026-11-03; not in the Supabase
-connector's account, so this session never reached it).
+**Do not point this workflow at `nvgedlxlkdzvcelimbvq` as it stands.** It was inspected read-only on
+2026-11-03 (schema metadata and counts only, no member data) and is not a clean project:
 
-**Rename it first.** `docs/legal/ERASURE_ROLLBACK_TEST.md` records this project as named
-`ydqhzvvoyufiiqvzcjns / sydomega`: its *name* contains the production project ID, which already led one
-dashboard session to the wrong project. Rename it (for example `sydomega-staging`) before anyone runs
-destructive tests there, and always confirm by **Project ID** (Settings > General), never by name.
+| fact | value |
+|---|---|
+| name / organisation | `ydqhzvvoyufiiqvzcjns / sydomega`, a Vercel-integration organisation (`vercel_icfg_...`), us-east-1 |
+| public tables / auth users | 89 / 0 |
+| recorded migrations | 83, latest `20261012150000` (the repo's latest is `20261025100000`) |
+| versions recorded there with **no** file in the repo | **24** (for example `20260817225138`, `20261001221116`) |
+| repo migrations never applied there | **354** of 413 |
+| `pg_cron` | not installed (available, not enabled) |
+
+So `supabase db push` would stop on a history mismatch (a remote version with no local file). That is the
+safe outcome, but the workflow cannot succeed here. **Do not repair the history** by marking versions
+reverted or rewriting them (`supabase/migrations/README.md`, "Safe recovery procedure"). The name also
+contains the production project ID, which already misled one dashboard session
+(`docs/legal/ERASURE_ROLLBACK_TEST.md`).
+
+**Recommendation: create a new, empty Supabase project named `sydomega-staging`** in the organisation you
+control, and use that. Then the first run applies all 413 migrations to a clean database. Resetting the
+lookalike instead would need a destructive `DROP`, which is the owner's call, and would leave a staging
+project owned by a Vercel integration.
+
+Then, for the new project:
 
 1. Repo **Settings > Environments > New environment**: `supabase-staging`. Optionally add yourself as
    a required reviewer so every run waits for approval.
-2. In that environment, add a **variable** `STAGING_PROJECT_REF` = `nvgedlxlkdzvcelimbvq`.
+2. In that environment, add a **variable** `STAGING_PROJECT_REF` = the new project's 20-character ref.
 3. In that environment, add **secrets** (never in the repo, chat or a `.env` file):
    - `STAGING_SUPABASE_ACCESS_TOKEN`: a personal access token created by the Supabase account that
      owns the staging project (Supabase dashboard > Account > Access Tokens).

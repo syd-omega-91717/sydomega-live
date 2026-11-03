@@ -1,0 +1,9 @@
+### The project named as staging is not a clean target (2026-11-03)
+
+**Why.** The owner named `nvgedlxlkdzvcelimbvq` as staging, and `docs/STAGING_ENVIRONMENT.md` (#1151) told them to point the deploy workflow at it and expected the first run to apply all 413 migrations. When the Supabase connector later became able to see that project (and only that project), a read-only inspection showed it is not an empty database.
+
+**Fix.** `docs/STAGING_ENVIRONMENT.md` now says not to use it as it stands and recommends a new empty project named `sydomega-staging`; `docs/legal/ERASURE_PLAN.md` points to the same. No code or workflow changed.
+
+**Verified.** Read-only queries via `mcp__Supabase__execute_sql` on 2026-11-03 (counts and migration names; no member data): 89 public tables, 0 auth users, 83 rows in `supabase_migrations.schema_migrations` (latest `20261012150000`), 1 of `private`/`omega_private` present, extensions `pg_stat_statements, pgcrypto, supabase_vault` with `pg_cron`, `pg_net`, `vector` available but not enabled; organisation `vercel_icfg_...`, us-east-1. Comparing the 83 recorded versions with `supabase/migrations/`: 59 shared, **24 recorded there with no local file**, **354 local files never applied** (413 local, latest `20261025100000`).
+
+**Not done / not verified.** Nothing was applied, reset or repaired. I did not check whether the project's contents are used by anything (the Vercel integration may inject its keys into a Vercel project's environment); that is for the owner. The inspection ran through a connector whose account differed from the one used earlier in the session, so production was **not** reachable and not compared. Whether the staging workflow fails cleanly on this project (a history-mismatch error from `supabase db push`) is inferred from the CLI's documented behaviour, not run.

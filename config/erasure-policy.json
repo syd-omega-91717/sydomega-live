@@ -113,9 +113,9 @@
    "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
   },
   "billing_invoices": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Financial record: tax and accounting retention usually applies. D1 (counsel). Proposed: anonymise, never delete."
+   "why": "D1 (decided 2026-11-03): financial record, anonymise and never delete. The row stays; the member's id and any personal columns are detached. Needs an anonymise_set written against the live columns before this table can be purged (the engine fails closed without it). Retention period of the anonymised row: counsel."
   },
   "bloodline_nodes": {
    "action": "delete",
@@ -148,14 +148,14 @@
    "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
   },
   "commission_contracts": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Contract record between parties. D1 (counsel); the other party may have a retention interest."
+   "why": "D1 (decided 2026-11-03): contract record; anonymise the member's side, keep the row for the other party. Needs an anonymise_set against the live columns. Counsel to confirm."
   },
   "consent_records": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Privacy page promises 10 years as proof of consent. D2 (counsel): minimal evidence record vs delete. Cascades from profiles today, so retention is not actually possible as built."
+   "why": "D2 (decided 2026-11-03): keep a minimal evidence record (consent type, time, a hash of the member id), never the member id. Today it cascades from profiles, so this needs a schema change first: user_id nullable, the foreign key set to ON DELETE SET NULL, and a member_hash column. The engine refuses (retention_defeated_by_cascade) until then."
   },
   "consult_requests": {
    "action": "delete",
@@ -563,9 +563,9 @@
    "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
   },
   "omega_service_orders": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Order record for a paid service. D1 (counsel). Proposed: anonymise."
+   "why": "D1 (decided 2026-11-03): financial record, anonymise and never delete. The row stays; the member's id and any personal columns are detached. Needs an anonymise_set written against the live columns before this table can be purged (the engine fails closed without it). Retention period of the anonymised row: counsel."
   },
   "omega_simulation_runs": {
    "action": "delete",
@@ -588,14 +588,14 @@
    "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
   },
   "payments": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Financial record: tax and accounting retention usually applies. D1 (counsel). Proposed: anonymise, never delete."
+   "why": "D1 (decided 2026-11-03): financial record, anonymise and never delete. The row stays; the member's id and any personal columns are detached. Needs an anonymise_set written against the live columns before this table can be purged (the engine fails closed without it). Retention period of the anonymised row: counsel."
   },
   "platform_events": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Platform event log; privacy page promises a 5-year event log. D2 (counsel)."
+   "why": "D2 (decided 2026-11-03): keep the event record without the member id or personal fields in the payload. Needs an anonymise_set against the live columns, and a review of what event_data holds."
   },
   "platform_owners": {
    "action": "delete",
@@ -683,14 +683,14 @@
    "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
   },
   "sovereign_events": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Privacy page promises a 5-year event log; event_data may hold personal data. D2 (counsel)."
+   "why": "D2 (decided 2026-11-03): keep the event record without the member id or personal fields in the payload. Needs an anonymise_set against the live columns, and a review of what event_data holds."
   },
   "sovereign_points_ledger": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Points ledger: an accounting-style record of awards. D1 (owner): anonymise vs delete."
+   "why": "D1 (decided 2026-11-03): financial record, anonymise and never delete. The row stays; the member's id and any personal columns are detached. Needs an anonymise_set written against the live columns before this table can be purged (the engine fails closed without it). Retention period of the anonymised row: counsel."
   },
   "storage_files": {
    "action": "pending_decision",
@@ -698,9 +698,9 @@
    "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
   },
   "subscriptions": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Financial record: billing history. D1 (counsel). Proposed: anonymise."
+   "why": "D1 (decided 2026-11-03): financial record, anonymise and never delete. The row stays; the member's id and any personal columns are detached. Needs an anonymise_set written against the live columns before this table can be purged (the engine fails closed without it). Retention period of the anonymised row: counsel."
   },
   "task_attachments": {
    "action": "delete",
@@ -738,9 +738,9 @@
    "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
   },
   "threat_events": {
-   "action": "pending_decision",
+   "action": "anonymise",
    "reviewed": false,
-   "why": "Security log; may be needed for fraud and abuse handling. D2 (counsel)."
+   "why": "D2 (decided 2026-11-03): keep the event record without the member id or personal fields in the payload. Needs an anonymise_set against the live columns, and a review of what event_data holds."
   },
   "token_balances": {
    "action": "delete",

@@ -41,7 +41,7 @@ not swept at all.
 
 ## Approach (phased; nothing destructive ships live without the gate)
 
-**Phase 1: inert pipeline in `supabase/migrations/`.** Promote the prototype to a real migration,
+**Phase 1: inert pipeline in `supabase/migrations/` (engine written 2026-11-03: `20261103230000_erasure_pipeline_dormant.sql`, pending review; tested by `scripts/tests/erasure_pipeline_test.sql`).** Promote the prototype to a real migration,
 fixed for findings 2 to 9, shipped dormant (`erasure_worker_enabled=false`, no cron job, not callable
 by members).
 - **Fail closed, not delete-by-default.** *(Classification and its CI check exist as of 2026-11-03: `config/erasure-policy.json`, `scripts/erasure-policy-contract.py`; 161 tables, 39 pending a decision, none yet reviewed.)* `private.erasure_policy` classifies **every** table that carries a member column as `delete`, `anonymise` or `retain`. The purge **refuses to run** while any such table is unclassified. A CI contract script asserts the same against the migrations, so a new table cannot merge unclassified. (Finding 9, 1.)
@@ -57,12 +57,24 @@ behind a stolen session is the worse trade). **Needs the owner's decision (D3).*
 
 **Phase 3: schedule and enable.** Only after the gate below.
 
-## Decisions I need (they are not mine to make)
+## Decisions (2026-11-03: the owner accepted the recommendations)
 
-- **D1, financial records** (`payments`, `billing_invoices`, `subscriptions`, `omega_service_orders`, `commission_contracts`): retain anonymised for how many years? *Counsel.* Recommendation: `anonymise`, never `delete`.
-- **D2, consent and event records:** keep a minimal evidence record (consent type, time, hash of the member) after erasure, or delete fully? *Counsel.* Recommendation: minimal evidence record, detached from the cascade.
-- **D3, `delete_account`:** cooling-off with cancel (recommended) and the MFA requirement dropped, or keep instant delete behind `aal2`.
-- **D4, timing:** the prototype waits 14 days and runs weekly; the privacy page says "within 30 days". Recommendation: 14-day cooling-off, daily job, so the longest case is about 15 days.
+| | Decision | Where it is applied |
+|---|---|---|
+| **D1** | Financial records (`payments`, `billing_invoices`, `subscriptions`, `omega_service_orders`, `commission_contracts`, `sovereign_points_ledger`): **anonymise, never delete**. | `config/erasure-policy.json` (action `anonymise`, still `reviewed: false`) |
+| **D2** | Consent and event records (`consent_records`, `sovereign_events`, `platform_events`, `threat_events`): **keep a minimal record, never the member id** (consent: type, time, hash). | same |
+| **D3** | `delete_account()` becomes a **cancellable cooling-off request** and the MFA requirement is dropped, replacing instant delete. | **Not built.** Phase 2: it changes a live member-facing function. |
+| **D4** | **14-day** cooling-off, **daily** job. | `erasure_delay_days = 14` is seeded; the **daily job is not created** (phase 3). |
+
+The owner is not counsel. The retention *period* for anonymised financial rows, and whether a hashed
+consent record satisfies the privacy page's "10 years as proof", remain **counsel's** to confirm before
+the worker is enabled. Neither decision enables anything: the engine is dormant and fail-closed.
+
+**Why `anonymise` is not finished.** Anonymising a row means making `user_id` nullable and changing its
+foreign key (for example `ON DELETE SET NULL`), plus writing the SET clause for each table's personal
+columns. That is DDL on payment tables, and it needs the **live** column list and constraint names, which
+this session could not read (production unreachable). Until each table has an `anonymise_set` and the
+schema change, the engine refuses to purge any member who has rows there. That is deliberate.
 
 ## Out of scope
 

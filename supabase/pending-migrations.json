@@ -2,5 +2,16 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": []
+  "pending": [
+    {
+      "version": "20261103230000",
+      "file": "20261103230000_erasure_pipeline_dormant.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "summary": "Dormant erasure engine: private.erasure_policy (empty), private.erasure_log, private.purge_user_data, private.run_erasure_queue, two platform_settings flags (worker off, delay 14). No cron job, no change to request_account_erasure or delete_account, no grants to any API role.",
+      "evidence": "scripts/tests/erasure_pipeline_test.sql passes on a local PostgreSQL 16 against a synthetic schema, and six deliberate breakages of the engine each fail the check meant to catch them. Not run against the production schema.",
+      "plan": "docs/legal/ERASURE_PLAN.md"
+    }
+  ]
 }

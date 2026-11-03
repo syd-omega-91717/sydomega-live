@@ -44,7 +44,7 @@ not swept at all.
 **Phase 1: inert pipeline in `supabase/migrations/`.** Promote the prototype to a real migration,
 fixed for findings 2 to 9, shipped dormant (`erasure_worker_enabled=false`, no cron job, not callable
 by members).
-- **Fail closed, not delete-by-default.** `private.erasure_policy` classifies **every** table that carries a member column as `delete`, `anonymise` or `retain`. The purge **refuses to run** while any such table is unclassified. A CI contract script asserts the same against the migrations, so a new table cannot merge unclassified. (Finding 9, 1.)
+- **Fail closed, not delete-by-default.** *(Classification and its CI check exist as of 2026-11-03: `config/erasure-policy.json`, `scripts/erasure-policy-contract.py`; 161 tables, 39 pending a decision, none yet reviewed.)* `private.erasure_policy` classifies **every** table that carries a member column as `delete`, `anonymise` or `retain`. The purge **refuses to run** while any such table is unclassified. A CI contract script asserts the same against the migrations, so a new table cannot merge unclassified. (Finding 9, 1.)
 - **All-or-nothing per member.** The purge runs each member inside its own sub-transaction and returns `ok:false` with *everything rolled back* if any step fails; the log row is written only after success; a failed member is marked and skipped, not retried first forever. (2, 3, 4.)
 - **`anonymise` for rows that must stay but should not identify:** detach `user_id` (or replace with a one-way hash) and null the free-text personal columns. This is how financial records can be kept without keeping the person. (1, 5.)
 - **Explicit `REVOKE ALL ... FROM PUBLIC, anon, authenticated`** on every new function, with a grant test. (7.)

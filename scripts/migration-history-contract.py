@@ -17,7 +17,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS = ROOT / "supabase" / "migrations"
 VERSION_RE = re.compile(r"^(\d+)_")
-ROW_RE = re.compile(r"^\s*(\d+)\s*[│|]\s*(\d+)?\s*[│|]")
+# One `supabase migration list` row: LOCAL | REMOTE | TIME. Either version column may be blank:
+# a blank REMOTE is a migration that exists only locally (not applied), and a blank LOCAL is one
+# applied remotely with no local file. At least one must be present (see parse_rows).
+ROW_RE = re.compile(r"^\s*(\d+)?\s*[│|]\s*(\d+)?\s*[│|]")
 
 # The one 8-digit version that is already APPLIED and therefore immutable.
 # supabase_migrations.schema_migrations holds `20260902`, and
@@ -73,18 +76,28 @@ def local_versions() -> tuple[dict[str, list[str]], list[str], list[str]]:
     return versions, duplicates, invalid_timestamp_versions
 
 
-def parse_remote(text: str) -> set[str]:
-    remote: set[str] = set()
+def parse_rows(text: str) -> tuple[list[tuple[str | None, str | None]], list[str]]:
+    """Return ((local, remote) per table row, lines that look like rows but did not parse).
+
+    The remote set is the REMOTE column only. This used to fall back to the LOCAL column when
+    REMOTE was blank, so a migration that existed only locally was counted as applied and the
+    gate could never report "missing remotely". It also used to scan every digit run in an
+    unrecognised line, which read the TIME column's '2026' as a version.
+    """
+    rows: list[tuple[str | None, str | None]] = []
+    unparsed: list[str] = []
     for raw in text.splitlines():
         line = raw.strip()
         match = ROW_RE.match(line)
-        if match:
-            remote.add(match.group(2) or match.group(1))
-            continue
-        versions = re.findall(r"(?<!\d)(\d{4,14})(?!\d)", line)
-        if "│" in line or "|" in line:
-            remote.update(versions[:2])
-    return remote
+        if match and (match.group(1) or match.group(2)):
+            rows.append((match.group(1), match.group(2)))
+        elif ("│" in line or "|" in line) and re.search(r"\d{4}", line):
+            unparsed.append(line)
+    return rows, unparsed
+
+
+def parse_remote(text: str) -> set[str]:
+    return {remote for _local, remote in parse_rows(text)[0] if remote}
 
 
 def check_local() -> tuple[set[str], int]:
@@ -117,7 +130,13 @@ def check_local() -> tuple[set[str], int]:
 
 
 def check_remote_text(text: str, local: set[str]) -> int:
-    remote = parse_remote(text)
+    rows, unparsed = parse_rows(text)
+    if unparsed:
+        print("::error::could not parse these lines of the migration list; refusing to guess")
+        for line in unparsed:
+            print(f"  {line}")
+        return 1
+    remote = {r for _l, r in rows if r}
     if not remote:
         print("::error::could not parse any remote migration versions")
         return 1

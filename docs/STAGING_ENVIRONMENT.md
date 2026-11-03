@@ -57,9 +57,9 @@ need to be stored in GitHub.
 - Storage buckets, extensions and `pg_cron` jobs are applied only to the extent the migrations
   create them. Compare with `supabase/live-schema.json` after the first run.
 
-## Known gap found while writing this
+## History check
 
-`scripts/migration-history-contract.py` line 82 (`remote.add(match.group(2) or match.group(1))`)
-counts a migration with a blank Remote column as applied remotely, so on `supabase migration list`
-output it can never report a version that is missing remotely. The staging workflow does not rely on
-it: its own check compares the Local and Remote columns row by row.
+`scripts/migration-history-contract.py --remote-output` compares `supabase migration list` with the
+local files. It used to count a blank Remote column as applied remotely, so it could never report a
+migration missing remotely; fixed 2026-11-03 (`docs/fixes/2026-11-03-migration-history-remote-column.md`).
+The staging workflow still runs its own row-by-row Local/Remote comparison as well, deliberately.

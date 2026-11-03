@@ -264,7 +264,9 @@ function fetchLivePrice(){
         if(data.configured===false){msg.textContent='Stock/ETF live price lookup is not configured on this platform yet — enter the price manually.';return;}
         if(data.error||data.price==null){msg.textContent='No quote found for "'+ticker+'" — enter the price manually.';return;}
         document.getElementById('h-price').value=data.price;
-        msg.textContent=data.symbol+' — live price loaded: $'+data.price;
+        var t=data.as_of?new Date(data.as_of):null;
+        var when=(t&&!isNaN(t.getTime()))?'as of '+t.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',timeZoneName:'short'}):'time unknown';
+        msg.textContent=data.symbol+' — price loaded: $'+data.price+' ('+(data.stale===true?'STALE, ':'')+when+'). Confirm it before relying on it.';
       })
       .catch(function(){msg.textContent='The price service is unavailable right now — try again later, or enter the price manually.';})
       .finally(function(){btn.disabled=false;btn.textContent='LIVE PRICE';});

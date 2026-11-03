@@ -454,13 +454,22 @@ function renderForex(rates){
 /* ── Commodities and indices — a real quote from the market-price Edge Function
    (dormant until TWELVE_DATA_API_KEY is set, as on investment.html) or "—"
    with UNAVAILABLE. No simulated value is ever shown. ── */
+/* Returns {price, asOf, stale} or null. asOf is the time the SERVER fetched the quote
+   (market-price's as_of), not the time this page did; null when the server did not say. */
 async function fetchIndexPrice(sym){
   try{
     var r=await fetch('https://ydqhzvvoyufiiqvzcjns.supabase.co/functions/v1/market-price?symbol='+encodeURIComponent(sym));
     var data=await r.json();
-    if(data&&data.configured&&data.price!=null)return data.price;
+    if(data&&data.configured&&data.price!=null){
+      var t=data.as_of?new Date(data.as_of):null;
+      return {price:data.price,asOf:(t&&!isNaN(t.getTime()))?t:null,stale:data.stale===true};
+    }
   }catch(e){console.warn('[Omega Pulse] market quote unavailable for '+sym+':',e);}
   return null;
+}
+function quoteAge(q){
+  if(!q.asOf)return 'TIME UNKNOWN';
+  return (q.stale?'STALE · ':'')+'as of '+q.asOf.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',timeZoneName:'short'});
 }
 async function fetchCommodities(){
   var ITEMS=[
@@ -480,10 +489,10 @@ async function fetchCommodities(){
     {name:'NIKKEI 225',sym:'N225',unit:'',group:'indices'}
   ];
   var prices=await Promise.all(ITEMS.map(function(item){return fetchIndexPrice(item.sym);}));
-  ITEMS.forEach(function(item,i){item.base=prices[i];item.live=prices[i]!=null;});
+  ITEMS.forEach(function(item,i){var q=prices[i];item.q=q;item.base=q?q.price:null;item.live=q!=null;});
   function row(item){
     var price=item.live?item.base.toLocaleString('en',{maximumFractionDigits:2})+(item.unit||''):'—';
-    var tag=item.live?' <span style="color:var(--green);font-size:12px">LIVE</span>':' <span style="color:var(--dim);font-size:12px">UNAVAILABLE</span>';
+    var tag=item.live?' <span style="color:'+(item.q.stale||!item.q.asOf?'var(--gold)':'var(--green)')+';font-size:12px">'+quoteAge(item.q)+'</span>':' <span style="color:var(--dim);font-size:12px">UNAVAILABLE</span>';
     return '<div class="cmd-row"><div class="cmd-name">'+item.name+tag+'</div><div class="cmd-price">'+price+'</div><div class="cmd-chg">—</div></div>';
   }
   ['metals','energy','indices'].forEach(function(group){
@@ -494,8 +503,8 @@ async function fetchCommodities(){
   var iTitle=document.getElementById('cmd-indices-label');
   if(iTitle)iTitle.textContent=liveCount+' / '+ITEMS.length+' market quotes available from the configured provider';
   var gold=ITEMS.find(function(x){return x.sym==='XAU'}), oil=ITEMS.find(function(x){return x.sym==='WTI'});
-  ['tk-GOLD','tk-GOLD2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=gold&&gold.live?'$'+gold.base.toLocaleString('en',{maximumFractionDigits:0}):'—';});
-  ['tk-OIL','tk-OIL2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=oil&&oil.live?'$'+oil.base.toLocaleString('en',{maximumFractionDigits:1}):'—';});
+  ['tk-GOLD','tk-GOLD2'].forEach(function(id){var el=document.getElementById(id);if(el){el.textContent=gold&&gold.live?'$'+gold.base.toLocaleString('en',{maximumFractionDigits:0}):'—';el.title=gold&&gold.live?quoteAge(gold.q):'';}});
+  ['tk-OIL','tk-OIL2'].forEach(function(id){var el=document.getElementById(id);if(el){el.textContent=oil&&oil.live?'$'+oil.base.toLocaleString('en',{maximumFractionDigits:1}):'—';el.title=oil&&oil.live?quoteAge(oil.q):'';}});
 }
 
 /* ── Weather — Open-Meteo free API ── */

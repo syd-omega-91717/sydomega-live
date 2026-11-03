@@ -14,6 +14,11 @@ Treat the first run as the test.
 Staging project ref: `nvgedlxlkdzvcelimbvq` (supplied by the owner 2026-11-03; not in the Supabase
 connector's account, so this session never reached it).
 
+**Rename it first.** `docs/legal/ERASURE_ROLLBACK_TEST.md` records this project as named
+`ydqhzvvoyufiiqvzcjns / sydomega`: its *name* contains the production project ID, which already led one
+dashboard session to the wrong project. Rename it (for example `sydomega-staging`) before anyone runs
+destructive tests there, and always confirm by **Project ID** (Settings > General), never by name.
+
 1. Repo **Settings > Environments > New environment**: `supabase-staging`. Optionally add yourself as
    a required reviewer so every run waits for approval.
 2. In that environment, add a **variable** `STAGING_PROJECT_REF` = `nvgedlxlkdzvcelimbvq`.

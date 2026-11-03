@@ -86,7 +86,7 @@ free-text content in the mirrored `member_state` (journal-style pages), and fami
 
 1. **Stop the finance mirror (small, reversible).** Exclude the finance keys from the mirror only,
    without changing the "export everything" behaviour. Restores the original design decision.
-2. **A real erasure pipeline.** A `private` function that purges every table with a `user_id`
+2. **A real erasure pipeline.** *(Plan and review of the existing prototype: `ERASURE_PLAN.md`, 2026-11-03; waiting on decisions D1 to D4.)* A `private` function that purges every table with a `user_id`
    (driven by the catalogue, not a hand-kept list), then `profiles` and `auth.users`; run for any
    request older than 30 days by a scheduled job; an `erasure_log` that records *that* it ran
    (not the data). Ship disabled behind a `platform_settings` flag, test on a throwaway account.

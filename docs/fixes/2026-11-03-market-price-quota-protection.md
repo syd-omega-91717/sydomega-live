@@ -1,0 +1,14 @@
+### market-price: cache, per-IP limit and upstream budget before the key is set (2026-11-03)
+
+**Why.** `docs/legal/FUNCTION_GO_LIVE.md:19` names the condition for setting `TWELVE_DATA_API_KEY`: the endpoint is public and every call spent the key's quota, so a per-IP limit or a longer server-side cache must exist first. `supabase/functions/market-price/index.ts` had only `Cache-Control: public, max-age=60` (a browser/CDN hint that a caller can ignore) and spent one upstream call per request. `pulse.html:459` and `investment.html:261` both call it, so the first viewer-driven traffic would have drained Twelve Data's 8/min free tier.
+
+**Fix.** Three bounded layers in front of Twelve Data, all in the isolate's memory: a per-symbol cache (5 min fresh, up to 1 h served and flagged `stale:true` if upstream fails); a 1-minute negative cache for symbols Twelve Data reports as not found (400/404 only, never a quota error); a 30/min per-IP limit (429 + `Retry-After`) and a 6/min upstream budget (stays under the 8/min tier). Every answer now carries `as_of`. Twelve Data's error text has the key scrubbed before it is returned. Every map is capped at 500 entries. `repository_blob_sha` in `docs/runtime/supabase-edge-functions-live.json` updated.
+
+**Verified.** 14 behaviour checks run against the real handler (Node 22 `--experimental-strip-types`, stubbed `Deno` and `fetch`): no key gives `configured:false` with no upstream call; a second viewer is served from cache; an unknown symbol is remembered; a quota error is not remembered as a miss; the 7th upstream call in a minute is refused with 503 and no fetch; stale is served and flagged when upstream is down; the 31st request from one IP is 429; another IP is unaffected; the key never appears in a response. Output: `ALL PASS`. `edge-function-auth-config-contract.py` PASS, `edge-service-role-auth-audit.py` PASS, `supabase-edge-runtime-reconciliation.py` PASS.
+
+**Not done / not verified.**
+- The limits are per isolate. Supabase can run several, each with its own counters, so the real ceiling is about isolates x the numbers above, and an idle isolate forgets everything. This bounds casual and accidental load, not a determined caller. A hard ceiling needs a shared store.
+- `TWELVE_DATA_API_KEY` is **not set**, so nothing changed for members: the pages still show "—". Setting it is the owner's step.
+- Twelve Data's terms for displaying its quotes to members, and any required disclaimer, are **not confirmed** (FUNCTION_GO_LIVE.md asks for this too). The pages do not yet show `as_of`.
+- Nothing was run against the real Twelve Data API or the deployed function; the sandbox proxy blocks `supabase.co`. `version` and `live_sha256` in the live-parity JSON still describe the previous deployed code and must be refreshed after the integration redeploys main.
+- No Deno type-check exists in CI (CLAUDE.md §7.6); the handler ran under Node's type stripping, which does not type-check.

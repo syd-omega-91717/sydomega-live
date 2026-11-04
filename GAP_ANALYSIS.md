@@ -14,6 +14,22 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-11-04 — erasure engine merged dormant; its migration is not yet recorded as applied.**
+  `20261103230000_erasure_pipeline_dormant.sql` merged in #1156 (`7895655`). It is registered
+  `PENDING_REVIEW` in `supabase/pending-migrations.json`, so `migration-drift.py` fails the push-time
+  `readiness` job on `main` ("a release may not ship a pending migration"): red on #1156 only, green on every
+  merge before it (measured 2026-11-04). Clearing it needs provider evidence (`list_migrations` on
+  `ydqhzvvoyufiiqvzcjns`) and the entry moved to `remote-migrations.json`. This session's Supabase connector
+  could not see production (it listed only `nvgedlxlkdzvcelimbvq`), so neither the apply nor the follow-up was
+  verified. The engine is inert (worker flag false, policy empty, no cron job, no API grants); the
+  production gate is `docs/legal/ERASURE_ROLLBACK_TEST.sql`. Plan and decisions: `docs/legal/ERASURE_PLAN.md`.
+- **OPEN 2026-11-04 — the GitHub Pages failover `build` job has failed on every merge to `main`
+  (at least #1148 to #1156).** It is `omega-static-failover.yml`: the workflow pins
+  `actions/upload-pages-artifact` to a SHA, but that composite action calls `actions/upload-artifact@v4`
+  unpinned, which the repository's "all actions must be pinned to a full-length commit SHA" policy rejects
+  (`Set up job` fails; job log of run 41736517574). **Do not just make it pass:** the next step, `deploy`,
+  would publish the built site to a public GitHub Pages address, and this platform is `noindex` and
+  membership-gated. Whether the failover should be live is the owner's decision.
 - **Legal gaps, opened 2026-11-01 — evidence pack in `docs/legal/LEGAL_GAP_AUDIT.md`.** Top three,
   all measured live: (1) `request_account_erasure()` only soft-deletes and promises permanent
   deletion in 30 days, and `cron.job` holds one job, none of it erasure; (2) of 105 `public` tables

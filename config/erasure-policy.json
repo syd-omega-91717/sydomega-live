@@ -512,6 +512,11 @@
    "reviewed": false,
    "why": "Carries owner_id/author_id/created_by-style columns but no user_id, so no sweep reaches it. Whose data it holds, and whether it is the member's, is not yet reviewed."
   },
+  "omega_knowledge_embedding_jobs": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Keyed by owner_id (no user_id), so the sweep never reaches it. provider_request/provider_response hold content that may be personal. Whether it is the member's data, and whether its foreign keys already remove it, is not yet reviewed. Added 2026-11-04 (newer than the 2026-10-06 snapshot)."
+  },
   "omega_media_jobs": {
    "action": "delete",
    "reviewed": false,
@@ -556,6 +561,31 @@
    "action": "delete",
    "reviewed": false,
    "why": "Member's own rows (user_id/profile_id/member_id). PROPOSED, not yet reviewed table by table."
+  },
+  "omega_personal_context_consent_events": {
+   "action": "anonymise",
+   "reviewed": false,
+   "why": "D2 (2026-11-04): consent evidence (consent_key, decision, policy_version, time). Keep a minimal record without the member id, like consent_records. user_id is NOT NULL with ON DELETE CASCADE, so this needs a schema change first (nullable, SET NULL, a member_hash column) and counsel's answer on hashed evidence. Added 2026-11-04 (newer than the 2026-10-06 snapshot)."
+  },
+  "omega_personal_context_items": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own free-text personal context (sensitive, AI-processing consented), user_id cascades from auth.users. PROPOSED delete, not yet reviewed. Added 2026-11-04: created by a migration after the 2026-10-06 schema snapshot."
+  },
+  "omega_personal_context_links": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own links between personal-context items, user_id cascades from auth.users. PROPOSED delete, not yet reviewed. Added 2026-11-04: created by a migration after the 2026-10-06 schema snapshot."
+  },
+  "omega_personal_context_preferences": {
+   "action": "delete",
+   "reviewed": false,
+   "why": "Member's own personal-context consent switches, user_id cascades from auth.users. PROPOSED delete, not yet reviewed. Added 2026-11-04: created by a migration after the 2026-10-06 schema snapshot."
+  },
+  "omega_provider_jobs": {
+   "action": "pending_decision",
+   "reviewed": false,
+   "why": "Keyed by owner_id (no user_id), so the sweep never reaches it. provider_request/provider_response hold content that may be personal. Whether it is the member's data, and whether its foreign keys already remove it, is not yet reviewed. Added 2026-11-04 (newer than the 2026-10-06 snapshot). owner_id has ON DELETE CASCADE to auth.users, so a deleted account removes these rows, but the purge's retention and log accounting does not see them."
   },
   "omega_recovery_checkpoints": {
    "action": "delete",

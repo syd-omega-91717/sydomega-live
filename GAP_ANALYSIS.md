@@ -34,6 +34,14 @@ project's own established convention (security/data-integrity first).
   has never run, so it is unproven. The workflow is designed to deploy on every push; the static files are
   already public on the Cloudflare site (membership gating is server-side), so this adds a second origin, not
   new content. Whether the failover should be live is still the owner's call.
+- **OPEN 2026-11-04 — Twelve Data's terms do not permit showing quotes to members without a Redistribution
+  licence; `TWELVE_DATA_API_KEY` must stay unset.** Terms read 2026-11-04 (`twelvedata.com/terms`, "Last updated:
+  January 1, 2026", via a cached copy; confirm the live page): data is licensed for "Internal Use" and may be shown
+  only to the customer's own employees, contractors and systems; external display or redistribution needs a
+  Redistribution Rights Add-On or written agreement with attribution (§1, §2.2(e), §2.3(b), §2.4); free-tier data
+  may not be used commercially (§2.3(l)). `market-price` is public and unauthenticated, so it would redistribute to
+  anyone. Detail and options: `docs/legal/FUNCTION_GO_LIVE.md`. Today nothing is redistributed (the function
+  answers `configured:false`). An AI reading of a contract, not legal advice: `docs/legal/COUNSEL_BRIEF.md` item 5.
 - **Legal gaps, opened 2026-11-01 — evidence pack in `docs/legal/LEGAL_GAP_AUDIT.md`.** Top three,
   all measured live: (1) `request_account_erasure()` only soft-deletes and promises permanent
   deletion in 30 days, and `cron.job` holds one job, none of it erasure; (2) of 105 `public` tables

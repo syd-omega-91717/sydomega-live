@@ -16,12 +16,31 @@ deploys to production, so "go live" is always a reviewed PR that also updates
 | `snapshot-leaderboard` | true | Owner-only (re-checks `profiles.is_owner`). The source's own "REDESIGN BEFORE DEPLOY" note flagged its cron path as not timing-safe; that path was **removed** before deploy. No schedule runs it. |
 | `market-price` | false | Public, GET-only (`PUBLIC_READONLY`), no privileged key. Answers `configured:false` until `TWELVE_DATA_API_KEY` is set. |
 
-**Before setting `TWELVE_DATA_API_KEY`:** the endpoint is public and each call spends the key's
-quota. ~~Add a per-IP limit or a longer server-side cache first~~ — **source done 2026-11-03**
-(5-min per-symbol cache, 30/min per-IP limit, 6/min upstream budget; `docs/fixes/2026-11-03-market-price-quota-protection.md`).
-Those limits are per isolate, so they are best-effort; not live until the integration redeploys
-main. **Still open:** confirm Twelve Data's terms allow displaying its quotes to your members
-(and what disclaimer they require), then have `pulse.html`/`investment.html` show `as_of`.
+**Before setting `TWELVE_DATA_API_KEY` — do not set it yet.** Twelve Data's terms were read on 2026-11-04
+(`https://twelvedata.com/terms`, "Last updated: January 1, 2026", fetched through a cached copy, so confirm
+the live page). What they say, and what it means here:
+
+- **Licence is "Internal Use".** Data may be displayed only to "Authorized Users", defined as the customer's
+  *own* employees, contractors and computerized systems (§1, §2.1, §2.2(b)). Members of this platform are
+  not that.
+- **Showing quotes to members is "external display" / "Redistribution"** (§1, §2.2(e), §2.3(b), §2.4): allowed
+  only under a **Redistribution Rights Add-On or a separate written agreement**, "including compliance with
+  attribution requirements". The contact is `sales@twelvedata.com`.
+- **`market-price` is public and unauthenticated** (`PUBLIC_READONLY`, CORS `*`), so anyone on the internet
+  could read the quotes through it, which is broader than "members".
+- **Free tier data cannot be used for commercial purposes** (§2.3(l)); this platform has paid memberships.
+- **Caching is limited to "timeframes specified in the Documentation"** (§2.3(g)); the function caches a
+  quote for 5 minutes, up to 1 hour when stale. Check that against the Documentation for the chosen plan.
+- **Exchange data can carry exchange fees, professional-subscriber rates and extra agreements** (§3.1).
+- Data is "informational purposes only, not investment advice" (§8.3); show that disclaimer next to prices.
+
+**Decision for the owner.** Either (a) get a written Redistribution licence from Twelve Data that covers
+displaying quotes to your members (and ask whether it covers a public endpoint, or add sign-in to the
+function first), then set the key; or (b) use a provider whose terms allow display on a members site; or
+(c) leave it off. (c) is today's state: the pages show "—" and nothing is redistributed. This is a reading
+of a contract by an AI assistant, not legal advice; counsel should confirm (`docs/legal/COUNSEL_BRIEF.md`).
+Already done: the cache and limits (`docs/fixes/2026-11-03-market-price-quota-protection.md`) and the
+`as_of` time on `pulse.html` and `investment.html` (#1150).
 
 ## Held on purpose
 

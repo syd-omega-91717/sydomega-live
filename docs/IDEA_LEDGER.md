@@ -137,7 +137,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | id | source | idea | evidence |
 |---|---|---|---|
 | G01 | GAP_ANALYSIS.md S | erasure engine merged dormant; its migration is not yet recorded as applied. | GAP_ANALYSIS.md section S |
-| G02 | GAP_ANALYSIS.md S | the GitHub Pages failover `build` job has failed on every merge to `main` | GAP_ANALYSIS.md section S |
+| G02 | GAP_ANALYSIS.md S | the GitHub Pages failover `build` job failed on every merge to `main` | GAP_ANALYSIS.md section S |
 | G03 | GAP_ANALYSIS.md S | page sprawl against real use. 239 pages; 70 opened ever | GAP_ANALYSIS.md section S |
 | G04 | GAP_ANALYSIS.md S | community, media and services tables are empty. `member_events`, | GAP_ANALYSIS.md section S |
 | G05 | GAP_ANALYSIS.md S | production keeps throwing errors already fixed in main. 76 | GAP_ANALYSIS.md section S |

@@ -37,10 +37,34 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
 
+      # actions/upload-pages-artifact is deliberately NOT used. It is a composite action that calls
+      # actions/upload-artifact@v4 by tag, and this repository's policy ("all actions must be pinned to a
+      # full-length commit SHA") rejects an unpinned action even when it is nested, so the job failed at
+      # "Set up job" on every push to main. These two steps are its v3.0.1 steps (commit 56afc609, Linux
+      # branch) verbatim, with upload-artifact pinned to the SHA this repo already uses (v4.6.2). The
+      # artifact name (github-pages), the tar layout and retention are unchanged, so deploy-pages is unaffected.
+      - name: Archive Pages artifact
+        shell: sh
+        env:
+          INPUT_PATH: public
+        run: |
+          echo ::group::Archive artifact
+          tar \
+            --dereference --hard-dereference \
+            --directory "$INPUT_PATH" \
+            -cvf "$RUNNER_TEMP/artifact.tar" \
+            --exclude=.git \
+            --exclude=.github \
+            .
+          echo ::endgroup::
+
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          path: public
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
 
   deploy:
     needs: build

@@ -23,13 +23,17 @@ project's own established convention (security/data-integrity first).
   could not see production (it listed only `nvgedlxlkdzvcelimbvq`), so neither the apply nor the follow-up was
   verified. The engine is inert (worker flag false, policy empty, no cron job, no API grants); the
   production gate is `docs/legal/ERASURE_ROLLBACK_TEST.sql`. Plan and decisions: `docs/legal/ERASURE_PLAN.md`.
-- **OPEN 2026-11-04 — the GitHub Pages failover `build` job has failed on every merge to `main`
-  (at least #1148 to #1156).** It is `omega-static-failover.yml`: the workflow pins
-  `actions/upload-pages-artifact` to a SHA, but that composite action calls `actions/upload-artifact@v4`
-  unpinned, which the repository's "all actions must be pinned to a full-length commit SHA" policy rejects
-  (`Set up job` fails; job log of run 41736517574). **Do not just make it pass:** the next step, `deploy`,
-  would publish the built site to a public GitHub Pages address, and this platform is `noindex` and
-  membership-gated. Whether the failover should be live is the owner's decision.
+- **OPEN 2026-11-04 — the GitHub Pages failover `build` job failed on every merge to `main`
+  (measured #1148 to #1157); fix written, not yet seen working.** It is `omega-static-failover.yml`: the
+  workflow pinned `actions/upload-pages-artifact` to a SHA, but that composite action calls
+  `actions/upload-artifact@v4` by tag, which the repository's "all actions must be pinned to a full-length
+  commit SHA" policy rejects (fails at `Set up job`; run 41736517574). The fix replaces it with its own
+  v3.0.1 steps verbatim plus the `upload-artifact` v4.6.2 SHA the repo already uses; the archive step was run
+  locally and matches (layout, `.git`/`.github` excluded, links followed). **Stays OPEN until a push to `main`
+  shows `build` green**, and the later `deploy` job (Pages source, DNS, the `sydomega.com` CNAME it writes)
+  has never run, so it is unproven. The workflow is designed to deploy on every push; the static files are
+  already public on the Cloudflare site (membership gating is server-side), so this adds a second origin, not
+  new content. Whether the failover should be live is still the owner's call.
 - **Legal gaps, opened 2026-11-01 — evidence pack in `docs/legal/LEGAL_GAP_AUDIT.md`.** Top three,
   all measured live: (1) `request_account_erasure()` only soft-deletes and promises permanent
   deletion in 30 days, and `cron.job` holds one job, none of it erasure; (2) of 105 `public` tables

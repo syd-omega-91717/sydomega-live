@@ -59,3 +59,25 @@ class NavEightDoors(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HubsHaveADock(unittest.TestCase):
+    """order, archive and govern had no <aside id="omega-side">, so nav.js (which returns early without it)
+    rendered no dock on three workspace hubs a member can reach from the menu. main needs min-width:0 beside
+    the dock or the module-picker row props the page open and it scrolls sideways (measured on govern)."""
+
+    def test_the_three_hubs_have_the_dock_element_and_the_flex_fix(self):
+        root = pathlib.Path(__file__).resolve().parents[2]
+        for slug in ("order", "archive", "govern"):
+            html = (root / (slug + ".html")).read_text(encoding="utf-8")
+            self.assertIn('<aside id="omega-side" data-page="%s"></aside>' % slug, html, slug)
+            self.assertRegex(html, r"main\{max-width:1240px;margin:(?:auto|0 auto);padding:[^}]*;min-width:0\}", slug)
+            # bg.js injects nav.js; the page's own tag (after the non-deferred bg.js) made a second copy -> duplicate ids
+            self.assertNotIn('<script src="/nav.js"></script>', html, slug)
+        gov = (root / "govern.html").read_text(encoding="utf-8")
+        self.assertEqual(gov.count('<script src="/bg.js"></script>'), 1)
+        self.assertEqual(gov.count('<script src="/omega-product-reality.js"></script>'), 1)
+
+    def test_section_home_pages_map_to_their_own_section(self):
+        for page in ("order", "intel"):
+            self.assertIn("%s:'%s'" % (page, page), SRC, page)

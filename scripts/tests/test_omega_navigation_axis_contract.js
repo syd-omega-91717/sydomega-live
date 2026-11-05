@@ -36,12 +36,18 @@ const requiredMappings = {
   'knowledge-loom': 'govern',
   'billing': 'vault',
   'vault-settings': 'vault',
-  'horoscope-page': 'intel'
+  // the page /horoscope.html belongs to COSMOS; the INTEL menu entry 'horoscope-page' is only a second key for
+  // the same page (commit fc3accd3 removed its PS twin to end a duplicate-key override)
+  'horoscope': 'cosmos',
+  // every section's home page must map to its own section, or its workspace highlights the wrong door
+  'order': 'order',
+  'intel': 'intel'
 };
 
 for (const [page, section] of Object.entries(requiredMappings)) {
-  const needle = page + ":'" + section + "'";
-  if (!source.includes(needle)) throw new Error('Missing canonical PS mapping: ' + page + ' -> ' + section);
+  // object keys that contain a hyphen are quoted in nav.js ('simulation-arena':'arena'); plain ones are not
+  const needles = [page + ":'" + section + "'", "'" + page + "':'" + section + "'"];
+  if (!needles.some((n) => source.includes(n))) throw new Error('Missing canonical PS mapping: ' + page + ' -> ' + section);
 }
 
 if (!source.includes("var activeSection=PS[dp]||'command';")) throw new Error('Navigation active-section fallback contract changed unexpectedly');

@@ -39,7 +39,7 @@
     creator:'services','project-studio':'services','creation-studio':'services',
     architecture:'govern','control-plane':'govern','control-center':'govern','platform-kernel':'govern','world-shell':'govern',
     'autonomous-insights':'govern',    'knowledge-loom':'govern',
-    life:'life',govern:'govern',arena:'arena','simulation-arena':'arena',chatbot:'command',
+    life:'life',govern:'govern',arena:'arena',order:'order',intel:'intel','simulation-arena':'arena',chatbot:'command',
     'interface-omni':'order',
     analytics:'intel',achieve:'achieve','achieve-home':'achieve',achievements:'achieve',leaderboard:'achieve',
     'quest-progress':'achieve','domain-mastery':'achieve','covenant':'achieve','seasonal-events':'achieve',

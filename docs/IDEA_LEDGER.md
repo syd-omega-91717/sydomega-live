@@ -136,7 +136,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 
 | id | source | idea | evidence |
 |---|---|---|---|
-| G01 | GAP_ANALYSIS.md S | three navigation faults found on the original `nav.js`, not fixed. In a headless render | GAP_ANALYSIS.md section S |
+| G01 | GAP_ANALYSIS.md S | five pages the menu links have no dock; one of the original three navigation faults remains open. | GAP_ANALYSIS.md section S |
 | G02 | GAP_ANALYSIS.md S | no page-usage data since the Cloudflare cutover. Vercel Analytics recorded 3 to 9 visitors a day | GAP_ANALYSIS.md section S |
 | G03 | GAP_ANALYSIS.md S | erasure engine merged dormant; its migration is not yet recorded as applied. | GAP_ANALYSIS.md section S |
 | G04 | GAP_ANALYSIS.md S | the GitHub Pages failover `build` job failed on every merge to `main` | GAP_ANALYSIS.md section S |

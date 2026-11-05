@@ -14,9 +14,16 @@ hubs get `min-width:0` on `main`. The Node contract test: its search text did no
 `horoscope` maps to COSMOS), so both were corrected and `order` and `intel` added. `scripts/tests/test_nav_axis_contract_runs.py`
 runs it with the unit tests so it cannot rot again.
 
+A second regression showed only in `scripts/verify-runtime.js` (not in any gate): with the dock present, `order`, `archive` and `govern` reported
+duplicate id `omega-context-rail`. `bg.js` injects `nav.js` unless it already sees a `/nav.js` tag, but on these pages the page's own tag sits
+after the non-deferred `bg.js`, so `bg.js` runs first, sees none, and injects a second copy; before the dock existed the second run returned
+early. The pages' own `nav.js` tags are removed (the standard path: most pages rely on `bg.js`). `govern.html` also loaded `bg.js` three times and
+`omega-product-reality.js` twice, which already failed `verify-runtime.js` on `main` with duplicate ids `omega-approval-guard`, `ocl-css` and
+`omega-desktop-pointer-recovery`; the repeats are removed.
+
 **Verified.** Headless render of `order`, `archive`, `govern`, `intel` at 1280, 1024 and 390 px: 8 doors each, no horizontal
 overflow in any of the 12 cases, the right door lit (ORDER, IDENTITY, GOVERN, INTEL). `node scripts/tests/test_omega_navigation_axis_contract.js`
-passes. The overflow was caught by that render, not by the gates, and is the reason `min-width:0` is there.
+passes. `node scripts/verify-runtime.js --pages order.html,archive.html,govern.html,intel.html`: PASS (it caught the duplicate ids above; `govern` failed it before this change too). The sideways overflow was caught by the render, not by the gates, and is the reason `min-width:0` is there.
 
 **Not done / not verified.** Five pages the menu links still have no dock: `ad-network`, `control-plane`, `creator`, `project-studio`,
 `world-shell`. `control-plane` (the Owner Deck) may be standalone on purpose, so they were left alone. Not checked on a real phone.

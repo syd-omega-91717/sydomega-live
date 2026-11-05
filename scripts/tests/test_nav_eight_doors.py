@@ -72,6 +72,11 @@ class HubsHaveADock(unittest.TestCase):
             html = (root / (slug + ".html")).read_text(encoding="utf-8")
             self.assertIn('<aside id="omega-side" data-page="%s"></aside>' % slug, html, slug)
             self.assertRegex(html, r"main\{max-width:1240px;margin:(?:auto|0 auto);padding:[^}]*;min-width:0\}", slug)
+            # bg.js injects nav.js; the page's own tag (after the non-deferred bg.js) made a second copy -> duplicate ids
+            self.assertNotIn('<script src="/nav.js"></script>', html, slug)
+        gov = (root / "govern.html").read_text(encoding="utf-8")
+        self.assertEqual(gov.count('<script src="/bg.js"></script>'), 1)
+        self.assertEqual(gov.count('<script src="/omega-product-reality.js"></script>'), 1)
 
     def test_section_home_pages_map_to_their_own_section(self):
         for page in ("order", "intel"):

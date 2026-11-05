@@ -94,6 +94,18 @@
    The two `if(document.body){...}else requestAnimationFrame(...)` sites in
    this file are deliberately left alone: they already retry rather than drop,
    and they are the only two that were written that way. */
+/* Ambient modules (cinematic layers, voice, music, orbital ring, lattice, living art, depth tilt) change nothing a
+   page needs to paint or respond. Inserted after `load`, when the browser is idle, they still run on every page;
+   they just stop competing with first paint and the page's own script. __omegaAppend still de-duplicates at the
+   moment of insertion, and an idle callback that never fires is capped at 2.5 s. Measured at 4x CPU slowdown:
+   see docs/fixes/2026-11-05-idle-load-ambient-modules.md. To undo, change a module's call back to __omegaAppend. */
+function __omegaIdleAppend(el){
+  var go=function(){
+    var run=function(){__omegaAppend(el);};
+    if(window.requestIdleCallback){requestIdleCallback(run,{timeout:2500});}else{setTimeout(run,300);}
+  };
+  if(document.readyState==='complete'){go();}else{window.addEventListener('load',go,{once:true});}
+}
 function __omegaAppend(el){
   /* One file, one execution. Every guard above keys on a data-omega-* marker,
      which a page's own <script src> tag never carries -- so a module a page
@@ -132,7 +144,7 @@ function __omegaAppend(el){
 }
 /* Platform nervous system */
   if(!document.querySelector('script[data-omega-motion]')){var mo=document.createElement('script');mo.src='/omega-motion.js';mo.setAttribute('data-omega-motion','1');mo.defer=true;__omegaAppend(mo);}
-  if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaAppend(mov3);}
+  if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaIdleAppend(mov3);}
   if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
   /* Universal trust-first orientation: every surface gets purpose, proof, next action and adjacent value. */
@@ -169,20 +181,20 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-agent-personas]')){var os_data_omega_agent_personas=document.createElement('script');os_data_omega_agent_personas.src='/omega-agent-personas-v3.js';os_data_omega_agent_personas.setAttribute('data-omega-agent-personas','1');os_data_omega_agent_personas.defer=true;__omegaAppend(os_data_omega_agent_personas);}
   /* Phase 1: Depth Tilt -- Pointer-driven 3D card tilt (micro-parallax).
      Guard: only loaded if a matching element exists on the page. */
-  if(!document.querySelector('script[data-omega-depth-tilt]')){var os_data_omega_depth_tilt=document.createElement('script');os_data_omega_depth_tilt.src='/omega-depth-tilt.js';os_data_omega_depth_tilt.setAttribute('data-omega-depth-tilt','1');os_data_omega_depth_tilt.defer=true;__omegaAppend(os_data_omega_depth_tilt);}
+  if(!document.querySelector('script[data-omega-depth-tilt]')){var os_data_omega_depth_tilt=document.createElement('script');os_data_omega_depth_tilt.src='/omega-depth-tilt.js';os_data_omega_depth_tilt.setAttribute('data-omega-depth-tilt','1');os_data_omega_depth_tilt.defer=true;__omegaIdleAppend(os_data_omega_depth_tilt);}
   /* Phase 1: Telemetry Sweep -- Animated line sweep on data load/state transition.
      Global instance: window.omegaSweep; also callable via window.OmegaTelemetrySweep. */
   if(!document.querySelector('script[data-omega-telemetry-sweep]')){var os_data_omega_telemetry_sweep=document.createElement('script');os_data_omega_telemetry_sweep.src='/omega-telemetry-sweep.js';os_data_omega_telemetry_sweep.setAttribute('data-omega-telemetry-sweep','1');os_data_omega_telemetry_sweep.defer=true;__omegaAppend(os_data_omega_telemetry_sweep);}
   /* Phase 1: Orbital Ring -- SVG-based interactive navigation ring.
      Guard: only loaded if a matching element exists on the page. */
-  if(!document.querySelector('script[data-omega-orbital-ring]')){var os_data_omega_orbital_ring=document.createElement('script');os_data_omega_orbital_ring.src='/omega-orbital-ring.js';os_data_omega_orbital_ring.setAttribute('data-omega-orbital-ring','1');os_data_omega_orbital_ring.defer=true;__omegaAppend(os_data_omega_orbital_ring);}
+  if(!document.querySelector('script[data-omega-orbital-ring]')){var os_data_omega_orbital_ring=document.createElement('script');os_data_omega_orbital_ring.src='/omega-orbital-ring.js';os_data_omega_orbital_ring.setAttribute('data-omega-orbital-ring','1');os_data_omega_orbital_ring.defer=true;__omegaIdleAppend(os_data_omega_orbital_ring);}
   /* Phase 1: Kinetic Reveal -- Character-by-character animation for kinetic typography.
      Wraps text in spans for staggered reveal; respects prefers-reduced-motion. */
-  if(!document.querySelector('script[data-omega-cinematic-animations-phase1]')){var os_data_omega_cinematic_animations_phase1=document.createElement('script');os_data_omega_cinematic_animations_phase1.src='/omega-cinematic-animations-phase1.js';os_data_omega_cinematic_animations_phase1.setAttribute('data-omega-cinematic-animations-phase1','1');os_data_omega_cinematic_animations_phase1.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase1);}
+  if(!document.querySelector('script[data-omega-cinematic-animations-phase1]')){var os_data_omega_cinematic_animations_phase1=document.createElement('script');os_data_omega_cinematic_animations_phase1.src='/omega-cinematic-animations-phase1.js';os_data_omega_cinematic_animations_phase1.setAttribute('data-omega-cinematic-animations-phase1','1');os_data_omega_cinematic_animations_phase1.defer=true;__omegaIdleAppend(os_data_omega_cinematic_animations_phase1);}
   /* Phase 2: 3D Depth, Volumetric Lighting, Scroll Parallax -- Advanced
      cinematic effects. Scroll-tracking via rAF; constellation orbits;
      depth-card tilt. Safe global; respects prefers-reduced-motion. */
-  if(!document.querySelector('script[data-omega-cinematic-animations-phase2]')){var os_data_omega_cinematic_animations_phase2=document.createElement('script');os_data_omega_cinematic_animations_phase2.src='/omega-cinematic-animations-phase2.js';os_data_omega_cinematic_animations_phase2.setAttribute('data-omega-cinematic-animations-phase2','1');os_data_omega_cinematic_animations_phase2.defer=true;__omegaAppend(os_data_omega_cinematic_animations_phase2);}
+  if(!document.querySelector('script[data-omega-cinematic-animations-phase2]')){var os_data_omega_cinematic_animations_phase2=document.createElement('script');os_data_omega_cinematic_animations_phase2.src='/omega-cinematic-animations-phase2.js';os_data_omega_cinematic_animations_phase2.setAttribute('data-omega-cinematic-animations-phase2','1');os_data_omega_cinematic_animations_phase2.defer=true;__omegaIdleAppend(os_data_omega_cinematic_animations_phase2);}
   /* Phase 3: Particle Systems Integration -- State-driven particle emission, constellation-
      particle cluster linkage, data load indicators. Integrates with omega-particles.js;
      synchronizes orbit timing with Phase 2. Safe global; respects prefers-reduced-motion. */
@@ -190,7 +202,7 @@ function __omegaAppend(el){
   /* Voice-Responsive Animations -- Synchronize particle emission, constellation glow, and bloom
      to copilot stream speed and voice energy. Listens to omega:copilot-* events; Web Audio API
      for optional voice detection. Respects prefers-reduced-motion. Grounded in: proposal #25. */
-  if(!document.querySelector('script[data-omega-voice-responsive]')){var os_data_omega_voice_responsive=document.createElement('script');os_data_omega_voice_responsive.src='/omega-voice-responsive.js';os_data_omega_voice_responsive.setAttribute('data-omega-voice-responsive','1');os_data_omega_voice_responsive.defer=true;__omegaAppend(os_data_omega_voice_responsive);}
+  if(!document.querySelector('script[data-omega-voice-responsive]')){var os_data_omega_voice_responsive=document.createElement('script');os_data_omega_voice_responsive.src='/omega-voice-responsive.js';os_data_omega_voice_responsive.setAttribute('data-omega-voice-responsive','1');os_data_omega_voice_responsive.defer=true;__omegaIdleAppend(os_data_omega_voice_responsive);}
   /* Phase 4: Elemental Theming -- Seasonal/elemental color cycling synchronized with nav axis.
      Tier 3+ feature; reads element affiliation, manages --page-accent/soft/glow tokens,
      persists to localStorage with 24h expiry. Grounded in: proposal #22. */
@@ -1250,7 +1262,7 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
   if(!document.querySelector('script[data-omega-user]')){var su=document.createElement('script');su.src='/omega-user.js';su.setAttribute('data-omega-user','1');su.defer=true;__omegaAppend(su);}
 if(!document.querySelector('script[data-omega-chrono]')){var sc=document.createElement('script');sc.src='/omega-chrono.js';sc.setAttribute('data-omega-chrono','1');sc.defer=true;__omegaAppend(sc);}
 if(!document.querySelector('script[data-omega-matrix]')){var sm=document.createElement('script');sm.src='/omega-matrix.js';sm.setAttribute('data-omega-matrix','1');sm.defer=true;__omegaAppend(sm);}
-if(!document.querySelector('script[data-omega-lattice-3d]')){var sl3=document.createElement('script');sl3.src='/omega-lattice-3d.js';sl3.setAttribute('data-omega-lattice-3d','1');sl3.defer=true;__omegaAppend(sl3);}
+if(!document.querySelector('script[data-omega-lattice-3d]')){var sl3=document.createElement('script');sl3.src='/omega-lattice-3d.js';sl3.setAttribute('data-omega-lattice-3d','1');sl3.defer=true;__omegaIdleAppend(sl3);}
 if(!document.querySelector('script[data-omega-lattice]')){var sl=document.createElement('script');sl.src='/omega-lattice.js';sl.setAttribute('data-omega-lattice','1');sl.defer=true;__omegaAppend(sl);}
 if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createElement('script');sc2.src='/omega-controls.js';sc2.setAttribute('data-omega-ctrl','1');sc2.defer=true;__omegaAppend(sc2);}})();
 /* ===== GENESIS VISUAL ENGINE -- make every page alive (armillary, particles, cinematic depth) ===== */
@@ -2959,7 +2971,7 @@ setTimeout(function(){
   /* Sovereign workflow orchestration engine */
   if(!document.querySelector('script[data-omega-workflow]')){var _ow=document.createElement('script');_ow.src='/omega-workflow.js';_ow.setAttribute('data-omega-workflow','1');_ow.defer=true;__omegaAppend(_ow);}
   /* Voice interface — Web Speech API commands + TTS */
-  if(!document.querySelector('script[data-omega-voice]')){var _ov=document.createElement('script');_ov.src='/omega-voice.js';_ov.setAttribute('data-omega-voice','1');_ov.defer=true;__omegaAppend(_ov);}
+  if(!document.querySelector('script[data-omega-voice]')){var _ov=document.createElement('script');_ov.src='/omega-voice.js';_ov.setAttribute('data-omega-voice','1');_ov.defer=true;__omegaIdleAppend(_ov);}
   /* Zero Trust continuous auth guardian */
   if(!document.querySelector('script[data-omega-guardian]')){var _og=document.createElement('script');_og.src='/omega-guardian.js';_og.setAttribute('data-omega-guardian','1');_og.defer=true;__omegaAppend(_og);}
 
@@ -3009,7 +3021,7 @@ setTimeout(function(){
   /* Progressive disclosure: long paragraphs show two lines and a MORE toggle. */
   if(!document.querySelector('script[data-omega-alive]')){var _oal=document.createElement('script');_oal.src='/omega-alive.js';_oal.setAttribute('data-omega-alive','1');_oal.defer=true;__omegaAppend(_oal);}
   /* Ω LIVING ART — every real <img> breathes, glows and tilts (omega-living-art.js header). */
-  if(!document.querySelector('script[data-omega-living-art]')){var _ola=document.createElement('script');_ola.src='/omega-living-art.js';_ola.setAttribute('data-omega-living-art','1');_ola.defer=true;__omegaAppend(_ola);}
+  if(!document.querySelector('script[data-omega-living-art]')){var _ola=document.createElement('script');_ola.src='/omega-living-art.js';_ola.setAttribute('data-omega-living-art','1');_ola.defer=true;__omegaIdleAppend(_ola);}
   if(!document.querySelector('script[data-omega-readmore]')){var _orm=document.createElement('script');_orm.src='/omega-readmore.js';_orm.setAttribute('data-omega-readmore','1');_orm.defer=true;__omegaAppend(_orm);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */
@@ -3017,7 +3029,7 @@ setTimeout(function(){
   /* Guided platform tour — Shepherd.js (MIT), first-time member walkthrough */
   if(!document.querySelector('script[data-omega-tour]')){var _otour=document.createElement('script');_otour.src='/omega-tour.js';_otour.setAttribute('data-omega-tour','1');_otour.defer=true;__omegaAppend(_otour);}
   /* Cinematic transitions — curtain nav, scroll reveals, count-up, stagger */
-  if(!document.querySelector('script[data-omega-cinematic]')){var _ocin=document.createElement('script');_ocin.src='/omega-cinematic.js';_ocin.setAttribute('data-omega-cinematic','1');_ocin.defer=true;__omegaAppend(_ocin);}
+  if(!document.querySelector('script[data-omega-cinematic]')){var _ocin=document.createElement('script');_ocin.src='/omega-cinematic.js';_ocin.setAttribute('data-omega-cinematic','1');_ocin.defer=true;__omegaIdleAppend(_ocin);}
   /* Cinematic emblem system — .omega-cinematic body class, ambient starfield
      layer, pointer-parallax custom properties. A DIFFERENT guard attribute
      than omega-cinematic.js above on purpose (CLAUDE.md bug class 5b: two
@@ -3092,7 +3104,7 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-confetti]')){var _ocnf=document.createElement('script');_ocnf.src='/omega-confetti.js';_ocnf.setAttribute('data-omega-confetti','1');_ocnf.defer=true;__omegaAppend(_ocnf);}
 
   /* Voice-responsive animations — copilot stream particle sync via Web Audio API */
-  if(!document.querySelector('script[data-omega-voice-sync]')){var _ovsync=document.createElement('script');_ovsync.src='/omega-voice-sync.js';_ovsync.setAttribute('data-omega-voice-sync','1');_ovsync.defer=true;__omegaAppend(_ovsync);}
+  if(!document.querySelector('script[data-omega-voice-sync]')){var _ovsync=document.createElement('script');_ovsync.src='/omega-voice-sync.js';_ovsync.setAttribute('data-omega-voice-sync','1');_ovsync.defer=true;__omegaIdleAppend(_ovsync);}
 
   /* Element particle backgrounds — tsParticles-slim@2 (MIT), fires on omega:user-loaded */
   if(!document.querySelector('script[data-omega-particles]')){var _opar=document.createElement('script');_opar.src='/omega-particles.js';_opar.setAttribute('data-omega-particles','1');_opar.defer=true;__omegaAppend(_opar);}
@@ -3107,7 +3119,7 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-realm]')){var _orlm=document.createElement('script');_orlm.src='/omega-realm.js';_orlm.setAttribute('data-omega-realm','1');_orlm.defer=true;__omegaAppend(_orlm);}
 
   /* Generative music engine — Tone.js v14 (MIT), [data-music-toggle] to play */
-  if(!document.querySelector('script[data-omega-music]')){var _omus=document.createElement('script');_omus.src='/omega-music.js';_omus.setAttribute('data-omega-music','1');_omus.defer=true;__omegaAppend(_omus);}
+  if(!document.querySelector('script[data-omega-music]')){var _omus=document.createElement('script');_omus.src='/omega-music.js';_omus.setAttribute('data-omega-music','1');_omus.defer=true;__omegaIdleAppend(_omus);}
 
   /* Procedural SVG sigil generator — deterministic from auth/element/name */
   if(!document.querySelector('script[data-omega-sigil-gen]')){var _osig=document.createElement('script');_osig.src='/omega-sigil-gen.js';_osig.setAttribute('data-omega-sigil-gen','1');_osig.defer=true;__omegaAppend(_osig);}

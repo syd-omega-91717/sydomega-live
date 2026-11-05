@@ -63,7 +63,7 @@
      measurement. */
   var TRANSIENT = '#omega-consent, #omega-install-banner, [data-omega-bottom-transient]';
 
-  var _last = null, _lastT = null, _queued = false, _ro = null;
+  var _last = null, _lastT = null, _queued = false, _ro = null, _obs = [];
 
   function extentOf(el) {
     var cs = getComputedStyle(el);
@@ -156,12 +156,22 @@
     /* A dock can change height without the DOM changing -- the controls dock
        wraps onto a second row at narrow widths. ResizeObserver catches that;
        resize alone does not, because the wrap happens at widths the media
-       query does not announce. */
+       query does not announce.
+       ONE observer for the life of the page; only the set of watched elements
+       changes. This used to disconnect and rebuild the observer on every
+       measure(), and a new ResizeObserver reports every element it is given
+       once, immediately -- which called schedule(), which ran measure(), which
+       rebuilt the observer: a loop that never ended. Measured on an idle
+       journal.html (nothing happening): ~58 new ResizeObservers and ~170
+       getComputedStyle calls a second, for as long as the page was open. */
     if (typeof ResizeObserver !== 'function') return;
-    if (_ro) _ro.disconnect();
-    _ro = new ResizeObserver(schedule);
-    for (var i = 0; i < els.length; i++) { try { _ro.observe(els[i]); } catch (e) {} }
-    for (var j = 0; trans && j < trans.length; j++) { try { _ro.observe(trans[j]); } catch (e) {} }
+    var want = [], i;
+    for (i = 0; i < els.length; i++) if (want.indexOf(els[i]) < 0) want.push(els[i]);
+    for (i = 0; trans && i < trans.length; i++) if (want.indexOf(trans[i]) < 0) want.push(trans[i]);
+    if (!_ro) _ro = new ResizeObserver(schedule);
+    for (i = 0; i < _obs.length; i++) if (want.indexOf(_obs[i]) < 0) { try { _ro.unobserve(_obs[i]); } catch (e) {} }
+    for (i = 0; i < want.length; i++) if (_obs.indexOf(want[i]) < 0) { try { _ro.observe(want[i]); } catch (e) {} }
+    _obs = want;
   }
 
   /* Only a mutation that adds or removes bottom chrome (or a banner) can move

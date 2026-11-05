@@ -140,7 +140,11 @@
       + (reduce? '' : ':hover>.omega-section-sign{animation:omegaSignSpin 16s linear infinite}');
     (document.head||document.documentElement).appendChild(spin);
     if (document.body) sign(); else document.addEventListener('DOMContentLoaded', sign);
-    try{ new MutationObserver(sign).observe(document.body||document.documentElement,{childList:true,subtree:true}); }catch(e){}
+    /* One pass per frame, not one per mutation batch: sign() runs querySelectorAll over every heading on the page,
+       and inserting a sign is itself a mutation, so on a page that updates live it re-scanned continuously. */
+    var signQueued=0;
+    function signSoon(){ if(signQueued)return; signQueued=1; (window.requestAnimationFrame||setTimeout)(function(){ signQueued=0; sign(); }); }
+    try{ new MutationObserver(signSoon).observe(document.body||document.documentElement,{childList:true,subtree:true}); }catch(e){}
   })();
 
 })();

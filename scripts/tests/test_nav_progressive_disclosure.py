@@ -48,7 +48,9 @@ class CoreSet(unittest.TestCase):
 
     def test_the_active_section_is_never_folded(self):
         self.assertIn("CORE_SECTIONS.indexOf(sec.key)<0&&!isAct?' on-more-item'", NAV)
-        self.assertIn("CORE_SECTIONS.indexOf(sec.key)<0&&sec.key!==activeSection?' ds-more'", NAV)
+        # the door you are IN (ACTIVE_GROUP, the group of the active section) is never folded, in the drawer either
+        self.assertIn("CORE_SECTIONS.indexOf(sec.key)<0&&sec.key!==ACTIVE_GROUP?' ds-more'", NAV)
+        self.assertIn("var ACTIVE_GROUP=groupOf(activeSection);", NAV)
 
 
 class Controls(unittest.TestCase):

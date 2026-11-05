@@ -14,6 +14,10 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-11-05 — three navigation faults found on the original `nav.js`, not fixed.** In a headless render
+  of `main`, `archive.html` and `govern.html` show no sidebar dock at all (`#omega-side` absent), and `intel.html`
+  highlights COMMAND (no `PS` entry for `intel`). Separately `scripts/tests/test_omega_navigation_axis_contract.js`
+  fails on `main` ("Missing canonical PS mapping: simulation-arena -> arena") and is run by no workflow.
 - **OPEN 2026-11-05 — no page-usage data since the Cloudflare cutover.** Vercel Analytics recorded 3 to 9 visitors a day
   until 2026-10-19 and nothing after (queried 2026-11-05), because production is served by Cloudflare Pages. Any decision
   to retire pages is therefore blind. Enable Cloudflare Web Analytics on the `sydomega` Pages project, then revisit

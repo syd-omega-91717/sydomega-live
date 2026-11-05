@@ -14,6 +14,10 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-11-05 — no page-usage data since the Cloudflare cutover.** Vercel Analytics recorded 3 to 9 visitors a day
+  until 2026-10-19 and nothing after (queried 2026-11-05), because production is served by Cloudflare Pages. Any decision
+  to retire pages is therefore blind. Enable Cloudflare Web Analytics on the `sydomega` Pages project, then revisit
+  `docs/PLATFORM_SIMPLIFICATION_PLAN.md` (15 sections to 8 proposed, nothing deleted).
 - **OPEN 2026-11-04 — erasure engine merged dormant; its migration is not yet recorded as applied.**
   `20261103230000_erasure_pipeline_dormant.sql` merged in #1156 (`7895655`). It is registered
   `PENDING_REVIEW` in `supabase/pending-migrations.json`, so `migration-drift.py` fails the push-time

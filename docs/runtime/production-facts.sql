@@ -4,6 +4,9 @@
 -- (Settings > General) that it reads ydqhzvvoyufiiqvzcjns and the region is Southeast Asia (Singapore).
 -- Never trust the project NAME: a lookalike named "ydqhzvvoyufiiqvzcjns / sydomega" has a different ID.
 -- Paste the single JSON cell it returns back to the engineer (or into a file under docs/runtime/).
+-- Read the "verdict" field first: it says STOP when the database has no owner account or fewer than 300
+-- recorded migrations, which is what a lookalike or empty project looks like (measured 2026-11-05: a run on
+-- the wrong project returned 83 migrations and 0 owner accounts).
 --
 -- WHAT IT READS: catalogue metadata (table and column names, types, nullability, foreign keys, trigger
 -- names), migration versions, two flag values, and row COUNTS for ten tables. It reads NO row contents and
@@ -88,6 +91,12 @@ select jsonb_pretty(jsonb_build_object(
   'database', current_database(),
   'server_version', current_setting('server_version'),
   'owner_accounts_present', (select count(*) from auth.users where email in ('s.y.dagher@gmail.com', 'slmndghr@gmail.com')),
+  'verdict', case
+      when (select count(*) from auth.users where email in ('s.y.dagher@gmail.com', 'slmndghr@gmail.com')) = 0
+        or (select count(*) from supabase_migrations.schema_migrations) < 300
+      then 'STOP: this does not look like production (production has both owner accounts and about 413 recorded migrations). Check the dashboard URL ends in /project/ydqhzvvoyufiiqvzcjns and run again there. Do not use this output.'
+      else 'OK: owner accounts present and migration history is production-sized. Still confirm the dashboard URL ends in /project/ydqhzvvoyufiiqvzcjns.'
+    end,
   'migrations', jsonb_build_object(
     'recorded_count', (select count(*) from supabase_migrations.schema_migrations),
     'latest_five', (select jsonb_agg(version order by version desc)

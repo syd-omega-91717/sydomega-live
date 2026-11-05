@@ -146,7 +146,11 @@
         "events",
         "travel",
         "health",
-        "social"
+        "social",
+        "studio",
+        "creation-studio",
+        "project-studio",
+        "creator"
       ],
       "separate": [
         "creation-studio"
@@ -205,7 +209,11 @@
         "agent-operations",
         "ops",
         "architecture",
-        "autonomous-insights"
+        "autonomous-insights",
+        "lab",
+        "design-system",
+        "design-showcase",
+        "design-lab"
       ],
       "owner": [
         "control-plane",

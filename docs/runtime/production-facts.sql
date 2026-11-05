@@ -3,6 +3,8 @@
 -- RUN IT in the SQL editor of the production project, after confirming by PROJECT ID
 -- (Settings > General) that it reads ydqhzvvoyufiiqvzcjns and the region is Southeast Asia (Singapore).
 -- Never trust the project NAME: a lookalike named "ydqhzvvoyufiiqvzcjns / sydomega" has a different ID.
+-- NO SQL EDITOR NEEDED: Actions > "Supabase Production Facts (read-only)" > Run workflow (branch main) runs this
+-- exact file on ydqhzvvoyufiiqvzcjns through the supabase-production environment and prints the JSON.
 -- Paste the single JSON cell it returns back to the engineer (or into a file under docs/runtime/).
 -- Read the "verdict" field first: it says STOP when the database has no owner account or fewer than 300
 -- recorded migrations, which is what a lookalike or empty project looks like (measured 2026-11-05: a run on

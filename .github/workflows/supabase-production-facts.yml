@@ -1,0 +1,81 @@
+name: Supabase Production Facts (read-only)
+
+# Runs docs/runtime/production-facts.sql against the production project and prints the single JSON result.
+# Read-only by construction: the SQL file is refused unless it is one SELECT with no write keyword, and the
+# read-only Management API endpoint is used first. Manual only; runs in the supabase-production environment,
+# so the same approvals and secrets as the controlled migration push apply. It applies nothing.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-production-facts
+  cancel-in-progress: false
+
+jobs:
+  facts:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: supabase-production
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Run the read-only facts query on the production project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "${SUPABASE_ACCESS_TOKEN}" || { echo "::error::Missing SUPABASE_ACCESS_TOKEN secret."; exit 1; }
+          python3 - <<'PY'
+          import json, os, re, sys, urllib.error, urllib.request
+
+          REF = "ydqhzvvoyufiiqvzcjns"
+          raw = open("docs/runtime/production-facts.sql", encoding="utf-8").read()
+          code = re.sub(r"--[^\n]*", "", raw)
+          code = re.sub(r"'(?:[^']|'')*'", "''", code)  # ignore text inside string literals
+          if not re.match(r"\s*with\b", code, re.I) or code.count(";") != 1 or not code.rstrip().endswith(";"):
+              sys.exit("Refusing to run: the file must be exactly one WITH ... SELECT statement.")
+          write = re.search(r"\b(insert|update|delete|drop|alter|create|truncate|grant|revoke|copy|call|vacuum|reindex|merge)\b", code, re.I)
+          if write:
+              sys.exit(f"Refusing to run: write keyword found: {write.group(1)!r}")
+
+          def post(path):
+              req = urllib.request.Request(
+                  f"https://api.supabase.com/v1/projects/{REF}/database/{path}",
+                  data=json.dumps({"query": raw}).encode(),
+                  headers={
+                      "Authorization": "Bearer " + os.environ["SUPABASE_ACCESS_TOKEN"],
+                      "Content-Type": "application/json",
+                      "User-Agent": "sydomega-production-facts",
+                  },
+                  method="POST",
+              )
+              return json.load(urllib.request.urlopen(req, timeout=90))
+
+          try:
+              rows = post("query/read-only")
+          except urllib.error.HTTPError as exc:
+              body = exc.read().decode(errors="replace")[:400]
+              if exc.code != 404:
+                  sys.exit(f"Supabase API refused the query: HTTP {exc.code}: {body}")
+              print("Read-only endpoint not available (404); using the guarded standard endpoint.")
+              rows = post("query")
+
+          cell = rows[0]["production_facts"] if isinstance(rows, list) and rows else None
+          if not cell:
+              sys.exit(f"Unexpected response shape: {str(rows)[:400]}")
+          facts = json.loads(cell)
+          print("::group::production_facts")
+          print(json.dumps(facts, indent=2))
+          print("::endgroup::")
+          verdict = facts.get("verdict", "")
+          print("VERDICT:", verdict)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
+              out.write("### Production facts\n\n**" + verdict + "**\n\n```json\n" + json.dumps(facts, indent=2) + "\n```\n")
+          if not verdict.startswith("OK"):
+              sys.exit("Verdict is not OK; do not use this output.")
+          PY

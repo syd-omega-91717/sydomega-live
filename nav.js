@@ -396,7 +396,7 @@
     media:['media','cinema','movies','series','publications','visual-atlas','trailers']
   };
   function compactSub(sec){
-    var wanted=COMPACT[sec.key]||[];
+    var wanted=sec.compact||COMPACT[sec.key]||[];
     var byKey={};sec.sub.forEach(function(x){byKey[x[0]]=x;});
     var out=[];
     wanted.forEach(function(k){if(byKey[k]&&byKey[k][3]!=='folded')out.push(byKey[k]);});
@@ -405,13 +405,44 @@
     if(active && !out.some(function(x){return x[0]===active[0];}))out.push(active);
     return out;
   }
+  /* DOORS, 15 -> 8. The dock, its tooltips and the phone drawer group the 15 sections into 8 doors so the
+     achievements, media, services, investing and archive sections are no longer all behind MORE. Only the GROUPING
+     changes: PS, SECTIONS, OmegaAxis, the full launcher (omega-menu), search and the owner deck still use the 15
+     sections, so every page keeps its accent, hero and URL. A door keeps its head section's key, label and
+     translation. Each merged door lists at most eight entries (GROUP_COMPACT) so merging does not lengthen the
+     tooltips. To undo: render from SECTIONS instead of GROUPS. */
+  var GROUP_OF={identity:'identity',archive:'identity',life:'identity',
+                ascend:'ascend',achieve:'ascend',arena:'ascend',
+                cosmos:'cosmos',media:'cosmos',
+                vault:'vault',invest:'vault',services:'vault'};
+  function groupOf(k){return GROUP_OF[k]||k;}
+  var GROUP_COMPACT={
+    identity:['profile','life','archive','passport','membership'],
+    ascend:['ascend','academy','gaming','focus','achievements','ladder','my-quests','sovereign-ai'],
+    cosmos:['cosmos','orrery','elements','horoscope','pantheons','media','movies','trailers'],
+    vault:['vault','wallet','marketplace','subscriptions','invest','portfolio','consultancy','services']
+  };
+  var GROUPS=[],seenGroup={};
+  SECTIONS.forEach(function(sec){
+    var g=groupOf(sec.key);if(seenGroup[g])return;seenGroup[g]=1;
+    var members=SECTIONS.filter(function(x){return groupOf(x.key)===g;})
+      .sort(function(a,b){return (b.key===g)-(a.key===g);});
+    var head=members[0],byKey={},sub=[];
+    members.forEach(function(m){m.sub.forEach(function(e){
+      var have=byKey[e[0]];
+      if(!have){byKey[e[0]]=e;sub.push(e);}
+      else if(have[3]==='folded'&&e[3]!=='folded'){sub[sub.indexOf(have)]=e;byKey[e[0]]=e;}
+    });});
+    GROUPS.push({key:head.key,icon:head.icon,label:head.label,col:head.col,href:head.href,sub:sub,compact:GROUP_COMPACT[g]});
+  });
+  var ACTIVE_GROUP=groupOf(activeSection);
   /* PROGRESSIVE DISCLOSURE. 15 sections and ~107 links on every page is more doors than a member can hold in
      their head (measured 2026-11-02). The dock leads with the seven that carry the platform's purpose -- home,
      growth, body, money, people, the cosmic identity, the profile -- and folds the other eight behind MORE.
      Nothing is removed: the folded sections stay in search, the full menu, the phone drawer and the owner deck, and
      the section you are IN is always shown, so you never lose where you are. A member who wants everything taps
      MORE once; the choice is remembered (omega_nav_all). */
-  var CORE_SECTIONS=['command','ascend','life','vault','order','cosmos','identity'];
+  var CORE_SECTIONS=['command','identity','ascend','cosmos','order','vault','intel'];
   var NAV_ALL=false; try{NAV_ALL=localStorage.getItem('omega_nav_all')==='1';}catch(e){}
   var h='';
   h+='<div class="on-hb">';
@@ -430,8 +461,8 @@
      carries what the title attribute used to. */
   h+='<a class="on-brand" href="/dashboard.html" title="SYD OMEGA 91717" aria-label="SYD OMEGA 91717 — Command Bridge"><canvas id="on-bcv" width="88" height="88" style="width:44px;height:44px"></canvas></a>';
   h+='<div class="on-sections">';
-  SECTIONS.forEach(function(sec){
-    var isAct=sec.key===activeSection;
+  GROUPS.forEach(function(sec){
+    var isAct=sec.key===ACTIVE_GROUP;
     h+='<div class="on-item'+(CORE_SECTIONS.indexOf(sec.key)<0&&!isAct?' on-more-item':'')+'">';
     h+='<a class="on-icon'+(isAct?' on-active':'')+'" href="'+sec.href+'" style="--col:'+sec.col+'">';
     h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'var(--muted)')+'">'+sec.icon+'</span>';
@@ -684,7 +715,7 @@
 
     /* DRAWER -- ALL 9 SECTIONS */
     /* DRAWER — derived from SECTIONS so mobile and desktop cannot drift. */
-    var DRAWER_SECTIONS=SECTIONS.map(function(sec){
+    var DRAWER_SECTIONS=GROUPS.map(function(sec){
       return {
         icon:sec.icon,label:sec.label,col:sec.col,href:sec.href,key:sec.key,
         links:sec.sub.filter(function(sub){return sub[3]!=='folded';}).map(function(sub){return [sub[1],sub[2],sub[3]==='owner'];})
@@ -727,10 +758,10 @@
     drawer.appendChild(dAll);
     var dsgrid=document.createElement('div');dsgrid.className='drawer-sections';
     DRAWER_SECTIONS.forEach(function(sec){
-      var ds=document.createElement('div');ds.className='ds-section'+(CORE_SECTIONS.indexOf(sec.key)<0&&sec.key!==activeSection?' ds-more':'');
-      var head=document.createElement('a');head.className='dss-head'+(sec.key===activeSection?' ds-on':'');head.href=sec.href;
+      var ds=document.createElement('div');ds.className='ds-section'+(CORE_SECTIONS.indexOf(sec.key)<0&&sec.key!==ACTIVE_GROUP?' ds-more':'');
+      var head=document.createElement('a');head.className='dss-head'+(sec.key===ACTIVE_GROUP?' ds-on':'');head.href=sec.href;
       var emblemHTML='';if(window.OmegaEmblems&&window.OmegaEmblems[sec.key]){emblemHTML='<span class="dss-emblem" style="color:'+sec.col+';font-size:20px;display:inline-block;margin-right:8px;">'+window.OmegaEmblems[sec.key]+'</span>';}
-      head.innerHTML=emblemHTML+'<span class="dss-icon" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===activeSection?sec.col:'')+'">'+sec.label+'</span>';
+      head.innerHTML=emblemHTML+'<span class="dss-icon" style="color:'+(sec.key===ACTIVE_GROUP?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===ACTIVE_GROUP?sec.col:'')+'">'+sec.label+'</span>';
       ds.appendChild(head);
       var links=document.createElement('div');links.className='ds-links';
       sec.links.forEach(function(lk){

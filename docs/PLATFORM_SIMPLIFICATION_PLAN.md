@@ -56,8 +56,9 @@ Visible entries per section drop from about 7 to about 6, and the 6 double-listi
 
 ## 4. Steps, each its own PR and reversible
 
-1. **Nav only.** Merge sections in `nav.js`, `omega-single-page-workspaces.js` and their config JSON; regenerate;
-   check each hub renders. No page removed.
+1. **Nav only. DONE 2026-11-05** (`docs/fixes/2026-11-05-nav-eight-doors.md`): the dock, tooltips and phone drawer group the
+   15 sections into 8 doors; the sections themselves, the hubs and every page are unchanged. Labels keep the existing
+   names because they are translated per key.
 2. **Hub trims.** Same trick as #1164 on the heaviest hubs: state a status once, keep real per-item facts.
 3. **Retire for real**, only with Cloudflare analytics and at least 30 days of data: pages with no views, no inbound
    link and nothing embedding them become redirects, then are removed.

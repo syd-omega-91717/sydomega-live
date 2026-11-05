@@ -118,7 +118,10 @@
 
   function boot() {
     parallax(); holo(); transitions(); audio();
-    try { new MutationObserver(function () { holo(); }).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+    /* holo() runs six querySelectorAll over the page: once per frame at most, not once per mutation batch. */
+    var holoQueued = 0;
+    function holoSoon() { if (holoQueued) return; holoQueued = 1; (window.requestAnimationFrame || setTimeout)(function () { holoQueued = 0; holo(); }); }
+    try { new MutationObserver(holoSoon).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
   }
   if (document.body) boot(); else document.addEventListener('DOMContentLoaded', boot);
 })();

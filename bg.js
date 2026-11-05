@@ -2922,7 +2922,10 @@ setTimeout(function(){
     wrap.appendChild(btn);
   }
   function scan(){var l=document.querySelectorAll('input[type=password]');for(var i=0;i<l.length;i++)enhance(l[i]);}
-  function boot(){scan();try{new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}}
+  /* One scan per frame, not per mutation batch (it queries the whole document for password inputs). */
+  var scanQueued=0;
+  function scanSoon(){if(scanQueued)return;scanQueued=1;(window.requestAnimationFrame||setTimeout)(function(){scanQueued=0;scan();});}
+  function boot(){scan();try{new MutationObserver(scanSoon).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 

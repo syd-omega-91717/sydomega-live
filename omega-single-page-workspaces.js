@@ -14,9 +14,9 @@
     '/intel.html':['research','prediction','intelligence','automation','graphify','graph-admin','graph-timeline','graph-centrality','graph-explorer','graph-anomalies','graph-evidence','atlas','cipher','codex','mindmap','nexus','pulse','sigma','signal','news'],
     '/arena.html':['sovereign-ai','agent-network','agents','analytics','queue','gaming'],
     '/govern.html':['governance','observatory','enterprise','privacy','roadmap','ecosystem','knowledge','knowledge-loom','maintenance','control-center','platform-kernel','agent-operations','ops','architecture','autonomous-insights'],
-    '/invest.html':['investment','portfolio','treasury','wallet','revenue','income','budget','expenses','wealth','ledger','payments','subscriptions'],
-    '/achieve.html':['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates','grades','levels','phases','ascension','kings','triads','grid','awards','hercules','trophies','gaming'],
-    '/archive.html':['heritage','bloodline','character','identity','passport','kyc','credentials','charter','sigil','membership'],
+    '/invest.html':['investment','portfolio','treasury','revenue','income','budget','expenses','wealth'],
+    '/achieve.html':['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates','grades','levels','phases','ascension','kings','triads','grid','awards','hercules','trophies'],
+    '/archive.html':['kyc','charter','sigil'],
     '/media.html':['cinema','movies','series','trailers','universe','feed','publications','visual-atlas','characters']
   };
   var modules=WORKSPACES[location.pathname]||[];

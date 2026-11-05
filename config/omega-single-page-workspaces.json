@@ -218,15 +218,11 @@
         "investment",
         "portfolio",
         "treasury",
-        "wallet",
         "revenue",
         "income",
         "budget",
         "expenses",
-        "wealth",
-        "ledger",
-        "payments",
-        "subscriptions"
+        "wealth"
       ]
     },
     "achieve": {
@@ -248,23 +244,15 @@
         "grid",
         "awards",
         "hercules",
-        "trophies",
-        "gaming"
+        "trophies"
       ]
     },
     "archive": {
       "canonical": "/archive.html",
       "capabilities": [
-        "heritage",
-        "bloodline",
-        "character",
-        "identity",
-        "passport",
         "kyc",
-        "credentials",
         "charter",
-        "sigil",
-        "membership"
+        "sigil"
       ]
     },
     "media": {

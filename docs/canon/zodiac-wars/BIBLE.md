@@ -21,6 +21,9 @@ Planned shape (founder's list): 1 feature film, a 10-episode limited series, a 5
 | Nine elements; only Fire, Water, Wind, Metal and Sand are tied to signs | `omega-canon.json` `elements` | Soul, Space, Void and The All have no House: they become the forgotten guardians (section 4). |
 | Celestial Knights are "the champions of each Faction ... not users; the Order's founding archetypes" | `factions.html` | One Knight per House, mortal, section 5. |
 | Twelve gates: INITIATE ... APEX | `omega-canon.json` `gate_names` | The structure of the series and the fighting game (sections 6 and 7). |
+| Ares presses Mars, Athena presses Ceres, Poseidon presses Neptune; the gods "contest the Order" through twelve Factions and their Knights | `media.html` universe III (Wrath of the Gods) | Section 3 uses these worlds. Athena rules **Ceres**, so Demeter moved to **Pluto**. |
+| The Solar Accord binds twelve worlds under a twelve-thousand-year peace; when the Solar Nexus reactivates the Celestial Knights are chosen and the Shadow Zodiac moves | `media.html` universe VI ("Zodiac Flux") and saga chapter 1 | "Zodiac Flux" is the in-universe name of this war's opening; **Zodiac Wars** stays the franchise title (see `docs/canon/UNIVERSE.md`). |
+| Chapter 1 cast: Kael Marren (Aries), a Mars foundry apprentice; Adaeze Okonkwo-Reyes (Libra), Earth's Balance Court mediator; Regent Vahn Ossara, Shadow Zodiac commander and Aries' dark mirror | `media.html` saga chapter 1 (THE ORIGIN) | Kept as the repo's own named characters. In this draft Ossara is the mortal commander who answers to Aries' Shadow, The Unbled. |
 
 ## 3. The Twelve Zodiac Gods (PROPOSED)
 
@@ -33,13 +36,15 @@ Each god rules one world. Each has a **Shadow counterpart**: not an enemy from o
 | Gemini | Wind | Hermes | Mercury | The Twice-Told | Every message true to every listener, and false. |
 | Cancer | Water | Artemis | The Moon | The Unlit | Protection that becomes confinement. |
 | Leo | Fire | Apollo | The Sun's corona | The Glare | Truth so bright it burns the thing it shows. |
-| Virgo | Sand | Athena | Pallas | The Perfect | A plan with no room for a person. |
+| Virgo | Sand | Athena | Ceres | The Perfect | A plan with no room for a person. |
 | Libra | Wind | Hera | Juno | The Sworn | Law that outlives its reason. |
-| Scorpio | Water | Demeter | Ceres | The Fallow | Grief that lets the harvest rot. |
+| Scorpio | Water | Demeter | Pluto | The Fallow | Grief that lets the harvest rot. |
 | Sagittarius | Fire | Zeus | Jupiter | The Unanswerable | Authority that no longer hears a question. |
 | Capricorn | Metal | Hestia | Saturn | The Cold Hearth | Duty kept after the family is gone. |
 | Aquarius | Wind | Hephaestus | Uranus | The Unfinished | Invention that never asks who it is for. |
 | Pisces | Water | Poseidon | Neptune | The Drowned | Memory so deep nothing surfaces. |
+
+**The Solar Accord.** Twelve thousand years ago the Twelve divided the worlds and swore a peace, the Accord. The Accord is not friendship: each god presses its House toward its own idea of sovereignty, which is the argument the Knights inherit (`media.html`, "Wrath of the Gods"). The Nexus waking is the Accord's first real test.
 
 **The thirteenth seat.** Earth belongs to no god. It is the one world the Twelve cannot rule without the consent of those who live on it, which is why the war reaches it.
 

@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "asOf": "2026-11-06",
+  "status": "PROPOSED",
+  "approvedByOwner": false,
+  "note": "How the founder's seven franchises fit the platform's existing canon. Decided under the founder's delegation on 2026-11-06 and reversible: nothing here is released, streaming or playable, and every title stays CONCEPT in config/omega-franchise-slate.json. The chronology is the 12-chapter saga in media.html (FILMS); a franchise is a window onto it.",
+  "decisions": [
+    {
+      "id": "D1",
+      "decision": "One universe, not two. The 12-chapter saga on media.html is the master chronology and the seven franchises are windows onto it."
+    },
+    {
+      "id": "D2",
+      "decision": "Zodiac Flux is the in-universe name of the war's opening (saga chapter 1). Zodiac Wars is the franchise title."
+    },
+    {
+      "id": "D3",
+      "decision": "omega-agents.json stays canonical for sign, element and god. The spec's pantheon names (Geb, Enki, Vayu, Thoth) belong to the Cave of the Shadows gate-guardian layer, not to the twelve Houses."
+    },
+    {
+      "id": "D4",
+      "decision": "Cave of the Shadows, Babylon Singularity, Solomon's Sovereignty and AI Sovereign are lore layers that sit under the franchises, not franchises of their own."
+    },
+    {
+      "id": "D5",
+      "decision": "Matrix total is 104,976 (12x12x9x9x9). 729 is the inner cube at each intersection."
+    }
+  ],
+  "anchors": [
+    {
+      "franchise": "zodiac-wars",
+      "chapters": [
+        1
+      ],
+      "role": "Opens the war: the Solar Nexus wakes and the Shadow Zodiac moves.",
+      "elements": [
+        "Fire"
+      ]
+    },
+    {
+      "franchise": "wrath-of-the-gods",
+      "chapters": [
+        2,
+        3,
+        4
+      ],
+      "role": "The Olympians contest the Order through twelve Factions and their Knights.",
+      "elements": [
+        "Water",
+        "Wind",
+        "Metal"
+      ]
+    },
+    {
+      "franchise": "myth-of-the-stones",
+      "chapters": [
+        5
+      ],
+      "role": "Prehistory of the stones, and the chapter where the frequency's origin is revealed.",
+      "elements": [
+        "Sand"
+      ]
+    },
+    {
+      "franchise": "the-sorcerer-reborn",
+      "chapters": [
+        6
+      ],
+      "role": "The old world falls; what slept in the deepest node returns.",
+      "elements": [
+        "Soul"
+      ]
+    },
+    {
+      "franchise": "aethelgard-universe",
+      "chapters": [
+        7
+      ],
+      "role": "Realms and timelines converge.",
+      "elements": [
+        "Space"
+      ]
+    },
+    {
+      "franchise": "post-human-mind",
+      "chapters": [
+        8
+      ],
+      "role": "The key beyond time, held in the Void.",
+      "elements": [
+        "Void"
+      ]
+    },
+    {
+      "franchise": "the-omega-saga",
+      "chapters": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "role": "The new civilisation, the singularity, expansion, and the final frequency.",
+      "elements": [
+        "The Ninth",
+        "All",
+        "Space",
+        "Omega"
+      ],
+      "cardElements": "ALL NINE ELEMENTS"
+    }
+  ],
+  "discrepancies": [
+    "media.html lists saga chapter 1 as IN PRODUCTION; the repository holds no production evidence.",
+    "media.html chapter 12 says 'all 729 nodes'; the matrix total is 104,976 (729 is the inner cube).",
+    "media.html carries two film sets: the 12-chapter saga (FILMS array) and the Olympian slate F01-F12. They are different lists.",
+    "The founder's game list and media.html's GAMES list differ.",
+    "The spec's pantheon mapping differs from omega-agents.json (see D3)."
+  ]
+}

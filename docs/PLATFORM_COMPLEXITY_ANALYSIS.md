@@ -95,3 +95,14 @@ Inside `bg.js` on `journal`: `drawOne` (`:2512`, the animated icon glyphs) 269 m
 - `three.js` is not a lever: `journal` loads none, `dashboard` loads it for its own mount.
 
 **Not measured.** A real phone, a real network, GPU paint cost (headless paints in software), or run-to-run noise.
+
+### 6.1 Tried and rejected (2026-11-06): the icon-glyph loop
+
+`bg.js` `drawOne` (the animated icon glyphs, about 8 canvases on `journal`) was the largest single function in the profile (260 to 320 ms at 4x CPU). Two cheap hypotheses were tested at the same setting (390 px mobile, 4x CPU, 7 s after load, three runs each, committed `bg.js` against the change, `drawOne` self-time):
+
+| change | before (ms) | after (ms) | verdict |
+|---|---|---|---|
+| skip the per-glyph `shadowBlur` glow in light mode | 322 / 268 / 262 | 222 / 259 / 271 | noise (medians 268 vs 259) |
+| set `ctx.font`, `textAlign`, `textBaseline` once instead of every frame | 218 / 208 / 286 | 220 / 232 / 237 | noise |
+
+Neither was shipped. Removing the glow would have made the icons visibly flatter for no measured gain, and the font hoist changed nothing. Run-to-run spread (208 to 322 ms for the same code) is wider than either effect, so the cost is probably in the per-frame path drawing and text rasterisation that headless software rendering exaggerates, not in a single call. A real gain needs a different approach, for example drawing each glyph once to an offscreen sprite and animating its transform, which is a larger change that was not attempted. The remaining candidate from section 6 is the `bg.js` background canvases (`starfield`, `core`, `resize`, about 175 ms together).

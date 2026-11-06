@@ -16,10 +16,12 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "module-load-audit.py"
 ONE_SHOT = re.compile(r"addEventListener\(\s*['\"](omega:populated|omega:user-loaded|omega:ready|load)['\"]")
-# Idle since PR #1169/#1170 and exposed to the same ordering problem. Not verified either way; do not add to this
-# list. Remove an entry once the module is shown to catch up on a missed event (or is made immediate).
-UNVERIFIED_IDLE = {"omega-cinematic.js", "omega-lattice-3d.js", "omega-music.js", "omega-voice.js"}
-
+# Idle modules that listen for a one-shot event and were READ to be safe. Add one only after reading how it behaves
+# when it arrives after the event, and say why here.
+KNOWN_SAFE_IDLE = {
+    "omega-cinematic.js": "re-runs its count-ups on every omega:populated and documents the late-arrival case",
+    "omega-lattice-3d.js": "wires its clicks at once when the document is already loaded (readyState check)",
+}
 
 _CACHE = []
 
@@ -50,7 +52,7 @@ class ModuleLoadAudit(unittest.TestCase):
             if r["loads"] != "idle":
                 continue
             name = r["module"][1:]
-            if name in UNVERIFIED_IDLE:
+            if name in KNOWN_SAFE_IDLE:
                 continue
             if ONE_SHOT.search((ROOT / name).read_text(encoding="utf-8", errors="ignore")):
                 bad.append(name)

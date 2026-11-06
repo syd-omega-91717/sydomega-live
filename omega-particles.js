@@ -56,12 +56,29 @@ function resolveElement(pr){
   return 'Void';
 }
 
+/* Lighter field where it costs most. Measured 2026-11-06 (docs/PLATFORM_COMPLEXITY_ANALYSIS.md section 6): on a phone-class
+   profile (390 px, 4x CPU) the engine was 7-14% of all script time. A phone-size viewport or a low-memory / low-core
+   device gets half the particles at 30 fps, and no hover-repulse where there is no hover. Desktop is unchanged. */
+function isLight(){
+  var mm=window.matchMedia;
+  if(mm&&mm('(max-width:700px)').matches) return true;
+  if(navigator.deviceMemory&&navigator.deviceMemory<=4) return true;
+  if(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4) return true;
+  return false;
+}
+function canHover(){
+  var mm=window.matchMedia;
+  return !mm||mm('(hover:hover)').matches;
+}
+
 function buildConfig(elem){
   var c=ELEM_CONFIGS[elem]||ELEM_CONFIGS['Void'];
+  var light=isLight();
+  var count=light?Math.max(8,Math.round(c.count*0.5)):c.count;
   return {
-    fpsLimit:40,
+    fpsLimit:light?30:40,
     particles:{
-      number:{value:c.count,density:{enable:true,width:1200,height:800}},
+      number:{value:count,density:{enable:true,width:1200,height:800}},
       color:{value:c.color},
       shape:{type:c.shape||'circle'},
       opacity:{value:c.opacity.max,random:{enable:true,minimumValue:c.opacity.min},animation:{enable:true,speed:0.5,minimumValue:c.opacity.min,sync:false}},
@@ -70,7 +87,7 @@ function buildConfig(elem){
       twinkle:{particles:{enable:true,frequency:0.04,opacity:0.85}}
     },
     interactivity:{
-      events:{onHover:{enable:true,mode:'repulse'},onClick:{enable:false}},
+      events:{onHover:{enable:canHover(),mode:'repulse'},onClick:{enable:false}},
       modes:{repulse:{distance:80,duration:0.4}}
     },
     detectRetina:true,

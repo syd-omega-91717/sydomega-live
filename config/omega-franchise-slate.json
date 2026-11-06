@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "owner": "founder",
+  "asOf": "2026-11-06",
+  "note": "The owner's planned franchise list, recorded as a concept slate. Every status is CONCEPT: the repository holds no scripts, footage or playable builds for these titles. Counts are PLANNED, not released. This slate is separate from the 12-film Olympian slate on media.html; whether the two canons merge is an open owner decision (docs/SPEC_RECONCILIATION.md). Allowed statuses: CONCEPT, IN DEVELOPMENT, IN PRODUCTION, RELEASED, each of which needs evidence in this file before use.",
+  "statuses": ["CONCEPT", "IN DEVELOPMENT", "IN PRODUCTION", "RELEASED"],
+  "franchises": [
+    { "id": "myth-of-the-stones", "title": "MYTH OF THE STONES", "filmsPlanned": 5, "seriesPlanned": null, "game": "Action RPG", "status": "CONCEPT", "color": "var(--gold)", "evidence": [] },
+    { "id": "wrath-of-the-gods", "title": "WRATH OF THE GODS", "filmsPlanned": 3, "seriesPlanned": null, "game": "God Simulator (strategy)", "status": "CONCEPT", "color": "var(--crim)", "evidence": [] },
+    { "id": "zodiac-wars", "title": "ZODIAC WARS", "filmsPlanned": 1, "seriesPlanned": "10-episode limited series and a 5-season series", "game": "Online Fighting RPG", "status": "CONCEPT", "color": "var(--cyan)", "evidence": [],
+      "pitch": "In a universe where the twelve Zodiac Gods rule entire planets and command civilizations across the Solar System, an ancient cosmic war reignites when the Solar Nexus awakens. Humanity becomes caught between Light Zodiac rulers, Shadow Zodiac counterparts, forgotten primordial guardians, and an existential force known as the Null, a self-aware collapse of reality itself." },
+    { "id": "the-omega-saga", "title": "THE OMEGA SAGA", "filmsPlanned": 5, "seriesPlanned": null, "game": "Tactical RPG / strategy", "status": "CONCEPT", "color": "var(--solar)", "evidence": [] },
+    { "id": "the-sorcerer-reborn", "title": "THE SORCERER REBORN", "filmsPlanned": 3, "seriesPlanned": null, "game": "Action RPG", "status": "CONCEPT", "color": "#9B6BF0", "evidence": [] },
+    { "id": "post-human-mind", "title": "POST-HUMAN MIND", "filmsPlanned": 3, "seriesPlanned": null, "game": "Time-manipulation RPG", "status": "CONCEPT", "color": "var(--green)", "evidence": [] },
+    { "id": "aethelgard-universe", "title": "AETHELGARD UNIVERSE", "filmsPlanned": 2, "seriesPlanned": null, "game": "Open-world fantasy RPG", "status": "CONCEPT", "color": "var(--cyan)", "evidence": [] }
+  ]
+}

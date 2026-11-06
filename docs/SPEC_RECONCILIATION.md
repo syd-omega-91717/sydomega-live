@@ -70,3 +70,7 @@ before any of it is described to members as active.
 
 Needs access: the production-facts workflow with `SUPABASE_ACCESS_TOKEN`; Cloudflare Web Analytics; rotating any real
 credentials from the April spec.
+
+## 7. Creative universe (started 2026-11-06)
+
+The spec's seven franchises (22 planned films, seven game concepts) are now recorded in `config/omega-franchise-slate.json` and shown on the SLATE tab of `universe.html`, every one as **CONCEPT**: the repo has no scripts, footage or playable builds for them, and the spec's "complete scripts" and "AAA games" were not verifiable here. This slate is separate from the 12-film Olympian slate on `media.html` (F01-F12) and the series on `series.html`; **which canon wins, or how they merge, is an open owner decision.** A title moves past CONCEPT only when evidence is added to the JSON; `scripts/tests/test_franchise_slate.py` enforces it.

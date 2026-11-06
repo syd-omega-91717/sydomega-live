@@ -178,7 +178,7 @@ function __omegaAppend(el){
   /* Phase C.6: Archetype visual surface configuration */
   if(!document.querySelector('script[data-omega-archetype-surfaces]')){var os_data_omega_archetype_surfaces=document.createElement('script');os_data_omega_archetype_surfaces.src='/omega-archetype-surfaces.js';os_data_omega_archetype_surfaces.setAttribute('data-omega-archetype-surfaces','1');os_data_omega_archetype_surfaces.defer=true;__omegaAppend(os_data_omega_archetype_surfaces);}
   /* Phase A: Agent brand mythology, sigil identity, constellation visualization */
-  if(!document.querySelector('script[data-omega-agent-personas]')){var os_data_omega_agent_personas=document.createElement('script');os_data_omega_agent_personas.src='/omega-agent-personas-v3.js';os_data_omega_agent_personas.setAttribute('data-omega-agent-personas','1');os_data_omega_agent_personas.defer=true;__omegaIdleAppend(os_data_omega_agent_personas);}
+  if(!document.querySelector('script[data-omega-agent-personas]')){var os_data_omega_agent_personas=document.createElement('script');os_data_omega_agent_personas.src='/omega-agent-personas-v3.js';os_data_omega_agent_personas.setAttribute('data-omega-agent-personas','1');os_data_omega_agent_personas.defer=true;__omegaAppend(os_data_omega_agent_personas);}
   /* Phase 1: Depth Tilt -- Pointer-driven 3D card tilt (micro-parallax).
      Guard: only loaded if a matching element exists on the page. */
   if(!document.querySelector('script[data-omega-depth-tilt]')){var os_data_omega_depth_tilt=document.createElement('script');os_data_omega_depth_tilt.src='/omega-depth-tilt.js';os_data_omega_depth_tilt.setAttribute('data-omega-depth-tilt','1');os_data_omega_depth_tilt.defer=true;__omegaIdleAppend(os_data_omega_depth_tilt);}
@@ -2972,7 +2972,7 @@ setTimeout(function(){
   /* Persistent AI memory — cross-session continuity */
   if(!document.querySelector('script[data-omega-memory]')){var _om=document.createElement('script');_om.src='/omega-memory.js';_om.setAttribute('data-omega-memory','1');_om.defer=true;__omegaAppend(_om);}
   /* Sovereign workflow orchestration engine */
-  if(!document.querySelector('script[data-omega-workflow]')){var _ow=document.createElement('script');_ow.src='/omega-workflow.js';_ow.setAttribute('data-omega-workflow','1');_ow.defer=true;__omegaIdleAppend(_ow);}
+  if(!document.querySelector('script[data-omega-workflow]')){var _ow=document.createElement('script');_ow.src='/omega-workflow.js';_ow.setAttribute('data-omega-workflow','1');_ow.defer=true;__omegaAppend(_ow);}
   /* Voice interface — Web Speech API commands + TTS */
   if(!document.querySelector('script[data-omega-voice]')){var _ov=document.createElement('script');_ov.src='/omega-voice.js';_ov.setAttribute('data-omega-voice','1');_ov.defer=true;__omegaIdleAppend(_ov);}
   /* Zero Trust continuous auth guardian */
@@ -2982,7 +2982,7 @@ setTimeout(function(){
   /* Capability engine — every page becomes a business capability */
   if(!document.querySelector('script[data-omega-capability]')){var _ocap=document.createElement('script');_ocap.src='/omega-capability.js';_ocap.setAttribute('data-omega-capability','1');_ocap.defer=true;__omegaAppend(_ocap);}
   /* Policy engine — externalised business rules */
-  if(!document.querySelector('script[data-omega-policy]')){var _opol=document.createElement('script');_opol.src='/omega-policy.js';_opol.setAttribute('data-omega-policy','1');_opol.defer=true;__omegaIdleAppend(_opol);}
+  if(!document.querySelector('script[data-omega-policy]')){var _opol=document.createElement('script');_opol.src='/omega-policy.js';_opol.setAttribute('data-omega-policy','1');_opol.defer=true;__omegaAppend(_opol);}
   /* FinOps engine — cost tracking and governance */
   if(!document.querySelector('script[data-omega-finops]')){var _ofops=document.createElement('script');_ofops.src='/omega-finops.js';_ofops.setAttribute('data-omega-finops','1');_ofops.defer=true;__omegaAppend(_ofops);}
   /* Experimentation engine — A/B tests, feature flags */
@@ -3028,7 +3028,7 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-readmore]')){var _orm=document.createElement('script');_orm.src='/omega-readmore.js';_orm.setAttribute('data-omega-readmore','1');_orm.defer=true;__omegaAppend(_orm);}
   if(!document.querySelector('script[data-omega-legal]')){var _olegal=document.createElement('script');_olegal.src='/omega-legal.js';_olegal.setAttribute('data-omega-legal','1');_olegal.defer=true;__omegaAppend(_olegal);}
   /* QR code engine — member credential QR, digital pass download */
-  if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;__omegaIdleAppend(_oqr);}
+  if(!document.querySelector('script[data-omega-qr]')){var _oqr=document.createElement('script');_oqr.src='/omega-qr.js';_oqr.setAttribute('data-omega-qr','1');_oqr.defer=true;__omegaAppend(_oqr);}
   /* Guided platform tour — Shepherd.js (MIT), first-time member walkthrough */
   if(!document.querySelector('script[data-omega-tour]')){var _otour=document.createElement('script');_otour.src='/omega-tour.js';_otour.setAttribute('data-omega-tour','1');_otour.defer=true;__omegaAppend(_otour);}
   /* Cinematic transitions — curtain nav, scroll reveals, count-up, stagger */
@@ -3116,7 +3116,7 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-ambient]')){var _oamb=document.createElement('script');_oamb.src='/omega-ambient.js';_oamb.setAttribute('data-omega-ambient','1');_oamb.defer=true;__omegaAppend(_oamb);}
 
   /* Sovereign passport PDF — jsPDF@2 (MIT), [data-passport-download] triggers download */
-  if(!document.querySelector('script[data-omega-passport]')){var _opas=document.createElement('script');_opas.src='/omega-passport.js';_opas.setAttribute('data-omega-passport','1');_opas.defer=true;__omegaIdleAppend(_opas);}
+  if(!document.querySelector('script[data-omega-passport]')){var _opas=document.createElement('script');_opas.src='/omega-passport.js';_opas.setAttribute('data-omega-passport','1');_opas.defer=true;__omegaAppend(_opas);}
 
   /* 3-D element realm — Three.js r160 (MIT), mounts canvas[data-realm] */
   if(!document.querySelector('script[data-omega-realm]')){var _orlm=document.createElement('script');_orlm.src='/omega-realm.js';_orlm.setAttribute('data-omega-realm','1');_orlm.defer=true;__omegaAppend(_orlm);}

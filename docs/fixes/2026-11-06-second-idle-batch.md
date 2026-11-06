@@ -1,0 +1,11 @@
+### Six engine modules load after the page is idle (2026-11-06)
+
+**Why.** Continues `2026-11-05-idle-load-ambient-modules.md`. A scan of the 138 modules `bg.js` injects immediately found 69 (about 481 KB of 1.47 MB) whose published `window.Omega*` globals no other root `.js` or `.html` file reads. That is a candidate list, not a verdict: a module can still be read through a CSS variable, a DOM event or a data attribute. The six chosen are the ones whose source shows no `DOMContentLoaded`, `MutationObserver`, scroll or resize listener and no injected `<style>` at load, so they cannot change first paint: `omega-workflow`, `omega-passport`, `omega-policy`, `omega-qr`, `omega-threat`, `omega-agent-personas-v3` (about 67 KB). Modules that inject CSS (29 of the 69), `omega-bottom-stack`, `omega-genesis`, `omega-motion` and `omega-alive` were deliberately left out.
+
+**Correction to `docs/PLATFORM_COMPLEXITY_ANALYSIS.md`.** It says `three.js` loads on `settings`. Measured signed in with the verify-in-browser harness: `settings.html` redirects to `/profile.html`, which carries two real sculpture mounts, so the 3-D load was `profile`, working as designed. `journal` loads 0 `three` files, `dashboard` 1 (it has a `signet` mount). Lever 2 (load `three.js` only where a mount exists) is already how it works.
+
+**Fix.** Those six injection lines in `bg.js` call `__omegaIdleAppend` instead of `__omegaAppend`. Nothing else changed. Undo is changing a call back. `scripts/tests/test_bg_idle_modules.py` pins the batch (now 18).
+
+**Verified.** `node --check bg.js`; `python3 -m unittest discover -s scripts/tests` 1138 OK; `scripts/audit.py` 0 critical / 7 warnings; `scripts/module-contract.py` PASSED; `omega-registry.py --check` OK; `node scripts/verify-runtime.js`: PASS on the 13 capability entrypoints.
+
+**Not done / not verified.** The saving is small and is deferral, not removal: the same files are still requested. `verify-runtime.js --all` (236 pages) and a timed before/after at 4x CPU were not run here. Features of the six modules were not exercised one by one, only "loads and nothing throws" on the 13 entrypoints. Real loading on demand (a module fetched when its trigger is first used) is the remaining lever and needs a per-module trigger table.

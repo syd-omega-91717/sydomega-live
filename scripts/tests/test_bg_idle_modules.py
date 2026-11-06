@@ -1,4 +1,4 @@
-"""Twelve ambient modules load after the page is idle, not during load (bg.js __omegaIdleAppend).
+"""Eighteen ambient modules load after the page is idle, not during load (bg.js __omegaIdleAppend).
 
 Same modules, same pages. They are inserted after `load` via requestIdleCallback (capped at 2.5 s), so they stop
 competing with first paint. __omegaAppend still de-duplicates at the moment of insertion. These tests keep the
@@ -13,6 +13,9 @@ BATCH = [
     "omega-cinematic.js", "omega-cinematic-animations-phase1.js", "omega-cinematic-animations-phase2.js",
     "omega-motion-v3.js", "omega-voice-responsive.js", "omega-voice.js", "omega-voice-sync.js", "omega-music.js",
     "omega-living-art.js", "omega-orbital-ring.js", "omega-lattice-3d.js", "omega-depth-tilt.js",
+    # second batch: engines no other file reads (no listener, observer or style at load)
+    "omega-workflow.js", "omega-passport.js", "omega-policy.js", "omega-qr.js", "omega-threat.js",
+    "omega-agent-personas-v3.js",
 ]
 
 

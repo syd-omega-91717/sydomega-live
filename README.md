@@ -100,7 +100,7 @@ Investment · Economy · Marketplace · Blockchain · Digital assets · Wallet/V
 ### Communication & services
 Communication · Social experiences · Notifications · Services · Legal · Events · Travel · Wellbeing
 
-The repository currently contains a **239-page web estate** under canonical page-contract governance.
+The repository currently contains a **236-page web estate** under canonical page-contract governance.
 
 ---
 
@@ -200,7 +200,7 @@ The current production architecture is intentionally lightweight and framework-f
 
 - GitHub
 - Repository contract and security checks
-- Vercel
+- Cloudflare Pages (production); Vercel retained for builds only
 - Explicit release and production evidence controls
 
 **Repository source and provider runtime are intentionally treated as separate evidence boundaries.**
@@ -439,7 +439,7 @@ Use provider-managed secret storage and the repository's existing security contr
 
 **Primary public platform:** [sydomega.com](https://sydomega.com)
 
-The public product is delivered through Vercel and uses Supabase for backend/data capabilities.
+The public product is served from Cloudflare Pages (project `sydomega`, since 2026-10-18; runbook: `docs/CLOUDFLARE_PAGES_CUTOVER.md`) and uses Supabase for backend/data capabilities.
 
 Production status is evidence-driven. Public documentation intentionally avoids exposing private operational state and does not substitute repository source for provider verification.
 
@@ -449,11 +449,11 @@ Production status is evidence-driven. Public documentation intentionally avoids 
 
 **Operating model:** One governed core, many domain projections
 
-**Web estate:** 239 pages under page-contract governance
+**Web estate:** 236 pages under page-contract governance
 
 **Backend model:** Supabase PostgreSQL + RLS + Edge Functions + Storage
 
-**Delivery model:** GitHub + Vercel
+**Delivery model:** GitHub → Cloudflare Pages (Vercel builds only; `vercel.json` auto-deploy is disabled)
 
 **Engineering posture:** Evidence-first, continuously hardened
 

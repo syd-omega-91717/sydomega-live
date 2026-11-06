@@ -37,6 +37,7 @@
   <button class="tab-btn" onclick="setTab('cinema')">CINEMA</button>
   <button class="tab-btn" onclick="setTab('gaming')">GAMING</button>
   <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn" data-tab="slate">SLATE</button>
 </div>
 
 <div class="tab-panel active" id="tab-overview">
@@ -124,6 +125,57 @@
   </div>
 </div>
 
+<div class="tab-panel" id="tab-slate">
+  <div class="sechead">FRANCHISE SLATE &mdash; PLANNED CONCEPTS</div>
+  <div data-no-clamp style="font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:14px;max-width:680px">The founder's planned franchise list: 22 films across 7 franchises, each paired with a game concept. Every title is a <b>concept</b> and every count is a plan: none of these has been made, or opened to members, yet. The Olympian film slate on <a href="/media.html" style="color:var(--gold)">Media</a> is a separate set.</div>
+  <div class="media-grid">
+    <div class="media-card card" data-franchise="myth-of-the-stones" style="--mc:var(--gold)">
+      <span class="media-glyph">&#9654;</span>
+      <div class="media-tag">FRANCHISE &middot; FILMS &amp; GAME</div>
+      <div class="media-title">MYTH OF THE STONES</div>
+      <div class="media-meta" data-no-clamp>FILMS (PLANNED): 5 &middot; GAME CONCEPT: ACTION RPG<br>STATUS: CONCEPT</div>
+    </div>
+    <div class="media-card card" data-franchise="wrath-of-the-gods" style="--mc:var(--crim)">
+      <span class="media-glyph">&#9655;</span>
+      <div class="media-tag">FRANCHISE &middot; FILMS &amp; GAME</div>
+      <div class="media-title">WRATH OF THE GODS</div>
+      <div class="media-meta" data-no-clamp>FILMS (PLANNED): 3 &middot; GAME CONCEPT: GOD SIMULATOR (STRATEGY)<br>STATUS: CONCEPT</div>
+    </div>
+    <div class="media-card card" data-franchise="zodiac-wars" style="--mc:var(--cyan)">
+      <span class="media-glyph">&#9876;</span>
+      <div class="media-tag">FRANCHISE &middot; FILMS &amp; GAME</div>
+      <div class="media-title">ZODIAC WARS</div>
+      <div class="media-meta" data-no-clamp>FILMS (PLANNED): 1 &middot; GAME CONCEPT: ONLINE FIGHTING RPG<br>SERIES (PLANNED): 10-EPISODE LIMITED SERIES AND A 5-SEASON SERIES<br>STATUS: CONCEPT</div>
+    </div>
+    <div class="media-card card" data-franchise="the-omega-saga" style="--mc:var(--solar)">
+      <span class="media-glyph">&#9830;</span>
+      <div class="media-tag">FRANCHISE &middot; FILMS &amp; GAME</div>
+      <div class="media-title">THE OMEGA SAGA</div>
+      <div class="media-meta" data-no-clamp>FILMS (PLANNED): 5 &middot; GAME CONCEPT: TACTICAL RPG / STRATEGY<br>STATUS: CONCEPT</div>
+    </div>
+    <div class="media-card card" data-franchise="the-sorcerer-reborn" style="--mc:#9B6BF0">
+      <span class="media-glyph">&#9974;</span>
+      <div class="media-tag">FRANCHISE &middot; FILMS &amp; GAME</div>
+      <div class="media-title">THE SORCERER REBORN</div>
+      <div class="media-meta" data-no-clamp>FILMS (PLANNED): 3 &middot; GAME CONCEPT: ACTION RPG<br>STATUS: CONCEPT</div>
+    </div>
+    <div class="media-card card" data-franchise="post-human-mind" style="--mc:var(--green)">
+      <span class="media-glyph">&#9645;</span>
+      <div class="media-tag">FRANCHISE &middot; FILMS &amp; GAME</div>
+      <div class="media-title">POST-HUMAN MIND</div>
+      <div class="media-meta" data-no-clamp>FILMS (PLANNED): 3 &middot; GAME CONCEPT: TIME-MANIPULATION RPG<br>STATUS: CONCEPT</div>
+    </div>
+    <div class="media-card card" data-franchise="aethelgard-universe" style="--mc:var(--cyan)">
+      <span class="media-glyph">&#10038;</span>
+      <div class="media-tag">FRANCHISE &middot; FILMS &amp; GAME</div>
+      <div class="media-title">AETHELGARD UNIVERSE</div>
+      <div class="media-meta" data-no-clamp>FILMS (PLANNED): 2 &middot; GAME CONCEPT: OPEN-WORLD FANTASY RPG<br>STATUS: CONCEPT</div>
+    </div>
+  </div>
+  <div class="sechead" style="margin-top:20px">ZODIAC WARS &mdash; PITCH</div>
+  <div data-no-clamp style="font-size:12px;line-height:1.8;color:var(--muted);max-width:680px">In a universe where the twelve Zodiac Gods rule entire planets and command civilizations across the Solar System, an ancient cosmic war reignites when the Solar Nexus awakens. Humanity becomes caught between Light Zodiac rulers, Shadow Zodiac counterparts, forgotten primordial guardians, and an existential force known as the Null, a self-aware collapse of reality itself. <a href="/factions.html" style="color:var(--gold)">See the Celestial Knights</a>.</div>
+</div>
+
 <div class="tab-panel" id="tab-science">
   <div class="sechead">UNIVERSE ARCHITECTURE</div>
   <div class="card-grid" data-stagger data-stagger-gap="60">
@@ -138,9 +190,11 @@
 
 <script>
 function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['overview','cinema','gaming','science'][i]===name);});
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['overview','cinema','gaming','science','slate'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
+/* No inline handler: the CSP ratchet allows none to be added. */
+document.querySelector('[data-tab="slate"]').addEventListener('click',function(){setTab('slate');});
 </script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';

@@ -1094,7 +1094,6 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js",
           "/omega-morph.js"
         ],
         "supabase_tables": [],
@@ -6026,7 +6025,6 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js",
           "/omega-govern-boot.js",
           "/omega-govern-native.js",
           "/omega-govern-product-reality.js",
@@ -11154,7 +11152,6 @@
         ],
         "scripts": [
           "/bg.js",
-          "/nav.js",
           "/omega-morph.js"
         ],
         "supabase_tables": [],
@@ -15691,10 +15688,10 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 4,
+          "buttons": 5,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 2
         },
         "media_counts": {
           "images": 0,

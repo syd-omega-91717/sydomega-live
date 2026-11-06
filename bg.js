@@ -2974,7 +2974,7 @@ setTimeout(function(){
   /* Sovereign workflow orchestration engine */
   if(!document.querySelector('script[data-omega-workflow]')){var _ow=document.createElement('script');_ow.src='/omega-workflow.js';_ow.setAttribute('data-omega-workflow','1');_ow.defer=true;__omegaAppend(_ow);}
   /* Voice interface — Web Speech API commands + TTS */
-  if(!document.querySelector('script[data-omega-voice]')){var _ov=document.createElement('script');_ov.src='/omega-voice.js';_ov.setAttribute('data-omega-voice','1');_ov.defer=true;__omegaIdleAppend(_ov);}
+  if(!document.querySelector('script[data-omega-voice]')){var _ov=document.createElement('script');_ov.src='/omega-voice.js';_ov.setAttribute('data-omega-voice','1');_ov.defer=true;__omegaAppend(_ov);}
   /* Zero Trust continuous auth guardian */
   if(!document.querySelector('script[data-omega-guardian]')){var _og=document.createElement('script');_og.src='/omega-guardian.js';_og.setAttribute('data-omega-guardian','1');_og.defer=true;__omegaAppend(_og);}
 
@@ -3122,7 +3122,7 @@ setTimeout(function(){
   if(!document.querySelector('script[data-omega-realm]')){var _orlm=document.createElement('script');_orlm.src='/omega-realm.js';_orlm.setAttribute('data-omega-realm','1');_orlm.defer=true;__omegaAppend(_orlm);}
 
   /* Generative music engine — Tone.js v14 (MIT), [data-music-toggle] to play */
-  if(!document.querySelector('script[data-omega-music]')){var _omus=document.createElement('script');_omus.src='/omega-music.js';_omus.setAttribute('data-omega-music','1');_omus.defer=true;__omegaIdleAppend(_omus);}
+  if(!document.querySelector('script[data-omega-music]')){var _omus=document.createElement('script');_omus.src='/omega-music.js';_omus.setAttribute('data-omega-music','1');_omus.defer=true;__omegaAppend(_omus);}
 
   /* Procedural SVG sigil generator — deterministic from auth/element/name */
   if(!document.querySelector('script[data-omega-sigil-gen]')){var _osig=document.createElement('script');_osig.src='/omega-sigil-gen.js';_osig.setAttribute('data-omega-sigil-gen','1');_osig.defer=true;__omegaAppend(_osig);}

@@ -44,7 +44,7 @@ multi-agent runtime" (`CLAUDE.md` §6).
 | spec | status | evidence |
 |---|---|---|
 | 9 subscription tiers $9 to $999 | **PARTLY** | tier numbers 1-9 exist (`omega-canon.js:42` `tierUnlocks`, stage names in the progression migration). The prices and the names Sydomegain / Omegasydein / Zenith were not found as a billing catalogue; checkout is held `LOCAL_ONLY` and `tokens_enabled` is `false`. Adding prices to a live Stripe product is a payments change (`CLAUDE.md` §5, §9). |
-| 729-node 9x9x9 matrix | **DIVERGES** | `vault.html` shows `12×12×9×9×9 = 104,976`; one number must win; the owner decides (not compared against `matrix.html` here). |
+| 729-node 9x9x9 matrix | **DECIDED 2026-11-06: 104,976** | The owner confirmed the matrix is 12x12x9x9x9 = **104,976**. The repo already says so: `matrix.html:222` ("The 104,976-Node Matrix"), `omega-canon.js:62-72` (asserts 104,976 at load), and `docs/IDEA_INTAKE.md:29` **rejected** "9x9x9 = 729-node matrix" on 2026-10-13. 729 is the **inner 9x9x9 cube** at each intersection (`matrix.html:267,369`, `omega-copilot.js:49`) and stays valid as that. A second lattice, nine-fold 9^5 = 59,049, also exists in the canon. The database table `omega_matrix_nodes` holds the 729 inner nodes (`config/omega-implementation-ledger.json` MATRIX-001, evidence 'verified live'); it does not store the 104,976 lattice, which is computed from the canon. Materialising 104,976 rows would be a schema and data decision, not a copy edit. Fixed here: the product catalogue and the concierge reference prompt no longer call 729 the total. |
 | 9-grade token ladder ($0.01 to $917.17) | **PRESENT in schema and pages** | `supabase/migrations/0001_omega_master_deploy.sql`, `0050_omega_payments.sql`, `income.html`, `cosmos.html` mention it. It is dormant behind `tokens_enabled=false` (`supabase/chunk_03_migrations.sql:518-527`). |
 | Founder card (name, level, credential number) | **PRESENT** | `profile.html`, `vault.html`, `sovereign-covenant.html`, `omega-user.js`. |
 
@@ -65,8 +65,7 @@ These must not be built or displayed as live. The repo's own counsel brief alrea
 
 Done in this change: this document only.
 
-Needs a decision, one PR each: (a) which agent mapping is canonical; (b) which matrix size is canonical (729 or
-104,976); (c) whether the nine tier prices go into the billing catalogue, behind a flag; (d) counsel sign-off on §5
+Needs a decision, one PR each: (a) which agent mapping is canonical; (b) ~~matrix size~~ decided: 104,976; (c) whether the nine tier prices go into the billing catalogue, behind a flag; (d) counsel sign-off on §5
 before any of it is described to members as active.
 
 Needs access: the production-facts workflow with `SUPABASE_ACCESS_TOKEN`; Cloudflare Web Analytics; rotating any real

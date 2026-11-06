@@ -64,3 +64,34 @@ and a stale navigation test failed on `main` and ran in no workflow. All fixed a
 - Go-ahead for lever 1 (the biggest) and the order of the merges in section 3.
 - Cloudflare Web Analytics, so removals and ordering can use real traffic. None exists since 2026-10-19.
 - `SUPABASE_ACCESS_TOKEN` in the `supabase-production` environment, to read production and clear the pending migrations.
+
+## 6. Where main-thread time goes (measured 2026-11-06)
+
+V8 CPU profile (`Profiler` over CDP), 390 px mobile, 4x CPU throttle, signed-in stub, local server, headless Chromium,
+6 s after `load`. **One run per page, not a median**: read the shares, not the milliseconds. Self-time by script.
+
+| script | `dashboard` | `journal` | what it is |
+|---|---|---|---|
+| `bg.js` | 993 ms (19.9%) | 635 ms (32.0%) | loader, injected CSS, ambient canvases, icon glyph loop |
+| `omega-genesis.js` | 515 ms (10.3%) | 132 ms (6.6%) | per-element atmosphere canvas (`frame`, `overscan`) |
+| `vendor/three.module.js` | 489 ms (9.8%) | not loaded | the dashboard's own 3-D mount |
+| `vendor/tsparticles-slim.js` | 361 ms (7.2%) | 273 ms (13.7%) | particle field |
+| `omega-a11y.js` | 301 ms (6.0%) | 155 ms (7.8%) | touch-target pass (`:508`) |
+| total script self-time | 4996 ms | 1988 ms | 129 / 122 scripts with samples |
+
+Inside `bg.js` on `journal`: `drawOne` (`:2512`, the animated icon glyphs) 269 ms, `core` / `starfield` / `resize`
+(the background canvas, `:1769-2009`) about 175 ms together, `applyScroll` 38 ms. Inside `omega-genesis.js`: `frame` 104 ms,
+`overscan` 62 ms.
+
+**Reading it.**
+- The cheap wins are already taken: `omega-genesis.js` draws at 30 fps and skips hidden tabs (`:118-129`), the icon loop
+  has a frame budget (`bg.js` after `drawOne`), `omega-a11y.js` caches controls it has measured (`:495-506`).
+- What is left is decoration: four animated full-viewport or per-glyph layers (`bg.js` canvases, `omega-genesis`,
+  tsparticles, the icon loop) account for roughly half of script time on a plain tracker page. Cutting one is a visual
+  decision, not a refactor: pausing the particle field off-screen, or skipping it on small screens, or dropping the
+  per-glyph `shadowBlur`.
+- Idle-loading more modules would not move this: the 15 modules `scripts/module-load-audit.py` calls SAFE are about
+  40 KB of 1,472 KB. Two attempts to defer modules already broke behaviour (`docs/fixes/2026-11-06-*`).
+- `three.js` is not a lever: `journal` loads none, `dashboard` loads it for its own mount.
+
+**Not measured.** A real phone, a real network, GPU paint cost (headless paints in software), or run-to-run noise.

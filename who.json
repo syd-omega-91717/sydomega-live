@@ -1,0 +1,1218 @@
+[
+ {
+  "mod": "/audio.js",
+  "bytes": 10585,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/i18n.js",
+  "bytes": 68761,
+  "globals": [
+   "OmegaI18n",
+   "omegaTranslate"
+  ],
+  "readers": 4,
+  "css": false
+ },
+ {
+  "mod": "/nav.js",
+  "bytes": 91845,
+  "globals": [
+   "OmegaAxis",
+   "OmegaCommandPalette"
+  ],
+  "readers": 8,
+  "css": true
+ },
+ {
+  "mod": "/omega-9d.js",
+  "bytes": 6791,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-a11y-controls.js",
+  "bytes": 5864,
+  "globals": [
+   "OmegaA11yControls"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-a11y.js",
+  "bytes": 28899,
+  "globals": [
+   "OmegaA11y"
+  ],
+  "readers": 2,
+  "css": true
+ },
+ {
+  "mod": "/omega-action-runtime.js",
+  "bytes": 3955,
+  "globals": [
+   "OmegaAction"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-actions.js",
+  "bytes": 15801,
+  "globals": [
+   "OmegaActions"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-agent-personas-v3.js",
+  "bytes": 10752,
+  "globals": [
+   "OmegaAgentPersonas"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-ai.js",
+  "bytes": 4515,
+  "globals": [
+   "OmegaAI"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-alive.js",
+  "bytes": 12365,
+  "globals": [
+   "OmegaAlive"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-ambient.js",
+  "bytes": 8194,
+  "globals": [
+   "OmegaAmbient"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-animated.js",
+  "bytes": 10798,
+  "globals": [
+   "OmegaAnimate",
+   "OmegaCountUp",
+   "OmegaLoading",
+   "OmegaParticles"
+  ],
+  "readers": 3,
+  "css": true
+ },
+ {
+  "mod": "/omega-animation-optimizer.js",
+  "bytes": 2142,
+  "globals": [
+   "OmegaAnimations"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-appearance.js",
+  "bytes": 2179,
+  "globals": [
+   "OmegaAppearance"
+  ],
+  "readers": 2,
+  "css": true
+ },
+ {
+  "mod": "/omega-archetype-motion.js",
+  "bytes": 3523,
+  "globals": [
+   "OmegaArchetypeMotion"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-archetype-surfaces.js",
+  "bytes": 10661,
+  "globals": [
+   "OmegaArchetypeSurfaces"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-archetype-system.js",
+  "bytes": 6690,
+  "globals": [
+   "OmegaArchetype"
+  ],
+  "readers": 4,
+  "css": false
+ },
+ {
+  "mod": "/omega-backdrop.js",
+  "bytes": 4272,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-bottom-stack.js",
+  "bytes": 12111,
+  "globals": [
+   "OmegaBottomStack"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-cache-optimizer.js",
+  "bytes": 2081,
+  "globals": [
+   "OmegaCache"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-canon-badge.js",
+  "bytes": 3510,
+  "globals": [
+   "OmegaCanonBadge"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-canon.js",
+  "bytes": 7559,
+  "globals": [
+   "OmegaCanon"
+  ],
+  "readers": 14,
+  "css": false
+ },
+ {
+  "mod": "/omega-capability.js",
+  "bytes": 12508,
+  "globals": [
+   "OmegaCapability"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-chart.js",
+  "bytes": 10992,
+  "globals": [
+   "OmegaChart"
+  ],
+  "readers": 3,
+  "css": false
+ },
+ {
+  "mod": "/omega-chrono.js",
+  "bytes": 13328,
+  "globals": [
+   "OmegaChrono"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-chronometer.js",
+  "bytes": 14251,
+  "globals": [
+   "OmegaChrono"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-cinematic-animations-phase3.js",
+  "bytes": 14266,
+  "globals": [
+   "OmegaPhase3"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-cinematic-system.js",
+  "bytes": 1148,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-components.js",
+  "bytes": 2718,
+  "globals": [
+   "OmegaButton"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-confetti.js",
+  "bytes": 19341,
+  "globals": [
+   "OmegaCelebrate",
+   "OmegaCelebration"
+  ],
+  "readers": 6,
+  "css": true
+ },
+ {
+  "mod": "/omega-constellation.js",
+  "bytes": 17764,
+  "globals": [
+   "OmegaConstellation"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-content.js",
+  "bytes": 7240,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-controls.js",
+  "bytes": 9810,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-copilot.js",
+  "bytes": 28720,
+  "globals": [
+   "OmegaCopilot"
+  ],
+  "readers": 2,
+  "css": true
+ },
+ {
+  "mod": "/omega-council.js",
+  "bytes": 10621,
+  "globals": [
+   "OmegaCouncil",
+   "OmegaCouncilReady"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-data-binding.js",
+  "bytes": 11119,
+  "globals": [
+   "OmegaDataBinding"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-data-runtime.js",
+  "bytes": 4116,
+  "globals": [
+   "OmegaData"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-dataguard.js",
+  "bytes": 5712,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-deemoji.js",
+  "bytes": 2826,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-demo-video.js",
+  "bytes": 15480,
+  "globals": [
+   "OmegaDemo"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-devtools.js",
+  "bytes": 2715,
+  "globals": [
+   "OmegaDevTools"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-element-motif.js",
+  "bytes": 7717,
+  "globals": [
+   "OmegaElementMotif"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-emblem-integration.js",
+  "bytes": 3864,
+  "globals": [
+   "OmegaEmblemIntegration"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-emblem-panel.js",
+  "bytes": 10918,
+  "globals": [
+   "OmegaEmblemPanel"
+  ],
+  "readers": 4,
+  "css": true
+ },
+ {
+  "mod": "/omega-emblems-catalog.js",
+  "bytes": 26105,
+  "globals": [
+   "OmegaEmblems",
+   "OmegaNav"
+  ],
+  "readers": 5,
+  "css": false
+ },
+ {
+  "mod": "/omega-emblems.js",
+  "bytes": 9044,
+  "globals": [
+   "OmegaEmblem"
+  ],
+  "readers": 8,
+  "css": true
+ },
+ {
+  "mod": "/omega-event-bus.js",
+  "bytes": 12469,
+  "globals": [
+   "OmegaBus"
+  ],
+  "readers": 6,
+  "css": false
+ },
+ {
+  "mod": "/omega-experiment.js",
+  "bytes": 6124,
+  "globals": [
+   "OmegaExperiment"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-feedback.js",
+  "bytes": 6649,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-finops.js",
+  "bytes": 6478,
+  "globals": [
+   "OmegaFinOps"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-flags.js",
+  "bytes": 6347,
+  "globals": [
+   "OmegaFlags"
+  ],
+  "readers": 2,
+  "css": true
+ },
+ {
+  "mod": "/omega-flow.js",
+  "bytes": 4978,
+  "globals": [
+   "OmegaFlow"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-function-handler.js",
+  "bytes": 750,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-gate.js",
+  "bytes": 5382,
+  "globals": [
+   "OmegaGate"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-genesis.js",
+  "bytes": 10690,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-geometry.js",
+  "bytes": 3646,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-graphify-integration.js",
+  "bytes": 14223,
+  "globals": [
+   "OmegaGraphify",
+   "OmegaGraphifyIntegration"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-guardian.js",
+  "bytes": 7424,
+  "globals": [
+   "OmegaGuardian"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-hercules.js",
+  "bytes": 11140,
+  "globals": [
+   "OmegaHercules"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-hero-wire.js",
+  "bytes": 3633,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-hover-handler.js",
+  "bytes": 1515,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-identity.js",
+  "bytes": 21151,
+  "globals": [
+   "OmegaIdentity"
+  ],
+  "readers": 4,
+  "css": true
+ },
+ {
+  "mod": "/omega-intelligence.js",
+  "bytes": 10303,
+  "globals": [
+   "OmegaIntelligence"
+  ],
+  "readers": 4,
+  "css": false
+ },
+ {
+  "mod": "/omega-keyboard.js",
+  "bytes": 12733,
+  "globals": [
+   "OmegaKeyboard"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-lattice.js",
+  "bytes": 4796,
+  "globals": [
+   "OmegaLattice"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-legal.js",
+  "bytes": 9925,
+  "globals": [
+   "OmegaLegal"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-live.js",
+  "bytes": 14360,
+  "globals": [
+   "OmegaLive"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-local-backup.js",
+  "bytes": 5923,
+  "globals": [
+   "OmegaLocalBackup"
+  ],
+  "readers": 8,
+  "css": false
+ },
+ {
+  "mod": "/omega-matrix.js",
+  "bytes": 5453,
+  "globals": [
+   "OmegaMatrix",
+   "omegaCompleteTask",
+   "omegaProgress",
+   "omegaTaskButton"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-member-state.js",
+  "bytes": 16686,
+  "globals": [
+   "OmegaMemberState"
+  ],
+  "readers": 3,
+  "css": false
+ },
+ {
+  "mod": "/omega-membership.js",
+  "bytes": 8309,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-memory.js",
+  "bytes": 7701,
+  "globals": [
+   "OmegaMemory"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-menu.js",
+  "bytes": 30682,
+  "globals": [
+   "OmegaMenu"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-metrics.js",
+  "bytes": 5097,
+  "globals": [
+   "OmegaMetrics"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-mfa-gate.js",
+  "bytes": 4159,
+  "globals": [
+   "OmegaMFAGate"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-mission-state.js",
+  "bytes": 3210,
+  "globals": [
+   "OmegaMissionState"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-monitoring.js",
+  "bytes": 3826,
+  "globals": [
+   "OmegaMetrics"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-more-info.js",
+  "bytes": 5209,
+  "globals": [
+   "OmegaMoreInfo"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-motion.js",
+  "bytes": 14182,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-nav-handler.js",
+  "bytes": 2284,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-notify.js",
+  "bytes": 9739,
+  "globals": [
+   "OmegaNotify"
+  ],
+  "readers": 16,
+  "css": true
+ },
+ {
+  "mod": "/omega-object-graph-runtime.js",
+  "bytes": 4252,
+  "globals": [
+   "OmegaObjectGraph"
+  ],
+  "readers": 4,
+  "css": false
+ },
+ {
+  "mod": "/omega-object-runtime.js",
+  "bytes": 2352,
+  "globals": [
+   "OmegaObject"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-onboard.js",
+  "bytes": 9719,
+  "globals": [
+   "OmegaOnboard"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-oss.js",
+  "bytes": 16162,
+  "globals": [
+   "OmegaOSS"
+  ],
+  "readers": 6,
+  "css": true
+ },
+ {
+  "mod": "/omega-page-emblem.js",
+  "bytes": 17794,
+  "globals": [
+   "OmegaPageEmblem"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-page-features.js",
+  "bytes": 6666,
+  "globals": [
+   "OmegaPageFeatures"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-page-world.js",
+  "bytes": 9647,
+  "globals": [
+   "OmegaPageWorld"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-particles.js",
+  "bytes": 8135,
+  "globals": [
+   "OmegaParticles"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-passport.js",
+  "bytes": 11529,
+  "globals": [
+   "OmegaPassport"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-pml.js",
+  "bytes": 9411,
+  "globals": [
+   "OmegaPMI"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-policy.js",
+  "bytes": 9524,
+  "globals": [
+   "OmegaPolicy"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-presence.js",
+  "bytes": 2277,
+  "globals": [
+   "OmegaPresence"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-progress.js",
+  "bytes": 4603,
+  "globals": [
+   "OmegaProgress"
+  ],
+  "readers": 9,
+  "css": true
+ },
+ {
+  "mod": "/omega-pwa.js",
+  "bytes": 11938,
+  "globals": [
+   "OmegaPWA"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-qr.js",
+  "bytes": 8971,
+  "globals": [
+   "OmegaQR"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-query-optimizer.js",
+  "bytes": 2174,
+  "globals": [
+   "OmegaQueryOptimizer"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-readmore.js",
+  "bytes": 7318,
+  "globals": [
+   "OmegaReadMore"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-realm.js",
+  "bytes": 5025,
+  "globals": [
+   "OmegaRealm"
+  ],
+  "readers": 7,
+  "css": false
+ },
+ {
+  "mod": "/omega-realtime.js",
+  "bytes": 13053,
+  "globals": [
+   "OmegaRealtime"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-recommend.js",
+  "bytes": 2397,
+  "globals": [
+   "OmegaRecommend"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-reminders.js",
+  "bytes": 19797,
+  "globals": [
+   "OmegaReminders"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-resilience.js",
+  "bytes": 2542,
+  "globals": [
+   "OmegaCircuitBreaker",
+   "OmegaGracefulDegrade"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-ring.js",
+  "bytes": 9473,
+  "globals": [
+   "OmegaRing"
+  ],
+  "readers": 4,
+  "css": false
+ },
+ {
+  "mod": "/omega-sculpture-dataviz.js",
+  "bytes": 5633,
+  "globals": [
+   "OmegaSculptureDataViz"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-sculpture.js",
+  "bytes": 94978,
+  "globals": [
+   "OmegaSculpture"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-sdt.js",
+  "bytes": 7600,
+  "globals": [
+   "OmegaSDT"
+  ],
+  "readers": 2,
+  "css": true
+ },
+ {
+  "mod": "/omega-search-enhanced.js",
+  "bytes": 3577,
+  "globals": [
+   "OmegaSearchEnhanced"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-search.js",
+  "bytes": 38193,
+  "globals": [
+   "OmegaSearch"
+  ],
+  "readers": 2,
+  "css": true
+ },
+ {
+  "mod": "/omega-security.js",
+  "bytes": 2851,
+  "globals": [
+   "OmegaRequestSigner",
+   "OmegaSecureStorage",
+   "OmegaSecurity"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-sense.js",
+  "bytes": 7668,
+  "globals": [
+   "OmegaSense",
+   "omegaToast"
+  ],
+  "readers": 6,
+  "css": false
+ },
+ {
+  "mod": "/omega-share-card.js",
+  "bytes": 18230,
+  "globals": [
+   "OmegaShareCard"
+  ],
+  "readers": 3,
+  "css": true
+ },
+ {
+  "mod": "/omega-share.js",
+  "bytes": 8805,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-shell.js",
+  "bytes": 12377,
+  "globals": [
+   "OmegaShell"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-sigil-gen.js",
+  "bytes": 9969,
+  "globals": [
+   "OmegaSigil"
+  ],
+  "readers": 4,
+  "css": false
+ },
+ {
+  "mod": "/omega-sign-codex.js",
+  "bytes": 2948,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-sovereign-os.js",
+  "bytes": 6903,
+  "globals": [
+   "OmegaOS"
+  ],
+  "readers": 9,
+  "css": false
+ },
+ {
+  "mod": "/omega-state.js",
+  "bytes": 6376,
+  "globals": [
+   "OmegaState"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-streak-freeze.js",
+  "bytes": 5701,
+  "globals": [
+   "OmegaStreakFreeze"
+  ],
+  "readers": 4,
+  "css": false
+ },
+ {
+  "mod": "/omega-sw-register.js",
+  "bytes": 3715,
+  "globals": [
+   "OmegaSW"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-sync-engine.js",
+  "bytes": 3134,
+  "globals": [
+   "OmegaSyncEngine"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-tab-handler.js",
+  "bytes": 1570,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-telemetry-sweep.js",
+  "bytes": 5162,
+  "globals": [
+   "OmegaTelemetrySweep",
+   "omegaSweep"
+  ],
+  "readers": 9,
+  "css": true
+ },
+ {
+  "mod": "/omega-telemetry.js",
+  "bytes": 5839,
+  "globals": [
+   "OmegaTelemetry"
+  ],
+  "readers": 13,
+  "css": false
+ },
+ {
+  "mod": "/omega-theme-elemental.js",
+  "bytes": 7421,
+  "globals": [
+   "OmegaTheme"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-threat.js",
+  "bytes": 8008,
+  "globals": [
+   "OmegaThread"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-tier-gate.js",
+  "bytes": 7793,
+  "globals": [],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-tooltip.js",
+  "bytes": 7343,
+  "globals": [
+   "OmegaTooltip"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-tour.js",
+  "bytes": 20532,
+  "globals": [
+   "OmegaTour"
+  ],
+  "readers": 0,
+  "css": true
+ },
+ {
+  "mod": "/omega-ui.js",
+  "bytes": 23680,
+  "globals": [
+   "OmegaUI"
+  ],
+  "readers": 1,
+  "css": true
+ },
+ {
+  "mod": "/omega-user.js",
+  "bytes": 11926,
+  "globals": [
+   "OmegaAuth",
+   "OmegaSign"
+  ],
+  "readers": 3,
+  "css": false
+ },
+ {
+  "mod": "/omega-value-layer.js",
+  "bytes": 4988,
+  "globals": [],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-wcag-aaa.js",
+  "bytes": 3804,
+  "globals": [
+   "OmegaA11y"
+  ],
+  "readers": 2,
+  "css": true
+ },
+ {
+  "mod": "/omega-workers.js",
+  "bytes": 12064,
+  "globals": [
+   "OmegaWorkers"
+  ],
+  "readers": 2,
+  "css": false
+ },
+ {
+  "mod": "/omega-workflow.js",
+  "bytes": 18323,
+  "globals": [
+   "OmegaWorkflow"
+  ],
+  "readers": 0,
+  "css": false
+ },
+ {
+  "mod": "/omega-world-actions.js",
+  "bytes": 2074,
+  "globals": [
+   "OmegaWorldAction"
+  ],
+  "readers": 1,
+  "css": false
+ },
+ {
+  "mod": "/omega-world-mission.js",
+  "bytes": 2957,
+  "globals": [
+   "OmegaWorldMission"
+  ],
+  "readers": 0,
+  "css": false
+ }
+]

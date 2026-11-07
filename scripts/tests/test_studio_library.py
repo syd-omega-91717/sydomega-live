@@ -91,6 +91,33 @@ class StudioLibrary(unittest.TestCase):
             self.assertIn("Authorization", src, fn)
             self.assertIn("auth.getUser()", src, fn)
 
+    def test_a_failed_profile_read_returns_only_a_fixed_shape_reason_and_logs_the_rest(self):
+        """The owner saw `UNAVAILABLE 503 profile_unavailable` with no way to learn why. The function now returns a short reason
+        (HTTP status and database error code, sanitised) and logs the real message server-side; it must never put a message or a key
+        in the response."""
+        for fn in ("studio-canon", "studio-library"):
+            src = (ROOT / "supabase" / "functions" / fn / "index.ts").read_text(encoding="utf-8")
+            self.assertIn('replace(/[^A-Za-z0-9_]/g, "").slice(0, 24)', src, fn)
+            self.assertIn("OWNER_PROFILE_READ_FAILED", src, fn)
+            self.assertIn("verdict.status === 503 && reason", src, fn)
+            # the response body carries `reason`, never `message`, and nothing from the key helpers
+            body = re.search(r"if \(!verdict\.ok\) return json\((.*?), verdict\.status", src, re.S).group(1)
+            self.assertIn("reason", body, fn)
+            self.assertNotIn("message", body, fn)
+            self.assertNotIn("adminKey", body, fn)
+            logs = re.findall(r"console\.error\((.*?)\);", src)
+            self.assertTrue(logs, fn)
+            for line in logs:
+                self.assertNotIn("adminKey", line, fn)
+                self.assertNotIn("publicKey", line, fn)
+                self.assertNotIn("Authorization", line, fn)
+
+    def test_the_pages_show_only_a_sanitised_reason(self):
+        for js in ("omega-studio-library.js", "omega-worlds.js"):
+            src = (ROOT / js).read_text(encoding="utf-8")
+            self.assertIn("e.reason = b && b.reason", src, js)
+            self.assertIn("/^[A-Za-z0-9_]{1,24}$/.test(e.reason)", src, js)
+
     def test_the_page_and_script_name_no_static_data_path(self):
         for f in ("studio-library.html", "omega-studio-library.js"):
             t = (ROOT / f).read_text(encoding="utf-8")

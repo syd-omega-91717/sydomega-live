@@ -30,7 +30,7 @@ Maps from merged slate entries: `aethelgard-universe`.
 
 ## Series
 
-**The Archives of Humanity** — 3 seasons of 8 episodes. Status: CONCEPT. No episode script exists.
+**The Archives of Humanity** — 3 seasons of 8 episodes. Status: SCRIPTS_DRAFT. Season 1 bible: `docs/studios/franchises/the-lost-civilizations/series/the-archives-of-humanity/season-1/BIBLE.md`. No episode script exists.
 
 ## Game
 
@@ -51,3 +51,4 @@ Maps from merged slate entries: `aethelgard-universe`.
 - **C-02** (name, PROPOSED_RESOLUTION): Elias Veyron is renamed Elian Veyron (decided 2026-11-07 under the founder's delegation). Elias Mercer keeps his name.
 - **C-03** (name, PROPOSED_RESOLUTION): Shared surname Ardent. Treated as one lineage: Juno is Nadia's descendant, a deliberate Convergence link.
 - **C-13** (chronology, PROPOSED_RESOLUTION): The disappearances belong to Age III but the expeditions are modern, so pharaohs and the twelve-thousand-year Accord do not clash.
+- **C-26** (lore, PROPOSED_RESOLUTION): The brief gives the surname Ardent to Nadia Ardent (The Lost Civilizations) and Juno Ardent (The Last Galactic Empire). Decision: no relation is implied in either series; a shared family is a Convergence-level reveal and must be earned by both franchises first.

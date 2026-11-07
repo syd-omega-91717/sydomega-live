@@ -91,6 +91,8 @@ Every conflict is in the registry with a resolution. On 2026-11-07 the founder d
 | C-22 | lore | Torin's timeline | Placed with the Wardens at 18, expelled at 22; the film makes him 42 and out of the order twenty years | proposed |
 | C-23 | lore | The Lamp and Torin | The Warden key carries Torin's word to the Citadel and the Lamp tells Seraphine; it never speaks to him (Lock 7) | proposed |
 | C-24 | scope | Zodiac Wars: Bloodlines shape | Keep 4 x 8, one guardian and three Houses per season; the ten-episode limited series and a Null season are not adopted | proposed |
+| C-25 | scope | Survivors of Tomorrow size and cast | 2 x 8 with Season 1 set in the Last City; Ines Calloway, Tobias Wren and Marguerite Osei are new, proposed names | proposed |
+| C-26 | lore | The surname Ardent | Nadia Ardent and Juno Ardent are not related in either series; a shared family must be earned by the Convergence | proposed |
 
 ## Standing rules
 

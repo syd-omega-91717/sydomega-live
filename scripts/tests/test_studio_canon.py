@@ -135,7 +135,7 @@ class StudioCanon(unittest.TestCase):
 
     def test_series_and_game_claims_need_their_files(self):
         bad = copy.deepcopy(REG)
-        bad["franchises"][2]["series"]["status"] = "BIBLE_DRAFT"   # the-omega-chronicles has no series bible
+        bad["franchises"][2]["series"]["bible"] = "docs/studios/no-such-series-bible.md"   # a series claiming a status whose bible file is absent
         bad["franchises"][5]["game"]["status"] = "PROTOTYPE"  # the-human-frontier has no design document
         bad["franchises"][2]["game"]["multiplayer"] = "LIVE"
         errs = " | ".join(chk.validate(bad, SLATE, PROD))
@@ -168,7 +168,7 @@ class StudioCanon(unittest.TestCase):
                 self.assertTrue((ROOT / s["bible"]).is_file(), f["id"])
             else:
                 self.assertNotIn("scripts", s, f["id"])
-        self.assertEqual(with_scripts, ["myth-of-the-stones", "zodiac-wars"])
+        self.assertEqual(with_scripts, ["myth-of-the-stones", "zodiac-wars", "the-omega-chronicles", "the-lost-civilizations", "the-last-galactic-empire", "the-human-frontier"])
 
     def test_help_exits_zero(self):
         import subprocess, sys

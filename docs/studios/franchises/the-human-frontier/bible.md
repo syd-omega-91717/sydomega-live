@@ -27,7 +27,7 @@ New to the canon. Season and episode counts were not specified.
 
 ## Series
 
-**Survivors of Tomorrow** — season and episode counts not specified. Status: CONCEPT. No episode script exists.
+**Survivors of Tomorrow** — 2 seasons of 8 episodes. Status: SCRIPTS_DRAFT. Season 1 bible: `docs/studios/franchises/the-human-frontier/series/survivors-of-tomorrow/season-1/BIBLE.md`. No episode script exists.
 
 ## Game
 
@@ -37,7 +37,10 @@ New to the canon. Season and episode counts were not specified.
 
 | Id | Name | Role | Canon status |
 |---|---|---|---|
+| `ines-calloway` | Ines Calloway | Water-board clerk who reads a number she was not meant to see | PROPOSED |
+| `tobias-wren` | Tobias Wren | Engineer on the east wall who wants a vote | PROPOSED |
+| `marguerite-osei` | Marguerite Osei | Warden of the Ledger, who kept the reserve figure low | PROPOSED |
 
 ## Recorded conflicts touching this franchise
 
-None.
+- **C-25** (scope, PROPOSED_RESOLUTION): The registry gave The Human Frontier's series, Survivors of Tomorrow, no season or episode counts. Decision under delegation: 2 seasons of 8 episodes, with Season 1 (Ration Day) set in the Last City. The registry also named no characters for this franchise, so Ines Calloway, Tobias Wren and Marguerite Osei are new, proposed names.

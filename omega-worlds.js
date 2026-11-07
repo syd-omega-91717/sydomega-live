@@ -311,6 +311,15 @@
 
   /* ---- load: only an approved session gets the canon; a refusal is shown, never swallowed into an empty page */
   function fail(msg) { var b = document.getElementById('wd-body'); b.textContent = ''; b.appendChild(h('p', { 'class': 'wd-err', role: 'alert', text: msg })); }
+  /* Why the load failed, in one short line. RESTRICTED and APPROVAL REQUIRED are the two refusals; anything else names the HTTP status and the
+     function's own error code (both are fixed server strings, shown with textContent) so UNAVAILABLE can be told apart: 404 not deployed, 5xx function, NO RESPONSE network or CORS. */
+  function why(e) {
+    if (e && e.code === 'owner_only') return 'RESTRICTED';
+    if (e && (e.status === 401 || e.status === 403)) return 'APPROVAL REQUIRED';
+    var part = e && e.status ? String(e.status) : (e && e.message === 'empty' ? 'EMPTY' : 'NO RESPONSE');
+    var code = e && typeof e.code === 'string' && /^[a-z_]{1,40}$/.test(e.code) ? ' · ' + e.code : '';
+    return 'UNAVAILABLE · ' + part + code;
+  }
   function load() {
     if (!window.OmegaSB) return Promise.reject(new Error('no client'));
     return window.OmegaSB.get().then(function (sb) { return sb.functions.invoke('studio-canon', { body: {} }); }).then(function (r) {
@@ -336,5 +345,5 @@
       else if (C && C.onReady) { clearInterval(wait); C.onReady(function () { render(); }); }
       else if (++tries > 60) { clearInterval(wait); }
     }, 100);
-  }).catch(function (e) { fail(e && e.code === 'owner_only' ? 'RESTRICTED' : (e && (e.status === 401 || e.status === 403) ? 'APPROVAL REQUIRED' : 'UNAVAILABLE')); });
+  }).catch(function (e) { fail(why(e)); });
 })();

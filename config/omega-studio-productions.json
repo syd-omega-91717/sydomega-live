@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "asOf": "2026-11-07",
+  "note": "Production records for the Studios division. A status past SCREENPLAY_DRAFT needs evidence paths to files that exist. Nothing here is released; no media or build exists for any production.",
+  "statuses": ["CONCEPT", "SCREENPLAY_DRAFT", "IN_PRODUCTION", "PUBLISHED"],
+  "productions": [
+    {
+      "id": "zodiac-wars-rise-of-aries",
+      "title": "ZODIAC WARS: THE RISE OF ARIES",
+      "franchise": "zodiac-wars",
+      "kind": "feature",
+      "sagaChapter": 1,
+      "status": "SCREENPLAY_DRAFT",
+      "approvedByOwner": false,
+      "package": "docs/studios/rise-of-aries/PACKAGE.md",
+      "screenplay": [
+        "docs/studios/rise-of-aries/ACT_1.fountain",
+        "docs/studios/rise-of-aries/ACT_2.fountain",
+        "docs/studios/rise-of-aries/ACT_3.fountain"
+      ],
+      "mediaFiles": [],
+      "release": null
+    }
+  ]
+}

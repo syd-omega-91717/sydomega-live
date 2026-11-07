@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Myth of the Stones: The Two-Hand Bridge, a five-level puzzle chapter about spans that open only when two hold them. Prototype, not a released game.">
+<title>&#937; SYD OMEGA 91717 &mdash; TWO-HAND BRIDGE</title>
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+.ob-status{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin:0 0 8px}
+.ob-row{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.ob-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);background:rgba(10,10,15,.7);border:1px solid rgba(201,168,76,.35);border-radius:3px;cursor:pointer;min-height:44px;min-width:44px;padding:8px 12px;display:inline-flex;align-items:center;justify-content:center}
+.ob-btn:hover{background:rgba(201,168,76,.18)}
+.ob-lv{padding:8px 9px;letter-spacing:1px}
+.ob-btn[aria-pressed=true].ob-lv{background:rgba(201,168,76,.22);border-color:var(--gold);color:var(--gold)}
+.ob-btn:focus-visible,#ob-canvas:focus-visible,.ob-help:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.ob-help{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-family:var(--M);font-size:16px;color:var(--gold);border:1px solid rgba(201,168,76,.45);border-radius:50%;text-decoration:none}
+.ob-info{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--M);font-size:13px;letter-spacing:2px;color:var(--ink);margin:0 0 8px}
+#ob-count{color:var(--gold)}
+#ob-stage{position:relative;width:100%;max-width:960px;display:flex;justify-content:center;background:#04050a;border:1px solid rgba(201,168,76,.28);border-radius:4px;overflow:hidden}
+#ob-canvas{display:block;flex:none;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer}
+.ob-win{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:min(280px,86%);text-align:center;background:rgba(4,5,10,.92);border:1px solid rgba(201,168,76,.55);border-radius:4px;padding:14px 18px}
+.ob-win[hidden]{display:none}
+.ob-win-h{font-family:var(--D);font-size:18px;letter-spacing:4px;color:var(--gold);margin:0 0 6px}
+.ob-win-d{font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--ink);margin:0 0 10px}
+.ob-win .ob-row{justify-content:center;margin:0}
+.ob-msg{font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--cyan);min-height:20px;margin:8px 0}
+.ob-ctrl{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-start;margin:0 0 8px}
+.ob-pad{display:none;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px);gap:6px}
+.ob-pad .ob-btn{min-width:56px;min-height:56px;padding:0;font-size:18px}
+#ob-up{grid-column:2;grid-row:1}#ob-left{grid-column:1;grid-row:2}#ob-down{grid-column:2;grid-row:2}#ob-right{grid-column:3;grid-row:2}
+@media (pointer:coarse){.ob-pad{display:grid}}
+.ob-keys{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin:0}
+@media (prefers-reduced-motion:reduce){#ob-canvas{transition:none}}
+</style>
+</head>
+<body data-page="game-origins-bridge">
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="game-origins-bridge" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">THE TWO-HAND BRIDGE<small>MYTH OF THE STONES &middot; PROTOTYPE</small></div><a class="ob-help" href="/guide.html" aria-label="Help">?</a></div>
+    <p class="ob-status" data-no-clamp>PROTOTYPE &middot; not a released game &middot; saved in this browser only</p>
+    <div id="ob-levels" class="ob-row" role="group" aria-label="Levels"></div>
+    <div class="ob-info"><span id="ob-who"></span><span id="ob-count"></span></div>
+    <div id="ob-stage">
+      <canvas id="ob-canvas" tabindex="0" role="application" aria-label="The level. Arrow keys move the active character, space swaps between the two."></canvas>
+      <div id="ob-win" class="ob-win" role="status" hidden></div>
+    </div>
+    <p id="ob-msg" class="ob-msg" role="status" aria-live="polite" data-no-clamp></p>
+    <div class="ob-ctrl">
+      <div class="ob-row">
+        <button type="button" class="ob-btn" id="ob-swap">SWAP</button>
+        <button type="button" class="ob-btn" id="ob-undo">UNDO</button>
+        <button type="button" class="ob-btn" id="ob-restart">RESTART</button>
+        <button type="button" class="ob-btn" id="ob-sound" aria-pressed="true">SOUND ON</button>
+      </div>
+      <div class="ob-pad" role="group" aria-label="Move">
+        <button type="button" class="ob-btn" id="ob-up" aria-label="Up">&uarr;</button>
+        <button type="button" class="ob-btn" id="ob-left" aria-label="Left">&larr;</button>
+        <button type="button" class="ob-btn" id="ob-down" aria-label="Down">&darr;</button>
+        <button type="button" class="ob-btn" id="ob-right" aria-label="Right">&rarr;</button>
+      </div>
+    </div>
+    <p class="ob-keys">ARROWS OR WASD MOVE &middot; SPACE SWAP &middot; Z UNDO &middot; R RESTART &middot; M SOUND &middot; 1-5 LEVEL</p>
+  </main>
+</div>
+<script src="/omega-bridge-logic.js"></script>
+<script src="/omega-bridge-game.js"></script>
+</body>
+</html>

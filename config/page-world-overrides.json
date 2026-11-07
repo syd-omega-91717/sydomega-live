@@ -172,6 +172,7 @@
     "insight": "intelligence",
     "personal-intelligence": "intelligence",
     "command-center": "genesis",
-    "game-origins": "arena"
+    "game-origins": "arena",
+    "game-origins-bridge": "arena"
   }
 }

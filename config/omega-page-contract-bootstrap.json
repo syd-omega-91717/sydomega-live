@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 239,
-  "open_task_count": 3219,
+  "page_count": 240,
+  "open_task_count": 3233,
   "pages": [
     {
       "page_id": "404",
@@ -5789,6 +5789,73 @@
         "PAGE::forge::MISSING::TRACEABILITY",
         "PAGE::forge::MISSING::TRUTH_STATES",
         "PAGE::forge::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "game-origins-bridge",
+      "path": "game-origins-bridge.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; TWO-HAND BRIDGE",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-bridge-game.js",
+          "/omega-bridge-logic.js",
+          "/omega-morph.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 8,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::game-origins-bridge::MISSING::ACCESSIBILITY",
+        "PAGE::game-origins-bridge::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::game-origins-bridge::MISSING::AUTHORIZATION",
+        "PAGE::game-origins-bridge::MISSING::DATA_SOURCES",
+        "PAGE::game-origins-bridge::MISSING::DOMAIN",
+        "PAGE::game-origins-bridge::MISSING::EVENTS",
+        "PAGE::game-origins-bridge::MISSING::FAILURE_PATHS",
+        "PAGE::game-origins-bridge::MISSING::PRIMARY_ROLE",
+        "PAGE::game-origins-bridge::MISSING::PURPOSE",
+        "PAGE::game-origins-bridge::MISSING::RESPONSIVE",
+        "PAGE::game-origins-bridge::MISSING::TASKS",
+        "PAGE::game-origins-bridge::MISSING::TRACEABILITY",
+        "PAGE::game-origins-bridge::MISSING::TRUTH_STATES",
+        "PAGE::game-origins-bridge::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

@@ -1,0 +1,9 @@
+### Studios: canon registry, validator and baseline audit (Phases A and B) (2026-11-07)
+
+**Why.** The founder's v1.0 brief lists seven franchises, 46 named characters and a seven-age chronology that overlap and partly contradict the canon merged in #1187-#1189. Measured by the new validator: six shared name tokens (kael, elias, ardent, voss, orion, ares), a frequency written as 9.17 Hz against the repository's 9.1717 Hz (`media.html`, `omega-canon.js`), the title "The Rise of Aries" used twice (a 2026 draft and the brief's ancient rebellion), and "The Twelve Houses" already being the live series title (`series.html`). Written as screenplays first, each would have forced a rewrite.
+
+**Fix.** `config/omega-studio-registry.json` (7 franchises, 26 films, 46 characters, 15 recorded conflicts), `scripts/studio-canon-check.py` (validation plus generated bibles), `docs/studios/OMEGA_STUDIOS_BASELINE_AUDIT.md`, the universe bible, seven generated franchise bibles, a visual-reference note (images not copied), and the master status register. The Rise of Aries journeyman Draven became Brannock to clear a collision.
+
+**Verified.** `python3 scripts/studio-canon-check.py` passes; `python3 -m unittest scripts.tests.test_studio_canon` passes (13 tests). The validator was shown to fail: tests plant a name collision, a bad status, an unknown age, a duplicate id and a premature PUBLISHED film, and each is caught. A recorded conflict clears a planted collision.
+
+**Not done / not verified.** Nothing is approved. Four conflicts are OPEN for the founder (C-02, C-06, C-12, C-15). Database and Storage were not inspected (no connector permission). No screenplay beyond the Rise of Aries draft exists; 24 features, about 150 episodes and four game design documents are not started. No studio pages, tables or media pipeline were built.

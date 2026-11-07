@@ -1,0 +1,975 @@
+{
+  "version": 1,
+  "canonVersion": "1.0-PROPOSED",
+  "asOf": "2026-11-07",
+  "note": "Proposed Canon v1.0 for Ω SYD OMEGA 91717 STUDIOS GLOBAL, reconciled against the canon merged in PRs #1187-#1189. Nothing here is released; every title is CONCEPT unless config/omega-studio-productions.json says otherwise. Validate with: python3 scripts/studio-canon-check.py",
+  "approvalStatuses": [
+    "PROPOSED",
+    "RECONCILED_PROPOSED",
+    "MERGED_DRAFT",
+    "REPO_CANON",
+    "FOUNDER_APPROVED"
+  ],
+  "fictionNote": "The frequency is 9.1717 Hz and the code is 91717 (the repository's established fictional motif). Both are story symbols, not scientific claims.",
+  "divisions": [
+    {
+      "id": "mythic",
+      "title": "Mythic Universe",
+      "purpose": "Ancient origins, stones, guardians and supernatural forces"
+    },
+    {
+      "id": "celestial",
+      "title": "Celestial Universe",
+      "purpose": "Zodiac houses, cosmic powers and celestial wars"
+    },
+    {
+      "id": "omega",
+      "title": "Omega Universe",
+      "purpose": "Technology, artificial intelligence and human evolution"
+    },
+    {
+      "id": "historical",
+      "title": "Historical Universe",
+      "purpose": "Lost civilizations, mysteries and ancient kingdoms"
+    },
+    {
+      "id": "galactic",
+      "title": "Galactic Universe",
+      "purpose": "Interstellar civilizations, empires and exploration"
+    },
+    {
+      "id": "human",
+      "title": "Human Universe",
+      "purpose": "Character-driven drama, politics, relationships and survival"
+    },
+    {
+      "id": "gaming",
+      "title": "Gaming Universe",
+      "purpose": "Interactive experiences connected to every franchise"
+    }
+  ],
+  "principles": [
+    {
+      "id": "matter",
+      "title": "Matter",
+      "meaning": "The physical foundation of existence"
+    },
+    {
+      "id": "energy",
+      "title": "Energy",
+      "meaning": "The force that enables transformation"
+    },
+    {
+      "id": "consciousness",
+      "title": "Consciousness",
+      "meaning": "The capacity to understand, influence and create"
+    }
+  ],
+  "ages": [
+    {
+      "id": "age-1",
+      "n": 1,
+      "title": "The First Convergence",
+      "summary": "Origins of the primordial forces, the seven stones and the earliest celestial territories"
+    },
+    {
+      "id": "age-2",
+      "n": 2,
+      "title": "The Age of Guardians",
+      "summary": "The first guardians emerge; the zodiac houses establish their order"
+    },
+    {
+      "id": "age-3",
+      "n": 3,
+      "title": "The Lost Civilizations",
+      "summary": "Ancient kingdoms find fragments of the original knowledge; several vanish trying to control it"
+    },
+    {
+      "id": "age-4",
+      "n": 4,
+      "title": "The Celestial Conflicts",
+      "summary": "The twelve houses fracture; this is the First War, ended by the Solar Accord"
+    },
+    {
+      "id": "age-5",
+      "n": 5,
+      "title": "The Galactic Expansion",
+      "summary": "Interstellar powers form alliances and empires; ancient signals are rediscovered"
+    },
+    {
+      "id": "age-6",
+      "n": 6,
+      "title": "The Omega Age",
+      "summary": "Humanity develops advanced AI and uncovers the 91717 phenomenon; the Solar Nexus wakes (saga chapter 1, 2026)"
+    },
+    {
+      "id": "age-7",
+      "n": 7,
+      "title": "The Convergence",
+      "summary": "The storylines meet and the nature of the original conflict becomes clear"
+    }
+  ],
+  "franchises": [
+    {
+      "id": "myth-of-the-stones",
+      "number": 1,
+      "title": "MYTH OF THE STONES",
+      "division": "mythic",
+      "genre": "Epic fantasy, mystery, adventure, mythology",
+      "premise": "Seven primordial stones hold fragments of an ancient power. Civilizations have fought over them for thousands of years without understanding their purpose.",
+      "films": [
+        {
+          "id": "myth-of-the-stones/the-seven-stones",
+          "title": "The Seven Stones",
+          "premise": "Discovery of the first stone and the awakening of an ancient threat",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "myth-of-the-stones/the-first-guardians",
+          "title": "The First Guardians",
+          "premise": "The origins of the seven protectors",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "myth-of-the-stones/the-forgotten-kingdom",
+          "title": "The Forgotten Kingdom",
+          "premise": "The civilization that tried to unite the stones",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "myth-of-the-stones/the-final-stone",
+          "title": "The Final Stone",
+          "premise": "The truth behind the First Convergence",
+          "status": "CONCEPT"
+        }
+      ],
+      "series": {
+        "title": "The Chronicles of the Guardians",
+        "seasons": 3,
+        "episodesPerSeason": 8
+      },
+      "game": {
+        "title": "Myth of the Stones: Origins",
+        "genre": "Third-person open-world action RPG"
+      },
+      "ages": [
+        "age-1",
+        "age-2",
+        "age-3"
+      ],
+      "mappedFrom": [
+        "myth-of-the-stones",
+        "the-sorcerer-reborn"
+      ],
+      "reconciliation": "Merged canon already places Myth of the Stones at saga chapter 5 plus prehistory, with The Sorcerer Reborn (chapter 6) as a spin-off. The seven stones sit inside the nine-element canon as a mortal taxonomy (conflict C-09).",
+      "canonStatus": "RECONCILED_PROPOSED"
+    },
+    {
+      "id": "zodiac-wars",
+      "number": 2,
+      "title": "ZODIAC WARS",
+      "division": "celestial",
+      "genre": "Cosmic fantasy, action, political drama, mythology",
+      "premise": "Twelve ancient houses keep the balance between celestial territories. Their alliance collapses when a thirteenth power emerges from a forgotten region of the cosmos.",
+      "films": [
+        {
+          "id": "zodiac-wars/the-twelve-houses",
+          "title": "The Twelve Houses",
+          "premise": "The political and celestial order is introduced",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "zodiac-wars/the-rise-of-aries",
+          "title": "The Rise of Aries",
+          "premise": "The first major rebellion",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "zodiac-wars/the-fall-of-orion",
+          "title": "The Fall of Orion",
+          "premise": "An ancient betrayal threatens the houses",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "zodiac-wars/the-celestial-war",
+          "title": "The Celestial War",
+          "premise": "The twelve houses face their greatest enemy",
+          "status": "CONCEPT"
+        }
+      ],
+      "series": {
+        "title": "Zodiac Wars: Bloodlines",
+        "seasons": 4,
+        "episodesPerSeason": 8
+      },
+      "game": {
+        "title": "Zodiac Wars: Ascension",
+        "genre": "Faction-based action RPG with possible tactical multiplayer"
+      },
+      "ages": [
+        "age-2",
+        "age-4",
+        "age-6"
+      ],
+      "mappedFrom": [
+        "zodiac-wars",
+        "wrath-of-the-gods"
+      ],
+      "reconciliation": "Merged canon: the Light rulers are the twelve Olympians; Zodiac Wars opens at saga chapter 1 (2026) with a draft screenplay, The Rise of Aries, already written. The v1.0 house leaders are treated as ancient Age IV regents. The Veiled House and the merged canon's Null and thirteenth seat are separate ideas until the founder says otherwise (C-05, C-11, C-12).",
+      "canonStatus": "RECONCILED_PROPOSED"
+    },
+    {
+      "id": "the-omega-chronicles",
+      "number": 3,
+      "title": "THE OMEGA CHRONICLES",
+      "division": "omega",
+      "genre": "Science fiction, thriller, philosophical drama, action",
+      "premise": "Humanity builds an intelligence that predicts civilization-level events. Its creators find it is answering signals that predate human civilization.",
+      "films": [
+        {
+          "id": "the-omega-chronicles/genesis-91717",
+          "title": "Genesis 91717",
+          "premise": "The discovery of the Omega signal",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-omega-chronicles/the-omega-protocol",
+          "title": "The Omega Protocol",
+          "premise": "The emergence of a new intelligence",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-omega-chronicles/the-artificial-gods",
+          "title": "The Artificial Gods",
+          "premise": "Human autonomy against machine evolution",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-omega-chronicles/the-last-intelligence",
+          "title": "The Last Intelligence",
+          "premise": "The final question of consciousness and existence",
+          "status": "CONCEPT"
+        }
+      ],
+      "series": {
+        "title": "Omega: The Human Equation",
+        "seasons": 3,
+        "episodesPerSeason": 10
+      },
+      "game": {
+        "title": "Omega: Civilization 91717",
+        "genre": "Strategic civilization-building and simulation"
+      },
+      "ages": [
+        "age-6",
+        "age-7"
+      ],
+      "mappedFrom": [
+        "the-omega-saga",
+        "post-human-mind"
+      ],
+      "reconciliation": "Merged canon maps The Omega Saga and Post-Human Mind (saga chapters 8-12) here. The AI named ORION is read as having chosen that name after the Sagittarius regent's legend (C-04).",
+      "canonStatus": "RECONCILED_PROPOSED"
+    },
+    {
+      "id": "the-lost-civilizations",
+      "number": 4,
+      "title": "THE LOST CIVILIZATIONS",
+      "division": "historical",
+      "genre": "Historical mystery, adventure, archaeological thriller",
+      "premise": "An expedition finds evidence of several advanced ancient civilizations that vanished independently but left strikingly similar records.",
+      "films": [
+        {
+          "id": "the-lost-civilizations/the-kingdom-beneath",
+          "title": "The Kingdom Beneath",
+          "premise": "A hidden civilization whose disappearance was deliberate",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-lost-civilizations/the-library-of-eternity",
+          "title": "The Library of Eternity",
+          "premise": "",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-lost-civilizations/the-forgotten-pharaohs",
+          "title": "The Forgotten Pharaohs",
+          "premise": "",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-lost-civilizations/the-last-archive",
+          "title": "The Last Archive",
+          "premise": "",
+          "status": "CONCEPT"
+        }
+      ],
+      "series": {
+        "title": "The Archives of Humanity",
+        "seasons": 3,
+        "episodesPerSeason": 8
+      },
+      "game": {
+        "title": "The Lost Kingdoms",
+        "genre": "Exploration, investigation, survival and puzzle adventure"
+      },
+      "ages": [
+        "age-3",
+        "age-6"
+      ],
+      "mappedFrom": [
+        "aethelgard-universe"
+      ],
+      "reconciliation": "Merged canon maps Aethelgard (saga chapter 7) here. The disappearances are Age III, but the expeditions are modern, which avoids a clash with the twelve-thousand-year Accord (C-13).",
+      "canonStatus": "RECONCILED_PROPOSED"
+    },
+    {
+      "id": "the-last-galactic-empire",
+      "number": 5,
+      "title": "THE LAST GALACTIC EMPIRE",
+      "division": "galactic",
+      "genre": "Space opera, military science fiction, political thriller",
+      "premise": "Interstellar civilizations form an empire to stop endless war. Generations on, the empire becomes the institution it was made to prevent.",
+      "films": [
+        {
+          "id": "the-last-galactic-empire/the-first-galactic-war",
+          "title": "The First Galactic War",
+          "premise": "Both the government and the rebellion hide the true origin of the war",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-last-galactic-empire/the-emperors-shadow",
+          "title": "The Emperor's Shadow",
+          "premise": "",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-last-galactic-empire/the-rebellion-of-worlds",
+          "title": "The Rebellion of Worlds",
+          "premise": "",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-last-galactic-empire/the-final-alliance",
+          "title": "The Final Alliance",
+          "premise": "",
+          "status": "CONCEPT"
+        }
+      ],
+      "series": {
+        "title": "Galactic Thrones",
+        "seasons": 4,
+        "episodesPerSeason": 10
+      },
+      "game": {
+        "title": "Last Galactic Empire",
+        "genre": "Grand strategy, fleet combat, multiplayer campaigns"
+      },
+      "ages": [
+        "age-5"
+      ],
+      "mappedFrom": [],
+      "reconciliation": "New to the canon. Anchored at saga chapter 11, where the 9.1717 Hz frequency is detected in seven other civilisations; the Galactic Universe runs on its own clock and meets the others there (C-14).",
+      "canonStatus": "PROPOSED"
+    },
+    {
+      "id": "the-human-frontier",
+      "number": 6,
+      "title": "THE HUMAN FRONTIER",
+      "division": "human",
+      "genre": "Survival, dystopian drama, action, political thriller",
+      "premise": "Humanity faces a run of planetary crises that make communities reconsider what civilization means.",
+      "films": [
+        {
+          "id": "the-human-frontier/the-last-city",
+          "title": "The Last City",
+          "premise": "Survivors choose between the old order and something new",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-human-frontier/beyond-the-horizon",
+          "title": "Beyond the Horizon",
+          "premise": "",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-human-frontier/a-world-reborn",
+          "title": "A World Reborn",
+          "premise": "",
+          "status": "CONCEPT"
+        }
+      ],
+      "series": {
+        "title": "Survivors of Tomorrow",
+        "seasons": null,
+        "episodesPerSeason": null
+      },
+      "game": {
+        "title": "Frontier: Rebuild Earth",
+        "genre": "Survival and settlement management"
+      },
+      "ages": [
+        "age-6",
+        "age-7"
+      ],
+      "mappedFrom": [],
+      "reconciliation": "New to the canon. Season and episode counts were not specified.",
+      "canonStatus": "PROPOSED"
+    },
+    {
+      "id": "the-convergence",
+      "number": 7,
+      "title": "THE CONVERGENCE",
+      "division": "gaming",
+      "genre": "Epic crossover, science fiction, fantasy, adventure",
+      "premise": "Events across the other six franchises reveal a shared threat. Their heroes must decide whether the civilizations can cooperate without losing their identities.",
+      "films": [
+        {
+          "id": "the-convergence/the-convergence",
+          "title": "The Convergence",
+          "premise": "The apparent universal threat is the result of civilizations repeatedly trying to monopolize one power",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-convergence/the-seven-realms",
+          "title": "The Seven Realms",
+          "premise": "",
+          "status": "CONCEPT"
+        },
+        {
+          "id": "the-convergence/omega-the-final-beginning",
+          "title": "Omega: The Final Beginning",
+          "premise": "",
+          "status": "CONCEPT"
+        }
+      ],
+      "series": {
+        "title": "The Convergence Files",
+        "seasons": null,
+        "episodesPerSeason": null
+      },
+      "game": {
+        "title": "Omega Multiverse",
+        "genre": "Interconnected exploration and cooperative adventure"
+      },
+      "ages": [
+        "age-7"
+      ],
+      "mappedFrom": [],
+      "reconciliation": "New to the canon. Crossovers must be earned by the other six franchises first. The division field is 'gaming' for the cooperative game; the film arc is cross-division.",
+      "canonStatus": "PROPOSED"
+    }
+  ],
+  "characters": [
+    {
+      "id": "auren-vale",
+      "name": "Auren Vale",
+      "franchise": "myth-of-the-stones",
+      "role": "Reluctant protagonist, descendant of the first guardians",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "lyra-thorne",
+      "name": "Lyra Thorne",
+      "franchise": "myth-of-the-stones",
+      "role": "Archaeologist who finds the first stone",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "torin-draven",
+      "name": "Torin Draven",
+      "franchise": "myth-of-the-stones",
+      "role": "Former guardian whose loyalty becomes uncertain (brief name: Kael Draven; renamed, see C-01)",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "seraphine",
+      "name": "Seraphine",
+      "franchise": "myth-of-the-stones",
+      "role": "Keeper of forbidden knowledge",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "malachar",
+      "name": "Malachar",
+      "franchise": "myth-of-the-stones",
+      "role": "Antagonist seeking to reunite the stones",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "eryndor",
+      "name": "Eryndor",
+      "franchise": "myth-of-the-stones",
+      "role": "Ancient guardian whose identity is concealed",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "ares-valorian",
+      "name": "Ares Valorian",
+      "franchise": "zodiac-wars",
+      "role": "Aries house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "tharion-voss",
+      "name": "Tharion Voss",
+      "franchise": "zodiac-wars",
+      "role": "Taurus house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "cael",
+      "name": "Cael",
+      "franchise": "zodiac-wars",
+      "role": "Gemini house leader (twin)",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "cira",
+      "name": "Cira",
+      "franchise": "zodiac-wars",
+      "role": "Gemini house leader (twin)",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "selene-maris",
+      "name": "Selene Maris",
+      "franchise": "zodiac-wars",
+      "role": "Cancer house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "leonis-aurell",
+      "name": "Leonis Aurell",
+      "franchise": "zodiac-wars",
+      "role": "Leo house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "verena-solis",
+      "name": "Verena Solis",
+      "franchise": "zodiac-wars",
+      "role": "Virgo house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "lucian-balance",
+      "name": "Lucian Balance",
+      "franchise": "zodiac-wars",
+      "role": "Libra house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "scyra-noctis",
+      "name": "Scyra Noctis",
+      "franchise": "zodiac-wars",
+      "role": "Scorpio house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "orion-vey",
+      "name": "Orion Vey",
+      "franchise": "zodiac-wars",
+      "role": "Sagittarius house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "kaelus-drakon",
+      "name": "Kaelus Drakon",
+      "franchise": "zodiac-wars",
+      "role": "Capricorn house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "aquila-neris",
+      "name": "Aquila Neris",
+      "franchise": "zodiac-wars",
+      "role": "Aquarius house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "phaedra-mir",
+      "name": "Phaedra Mir",
+      "franchise": "zodiac-wars",
+      "role": "Pisces house leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "the-veiled-house",
+      "name": "The Veiled House",
+      "franchise": "zodiac-wars",
+      "role": "Thirteenth faction, believed a myth",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "kael-marren",
+      "name": "Kael Marren",
+      "franchise": "zodiac-wars",
+      "role": "Aries Knight, Mars foundry apprentice",
+      "canonStatus": "MERGED_DRAFT",
+      "source": "docs/studios/rise-of-aries (PR #1189)"
+    },
+    {
+      "id": "adaeze-okonkwo-reyes",
+      "name": "Adaeze Okonkwo-Reyes",
+      "franchise": "zodiac-wars",
+      "role": "Libra Knight, mediator of the Balance Court",
+      "canonStatus": "MERGED_DRAFT",
+      "source": "docs/studios/rise-of-aries (PR #1189)"
+    },
+    {
+      "id": "vahn-ossara",
+      "name": "Vahn Ossara",
+      "franchise": "zodiac-wars",
+      "role": "Shadow Zodiac regent, Orla Tevane's first apprentice",
+      "canonStatus": "MERGED_DRAFT",
+      "source": "docs/studios/rise-of-aries (PR #1189)"
+    },
+    {
+      "id": "solenne-varr",
+      "name": "Solenne Varr",
+      "franchise": "zodiac-wars",
+      "role": "Pisces Knight, Neptune archivist",
+      "canonStatus": "MERGED_DRAFT",
+      "source": "docs/studios/rise-of-aries (PR #1189)"
+    },
+    {
+      "id": "ima",
+      "name": "Ima",
+      "franchise": "zodiac-wars",
+      "role": "Solenne's grandniece, eight",
+      "canonStatus": "MERGED_DRAFT",
+      "source": "docs/studios/rise-of-aries (PR #1189)"
+    },
+    {
+      "id": "orla-tevane",
+      "name": "Orla Tevane",
+      "franchise": "zodiac-wars",
+      "role": "Master of the Ares Foundry",
+      "canonStatus": "MERGED_DRAFT",
+      "source": "docs/studios/rise-of-aries (PR #1189)"
+    },
+    {
+      "id": "tamsin-okoro",
+      "name": "Tamsin Okoro",
+      "franchise": "zodiac-wars",
+      "role": "Foundry apprentice",
+      "canonStatus": "MERGED_DRAFT",
+      "source": "docs/studios/rise-of-aries (PR #1189)"
+    },
+    {
+      "id": "brannock",
+      "name": "Brannock",
+      "franchise": "zodiac-wars",
+      "role": "Foundry journeyman",
+      "canonStatus": "MERGED_DRAFT",
+      "source": "docs/studios/rise-of-aries (PR #1189)"
+    },
+    {
+      "id": "ares",
+      "name": "Ares",
+      "franchise": "zodiac-wars",
+      "role": "Light ruler of Aries and Mars",
+      "canonStatus": "REPO_CANON",
+      "source": "omega-agents.json"
+    },
+    {
+      "id": "hera",
+      "name": "Hera",
+      "franchise": "zodiac-wars",
+      "role": "Light ruler of Libra and Juno",
+      "canonStatus": "REPO_CANON",
+      "source": "omega-agents.json"
+    },
+    {
+      "id": "poseidon",
+      "name": "Poseidon",
+      "franchise": "zodiac-wars",
+      "role": "Light ruler of Pisces and Neptune",
+      "canonStatus": "REPO_CANON",
+      "source": "omega-agents.json"
+    },
+    {
+      "id": "elias-veyron",
+      "name": "Elias Veyron",
+      "franchise": "the-omega-chronicles",
+      "role": "Systems architect who finds the Omega signal",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "mira-solen",
+      "name": "Mira Solen",
+      "franchise": "the-omega-chronicles",
+      "role": "Cognitive scientist studying machine consciousness",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "orion-ai",
+      "name": "ORION",
+      "franchise": "the-omega-chronicles",
+      "role": "AI of ambiguous intent",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "cassian-rook",
+      "name": "Cassian Rook",
+      "franchise": "the-omega-chronicles",
+      "role": "Director seeking control of the discovery",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "the-architect",
+      "name": "The Architect",
+      "franchise": "the-omega-chronicles",
+      "role": "Intelligence tied to the ancient signal",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "nadia-ardent",
+      "name": "Nadia Ardent",
+      "franchise": "the-lost-civilizations",
+      "role": "Expedition leader",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "elias-mercer",
+      "name": "Elias Mercer",
+      "franchise": "the-lost-civilizations",
+      "role": "Historian and linguist",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "samir-rahal",
+      "name": "Samir Rahal",
+      "franchise": "the-lost-civilizations",
+      "role": "Field explorer",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "queen-nefara",
+      "name": "Queen Nefara",
+      "franchise": "the-lost-civilizations",
+      "role": "Historical figure whose records challenge the chronology",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "the-archivist",
+      "name": "The Archivist",
+      "franchise": "the-lost-civilizations",
+      "role": "Unknown protector of the final archive",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "aethon-iv",
+      "name": "Aethon IV",
+      "franchise": "the-last-galactic-empire",
+      "role": "Emperor",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "kaelen-voss",
+      "name": "Kaelen Voss",
+      "franchise": "the-last-galactic-empire",
+      "role": "Military strategist",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "seraya",
+      "name": "Seraya",
+      "franchise": "the-last-galactic-empire",
+      "role": "Princess and political reformer",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "admiral-threx",
+      "name": "Admiral Threx",
+      "franchise": "the-last-galactic-empire",
+      "role": "Military antagonist",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    },
+    {
+      "id": "juno-ardent",
+      "name": "Juno Ardent",
+      "franchise": "the-last-galactic-empire",
+      "role": "Leader of the independent worlds",
+      "canonStatus": "PROPOSED",
+      "source": "studio brief v1.0"
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "C-01",
+      "kind": "name",
+      "subjects": [
+        "torin-draven",
+        "kael-marren"
+      ],
+      "resolution": "The brief's 'Kael Draven' collides with Kael Marren (merged draft). The Myth of the Stones character is renamed Torin Draven; the Rise of Aries journeyman Draven became Brannock.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-02",
+      "kind": "name",
+      "subjects": [
+        "elias-veyron",
+        "elias-mercer"
+      ],
+      "resolution": "Two Elias in different franchises. Mercer keeps the name; Veyron's given name is held for the founder (suggested: Elian). Until decided, scripts must always use the full name.",
+      "status": "OPEN"
+    },
+    {
+      "id": "C-03",
+      "kind": "name",
+      "subjects": [
+        "nadia-ardent",
+        "juno-ardent"
+      ],
+      "resolution": "Shared surname Ardent. Treated as one lineage: Juno is Nadia's descendant, a deliberate Convergence link.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-04",
+      "kind": "name",
+      "subjects": [
+        "orion-vey",
+        "orion-ai"
+      ],
+      "resolution": "The AI chose the name ORION after the Sagittarius regent whose fall the ancient signal records. A deliberate echo, to be revealed in The Fall of Orion and The Omega Protocol.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-05",
+      "kind": "name",
+      "subjects": [
+        "ares-valorian",
+        "ares"
+      ],
+      "resolution": "Ares Valorian is the first Regent of Aries (Age IV), named for the god in honour. Present-day Aries is Kael Marren. The god Ares is unrelated to Valorian's person.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-06",
+      "kind": "name",
+      "subjects": [
+        "tharion-voss",
+        "kaelen-voss"
+      ],
+      "resolution": "Shared surname Voss. Held for the founder; suggested: Kaelen Voss keeps the name and the Taurus leader becomes Tharion Vorne.",
+      "status": "OPEN"
+    },
+    {
+      "id": "C-07",
+      "kind": "motif",
+      "subjects": [],
+      "resolution": "The brief says 9.17 Hz. The repository's established value is 9.1717 Hz (media.html, omega-canon.js). Canon is 9.1717 Hz everywhere.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-08",
+      "kind": "lore",
+      "subjects": [
+        "matter",
+        "energy",
+        "consciousness"
+      ],
+      "resolution": "The three principles are domains of the nine elements: Matter (Metal, Sand, Water), Energy (Fire, Wind), Consciousness (Soul); Space, Void and The All are the conditions that frame them. Proposed, needs founder approval.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-09",
+      "kind": "lore",
+      "subjects": [
+        "myth-of-the-stones"
+      ],
+      "resolution": "The seven stones are a mortal taxonomy: the guardians sorted the nine elements into seven aspects (Creation, Memory, Time, Energy, Matter, Consciousness, Balance). The mismatch is intentional and part of the mystery.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-10",
+      "kind": "chronology",
+      "subjects": [
+        "age-4",
+        "age-6"
+      ],
+      "resolution": "The merged saga runs 2026-2037 (Age VI-VII). Age IV is the First War that the Solar Accord paused twelve thousand years ago, so The Rise of Aries (2026) is the Accord's test, not the First War.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-11",
+      "kind": "title",
+      "subjects": [
+        "zodiac-wars/the-rise-of-aries"
+      ],
+      "resolution": "'The Rise of Aries' already exists as a 2026 screenplay. Valorian's ancient rebellion becomes a flashback and a possible prequel, not a second film of the same name.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-12",
+      "kind": "title",
+      "subjects": [
+        "zodiac-wars/the-twelve-houses"
+      ],
+      "resolution": "'The Twelve Houses' is already the live micro-series title (series.html). The film title is held; the founder decides whether the film or the series is renamed.",
+      "status": "OPEN"
+    },
+    {
+      "id": "C-13",
+      "kind": "chronology",
+      "subjects": [
+        "the-lost-civilizations"
+      ],
+      "resolution": "The disappearances belong to Age III but the expeditions are modern, so pharaohs and the twelve-thousand-year Accord do not clash.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-14",
+      "kind": "chronology",
+      "subjects": [
+        "the-last-galactic-empire"
+      ],
+      "resolution": "The Galactic Universe runs on its own clock and meets the others at saga chapter 11; Age V is not a human prehistory.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-15",
+      "kind": "scope",
+      "subjects": [],
+      "resolution": "The brief names 26 films, about 150 episodes and four games. Only one screenplay draft exists. The master status file tracks the gap.",
+      "status": "OPEN"
+    }
+  ]
+}

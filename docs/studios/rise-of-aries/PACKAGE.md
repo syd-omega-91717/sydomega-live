@@ -32,7 +32,7 @@ Shadows' case by design), grief, no strong language, no sexual content. Running 
 | Solenne Varr (Pisces) | Neptune archivist, 73, the Knight who tells the old story to a child | name and character proposed |
 | Ima | Solenne's grandniece, 8 | proposed |
 | Orla Tevane | Master of the Ares Foundry | proposed |
-| Tamsin Okoro, Draven | Foundry apprentice and journeyman | proposed |
+| Tamsin Okoro, Brannock | Foundry apprentice and journeyman | proposed |
 | Ares, Hera, Poseidon | Light rulers of Mars, Juno, Neptune | `omega-agents.json` / `media.html` universe III |
 | The Unbled, The Sworn, The Drowned | Shadows of Aries, Libra, Pisces | `docs/canon/zodiac-wars/BIBLE.md` |
 | Sentinel | Aries' agent persona, here the foundry perimeter and Kael's ship | `omega-agents.json`; echoes the line in `assets/series/twelve-houses-s1.json` |

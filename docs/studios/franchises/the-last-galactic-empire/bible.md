@@ -46,5 +46,5 @@ New to the canon. Anchored at saga chapter 11, where the 9.1717 Hz frequency is 
 ## Recorded conflicts touching this franchise
 
 - **C-03** (name, PROPOSED_RESOLUTION): Shared surname Ardent. Treated as one lineage: Juno is Nadia's descendant, a deliberate Convergence link.
-- **C-06** (name, OPEN): Shared surname Voss. Held for the founder; suggested: Kaelen Voss keeps the name and the Taurus leader becomes Tharion Vorne.
+- **C-06** (name, PROPOSED_RESOLUTION): The Taurus leader Tharion Voss is renamed Tharion Vorne (decided 2026-11-07 under delegation). Kaelen Voss keeps his name.
 - **C-14** (chronology, PROPOSED_RESOLUTION): The Galactic Universe runs on its own clock and meets the others at saga chapter 11; Age V is not a human prehistory.

@@ -122,7 +122,8 @@
           "id": "myth-of-the-stones/the-seven-stones",
           "title": "The Seven Stones",
           "premise": "Discovery of the first stone and the awakening of an ancient threat",
-          "status": "CONCEPT"
+          "status": "SCREENPLAY_DRAFT",
+          "production": "myth-of-the-stones-the-seven-stones"
         },
         {
           "id": "myth-of-the-stones/the-first-guardians",
@@ -174,15 +175,17 @@
       "films": [
         {
           "id": "zodiac-wars/the-twelve-houses",
-          "title": "The Twelve Houses",
+          "title": "The Thirteenth Seat",
           "premise": "The political and celestial order is introduced",
-          "status": "CONCEPT"
+          "status": "CONCEPT",
+          "formerTitle": "The Twelve Houses"
         },
         {
           "id": "zodiac-wars/the-rise-of-aries",
           "title": "The Rise of Aries",
           "premise": "The first major rebellion",
-          "status": "CONCEPT"
+          "status": "SCREENPLAY_DRAFT",
+          "production": "zodiac-wars-rise-of-aries"
         },
         {
           "id": "zodiac-wars/the-fall-of-orion",
@@ -489,9 +492,10 @@
       "id": "seraphine",
       "name": "Seraphine",
       "franchise": "myth-of-the-stones",
-      "role": "Keeper of forbidden knowledge",
+      "role": "Keeper of forbidden knowledge; in The Seven Stones she is revealed to be Eryndor, the last surviving Guardian",
       "canonStatus": "PROPOSED",
-      "source": "studio brief v1.0"
+      "source": "studio brief v1.0",
+      "aliasOf": "eryndor"
     },
     {
       "id": "malachar",
@@ -505,7 +509,7 @@
       "id": "eryndor",
       "name": "Eryndor",
       "franchise": "myth-of-the-stones",
-      "role": "Ancient guardian whose identity is concealed",
+      "role": "Ancient guardian whose true identity is concealed: she lives as Seraphine",
       "canonStatus": "PROPOSED",
       "source": "studio brief v1.0"
     },
@@ -519,11 +523,12 @@
     },
     {
       "id": "tharion-voss",
-      "name": "Tharion Voss",
+      "name": "Tharion Vorne",
       "franchise": "zodiac-wars",
       "role": "Taurus house leader",
       "canonStatus": "PROPOSED",
-      "source": "studio brief v1.0"
+      "source": "studio brief v1.0",
+      "formerName": "Tharion Voss"
     },
     {
       "id": "cael",
@@ -711,11 +716,12 @@
     },
     {
       "id": "elias-veyron",
-      "name": "Elias Veyron",
+      "name": "Elian Veyron",
       "franchise": "the-omega-chronicles",
       "role": "Systems architect who finds the Omega signal",
       "canonStatus": "PROPOSED",
-      "source": "studio brief v1.0"
+      "source": "studio brief v1.0",
+      "formerName": "Elias Veyron"
     },
     {
       "id": "mira-solen",
@@ -828,6 +834,118 @@
       "role": "Leader of the independent worlds",
       "canonStatus": "PROPOSED",
       "source": "studio brief v1.0"
+    },
+    {
+      "id": "ithren",
+      "name": "Ithren",
+      "franchise": "myth-of-the-stones",
+      "role": "Guardian of the Memory stone; Auren's ancestor; she stunned Malachar and hid the stones",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "orsolya",
+      "name": "Orsolya",
+      "franchise": "myth-of-the-stones",
+      "role": "One of the seven original Guardians",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "maevar",
+      "name": "Maevar",
+      "franchise": "myth-of-the-stones",
+      "role": "One of the seven original Guardians",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "tolun",
+      "name": "Tolun",
+      "franchise": "myth-of-the-stones",
+      "role": "One of the seven original Guardians",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "sabeth",
+      "name": "Sabeth",
+      "franchise": "myth-of-the-stones",
+      "role": "One of the seven original Guardians",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "speaker-verran",
+      "name": "Speaker Verran",
+      "franchise": "myth-of-the-stones",
+      "role": "Head of the Aurelith's Conclave who seats himself on the Loom's throne",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "liora",
+      "name": "Liora",
+      "franchise": "myth-of-the-stones",
+      "role": "Malachar's daughter, six, lost in the Sundering",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "isolde-vale",
+      "name": "Isolde Vale",
+      "franchise": "myth-of-the-stones",
+      "role": "Auren's mother, a keeper of the Guardians' line; disappeared fifteen years ago",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "hollis-reeve",
+      "name": "Hollis Reeve",
+      "franchise": "myth-of-the-stones",
+      "role": "Director of the Kharesh excavation",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "tuan-pham",
+      "name": "Tuan Pham",
+      "franchise": "myth-of-the-stones",
+      "role": "Geophysicist on the expedition",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "vesper-lund",
+      "name": "Vesper Lund",
+      "franchise": "myth-of-the-stones",
+      "role": "Malachar's lieutenant; later takes the Balance stone",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "corvin-hale",
+      "name": "Corvin Hale",
+      "franchise": "myth-of-the-stones",
+      "role": "Malachar's heavy; holds the door at the end",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "nell",
+      "name": "Nell",
+      "franchise": "myth-of-the-stones",
+      "role": "Museum colleague of Auren",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+    },
+    {
+      "id": "the-lamp",
+      "name": "The Lamp",
+      "franchise": "myth-of-the-stones",
+      "role": "The Guardian Citadel's archive intelligence",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
     }
   ],
   "conflicts": [
@@ -848,8 +966,8 @@
         "elias-veyron",
         "elias-mercer"
       ],
-      "resolution": "Two Elias in different franchises. Mercer keeps the name; Veyron's given name is held for the founder (suggested: Elian). Until decided, scripts must always use the full name.",
-      "status": "OPEN"
+      "resolution": "Elias Veyron is renamed Elian Veyron (decided 2026-11-07 under the founder's delegation). Elias Mercer keeps his name.",
+      "status": "PROPOSED_RESOLUTION"
     },
     {
       "id": "C-03",
@@ -888,8 +1006,8 @@
         "tharion-voss",
         "kaelen-voss"
       ],
-      "resolution": "Shared surname Voss. Held for the founder; suggested: Kaelen Voss keeps the name and the Taurus leader becomes Tharion Vorne.",
-      "status": "OPEN"
+      "resolution": "The Taurus leader Tharion Voss is renamed Tharion Vorne (decided 2026-11-07 under delegation). Kaelen Voss keeps his name.",
+      "status": "PROPOSED_RESOLUTION"
     },
     {
       "id": "C-07",
@@ -943,8 +1061,8 @@
       "subjects": [
         "zodiac-wars/the-twelve-houses"
       ],
-      "resolution": "'The Twelve Houses' is already the live micro-series title (series.html). The film title is held; the founder decides whether the film or the series is renamed.",
-      "status": "OPEN"
+      "resolution": "The feature film is retitled THE THIRTEENTH SEAT (decided 2026-11-07 under delegation); its id keeps the stable slug. The live micro-series keeps THE TWELVE HOUSES. The old title is kept as formerTitle.",
+      "status": "PROPOSED_RESOLUTION"
     },
     {
       "id": "C-13",
@@ -968,8 +1086,37 @@
       "id": "C-15",
       "kind": "scope",
       "subjects": [],
-      "resolution": "The brief names 26 films, about 150 episodes and four games. Only one screenplay draft exists. The master status file tracks the gap.",
-      "status": "OPEN"
+      "resolution": "Work proceeds in waves, one franchise vertical at a time (screenplay, season bible, game design document, prototype), each recorded in OMEGA_STUDIOS_MASTER_STATUS.md. The totals (26 films, about 150 episodes, 4 games) stay the target, not a claim.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-16",
+      "kind": "name",
+      "subjects": [
+        "auren-vale",
+        "isolde-vale"
+      ],
+      "resolution": "Shared surname Vale is by design: mother and son.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-17",
+      "kind": "lore",
+      "subjects": [
+        "myth-of-the-stones"
+      ],
+      "resolution": "The Seven Stones shows a nine-ring wall with seven rings inscribed and two blank, seeding the nine-element canon (C-09) without naming the missing two.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-18",
+      "kind": "motif",
+      "subjects": [
+        "ithren",
+        "solenne-varr"
+      ],
+      "resolution": "The phrase 'hold the other end' appears in The Seven Stones (Ithren) and The Rise of Aries (Solenne). Treated as a deliberate cross-franchise echo and a Convergence motif.",
+      "status": "PROPOSED_RESOLUTION"
     }
   ]
 }

@@ -20,3 +20,18 @@ silhouettes or logos.
 
 Palette to carry across: Omega gold `#C9A84C`, cyan `#00E5FF`, void `#0A0A0F` (repository tokens), with violet as the
 Myth accent. Contrast and reduced-motion rules from `CLAUDE.md` §4 apply to any in-page use.
+
+## Second batch (10 images, same rules)
+
+Also third-party and unlicensed; not copied. A screenshot of the founder's own planning chat showed the first batch matched
+to franchises. The new references:
+
+| Reference (source site) | What it shows | Direction taken | Used for |
+|---|---|---|---|
+| Orange star-wheel over a lantern city (medium.com, Akashic records) | A robed figure before a vast glowing orrery | The Loom as a nested ring orrery over a city | The Seven Stones, the Loom chamber |
+| Zodiac warriors under a sign-carved arch (20minutos.es) | Armoured house champions beneath twelve glyphs | The twelve signs on columns and an arch | The twelve sky-signs, Zodiac Wars |
+| Yellow circuit cityscape and sphere (wall.alphacoders.com) | Gold-black towers and a planet in a ring | Gold-on-black city language | Omega Chronicles |
+| **Seven coloured gems around an altar (diablo.4fansites.de, a Diablo IV page)** | Seven floating gems of different colours around a pedestal | **Nearest to The Seven Stones and from a commercial game.** The stones must not be staged as floating colour-coded gems around an altar; they sit in two-key cradles of a lattice | Guardrail only |
+| Hero ensemble in a stylised fighting-game key art (soppulse.weebly.com) | Many glossy fantasy characters | Not used: it reads as another game's character style | Avoid |
+| A figure before a glowing planet over a city (medium.com) | Lone figure, warm city, orbital debris | Scale by one human figure | Omega Chronicles, Convergence |
+| Planning-chat screenshots (not a site) | The founder's own franchise board | Confirms franchise-to-image matching | Reference |

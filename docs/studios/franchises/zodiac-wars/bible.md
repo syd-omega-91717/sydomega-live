@@ -24,8 +24,8 @@ Maps from merged slate entries: `zodiac-wars`, `wrath-of-the-gods`.
 
 | Film | Premise | Status |
 |---|---|---|
-| The Twelve Houses | The political and celestial order is introduced | CONCEPT |
-| The Rise of Aries | The first major rebellion | CONCEPT |
+| The Thirteenth Seat (formerly The Twelve Houses) | The political and celestial order is introduced | CONCEPT |
+| The Rise of Aries | The first major rebellion | SCREENPLAY_DRAFT (production `zodiac-wars-rise-of-aries`) |
 | The Fall of Orion | An ancient betrayal threatens the houses | CONCEPT |
 | The Celestial War | The twelve houses face their greatest enemy | CONCEPT |
 
@@ -42,7 +42,7 @@ Maps from merged slate entries: `zodiac-wars`, `wrath-of-the-gods`.
 | Id | Name | Role | Canon status |
 |---|---|---|---|
 | `ares-valorian` | Ares Valorian | Aries house leader | PROPOSED |
-| `tharion-voss` | Tharion Voss | Taurus house leader | PROPOSED |
+| `tharion-voss` | Tharion Vorne | Taurus house leader | PROPOSED |
 | `cael` | Cael | Gemini house leader (twin) | PROPOSED |
 | `cira` | Cira | Gemini house leader (twin) | PROPOSED |
 | `selene-maris` | Selene Maris | Cancer house leader | PROPOSED |
@@ -72,6 +72,7 @@ Maps from merged slate entries: `zodiac-wars`, `wrath-of-the-gods`.
 - **C-01** (name, PROPOSED_RESOLUTION): The brief's 'Kael Draven' collides with Kael Marren (merged draft). The Myth of the Stones character is renamed Torin Draven; the Rise of Aries journeyman Draven became Brannock.
 - **C-04** (name, PROPOSED_RESOLUTION): The AI chose the name ORION after the Sagittarius regent whose fall the ancient signal records. A deliberate echo, to be revealed in The Fall of Orion and The Omega Protocol.
 - **C-05** (name, PROPOSED_RESOLUTION): Ares Valorian is the first Regent of Aries (Age IV), named for the god in honour. Present-day Aries is Kael Marren. The god Ares is unrelated to Valorian's person.
-- **C-06** (name, OPEN): Shared surname Voss. Held for the founder; suggested: Kaelen Voss keeps the name and the Taurus leader becomes Tharion Vorne.
+- **C-06** (name, PROPOSED_RESOLUTION): The Taurus leader Tharion Voss is renamed Tharion Vorne (decided 2026-11-07 under delegation). Kaelen Voss keeps his name.
 - **C-11** (title, PROPOSED_RESOLUTION): 'The Rise of Aries' already exists as a 2026 screenplay. Valorian's ancient rebellion becomes a flashback and a possible prequel, not a second film of the same name.
-- **C-12** (title, OPEN): 'The Twelve Houses' is already the live micro-series title (series.html). The film title is held; the founder decides whether the film or the series is renamed.
+- **C-12** (title, PROPOSED_RESOLUTION): The feature film is retitled THE THIRTEENTH SEAT (decided 2026-11-07 under delegation); its id keeps the stable slug. The live micro-series keeps THE TWELVE HOUSES. The old title is kept as formerTitle.
+- **C-18** (motif, PROPOSED_RESOLUTION): The phrase 'hold the other end' appears in The Seven Stones (Ithren) and The Rise of Aries (Solenne). Treated as a deliberate cross-franchise echo and a Convergence motif.

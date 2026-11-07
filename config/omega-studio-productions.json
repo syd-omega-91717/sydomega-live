@@ -2,7 +2,12 @@
   "version": 1,
   "asOf": "2026-11-07",
   "note": "Production records for the Studios division. A status past SCREENPLAY_DRAFT needs evidence paths to files that exist. Nothing here is released; no media or build exists for any production.",
-  "statuses": ["CONCEPT", "SCREENPLAY_DRAFT", "IN_PRODUCTION", "PUBLISHED"],
+  "statuses": [
+    "CONCEPT",
+    "SCREENPLAY_DRAFT",
+    "IN_PRODUCTION",
+    "PUBLISHED"
+  ],
   "productions": [
     {
       "id": "zodiac-wars-rise-of-aries",
@@ -17,6 +22,23 @@
         "docs/studios/rise-of-aries/ACT_1.fountain",
         "docs/studios/rise-of-aries/ACT_2.fountain",
         "docs/studios/rise-of-aries/ACT_3.fountain"
+      ],
+      "mediaFiles": [],
+      "release": null
+    },
+    {
+      "id": "myth-of-the-stones-the-seven-stones",
+      "title": "MYTH OF THE STONES: THE SEVEN STONES",
+      "franchise": "myth-of-the-stones",
+      "kind": "feature",
+      "sagaChapter": null,
+      "status": "SCREENPLAY_DRAFT",
+      "approvedByOwner": false,
+      "package": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/PACKAGE.md",
+      "screenplay": [
+        "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_1.fountain",
+        "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_2.fountain",
+        "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_3.fountain"
       ],
       "mediaFiles": [],
       "release": null

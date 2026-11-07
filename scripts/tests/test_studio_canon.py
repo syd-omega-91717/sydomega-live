@@ -33,10 +33,34 @@ class StudioCanon(unittest.TestCase):
         self.assertEqual(len(REG["divisions"]), 7)
         self.assertEqual(sum(len(f["films"]) for f in REG["franchises"]), 26)
 
-    def test_every_film_is_concept_without_a_production_record(self):
+    def test_film_status_matches_its_production_record(self):
+        prod = {p["id"]: p for p in PROD["productions"]}
         for f in REG["franchises"]:
             for film in f["films"]:
-                self.assertEqual(film["status"], "CONCEPT", film["id"])
+                if film.get("production"):
+                    self.assertEqual(film["status"], prod[film["production"]]["status"], film["id"])
+                else:
+                    self.assertEqual(film["status"], "CONCEPT", film["id"])
+
+    def test_two_screenplay_drafts_are_registered(self):
+        drafts = sorted(film["id"] for f in REG["franchises"] for film in f["films"] if film["status"] == "SCREENPLAY_DRAFT")
+        self.assertEqual(drafts, ["myth-of-the-stones/the-seven-stones", "zodiac-wars/the-rise-of-aries"])
+
+    def test_renames_from_the_resolved_conflicts_are_applied(self):
+        ch = {c["id"]: c for c in REG["characters"]}
+        self.assertEqual(ch["elias-veyron"]["name"], "Elian Veyron")
+        self.assertEqual(ch["tharion-voss"]["name"], "Tharion Vorne")
+        self.assertEqual(ch["seraphine"]["aliasOf"], "eryndor")
+        titles = {film["id"]: film["title"] for f in REG["franchises"] for film in f["films"]}
+        self.assertEqual(titles["zodiac-wars/the-twelve-houses"], "The Thirteenth Seat")
+
+    def test_planted_missing_production_and_alias_are_caught(self):
+        bad = copy.deepcopy(REG)
+        bad["franchises"][0]["films"][1]["production"] = "does-not-exist"
+        bad["characters"][0]["aliasOf"] = "nobody"
+        errs = " | ".join(chk.validate(bad, SLATE, PROD))
+        self.assertIn("does not exist", errs)
+        self.assertIn("aliasOf", errs)
 
     def test_planted_name_collision_is_caught(self):
         bad = copy.deepcopy(REG)
@@ -65,8 +89,13 @@ class StudioCanon(unittest.TestCase):
 
     def test_a_film_cannot_claim_more_than_concept_without_a_production(self):
         bad = copy.deepcopy(REG)
-        bad["franchises"][0]["films"][0]["status"] = "PUBLISHED"
+        bad["franchises"][0]["films"][1]["status"] = "PUBLISHED"
         self.assertTrue(any("no production record" in e for e in chk.validate(bad, SLATE, PROD)))
+
+    def test_a_film_cannot_outrun_its_production_record(self):
+        bad = copy.deepcopy(REG)
+        bad["franchises"][0]["films"][0]["status"] = "PUBLISHED"
+        self.assertTrue(any("its production says" in e for e in chk.validate(bad, SLATE, PROD)))
 
     def test_frequency_guard_matches_only_the_short_form(self):
         self.assertTrue(chk.BAD_FREQ.search("a hum of 9.17 Hz"))

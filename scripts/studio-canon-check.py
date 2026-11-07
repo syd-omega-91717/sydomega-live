@@ -7,7 +7,7 @@ The Studios division promises one interconnected universe with no contradictory 
 (docs/studios/PLAN.md). config/omega-studio-registry.json is the single source for franchises, ages, characters and
 the recorded conflicts. This script fails when:
 
-  * an id is duplicated, malformed or points at nothing,
+  * an id is duplicated, malformed or points at nothing (including a film's production or a character's aliasOf),
   * a status is outside the vocabulary, or a film claims more than CONCEPT without evidence in
     config/omega-studio-productions.json,
   * two characters share a name token (first or last name) and no recorded conflict names both of them,
@@ -81,10 +81,20 @@ def validate(reg, slate, prod):
             reg_id(film["id"], "film")
             if not film["id"].startswith(f["id"] + "/"):
                 errs.append("%s: film id %r not under the franchise" % (f["id"], film["id"]))
-            if film["status"] != "CONCEPT":
-                p = prod_by_id.get(film.get("production", ""))
-                if not p or p["status"] == "CONCEPT":
-                    errs.append("%s claims %s with no production record" % (film["id"], film["status"]))
+            pid = film.get("production")
+            p = prod_by_id.get(pid) if pid else None
+            if film["status"] != "CONCEPT" and (not p or p["status"] == "CONCEPT"):
+                errs.append("%s claims %s with no production record" % (film["id"], film["status"]))
+            if pid and not p:
+                errs.append("%s names production %r that does not exist" % (film["id"], pid))
+            if p and p["status"] != film["status"]:
+                errs.append("%s is %s but its production says %s" % (film["id"], film["status"], p["status"]))
+            if p and p["franchise"] != f["id"]:
+                errs.append("%s: production %r belongs to franchise %r" % (film["id"], pid, p["franchise"]))
+            if p:
+                for rel in [p["package"]] + p["screenplay"]:
+                    if not (ROOT / rel).is_file():
+                        errs.append("%s: production file %s is missing" % (film["id"], rel))
     chars = reg["characters"]
     fr_ids = {f["id"] for f in reg["franchises"]}
     for c in chars:
@@ -93,6 +103,10 @@ def validate(reg, slate, prod):
             errs.append("%s: unknown franchise %r" % (c["id"], c["franchise"]))
         if c["canonStatus"] not in vocab:
             errs.append("%s: status %r outside vocabulary" % (c["id"], c["canonStatus"]))
+    char_ids = {c["id"] for c in chars}
+    for c in chars:
+        if c.get("aliasOf") and c["aliasOf"] not in char_ids:
+            errs.append("%s: aliasOf %r is not a character" % (c["id"], c["aliasOf"]))
     for c in reg["conflicts"]:
         for s in c["subjects"]:
             if s not in ids:
@@ -134,7 +148,9 @@ def render_bible(reg, f):
     if f["mappedFrom"]:
         L += ["Maps from merged slate entries: %s." % ", ".join("`%s`" % m for m in f["mappedFrom"]), ""]
     L += ["## Film slate", "", "| Film | Premise | Status |", "|---|---|---|"]
-    L += ["| %s | %s | %s |" % (x["title"], x["premise"] or "not yet written", x["status"]) for x in f["films"]]
+    L += ["| %s | %s | %s |" % (x["title"] + (" (formerly %s)" % x["formerTitle"] if x.get("formerTitle") else ""),
+                               x["premise"] or "not yet written",
+                               x["status"] + (" (production `%s`)" % x["production"] if x.get("production") else "")) for x in f["films"]]
     s = f["series"]
     cnt = "%d seasons of %d episodes" % (s["seasons"], s["episodesPerSeason"]) if s["seasons"] else "season and episode counts not specified"
     L += ["", "## Series", "", "**%s** — %s. No episode script exists." % (s["title"], cnt), "",

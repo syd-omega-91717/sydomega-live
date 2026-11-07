@@ -40,7 +40,7 @@ Maps from merged slate entries: `the-omega-saga`, `post-human-mind`.
 
 | Id | Name | Role | Canon status |
 |---|---|---|---|
-| `elias-veyron` | Elias Veyron | Systems architect who finds the Omega signal | PROPOSED |
+| `elias-veyron` | Elian Veyron | Systems architect who finds the Omega signal | PROPOSED |
 | `mira-solen` | Mira Solen | Cognitive scientist studying machine consciousness | PROPOSED |
 | `orion-ai` | ORION | AI of ambiguous intent | PROPOSED |
 | `cassian-rook` | Cassian Rook | Director seeking control of the discovery | PROPOSED |
@@ -48,5 +48,5 @@ Maps from merged slate entries: `the-omega-saga`, `post-human-mind`.
 
 ## Recorded conflicts touching this franchise
 
-- **C-02** (name, OPEN): Two Elias in different franchises. Mercer keeps the name; Veyron's given name is held for the founder (suggested: Elian). Until decided, scripts must always use the full name.
+- **C-02** (name, PROPOSED_RESOLUTION): Elias Veyron is renamed Elian Veyron (decided 2026-11-07 under the founder's delegation). Elias Mercer keeps his name.
 - **C-04** (name, PROPOSED_RESOLUTION): The AI chose the name ORION after the Sagittarius regent whose fall the ancient signal records. A deliberate echo, to be revealed in The Fall of Orion and The Omega Protocol.

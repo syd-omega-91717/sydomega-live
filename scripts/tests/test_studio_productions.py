@@ -52,6 +52,23 @@ class StudioProductions(unittest.TestCase):
             for rel in p["screenplay"]:
                 self.assertIsNone(CLAIMS.search(text(rel)), rel)
 
+    def test_no_authoring_notes_left_in_any_screenplay(self):
+        stray = re.compile(r"\b(TODO|TBD|FIXME|XXX|LOREM)\b|\?\s+NO\b")
+        for p in REG["productions"]:
+            for rel in p["screenplay"]:
+                for n, line in enumerate(text(rel).splitlines(), 1):
+                    self.assertIsNone(stray.search(line), "%s:%d %s" % (rel, n, line[:60]))
+
+    def test_canon_parity_for_the_seven_stones(self):
+        p = [x for x in REG["productions"] if x["id"] == "myth-of-the-stones-the-seven-stones"][0]
+        body = "\n".join(text(r) for r in p["screenplay"])
+        for name in ("AUREN", "LYRA", "TORIN", "SERAPHINE", "MALACHAR", "ERYNDOR"):
+            self.assertIn(name, body, name)
+        self.assertNotRegex(body, r"\bKAEL\b")
+        self.assertNotRegex(body, r"(?i)9\.17\s?Hz")
+        self.assertIn("9.1717 Hz", body)
+        self.assertGreater(len(body.split()), 14000)
+
     def test_canon_parity_for_the_rise_of_aries(self):
         body = "\n".join(text(r) for r in REG["productions"][0]["screenplay"])
         for name in ("Kael Marren", "Adaeze Okonkwo-Reyes", "Vahn Ossara"):

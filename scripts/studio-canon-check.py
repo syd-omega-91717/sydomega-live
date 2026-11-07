@@ -13,6 +13,8 @@ the recorded conflicts. This script fails when:
   * two characters share a name token (first or last name) and no recorded conflict names both of them,
   * a franchise maps from an id that is not in config/omega-franchise-slate.json,
   * a document under docs/studios writes the frequency as '9.17 Hz' instead of the canon 9.1717 Hz,
+  * a production marked approved lacks a date and a quoted note, or a FOUNDER_APPROVED character has no approved production,
+  * a series or game claims a status its bible, design document or build file does not back (multiplayer may never be claimed),
   * a generated bible differs from the registry (run with --write-bibles to refresh).
 
 USAGE
@@ -103,6 +105,28 @@ def validate(reg, slate, prod):
             errs.append("%s: unknown franchise %r" % (c["id"], c["franchise"]))
         if c["canonStatus"] not in vocab:
             errs.append("%s: status %r outside vocabulary" % (c["id"], c["canonStatus"]))
+    for pr in prod["productions"]:
+        if pr.get("approvedByOwner") and not (pr.get("approvedOn") and pr.get("approvalNote", "").strip()):
+            errs.append("production %s is approved without approvedOn and approvalNote" % pr["id"])
+    for c in chars:
+        if c["canonStatus"] == "FOUNDER_APPROVED":
+            via = prod_by_id.get(c.get("approvedVia", ""))
+            if not via or not via.get("approvedByOwner"):
+                errs.append("%s is FOUNDER_APPROVED without an approved production in approvedVia" % c["id"])
+    for f in reg["franchises"]:
+        s_, g = f["series"], f["game"]
+        if s_.get("status", "CONCEPT") not in ("CONCEPT", "BIBLE_DRAFT", "SCRIPTS_DRAFT", "IN_PRODUCTION", "PUBLISHED"):
+            errs.append("%s: series status %r" % (f["id"], s_.get("status")))
+        if s_.get("status", "CONCEPT") != "CONCEPT" and not (ROOT / s_.get("bible", "-")).is_file():
+            errs.append("%s: series status %s but its bible file is missing" % (f["id"], s_.get("status")))
+        if g.get("status", "CONCEPT") not in ("CONCEPT", "DESIGNED", "PROTOTYPE", "PLAYABLE_SLICE", "RELEASED"):
+            errs.append("%s: game status %r" % (f["id"], g.get("status")))
+        if g.get("status", "CONCEPT") in ("DESIGNED", "PROTOTYPE", "PLAYABLE_SLICE", "RELEASED") and not (ROOT / g.get("gdd", "-")).is_file():
+            errs.append("%s: game status %s but its design document is missing" % (f["id"], g.get("status")))
+        if g.get("status") in ("PROTOTYPE", "PLAYABLE_SLICE", "RELEASED") and not (ROOT / g.get("build", "-")).is_file():
+            errs.append("%s: game status %s but no build file exists" % (f["id"], g.get("status")))
+        if g.get("multiplayer", "UNAVAILABLE") != "UNAVAILABLE":
+            errs.append("%s: multiplayer may not be claimed without evidence" % f["id"])
     char_ids = {c["id"] for c in chars}
     for c in chars:
         if c.get("aliasOf") and c["aliasOf"] not in char_ids:
@@ -153,8 +177,10 @@ def render_bible(reg, f):
                                x["status"] + (" (production `%s`)" % x["production"] if x.get("production") else "")) for x in f["films"]]
     s = f["series"]
     cnt = "%d seasons of %d episodes" % (s["seasons"], s["episodesPerSeason"]) if s["seasons"] else "season and episode counts not specified"
-    L += ["", "## Series", "", "**%s** — %s. No episode script exists." % (s["title"], cnt), "",
-          "## Game", "", "**%s** — %s. No playable build exists." % (f["game"]["title"], f["game"]["genre"]), "",
+    sdoc = " Season 1 bible: `%s`." % s["bible"] if s.get("bible") else ""
+    gdoc = " Design document: `%s`." % f["game"]["gdd"] if f["game"].get("gdd") else ""
+    L += ["", "## Series", "", "**%s** — %s. Status: %s.%s No episode script exists." % (s["title"], cnt, s.get("status", "CONCEPT"), sdoc), "",
+          "## Game", "", "**%s** — %s. Status: %s.%s No playable build exists. Multiplayer: %s." % (f["game"]["title"], f["game"]["genre"], f["game"].get("status", "CONCEPT"), gdoc, f["game"].get("multiplayer", "UNAVAILABLE")), "",
           "## Characters", "", "| Id | Name | Role | Canon status |", "|---|---|---|---|"]
     L += ["| `%s` | %s | %s | %s |" % (c["id"], c["name"], c["role"], c["canonStatus"]) for c in chars]
     L += ["", "## Recorded conflicts touching this franchise", ""]

@@ -30,11 +30,11 @@ Maps from merged slate entries: `the-omega-saga`, `post-human-mind`.
 
 ## Series
 
-**Omega: The Human Equation** — 3 seasons of 10 episodes. No episode script exists.
+**Omega: The Human Equation** — 3 seasons of 10 episodes. Status: CONCEPT. No episode script exists.
 
 ## Game
 
-**Omega: Civilization 91717** — Strategic civilization-building and simulation. No playable build exists.
+**Omega: Civilization 91717** — Strategic civilization-building and simulation. Status: CONCEPT. No playable build exists. Multiplayer: UNAVAILABLE.
 
 ## Characters
 

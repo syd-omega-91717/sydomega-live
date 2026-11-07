@@ -39,6 +39,12 @@ class StudioProductions(unittest.TestCase):
             if not p["approvedByOwner"]:
                 self.assertIn("Not approved", text(p["package"]).replace("not approved", "Not approved"))
 
+    def test_an_approved_package_says_so_and_names_its_scope(self):
+        for p in REG["productions"]:
+            if p["approvedByOwner"]:
+                self.assertIn("founder-approved", text(p["package"]), p["id"])
+                self.assertRegex(p["approvalNote"], r"Scope:")
+
     def test_screenplay_is_a_screenplay_not_a_synopsis(self):
         for p in REG["productions"]:
             words = sum(len(text(rel).split()) for rel in p["screenplay"])

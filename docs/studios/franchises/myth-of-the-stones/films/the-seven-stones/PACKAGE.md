@@ -1,6 +1,6 @@
 # MYTH OF THE STONES: THE SEVEN STONES — production package (Draft 1, PROPOSED)
 
-**Status: SCREENPLAY DRAFT 1. Not approved, not produced, not released.** No footage, voice, score or artwork exists. The
+**Status: SCREENPLAY DRAFT 1, content founder-approved on 2026-11-07 (the story, the twist that Seraphine is Eryndor, and the new characters, as merged in PR #1191). Not produced, not released.** Later edits are not covered by that approval. No footage, voice, score or artwork exists. The
 screenplay is `ACT_1.fountain`, `ACT_2.fountain` and `ACT_3.fountain` (Fountain plain text), 15,259 words: roughly 80-95
 screenplay pages, a **long-form first draft that is still short of the brief's 125-140 minute target** (about 100-120 pages).
 Expanding it is item 2 in the register below.
@@ -42,7 +42,7 @@ The twelve sky-signs and the final line connect to Zodiac Wars; the map centred 
 `python3 scripts/studio-canon-check.py` passes. Frequency is 9.1717 Hz throughout. The three principles (Matter, Energy, Consciousness) and the nine-ring wall are consistent with C-08, C-09 and C-17.
 
 ## Remaining-work register
-1. Founder approval of the content, the new characters and the twist (Seraphine is Eryndor).
+1. ~~Founder approval of the content~~ done 2026-11-07 (recorded in `config/omega-studio-productions.json`).
 2. Expand to full length (about 100-120 pages): a Torin-and-Malachar flashback, a fuller Kingdom of Ash set piece, a Citadel combat sequence.
 3. Treatment, shot list, storyboards, production breakdown (not started).
 4. Eight-episode Season 1 scripts (not started).

@@ -119,6 +119,37 @@ class StudioCanon(unittest.TestCase):
             row = [l for l in bible.splitlines() if l.startswith("| %s |" % c["id"])][0]
             self.assertEqual("**open**" in row, c["status"] == "OPEN", c["id"])
 
+    def test_approval_needs_a_date_a_note_and_an_approved_production(self):
+        bad = copy.deepcopy(PROD)
+        bad["productions"][0]["approvedByOwner"] = True
+        errs = " | ".join(chk.validate(REG, SLATE, bad))
+        self.assertIn("without approvedOn and approvalNote", errs)
+        bad2 = copy.deepcopy(REG)
+        bad2["characters"][0]["canonStatus"] = "FOUNDER_APPROVED"
+        self.assertIn("FOUNDER_APPROVED without an approved production", " | ".join(chk.validate(bad2, SLATE, PROD)))
+
+    def test_seven_stones_is_approved_and_rise_of_aries_is_not(self):
+        prod = {p["id"]: p for p in PROD["productions"]}
+        self.assertTrue(prod["myth-of-the-stones-the-seven-stones"]["approvedByOwner"])
+        self.assertFalse(prod["zodiac-wars-rise-of-aries"]["approvedByOwner"])
+
+    def test_series_and_game_claims_need_their_files(self):
+        bad = copy.deepcopy(REG)
+        bad["franchises"][1]["series"]["status"] = "BIBLE_DRAFT"
+        bad["franchises"][1]["game"]["status"] = "PROTOTYPE"
+        bad["franchises"][2]["game"]["multiplayer"] = "LIVE"
+        errs = " | ".join(chk.validate(bad, SLATE, PROD))
+        self.assertIn("bible file is missing", errs)
+        self.assertIn("design document is missing", errs)
+        self.assertIn("multiplayer may not be claimed", errs)
+
+    def test_only_origins_has_a_design_document_and_no_game_is_playable(self):
+        for f in REG["franchises"]:
+            self.assertIn(f["game"]["status"], ("CONCEPT", "DESIGNED"), f["id"])
+            self.assertEqual(f["game"]["multiplayer"], "UNAVAILABLE", f["id"])
+        designed = [f["id"] for f in REG["franchises"] if f["game"]["status"] == "DESIGNED"]
+        self.assertEqual(designed, ["myth-of-the-stones"])
+
     def test_help_exits_zero(self):
         import subprocess, sys
         out = subprocess.run([sys.executable, str(ROOT / "scripts" / "studio-canon-check.py"), "--help"],

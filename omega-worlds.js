@@ -278,7 +278,15 @@
   function renderBody() {
     var box = document.getElementById('wd-body'); box.textContent = '';
     box.setAttribute('aria-labelledby', 'wd-tab-' + state.tab);
-    box.appendChild({ kings: bodyKings, city: bodyCity, pantheons: bodyPantheons, sky: bodySky, planets: bodyPlanets }[state.tab]());
+    var view;
+    switch (state.tab) {
+      case 'city': view = bodyCity(); break;
+      case 'pantheons': view = bodyPantheons(); break;
+      case 'sky': view = bodySky(); break;
+      case 'planets': view = bodyPlanets(); break;
+      default: view = bodyKings();
+    }
+    box.appendChild(view);
     if (state.tab === 'planets' && state.orbit && !reduced) loop();
   }
   function renderQuestions() {

@@ -20,6 +20,11 @@ OWNER = "omega-sculpture.js"
 # rendering owner; confirmed by grep it is the only other getContext('webgl')
 # call site in the repo besides OWNER itself.
 ALLOWED_DETECTION_FILES = {"omega-page-features.js"}
+# game-origins.html is a dedicated game page that owns exactly one renderer of its own and mounts NO sculpture
+# (no data-omega-sculpture attribute, so bg.js never injects omega-sculpture.js there): still one WebGL context per
+# page. scripts/tests/test_origins_logic.py fails if that page ever mounts a sculpture, and these two files are the
+# only exemption; the probe in omega-origins-game.js is a feature test that then falls back to a "needs WebGL" notice.
+ALLOWED_GAME_RENDERER_FILES = {"omega-origins-scene.js", "omega-origins-game.js"}
 EXTENSIONS = {".js", ".mjs", ".cjs", ".ts", ".tsx", ".html"}
 # vendor/ is self-hosted third-party code (CLAUDE.md 4: "audit.py tracks
 # them apart from root modules"). three.module.js's own source necessarily
@@ -58,7 +63,7 @@ def main(argv: list[str]) -> int:
 
         for number, line in enumerate(lines, start=1):
             if any(pattern.search(line) for pattern in PATTERNS):
-                if path.name != OWNER and path.name not in ALLOWED_DETECTION_FILES:
+                if path.name != OWNER and path.name not in ALLOWED_DETECTION_FILES and path.name not in ALLOWED_GAME_RENDERER_FILES:
                     findings.append((path.relative_to(ROOT), number, line.strip()))
 
     print(f"Scanned {scanned} source files")

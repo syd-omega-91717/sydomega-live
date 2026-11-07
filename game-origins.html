@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Myth of the Stones: Origins, Vertical Slice 0 - a 3-D prototype of one valley, one quest and one boss. Prototype, not a released game.">
+<title>&#937; SYD OMEGA 91717 &mdash; ORIGINS Slice 0</title>
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+.og-intro{font-family:var(--R);font-size:15px;line-height:1.55;color:var(--ink);max-width:70ch;margin:0 0 10px}
+.og-status{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin:0 0 12px}
+#og-stage{position:relative;width:100%;height:clamp(420px,calc(100vh - 230px),820px);background:#04050a;border:1px solid rgba(201,168,76,.28);border-radius:4px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;contain:layout paint}
+#og-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#og-stage .og-hide{display:none!important}
+#og-stage .og-hud{position:absolute;inset:0;pointer-events:none;font-family:var(--R);color:var(--ink)}
+#og-stage .og-hud button,#og-stage .og-hud .og-stick{pointer-events:auto}
+#og-stage .og-top{position:absolute;left:max(10px,62px);top:10px;display:grid;grid-template-columns:repeat(2,minmax(120px,170px));gap:5px 8px;max-width:calc(100% - 20px)}
+#og-stage .og-who{grid-column:1/-1;font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);text-shadow:0 1px 4px #000}
+#og-stage .og-bar{position:relative;height:16px;background:rgba(4,5,10,.72);border:1px solid rgba(255,255,255,.18);border-radius:2px;overflow:hidden}
+#og-stage .og-fill{position:absolute;inset:0;transform-origin:left center;transform:scaleX(1);transition:transform .12s linear}
+#og-stage .og-hp .og-fill{background:#c23b4a}#og-stage .og-st .og-fill{background:#3fae6a}#og-stage .og-wt .og-fill{background:#8a7fd1}#og-stage .og-xp .og-fill{background:#c9a84c}
+#og-stage .og-bartxt{position:relative;display:block;padding:0 6px;font-family:var(--M);font-size:12px;line-height:14px;letter-spacing:1.5px;color:#fff;text-shadow:0 1px 3px #000}
+#og-stage .og-objective{position:absolute;left:50%;top:10px;transform:translateX(-50%);max-width:min(46ch,38%);text-align:center;background:rgba(4,5,10,.6);border:1px solid rgba(201,168,76,.25);padding:6px 12px;border-radius:3px}
+#og-stage .og-objtxt{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)}
+#og-stage .og-objsub{font-size:13px;color:var(--ink);opacity:.85}
+#og-stage .og-arrow{display:none;margin-top:2px;color:var(--cyan);font-size:16px;line-height:1}
+#og-stage .og-tools{position:absolute;right:10px;top:10px;display:flex;gap:6px}
+#og-stage .og-btn,#og-stage .og-act{font-family:var(--M);letter-spacing:2px;color:var(--ink);background:rgba(4,5,10,.78);border:1px solid rgba(201,168,76,.45);border-radius:3px;cursor:pointer}
+#og-stage .og-btn{min-height:44px;padding:8px 14px;font-size:12px}
+#og-stage .og-sm{min-height:44px;min-width:44px;padding:6px 10px;font-size:12px;position:relative}
+#og-stage .og-btn:hover,#og-stage .og-act:active{background:rgba(201,168,76,.22)}
+#og-stage .og-btn:focus-visible,#og-stage .og-act:focus-visible,#og-stage .og-slot:focus-visible,#og-stage .og-skill:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+#og-stage .og-dot{display:none;position:absolute;right:3px;top:3px;width:9px;height:9px;border-radius:50%;background:var(--gold)}
+#og-stage .og-prompt{position:absolute;left:50%;bottom:22%;transform:translateX(-50%);font-family:var(--M);font-size:13px;letter-spacing:2px;color:#fff;background:rgba(4,5,10,.7);padding:6px 14px;border-radius:3px;opacity:0;transition:opacity .15s;white-space:nowrap}
+#og-stage .og-toasts{position:absolute;left:10px;bottom:10px;display:flex;flex-direction:column;gap:4px;max-width:min(60ch,60%)}
+#og-stage .og-toast{background:rgba(4,5,10,.82);border-left:3px solid var(--gold);padding:6px 10px;font-size:14px;border-radius:2px}
+#og-stage .og-floats{position:absolute;inset:0;overflow:hidden}
+#og-stage .og-float{position:absolute;font-family:var(--M);font-size:16px;font-weight:700;color:#fff;text-shadow:0 1px 4px #000;transform:translate(-50%,0);animation:og-rise .9s ease-out forwards}
+#og-stage .og-fcrit{color:var(--gold);font-size:20px}#og-stage .og-fhurt{color:#ff6b78}
+@keyframes og-rise{from{opacity:1;margin-top:0}to{opacity:0;margin-top:-34px}}
+#og-stage .og-bossbar{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:min(520px,70%);text-align:center}
+#og-stage .og-bossname{font-family:var(--D);font-size:12px;letter-spacing:4px;color:var(--gold);margin-bottom:4px}
+#og-stage .og-bosstrack{height:10px;background:rgba(4,5,10,.8);border:1px solid rgba(255,255,255,.25);overflow:hidden}
+#og-stage .og-bossfill{height:100%;background:linear-gradient(90deg,#c23b4a,#c9a84c);transform-origin:left center;transition:transform .15s linear}
+#og-stage .og-touch{position:absolute;left:0;right:0;bottom:0;height:46%;display:none}
+@media (pointer:coarse){#og-stage .og-touch{display:block}}
+#og-stage .og-stick{position:absolute;left:18px;bottom:18px;width:116px;height:116px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(4,5,10,.35);touch-action:none}
+#og-stage .og-knob{position:absolute;left:34px;top:34px;width:48px;height:48px;border-radius:50%;background:rgba(201,168,76,.55)}
+#og-stage .og-acts{position:absolute;right:12px;bottom:14px;display:grid;grid-template-columns:repeat(2,64px);gap:8px}
+#og-stage .og-act{min-width:64px;min-height:56px;font-size:12px;touch-action:none}
+#og-stage .og-act-attack{grid-column:1/-1;min-height:64px;background:rgba(201,168,76,.28)}
+#og-stage .og-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,5,10,.72);padding:12px;overflow:auto}
+#og-stage .og-sheet{width:min(560px,100%);max-height:100%;overflow:auto;background:#0a0b12;border:1px solid rgba(201,168,76,.45);border-radius:4px;padding:18px 18px 14px}
+#og-stage .og-h{margin:0 0 10px;font-family:var(--D);font-size:18px;letter-spacing:3px;color:var(--gold);font-weight:400}
+#og-stage .og-lede{font-size:16px;line-height:1.55;margin:0 0 12px}
+#og-stage .og-note{font-family:var(--M);font-size:12px;line-height:1.6;letter-spacing:1px;color:var(--muted);margin:0 0 10px}
+#og-stage .og-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+#og-stage .og-col{display:flex;flex-direction:column;gap:8px}
+#og-stage .og-big{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;width:100%}
+#og-stage .og-big span{font-family:var(--R);font-size:14px;letter-spacing:0;color:var(--muted)}
+#og-stage .og-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#og-stage .og-slot{min-height:56px;padding:4px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.18);border-radius:3px;cursor:pointer}
+#og-stage .og-slot.og-empty{opacity:.45;cursor:default}
+#og-stage .og-eq{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+#og-stage .og-list{display:flex;flex-direction:column;gap:6px}
+#og-stage .og-skill{display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 12px;min-height:44px;color:var(--ink);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.18);border-radius:3px;cursor:pointer;font-family:var(--R);font-size:14px}
+#og-stage .og-skill:disabled{opacity:.5;cursor:default}
+#og-stage .og-skill b{font-family:var(--M);font-size:12px;letter-spacing:2px;font-weight:400;color:var(--gold)}
+#og-stage .og-keyrow{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+#og-stage .og-keyrow b{font-family:var(--M);font-size:12px;letter-spacing:1.5px;font-weight:400;color:var(--gold)}
+#og-stage .og-opt{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px}
+#og-stage .og-opt input{width:20px;height:20px}
+#og-stage .og-select{margin-left:auto;min-height:40px;background:#04050a;color:var(--ink);border:1px solid rgba(201,168,76,.45);border-radius:3px;font-family:var(--M);padding:0 8px}
+#og-stage .og-dialogue{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);width:min(620px,92%);background:rgba(4,5,10,.9);border:1px solid rgba(201,168,76,.45);border-radius:4px;padding:12px 16px;pointer-events:auto}
+#og-stage .og-dialogue b{display:block;font-family:var(--M);font-size:12px;letter-spacing:3px;font-weight:400;color:var(--gold);margin-bottom:4px}
+#og-stage .og-dialogue p{margin:0 0 8px;font-size:16px;line-height:1.5}
+#og-stage.og-hurt::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 90px 10px rgba(194,59,74,.65)}
+#og-stage.og-large .og-bartxt,#og-stage.og-large .og-toast,#og-stage.og-large .og-objsub,#og-stage.og-large .og-dialogue p,#og-stage.og-large .og-note{font-size:17px}
+#og-stage.og-contrast .og-bar{border-color:#fff}
+@media(max-width:700px){
+  #og-stage{height:clamp(420px,calc(100vh - 200px),760px)}
+  #og-stage .og-top{grid-template-columns:repeat(2,minmax(96px,1fr));left:62px;top:8px;right:8px;max-width:none}
+  #og-stage .og-objective{top:auto;bottom:calc(46% + 6px);max-width:86%}
+  #og-stage .og-tools{top:auto;bottom:calc(46% + 58px);right:8px}
+  #og-stage .og-toasts{display:none}
+  #og-stage .og-dialogue{bottom:48%}
+  #og-stage .og-prompt{bottom:50%}
+  #og-stage .og-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(prefers-reduced-motion:reduce){#og-stage .og-float{animation:none;opacity:0}#og-stage .og-fill,#og-stage .og-bossfill{transition:none}}
+</style>
+</head>
+<body data-page="game-origins">
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="game-origins" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">MYTH OF THE STONES: ORIGINS<small>Vertical Slice 0 &middot; PROTOTYPE &middot; The Forgotten Valley</small></div></div>
+    <p class="og-status">PROTOTYPE &mdash; one valley, one quest, one boss. Not a released game. Saved in this browser only.</p>
+    <p class="og-intro">Play Auren Vale in &ldquo;The Hum in the Valley&rdquo;. Follow the sound to the shrine, hold the encounter, wake the stone and face the Unfinished Guardian. Every graphic and sound is generated in code. Needs a browser with WebGL.</p>
+    <div id="og-stage"><canvas id="og-canvas" aria-label="3-D view of the Forgotten Valley" role="img"></canvas></div>
+  </main>
+</div>
+<script src="/omega-origins-logic.js"></script>
+<script src="/omega-origins-audio.js"></script>
+<script src="/omega-origins-scene.js"></script>
+<script src="/omega-origins-ui.js"></script>
+<script src="/omega-origins-game.js"></script>
+</body>
+</html>

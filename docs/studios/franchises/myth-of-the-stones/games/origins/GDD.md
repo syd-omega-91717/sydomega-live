@@ -19,11 +19,11 @@ EXPLORE (regions, temples, ruins) → INVESTIGATE (records, artifacts, memory-re
 (enemies, guardians, bosses) → EVOLVE (abilities, gear, reputation, world state). One loop minute to minute; one region arc per hour.
 
 ## 3. Technical architecture (what actually fits this repository)
-- **No build step, no framework, no CDN** (CLAUDE.md §§4, 9). Plain ES modules on an HTML `<canvas>` served as static files, loaded by one page.
-- **2D top-down for Vertical Slice 0.** True 3D third-person is out of scope for now. The vendored three.js (CLAUDE.md §4) is a later option, not a promise.
-- **Layout (proposed, not created):** `game-origins.html` (page), `omega-origins-core.js` (loop, input, time step), `omega-origins-world.js`, `omega-origins-combat.js`, `omega-origins-items.js`, `omega-origins-progress.js`, `omega-origins-ai.js`, `omega-origins-save.js`, `omega-origins-ui.js`, `omega-origins-audio.js`. Each pure-logic module exports plain functions so it can be tested without a browser.
+- **No build step, no framework, no CDN** (CLAUDE.md §§4, 9). Classic scripts served as static files, loaded by one page.
+- **3-D third-person for Vertical Slice 0 (decision of 2026-11-07, replacing the earlier 2-D plan).** Real-time geometry on the vendored three.js r160 (`/vendor/three.module.js`, the same dynamic import `omega-sculpture.js` uses): low-poly flat-shaded terrain, a physically lit shrine, instanced trees and rocks, bloom-free but PMREM-lit materials, ACES tone mapping, a follow camera. If WebGL is missing the page says so; there is no 2-D fallback game.
+- **Layout (built):** `game-origins.html` (page and CSS), `omega-origins-logic.js` (all rules as pure functions, UMD so Node can test them: damage, level curve, inventory, quest chain, enemy state machine, save serialise/migrate/checksum), `omega-origins-scene.js` (three.js world), `omega-origins-game.js` (loop, input, combat, AI, quest flow, saves), `omega-origins-ui.js` (HUD, touch controls, sheets), `omega-origins-audio.js` (synthesised sound).
 - **Page contract:** loads `bg.js`; added to `nav.js` (`PS` and `SECTIONS`); no inline event handlers (CSP ratchet); every Supabase write checks `.error` (CLAUDE.md §9); reduced-motion honoured.
-- **Art and audio are original and procedural.** Sprites are drawn in code or authored originals; sound is synthesised with the Web Audio API (the 9.1717 Hz hum as a quiet sine under the soundscape). No third-party artwork or sound is copied (see `docs/studios/canon/VISUAL_REFERENCES.md`).
+- **Art and audio are original and procedural.** Every mesh is built in code from primitives; sound is synthesised with the Web Audio API (the 9.1717 Hz hum as a quiet sine under the soundscape). No third-party artwork or sound is copied (see `docs/studios/canon/VISUAL_REFERENCES.md`).
 - **Time step:** fixed 60 Hz simulation, render interpolated; deterministic given a seed so tests can replay a fight.
 
 ## 4. Playable characters
@@ -105,9 +105,9 @@ Forgotten Valley (64 x 64 tiles), one playable character (Auren), one complete q
 Pure systems (damage, loot rolls, level curve, save migration, FSM transitions) are written as functions and tested with seeded replays.
 
 ## 19. Risks and honest estimate
-A 2D slice of this scope is a few focused weeks for one engineer; the full open-world game is years. The biggest risks: scope creep toward 3D, art volume, and combat feel, which only play-testing can settle. Nothing here has been play-tested.
+The slice is built (see section 18) but has only been run by a scripted bot in headless Chromium on software rendering; the full open-world game is years of work. The biggest risks are art volume (every mesh here is primitive geometry, far below the mood references), combat feel and balance, which only human play-testing can settle, and real-device performance, which is unmeasured. No person has play-tested it.
 
 ## 20. Open questions for the founder
-1. Is a 2D top-down prototype acceptable as the first playable, with 3D as a later phase?
+1. (Answered by delegation, 2026-11-07: the first prototype is 3-D.) Is the primitive-geometry art direction acceptable for the slice, or should it wait for authored models?
 2. Should the player-created guardian be in Slice 0 or later?
 3. Is browser-only saving acceptable for the first release, with server saves later?

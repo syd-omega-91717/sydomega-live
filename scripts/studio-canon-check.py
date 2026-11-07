@@ -180,7 +180,7 @@ def render_bible(reg, f):
     sdoc = " Season 1 bible: `%s`." % s["bible"] if s.get("bible") else ""
     gdoc = " Design document: `%s`." % f["game"]["gdd"] if f["game"].get("gdd") else ""
     L += ["", "## Series", "", "**%s** — %s. Status: %s.%s No episode script exists." % (s["title"], cnt, s.get("status", "CONCEPT"), sdoc), "",
-          "## Game", "", "**%s** — %s. Status: %s.%s No playable build exists. Multiplayer: %s." % (f["game"]["title"], f["game"]["genre"], f["game"].get("status", "CONCEPT"), gdoc, f["game"].get("multiplayer", "UNAVAILABLE")), "",
+          "## Game", "", "**%s** — %s. Status: %s.%s %s Multiplayer: %s." % (f["game"]["title"], f["game"]["genre"], f["game"].get("status", "CONCEPT"), gdoc, ("Prototype build: `%s` (Vertical Slice 0 only; not a released game)." % f["game"]["build"]) if f["game"].get("build") else "No playable build exists.", f["game"].get("multiplayer", "UNAVAILABLE")), "",
           "## Characters", "", "| Id | Name | Role | Canon status |", "|---|---|---|---|"]
     L += ["| `%s` | %s | %s | %s |" % (c["id"], c["name"], c["role"], c["canonStatus"]) for c in chars]
     L += ["", "## Recorded conflicts touching this franchise", ""]

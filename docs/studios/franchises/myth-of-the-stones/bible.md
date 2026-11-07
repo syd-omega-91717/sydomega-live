@@ -35,7 +35,7 @@ Maps from merged slate entries: `myth-of-the-stones`, `the-sorcerer-reborn`.
 
 ## Game
 
-**Myth of the Stones: Origins** — Third-person open-world action RPG. Status: DESIGNED. Design document: `docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md`. No playable build exists. Multiplayer: UNAVAILABLE.
+**Myth of the Stones: Origins** — Third-person open-world action RPG. Status: PROTOTYPE. Design document: `docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md`. Prototype build: `game-origins.html` (Vertical Slice 0 only; not a released game). Multiplayer: UNAVAILABLE.
 
 ## Characters
 

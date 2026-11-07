@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Ω Studios Worlds: the thrones, places, pantheons, sky and planets of the Studios canon, each marked with how much of it is actually decided.">
+<title>&#937; SYD OMEGA 91717 &mdash; WORLDS</title>
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+.wd-lead{font-family:var(--R);font-size:15px;line-height:1.55;color:var(--ink);max-width:72ch;margin:0 0 10px}
+.wd-truth{font-family:var(--M);font-size:12px;line-height:1.7;letter-spacing:1px;color:var(--muted);max-width:90ch;margin:0 0 14px;padding:8px 12px;border-left:3px solid var(--gold);background:rgba(10,10,15,.55)}
+.wd-bar{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.wd-tab,.wd-chip,.wd-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);background:rgba(10,10,15,.7);border:1px solid rgba(201,168,76,.35);border-radius:3px;cursor:pointer;min-height:44px;padding:8px 14px}
+.wd-tab[aria-selected=true],.wd-chip[aria-pressed=true],.wd-btn[aria-pressed=true]{background:rgba(201,168,76,.22);border-color:var(--gold);color:var(--gold)}
+.wd-tab:focus-visible,.wd-chip:focus-visible,.wd-btn:focus-visible,.wd-card:focus-visible,.wd-link:focus-visible,.wd-body:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.wd-btn[disabled]{opacity:.5;cursor:not-allowed}
+.wd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 16px}
+.wd-card{position:relative;cursor:pointer;padding:12px 14px;border:1px solid rgba(255,255,255,.12);background:rgba(10,10,15,.6);border-radius:3px}
+.wd-card[aria-current=true]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+.wd-card.wd-open{border-style:dashed}
+.wd-name{font-family:var(--D);font-size:15px;letter-spacing:2px;color:var(--ink);margin:6px 0 4px}
+.wd-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin:0 0 6px}
+.wd-note{font-family:var(--R);font-size:14px;line-height:1.5;color:var(--ink);opacity:.9;margin:0}
+.wd-badge{display:inline-block;font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid currentColor;border-radius:2px;line-height:1.5}
+.wd-s-FOUNDER_APPROVED{color:#5fd18a}.wd-s-REPO_CANON{color:#e2c86d}.wd-s-MERGED_DRAFT,.wd-s-RECONCILED_PROPOSED{color:#4fe3ff}.wd-s-PROPOSED{color:#b69cff}.wd-s-OPEN{color:#ff9a9a}
+.wd-detail{border:1px solid rgba(201,168,76,.35);background:rgba(10,10,15,.7);border-radius:3px;padding:14px 16px;margin:0 0 16px}
+.wd-detail h2{font-family:var(--D);font-size:18px;letter-spacing:3px;color:var(--gold);font-weight:400;margin:0 0 6px}
+.wd-detail h3{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);font-weight:400;margin:12px 0 4px}
+.wd-detail ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.wd-src{font-family:var(--M);font-size:12px;color:var(--muted);word-break:break-all}
+.wd-link{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);background:rgba(10,10,15,.8);border:1px solid rgba(0,229,255,.4);border-radius:3px;cursor:pointer;min-height:36px;padding:6px 10px}
+.wd-link:hover{background:rgba(0,229,255,.14)}
+.wd-stage{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin:0 0 16px}
+@media (min-width:900px){.wd-stage{grid-template-columns:minmax(0,640px) minmax(0,1fr)}}
+.wd-svg{width:100%;height:auto;max-width:640px;background:#04050a;border:1px solid rgba(201,168,76,.28);border-radius:4px;display:block}
+.wd-svg text{font-family:var(--M);fill:#d8dbe6;font-size:12px;paint-order:stroke;stroke:#04050a;stroke-width:3px}
+.wd-svg .wd-hit{cursor:pointer}
+.wd-svg .wd-hit:focus-visible{outline:none}
+.wd-svg .wd-hit:focus-visible .wd-halo,.wd-svg .wd-hit:hover .wd-halo,.wd-svg .wd-hit[aria-current=true] .wd-halo{stroke:var(--cyan);stroke-width:2;opacity:1}
+.wd-svg .wd-halo{fill:none;stroke:transparent;opacity:0}
+@media (max-width:700px){.wd-svg .wd-lab{display:none}.wd-svg .wd-lab.on{display:block}}
+.wd-rings{margin:0;padding:0;list-style:none;font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--ink)}
+.wd-rings li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.wd-rings .wd-blank{color:#ff9a9a;font-style:italic}
+.wd-q{margin:0 0 8px;padding:10px 12px;border:1px dashed rgba(255,154,154,.5);border-radius:3px;background:rgba(10,10,15,.55)}
+.wd-q p{font-family:var(--R);font-size:15px;line-height:1.5;margin:0 0 6px}
+.wd-q ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.wd-err{font-family:var(--M);font-size:13px;color:#ff9a9a;border:1px solid #ff9a9a;padding:10px 12px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){.wd-card{transition:none}}
+</style>
+</head>
+<body data-page="worlds">
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="worlds" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">WORLDS<small>STUDIOS &middot; KINGS &middot; CITY &middot; PANTHEONS &middot; SKY &middot; PLANETS</small></div></div>
+    <p class="wd-lead">The thrones, places, pantheons, sky and planets of the Ω Studios fiction, in one place. Every entry names the file it comes from and carries a status, so you can see at a glance what is decided and what is only proposed.</p>
+    <p class="wd-truth" id="wd-truth">Nothing here is released. FOUNDER APPROVED = inside a production you approved. REPO CANON = already fixed in platform files. PROPOSED = written by the assistant, waiting for your decision. OPEN = canon has not decided, so the slot is left empty on purpose. Real-world kings and gods live on <a href="/kings.html">Kings</a> and <a href="/pantheons.html">Pantheons</a>.</p>
+    <div class="wd-bar" role="tablist" aria-label="World sections" id="wd-tabs"></div>
+    <div class="wd-bar" role="group" aria-label="Filter by canon status" id="wd-chips"></div>
+    <div id="wd-detail" class="wd-detail" aria-live="polite" hidden></div>
+    <div id="wd-body" class="wd-body" role="tabpanel" tabindex="-1"><p class="wd-meta">Loading the Worlds canon&hellip;</p></div>
+    <div class="sechead">OPEN QUESTIONS FOR THE FOUNDER</div>
+    <div id="wd-questions"></div>
+    <noscript><p class="wd-err">This page needs JavaScript to read the Worlds canon.</p></noscript>
+    <div class="lf"><span>&#937; WORLDS &middot; SYD OMEGA 91717</span><span id="wd-foot">PROPOSED CANON</span></div>
+  </main>
+</div>
+<script src="/omega-worlds.js" defer></script>
+</body>
+</html>

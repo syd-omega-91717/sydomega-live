@@ -64,7 +64,7 @@ Maps from merged slate entries: `zodiac-wars`, `wrath-of-the-gods`.
 | `tamsin-okoro` | Tamsin Okoro | Foundry apprentice | MERGED_DRAFT |
 | `brannock` | Brannock | Foundry journeyman | MERGED_DRAFT |
 | `ares` | Ares | Light ruler of Aries and Mars | REPO_CANON |
-| `hera` | Hera | Light ruler of Libra and Juno | REPO_CANON |
+| `hera` | Hera | Light ruler of Libra (her world, Juno, is only proposed) | REPO_CANON |
 | `poseidon` | Poseidon | Light ruler of Pisces and Neptune | REPO_CANON |
 
 ## Recorded conflicts touching this franchise

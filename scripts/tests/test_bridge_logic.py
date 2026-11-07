@@ -24,6 +24,7 @@ def run(js):
 
 # A tiny arena for rule tests: Auren (@) and Torin (&) on the left, a thread, a span, and a far side with the stone (this is level I).
 ARENA = ["###########", "#...AAA...#", "#.@a===a*.#", "#.&.   ...#", "###########"]
+GATE_JS = "const G=" + json.dumps({"id": "g", "rows": ["##########", "#.^..#.*.#", "#&@..+...#", "#....#...#", "##########"]}) + ";"
 ARENA_JS = "const A=" + json.dumps({"id": "t", "rows": ARENA}) + ";"
 
 
@@ -31,7 +32,7 @@ ARENA_JS = "const A=" + json.dumps({"id": "t", "rows": ARENA}) + ";"
 class BridgeLogic(unittest.TestCase):
     def test_every_level_is_solvable_with_the_stored_par_and_the_solution_replays(self):
         out = run("""const o=L.LEVELS.map(l=>{const r=L.solve(l),g=L.replay(l,r.actions);return {id:l.id,par:l.par,solver:r.moves,won:g.state.won,moves:g.state.moves}});console.log(JSON.stringify(o))""")
-        self.assertEqual(len(out), 10)
+        self.assertEqual(len(out), 15)
         for lv in out:
             self.assertEqual(lv["par"], lv["solver"], lv["id"])
             self.assertTrue(lv["won"], lv["id"])
@@ -39,16 +40,30 @@ class BridgeLogic(unittest.TestCase):
 
     def test_every_pair_is_needed_and_no_level_is_beaten_without_pairs(self):
         out = run("""const o=L.LEVELS.map(l=>{const p=L.parse(l);return {id:l.id,pairs:p.letters.length,
-          needed:p.letters.map(k=>L.solve(l,{disable:k})===null),none:L.solve(l,{disable:p.letters.join('')})===null}});console.log(JSON.stringify(o))""")
+          needed:p.letters.map(k=>L.solve(l,{disable:k})===null),none:p.letters.length?L.solve(l,{disable:p.letters.join('')})===null:true}});console.log(JSON.stringify(o))""")
         for lv in out:
-            self.assertGreaterEqual(lv["pairs"], 1, lv["id"])
             self.assertTrue(all(lv["needed"]), "%s has a decorative pair" % lv["id"])
             self.assertTrue(lv["none"], "%s can be beaten with every pair disabled" % lv["id"])
+            if lv["id"] in ("leap", "families"):
+                self.assertEqual(lv["pairs"], 0, lv["id"])   # chapter III teaches the held rule on its own first
+            else:
+                self.assertGreaterEqual(lv["pairs"], 1, lv["id"])
+
+    def test_every_plate_family_a_level_uses_is_needed_and_chapter_three_cannot_be_beaten_without_them(self):
+        out = run("""const o=L.LEVELS.map(l=>{const fams=['^','~'].filter(f=>l.rows.join('').includes(f));
+          return {id:l.id,ch:l.chapter,fams:fams,needed:fams.map(f=>L.solve(l,{disable:f})===null),none:fams.length?L.solve(l,{disable:fams.join('')})===null:null}});console.log(JSON.stringify(o))""")
+        for lv in out:
+            if lv["ch"] == 3:
+                self.assertGreaterEqual(len(lv["fams"]), 1, lv["id"])
+                self.assertTrue(all(lv["needed"]), "%s has a decorative plate family" % lv["id"])
+                self.assertTrue(lv["none"], lv["id"])
+            else:
+                self.assertEqual(lv["fams"], [], "plates and gates belong to chapter III")
 
     def test_each_chapter_ramps_up_and_chapter_two_is_the_deeper_one(self):
         out = run("console.log(JSON.stringify(L.LEVELS.map(l=>({c:l.chapter,par:l.par,pairs:L.parse(l).letters.length,w:L.parse(l).w,h:L.parse(l).h}))))")
-        self.assertEqual(len(out), 10)
-        for ch in (1, 2):
+        self.assertEqual(len(out), 15)
+        for ch in (1, 2, 3):
             lv = [x for x in out if x["c"] == ch]
             self.assertEqual(len(lv), 5, "chapter %d" % ch)
             pars = [x["par"] for x in lv]
@@ -58,18 +73,41 @@ class BridgeLogic(unittest.TestCase):
         self.assertTrue(all(x["pairs"] >= 2 for x in ch2), "every chapter II level needs at least two spans")
         self.assertGreater(min(x["par"] for x in ch2), 30, "chapter II starts well above the tutorial")
         self.assertEqual(out[-1]["par"], max(x["par"] for x in out))
+        self.assertGreater(out[-1]["par"], 58, "the finale tops chapter II's hardest level")
+        ch3 = [x for x in out if x["c"] == 3]
+        self.assertLess(ch3[0]["par"], ch2[0]["par"], "chapter III opens by teaching one new rule, so it starts below chapter II")
 
     def test_every_level_fits_a_phone_width_and_the_level_ids_are_unique(self):
         out = run("console.log(JSON.stringify(L.LEVELS.map(l=>({id:l.id,w:L.parse(l).w,h:L.parse(l).h}))))")
         self.assertEqual(len({x["id"] for x in out}), len(out))
         for x in out:
             self.assertLessEqual(x["w"], 24, x["id"])   # 24 columns is 12 px tiles at 375 px; wider would be unreadable
-            self.assertLessEqual(x["h"], 6, x["id"])
+            self.assertLessEqual(x["h"], 9, x["id"])   # the finale folds into two bands rather than growing wider
 
     def test_a_chapter_two_level_really_needs_both_characters_to_swap_several_times(self):
         out = run("console.log(JSON.stringify(L.LEVELS.filter(l=>l.chapter===2).map(l=>({id:l.id,swaps:(L.solve(l).actions.match(/S/g)||[]).length}))))")
         for x in out:
             self.assertGreaterEqual(x["swaps"], 3, x["id"])
+
+    # GATE arena: Torin (1,2), Auren (2,2); plate ^ at (2,1); gate + at (5,2) in a wall; the stone beyond it at (7,1).
+    def test_a_gate_is_shut_to_a_lone_character_and_open_while_the_other_holds_its_plate(self):
+        out = run(GATE_JS + """const g=L.newGame(G);['R','R'].forEach(d=>g.move(d));const alone=g.move('R');   // Auren to (4,2), then into the gate
+          g.swap();g.move('U');const onPlate=g.move('R');                                             // Torin up and right onto the plate (2,1)
+          g.swap();const through=g.move('R');                                                         // Auren into the gate (5,2)
+          console.log(JSON.stringify({alone:[alone.moved,alone.blocked],onPlate:onPlate.moved,through:[through.moved,through.blocked]}))""")
+        self.assertEqual(out["alone"], [False, "gate"])
+        self.assertTrue(out["onPlate"])
+        self.assertEqual(out["through"], [True, None])
+
+    def test_the_holder_cannot_leave_the_plate_while_the_other_stands_in_the_gate_and_a_gate_keeps_no_memory(self):
+        out = run(GATE_JS + """const g=L.newGame(G);['R','R'].forEach(d=>g.move(d));g.swap();g.move('U');g.move('R');g.swap();g.move('R');   // Auren is in the gate
+          g.swap();const stuck=g.move('L');                                                          // Torin tries to step off the plate
+          g.swap();g.move('R');                                                                       // Auren leaves the gate for (6,2)
+          g.swap();const freed=g.move('L');g.swap();const back=g.move('L');                           // Torin may leave now; Auren cannot return
+          console.log(JSON.stringify({stuck:[stuck.moved,stuck.blocked],freed:freed.moved,back:[back.moved,back.blocked]}))""")
+        self.assertEqual(out["stuck"], [False, "holding"])
+        self.assertTrue(out["freed"])
+        self.assertEqual(out["back"], [False, "gate"], "a gate must shut again once nobody holds its plate")
 
     # ARENA coordinates (column, row): Auren (2,2), Torin (2,3); cradle a at (3,2) and (7,2); thread (4..6,2); span A (4..6,1); stone (8,2).
     def test_the_heavy_character_cannot_cross_a_thread_and_the_light_one_can(self):

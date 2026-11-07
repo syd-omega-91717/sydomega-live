@@ -35,7 +35,7 @@ Maps from merged slate entries: `zodiac-wars`, `wrath-of-the-gods`.
 
 ## Game
 
-**Zodiac Wars: Ascension** — Faction-based action RPG with possible tactical multiplayer. Status: CONCEPT. No playable build exists. Multiplayer: UNAVAILABLE.
+**Zodiac Wars: Ascension** — Faction-based action RPG with possible tactical multiplayer. Status: DESIGNED. Design document: `docs/studios/franchises/zodiac-wars/games/ascension/GDD.md`. No playable build exists. Multiplayer: UNAVAILABLE.
 
 ## Characters
 

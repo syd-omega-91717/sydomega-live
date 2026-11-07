@@ -41,15 +41,16 @@ def main()->int:
     drift=[]
     for name,meta in expected.items():
         state=meta.get("state")
-        if state not in {"DEPLOYED","LOCAL_ONLY"}: return fail(f"{name}: invalid state {state!r}")
-        if state=="DEPLOYED":
+        if state not in {"DEPLOYED","LOCAL_ONLY","PENDING_DEPLOY"}: return fail(f"{name}: invalid state {state!r}")
+        if state in ("DEPLOYED","PENDING_DEPLOY"):
             recorded=meta.get("repository_blob_sha")
-            if not recorded: return fail(f"{name}: DEPLOYED requires repository_blob_sha")
+            if not recorded: return fail(f"{name}: {state} requires repository_blob_sha")
             if actual[name]!=recorded: drift.append(name)
     if drift: return fail(f"deployed source changed without runtime reconciliation: {drift}")
     deployed=sum(1 for m in expected.values() if m.get("state")=="DEPLOYED")
     local_only=sum(1 for m in expected.values() if m.get("state")=="LOCAL_ONLY")
-    print(f"EDGE_RUNTIME_RECONCILIATION=PASS repository={len(actual)} deployed={deployed} local_only={local_only}")
+    pending=sum(1 for m in expected.values() if m.get("state")=="PENDING_DEPLOY")
+    print(f"EDGE_RUNTIME_RECONCILIATION=PASS repository={len(actual)} deployed={deployed} local_only={local_only} pending_deploy={pending}")
     return 0
 
 if __name__=="__main__":

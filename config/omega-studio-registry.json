@@ -148,8 +148,11 @@
         "title": "The Chronicles of the Guardians",
         "seasons": 3,
         "episodesPerSeason": 8,
-        "status": "BIBLE_DRAFT",
-        "bible": "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md"
+        "status": "SCRIPTS_DRAFT",
+        "bible": "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md",
+        "scripts": [
+          "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/episodes/E01_THE_FIRST_SIGNAL.fountain"
+        ]
       },
       "game": {
         "title": "Myth of the Stones: Origins",
@@ -215,8 +218,9 @@
       "game": {
         "title": "Zodiac Wars: Ascension",
         "genre": "Faction-based action RPG with possible tactical multiplayer",
-        "status": "CONCEPT",
-        "multiplayer": "UNAVAILABLE"
+        "status": "DESIGNED",
+        "multiplayer": "UNAVAILABLE",
+        "gdd": "docs/studios/franchises/zodiac-wars/games/ascension/GDD.md"
       },
       "ages": [
         "age-2",
@@ -272,8 +276,9 @@
       "game": {
         "title": "Omega: Civilization 91717",
         "genre": "Strategic civilization-building and simulation",
-        "status": "CONCEPT",
-        "multiplayer": "UNAVAILABLE"
+        "status": "DESIGNED",
+        "multiplayer": "UNAVAILABLE",
+        "gdd": "docs/studios/franchises/the-omega-chronicles/games/civilization-91717/GDD.md"
       },
       "ages": [
         "age-6",
@@ -383,8 +388,9 @@
       "game": {
         "title": "Last Galactic Empire",
         "genre": "Grand strategy, fleet combat, multiplayer campaigns",
-        "status": "CONCEPT",
-        "multiplayer": "UNAVAILABLE"
+        "status": "DESIGNED",
+        "multiplayer": "UNAVAILABLE",
+        "gdd": "docs/studios/franchises/the-last-galactic-empire/games/last-galactic-empire/GDD.md"
       },
       "ages": [
         "age-5"
@@ -1188,6 +1194,15 @@
         "myth-of-the-stones"
       ],
       "resolution": "The brief's third-person open-world RPG is a design target; the first buildable artefact is a 2D top-down Vertical Slice 0, labelled PROTOTYPE until it meets the release criteria in the GDD. Multiplayer is UNAVAILABLE.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-21",
+      "kind": "lore",
+      "subjects": [
+        "malachar"
+      ],
+      "resolution": "The Season 1 episode 1 beat sheet says two niches are filled in Malachar's sanctum, but Continuity Lock 1 says he holds only the Time stone until episode 6 (Energy arrives then). The episode 1 script shows one filled niche (Time) and six empty.",
       "status": "PROPOSED_RESOLUTION"
     }
   ]

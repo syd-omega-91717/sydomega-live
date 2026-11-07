@@ -1,12 +1,14 @@
 # Deploying studio-canon
 
-Not deployed yet: it is `LOCAL_ONLY` in `docs/runtime/supabase-edge-functions-live.json`, absent from `supabase/config.toml`,
-and `worlds.html` shows UNAVAILABLE until it is live. Merging does not deploy it, because a function missing from `config.toml`
-never deploys. To turn it on, in one change:
+Configured to deploy: it is in `supabase/config.toml` (`verify_jwt = true`), in `config/omega-edge-function-auth.json`, and
+recorded as `PENDING_DEPLOY` in `docs/runtime/supabase-edge-functions-live.json`. The Supabase GitHub integration redeploys every
+function in `config.toml` when the change merges to `main`. `PENDING_DEPLOY` means configured, not yet seen live.
 
-1. Add to `supabase/config.toml`: `[functions.studio-canon]` and `verify_jwt = true`.
-2. Add `studio-canon` to `config/omega-edge-function-auth.json` (`verify_jwt: true`, `auth_mode: SUPABASE_JWT`).
-3. After the live deploy, record it in `docs/runtime/supabase-edge-functions-live.json` as DEPLOYED with the live version,
-   `live_sha256` and `repository_blob_sha` (read from the provider, not typed).
-4. Call it once as an approved member (expect the canon) and once as an unapproved account (expect 403).
-5. Regenerate the payload after any canon edit: `python3 scripts/studio-worlds-check.py --write-function-data`.
+After the merge:
+
+1. Call it once as an owner (expect the canon) and once as an approved non-owner (expect 403 `owner_only`).
+2. Record it in the snapshot as `DEPLOYED` with the live version, `live_sha256` and `repository_blob_sha`, read from the provider.
+3. After any change to `index.ts`, refresh `repository_blob_sha` (the reconciliation contract fails on drift).
+4. After any canon edit: `python3 scripts/studio-worlds-check.py --write-function-data`.
+
+Until step 1 succeeds, `worlds.html` shows UNAVAILABLE (not deployed) or RESTRICTED (not an owner).

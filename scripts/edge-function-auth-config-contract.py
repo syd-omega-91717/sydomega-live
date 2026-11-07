@@ -33,9 +33,11 @@ def main() -> int:
     config = tomllib.loads(CONFIG.read_text(encoding="utf-8"))
     snapshot = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
     registry = json.loads(AUTH_REGISTRY.read_text(encoding="utf-8"))
+    # PENDING_DEPLOY: configured to deploy on the next merge (the Supabase GitHub integration redeploys every function in
+    # config.toml) but not yet seen live. It is held to the same config and auth rules; only DEPLOYED claims live evidence.
     deployed = {
         name: meta for name, meta in snapshot.get("functions", {}).items()
-        if meta.get("state") == "DEPLOYED"
+        if meta.get("state") in ("DEPLOYED", "PENDING_DEPLOY")
     }
     declared = registry.get("functions", {})
     configured = config.get("functions", {})

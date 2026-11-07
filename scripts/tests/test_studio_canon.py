@@ -136,21 +136,36 @@ class StudioCanon(unittest.TestCase):
     def test_series_and_game_claims_need_their_files(self):
         bad = copy.deepcopy(REG)
         bad["franchises"][1]["series"]["status"] = "BIBLE_DRAFT"
-        bad["franchises"][1]["game"]["status"] = "PROTOTYPE"
+        bad["franchises"][5]["game"]["status"] = "PROTOTYPE"  # the-human-frontier has no design document
         bad["franchises"][2]["game"]["multiplayer"] = "LIVE"
         errs = " | ".join(chk.validate(bad, SLATE, PROD))
         self.assertIn("bible file is missing", errs)
         self.assertIn("design document is missing", errs)
         self.assertIn("multiplayer may not be claimed", errs)
 
-    def test_only_origins_is_past_concept_and_no_game_is_released_or_multiplayer(self):
-        # Origins is a PROTOTYPE (Vertical Slice 0 exists, nobody has play-tested it); every other game is still CONCEPT.
+    def test_only_origins_is_a_prototype_designed_games_have_documents_and_none_is_released_or_multiplayer(self):
+        # Origins is a PROTOTYPE (Vertical Slice 0 exists, nobody has play-tested it). Four games are DESIGNED, each with a
+        # design document that exists; every other game is still CONCEPT.
+        designed = []
         for f in REG["franchises"]:
             allowed = ("PROTOTYPE",) if f["id"] == "myth-of-the-stones" else ("CONCEPT", "DESIGNED")
             self.assertIn(f["game"]["status"], allowed, f["id"])
             self.assertEqual(f["game"]["multiplayer"], "UNAVAILABLE", f["id"])
-        past = [f["id"] for f in REG["franchises"] if f["game"]["status"] not in ("CONCEPT",)]
-        self.assertEqual(past, ["myth-of-the-stones"])
+            if f["game"]["status"] == "DESIGNED":
+                designed.append(f["id"])
+                self.assertTrue((ROOT / f["game"]["gdd"]).is_file(), f["id"])
+        self.assertEqual(designed, ["zodiac-wars", "the-omega-chronicles", "the-last-galactic-empire"])
+        past = [f["id"] for f in REG["franchises"] if f["game"]["status"] != "CONCEPT"]
+        self.assertEqual(past, ["myth-of-the-stones"] + designed)
+
+    def test_the_one_series_with_a_script_names_a_file_that_exists_and_no_other_claims_scripts(self):
+        for f in REG["franchises"]:
+            s = f["series"]
+            if s["status"] == "SCRIPTS_DRAFT":
+                self.assertEqual(f["id"], "myth-of-the-stones")
+                self.assertTrue(s["scripts"] and all((ROOT / x).is_file() for x in s["scripts"]))
+            else:
+                self.assertNotIn("scripts", s, f["id"])
 
     def test_help_exits_zero(self):
         import subprocess, sys

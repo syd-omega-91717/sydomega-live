@@ -14,6 +14,10 @@
  *   =  thread: only the light character may cross
  *   a-d  cradle, each letter exactly twice (a pair)       A-D  bridge span, walkable once its pair has opened
  *   @  Auren's start (floor)   &  Torin's start (floor)   *  the stone: Auren reaching it wins
+ *   ^ ~  plates   + x  their gates (chapter III, the HELD rule; ^ opens +, ~ opens x): a gate can be entered only while the OTHER
+ *      character stands on a plate of its family, and whoever stands on a plate cannot step off it (except onto another plate of
+ *      the same family) while the other stands in that family's gate. Unlike a span a gate keeps no memory: it is open exactly as
+ *      long as someone holds. The state needs no extra field, positions decide it.
  *
  * Works as a browser global (window.OmegaBridgeLogic) and as a CommonJS module for node tests. Status: PROTOTYPE; not a release. */
 (function (root) {
@@ -22,6 +26,7 @@
   var DIRS = { U: [0, -1], D: [0, 1], L: [-1, 0], R: [1, 0] };
   var DIR_KEYS = ['U', 'D', 'L', 'R'];
   var PAIR_LETTERS = 'abcd';
+  var GATE_OF = { '^': '+', '~': 'x' }, PLATE_OF = { '+': '^', 'x': '~' };
 
   /* par is the solver's minimum number of steps (swapping who you control is free); the tests fail if it drifts, if any level is
      unsolvable, if any pair of cradles is not actually needed, or if a level can be beaten with every pair disabled. */
@@ -85,7 +90,41 @@
       '#..aAAA..bBBB..cCCC...#',
       '#...===...===...===.c*#',
       '#&@.   ..b   ..a   ...#',
-      '#######################'] }
+      '#######################'] },
+    { id: 'gate', chapter: 3, name: 'XI. The First Gate', par: 18, rows: [
+      '##############',
+      '#...AAA...####',
+      '#.@a===a^.+*.#',
+      '#.&.   ...####',
+      '##############'] },
+    { id: 'leap', chapter: 3, name: 'XII. Leapfrog', par: 25, rows: [
+      '###################',
+      '#...^#..^..#......#',
+      '#&@..+.....x....*.#',
+      '#....#.~...#......#',
+      '###################'] },
+    { id: 'families', chapter: 3, name: 'XIII. Two Families', par: 27, rows: [
+      '###################',
+      '#...^#...~.#......#',
+      '#&@..+.....x....*.#',
+      '#....#....^#......#',
+      '###################'] },
+    { id: 'gatespan', chapter: 3, name: 'XIV. Gate and Span', par: 41, rows: [
+      '########################',
+      '#...^#.^..AAA.....#....#',
+      '#&@..+...a===a....x..*.#',
+      '#....#....   ...~.#....#',
+      '########################'] },
+    { id: 'held', chapter: 3, name: 'XV. The Held Bridge', par: 80, rows: [
+      '###################',
+      '#...^#.^..AAA.....#',
+      '#&@..+...a===a....#',
+      '#....#....   .....#',
+      '#################.#',
+      '#....BBB..~.#.....#',
+      '#*..b===b...x.....#',
+      '#....   ....#..~..#',
+      '###################'] }
   ];
 
   function parse(level) {
@@ -100,7 +139,7 @@
         else if (ch === '*') { p.goal = i; }
         else if (PAIR_LETTERS.indexOf(ch) >= 0) { (p.pairs[ch] = p.pairs[ch] || []).push(i); }
         else if (ch >= 'A' && ch <= 'D') { (p.spans[ch.toLowerCase()] = p.spans[ch.toLowerCase()] || []).push(i); }
-        else if ('# .='.indexOf(ch) < 0) throw new Error('level ' + level.id + ': unknown tile "' + ch + '"');
+        else if ('# .=^~+x'.indexOf(ch) < 0) throw new Error('level ' + level.id + ': unknown tile "' + ch + '"');
         p.tiles.push(ch);
       }
     }
@@ -128,6 +167,7 @@
     var c = p.tiles[i];
     if (c === '#' || c === ' ') return false;
     if (c === '=') return who === 'T';
+    if (PLATE_OF[c]) { var oth = who === 'A' ? s.t : s.a; return !(p.disabled && p.disabled[PLATE_OF[c]]) && p.tiles[oth] === PLATE_OF[c]; }
     if (c >= 'A' && c <= 'D') return !!s.open[c.toLowerCase()];
     return true;
   }
@@ -152,9 +192,10 @@
     if (x < 0 || y < 0 || x >= p.w || y >= p.h) { out.blocked = 'edge'; return out; }
     var to = y * p.w + x;
     if (to === other) { out.blocked = 'occupied'; return out; }
+    if (GATE_OF[p.tiles[from]] && p.tiles[other] === GATE_OF[p.tiles[from]] && p.tiles[to] !== p.tiles[from]) { out.blocked = 'holding'; return out; }
     if (!canStand(p, s, who, to)) {
       var c = p.tiles[to];
-      out.blocked = c === '=' ? 'too-heavy' : (c >= 'A' && c <= 'D') ? 'closed' : (c === ' ' ? 'chasm' : 'wall');
+      out.blocked = c === '=' ? 'too-heavy' : PLATE_OF[c] ? 'gate' : (c >= 'A' && c <= 'D') ? 'closed' : (c === ' ' ? 'chasm' : 'wall');
       return out;
     }
     var n = copy(s);
@@ -185,7 +226,7 @@
   /* Minimum steps to win by breadth-first search over (positions, who is active, open pairs). A swap costs 0 and a step costs 1, so
      each distance layer is first closed under swaps (every state gets its swapped twin) and only then expanded by steps; that keeps
      the answer minimal. Returns { moves, actions } or null if unsolvable; actions is a string of U D L R and S (swap) that wins in
-     exactly `moves` steps. opts.disable = 'ab' makes those pairs unable to open, which is how a test proves every pair is needed. */
+     exactly `moves` steps. opts.disable = 'ab' makes those pairs unable to open, which is how a test proves every pair is needed ('^' or '~' disables that plate family, so its gates never open). */
   function solve(level, opts) {
     var p = parse(level), W = p.w * p.h;
     if (opts && opts.disable) { p.disabled = {}; opts.disable.split('').forEach(function (k) { p.disabled[k] = true; }); }

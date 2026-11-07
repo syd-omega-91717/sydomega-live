@@ -9,10 +9,11 @@
   var L = root.OmegaBridgeLogic;
   var STORE = 'omega_bridge_v1';
   var COLOR = { a: '#c9a84c', b: '#4fe3ff', c: '#b69cff', d: '#5fd18a' };
+  var HELD = { '^': '#ffb347', '+': '#ffb347', '~': '#ff7a9c', x: '#ff7a9c' }, PLATE_OF = { '+': '^', x: '~' };
   var ROMAN = { a: 'I', b: 'II', c: 'III', d: 'IV' };
   var WHY = {
     'too-heavy': 'Too heavy for the thread.', closed: 'That span is closed. Both of you must hold its cradles.',
-    occupied: 'Someone is standing there.', wall: 'A wall.', chasm: 'A chasm.', edge: 'The edge.', won: 'Solved.'
+    occupied: 'Someone is standing there.', gate: 'The gate is shut. Someone must stand on its plate.', holding: 'Stay on the plate: the other is in the gate.', wall: 'A wall.', chasm: 'A chasm.', edge: 'The edge.', won: 'Solved.'
   };
   var KEYS = { ArrowUp: 'U', ArrowDown: 'D', ArrowLeft: 'L', ArrowRight: 'R', w: 'U', s: 'D', a: 'L', d: 'R', W: 'U', S: 'D', A: 'L', D: 'R' };
 
@@ -207,6 +208,17 @@
         ctx.fillStyle = alpha(col2, on || op ? 0.3 : 0.08); ctx.fill();
         ctx.strokeStyle = col2; ctx.lineWidth = 2.5; if (on || op) { ctx.shadowColor = col2; ctx.shadowBlur = 8; } ctx.stroke(); ctx.shadowBlur = 0; ctx.lineWidth = 1;
         if (T >= 18) { ctx.fillStyle = col2; ctx.font = '700 ' + Math.round(T * 0.26) + 'px "Courier Prime", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(ROMAN[c], px + T / 2, py + T / 2 + 1); }
+      }
+      if (c === '^' || c === '~') {                         // a plate: lit while someone stands on it
+        var pc = HELD[c], pressed = (s.a === idxT || s.t === idxT), m = Math.round(T * 0.2);
+        ctx.fillStyle = alpha(pc, pressed ? 0.42 : 0.1); ctx.fillRect(px + m, py + m, T - 2 * m, T - 2 * m);
+        ctx.strokeStyle = pc; ctx.lineWidth = 2; if (pressed) { ctx.shadowColor = pc; ctx.shadowBlur = 10; } ctx.strokeRect(px + m + 0.5, py + m + 0.5, T - 2 * m - 1, T - 2 * m - 1); ctx.shadowBlur = 0; ctx.lineWidth = 1;
+      }
+      if (c === '+' || c === 'x') {                         // a gate: bars while shut, drawn back while its plate is held
+        var gc = HELD[c], pl = PLATE_OF[c], held = tile(s.a % plan.w, Math.floor(s.a / plan.w)) === pl || tile(s.t % plan.w, Math.floor(s.t / plan.w)) === pl, bars = 4;
+        ctx.strokeStyle = alpha(gc, held ? 0.25 : 0.9); ctx.lineWidth = held ? 1 : 2.5;
+        for (var q = 0; q < bars; q++) { var gx = px + (T * (q + 0.5)) / bars, ext = held ? T * 0.18 : T * 0.9; ctx.beginPath(); ctx.moveTo(gx, py + T * 0.05); ctx.lineTo(gx, py + T * 0.05 + ext); ctx.stroke(); }
+        ctx.lineWidth = 1;
       }
       if (c === '*') {
         var cx = px + T / 2, cy = py + T / 2, r = T * 0.3, bob = reduced() ? 0 : Math.sin(now / 900) * 1.5;

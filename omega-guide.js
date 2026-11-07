@@ -102,7 +102,7 @@
         'Where the films, series, games and characters of the Studios stories are kept, with the status of each. It is open to the owner accounts only. A draft is not a finished work, and nothing in it is released.',
         ['/studio-library.html', 'STUDIO LIBRARY']],
       ['world', 'How do I play The Two-Hand Bridge?',
-        'Ten puzzle levels in two chapters. A span opens only when one of you stands on each of its two cradles, and then it stays open. Auren is heavy and cannot cross a thread; Torin is light and can. Arrow keys or WASD move the active one, Space swaps, Z undoes, R restarts, M mutes. On a phone, tap the other character to swap, tap or swipe to step. Par is the fewest moves possible. A prototype, saved in this browser only.',
+        'Fifteen puzzle levels in three chapters. A span opens only when one of you stands on each of its two cradles, and then it stays open. Chapter III adds plates and gates: a gate is open only while the other one stands on a plate of its colour, and that holder cannot step off while you are in the gate. Auren is heavy and cannot cross a thread; Torin is light and can. Arrow keys or WASD move the active one, Space swaps, Z undoes, R restarts, M mutes. On a phone, tap the other character to swap, tap or swipe to step. Par is the fewest moves possible. A prototype, saved in this browser only.',
         ['/game-origins-bridge.html', 'TWO-HAND BRIDGE']],
       ['world', 'What are the signs, elements and gods?',
         'Every member is bound to a zodiac sign. The sign sets your element, your patron god and your guide agent (all twelve are shown below).',

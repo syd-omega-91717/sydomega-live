@@ -63,25 +63,28 @@ screenplay draft (`docs/studios/rise-of-aries/`). The gap is tracked in `OMEGA_S
 
 ## Recorded conflicts and decisions
 
-Every conflict is in the registry with a resolution. `OPEN` means the founder must decide; the others are proposals.
+Every conflict is in the registry with a resolution. On 2026-11-07 the founder delegated the four open ones; they were resolved as proposals and remain reversible. `OPEN` would mean the founder still has to decide.
 
 | Id | Kind | Subject | Resolution in one line | Status |
 |---|---|---|---|---|
 | C-01 | name | Kael Draven / Kael Marren | Myth character renamed Torin Draven; journeyman became Brannock | proposed |
-| C-02 | name | Elias Veyron / Elias Mercer | Two Elias; Veyron's given name held for the founder | **open** |
+| C-02 | name | Elias Veyron / Elias Mercer | Veyron renamed Elian Veyron | proposed |
 | C-03 | name | Nadia / Juno Ardent | One lineage, a Convergence link | proposed |
 | C-04 | name | Orion Vey / ORION (AI) | The AI named itself after the fallen regent | proposed |
 | C-05 | name | Ares Valorian / the god Ares | Valorian is the first Regent of Aries, named in honour | proposed |
-| C-06 | name | Tharion Voss / Kaelen Voss | Shared surname; Taurus leader suggested as Tharion Vorne | **open** |
+| C-06 | name | Tharion Voss / Kaelen Voss | Taurus leader renamed Tharion Vorne | proposed |
 | C-07 | motif | 9.17 Hz vs 9.1717 Hz | Canon is 9.1717 Hz | proposed |
 | C-08 | lore | Three principles vs nine elements | Principles are domains of the elements | proposed |
 | C-09 | lore | Seven stones vs nine elements | A mortal taxonomy; the mismatch is part of the mystery | proposed |
 | C-10 | chronology | Age IV vs 2026 saga | Age IV is the First War; the 2026 film is the Accord's test | proposed |
 | C-11 | title | The Rise of Aries | One film (2026); Valorian's rebellion is a flashback or prequel | proposed |
-| C-12 | title | The Twelve Houses | Already the live series title; film title held | **open** |
+| C-12 | title | The Twelve Houses | Film retitled The Thirteenth Seat; the live micro-series keeps its title | proposed |
 | C-13 | chronology | Lost Civilizations | Disappearances Age III, expeditions modern | proposed |
 | C-14 | chronology | Galactic Universe | Own clock, meets the rest at chapter 11 | proposed |
-| C-15 | scope | 26 films, ~150 episodes, 4 games | One draft exists | **open** |
+| C-15 | scope | 26 films, ~150 episodes, 4 games | Waves, one franchise vertical at a time | proposed |
+| C-16 | name | Auren Vale / Isolde Vale | Shared surname is mother and son | proposed |
+| C-17 | lore | Nine-ring wall, seven stones | Seven rings inscribed, two blank; seeds the nine elements | proposed |
+| C-18 | motif | 'Hold the other end' | Deliberate echo between Ithren and Solenne | proposed |
 
 ## Standing rules
 

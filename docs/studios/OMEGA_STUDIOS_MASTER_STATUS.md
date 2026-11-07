@@ -9,8 +9,8 @@ generated files alone are never completion. `-` means not started.
 | Canon registry and validator | yes | yes | yes | yes | - | - | n/a | `scripts/studio-canon-check.py`, `test_studio_canon.py` |
 | Universe bible and 7 franchise bibles | yes | yes | n/a | yes (staleness test) | - | - | n/a | proposed, unapproved |
 | Zodiac Wars: The Rise of Aries screenplay | yes | draft 1, ~65-80 pages | n/a | yes (`test_studio_productions.py`) | - | merged to `main` as text | no | content unapproved; short of 100 pages |
-| Myth of the Stones: The Seven Stones screenplay | yes | - | n/a | - | - | - | no | next wave |
-| Other 24 feature screenplays | - | - | n/a | - | - | - | no | not started |
+| Myth of the Stones: The Seven Stones screenplay | yes | draft 1, ~80-95 pages | n/a | yes (`test_studio_productions.py`) | - | - | no | `docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/`; content unapproved; short of the 125-140 minute target |
+| Other 24 feature screenplays (26 films in all) | - | - | n/a | - | - | - | no | not started |
 | Series episode scripts (about 150) | - | - | n/a | - | - | - | no | not started; the only story text is one-line plots in `twelve-houses-s1.json` |
 | Game design documents (4 flagships) | - | - | - | - | - | - | no | not started |
 | Playable prototype | - | - | - | - | - | - | no | none exists |
@@ -19,5 +19,4 @@ generated files alone are never completion. `-` means not started.
 | Media delivery (video, subtitles, access control) | - | - | - | - | - | - | no | Storage unread; no subtitle or streaming assets exist |
 | Rights and licence records | - | - | - | - | - | - | no | none exist; third-party references are not licensed |
 
-Open founder decisions: C-02, C-06, C-12, C-15 (see the universe bible), approval of the Rise of Aries content, and which
-franchise's remaining screenplays come first.
+Open founder decisions: none of the 18 recorded conflicts is OPEN (the four that were were resolved as proposals under delegation on 2026-11-07 and remain reversible). Still needed from the founder: approval of both screenplays' content, and which franchise's remaining screenplays come next.

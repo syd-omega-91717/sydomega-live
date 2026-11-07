@@ -48,6 +48,6 @@ Maps from merged slate entries: `aethelgard-universe`.
 
 ## Recorded conflicts touching this franchise
 
-- **C-02** (name, OPEN): Two Elias in different franchises. Mercer keeps the name; Veyron's given name is held for the founder (suggested: Elian). Until decided, scripts must always use the full name.
+- **C-02** (name, PROPOSED_RESOLUTION): Elias Veyron is renamed Elian Veyron (decided 2026-11-07 under the founder's delegation). Elias Mercer keeps his name.
 - **C-03** (name, PROPOSED_RESOLUTION): Shared surname Ardent. Treated as one lineage: Juno is Nadia's descendant, a deliberate Convergence link.
 - **C-13** (chronology, PROPOSED_RESOLUTION): The disappearances belong to Age III but the expeditions are modern, so pharaohs and the twelve-thousand-year Accord do not clash.

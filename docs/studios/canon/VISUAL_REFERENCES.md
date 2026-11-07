@@ -69,3 +69,14 @@ Third-party, unlicensed, not copied. Titles are as shown on the source pages; wh
 | Figure with a glowing blade before a stepped pyramid between two horned stone guardians (everyeye.it, "Chronos: Before the Ashes") | Teal forest ruin, twin statues | Twin guardian statues flanking a stair as architecture. Do not use the title word Chronos for anything canon (a Time stone exists) | The Lost Civilizations, Kharesh |
 | A generated RPG inventory screen with a character named Aric Drakon (seahot.ai, a prompting guide) | Equipment slots, stat panel, item card | Stat-panel hierarchy only. **Do not use the name Drakon**: it collides with Kaelus Drakon (Capricorn) and Draven | Origins character sheet |
 | Warrior in a red cape before a bronze automaton with a flaming brazier for a head, in a golden river (notebookcheck.pl; game not named in the visible title) | Backlit forest, giant guardian with a crook staff | A foundry guardian automaton for scale. The brazier-head silhouette is distinctive and is not to be copied | Zodiac Wars, Ares Foundry |
+
+## Fifth batch (4 images, same rules)
+
+Third-party, unlicensed, not copied.
+
+| Reference (source site) | What it shows | Direction taken | Used for |
+|---|---|---|---|
+| Swordsman seen from behind above overgrown temple stairs, a broken monolith beside him (store.steampowered.com, "Xuan-Yuan Sword VII") | Quiet ruin approach, one figure for scale | Another lone-figure approach shot | Kharesh, the Lost Civilizations |
+| Fighter with blue lightning against a magma-veined brute in a frozen dead forest (mynewsdesk.com, "Guild Wars 2: The Icebrood Saga") | Ember-lit creature, cold ground | **Guardrail.** Canon draws the Shadows as absences with an ember edge, not molten bodies; do not make the Unbled a lava brute. Cold-ground, hot-edge contrast is usable | Zodiac Wars, Shadows |
+| Girl with a glowing bow facing a rock guardian with lit nodes, boss bar reading STONE GUARDIAN (elementogeek.com, "Kena: Bridge of Spirits") | Stone giant, glowing joints | Boss bar plus lit-joint readability only. Our stone boss is the Unfinished Guardian, not a copy of this silhouette | Origins boss |
+| A generated "Resource Management" screen: Weapons, Armor, Potions tabs, an Artifacts row, Sort, Filter, Equip (jungbo.learnnamja.com) | Mixed-myth item names including Mjolnir, Aegis, Golden Fleece | Tabs and button layout only. **Do not use Mjolnir or any item from another franchise's mythology**; the generated text is also garbled | Origins UI |

@@ -119,6 +119,9 @@
     "checkout": {
       "state": "LOCAL_ONLY"
     },
+    "studio-canon": {
+      "state": "LOCAL_ONLY"
+    },
     "event-ingest": {
       "state": "LOCAL_ONLY"
     },

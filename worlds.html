@@ -8,8 +8,8 @@
 <title>&#937; SYD OMEGA 91717 &mdash; WORLDS</title>
 <link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
 <style>
-.wd-lead{font-family:var(--R);font-size:15px;line-height:1.55;color:var(--ink);max-width:72ch;margin:0 0 10px}
-.wd-truth{font-family:var(--M);font-size:12px;line-height:1.7;letter-spacing:1px;color:var(--muted);max-width:90ch;margin:0 0 14px;padding:8px 12px;border-left:3px solid var(--gold);background:rgba(10,10,15,.55)}
+.wd-help{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-family:var(--M);font-size:16px;color:var(--gold);border:1px solid rgba(201,168,76,.45);border-radius:50%;text-decoration:none}
+.wd-help:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 .wd-bar{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
 .wd-tab,.wd-chip,.wd-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);background:rgba(10,10,15,.7);border:1px solid rgba(201,168,76,.35);border-radius:3px;cursor:pointer;min-height:44px;padding:8px 14px}
 .wd-tab[aria-selected=true],.wd-chip[aria-pressed=true],.wd-btn[aria-pressed=true]{background:rgba(201,168,76,.22);border-color:var(--gold);color:var(--gold)}
@@ -54,17 +54,15 @@
 <div class="shell">
   <aside class="side" id="omega-side" data-page="worlds" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
-    <div class="topbar"><div class="t">WORLDS<small>STUDIOS &middot; KINGS &middot; CITY &middot; PANTHEONS &middot; SKY &middot; PLANETS</small></div></div>
-    <p class="wd-lead">The thrones, places, pantheons, sky and planets of the Ω Studios fiction, in one place. Every entry names the file it comes from and carries a status, so you can see at a glance what is decided and what is only proposed.</p>
-    <p class="wd-truth" id="wd-truth">Nothing here is released. FOUNDER APPROVED = inside a production you approved. REPO CANON = already fixed in platform files. PROPOSED = written by the assistant, waiting for your decision. OPEN = canon has not decided, so the slot is left empty on purpose. Real-world kings and gods live on <a href="/kings.html">Kings</a> and <a href="/pantheons.html">Pantheons</a>.</p>
+    <div class="topbar"><div class="t">WORLDS<small>STUDIOS</small></div><a class="wd-help" href="/guide.html" aria-label="Help">?</a></div>
     <div class="wd-bar" role="tablist" aria-label="World sections" id="wd-tabs"></div>
     <div class="wd-bar" role="group" aria-label="Filter by canon status" id="wd-chips"></div>
     <div id="wd-detail" class="wd-detail" aria-live="polite" hidden></div>
-    <div id="wd-body" class="wd-body" role="tabpanel" tabindex="-1"><p class="wd-meta">Loading the Worlds canon&hellip;</p></div>
-    <div class="sechead">OPEN QUESTIONS FOR THE FOUNDER</div>
+    <div id="wd-body" class="wd-body" role="tabpanel" tabindex="-1"><p class="wd-meta">&hellip;</p></div>
+    <div class="sechead">OPEN</div>
     <div id="wd-questions"></div>
-    <noscript><p class="wd-err">This page needs JavaScript to read the Worlds canon.</p></noscript>
-    <div class="lf"><span>&#937; WORLDS &middot; SYD OMEGA 91717</span><span id="wd-foot">PROPOSED CANON</span></div>
+    <noscript><p class="wd-err">JAVASCRIPT REQUIRED</p></noscript>
+    <div class="lf"><span>&#937; WORLDS</span><span id="wd-foot">PROPOSED CANON</span></div>
   </main>
 </div>
 <script src="/omega-worlds.js" defer></script>

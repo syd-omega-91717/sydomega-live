@@ -6,4 +6,4 @@
 
 **Verified.** `python3 -m unittest scripts.tests.test_studio_productions` passes: files exist, status needs what it claims, 25+ scene headings, no release claims, and the sign/god pairs match `omega-agents.json`.
 
-**Not done / not verified.** The founder has not approved the content. At about 65-80 pages it is a short-feature first draft, not 100 pages. No treatment, shot list, storyboard, subtitles, rights records, or any picture or sound exists. Ossara's backstory, Solenne Varr, Ima, Orla Tevane, Tamsin and Draven are proposed inventions. Nobody but the author has read the screenplay for quality.
+**Not done / not verified.** The founder has not approved the content. At about 65-80 pages it is a short-feature first draft, not 100 pages. No treatment, shot list, storyboard, subtitles, rights records, or any picture or sound exists. Ossara's backstory, Solenne Varr, Ima, Orla Tevane, Tamsin and Brannock are proposed inventions. Nobody but the author has read the screenplay for quality.

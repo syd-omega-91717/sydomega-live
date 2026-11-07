@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Myth of the Stones: The Two-Hand Bridge, a five-level puzzle chapter about spans that open only when two hold them. Prototype, not a released game.">
+<meta name="description" content="Myth of the Stones: The Two-Hand Bridge, a ten-level puzzle game about spans that open only when two hold them. Prototype, not a released game.">
 <title>&#937; SYD OMEGA 91717 &mdash; TWO-HAND BRIDGE</title>
 <link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
 <style>
@@ -13,6 +13,7 @@
 .ob-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);background:rgba(10,10,15,.7);border:1px solid rgba(201,168,76,.35);border-radius:3px;cursor:pointer;min-height:44px;min-width:44px;padding:8px 12px;display:inline-flex;align-items:center;justify-content:center}
 .ob-btn:hover{background:rgba(201,168,76,.18)}
 .ob-lv{padding:8px 9px;letter-spacing:1px}
+.ob-chapter{margin-left:14px}
 .ob-btn[aria-pressed=true].ob-lv{background:rgba(201,168,76,.22);border-color:var(--gold);color:var(--gold)}
 .ob-btn:focus-visible,#ob-canvas:focus-visible,.ob-help:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 .ob-help{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-family:var(--M);font-size:16px;color:var(--gold);border:1px solid rgba(201,168,76,.45);border-radius:50%;text-decoration:none}
@@ -62,7 +63,7 @@
         <button type="button" class="ob-btn" id="ob-right" aria-label="Right">&rarr;</button>
       </div>
     </div>
-    <p class="ob-keys">ARROWS OR WASD MOVE &middot; SPACE SWAP &middot; Z UNDO &middot; R RESTART &middot; M SOUND &middot; 1-5 LEVEL</p>
+    <p class="ob-keys">ARROWS OR WASD MOVE &middot; SPACE SWAP &middot; Z UNDO &middot; R RESTART &middot; M SOUND &middot; 1-9 AND 0 LEVEL</p>
   </main>
 </div>
 <script src="/omega-bridge-logic.js"></script>

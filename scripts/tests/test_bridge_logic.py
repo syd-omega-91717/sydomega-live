@@ -31,7 +31,7 @@ ARENA_JS = "const A=" + json.dumps({"id": "t", "rows": ARENA}) + ";"
 class BridgeLogic(unittest.TestCase):
     def test_every_level_is_solvable_with_the_stored_par_and_the_solution_replays(self):
         out = run("""const o=L.LEVELS.map(l=>{const r=L.solve(l),g=L.replay(l,r.actions);return {id:l.id,par:l.par,solver:r.moves,won:g.state.won,moves:g.state.moves}});console.log(JSON.stringify(o))""")
-        self.assertEqual(len(out), 5)
+        self.assertEqual(len(out), 10)
         for lv in out:
             self.assertEqual(lv["par"], lv["solver"], lv["id"])
             self.assertTrue(lv["won"], lv["id"])
@@ -45,12 +45,31 @@ class BridgeLogic(unittest.TestCase):
             self.assertTrue(all(lv["needed"]), "%s has a decorative pair" % lv["id"])
             self.assertTrue(lv["none"], "%s can be beaten with every pair disabled" % lv["id"])
 
-    def test_levels_get_longer_and_use_more_pairs(self):
-        out = run("console.log(JSON.stringify(L.LEVELS.map(l=>[l.par,L.parse(l).letters.length])))")
-        pars = [p for p, _ in out]
-        self.assertEqual(pars[0], min(pars))
-        self.assertEqual(pars[-1], max(pars))
-        self.assertEqual(out[-1][1], 3)
+    def test_each_chapter_ramps_up_and_chapter_two_is_the_deeper_one(self):
+        out = run("console.log(JSON.stringify(L.LEVELS.map(l=>({c:l.chapter,par:l.par,pairs:L.parse(l).letters.length,w:L.parse(l).w,h:L.parse(l).h}))))")
+        self.assertEqual(len(out), 10)
+        for ch in (1, 2):
+            lv = [x for x in out if x["c"] == ch]
+            self.assertEqual(len(lv), 5, "chapter %d" % ch)
+            pars = [x["par"] for x in lv]
+            self.assertEqual(pars, sorted(pars), "chapter %d must not get easier" % ch)
+        ch1, ch2 = [x for x in out if x["c"] == 1], [x for x in out if x["c"] == 2]
+        self.assertEqual(max(x["pairs"] for x in ch1), 3)
+        self.assertTrue(all(x["pairs"] >= 2 for x in ch2), "every chapter II level needs at least two spans")
+        self.assertGreater(min(x["par"] for x in ch2), 30, "chapter II starts well above the tutorial")
+        self.assertEqual(out[-1]["par"], max(x["par"] for x in out))
+
+    def test_every_level_fits_a_phone_width_and_the_level_ids_are_unique(self):
+        out = run("console.log(JSON.stringify(L.LEVELS.map(l=>({id:l.id,w:L.parse(l).w,h:L.parse(l).h}))))")
+        self.assertEqual(len({x["id"] for x in out}), len(out))
+        for x in out:
+            self.assertLessEqual(x["w"], 24, x["id"])   # 24 columns is 12 px tiles at 375 px; wider would be unreadable
+            self.assertLessEqual(x["h"], 6, x["id"])
+
+    def test_a_chapter_two_level_really_needs_both_characters_to_swap_several_times(self):
+        out = run("console.log(JSON.stringify(L.LEVELS.filter(l=>l.chapter===2).map(l=>({id:l.id,swaps:(L.solve(l).actions.match(/S/g)||[]).length}))))")
+        for x in out:
+            self.assertGreaterEqual(x["swaps"], 3, x["id"])
 
     # ARENA coordinates (column, row): Auren (2,2), Torin (2,3); cradle a at (3,2) and (7,2); thread (4..6,2); span A (4..6,1); stone (8,2).
     def test_the_heavy_character_cannot_cross_a_thread_and_the_light_one_can(self):
@@ -147,6 +166,11 @@ class BridgeFiles(unittest.TestCase):
             code = re.sub(r"(^|\s)//[^\n]*", r"\1", code)
             for bad in ("fetch(", "XMLHttpRequest", "sendBeacon", "WebSocket", "stripe", "checkout", "innerHTML", "outerHTML", "insertAdjacentHTML", "document.write", "eval(", "new Function"):
                 self.assertNotIn(bad, code, "%s uses %s" % (f, bad))
+
+    def test_a_held_key_cannot_fire_steps_and_nothing_flashes(self):
+        code = (ROOT / "omega-bridge-game.js").read_text(encoding="utf-8")
+        self.assertIn("e.repeat", code)
+        self.assertNotIn("setInterval", code)
 
     def test_the_logic_file_is_pure(self):
         code = (ROOT / "omega-bridge-logic.js").read_text(encoding="utf-8")

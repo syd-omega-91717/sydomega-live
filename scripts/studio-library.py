@@ -21,6 +21,7 @@ import argparse
 import json
 import pathlib
 import re
+import string
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -72,9 +73,13 @@ def build():
             m = re.search(r"E(\d{2})_([A-Z0-9_]+)\.fountain$", path)
             num = int(m.group(1))
             did = "episode:%s:%03d" % (f["id"], 100 + num)
-            title = m.group(2).replace("_", " ").title()
+            text = read(path)
+            # The script's own header names the episode ("Episode: 105, "THE TRAITOR'S MEMORY""), which a filename cannot spell (no apostrophe);
+            # the filename is only the fallback.
+            h = re.search(r'^Episode:\s*\d+,\s*"([^"]+)"', text, re.M)
+            title = string.capwords((h.group(1) if h else m.group(2).replace("_", " ")).lower())
             docs[did] = {"kind": "teleplay", "title": "%d %s" % (100 + num, title), "franchise": f["id"], "status": "SCRIPT_DRAFT_SHORT",
-                         "text": read(path)}
+                         "text": text}
             ep_ids.append(did)
         g = f["game"]
         gdoc = None

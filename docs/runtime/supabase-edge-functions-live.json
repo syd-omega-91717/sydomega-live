@@ -124,6 +124,11 @@
       "verify_jwt": true,
       "repository_blob_sha": "83407bba8c08c21324aeb0c0b5f7e7283549fb7f"
     },
+    "studio-library": {
+      "state": "PENDING_DEPLOY",
+      "verify_jwt": true,
+      "repository_blob_sha": "2a252b7e9880dc59d5a4f92a13cace1d4fac9d1c"
+    },
     "event-ingest": {
       "state": "LOCAL_ONLY"
     },

@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 238,
-  "open_task_count": 3205,
+  "page_count": 239,
+  "open_task_count": 3219,
   "pages": [
     {
       "page_id": "404",
@@ -14958,6 +14958,72 @@
         "PAGE::stoic::MISSING::TRACEABILITY",
         "PAGE::stoic::MISSING::TRUTH_STATES",
         "PAGE::stoic::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "studio-library",
+      "path": "studio-library.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; STUDIO LIBRARY",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-morph.js",
+          "/omega-studio-library.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::studio-library::MISSING::ACCESSIBILITY",
+        "PAGE::studio-library::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::studio-library::MISSING::AUTHORIZATION",
+        "PAGE::studio-library::MISSING::DATA_SOURCES",
+        "PAGE::studio-library::MISSING::DOMAIN",
+        "PAGE::studio-library::MISSING::EVENTS",
+        "PAGE::studio-library::MISSING::FAILURE_PATHS",
+        "PAGE::studio-library::MISSING::PRIMARY_ROLE",
+        "PAGE::studio-library::MISSING::PURPOSE",
+        "PAGE::studio-library::MISSING::RESPONSIVE",
+        "PAGE::studio-library::MISSING::TASKS",
+        "PAGE::studio-library::MISSING::TRACEABILITY",
+        "PAGE::studio-library::MISSING::TRUTH_STATES",
+        "PAGE::studio-library::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

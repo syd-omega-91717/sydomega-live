@@ -27,6 +27,11 @@
       "auth_mode": "SUPABASE_JWT",
       "rationale": "Owner-only delivery of unreleased Studios canon; the owner flag is re-checked server-side."
     },
+    "studio-library": {
+      "verify_jwt": true,
+      "auth_mode": "SUPABASE_JWT",
+      "rationale": "Owner-only delivery of the unreleased Studios library (scripts, design documents, catalog); the owner flag is re-checked server-side."
+    },
     "content-ingest": {
       "verify_jwt": true,
       "auth_mode": "SUPABASE_JWT",

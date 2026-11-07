@@ -25,6 +25,7 @@
     "snapshot-leaderboard",
     "stripe-webhook",
     "studio-canon",
+    "studio-library",
     "weekly-digest"
   ]
 }

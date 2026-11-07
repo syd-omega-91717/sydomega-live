@@ -1,6 +1,6 @@
 """The Studios canon must only be served to an approved member, and must not also ship as a public static file.
 
-The access decision lives in supabase/functions/_shared/studio-access.ts and is pure, so every case runs here under
+The access decision lives in supabase/functions/_shared/studio-access.mjs and is pure, so every case runs here under
 real Node (type stripping), not a re-implementation in Python. Each deny case is a planted violation: if the predicate
 were loosened, the matching test fails.
 """
@@ -12,7 +12,7 @@ import subprocess
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-ACCESS = ROOT / "supabase" / "functions" / "_shared" / "studio-access.ts"
+ACCESS = ROOT / "supabase" / "functions" / "_shared" / "studio-access.mjs"
 FUNC = ROOT / "supabase" / "functions" / "studio-canon" / "index.ts"
 NOW = 1_800_000_000_000
 FUTURE = "2027-06-01T00:00:00Z"
@@ -26,7 +26,7 @@ console.log(JSON.stringify(cases.map(c => decideAccess(c.user, c.profile, c.err,
 
 
 def decide(cases):
-    out = subprocess.run(["node", "--experimental-strip-types", "--no-warnings", "--input-type=module", "-e", SCRIPT, json.dumps(cases)],
+    out = subprocess.run(["node", "--input-type=module", "-e", SCRIPT, json.dumps(cases)],
                          capture_output=True, text=True, timeout=60)
     assert out.returncode == 0, out.stderr
     return json.loads(out.stdout.strip().splitlines()[-1])

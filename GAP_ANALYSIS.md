@@ -19,7 +19,7 @@ project's own established convention (security/data-integrity first).
   (so are the canon registry, the bibles and every other `docs/studios` file). Separately, every file the site serves is fetchable by
   URL: `bg.js` only hides the page until approval (the approval guard is a UI veil, not a boundary). What is gated server-side is
   Supabase data (RLS) and Edge Functions with `verify_jwt`. The Worlds canon was moved behind such a function
-  (`supabase/functions/studio-canon`, written and tested but NOT yet deployed: see its `DEPLOY.md`; approval predicate in `_shared/studio-access.ts`, tests in `test_studio_canon_gate.py`) and is no
+  (`supabase/functions/studio-canon`, written and tested but NOT yet deployed: see its `DEPLOY.md`; approval predicate in `_shared/studio-access.mjs`, tests in `test_studio_canon_gate.py`) and is no
   longer shipped by the build (checked: `public/config/` has no worlds file). **Still open, the owner's decision:** making the
   repository private (or moving unreleased scripts to a private repository or to Storage behind signed URLs); the GitHub Pages failover
   would also publish the static files to a second origin. Until then, treat anything under `docs/` as public.

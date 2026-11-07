@@ -1,6 +1,6 @@
 // SYD OMEGA 91717 — the one server-side answer to "may this caller read Studios canon?".
 //
-// Pure on purpose: no Deno, no network. The studio-canon function feeds it the caller's `profiles` row and acts on
+// Plain ES module (.mjs) on purpose, so Deno imports it and any Node runs it with no flag. Pure: no Deno, no network. The studio-canon function feeds it the caller's `profiles` row and acts on
 // the verdict; scripts/tests/test_studio_canon_gate.py runs every case below under Node.
 //
 // It mirrors the client approval guard in bg.js (`access_approved === false && !is_owner && !is_trial` sends a visitor to
@@ -9,24 +9,21 @@
 //   - a rejected account is denied even if access_approved is still true;
 //   - a trial whose expiry has passed is denied even if the expiry job has not flipped access_approved yet.
 
-export type Profile = {
-  is_owner?: boolean | null;
-  access_approved?: boolean | null;
-  is_rejected?: boolean | null;
-  is_trial?: boolean | null;
-  trial_expires_at?: string | null;
-};
+/**
+ * @typedef {{ is_owner?: boolean|null, access_approved?: boolean|null, is_rejected?: boolean|null,
+ *             is_trial?: boolean|null, trial_expires_at?: string|null }} Profile
+ * @typedef {{ ok: true } | { ok: false, status: 401|403|503,
+ *             error: "not_authenticated"|"access_not_approved"|"profile_unavailable" }} Verdict
+ */
 
-export type Verdict =
-  | { ok: true }
-  | { ok: false; status: 401 | 403 | 503; error: "not_authenticated" | "access_not_approved" | "profile_unavailable" };
-
-export function decideAccess(
-  userId: string | null,
-  profile: Profile | null,
-  profileError: boolean,
-  nowMs: number,
-): Verdict {
+/**
+ * @param {string|null} userId
+ * @param {Profile|null} profile
+ * @param {boolean} profileError
+ * @param {number} nowMs
+ * @returns {Verdict}
+ */
+export function decideAccess(userId, profile, profileError, nowMs) {
   if (!userId) return { ok: false, status: 401, error: "not_authenticated" };
   if (profileError) return { ok: false, status: 503, error: "profile_unavailable" };
   if (!profile) return { ok: false, status: 403, error: "access_not_approved" };

@@ -3,7 +3,7 @@
 //
 // Why a function and not a static file: every file the site serves is public to anyone who knows its URL; bg.js only
 // hides the page. Content that must not be seen without approval has to come from a server that checks approval.
-// verify_jwt plus auth.getUser() proves who is calling; _shared/studio-access.ts decides if that profile is approved.
+// verify_jwt plus auth.getUser() proves who is calling; _shared/studio-access.mjs decides if that profile is approved.
 //
 // No input selects the data: the body is ignored, so there is no path, id or filter to inject into.
 // The payload (./worlds-data.ts) is generated from config/omega-studio-worlds.json by
@@ -12,7 +12,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 import { publishableKey, secretKey } from "../_shared/keys.ts";
-import { decideAccess } from "../_shared/studio-access.ts";
+import { decideAccess } from "../_shared/studio-access.mjs";
 import { WORLDS } from "./worlds-data.ts";
 
 const allowedOrigin = (origin: string | null) => {

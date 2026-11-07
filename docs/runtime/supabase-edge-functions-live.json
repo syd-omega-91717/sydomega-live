@@ -122,12 +122,12 @@
     "studio-canon": {
       "state": "PENDING_DEPLOY",
       "verify_jwt": true,
-      "repository_blob_sha": "492fe73c94c1656ba14aca02628ef2b4da1ba583"
+      "repository_blob_sha": "08d86b1b26b47a3a08e98ee42e998c2089febbec"
     },
     "studio-library": {
       "state": "PENDING_DEPLOY",
       "verify_jwt": true,
-      "repository_blob_sha": "1812ace5bed444702359ce3f76bb21a621f8ae77"
+      "repository_blob_sha": "9a1bb3307e8c416cbd9c17fe37ec08e8ce456be1"
     },
     "event-ingest": {
       "state": "LOCAL_ONLY"

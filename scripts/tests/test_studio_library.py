@@ -115,6 +115,20 @@ class StudioLibrary(unittest.TestCase):
                 self.assertNotIn("publicKey", line, fn)
                 self.assertNotIn("Authorization", line, fn)
 
+    def test_the_owner_flag_is_read_with_the_callers_own_session_first_and_the_server_key_only_as_a_fallback(self):
+        """The owner's profile read through the server-side key failed in production (503 profile_unavailable) for a reason that could not
+        be read from here. The caller's own session can already read its own `profiles` row (the sign-in guard does it on every page), so
+        the function reads that first and falls back to the server key. The access rule must not change: only a literal true passes."""
+        for fn in ("studio-canon", "studio-library"):
+            src = (ROOT / "supabase" / "functions" / fn / "index.ts").read_text(encoding="utf-8")
+            own, admin = src.index('readProfile(caller, "own")'), src.index('readProfile(createClient(url, adminKey), "admin")')
+            self.assertLess(own, admin, fn)
+            self.assertLess(admin, src.index("decideOwner(userId, profile, profileError)"), fn)
+            self.assertIn("profileError = !ok", src, fn)
+            self.assertIn("if (!ok || !profile)", src, fn)
+            self.assertNotIn("is_owner ===", src, fn)          # the decision stays in decideOwner, never inline
+            self.assertNotIn("is_owner: true", src, fn)
+
     def test_the_pages_show_only_a_sanitised_reason(self):
         for js in ("omega-studio-library.js", "omega-worlds.js"):
             src = (ROOT / js).read_text(encoding="utf-8")

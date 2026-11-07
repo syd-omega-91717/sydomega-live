@@ -27,7 +27,7 @@ New to the canon. Anchored at saga chapter 11, where the 9.1717 Hz frequency is 
 
 ## Series
 
-**Galactic Thrones** — 4 seasons of 10 episodes. Status: CONCEPT. No episode script exists.
+**Galactic Thrones** — 4 seasons of 10 episodes. Status: SCRIPTS_DRAFT. Season 1 bible: `docs/studios/franchises/the-last-galactic-empire/series/galactic-thrones/season-1/BIBLE.md`. No episode script exists.
 
 ## Game
 
@@ -48,3 +48,4 @@ New to the canon. Anchored at saga chapter 11, where the 9.1717 Hz frequency is 
 - **C-03** (name, PROPOSED_RESOLUTION): Shared surname Ardent. Treated as one lineage: Juno is Nadia's descendant, a deliberate Convergence link.
 - **C-06** (name, PROPOSED_RESOLUTION): The Taurus leader Tharion Voss is renamed Tharion Vorne (decided 2026-11-07 under delegation). Kaelen Voss keeps his name.
 - **C-14** (chronology, PROPOSED_RESOLUTION): The Galactic Universe runs on its own clock and meets the others at saga chapter 11; Age V is not a human prehistory.
+- **C-26** (lore, PROPOSED_RESOLUTION): The brief gives the surname Ardent to Nadia Ardent (The Lost Civilizations) and Juno Ardent (The Last Galactic Empire). Decision: no relation is implied in either series; a shared family is a Convergence-level reveal and must be earned by both franchises first.

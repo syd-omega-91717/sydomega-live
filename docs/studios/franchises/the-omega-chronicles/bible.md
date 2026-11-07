@@ -30,7 +30,7 @@ Maps from merged slate entries: `the-omega-saga`, `post-human-mind`.
 
 ## Series
 
-**Omega: The Human Equation** — 3 seasons of 10 episodes. Status: CONCEPT. No episode script exists.
+**Omega: The Human Equation** — 3 seasons of 10 episodes. Status: SCRIPTS_DRAFT. Season 1 bible: `docs/studios/franchises/the-omega-chronicles/series/omega-the-human-equation/season-1/BIBLE.md`. No episode script exists.
 
 ## Game
 

@@ -282,7 +282,11 @@
         "title": "Omega: The Human Equation",
         "seasons": 3,
         "episodesPerSeason": 10,
-        "status": "CONCEPT"
+        "status": "SCRIPTS_DRAFT",
+        "bible": "docs/studios/franchises/the-omega-chronicles/series/omega-the-human-equation/season-1/BIBLE.md",
+        "scripts": [
+          "docs/studios/franchises/the-omega-chronicles/series/omega-the-human-equation/season-1/episodes/E01_THE_CALIBRATION.fountain"
+        ]
       },
       "game": {
         "title": "Omega: Civilization 91717",
@@ -339,7 +343,11 @@
         "title": "The Archives of Humanity",
         "seasons": 3,
         "episodesPerSeason": 8,
-        "status": "CONCEPT"
+        "status": "SCRIPTS_DRAFT",
+        "bible": "docs/studios/franchises/the-lost-civilizations/series/the-archives-of-humanity/season-1/BIBLE.md",
+        "scripts": [
+          "docs/studios/franchises/the-lost-civilizations/series/the-archives-of-humanity/season-1/episodes/E01_THE_SAME_SENTENCE.fountain"
+        ]
       },
       "game": {
         "title": "The Lost Kingdoms",
@@ -394,7 +402,11 @@
         "title": "Galactic Thrones",
         "seasons": 4,
         "episodesPerSeason": 10,
-        "status": "CONCEPT"
+        "status": "SCRIPTS_DRAFT",
+        "bible": "docs/studios/franchises/the-last-galactic-empire/series/galactic-thrones/season-1/BIBLE.md",
+        "scripts": [
+          "docs/studios/franchises/the-last-galactic-empire/series/galactic-thrones/season-1/episodes/E01_THE_UNREGISTERED_FLEET.fountain"
+        ]
       },
       "game": {
         "title": "Last Galactic Empire",
@@ -439,9 +451,13 @@
       ],
       "series": {
         "title": "Survivors of Tomorrow",
-        "seasons": null,
-        "episodesPerSeason": null,
-        "status": "CONCEPT"
+        "seasons": 2,
+        "episodesPerSeason": 8,
+        "status": "SCRIPTS_DRAFT",
+        "bible": "docs/studios/franchises/the-human-frontier/series/survivors-of-tomorrow/season-1/BIBLE.md",
+        "scripts": [
+          "docs/studios/franchises/the-human-frontier/series/survivors-of-tomorrow/season-1/episodes/E01_RATION_DAY.fountain"
+        ]
       },
       "game": {
         "title": "Frontier: Rebuild Earth",
@@ -1017,6 +1033,30 @@
       "role": "Private collector who holds the Energy stone until Season 1 episode 6",
       "canonStatus": "PROPOSED",
       "source": "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md"
+    },
+    {
+      "id": "ines-calloway",
+      "name": "Ines Calloway",
+      "franchise": "the-human-frontier",
+      "role": "Water-board clerk who reads a number she was not meant to see",
+      "canonStatus": "PROPOSED",
+      "source": "Survivors of Tomorrow Season 1 bible, draft 1 (new names)"
+    },
+    {
+      "id": "tobias-wren",
+      "name": "Tobias Wren",
+      "franchise": "the-human-frontier",
+      "role": "Engineer on the east wall who wants a vote",
+      "canonStatus": "PROPOSED",
+      "source": "Survivors of Tomorrow Season 1 bible, draft 1 (new names)"
+    },
+    {
+      "id": "marguerite-osei",
+      "name": "Marguerite Osei",
+      "franchise": "the-human-frontier",
+      "role": "Warden of the Ledger, who kept the reserve figure low",
+      "canonStatus": "PROPOSED",
+      "source": "Survivors of Tomorrow Season 1 bible, draft 1 (new names)"
     }
   ],
   "conflicts": [
@@ -1242,6 +1282,25 @@
         "zodiac-wars"
       ],
       "resolution": "The registry says Zodiac Wars: Bloodlines is 4 seasons of 8 episodes; the Zodiac Wars canon draft and the Rise of Aries package describe a ten-episode limited series ('Season 1 opens on the Soul door') and a five-season series. Decision under delegation: keep the registry's 4 x 8, with one forgotten guardian and three Houses per season (Season 1: Soul with Aries, Libra and Pisces). The ten-episode limited series and a fifth, Null season are not adopted. The live micro-series The Twelve Houses is a separate product.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-25",
+      "kind": "scope",
+      "subjects": [
+        "the-human-frontier"
+      ],
+      "resolution": "The registry gave The Human Frontier's series, Survivors of Tomorrow, no season or episode counts. Decision under delegation: 2 seasons of 8 episodes, with Season 1 (Ration Day) set in the Last City. The registry also named no characters for this franchise, so Ines Calloway, Tobias Wren and Marguerite Osei are new, proposed names.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-26",
+      "kind": "lore",
+      "subjects": [
+        "nadia-ardent",
+        "juno-ardent"
+      ],
+      "resolution": "The brief gives the surname Ardent to Nadia Ardent (The Lost Civilizations) and Juno Ardent (The Last Galactic Empire). Decision: no relation is implied in either series; a shared family is a Convergence-level reveal and must be earned by both franchises first.",
       "status": "PROPOSED_RESOLUTION"
     }
   ]

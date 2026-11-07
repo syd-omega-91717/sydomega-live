@@ -1,0 +1,9 @@
+### Studios: episodes 103 and 104 (2026-11-07)
+
+**Why.** The owner said "Go" on continuing Myth of the Stones after the two delegated decisions were recorded.
+
+**Fix.** Season 1 episodes 103 "The Keeper" and 104 "The Broken Kingdom" (short first drafts, about 14 of about 50 pages each), registered as scripts three and four. Self-review before commit found and fixed four canon problems: (1) a "small grey stone" at Ormel Hesh would have been read as one of the seven, and the film's grey stone is Ithren's Memory stone found at Kharesh, so the object is now a pale slate lattice token; (2) the Lamp line that blurred Seraphine's four thousand years with the 311 years since the Sundering was removed; (3) Lyra's claim that the donor knew an unpublished slab contradicted episode 101 and was reworded; (4) the film stages the stunning of Malachar in the Loom chamber right after the Sundering, not "the next morning" as the bible says, so the flashback follows the film. Two deliberate omissions: the Citadel's statue of Ithren with Auren's face (a film reveal) is not shown, and Auren has no second time-stutter (Lock 5). The film prologue also names all seven Guardians (Malachar, Ithren, Eryndor, Orsolya, Maevar, Tolun, Sabeth), so the two members the Worlds data had marked "inferred" now cite the film, and the resolved open question about them was removed.
+
+**Verified.** Studio canon validator 0 findings; Studios and Worlds tests; the full `./scripts/ci-local.sh`. The Worlds payload for the gated function was regenerated and the validator checks it matches.
+
+**Not done / not verified.** 146 episodes, 24 screenplays and every game build are unwritten; nothing here is approved content. The invented Ormel Hesh details (a child, Ilsa, whose father Malachar "knew"; "the first town to stop") are proposals the founder may strike. The live `studio-canon` code, the owner path and the non-owner 403 are still unverified; its snapshot stays `PENDING_DEPLOY`.

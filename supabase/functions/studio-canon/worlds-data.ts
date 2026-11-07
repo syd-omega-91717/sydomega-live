@@ -682,6 +682,7 @@ export const WORLDS = {
       "approvedBy": "myth-of-the-stones-the-seven-stones",
       "sources": [
         "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/PACKAGE.md",
+        "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_1.fountain",
         "docs/studios/franchises/myth-of-the-stones/bible.md"
       ],
       "members": [
@@ -707,14 +708,14 @@ export const WORLDS = {
         },
         {
           "character": "eryndor",
-          "basis": "inferred: the last surviving Guardian"
+          "basis": "film prologue (ACT_1) names her among the seven"
         },
         {
           "character": "malachar",
-          "basis": "inferred: refuses to give up his stone at the Sundering"
+          "basis": "film prologue (ACT_1) names him among the seven"
         }
       ],
-      "note": "Seven Guardians took seven stones from the Loom. The registry names five as members; Eryndor and Malachar complete the seven by inference and are listed as such."
+      "note": "Seven Guardians took seven stones from the Loom. The film prologue (Act One) names all seven: Malachar, Ithren, Eryndor, Orsolya, Maevar, Tolun and Sabeth."
     }
   ],
   "sky": {
@@ -823,13 +824,6 @@ export const WORLDS = {
         "pluto",
         "twelve-shadow",
         "throne-thirteenth"
-      ]
-    },
-    {
-      "id": "q-seven-guardians",
-      "question": "Are Eryndor and Malachar the other two Guardians?",
-      "subjects": [
-        "seven-guardians"
       ]
     },
     {

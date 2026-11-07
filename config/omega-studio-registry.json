@@ -152,7 +152,9 @@
         "bible": "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md",
         "scripts": [
           "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/episodes/E01_THE_FIRST_SIGNAL.fountain",
-          "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/episodes/E02_THE_HIDDEN_BLOODLINE.fountain"
+          "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/episodes/E02_THE_HIDDEN_BLOODLINE.fountain",
+          "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/episodes/E03_THE_KEEPER.fountain",
+          "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/episodes/E04_THE_BROKEN_KINGDOM.fountain"
         ]
       },
       "game": {

@@ -91,7 +91,7 @@
     function renderLevels() {
       var box = ui.levels; box.textContent = '';
       L.LEVELS.forEach(function (lv, i) {
-        var b = document.createElement('button'); b.type = 'button'; b.className = 'ob-btn ob-lv';
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'ob-btn ob-lv' + (i > 0 && lv.chapter !== L.LEVELS[i - 1].chapter ? ' ob-chapter' : '');
         b.textContent = lv.name.split('.')[0] + (prog.best[lv.id] ? ' ✓' : '');
         b.setAttribute('aria-label', lv.name + (prog.best[lv.id] ? ', solved in ' + prog.best[lv.id] + ' moves' : ''));
         b.setAttribute('aria-pressed', i === idx ? 'true' : 'false');
@@ -138,14 +138,15 @@
 
     /* ---- input */
     canvas.addEventListener('keydown', function (e) {
-      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;   // a held key must not fire a step every few milliseconds
       var k = e.key, dir = KEYS[k];
       if (dir) { e.preventDefault(); act('move', dir); }
       else if (k === ' ' || k === 'q' || k === 'Q' || k === 'x' || k === 'X') { e.preventDefault(); act('swap'); }
       else if (k === 'z' || k === 'Z' || k === 'Backspace') { e.preventDefault(); act('undo'); }
       else if (k === 'r' || k === 'R') { e.preventDefault(); act('restart'); }
       else if ((k === 'n' || k === 'N' || k === 'Enter') && won && idx < L.LEVELS.length - 1) { e.preventDefault(); setLevel(idx + 1); }
-      else if (k >= '1' && k <= String(L.LEVELS.length)) { e.preventDefault(); setLevel(Number(k) - 1); }
+      else if (k >= '1' && k <= '9' && Number(k) <= L.LEVELS.length) { e.preventDefault(); setLevel(Number(k) - 1); }
+      else if (k === '0' && L.LEVELS.length >= 10) { e.preventDefault(); setLevel(9); }
       else if (k === 'm' || k === 'M') { e.preventDefault(); toggleSound(); }
     });
     function bindBtn(id, fn) { var b = $(id); if (b) b.addEventListener('click', function () { fn(); canvas.focus(); }); }

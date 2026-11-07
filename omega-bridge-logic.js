@@ -26,36 +26,66 @@
   /* par is the solver's minimum number of steps (swapping who you control is free); the tests fail if it drifts, if any level is
      unsolvable, if any pair of cradles is not actually needed, or if a level can be beaten with every pair disabled. */
   var LEVELS = [
-    { id: 'span', name: 'I. First Span', par: 14, rows: [
+    { id: 'span', chapter: 1, name: 'I. First Span', par: 14, rows: [
       '###########',
       '#...AAA...#',
       '#.@a===a*.#',
       '#.&.   ...#',
       '###########'] },
-    { id: 'narrows', name: 'II. The Narrows', par: 21, rows: [
+    { id: 'narrows', chapter: 1, name: 'II. The Narrows', par: 21, rows: [
       '##############',
       '####.AAAA..###',
       '#&@.a====a.*##',
       '##############'] },
-    { id: 'relay', name: 'III. The Relay', par: 28, rows: [
+    { id: 'relay', chapter: 1, name: 'III. The Relay', par: 28, rows: [
       '#################',
       '#...AAA...BBB...#',
       '#.@a===a.b===b*.#',
       '#.&.   ...   ...#',
       '#################'] },
-    { id: 'return', name: 'IV. The Return', par: 28, rows: [
+    { id: 'return', chapter: 1, name: 'IV. The Return', par: 28, rows: [
       '#################',
       '#....AAA...BBB..#',
       '#.@.a===a.b   .*#',
       '#.&b.   ...   ..#',
       '#################'] },
-    { id: 'hold', name: 'V. The Long Hold', par: 48, rows: [
+    { id: 'hold', chapter: 1, name: 'V. The Long Hold', par: 48, rows: [
       '########################',
       '#....AAA...BBB....CCC..#',
       '#.@.a===a.b   ...c   .*#',
       '#.&b.   ...   ...=   ..#',
       '#################c######',
-      '########################'] }
+      '########################'] },
+    { id: 'near', chapter: 2, name: 'VI. Far and Near', par: 39, rows: [
+      '#################',
+      '#a..AAAb..BBB.*a#',
+      '#&..===b..===...#',
+      '#@..   ...   ...#',
+      '#################'] },
+    { id: 'crossed', chapter: 2, name: 'VII. Crossed Hands', par: 40, rows: [
+      '#################',
+      '#...AAAb.bBBB...#',
+      '#..@===...===..*#',
+      '#a&.   ...   a..#',
+      '#################'] },
+    { id: 'three', chapter: 2, name: 'VIII. Three Spans', par: 48, rows: [
+      '#######################',
+      '#&@aAAA...BBB...CCCc..#',
+      '#...===..b===c..===.*.#',
+      '#.a.   .b.   ...   ...#',
+      '#######################'] },
+    { id: 'crowded', chapter: 2, name: 'IX. The Crowded Island', par: 49, rows: [
+      '#######################',
+      '#...AAA...BBBb..CCC...#',
+      '#..a===...===...===c..#',
+      '#.&@   acb   ...   *..#',
+      '#######################'] },
+    { id: 'great', chapter: 2, name: 'X. The Great Hold', par: 58, rows: [
+      '#######################',
+      '#..aAAA..bBBB..cCCC...#',
+      '#...===...===...===.c*#',
+      '#&@.   ..b   ..a   ...#',
+      '#######################'] }
   ];
 
   function parse(level) {

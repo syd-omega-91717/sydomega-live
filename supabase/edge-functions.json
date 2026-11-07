@@ -24,6 +24,7 @@
     "secrets-health",
     "snapshot-leaderboard",
     "stripe-webhook",
+    "studio-canon",
     "weekly-digest"
   ]
 }

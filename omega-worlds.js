@@ -1,5 +1,6 @@
-/* Ω STUDIOS WORLDS page logic (worlds.html). Reads /config/omega-studio-worlds.json only; the twelve signs and gods
-   come from window.OmegaCanon. Every status shown is the data file's status; this file decides nothing about canon. */
+/* Ω STUDIOS WORLDS page logic (worlds.html). The canon arrives only from the approval-gated studio-canon function;
+   it is not a static file. The twelve signs and gods come from window.OmegaCanon. Every status shown is the data's
+   own status; this file decides nothing about canon. */
 (function () {
   'use strict';
   var ST = ['FOUNDER_APPROVED', 'REPO_CANON', 'MERGED_DRAFT', 'RECONCILED_PROPOSED', 'PROPOSED', 'OPEN'];
@@ -89,13 +90,13 @@
       })));
     }
     if (e.sources && e.sources.length) {
-      box.appendChild(h('h3', { text: 'SOURCES (repository files)' }));
+      box.appendChild(h('h3', { text: 'SOURCES' }));
       box.appendChild(h('ul', {}, e.sources.map(function (x) { return h('li', {}, [h('span', { 'class': 'wd-src', text: x })]); })));
     } else if (e.status === 'OPEN') {
       box.appendChild(h('h3', { text: 'SOURCES' }));
-      box.appendChild(h('p', { 'class': 'wd-meta', text: 'None. Canon has not decided this; see the open questions below.' }));
+      box.appendChild(h('p', { 'class': 'wd-meta', text: 'NONE · OPEN' }));
     }
-    if (e.approvedBy) box.appendChild(h('p', { 'class': 'wd-meta', text: 'APPROVED INSIDE PRODUCTION ' + e.approvedBy }));
+    if (e.approvedBy) box.appendChild(h('p', { 'class': 'wd-meta', text: 'APPROVED IN ' + e.approvedBy }));
   }
 
   /* ---- cards */
@@ -105,7 +106,7 @@
       badge(e.status),
       h('div', { 'class': 'wd-name', text: e.name }),
       h('p', { 'class': 'wd-meta', text: [e.franchise ? e.franchise.replace(/-/g, ' ') : '', e.kind && e.kind !== 'open' ? e.kind : ''].filter(Boolean).join(' · ').toUpperCase() }),
-      h('p', { 'class': 'wd-note', text: e.note || '' })
+      null
     ]);
     if (cur) el.setAttribute('aria-current', 'true');
     el.style.setProperty('--card-accent', { FOUNDER_APPROVED: '#5fd18a', REPO_CANON: '#e2c86d', MERGED_DRAFT: '#4fe3ff', RECONCILED_PROPOSED: '#4fe3ff', PROPOSED: '#b69cff', OPEN: '#ff9a9a' }[e.status]);
@@ -119,7 +120,7 @@
     var g = h('div', { 'class': 'wd-grid' });
     var shown = list.filter(function (r) { return visible(r.e); });
     shown.forEach(function (r) { g.appendChild(card(r)); });
-    if (!shown.length) g.appendChild(h('p', { 'class': 'wd-meta', text: 'Nothing in this section has that status.' }));
+    if (!shown.length) g.appendChild(h('p', { 'class': 'wd-meta', text: 'NONE' }));
     return g;
   }
   function recs(sec) { return D[sec].map(function (e) { return { sec: sec, e: e }; }); }
@@ -127,21 +128,18 @@
   /* ---- tab bodies */
   function bodyKings() {
     var w = h('div', {});
-    w.appendChild(h('p', { 'class': 'wd-note', text: 'The fiction has few crowned kings. It has thrones, and the argument in every franchise is who sits on them. A throne can be seated, refused, historical or empty; empty is a fact too.' }));
     w.appendChild(renderGrid(recs('thrones')));
     return w;
   }
   function bodyCity() {
     var w = h('div', {});
-    w.appendChild(h('p', { 'class': 'wd-note', text: 'Places named in canon. A place with no world is not an oversight: canon has not said where it stands (see the first open question). The member city is on the City page.' }));
-    var a = h('a', { href: '/city.html', 'class': 'wd-link', text: 'MEMBER CITY (platform)' }); a.style.display = 'inline-block'; a.style.margin = '0 0 10px';
+    var a = h('a', { href: '/city.html', 'class': 'wd-link', text: 'MEMBER CITY' }); a.style.display = 'inline-block'; a.style.margin = '0 0 10px';
     w.appendChild(a);
     w.appendChild(renderGrid(recs('places')));
     return w;
   }
   function bodyPantheons() {
     var w = h('div', {});
-    w.appendChild(h('p', { 'class': 'wd-note', text: 'Gods, shadows and guardians of the fiction. The twelve Light rulers are read from the canon module, not copied here.' }));
     w.appendChild(renderGrid(recs('pantheons')));
     var C = canon();
     if (state.sel === 'twelve-light') {
@@ -183,10 +181,9 @@
     });
     var side = h('div', {});
     side.appendChild(h('div', { 'class': 'sechead', text: 'THE NINE-RING WALL' }));
-    side.appendChild(h('p', { 'class': 'wd-note', text: D.sky.rings.note }));
     var ul = h('ol', { 'class': 'wd-rings', 'aria-label': 'Nine rings, seven inscribed and two blank' });
     D.sky.rings.inscribed.forEach(function (n, i) { ul.appendChild(h('li', { text: 'RING ' + (i + 1) + ' · ' + n.toUpperCase() })); });
-    for (var b = 0; b < D.sky.rings.blank; b++) ul.appendChild(h('li', { 'class': 'wd-blank', text: 'RING ' + (D.sky.rings.inscribed.length + b + 1) + ' · BLANK, NOT NAMED IN CANON' }));
+    for (var b = 0; b < D.sky.rings.blank; b++) ul.appendChild(h('li', { 'class': 'wd-blank', text: 'RING ' + (D.sky.rings.inscribed.length + b + 1) + ' · BLANK' }));
     side.appendChild(ul);
     side.appendChild(h('div', { 'class': 'sechead', text: 'EVENTS OF THE SKY' }));
     side.appendChild(renderGrid(D.sky.events.map(function (e) { return { sec: 'events', e: e }; })));
@@ -218,11 +215,10 @@
     anim.bodies.forEach(function (b) { svg.appendChild(b.g); });
     anim.svg = svg; anim.byId = byId; placeBodies();
     var side = h('div', {});
-    var btn = h('button', { type: 'button', 'class': 'wd-btn', 'aria-pressed': state.orbit ? 'true' : 'false', text: reduced ? 'ORBIT MOTION OFF (reduced motion)' : 'ANIMATE ORBITS' });
+    var btn = h('button', { type: 'button', 'class': 'wd-btn', 'aria-pressed': state.orbit ? 'true' : 'false', text: reduced ? 'ORBIT OFF' : 'ORBIT' });
     if (reduced) btn.disabled = true;
     btn.addEventListener('click', function () { state.orbit = !state.orbit; btn.setAttribute('aria-pressed', state.orbit ? 'true' : 'false'); if (state.orbit) loop(); else cancelAnimationFrame(anim.raf); });
     side.appendChild(btn);
-    side.appendChild(h('p', { 'class': 'wd-note', text: 'Distances are by orbit order, not to scale. Ceres and Juno share the belt. The Moon orbits Earth. Earth is the thirteenth seat: no god rules it.' }));
     stage.appendChild(svg); stage.appendChild(side); w.appendChild(stage);
     w.appendChild(renderGrid(recs('worlds')));
     return w;
@@ -313,14 +309,19 @@
     if (p[1] && index[p[1]]) state.sel = p[1];
   }
 
-  /* ---- load: a failure is shown, never swallowed into an empty page */
+  /* ---- load: only an approved session gets the canon; a refusal is shown, never swallowed into an empty page */
   function fail(msg) { var b = document.getElementById('wd-body'); b.textContent = ''; b.appendChild(h('p', { 'class': 'wd-err', role: 'alert', text: msg })); }
-  fetch('/config/omega-studio-worlds.json', { cache: 'no-cache' }).then(function (r) {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  }).then(function (data) {
+  function load() {
+    if (!window.OmegaSB) return Promise.reject(new Error('no client'));
+    return window.OmegaSB.get().then(function (sb) { return sb.functions.invoke('studio-canon', { body: {} }); }).then(function (r) {
+      if (r && r.error) { var e = new Error(r.error.message || 'error'); e.status = r.error.context && r.error.context.status; throw e; }
+      if (!r || !r.data || !r.data.canon) throw new Error('empty');
+      return r.data.canon;
+    });
+  }
+  load().then(function (data) {
     D = data; buildIndex(); readHash();
-    document.getElementById('wd-foot').textContent = 'CANON ' + D.canonVersion + ' · AS OF ' + D.asOf;
+    document.getElementById('wd-foot').textContent = D.canonVersion + ' · ' + D.asOf;
     render();
     /* The twelve gods and signs come from the canon module. bg.js injects it after this script runs, so wait for
        it (up to ~6 s) and re-render when ready; without it the page still works and shows track numbers. */
@@ -330,5 +331,5 @@
       else if (C && C.onReady) { clearInterval(wait); C.onReady(function () { render(); }); }
       else if (++tries > 60) { clearInterval(wait); }
     }, 100);
-  }).catch(function (e) { fail('The Worlds canon could not be loaded (' + e.message + '). Nothing is shown rather than a guess.'); });
+  }).catch(function (e) { fail(e && (e.status === 401 || e.status === 403) ? 'APPROVAL REQUIRED' : 'UNAVAILABLE'); });
 })();

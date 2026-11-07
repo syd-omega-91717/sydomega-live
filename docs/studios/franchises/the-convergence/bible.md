@@ -26,11 +26,11 @@ New to the canon. Crossovers must be earned by the other six franchises first. T
 
 ## Series
 
-**The Convergence Files** — season and episode counts not specified. No episode script exists.
+**The Convergence Files** — season and episode counts not specified. Status: CONCEPT. No episode script exists.
 
 ## Game
 
-**Omega Multiverse** — Interconnected exploration and cooperative adventure. No playable build exists.
+**Omega Multiverse** — Interconnected exploration and cooperative adventure. Status: CONCEPT. No playable build exists. Multiplayer: UNAVAILABLE.
 
 ## Characters
 

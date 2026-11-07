@@ -30,11 +30,11 @@ Maps from merged slate entries: `aethelgard-universe`.
 
 ## Series
 
-**The Archives of Humanity** — 3 seasons of 8 episodes. No episode script exists.
+**The Archives of Humanity** — 3 seasons of 8 episodes. Status: CONCEPT. No episode script exists.
 
 ## Game
 
-**The Lost Kingdoms** — Exploration, investigation, survival and puzzle adventure. No playable build exists.
+**The Lost Kingdoms** — Exploration, investigation, survival and puzzle adventure. Status: CONCEPT. No playable build exists. Multiplayer: UNAVAILABLE.
 
 ## Characters
 

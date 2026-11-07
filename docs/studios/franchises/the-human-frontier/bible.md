@@ -27,11 +27,11 @@ New to the canon. Season and episode counts were not specified.
 
 ## Series
 
-**Survivors of Tomorrow** — season and episode counts not specified. No episode script exists.
+**Survivors of Tomorrow** — season and episode counts not specified. Status: CONCEPT. No episode script exists.
 
 ## Game
 
-**Frontier: Rebuild Earth** — Survival and settlement management. No playable build exists.
+**Frontier: Rebuild Earth** — Survival and settlement management. Status: CONCEPT. No playable build exists. Multiplayer: UNAVAILABLE.
 
 ## Characters
 

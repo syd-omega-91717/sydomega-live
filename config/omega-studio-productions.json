@@ -33,7 +33,7 @@
       "kind": "feature",
       "sagaChapter": null,
       "status": "SCREENPLAY_DRAFT",
-      "approvedByOwner": false,
+      "approvedByOwner": true,
       "package": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/PACKAGE.md",
       "screenplay": [
         "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_1.fountain",
@@ -41,7 +41,9 @@
         "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_3.fountain"
       ],
       "mediaFiles": [],
-      "release": null
+      "release": null,
+      "approvedOn": "2026-11-07",
+      "approvalNote": "Founder, after PR #1191 merged: 'Approve it and write the Season 1 bible'. Scope: the story, the twist (Seraphine is Eryndor) and the new characters as merged in #1191. Later edits are not covered."
     }
   ]
 }

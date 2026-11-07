@@ -31,11 +31,11 @@ Maps from merged slate entries: `zodiac-wars`, `wrath-of-the-gods`.
 
 ## Series
 
-**Zodiac Wars: Bloodlines** — 4 seasons of 8 episodes. No episode script exists.
+**Zodiac Wars: Bloodlines** — 4 seasons of 8 episodes. Status: CONCEPT. No episode script exists.
 
 ## Game
 
-**Zodiac Wars: Ascension** — Faction-based action RPG with possible tactical multiplayer. No playable build exists.
+**Zodiac Wars: Ascension** — Faction-based action RPG with possible tactical multiplayer. Status: CONCEPT. No playable build exists. Multiplayer: UNAVAILABLE.
 
 ## Characters
 

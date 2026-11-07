@@ -85,6 +85,8 @@ Every conflict is in the registry with a resolution. On 2026-11-07 the founder d
 | C-16 | name | Auren Vale / Isolde Vale | Shared surname is mother and son | proposed |
 | C-17 | lore | Nine-ring wall, seven stones | Seven rings inscribed, two blank; seeds the nine elements | proposed |
 | C-18 | motif | 'Hold the other end' | Deliberate echo between Ithren and Solenne | proposed |
+| C-19 | chronology | Season 1 vs the film | Season 1 runs in the eleven months before the film and ends on its first scene | proposed |
+| C-20 | scope | Open-world RPG | Design target; first build is a 2D Vertical Slice 0 prototype; multiplayer unavailable | proposed |
 
 ## Standing rules
 

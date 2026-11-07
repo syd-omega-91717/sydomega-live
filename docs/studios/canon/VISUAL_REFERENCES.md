@@ -35,3 +35,20 @@ to franchises. The new references:
 | Hero ensemble in a stylised fighting-game key art (soppulse.weebly.com) | Many glossy fantasy characters | Not used: it reads as another game's character style | Avoid |
 | A figure before a glowing planet over a city (medium.com) | Lone figure, warm city, orbital debris | Scale by one human figure | Omega Chronicles, Convergence |
 | Planning-chat screenshots (not a site) | The founder's own franchise board | Confirms franchise-to-image matching | Reference |
+
+## Third batch (10 images, same rules)
+
+Third-party, unlicensed, not copied. Used as mood only.
+
+| Reference (source site) | What it shows | Direction taken | Used for |
+|---|---|---|---|
+| Lit domed city seen across an underground lake (plaza.rakuten.co.jp) | Three explorers, a golden hidden city in a cave | Warm lamp-light against cold cave dark | The Lost Civilizations, the Crystal Depths approach |
+| Two huge warships over a gas giant (backiee.com) | Slab-sided capital ships, planets | Long horizontal hulls, planetary scale | The Last Galactic Empire |
+| Three scenes of a ruined megacity with a vortex and a wave (promptbase.com) | Survivors on a broken overpass | Scale by a lone figure on a bridge | The Human Frontier |
+| A figure before three glowing portals to other worlds (valeon.blog) | Rock ledge, portals to worlds | Portals as framed windows to other franchises | The Convergence |
+| Armoured warrior queen with a staff (seaart.ai) | Gold-and-teal armour, long white hair | Not copied; may inform Ithren's order silhouette only through original design | Reference |
+| Rune-circled priestess with hand tattoos (pbihao.github.io) | Hooded woman, rune circle | Closest to the keeper archetype; Seraphine and Eryndor are older and plainer, a bookseller's cardigan, not a priestess's robes | Seraphine / Eryndor |
+| Horned black-armoured general in a burning forest (story.com) | Red-eyed dark knight | Not used: genre cliché. Malachar is a calm man in a grey coat by design | Avoid |
+| Hooded golden-masked figure (arthub.ai) | Black cloth with gold mask, red eyes | Not used for Malachar; possible for an anonymous Reunion enforcer | Reference |
+| Woman in gold armour with golden blades and halo (thehouseofoshun.com) | Dark-skinned warrior, light rings | Not copied; halo rings echo the nine-ring motif | Reference |
+| **Anime woman in gold armour with long pale hair (seaart.ai)** | **Gold sign-themed armour in the manner of *Saint Seiya*'s "gold saints"** | **A guardrail.** Zodiac Wars must not wear gold-armoured sign knights in that style. The merged canon already avoids it (the Knights are mortal foundry apprentices, mediators and archivists; the rulers are Olympians), and design work must keep it that way | Guardrail only |

@@ -147,11 +147,16 @@
       "series": {
         "title": "The Chronicles of the Guardians",
         "seasons": 3,
-        "episodesPerSeason": 8
+        "episodesPerSeason": 8,
+        "status": "BIBLE_DRAFT",
+        "bible": "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md"
       },
       "game": {
         "title": "Myth of the Stones: Origins",
-        "genre": "Third-person open-world action RPG"
+        "genre": "Third-person open-world action RPG",
+        "status": "DESIGNED",
+        "multiplayer": "UNAVAILABLE",
+        "gdd": "docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md"
       },
       "ages": [
         "age-1",
@@ -203,11 +208,14 @@
       "series": {
         "title": "Zodiac Wars: Bloodlines",
         "seasons": 4,
-        "episodesPerSeason": 8
+        "episodesPerSeason": 8,
+        "status": "CONCEPT"
       },
       "game": {
         "title": "Zodiac Wars: Ascension",
-        "genre": "Faction-based action RPG with possible tactical multiplayer"
+        "genre": "Faction-based action RPG with possible tactical multiplayer",
+        "status": "CONCEPT",
+        "multiplayer": "UNAVAILABLE"
       },
       "ages": [
         "age-2",
@@ -257,11 +265,14 @@
       "series": {
         "title": "Omega: The Human Equation",
         "seasons": 3,
-        "episodesPerSeason": 10
+        "episodesPerSeason": 10,
+        "status": "CONCEPT"
       },
       "game": {
         "title": "Omega: Civilization 91717",
-        "genre": "Strategic civilization-building and simulation"
+        "genre": "Strategic civilization-building and simulation",
+        "status": "CONCEPT",
+        "multiplayer": "UNAVAILABLE"
       },
       "ages": [
         "age-6",
@@ -310,11 +321,14 @@
       "series": {
         "title": "The Archives of Humanity",
         "seasons": 3,
-        "episodesPerSeason": 8
+        "episodesPerSeason": 8,
+        "status": "CONCEPT"
       },
       "game": {
         "title": "The Lost Kingdoms",
-        "genre": "Exploration, investigation, survival and puzzle adventure"
+        "genre": "Exploration, investigation, survival and puzzle adventure",
+        "status": "CONCEPT",
+        "multiplayer": "UNAVAILABLE"
       },
       "ages": [
         "age-3",
@@ -362,11 +376,14 @@
       "series": {
         "title": "Galactic Thrones",
         "seasons": 4,
-        "episodesPerSeason": 10
+        "episodesPerSeason": 10,
+        "status": "CONCEPT"
       },
       "game": {
         "title": "Last Galactic Empire",
-        "genre": "Grand strategy, fleet combat, multiplayer campaigns"
+        "genre": "Grand strategy, fleet combat, multiplayer campaigns",
+        "status": "CONCEPT",
+        "multiplayer": "UNAVAILABLE"
       },
       "ages": [
         "age-5"
@@ -405,11 +422,14 @@
       "series": {
         "title": "Survivors of Tomorrow",
         "seasons": null,
-        "episodesPerSeason": null
+        "episodesPerSeason": null,
+        "status": "CONCEPT"
       },
       "game": {
         "title": "Frontier: Rebuild Earth",
-        "genre": "Survival and settlement management"
+        "genre": "Survival and settlement management",
+        "status": "CONCEPT",
+        "multiplayer": "UNAVAILABLE"
       },
       "ages": [
         "age-6",
@@ -449,11 +469,14 @@
       "series": {
         "title": "The Convergence Files",
         "seasons": null,
-        "episodesPerSeason": null
+        "episodesPerSeason": null,
+        "status": "CONCEPT"
       },
       "game": {
         "title": "Omega Multiverse",
-        "genre": "Interconnected exploration and cooperative adventure"
+        "genre": "Interconnected exploration and cooperative adventure",
+        "status": "CONCEPT",
+        "multiplayer": "UNAVAILABLE"
       },
       "ages": [
         "age-7"
@@ -840,112 +863,142 @@
       "name": "Ithren",
       "franchise": "myth-of-the-stones",
       "role": "Guardian of the Memory stone; Auren's ancestor; she stunned Malachar and hid the stones",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "orsolya",
       "name": "Orsolya",
       "franchise": "myth-of-the-stones",
       "role": "One of the seven original Guardians",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "maevar",
       "name": "Maevar",
       "franchise": "myth-of-the-stones",
       "role": "One of the seven original Guardians",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "tolun",
       "name": "Tolun",
       "franchise": "myth-of-the-stones",
       "role": "One of the seven original Guardians",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "sabeth",
       "name": "Sabeth",
       "franchise": "myth-of-the-stones",
       "role": "One of the seven original Guardians",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "speaker-verran",
       "name": "Speaker Verran",
       "franchise": "myth-of-the-stones",
       "role": "Head of the Aurelith's Conclave who seats himself on the Loom's throne",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "liora",
       "name": "Liora",
       "franchise": "myth-of-the-stones",
       "role": "Malachar's daughter, six, lost in the Sundering",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "isolde-vale",
       "name": "Isolde Vale",
       "franchise": "myth-of-the-stones",
       "role": "Auren's mother, a keeper of the Guardians' line; disappeared fifteen years ago",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "hollis-reeve",
       "name": "Hollis Reeve",
       "franchise": "myth-of-the-stones",
       "role": "Director of the Kharesh excavation",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "tuan-pham",
       "name": "Tuan Pham",
       "franchise": "myth-of-the-stones",
       "role": "Geophysicist on the expedition",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "vesper-lund",
       "name": "Vesper Lund",
       "franchise": "myth-of-the-stones",
       "role": "Malachar's lieutenant; later takes the Balance stone",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "corvin-hale",
       "name": "Corvin Hale",
       "franchise": "myth-of-the-stones",
       "role": "Malachar's heavy; holds the door at the end",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "nell",
       "name": "Nell",
       "franchise": "myth-of-the-stones",
       "role": "Museum colleague of Auren",
-      "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
     },
     {
       "id": "the-lamp",
       "name": "The Lamp",
       "franchise": "myth-of-the-stones",
       "role": "The Guardian Citadel's archive intelligence",
+      "canonStatus": "FOUNDER_APPROVED",
+      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones",
+      "approvedVia": "myth-of-the-stones-the-seven-stones"
+    },
+    {
+      "id": "perrin-hask",
+      "name": "Perrin Hask",
+      "franchise": "myth-of-the-stones",
+      "role": "Torin's old Warden mentor, who dies in Season 1 episode 5",
       "canonStatus": "PROPOSED",
-      "source": "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones"
+      "source": "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md"
+    },
+    {
+      "id": "anselm-crowe",
+      "name": "Anselm Crowe",
+      "franchise": "myth-of-the-stones",
+      "role": "Private collector who holds the Energy stone until Season 1 episode 6",
+      "canonStatus": "PROPOSED",
+      "source": "docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md"
     }
   ],
   "conflicts": [
@@ -1116,6 +1169,24 @@
         "solenne-varr"
       ],
       "resolution": "The phrase 'hold the other end' appears in The Seven Stones (Ithren) and The Rise of Aries (Solenne). Treated as a deliberate cross-franchise echo and a Convergence motif.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-19",
+      "kind": "chronology",
+      "subjects": [
+        "myth-of-the-stones"
+      ],
+      "resolution": "Season 1 of The Chronicles of the Guardians runs in the eleven months before The Seven Stones and ends on the film's first present-day scene, so it keeps the brief's episode titles without retelling the film. Season 2 follows the film.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-20",
+      "kind": "scope",
+      "subjects": [
+        "myth-of-the-stones"
+      ],
+      "resolution": "The brief's third-person open-world RPG is a design target; the first buildable artefact is a 2D top-down Vertical Slice 0, labelled PROTOTYPE until it meets the release criteria in the GDD. Multiplayer is UNAVAILABLE.",
       "status": "PROPOSED_RESOLUTION"
     }
   ]

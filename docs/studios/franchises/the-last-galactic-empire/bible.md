@@ -27,11 +27,11 @@ New to the canon. Anchored at saga chapter 11, where the 9.1717 Hz frequency is 
 
 ## Series
 
-**Galactic Thrones** — 4 seasons of 10 episodes. No episode script exists.
+**Galactic Thrones** — 4 seasons of 10 episodes. Status: CONCEPT. No episode script exists.
 
 ## Game
 
-**Last Galactic Empire** — Grand strategy, fleet combat, multiplayer campaigns. No playable build exists.
+**Last Galactic Empire** — Grand strategy, fleet combat, multiplayer campaigns. Status: CONCEPT. No playable build exists. Multiplayer: UNAVAILABLE.
 
 ## Characters
 

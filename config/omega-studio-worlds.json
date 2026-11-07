@@ -107,11 +107,11 @@
     }
   },
   "openQuestions": [
-    {"id": "q-world-of-the-aurelith", "question": "Which world did the Aurelith, the Loom, the Citadel, the Crystal Depths and Karth Vael stand on, and in which age?", "subjects": ["aurelith", "loom", "guardian-citadel", "crystal-depths", "karth-vael", "eternal-temple", "ormel-hesh"]},
-    {"id": "q-imperial-capital", "question": "What is the Empire's capital called, and which world is it on?", "subjects": ["imperial-capital", "throne-imperial"]},
-    {"id": "q-kingdom-of-ash", "question": "Who rules the Kingdom of Ash, if anyone?", "subjects": ["throne-ash"]},
-    {"id": "q-twelve-worlds", "question": "Does the founder accept the nine proposed worlds, the Shadows and the thirteenth seat from the Zodiac Wars bible section 3? Juno in particular is proposed, not repository canon.", "subjects": ["juno", "sun-corona", "mercury", "venus", "moon", "jupiter", "saturn", "uranus", "pluto", "twelve-shadow", "throne-thirteenth"]},
-    {"id": "q-seven-guardians", "question": "Are Eryndor and Malachar the sixth and seventh Guardians, or are there two others?", "subjects": ["seven-guardians"]},
-    {"id": "q-succession", "question": "How is Princess Seraya related to the imperial throne?", "subjects": ["throne-imperial"]}
+    {"id": "q-world-of-the-aurelith", "question": "Which world is the Aurelith on?", "subjects": ["aurelith", "loom", "guardian-citadel", "crystal-depths", "karth-vael", "eternal-temple", "ormel-hesh"]},
+    {"id": "q-imperial-capital", "question": "What is the Empire's capital called?", "subjects": ["imperial-capital", "throne-imperial"]},
+    {"id": "q-kingdom-of-ash", "question": "Who rules the Kingdom of Ash?", "subjects": ["throne-ash"]},
+    {"id": "q-twelve-worlds", "question": "Accept the nine proposed worlds, the Shadows and the thirteenth seat?", "subjects": ["juno", "sun-corona", "mercury", "venus", "moon", "jupiter", "saturn", "uranus", "pluto", "twelve-shadow", "throne-thirteenth"]},
+    {"id": "q-seven-guardians", "question": "Are Eryndor and Malachar the other two Guardians?", "subjects": ["seven-guardians"]},
+    {"id": "q-succession", "question": "How is Seraya tied to the imperial throne?", "subjects": ["throne-imperial"]}
   ]
 }

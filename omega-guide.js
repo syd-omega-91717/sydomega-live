@@ -95,6 +95,9 @@
           : 'Membership levels, each unlocking more of the platform.'],
 
       ['world', 'What do the coloured labels mean?', function () { return badgeLegend(); }],
+      ['world', 'What is Worlds, and what do its labels mean?',
+        'The kings, places, gods, sky and planets of the Studios stories. FOUNDER APPROVED: inside a production the owner approved. REPO CANON: already fixed in platform files. PROPOSED: suggested, waiting for a decision. OPEN: not decided yet, so it is left empty.',
+        ['/worlds.html', 'WORLDS']],
       ['world', 'What are the signs, elements and gods?',
         'Every member is bound to a zodiac sign. The sign sets your element, your patron god and your guide agent (all twelve are shown below).',
         ['/cosmos.html', 'COSMOS']],

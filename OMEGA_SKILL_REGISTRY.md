@@ -100,7 +100,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 | root `.js` files | 282 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 415 (107 numbered `NNNN_`, 308 timestamped) |
-| Edge Functions | 26 |
+| Edge Functions | 27 |
 | skills | 23 |
 | agent definitions | 2 |
 

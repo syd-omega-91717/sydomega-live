@@ -14,6 +14,15 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-11-07 — the owner's rule "nothing is visible without prior approval" does not hold for Studios text, and cannot hold for any static file.**
+  Measured the same day: `curl https://raw.githubusercontent.com/syd-omega-91717/sydomega-live/main/docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_1.fountain` returns HTTP 200 with no login, because the repository is public
+  (so are the canon registry, the bibles and every other `docs/studios` file). Separately, every file the site serves is fetchable by
+  URL: `bg.js` only hides the page until approval (the approval guard is a UI veil, not a boundary). What is gated server-side is
+  Supabase data (RLS) and Edge Functions with `verify_jwt`. The Worlds canon was moved behind such a function
+  (`supabase/functions/studio-canon`, written and tested but NOT yet deployed: see its `DEPLOY.md`; approval predicate in `_shared/studio-access.ts`, tests in `test_studio_canon_gate.py`) and is no
+  longer shipped by the build (checked: `public/config/` has no worlds file). **Still open, the owner's decision:** making the
+  repository private (or moving unreleased scripts to a private repository or to Storage behind signed URLs); the GitHub Pages failover
+  would also publish the static files to a second origin. Until then, treat anything under `docs/` as public.
 - **OPEN 2026-11-05 — five pages the menu links have no dock; one of the original three navigation faults remains open.**
   `ad-network`, `control-plane`, `creator`, `project-studio` and `world-shell` have no `<aside id="omega-side">`, so `nav.js`
   renders nothing there (counted over all 236 pages on 2026-11-05). `control-plane` (the Owner Deck) may be standalone on purpose.

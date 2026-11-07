@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Ω Studios library: films, series, games and characters with their real status, and the scripts and design documents written so far.">
+<title>&#937; SYD OMEGA 91717 &mdash; STUDIO LIBRARY</title>
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+.sl-bar{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.sl-tab,.sl-chip,.sl-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);background:rgba(10,10,15,.7);border:1px solid rgba(201,168,76,.35);border-radius:3px;cursor:pointer;min-height:44px;padding:8px 14px;text-decoration:none;display:inline-flex;align-items:center}
+.sl-tab[aria-selected=true],.sl-chip[aria-pressed=true]{background:rgba(201,168,76,.22);border-color:var(--gold);color:var(--gold)}
+.sl-tab:focus-visible,.sl-chip:focus-visible,.sl-btn:focus-visible,.sl-help:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.sl-help{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-family:var(--M);font-size:16px;color:var(--gold);border:1px solid rgba(201,168,76,.45);border-radius:50%;text-decoration:none}
+.sl-fr{font-family:var(--D);font-size:16px;letter-spacing:3px;color:var(--gold);font-weight:400;margin:18px 0 8px}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 8px}
+.sl-card{padding:12px 14px;border:1px solid rgba(255,255,255,.12);background:rgba(10,10,15,.6);border-radius:3px}
+.sl-name{font-family:var(--D);font-size:14px;letter-spacing:2px;color:var(--ink);margin:6px 0 4px}
+.sl-meta{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin:0 0 8px}
+.sl-row{display:flex;flex-wrap:wrap;gap:6px}
+.sl-badge{display:inline-block;font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid currentColor;border-radius:2px;line-height:1.5}
+.sl-s-CONCEPT{color:#aab0c0}.sl-s-SCREENPLAY_DRAFT,.sl-s-SCRIPT_DRAFT_SHORT,.sl-s-SCRIPTS_DRAFT{color:#4fe3ff}.sl-s-DESIGNED{color:#e2c86d}.sl-s-PROTOTYPE{color:#5fd18a}.sl-s-BIBLE_DRAFT{color:#b69cff}
+.sl-s-FOUNDER_APPROVED{color:#5fd18a}.sl-s-REPO_CANON{color:#e2c86d}.sl-s-MERGED_DRAFT,.sl-s-RECONCILED_PROPOSED{color:#4fe3ff}.sl-s-PROPOSED{color:#b69cff}
+.sl-err{font-family:var(--M);font-size:13px;color:#ff9a9a;border:1px solid #ff9a9a;padding:10px 12px;border-radius:3px}
+.sl-reader{max-width:78ch;margin:0 auto}
+.sl-reader h2{font-family:var(--D);font-size:18px;letter-spacing:3px;color:var(--gold);font-weight:400;margin:10px 0 4px}
+.sl-reader .sl-title{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin:0 0 4px;white-space:pre-wrap}
+.sl-body{font-family:"Courier Prime",var(--M),monospace;font-size:14px;line-height:1.55;color:var(--ink);margin-top:14px}
+.sl-body p{margin:0 0 10px;white-space:pre-wrap}
+.sl-scene{font-weight:700;text-transform:uppercase;margin-top:18px!important;color:var(--gold)}
+.sl-cue{margin:0 0 0 34%!important;text-transform:uppercase}
+.sl-par{margin:0 0 0 26%!important;color:var(--muted)}
+.sl-dia{margin:0 0 10px 16%!important;max-width:34ch}
+.sl-trans{text-align:right;text-transform:uppercase;color:var(--muted)}
+.sl-act{font-family:var(--D);letter-spacing:4px;text-align:center;color:var(--gold);margin:26px 0 8px!important}
+.sl-note{color:var(--muted);font-size:13px}
+.sl-md h3{font-family:var(--D);font-size:15px;letter-spacing:2px;color:var(--gold);font-weight:400;margin:18px 0 6px}
+.sl-md pre{white-space:pre-wrap;margin:0 0 10px;font-size:13px}
+@media (max-width:700px){.sl-cue{margin-left:20%!important}.sl-par{margin-left:14%!important}.sl-dia{margin-left:8%!important}}
+</style>
+</head>
+<body data-page="studio-library">
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="studio-library" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">STUDIO LIBRARY<small>STUDIOS</small></div><a class="sl-help" href="/guide.html" aria-label="Help">?</a></div>
+    <div id="sl-list">
+      <div class="sl-bar" role="tablist" aria-label="Library sections" id="sl-tabs"></div>
+      <div class="sl-bar" role="group" aria-label="Filter by franchise" id="sl-chips"></div>
+      <div id="sl-body" role="tabpanel" tabindex="-1"><p class="sl-meta">&hellip;</p></div>
+    </div>
+    <section id="sl-reader" class="sl-reader" hidden aria-live="polite"></section>
+    <noscript><p class="sl-err">JAVASCRIPT REQUIRED</p></noscript>
+    <div class="lf"><span>&#937; STUDIO LIBRARY</span><span id="sl-foot">STUDIOS</span></div>
+  </main>
+</div>
+<script src="/omega-studio-library.js" defer></script>
+</body>
+</html>

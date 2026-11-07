@@ -9,6 +9,9 @@ verify_jwt = true
 [functions.studio-canon]
 verify_jwt = true
 
+[functions.studio-library]
+verify_jwt = true
+
 [functions.concierge-orchestrator]
 verify_jwt = true
 

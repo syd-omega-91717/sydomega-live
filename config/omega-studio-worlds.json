@@ -81,15 +81,15 @@
     {"id": "twelve-shadow", "name": "The Twelve Shadows", "franchise": "zodiac-wars", "status": "PROPOSED", "sources": ["docs/canon/zodiac-wars/BIBLE.md"], "derive": "worlds-shadow", "members": [{"character": "vahn-ossara", "basis": "regent"}], "note": "Each Shadow is the same god pursued without its limit. The Regent of the Shadow Zodiac in chapter 1 is Vahn Ossara, who answers to Aries' Shadow."},
     {"id": "four-guardians", "name": "The four forgotten guardians", "franchise": "zodiac-wars", "status": "PROPOSED", "sources": ["docs/canon/zodiac-wars/BIBLE.md", "omega-canon.json"], "members": [{"element": 6}, {"element": 7}, {"element": 8}, {"element": 9}], "note": "Soul, Space, Void and The All: the four elements no House holds. They are conditions, not gods."},
     {"id": "the-null", "name": "The Null", "franchise": "zodiac-wars", "status": "PROPOSED", "sources": ["docs/canon/zodiac-wars/BIBLE.md"], "members": [{"name": "The Null"}], "note": "A collapse that has become aware. It is not the Void: it unmakes the difference between the elements."},
-    {"id": "seven-guardians", "name": "The seven original Guardians", "franchise": "myth-of-the-stones", "status": "FOUNDER_APPROVED", "approvedBy": "myth-of-the-stones-the-seven-stones", "sources": ["docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/PACKAGE.md", "docs/studios/franchises/myth-of-the-stones/bible.md"], "members": [
+    {"id": "seven-guardians", "name": "The seven original Guardians", "franchise": "myth-of-the-stones", "status": "FOUNDER_APPROVED", "approvedBy": "myth-of-the-stones-the-seven-stones", "sources": ["docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/PACKAGE.md", "docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_1.fountain", "docs/studios/franchises/myth-of-the-stones/bible.md"], "members": [
       {"character": "ithren", "basis": "registry: Guardian of the Memory stone"},
       {"character": "orsolya", "basis": "registry: one of the seven"},
       {"character": "maevar", "basis": "registry: one of the seven"},
       {"character": "tolun", "basis": "registry: one of the seven"},
       {"character": "sabeth", "basis": "registry: one of the seven"},
-      {"character": "eryndor", "basis": "inferred: the last surviving Guardian"},
-      {"character": "malachar", "basis": "inferred: refuses to give up his stone at the Sundering"}
-    ], "note": "Seven Guardians took seven stones from the Loom. The registry names five as members; Eryndor and Malachar complete the seven by inference and are listed as such."}
+      {"character": "eryndor", "basis": "film prologue (ACT_1) names her among the seven"},
+      {"character": "malachar", "basis": "film prologue (ACT_1) names him among the seven"}
+    ], "note": "Seven Guardians took seven stones from the Loom. The film prologue (Act One) names all seven: Malachar, Ithren, Eryndor, Orsolya, Maevar, Tolun and Sabeth."}
   ],
   "sky": {
     "events": [
@@ -111,7 +111,6 @@
     {"id": "q-imperial-capital", "question": "What is the Empire's capital called?", "subjects": ["imperial-capital", "throne-imperial"]},
     {"id": "q-kingdom-of-ash", "question": "Who rules the Kingdom of Ash?", "subjects": ["throne-ash"]},
     {"id": "q-twelve-worlds", "question": "Accept the nine proposed worlds, the Shadows and the thirteenth seat?", "subjects": ["juno", "sun-corona", "mercury", "venus", "moon", "jupiter", "saturn", "uranus", "pluto", "twelve-shadow", "throne-thirteenth"]},
-    {"id": "q-seven-guardians", "question": "Are Eryndor and Malachar the other two Guardians?", "subjects": ["seven-guardians"]},
     {"id": "q-succession", "question": "How is Seraya tied to the imperial throne?", "subjects": ["throne-imperial"]}
   ]
 }

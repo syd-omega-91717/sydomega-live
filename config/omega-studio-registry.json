@@ -220,7 +220,11 @@
         "title": "Zodiac Wars: Bloodlines",
         "seasons": 4,
         "episodesPerSeason": 8,
-        "status": "CONCEPT"
+        "status": "SCRIPTS_DRAFT",
+        "bible": "docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/BIBLE.md",
+        "scripts": [
+          "docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/episodes/E01_THE_NEXT_COUNT.fountain"
+        ]
       },
       "game": {
         "title": "Zodiac Wars: Ascension",
@@ -1210,6 +1214,34 @@
         "malachar"
       ],
       "resolution": "The Season 1 episode 1 beat sheet says two niches are filled in Malachar's sanctum, but Continuity Lock 1 says he holds only the Time stone until episode 6 (Energy arrives then). The episode 1 script shows one filled niche (Time) and six empty.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-22",
+      "kind": "lore",
+      "subjects": [
+        "torin-draven"
+      ],
+      "resolution": "The Season 1 bible (Continuity Lock 8) said Torin joined the Wardens at 22 and 'fell out' twenty years before the film. The film makes him 42 and a Warden who fell out twenty years ago, so he cannot have joined at 22. Resolved while scripting episode 105: Malachar places him with the Wardens at 18 and the council expels him at 22; Perrin Hask alone keeps faith with him.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-23",
+      "kind": "lore",
+      "subjects": [
+        "the-lamp",
+        "torin-draven"
+      ],
+      "resolution": "The Season 1 bible had the Lamp whisper to Torin in episode 5, but Continuity Lock 7 says the Lamp has spoken to no one but Seraphine in ninety years. Resolved in episode 105: the Warden key Torin takes carries his spoken word to the Citadel, and the Lamp tells Seraphine.",
+      "status": "PROPOSED_RESOLUTION"
+    },
+    {
+      "id": "C-24",
+      "kind": "scope",
+      "subjects": [
+        "zodiac-wars"
+      ],
+      "resolution": "The registry says Zodiac Wars: Bloodlines is 4 seasons of 8 episodes; the Zodiac Wars canon draft and the Rise of Aries package describe a ten-episode limited series ('Season 1 opens on the Soul door') and a five-season series. Decision under delegation: keep the registry's 4 x 8, with one forgotten guardian and three Houses per season (Season 1: Soul with Aries, Libra and Pisces). The ten-episode limited series and a fifth, Null season are not adopted. The live micro-series The Twelve Houses is a separate product.",
       "status": "PROPOSED_RESOLUTION"
     }
   ]

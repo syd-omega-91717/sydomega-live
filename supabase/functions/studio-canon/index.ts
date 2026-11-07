@@ -61,8 +61,9 @@ Deno.serve(async (req: Request) => {
   if (!auth?.toLowerCase().startsWith("bearer ")) return json({ error: "not_authenticated" }, 401, origin);
 
   let userId: string | null = null;
+  let caller: ReturnType<typeof createClient> | null = null;
   try {
-    const caller = createClient(url, publicKey, { global: { headers: { Authorization: auth } } });
+    caller = createClient(url, publicKey, { global: { headers: { Authorization: auth } } });
     const { data, error } = await caller.auth.getUser();
     userId = error || !data?.user ? null : data.user.id;
   } catch {
@@ -71,25 +72,30 @@ Deno.serve(async (req: Request) => {
 
   let profile = null;
   let profileError = false;
-  let reason = ""; // a short fixed-shape diagnostic for a failed profile read: an HTTP status and a database error code, never a message or a key
-  if (userId) {
+  let reason = ""; // a short fixed-shape diagnostic for a failed profile read: who read it, an HTTP status and a database error code, never a message or a key
+  // Read the caller's own `is_owner` flag: first with the caller's own session (row-level security scopes it to that user, the app's own
+  // sign-in guard reads the same row the same way, and it does not depend on the server-side key), then, only if that gives no row, with the
+  // server-side key. Any failure of both is a 503, a missing row is a 403, and only a literal `true` passes (decideOwner).
+  const readProfile = async (client: ReturnType<typeof createClient>, who: string): Promise<boolean> => {
     try {
-      const admin = createClient(url, adminKey);
-      const { data, error, status } = await admin
-        .from("profiles")
-        .select("is_owner")
-        .eq("id", userId)
-        .maybeSingle();
+      const { data, error, status } = await client.from("profiles").select("is_owner").eq("id", userId).maybeSingle();
       if (error) {
-        profileError = true;
-        reason = diagnose(status, error.code);
-        console.error(JSON.stringify({ event: "OWNER_PROFILE_READ_FAILED", status, code: error.code ?? null, message: String(error.message ?? "").slice(0, 200) }));
-      } else profile = data;
+        reason = `${who}_${diagnose(status, error.code)}`.slice(0, 24);
+        console.error(JSON.stringify({ event: "OWNER_PROFILE_READ_FAILED", who, status, code: error.code ?? null, message: String(error.message ?? "").slice(0, 200) }));
+        return false;
+      }
+      profile = data;
+      return true;
     } catch (e) {
-      profileError = true;
-      reason = "thrown";
-      console.error(JSON.stringify({ event: "OWNER_PROFILE_READ_THREW", message: String((e as Error)?.message ?? e).slice(0, 200) }));
+      reason = `${who}_thrown`.slice(0, 24);
+      console.error(JSON.stringify({ event: "OWNER_PROFILE_READ_THREW", who, message: String((e as Error)?.message ?? e).slice(0, 200) }));
+      return false;
     }
+  };
+  if (userId) {
+    let ok = caller ? await readProfile(caller, "own") : false;
+    if (!ok || !profile) ok = await readProfile(createClient(url, adminKey), "admin");
+    profileError = !ok;
   }
 
   const verdict = decideOwner(userId, profile, profileError);

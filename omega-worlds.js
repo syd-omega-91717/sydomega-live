@@ -314,7 +314,12 @@
   function load() {
     if (!window.OmegaSB) return Promise.reject(new Error('no client'));
     return window.OmegaSB.get().then(function (sb) { return sb.functions.invoke('studio-canon', { body: {} }); }).then(function (r) {
-      if (r && r.error) { var e = new Error(r.error.message || 'error'); e.status = r.error.context && r.error.context.status; throw e; }
+      if (r && r.error) {
+        var e = new Error(r.error.message || 'error'), ctx = r.error.context;
+        e.status = ctx && ctx.status;
+        /* the function names why it refused; read it so an approved member is told RESTRICTED, not asked to get approved */
+        return (ctx && ctx.json ? ctx.json().catch(function () { return null; }) : Promise.resolve(null)).then(function (b) { e.code = b && b.error; throw e; });
+      }
       if (!r || !r.data || !r.data.canon) throw new Error('empty');
       return r.data.canon;
     });
@@ -331,5 +336,5 @@
       else if (C && C.onReady) { clearInterval(wait); C.onReady(function () { render(); }); }
       else if (++tries > 60) { clearInterval(wait); }
     }, 100);
-  }).catch(function (e) { fail(e && (e.status === 401 || e.status === 403) ? 'APPROVAL REQUIRED' : 'UNAVAILABLE'); });
+  }).catch(function (e) { fail(e && e.code === 'owner_only' ? 'RESTRICTED' : (e && (e.status === 401 || e.status === 403) ? 'APPROVAL REQUIRED' : 'UNAVAILABLE')); });
 })();

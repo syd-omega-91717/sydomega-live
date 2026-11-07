@@ -37,3 +37,18 @@ export function decideAccess(userId, profile, profileError, nowMs) {
   }
   return { ok: true };
 }
+
+/**
+ * Unreleased Studios canon is for the owner accounts only; an approved member is not enough.
+ * Same fail-closed rules: no caller 401, a profile read error 503, no row or any value but literal true 403.
+ * @param {string|null} userId
+ * @param {Profile|null} profile
+ * @param {boolean} profileError
+ * @returns {Verdict | { ok: false, status: 403, error: "owner_only" }}
+ */
+export function decideOwner(userId, profile, profileError) {
+  if (!userId) return { ok: false, status: 401, error: "not_authenticated" };
+  if (profileError) return { ok: false, status: 503, error: "profile_unavailable" };
+  if (!profile || profile.is_owner !== true) return { ok: false, status: 403, error: "owner_only" };
+  return { ok: true };
+}

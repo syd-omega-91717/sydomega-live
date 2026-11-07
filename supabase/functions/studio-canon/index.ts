@@ -1,9 +1,9 @@
 // SYD OMEGA 91717 — canonical source for the governed `studio-canon` Edge Function.
-// Approval-gated delivery of the Ω Studios Worlds canon: POST {} -> { canon } or a typed error.
+// Owner-only delivery of the unreleased Ω Studios Worlds canon (nothing is published yet, so approved members do not see it): POST {} -> { canon } or a typed error.
 //
 // Why a function and not a static file: every file the site serves is public to anyone who knows its URL; bg.js only
 // hides the page. Content that must not be seen without approval has to come from a server that checks approval.
-// verify_jwt plus auth.getUser() proves who is calling; _shared/studio-access.mjs decides if that profile is approved.
+// verify_jwt plus auth.getUser() proves who is calling; _shared/studio-access.mjs decides if that profile is an owner.
 //
 // No input selects the data: the body is ignored, so there is no path, id or filter to inject into.
 // The payload (./worlds-data.ts) is generated from config/omega-studio-worlds.json by
@@ -12,7 +12,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
 import { publishableKey, secretKey } from "../_shared/keys.ts";
-import { decideAccess } from "../_shared/studio-access.mjs";
+import { decideOwner } from "../_shared/studio-access.mjs";
 import { WORLDS } from "./worlds-data.ts";
 
 const allowedOrigin = (origin: string | null) => {
@@ -72,7 +72,7 @@ Deno.serve(async (req: Request) => {
       const admin = createClient(url, adminKey);
       const { data, error } = await admin
         .from("profiles")
-        .select("is_owner,access_approved,is_rejected,is_trial,trial_expires_at")
+        .select("is_owner")
         .eq("id", userId)
         .maybeSingle();
       if (error) profileError = true;
@@ -82,7 +82,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  const verdict = decideAccess(userId, profile, profileError, Date.now());
+  const verdict = decideOwner(userId, profile, profileError);
   if (!verdict.ok) return json({ error: verdict.error }, verdict.status, origin);
   return json({ canon: WORLDS }, 200, origin);
 });

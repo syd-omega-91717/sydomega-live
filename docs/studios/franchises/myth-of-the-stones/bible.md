@@ -31,7 +31,7 @@ Maps from merged slate entries: `myth-of-the-stones`, `the-sorcerer-reborn`.
 
 ## Series
 
-**The Chronicles of the Guardians** — 3 seasons of 8 episodes. Status: BIBLE_DRAFT. Season 1 bible: `docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md`. No episode script exists.
+**The Chronicles of the Guardians** — 3 seasons of 8 episodes. Status: SCRIPTS_DRAFT. Season 1 bible: `docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md`. No episode script exists.
 
 ## Game
 
@@ -73,3 +73,4 @@ Maps from merged slate entries: `myth-of-the-stones`, `the-sorcerer-reborn`.
 - **C-18** (motif, PROPOSED_RESOLUTION): The phrase 'hold the other end' appears in The Seven Stones (Ithren) and The Rise of Aries (Solenne). Treated as a deliberate cross-franchise echo and a Convergence motif.
 - **C-19** (chronology, PROPOSED_RESOLUTION): Season 1 of The Chronicles of the Guardians runs in the eleven months before The Seven Stones and ends on the film's first present-day scene, so it keeps the brief's episode titles without retelling the film. Season 2 follows the film.
 - **C-20** (scope, PROPOSED_RESOLUTION): The brief's third-person open-world RPG is a design target; the first buildable artefact is a 2D top-down Vertical Slice 0, labelled PROTOTYPE until it meets the release criteria in the GDD. Multiplayer is UNAVAILABLE.
+- **C-21** (lore, PROPOSED_RESOLUTION): The Season 1 episode 1 beat sheet says two niches are filled in Malachar's sanctum, but Continuity Lock 1 says he holds only the Time stone until episode 6 (Energy arrives then). The episode 1 script shows one filled niche (Time) and six empty.

@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 237,
-  "open_task_count": 3191,
+  "page_count": 238,
+  "open_task_count": 3205,
   "pages": [
     {
       "page_id": "404",
@@ -16779,6 +16779,72 @@
         "PAGE::world::MISSING::TRACEABILITY",
         "PAGE::world::MISSING::TRUTH_STATES",
         "PAGE::world::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "worlds",
+      "path": "worlds.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; WORLDS",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-morph.js",
+          "/omega-worlds.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 2
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::worlds::MISSING::ACCESSIBILITY",
+        "PAGE::worlds::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::worlds::MISSING::AUTHORIZATION",
+        "PAGE::worlds::MISSING::DATA_SOURCES",
+        "PAGE::worlds::MISSING::DOMAIN",
+        "PAGE::worlds::MISSING::EVENTS",
+        "PAGE::worlds::MISSING::FAILURE_PATHS",
+        "PAGE::worlds::MISSING::PRIMARY_ROLE",
+        "PAGE::worlds::MISSING::PURPOSE",
+        "PAGE::worlds::MISSING::RESPONSIVE",
+        "PAGE::worlds::MISSING::TASKS",
+        "PAGE::worlds::MISSING::TRACEABILITY",
+        "PAGE::worlds::MISSING::TRUTH_STATES",
+        "PAGE::worlds::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     }

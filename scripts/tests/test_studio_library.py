@@ -38,7 +38,12 @@ class StudioLibrary(unittest.TestCase):
         self.assertEqual(sum(len(f["films"]) for f in p["franchises"]), 26)
         self.assertEqual(sum(len(f["characters"]) for f in p["franchises"]), len(REG["characters"]))
         kinds = sorted(d["kind"] for d in p["documents"].values())
-        self.assertEqual(kinds, ["design"] * 4 + ["screenplay"] * 2 + ["teleplay"] * 4)
+        self.assertEqual(kinds, ["design"] * 4 + ["screenplay"] * 2 + ["teleplay"] * 8)
+
+    def test_an_episode_title_comes_from_its_own_header_so_an_apostrophe_survives(self):
+        titles = {v["title"] for k, v in lib.build()["documents"].items() if k.startswith("episode:")}
+        self.assertIn("105 The Traitor's Memory", titles)
+        self.assertEqual(sorted(t[:3] for t in titles), [str(n) for n in range(101, 109)])
 
     def test_every_document_reference_resolves_and_has_text(self):
         p = lib.build()

@@ -1,7 +1,8 @@
 # THE CHRONICLES OF THE GUARDIANS — Season 1: The Forgotten Order (Bible, Draft 1, PROPOSED)
 
-**Status: SEASON BIBLE DRAFT 1.** Not approved, not produced. This is a bible and eight beat sheets. **No episode script exists**: the brief
-requires each episode to get its own full screenplay, and those are the next wave. Written under the founder's delegation on 2026-11-07,
+**Status: SEASON BIBLE DRAFT 1.** Not approved, not produced. This is a bible and eight beat sheets. **Episodes 101 to 108 now exist as short
+first drafts** (a cold open and three condensed acts, about 14-16 of about 50 pages each; see "Scripting changes" below). The brief
+requires each episode to get a full-length screenplay, and those are the next wave. Written under the founder's delegation on 2026-11-07,
 after the founder approved the story of *The Seven Stones* (see `config/omega-studio-productions.json`). Format: 8 episodes of about
 50 minutes. Registry ids: `myth-of-the-stones`, series title `The Chronicles of the Guardians`.
 
@@ -55,7 +56,7 @@ mystery that slowly admits the impossible; long conversations, quiet dread, one 
 5. **Auren does not stop time** until the film's pit scene. Season 1 shows only visions and one involuntary stutter in the lab.
 6. **Torin has not been seen by Auren** and is "recently hired by funders" from Lyra's view. He joins Lyra's project in episode 6.
 7. **The Citadel's Lamp has not spoken to anyone but Seraphine** in ninety years (film: "ninety years").
-8. **Torin's age and history:** orphan, raised by Malachar from fifteen, joined the Wardens at twenty-two, fell out twenty years before the film (film).
+8. **Torin's age and history:** orphan, visited by Malachar from about twelve and raised by him from fifteen, placed with the Wardens at eighteen, expelled at twenty-two, which is the "fell out twenty years ago" of the film (he is 42 in the film). *Corrected while scripting 105: the earlier text said he joined at twenty-two, which cannot hold with the film.*
 9. **Frequency is 9.1717 Hz** everywhere (registry C-07).
 
 ## Episode guide
@@ -92,10 +93,10 @@ mystery that slowly admits the impossible; long conversations, quiet dread, one 
 
 ### 5. THE TRAITOR'S MEMORY
 *Logline:* Torin's whole life, and the day he becomes a double agent for good.
-- A: Torin as an orphan; Malachar on the end of the bed; the long years; the Wardens (Perrin Hask) who take him in at twenty-two without knowing whom he reports to.
+- A: Torin as an orphan; Malachar on the end of the bed; the long years; the Wardens (Perrin Hask) who take him in at eighteen without knowing whom he reports to, and expel him at twenty-two.
 - B: Hask is dying in a hospice in the mountains; Torin must choose between telling him the truth and stealing the last Warden key. He steals it; Hask forgives him anyway.
 - C: Auren sees the scene as a vision (Memory's gift, unbidden) and believes it is Ithren's.
-*Cliffhanger:* Hask dies; Torin, alone, says aloud for the first time, "I am the traitor," and the Lamp, which can hear him from ninety kilometres away, whispers back "Yes."
+*Cliffhanger:* Hask dies; Torin, alone, says aloud for the first time, "I am the traitor." The Warden key he holds carries the word to the Citadel, and the Lamp tells Seraphine (not Torin: Lock 7).
 
 ### 6. THE FIFTH STONE
 *Logline:* Malachar goes to take the thing that makes a city build itself forever, and fails.
@@ -117,6 +118,15 @@ mystery that slowly admits the impossible; long conversations, quiet dread, one 
 - C: Malachar, with two stones, sends Vesper and Corvin to Kharesh; he stays behind and asks the hum "What are you waiting for?"
 - Final scene: **the film's first present-day scene**: Lyra on the ramp, Tuan's voice on the radio: "It's a refrigerator in your tent."
 *Cliffhanger:* none beyond the film.
+
+## Scripting changes (episodes 101-108)
+Where writing a script showed the bible or a beat could not hold with the approved film, the script follows the film and the change is listed here.
+- **103:** the stunning of Malachar is staged as the film does, directly after the Sundering, not "the morning after".
+- **104:** the object Lyra holds is a lattice token, not a stone; Ormel Hesh has no stone.
+- **105:** Torin's timeline corrected (Lock 8); the Lamp speaks only to Seraphine (Lock 7); Torin withholds Auren's name from Malachar, and promises Hask the key will not be used on "the boy", which the film pays off ("you crossed the bridge for me").
+- **106:** Creation does not speak to Malachar and Liora does not appear to him at Karth Vael, so the film's courtyard scene is their first reunion; Malachar ends with exactly two stones.
+- **107:** the throne, the lie and Liora are staged to match the film's confession; added: the six decide the night before to shear the stones if Verran sits, without Malachar. This is the "He does not know" of the closing line.
+- **108:** the twelve-ringed sigil and Ithren's note are the seed of the film's closing line; no sign is named. The episode ends on the film's first scene.
 
 ## Season 2 and 3 (high level, reconciled with the film)
 - **Season 2, The War of the Guardians (8 episodes).** After the film: the seven stones are in seven lattice cradles, each needing two hands, and the world has no idea who should hold the keys. Malachar's fate is unknown; the twelve signs are lit; the first custodians are chosen badly; Vesper and Torin are on trial; the Reunion splits.

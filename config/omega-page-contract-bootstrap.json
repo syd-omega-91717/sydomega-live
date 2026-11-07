@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 240,
-  "open_task_count": 3233,
+  "page_count": 241,
+  "open_task_count": 3247,
   "pages": [
     {
       "page_id": "404",
@@ -5789,6 +5789,73 @@
         "PAGE::forge::MISSING::TRACEABILITY",
         "PAGE::forge::MISSING::TRUTH_STATES",
         "PAGE::forge::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "game-omega-civilization",
+      "path": "game-omega-civilization.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; CIVILIZATION 91717",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-civ-game.js",
+          "/omega-civ-logic.js",
+          "/omega-morph.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 4,
+          "forms": 0,
+          "inputs": 1,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::game-omega-civilization::MISSING::ACCESSIBILITY",
+        "PAGE::game-omega-civilization::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::game-omega-civilization::MISSING::AUTHORIZATION",
+        "PAGE::game-omega-civilization::MISSING::DATA_SOURCES",
+        "PAGE::game-omega-civilization::MISSING::DOMAIN",
+        "PAGE::game-omega-civilization::MISSING::EVENTS",
+        "PAGE::game-omega-civilization::MISSING::FAILURE_PATHS",
+        "PAGE::game-omega-civilization::MISSING::PRIMARY_ROLE",
+        "PAGE::game-omega-civilization::MISSING::PURPOSE",
+        "PAGE::game-omega-civilization::MISSING::RESPONSIVE",
+        "PAGE::game-omega-civilization::MISSING::TASKS",
+        "PAGE::game-omega-civilization::MISSING::TRACEABILITY",
+        "PAGE::game-omega-civilization::MISSING::TRUTH_STATES",
+        "PAGE::game-omega-civilization::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

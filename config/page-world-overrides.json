@@ -169,6 +169,7 @@
     "ladder": "academy",
     "insight": "intelligence",
     "personal-intelligence": "intelligence",
-    "command-center": "genesis"
+    "command-center": "genesis",
+    "game-origins": "arena"
   }
 }

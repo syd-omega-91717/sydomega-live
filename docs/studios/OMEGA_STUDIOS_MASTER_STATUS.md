@@ -13,9 +13,9 @@ generated files alone are never completion. `-` means not started.
 | Other 24 feature screenplays (26 films in all) | - | - | n/a | - | - | - | no | not started |
 | Myth of the Stones series, Season 1 bible | yes | bible + 8 beat sheets (about 2,300 words) | n/a | yes (file and status checks) | - | - | no | `docs/studios/franchises/myth-of-the-stones/series/the-chronicles-of-the-guardians/season-1/BIBLE.md`; no episode script exists |
 | Series episode scripts (about 150) | - | - | n/a | - | - | - | no | not started; the only story text is one-line plots in `twelve-houses-s1.json` plus the Season 1 beat sheets |
-| Game design document: Myth of the Stones: Origins | yes | GDD draft 1 (about 1,900 words) | n/a | yes (status checks) | - | - | no | `docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md`; defines a 2D Vertical Slice 0, multiplayer UNAVAILABLE |
+| Game design document: Myth of the Stones: Origins | yes | GDD draft 1 (about 1,900 words) | n/a | yes (status checks) | - | - | no | `docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md`; defines a 3-D Vertical Slice 0, multiplayer UNAVAILABLE |
 | Game design documents (3 other flagships) | - | - | - | - | - | - | no | not started |
-| Playable prototype | - | - | - | - | - | - | no | none exists |
+| Playable prototype: Origins Vertical Slice 0 (3-D) | yes (page loads, 0 page errors) | 5 modules, about 1,650 lines | n/a | yes (`test_origins_logic.py`; scripted bot run to the end of the quest in headless Chromium) | - | on a branch until merged | no | `game-origins.html`; status PROTOTYPE, not PLAYABLE_SLICE: no human has played it, performance is unmeasured on real hardware (software-rendered headless run: about 14 fps), primitive-geometry art |
 | Studios pages (9 new routes) | yes (audit) | - | - | - | - | - | no | reconcile with `nav.js` first |
 | `studio_*` schema and RLS | - | - | - | - | - | - | no | needs live DB access and review before any migration |
 | Media delivery (video, subtitles, access control) | - | - | - | - | - | - | no | Storage unread; no subtitle or streaming assets exist |

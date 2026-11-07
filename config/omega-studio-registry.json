@@ -154,9 +154,10 @@
       "game": {
         "title": "Myth of the Stones: Origins",
         "genre": "Third-person open-world action RPG",
-        "status": "DESIGNED",
+        "status": "PROTOTYPE",
         "multiplayer": "UNAVAILABLE",
-        "gdd": "docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md"
+        "gdd": "docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md",
+        "build": "game-origins.html"
       },
       "ages": [
         "age-1",

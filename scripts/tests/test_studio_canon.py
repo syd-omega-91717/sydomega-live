@@ -143,12 +143,14 @@ class StudioCanon(unittest.TestCase):
         self.assertIn("design document is missing", errs)
         self.assertIn("multiplayer may not be claimed", errs)
 
-    def test_only_origins_has_a_design_document_and_no_game_is_playable(self):
+    def test_only_origins_is_past_concept_and_no_game_is_released_or_multiplayer(self):
+        # Origins is a PROTOTYPE (Vertical Slice 0 exists, nobody has play-tested it); every other game is still CONCEPT.
         for f in REG["franchises"]:
-            self.assertIn(f["game"]["status"], ("CONCEPT", "DESIGNED"), f["id"])
+            allowed = ("PROTOTYPE",) if f["id"] == "myth-of-the-stones" else ("CONCEPT", "DESIGNED")
+            self.assertIn(f["game"]["status"], allowed, f["id"])
             self.assertEqual(f["game"]["multiplayer"], "UNAVAILABLE", f["id"])
-        designed = [f["id"] for f in REG["franchises"] if f["game"]["status"] == "DESIGNED"]
-        self.assertEqual(designed, ["myth-of-the-stones"])
+        past = [f["id"] for f in REG["franchises"] if f["game"]["status"] not in ("CONCEPT",)]
+        self.assertEqual(past, ["myth-of-the-stones"])
 
     def test_help_exits_zero(self):
         import subprocess, sys

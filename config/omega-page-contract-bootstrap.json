@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 236,
-  "open_task_count": 3177,
+  "page_count": 237,
+  "open_task_count": 3191,
   "pages": [
     {
       "page_id": "404",
@@ -5789,6 +5789,76 @@
         "PAGE::forge::MISSING::TRACEABILITY",
         "PAGE::forge::MISSING::TRUTH_STATES",
         "PAGE::forge::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "game-origins",
+      "path": "game-origins.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; ORIGINS Slice 0",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-morph.js",
+          "/omega-origins-audio.js",
+          "/omega-origins-game.js",
+          "/omega-origins-logic.js",
+          "/omega-origins-scene.js",
+          "/omega-origins-ui.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::game-origins::MISSING::ACCESSIBILITY",
+        "PAGE::game-origins::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::game-origins::MISSING::AUTHORIZATION",
+        "PAGE::game-origins::MISSING::DATA_SOURCES",
+        "PAGE::game-origins::MISSING::DOMAIN",
+        "PAGE::game-origins::MISSING::EVENTS",
+        "PAGE::game-origins::MISSING::FAILURE_PATHS",
+        "PAGE::game-origins::MISSING::PRIMARY_ROLE",
+        "PAGE::game-origins::MISSING::PURPOSE",
+        "PAGE::game-origins::MISSING::RESPONSIVE",
+        "PAGE::game-origins::MISSING::TASKS",
+        "PAGE::game-origins::MISSING::TRACEABILITY",
+        "PAGE::game-origins::MISSING::TRUTH_STATES",
+        "PAGE::game-origins::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

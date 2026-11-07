@@ -31,7 +31,7 @@ Maps from merged slate entries: `zodiac-wars`, `wrath-of-the-gods`.
 
 ## Series
 
-**Zodiac Wars: Bloodlines** — 4 seasons of 8 episodes. Status: CONCEPT. No episode script exists.
+**Zodiac Wars: Bloodlines** — 4 seasons of 8 episodes. Status: SCRIPTS_DRAFT. Season 1 bible: `docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/BIBLE.md`. No episode script exists.
 
 ## Game
 
@@ -76,3 +76,4 @@ Maps from merged slate entries: `zodiac-wars`, `wrath-of-the-gods`.
 - **C-11** (title, PROPOSED_RESOLUTION): 'The Rise of Aries' already exists as a 2026 screenplay. Valorian's ancient rebellion becomes a flashback and a possible prequel, not a second film of the same name.
 - **C-12** (title, PROPOSED_RESOLUTION): The feature film is retitled THE THIRTEENTH SEAT (decided 2026-11-07 under delegation); its id keeps the stable slug. The live micro-series keeps THE TWELVE HOUSES. The old title is kept as formerTitle.
 - **C-18** (motif, PROPOSED_RESOLUTION): The phrase 'hold the other end' appears in The Seven Stones (Ithren) and The Rise of Aries (Solenne). Treated as a deliberate cross-franchise echo and a Convergence motif.
+- **C-24** (scope, PROPOSED_RESOLUTION): The registry says Zodiac Wars: Bloodlines is 4 seasons of 8 episodes; the Zodiac Wars canon draft and the Rise of Aries package describe a ten-episode limited series ('Season 1 opens on the Soul door') and a five-season series. Decision under delegation: keep the registry's 4 x 8, with one forgotten guardian and three Houses per season (Season 1: Soul with Aries, Libra and Pisces). The ten-episode limited series and a fifth, Null season are not adopted. The live micro-series The Twelve Houses is a separate product.

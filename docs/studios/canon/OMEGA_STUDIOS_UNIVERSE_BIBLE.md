@@ -88,6 +88,9 @@ Every conflict is in the registry with a resolution. On 2026-11-07 the founder d
 | C-19 | chronology | Season 1 vs the film | Season 1 runs in the eleven months before the film and ends on its first scene | proposed |
 | C-20 | scope | Open-world RPG | Design target; first build is a 2D Vertical Slice 0 prototype; multiplayer unavailable | proposed |
 | C-21 | lore | Malachar's sanctum | Episode 1 shows one filled niche (Time), not two, to match Continuity Lock 1 | proposed |
+| C-22 | lore | Torin's timeline | Placed with the Wardens at 18, expelled at 22; the film makes him 42 and out of the order twenty years | proposed |
+| C-23 | lore | The Lamp and Torin | The Warden key carries Torin's word to the Citadel and the Lamp tells Seraphine; it never speaks to him (Lock 7) | proposed |
+| C-24 | scope | Zodiac Wars: Bloodlines shape | Keep 4 x 8, one guardian and three Houses per season; the ten-episode limited series and a Null season are not adopted | proposed |
 
 ## Standing rules
 

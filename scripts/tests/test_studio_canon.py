@@ -135,7 +135,7 @@ class StudioCanon(unittest.TestCase):
 
     def test_series_and_game_claims_need_their_files(self):
         bad = copy.deepcopy(REG)
-        bad["franchises"][1]["series"]["status"] = "BIBLE_DRAFT"
+        bad["franchises"][2]["series"]["status"] = "BIBLE_DRAFT"   # the-omega-chronicles has no series bible
         bad["franchises"][5]["game"]["status"] = "PROTOTYPE"  # the-human-frontier has no design document
         bad["franchises"][2]["game"]["multiplayer"] = "LIVE"
         errs = " | ".join(chk.validate(bad, SLATE, PROD))
@@ -158,14 +158,17 @@ class StudioCanon(unittest.TestCase):
         past = [f["id"] for f in REG["franchises"] if f["game"]["status"] != "CONCEPT"]
         self.assertEqual(past, ["myth-of-the-stones"] + designed)
 
-    def test_the_one_series_with_a_script_names_a_file_that_exists_and_no_other_claims_scripts(self):
+    def test_a_series_with_scripts_names_files_that_exist_and_no_other_series_claims_scripts(self):
+        with_scripts = []
         for f in REG["franchises"]:
             s = f["series"]
             if s["status"] == "SCRIPTS_DRAFT":
-                self.assertEqual(f["id"], "myth-of-the-stones")
-                self.assertTrue(s["scripts"] and all((ROOT / x).is_file() for x in s["scripts"]))
+                with_scripts.append(f["id"])
+                self.assertTrue(s["scripts"] and all((ROOT / x).is_file() for x in s["scripts"]), f["id"])
+                self.assertTrue((ROOT / s["bible"]).is_file(), f["id"])
             else:
                 self.assertNotIn("scripts", s, f["id"])
+        self.assertEqual(with_scripts, ["myth-of-the-stones", "zodiac-wars"])
 
     def test_help_exits_zero(self):
         import subprocess, sys

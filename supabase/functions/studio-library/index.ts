@@ -43,6 +43,10 @@ const json = (body: unknown, status = 200, origin: string | null = null) =>
     headers: { ...corsHeaders(origin), "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 
+// "403_42501" style: the HTTP status and the database error code, letters, digits and underscores only, so it is safe to return to a signed-in caller.
+const diagnose = (status: number | undefined, code: string | undefined) =>
+  `${status ?? 0}${code ? `_${code}` : ""}`.replace(/[^A-Za-z0-9_]/g, "").slice(0, 24) || "unknown";
+
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("Origin");
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders(origin) });
@@ -67,22 +71,28 @@ Deno.serve(async (req: Request) => {
 
   let profile = null;
   let profileError = false;
+  let reason = ""; // a short fixed-shape diagnostic for a failed profile read: an HTTP status and a database error code, never a message or a key
   if (userId) {
     try {
       const admin = createClient(url, adminKey);
-      const { data, error } = await admin
+      const { data, error, status } = await admin
         .from("profiles")
         .select("is_owner")
         .eq("id", userId)
         .maybeSingle();
-      if (error) profileError = true;
-      else profile = data;
-    } catch {
+      if (error) {
+        profileError = true;
+        reason = diagnose(status, error.code);
+        console.error(JSON.stringify({ event: "OWNER_PROFILE_READ_FAILED", status, code: error.code ?? null, message: String(error.message ?? "").slice(0, 200) }));
+      } else profile = data;
+    } catch (e) {
       profileError = true;
+      reason = "thrown";
+      console.error(JSON.stringify({ event: "OWNER_PROFILE_READ_THREW", message: String((e as Error)?.message ?? e).slice(0, 200) }));
     }
   }
 
   const verdict = decideOwner(userId, profile, profileError);
-  if (!verdict.ok) return json({ error: verdict.error }, verdict.status, origin);
+  if (!verdict.ok) return json(verdict.status === 503 && reason ? { error: verdict.error, reason } : { error: verdict.error }, verdict.status, origin);
   return json({ library: LIBRARY }, 200, origin);
 });

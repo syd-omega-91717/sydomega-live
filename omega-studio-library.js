@@ -164,7 +164,8 @@
     if (e && (e.status === 401 || e.status === 403)) return 'APPROVAL REQUIRED';
     var part = e && e.status ? String(e.status) : (e && e.message === 'empty' ? 'EMPTY' : 'NO RESPONSE');
     var code = e && typeof e.code === 'string' && /^[a-z_]{1,40}$/.test(e.code) ? ' · ' + e.code : '';
-    return 'UNAVAILABLE · ' + part + code;
+    var why2 = e && typeof e.reason === 'string' && /^[A-Za-z0-9_]{1,24}$/.test(e.reason) ? ' · ' + e.reason : '';
+    return 'UNAVAILABLE · ' + part + code + why2;
   }
   function load() {
     if (!window.OmegaSB) return Promise.reject(new Error('no client'));
@@ -172,7 +173,7 @@
       if (r && r.error) {
         var e = new Error(r.error.message || 'error'), ctx = r.error.context;
         e.status = ctx && ctx.status;
-        return (ctx && ctx.json ? ctx.json().catch(function () { return null; }) : Promise.resolve(null)).then(function (b) { e.code = b && b.error; throw e; });
+        return (ctx && ctx.json ? ctx.json().catch(function () { return null; }) : Promise.resolve(null)).then(function (b) { e.code = b && b.error; e.reason = b && b.reason; throw e; });
       }
       if (!r || !r.data || !r.data.library) throw new Error('empty');
       return r.data.library;

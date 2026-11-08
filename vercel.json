@@ -125,7 +125,7 @@
         },
         {
           "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), accelerometer=(self), gyroscope=(self), magnetometer=(self)"
+          "value": "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), interest-cohort=(), accelerometer=(self), gyroscope=(self), magnetometer=(self)"
         },
         {
           "key": "Content-Security-Policy",

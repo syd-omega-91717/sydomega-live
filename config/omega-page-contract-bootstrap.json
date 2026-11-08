@@ -15174,6 +15174,7 @@
         "h1": [],
         "scripts": [
           "/bg.js",
+          "/omega-animatic.js",
           "/omega-morph.js",
           "/omega-studio-library.js"
         ],
@@ -15610,10 +15611,10 @@
           }
         ],
         "interactive_counts": {
-          "buttons": 13,
+          "buttons": 2,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,

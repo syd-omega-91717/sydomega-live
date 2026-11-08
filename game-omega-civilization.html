@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Omega: Civilization 91717, Slice 0: a twelve-year strategy simulation in which ORION forecasts with honest odds and you decide whether to trust them. Prototype, not a released game.">
+<title>&#937; SYD OMEGA 91717 &mdash; CIVILIZATION 91717</title>
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+.oc-status{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin:0 0 10px}
+.oc-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.oc-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);background:rgba(10,10,15,.7);border:1px solid rgba(201,168,76,.35);border-radius:3px;cursor:pointer;min-height:44px;min-width:44px;padding:8px 12px;display:inline-flex;align-items:center;justify-content:center}
+.oc-btn:hover:not(:disabled){background:rgba(201,168,76,.18)}
+.oc-btn:disabled{opacity:.45;cursor:not-allowed}
+.oc-btn[aria-pressed=true]{background:rgba(201,168,76,.22);border-color:var(--gold);color:var(--gold)}
+.oc-btn:focus-visible,.oc-help:focus-visible,#oc-result:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.oc-help{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-family:var(--M);font-size:16px;color:var(--gold);border:1px solid rgba(201,168,76,.45);border-radius:50%;text-decoration:none}
+.oc-cols{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+@media (min-width:900px){.oc-cols{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}}
+.oc-panel{background:rgba(10,10,15,.55);border:1px solid rgba(201,168,76,.22);border-radius:4px;padding:12px 14px}
+.oc-h{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin:0 0 8px;font-weight:700}
+.oc-meter{display:grid;grid-template-columns:104px 1fr 34px;gap:8px;align-items:center;margin:0 0 6px;font-family:var(--M);font-size:12px;letter-spacing:1px}
+.oc-bar{display:block;height:10px;background:rgba(255,255,255,.07);border-radius:5px;overflow:hidden}
+.oc-fill{display:block;height:100%}
+.oc-mv{text-align:right;color:var(--ink)}
+.oc-low{color:#ff8a8a}
+.oc-ok{color:#5fd18a}.oc-warn{color:#ffb347}
+#oc-stage{background:#04050a;border:1px solid rgba(201,168,76,.28);border-radius:4px;overflow:hidden;display:flex;justify-content:center}
+#oc-map{display:block}
+.oc-regions{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:4px 14px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
+.oc-regions li{border-left:3px solid;padding-left:6px}
+.oc-arow{display:grid;grid-template-columns:1fr auto auto auto auto;gap:6px;align-items:center;margin:0 0 6px;font-family:var(--M);font-size:12px;letter-spacing:1px}
+.oc-fx{color:var(--muted);font-size:12px;text-align:right}
+.oc-pm{padding:0;font-size:18px}
+.oc-n{min-width:20px;text-align:center;color:var(--gold);font-size:15px}
+.oc-pols{display:flex;flex-wrap:wrap;gap:6px}
+.oc-pol{letter-spacing:1px;font-size:12px;padding:6px 10px}
+.oc-tbl,#oc-fc,#oc-hist{width:100%;border-collapse:collapse;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
+.oc-tbl th,.oc-tbl td,#oc-fc th,#oc-fc td,#oc-hist th,#oc-hist td{text-align:left;padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.08)}
+.oc-tbl th,#oc-fc th,#oc-hist th{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:12px}
+.oc-odds{position:relative}
+.oc-obar{display:block;height:6px;background:rgba(255,255,255,.07);border-radius:3px;margin-top:4px;overflow:hidden}
+.oc-ofill{display:block;height:100%;background:#ff7a9c}
+.oc-note{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin:8px 0 0}
+.oc-chk{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
+.oc-chk input{width:20px;height:20px}
+.oc-log{list-style:none;margin:0;padding:0;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);max-height:220px;overflow:auto}
+.oc-log li{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.oc-bad{color:#ffb3b3}
+#oc-result{border:1px solid rgba(201,168,76,.55);border-radius:4px;padding:14px 16px;margin:14px 0;background:rgba(4,5,10,.9)}
+#oc-result[hidden]{display:none}
+.oc-rh{font-family:var(--D);font-size:20px;letter-spacing:4px;color:var(--gold);margin:0 0 8px}
+.oc-rd{font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--ink);margin:0 0 10px;line-height:1.5}
+.oc-msg{font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--cyan);min-height:20px;margin:8px 0}
+.oc-keys{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin:10px 0 0}
+</style>
+</head>
+<body data-page="game-omega-civilization">
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="game-omega-civilization" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">CIVILIZATION 91717<small>THE OMEGA CHRONICLES &middot; SLICE 0 &middot; PROTOTYPE</small></div><a class="oc-help" href="/guide.html" aria-label="Help">?</a></div>
+    <p class="oc-status" id="oc-status" data-no-clamp>PROTOTYPE &middot; not a released game &middot; saved in this browser only</p>
+    <div id="oc-res" class="oc-panel" role="group" aria-label="Resources"></div>
+    <div class="oc-cols">
+      <div>
+        <div id="oc-stage"><canvas id="oc-map" role="img" aria-label="Hex map of five regions. Red shading shows stress. The same numbers are listed below the map."></canvas></div>
+        <ul id="oc-regions" class="oc-regions" aria-label="Region stress"></ul>
+      </div>
+      <div>
+        <section class="oc-panel" aria-label="Plan">
+          <h2 class="oc-h">PLAN <span id="oc-left"></span></h2>
+          <div id="oc-alloc"></div>
+          <h2 class="oc-h" style="margin-top:12px">ONE POLICY CHANGE A YEAR</h2>
+          <div id="oc-policies" class="oc-pols"></div>
+        </section>
+        <section class="oc-panel" aria-label="ORION" style="margin-top:12px">
+          <h2 class="oc-h">ORION</h2>
+          <div class="oc-row">
+            <button type="button" class="oc-btn" id="oc-ask" data-omega-task-id="civ91717.orion.ask" aria-pressed="false">ASK ORION</button>
+            <label class="oc-chk"><input type="checkbox" id="oc-audit" disabled> AUDIT THE FORECAST (&minus;3 TRUST)</label>
+          </div>
+          <table id="oc-fc" aria-label="ORION's forecast"></table>
+          <p class="oc-note" id="oc-fcnote" data-no-clamp></p>
+        </section>
+      </div>
+    </div>
+    <div class="oc-row" style="margin-top:14px">
+      <button type="button" class="oc-btn" id="oc-end" data-omega-task-id="civ91717.year.end">END YEAR</button>
+      <button type="button" class="oc-btn" id="oc-undo" data-omega-task-id="civ91717.year.undo">UNDO YEAR</button>
+      <button type="button" class="oc-btn" id="oc-new" data-omega-task-id="civ91717.game.new">NEW GAME</button>
+    </div>
+    <p id="oc-msg" class="oc-msg" role="status" aria-live="polite" data-no-clamp></p>
+    <section id="oc-result" role="status" hidden></section>
+    <section class="oc-panel" aria-label="Log"><h2 class="oc-h">LOG</h2><ol id="oc-log" class="oc-log" aria-live="polite"></ol></section>
+    <section class="oc-panel" aria-label="History" style="margin-top:12px"><h2 class="oc-h">YEAR BY YEAR</h2><table id="oc-hist"></table></section>
+    <p class="oc-keys">1-4 ADD A POINT &middot; SHIFT+1-4 REMOVE &middot; A ASK ORION &middot; E END YEAR</p>
+  </main>
+</div>
+<script src="/omega-civ-logic.js"></script>
+<script src="/omega-civ-game.js"></script>
+</body>
+</html>

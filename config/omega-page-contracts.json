@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 240,
+  "page_count": 241,
   "contracts": [
     {
       "page_id": "404",
@@ -5579,6 +5579,66 @@
           "forms": 0,
           "inputs": 7,
           "links": 0
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "game-omega-civilization",
+      "path": "game-omega-civilization.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; CIVILIZATION 91717",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::game-omega-civilization::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "game-omega-civilization.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-civ-game.js",
+          "/omega-civ-logic.js",
+          "/omega-morph.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 4,
+          "forms": 0,
+          "inputs": 1,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -16365,8 +16425,8 @@
     }
   ],
   "audit_summary": {
-    "page_count": 240,
-    "source_audited_pages": 240,
+    "page_count": 241,
+    "source_audited_pages": 241,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true
   }

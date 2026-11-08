@@ -3,7 +3,7 @@
    control that could mark a work released, streaming or playable. Plain DOM only: text is set with textContent and nothing is parsed as HTML. */
 (function () {
   'use strict';
-  var TABS = [['films', 'FILMS'], ['series', 'SERIES'], ['games', 'GAMES'], ['characters', 'CHARACTERS'], ['status', 'WHAT REMAINS']];
+  var TABS = [['films', 'FILMS'], ['series', 'SERIES'], ['games', 'GAMES'], ['characters', 'CHARACTERS'], ['screen', 'SCREENING ROOM'], ['status', 'WHAT REMAINS']];
   var L = null, state = { tab: 'films', fr: 'ALL', back: null };
   var LABEL = { CONCEPT: 'CONCEPT', SCREENPLAY_DRAFT: 'SCREENPLAY DRAFT', SCRIPT_DRAFT_SHORT: 'SHORT DRAFT', SCRIPTS_DRAFT: 'SCRIPTS IN DRAFT', BIBLE_DRAFT: 'BIBLE DRAFT', DESIGNED: 'DESIGNED', PROTOTYPE: 'PROTOTYPE', FOUNDER_APPROVED: 'FOUNDER APPROVED', REPO_CANON: 'REPO CANON', MERGED_DRAFT: 'MERGED DRAFT', RECONCILED_PROPOSED: 'RECONCILED', PROPOSED: 'PROPOSED' };
 
@@ -109,6 +109,59 @@
     });
     return box;
   }
+  /* ---- the Screening Room: a procedural animatic of each series' cold open. Not footage; the words are the episode script's own. */
+  var scr = { id: null, T: 0, playing: false, sound: false, raf: 0, last: 0, score: null };
+  function stopScreen() { if (scr.raf) { cancelAnimationFrame(scr.raf); scr.raf = 0; } scr.playing = false; if (scr.score) { scr.score.stop(); scr.score = null; } }
+  function viewScreen() {
+    var A = window.OmegaAnimatic, box = h('div', { 'class': 'sl-screen' });
+    if (!A) { box.appendChild(h('p', { 'class': 'sl-err', role: 'alert', text: 'The screening engine did not load.' })); return box; }
+    var plans = {}, ids = [];
+    A.ORDER.forEach(function (id) {
+      var f = L.franchises.filter(function (x) { return x.id === id; })[0], d = L.documents['episode:' + id + ':101'];
+      if (f) { plans[id] = A.plan({ id: id, title: f.title, premise: f.premise, series: f.series }, d && d.text); ids.push(id); }
+    });
+    if (!scr.id || !plans[scr.id]) { scr.id = ids[0]; scr.T = A.TITLE_AT + 2.5; }
+    var picker = h('div', { 'class': 'sl-row', role: 'group', 'aria-label': 'Choose a franchise' });
+    ids.forEach(function (id) {
+      var b = h('button', { type: 'button', 'class': 'sl-chip', 'aria-pressed': scr.id === id ? 'true' : 'false', text: plans[id].title });
+      b.addEventListener('click', function () { stopScreen(); scr.id = id; scr.T = A.TITLE_AT + 2.5; render(); }); picker.appendChild(b);
+    });
+    box.appendChild(picker);
+    var canvas = h('canvas', { role: 'img', 'aria-label': 'Animatic of ' + plans[scr.id].title + ': a procedural moving storyboard of the first episode\'s cold open, with its spoken lines shown as captions below.' });
+    var cap = h('p', { 'class': 'sl-cap', 'aria-live': 'polite', 'data-no-clamp': '' }), time = h('span', { 'class': 'sl-time', text: '' });
+    var play = h('button', { type: 'button', 'class': 'sl-btn', text: 'PLAY' }), restart = h('button', { type: 'button', 'class': 'sl-btn', text: 'RESTART' });
+    var snd = h('button', { type: 'button', 'class': 'sl-btn', 'aria-pressed': scr.sound ? 'true' : 'false', text: scr.sound ? 'SOUND ON' : 'SOUND OFF' });
+    var scrub = h('input', { type: 'range', 'class': 'sl-scrub', min: '0', max: String(Math.round(A.DURATION * 10)), step: '1', value: String(Math.round(scr.T * 10)), 'aria-label': 'Position in the animatic' });
+    if (!new A.Score(plans[scr.id]).available()) { snd.disabled = true; snd.textContent = 'NO AUDIO'; }
+    box.appendChild(canvas); box.appendChild(h('div', { 'class': 'sl-ctl' }, [play, restart, snd, scrub, time])); box.appendChild(cap);
+    var p = plans[scr.id], ctx = canvas.getContext('2d'), W = 0, H = 0;
+    function size() { var w = Math.max(280, Math.min(960, box.clientWidth || canvas.parentNode && canvas.parentNode.clientWidth || 640)), dpr = Math.min(2, window.devicePixelRatio || 1); W = w; H = Math.round(w * 9 / 16); canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); canvas.style.height = H + 'px'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    function fmt(s) { var m = Math.floor(s / 60), r = Math.floor(s % 60); return m + ':' + (r < 10 ? '0' : '') + r; }
+    function paint() {
+      if (!W) size(); A.draw(ctx, W, H, scr.T, p); scrub.value = String(Math.round(scr.T * 10)); time.textContent = fmt(scr.T) + ' / ' + fmt(A.DURATION);
+      var ln = A.activeLine(p, scr.T); cap.textContent = ln ? (ln.who ? ln.who + ': ' : '') + ln.text : (scr.T >= A.TITLE_AT ? p.title + ' \u2014 ' + p.seriesTitle : (p.fromScript ? '' : 'No spoken lines in this cold open: the franchise premise is shown instead.'));
+    }
+    function tick(now) {
+      if (!scr.playing) return;
+      scr.T += Math.min(0.1, (now - scr.last) / 1000); scr.last = now;
+      if (scr.T >= A.DURATION) { scr.T = A.DURATION - 0.01; paint(); stopScreen(); play.textContent = 'PLAY'; return; }
+      paint(); scr.raf = requestAnimationFrame(tick);
+    }
+    function startAudio() { if (scr.score) scr.score.stop(); scr.score = null; if (scr.sound && scr.playing) { scr.score = new A.Score(p); if (!scr.score.start(scr.T)) scr.score = null; } }
+    play.addEventListener('click', function () {
+      if (scr.playing) { stopScreen(); play.textContent = 'PLAY'; return; }
+      if (scr.T >= A.DURATION - 0.05) scr.T = 0; scr.playing = true; scr.last = performance.now(); play.textContent = 'PAUSE'; startAudio(); scr.raf = requestAnimationFrame(tick);
+    });
+    restart.addEventListener('click', function () { stopScreen(); scr.T = 0; paint(); { scr.playing = true; scr.last = performance.now(); play.textContent = 'PAUSE'; startAudio(); scr.raf = requestAnimationFrame(tick); } });
+    snd.addEventListener('click', function () { scr.sound = !scr.sound; snd.setAttribute('aria-pressed', scr.sound ? 'true' : 'false'); snd.textContent = scr.sound ? 'SOUND ON' : 'SOUND OFF'; startAudio(); });
+    scrub.addEventListener('input', function () { scr.T = Number(scrub.value) / 10; if (scr.playing) { scr.last = performance.now(); startAudio(); } paint(); });
+    document.addEventListener('visibilitychange', function () { if (document.hidden && scr.playing) { stopScreen(); play.textContent = 'PLAY'; } });
+    window.addEventListener('resize', function () { size(); paint(); });
+    box.appendChild(h('p', { 'class': 'sl-meta sl-locked', text: 'THE CONVERGENCE: NOT STARTED. The registry says crossovers must be earned by the other six franchises first.' }));
+    box.appendChild(h('p', { 'class': 'sl-meta', text: 'An animatic is a timed moving storyboard: generative art, the first spoken lines of the series\' first episode as captions, and a synthesized score (off until you turn it on). It is not footage and not a trailer; no actor, voice or filmed shot exists.' }));
+    window.setTimeout(function () { size(); paint(); }, 0);
+    return box;
+  }
   /* What exists and what remains, exactly as the registry and the files on disk say (computed once, by scripts/studios-presence.py). */
   function viewStatus() {
     var s = L.status, box = h('div', {}), rows = [
@@ -158,13 +211,14 @@
     });
   }
   function render() {
-    renderTabs(); renderChips(); $('sl-chips').style.display = state.tab === 'status' ? 'none' : '';   // the franchise filter does not apply to the status tab
+    stopScreen(); renderTabs(); renderChips(); $('sl-chips').style.display = (state.tab === 'status' || state.tab === 'screen') ? 'none' : '';   // the franchise filter does not apply to the status tab
     var box = $('sl-body'); box.textContent = ''; box.setAttribute('aria-labelledby', 'sl-tab-' + state.tab);
     var view;
     switch (state.tab) {
       case 'series': view = viewSeries(); break;
       case 'games': view = viewGames(); break;
       case 'characters': view = viewCharacters(); break;
+      case 'screen': view = viewScreen(); break;
       case 'status': view = viewStatus(); break;
       default: view = viewFilms();
     }

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Last Galactic Empire, Slice 0: a forty-season grand-strategy campaign. You are the Court; every law that keeps the peace raises Drift, and at 100 you have become what the Empire was founded to prevent. Prototype, not a released game.">
+<title>&#937; SYD OMEGA 91717 &mdash; LAST GALACTIC EMPIRE</title>
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+.gl-status{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin:0 0 10px}
+.gl-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.gl-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);background:rgba(10,10,15,.7);border:1px solid rgba(201,168,76,.35);border-radius:3px;cursor:pointer;min-height:44px;min-width:44px;padding:8px 12px;display:inline-flex;align-items:center;justify-content:center}
+.gl-btn:hover:not(:disabled){background:rgba(201,168,76,.18)}
+.gl-btn:disabled{opacity:.45;cursor:not-allowed}
+.gl-btn[aria-pressed=true]{background:rgba(201,168,76,.22);border-color:var(--gold);color:var(--gold)}
+.gl-btn:focus-visible,.gl-help:focus-visible,#gl-result:focus-visible,.gl-sel-ctl:focus-visible,#gl-map:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.gl-small{min-height:36px;min-width:36px;padding:4px 8px;letter-spacing:1px}
+.gl-pm{padding:0;font-size:18px}
+.gl-help{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-family:var(--M);font-size:16px;color:var(--gold);border:1px solid rgba(201,168,76,.45);border-radius:50%;text-decoration:none}
+.gl-cols{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+@media (min-width:1000px){.gl-cols{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
+.gl-panel{background:rgba(10,10,15,.55);border:1px solid rgba(201,168,76,.22);border-radius:4px;padding:12px 14px;margin:0 0 12px}
+.gl-h{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);margin:0 0 8px;font-weight:700}
+.gl-h2{font-family:var(--M);font-size:13px;letter-spacing:2px;color:var(--ink);margin:0 0 6px}
+.gl-meter{display:grid;grid-template-columns:128px 1fr 76px;gap:8px;align-items:center;margin:0 0 6px;font-family:var(--M);font-size:12px;letter-spacing:1px}
+.gl-bar{position:relative;display:block;height:10px;background:rgba(255,255,255,.07);border-radius:5px;overflow:hidden}
+.gl-fill{display:block;height:100%}
+.gl-mark{position:absolute;top:0;width:2px;height:100%;background:rgba(255,255,255,.65)}
+.gl-mv{text-align:right;color:var(--ink)}
+.gl-facts,.gl-note{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);margin:6px 0;line-height:1.5}
+.gl-low{color:#ff8a8a}
+#gl-stage{background:#04050a;border:1px solid rgba(201,168,76,.28);border-radius:4px;overflow:hidden;display:flex;justify-content:center}
+#gl-map{display:block;cursor:pointer;touch-action:manipulation}
+.gl-pols{display:flex;flex-wrap:wrap;gap:6px}
+.gl-law{letter-spacing:1px;font-size:12px;padding:6px 10px}
+.gl-law[data-kind=freedom]{border-color:rgba(79,227,255,.45)}
+.gl-tbl,#gl-hist,#gl-owners{width:100%;border-collapse:collapse;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
+.gl-tbl th,.gl-tbl td,#gl-hist th,#gl-hist td,#gl-owners th,#gl-owners td{text-align:left;padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:middle}
+#gl-hist th,#gl-owners th{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:12px}
+.gl-sel{background:rgba(201,168,76,.1)}
+.gl-fleet{border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:8px 10px;margin:0 0 8px}
+.gl-fhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
+.gl-fctl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 10px;align-items:center;margin-top:8px}
+.gl-lab{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold)}
+.gl-chk{grid-column:1 / -1;display:flex;align-items:center;gap:6px;min-height:44px}
+.gl-chk input{width:22px;height:22px}
+.gl-sel-ctl{font-family:var(--M);font-size:12px;color:var(--ink);background:#0a0a0f;border:1px solid rgba(201,168,76,.35);border-radius:3px;min-height:36px;max-width:100%;padding:4px}
+.gl-scroll{overflow-x:auto}
+.gl-log{list-style:none;margin:0;padding:0;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);max-height:300px;overflow:auto}
+.gl-log li{padding:3px 0}
+.gl-season{color:var(--gold);border-top:1px solid rgba(255,255,255,.12);margin-top:6px;padding-top:6px !important}
+.gl-battle{color:#ffb3b3}
+.gl-sub{color:var(--muted);padding-left:14px}
+#gl-result{border:1px solid rgba(201,168,76,.55);border-radius:4px;padding:14px 16px;margin:14px 0;background:rgba(4,5,10,.9)}
+#gl-result[hidden]{display:none}
+.gl-rh{font-family:var(--D);font-size:20px;letter-spacing:4px;color:var(--gold);margin:0 0 8px}
+.gl-rd{font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--ink);margin:0 0 10px;line-height:1.5}
+.gl-msg{font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--cyan);min-height:20px;margin:8px 0}
+.gl-keys{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin:10px 0 0}
+.gl-key{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);margin:8px 0 0}
+</style>
+</head>
+<body data-page="game-last-galactic-empire">
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="game-last-galactic-empire" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">LAST GALACTIC EMPIRE<small>THE LAST GALACTIC EMPIRE &middot; SLICE 0 &middot; PROTOTYPE</small></div><a class="gl-help" href="/guide.html" aria-label="Help">?</a></div>
+    <p class="gl-status" id="gl-status" data-no-clamp>PROTOTYPE &middot; not a released game &middot; saved in this browser only</p>
+    <div id="gl-meters" class="gl-panel" role="group" aria-label="Drift, trust and treasury"></div>
+    <div class="gl-cols">
+      <div>
+        <div id="gl-stage"><canvas id="gl-map" role="img" aria-label="Map of twenty systems and their jumps. Gold squares are the Court, cyan diamonds the Reformers, pink triangles the Independent Worlds, grey circles unclaimed. Every system and fleet is also listed in the tables below."></canvas></div>
+        <p class="gl-key" aria-hidden="true"><span>&#9632; COURT</span><span>&#9670; REFORMERS</span><span>&#9650; INDEPENDENTS</span><span>&#9679; UNCLAIMED</span><span>BAR = FLEET STRENGTH</span></p>
+        <div class="gl-panel" style="margin-top:12px" aria-live="polite"><h2 class="gl-h">SYSTEM</h2><div id="gl-sys"></div></div>
+      </div>
+      <div>
+        <section class="gl-panel" aria-label="The Charter"><h2 class="gl-h">THE CHARTER &middot; ONE CHANGE A SEASON &middot; EVERY LAW COSTS 2 DRIFT</h2><div id="gl-laws" class="gl-pols"></div><div id="gl-answer" style="margin-top:10px"></div></section>
+        <section class="gl-panel" aria-label="Court fleets"><h2 class="gl-h">YOUR FLEETS</h2><div id="gl-fleets" role="group" aria-label="Court fleets and their orders"></div><p id="gl-cost" class="gl-note" data-no-clamp></p></section>
+      </div>
+    </div>
+    <div class="gl-row">
+      <button type="button" class="gl-btn" id="gl-end" data-omega-task-id="galactic.season.end">END SEASON</button>
+      <button type="button" class="gl-btn" id="gl-undo" data-omega-task-id="galactic.season.undo">UNDO SEASON</button>
+      <button type="button" class="gl-btn" id="gl-new" data-omega-task-id="galactic.campaign.new">NEW CAMPAIGN</button>
+    </div>
+    <p id="gl-msg" class="gl-msg" role="status" aria-live="polite" data-no-clamp></p>
+    <section id="gl-result" role="status" hidden></section>
+    <section class="gl-panel" aria-label="Season log"><h2 class="gl-h">WHY IT HAPPENED &middot; EVERY BATTLE'S ARITHMETIC, EVERY ENEMY MOVE'S REASON</h2><ol id="gl-log" class="gl-log" aria-live="polite"></ol></section>
+    <section class="gl-panel" aria-label="Systems"><h2 class="gl-h">SYSTEMS</h2><div class="gl-scroll"><table id="gl-owners" aria-label="All twenty systems"></table></div></section>
+    <section class="gl-panel" aria-label="History"><h2 class="gl-h">SEASON BY SEASON</h2><div class="gl-scroll"><table id="gl-hist"></table></div></section>
+    <p class="gl-keys">CLICK A FLEET'S # THEN A NEIGHBOURING SYSTEM, OR USE THE ORDER LISTS &middot; E END SEASON</p>
+  </main>
+</div>
+<script src="/omega-galactic-logic.js"></script>
+<script src="/omega-galactic-game.js"></script>
+</body>
+</html>

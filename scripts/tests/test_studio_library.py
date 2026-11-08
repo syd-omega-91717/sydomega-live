@@ -61,7 +61,7 @@ class StudioLibrary(unittest.TestCase):
         for d in p["documents"].values():
             self.assertGreater(len(d["text"].split()), 200)
 
-    def test_statuses_are_the_canon_statuses_and_only_one_prototype_is_openable(self):
+    def test_statuses_are_the_canon_statuses_and_only_prototypes_with_a_build_file_are_openable(self):
         p = lib.build()
         for f in p["franchises"]:
             for fm in f["films"]:
@@ -72,9 +72,9 @@ class StudioLibrary(unittest.TestCase):
         for d in p["documents"].values():
             self.assertIn(d["status"], ALLOWED)
         openable = [f["id"] for f in p["franchises"] if f["game"]["prototype"]]
-        self.assertEqual(openable, ["myth-of-the-stones"])
-        proto = [f["game"]["prototype"] for f in p["franchises"] if f["game"]["prototype"]][0]
-        self.assertTrue((ROOT / proto.lstrip("/")).is_file(), proto)
+        self.assertEqual(openable, ["myth-of-the-stones", "the-omega-chronicles", "the-last-galactic-empire"])
+        for proto in [f["game"]["prototype"] for f in p["franchises"] if f["game"]["prototype"]]:
+            self.assertTrue((ROOT / proto.lstrip("/")).is_file(), proto)
 
     def test_no_document_writes_the_frequency_wrongly(self):
         for d in lib.build()["documents"].values():

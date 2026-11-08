@@ -12,6 +12,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("studio_canon_check", ROOT / "scripts" / "studio-canon-check.py")
 chk = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(chk)
+PROTOTYPES = ("myth-of-the-stones", "the-omega-chronicles", "the-last-galactic-empire")   # each has a build file that exists and a test suite
 REG = chk.load(chk.REG_PATH)
 SLATE = chk.load(chk.SLATE_PATH)
 PROD = chk.load(chk.PROD_PATH)
@@ -148,15 +149,18 @@ class StudioCanon(unittest.TestCase):
         # design document that exists; every other game is still CONCEPT.
         designed = []
         for f in REG["franchises"]:
-            allowed = ("PROTOTYPE",) if f["id"] == "myth-of-the-stones" else ("CONCEPT", "DESIGNED")
+            allowed = ("PROTOTYPE",) if f["id"] in PROTOTYPES else ("CONCEPT", "DESIGNED")
+            if f["game"]["status"] == "PROTOTYPE":
+                self.assertTrue((ROOT / f["game"]["build"]).is_file(), f["id"])
+                self.assertTrue((ROOT / f["game"]["gdd"]).is_file(), f["id"])
             self.assertIn(f["game"]["status"], allowed, f["id"])
             self.assertEqual(f["game"]["multiplayer"], "UNAVAILABLE", f["id"])
             if f["game"]["status"] == "DESIGNED":
                 designed.append(f["id"])
                 self.assertTrue((ROOT / f["game"]["gdd"]).is_file(), f["id"])
-        self.assertEqual(designed, ["zodiac-wars", "the-omega-chronicles", "the-last-galactic-empire"])
+        self.assertEqual(designed, ["zodiac-wars"])
         past = [f["id"] for f in REG["franchises"] if f["game"]["status"] != "CONCEPT"]
-        self.assertEqual(past, ["myth-of-the-stones"] + designed)
+        self.assertEqual(past, ["myth-of-the-stones", "zodiac-wars", "the-omega-chronicles", "the-last-galactic-empire"])
 
     def test_a_series_with_scripts_names_files_that_exist_and_no_other_series_claims_scripts(self):
         with_scripts = []

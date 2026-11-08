@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 241,
-  "open_task_count": 3247,
+  "page_count": 242,
+  "open_task_count": 3261,
   "pages": [
     {
       "page_id": "404",
@@ -5789,6 +5789,73 @@
         "PAGE::forge::MISSING::TRACEABILITY",
         "PAGE::forge::MISSING::TRUTH_STATES",
         "PAGE::forge::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "game-last-galactic-empire",
+      "path": "game-last-galactic-empire.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; LAST GALACTIC EMPIRE",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-galactic-game.js",
+          "/omega-galactic-logic.js",
+          "/omega-morph.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 3,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::game-last-galactic-empire::MISSING::ACCESSIBILITY",
+        "PAGE::game-last-galactic-empire::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::game-last-galactic-empire::MISSING::AUTHORIZATION",
+        "PAGE::game-last-galactic-empire::MISSING::DATA_SOURCES",
+        "PAGE::game-last-galactic-empire::MISSING::DOMAIN",
+        "PAGE::game-last-galactic-empire::MISSING::EVENTS",
+        "PAGE::game-last-galactic-empire::MISSING::FAILURE_PATHS",
+        "PAGE::game-last-galactic-empire::MISSING::PRIMARY_ROLE",
+        "PAGE::game-last-galactic-empire::MISSING::PURPOSE",
+        "PAGE::game-last-galactic-empire::MISSING::RESPONSIVE",
+        "PAGE::game-last-galactic-empire::MISSING::TASKS",
+        "PAGE::game-last-galactic-empire::MISSING::TRACEABILITY",
+        "PAGE::game-last-galactic-empire::MISSING::TRUTH_STATES",
+        "PAGE::game-last-galactic-empire::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

@@ -34,7 +34,7 @@ Maps from merged slate entries: `the-omega-saga`, `post-human-mind`.
 
 ## Game
 
-**Omega: Civilization 91717** — Strategic civilization-building and simulation. Status: DESIGNED. Design document: `docs/studios/franchises/the-omega-chronicles/games/civilization-91717/GDD.md`. No playable build exists. Multiplayer: UNAVAILABLE.
+**Omega: Civilization 91717** — Strategic civilization-building and simulation. Status: PROTOTYPE. Design document: `docs/studios/franchises/the-omega-chronicles/games/civilization-91717/GDD.md`. Prototype build: `game-omega-civilization.html` (Vertical Slice 0 only; not a released game). Multiplayer: UNAVAILABLE.
 
 ## Characters
 

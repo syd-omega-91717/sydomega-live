@@ -46,7 +46,7 @@ class Today(unittest.TestCase):
             "omega_fc_cards": "flashcard.html", "omega_vocab": "vocabulary.html",
             "omega_water_log": "water.html", "omega_water_goal": "water.html",
             "omega_sleep_log": "sleep.html", "omega_mood_log": "mood.html",
-            "omega_gratitude_log": "gratitude.html", "omega_meditate_log": "meditate.html",
+            "omega_gratitude_log": "gratitude.html", "omega_meditate_log": "breath.html",
             "omega_workout_log": "workout.html",
         }
         for key, page in owners.items():

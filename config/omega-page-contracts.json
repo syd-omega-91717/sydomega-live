@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 242,
+  "page_count": 241,
   "contracts": [
     {
       "page_id": "404",
@@ -1880,7 +1880,7 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 6,
+          "buttons": 7,
           "forms": 0,
           "inputs": 0,
           "links": 0
@@ -3903,7 +3903,8 @@
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/omega-weather.js"
         ],
         "data_evidence": {
           "supabase_tables": [
@@ -5635,7 +5636,7 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 3,
+          "buttons": 4,
           "forms": 0,
           "inputs": 0,
           "links": 1
@@ -9538,67 +9539,6 @@
       }
     },
     {
-      "page_id": "meditate",
-      "path": "meditate.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Meditate",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::meditate::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "meditate.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js",
-          "omega-ui.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 11,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
       "page_id": "membership",
       "path": "membership.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -12446,7 +12386,8 @@
           "/omega-analytics-init.js",
           "/omega-esc.js",
           "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/omega-weather.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],
@@ -14657,6 +14598,7 @@
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/omega-animatic.js",
           "/omega-morph.js",
           "/omega-studio-library.js"
         ],
@@ -15099,10 +15041,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 13,
+          "buttons": 2,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_evidence": {
           "images": 0,
@@ -16485,8 +16427,8 @@
     }
   ],
   "audit_summary": {
-    "page_count": 242,
-    "source_audited_pages": 242,
+    "page_count": 241,
+    "source_audited_pages": 241,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true
   }

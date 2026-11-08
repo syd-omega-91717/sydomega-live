@@ -74,6 +74,16 @@
       "source": "/omega-visual-home.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/meditate",
+      "destination": "/breath",
+      "permanent": true
+    },
+    {
+      "source": "/meditate.html",
+      "destination": "/breath",
+      "permanent": true
     }
   ],
   "headers": [

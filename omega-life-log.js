@@ -37,7 +37,7 @@
     { k: 'sleep',     label: 'SLEEP',     glyph: '☾', unit: 'h',   agg: 'last', dial: { def: 7.5, step: 0.5, min: 0, max: 16, dp: 1 }, href: '/sleep.html' },
     { k: 'water',     label: 'WATER',     glyph: '≈', unit: 'ml',  agg: 'sum',  step: 250, href: '/water.html' },
     { k: 'workout',   label: 'TRAINING',  glyph: '⚔︎', unit: 'sessions', agg: 'sum', step: 1, href: '/workout.html' },
-    { k: 'meditate',  label: 'STILLNESS', glyph: '◎', unit: 'min', agg: 'sum',  step: 5, href: '/meditate.html' },
+    { k: 'meditate',  label: 'STILLNESS', glyph: '◎', unit: 'min', agg: 'sum',  step: 5, href: '/breath.html' },
     { k: 'breath',    label: 'BREATH',    glyph: '∿', unit: 'min', agg: 'sum',  step: 3, href: '/breath.html' },
     { k: 'gratitude', label: 'GRATITUDE', glyph: '✧', unit: 'items', agg: 'sum', step: 1, note: true, href: '/gratitude.html' },
     { k: 'body',      label: 'BODY',      glyph: '⚖︎', unit: 'kg',  agg: 'last', dial: { def: 70, step: 0.1, min: 20, max: 300, dp: 1 }, href: '/body.html' },

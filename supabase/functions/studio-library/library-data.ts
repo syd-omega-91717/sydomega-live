@@ -64,7 +64,14 @@ export const LIBRARY = {
     "status": "PROTOTYPE",
     "multiplayer": "UNAVAILABLE",
     "doc": "gdd:myth-of-the-stones",
-    "prototype": "/game-origins.html"
+    "prototype": "/game-origins.html",
+    "companions": [
+     {
+      "title": "The Two-Hand Bridge",
+      "status": "PROTOTYPE",
+      "prototype": "/game-origins-bridge.html"
+     }
+    ]
    },
    "characters": [
     {
@@ -252,7 +259,8 @@ export const LIBRARY = {
     "status": "DESIGNED",
     "multiplayer": "UNAVAILABLE",
     "doc": "gdd:zodiac-wars",
-    "prototype": null
+    "prototype": null,
+    "companions": []
    },
    "characters": [
     {
@@ -455,7 +463,8 @@ export const LIBRARY = {
     "status": "PROTOTYPE",
     "multiplayer": "UNAVAILABLE",
     "doc": "gdd:the-omega-chronicles",
-    "prototype": "/game-omega-civilization.html"
+    "prototype": "/game-omega-civilization.html",
+    "companions": []
    },
    "characters": [
     {
@@ -538,7 +547,8 @@ export const LIBRARY = {
     "status": "CONCEPT",
     "multiplayer": "UNAVAILABLE",
     "doc": null,
-    "prototype": null
+    "prototype": null,
+    "companions": []
    },
    "characters": [
     {
@@ -620,7 +630,8 @@ export const LIBRARY = {
     "status": "PROTOTYPE",
     "multiplayer": "UNAVAILABLE",
     "doc": "gdd:the-last-galactic-empire",
-    "prototype": "/game-last-galactic-empire.html"
+    "prototype": "/game-last-galactic-empire.html",
+    "companions": []
    },
    "characters": [
     {
@@ -698,7 +709,8 @@ export const LIBRARY = {
     "status": "CONCEPT",
     "multiplayer": "UNAVAILABLE",
     "doc": null,
-    "prototype": null
+    "prototype": null,
+    "companions": []
    },
    "characters": [
     {
@@ -761,7 +773,8 @@ export const LIBRARY = {
     "status": "CONCEPT",
     "multiplayer": "UNAVAILABLE",
     "doc": null,
-    "prototype": null
+    "prototype": null,
+    "companions": []
    },
    "characters": []
   }
@@ -900,5 +913,55 @@ export const LIBRARY = {
    "status": "SCRIPT_DRAFT_SHORT",
    "text": "Title: SURVIVORS OF TOMORROW\nEpisode: 101, \"RATION DAY\"\nCredit: Draft 1 SHORT — PROPOSED, not approved\nAuthor: Prepared for Ω SYD OMEGA 91717 STUDIOS GLOBAL under the founder's direction\nDraft date: 2026-11-07\nNotes: Cold open and three condensed acts, about 11 script pages of a 50-minute episode. Follows the Season 1 bible; Ines Calloway, Tobias Wren and Marguerite Osei are new, proposed names. Every number in this script is stated and consistent. Nothing here is filmed, released or playable.\n\nFADE IN:\n\nEXT. THE LAST CITY — DAWN\n\nA walled settlement on a flat grey plain: terraced roofs, rain barrels, solar sheets patched with tarpaulin. Eleven thousand people, and a long queue at a low building with a bell. Thin morning light.\n\nA hand-lettered board above the queue: \"RATION DAY — SIXTH OF THE MONTH.\"\n\nMAIN TITLES — A LEDGER PAGE TURNS. EACH LINE IS A DAY OF WATER, WRITTEN IN THE SAME HAND, UNTIL THE LINES RUN OUT.\n\nACT ONE\n\nINT. THE WATER BOARD — MORNING\n\nA narrow office with a map of cisterns pinned to a wall. INES CALLOWAY, forty-one, cardigan, spectacles pushed up on her forehead, balances a ledger on one knee. She is stamping receipts with the care of a woman who has stamped ten thousand.\n\nTOBIAS WREN, twenty-nine, sweat on his collar from the east wall, comes in with a pipe wrench still in his hand.\n\nTOBIAS\nThey cut the ration again.\n\nINES\nTwelve percent.\n\nTOBIAS\nWhy twelve?\n\nINES\nBecause the Warden says the reserve is eighty-one days.\n\nTOBIAS\n(flat)\nWe said eighty-one last month.\n\nINES\nWe said eighty-one last month, and eighty-one the month before, and eighty-one the month before that.\n\nTobias thinks about this. It does not take long.\n\nTOBIAS\nThen it would be less now.\n\nINES\nIt would.\n\nShe stamps another receipt.\n\nACT TWO\n\nINT. THE LEDGER HALL — DAY\n\nA tall, plain room lined with shelves of bound volumes. At a lectern in the middle stands MARGUERITE OSEI, sixty-three, the Warden of the Ledger, straight-backed, in the long brown coat of her office. She is reading a short notice to a small crowd.\n\nOSEI\n\"The reserve stands at eighty-one days. The ration is therefore reduced by twelve percent, effective at the next bell.\"\n\nA MURMUR. A man in the second row raises a hand.\n\nMAN\nWarden, how do you know it's eighty-one?\n\nOSEI\n(a beat)\nThe Ledger records it.\n\nMAN\nWho counts the Ledger?\n\nOSEI\nThe Ledger counts itself.\n\nA laugh, short and uneasy. The crowd breaks up. Ines, at the back, watches Osei fold the notice. She watches her hands.\n\nINT. THE WATER BOARD — NIGHT\n\nInes alone, a lamp, the cistern map. She opens the cistern gauge book, not the Ledger: the physical record of what each tank actually holds, kept by a clerk who has never been asked to total it. She totals it.\n\nINES\n(low)\nSixty-three.\n\nShe does it again with a pencil on the margin of the map, tank by tank.\n\nINES (CONT'D)\nSixty-three days.\n\nEighteen days is the difference. She puts her pencil down very carefully, as if it were the thing at fault.\n\nACT THREE\n\nINT. THE LEDGER HALL — NIGHT\n\nInes stands at the lectern in the empty hall. Osei sits on a bench against the wall, a small figure in the high room, as if she had been there for an hour.\n\nOSEI\nYou've counted.\n\nINES\nSixty-three. Not eighty-one.\n\nOSEI\n(without surprise)\nI would rather you had counted it wrong.\n\nINES\nWhy?\n\nOSEI\nBecause I set it at eighty-one so that people would sleep. When it was seventy, and a panic at the cisterns put twenty into the infirmary, I decided what the number would be. I have been correcting it by quiet small cuts ever since. The cuts are the reason for the ration, not the figure.\n\nINES\nIt's a lie.\n\nOSEI\nIt is a kindness with a bad habit.\n\nINES\n(a beat)\nWhat does the Ledger say, Warden?\n\nOSEI\n(very quietly)\nWhat I wrote.\n\nInes nods. She takes a stub of chalk from her cardigan pocket and, on the board beside the lectern, where the day's ration is chalked, she writes a line under the Warden's.\n\nOSEI (CONT'D)\n(not moving)\nDo you know what you are doing?\n\nINES\nSaying the number.\n\nShe finishes the line. \"63.\"\n\nSMASH CUT TO:\n\nEXT. THE LAST CITY — NIGHT\n\nThe bell in the ration house tolls. Not the ration bell: a longer, slower one. Lamps come on across the terraces, window by window, as people come out to read the board.\n\nCUT TO BLACK.\n\nTAG\n\nINT. THE LEDGER HALL — NIGHT\n\nOsei alone. She opens the oldest volume on the shelf, the one with the cracked spine, to a page that has a single line of figures in a hand not hers. She does not read it. She puts her palm flat on it, the way one might on a sleeping animal.\n\nCLOSING SEQUENCE — THE LEDGER'S LINES RUN OUT. A NEW LINE IS ADDED AT THE BOTTOM, IN A DIFFERENT HAND.\n\nTHE END OF EPISODE 101 (DRAFT 1 SHORT)\n"
   }
+ },
+ "status": {
+  "films": 26,
+  "filmsScripted": 2,
+  "episodesDeclared": 166,
+  "episodesWritten": 13,
+  "seriesUnsized": [
+   "The Convergence Files"
+  ],
+  "characters": 65,
+  "builds": [
+   {
+    "title": "Myth of the Stones: Origins",
+    "status": "PROTOTYPE",
+    "prototype": "/game-origins.html"
+   },
+   {
+    "title": "The Two-Hand Bridge",
+    "status": "PROTOTYPE",
+    "prototype": "/game-origins-bridge.html"
+   },
+   {
+    "title": "Omega: Civilization 91717",
+    "status": "PROTOTYPE",
+    "prototype": "/game-omega-civilization.html"
+   },
+   {
+    "title": "Last Galactic Empire",
+    "status": "PROTOTYPE",
+    "prototype": "/game-last-galactic-empire.html"
+   }
+  ],
+  "gamesWithoutBuild": [
+   {
+    "title": "Zodiac Wars: Ascension",
+    "status": "DESIGNED"
+   },
+   {
+    "title": "The Lost Kingdoms",
+    "status": "CONCEPT"
+   },
+   {
+    "title": "Frontier: Rebuild Earth",
+    "status": "CONCEPT"
+   },
+   {
+    "title": "Omega Multiverse",
+    "status": "CONCEPT"
+   }
+  ]
  }
 };

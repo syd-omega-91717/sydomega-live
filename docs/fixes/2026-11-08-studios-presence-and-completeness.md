@@ -1,0 +1,15 @@
+### Studios: every item present once, and an exact count of what remains (2026-11-08)
+
+**Why.** The user asked for everything to be built completely, with nothing missing or remaining, and for every item to be present once and mentioned once across the project, pages and platform. Complete is not achievable (films, series, four games, footage and a playtest do not exist), so the honest version of both asks is two checkable things: uniqueness and a true count of what is left.
+
+**Measured first.** Registry: no duplicate ids, titles or names. Navigation: `nav.js` lists five pages twice (`life`, `subscriptions`, `income`, `payments`, `ledger`) and `/horoscope.html` under two slugs, but in each pair exactly one entry is marked `folded`, so in a real browser each page renders once per flyout; the repeated links to a section hub are the section icon and its flyout's first link, two roles of one control. Studios scope: each playable page was in the menu once, the menu map once and the status document once, and the 26 conflicts were once each in both places. The existing `content-uniqueness-contract.py` (no duplicate page titles) passes on 252 pages.
+
+**Gaps found (the opposite problem).** The Two-Hand Bridge was built, tested and in the menu but absent from the registry, so no bible or library could see it; Origins had no Help entry at all and no tests file recorded.
+
+**Fix.** The Bridge is registered as a companion build of Myth's game (validated by the canon checker: build and tests files must exist; shown in the bible and the library); Origins has one Help entry and its tests file recorded; `scripts/studios-presence.py` fails on any duplicate, orphan script or season bible, missing menu, Help or status entry for a build page, or a conflict missing from or extra in the universe bible, and writes `docs/studios/COMPLETENESS.md`; the owner-only library gains a WHAT REMAINS tab fed by the same single computation, so no number is stored twice.
+
+**What remains, exactly (from the report).** 24 of 26 films have no script; 153 of 166 declared episodes are not written (the 13 that exist are short drafts); 4 of 7 games have no build (Zodiac Wars: Ascension is DESIGNED, the other three CONCEPT); The Convergence is not started on purpose; footage, voice, music, a human playtest and any release cannot be made in this repository.
+
+**Verified.** `test_studios_presence.py` 7 tests (each plants a fault the checker must name), canon and library tests, `studios-presence.py` PASS; in headless Chromium at 1280 and 375 wide the library shows five tabs, the status numbers match, and each of the four builds is linked exactly once on the Games and the status tabs.
+
+**Not done / not verified.** The 242-page navigation outside the Studios scope was measured, not redesigned: the repeated hub links are intentional controls, and no page repeats inside a flyout. Whether the owner wants those entry points reduced is a design decision, not a duplication bug. The Studio Library tab was checked against a stubbed owner session; the live owner path is unchanged.

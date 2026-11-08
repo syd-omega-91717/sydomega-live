@@ -37,6 +37,10 @@ Maps from merged slate entries: `myth-of-the-stones`, `the-sorcerer-reborn`.
 
 **Myth of the Stones: Origins** — Third-person open-world action RPG. Status: PROTOTYPE. Design document: `docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md`. Prototype build: `game-origins.html` (Vertical Slice 0 only; not a released game). Multiplayer: UNAVAILABLE.
 
+**Companion builds** (playable prototypes beside the main game):
+
+- **The Two-Hand Bridge** — Cooperative puzzle: two characters, spans that need both hands and gates that need one. Status: PROTOTYPE. Build: `game-origins-bridge.html`. Tests: `scripts/tests/test_bridge_logic.py`.
+
 ## Characters
 
 | Id | Name | Role | Canon status |

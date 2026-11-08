@@ -167,7 +167,17 @@
         "status": "PROTOTYPE",
         "multiplayer": "UNAVAILABLE",
         "gdd": "docs/studios/franchises/myth-of-the-stones/games/origins/GDD.md",
-        "build": "game-origins.html"
+        "build": "game-origins.html",
+        "companions": [
+          {
+            "title": "The Two-Hand Bridge",
+            "genre": "Cooperative puzzle: two characters, spans that need both hands and gates that need one",
+            "status": "PROTOTYPE",
+            "build": "game-origins-bridge.html",
+            "tests": "scripts/tests/test_bridge_logic.py"
+          }
+        ],
+        "tests": "scripts/tests/test_origins_logic.py"
       },
       "ages": [
         "age-1",
@@ -294,7 +304,8 @@
         "status": "PROTOTYPE",
         "multiplayer": "UNAVAILABLE",
         "gdd": "docs/studios/franchises/the-omega-chronicles/games/civilization-91717/GDD.md",
-        "build": "game-omega-civilization.html"
+        "build": "game-omega-civilization.html",
+        "tests": "scripts/tests/test_civ_logic.py"
       },
       "ages": [
         "age-6",
@@ -415,7 +426,8 @@
         "status": "PROTOTYPE",
         "multiplayer": "UNAVAILABLE",
         "gdd": "docs/studios/franchises/the-last-galactic-empire/games/last-galactic-empire/GDD.md",
-        "build": "game-last-galactic-empire.html"
+        "build": "game-last-galactic-empire.html",
+        "tests": "scripts/tests/test_galactic_logic.py"
       },
       "ages": [
         "age-5"

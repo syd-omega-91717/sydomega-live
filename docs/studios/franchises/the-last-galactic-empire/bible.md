@@ -31,7 +31,7 @@ New to the canon. Anchored at saga chapter 11, where the 9.1717 Hz frequency is 
 
 ## Game
 
-**Last Galactic Empire** — Grand strategy, fleet combat, multiplayer campaigns. Status: DESIGNED. Design document: `docs/studios/franchises/the-last-galactic-empire/games/last-galactic-empire/GDD.md`. No playable build exists. Multiplayer: UNAVAILABLE.
+**Last Galactic Empire** — Grand strategy, fleet combat, multiplayer campaigns. Status: PROTOTYPE. Design document: `docs/studios/franchises/the-last-galactic-empire/games/last-galactic-empire/GDD.md`. Prototype build: `game-last-galactic-empire.html` (Vertical Slice 0 only; not a released game). Multiplayer: UNAVAILABLE.
 
 ## Characters
 

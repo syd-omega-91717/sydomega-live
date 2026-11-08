@@ -291,9 +291,10 @@
       "game": {
         "title": "Omega: Civilization 91717",
         "genre": "Strategic civilization-building and simulation",
-        "status": "DESIGNED",
+        "status": "PROTOTYPE",
         "multiplayer": "UNAVAILABLE",
-        "gdd": "docs/studios/franchises/the-omega-chronicles/games/civilization-91717/GDD.md"
+        "gdd": "docs/studios/franchises/the-omega-chronicles/games/civilization-91717/GDD.md",
+        "build": "game-omega-civilization.html"
       },
       "ages": [
         "age-6",
@@ -411,9 +412,10 @@
       "game": {
         "title": "Last Galactic Empire",
         "genre": "Grand strategy, fleet combat, multiplayer campaigns",
-        "status": "DESIGNED",
+        "status": "PROTOTYPE",
         "multiplayer": "UNAVAILABLE",
-        "gdd": "docs/studios/franchises/the-last-galactic-empire/games/last-galactic-empire/GDD.md"
+        "gdd": "docs/studios/franchises/the-last-galactic-empire/games/last-galactic-empire/GDD.md",
+        "build": "game-last-galactic-empire.html"
       },
       "ages": [
         "age-5"

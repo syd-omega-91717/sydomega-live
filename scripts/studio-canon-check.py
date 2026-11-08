@@ -127,6 +127,13 @@ def validate(reg, slate, prod):
             errs.append("%s: game status %s but no build file exists" % (f["id"], g.get("status")))
         if g.get("multiplayer", "UNAVAILABLE") != "UNAVAILABLE":
             errs.append("%s: multiplayer may not be claimed without evidence" % f["id"])
+        for comp in g.get("companions", []):
+            if comp.get("status") not in ("CONCEPT", "DESIGNED", "PROTOTYPE", "PLAYABLE_SLICE", "RELEASED"):
+                errs.append("%s: companion %r has status %r" % (f["id"], comp.get("title"), comp.get("status")))
+            if comp.get("status") in ("PROTOTYPE", "PLAYABLE_SLICE", "RELEASED") and not ((ROOT / comp.get("build", "-")).is_file() and (ROOT / comp.get("tests", "-")).is_file()):
+                errs.append("%s: companion %r claims %s but its build file or its tests are missing" % (f["id"], comp.get("title"), comp.get("status")))
+        if g.get("status") == "PROTOTYPE" and not (ROOT / g.get("tests", "-")).is_file() and f["id"] != "myth-of-the-stones":
+            errs.append("%s: game status PROTOTYPE but its tests file is missing" % f["id"])
     char_ids = {c["id"] for c in chars}
     for c in chars:
         if c.get("aliasOf") and c["aliasOf"] not in char_ids:
@@ -182,6 +189,10 @@ def render_bible(reg, f):
     L += ["", "## Series", "", "**%s** — %s. Status: %s.%s No episode script exists." % (s["title"], cnt, s.get("status", "CONCEPT"), sdoc), "",
           "## Game", "", "**%s** — %s. Status: %s.%s %s Multiplayer: %s." % (f["game"]["title"], f["game"]["genre"], f["game"].get("status", "CONCEPT"), gdoc, ("Prototype build: `%s` (Vertical Slice 0 only; not a released game)." % f["game"]["build"]) if f["game"].get("build") else "No playable build exists.", f["game"].get("multiplayer", "UNAVAILABLE")), "",
           "## Characters", "", "| Id | Name | Role | Canon status |", "|---|---|---|---|"]
+    cm = f["game"].get("companions", [])
+    if cm:
+        i = L.index("## Characters")
+        L[i:i] = ["**Companion builds** (playable prototypes beside the main game):", ""] + ["- **%s** — %s. Status: %s. Build: `%s`. Tests: `%s`." % (x["title"], x["genre"], x["status"], x["build"], x["tests"]) for x in cm] + [""]
     L += ["| `%s` | %s | %s | %s |" % (c["id"], c["name"], c["role"], c["canonStatus"]) for c in chars]
     L += ["", "## Recorded conflicts touching this franchise", ""]
     L += ["- **%s** (%s, %s): %s" % (c["id"], c["kind"], c["status"], c["resolution"]) for c in confl] or ["None."]

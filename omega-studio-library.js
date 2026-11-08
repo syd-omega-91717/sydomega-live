@@ -3,7 +3,7 @@
    control that could mark a work released, streaming or playable. Plain DOM only: text is set with textContent and nothing is parsed as HTML. */
 (function () {
   'use strict';
-  var TABS = [['films', 'FILMS'], ['series', 'SERIES'], ['games', 'GAMES'], ['characters', 'CHARACTERS']];
+  var TABS = [['films', 'FILMS'], ['series', 'SERIES'], ['games', 'GAMES'], ['characters', 'CHARACTERS'], ['status', 'WHAT REMAINS']];
   var L = null, state = { tab: 'films', fr: 'ALL', back: null };
   var LABEL = { CONCEPT: 'CONCEPT', SCREENPLAY_DRAFT: 'SCREENPLAY DRAFT', SCRIPT_DRAFT_SHORT: 'SHORT DRAFT', SCRIPTS_DRAFT: 'SCRIPTS IN DRAFT', BIBLE_DRAFT: 'BIBLE DRAFT', DESIGNED: 'DESIGNED', PROTOTYPE: 'PROTOTYPE', FOUNDER_APPROVED: 'FOUNDER APPROVED', REPO_CANON: 'REPO CANON', MERGED_DRAFT: 'MERGED DRAFT', RECONCILED_PROPOSED: 'RECONCILED', PROPOSED: 'PROPOSED' };
 
@@ -103,9 +103,24 @@
       var g = f.game, row = [];
       if (g.doc) row.push(readBtn(g.doc, 'DESIGN'));
       if (g.prototype) row.push(h('a', { 'class': 'sl-btn', href: g.prototype, text: 'OPEN PROTOTYPE' }));
+      (g.companions || []).forEach(function (c) { row.push(h('a', { 'class': 'sl-btn', href: c.prototype, text: 'OPEN ' + c.title.toUpperCase() })); });
       box.appendChild(franchiseBlock(f, [h('div', { 'class': 'sl-card' }, [badge(g.status), h('div', { 'class': 'sl-name', text: g.title }),
         h('p', { 'class': 'sl-meta', text: 'MULTIPLAYER ' + g.multiplayer }), h('div', { 'class': 'sl-row' }, row)])]));
     });
+    return box;
+  }
+  /* What exists and what remains, exactly as the registry and the files on disk say (computed once, by scripts/studios-presence.py). */
+  function viewStatus() {
+    var s = L.status, box = h('div', {}), rows = [
+      ['FILMS WITH A SCRIPT', s.filmsScripted + ' OF ' + s.films, (s.films - s.filmsScripted) + ' REMAIN'],
+      ['SERIES EPISODES WRITTEN (SHORT DRAFTS)', s.episodesWritten + ' OF ' + s.episodesDeclared, (s.episodesDeclared - s.episodesWritten) + ' REMAIN'],
+      ['PLAYABLE BUILDS', String(s.builds.length), s.gamesWithoutBuild.length + ' GAMES HAVE NONE']];
+    rows.forEach(function (r) { box.appendChild(h('div', { 'class': 'sl-card' }, [h('div', { 'class': 'sl-name', text: r[0] }), h('p', { 'class': 'sl-meta', text: r[1] + ' \u00b7 ' + r[2] })])); });
+    var open = [h('div', { 'class': 'sl-name', text: 'BUILT, OPEN THEM' })], row = [];
+    s.builds.forEach(function (b) { row.push(h('a', { 'class': 'sl-btn', href: b.prototype, text: 'OPEN ' + b.title.toUpperCase() })); });
+    open.push(h('div', { 'class': 'sl-row' }, row)); box.appendChild(h('div', { 'class': 'sl-card' }, open));
+    box.appendChild(h('div', { 'class': 'sl-card' }, [h('div', { 'class': 'sl-name', text: 'GAMES WITH NO BUILD' }), h('p', { 'class': 'sl-meta', text: s.gamesWithoutBuild.map(function (g) { return g.title + ' (' + g.status + ')'; }).join(' \u00b7 ') })]));
+    box.appendChild(h('p', { 'class': 'sl-meta', text: 'Every item is a proposal and every episode a short draft. Footage, voice, music, a human playtest and any release need people and tools outside this repository.' }));
     return box;
   }
   function viewCharacters() {
@@ -143,13 +158,14 @@
     });
   }
   function render() {
-    renderTabs(); renderChips();
+    renderTabs(); renderChips(); $('sl-chips').style.display = state.tab === 'status' ? 'none' : '';   // the franchise filter does not apply to the status tab
     var box = $('sl-body'); box.textContent = ''; box.setAttribute('aria-labelledby', 'sl-tab-' + state.tab);
     var view;
     switch (state.tab) {
       case 'series': view = viewSeries(); break;
       case 'games': view = viewGames(); break;
       case 'characters': view = viewCharacters(); break;
+      case 'status': view = viewStatus(); break;
       default: view = viewFilms();
     }
     box.appendChild(view);

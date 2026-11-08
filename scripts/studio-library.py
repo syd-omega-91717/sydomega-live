@@ -94,14 +94,27 @@ def build():
             "series": {"title": s["title"], "seasons": s.get("seasons"), "episodesPerSeason": s.get("episodesPerSeason"),
                        "status": s.get("status", "CONCEPT"), "docs": ep_ids},
             "game": {"title": g["title"], "genre": g["genre"], "status": g["status"], "multiplayer": g["multiplayer"],
-                     "doc": gdoc, "prototype": ("/" + build_page) if build_page else None},
+                     "doc": gdoc, "prototype": ("/" + build_page) if build_page else None,
+                     "companions": [{"title": c["title"], "status": c["status"], "prototype": "/" + c["build"]} for c in g.get("companions", [])]},
             "characters": chars_by_f.get(f["id"], []),
         })
     return {
         "version": 1, "asOf": reg["asOf"], "canonVersion": reg["canonVersion"],
         "note": "Unreleased and unapproved unless a status says otherwise. A DRAFT is not a finished work; a PROTOTYPE is not a game release.",
-        "franchises": franchises, "documents": docs,
+        "franchises": franchises, "documents": docs, "status": completeness(reg),
     }
+
+
+def completeness(reg):
+    """What exists and what remains, from the one script that computes it (scripts/studios-presence.py), so no number is kept twice."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("studios_presence", ROOT / "scripts" / "studios-presence.py")
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    t = m.totals(reg)
+    return {"films": t["films"], "filmsScripted": t["films_scripted"], "episodesDeclared": t["episodes_declared"], "episodesWritten": t["episodes_written"],
+            "seriesUnsized": t["series_unsized"], "characters": t["characters"],
+            "builds": [{"title": b[1], "status": b[4], "prototype": "/" + b[2]} for b in t["builds"]],
+            "gamesWithoutBuild": [{"title": x[0], "status": x[1]} for x in t["games_without_build"]]}
 
 
 def render(payload):

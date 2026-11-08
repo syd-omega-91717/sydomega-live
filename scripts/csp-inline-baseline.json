@@ -435,10 +435,6 @@
   "handlers": 9,
   "scripts": 5
  },
- "meditate.html": {
-  "handlers": 7,
-  "scripts": 1
- },
  "membership.html": {
   "handlers": 4,
   "scripts": 1
@@ -708,7 +704,7 @@
   "scripts": 1
  },
  "trailers.html": {
-  "handlers": 6,
+  "handlers": 4,
   "scripts": 2
  },
  "travel.html": {

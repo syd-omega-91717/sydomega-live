@@ -111,7 +111,7 @@
       var n = log.filter(function (e) { return e && e.date === TODAY; }).length;
       return { check: true, done: n > 0 };
     } },
-    { id: 'meditate', glyph: '◎', label: 'STILLNESS', href: '/meditate.html', probe: function () {
+    { id: 'meditate', glyph: '◎', label: 'STILLNESS', href: '/breath.html', probe: function () {
       var log = read('omega_meditate_log'); if (!Array.isArray(log) || !log.length) return null;
       var secs = log.filter(function (e) { return e && day(e.date) === TODAY; })
                     .reduce(function (s, e) { return s + (+e.duration || 0); }, 0);
@@ -426,7 +426,7 @@
     ['habits', 'HABITS KEPT', '/habits.html', true], ['priorities', 'PRIORITIES DONE', '/command.html', true],
     ['training', 'TRAINING', '/workout.html', true], ['sleep', 'SLEEP · AVG', '/sleep.html', true],
     ['mood', 'MOOD · AVG', '/mood.html', true], ['water', 'WATER GOAL MET', '/water.html', true],
-    ['stillness', 'STILLNESS', '/meditate.html', true]
+    ['stillness', 'STILLNESS', '/breath.html', true]
   ];
   function carryOver() {
     var br = read('omega_command_briefs'); if (!Array.isArray(br)) return [];

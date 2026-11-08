@@ -1,6 +1,6 @@
 # Which pages must be one, and which could be merged
 
-Snapshot of 2026-11-08 over 242 pages. Reproduce the evidence with `python3 scripts/page-consolidation.py`. **Nothing here has been merged**: a page merge touches the menu, `nav.js`'s section map, `config/page-cores.json`, the page-contract registries, six language packs, the service-worker precache, the page-count claims and every link that points at the old address, and it needs a redirect so no bookmark breaks. That is a project to approve one batch at a time, not something to do while also fixing bugs.
+Snapshot of 2026-11-08 over 242 pages. Reproduce the evidence with `python3 scripts/page-consolidation.py`. **Update, 2026-11-08: the owner said "you choose, merge without elimination"; `breath` + `meditate` is merged (below). Everything else on this page is still a recommendation.** Why nothing here was merged before: a page merge touches the menu, `nav.js`'s section map, `config/page-cores.json`, the page-contract registries, six language packs, the service-worker precache, the page-count claims and every link that points at the old address, and it needs a redirect so no bookmark breaks. That is a project to approve one batch at a time, not something to do while also fixing bugs.
 
 ## Method, and a mistake worth recording
 The first attempt (score every pair on raw text and shared database tables) reported **316 candidate pairs**, and nearly all were false: two pages scored 0.77 because both carry the same page chrome and both read the `profiles` table. Removing the noise (TF-IDF word weights across the whole estate; ignoring tables that more than 12% of pages touch) left **21**, and only about eight of those are real merge candidates. The existing `scripts/page-overlap-audit.py` has the same flaw (it compares 1,200 characters of raw text including inline CSS and JavaScript), so its "advisory PASS" says nothing about duplication.
@@ -12,6 +12,14 @@ The first attempt (score every pair on raw text and shared database tables) repo
 | Studios films, series, games, characters, conflicts | `config/omega-studio-registry.json`, shown only through the owner-only Studio Library | `scripts/studios-presence.py` |
 | Animatics of the series | the Studio Library's SCREENING ROOM tab, not a new page; its words come from the episode scripts | `test_animatic.py` |
 | What exists and what remains | `docs/studios/COMPLETENESS.md`, one computation, also the library's WHAT REMAINS tab | `test_studios_presence.py` |
+
+## Merged
+| Merged | Into | How | Evidence |
+|---|---|---|---|
+| `meditate` | `breath` | techniques, timed sessions, pause, affirmations, streak and science text ported; `/meditate` redirects; both logs kept because other modules read them | `docs/fixes/2026-11-08-breath-meditate-merge.md`, `test_breath_merge.py` |
+
+## The test "without elimination" gives
+A merge loses nothing only if the page being removed is a subset of the one that stays. Measured on visible text, no candidate pair passes it: every source page has most of its lines to itself (trophies 23 of 27 lines are its own, expenses 66 of 75, levels 38 of 47, series 136 of 138). So each remaining merge is a port of real features, not a deletion, and carries the same cost `breath` + `meditate` did (about 25 files of links and registries plus a browser run). `movies` is not a stub either: it is a poster wall with hover video previews. `budget` + `expenses` already share their storage keys, which makes them the cheapest next port; `series` and `movies` into `cinema` should wait for the decision on the two film catalogues below.
 
 ## Should merge (strong evidence; each is a separate batch to approve)
 | Merge | Evidence | Pages saved |

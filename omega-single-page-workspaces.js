@@ -10,7 +10,7 @@
   var WORKSPACES={
     '/dashboard.html':['beacon','search','notifications','chatbot','missions','world','replay','evidence','recovery','contacts','decisions','network','notes','projects','quotes','time','vision'],
     '/profile.html':['identity','passport','character','credentials','membership'],
-    '/life.html':['body','physiology','workout','nutrition','sleep','mood','meditate','breath','habits','journal','rituals','fasting','targets','weekly','affirmations','gratitude','oath','stoic','water'],
+    '/life.html':['body','physiology','workout','nutrition','sleep','mood','breath','habits','journal','rituals','fasting','targets','weekly','affirmations','gratitude','oath','stoic','water'],
     '/ascend.html':['academy','courses','focus','contributions','evolution','levels','phases','ascension','domain-mastery','clarity','flashcard','library','mentors','principles','reading','skills','vocabulary','architect','forge'],
     '/cosmos.html':['horoscope','elements','pantheons','houses','chronicle','dna','graph','map','mirror','oracle','realm','rune','tribe','realms','sculpture','cosmic-ledger'],
     '/vault.html':['wallet','subscriptions','payments','ledger','blockchain','advertising','ad-network','sovereign-covenant'],

@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 242,
-  "open_task_count": 3261,
+  "page_count": 241,
+  "open_task_count": 3247,
   "pages": [
     {
       "page_id": "404",
@@ -1923,6 +1923,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -1932,7 +1933,7 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 6,
+          "buttons": 7,
           "forms": 0,
           "inputs": 0,
           "links": 0
@@ -9874,74 +9875,6 @@
         "PAGE::media::MISSING::TRACEABILITY",
         "PAGE::media::MISSING::TRUTH_STATES",
         "PAGE::media::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
-      "page_id": "meditate",
-      "path": "meditate.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Meditate",
-        "h1": [],
-        "scripts": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js",
-          "omega-ui.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 11,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::meditate::MISSING::ACCESSIBILITY",
-        "PAGE::meditate::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::meditate::MISSING::AUTHORIZATION",
-        "PAGE::meditate::MISSING::DATA_SOURCES",
-        "PAGE::meditate::MISSING::DOMAIN",
-        "PAGE::meditate::MISSING::EVENTS",
-        "PAGE::meditate::MISSING::FAILURE_PATHS",
-        "PAGE::meditate::MISSING::PRIMARY_ROLE",
-        "PAGE::meditate::MISSING::PURPOSE",
-        "PAGE::meditate::MISSING::RESPONSIVE",
-        "PAGE::meditate::MISSING::TASKS",
-        "PAGE::meditate::MISSING::TRACEABILITY",
-        "PAGE::meditate::MISSING::TRUTH_STATES",
-        "PAGE::meditate::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

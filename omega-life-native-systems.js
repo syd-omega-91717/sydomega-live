@@ -7,7 +7,7 @@
     {title:'HABITS',route:'/habits.html',store:'omega_habits_v2',kind:'habits'},
     {title:'GOALS & TARGETS',route:'/targets.html',store:'omega_okr_data',kind:'okr'},
     {title:'JOURNAL',route:'/journal.html',kind:'route'},
-    {title:'MEDITATION',route:'/meditate.html',kind:'route'},
+    {title:'MEDITATION',route:'/breath.html',kind:'route'},
     {title:'WORKOUT',route:'/workout.html',kind:'route'},
     {title:'NUTRITION',route:'/nutrition.html',kind:'route'},
     {title:'SLEEP',route:'/sleep.html',kind:'route'},

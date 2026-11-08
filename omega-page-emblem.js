@@ -136,7 +136,6 @@
   library:[12,'a','❦'],
   map:[12,'a','⌖'],
   matrix:[12,'a','⛶'],
-  meditate:[9,'b','≈'],
   mentors:[12,'c','☏'],
   mindmap:[12,'a','⬡'],
   mirror:[9,'a','⊙'],

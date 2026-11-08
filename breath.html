@@ -43,6 +43,7 @@
 .btn-ctrl.red:hover{background:rgba(239,83,80,.1)}
 
 /* CYCLES SELECTOR */
+.affirm{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--gold);text-align:center;margin:4px 0 -10px;min-height:18px}
 .cycles-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .cyc-btn{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:8px 14px;border:1px solid rgba(201,168,76,.1);color:var(--dim);background:none;cursor:pointer;transition:.1s}
 .cyc-btn:hover,.cyc-btn.sel{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
@@ -73,7 +74,7 @@
 <div class="shell">
 <aside class="side" id="omega-side" data-page="breath"></aside>
 <main class="main">
-  <div class="topbar"><div class="t">BREATHWORK<small>SOVEREIGN BREATHING &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="tb-sessions">── SESSIONS: 0</span></div>
+  <div class="topbar"><div class="t">BREATHWORK<small>SOVEREIGN BREATHING &amp; STILLNESS &middot; SYD OMEGA 91717</small></div><span style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:rgba(138,134,118,.5);margin-left:auto" id="tb-sessions">── SESSIONS: 0</span></div>
   <div style="padding:20px var(--pad,20px)">
 
   <div class="layer-tabs">
@@ -95,6 +96,11 @@
       <div class="cycles-row" id="cycles-row"></div>
     </div>
 
+    <div class="sect">
+      <div class="sect-hd">OR BY TIME</div>
+      <div class="cycles-row" id="mins-row"></div>
+    </div>
+    <div class="affirm" id="affirmation">I AM SOVEREIGN OVER MY STATE OF MIND</div>
     <div class="breath-stage">
       <canvas id="breath-canvas" width="240" height="240"></canvas>
       <div class="breath-phase" id="breath-phase">SELECT A TECHNIQUE AND START</div>
@@ -104,6 +110,7 @@
 
     <div class="controls">
       <button class="btn-ctrl" id="btn-start" onclick="startSession()">&#9670; BEGIN SESSION</button>
+      <button class="btn-ctrl" id="btn-pause" style="display:none">❚❚ PAUSE</button>
       <button class="btn-ctrl red" id="btn-stop" onclick="stopSession()" style="display:none">■ END SESSION</button>
     </div>
   </div>
@@ -130,6 +137,11 @@
         <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">COHERENCE · 5-0-5-0</div><div class="sci-body">Inhale 5 · Exhale 5. Six breaths per minute. Synchronizes heart rate, blood pressure, and respiratory rhythms. HRV optimization protocol.</div></div>
         <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">PHYSIOLOGICAL SIGH</div><div class="sci-body">Double inhale through nose + long exhale. Fastest single-breath stress intervention. Re-inflates collapsed alveoli. Rapidly expels CO₂.</div></div>
         <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">POWER BREATH · 6-0-2-0</div><div class="sci-body">Long inhale 6 · Short exhale 2. Sympathetic activation. Energy and focus amplification. Pre-performance arousal protocol.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">RESONANT · 5.5-5.5</div><div class="sci-body">5.5-second inhale, 5.5-second exhale: about 5.5 breaths a minute, the resonance frequency of the heart-lung system. Maximizes HRV and synchronizes the nervous system.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">TRIANGLE · 4-4-8</div><div class="sci-body">Inhale 4 · Hold 4 · Exhale 8. A long exhale after a short hold. Deep calm before peak output.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">ENERGIZE · 2-0-2-0</div><div class="sci-body">Rapid, even breaths. Quick activation when you need to wake the system up. Stop if you feel lightheaded.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">WIM HOF METHOD · guide only</div><div class="sci-body">Thirty rapid breaths, then retain, then recover; repeat three or four rounds. Alkalizes the blood and raises adrenaline. The timer does not run this pattern. Never practise it while driving or in water.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">UJJAYI (OCEAN BREATH) · guide only</div><div class="sci-body">Constrict the back of the throat on both inhale and exhale to make an ocean-like sound. Builds internal heat and focus; used in yoga. The timer does not run this pattern.</div></div>
         <div class="sci-card card" data-reveal="fade-up"><div class="sci-title">WAKING BREATH · 1-0-1-0</div><div class="sci-body">Natural breath with awareness. Baseline. First practice before adding ratios. Grounds the nervous system in present-moment sensation.</div></div>
       </div>
     </div>
@@ -174,6 +186,18 @@
       <div class="sci-cite">McCraty, R. (2016) — Heart-Brain Coherence. HeartMath Institute Research Center / Lehrer, P.M. et al. (2000) — Heart rate variability biofeedback. Applied Psychophysiology and Biofeedback</div>
       <div class="sci-body">Breathing at approximately 5.5-6 breaths per minute (roughly 5 seconds in, 5 seconds out) produces cardiac coherence — a state where heart rate, blood pressure, and respiratory rhythms synchronize. HeartMath Institute research shows coherent states improve cognitive performance, emotional regulation, and immune function. This is the physiological mechanism behind the sovereign practice of slow, rhythmic conscious breathing.</div>
     </div>
+    <div class="sci-card card" data-reveal="fade-up">
+      <div class="sci-title">WHY BREATH CONTROLS STATE</div>
+      <div class="sci-body">The vagus nerve connects the brain to the body, and breathing is the only autonomic function you can consciously control. By controlling the breath you modulate the autonomic nervous system directly, shifting between sympathetic (fight-or-flight) and parasympathetic (rest-and-digest) states.</div>
+    </div>
+    <div class="sci-card card" data-reveal="fade-up">
+      <div class="sci-title">CO&#8322; TOLERANCE</div>
+      <div class="sci-body">Most people breathe too fast. The urge to breathe is triggered by CO&#8322;, not by a lack of oxygen. Building CO&#8322; tolerance through breath training extends calm performance under pressure.</div>
+    </div>
+    <div class="sci-card card" data-reveal="fade-up">
+      <div class="sci-title">THE MORNING PROTOCOL</div>
+      <div class="sci-body">A suggested sequence within 30 minutes of waking: 5 minutes of energizing breath, 5 minutes of Box Breathing for focus, then 5 minutes of Resonant breathing for HRV. Choose each by time in the practice tab.</div>
+    </div>
   </div>
 
   </div>
@@ -183,6 +207,7 @@
 </div>
 
 <script src="omega-ui.js"></script>
+<script src="/omega-esc.js"></script>
 <script>
 const BREATH_KEY = 'omega_breath_log';
 
@@ -192,13 +217,22 @@ const TECHNIQUES = [
   {name:'COHERENCE',       ratio:[5,0,5,0],   phases:['INHALE','—','EXHALE','—'],             color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'), desc:'5-5 rhythm. HRV optimization. 6 breaths/min.'},
   {name:'POWER BREATH',    ratio:[6,0,2,0],   phases:['INHALE','—','EXHALE','—'],             color:'#4CAF50', desc:'Long inhale, short exhale. Energy activation.'},
   {name:'PHYSIOLOGICAL SIGH', ratio:[2,1,8,0],phases:['DOUBLE INHALE','PAUSE','EXHALE LONG','—'],color:'#26C6DA', desc:'Fastest stress reset. Double inhale + long exhale.'},
-  {name:'RESONANT',        ratio:[5,0,5,0],   phases:['INHALE','—','EXHALE','—'],             color:'#FF9800', desc:'Cardiac coherence. Maximum HRV synchronization.'},
+  {name:'RESONANT',        ratio:[5.5,0,5.5,0], phases:['INHALE','—','EXHALE','—'],             color:'#FF9800', desc:'5.5-5.5 resonance frequency. Maximum HRV synchronization.'},
+  {name:'TRIANGLE',        ratio:[4,4,8,0],   phases:['INHALE','HOLD','EXHALE','—'],         color:'#E07850', desc:'Deep calm before peak output.'},
+  {name:'ENERGIZE',        ratio:[2,0,2,0],   phases:['INHALE','—','EXHALE','—'],             color:'#F0C83C', desc:'Rapid activation breathwork.'},
 ];
 
 const CYCLE_OPTIONS = [3,5,8,10,15,20];
+const MIN_OPTIONS = [2,5,10,15,20];
+/* The meditation page this one absorbed logged its own technique names; they colour and group with the matching technique here. */
+const ALIAS = {'4-7-8 METHOD':'4-7-8 CALM','RESONANCE':'RESONANT','CYCLIC SIGH':'PHYSIOLOGICAL SIGH'};
+const MEDITATE_KEY = 'omega_meditate_log';   /* timed sessions keep writing here: omega-today.js and omega-life-log.js read it as STILLNESS minutes */
+const AFFIRMATIONS = ['I AM SOVEREIGN OVER MY STATE OF MIND','STILLNESS IS A SUPERPOWER','I BREATHE, THEREFORE I COMMAND','IN THE BREATH IS THE ANSWER','CALM IS CONTAGIOUS — I RADIATE SOVEREIGNTY','I CHOOSE MY STATE EVERY MOMENT','THE SOVEREIGN MIND IS UNSHAKEABLE'];
 
 let selectedTech = TECHNIQUES[0];
 let selectedCycles = 5;
+let selectedMins = null;   /* null = count cycles; a number = run for about that many minutes */
+let runCycles = 5, runTimed = false, pausedAt = 0, pausedMs = 0;
 let sessionState = 'idle';
 let sessionInterval = null;
 let sessionStart = null;
@@ -209,6 +243,7 @@ let animFrame = null;
 
 /* ─── INIT ─── */
 function init(){
+  document.getElementById('btn-pause').addEventListener('click',pauseSession);
   renderTechGrid();
   renderCyclesRow();
   drawBreathCircle(0, 'idle');
@@ -235,18 +270,27 @@ function renderTechGrid(){
 }
 
 function renderCyclesRow(){
-  var r=document.getElementById('cycles-row'); r.innerHTML='';
+  var r=document.getElementById('cycles-row'), m=document.getElementById('mins-row'); r.innerHTML=''; m.innerHTML='';
+  function mark(){
+    document.querySelectorAll('.cyc-btn').forEach(function(x){x.classList.remove('sel');});
+    document.querySelectorAll('.cyc-btn').forEach(function(x){
+      if(selectedMins===null && x.getAttribute('data-cycles')===String(selectedCycles)) x.classList.add('sel');
+      if(selectedMins!==null && x.getAttribute('data-mins')===String(selectedMins)) x.classList.add('sel');
+    });
+  }
   CYCLE_OPTIONS.forEach(function(n){
-    var b=document.createElement('button'); b.className='cyc-btn'+(n===selectedCycles?' sel':'');
+    var b=document.createElement('button'); b.className='cyc-btn'; b.setAttribute('data-cycles',String(n));
     b.textContent=n+' CYCLES';
-    b.onclick=function(){
-      if(sessionState!=='idle') return;
-      selectedCycles=n;
-      document.querySelectorAll('.cyc-btn').forEach(function(x){x.classList.remove('sel');});
-      b.classList.add('sel');
-    };
+    b.onclick=function(){ if(sessionState!=='idle') return; selectedCycles=n; selectedMins=null; mark(); };
     r.appendChild(b);
   });
+  MIN_OPTIONS.forEach(function(n){
+    var b=document.createElement('button'); b.className='cyc-btn'; b.setAttribute('data-mins',String(n));
+    b.textContent=n+' MIN';
+    b.onclick=function(){ if(sessionState!=='idle') return; selectedMins=n; mark(); };
+    m.appendChild(b);
+  });
+  mark();
 }
 
 /* ─── BREATH ANIMATION ─── */
@@ -310,32 +354,61 @@ function drawBreathCircle(progress, phase){
 }
 
 /* ─── SESSION CONTROL ─── */
+function cycleSeconds(t){return t.ratio.reduce(function(a,b){return a+b;},0);}
+function elapsedSecs(){return Math.round((Date.now()-sessionStart-pausedMs)/1000);}
 function startSession(){
   sessionState='running';
-  sessionStart=Date.now();
+  sessionStart=Date.now(); pausedMs=0; pausedAt=0;
+  runTimed=selectedMins!==null;
+  runCycles=runTimed?Math.max(1,Math.round(selectedMins*60/cycleSeconds(selectedTech))):selectedCycles;
   currentPhase=0; currentCycle=1;
   document.getElementById('btn-start').style.display='none';
   document.getElementById('btn-stop').style.display='';
+  document.getElementById('btn-pause').style.display='';
+  document.getElementById('btn-pause').textContent='❚❚ PAUSE';
+  document.getElementById('affirmation').textContent=AFFIRMATIONS[Math.floor(Math.random()*AFFIRMATIONS.length)];
   runPhase();
+}
+/* Pause stops the animation; resuming restarts the phase it was in. Time spent paused is not logged. */
+function pauseSession(){
+  if(sessionState==='running'){
+    sessionState='paused'; cancelAnimationFrame(animFrame); pausedAt=Date.now();
+    document.getElementById('btn-pause').textContent='▶ RESUME';
+    document.getElementById('breath-phase').textContent='PAUSED';
+  } else if(sessionState==='paused'){
+    pausedMs+=Date.now()-pausedAt; pausedAt=0; sessionState='running';
+    document.getElementById('btn-pause').textContent='❚❚ PAUSE';
+    runPhase();
+  }
+}
+/* One entry, written to the log that matches how the session was chosen: by time -> the stillness log, by cycles -> the breath log. */
+function recordSession(elapsed,doneCycles,completed){
+  if(runTimed){
+    var m=[]; try{m=JSON.parse(localStorage.getItem(MEDITATE_KEY)||'[]'); if(!Array.isArray(m)) m=[];}catch(e){m=[];}
+    m.push({tech:selectedTech.name,duration:elapsed,cycles:doneCycles,date:new Date().toISOString()});
+    localStorage.setItem(MEDITATE_KEY,JSON.stringify(m.slice(-200)));
+  } else {
+    var logs=loadLogs();
+    var e={id:Date.now(),ts:new Date().toISOString(),technique:selectedTech.name,cycles:doneCycles,totalCycles:runCycles,duration:elapsed};
+    if(completed) e.completed=true;
+    logs.unshift(e); saveLogs(logs);
+  }
+  updateMeta();
 }
 
 function stopSession(){
   clearTimeout(sessionInterval);
   cancelAnimationFrame(animFrame);
-  sessionState='idle';
+  var wasPaused=sessionState==='paused'; sessionState='idle';
+  if(wasPaused&&pausedAt) pausedMs+=Date.now()-pausedAt;
   if(sessionStart){
-    var elapsed=Math.round((Date.now()-sessionStart)/1000);
-    if(elapsed>10){
-      var logs=loadLogs();
-      logs.unshift({id:Date.now(),ts:new Date().toISOString(),technique:selectedTech.name,
-        cycles:currentCycle-1,totalCycles:selectedCycles,duration:elapsed});
-      saveLogs(logs);
-      updateMeta();
-    }
+    var elapsed=elapsedSecs();
+    if(elapsed>(runTimed?30:10)) recordSession(elapsed,currentCycle-1,false);
   }
   sessionStart=null;
   document.getElementById('btn-start').style.display='';
   document.getElementById('btn-stop').style.display='none';
+  document.getElementById('btn-pause').style.display='none';
   document.getElementById('breath-phase').textContent='SESSION ENDED';
   document.getElementById('breath-count').textContent='';
   document.getElementById('breath-cycles-display').textContent='CYCLE 0 / 0';
@@ -352,19 +425,19 @@ function runPhase(){
     currentPhase=(currentPhase+1)%phases.length;
     if(currentPhase===0){
       currentCycle++;
-      if(currentCycle>selectedCycles){finishSession();return;}
+      if(currentCycle>runCycles){finishSession();return;}
     }
   }
 
   var phaseName=phases[currentPhase];
   var phaseSecs=ratios[currentPhase];
   document.getElementById('breath-phase').textContent=phaseName;
-  document.getElementById('breath-cycles-display').textContent='CYCLE '+currentCycle+' / '+selectedCycles;
+  document.getElementById('breath-cycles-display').textContent='CYCLE '+currentCycle+' / '+runCycles;
   animatePhase(phaseName,phaseSecs,function(){
     currentPhase=(currentPhase+1)%phases.length;
     if(currentPhase===0){
       currentCycle++;
-      if(currentCycle>selectedCycles){finishSession();return;}
+      if(currentCycle>runCycles){finishSession();return;}
     }
     runPhase();
   });
@@ -388,24 +461,20 @@ function animatePhase(phaseName,totalSecs,done){
 
 function finishSession(){
   clearTimeout(sessionInterval);
-  var elapsed=Math.round((Date.now()-sessionStart)/1000);
-  var logs=loadLogs();
-  logs.unshift({id:Date.now(),ts:new Date().toISOString(),technique:selectedTech.name,
-    cycles:selectedCycles,totalCycles:selectedCycles,duration:elapsed,completed:true});
-  saveLogs(logs);
-  updateMeta();
+  recordSession(elapsedSecs(),runCycles,true);
   sessionState='idle'; sessionStart=null;
   document.getElementById('btn-start').style.display='';
   document.getElementById('btn-stop').style.display='none';
+  document.getElementById('btn-pause').style.display='none';
   document.getElementById('breath-phase').textContent='SESSION COMPLETE';
   document.getElementById('breath-count').textContent='✓';
-  document.getElementById('breath-cycles-display').textContent=selectedCycles+' CYCLES COMPLETE';
+  document.getElementById('breath-cycles-display').textContent=runCycles+' CYCLES COMPLETE';
   drawBreathCircle(1,'idle');
 }
 
 /* ─── HISTORY ─── */
 function renderHistory(){
-  var logs=loadLogs();
+  var logs=loadAll();
   var sg=document.getElementById('breath-stats');
   var bl=document.getElementById('breath-log');
   if(!logs.length){
@@ -422,12 +491,14 @@ function renderHistory(){
     {v:totalCycles,l:'TOTAL CYCLES'},
     {v:days,l:'ACTIVE DAYS'},
     {v:fmtDur(Math.round(totalSecs/total)),l:'AVG SESSION'},
-  ].map(function(x){return'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val">'+x.v+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
+    {v:streakDays(logs),l:'DAY STREAK'},
+    {v:favourite(logs),l:'FAVOURITE'},
+  ].map(function(x){return'<div class="stat-box card" data-reveal="fade-up"><div class="stat-val">'+escH(x.v)+'</div><div class="stat-lbl">'+x.l+'</div></div>';}).join('');
 
   bl.innerHTML='';
   logs.slice(0,20).forEach(function(l){
     var d=new Date(l.ts);
-    var t=TECHNIQUES.find(function(t){return t.name===l.technique;})||{color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')};
+    var t=TECHNIQUES.find(function(t){return t.name===(ALIAS[l.technique]||l.technique);})||{color:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')};
     var div=document.createElement('div'); div.className='log-card card';
     var left=document.createElement('div');
     var nm=document.createElement('div'); nm.className='log-name'; nm.style.color=t.color; nm.textContent=l.technique;
@@ -440,6 +511,17 @@ function renderHistory(){
   });
 }
 
+const escH = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
+function streakDays(logs){
+  var days=new Set(logs.map(function(l){return new Date(l.ts).toDateString();})), n=0, d=new Date(); d.setHours(0,0,0,0);
+  for(var i=0;i<365;i++){ var x=new Date(d); x.setDate(d.getDate()-i); if(days.has(x.toDateString())) n++; else break; }
+  return n;
+}
+function favourite(logs){
+  var f={}; logs.forEach(function(l){var k=ALIAS[l.technique]||l.technique; f[k]=(f[k]||0)+1;});
+  var top=Object.keys(f).sort(function(a,b){return f[b]-f[a];})[0];
+  return top?top.split(' ')[0]:'—';
+}
 function fmtDur(s){var m=Math.floor(s/60);var sec=s%60;return m>0?m+'m '+sec+'s':sec+'s';}
 /* The log also holds data restored from a backup or the cloud, so every entry is coerced to the types the renderers
    assume (cycles/duration numbers, technique/ts strings). A string cycles used to be summed straight into the stats
@@ -458,8 +540,19 @@ function loadLogs(){
     });
   }catch(e){return[];}
 }
+/* The timed (stillness) log keeps its own shape for the readers that depend on it; here it is coerced the same way as the breath log. */
+function loadMeditate(){
+  try{
+    var a=JSON.parse(localStorage.getItem(MEDITATE_KEY)||'[]');
+    if(!Array.isArray(a)) return [];
+    return a.filter(function(l){return l&&typeof l==='object';}).map(function(l){
+      return {ts:typeof l.date==='string'?l.date:new Date(0).toISOString(),technique:String(l.tech==null?'':l.tech),cycles:Number(l.cycles)||0,duration:Number(l.duration)||0};
+    });
+  }catch(e){return[];}
+}
+function loadAll(){return loadLogs().concat(loadMeditate()).sort(function(a,b){return a.ts<b.ts?1:a.ts>b.ts?-1:0;});}
 function saveLogs(l){localStorage.setItem(BREATH_KEY,JSON.stringify(l));}
-function updateMeta(){document.getElementById('tb-sessions').textContent='── SESSIONS: '+loadLogs().length;}
+function updateMeta(){document.getElementById('tb-sessions').textContent='── SESSIONS: '+loadAll().length;}
 
 /* ─── TAB SWITCH ─── */
 function switchTab(btn,id){

@@ -2281,25 +2281,6 @@
       "reward": "/achievements.html"
     },
     {
-      "page": "meditate.html",
-      "slug": "meditate",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/meditate.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
       "page": "membership.html",
       "slug": "membership",
       "archetype": "identity",

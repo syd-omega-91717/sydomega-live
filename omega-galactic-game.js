@@ -40,9 +40,9 @@
 
   function start() {
     var ui = { status: $('gl-status'), meters: $('gl-meters'), canvas: $('gl-map'), sys: $('gl-sys'), fleets: $('gl-fleets'), laws: $('gl-laws'), answer: $('gl-answer'), cost: $('gl-cost'),
-      end: $('gl-end'), undo: $('gl-undo'), newg: $('gl-new'), log: $('gl-log'), result: $('gl-result'), msg: $('gl-msg'), hist: $('gl-hist'), owners: $('gl-owners') };
+      end: $('gl-end'), undo: $('gl-undo'), newg: $('gl-new'), log: $('gl-log'), result: $('gl-result'), msg: $('gl-msg'), hist: $('gl-hist'), owners: $('gl-owners'), advise: $('gl-advise'), advice: $('gl-advice') };
     if (!ui.canvas || !ui.fleets) return;
-    var ctx = ui.canvas.getContext('2d'), prog = load(), g, pend, selFleet = null, selSys = null, geo = { s: 1, ox: 0, oy: 0 };
+    var ctx = ui.canvas.getContext('2d'), prog = load(), g, pend, selFleet = null, selSys = null, geo = { s: 1, ox: 0, oy: 0 }, showAdvice = false;
 
     function fresh() { return { decree: null, orders: {}, doctrines: {}, reinforce: {}, answer: 0 }; }
     function begin(seed, plan) {
@@ -151,6 +151,22 @@
         [dl, ds, ml, ms, rl].forEach(function (n) { ctl.appendChild(n); }); card.appendChild(ctl); ui.fleets.appendChild(card);
       });
     }
+    /* The Advisor: the staff officer's reasoning, and a button that fills in the plan it recommends (you still press END SEASON). */
+    function drawAdvice() {
+      ui.advice.textContent = '';
+      ui.advise.setAttribute('aria-pressed', showAdvice ? 'true' : 'false'); ui.advise.textContent = showAdvice ? 'HIDE THE ADVISOR' : 'ASK THE ADVISOR'; ui.advise.disabled = g.over;
+      if (!showAdvice || g.over) return;
+      var a = G.advise(g), ul = el('ul', 'gl-advlist');
+      a.lines.forEach(function (ln) { ul.appendChild(el('li', '', ln)); }); ui.advice.appendChild(ul);
+      var b = el('button', 'gl-btn', 'APPLY THIS ADVICE'); b.type = 'button'; b.setAttribute('aria-label', 'Apply the advisor\'s plan to this season; you still choose when to end the season');
+      b.addEventListener('click', function () {
+        pend = fresh(); pend.decree = a.action.decree; pend.answer = a.action.answer;
+        a.action.doctrines.forEach(function (d) { var f = g.fleets.filter(function (x) { return x.id === d.fleet; })[0]; if (f && f.doc !== d.doc) pend.doctrines[d.fleet] = d.doc; });
+        a.action.reinforce.forEach(function (id) { pend.reinforce[id] = true; });
+        say('The advisor\'s plan is filled in. Change anything you disagree with, then end the season.'); refresh();
+      });
+      ui.advice.appendChild(b);
+    }
     function drawLaws() {
       ui.laws.textContent = '';
       G.LAWS.forEach(function (l) {
@@ -209,7 +225,7 @@
       ui.status.textContent = g.over ? 'CAMPAIGN OVER · SEASON ' + g.season + ' OF ' + G.SEASONS : 'SEASON ' + (g.season + 1) + ' OF ' + G.SEASONS + ' · SEED ' + g.seed + ' · WIN: ' + G.PEACE_NEED + ' QUIET SEASONS, DRIFT UNDER ' + G.PEACE_DRIFT + ', BOTH TRUST ≥ ' + G.PEACE_TRUST + ', OR DISSOLVE THE VETO';
       ui.cost.textContent = 'TREASURY ' + g.treasury.C + ' · THIS SEASON ' + spend(act) + ' · LEFT ' + left;
       ui.cost.className = left < 0 ? 'gl-note gl-low' : 'gl-note';
-      drawMeters(); drawLaws(); drawAnswer(); drawFleets(); drawSys(); drawOwners(); drawLog(); drawHist(); drawMap(); drawResult();
+      drawMeters(); drawAdvice(); drawLaws(); drawAnswer(); drawFleets(); drawSys(); drawOwners(); drawLog(); drawHist(); drawMap(); drawResult();
       ui.end.disabled = g.over || !!err; ui.end.textContent = g.over ? 'CAMPAIGN OVER' : 'END SEASON ' + (g.season + 1);
       ui.end.title = err || ''; if (err && !g.over) say(err); else if (!g.over && ui.msg.textContent === err) say('');
       ui.undo.disabled = g.plan.length === 0;
@@ -239,6 +255,7 @@
       else { var mine = myFleets().filter(function (x) { return x.at === i; })[0]; if (mine) selFleet = mine.id; }
       selSys = i; refresh();
     });
+    ui.advise.addEventListener('click', function () { showAdvice = !showAdvice; refresh(); });
     ui.end.addEventListener('click', commit); ui.undo.addEventListener('click', undo);
     ui.newg.addEventListener('click', function () { newGame(g.plan.length ? g.seed : nextSeed()); });
     root.document.addEventListener('keydown', function (e) {

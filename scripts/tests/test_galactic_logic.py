@@ -141,7 +141,7 @@ class GalacticLogic(unittest.TestCase):
           for(let i=1;i<=N;i++){for(const [k,fn] of [['bot',G.bot],['naive',G.naive],['idle',G.idle]]){const g=G.play(i*7919+91717,fn);res[k][g.ending]=(res[k][g.ending]||0)+1}}
           console.log(JSON.stringify(res))""")
         n = 120
-        self.assertGreaterEqual(out["bot"].get("stable-peace", 0) / n, 0.95)
+        self.assertGreaterEqual(out["bot"].get("stable-peace", 0) / n, 0.93)
         self.assertLessEqual(out["idle"].get("stable-peace", 0) / n, 0.05)
         self.assertGreater(out["idle"].get("capital-lost", 0) / n, 0.9, "doing nothing loses the capital")
         self.assertLess(out["naive"].get("stable-peace", 0), out["bot"].get("stable-peace", 0), "managing doctrines must matter")
@@ -172,6 +172,35 @@ class GalacticLogic(unittest.TestCase):
         self.assertEqual((out["ending"], out["won"], out["over"]), ("reform", True, True))
         self.assertEqual(out["paid"], 10)
         self.assertEqual(out["after"], "The campaign is over.")
+
+    def test_an_enemy_that_does_not_adapt_repeats_its_doctrine_says_so_and_adapts_about_as_often_as_stated(self):
+        out = run("""// an Independent fleet standing beside a defended Court system, advancing on it
+          const gg=G.newGame(1);const ind=gg.fleets.find(f=>f.f==='I');ind.at=15;
+          const yes=G.aiOrders(gg,'I',true).find(o=>o.fleet===ind.id),no=G.aiOrders(gg,'I',false).find(o=>o.fleet===ind.id);
+          let adapt=0,miss=0;for(let s=1;s<=150;s++){const c=G.play(s*104729+7,G.bot);c.log.forEach(l=>{if(/did not adapt/.test(l))miss++;else if(/the defenders are on/.test(l))adapt++})}
+          console.log(JSON.stringify({yes:yes.reason,yesDoc:yes.doc,no:no.reason,noDoc:no.doc,own:ind.doc,adapt,miss,stated:G.ADAPT}))""")
+        self.assertIn("so ", out["yes"])
+        self.assertNotEqual(out["yesDoc"], out["own"], "an adapting enemy changes to the counter")
+        self.assertIn("did not adapt", out["no"])
+        self.assertEqual(out["noDoc"], out["own"], "a non-adapting enemy repeats its doctrine")
+        total = out["adapt"] + out["miss"]
+        self.assertGreater(total, 100)
+        share = out["miss"] / total
+        stated_miss = 1 - (out["stated"]["R"] + out["stated"]["I"]) / 200       # the two factions are about equally often the attacker
+        self.assertLess(abs(share - stated_miss), 0.12, "the log shows the enemy missing about as often as the Advisor says (%.2f vs %.2f)" % (share, stated_miss))
+
+    def test_the_advisor_explains_the_counter_of_the_counter_and_its_plan_is_the_scripted_courts(self):
+        out = run("""const g=G.newGame(3);const a=G.advise(g);const b=G.bot(g);
+          console.log(JSON.stringify({lines:a.lines,same:JSON.stringify(a.action)===JSON.stringify(b),fleets:g.fleets.filter(f=>f.f==='C').length}))""")
+        self.assertTrue(out["same"])
+        self.assertGreaterEqual(len(out["lines"]), out["fleets"] + 1)
+        self.assertIn("on guard. An enemy that adapts will pick screen (screen beats guard), so be on assault (assault beats screen).", out["lines"][0])
+        self.assertTrue(any("not a promise" in l for l in out["lines"]), "the advice states how far to trust it")
+
+    def test_chance_makes_even_the_best_script_lose_sometimes_but_never_an_idle_court_win(self):
+        out = run("""let lost=0,N=300;for(let i=1;i<=N;i++){if(G.play(i*7919+91717,G.bot).ending!=='stable-peace')lost++}console.log(JSON.stringify({lost,N}))""")
+        self.assertGreaterEqual(out["lost"], 1, "with an enemy that sometimes misses and sometimes does not, no script is perfect")
+        self.assertLess(out["lost"] / out["N"], 0.08)
 
     def test_a_campaign_runs_fast_enough_to_play_instantly(self):
         out = run("""const t=process.hrtime.bigint();for(let i=0;i<40;i++)G.play(i,G.bot);console.log(JSON.stringify({ms:Number(process.hrtime.bigint()-t)/1e6/40}))""")

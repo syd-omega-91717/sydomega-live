@@ -3,10 +3,10 @@
   "name": "Ω Page Action / Task Audit",
   "status": "SOURCE_EVIDENCE_ONLY",
   "page_count": 242,
-  "action_count": 1362,
+  "action_count": 1363,
   "counts": {
     "AVAILABLE_WITHOUT_MUTATION": 13,
-    "GOVERNED": 29,
+    "GOVERNED": 30,
     "UNAVAILABLE": 0,
     "UNMAPPED": 1320
   },
@@ -9612,7 +9612,7 @@
       "action_id": 1,
       "kind": "button",
       "state": "GOVERNED",
-      "task_id": "galactic.season.end",
+      "task_id": "galactic.advisor.toggle",
       "capability_id": null,
       "explicit_unavailable_reason": null,
       "evidence": {
@@ -9633,7 +9633,7 @@
       "action_id": 2,
       "kind": "button",
       "state": "GOVERNED",
-      "task_id": "galactic.season.undo",
+      "task_id": "galactic.season.end",
       "capability_id": null,
       "explicit_unavailable_reason": null,
       "evidence": {
@@ -9652,6 +9652,27 @@
     },
     {
       "action_id": 3,
+      "kind": "button",
+      "state": "GOVERNED",
+      "task_id": "galactic.season.undo",
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": true,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "game-last-galactic-empire",
+      "path": "game-last-galactic-empire.html"
+    },
+    {
+      "action_id": 4,
       "kind": "button",
       "state": "GOVERNED",
       "task_id": "galactic.campaign.new",

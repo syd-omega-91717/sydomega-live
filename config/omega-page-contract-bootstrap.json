@@ -5811,7 +5811,7 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 3,
+          "buttons": 4,
           "forms": 0,
           "inputs": 0,
           "links": 1

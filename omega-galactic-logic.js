@@ -19,6 +19,7 @@
 
   var SEASONS = 40, PEACE_NEED = 4, PEACE_TRUST = 60, PEACE_DRIFT = 60, HARD_DRIFT = 100, FLEET_COST = 6, FLEET_GAIN = 4, ANSWER_COST = 2, VETO_COST = 10, VETO_TRUST = 60, HOSTILE_BELOW = 40;
   var FACTIONS = ['C', 'R', 'I'];
+  var ADAPT = { R: 70, I: 85 };   // percent chance, each season, that a faction notices and counters the defenders' current doctrine
   var FACTION_NAME = { C: 'The Court', R: 'The Reformers', I: 'The Independent Worlds' };
   var CAPITAL = { C: 0, R: 8, I: 13 };
   var DOCTRINES = ['assault', 'guard', 'screen'];
@@ -147,7 +148,10 @@
   }
 
   /* ---------- the AI: named goals, one reason per move */
-  function aiOrders(g, f) {
+  /* adapt: whether this faction notices and counters the defenders' current doctrine this season (decided by the seeded stream, shown in the log);
+     when it does not, it repeats the doctrine its fleet was already on. */
+  function aiOrders(g, f, adapt) {
+    if (adapt === undefined) adapt = true;
     var out = [], sup = supplySet(g, f), hostile = g.trust[f] < HOSTILE_BELOW;
     g.fleets.filter(function (x) { return x.f === f; }).forEach(function (fl) {
       var tgt, reason = null, to = null, cap = CAPITAL[f];
@@ -166,7 +170,10 @@
       if (to !== null && to !== fl.at) out.push({ fleet: fl.id, to: to, reason: reason, f: f }); else out.push({ fleet: fl.id, to: fl.at, reason: reason, f: f });
       if (to !== null && to !== fl.at && g.owner[to] === 'C') {
         var defDoc = dominantDoctrine(g.fleets.filter(function (o) { return o.at === to && o.f === 'C'; })), mine = DOCTRINES.filter(function (d) { return COUNTERS[d] === defDoc; })[0];
-        if (g.fleets.some(function (o) { return o.at === to && o.f === 'C'; })) { out[out.length - 1].doc = mine; out[out.length - 1].reason += '; the defenders are on ' + defDoc + ', so ' + mine; }
+        if (g.fleets.some(function (o) { return o.at === to && o.f === 'C'; })) {
+          if (adapt) { out[out.length - 1].doc = mine; out[out.length - 1].reason += '; the defenders are on ' + defDoc + ', so ' + mine; }
+          else { out[out.length - 1].doc = fl.doc; out[out.length - 1].reason += '; it did not adapt to the defenders\' ' + defDoc + ' and stays on ' + fl.doc; }
+        }
         else out[out.length - 1].doc = 'assault';
       }
     });
@@ -214,8 +221,8 @@
     // 2. orders: the Court's, then each AI's with its reason
     var orders = (act.orders || []).map(function (o) { return { fleet: o.fleet, to: o.to, f: 'C' }; });
     // the AI commits its orders from the board as it stood at the start of the season (it cannot see what the Court decides this season)
-    var pre = copy(g0);
-    ['R', 'I'].forEach(function (f) { aiOrders(pre, f).forEach(function (o) {
+    var pre = copy(g0), ast = rng((g.seed ^ Math.imul(s + 1, 0x27d4eb2f) ^ 0xa11) | 0), adapt = { R: ast.below(100) < ADAPT.R, I: ast.below(100) < ADAPT.I };
+    ['R', 'I'].forEach(function (f) { aiOrders(pre, f, adapt[f]).forEach(function (o) {
       orders.push(o); var fl = g.fleets.filter(function (x) { return x.id === o.fleet; })[0]; if (!fl) return;
       fl.doc = o.doc || 'guard';
       if (o.to !== fl.at) log.push(FACTION_NAME[f] + ', fleet ' + o.fleet + ' to ' + name(o.to) + ': ' + o.reason + '.');
@@ -283,13 +290,26 @@
   }
   /* The same Court that never touches a doctrine. */
   function naive(g) { var a = bot(g); a.doctrines = []; return a; }
+  /* The Advisor: what a careful staff officer would tell the Court, with the reasoning and how far to trust it. Pure; the action is the scripted Court's. */
+  function advise(g) {
+    var lines = [], act = bot(g), ai, me;
+    g.fleets.filter(function (f) { return f.f === 'C'; }).forEach(function (f) {
+      ai = DOCTRINES.filter(function (d) { return COUNTERS[d] === f.doc; })[0]; me = DOCTRINES.filter(function (d) { return COUNTERS[d] === ai; })[0];
+      lines.push('Fleet ' + f.id + ' is on ' + f.doc + '. An enemy that adapts will pick ' + ai + ' (' + ai + ' beats ' + f.doc + '), so be on ' + me + ' (' + me + ' beats ' + ai + ').');
+    });
+    lines.push('The Independent Worlds adapt about ' + ADAPT.I + '% of seasons and the Reformers about ' + ADAPT.R + '%. When they do not, they repeat their last doctrine, so this advice is a good bet, not a promise.');
+    if (g.grievances.length) lines.push('Answer ' + act.answer + ' open grievance' + (act.answer === 1 ? '' : 's') + ': each left open costs 1 Drift and 2 trust a season.');
+    if (act.decree) lines.push('Change the Charter: ' + (g.laws[act.decree] ? 'repeal ' : 'enact ') + LAWS.filter(function (l) { return l.id === act.decree; })[0].name + '.');
+    if (act.reinforce.length) lines.push('Reinforce fleet' + (act.reinforce.length === 1 ? ' ' : 's ') + act.reinforce.join(', ') + ' (' + FLEET_COST + ' each).');
+    return { lines: lines, action: act };
+  }
   function idle(g) { return { decree: null, orders: [], doctrines: [], reinforce: [], answer: 0 }; }
   function play(seed, chooser) { var g = newGame(seed), r; while (!g.over) { r = applySeason(g, chooser(g)); if (r.error) throw new Error(r.error); g = r.game; } return g; }
 
   var api = { SEASONS: SEASONS, PEACE_NEED: PEACE_NEED, PEACE_TRUST: PEACE_TRUST, PEACE_DRIFT: PEACE_DRIFT, HARD_DRIFT: HARD_DRIFT, FLEET_COST: FLEET_COST, FLEET_GAIN: FLEET_GAIN, ANSWER_COST: ANSWER_COST, VETO_COST: VETO_COST, VETO_TRUST: VETO_TRUST,
-    HOSTILE_BELOW: HOSTILE_BELOW, FACTIONS: FACTIONS, FACTION_NAME: FACTION_NAME, CAPITAL: CAPITAL, DOCTRINES: DOCTRINES, COUNTERS: COUNTERS, SYSTEMS: SYSTEMS, EDGES: EDGES, ADJ: ADJ, LAWS: LAWS,
+    HOSTILE_BELOW: HOSTILE_BELOW, ADAPT: ADAPT, FACTIONS: FACTIONS, FACTION_NAME: FACTION_NAME, CAPITAL: CAPITAL, DOCTRINES: DOCTRINES, COUNTERS: COUNTERS, SYSTEMS: SYSTEMS, EDGES: EDGES, ADJ: ADJ, LAWS: LAWS,
     rng: rng, newGame: newGame, supplySet: supplySet, nearest: nearest, fleetPower: fleetPower, resolveBattle: resolveBattle, aiOrders: aiOrders, validateAction: validateAction,
-    applySeason: applySeason, replay: replay, checksum: checksum, bot: bot, naive: naive, idle: idle, play: play };
+    applySeason: applySeason, replay: replay, checksum: checksum, bot: bot, advise: advise, naive: naive, idle: idle, play: play };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.OmegaGalacticLogic = api;
 })(typeof window !== 'undefined' ? window : this);

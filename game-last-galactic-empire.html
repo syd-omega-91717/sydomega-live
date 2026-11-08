@@ -39,6 +39,7 @@
 .gl-tbl th,.gl-tbl td,#gl-hist th,#gl-hist td,#gl-owners th,#gl-owners td{text-align:left;padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:middle}
 #gl-hist th,#gl-owners th{color:var(--gold);font-weight:700;letter-spacing:2px;font-size:12px}
 .gl-sel{background:rgba(201,168,76,.1)}
+.gl-advlist{margin:10px 0;padding-left:18px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink);line-height:1.6}
 .gl-fleet{border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:8px 10px;margin:0 0 8px}
 .gl-fhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--ink)}
 .gl-fctl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 10px;align-items:center;margin-top:8px}
@@ -79,6 +80,7 @@
         <section class="gl-panel" aria-label="Court fleets"><h2 class="gl-h">YOUR FLEETS</h2><div id="gl-fleets" role="group" aria-label="Court fleets and their orders"></div><p id="gl-cost" class="gl-note" data-no-clamp></p></section>
       </div>
     </div>
+    <section class="gl-panel" aria-label="Advisor"><h2 class="gl-h">THE ADVISOR</h2><button type="button" class="gl-btn" id="gl-advise" aria-pressed="false" data-omega-task-id="galactic.advisor.toggle">ASK THE ADVISOR</button><div id="gl-advice" aria-live="polite"></div></section>
     <div class="gl-row">
       <button type="button" class="gl-btn" id="gl-end" data-omega-task-id="galactic.season.end">END SEASON</button>
       <button type="button" class="gl-btn" id="gl-undo" data-omega-task-id="galactic.season.undo">UNDO SEASON</button>

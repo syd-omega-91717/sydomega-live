@@ -233,6 +233,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 </div>
 
 <script src="/omega-esc.js"></script>
+<script src="/omega-weather.js"></script>
 <script type="module">
 const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 /* ── Data cache ── */
@@ -516,45 +517,32 @@ var CITIES=[
   {name:'PARIS',lat:48.85,lon:2.35,tz:'Europe/Paris'},
   {name:'RIYADH',lat:24.69,lon:46.72,tz:'Asia/Riyadh'},
 ];
-var WMO_CODES={0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Icy fog',51:'Light drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',80:'Showers',85:'Snow showers',95:'Thunderstorm',99:'Heavy thunderstorm'};
-var WMO_ICONS={0:'☀︎',1:'☀︎',2:'⛅︎',3:'☁︎',45:'≋',48:'≋',51:'⌇',61:'☂',63:'☂',65:'☂',71:'❄︎',73:'❄︎',80:'⌇',85:'❄︎',95:'⛈︎',99:'⛈︎'};
+/* The weather-code table, icons and request live in /omega-weather.js (one copy for the whole platform). */
 async function fetchWeather(){
   var grid=document.getElementById('weather-grid');
   if(grid)grid.innerHTML='<div class="loading" style="grid-column:1/-1">LOADING WEATHER</div>';
-  try{
-    var results=await Promise.all(CITIES.map(async function(city){
-      var url='https://api.open-meteo.com/v1/forecast?latitude='+city.lat+'&longitude='+city.lon+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&wind_speed_unit=kmh&timezone='+city.tz;
-      var r=await fetch(url);
-      if(!r.ok)throw new Error('Open-Meteo '+r.status);
-      var data=await r.json();
-      return {city:city.name,data:data.current||{}};
-    }));
-    renderWeather(results);
-  }catch(e){
-    if(grid)grid.innerHTML='<div style="grid-column:1/-1;font-size:12px;letter-spacing:1px;color:var(--dim);padding:20px;text-align:center">Weather data unavailable</div>';
-  }
+  if(!window.OmegaWeather){if(grid)grid.innerHTML='<div style="grid-column:1/-1;font-size:12px;letter-spacing:1px;color:var(--dim);padding:20px;text-align:center">Weather data unavailable</div>';return;}
+  /* allSettled: one city failing must not blank the other five */
+  var settled=await Promise.allSettled(CITIES.map(function(city){return OmegaWeather.fetchCurrent(city.lat,city.lon,{tz:city.tz});}));
+  renderWeather(CITIES.map(function(city,i){return {city:city.name,reading:settled[i].status==='fulfilled'?settled[i].value:null};}));
 }
 function renderWeather(results){
   var grid=document.getElementById('weather-grid');
   if(!grid)return;
+  if(!results.some(function(r){return r.reading;})){grid.innerHTML='<div style="grid-column:1/-1;font-size:12px;letter-spacing:1px;color:var(--dim);padding:20px;text-align:center">Weather data unavailable</div>';return;}
   grid.innerHTML=results.map(function(r){
-    var d=r.data;
-    var code=d.weather_code||0;
-    var icon=WMO_ICONS[code]||'⊛';
-    var desc=WMO_CODES[code]||'Unknown';
-    var temp=typeof d.temperature_2m==='number'?d.temperature_2m.toFixed(1)+'°C':'--';
-    var humidity=d.relative_humidity_2m||'--';
-    var wind=d.wind_speed_10m||'--';
+    if(!r.reading)return '<div class="card"><div class="card-title">'+esc(r.city)+'</div><div class="weather-main"><div class="wt-desc">Unavailable right now</div></div></div>';
+    var d=OmegaWeather.describe(r.reading.code),c=r.reading;
     return '<div class="card" data-reveal="fade-up">'
-      +'<div class="card-title">'+r.city+'</div>'
+      +'<div class="card-title">'+esc(r.city)+'</div>'
       +'<div class="weather-main">'
-      +'<div class="wt-icon">'+icon+'</div>'
-      +'<div class="wt-temp">'+temp+'</div>'
-      +'<div class="wt-desc">'+desc+'</div>'
+      +'<div class="wt-icon">'+esc(d.icon)+'</div>'
+      +'<div class="wt-temp">'+esc(OmegaWeather.tempText(c.temp,1))+'</div>'
+      +'<div class="wt-desc">'+esc(d.text)+'</div>'
       +'</div>'
       +'<div class="wt-row">'
-      +'<div class="wt-item"><div class="wt-item-val">'+humidity+'%</div><div class="wt-item-lbl">HUMIDITY</div></div>'
-      +'<div class="wt-item"><div class="wt-item-val">'+wind+'</div><div class="wt-item-lbl">WIND KM/H</div></div>'
+      +'<div class="wt-item"><div class="wt-item-val">'+esc(OmegaWeather.humidityText(c.humidity))+'</div><div class="wt-item-lbl">HUMIDITY</div></div>'
+      +'<div class="wt-item"><div class="wt-item-val">'+esc(OmegaWeather.windText(c.wind))+'</div><div class="wt-item-lbl">WIND KM/H</div></div>'
       +'</div>'
       +'</div>';
   }).join('');

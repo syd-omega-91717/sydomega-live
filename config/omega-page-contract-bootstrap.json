@@ -4020,7 +4020,8 @@
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/omega-weather.js"
         ],
         "supabase_tables": [
           "activity_feed",
@@ -12840,7 +12841,8 @@
           "/omega-analytics-init.js",
           "/omega-esc.js",
           "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/omega-weather.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],

@@ -40,26 +40,32 @@ if(!todayBrief){
    browser's location and send 4-decimal coordinates to a third party on every page load; it now sends nothing
    until asked, at about 11 km precision. */
 (function(){
-  var WMO={0:'CLEAR SKY',1:'MAINLY CLEAR',2:'PARTLY CLOUDY',3:'OVERCAST',45:'FOG',48:'ICY FOG',51:'LIGHT DRIZZLE',53:'DRIZZLE',55:'HEAVY DRIZZLE',61:'LIGHT RAIN',63:'RAIN',65:'HEAVY RAIN',71:'LIGHT SNOW',73:'SNOW',75:'HEAVY SNOW',80:'LIGHT SHOWERS',81:'SHOWERS',82:'HEAVY SHOWERS',95:'THUNDERSTORM',96:'THUNDERSTORM+HAIL'};
-  var ICONS={0:'☀︎',1:'☀︎',2:'⛅︎',3:'☁︎',45:'≋',48:'≋',51:'⌇',53:'☂',55:'☂',61:'☂',63:'☂',65:'☂',71:'❄︎',73:'❄︎',75:'❄︎',80:'⌇',81:'☂',82:'⛈︎',95:'⛈︎',96:'⛈︎'};
+  /* The code table, icons, coordinate labels and request live in /omega-weather.js; this block only drives the panel. */
+  function el(id){return document.getElementById(id);}
+  function say(id,text){var n=el(id);if(n)n.textContent=text;}
   function start(){
-    var btn=document.getElementById('wxOn');if(btn)btn.disabled=true;
-    if(!navigator.geolocation){document.getElementById('wxLoc').textContent='GEOLOCATION NOT SUPPORTED';return;}
-    document.getElementById('wxLoc').textContent='ASKING YOUR BROWSER FOR LOCATION\u2026';
+    var btn=el('wxOn');if(btn)btn.disabled=true;
+    var W=window.OmegaWeather;
+    if(!W){say('wxLoc','WEATHER UNAVAILABLE');if(btn)btn.disabled=false;return;}
+    if(!navigator.geolocation){say('wxLoc','GEOLOCATION NOT SUPPORTED');return;}
+    say('wxLoc','ASKING YOUR BROWSER FOR LOCATION\u2026');
     navigator.geolocation.getCurrentPosition(function(pos){
-      var lat=pos.coords.latitude.toFixed(1),lon=pos.coords.longitude.toFixed(1);
-      fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code,uv_index&temperature_unit=celsius&wind_speed_unit=kmh&timezone=auto')
-      .then(function(r){return r.json();}).then(function(d){
-        var c=d.current,code=c.weather_code;
-        document.getElementById('wxIcon').textContent=ICONS[code]||'☀︎';
-        document.getElementById('wxTemp').textContent=Math.round(c.temperature_2m)+'°C';
-        document.getElementById('wxDesc').textContent=WMO[code]||'CLEAR';
-        document.getElementById('wxDetail').textContent='Wind '+Math.round(c.wind_speed_10m)+' km/h · Humidity '+c.relative_humidity_2m+'% · UV '+Math.round(c.uv_index||0);
-        document.getElementById('wxLoc').textContent='⌖ '+lat+'°N '+lon+'°E';
-      }).catch(function(){document.getElementById('wxLoc').textContent='WEATHER UNAVAILABLE';});
-    },function(){document.getElementById('wxLoc').textContent='LOCATION PERMISSION DENIED';document.getElementById('wxDesc').textContent='ENABLE LOCATION FOR WEATHER';if(btn)btn.disabled=false;});
+      var lat=Math.round(pos.coords.latitude*10)/10,lon=Math.round(pos.coords.longitude*10)/10;     /* about 11 km, as the note on the panel says */
+      W.fetchCurrent(lat,lon,{uv:true}).then(function(c){
+        var d=W.describe(c.code);
+        say('wxIcon',d.icon);say('wxTemp',W.tempText(c.temp));say('wxDesc',d.text.toUpperCase());
+        say('wxDetail','Wind '+W.windText(c.wind)+' km/h \u00b7 Humidity '+W.humidityText(c.humidity)+' \u00b7 UV '+(c.uv===null?'\u2014':Math.round(c.uv)));
+        say('wxLoc','\u2316 '+W.coords(lat,lon));
+        if(btn)btn.disabled=false;
+      }).catch(function(){say('wxLoc','WEATHER UNAVAILABLE');say('wxDesc','TRY AGAIN IN A MOMENT');if(btn)btn.disabled=false;});
+    },function(err){
+      var code=err&&err.code;                                   /* 1 denied, 2 position unavailable, 3 timed out */
+      say('wxLoc',code===1?'LOCATION PERMISSION DENIED':code===3?'LOCATION TIMED OUT':'LOCATION UNAVAILABLE');
+      say('wxDesc',code===1?'ALLOW LOCATION FOR THIS SITE, THEN TRY AGAIN':'TRY AGAIN');
+      if(btn)btn.disabled=false;
+    },{timeout:10000,maximumAge:600000});
   }
-  var on=document.getElementById('wxOn');if(on)on.addEventListener('click',start);
+  var on=el('wxOn');if(on)on.addEventListener('click',start);
 })();
 
 /* QUOTES */

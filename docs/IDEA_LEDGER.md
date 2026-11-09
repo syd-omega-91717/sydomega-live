@@ -6,7 +6,7 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**512 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 41, IDEA_INTAKE.md 16.
+**513 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 41, IDEA_INTAKE.md 17.
 
 | status | count |
 |---|---|
@@ -15,7 +15,7 @@ production serves it.
 | PARTIAL | 56 |
 | OPEN_GAP | 24 |
 | DORMANT | 1 |
-| SHIPPED | 44 |
+| SHIPPED | 45 |
 | DECIDED | 42 |
 | CLOSED | 17 |
 | SUPERSEDED | 1 |
@@ -69,7 +69,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
-| I16 | IDEA_INTAKE.md | Replace max-height expand/collapse hacks with interpolate-size | the expanding panels guess a max-height ceiling, so text past the guess is clipped and the easing runs against the wrong height. Grounded 2… |
+| I17 | IDEA_INTAKE.md | Let text areas grow with what the member writes (field-sizing: content) | a long journal entry, work or note scrolls inside a fixed box today. Grounded 2026-11-09: 116 <textarea> on 59 pages; 0 first-party uses of… |
 
 ### PARTIAL (56)
 
@@ -167,7 +167,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (44)
+### SHIPPED (45)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -215,6 +215,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; merged in #885: profile.html:1529 gives each held certificate a download button, omega-passport.js:224 `… |
 | I14 | IDEA_INTAKE.md | Rendered-image alt-text check | built 2026-10-26: scripts/verify-runtime.js:203 collects painted <img> with no alt attribute and :547 fails the page; 0 across all 237 page… |
 | I15 | IDEA_INTAKE.md | Honour prefers-reduced-transparency on the glass layers | built 2026-11-02: css/omega-system.css:1284 removes every backdrop-filter and gives the shared glass surfaces an opaque base colour when th… |
+| I16 | IDEA_INTAKE.md | Replace max-height expand/collapse hacks with interpolate-size | built 2026-11-09: media.html:214 and publishing.html:22 animate height:0→auto under @supports (interpolate-size:allow-keywords), keeping th… |
 
 ### DECIDED (42)
 

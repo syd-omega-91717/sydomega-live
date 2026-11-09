@@ -18,6 +18,9 @@
 .work-arrow{font-family:var(--M);color:var(--cyan);font-size:16px;transition:transform .25s;flex-shrink:0}
 .work-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
 .work-item.open .work-body{max-height:2000px}
+/* I16: animate to the real height where supported; a member's work can run past the 2000px fallback cap. */
+@supports (interpolate-size:allow-keywords){.work-body{interpolate-size:allow-keywords;max-height:none;height:0;transition:height .4s ease}.work-item.open .work-body{max-height:none;height:auto}}
+@media (prefers-reduced-motion:reduce){.work-body{transition:none}}
 .work-item.open .work-arrow{transform:rotate(180deg)}
 .work-content{padding:0 16px 16px;font-size:12px;color:var(--muted);line-height:1.85;white-space:pre-wrap}
 .howit-step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}

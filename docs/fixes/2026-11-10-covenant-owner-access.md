@@ -15,6 +15,7 @@ The Sovereign Covenant contained founder and reserved-governance material but th
 - The Vault reserve heading uses a distinct description instead of repeating the Academy's canonical lattice heading.
 - The Approvals route is now owner-only in navigation; its denial screen no longer displays founder identity to non-owners.
 - The global `omega-user.js` member runtime now carries only the public abbreviation `S.Y.D`; the full name and professional order number were removed from that shared client module. The Profile field is labelled **Public Identity**.
+- The globally consumed `omega-canon.json` no longer embeds the full owner name or professional order number. Its owner apex record uses the public abbreviation and explicitly avoids claiming immutable Genesis Block registration or unverified achievement completion.
 - The full name remains on owner-only Covenant and Approvals surfaces. Member-facing legal/controller identity continues to use the public abbreviation where disclosure is required.
 
 ## Verification boundary

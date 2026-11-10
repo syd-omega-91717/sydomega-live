@@ -11,6 +11,20 @@
         "game-omega-civilization.html",
         "game-origins-bridge.html"
       ]
+    },
+    {
+      "normalised_text": "stored only in this browser not synced to your account clearing browser data or switching devices loses it export a backup periodically",
+      "reason": "Required per-page disclosure: this financial workspace stores the displayed records in browser-local storage and the user must be warned about device loss and backup before entering or relying on those records. Removing it from any standalone finance route would hide a material persistence limitation.",
+      "verified_on": "2026-11-10",
+      "scope": [
+        "budget.html",
+        "expenses.html",
+        "investment.html",
+        "revenue.html",
+        "treasury.html",
+        "wallet.html",
+        "wealth.html"
+      ]
     }
   ]
 }

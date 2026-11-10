@@ -1,12 +1,10 @@
 """Contract for Ω MORPH: native cross-document view transitions with a shared element."""
-import json
 from pathlib import Path
 import subprocess
 import sys
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-REDIRECTS = set(json.loads((ROOT / "config/page-cores.json").read_text(encoding="utf-8")).get("redirects", {}))
 BG = (ROOT / "bg.js").read_text(encoding="utf-8")
 CIN = (ROOT / "omega-cinematic.js").read_text(encoding="utf-8")
 NINE = (ROOT / "omega-9d.js").read_text(encoding="utf-8")
@@ -19,7 +17,7 @@ class OmegaMorphContract(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
 
     def test_block_sits_in_head_before_any_script(self):
-        for page in sorted(p for p in ROOT.glob("*.html") if p.stem not in REDIRECTS):
+        for page in sorted(ROOT.glob("*.html")):
             text = page.read_text(encoding="utf-8")
             with self.subTest(page=page.name):
                 start = text.index("<!-- omega-morph:start -->")

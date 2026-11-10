@@ -26,6 +26,8 @@ A merge loses nothing only if the page being removed is a subset of the one that
 | Change | Canonical owner | Preserved experience |
 |---|---|---|
 | Exam and certification cards removed from the Gaming page | `academy.html` | Gaming retains playable challenges, mastery progress, and exam totals; its EXAMS tab now links to Academy. The two pages remain separate because learning and play are different jobs. |
+| Authority formula, axis explanation and gate thresholds | `evolution.html` | Profile, Honors, Approvals, Dashboard, Academy, Gaming and Vault now show their own task-specific context and link to the canonical progression model instead of repeating the full explanation. |
+| Eleven governance articles | `sovereign-covenant.html` | The member Vault no longer renders a second article catalogue; the Covenant route remains owner-only and the Vault link is revealed only after owner verification. |
 | Founder covenant articles removed from the member Vault | `sovereign-covenant.html` | The Vault no longer repeats owner identity or reserved-control articles. The Covenant route and navigation are owner-only and fail closed; the Vault reveals its Covenant link only to a verified owner. |
 
 The Gaming page no longer renders duplicate `knowledge` task cards. Completion totals continue to come from the shared `task_completions` records, not from the presence of catalogue cards in the DOM. A regression test prevents the two pages from acquiring overlapping task-card ownership again.

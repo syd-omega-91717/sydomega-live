@@ -97,3 +97,9 @@ The project the owner first named as staging (`nvgedlxlkdzvcelimbvq`) is the loo
 2026-11-03 it is **not clean**: 83 recorded migrations, 24 of them with no file in the repo, 354 repo
 migrations never applied, and its name contains the production ID. Use a **new empty project**
 (`docs/STAGING_ENVIRONMENT.md`) for the gate in step 2 above, and always confirm by Project ID.
+
+## Provider verification update — 2026-11-10
+
+The production migration ledger records both the dormant erasure engine migration (`20261103230000`) and the D1 financial-retention migration (`20261104090000`) as applied. Read-only production checks confirm the erasure objects exist, but `private.erasure_policy` currently contains **0 rows**; `erasure_worker_enabled=false`; `erasure_delay_days=14`; `pg_cron` is installed but no erasure job is scheduled; and both erasure functions remain non-executable by anon, authenticated, and service_role. The three D1 financial user foreign keys are confirmed `ON DELETE SET NULL` with nullable `user_id`.
+
+**Decision:** keep the erasure worker dormant. Provider application of the migration and D1 schema verification do not complete the policy classification, retention decisions, legal review, member-data inventory, or end-to-end account deletion proof. Do not enable the worker or schedule a job until those controls are complete and reviewed.

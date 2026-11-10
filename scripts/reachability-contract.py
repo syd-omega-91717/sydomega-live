@@ -40,6 +40,11 @@ navigation -- each with the reason recorded, because "it is exempt" with no
 reason is how an unreachable page gets quietly normalised. Adding to that list
 is a product decision and should look like one in the diff.
 
+Compatibility redirects are a separate category, loaded from
+config/page-cores.json. They preserve old bookmarks but are not navigation
+destinations: each alias file and local target must exist, and aliases must
+not be reintroduced into nav.js.
+
 WHAT THIS CANNOT CHECK, stated plainly: that the link actually works at
 runtime. `nav.js` only renders into an element with id `omega-side`, and a page
 without that container gets no sidebar at all however well it is registered

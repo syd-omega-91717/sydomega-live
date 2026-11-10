@@ -158,17 +158,12 @@
     "intel": {
       "canonical": "/intel.html",
       "capabilities": [
+        "insight",
         "research",
         "prediction",
         "intelligence",
         "automation",
-        "graphify",
         "graph-admin",
-        "graph-timeline",
-        "graph-centrality",
-        "graph-explorer",
-        "graph-anomalies",
-        "graph-evidence",
         "atlas",
         "cipher",
         "codex",

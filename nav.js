@@ -61,7 +61,7 @@
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
-    affirmations:'life',body:'life',breath:'life',fasting:'life',gratitude:'life',habits:'life',journal:'life',mood:'life',nutrition:'life',oath:'life',physiology:'life',rituals:'life',sleep:'life',stoic:'life',targets:'life',water:'life',weekly:'life',workout:'life',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos',graphify:'intel','graph-admin':'intel','graph-timeline':'intel','graph-centrality':'intel','graph-explorer':'intel','graph-anomalies':'intel','graph-evidence':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend','standing-dashboard':'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
+    affirmations:'life',body:'life',breath:'life',fasting:'life',gratitude:'life',habits:'life',journal:'life',mood:'life',nutrition:'life',oath:'life',physiology:'life',rituals:'life',sleep:'life',stoic:'life',targets:'life',water:'life',weekly:'life',workout:'life',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos','graph-admin':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend','standing-dashboard':'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
   };
 
   var SECTIONS=[
@@ -116,9 +116,9 @@
           ['health','HEALTH SERVICE','/health.html','folded']]},
     {key:'intel',   icon:'\u25CF', label:'INTEL',    href:'/intel.html',col:'#AB82F2',
      sub:[['insight','INSIGHT','/insight.html'],['research','RESEARCH','/research.html'],['prediction','ORACLE PREDICTION','/prediction.html'],['intelligence','INTELLIGENCE','/intelligence.html'],['personal-intelligence','PERSONAL INTELLIGENCE','/personal-intelligence.html'],
-          ['automation','AUTOMATION','/automation.html'],['compliance','COMPLIANCE','/compliance.html'],['graphify','GRAPHIFY AI','/graphify.html','folded'],
-          ['graph-admin','GRAPH ADMIN','/graph-admin.html','folded'],['graph-timeline','GRAPH TIMELINE','/graph-timeline.html','folded'],['graph-centrality','ENTITY CENTRALITY','/graph-centrality.html','folded'],
-          ['graph-explorer','RELATIONSHIP EXPLORER','/graph-explorer.html','folded'],['graph-anomalies','GRAPH ANOMALIES','/graph-anomalies.html','folded'],['graph-evidence','EVIDENCE CHAIN','/graph-evidence.html','folded'],
+          ['automation','AUTOMATION','/automation.html'],['compliance','COMPLIANCE','/compliance.html'],
+          ['graph-admin','GRAPH ADMIN','/graph-admin.html','folded'],
+          
           ['horoscope-page','HOROSCOPE','/horoscope.html','folded'],['atlas','ATLAS','/atlas.html','folded'],['cipher','CIPHER','/cipher.html','folded'],
           ['codex','CODEX','/codex.html','folded'],['mindmap','MIND MAP','/mindmap.html','folded'],['nexus','NEXUS','/nexus.html','folded'],
           ['pulse','PULSE','/pulse.html','folded'],['sigma','SIGMA PROTOCOL','/sigma.html','folded'],['signal','SIGNAL INTEL','/signal.html','folded'],['intel','INTEL WORKSPACE','/intel.html']]},
@@ -384,7 +384,7 @@
     vault:['vault','wallet','subscriptions','payments','marketplace','blockchain'],
     order:['order','family','approvals','hall','sovereigns'],
     services:['services','creation-studio','consultancy','contracts','publishing','travel'],
-    /* six graph-* pages and graphify are folded into insight.html (four lenses, one graph). */
+    /* Legacy knowledge-graph routes redirect to insight.html; graph.html remains the separate Cosmos constellation. */
     intel:['insight','intel','intelligence','research','knowledge-loom','cipher'],
     arena:['arena','sovereign-ai','agent-network','analytics'],
     govern:['govern','control-center','observatory','enterprise','knowledge-loom','architecture'],

@@ -154,8 +154,9 @@ class PageCopyAuditTests(unittest.TestCase):
         self.assertIn("SLEIMAN YOUSSEF DAGHER", covenant)
         self.assertIn("profileResult.data.is_owner", covenant)
         self.assertIn("if(!profileResult.data.is_owner)", covenant)
-        self.assertNotIn("S.Y.D", profile)
         self.assertNotIn("Sleiman Youssef Dagher", profile)
+        self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", profile)
+        self.assertIn("d.is_owner?'S.Y.D'", profile)
         self.assertIn("Sleiman Youssef Dagher", approvals)
 
     def test_authority_formula_and_gate_explanation_have_one_canonical_page(self):

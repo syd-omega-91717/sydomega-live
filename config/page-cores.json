@@ -258,7 +258,7 @@
       "core": "intel",
       "host": "insight",
       "state": "BUILT",
-      "is": "One member graph workspace: GRAPH, TIMELINE, CENTRALITY, ANOMALIES and EVIDENCE lenses, bounded-depth relationship exploration and exports. AI query and ingestion remain held until privacy and per-member cost gates pass.",
+      "is": "One member graph workspace: GRAPH, TIMELINE, CENTRALITY, ANOMALIES and EVIDENCE lenses, bounded-depth exploration and exports. Six legacy URLs remain registered as compatibility routes; navigation exposes INSIGHT as the single destination. AI query and ingestion remain held until privacy and per-member cost gates pass.",
       "pages": [
         "insight",
         "intelligence",
@@ -278,7 +278,13 @@
         "automation",
         "compliance",
         "sovereign-ai",
-        "personal-intelligence"
+        "personal-intelligence",
+        "graph-anomalies",
+        "graph-centrality",
+        "graph-evidence",
+        "graph-explorer",
+        "graph-timeline",
+        "graphify"
       ]
     },
     {

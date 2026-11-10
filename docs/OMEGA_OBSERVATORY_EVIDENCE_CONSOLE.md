@@ -25,6 +25,17 @@ The console visualizes config/omega-production-10-10-evidence-gate.json as a rep
 - Links to the existing Owner Deck and GOVERN workspace.
 - No new package dependencies, framework, database table, migration, or provider secret.
 
+## Live telemetry semantics
+
+The existing status view now includes separate coverage indicators for:
+
+- External uptime: remains NOT MONITORED until an external monitor supplies measurements.
+- Core Web Vitals: NO FIELD DATA when platform_metrics has no returned records.
+- Error budgets: NOT COMPUTED when rows have NULL budget_4wk_pct. Seeded status strings do not become measured health.
+- Incident register: NO RECORDS is distinct from zero open incidents. An empty incident table does not establish uptime or prove that no incidents occurred.
+
+The five service-specific error-budget rows are not collapsed into a fabricated platform-wide aggregate. Only numeric, computed budgets can populate their corresponding SLO surfaces.
+
 ## Verification
 
 Run:

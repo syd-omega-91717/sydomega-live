@@ -374,6 +374,7 @@ def main() -> int:
         print(f"APPROVED_REPEAT_GROUPS={len(report['approved_cross_page_duplicate_groups'])}")
         print(f"WITHIN_PAGE_REPEAT_GROUPS={len(report['within_page_duplicate_groups'])}")
         print(f"REUSED_CTA_GROUPS={len(report['reused_cta_groups'])}")
+        print(f"NEAR_DUPLICATE_PAIRS={len(report['near_duplicate_pairs'])}")
         print(f"UNUSED_ALLOWLIST_ENTRIES={len(report['unused_allowlist_entries'])}")
         print(f"ALLOWLIST_SCOPE_MISMATCHES={len(report['allowlist_scope_mismatches'])}")
         print(f"SCAN_ERRORS={len(report['scan_errors'])}")

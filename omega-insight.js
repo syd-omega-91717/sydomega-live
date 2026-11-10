@@ -251,7 +251,7 @@ function panelEvent(event) {
   $('ins-panel').innerHTML = '<h3>' + esc(String(event.event_type || 'Event').replace(/_/g, ' ').toUpperCase()) + '</h3>' +
     '<div class="ins-row"><em>OCCURRED</em><span>' + esc(event.occurred_at || 'Not recorded') + '</span></div>' +
     '<div class="ins-row"><em>ENTITY</em><span>' + esc(entity ? name(entity) : 'Unlinked event') + '</span></div>' +
-    (entity ? '<button type="button" class="btn" data-omega-task-id="insight.node.select" data-id="' + esc(entity.id) + '">OPEN ENTITY</button>' : '') +
+    (entity ? '<button type="button" class="btn ins-li" data-omega-task-id="insight.node.select" data-id="' + esc(entity.id) + '">OPEN ENTITY</button>' : '') +
     '<button type="button" class="btn" data-omega-task-id="insight.timeline.back" id="ins-back">← TIMELINE</button>';
   $('ins-back').onclick = panelTimeline;
   bindList();
@@ -264,7 +264,7 @@ function panelEvidenceItem(item) {
     '<div class="ins-row"><em>METHOD</em><span>' + esc(item.extraction_method || 'Not recorded') + '</span></div>' +
     '<div class="ins-row"><em>REVIEW</em><span>' + (item.human_verified ? 'HUMAN VERIFIED' : 'NOT HUMAN VERIFIED') + '</span></div>' +
     '<div class="ins-row"><em>EXTRACTED</em><span>' + esc(item.extracted_text || 'No extracted text recorded') + '</span></div>' +
-    (entity ? '<button type="button" class="btn" data-omega-task-id="insight.node.select" data-id="' + esc(entity.id) + '">OPEN ENTITY</button>' : '') +
+    (entity ? '<button type="button" class="btn ins-li" data-omega-task-id="insight.node.select" data-id="' + esc(entity.id) + '">OPEN ENTITY</button>' : '') +
     '<button type="button" class="btn" data-omega-task-id="insight.evidence.back" id="ins-back">← EVIDENCE</button>';
   $('ins-back').onclick = panelEvidence;
   bindList();
@@ -318,7 +318,7 @@ function downloadFile(filename, mime, content) {
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  URL.revokeObjectURL(url);
+  window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
 }
 
 function exportGraph() {

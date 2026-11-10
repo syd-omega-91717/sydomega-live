@@ -21,6 +21,7 @@ The scanner:
 - Excludes scripts, styles, SVG, navigation, shared headers/footers, sidebars, hidden content and elements marked data-copy-ignore.
 - Normalises Unicode, case and whitespace before comparing exact text.
 - Reports exact repeated prose across pages separately from repeated prose inside one page.
+- Classifies explicitly justified cross-page repeats through config/page-copy-allowlist.json; allowlist entries require a reason and unused entries are reported.
 - Reports repeated button/link calls to action separately; standard CTA reuse is not misclassified as duplicate explanatory content.
 - Uses a configurable minimum word count (default 8) to avoid flagging short labels such as OVERVIEW, SAVE or OPEN.
 - Produces a Markdown report suitable for the GitHub Actions job summary.
@@ -40,6 +41,7 @@ The scanner:
 - Existing title/description uniqueness remains a separate blocking contract.
 - Purpose overlap remains a separate advisory analysis in scripts/page-consolidation.py.
 - Every proposed page merge must preserve source features and data compatibility. Do not remove a page merely because its text similarity score is high.
+- Required route-level release, privacy, safety and persistence notices may repeat only with an explicit allowlist reason; do not remove truth-critical disclosures to make a duplicate count look better.
 
 ## Next remediation sequence
 

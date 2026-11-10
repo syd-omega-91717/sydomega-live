@@ -211,7 +211,6 @@ class PageCopyAuditTests(unittest.TestCase):
             self.assertIn("review signal", rendered)
             self.assertIn("Pages scanned", rendered)
             self.assertIn("Near-duplicate prose candidates", rendered)
-            self.assertIn("Near-duplicate prose candidates", rendered)
 
 
     def test_founder_identity_is_confined_to_owner_surfaces(self):

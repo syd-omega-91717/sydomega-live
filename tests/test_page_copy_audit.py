@@ -210,6 +210,7 @@ class PageCopyAuditTests(unittest.TestCase):
             rendered = MODULE.markdown(report)
             self.assertIn("review signal", rendered)
             self.assertIn("Pages scanned", rendered)
+            self.assertIn("Near-duplicate prose candidates", rendered)
 
 
     def test_founder_identity_is_confined_to_owner_surfaces(self):
@@ -256,7 +257,6 @@ class PageCopyAuditTests(unittest.TestCase):
         for obsolete_panel in ("tab-stem", "tab-professional", "tab-technology", "tab-healthcare", "tab-sovereign_e"):
             self.assertNotIn('id="' + obsolete_panel + '"', gaming)
 
-            self.assertIn("Near-duplicate prose candidates", rendered)
 
 
 if __name__ == "__main__":

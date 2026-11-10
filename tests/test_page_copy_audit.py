@@ -149,6 +149,7 @@ class PageCopyAuditTests(unittest.TestCase):
         covenant = (ROOT / "sovereign-covenant.html").read_text(encoding="utf-8")
         profile = (ROOT / "profile.html").read_text(encoding="utf-8")
         approvals = (ROOT / "approvals.html").read_text(encoding="utf-8")
+        approvals_js = (ROOT / "approvals.js").read_text(encoding="utf-8")
         self.assertNotIn("S.Y.D", vault)
         self.assertNotIn("LEBANESE ORDER OF ENGINEERS NO. 30875", vault)
         self.assertIn("SLEIMAN YOUSSEF DAGHER", covenant)
@@ -158,6 +159,7 @@ class PageCopyAuditTests(unittest.TestCase):
         self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", profile)
         self.assertIn("d.is_owner?'S.Y.D'", profile)
         self.assertIn("Sleiman Youssef Dagher", approvals)
+        self.assertIn("if(!pr||!pr.is_owner)", approvals_js)
 
     def test_authority_formula_and_gate_explanation_have_one_canonical_page(self):
         canonical = (ROOT / "evolution.html").read_text(encoding="utf-8")

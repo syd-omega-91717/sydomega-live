@@ -51,6 +51,15 @@ class PageCopyAuditTests(unittest.TestCase):
             self.assertEqual(len(report["within_page_duplicate_groups"]), 1)
             self.assertEqual(report["within_page_duplicate_groups"][0]["pages"], ["one.html"])
 
+    def test_leaf_div_copy_is_audited_without_collecting_its_parent_container(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            self.write_page(root, "one.html", "<main><div><div>" + REPEATED + "</div></div></main>")
+            self.write_page(root, "two.html", "<main><div><div>" + REPEATED + "</div></div></main>")
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(report["block_count"], 2)
+            self.assertEqual(len(report["cross_page_duplicate_groups"]), 1)
+
     def test_page_specific_header_inside_main_is_not_discarded(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)

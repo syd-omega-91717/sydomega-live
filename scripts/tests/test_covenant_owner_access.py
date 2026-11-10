@@ -10,6 +10,9 @@ PROFILE = (ROOT / "profile.html").read_text(encoding="utf-8")
 APPROVALS = (ROOT / "approvals.html").read_text(encoding="utf-8")
 APPROVALS_JS = (ROOT / "approvals.js").read_text(encoding="utf-8")
 OMEGA_USER = (ROOT / "omega-user.js").read_text(encoding="utf-8")
+PRIVACY = (ROOT / "privacy.html").read_text(encoding="utf-8")
+FAMILY = (ROOT / "family.html").read_text(encoding="utf-8")
+MATRIX = (ROOT / "matrix.html").read_text(encoding="utf-8")
 
 
 class CovenantOwnerAccessTests(unittest.TestCase):
@@ -64,6 +67,9 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertIn("d.is_owner?'S.Y.D'", PROFILE)
         self.assertIn('prof_label_full_name">PUBLIC IDENTITY', PROFILE)
         self.assertIn("Sleiman Youssef Dagher", APPROVALS)
+        for page in (PROFILE, VAULT, PRIVACY, FAMILY, MATRIX, OMEGA_USER):
+            self.assertNotIn("Sleiman Youssef Dagher", page)
+        self.assertIn("DATA CONTROLLER: S.Y.D", PRIVACY)
         self.assertIn("display_name    : 'S.Y.D'", OMEGA_USER)
         self.assertNotIn("Sleiman Youssef Dagher", OMEGA_USER)
         self.assertNotIn("full_name", OMEGA_USER)

@@ -21,7 +21,7 @@ The scanner:
 - Excludes scripts, styles, SVG, navigation, shared headers/footers, sidebars, hidden content and elements marked data-copy-ignore.
 - Normalises Unicode, case and whitespace before comparing exact text.
 - Reports exact repeated prose across pages separately from repeated prose inside one page.
-- Classifies explicitly justified cross-page repeats through config/page-copy-allowlist.json; allowlist entries require a reason and unused entries are reported.
+- Classifies explicitly justified cross-page repeats through config/page-copy-allowlist.json; allowlist entries require a reason and an exact page scope; scope drift and unused entries are reported.
 - Reports repeated button/link calls to action separately; standard CTA reuse is not misclassified as duplicate explanatory content.
 - Uses a configurable minimum word count (default 8) to avoid flagging short labels such as OVERVIEW, SAVE or OPEN.
 - Produces a Markdown report suitable for the GitHub Actions job summary.

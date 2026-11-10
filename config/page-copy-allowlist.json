@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "policy": "Exact repeated prose is not approved by default. Every approved cross-page duplicate requires a stable exact normalised_text key and a reason. Unused entries are reported for cleanup.",
+  "approved": [
+    {
+      "normalised_text": "prototype not a released game saved in this browser only",
+      "reason": "This is a required per-route truth notice on standalone game prototype pages. Each route must independently disclose that the game is not released and its state is browser-local; removing the notice from individual game pages would misrepresent release and persistence status.",
+      "verified_on": "2026-11-10",
+      "scope": [
+        "game-last-galactic-empire.html",
+        "game-omega-civilization.html",
+        "game-origins-bridge.html"
+      ]
+    }
+  ]
+}

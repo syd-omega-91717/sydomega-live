@@ -193,7 +193,7 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         var metricRows=Number(cwv.count||0);
         sid('coverage-cwv-state',metricRows?'DATA AVAILABLE':'NO FIELD DATA');
         sid('coverage-cwv-detail',metricRows+' platform metric row(s) reported. Core Web Vitals require populated field measurements.');
-        document.getElementById('coverage-cwv').setAttribute('data-state',metricRows?'good':'unknown');
+        document.getElementById('coverage-cwv').setAttribute('data-state','unknown');
       }
       if(cwv.data&&cwv.data.dimensions){
         var d=cwv.data.dimensions;
@@ -222,10 +222,18 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         var recorded=latest?new Date(latest.last_computed).toLocaleString():'not recorded';
         sid('coverage-budget-state',computed.length?'COMPUTED':'NOT COMPUTED');
         sid('coverage-budget-detail',rows.length+' configured surface(s); '+computed.length+' with numeric 4-week budgets. Latest row timestamp: '+recorded+'. NULL budget values are not green health.');
-        document.getElementById('coverage-budget').setAttribute('data-state',computed.length?'good':'warn');
-        /* No synthetic platform aggregate: a service-specific budget is not a platform-wide budget. */
-        sid('budget-pct','NO PLATFORM AGGREGATE');
-        var fill=document.getElementById('budget-fill');if(fill){fill.style.width='0';fill.style.background='var(--muted)';}
+        document.getElementById('coverage-budget').setAttribute('data-state',computed.length?'unknown':'warn');
+        /* Only a dedicated platform row may populate the platform-wide budget. */
+        var platformBudget=rows.find(function(sv){return sv.surface==='platform'||sv.surface==='platform_service';});
+        var fill=document.getElementById('budget-fill');
+        if(platformBudget&&platformBudget.budget_4wk_pct!=null&&Number.isFinite(Number(platformBudget.budget_4wk_pct))){
+          var platformPct=Math.min(100,+(Number(platformBudget.budget_4wk_pct)*100).toFixed(1));
+          sid('budget-pct',platformPct+'%');
+          if(fill){fill.style.width=platformPct+'%';fill.style.background=platformPct<20?'var(--green)':platformPct<50?'var(--solar)':'var(--crim)';}
+        }else{
+          sid('budget-pct','NO PLATFORM AGGREGATE');
+          if(fill){fill.style.width='0';fill.style.background='var(--muted)';}
+        }
         rows.forEach(function(sv){
           if(sv.budget_4wk_pct==null)return;
           var card=document.querySelector('[data-surface="'+String(sv.surface).replace(/"/g,'')+'"]');if(!card)return;
@@ -263,7 +271,7 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         sid('k-incidents',open);
         sid('coverage-incidents-state','RECORDS PRESENT');
         sid('coverage-incidents-detail',inc.data.length+' recent incident record(s) loaded. Open count reflects the returned records only.');
-        document.getElementById('coverage-incidents').setAttribute('data-state',open?'bad':'good');
+        document.getElementById('coverage-incidents').setAttribute('data-state',open?'bad':'unknown');
         if(open){document.getElementById('status-dot').style.background='var(--crim)';document.getElementById('status-text').textContent='INCIDENT IN PROGRESS';document.getElementById('status-text').style.color='var(--crim)';}
         var SEV={P0:'#8B0000',P1:'#8B0000',P2:'#C9A84C',P3:'#3fb27f',P4:'#8a8676'};
         document.getElementById('inc-rows').innerHTML=inc.data.map(function(i){

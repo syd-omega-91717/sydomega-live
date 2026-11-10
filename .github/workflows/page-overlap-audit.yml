@@ -8,13 +8,6 @@ on:
   schedule:
     - cron: '30 4 * * *'
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - '**.html'
-      - 'scripts/page-copy-audit.py'
-      - 'scripts/page-overlap-audit.py'
-      - '.github/workflows/page-overlap-audit.yml'
 
 permissions:
   contents: read

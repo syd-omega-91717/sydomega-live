@@ -163,7 +163,7 @@ class PageCopyAuditTests(unittest.TestCase):
 
     def test_authority_formula_and_gate_explanation_have_one_canonical_page(self):
         canonical = (ROOT / "evolution.html").read_text(encoding="utf-8")
-        for name in ("profile.html", "honors.html", "approvals.html", "dashboard.html", "academy.html", "gaming.html", "vault.html"):
+        for name in ("profile.html", "honors.html", "approvals.html", "dashboard.html", "academy.html", "gaming.html", "vault.html", "sovereign-covenant.html"):
             page = (ROOT / name).read_text(encoding="utf-8")
             self.assertNotIn("AUTHORITY FORMULA", page, name + " must link to the canonical model")
             self.assertNotIn("GATE THRESHOLDS", page, name + " must not duplicate the canonical gate table")

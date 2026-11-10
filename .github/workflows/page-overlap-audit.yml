@@ -4,9 +4,6 @@ name: Page Content and Purpose Audit
 # answer different questions. The purpose audit is O(n^2) over the page estate.
 # Reports run nightly and on demand; they do not gate merges.
 on:
-  push:
-    branches:
-      - fix/audit-workflow-and-content-dedup-20261111
   schedule:
     - cron: '30 4 * * *'
   workflow_dispatch:

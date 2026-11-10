@@ -18,7 +18,7 @@ AUDIT = (ROOT / "docs/fixes/2026-11-10-edge-function-live-inventory.md").read_te
 
 DEPLOYED = {name: item for name, item in SNAPSHOT["functions"].items() if item["state"] == "DEPLOYED"}
 LOCAL_ONLY = {name for name, item in SNAPSHOT["functions"].items() if item["state"] == "LOCAL_ONLY"}
-CONFIGURED = set(re.findall(r"^\\[functions\\.([a-z0-9-]+)\\]\\s*$", CONFIG, re.MULTILINE))
+CONFIGURED = set(re.findall(r"^\[functions\.([a-z0-9-]+)\]\s*$", CONFIG, re.MULTILINE))
 EXPECTED_LOCAL_ONLY = {
     "checkout",
     "event-ingest",
@@ -74,7 +74,7 @@ class SupabaseEdgeRuntimeSnapshotTests(unittest.TestCase):
         })
 
     def test_public_claim_and_owner_go_live_document_match_snapshot(self):
-        self.assertRegex(INDEX, r"22\\s+edge services\\s+—\\s+DEPLOYED")
+        self.assertRegex(INDEX, r"22\s+edge services\s+—\s+DEPLOYED")
         table_rows = [
             line for line in GO_LIVE.splitlines()
             if line.startswith("| `") and "| Exact entrypoint match |" in line

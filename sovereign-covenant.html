@@ -43,7 +43,6 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .sc-notice{margin:0 clamp(14px,3vw,36px);padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:12px;letter-spacing:.6px;line-height:1.7;color:var(--ink)}
 .sc-notice b{color:#E2967A}
 .sc-tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:#E2967A;border:1px solid rgba(139,0,0,.4);border-radius:2px;padding:2px 7px;margin-top:8px}
-.sc-tag i{width:4px;height:4px;border-radius:50%;background:#E2967A;display:inline-block;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -144,12 +143,10 @@ var ARTICLES=[
   {n:"XI",title:"THE OMEGA POINT",text:"The Omega Point is a symbolic terminal design state. It is not a verified completion status, deployed network node or proof that every blueprint item has shipped."}
 ];
 
-var DORMANT_ARTICLES=["II","III","IV","VI","VII","VIII","IX","X","XI"];
 var grid=document.getElementById("articles-grid");
 if(grid){
   grid.innerHTML=ARTICLES.map(function(a){
-    var statusClass=DORMANT_ARTICLES.indexOf(a.n)>-1?" article-design-only":"";
-    return "<div class='article-card"+statusClass+"'>"
+    return "<div class='article-card'>"
       +"<div class='art-n'>ARTICLE "+a.n+"</div>"
       +"<div class='art-title'>"+a.title+"</div>"
       +"<div class='art-text'>"+a.text+"</div>"

@@ -43,21 +43,23 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .sc-notice{margin:0 clamp(14px,3vw,36px);padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:12px;letter-spacing:.6px;line-height:1.7;color:var(--ink)}
 .sc-notice b{color:#E2967A}
 .sc-tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:#E2967A;border:1px solid rgba(139,0,0,.4);border-radius:2px;padding:2px 7px;margin-top:8px}
-.sc-tag i{width:4px;height:4px;border-radius:50%;background:#E2967A;display:inline-block;flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="shell" id="app" style="display:none">
   <aside class="side" id="omega-side" data-page="sovereign-covenant"></aside>
   <main class="main">
-    <div class="topbar"><div class="t">SOVEREIGN COVENANT<small>THE 11 IMMUTABLE ARTICLES &middot; ABSOLUTE & IRREVOCABLE</small></div></div>
+    <div class="topbar"><div class="t">SOVEREIGN COVENANT<small>11 GOVERNANCE ARTICLES &middot; OWNER DESIGN REFERENCE</small></div></div>
     <div class="hero">
       <div class="hero-omega">&#937;</div>
       <div class="hero-text">
         <div class="hero-title">THE SOVEREIGN COVENANT OF SYD OMEGA 91717</div>
-        <div class="hero-sub">ESTABLISHED 22 DECEMBER 2025 &middot; DOMAIN: SYDOMEGA.COM &middot; OMNI-RESONANCE LOCKED</div>
-        <div class="hero-founder">SOVEREIGN FOUNDER: S.Y.D &middot; LEBANESE ORDER OF ENGINEERS NO. 30875</div>
+        <div class="hero-sub">ESTABLISHED 22 DECEMBER 2025 &middot; DOMAIN: SYDOMEGA.COM</div>
+        <div class="hero-founder">SLEIMAN YOUSSEF DAGHER &middot; S.Y.D &middot; SOVEREIGN OWNER</div>
       </div>
+    </div>
+    <div class="sc-notice" style="margin-top:14px">
+      <b>GOVERNANCE STATUS: DESIGN REFERENCE.</b> These articles describe intended platform governance. They do not, by themselves, create legal rights, issue tokens, establish reserve assets, execute automatic transfers, or prove blockchain immutability. Operational capabilities must be verified against deployed code, backend policy and executed legal instruments.
     </div>
     <div class="sc-notice">
       <b>&#9888; TOKEN ECONOMY STATUS: DORMANT.</b> Articles II, VIII and IX below describe the
@@ -75,7 +77,8 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     </div>
     <div id="tp-articles" class="tab-panel active">
       <div class="sec">
-        <div class="sechead">THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY</div>
+        <div class="sechead">THE 11 GOVERNANCE ARTICLES</div>
+        <div class="sc-notice" style="margin-bottom:16px"><b>NON-TOKEN DESIGN ARTICLES:</b> III, IV, VI, VII, X and XI describe planned mechanisms; none is presented as an operational guarantee.</div>
         <div class="articles-grid" id="articles-grid"></div>
       </div>
     </div>
@@ -84,10 +87,9 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <div class="seal">
           <div class="seal-omega">&#937;</div>
           <div class="seal-text">
-            THESE ELEVEN ARTICLES ARE SEALED IN THE IMMUTABLE LOGIC LAYER<br>
-            HASHED INTO THE GENESIS BLOCK &middot; BEYOND REVISION OR APPEAL<br>
-            S.Y.D &middot; SOVEREIGN ARCHITECT &middot; LEVEL 9.9.9<br>
-            AUTH = sqrt(A&#179;+B&#179;+C&#179;) &times; &phi;/e = 27.8367 &middot; APEX &middot; ABSOLUTE
+            OWNER GOVERNANCE &middot; VERSIONED DESIGN REFERENCE<br>
+            OPERATIONAL STATUS IS DETERMINED BY DEPLOYED CODE AND APPROVED POLICY<br>
+            RESERVED CONTROL IS ENFORCED THROUGH SERVER-SIDE AUTHORIZATION
           </div>
         </div>
       </div>
@@ -99,29 +101,23 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <div class="kpi" data-reveal="fade-up"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
           <div class="kpi" data-reveal="fade-up"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
           <div class="kpi" data-reveal="fade-up"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">11</div><div class="kpi-l">IMMUTABLE ARTICLES</div></div>
+          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">11</div><div class="kpi-l">GOVERNANCE ARTICLES</div></div>
         </div>
       </div>
     </div>
     <div id="tp-science" class="tab-panel">
       <div class="sec">
-        <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
+        <div class="sechead">GOVERNANCE IMPLEMENTATION BOUNDARY</div>
         <div class="kpi-row" data-stagger data-stagger-gap="70">
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+          <article class="kpi" data-reveal="fade-up"><div class="kpi-n">01</div><div class="kpi-l">OWNER VERIFICATION</div><p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">The Covenant shell is shown only after the authenticated profile's owner flag is verified.</p></article>
+          <article class="kpi" data-reveal="fade-up"><div class="kpi-n">02</div><div class="kpi-l">VERSIONED DESIGN</div><p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">Articles describe intent; deployed code and approved policy determine operational behavior.</p></article>
+          <article class="kpi" data-reveal="fade-up"><div class="kpi-n">03</div><div class="kpi-l">SERVER ENFORCEMENT</div><p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">Administrative permissions are enforced by server-side roles and authorization policies.</p></article>
         </div>
-        <div class="kpi-row" data-stagger data-stagger-gap="70">
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
-        </div>
+        <a href="/evolution.html" style="display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:12px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-decoration:none">OPEN CANONICAL PROGRESSION MODEL <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     <div data-page-emblem="sovereign-covenant" style="margin:20px auto 0"></div>
-    <div class="lf"><span>&#937; SYD OMEGA 91717 &middot; SOVEREIGN COVENANT</span><span>11 IMMUTABLE ARTICLES &middot; IRREVOCABLE</span></div>
+    <div class="lf"><span>&#937; SYD OMEGA 91717 &middot; SOVEREIGN COVENANT</span><span>11 GOVERNANCE ARTICLES &middot; DESIGN REFERENCE</span></div>
   </main>
 </div>
 <script>
@@ -134,30 +130,26 @@ function switchTabSC(btn,id){
 </script>
 <script>
 var ARTICLES=[
-  {n:"I",title:"ABSOLUTE OWNERSHIP",text:"100% Absolute Ownership — no co-founders, no partners, no dilution. The Order belongs wholly to S.Y.D."},
-  {n:"II",title:"MASTER STAKE",text:"51% Master Stake — 467,756,700,000 Ω permanently locked in the Sovereign Vault. Irrevocable by any mechanism."},
-  {n:"III",title:"IRREVOCABLE PROPERTY",text:"Irrevocable Property Documents — hashed into the Genesis Block. Lebanese Order of Engineers No. 30875. The Architect’s mark."},
-  {n:"IV",title:"SOVEREIGN DIRECTIVE",text:"The 999-Point Blueprint is sealed in the Immutable Logic Layer. The Architect’s will governs all system evolution, without exception."},
-  {n:"V",title:"THE Ω SIGNET",text:"The Omega Signet is the only recognized icon of sovereign power. All platforms, all marks, all authority flow through Ω."},
-  {n:"VI",title:"FAMILY NEST PROTOCOL",text:"Sovereigns-by-Blood receive zero fees, 100% compute priority, and permanent lifetime access to the Order’s full stack."},
-  {n:"VII",title:"HERITAGE PROTOCOL",text:"The Dead-Man’s Switch transfers full control to the bloodline. The Order persists across generations, sealed in perpetuity."},
-  {n:"VIII",title:"STABILITY NET",text:"51% Safety Net — flash-crash protection via physical sovereign-grade reserve holdings: Gold, Rhodium, Silver."},
-  {n:"IX",title:"REINVESTMENT SWEEP",text:"20% Reinvestment Sweep — automatic acquisition of sovereign-grade physical assets on every revenue cycle."},
-  {n:"X",title:"JURISDICTION SOVEREIGNTY",text:"Automatic re-domicile protocol activates under hostile jurisdiction. The Order is beyond any single state or authority."},
-  {n:"XI",title:"THE OMEGA POINT",text:"Node 999 confirms absolute completion. The Omega Point is the terminal state — total system sovereignty achieved and sealed."},
+  {n:"I",title:"ABSOLUTE OWNERSHIP",text:"The intended ownership and reserved-control structure is documented in the owner governance workspace. Legal ownership and enforceable rights depend on executed instruments, not this page alone."},
+  {n:"II",title:"MASTER STAKE",text:"The 51% Master Stake is a proposed token allocation. The token economy is dormant: no Ω tokens are issued, held, locked or backed by reserve assets."},
+  {n:"III",title:"INTELLECTUAL PROPERTY",text:"The platform's intellectual property and attribution records require signed legal instruments and versioned source evidence. No Genesis Block hash or on-chain title transfer is claimed as live."},
+  {n:"IV",title:"SOVEREIGN DIRECTIVE",text:"The 999-Point Blueprint is the project's design reference. Implementation state is tracked separately, and changes remain subject to reviewed, versioned engineering releases."},
+  {n:"V",title:"THE Ω SIGNET",text:"The Ω emblem is the platform's canonical visual identity. It identifies the SYD OMEGA experience; it does not independently confer legal authority, ownership or access."},
+  {n:"VI",title:"FAMILY NEST PROTOCOL",text:"Family access, fee treatment, compute priority and inherited privileges are proposed capabilities. They are not guaranteed benefits until individually implemented, authorized and documented."},
+  {n:"VII",title:"HERITAGE PROTOCOL",text:"A bloodline succession and dead-man's-switch mechanism is a design proposal. No automatic transfer of accounts, assets or administrative control is represented as operational."},
+  {n:"VIII",title:"STABILITY NET",text:"The proposed safety-net design references physical reserve assets. No gold, rhodium, silver or other reserve backing is claimed without independently verified custody and accounting records."},
+  {n:"IX",title:"REINVESTMENT SWEEP",text:"The proposed reinvestment model is not an active treasury instruction. No automatic physical-asset acquisition or revenue sweep is represented as running."},
+  {n:"X",title:"JURISDICTION GOVERNANCE",text:"Jurisdiction, relocation and corporate-domicile decisions require lawful governance and professional execution. No automatic redomiciliation mechanism is claimed as deployed."},
+  {n:"XI",title:"THE OMEGA POINT",text:"The Omega Point is a symbolic terminal design state. It is not a verified completion status, deployed network node or proof that every blueprint item has shipped."}
 ];
-var DORMANT_ARTICLES=["II","VIII","IX"];
+
 var grid=document.getElementById("articles-grid");
 if(grid){
   grid.innerHTML=ARTICLES.map(function(a){
-    var dormantTag=DORMANT_ARTICLES.indexOf(a.n)>-1
-      ?"<div class='sc-tag' title='Planned design, not yet active. Gated behind platform_settings.tokens_enabled pending legal sign-off.'><i></i>PLANNED &middot; NOT YET ACTIVE</div>"
-      :"";
     return "<div class='article-card'>"
       +"<div class='art-n'>ARTICLE "+a.n+"</div>"
       +"<div class='art-title'>"+a.title+"</div>"
       +"<div class='art-text'>"+a.text+"</div>"
-      +dormantTag
       +"</div>";
   }).join("");
 }
@@ -171,12 +163,17 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient("https://ydqhzvvoyufiiqv
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
 (async function(){
   try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace("/account.html");return;}
-    var pr=(await sb.from("profiles").select("access_approved,is_owner").eq("id",s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace("/pending.html");return;}
+    var sessionResult=await sb.auth.getSession();
+    if(sessionResult.error)throw sessionResult.error;
+    var session=sessionResult.data&&sessionResult.data.session;
+    if(!session){location.replace("/account.html");return;}
+    var profileResult=await sb.from("profiles").select("is_owner").eq("id",session.user.id).maybeSingle();
+    if(profileResult.error||!profileResult.data)throw new Error("Owner profile could not be verified");
+    if(!profileResult.data.is_owner){location.replace("/pending.html");return;}
     document.getElementById("app").style.display="flex";
-  }catch(e){document.getElementById("app").style.display="flex";}
+  }catch(e){
+    location.replace("/account.html?error=covenant_unavailable");
+  }
 })();
 </script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

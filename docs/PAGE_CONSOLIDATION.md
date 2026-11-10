@@ -1,9 +1,9 @@
 # Which pages must be one, and which could be merged
 
-Snapshot of 2026-11-08 over 242 pages. Reproduce the evidence with `python3 scripts/page-consolidation.py`. **Update, 2026-11-08: the owner said "you choose, merge without elimination"; `breath` + `meditate` is merged (below). Everything else on this page is still a recommendation.** Why nothing here was merged before: a page merge touches the menu, `nav.js`'s section map, `config/page-cores.json`, the page-contract registries, six language packs, the service-worker precache, the page-count claims and every link that points at the old address, and it needs a redirect so no bookmark breaks. That is a project to approve one batch at a time, not something to do while also fixing bugs.
+Snapshot of 2026-11-08 over 242 root pages. The current registry records 241 canonical page contracts, while the recursive visible-copy audit scans 251 HTML pages including non-contract routes; these counts describe different inventories and must not be substituted for one another. Reproduce the purpose-overlap evidence with `python3 scripts/page-consolidation.py`. **Update, 2026-11-08: the owner said "you choose, merge without elimination"; `breath` + `meditate` is merged (below). Everything else on this page is still a recommendation.** Why nothing here was merged before: a page merge touches the menu, `nav.js`'s section map, `config/page-cores.json`, the page-contract registries, six language packs, the service-worker precache, the page-count claims and every link that points at the old address, and it needs a redirect so no bookmark breaks. That is a project to approve one batch at a time, not something to do while also fixing bugs.
 
 ## Method, and a mistake worth recording
-The first attempt (score every pair on raw text and shared database tables) reported **316 candidate pairs**, and nearly all were false: two pages scored 0.77 because both carry the same page chrome and both read the `profiles` table. Removing the noise (TF-IDF word weights across the whole estate; ignoring tables that more than 12% of pages touch) left **21**, and only about eight of those are real merge candidates. The existing `scripts/page-overlap-audit.py` has the same flaw (it compares 1,200 characters of raw text including inline CSS and JavaScript), so its "advisory PASS" says nothing about duplication.
+The first attempt (score every pair on raw text and shared database tables) reported **316 candidate pairs**, and nearly all were false: two pages scored 0.77 because both carry the same page chrome and both read the `profiles` table. Removing the noise (TF-IDF word weights across the whole estate; ignoring tables that more than 12% of pages touch) left **21**, and only about eight of those are real merge candidates. The existing `scripts/page-overlap-audit.py` still has that purpose-overlap limitation (it compares 1,200 characters of raw text including inline CSS and JavaScript). `scripts/page-copy-audit.py` now separately measures exact visible copy blocks without shared chrome; it is not a semantic paraphrase detector or a substitute for the purpose-overlap analysis.
 
 ## Already one (keep it one)
 | Subject | Where the single copy lives | Guard |
@@ -20,6 +20,18 @@ The first attempt (score every pair on raw text and shared database tables) repo
 
 ## The test "without elimination" gives
 A merge loses nothing only if the page being removed is a subset of the one that stays. Measured on visible text, no candidate pair passes it: every source page has most of its lines to itself (trophies 23 of 27 lines are its own, expenses 66 of 75, levels 38 of 47, series 136 of 138). So each remaining merge is a port of real features, not a deletion, and carries the same cost `breath` + `meditate` did (about 25 files of links and registries plus a browser run). `movies` is not a stub either: it is a poster wall with hover video previews. `budget` + `expenses` already share their storage keys, which makes them the cheapest next port; `series` and `movies` into `cinema` should wait for the decision on the two film catalogues below.
+
+## De-duplicated without merging
+
+| Change | Canonical owner | Preserved experience |
+|---|---|---|
+| Exam and certification cards removed from the Gaming page | `academy.html` | Gaming retains playable challenges, mastery progress, and exam totals. Its science/progress surfaces link to the single Academy exam catalogue; duplicate exam cards and the unreachable legacy exam panel are removed. The two pages remain separate because learning and play are different jobs. |
+| Authority formula and gate definitions consolidated | `evolution.html` | Evolution is the single visible canonical formula reference. Profile, Dashboard and Honors link to it; Approvals explains policy-based access rather than repeating the progression formula. |
+| Authority formula, axis explanation and gate thresholds | `evolution.html` | Profile, Honors, Approvals, Dashboard, Academy, Gaming and Vault now show their own task-specific context and link to the canonical progression model instead of repeating the full explanation. |
+| Eleven governance articles | `sovereign-covenant.html` | The member Vault no longer renders a second article catalogue; the Covenant route remains owner-only and the Vault link is revealed only after owner verification. |
+| Founder covenant articles removed from the member Vault | `sovereign-covenant.html` | The Vault no longer repeats owner identity or reserved-control articles. The Covenant route and navigation are owner-only and fail closed; the Vault reveals its Covenant link only to a verified owner. |
+
+The Gaming page no longer renders duplicate `knowledge` task cards. Completion totals continue to come from the shared `task_completions` records, not from the presence of catalogue cards in the DOM. A regression test prevents the two pages from acquiring overlapping task-card ownership again.
 
 ## Should merge (strong evidence; each is a separate batch to approve)
 | Merge | Evidence | Pages saved |

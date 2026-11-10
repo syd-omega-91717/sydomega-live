@@ -927,36 +927,19 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
 
 <div class="mtab-panel" id="mtab-science" style="display:none;max-width:1400px;margin:0 auto;padding:0 2rem 3rem">
   <div style="margin-top:1.5rem">
-    <div class="sechead">AUTHORITY FORMULA</div>
-    <div style="border:1px solid var(--border);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
-      <div style="font-family:serif;font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
-      <div style="font-family:monospace;font-size:12px;color:var(--muted);line-height:2">
-        &phi; (PHI) = 1.6180339887<br>
-        e (EULER) = 2.7182818285<br>
-        APEX AUTH = 27.8367 (A=B=C=9)<br>
-        LATTICE = 12&times;12&times;9&times;9&times;9 = 104,976 NODES
-      </div>
+    <div class="sechead">AWARD RECORD PROVENANCE</div>
+    <div style="border:1px solid var(--border);padding:clamp(18px,3vw,28px);margin-bottom:16px;background:linear-gradient(145deg,rgba(10,10,15,.92),rgba(18,14,8,.82));border-radius:4px">
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--gold);margin-bottom:10px">EVIDENCE BEFORE PRESENTATION</div>
+      <div style="font-family:var(--D);font-size:clamp(18px,2.4vw,24px);color:var(--ink);line-height:1.4;margin-bottom:10px">An award is a record, not an illustration.</div>
+      <p style="font-size:14px;line-height:1.75;color:var(--muted);max-width:820px">Member award totals are read from the member-scoped certificates, medals and trophies records. A decorative asset, preview card or catalogue entry does not establish that an award has been earned.</p>
     </div>
-    <div class="sechead">SYSTEM CONSTANTS</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
-      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:var(--fs-4,20px);color:var(--gold)">9.17 Hz</div><div style="font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">SOVEREIGN FREQUENCY</div></div>
-      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:var(--fs-4,20px);color:var(--cyan)">104,976</div><div style="font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">LATTICE NODES</div></div>
-      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:var(--fs-4,20px);color:var(--green)">&phi; / e</div><div style="font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">GOLDEN RATIO / EULER</div></div>
-      <div style="border:1px solid var(--border);padding:14px;text-align:center"><div style="font-family:serif;font-size:var(--fs-4,20px);color:var(--solar)">27.8367</div><div style="font-family:monospace;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px">APEX AUTHORITY</div></div>
+    <div class="sechead">RECORD FLOW</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:18px">
+      <div style="border:1px solid var(--border);padding:16px;background:rgba(10,10,15,.55)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">01 · MEMBER</div><div style="font-family:var(--D);font-size:13px;color:var(--ink)">Authenticated identity</div><p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:6px">The record query is scoped to the signed-in member.</p></div>
+      <div style="border:1px solid var(--border);padding:16px;background:rgba(10,10,15,.55)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">02 · SOURCE</div><div style="font-family:var(--D);font-size:13px;color:var(--ink)">Award tables</div><p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:6px">Certificates, medals and trophies supply the displayed record counts.</p></div>
+      <div style="border:1px solid var(--border);padding:16px;background:rgba(10,10,15,.55)"><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px">03 · PRESENTATION</div><div style="font-family:var(--D);font-size:13px;color:var(--ink)">Honors display</div><p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:6px">Artwork decorates a record; it never substitutes for one.</p></div>
     </div>
-    <div class="sechead">GATE THRESHOLDS</div>
-    <div style="font-family:monospace;font-size:12px;line-height:2;color:var(--muted);border:1px solid var(--border);padding:16px">
-      SAND GENESIS &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
-      GLASS AWAKENING &bull; AUTH &ge; 2.99<br>
-      IRON FORGING &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>
-      STEEL TEMPERING &bull; AUTH &ge; 5.51<br>
-      TITANIUM ASCENT &bull; AUTH &ge; 6.77<br>
-      CARBON PRECISION &bull; AUTH &ge; 8.03<br>
-      GOLD SOVEREIGNTY &bull; AUTH &ge; 9.29<br>
-      PLATINUM LEGACY &bull; AUTH &ge; 10.55<br>
-      OMEGA THRESHOLD &bull; AUTH &ge; 25.517<br>
-      OMEGA MASTER &nbsp;&nbsp;&bull; AUTH &ge; 27.836
-    </div>
+    <a href="/evolution.html" style="display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid rgba(201,168,76,.35);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-decoration:none">OPEN THE CANONICAL PROGRESSION MODEL <span aria-hidden="true">↗</span></a>
   </div>
 </div>
 <script>

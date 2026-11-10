@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "policy": "Exact repeated prose is not approved by default. Every approved cross-page duplicate requires a stable exact normalised_text key and a reason. Unused entries are reported for cleanup.",
+  "approved": [
+    {
+      "normalised_text": "prototype not a released game saved in this browser only",
+      "reason": "This is a required per-route truth notice on standalone game prototype pages. Each route must independently disclose that the game is not released and its state is browser-local; removing the notice from individual game pages would misrepresent release and persistence status.",
+      "verified_on": "2026-11-10",
+      "scope": [
+        "game-last-galactic-empire.html",
+        "game-omega-civilization.html",
+        "game-origins-bridge.html"
+      ]
+    },
+    {
+      "normalised_text": "stored only in this browser not synced to your account clearing browser data or switching devices loses it export a backup periodically",
+      "reason": "Required per-page disclosure: this financial workspace stores the displayed records in browser-local storage and the user must be warned about device loss and backup before entering or relying on those records. Removing it from any standalone finance route would hide a material persistence limitation.",
+      "verified_on": "2026-11-10",
+      "scope": [
+        "budget.html",
+        "expenses.html",
+        "investment.html",
+        "revenue.html",
+        "treasury.html",
+        "wallet.html",
+        "wealth.html"
+      ]
+    }
+  ]
+}

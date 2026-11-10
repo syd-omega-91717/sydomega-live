@@ -519,7 +519,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
     <div class="tab-panel" id="tab-identity">
       <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_identity_official">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
-        <div class="id-field"><div class="idf-label" data-i18n="prof_label_full_name">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_public_identity">PUBLIC IDENTITY</div><div class="idf-val" id="idf-fullname">--</div></div>
         <div id="owner-only-identity" style="display:none">
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_father_name">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_mother_name">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
@@ -578,7 +578,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
   <canvas id="cv-matx" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
   <div>
     <div style="font-family:var(--D);font-size:12px;letter-spacing:.05em;color:var(--gold);margin-bottom:3px" id="hd-title-matx">&#937; SOVEREIGN ENGINE</div>
-    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
+    <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">LIVE AXIS PROFILE &middot; KNOWLEDGE / MASTERY / CONTRIBUTION</div>
   </div>
   <div style="margin-left:auto;text-align:right">
     <div style="font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold)" id="hd-auth-matx">27.8367</div>
@@ -607,8 +607,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:1.4rem">
   <canvas id="mat-cv" width="120" height="120" style="width:60px;height:60px;flex-shrink:0"></canvas>
   <div style="font-family:var(--D,\'Cinzel Decorative\',serif);font-size:12px;letter-spacing:2px;color:var(--muted,#8a8676)">
-    AUTH = sqrt(A³+B³+C³)×φ/e = 27.8367 | A³=B³=C³=729 | sqrt(2187)×φ/e<br>
-    12×12×9×9×9 = 104,976 &middot; 3×104,976 = 314,928
+    THREE-AXIS READOUT · A / KNOWLEDGE · B / MASTERY · C / CONTRIBUTION
   </div>
 </div>
 <script>
@@ -648,20 +647,20 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div style="height:5px;background:rgba(201,168,76,.1);border-radius:3px;overflow:hidden;margin-bottom:1.4rem">
         <i id="lat-bar" style="display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--solar));transition:width .8s ease"></i>
       </div>
-      <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem" data-i18n="profile_section_axis_map">AXIS MAP &mdash; AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&#981;/e <span data-canon-lattice="twelve"></span></div>
+      <div class="sechead" data-reveal="fade-up" style="margin-bottom:1rem" data-i18n="profile_section_axis_map">YOUR AXIS BALANCE &mdash; KNOWLEDGE / MASTERY / CONTRIBUTION</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1.4rem">
         <div style="border:1px solid rgba(0,229,255,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px" data-i18n="profile_axis_knowledge_label">A &middot; KNOWLEDGE<br><small style="font-size:12px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px" data-i18n="profile_axis_knowledge_label">A &middot; KNOWLEDGE<br><small style="font-size:12px;letter-spacing:1px;color:var(--muted)"></small></div>
           <div style="font-family:var(--D);font-size:16px;color:var(--cyan)" id="mat-a">--</div>
           <div style="height:4px;background:rgba(0,229,255,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-a-bar" style="display:block;height:100%;width:0;background:var(--cyan);transition:width .6s"></i></div>
         </div>
         <div style="border:1px solid rgba(201,168,76,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px" data-i18n="profile_axis_mastery_label">B &middot; MASTERY<br><small style="font-size:12px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px" data-i18n="profile_axis_mastery_label">B &middot; MASTERY</div>
           <div style="font-family:var(--D);font-size:16px;color:var(--gold)" id="mat-b">--</div>
           <div style="height:4px;background:rgba(201,168,76,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-b-bar" style="display:block;height:100%;width:0;background:var(--gold);transition:width .6s"></i></div>
         </div>
         <div style="border:1px solid rgba(63,178,127,.2);padding:12px;border-radius:2px">
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-bottom:8px" data-i18n="profile_axis_contribution_label">C &middot; CONTRIBUTION<br><small style="font-size:12px;letter-spacing:1px;color:var(--muted)">12×12×9×9×9 = 104,976</small></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-bottom:8px" data-i18n="profile_axis_contribution_label">C &middot; CONTRIBUTION</div>
           <div style="font-family:var(--D);font-size:16px;color:var(--green)" id="mat-c">--</div>
           <div style="height:4px;background:rgba(63,178,127,.1);border-radius:2px;margin-top:8px;overflow:hidden"><i id="mat-c-bar" style="display:block;height:100%;width:0;background:var(--green);transition:width .6s"></i></div>
         </div>
@@ -679,7 +678,7 @@ function frame(){ctx.clearRect(0,0,120,120);
       <div class="social-panel">
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://x.com/SYDOMEGA_AI"><span class="sc-icon" style="color:#1DA1F2">&#x25CF;</span><div class="sc-body"><div class="scb-handle">@SYDOMEGA_AI</div><div class="scb-desc">Twitter / X -- Sovereign broadcast</div></div></a>
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://instagram.com/sydomega.ai"><span class="sc-icon" style="color:#E1306C">&#x25C8;</span><div class="sc-body"><div class="scb-handle">@sydomega.ai</div><div class="scb-desc">Instagram -- Cinematic universe</div></div></a>
-        <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/search/results/people/?keywords=Sleiman%20Youssef%20Dagher"><span class="sc-icon" style="color:#0A66C2">&#x25B6;</span><div class="sc-body"><div class="scb-handle">S.Y.D</div><div class="scb-desc">LinkedIn -- Professional network</div></div></a>
+        
         <a class="social-card card" target="_blank" rel="noopener noreferrer" href="https://t.me/SYDOMEGA_AI"><span class="sc-icon" style="color:var(--gold)">&#x25B2;</span><div class="sc-body"><div class="scb-handle">SYDOMEGA_AI</div><div class="scb-desc">Telegram -- Order channel</div></div></a>
       </div>
       <div class="sechead" data-reveal="fade-up" data-i18n="prof_social_identification_header">SOVEREIGN IDENTIFICATION</div>
@@ -738,7 +737,7 @@ function frame(){ctx.clearRect(0,0,120,120);
       </div>
     </div>
     <div style="margin-top:12px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold);text-align:center">
-      AUTH = sqrt(2187) &times; &phi;/e = <strong>27.8367</strong> &middot; ABSOLUTE APEX
+      MAXIMUM AXIS PROFILE &middot; A = 9 &middot; B = 9 &middot; C = 9
     </div>
   </div>
 </div>
@@ -1368,7 +1367,7 @@ function frame(){ctx.clearRect(0,0,120,120);
   <canvas id="phb-cv-character" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
   <div>
     <div style="font-family:var(--D),serif;font-size:12px;letter-spacing:2px;color:var(--muted)">SOVEREIGN CHARACTER &middot; 12&times;12&times;9&times;9&times;9 <span data-canon-lattice="twelve"></span></div>
-    <div style="font-family:var(--D),serif;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; APEX 27.8367</div>
+    <div style="font-family:var(--D),serif;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:3px">THREE-AXIS IDENTITY &middot; KNOWLEDGE / MASTERY / CONTRIBUTION</div>
   </div>
 </div>
 <script>
@@ -1438,35 +1437,11 @@ t++;requestAnimationFrame(f);}f();})();
         <div style="border:1px solid rgba(201,168,76,.15);background:#000005;height:clamp(240px,34vh,380px);margin-bottom:16px;position:relative;overflow:hidden">
           <canvas id="profile-realm-canvas" aria-label="Your sovereign element, rendered as a rotating 3-D sphere. Drag to rotate." style="width:100%;height:100%;display:block;cursor:grab"></canvas>
         </div>
-        <div class="sechead" data-i18n="prof_science_formula_header">AUTHORITY FORMULA</div>
-        <div style="border:1px solid rgba(201,168,76,.15);padding:20px;margin-bottom:16px;background:rgba(10,10,15,.5)">
-          <div style="font-family:var(--D);font-size:14px;color:var(--gold);margin-bottom:8px">AUTH = sqrt(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
-          <div style="font-family:var(--M);font-size:12px;color:var(--muted);line-height:2">
-            &phi; (PHI) = 1.6180339887<br>
-            e (EULER) = 2.7182818285<br>
-            APEX AUTH = 27.8367 (A=B=C=9)<br>
-            LATTICE = 12&times;12&times;9&times;9&times;9 = 104,976 NODES
-          </div>
-        </div>
-        <div class="sechead" data-i18n="prof_science_constants_header">SYSTEM CONSTANTS</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px">
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold)">9.17 Hz</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_frequency">SOVEREIGN FREQUENCY</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:var(--fs-4,20px);color:var(--cyan)">104,976</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_lattice_nodes">LATTICE NODES</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:var(--fs-4,20px);color:var(--green)">&phi; / e</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_golden_ratio">GOLDEN RATIO / EULER</div></div>
-          <div style="border:1px solid var(--line);padding:14px;text-align:center"><div style="font-family:var(--D);font-size:var(--fs-4,20px);color:var(--solar)">27.8367</div><div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="prof_science_apex_auth">APEX AUTHORITY</div></div>
-        </div>
-        <div class="sechead" data-i18n="prof_science_gate_thresholds">GATE THRESHOLDS</div>
-        <div style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted);border:1px solid var(--line);padding:16px">
-          <span data-i18n="prof_gate_sand_genesis">SAND GENESIS</span> &nbsp;&nbsp;&bull; AUTH &ge; 1.73<br>
-          <span data-i18n="prof_gate_glass_awakening">GLASS AWAKENING</span> &bull; AUTH &ge; 2.99<br>
-          <span data-i18n="prof_gate_iron_forging">IRON FORGING</span> &nbsp;&nbsp;&bull; AUTH &ge; 4.25<br>
-          <span data-i18n="prof_gate_steel_tempering">STEEL TEMPERING</span> &bull; AUTH &ge; 5.51<br>
-          <span data-i18n="prof_gate_titanium_ascent">TITANIUM ASCENT</span> &bull; AUTH &ge; 6.77<br>
-          <span data-i18n="prof_gate_carbon_precision">CARBON PRECISION</span> &bull; AUTH &ge; 8.03<br>
-          <span data-i18n="prof_gate_gold_sovereignty">GOLD SOVEREIGNTY</span> &bull; AUTH &ge; 9.29<br>
-          <span data-i18n="prof_gate_platinum_legacy">PLATINUM LEGACY</span> &bull; AUTH &ge; 10.55<br>
-          <span data-i18n="prof_gate_omega_threshold">OMEGA THRESHOLD</span> &bull; AUTH &ge; 25.517<br>
-          <span data-i18n="prof_gate_omega_master">OMEGA MASTER</span> &nbsp;&nbsp;&bull; AUTH &ge; 27.836
+        <div style="border:1px solid rgba(201,168,76,.22);padding:clamp(18px,3vw,28px);margin-bottom:16px;background:linear-gradient(145deg,rgba(201,168,76,.07),rgba(10,10,15,.72));border-radius:3px">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--gold);margin-bottom:10px">CANONICAL PROGRESSION REFERENCE</div>
+          <div style="font-family:var(--D);font-size:clamp(18px,2.4vw,24px);color:var(--ink);line-height:1.4;margin-bottom:8px">Your profile shows your current three-axis state.</div>
+          <p style="font-size:14px;line-height:1.75;color:var(--muted);max-width:760px">The authority formula, progression thresholds and gate definitions are maintained in one canonical reference. This page focuses on your personal profile, credentials and axis values.</p>
+          <a href="/evolution.html" style="display:inline-flex;align-items:center;gap:10px;margin-top:16px;padding:12px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-decoration:none">VIEW PROGRESSION MODEL <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </div>
@@ -1780,7 +1755,7 @@ async function boot(){
     Sagittarius:{agentKey:'profile_agent_beacon',tokenKey:'token_ember',elementKey:'element_fire'},Capricorn:{agentKey:'profile_agent_analyst',tokenKey:'token_ferrum',elementKey:'element_metal'},
     Aquarius:{agentKey:'profile_agent_tutor',tokenKey:'token_prime',elementKey:'element_wind'},Pisces:{agentKey:'profile_agent_historian',tokenKey:'token_abyss',elementKey:'element_water'},
   };
-  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'Sleiman Youssef Dagher':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'S.Y.D':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
   var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){

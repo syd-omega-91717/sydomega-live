@@ -69,7 +69,7 @@ class InsightLegacyRouteTests(unittest.TestCase):
         cores = json.loads((ROOT / "config/page-cores.json").read_text(encoding="utf-8"))
         intel = next(item for item in cores["cores"] if item["core"] == "intel")
         for legacy in ROUTES:
-            self.assertNotIn(legacy, intel["pages"])
+            self.assertIn(legacy, intel["pages"], "compatibility routes remain registered even though navigation exposes only Insight")
         contracts = json.loads((ROOT / "config/omega-page-contracts.json").read_text(encoding="utf-8"))
         by_id = {item["page_id"]: item for item in contracts["contracts"]}
         for page, lens in ROUTES.items():

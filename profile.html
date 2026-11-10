@@ -529,6 +529,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_blood_type">BLOOD TYPE</div><div class="idf-val" style="color:var(--crim)">B+</div></div>
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_registry">REGISTRY</div><div class="idf-val">NO. 2 -- MRACH EL HABBAS</div></div>
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_region">REGION</div><div class="idf-val">SOUTH LEBANON, JEZZINE</div></div>
+        <div class="id-field"><div class="idf-label">OWNER ABBREVIATION</div><div class="idf-val" id="idf-abbrev">--</div></div>
         </div>
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_platform_sign">PLATFORM SIGN</div><div class="idf-val" style="color:var(--solar)" id="idf-sign">--</div></div>
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_agent_assigned">AGENT ASSIGNED</div><div class="idf-val" style="color:var(--gold)" id="idf-agent">--</div></div>
@@ -1755,7 +1756,8 @@ async function boot(){
     Sagittarius:{agentKey:'profile_agent_beacon',tokenKey:'token_ember',elementKey:'element_fire'},Capricorn:{agentKey:'profile_agent_analyst',tokenKey:'token_ferrum',elementKey:'element_metal'},
     Aquarius:{agentKey:'profile_agent_tutor',tokenKey:'token_prime',elementKey:'element_wind'},Pisces:{agentKey:'profile_agent_historian',tokenKey:'token_abyss',elementKey:'element_water'},
   };
-  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'S.Y.D':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'Sleiman Youssef Dagher':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var idfAbbrev=document.getElementById('idf-abbrev');if(idfAbbrev)idfAbbrev.textContent=isOwner?'S.Y.D':'';
   var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){

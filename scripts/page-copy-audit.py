@@ -160,6 +160,7 @@ def build_report(root: Path, min_words: int = 8) -> dict:
                 "words": 0, "kind": "error",
             })
 
+    errors = []
     allowlist_path = root / "config" / "page-copy-allowlist.json"
     approved_text: dict[str, str] = {}
     if allowlist_path.is_file():

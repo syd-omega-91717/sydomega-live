@@ -17,7 +17,7 @@ the member. Today it does not (`LEGAL_GAP_AUDIT.md` findings 1, 2, 19, 20).
 
 - `private.request_account_erasure()` (live): soft-deletes only; no job finishes it (`cron.job` holds one unrelated job).
 - `private.delete_account()` (live): deletes from six tables plus `profiles` and `auth.users`, and demands an `aal2` (MFA) session. Of 105 tables with a `user_id`, at most one cascades.
-- A **prototype** pipeline (`private.purge_user_data`, `private.run_erasure_queue`, `erasure_policy`, `erasure_log`) that exists **only inside** `docs/legal/ERASURE_ROLLBACK_TEST.sql`, created and rolled back inside one transaction. It is not in `supabase/migrations/`, has never run on production, and passed only on a local replica.
+- A **dormant** pipeline (`private.purge_user_data`, `private.run_erasure_queue`, `private.erasure_policy`, `private.erasure_log`) implemented in `supabase/migrations/20261103230000_erasure_pipeline_dormant.sql` and recorded as applied by the production migration ledger on 2026-11-10. Read-only production checks confirm the objects exist, but `private.erasure_policy` has 0 rows, the worker flag is false, no erasure cron job exists, and the functions are not executable by anon/authenticated/service_role. The local synthetic-schema test validates code paths; it does not prove end-to-end production erasure.
 
 From `supabase/live-schema.json` (snapshot 2026-10-06, 288 tables, so possibly stale): the prototype's
 sweep (`user_id`, `profile_id`, `member_id`) reaches **132** tables; **31** more tables carry
@@ -41,7 +41,7 @@ not swept at all.
 
 ## Approach (phased; nothing destructive ships live without the gate)
 
-**Phase 1: inert pipeline in `supabase/migrations/` (engine written 2026-11-03: `20261103230000_erasure_pipeline_dormant.sql`, pending review; tested by `scripts/tests/erasure_pipeline_test.sql`).** Promote the prototype to a real migration,
+**Phase 1: inert pipeline in `supabase/migrations/` (engine written 2026-11-03; provider ledger confirms applied 2026-11-10; policy review and activation remain pending; tested by `scripts/tests/erasure_pipeline_test.sql`).** The migration is now present in production but remains dormant. Keep the policy fail-closed and complete the remaining review before any worker is enabled. The original implementation goal was to promote the prototype to a real migration,
 fixed for findings 2 to 9, shipped dormant (`erasure_worker_enabled=false`, no cron job, not callable
 by members).
 - **Fail closed, not delete-by-default.** *(Classification and its CI check exist as of 2026-11-03: `config/erasure-policy.json`, `scripts/erasure-policy-contract.py`; 161 tables, 39 pending a decision, none yet reviewed.)* `private.erasure_policy` classifies **every** table that carries a member column as `delete`, `anonymise` or `retain`. The purge **refuses to run** while any such table is unclassified. A CI contract script asserts the same against the migrations, so a new table cannot merge unclassified. (Finding 9, 1.)

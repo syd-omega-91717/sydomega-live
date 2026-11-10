@@ -163,6 +163,45 @@ class PageCopyAuditTests(unittest.TestCase):
         self.assertIn(str(count) + "-page web estate", readme)
         self.assertIn("Web estate:** " + str(count) + " pages under page-contract governance", readme)
 
+    def test_short_status_chips_repeated_inside_one_page_are_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            badges = "".join('<div class="status-badge"><span>BUILT</span></div>' for _ in range(3))
+            self.write_page(root, "one.html", "<main><h1>Module catalogue</h1>" + badges + "</main>")
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(len(report["repeated_status_labels"]), 1)
+            self.assertEqual(report["repeated_status_labels"][0]["occurrences"], 3)
+            self.assertEqual(report["repeated_status_labels"][0]["pages"], ["one.html"])
+
+    def test_short_status_labels_across_pages_are_not_mistaken_for_in_page_repetition(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            for name in ("one.html", "two.html", "three.html"):
+                self.write_page(root, name, '<main><h1>Distinct page purpose</h1><span class="status-badge">BUILT</span></main>')
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(report["repeated_status_labels"], [])
+
+    def test_status_repetition_is_counted_per_page_even_when_other_pages_use_same_label(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            repeated = "".join('<span class="status-chip">READY</span>' for _ in range(3))
+            self.write_page(root, "one.html", "<main><h1>Operations</h1>" + repeated + "</main>")
+            self.write_page(root, "two.html", '<main><h1>Other purpose</h1><span class="status-chip">READY</span></main>')
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(len(report["repeated_status_labels"]), 1)
+            self.assertEqual(report["repeated_status_labels"][0]["pages"], ["one.html"])
+            self.assertEqual(report["repeated_status_labels"][0]["occurrences"], 3)
+
+    def test_hidden_or_unclassified_short_labels_are_not_status_chip_findings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            body = ('<main><span class="status-badge" hidden>BUILT</span>'
+                    '<span class="ordinary-label">BUILT</span>'
+                    '<span class="status-badge">READY</span></main>')
+            self.write_page(root, "one.html", body)
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(report["repeated_status_labels"], [])
+
     def test_markdown_report_explains_that_repetition_is_a_review_signal(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
@@ -171,6 +210,52 @@ class PageCopyAuditTests(unittest.TestCase):
             rendered = MODULE.markdown(report)
             self.assertIn("review signal", rendered)
             self.assertIn("Pages scanned", rendered)
+
+
+    def test_founder_identity_is_confined_to_owner_surfaces(self):
+        vault = (ROOT / "vault.html").read_text(encoding="utf-8")
+        covenant = (ROOT / "sovereign-covenant.html").read_text(encoding="utf-8")
+        profile = (ROOT / "profile.html").read_text(encoding="utf-8")
+        approvals = (ROOT / "approvals.html").read_text(encoding="utf-8")
+        approvals_js = (ROOT / "approvals.js").read_text(encoding="utf-8")
+        self.assertNotIn("S.Y.D", vault)
+        self.assertNotIn("LEBANESE ORDER OF ENGINEERS NO. 30875", vault)
+        self.assertIn("SLEIMAN YOUSSEF DAGHER", covenant)
+        self.assertIn("profileResult.data.is_owner", covenant)
+        self.assertIn("if(!profileResult.data.is_owner)", covenant)
+        self.assertIn('id="owner-only-identity" style="display:none"', profile)
+        self.assertIn("idfFull.textContent=isOwner?'Sleiman Youssef Dagher'", profile)
+        self.assertIn("document.getElementById('owner-only-identity').style.display='';", profile)
+        self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", profile)
+        self.assertIn("d.is_owner?'S.Y.D'", profile)
+        self.assertIn("Sleiman Youssef Dagher", approvals)
+        self.assertIn("if(!pr||!pr.is_owner)", approvals_js)
+
+    def test_authority_formula_and_gate_explanation_have_one_canonical_page(self):
+        canonical = (ROOT / "evolution.html").read_text(encoding="utf-8")
+        for name in ("profile.html", "honors.html", "approvals.html", "dashboard.html", "academy.html", "gaming.html", "vault.html"):
+            page = (ROOT / name).read_text(encoding="utf-8")
+            self.assertNotIn("AUTHORITY FORMULA", page, name + " must link to the canonical model")
+            self.assertNotIn("GATE THRESHOLDS", page, name + " must not duplicate the canonical gate table")
+        self.assertIn("AUTHORITY FORMULA", canonical)
+        self.assertIn("THREE AXES", canonical)
+
+    def test_exam_catalogue_has_one_canonical_owner(self):
+        import re
+        academy = (ROOT / "academy.html").read_text(encoding="utf-8")
+        gaming = (ROOT / "gaming.html").read_text(encoding="utf-8")
+        academy_tasks = set(re.findall(r'data-task="([^"]+)"', academy))
+        gaming_tasks = set(re.findall(r'data-task="([^"]+)"', gaming))
+        self.assertIn('data-task-type="knowledge"', academy)
+        self.assertNotIn('data-task-type="knowledge"', gaming)
+        self.assertTrue(academy_tasks)
+        self.assertFalse(academy_tasks & gaming_tasks, "academy and gaming must not render the same task cards")
+        self.assertIn('href="/academy.html"', gaming)
+        self.assertIn('<a class="tab-btn exam-tab" href="/academy.html"', gaming)
+        self.assertNotIn('id="tab-exams"', gaming)
+        for obsolete_panel in ("tab-stem", "tab-professional", "tab-technology", "tab-healthcare", "tab-sovereign_e"):
+            self.assertNotIn('id="' + obsolete_panel + '"', gaming)
+
             self.assertIn("Near-duplicate prose candidates", rendered)
 
 

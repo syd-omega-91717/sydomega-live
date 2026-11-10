@@ -1,20 +1,16 @@
-# Deploying studio-canon
+# Verifying deployed studio-canon
 
-Configured to deploy: it is in `supabase/config.toml` (`verify_jwt = true`), in `config/omega-edge-function-auth.json`, and
-recorded as `PENDING_DEPLOY` in `docs/runtime/supabase-edge-functions-live.json`. The Supabase GitHub integration redeploys every
-function in `config.toml` when the change merges to `main`. `PENDING_DEPLOY` means configured, not yet seen live.
+**Provider observation — 2026-11-10:** \`studio-canon\` is ACTIVE at version 4 with \`verify_jwt=true\`. The deployed \`index.ts\` matches main byte-for-byte; the returned \`worlds-data.ts\`, shared key module and studio-access module also match their repository files. The live snapshot records the provider SHA-256 and repository blob SHA.
 
-After the merge:
+An unauthenticated request previously returned 401 \`UNAUTHORIZED_NO_AUTH_HEADER\` (2026-11-07). This confirms the gateway enforces JWT, but does not prove the owner path or approved non-owner denial path.
 
-1. Call it once as an owner (expect the canon) and once as an approved non-owner (expect 403 `owner_only`).
-2. Record it in the snapshot as `DEPLOYED` with the live version, `live_sha256` and `repository_blob_sha`, read from the provider.
-3. After any change to `index.ts`, refresh `repository_blob_sha` (the reconciliation contract fails on drift).
-4. After any canon edit: `python3 scripts/studio-worlds-check.py --write-function-data`.
+## Required verification after any deployment
 
-Until step 1 succeeds, `worlds.html` shows UNAVAILABLE (not deployed) or RESTRICTED (not an owner).
+1. Read the provider inventory and confirm the function is ACTIVE with \`verify_jwt=true\`.
+2. Read the deployed function files and compare the entrypoint and every returned dependency/payload file with the current main branch.
+3. Invoke as an owner and verify the expected canon response.
+4. Invoke as an approved non-owner and verify 403 \`owner_only\`; also test signed-out, rejected, expired-trial, missing-profile and profile-read-error cases.
+5. Refresh \`docs/runtime/supabase-edge-functions-live.json\` with provider version, SHA-256, repository blob SHA and capture time.
+6. Run \`python3 scripts/supabase-edge-runtime-reconciliation.py\`, the Studio tests and the relevant browser checks.
 
-## Observed 2026-11-07 (after PR #1196 merged)
-An unauthenticated GET to `/functions/v1/studio-canon` returned 401 `UNAUTHORIZED_NO_AUTH_HEADER`, and a control for a function that does not exist
-returned 404 `NOT_FOUND`, so the function exists on production and the gateway enforces its JWT requirement. **Not yet verified:** that the deployed
-code is this repository's version, that an owner receives the canon, and that an approved non-owner receives 403 `owner_only`. The snapshot therefore
-stays `PENDING_DEPLOY` until those are seen (a status of DEPLOYED claims the live code matches `repository_blob_sha`).
+**Current limitation:** the 2026-11-10 provider log query returned a FetchException. The previous owner-page 503 \`profile_unavailable\` cause therefore remains undiagnosed. Source parity does not prove a successful owner request. Keep the page's UNAVAILABLE/RESTRICTED states honest until the owner and non-owner invocation paths pass.

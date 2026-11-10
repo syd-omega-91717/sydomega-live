@@ -6341,12 +6341,9 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Graph Anomalies",
+      "purpose": "Legacy compatibility route redirects to /insight.html?lens=anomaly; canonical graph experience lives in INSIGHT.",
       "data_sources": {
-        "supabase_tables": [
-          "graph_entities",
-          "graph_relationships"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": []
       },
       "capabilities": [
@@ -6371,18 +6368,9 @@
         "page_source": "graph-anomalies.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/bg.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "graph_entities",
-            "graph_relationships"
-          ],
-          "supabase_rpcs": []
-        },
+        "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -6392,10 +6380,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 2,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 2,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -6413,12 +6401,9 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Entity Centrality",
+      "purpose": "Legacy compatibility route redirects to /insight.html?lens=central; canonical graph experience lives in INSIGHT.",
       "data_sources": {
-        "supabase_tables": [
-          "graph_entities",
-          "graph_relationships"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": []
       },
       "capabilities": [
@@ -6443,18 +6428,9 @@
         "page_source": "graph-centrality.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/bg.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "graph_entities",
-            "graph_relationships"
-          ],
-          "supabase_rpcs": []
-        },
+        "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -6464,10 +6440,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 2,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 2,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -6485,12 +6461,9 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Evidence Chain",
+      "purpose": "Legacy compatibility route redirects to /insight.html?lens=evidence; canonical graph experience lives in INSIGHT.",
       "data_sources": {
-        "supabase_tables": [
-          "graph_entities",
-          "graph_events"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": []
       },
       "capabilities": [
@@ -6515,18 +6488,9 @@
         "page_source": "graph-evidence.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/bg.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "graph_entities",
-            "graph_events"
-          ],
-          "supabase_rpcs": []
-        },
+        "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -6536,10 +6500,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 1,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 2,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -6557,12 +6521,9 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Entity Relationship Explorer",
+      "purpose": "Legacy compatibility route redirects to /insight.html?lens=graph; canonical graph experience lives in INSIGHT.",
       "data_sources": {
-        "supabase_tables": [
-          "graph_entities",
-          "graph_relationships"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": []
       },
       "capabilities": [
@@ -6587,18 +6548,9 @@
         "page_source": "graph-explorer.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/bg.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "graph_entities",
-            "graph_relationships"
-          ],
-          "supabase_rpcs": []
-        },
+        "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -6608,10 +6560,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 1,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 2,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -6629,11 +6581,9 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Graph Timeline",
+      "purpose": "Legacy compatibility route redirects to /insight.html?lens=time; canonical graph experience lives in INSIGHT.",
       "data_sources": {
-        "supabase_tables": [
-          "graph_events"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": []
       },
       "capabilities": [
@@ -6658,17 +6608,9 @@
         "page_source": "graph-timeline.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/bg.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "graph_events"
-          ],
-          "supabase_rpcs": []
-        },
+        "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -6678,10 +6620,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 1,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 3,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -6769,13 +6711,9 @@
       "workspace": "UNVERIFIED",
       "domain": "UNVERIFIED",
       "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Graphify",
+      "purpose": "Legacy compatibility route redirects to /insight.html?lens=graph&tools=1; canonical graph experience lives in INSIGHT.",
       "data_sources": {
-        "supabase_tables": [
-          "graph_entities",
-          "graph_evidence",
-          "graph_relationships"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": []
       },
       "capabilities": [
@@ -6800,21 +6738,9 @@
         "page_source": "graphify.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-esc.js",
-          "/omega-graphify.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/bg.js"
         ],
-        "data_evidence": {
-          "supabase_tables": [
-            "graph_entities",
-            "graph_evidence",
-            "graph_relationships"
-          ],
-          "supabase_rpcs": []
-        },
+        "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -6824,10 +6750,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 13,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 5,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -7885,11 +7811,19 @@
       "path": "insight.html",
       "contract_state": "EVIDENCE_CONTRACT",
       "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; INSIGHT",
-      "data_sources": "UNVERIFIED",
+      "workspace": "intel",
+      "domain": "Intelligence",
+      "primary_role": "Member knowledge graph exploration and evidence analysis",
+      "purpose": "Canonical member graph workspace with graph, event timeline, centrality, anomaly, and evidence lenses; bounded-depth exploration and user-initiated exports. AI query/ingestion are held pending privacy and per-member cost gates.",
+      "data_sources": {
+        "supabase_tables": [
+          "graph_entities",
+          "graph_relationships",
+          "graph_events",
+          "graph_evidence"
+        ],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -7918,7 +7852,15 @@
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
-        "data_evidence": "UNVERIFIED",
+        "data_evidence": {
+          "supabase_tables": [
+            "graph_entities",
+            "graph_relationships",
+            "graph_events",
+            "graph_evidence"
+          ],
+          "supabase_rpcs": []
+        },
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -7928,9 +7870,9 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 0,
+          "buttons": 2,
           "forms": 0,
-          "inputs": 1,
+          "inputs": 2,
           "links": 1
         },
         "media_evidence": {

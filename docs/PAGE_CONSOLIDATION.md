@@ -61,3 +61,11 @@ Measured by rendering pages and counting short labels that repeat on one page (`
 
 ## Pages with no menu entry
 `honors` and `achieve` are reachable only by link; `account`, `enter`, `pending`, `reset`, `terms` and `offline` are public or auth pages and are expected to be absent; `monitoring-dashboard` is an operator page.
+
+## Purpose-overlap audit — upgraded 2026-11-11
+
+The scheduled audit now uses visible main-content text and headings, rare table/RPC references, explicit capability/task markers, and uncommon internal destinations. It excludes scripts, styles, hidden content, shared navigation/chrome, ubiquitous tables, and ubiquitous links before scoring candidate page pairs.
+
+The score is a prioritisation signal, not a merge verdict. The report shows each evidence component and the source-side data/task/capability markers so reviewers can distinguish a genuine duplicate job from two separate experiences that happen to share a profile table, design system, or progression link. The scheduled workflow writes the report to the GitHub Actions summary. Regression tests are part of the blocking local/GitHub contract suite; the full quadratic estate scan remains scheduled/on-demand only.
+
+No page is automatically deleted, redirected, hidden, or merged. A consolidation still requires a verified feature inventory, ownership of data and tasks, authorization review, inbound-link analysis, route preservation, and browser regression tests.

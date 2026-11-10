@@ -6,28 +6,28 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**513 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 41, IDEA_INTAKE.md 17.
+**496 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 41.
 
 | status | count |
 |---|---|
-| NEEDS_DECISION | 16 |
-| PROPOSED | 18 |
+| NEEDS_DECISION | 13 |
+| PROPOSED | 17 |
 | PARTIAL | 56 |
 | OPEN_GAP | 23 |
 | DORMANT | 1 |
-| SHIPPED | 45 |
-| DECIDED | 42 |
+| SHIPPED | 37 |
+| DECIDED | 41 |
 | CLOSED | 18 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
-| REJECTED | 118 |
+| REJECTED | 114 |
 
 ## Actionable queue
 
 Everything not yet settled, owner decisions first. The weekly idea routine
 works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-checks the rest.
 
-### NEEDS_DECISION (16)
+### NEEDS_DECISION (13)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -44,11 +44,8 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B652 | 999 blueprint [INTELLIGENCE] | The "Nest" Genetic Anchor: Points 652-654 detail the "Inheritance Logic." If Major is unreachable, the system… | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
 | B969 | 999 blueprint [R&D_OR_LORE] | The Sovereign Succession Cipher: This point hard-codes the biological lineage of Major. The Mars Ledger holds… | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
 | N155 | 999 blueprint [APPENDIX_NODE] | Multi-Generational Trust Lock (trust enclaves) | succession is a legal instrument plus a second owner account; only 1 owner account exists live (GAP_ANALYSIS.md S) |
-| I05 | IDEA_INTAKE.md | Database backups the owner controls | the blueprint's Mars Ledger (points 9, 615) reduces to off-site backups / point-in-time restore, which needs Supabase Pro (2026-10-12) |
-| I08 | IDEA_INTAKE.md | Member sticker and logo pack | from the Unified Blueprint board; no sticker surface exists in the repo (2026-10-13) |
-| I13 | IDEA_INTAKE.md | Align the passport PDF's 12 gate names with the canon tiers | omega-passport.js GATE_NAMES (INITIATE, ACOLYTE, SCHOLAR...) differ from omega-canon.json tiers (Initiate, Seeker, Adept...); its authority… |
 
-### PROPOSED (18)
+### PROPOSED (17)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -69,7 +66,6 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
-| I17 | IDEA_INTAKE.md | Let text areas grow with what the member writes (field-sizing: content) | a long journal entry, work or note scrolls inside a fixed box today. Grounded 2026-11-09: 116 <textarea> on 59 pages; 0 first-party uses of… |
 
 ### PARTIAL (56)
 
@@ -78,7 +74,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | F26 | FEATURE_IDEAS.md | 3D Environment Integration & Real-Time Geometry Binding (COSMOS / ASCEND / IDENTITY) — proposal | omega-sculpture.js delivers real-time geometry (entries 32, 35, 36); data-bound geometry beyond those scenes is not built |
 | B001 | 999 blueprint [INTELLIGENCE] | 100% Core Ownership: Every line of code, every pixel, and every neural weight of the SYD OMEGA 91717 platform… | code-level ownership is profiles.is_owner + is_platform_owner() (CLAUDE.md §1); legal title is outside code |
 | B005 | 999 blueprint [INTELLIGENCE] | Windsurf Permanent Directive: The core system instructions (like these 999 points) are written in an "Immutab… | the autonomous pipeline never merges to main and never flips a flag (CLAUDE.md §10); the weekly idea routine opens draft PRs only |
-| B006 | 999 blueprint [PRODUCT] | 🔱 Abolition Decree: The system scans all user inputs. Any attempt to use the trident sign 🔱 triggers an imm… | scripts/brand-glyph-check.py fails CI on U+1F531 (inside its U+1F300-1F64F range) in any shipped file; member input is not policed |
+| B006 | 999 blueprint [PRODUCT] | 🔱 Abolition Decree: The system scans all user inputs. Any attempt to use the trident sign 🔱 triggers an immed… | scripts/brand-glyph-check.py fails CI on U+1F531 (inside its U+1F300-1F64F range) in any shipped file; member input is not policed |
 | B010 | 999 blueprint [INTELLIGENCE] | The 10-Step Rule: For every feature a competitor (like Google or OpenAI) releases, the Ω-Historian must gener… | web-trend-scout skill + weekly idea routine produce proposals; no 10-per-competitor-release rule |
 | B011 | 999 blueprint [INTELLIGENCE] | Recursive Self-Audit: The Auditor Agent (Agent 10) spends 100% of its idle cycles looking for logic-leaks in… | 41-gate contract suite + CI audits run on every change; not an idle-cycle agent |
 | B016 | 999 blueprint [ECONOMIC_R&D] | 729-Point Depth: Each "Point" in the 9x9x9 cube is a specific life-skill or financial milestone. To reach the… | matrix.html renders the 9x9x9 = 729-node matrix from profiles.axis_a/b/c (matrix.html:266, :536) |
@@ -91,7 +87,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B030 | 999 blueprint [DESIGN_CONCEPT] | Visual Analysis Code Mandate: Every image is accompanied by a .py script that describes its exact geometry an… | imagery is procedural SVG/canvas generated from code (image-pipeline skill), so the code is the source |
 | B032 | 999 blueprint [ECONOMIC_R&D] | Image Memory: The system indexes every pixel generated since 2025. If you ask for "the same gold from last De… | palette tokens live once in css/omega-system.css + theme.js (CLAUDE.md §4); no per-pixel history |
 | B044 | 999 blueprint [ECONOMIC_R&D] | The Forge of Competition: A PvP (Peer-vs-Peer) logic arena. Users compete to solve "Universal Fulfillment" qu… | forge.html runs FORGE TRIALS; bounties and arena fees are money -> owner decision |
-| B047 | 999 blueprint [R&D_OR_LORE] | Sentinel (Agent 1): The "Firewall." It monitors every packet of data. If it detects a 🔱 symbol or a hostile… | security is RLS on every table, CSP, secret and service-role scans (CLAUDE.md §5, §7); no IP blacklists or orbital nodes |
+| B047 | 999 blueprint [R&D_OR_LORE] | Sentinel (Agent 1): The "Firewall." It monitors every packet of data. If it detects a 🔱 symbol or a hostile A… | security is RLS on every table, CSP, secret and service-role scans (CLAUDE.md §5, §7); no IP blacklists or orbital nodes |
 | B049 | 999 blueprint [INTELLIGENCE] | Historian (Agent 3): The "Archivist." It documents every "Little Idea" you have. It ensures that the "Visual… | chronicle.html is the member timeline; docs/IDEA_LEDGER.md is the idea archive |
 | B050 | 999 blueprint [INTELLIGENCE] | Tutor (Agent 4): The "Education Lead." It manages the Stage 1-9 Academy. It adapts the "Mental Profile Alignm… | academy.html / courses.html / flashcard.html are the Tutor surfaces |
 | B053 | 999 blueprint [INTELLIGENCE] | Oracle (Agent 7): The "Bridge." It connects the user’s Birth-Sync to the search engine. It predicts "Lucky Wi… | horoscope.html renders sign profiles; "lucky windows" are entertainment, not advice |
@@ -166,7 +162,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (45)
+### SHIPPED (37)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -207,16 +203,8 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B250 | 999 blueprint [PRODUCT] | Bayesian Belief Updating: The system tracks the user's "Rate of Forgetting" (Point 5.6) and creates a Digital… | flashcard.html implements SM-2 spaced repetition: reviews scheduled at the forgetting curve (flashcard.html:125, :202) |
 | B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking |
 | N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking |
-| I01 | IDEA_INTAKE.md | Copilot visual commands | 14 slash commands (/handwritten, /decision-matrix, /infographic, /canvas, /layers, /cycle, /diagram, /roadmap, /sketchnotes, /iceberg, /blu… |
-| I02 | IDEA_INTAKE.md | Owner two-factor deep link | settings.html#two-factor opens the enrolment section; approvals offers it on aal2_no_factor, PR #875 (2026-10-12) |
-| I04 | IDEA_INTAKE.md | Map every 999-blueprint point | all 413 entries (391 + 8 restored duplicates + 14 appendix Nodes) classified with reasons by scripts/blueprint-truth-map.py (2026-10-12) |
-| I06 | IDEA_INTAKE.md | Owner concept media on the Vision Board | 6 Veo clips + 3 boards as a labelled CONCEPT ART tab (vision.html, assets/concept/, 6.6 MB, faststart); each board states what exists today… |
-| I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; merged in #885: profile.html:1529 gives each held certificate a download button, omega-passport.js:224 `… |
-| I14 | IDEA_INTAKE.md | Rendered-image alt-text check | built 2026-10-26: scripts/verify-runtime.js:203 collects painted <img> with no alt attribute and :547 fails the page; 0 across all 237 page… |
-| I15 | IDEA_INTAKE.md | Honour prefers-reduced-transparency on the glass layers | built 2026-11-02: css/omega-system.css:1284 removes every backdrop-filter and gives the shared glass surfaces an opaque base colour when th… |
-| I16 | IDEA_INTAKE.md | Replace max-height expand/collapse hacks with interpolate-size | built 2026-11-09: media.html:214 and publishing.html:22 animate height:0→auto under @supports (interpolate-size:allow-keywords), keeping th… |
 
-### DECIDED (42)
+### DECIDED (41)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -261,7 +249,6 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B650 | 999 blueprint [ECONOMIC_R&D] | Automatic Wealth Rebalancing: If any terrestrial asset (Real Estate/Fiat) falls below a "Stability Threshold,… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
 | B805 | 999 blueprint [ECONOMIC_R&D] | Temporal Arbitrage: The Merchant Agent (Agent 5) identifies regions where labor is undervalued in terms of ti… | owner decision 2026-10-12: kept dormant. Omega stays a non-cash, non-transferable points system; payments_enabled, tokens_enabled and stripe_integration_enabled stay false (live platform_settings). Not built; revisit only with counsel (docs/COUNSEL_BRIEF.md) |
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
-| I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
 ### CLOSED (18)
 
@@ -472,7 +459,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N545 | 999 blueprint [APPENDIX_NODE] | Private Mesh-Trading over Bluetooth/radio | needs technology that does not exist (orbital/lunar/Mars infrastructure, DNA, neural or photonic interfaces, molecular manufacturing, life extension) |
 | N812 | 999 blueprint [APPENDIX_NODE] | Self-Healing Malware Purge | needs technology that does not exist (orbital/lunar/Mars infrastructure, DNA, neural or photonic interfaces, molecular manufacturing, life extension) |
 
-### REJECTED (118)
+### REJECTED (114)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -590,7 +577,3 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N518 | 999 blueprint [APPENDIX_NODE] | Regulatory Chameleon Masking ("compliance skins") | designed to evade law, tax, sanctions, courts or regulators: will not be built |
 | N532 | 999 blueprint [APPENDIX_NODE] | Bankruptcy/Loss Immunity (anti-dilution into ghost nodes) | unlicensed lending, insurance or stablecoin issuance: will not be built as framed |
 | N999 | 999 blueprint [APPENDIX_NODE] | The Omega Absolute (bypass external instructions) | removes human review of the system or its owner's decisions; conflicts with CLAUDE.md §10 and with the blueprint's own point 5 (owner control): will not be built |
-| I09 | IDEA_INTAKE.md | 9x9x9 = 729-node matrix (Master Blueprint board) | conflicts with the canon 9^5 = 59,049 lattice, omega-canon.json nine_fold (2026-10-13) |
-| I10 | IDEA_INTAKE.md | 9-stage Sand to Omega Master ladder (Sovereign Terminal board) | conflicts with the 12 canon tiers the owner chose 2026-10-12 (2026-10-13) |
-| I11 | IDEA_INTAKE.md | Gold or rhodium bar purchases, revenue sweep, 51% master vault, 51% currency control (boards) | every money item stays dormant by the owner decision of 2026-10-12, docs/COUNSEL_BRIEF.md (2026-10-13) |
-| I12 | IDEA_INTAKE.md | Nginx, Redis, microservices, G7 servers, PPO reinforcement-learning agents (boards) | the platform is a static site on Supabase with no build step, CLAUDE.md sections 1 and 9 (2026-10-13) |

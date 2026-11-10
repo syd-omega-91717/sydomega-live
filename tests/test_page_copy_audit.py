@@ -144,6 +144,24 @@ class PageCopyAuditTests(unittest.TestCase):
             self.assertIn("Pages scanned", rendered)
 
 
+    def test_founder_identity_is_confined_to_owner_surfaces(self):
+        vault = (ROOT / "vault.html").read_text(encoding="utf-8")
+        covenant = (ROOT / "sovereign-covenant.html").read_text(encoding="utf-8")
+        approvals = (ROOT / "approvals.html").read_text(encoding="utf-8")
+        for page in (vault, covenant):
+            self.assertNotIn("S.Y.D", page)
+            self.assertNotIn("LEBANESE ORDER OF ENGINEERS NO. 30875", page)
+        self.assertIn("Sleiman Youssef Dagher", approvals)
+
+    def test_authority_formula_and_gate_explanation_have_one_canonical_page(self):
+        canonical = (ROOT / "evolution.html").read_text(encoding="utf-8")
+        for name in ("profile.html", "honors.html", "approvals.html", "dashboard.html"):
+            page = (ROOT / name).read_text(encoding="utf-8")
+            self.assertNotIn("AUTHORITY FORMULA", page, name + " must link to the canonical model")
+            self.assertNotIn("GATE THRESHOLDS", page, name + " must not duplicate the canonical gate table")
+        self.assertIn("AUTHORITY FORMULA", canonical)
+        self.assertIn("THREE AXES", canonical)
+
     def test_exam_catalogue_has_one_canonical_owner(self):
         import re
         academy = (ROOT / "academy.html").read_text(encoding="utf-8")

@@ -24,7 +24,7 @@ from pathlib import Path
 
 SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", "public"}
 SKIP_TAGS = {"script", "style", "noscript", "svg", "template", "nav", "footer", "aside"}
-BLOCK_TAGS = {"h1", "h2", "h3", "h4", "p", "li", "button", "a", "label", "summary", "blockquote", "dt", "dd"}
+BLOCK_TAGS = {"h1", "h2", "h3", "h4", "p", "li", "div", "section", "article", "button", "a", "label", "summary", "blockquote", "dt", "dd"}
 CTA_TAGS = {"button", "a"}
 SKIP_CLASSES = {
     "omega-side", "sidebar", "topbar", "global-nav", "breadcrumbs",

@@ -61,13 +61,13 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .ledger-row.tbl-row:hover{background:rgba(201,168,76,.02)!important}
 .ledger-ts{font-family:var(--M);font-size:12px;color:var(--muted)}
 .ledger-pts{font-family:var(--D);font-size:12px}
-.articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:14px}
-.article-card{border:1px solid var(--line);padding:18px;border-radius:2px;background:rgba(10,10,15,.5);position:relative;overflow:hidden;transition:.18s}
-.article-card:hover{border-color:rgba(201,168,76,.3)}
-.article-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
-.art-n{font-family:var(--D);font-size:clamp(28px,5vw,48px);color:rgba(201,168,76,.12);position:absolute;top:8px;right:14px;line-height:1}
-.art-title{font-family:var(--D);font-size:12px;color:var(--gold);margin-bottom:8px;letter-spacing:.04em}
-.art-text{font-size:12px;line-height:1.75;color:var(--ink);opacity:.75}
+
+
+
+
+
+
+
 .audit-table.tbl-wrap{border:1px solid rgba(0,229,255,.1)!important;border-radius:2px!important;overflow:hidden!important}
 .audit-head.tbl-head{display:grid;grid-template-columns:110px 1fr 90px 70px;padding:8px 12px;background:rgba(0,229,255,.04)!important;border-bottom:1px solid rgba(0,229,255,.1)!important}
 .audit-hcell.tbl-hcell{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan)!important}
@@ -169,7 +169,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
       </div>
 
-      <div class="sechead sechead-gold" data-i18n="vault_reserve_lattice_title">LATTICE POSITION &middot; CANONICAL (12&times;12&times;9&#179; = 104,976)</div>
+      <div class="sechead sechead-gold">RESERVE GEOMETRY &middot; CANONICAL NODE REFERENCE (12&times;12&times;9&#179; = 104,976)</div>
       <div data-lattice="canonical" data-nodes="0" style="cursor:pointer;max-width:500px" title="Click for 3D lattice view"></div>
     </div>
 
@@ -279,15 +279,11 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <a href="/evolution.html" style="display:inline-flex;align-items:center;gap:10px;margin-top:14px;padding:12px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-decoration:none">OPEN PROGRESSION MODEL <span aria-hidden="true">↗</span></a>
       </div>
 
-      <div class="sechead sechead-gold" data-i18n="vault_science_articles_title">&#937; THE 11 IMMUTABLE ARTICLES OF ABSOLUTE SOVEREIGNTY</div>
-      <div style="margin:0 0 16px;padding:12px 16px;border:1px solid rgba(139,0,0,.35);background:rgba(139,0,0,.08);border-radius:2px;font-family:var(--M);font-size:12px;letter-spacing:.6px;line-height:1.7;color:var(--ink)">
-        <b style="color:#E2967A">&#9888; DESIGN, NOT LIVE STATUS.</b> These 11 Articles are the platform's governance <i>design</i> —
-        real and documented (matching <code>sovereign-covenant.html</code>), but "sealed into the Genesis Block"
-        and "hash-chained" describe a mechanism not yet built: no article is currently hash-chained, and the
-        Article II token stake is dormant (<code>platform_settings.tokens_enabled=false</code>). Read as
-        roadmap, not present-tense fact.
+      <div class="sechead sechead-gold">GOVERNANCE ACCESS</div>
+      <div style="margin:0 0 16px;padding:14px 16px;border:1px solid var(--line);background:rgba(201,168,76,.03);border-radius:2px;font-family:var(--M);font-size:12px;letter-spacing:.6px;line-height:1.7;color:var(--ink)">
+        Owner identity and reserved-control documents are restricted to the owner governance workspace. This Vault page remains focused on account-authorized holdings, reserve views and ledger evidence.
+        <a id="vault-covenant-link" href="/sovereign-covenant.html" style="display:none;align-items:center;gap:8px;margin-top:12px;padding:10px 14px;border:1px solid rgba(201,168,76,.35);color:var(--gold);text-decoration:none">OPEN SOVEREIGN COVENANT ↗</a>
       </div>
-      <div class="articles-grid" id="articles-grid" data-loading data-omega-orbital="articles"></div>
     </div>
 
     </div><!-- end tab-panels -->
@@ -394,39 +390,7 @@ function setTab(name){
 </script>
 
 <!-- ── ARTICLES RENDERER ──────────────────────────────────────────────── -->
-<script>
-(function(){
-  var ARTS=[
-    {n:"I",  title:"ABSOLUTE OWNERSHIP",   col:"#C9A84C",text:"100% absolute ownership — no co-founders, no partners, no shareholders. Ownership and reserved-control details are restricted to the owner governance workspace."},
-    {n:"II", title:"MASTER STAKE",         col:"#E2C86D",text:"51% Master Stake — 467,756,700,000 Ω permanently locked in the Sovereign Vault. This stake cannot be diluted, transferred, or overridden by any mechanism or jurisdiction."},
-    {n:"III",title:"IRREVOCABLE PROPERTY", col:"#C9A84C",text:"Irrevocable Property Documents hashed into the Genesis Block. All intellectual property, code, design, architecture, and platform identity belongs exclusively to the Sovereign Founder."},
-    {n:"IV", title:"SOVEREIGN DIRECTIVE",  col:"#E2C86D",text:"The 999-Point Blueprint is sealed in the Immutable Ledger. Every module, phase, and governance rule follows the sovereign directive — unchanged and unchangeable."},
-    {n:"V",  title:"AUTHORITY FORMULA",    col:"#00E5FF",text:"AUTH=√(A³+B³+C³)×φ/e. Apex=27.8367. This formula is the permanent engine of progression. A³=B³=C³=729 at peak. The Sovereign Founder holds AUTH=27.8367 permanently."},
-    {n:"VI", title:"THE 9×9×9 LATTICE",col:"#9B6BF0",text:"729 inner nodes. The Plane. Nested within 12×12×9³=104,976 canonical nodes. The lattice is the spine of all progression, certification, and achievement in the platform."},
-    {n:"VII",title:"TRIAL SOVEREIGNTY",    col:"#C9A84C",text:"Only the Sovereign Founder may grant, extend, renew, revoke, reject, or make permanent any access. Trial duration: 9 minutes 17 seconds. No authority supersedes the Founder's directive."},
-    {n:"VIII",title:"DEDICATION LAW",      col:"#E2C86D",text:"Members must dedicate a minimum of 9 hours, 17 minutes, and 17 seconds (33,437 seconds) per day to the platform to advance their standing and rank among peers."},
-    {n:"IX", title:"TOKEN SOVEREIGNTY",    col:"#C9A84C",text:"12 sovereign token types, one per track, one per zodiac sign. ARENITE is the Founder Token — permanently held at apex by the Sovereign Founder. The token economy is dormant until legal review is complete."},
-    {n:"X",  title:"COVENANT IMMUTABILITY",col:"#00E5FF",text:"These 11 Articles cannot be amended, overridden, diluted, or circumvented by any party, technology, jurisdiction, or future decision. They are sealed at genesis and remain so in perpetuity."},
-    {n:"XI", title:"ABSOLUTE FINALITY",    col:"#8B0000",text:"The Sovereign Founder's word is final on all matters of platform governance, architecture, design, legal, financial, and operational decisions. There is no appeal, no override, no exception."}
-  ];
-  function renderArts(){
-    var grid=document.getElementById('articles-grid');
-    if(!grid)return;
-    grid.innerHTML='';
-    ARTS.forEach(function(a){
-      var card=document.createElement('div');
-      card.className='article-card card';
-      var num=document.createElement('div');num.className='art-n';num.textContent=a.n;
-      var title=document.createElement('div');title.className='art-title';title.style.color=a.col;title.textContent='ARTICLE '+a.n+' — '+a.title.toUpperCase();
-      var text=document.createElement('div');text.className='art-text';text.textContent=a.text;
-      card.appendChild(num);card.appendChild(title);card.appendChild(text);
-      grid.appendChild(card);
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',renderArts);
-  else renderArts();
-})();
-</script>
+
 
 <!-- ── MAIN MODULE ────────────────────────────────────────────────────── -->
 <script type="module">
@@ -442,6 +406,8 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
     if(!sess){location.replace('/account.html');return;}
     var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
+    var covenantLink=document.getElementById('vault-covenant-link');
+    if(covenantLink&&pr.is_owner)covenantLink.style.display='inline-flex';
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
 
     document.getElementById('app').style.display='flex';

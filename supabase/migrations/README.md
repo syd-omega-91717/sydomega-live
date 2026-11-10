@@ -10,16 +10,18 @@ This directory is the canonical, ordered, automatically-appliable schema history
 
 The repository contains timestamped reconciliation migrations for changes that were historically applied directly to the live database. Those files preserve the recorded migration versions so `supabase db push` does not encounter `Remote migration versions not found in local migrations directory`.
 
-## Current provider-verified state — 2026-10-24
+## Current provider-verified state — 2026-11-10
 
-- The live Supabase migration ledger contains **409 applied versions**; the latest recorded version is `20261024102602_harden_provider_registry_column_access`.
-- `supabase/remote-migrations.json` is being reconciled in the current follow-up to the provider-confirmed 409-version ledger. The local migration directory remains 409 files after renaming the provider-registry migration to its actual applied version. The pending registry is empty in this reconciliation branch; the full fresh-database replay is a required merge gate.
-- The Stripe zero-decimal settlement migration `20261024091500` and provider-registry column-access migration `20261024102602` are applied in production. The live `omega_private.record_stripe_payment` definition was verified against the currency conversion source, with service-role-only execute access.
-- The provider registry privilege boundary is live and verified: authenticated has no table-wide SELECT and can read only `id`, `provider_key`, `display_name`, `adapter_kind`, `capabilities`, and `status`. Authenticated SELECT is denied for `secret_ref`, `metadata`, `created_at`, and `updated_at`; `service_role` retains `secret_ref` SELECT for server-side workers.
-- The provider ledger briefly contained duplicate entries named `harden_provider_registry_column_access` at `20261024101622` and `20261024102602`. The earlier row was confirmed to have no persistent privilege effect and was removed by a guarded history-only repair after checking the live grants and confirming the later applied row. No application data or schema objects were changed by that repair; the current provider ledger has only `20261024102602`.
-- PR #1072 introduced a duplicate pending version and malformed source allowlist, which caused migration inventory/replay and release-readiness checks to fail. That malformed source was not applied to production. The current reconciliation restores the source file to the provider-confirmed version and requires a fresh isolated replay before it can merge.
+- The live Supabase migration ledger contains **415 unique recorded versions**; the latest is `20261104090000_financial_rows_survive_account_deletion`.
+- The provider inventory exactly reconciles with the prior repository snapshot plus its two pending entries: 413 previously recorded + 2 provider-confirmed = 415 live. `supabase/remote-migrations.json` now records all 415; `supabase/pending-migrations.json` is empty.
+- Provider history confirms `20261103230000_erasure_pipeline_dormant` and `20261104090000_financial_rows_survive_account_deletion` are recorded as applied. This confirms migration-ledger presence, not byte-for-byte SQL parity or every downstream business behavior.
+- Read-only production SQL confirms the erasure tables and functions exist; `private.erasure_policy` contains **0 rows**, `erasure_worker_enabled=false`, `erasure_delay_days=14`, the `pg_cron` extension exists, and there is **no erasure cron job**.
+- Read-only production SQL confirms the three D1 financial tables (`commission_contracts`, `sovereign_points_ledger`, `omega_service_orders`) have nullable `user_id` columns and foreign keys using `ON DELETE SET NULL`. No rows were changed by these checks.
+- Read-only privilege probes confirm `private.purge_user_data(uuid)` and `private.run_erasure_queue()` are not executable by `anon`, `authenticated`, or `service_role`. The erasure engine remains intentionally dormant; do not activate it while the policy table is empty and legal/data-classification review remains incomplete.
+- The full fresh-database replay and semantic policy review remain required. A provider ledger entry does not prove every SQL statement is equivalent to the intended source or that account deletion is safe end-to-end.
+- The Stripe zero-decimal settlement migration `20261024091500` and provider-registry column-access migration `20261024102602` remain recorded as applied. The live `omega_private.record_stripe_payment` definition was previously verified against the currency conversion source, with service-role-only execute access.
+- The provider registry privilege boundary was previously verified: authenticated has no table-wide SELECT and can read only `id`, `provider_key`, `display_name`, `adapter_kind`, `capabilities`, and `status`. Authenticated SELECT is denied for `secret_ref`, `metadata`, `created_at`, and `updated_at`; `service_role` retains `secret_ref` SELECT for server-side workers.
 - Migration-history parity is a point-in-time fact. Continue to require fresh migration replay, policy/grant tests, and provider-side verification for future migrations.
-- The dated sections below are historical snapshots. Their counts and deployment states apply only to the commits and dates named in those sections; use this current provider-verified state for present status.
 
 ## Verification
 

@@ -32,15 +32,9 @@ project's own established convention (security/data-integrity first).
   until 2026-10-19 and nothing after (queried 2026-11-05), because production is served by Cloudflare Pages. Any decision
   to retire pages is therefore blind. Enable Cloudflare Web Analytics on the `sydomega` Pages project, then revisit
   `docs/PLATFORM_SIMPLIFICATION_PLAN.md` (15 sections to 8 proposed, nothing deleted).
-- **OPEN 2026-11-04 — erasure engine merged dormant; its migration is not yet recorded as applied.**
-  `20261103230000_erasure_pipeline_dormant.sql` merged in #1156 (`7895655`). It is registered
-  `PENDING_REVIEW` in `supabase/pending-migrations.json`, so `migration-drift.py` fails the push-time
-  `readiness` job on `main` ("a release may not ship a pending migration"): red on #1156 only, green on every
-  merge before it (measured 2026-11-04). Clearing it needs provider evidence (`list_migrations` on
-  `ydqhzvvoyufiiqvzcjns`) and the entry moved to `remote-migrations.json`. This session's Supabase connector
-  could not see production (it listed only `nvgedlxlkdzvcelimbvq`), so neither the apply nor the follow-up was
-  verified. The engine is inert (worker flag false, policy empty, no cron job, no API grants); the
-  production gate is `docs/legal/ERASURE_ROLLBACK_TEST.sql`. Plan and decisions: `docs/legal/ERASURE_PLAN.md`.
+- **CLOSED 2026-11-10 — provider migration ledger and D1 financial retention schema reconciled; erasure remains dormant.**
+  Authenticated Supabase `list_migrations` on the configured production project returned **415 unique versions**; the set exactly matched the previous 413-version remote snapshot plus the two entries previously marked pending. `20261103230000` and `20261104090000` are now recorded in `remote-migrations.json`; `pending-migrations.json` is empty. Read-only production SQL verified the erasure tables/functions exist, `private.erasure_policy` has 0 rows, `erasure_worker_enabled=false`, delay is 14 days, `pg_cron` exists but no erasure job is scheduled, and neither erasure function is executable by anon/authenticated/service_role. The three D1 financial tables now have nullable `user_id` columns and `ON DELETE SET NULL` foreign keys. No production rows were modified.
+  **Remaining gap:** this closes the migration-history mismatch and verifies the D1 foreign-key shape; it does not complete table-by-table erasure classification, legal retention review, account-deletion end-to-end testing, or safe activation. Keep the worker disabled until `private.erasure_policy` is populated and independently reviewed.
 - **OPEN 2026-11-04 — the GitHub Pages failover `build` job failed on every merge to `main`
   (measured #1148 to #1157); fix written, not yet seen working.** It is `omega-static-failover.yml`: the
   workflow pinned `actions/upload-pages-artifact` to a SHA, but that composite action calls

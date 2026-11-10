@@ -1,27 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
-  "policy": "A source migration absent from live history must be explicitly pending; it must never be represented as applied in remote-migrations.json without provider evidence.",
-  "pending": [
-    {
-      "version": "20261103230000",
-      "file": "20261103230000_erasure_pipeline_dormant.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "summary": "Dormant erasure engine: private.erasure_policy (empty), private.erasure_log, private.purge_user_data, private.run_erasure_queue, two platform_settings flags (worker off, delay 14). No cron job, no change to request_account_erasure or delete_account, no grants to any API role.",
-      "evidence": "scripts/tests/erasure_pipeline_test.sql passes on a local PostgreSQL 16 against a synthetic schema, and six deliberate breakages of the engine each fail the check meant to catch them. Not run against the production schema.",
-      "plan": "docs/legal/ERASURE_PLAN.md"
-    },
-    {
-      "version": "20261104090000",
-      "file": "20261104090000_financial_rows_survive_account_deletion.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "summary": "Decision D1: commission_contracts, sovereign_points_ledger and omega_service_orders keep their rows when the member is deleted. user_id becomes nullable and the foreign key to auth.users becomes ON DELETE SET NULL (was CASCADE, CASCADE and RESTRICT). Reads and writes no row. Changes what the existing delete_account() leaves behind for these three tables.",
-      "evidence": "Applied to a local PostgreSQL 16 replica built by replaying all 414 migrations: the three foreign keys read ON DELETE SET NULL, user_id is nullable, and deleting an auth user keeps one row in each table with user_id NULL (an order that previously blocked deletion included). Replica uses stand-ins for Supabase roles and extensions; not run against production, whose real keys are unknown until docs/runtime/production-facts.sql is run.",
-      "plan": "docs/legal/ERASURE_PLAN.md"
-    }
-  ]
+  "policy": "A source migration absent from live history must be explicitly pending. Provider-applied versions belong in remote-migrations.json. A ledger entry alone does not prove the migration's intended behavior has been independently verified.",
+  "pending": []
 }

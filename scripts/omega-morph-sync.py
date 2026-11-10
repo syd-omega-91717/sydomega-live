@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Keep the Ω MORPH view-transition block identical in every canonical root page's <head>.
+"""Keep the Ω MORPH view-transition block identical in every root page's <head>.
 
 Cross-document View Transitions need BOTH documents to opt in, and the incoming
 one must have opted in by its first rendering opportunity. bg.js injects its
@@ -14,7 +14,6 @@ Usage:
   python3 scripts/omega-morph-sync.py          rewrite pages so each carries BLOCK
   python3 scripts/omega-morph-sync.py --check  exit 1 if any page lacks it or drifted
 """
-import json
 import re
 import sys
 from pathlib import Path
@@ -22,7 +21,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 START = "<!-- omega-morph:start -->"
 END = "<!-- omega-morph:end -->"
-REDIRECTS = set(json.loads((ROOT / "config/page-cores.json").read_text(encoding="utf-8")).get("redirects", {}))
 
 # The dark first-paint background: the incoming page used to paint one frame on
 # the browser's default white before any dark style loaded (measured in a
@@ -51,7 +49,7 @@ CHARSET = re.compile(r"<meta\s+charset=[^>]*>", re.I)
 
 
 def pages():
-    return sorted(p for p in ROOT.glob("*.html") if p.stem not in REDIRECTS)
+    return sorted(ROOT.glob("*.html"))
 
 
 def apply(text):
@@ -83,7 +81,7 @@ def main():
             print("OMEGA MORPH: FAIL -- %d page(s) missing or drifted: %s" % (len(bad), ", ".join(bad[:10])))
             print("  Fix: python3 scripts/omega-morph-sync.py")
             return 1
-        print("OMEGA MORPH: PASS -- %d canonical pages carry the view-transition block" % len(pages()))
+        print("OMEGA MORPH: PASS -- %d pages carry the view-transition block" % len(pages()))
         return 0
     print("OMEGA MORPH: wrote %d page(s)" % len(bad))
     return 0

@@ -2,15 +2,8 @@ name: Page Content and Purpose Audit
 
 # Advisory-only quality reports: visible-copy repetition and semantic page-purpose overlap
 # answer different questions. The purpose audit is O(n^2) over the page estate.
-# Reports run on relevant PRs, nightly and on demand; they do not gate merges.
+# Reports run nightly and on demand; they do not gate merges.
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '**/*.html'
-      - 'scripts/page-copy-audit.py'
-      - 'scripts/page-consolidation.py'
-      - 'config/page-cores.json'
   schedule:
     - cron: '30 4 * * *'
   workflow_dispatch:

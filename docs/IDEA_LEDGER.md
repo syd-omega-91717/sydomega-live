@@ -13,11 +13,11 @@ production serves it.
 | NEEDS_DECISION | 16 |
 | PROPOSED | 18 |
 | PARTIAL | 56 |
-| OPEN_GAP | 24 |
+| OPEN_GAP | 23 |
 | DORMANT | 1 |
 | SHIPPED | 45 |
 | DECIDED | 42 |
-| CLOSED | 17 |
+| CLOSED | 18 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
 | REJECTED | 118 |
@@ -78,7 +78,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | F26 | FEATURE_IDEAS.md | 3D Environment Integration & Real-Time Geometry Binding (COSMOS / ASCEND / IDENTITY) — proposal | omega-sculpture.js delivers real-time geometry (entries 32, 35, 36); data-bound geometry beyond those scenes is not built |
 | B001 | 999 blueprint [INTELLIGENCE] | 100% Core Ownership: Every line of code, every pixel, and every neural weight of the SYD OMEGA 91717 platform… | code-level ownership is profiles.is_owner + is_platform_owner() (CLAUDE.md §1); legal title is outside code |
 | B005 | 999 blueprint [INTELLIGENCE] | Windsurf Permanent Directive: The core system instructions (like these 999 points) are written in an "Immutab… | the autonomous pipeline never merges to main and never flips a flag (CLAUDE.md §10); the weekly idea routine opens draft PRs only |
-| B006 | 999 blueprint [PRODUCT] | 🔱 Abolition Decree: The system scans all user inputs. Any attempt to use the trident sign 🔱 triggers an immed… | scripts/brand-glyph-check.py fails CI on U+1F531 (inside its U+1F300-1F64F range) in any shipped file; member input is not policed |
+| B006 | 999 blueprint [PRODUCT] | 🔱 Abolition Decree: The system scans all user inputs. Any attempt to use the trident sign 🔱 triggers an imm… | scripts/brand-glyph-check.py fails CI on U+1F531 (inside its U+1F300-1F64F range) in any shipped file; member input is not policed |
 | B010 | 999 blueprint [INTELLIGENCE] | The 10-Step Rule: For every feature a competitor (like Google or OpenAI) releases, the Ω-Historian must gener… | web-trend-scout skill + weekly idea routine produce proposals; no 10-per-competitor-release rule |
 | B011 | 999 blueprint [INTELLIGENCE] | Recursive Self-Audit: The Auditor Agent (Agent 10) spends 100% of its idle cycles looking for logic-leaks in… | 41-gate contract suite + CI audits run on every change; not an idle-cycle agent |
 | B016 | 999 blueprint [ECONOMIC_R&D] | 729-Point Depth: Each "Point" in the 9x9x9 cube is a specific life-skill or financial milestone. To reach the… | matrix.html renders the 9x9x9 = 729-node matrix from profiles.axis_a/b/c (matrix.html:266, :536) |
@@ -91,7 +91,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B030 | 999 blueprint [DESIGN_CONCEPT] | Visual Analysis Code Mandate: Every image is accompanied by a .py script that describes its exact geometry an… | imagery is procedural SVG/canvas generated from code (image-pipeline skill), so the code is the source |
 | B032 | 999 blueprint [ECONOMIC_R&D] | Image Memory: The system indexes every pixel generated since 2025. If you ask for "the same gold from last De… | palette tokens live once in css/omega-system.css + theme.js (CLAUDE.md §4); no per-pixel history |
 | B044 | 999 blueprint [ECONOMIC_R&D] | The Forge of Competition: A PvP (Peer-vs-Peer) logic arena. Users compete to solve "Universal Fulfillment" qu… | forge.html runs FORGE TRIALS; bounties and arena fees are money -> owner decision |
-| B047 | 999 blueprint [R&D_OR_LORE] | Sentinel (Agent 1): The "Firewall." It monitors every packet of data. If it detects a 🔱 symbol or a hostile A… | security is RLS on every table, CSP, secret and service-role scans (CLAUDE.md §5, §7); no IP blacklists or orbital nodes |
+| B047 | 999 blueprint [R&D_OR_LORE] | Sentinel (Agent 1): The "Firewall." It monitors every packet of data. If it detects a 🔱 symbol or a hostile… | security is RLS on every table, CSP, secret and service-role scans (CLAUDE.md §5, §7); no IP blacklists or orbital nodes |
 | B049 | 999 blueprint [INTELLIGENCE] | Historian (Agent 3): The "Archivist." It documents every "Little Idea" you have. It ensures that the "Visual… | chronicle.html is the member timeline; docs/IDEA_LEDGER.md is the idea archive |
 | B050 | 999 blueprint [INTELLIGENCE] | Tutor (Agent 4): The "Education Lead." It manages the Stage 1-9 Academy. It adapts the "Mental Profile Alignm… | academy.html / courses.html / flashcard.html are the Tutor surfaces |
 | B053 | 999 blueprint [INTELLIGENCE] | Oracle (Agent 7): The "Bridge." It connects the user’s Birth-Sync to the search engine. It predicts "Lucky Wi… | horoscope.html renders sign profiles; "lucky windows" are entertainment, not advice |
@@ -132,14 +132,13 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (24)
+### OPEN_GAP (23)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | G01 | GAP_ANALYSIS.md S | the owner's rule "nothing is visible without prior approval" does not hold for Studios text, and cannot hold… | GAP_ANALYSIS.md section S |
 | G02 | GAP_ANALYSIS.md S | five pages the menu links have no dock; one of the original three navigation faults remains open. | GAP_ANALYSIS.md section S |
 | G03 | GAP_ANALYSIS.md S | no page-usage data since the Cloudflare cutover. Vercel Analytics recorded 3 to 9 visitors a day | GAP_ANALYSIS.md section S |
-| G04 | GAP_ANALYSIS.md S | erasure engine merged dormant; its migration is not yet recorded as applied. | GAP_ANALYSIS.md section S |
 | G05 | GAP_ANALYSIS.md S | the GitHub Pages failover `build` job failed on every merge to `main` | GAP_ANALYSIS.md section S |
 | G06 | GAP_ANALYSIS.md S | Twelve Data's terms do not permit showing quotes to members without a Redistribution | GAP_ANALYSIS.md section S |
 | G07 | GAP_ANALYSIS.md S | page sprawl against real use. 239 pages; 70 opened ever | GAP_ANALYSIS.md section S |
@@ -264,10 +263,11 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
-### CLOSED (17)
+### CLOSED (18)
 
 | id | source | idea | evidence |
 |---|---|---|---|
+| G04 | GAP_ANALYSIS.md S | provider migration ledger and D1 financial retention schema reconciled; erasure remains dormant. | GAP_ANALYSIS.md section S |
 | G14 | GAP_ANALYSIS.md S | was: `omega_platform_events.event_id` is NOT NULL with no default live. 7 rows, | GAP_ANALYSIS.md section S |
 | G15 | GAP_ANALYSIS.md S | was: `omega_record_world_action` cannot write its event (42501). It is | GAP_ANALYSIS.md section S |
 | G16 | GAP_ANALYSIS.md S | 2026-10-17 (`20261017093038` + `20261017093316`, `stripe-webhook` v6; verified live | GAP_ANALYSIS.md section S |

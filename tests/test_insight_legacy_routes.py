@@ -49,7 +49,8 @@ class InsightLegacyRouteTests(unittest.TestCase):
     def test_graph_constellation_and_owner_admin_remain_separate(self):
         graph = (ROOT / "graph.html").read_text(encoding="utf-8")
         admin = (ROOT / "graph-admin.html").read_text(encoding="utf-8")
-        self.assertNotIn("location.replace", graph)
+        self.assertNotIn("insight.html?lens=", graph)
+        self.assertIn("CONSTELLATION GRAPH", graph)
         self.assertIn("GRAPH ADMIN", admin)
 
     def test_navigation_and_workspace_expose_one_graph_destination(self):

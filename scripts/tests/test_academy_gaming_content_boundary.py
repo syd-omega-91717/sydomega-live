@@ -10,7 +10,7 @@ GAMING = (ROOT / "gaming.html").read_text(encoding="utf-8")
 class AcademyGamingBoundaryTests(unittest.TestCase):
     def test_gaming_routes_exam_catalogue_to_academy(self):
         self.assertIn('href="/academy.html"', GAMING)
-        self.assertIn("ONE EXAM CATALOGUE · ONE PROGRESS RECORD", GAMING)
+        self.assertIn("Exam pathways and assessment cards have one home in Sovereign Academy", GAMING)
         self.assertNotIn('id="tab-exams"', GAMING)
         self.assertNotIn('data-tab="exams"', GAMING)
 

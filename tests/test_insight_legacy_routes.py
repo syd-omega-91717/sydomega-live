@@ -45,6 +45,8 @@ class InsightLegacyRouteTests(unittest.TestCase):
             self.assertIn(marker, js)
         self.assertIn("relationship.source_entity_id", js)
         self.assertIn("relationship.target_entity_id", js)
+        self.assertIn("current[1] >= maxDepth", js)
+        self.assertIn("Math.min(5", js)
 
     def test_graph_constellation_and_owner_admin_remain_separate(self):
         graph = (ROOT / "graph.html").read_text(encoding="utf-8")

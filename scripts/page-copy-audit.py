@@ -3,7 +3,7 @@
 
 This is an evidence report, not an auto-rewriter. It extracts visible content
 blocks from each page, excludes shared chrome and executable/style content,
-and reports exact repeated prose separately from repeated calls to action.
+and reports exact/near-duplicate prose separately from repeated calls to action.
 
 Usage:
   python3 scripts/page-copy-audit.py
@@ -278,7 +278,7 @@ def build_report(root: Path, min_words: int = 8, near_min_words: int = 20, near_
         "unused_allowlist_entries": unused_allowlist,
         "allowlist_scope_mismatches": allowlist_scope_mismatches,
         "scan_errors": errors,
-        "truth_note": "Exact text repetition is a review signal, not proof of an error. Shared legal copy, standard controls, and intentionally repeated instructions may be justified.",
+        "truth_note": "Exact and lexical near-duplicate text are review signals, not proof of an error. Shared legal copy, standard controls, and intentionally repeated instructions may be justified.",
     }
 
 

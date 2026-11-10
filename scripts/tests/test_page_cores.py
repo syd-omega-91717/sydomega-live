@@ -5,7 +5,7 @@ Contract for config/page-cores.json -- the target shape of the estate.
 The estate grew to 240 pages while 70 were ever opened (platform_events,
 2026-10-17). page-cores.json assigns every root page to exactly one core (one
 page that absorbs the others as lenses, tabs or panels) or to the short
-`system` list. These tests keep that true as pages come and go:
+`system` list or an explicit compatibility redirect. These tests keep that true as pages come and go:
 
   - a new page must be placed in a core before it can ship, so sprawl has to
     be a decision, not a side effect;
@@ -39,6 +39,9 @@ class PageCoresContract(unittest.TestCase):
                 self.owner[page] = core
         for page in self.doc["system"]["pages"]:
             self.assertNotIn(page, self.owner, "%s is both a core page and a system page" % page)
+            self.owner[page] = None
+        for page in self.doc.get("redirects", {}):
+            self.assertNotIn(page, self.owner, "%s is both a canonical page and a redirect" % page)
             self.owner[page] = None
 
     def test_every_page_belongs_somewhere(self):

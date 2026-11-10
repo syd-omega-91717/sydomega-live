@@ -15,7 +15,7 @@ The following source-level corrections have since been made on the page-copy aud
 - `academy.html` is the single owner of the exam and certification catalogue; `gaming.html` now links to Academy and retains only mastery/play cards.
 - The full authority calculation and gate definitions have one canonical reference in `evolution.html`; related pages retain their own live data or purpose-specific explanations.
 - The Vault no longer repeats the owner-only Covenant article catalogue. Its Covenant link is revealed only after the authenticated profile is verified as owner.
-- Founder identification was removed from member-facing Vault content and the founder LinkedIn card on Profile is hidden unless the authenticated profile is the owner.
+- Founder identification was removed from member-facing Vault and Profile content. Owner identification remains on owner-only governance and approval surfaces.
 - Honors, Approvals, Dashboard, Academy, Gaming and Vault now use page-specific content instead of repeating the same formula/gate explanation.
 - Exact duplicate checks are protected by regression tests for catalogue ownership, owner identity boundaries and the canonical progression reference.
 

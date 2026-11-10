@@ -121,7 +121,7 @@
       x: 180, y: 220, 'text-anchor': 'middle',
       fill: '#E8C766', 'font-family': 'Cinzel,serif', 'font-size': 10
     });
-    total.textContent = summary.PASS + ' VERIFIED IN SOURCE';
+    total.textContent = summary.PASS + ' PASS DECLARED';
     svg.appendChild(total);
     return svg;
   }

@@ -181,7 +181,8 @@ class PageCopyAuditTests(unittest.TestCase):
         self.assertTrue(academy_tasks)
         self.assertFalse(academy_tasks & gaming_tasks, "academy and gaming must not render the same task cards")
         self.assertIn('href="/academy.html"', gaming)
-        self.assertIn('id="tab-exams"', gaming)
+        self.assertIn('<a class="tab-btn exam-tab" href="/academy.html"', gaming)
+        self.assertNotIn('id="tab-exams"', gaming)
         for obsolete_panel in ("tab-stem", "tab-professional", "tab-technology", "tab-healthcare", "tab-sovereign_e"):
             self.assertNotIn('id="' + obsolete_panel + '"', gaming)
 

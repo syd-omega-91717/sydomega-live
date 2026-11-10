@@ -3,6 +3,11 @@
 Snapshot of 2026-11-08 over 242 pages. Reproduce the evidence with `python3 scripts/page-consolidation.py`. **Updates: 2026-11-08 — `breath` + `meditate` merged without deleting their URLs; 2026-11-11 — six knowledge-graph routes consolidated into `insight.html` with compatibility redirects. Remaining rows are recommendations, not completed work.** Why nothing here was merged before: a page merge touches the menu, `nav.js`'s section map, `config/page-cores.json`, the page-contract registries, six language packs, the service-worker precache, the page-count claims and every link that points at the old address, and it needs a redirect so no bookmark breaks. That is a project to approve one batch at a time, not something to do while also fixing bugs.
 
 ## Method, and a mistake worth recording
+
+The current evidence-based page-purpose audit is implemented in scripts/page-consolidation.py. It scores visible main content and headings, rare data sources, explicit task/capability markers, and uncommon internal destinations. It excludes scripts, styles, hidden content, shared navigation/chrome, ubiquitous tables, and ubiquitous links. It reports the component scores and supporting source evidence rather than comparing raw HTML and JavaScript.
+
+The audit is advisory. A high score is a request for human review, not permission to merge pages. Each candidate still needs a distinct-user-job comparison, authorization/data ownership review, inbound-link analysis, route preservation, and browser regression coverage. The nightly/on-demand workflow publishes the report in the GitHub Actions summary; the deterministic extraction tests are included in the blocking contract suite.
+
 The first attempt (score every pair on raw text and shared database tables) reported **316 candidate pairs**, and nearly all were false: two pages scored 0.77 because both carry the same page chrome and both read the `profiles` table. Removing the noise (TF-IDF word weights across the whole estate; ignoring tables that more than 12% of pages touch) left **21**, and only about eight of those are real merge candidates. The existing `scripts/page-overlap-audit.py` has the same flaw (it compares 1,200 characters of raw text including inline CSS and JavaScript), so its "advisory PASS" says nothing about duplication.
 
 ## Already one (keep it one)

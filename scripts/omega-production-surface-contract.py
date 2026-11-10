@@ -6,11 +6,13 @@ not only source pages, so build-time normalization is part of the contract.
 """
 
 from pathlib import Path
+import json
 import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
+REDIRECTS = set(json.loads((ROOT / "config/page-cores.json").read_text(encoding="utf-8")).get("redirects", {}))
 SYSTEM = {
     "offline.html","404.html","healthz.html",
     "pending.html",
@@ -74,7 +76,7 @@ def main():
 
         # Navigation may be emitted by nav.js rather than literal <nav>.
         # Accept both canonical markup and the repository's runtime hooks.
-        if rel not in SYSTEM and not re.search(
+        if rel not in SYSTEM and page.stem not in REDIRECTS and not re.search(
             r'<nav\b|omega-side|omega-nav|nav\.js|data-omega-nav|class=["\'][^"\']*(?:topbar|sidebar|navigation)[^"\']*["\']',
             text, re.I
         ):

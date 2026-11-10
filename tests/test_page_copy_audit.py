@@ -210,6 +210,7 @@ class PageCopyAuditTests(unittest.TestCase):
             rendered = MODULE.markdown(report)
             self.assertIn("review signal", rendered)
             self.assertIn("Pages scanned", rendered)
+            self.assertIn("Near-duplicate prose candidates", rendered)
 
 
     def test_founder_identity_is_confined_to_owner_surfaces(self):
@@ -227,7 +228,7 @@ class PageCopyAuditTests(unittest.TestCase):
         self.assertIn("idfFull.textContent=isOwner?'Sleiman Youssef Dagher'", profile)
         self.assertIn("document.getElementById('owner-only-identity').style.display='';", profile)
         self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", profile)
-        self.assertIn("d.is_owner?'S.Y.D'", profile)
+        self.assertIn("idfAbbrev.textContent=isOwner?'S.Y.D'", profile)
         self.assertIn("Sleiman Youssef Dagher", approvals)
         self.assertIn("if(!pr||!pr.is_owner)", approvals_js)
 
@@ -256,7 +257,6 @@ class PageCopyAuditTests(unittest.TestCase):
         for obsolete_panel in ("tab-stem", "tab-professional", "tab-technology", "tab-healthcare", "tab-sovereign_e"):
             self.assertNotIn('id="' + obsolete_panel + '"', gaming)
 
-            self.assertIn("Near-duplicate prose candidates", rendered)
 
 
 if __name__ == "__main__":

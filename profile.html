@@ -519,7 +519,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
     <div class="tab-panel" id="tab-identity">
       <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_identity_official">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
-        <div class="id-field"><div class="idf-label" data-i18n="prof_label_full_name">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_full_name">PUBLIC IDENTITY</div><div class="idf-val" id="idf-fullname">--</div></div>
         <div id="owner-only-identity" style="display:none">
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_father_name">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_mother_name">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
@@ -1755,7 +1755,7 @@ async function boot(){
     Sagittarius:{agentKey:'profile_agent_beacon',tokenKey:'token_ember',elementKey:'element_fire'},Capricorn:{agentKey:'profile_agent_analyst',tokenKey:'token_ferrum',elementKey:'element_metal'},
     Aquarius:{agentKey:'profile_agent_tutor',tokenKey:'token_prime',elementKey:'element_wind'},Pisces:{agentKey:'profile_agent_historian',tokenKey:'token_abyss',elementKey:'element_water'},
   };
-  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'OWNER PROFILE':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'S.Y.D':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
   var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){
@@ -2300,7 +2300,7 @@ async function bootCharacterFull(){
   }
   if(ch){
     document.getElementById('cm-sign').textContent=sign.toUpperCase()+' . '+ch.archetype;
-    document.getElementById('cm-name').textContent=d.display_name||ch.name;
+    document.getElementById('cm-name').textContent=d.is_owner?'S.Y.D':(d.display_name||ch.name);
     document.getElementById('cm-role').textContent=ch.role;
     const traits=document.getElementById('cm-traits');
     ch.traits.forEach(t=>{const s=document.createElement('span');s.className='cm-trait';s.textContent=t;traits.appendChild(s);});
@@ -2434,7 +2434,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 var ppSb=sb;
 let ppUid=null;
 
-const PP_RANKS=['Initiate','Seeker','Strategist','Master','Omega Elite','Visionary','Architect','Sovereign','Universal Omega'];
+const PP_RANKS=['Initiate','Seeker','Strategist','Master','Omega Elite','Visionary','Architect','Sovereign','Universal S.Y.D'];
 const PP_MAT=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
 const PP_GLY={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
 const PP_AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};

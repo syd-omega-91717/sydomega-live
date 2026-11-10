@@ -25,7 +25,7 @@ A merge loses nothing only if the page being removed is a subset of the one that
 
 | Change | Canonical owner | Preserved experience |
 |---|---|---|
-| Exam and certification cards removed from the Gaming page | `academy.html` | Gaming retains playable challenges, mastery progress, and exam totals. Its science/progress surfaces link to the single Academy exam catalogue; duplicate exam cards and the unreachable legacy exam panel are removed. The two pages remain separate because learning and play are different jobs. |
+| Exam and certification cards removed from the Gaming page | `academy.html` | Gaming retains 72 game catalogue cards, mastery progress and exam totals. Academy retains the 96 exam cards. Gaming's science/progress surfaces link to the single Academy exam catalogue; 60 duplicate learning cards and the unreachable legacy exam panel are removed. The two pages remain separate because learning and play are different jobs. |
 | Authority formula and gate definitions consolidated | `evolution.html` | Evolution is the single visible canonical formula reference. Profile, Dashboard and Honors link to it; Approvals explains policy-based access rather than repeating the progression formula. |
 | Authority formula, axis explanation and gate thresholds | `evolution.html` | Profile, Honors, Approvals, Dashboard, Academy, Gaming and Vault now show their own task-specific context and link to the canonical progression model instead of repeating the full explanation. |
 | Eleven governance articles | `sovereign-covenant.html` | The member Vault no longer renders a second article catalogue; the Covenant route remains owner-only and the Vault link is revealed only after owner verification. |

@@ -23,7 +23,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", "public"}
-SKIP_TAGS = {"script", "style", "noscript", "svg", "template", "nav", "header", "footer", "aside"}
+SKIP_TAGS = {"script", "style", "noscript", "svg", "template", "nav", "footer", "aside"}
 BLOCK_TAGS = {"h1", "h2", "h3", "h4", "p", "li", "button", "a", "label", "summary", "blockquote", "dt", "dd"}
 CTA_TAGS = {"button", "a"}
 SKIP_CLASSES = {
@@ -76,6 +76,7 @@ class CopyParser(HTMLParser):
             tag in SKIP_TAGS
             or "hidden" in a
             or a.get("aria-hidden", "").lower() == "true"
+            or a.get("role", "").lower() in {"banner", "contentinfo"}
             or "data-copy-ignore" in a
             or bool(classes & SKIP_CLASSES)
         )

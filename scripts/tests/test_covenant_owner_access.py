@@ -13,6 +13,7 @@ OMEGA_USER = (ROOT / "omega-user.js").read_text(encoding="utf-8")
 PRIVACY = (ROOT / "privacy.html").read_text(encoding="utf-8")
 FAMILY = (ROOT / "family.html").read_text(encoding="utf-8")
 MATRIX = (ROOT / "matrix.html").read_text(encoding="utf-8")
+OMEGA_CANON = (ROOT / "omega-canon.json").read_text(encoding="utf-8")
 
 
 class CovenantOwnerAccessTests(unittest.TestCase):
@@ -74,6 +75,10 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertNotIn("Sleiman Youssef Dagher", OMEGA_USER)
         self.assertNotIn("full_name", OMEGA_USER)
         self.assertNotIn("order_number", OMEGA_USER)
+        self.assertNotIn("Sleiman Youssef Dagher", OMEGA_CANON)
+        self.assertNotIn("Lebanese Order of Engineers No. 30875", OMEGA_CANON)
+        self.assertIn("Public owner identity: S.Y.D", OMEGA_CANON)
+        self.assertNotIn("hashed into the Genesis Block", OMEGA_CANON)
         self.assertIn("OWNER.display_name : name", OMEGA_USER)
         self.assertIn("OWNER-ONLY ADMINISTRATION", APPROVALS)
         self.assertNotIn("S.Y.D &mdash; EXCLUSIVELY", APPROVALS)

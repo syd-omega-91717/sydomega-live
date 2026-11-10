@@ -21,6 +21,14 @@ The first attempt (score every pair on raw text and shared database tables) repo
 ## The test "without elimination" gives
 A merge loses nothing only if the page being removed is a subset of the one that stays. Measured on visible text, no candidate pair passes it: every source page has most of its lines to itself (trophies 23 of 27 lines are its own, expenses 66 of 75, levels 38 of 47, series 136 of 138). So each remaining merge is a port of real features, not a deletion, and carries the same cost `breath` + `meditate` did (about 25 files of links and registries plus a browser run). `movies` is not a stub either: it is a poster wall with hover video previews. `budget` + `expenses` already share their storage keys, which makes them the cheapest next port; `series` and `movies` into `cinema` should wait for the decision on the two film catalogues below.
 
+## De-duplicated without merging
+
+| Change | Canonical owner | Preserved experience |
+|---|---|---|
+| Exam and certification cards removed from the Gaming page | `academy.html` | Gaming retains playable challenges, mastery progress, and exam totals; its EXAMS tab now links to Academy. The two pages remain separate because learning and play are different jobs. |
+
+The Gaming page no longer renders duplicate `knowledge` task cards. Completion totals continue to come from the shared `task_completions` records, not from the presence of catalogue cards in the DOM. A regression test prevents the two pages from acquiring overlapping task-card ownership again.
+
 ## Should merge (strong evidence; each is a separate batch to approve)
 | Merge | Evidence | Pages saved |
 |---|---|---|

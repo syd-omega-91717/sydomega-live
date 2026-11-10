@@ -68,6 +68,24 @@ class PageCopyAuditTests(unittest.TestCase):
             self.assertEqual(report["block_count"], 1)
             self.assertEqual(report["cross_page_duplicate_groups"], [])
 
+    def test_explicit_allowlist_justifies_required_truth_copy(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            config = root / "config"
+            config.mkdir()
+            repeated = "Prototype · not a released game · saved in this browser only"
+            normalised = MODULE.normalise(repeated)
+            (config / "page-copy-allowlist.json").write_text(
+                __import__("json").dumps({"approved": [{"normalised_text": normalised, "reason": "Required route-level release and persistence notice."}]}),
+                encoding="utf-8",
+            )
+            self.write_page(root, "one.html", "<main><p>" + repeated + "</p></main>")
+            self.write_page(root, "two.html", "<main><p>" + repeated + "</p></main>")
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(report["cross_page_duplicate_groups"], [])
+            self.assertEqual(len(report["approved_cross_page_duplicate_groups"]), 1)
+            self.assertIn("Required route-level", report["approved_cross_page_duplicate_groups"][0]["approved_reason"])
+
     def test_pages_without_main_use_body_content_as_fallback(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)

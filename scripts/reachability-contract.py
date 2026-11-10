@@ -85,10 +85,7 @@ SYSTEM_PAGES = {
     # wired into primary navigation; part of autonomous-insights suite
     'monitoring-dashboard': 'Phase 5 autonomous monitoring, pending nav wiring',
     # Infrastructure pages not member-facing
-    'agent':               'agent configuration page, infrastructure only',
     'healthz':             'health check endpoint, not a member destination',
-    'investor-dashboard':  'investor relations page, not member-facing',
-    'venture-pipeline':    'venture pipeline tool, infrastructure only',
 }
 
 

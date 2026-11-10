@@ -35,7 +35,8 @@ The scanner:
 ## Governance
 
 - The deterministic regression tests run in the blocking contract suite.
-- The full repository scan runs in the scheduled/on-demand Page Overlap Audit workflow and is appended to the GitHub Actions job summary.
+- The full repository scan runs in the blocking contract suite as an advisory report (it fails only on scan errors, not on repeated copy) and is appended to the contract output.
+- The scheduled/on-demand Page Overlap Audit workflow also appends the report to the GitHub Actions job summary.
 - Existing title/description uniqueness remains a separate blocking contract.
 - Purpose overlap remains a separate advisory analysis in scripts/page-consolidation.py.
 - Every proposed page merge must preserve source features and data compatibility. Do not remove a page merely because its text similarity score is high.

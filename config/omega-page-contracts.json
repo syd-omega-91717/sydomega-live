@@ -7811,11 +7811,19 @@
       "path": "insight.html",
       "contract_state": "EVIDENCE_CONTRACT",
       "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; INSIGHT",
-      "data_sources": "UNVERIFIED",
+      "workspace": "intel",
+      "domain": "Intelligence",
+      "primary_role": "Member knowledge graph exploration and evidence analysis",
+      "purpose": "Canonical member graph workspace with graph, event timeline, centrality, anomaly, and evidence lenses; bounded-depth exploration and user-initiated exports. AI query/ingestion are held pending privacy and per-member cost gates.",
+      "data_sources": {
+        "supabase_tables": [
+          "graph_entities",
+          "graph_relationships",
+          "graph_events",
+          "graph_evidence"
+        ],
+        "supabase_rpcs": []
+      },
       "capabilities": [
         "UNVERIFIED"
       ],
@@ -7844,7 +7852,15 @@
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
-        "data_evidence": "UNVERIFIED",
+        "data_evidence": {
+          "supabase_tables": [
+            "graph_entities",
+            "graph_relationships",
+            "graph_events",
+            "graph_evidence"
+          ],
+          "supabase_rpcs": []
+        },
         "capability_registry_matches": [],
         "domain_candidates": []
       },
@@ -7854,9 +7870,9 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 0,
+          "buttons": 2,
           "forms": 0,
-          "inputs": 1,
+          "inputs": 2,
           "links": 1
         },
         "media_evidence": {

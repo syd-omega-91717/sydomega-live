@@ -54,8 +54,6 @@ jobs:
         run: python scripts/omega-capability-provenance-contract.py
       - name: Enforce Eternal Continuity contract
         run: python scripts/omega-eternity-contract.py
-      - name: Enforce capability provenance contract
-        run: python scripts/omega-capability-provenance-contract.py
       - name: Enforce durable event fabric contract
         run: python scripts/omega-event-fabric-contract.py
       - name: Enforce evidence graph contract

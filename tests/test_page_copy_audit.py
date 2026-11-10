@@ -126,6 +126,14 @@ class PageCopyAuditTests(unittest.TestCase):
         ids = [gate[0] for gate in gates]
         self.assertEqual(len(ids), len(set(ids)), "contract-suite.py contains a repeated gate id")
 
+    def test_readme_page_count_matches_canonical_page_contract_registry(self):
+        import json
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        registry = json.loads((ROOT / "config" / "omega-page-contracts.json").read_text(encoding="utf-8"))
+        count = registry["page_count"]
+        self.assertIn(str(count) + "-page web estate", readme)
+        self.assertIn("Web estate:** " + str(count) + " pages under page-contract governance", readme)
+
     def test_markdown_report_explains_that_repetition_is_a_review_signal(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)

@@ -1,0 +1,43 @@
+"""Owner-only access and content-boundary contracts for the Sovereign Covenant."""
+from pathlib import Path
+import unittest
+
+ROOT = Path(__file__).resolve().parents[2]
+COVENANT = (ROOT / "sovereign-covenant.html").read_text(encoding="utf-8")
+VAULT = (ROOT / "vault.html").read_text(encoding="utf-8")
+NAV = (ROOT / "nav.js").read_text(encoding="utf-8")
+
+
+class CovenantOwnerAccessTests(unittest.TestCase):
+    def test_covenant_shell_stays_hidden_until_owner_is_verified(self):
+        self.assertIn('id="app" style="display:none"', COVENANT)
+        self.assertIn('select("is_owner")', COVENANT)
+        self.assertIn('if(!profileResult.data.is_owner){location.replace("/pending.html");return;}', COVENANT)
+        self.assertIn('document.getElementById("app").style.display="flex";', COVENANT)
+
+    def test_covenant_fails_closed_when_session_or_owner_lookup_fails(self):
+        self.assertIn('if(sessionResult.error)throw sessionResult.error;', COVENANT)
+        self.assertIn('if(profileResult.error||!profileResult.data)throw new Error("Owner profile could not be verified");', COVENANT)
+        self.assertIn('location.replace("/account.html?error=covenant_unavailable");', COVENANT)
+        self.assertNotIn('catch(e){document.getElementById("app").style.display="flex";}', COVENANT)
+        self.assertNotIn('!pr.is_owner&&!pr.access_approved', COVENANT)
+
+    def test_covenant_navigation_entry_is_owner_only(self):
+        self.assertIn("['sovereign-covenant','COVENANT','/sovereign-covenant.html','owner']", NAV)
+
+    def test_member_vault_contains_no_founder_identity_or_duplicate_article_renderer(self):
+        self.assertNotIn("S.Y.D", VAULT)
+        self.assertNotIn("SOVEREIGN FOUNDER:", VAULT)
+        self.assertNotIn("var ARTS=[", VAULT)
+        self.assertNotIn("renderArts", VAULT)
+        self.assertNotIn("articles-grid", VAULT)
+        self.assertIn("Owner identity and reserved-control documents are restricted to the owner governance workspace.", VAULT)
+
+    def test_vault_exposes_covenant_link_only_to_verified_owner(self):
+        self.assertIn('id="vault-covenant-link"', VAULT)
+        self.assertIn("if(covenantLink&&pr.is_owner)covenantLink.style.display='inline-flex';", VAULT)
+        self.assertIn('href="/sovereign-covenant.html"', VAULT)
+
+
+if __name__ == "__main__":
+    unittest.main()

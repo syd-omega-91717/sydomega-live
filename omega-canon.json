@@ -80,7 +80,7 @@
     "apex_scaled": "sqrt(2187)*phi/e=27.8367",
     "apex_derivation": "A^3+B^3+C^3=2187 at apex; sqrt(2187)*1.6180339887/2.7182818285=27.836687",
     "member_genesis": "All new members start at axis_a=axis_b=axis_c=0.001. Progress by +0.001 per verified task. Apex=9.000.",
-    "owner_apex": "Owner (Sleiman Youssef Dagher) is permanently locked at axes (9.000,9.000,9.000), authority=27.8367, all 12 achievements complete."
+    "owner_apex": "Public owner identity: S.Y.D. Apex axis values are a calculated profile state, not a legal entitlement or access grant; achievement completion must be verified from member records."
   },
   "nine_fold": {
     "lattice": "9 x 9 x 9 x 9 x 9",
@@ -770,7 +770,7 @@
     {
       "n": 3,
       "title": "IRREVOCABLE PROPERTY",
-      "text": "Irrevocable Property Documents — hashed into the Genesis Block. Lebanese Order of Engineers No. 30875."
+      "text": "Intellectual-property and attribution details are maintained in owner-only governance records and executed legal instruments. No Genesis Block hash or on-chain title transfer is represented as live."
     },
     {
       "n": 4,

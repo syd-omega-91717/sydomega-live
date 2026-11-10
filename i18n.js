@@ -341,7 +341,7 @@ var T_EN={
 "prof_kpi_matrix_coord":"Matrix Coord",
 "prof_kpi_material_tier":"Material Tier",
 "prof_kpi_grade":"Grade",
-"prof_label_full_name":"Full Name",
+"prof_label_full_name":"Public Identity",
 "prof_label_father_name":"Father's Name",
 "prof_label_mother_name":"Mother's Name",
 "prof_label_dob":"Date of Birth",

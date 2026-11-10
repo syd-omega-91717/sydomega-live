@@ -76,7 +76,7 @@ class PageCopyAuditTests(unittest.TestCase):
             repeated = "Prototype · not a released game · saved in this browser only"
             normalised = MODULE.normalise(repeated)
             (config / "page-copy-allowlist.json").write_text(
-                __import__("json").dumps({"approved": [{"normalised_text": normalised, "reason": "Required route-level release and persistence notice."}]}),
+                __import__("json").dumps({"approved": [{"normalised_text": normalised, "reason": "Required route-level release and persistence notice.", "scope": ["one.html", "two.html"]}]}),
                 encoding="utf-8",
             )
             self.write_page(root, "one.html", "<main><p>" + repeated + "</p></main>")
@@ -85,6 +85,23 @@ class PageCopyAuditTests(unittest.TestCase):
             self.assertEqual(report["cross_page_duplicate_groups"], [])
             self.assertEqual(len(report["approved_cross_page_duplicate_groups"]), 1)
             self.assertIn("Required route-level", report["approved_cross_page_duplicate_groups"][0]["approved_reason"])
+
+    def test_allowlist_does_not_approve_copy_outside_its_declared_page_scope(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            config = root / "config"
+            config.mkdir()
+            normalised = MODULE.normalise(REPEATED)
+            (config / "page-copy-allowlist.json").write_text(
+                __import__("json").dumps({"approved": [{"normalised_text": normalised, "reason": "Scoped test approval.", "scope": ["one.html", "two.html", "three.html"]}]}),
+                encoding="utf-8",
+            )
+            self.write_page(root, "one.html", "<main><p>" + REPEATED + "</p></main>")
+            self.write_page(root, "two.html", "<main><p>" + REPEATED + "</p></main>")
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(len(report["cross_page_duplicate_groups"]), 1)
+            self.assertEqual(len(report["approved_cross_page_duplicate_groups"]), 0)
+            self.assertEqual(len(report["allowlist_scope_mismatches"]), 1)
 
     def test_pages_without_main_use_body_content_as_fallback(self):
         with tempfile.TemporaryDirectory() as tmp:

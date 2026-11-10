@@ -6368,7 +6368,9 @@
         "page_source": "graph-anomalies.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/omega-morph.js",
+          "/bg.js",
+          "/nav.js"
         ],
         "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
@@ -6428,7 +6430,9 @@
         "page_source": "graph-centrality.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/omega-morph.js",
+          "/bg.js",
+          "/nav.js"
         ],
         "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
@@ -6488,7 +6492,9 @@
         "page_source": "graph-evidence.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/omega-morph.js",
+          "/bg.js",
+          "/nav.js"
         ],
         "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
@@ -6548,7 +6554,9 @@
         "page_source": "graph-explorer.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/omega-morph.js",
+          "/bg.js",
+          "/nav.js"
         ],
         "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
@@ -6608,7 +6616,9 @@
         "page_source": "graph-timeline.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/omega-morph.js",
+          "/bg.js",
+          "/nav.js"
         ],
         "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],
@@ -6738,7 +6748,9 @@
         "page_source": "graphify.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/omega-morph.js",
+          "/bg.js",
+          "/nav.js"
         ],
         "data_evidence": "none — compatibility redirect only",
         "capability_registry_matches": [],

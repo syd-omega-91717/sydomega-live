@@ -40,3 +40,5 @@ jobs:
           python-version: '3.12'
       - name: Run overlap audit
         run: python scripts/page-overlap-audit.py
+      - name: Publish evidence-based page-purpose report
+        run: python scripts/page-consolidation.py --markdown >> "$GITHUB_STEP_SUMMARY"

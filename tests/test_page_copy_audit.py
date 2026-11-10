@@ -228,7 +228,7 @@ class PageCopyAuditTests(unittest.TestCase):
         self.assertIn("idfFull.textContent=isOwner?'Sleiman Youssef Dagher'", profile)
         self.assertIn("document.getElementById('owner-only-identity').style.display='';", profile)
         self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", profile)
-        self.assertIn("d.is_owner?'S.Y.D'", profile)
+        self.assertIn("idfAbbrev.textContent=isOwner?'S.Y.D'", profile)
         self.assertIn("Sleiman Youssef Dagher", approvals)
         self.assertIn("if(!pr||!pr.is_owner)", approvals_js)
 

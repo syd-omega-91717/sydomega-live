@@ -33,7 +33,7 @@ class PageCopyAuditTests(unittest.TestCase):
     def test_shared_chrome_scripts_hidden_content_and_ctas_are_separated(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
-            chrome = "<nav><p>" + REPEATED + "</p></nav><header><p>" + REPEATED + "</p></header>"
+            chrome = "<nav><p>" + REPEATED + "</p></nav><header class=\"site-header\"><p>" + REPEATED + "</p></header>"
             code = "<script>var copy = '" + REPEATED + "';</script>"
             hidden = '<div hidden><p>' + REPEATED + "</p></div>"
             cta = "<button>" + REPEATED + "</button>"
@@ -50,6 +50,14 @@ class PageCopyAuditTests(unittest.TestCase):
             report = MODULE.build_report(root, 8)
             self.assertEqual(len(report["within_page_duplicate_groups"]), 1)
             self.assertEqual(report["within_page_duplicate_groups"][0]["pages"], ["one.html"])
+
+    def test_page_specific_header_inside_main_is_not_discarded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            self.write_page(root, "one.html", "<main><header><h1>" + REPEATED + "</h1></header></main>")
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(report["block_count"], 1)
+            self.assertEqual(report["cross_page_duplicate_groups"], [])
 
     def test_pages_without_main_use_body_content_as_fallback(self):
         with tempfile.TemporaryDirectory() as tmp:

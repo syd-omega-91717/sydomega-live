@@ -141,7 +141,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 <div id="gate">
   <div class="gate-omega">&#937;</div>
   <div class="gate-title" data-i18n="access_denied"></div>
-  <div class="gate-sub"><span data-i18n="gate_access_denied_subtitle"></span><br>S.Y.D &mdash; EXCLUSIVELY<br>LEBANESE ORDER OF ENGINEERS NO. 30875</div>
+  <div class="gate-sub"><span data-i18n="gate_access_denied_subtitle"></span><br>OWNER-ONLY ADMINISTRATION<br>AUTHORIZED ACCESS REQUIRED</div>
   <a href="/dashboard.html" class="gate-btn" data-i18n="btn_return_dashboard"></a>
 </div>
 <div id="toast"></div>
@@ -240,7 +240,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         <canvas id="cv-audit" width="80" height="80" style="width:40px;height:40px;flex-shrink:0"></canvas>
         <div>
           <div style="font-family:var(--D);font-size:12px;letter-spacing:.05em;color:var(--cyan);margin-bottom:3px" id="hd-title-audit">&#937; SOVEREIGN ENGINE</div>
-          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; 12&times;12&times;9&times;9&times;9 = 104,976 &middot; <span data-canon-lattice="twelve"></span></div>
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted)">OWNER AUDIT &middot; ACCESS DECISIONS &middot; EVIDENCE LOG</div>
         </div>
         <div style="margin-left:auto;text-align:right">
           <div style="font-family:var(--D);font-size:var(--fs-4,20px);color:var(--cyan)" id="hd-auth-audit">27.8367</div>
@@ -255,37 +255,19 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
     <!-- TAB: SCIENCE -->
     <div class="tab-panel" id="tab-science">
-      <div class="sechead">SOVEREIGN CONSTANTS &amp; SYSTEM ARCHITECTURE</div>
-      <div class="sci-block">
-        <div class="sci-formula">
-          AUTH = sqrt(A&#179; + B&#179; + C&#179;) &times; &phi; / e<br>
-          A = B = C = 9 &rarr; A&#179;+B&#179;+C&#179; = 2187<br>
-          sqrt(2187) &times; 1.6180339887 / 2.7182818285 = <strong>27.8367</strong>
-        </div>
-        <div class="sci-kv">
-          <span class="k">PHI (&phi;)</span><span class="v" style="color:var(--gold)">1.6180339887</span>
-          <span class="k">EULER (e)</span><span class="v" style="color:var(--gold)">2.7182818285</span>
-          <span class="k">AUTHORITY APEX</span><span class="v" style="color:var(--gold)">27.8367 — IRREVOCABLE</span>
-          <span class="k">TRIAL WINDOW</span><span class="v">557 SECONDS (9 MIN 17 SEC)</span>
-          <span class="k">LATTICE</span><span class="v">12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</span>
-          <span class="k">DESIGNATION</span><span class="v">9.9.9 &mdash; ARIES &middot; FIRE &middot; ARES &middot; SENTINEL &middot; ARENITE</span>
-        </div>
+      <div class="sechead">ACCESS DECISION MODEL</div>
+      <div class="sci-block" style="border-color:rgba(0,229,255,.18)">
+        <div class="sci-formula" style="font-size:14px;line-height:1.7">PRIVILEGE IS GOVERNED BY POLICY — NOT BY PROGRESSION SCORE.</div>
+        <p style="font-size:14px;line-height:1.75;color:var(--muted);margin-top:12px">This console is for reviewing member approval state and access evidence. A member's calculated authority or achievement level is informational; it does not grant administrative privileges or override server-side authorization.</p>
       </div>
-      <div class="sechead" style="margin-top:24px">GATE THRESHOLDS</div>
+      <div class="sechead" style="margin-top:24px">REVIEW SEQUENCE</div>
       <div class="sci-kv">
-        <span class="k">GATE 1</span><span class="v">AUTH &ge; 1.0 &mdash; ENTRY</span>
-        <span class="k">GATE 2</span><span class="v">AUTH &ge; 2.0 &mdash; BASIC ACCESS</span>
-        <span class="k">GATE 3</span><span class="v">AUTH &ge; 3.0 &mdash; VERIFIED</span>
-        <span class="k">GATE 4</span><span class="v">AUTH &ge; 5.0 &mdash; TRUSTED</span>
-        <span class="k">GATE 5</span><span class="v">AUTH &ge; 7.0 &mdash; ELEVATED</span>
-        <span class="k">GATE 6</span><span class="v">AUTH &ge; 9.0 &mdash; SOVEREIGN TIER I</span>
-        <span class="k">GATE 7</span><span class="v">AUTH &ge; 11.0 &mdash; SOVEREIGN TIER II</span>
-        <span class="k">GATE 8</span><span class="v">AUTH &ge; 13.0 &mdash; SENTINEL</span>
-        <span class="k">GATE 9</span><span class="v">AUTH &ge; 15.0 &mdash; ORACLE</span>
-        <span class="k">GATE 10</span><span class="v">AUTH &ge; 18.0 &mdash; ARENITE</span>
-        <span class="k">GATE 11</span><span class="v">AUTH &ge; 22.0 &mdash; APEX APPROACH</span>
-        <span class="k">GATE 12</span><span class="v" style="color:var(--gold)">AUTH = 27.8367 &mdash; INVISIBLE ARCHITECT</span>
+        <span class="k">01 · IDENTITY</span><span class="v">Confirm the authenticated member context.</span>
+        <span class="k">02 · APPROVAL</span><span class="v">Review the current access and approval state.</span>
+        <span class="k">03 · POLICY</span><span class="v">Apply the server-enforced role and permission boundary.</span>
+        <span class="k">04 · EVIDENCE</span><span class="v">Inspect the audit record and any reported errors.</span>
       </div>
+      <a href="/governance.html" style="display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:12px 16px;border:1px solid rgba(201,168,76,.35);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-decoration:none">OPEN GOVERNANCE CONTROL MODEL <span aria-hidden="true">↗</span></a>
     </div>
 
     <div data-page-emblem="approvals" style="margin:20px auto 0"></div>

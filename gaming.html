@@ -32,7 +32,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .section-tabs{display:flex;flex:1;overflow-x:auto}
 .tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:.6rem 1rem;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.2s;flex-shrink:0}
 .tab-btn.on.game-tab{border-bottom-color:var(--purple);color:var(--purple)}
-.tab-btn.on.exam-tab{border-bottom-color:var(--gold);color:var(--gold)}
+.tab-btn.on.exam-tab{border-bottom-color:var(--gold);color:var(--gold)}.tab-btn[href]{text-decoration:none;display:flex;align-items:center}
 .tab-divider{width:1px;background:var(--line);margin:8px 0;flex-shrink:0}
 .tab-panel{display:none;padding:clamp(14px,3vw,36px)}.tab-panel.on{display:block}
 /* CARDS */
@@ -111,7 +111,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
         </div>
       </div>
       <div style="border:1px solid var(--line);padding:14px;border-radius:2px;background:rgba(10,10,15,.5);font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);line-height:2">
-        AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &nbsp;|&nbsp; A&#179;=<span id="auth-a3" style="color:var(--gold)">--</span> &nbsp;+&nbsp; B&#179;=<span id="auth-b3" style="color:var(--purple)">--</span> &nbsp;+&nbsp; C&#179;=<span id="auth-c3" style="color:var(--green)">--</span> &nbsp;=&nbsp; <span id="auth-sum" style="color:var(--cyan)">--</span> &nbsp;&rarr;&nbsp; AUTH=<span id="auth-val" style="color:var(--solar)">--</span> &nbsp;|&nbsp; APEX: 729+729+729=2187 &rarr; sqrt(2187)&times;&phi;/e=27.8367
+        AXIS TOTALS &nbsp;|&nbsp; A&#179;=<span id="auth-a3" style="color:var(--gold)">--</span> &nbsp;+&nbsp; B&#179;=<span id="auth-b3" style="color:var(--purple)">--</span> &nbsp;+&nbsp; C&#179;=<span id="auth-c3" style="color:var(--green)">--</span> &nbsp;=&nbsp; <span id="auth-sum" style="color:var(--cyan)">--</span> &nbsp;&middot;&nbsp; CURRENT AUTHORITY=<span id="auth-val" style="color:var(--solar)">--</span>
       </div>
     </div>
 
@@ -119,7 +119,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <div class="tab-wrap">
       <div class="section-tabs">
         <button class="tab-btn game-tab on" data-tab="games">&#9670; GAMES</button>
-        <button class="tab-btn exam-tab" data-tab="exams">&#9670; EXAMS</button>
+        <a class="tab-btn exam-tab" href="/academy.html" aria-label="Open Sovereign Academy exam catalogue">&#9670; EXAMS ↗</a>
         <button class="tab-btn" data-tab="progress">&#9670; PROGRESS</button>
         <button class="tab-btn" data-tab="science">&#9670; SCIENCE</button>
       </div>
@@ -318,7 +318,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
   <div class="c-desc">Navigate all 729 inner cube nodes. The grand trial.</div>
 </div><div class="g-card card" data-task="Authority Climb" data-task-type="mastery">
   <div class="c-name" style="color:var(--purple)">AUTHORITY CLIMB</div>
-  <div class="c-desc">Real-time sqrt(A³+B³+C³)×φ/e visualization. Climb to 27.8367.</div>
+  <div class="c-desc">Explore the three-axis progression model and climb through the mastery tiers.</div>
 </div><div class="g-card card" data-task="Olympian Path" data-task-type="mastery">
   <div class="c-name" style="color:var(--purple)">OLYMPIAN PATH</div>
   <div class="c-desc">12 stages. Each themed to one of the 12 Olympians.</div>
@@ -345,255 +345,10 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
   <div class="c-desc">Complete all 9 stages of sovereign certification.</div>
 </div><div class="g-card card" data-task="The Apex Trial" data-task-type="mastery">
   <div class="c-name" style="color:var(--purple)">THE APEX TRIAL</div>
-  <div class="c-desc">Reach AUTH=27.8367. The ultimate sovereign achievement.</div>
+  <div class="c-desc">Reach the highest verified progression tier through completed mastery goals.</div>
 </div><div class="g-card card" data-task="Heritage Oracle" data-task-type="mastery">
   <div class="c-name" style="color:var(--purple)">HERITAGE ORACLE</div>
   <div class="c-desc">All civilizations, all eras. 9 difficulty tiers.</div>
-</div></div></div>
-<div class="tab-panel" id="tab-stem"><div class="sechead" data-reveal="fade-up">STEM & SCIENCE &middot; AXIS A KNOWLEDGE &middot; CATALOGUE &middot; NOT HOSTED</div><div class="card-grid"><div class="e-card card" data-task="Mathematics Olympiad" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">MATHEMATICS OLYMPIAD</div>
-  <div class="c-desc">IMO-standard. Algebra, geometry, combinatorics, number theory. Level 9.</div>
-</div><div class="e-card card" data-task="Physics Grand Exam" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">PHYSICS GRAND EXAM</div>
-  <div class="c-desc">AP/IB/A-Level + university. Mechanics, electrodynamics, quantum.</div>
-</div><div class="e-card card" data-task="Chemistry Mastery" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">CHEMISTRY MASTERY</div>
-  <div class="c-desc">Periodic table to organic synthesis. International standard.</div>
-</div><div class="e-card card" data-task="Biology & Life Sciences" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">BIOLOGY & LIFE SCIENCES</div>
-  <div class="c-desc">Cell biology through ecology. MCAT and IB HL standard.</div>
-</div><div class="e-card card" data-task="Statistics & Probability" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 6</div>
-  <div class="c-name" style="color:var(--gold)">STATISTICS & PROBABILITY</div>
-  <div class="c-desc">Descriptive, inferential, Bayesian. Data science foundation.</div>
-</div><div class="e-card card" data-task="Computer Science Theory" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">COMPUTER SCIENCE THEORY</div>
-  <div class="c-desc">Algorithms, complexity, automata, computability.</div>
-</div><div class="e-card card" data-task="Data Science & ML" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">DATA SCIENCE & ML</div>
-  <div class="c-desc">Python, statistics, machine learning, model evaluation.</div>
-</div><div class="e-card card" data-task="Astronomy & Astrophysics" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">ASTRONOMY & ASTROPHYSICS</div>
-  <div class="c-desc">Solar system to cosmology. Hubble, dark matter, black holes.</div>
-</div><div class="e-card card" data-task="Environmental Science" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 5</div>
-  <div class="c-name" style="color:var(--gold)">ENVIRONMENTAL SCIENCE</div>
-  <div class="c-desc">Climate, ecosystems, energy. IPCC scientific consensus.</div>
-</div><div class="e-card card" data-task="Neuroscience Basics" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 6</div>
-  <div class="c-name" style="color:var(--gold)">NEUROSCIENCE BASICS</div>
-  <div class="c-desc">Brain structure, neural networks, cognitive science.</div>
-</div><div class="e-card card" data-task="Engineering Fundamentals" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">ENGINEERING FUNDAMENTALS</div>
-  <div class="c-desc">Statics, dynamics, thermodynamics, materials science.</div>
-</div><div class="e-card card" data-task="Research Methods" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 6</div>
-  <div class="c-name" style="color:var(--gold)">RESEARCH METHODS</div>
-  <div class="c-desc">Hypothesis, experiment design, peer review, publication.</div>
-</div></div></div>
-<div class="tab-panel" id="tab-professional"><div class="sechead" data-reveal="fade-up">PROFESSIONAL CERTS &middot; AXIS A KNOWLEDGE &middot; CATALOGUE &middot; NOT HOSTED</div><div class="card-grid"><div class="e-card card" data-task="CFA Level I–III" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">CFA LEVEL I–III</div>
-  <div class="c-desc">Chartered Financial Analyst. Global gold standard in investment.</div>
-</div><div class="e-card card" data-task="PMP Certification" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">PMP CERTIFICATION</div>
-  <div class="c-desc">Project Management Professional. PMI standard worldwide.</div>
-</div><div class="e-card card" data-task="CISSP" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">CISSP</div>
-  <div class="c-desc">Certified Information Systems Security Professional.</div>
-</div><div class="e-card card" data-task="MBA Core Curriculum" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">MBA CORE CURRICULUM</div>
-  <div class="c-desc">Strategy, finance, operations, marketing, leadership.</div>
-</div><div class="e-card card" data-task="Lean Six Sigma" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 6</div>
-  <div class="c-name" style="color:var(--gold)">LEAN SIX SIGMA</div>
-  <div class="c-desc">Process improvement. Yellow through Black Belt.</div>
-</div><div class="e-card card" data-task="Chartered Accountant" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">CHARTERED ACCOUNTANT</div>
-  <div class="c-desc">ACCA/CPA. International accounting standards.</div>
-</div><div class="e-card card" data-task="Architectural License" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">ARCHITECTURAL LICENSE</div>
-  <div class="c-desc">ARE exam. Architectural registration worldwide.</div>
-</div><div class="e-card card" data-task="Engineering PE Exam" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">ENGINEERING PE EXAM</div>
-  <div class="c-desc">Professional Engineer. All engineering disciplines.</div>
-</div><div class="e-card card" data-task="Legal Bar Equivalence" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">LEGAL BAR EQUIVALENCE</div>
-  <div class="c-desc">Contract, tort, constitutional, international law.</div>
-</div><div class="e-card card" data-task="Medical Licensing" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">MEDICAL LICENSING</div>
-  <div class="c-desc">USMLE/PLAB equivalent. Clinical knowledge and reasoning.</div>
-</div><div class="e-card card" data-task="Supply Chain Management" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 6</div>
-  <div class="c-name" style="color:var(--gold)">SUPPLY CHAIN MANAGEMENT</div>
-  <div class="c-desc">CSCMP/APICS. Logistics, procurement, global supply chains.</div>
-</div><div class="e-card card" data-task="Human Resources" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 5</div>
-  <div class="c-name" style="color:var(--gold)">HUMAN RESOURCES</div>
-  <div class="c-desc">SHRM/CIPD. Talent management, labor law, organizational behavior.</div>
-</div></div></div>
-<div class="tab-panel" id="tab-technology"><div class="sechead" data-reveal="fade-up">TECHNOLOGY & AI &middot; AXIS A KNOWLEDGE &middot; CATALOGUE &middot; NOT HOSTED</div><div class="card-grid"><div class="e-card card" data-task="Python Advanced" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">PYTHON ADVANCED</div>
-  <div class="c-desc">OOP, async, metaclasses, CPython internals. Expert level.</div>
-</div><div class="e-card card" data-task="Algorithm Design" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">ALGORITHM DESIGN</div>
-  <div class="c-desc">Dijkstra, dynamic programming, graph theory. FAANG standard.</div>
-</div><div class="e-card card" data-task="Machine Learning" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">MACHINE LEARNING</div>
-  <div class="c-desc">Supervised, unsupervised, RL. Theory and implementation.</div>
-</div><div class="e-card card" data-task="Deep Learning" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">DEEP LEARNING</div>
-  <div class="c-desc">Neural networks, transformers, diffusion. State of the art.</div>
-</div><div class="e-card card" data-task="Database Architecture" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">DATABASE ARCHITECTURE</div>
-  <div class="c-desc">PostgreSQL, indexing, query optimization, sharding.</div>
-</div><div class="e-card card" data-task="System Design" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">SYSTEM DESIGN</div>
-  <div class="c-desc">Distributed systems, CAP theorem, microservices, CDN.</div>
-</div><div class="e-card card" data-task="Cloud Architecture" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">CLOUD ARCHITECTURE</div>
-  <div class="c-desc">AWS/GCP/Azure. Solutions architect professional level.</div>
-</div><div class="e-card card" data-task="Blockchain & Web3" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">BLOCKCHAIN & WEB3</div>
-  <div class="c-desc">Consensus mechanisms, smart contracts, tokenomics.</div>
-</div><div class="e-card card" data-task="DevOps & SRE" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">DEVOPS & SRE</div>
-  <div class="c-desc">CI/CD, Kubernetes, monitoring, SLO/SLA/SLI.</div>
-</div><div class="e-card card" data-task="AI Ethics & Governance" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">AI ETHICS & GOVERNANCE</div>
-  <div class="c-desc">Bias, fairness, explainability, regulation.</div>
-</div><div class="e-card card" data-task="Quantum Computing" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">QUANTUM COMPUTING</div>
-  <div class="c-desc">Qubits, gates, Shor, Grover algorithms. Theoretical foundation.</div>
-</div><div class="e-card card" data-task="Cryptography Advanced" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">CRYPTOGRAPHY ADVANCED</div>
-  <div class="c-desc">RSA, ECC, ZKP, homomorphic encryption. Mathematical depth.</div>
-</div></div></div>
-<div class="tab-panel" id="tab-healthcare"><div class="sechead" data-reveal="fade-up">HEALTHCARE & MEDICINE &middot; AXIS A KNOWLEDGE &middot; CATALOGUE &middot; NOT HOSTED</div><div class="card-grid"><div class="e-card card" data-task="Anatomy & Physiology" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">ANATOMY & PHYSIOLOGY</div>
-  <div class="c-desc">All body systems. Medical school first-year standard.</div>
-</div><div class="e-card card" data-task="Pharmacology" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">PHARMACOLOGY</div>
-  <div class="c-desc">Drug mechanisms, interactions, dosing. Clinical standard.</div>
-</div><div class="e-card card" data-task="Clinical Reasoning" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">CLINICAL REASONING</div>
-  <div class="c-desc">Case-based diagnosis. USMLE Step 2 equivalent.</div>
-</div><div class="e-card card" data-task="Public Health & Epidemiology" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">PUBLIC HEALTH & EPIDEMIOLOGY</div>
-  <div class="c-desc">Disease surveillance, outbreak response, health policy.</div>
-</div><div class="e-card card" data-task="Mental Health Foundations" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">MENTAL HEALTH FOUNDATIONS</div>
-  <div class="c-desc">DSM-5, psychopathology, therapeutic approaches.</div>
-</div><div class="e-card card" data-task="Nutrition Science" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 5</div>
-  <div class="c-name" style="color:var(--gold)">NUTRITION SCIENCE</div>
-  <div class="c-desc">Macro/micronutrients, metabolism, therapeutic diets.</div>
-</div><div class="e-card card" data-task="Emergency Medicine" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">EMERGENCY MEDICINE</div>
-  <div class="c-desc">ATLS/ACLS principles. Triage and emergency management.</div>
-</div><div class="e-card card" data-task="Medical Research Methods" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">MEDICAL RESEARCH METHODS</div>
-  <div class="c-desc">RCT design, meta-analysis, evidence-based medicine.</div>
-</div><div class="e-card card" data-task="Biomedical Ethics" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">BIOMEDICAL ETHICS</div>
-  <div class="c-desc">Autonomy, beneficence, justice. Clinical and research ethics.</div>
-</div><div class="e-card card" data-task="Genetics & Genomics" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 8</div>
-  <div class="c-name" style="color:var(--gold)">GENETICS & GENOMICS</div>
-  <div class="c-desc">Mendelian through CRISPR. Clinical genomics application.</div>
-</div><div class="e-card card" data-task="Global Health" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 6</div>
-  <div class="c-name" style="color:var(--gold)">GLOBAL HEALTH</div>
-  <div class="c-desc">WHO frameworks, tropical diseases, health systems worldwide.</div>
-</div><div class="e-card card" data-task="Health Informatics" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 6</div>
-  <div class="c-name" style="color:var(--gold)">HEALTH INFORMATICS</div>
-  <div class="c-desc">EHR, medical data standards, HL7/FHIR systems.</div>
-</div></div></div>
-<div class="tab-panel" id="tab-sovereign_e"><div class="sechead" data-reveal="fade-up">SOVEREIGN CERTS &middot; AXIS A KNOWLEDGE &middot; CATALOGUE &middot; NOT HOSTED</div><div class="card-grid"><div class="e-card card" data-task="Omega Initiate Certificate" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 1</div>
-  <div class="c-name" style="color:var(--gold)">OMEGA INITIATE CERTIFICATE</div>
-  <div class="c-desc">Entry level. Matrix navigation + authority formula mastery.</div>
-</div><div class="e-card card" data-task="Sovereign Architect Badge" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 3</div>
-  <div class="c-name" style="color:var(--gold)">SOVEREIGN ARCHITECT BADGE</div>
-  <div class="c-desc">System design. 12-fold architecture understanding.</div>
-</div><div class="e-card card" data-task="Matrix Master Certificate" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 5</div>
-  <div class="c-name" style="color:var(--gold)">MATRIX MASTER CERTIFICATE</div>
-  <div class="c-desc">Full 9-stage theory + practice. All three axes demonstrated.</div>
-</div><div class="e-card card" data-task="Authority Apex Achievement" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">AUTHORITY APEX ACHIEVEMENT</div>
-  <div class="c-desc">AUTH=27.8367 understanding. A³+B³+C³=2187. Proved.</div>
-</div><div class="e-card card" data-task="Heritage Guardian Certificate" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 4</div>
-  <div class="c-name" style="color:var(--gold)">HERITAGE GUARDIAN CERTIFICATE</div>
-  <div class="c-desc">All civilizations in the Heritage Archive. 9 eras.</div>
-</div><div class="e-card card" data-task="Elemental Mastery Badge" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 4</div>
-  <div class="c-name" style="color:var(--gold)">ELEMENTAL MASTERY BADGE</div>
-  <div class="c-desc">All 9 elements. Properties, interactions, sovereign mapping.</div>
-</div><div class="e-card card" data-task="Covenant Scholar" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 5</div>
-  <div class="c-name" style="color:var(--gold)">COVENANT SCHOLAR</div>
-  <div class="c-desc">All 11 Sovereign Articles. Memorized and applied.</div>
-</div><div class="e-card card" data-task="Lattice Engineer" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 7</div>
-  <div class="c-name" style="color:var(--gold)">LATTICE ENGINEER</div>
-  <div class="c-desc">All matrix systems. 28×28 to 9×9×9. Architecture mastery.</div>
-</div><div class="e-card card" data-task="Token Economics Certificate" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 6</div>
-  <div class="c-name" style="color:var(--gold)">TOKEN ECONOMICS CERTIFICATE</div>
-  <div class="c-desc">12-token theory. Utility, distribution, governance.</div>
-</div><div class="e-card card" data-task="Olympian Path Complete" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 4</div>
-  <div class="c-name" style="color:var(--gold)">OLYMPIAN PATH COMPLETE</div>
-  <div class="c-desc">All 12 Olympians. Mythology, attributes, sovereign mapping.</div>
-</div><div class="e-card card" data-task="Digital Sovereign Identity" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 3</div>
-  <div class="c-name" style="color:var(--gold)">DIGITAL SOVEREIGN IDENTITY</div>
-  <div class="c-desc">KYC, credentials, identity verification mastery.</div>
-</div><div class="e-card card" data-task="Sovereign Apex Laureate" data-task-type="knowledge">
-  <div class="c-cat">LEVEL 9</div>
-  <div class="c-name" style="color:var(--gold)">SOVEREIGN APEX LAUREATE</div>
-  <div class="c-desc">All 12 sovereign certifications complete. Terminal honor.</div>
 </div></div></div>
 <div class="tab-panel" id="tab-progress_tab">
   <div class="kpi-row" data-reveal="fade-up">
@@ -607,27 +362,26 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 </div>
 <div class="tab-panel" id="tab-science" style="display:none">
   <div style="padding:clamp(14px,3vw,36px)">
-    <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
+    <div class="sechead">PLAY STATE · MASTERY EVIDENCE</div>
     <div class="kpi-row">
-      <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" style="font-size:12px">AUTH = sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e</div><div class="kpi-l">AUTHORITY FORMULA</div></div>
-      <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX</div></div>
-      <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">1.6180339887</div><div class="kpi-l">&phi; GOLDEN RATIO</div></div>
-      <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">2.7182818285</div><div class="kpi-l">e EULER'S NUMBER</div></div>
+      <article class="kpi" style="--kc:var(--purple);padding:18px"><div class="kpi-l">LIVE PLAY</div><div style="font-family:var(--D);font-size:17px;color:var(--purple);margin-top:8px">Playable modules</div><p style="font-size:13px;line-height:1.65;color:var(--muted);margin-top:8px">Use the Play Now area for games that are actually mounted in the arena.</p></article>
+      <article class="kpi" style="--kc:var(--gold);padding:18px"><div class="kpi-l">CATALOGUE ONLY</div><div style="font-family:var(--D);font-size:17px;color:var(--gold);margin-top:8px">Not hosted here</div><p style="font-size:13px;line-height:1.65;color:var(--muted);margin-top:8px">A listed concept is not a playable release. Its availability label must remain visible.</p></article>
+      <article class="kpi" style="--kc:var(--green);padding:18px"><div class="kpi-l">RECORDED PROGRESS</div><div style="font-family:var(--D);font-size:17px;color:var(--green);margin-top:8px">Evidence-backed</div><p style="font-size:13px;line-height:1.65;color:var(--muted);margin-top:8px">Opening a catalogue card does not award mastery; completed goals must be recorded.</p></article>
     </div>
-    <div class="sechead">GATE THRESHOLDS</div>
-    <div class="kpi-row">
-      <div class="kpi" style="--kc:var(--muted)"><div class="kpi-n">0.001</div><div class="kpi-l">AXIS FLOOR</div></div>
-      <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n">1.618</div><div class="kpi-l">GATE I &mdash; &phi;</div></div>
-      <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n">2.718</div><div class="kpi-l">GATE II &mdash; e</div></div>
-      <div class="kpi" style="--kc:var(--green)"><div class="kpi-n">9.000</div><div class="kpi-l">GATE III &mdash; SOVEREIGN</div></div>
-      <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n">27.8367</div><div class="kpi-l">GATE IV &mdash; APEX</div></div>
+    <div style="border:1px solid rgba(155,107,240,.25);padding:18px;background:linear-gradient(120deg,rgba(155,107,240,.07),rgba(10,10,15,.8));border-radius:3px;margin-bottom:16px">
+      <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--purple);margin-bottom:8px">SEPARATE EXPERIENCE · SHARED MEMBER RECORD</div>
+      <p style="font-size:13px;line-height:1.7;color:var(--muted)">Gaming owns playable challenges and mastery. Exam pathways and assessment cards have one home in Sovereign Academy; exam totals remain visible here from the member's recorded completion history.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a href="/academy.html" class="catalog-toggle" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin:0;min-height:46px">OPEN EXAM CATALOGUE ↗</a>
+      <a href="/evolution.html" class="catalog-toggle" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin:0;min-height:46px">VIEW PROGRESSION MODEL ↗</a>
     </div>
   </div>
 </div>
     <div data-page-emblem="gaming" style="margin:20px auto 0"></div>
     <div class="lf">
-      <span>&#937; GAMES &amp; EXAMS &middot; 144+144=288 TOTAL</span>
-      <span>AUTH=sqrt(A&#179;+B&#179;+C&#179;)&times;&phi;/e &middot; A&#179;=B&#179;=C&#179;=729 at apex &middot; 27.8367</span>
+      <span>&#937; GAMING UNIVERSE &middot; PLAY &amp; MASTERY</span>
+      <span>PLAYABLE MODULES &middot; RECORDED GOALS &middot; MEMBER PROGRESS</span>
     </div>
   
 <!-- Ω SPATIAL REALM: GAMING — additive mount; functional content remains authoritative -->
@@ -636,7 +390,6 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 </div><script>
 var TAB_GROUPS={
   games:['tab-arcade','tab-strategy','tab-action','tab-puzzle','tab-sport','tab-simulation','tab-sovereign_g'],
-  exams:['tab-stem','tab-professional','tab-technology','tab-healthcare','tab-sovereign_e'],
   progress:['tab-progress_tab'],
   science:['tab-science']
 };
@@ -665,7 +418,7 @@ var catalogOpen=false;
     setTab('games');
   });
 })();
-document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
+document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
 window.setTab=setTab;
 setTab('games');
 </script>

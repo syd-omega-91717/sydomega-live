@@ -1,4 +1,5 @@
 """Tests for the visible-content duplication audit."""
+import ast
 import importlib.util
 import pathlib
 import tempfile
@@ -64,6 +65,14 @@ class PageCopyAuditTests(unittest.TestCase):
             self.write_page(root, "two.html", "<main><h2>OVERVIEW</h2><p>Another short note.</p></main>")
             report = MODULE.build_report(root, 8)
             self.assertEqual(report["cross_page_duplicate_groups"], [])
+
+    def test_contract_suite_gate_ids_are_unique(self):
+        source = (ROOT / "scripts" / "contract-suite.py").read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        gates_node = next(node.value for node in tree.body if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "GATES" for t in node.targets))
+        gates = ast.literal_eval(gates_node)
+        ids = [gate[0] for gate in gates]
+        self.assertEqual(len(ids), len(set(ids)), "contract-suite.py contains a repeated gate id")
 
     def test_markdown_report_explains_that_repetition_is_a_review_signal(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -1756,7 +1756,7 @@ async function boot(){
     Sagittarius:{agentKey:'profile_agent_beacon',tokenKey:'token_ember',elementKey:'element_fire'},Capricorn:{agentKey:'profile_agent_analyst',tokenKey:'token_ferrum',elementKey:'element_metal'},
     Aquarius:{agentKey:'profile_agent_tutor',tokenKey:'token_prime',elementKey:'element_wind'},Pisces:{agentKey:'profile_agent_historian',tokenKey:'token_abyss',elementKey:'element_water'},
   };
-  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'Sleiman Youssef Dagher':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'S.Y.D':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
   var idfAbbrev=document.getElementById('idf-abbrev');if(idfAbbrev)idfAbbrev.textContent=isOwner?'S.Y.D':'';
   var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];

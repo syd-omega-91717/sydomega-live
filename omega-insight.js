@@ -29,7 +29,7 @@ var LENSES = [['graph', 'GRAPH'], ['time', 'TIMELINE'], ['central', 'CENTRALITY'
 var COL = { concept: '#C9A84C', event: '#00E5FF' };
 var requestedLens = new URLSearchParams(window.location.search).get('lens');
 var validLenses = LENSES.map(function (item) { return item[0]; });
-var S = { lens: validLenses.indexOf(requestedLens) >= 0 ? requestedLens : 'graph', ents: [], rels: [], evts: [], evid: [], byId: {}, deg: {}, flags: {}, pos: {}, sel: null, find: '' };
+var S = { lens: validLenses.indexOf(requestedLens) >= 0 ? requestedLens : 'graph', ents: [], rels: [], evts: [], evid: [], byId: {}, deg: {}, flags: {}, pos: {}, sel: null, find: '', depth: 2 };
 var $ = function (id) { return document.getElementById(id); };
 function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function day(iso) { return iso ? String(iso).slice(0, 10) : '–'; }
@@ -120,8 +120,30 @@ function radius(e) {
 }
 
 /* ── draw ───────────────────────────────────────────────────────────── */
+function visibleIds() {
+  var visible = new Set(S.ents.map(function (entity) { return entity.id; }));
+  if (!S.sel) return visible;
+  visible = new Set([S.sel]);
+  var queue = [[S.sel, 0]];
+  var maxDepth = Math.max(1, Math.min(5, Number(S.depth) || 2));
+  while (queue.length) {
+    var current = queue.shift();
+    if (current[1] >= maxDepth) continue;
+    S.rels.forEach(function (relationship) {
+      var next = relationship.source_entity_id === current[0] ? relationship.target_entity_id :
+        relationship.target_entity_id === current[0] ? relationship.source_entity_id : null;
+      if (next && !visible.has(next)) {
+        visible.add(next);
+        queue.push([next, current[1] + 1]);
+      }
+    });
+  }
+  return visible;
+}
+
 function draw() {
   var nodes = $('ins-nodes'), edges = $('ins-edges'), labels = $('ins-labels');
+  var visible = visibleIds();
   if (!nodes.childNodes.length) {
     S.rels.forEach(function (r) { edges.appendChild(el('line', { 'data-s': r.source_entity_id, 'data-t': r.target_entity_id })); });
     S.ents.forEach(function (e) {
@@ -137,6 +159,7 @@ function draw() {
   S.pos = layout(S.lens);
   nodes.querySelectorAll('.ins-node').forEach(function (g) {
     var id = g.dataset.id, p = S.pos[id] || [W / 2, H / 2], e = S.byId[id];
+    g.classList.toggle('off', !visible.has(id));
     g.style.transform = 'translate(' + p[0].toFixed(1) + 'px,' + p[1].toFixed(1) + 'px)';
     g.querySelector('circle').setAttribute('r', radius(e));
     var q = S.find; g.classList.toggle('dim', !!q && name(e).toLowerCase().indexOf(q) < 0);
@@ -145,17 +168,23 @@ function draw() {
   });
   edges.classList.toggle('off', S.lens !== 'graph');
   edges.querySelectorAll('line').forEach(function (ln) {
-    var a = S.pos[ln.dataset.s], b = S.pos[ln.dataset.t]; if (!a || !b) return;
+    var a = S.pos[ln.dataset.s], b = S.pos[ln.dataset.t];
+    var edgeVisible = visible.has(ln.dataset.s) && visible.has(ln.dataset.t);
+    ln.classList.toggle('off', !edgeVisible);
+    if (!a || !b) return;
     ln.setAttribute('x1', a[0]); ln.setAttribute('y1', a[1]); ln.setAttribute('x2', b[0]); ln.setAttribute('y2', b[1]);
     ln.classList.toggle('hot', ln.dataset.s === S.sel || ln.dataset.t === S.sel);
   });
   labels.querySelectorAll('.ins-lbl').forEach(function (l) {
-    var p = S.pos[l.dataset.id]; if (!p) return;
+    var p = S.pos[l.dataset.id];
+    l.classList.toggle('off', !visible.has(l.dataset.id));
+    if (!p) return;
     var e = S.byId[l.dataset.id], off = e.entity_type === 'concept' ? radius(e) + 16 : 0;
     l.style.left = (p[0] / W * 100) + '%'; l.style.top = ((p[1] + off) / H * 100) + '%';
     l.textContent = e.entity_type === 'concept' ? hubLabel(e) : (l.dataset.id === S.sel ? name(e) : '');
   });
   $('ins-axes').innerHTML = S.lens === 'time' ? '<line x1="130" y1="' + (H - 20) + '" x2="' + (W - 40) + '" y2="' + (H - 20) + '"/>' : '';
+  $('ins-depth-wrap').hidden = S.lens !== 'graph';
   $('ins-lens').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.lens === S.lens); });
 }
 
@@ -346,6 +375,11 @@ function boot() {
   }).join('');
   $('ins-lens').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; S.lens = b.dataset.lens; S.sel = null; draw(); panelOverview(); };
   $('ins-find').oninput = function () { S.find = this.value.trim().toLowerCase(); draw(); };
+  $('ins-depth').onchange = function () {
+    S.depth = Math.max(1, Math.min(5, Number(this.value) || 2));
+    this.value = String(S.depth);
+    draw();
+  };
   $('ins-export-json').onclick = exportGraph;
   $('ins-export-evidence').onclick = exportEvidence;
   if (new URLSearchParams(window.location.search).get('tools') === '1') $('ins-ai-tools').open = true;

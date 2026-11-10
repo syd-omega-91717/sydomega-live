@@ -160,6 +160,8 @@ function draw() {
   nodes.querySelectorAll('.ins-node').forEach(function (g) {
     var id = g.dataset.id, p = S.pos[id] || [W / 2, H / 2], e = S.byId[id];
     g.classList.toggle('off', !visible.has(id));
+    g.setAttribute('tabindex', visible.has(id) ? '0' : '-1');
+    g.setAttribute('aria-hidden', visible.has(id) ? 'false' : 'true');
     g.style.transform = 'translate(' + p[0].toFixed(1) + 'px,' + p[1].toFixed(1) + 'px)';
     g.querySelector('circle').setAttribute('r', radius(e));
     var q = S.find; g.classList.toggle('dim', !!q && name(e).toLowerCase().indexOf(q) < 0);

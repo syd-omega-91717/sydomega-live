@@ -1,4 +1,4 @@
-### Erasure engine: fail-closed, all-or-nothing, dormant (migration pending review) (2026-11-03)
+### Erasure engine: fail-closed, all-or-nothing, dormant (provider-applied; policy review pending) (2026-11-03)
 
 **Why.** `docs/legal/ERASURE_PLAN.md` findings 1 to 4, 7 to 9 against the prototype in `docs/legal/ERASURE_ROLLBACK_TEST.sql`: delete-by-default over financial tables, partial erasure committed when the final `auth.users` delete failed, the log written before the work, one failing member blocking the queue, no explicit revokes, a retained table silently destroyed by the `profiles` cascade, and a new table silently deleted or kept. The owner accepted the plan's recommendations for D1 to D4 on 2026-11-03.
 

@@ -31,7 +31,7 @@
 .inc-row.tbl-row{border-bottom:1px solid rgba(201,168,76,.04)!important;font-size:12px}
 .inc-row.tbl-row:last-child{border-bottom:none!important}
 .sev{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 6px;text-align:center}
-@media(max-width:600px){.cwv-row{grid-template-columns:1fr}.inc-head.tbl-head,.inc-row.tbl-row{grid-template-columns:60px 1fr 80px!important}}
+.coverage-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 22px}.coverage-card{min-width:0;padding:14px;border:1px solid var(--line);border-top:2px solid var(--muted);background:linear-gradient(145deg,rgba(14,16,26,.9),rgba(4,5,10,.82));border-radius:10px}.coverage-label{font-family:var(--M);font-size:12px;letter-spacing:1.4px;color:var(--muted)}.coverage-state{display:block;margin:8px 0 6px;font-family:var(--D);font-size:clamp(15px,1.8vw,20px);color:var(--solar);line-height:1.25}.coverage-detail{margin:0;color:#aeb4bd;font-size:13px;line-height:1.45}.coverage-card[data-state="good"]{border-top-color:var(--green)}.coverage-card[data-state="warn"]{border-top-color:var(--solar)}.coverage-card[data-state="bad"]{border-top-color:var(--crim)}.coverage-card[data-state="unknown"]{border-top-color:var(--muted)}@media(max-width:900px){.coverage-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.coverage-grid{grid-template-columns:1fr}.coverage-card{padding:12px}}@media(max-width:600px){.cwv-row{grid-template-columns:1fr}.inc-head.tbl-head,.inc-row.tbl-row{grid-template-columns:60px 1fr 80px!important}}
 </style>
 </head>
 <body>
@@ -57,7 +57,7 @@
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-members">—</div><div class="kpi-label">ACTIVE MEMBERS</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-events">—</div><div class="kpi-label">EVENTS TODAY</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-tasks">—</div><div class="kpi-label">TASKS (7d)</div></div>
-    <div class="kpi-card" data-reveal="fade-up" style="border-top:2px solid var(--crim)"><div class="kpi-val" id="k-incidents" style="color:var(--crim)">0</div><div class="kpi-label">OPEN INCIDENTS</div></div>
+    <div class="kpi-card" data-reveal="fade-up" style="border-top:2px solid var(--crim)"><div class="kpi-val" id="k-incidents" style="color:var(--muted)">—</div><div class="kpi-label">OPEN INCIDENTS · LOG DATA REQUIRED</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-threats">—</div><div class="kpi-label">THREAT EVENTS (7d)</div></div>
   </div>
   <div class="sechead" style="margin-top:8px">CORE WEB VITALS &middot; 75TH PERCENTILE</div>
@@ -78,6 +78,13 @@
       <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--solar)">&lt; 50% &rarr; YELLOW &middot; Caution</div>
       <div style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--crim)">&ge; 50% &rarr; RED &middot; Releases halted</div>
     </div>
+  </div>
+  <div class="sechead" style="margin-top:18px">TELEMETRY COVERAGE · OBSERVED DATA AVAILABILITY</div>
+  <div class="coverage-grid" aria-label="Operational telemetry coverage">
+    <article class="coverage-card" id="coverage-uptime" data-state="unknown"><div class="coverage-label">EXTERNAL UPTIME</div><strong class="coverage-state" id="coverage-uptime-state">NOT MONITORED</strong><p class="coverage-detail" id="coverage-uptime-detail">No external uptime monitor is connected. Incident-log absence is not uptime evidence.</p></article>
+    <article class="coverage-card" id="coverage-cwv" data-state="unknown"><div class="coverage-label">CORE WEB VITALS</div><strong class="coverage-state" id="coverage-cwv-state">CHECKING</strong><p class="coverage-detail" id="coverage-cwv-detail">Waiting for the latest platform metric query.</p></article>
+    <article class="coverage-card" id="coverage-budget" data-state="unknown"><div class="coverage-label">ERROR BUDGETS</div><strong class="coverage-state" id="coverage-budget-state">CHECKING</strong><p class="coverage-detail" id="coverage-budget-detail">Waiting for computed budget records.</p></article>
+    <article class="coverage-card" id="coverage-incidents" data-state="unknown"><div class="coverage-label">INCIDENT REGISTER</div><strong class="coverage-state" id="coverage-incidents-state">CHECKING</strong><p class="coverage-detail" id="coverage-incidents-detail">Waiting for the incident-log query.</p></article>
   </div>
   <div id="omega-evidence-console" aria-live="polite"></div>
 </div>
@@ -175,61 +182,111 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
     try{var tc=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',new Date(Date.now()-7*864e5).toISOString());sid('k-tasks',tc.error?'—':(tc.count==null?'—':tc.count));}catch(e){sid('k-tasks','—');console.warn('[Omega Observatory] task count unavailable:',e);}
     /* Threat events */
     try{var thr=await sb.from('threat_events').select('id',{count:'exact',head:true}).gte('created_at',new Date(Date.now()-7*864e5).toISOString());sid('k-threats',thr.error?'—':(thr.count==null?'—':thr.count));}catch(e){sid('k-threats','—');console.warn('[Omega Observatory] threat count unavailable:',e);}
-    /* CWV */
+    /* Core Web Vitals: report data availability separately from the thresholds. */
     try{
-      var cwv=await sb.from('platform_metrics').select('dimensions').order('created_at',{ascending:false}).limit(1).maybeSingle();
+      var cwv=await sb.from('platform_metrics').select('dimensions',{count:'exact'}).order('created_at',{ascending:false}).limit(1).maybeSingle();
+      if(cwv.error){
+        sid('coverage-cwv-state','UNAVAILABLE');
+        sid('coverage-cwv-detail','The platform_metrics query failed. No field-data status is inferred.');
+        document.getElementById('coverage-cwv').setAttribute('data-state','bad');
+      }else{
+        var metricRows=Number(cwv.count||0);
+        sid('coverage-cwv-state',metricRows?'DATA AVAILABLE':'NO FIELD DATA');
+        sid('coverage-cwv-detail',metricRows+' platform metric row(s) reported. Core Web Vitals require populated field measurements.');
+        document.getElementById('coverage-cwv').setAttribute('data-state',metricRows?'good':'unknown');
+      }
       if(cwv.data&&cwv.data.dimensions){
         var d=cwv.data.dimensions;
-        var lcpEl=document.getElementById('lcp-val');if(lcpEl&&d.lcp_ms){lcpEl.textContent=d.lcp_ms+'ms';lcpEl.style.color=goodColor(d.lcp_ms,2500);}
-        var inpEl=document.getElementById('inp-val');if(inpEl&&d.inp_ms){inpEl.textContent=d.inp_ms+'ms';inpEl.style.color=goodColor(d.inp_ms,200);}
+        var lcpEl=document.getElementById('lcp-val');if(lcpEl&&d.lcp_ms!=null){lcpEl.textContent=d.lcp_ms+'ms';lcpEl.style.color=goodColor(d.lcp_ms,2500);}
+        var inpEl=document.getElementById('inp-val');if(inpEl&&d.inp_ms!=null){inpEl.textContent=d.inp_ms+'ms';inpEl.style.color=goodColor(d.inp_ms,200);}
         var clsEl=document.getElementById('cls-val');if(clsEl&&d.cls!=null){clsEl.textContent=d.cls;clsEl.style.color=d.cls<=0.1?'var(--green)':'var(--crim)';}
       }
-    }catch(e){console.warn('[Omega Observatory] CWV data unavailable:',e);}
-    /* Error budget */
+    }catch(e){
+      sid('coverage-cwv-state','UNAVAILABLE');
+      sid('coverage-cwv-detail','The platform metric query failed. No field-data status is inferred.');
+      document.getElementById('coverage-cwv').setAttribute('data-state','bad');
+      console.warn('[Omega Observatory] CWV data unavailable:',e);
+    }
+    /* One error-budget query drives both the summary and per-surface cards. */
     try{
-      var eb=await sb.from('error_budget_policy').select('budget_4wk_pct').order('last_computed',{ascending:false}).limit(1).maybeSingle();
-      if(eb.data&&eb.data.budget_4wk_pct!=null){
-        var pct=Math.min(100,+(eb.data.budget_4wk_pct*100).toFixed(1));
-        sid('budget-pct',pct+'%');
-        var fill=document.getElementById('budget-fill');
-        if(fill){fill.style.width=pct+'%';fill.style.background=pct<20?'var(--green)':pct<50?'var(--solar)':'var(--crim)';}
+      var slo=await sb.from('error_budget_policy').select('surface,status,budget_4wk_pct,last_computed').order('last_computed',{ascending:false});
+      if(slo.error){
+        sid('coverage-budget-state','UNAVAILABLE');
+        sid('coverage-budget-detail','The error-budget query failed. Seeded statuses are not treated as measured health.');
+        document.getElementById('coverage-budget').setAttribute('data-state','bad');
+        sid('budget-pct','UNAVAILABLE');
+      }else{
+        var rows=Array.isArray(slo.data)?slo.data:[];
+        var computed=rows.filter(function(sv){return sv.budget_4wk_pct!==null&&sv.budget_4wk_pct!==undefined&&Number.isFinite(Number(sv.budget_4wk_pct));});
+        var latest=rows.filter(function(sv){return !!sv.last_computed;}).sort(function(a,b){return new Date(b.last_computed)-new Date(a.last_computed);})[0];
+        var recorded=latest?new Date(latest.last_computed).toLocaleString():'not recorded';
+        sid('coverage-budget-state',computed.length?'COMPUTED':'NOT COMPUTED');
+        sid('coverage-budget-detail',rows.length+' configured surface(s); '+computed.length+' with numeric 4-week budgets. Latest row timestamp: '+recorded+'. NULL budget values are not green health.');
+        document.getElementById('coverage-budget').setAttribute('data-state',computed.length?'good':'warn');
+        /* No synthetic platform aggregate: a service-specific budget is not a platform-wide budget. */
+        sid('budget-pct','NO PLATFORM AGGREGATE');
+        var fill=document.getElementById('budget-fill');if(fill){fill.style.width='0';fill.style.background='var(--muted)';}
+        rows.forEach(function(sv){
+          if(sv.budget_4wk_pct==null)return;
+          var card=document.querySelector('[data-surface="'+String(sv.surface).replace(/"/g,'')+'"]');if(!card)return;
+          var used=Math.min(100,+(Number(sv.budget_4wk_pct)*100).toFixed(1));
+          var col={green:'var(--green)',yellow:'var(--solar)',red:'var(--crim)',halted:'var(--crim)'}[sv.status]||'var(--muted)';
+          var v=card.querySelector('.slo-val');if(v){v.textContent=used+'% BUDGET USED';v.style.color=col;}
+          var st=card.querySelector('.slo-status');if(st){st.textContent=String(sv.status||'').toUpperCase();st.style.color=col;}
+          var f=card.querySelector('.slo-fill');if(f){f.style.width=used+'%';f.style.background=col;}
+        });
       }
-    }catch(e){console.warn('[Omega Observatory] error budget unavailable:',e);}
-    /* SLO data */
-    try{
-      var slo=await sb.from('error_budget_policy').select('*');
-      /* A seeded row carries status 'green' with budget_4wk_pct null: nothing
-         computed it. Only a row with a computed budget may colour a card. */
-      if(!slo.error&&slo.data)slo.data.forEach(function(sv){
-        if(sv.budget_4wk_pct==null)return;
-        var card=document.querySelector('[data-surface="'+sv.surface+'"]');if(!card)return;
-        var col={green:'var(--green)',yellow:'var(--solar)',red:'var(--crim)',halted:'var(--crim)'}[sv.status]||'var(--muted)';
-        var used=Math.min(100,+(sv.budget_4wk_pct*100).toFixed(1));
-        var v=card.querySelector('.slo-val');if(v){v.textContent=used+'% BUDGET USED';v.style.color=col;}
-        var st=card.querySelector('.slo-status');if(st){st.textContent=String(sv.status||'').toUpperCase();st.style.color=col;}
-        var f=card.querySelector('.slo-fill');if(f){f.style.width=used+'%';f.style.background=col;}
-      });
-    }catch(e){console.warn('[Omega Observatory] SLO data unavailable:',e);}
+    }catch(e){
+      sid('coverage-budget-state','UNAVAILABLE');
+      sid('coverage-budget-detail','The error-budget query failed. No budget status is inferred.');
+      document.getElementById('coverage-budget').setAttribute('data-state','bad');
+      sid('budget-pct','UNAVAILABLE');
+      console.warn('[Omega Observatory] error budget unavailable:',e);
+    }
     /* Uptime (30d) is deliberately not computed. Deriving it from the incidents
        table printed 100.00% whenever nothing was logged -- including through the
        2026-10-06 production pause, which no one filed as an incident. Uptime needs
        an external monitor; k-uptime stays "NOT MONITORED" until one writes data. */
-    /* Incidents */
+    /* Incident records: an empty log is not evidence of zero incidents or uptime. */
     try{
       var inc=await sb.from('incidents').select('*').order('started_at',{ascending:false}).limit(10);
-      if(inc.error){sid('k-incidents','—');document.getElementById('inc-rows').innerHTML='<div style="padding:20px;text-align:center;font-family:var(--M);font-size:12px;color:var(--crim)">INCIDENT LOG UNAVAILABLE</div>';}
-      else if(inc.data&&inc.data.length){
+      if(inc.error){
+        sid('k-incidents','—');
+        sid('inc-count','—');
+        sid('coverage-incidents-state','UNAVAILABLE');
+        sid('coverage-incidents-detail','The incident-log query failed. No zero-incident claim is made.');
+        document.getElementById('coverage-incidents').setAttribute('data-state','bad');
+        document.getElementById('inc-rows').textContent='INCIDENT LOG UNAVAILABLE';
+      }else if(inc.data&&inc.data.length){
         sid('inc-count',inc.data.length);
         var open=inc.data.filter(function(i){return i.status==='open';}).length;
         sid('k-incidents',open);
+        sid('coverage-incidents-state','RECORDS PRESENT');
+        sid('coverage-incidents-detail',inc.data.length+' recent incident record(s) loaded. Open count reflects the returned records only.');
+        document.getElementById('coverage-incidents').setAttribute('data-state',open?'bad':'good');
         if(open){document.getElementById('status-dot').style.background='var(--crim)';document.getElementById('status-text').textContent='INCIDENT IN PROGRESS';document.getElementById('status-text').style.color='var(--crim)';}
         var SEV={P0:'#8B0000',P1:'#8B0000',P2:'#C9A84C',P3:'#3fb27f',P4:'#8a8676'};
         document.getElementById('inc-rows').innerHTML=inc.data.map(function(i){
           var col=SEV[i.severity]||'#8a8676';
           return '<div class="tbl-row inc-row"><div class="sev" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+String(i.severity||'').replace(/</g,'&lt;')+'</div><div>'+String(i.title||'').slice(0,50).replace(/</g,'&lt;')+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+String(i.status||'').toUpperCase()+'</div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+((i.ttr_minutes||'?')+'m')+'</div></div>';
         }).join('');
+      }else{
+        sid('k-incidents','—');
+        sid('inc-count','0');
+        sid('coverage-incidents-state','NO RECORDS');
+        sid('coverage-incidents-detail','The query returned no incident rows. An empty register does not prove zero incidents or uptime.');
+        document.getElementById('coverage-incidents').setAttribute('data-state','unknown');
+        document.getElementById('inc-rows').textContent='NO INCIDENT RECORDS — absence of records is not uptime evidence.';
       }
-    }catch(e){console.warn('[Omega Observatory] incident data unavailable:',e);}
+    }catch(e){
+      sid('k-incidents','—');
+      sid('inc-count','—');
+      sid('coverage-incidents-state','UNAVAILABLE');
+      sid('coverage-incidents-detail','The incident-log query failed. No incident status is inferred.');
+      document.getElementById('coverage-incidents').setAttribute('data-state','bad');
+      document.getElementById('inc-rows').textContent='INCIDENT LOG UNAVAILABLE';
+      console.warn('[Omega Observatory] incident data unavailable:',e);
+    }
   }catch(e){document.getElementById('app').style.display='flex';console.warn('[Omega Observatory] boot failed:',e);}
 })();
 </script>

@@ -171,12 +171,17 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient("https://ydqhzvvoyufiiqv
 try{window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};}catch(e){}
 (async function(){
   try{
-    var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace("/account.html");return;}
-    var pr=(await sb.from("profiles").select("access_approved,is_owner").eq("id",s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace("/pending.html");return;}
+    var sessionResult=await sb.auth.getSession();
+    if(sessionResult.error)throw sessionResult.error;
+    var session=sessionResult.data&&sessionResult.data.session;
+    if(!session){location.replace("/account.html");return;}
+    var profileResult=await sb.from("profiles").select("is_owner").eq("id",session.user.id).maybeSingle();
+    if(profileResult.error||!profileResult.data)throw new Error("Owner profile could not be verified");
+    if(!profileResult.data.is_owner){location.replace("/pending.html");return;}
     document.getElementById("app").style.display="flex";
-  }catch(e){document.getElementById("app").style.display="flex";}
+  }catch(e){
+    location.replace("/account.html?error=covenant_unavailable");
+  }
 })();
 </script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

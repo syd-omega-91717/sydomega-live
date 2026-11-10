@@ -340,6 +340,14 @@
       ]
     }
   ],
+  "redirects": {
+    "graph-anomalies": "/insight.html?lens=anomaly",
+    "graph-centrality": "/insight.html?lens=central",
+    "graph-evidence": "/insight.html?lens=evidence",
+    "graph-explorer": "/insight.html?lens=graph",
+    "graph-timeline": "/insight.html?lens=time",
+    "graphify": "/insight.html?lens=graph&tools=1"
+  },
   "system": {
     "note": "Public or infrastructure pages that must stay separate (auth, legal, offline, health).",
     "pages": [

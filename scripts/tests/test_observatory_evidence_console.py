@@ -75,7 +75,7 @@ class ObservatoryEvidenceConsoleTests(unittest.TestCase):
     def test_service_budget_is_not_misrepresented_as_platform_aggregate(self):
         self.assertIn("surface==='platform'||sv.surface==='platform_service'", PAGE)
         self.assertIn("NO PLATFORM AGGREGATE", PAGE)
-        self.assertIn("computed.length?'unknown':'warn'", PAGE)
+        self.assertIn("computed.length?'unknown':(rows.length?'warn':'unknown')", PAGE)
 
     def test_existing_uptime_truth_contract_remains_untouched(self):
         uptime_test = (ROOT / "scripts" / "tests" / "test_uptime_truth_contract.py").read_text(encoding="utf-8")

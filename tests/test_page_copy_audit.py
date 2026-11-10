@@ -144,5 +144,22 @@ class PageCopyAuditTests(unittest.TestCase):
             self.assertIn("Pages scanned", rendered)
 
 
+    def test_exam_catalogue_has_one_canonical_owner(self):
+        import re
+        academy = (ROOT / "academy.html").read_text(encoding="utf-8")
+        gaming = (ROOT / "gaming.html").read_text(encoding="utf-8")
+        academy_tasks = set(re.findall(r'data-task="([^"]+)"', academy))
+        gaming_tasks = set(re.findall(r'data-task="([^"]+)"', gaming))
+        self.assertIn('data-task-type="knowledge"', academy)
+        self.assertNotIn('data-task-type="knowledge"', gaming)
+        self.assertTrue(academy_tasks)
+        self.assertFalse(academy_tasks & gaming_tasks, "academy and gaming must not render the same task cards")
+        self.assertIn('href="/academy.html"', gaming)
+        self.assertIn('id="tab-exams"', gaming)
+        for obsolete_panel in ("tab-stem", "tab-professional", "tab-technology", "tab-healthcare", "tab-sovereign_e"):
+            self.assertNotIn('id="' + obsolete_panel + '"', gaming)
+
+
+
 if __name__ == "__main__":
     unittest.main()

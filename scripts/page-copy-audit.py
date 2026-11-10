@@ -160,12 +160,28 @@ def build_report(root: Path, min_words: int = 8) -> dict:
                 "words": 0, "kind": "error",
             })
 
+    allowlist_path = root / "config" / "page-copy-allowlist.json"
+    approved_text: dict[str, str] = {}
+    if allowlist_path.is_file():
+        try:
+            allowlist = json.loads(allowlist_path.read_text(encoding="utf-8"))
+            for item in allowlist.get("approved", []):
+                normal = str(item.get("normalised_text", "")).strip()
+                reason = str(item.get("reason", "")).strip()
+                if normal and reason:
+                    approved_text[normal] = reason
+                else:
+                    errors.append({"page": "config/page-copy-allowlist.json", "tag": "error", "text": "allowlist entries require normalised_text and reason", "normalised": "", "words": 0, "kind": "error"})
+        except (OSError, ValueError) as exc:
+            errors.append({"page": "config/page-copy-allowlist.json", "tag": "error", "text": str(exc), "normalised": "", "words": 0, "kind": "error"})
+
     groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for block in all_blocks:
         if block["normalised"]:
             groups[(block["kind"], block["normalised"])].append(block)
 
-    cross_page, within_page, cta_reuse = [], [], []
+    cross_page, approved_cross_page, within_page, cta_reuse = [], [], [], []
+    seen_allowlist: set[str] = set()
     for (kind, normal), items in groups.items():
         if len(items) < 2:
             continue
@@ -178,14 +194,21 @@ def build_report(root: Path, min_words: int = 8) -> dict:
         if kind == "cta":
             cta_reuse.append(group)
         elif len(paths) > 1:
-            cross_page.append(group)
+            reason = approved_text.get(normal)
+            if reason:
+                group["approved_reason"] = reason
+                approved_cross_page.append(group)
+                seen_allowlist.add(normal)
+            else:
+                cross_page.append(group)
         else:
             within_page.append(group)
 
     sort_key = lambda item: (-item["occurrences"], -item["words"], item["text"].casefold())
-    for collection in (cross_page, within_page, cta_reuse):
+    for collection in (cross_page, approved_cross_page, within_page, cta_reuse):
         collection.sort(key=sort_key)
-    errors = [b for b in all_blocks if b["kind"] == "error"]
+    errors.extend(b for b in all_blocks if b["kind"] == "error")
+    unused_allowlist = sorted(set(approved_text) - seen_allowlist)
     return {
         "schema_version": 1,
         "generated_by": "scripts/page-copy-audit.py",
@@ -193,8 +216,10 @@ def build_report(root: Path, min_words: int = 8) -> dict:
         "block_count": sum(1 for b in all_blocks if b["kind"] != "error"),
         "min_words": min_words,
         "cross_page_duplicate_groups": cross_page,
+        "approved_cross_page_duplicate_groups": approved_cross_page,
         "within_page_duplicate_groups": within_page,
         "reused_cta_groups": cta_reuse,
+        "unused_allowlist_entries": unused_allowlist,
         "scan_errors": errors,
         "truth_note": "Exact text repetition is a review signal, not proof of an error. Shared legal copy, standard controls, and intentionally repeated instructions may be justified.",
     }
@@ -205,7 +230,8 @@ def markdown(report: dict, limit: int = 30) -> str:
         "# Ω Page Copy Uniqueness Audit", "",
         f"- Pages scanned: **{report['page_count']}**",
         f"- Visible content blocks: **{report['block_count']}**",
-        f"- Cross-page repeated prose groups: **{len(report['cross_page_duplicate_groups'])}**",
+        f"- Unapproved cross-page repeated prose groups: **{len(report['cross_page_duplicate_groups'])}**",
+        f"- Approved cross-page repeated prose groups: **{len(report['approved_cross_page_duplicate_groups'])}**",
         f"- Within-page repeated prose groups: **{len(report['within_page_duplicate_groups'])}**",
         f"- Reused CTA groups (reported separately): **{len(report['reused_cta_groups'])}**",
         f"- Scan errors: **{len(report['scan_errors'])}**", "",
@@ -220,6 +246,19 @@ def markdown(report: dict, limit: int = 30) -> str:
             f"> {item['text']}", "",
             ", ".join(item["pages"]), "",
         ])
+    lines.extend(["## Approved repeated prose", ""])
+    if not report["approved_cross_page_duplicate_groups"]:
+        lines.append("No repeated prose has an explicit allowlist justification.")
+    for item in report["approved_cross_page_duplicate_groups"][:limit]:
+        lines.extend([
+            f"- **{item['occurrences']}×** — {item['text']}",
+            f"  Reason: {item['approved_reason']}",
+            f"  Pages: {', '.join(item['pages'])}",
+        ])
+    if report["unused_allowlist_entries"]:
+        lines.extend(["", "## Stale allowlist entries", ""])
+        for item in report["unused_allowlist_entries"]:
+            lines.append(f"- {item}")
     lines.extend(["## Repeated prose within a page", ""])
     if not report["within_page_duplicate_groups"]:
         lines.append("No within-page repeated prose blocks met the configured word threshold.")

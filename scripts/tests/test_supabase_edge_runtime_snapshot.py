@@ -81,7 +81,7 @@ class SupabaseEdgeRuntimeSnapshotTests(unittest.TestCase):
         ]
         self.assertEqual(len(table_rows), 22)
         self.assertIn("22 ACTIVE", GO_LIVE)
-        self.assertIn("22 ACTIVE functions", AUDIT)
+        self.assertIn("22 ACTIVE Edge Functions", AUDIT)
         self.assertIn("notify-access` v2 is ACTIVE", GAP)
         self.assertNotIn("9 of 25 functions are", GAP)
 

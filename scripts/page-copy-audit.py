@@ -26,7 +26,7 @@ SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", "public"}
 SKIP_TAGS = {"script", "style", "noscript", "svg", "template", "nav", "footer", "aside"}
 BLOCK_TAGS = {"h1", "h2", "h3", "h4", "p", "li", "div", "section", "article", "button", "a", "label", "summary", "blockquote", "dt", "dd"}
 CTA_TAGS = {"button", "a"}
-STATUS_CLASSES = {"badge", "chip", "tag", "status", "status-badge", "status-chip", "status-tag", "status-pill", "state", "state-chip", "phase", "rank-badge", "level-badge", "availability"}
+STATUS_CLASSES = {"badge", "chip", "tag", "status", "status-badge", "status-chip", "status-tag", "status-pill", "state", "state-chip", "phase", "rank-badge", "level-badge", "availability", "status-dot", "status-indicator", "status-label", "badge-label", "chip-label", "tag-pill"}
 SKIP_CLASSES = {
     "omega-side", "sidebar", "topbar", "global-nav", "breadcrumbs",
     "cookie-banner", "cookie-consent", "site-header", "site-footer",
@@ -230,9 +230,18 @@ def build_report(root: Path, min_words: int = 8, near_min_words: int = 20, near_
         if kind == "cta":
             cta_reuse.append(group)
         elif kind == "status":
-            if len(paths) == 1 and len(items) >= 3:
-                group["classes"] = sorted({name for item in items for name in item.get("classes", [])})
-                repeated_status_labels.append(group)
+            by_page: dict[str, list[dict]] = defaultdict(list)
+            for item in items:
+                by_page[item["page"]].append(item)
+            for page, page_items in by_page.items():
+                if len(page_items) >= 3:
+                    repeated_status_labels.append({
+                        "kind": "status", "text": page_items[0]["text"],
+                        "normalised": normal, "words": page_items[0]["words"],
+                        "occurrences": len(page_items), "pages": [page],
+                        "locations": [{"page": item["page"], "tag": item["tag"]} for item in page_items],
+                        "classes": sorted({name for item in page_items for name in item.get("classes", [])}),
+                    })
         elif len(paths) > 1:
             approval = approved_text.get(normal)
             if approval:

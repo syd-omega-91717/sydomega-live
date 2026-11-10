@@ -1,10 +1,25 @@
 # Ω Page Copy Uniqueness
 
-**Status:** Implemented as an evidence-only audit. First full scheduled report pending.
+**Status:** Implemented as a blocking-contract evidence audit. Baseline scan completed 2026-11-10; targeted remediation is in progress and a post-remediation full scan is still required.
 
 ## Purpose
 
 The page estate is intentionally multi-page. It must not repeat substantial explanatory copy, duplicate a feature under multiple URLs without a clear reason, or repeat a long instruction inside the same page. The audit is designed to identify those cases without confusing shared site chrome or short labels with duplicated product content.
+
+## First full scan and remediation
+
+The baseline Contracts run on 2026-11-10 scanned **251 HTML pages** and **1,830 visible content blocks**. It reported 12 unapproved exact cross-page prose groups, 2 explicitly approved truth notices, 0 exact within-page prose groups at the eight-word threshold, 0 repeated CTA groups and 0 scan errors. The baseline report is evidence, not the final post-remediation result.
+
+The following source-level corrections have since been made on the page-copy audit branch:
+
+- `academy.html` is the single owner of the exam and certification catalogue; `gaming.html` now links to Academy and retains only mastery/play cards.
+- The full authority calculation and gate definitions have one canonical reference in `evolution.html`; related pages retain their own live data or purpose-specific explanations.
+- The Vault no longer repeats the owner-only Covenant article catalogue. Its Covenant link is revealed only after the authenticated profile is verified as owner.
+- Founder identification was removed from member-facing Vault content and the founder LinkedIn card on Profile is hidden unless the authenticated profile is the owner.
+- Honors, Approvals, Dashboard, Academy, Gaming and Vault now use page-specific content instead of repeating the same formula/gate explanation.
+- Exact duplicate checks are protected by regression tests for catalogue ownership, owner identity boundaries and the canonical progression reference.
+
+**Verification boundary:** the baseline report is not a post-remediation scan. Re-run `python3 scripts/page-copy-audit.py --markdown` on the final branch and inspect all remaining groups before claiming zero duplicate prose.
 
 ## What the audit measures
 

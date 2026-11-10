@@ -6,4 +6,4 @@
 
 **Verified.** Studio canon validator 0 findings; Studios and Worlds tests; the full `./scripts/ci-local.sh`. The Worlds payload for the gated function was regenerated and the validator checks it matches.
 
-**Not done / not verified.** 146 episodes, 24 screenplays and every game build are unwritten; nothing here is approved content. The invented Ormel Hesh details (a child, Ilsa, whose father Malachar "knew"; "the first town to stop") are proposals the founder may strike. The live `studio-canon` code, the owner path and the non-owner 403 are still unverified; its snapshot stays `PENDING_DEPLOY`.
+**Provider update 2026-11-10.** `studio-canon` v4 is ACTIVE and its entrypoint plus returned Studio dependencies match main byte-for-byte. The owner path and non-owner 403 remain unverified; the provider log query failed, so the earlier 503 profile-read cause is still unknown. 146 episodes, 24 screenplays and every game build are unwritten; nothing here is approved content. The invented Ormel Hesh details (a child, Ilsa, whose father Malachar "knew"; "the first town to stop") remain proposals the founder may strike.

@@ -6,18 +6,18 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**512 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 41, IDEA_INTAKE.md 16.
+**513 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 41, IDEA_INTAKE.md 17.
 
 | status | count |
 |---|---|
 | NEEDS_DECISION | 16 |
 | PROPOSED | 18 |
 | PARTIAL | 56 |
-| OPEN_GAP | 24 |
+| OPEN_GAP | 23 |
 | DORMANT | 1 |
-| SHIPPED | 44 |
+| SHIPPED | 45 |
 | DECIDED | 42 |
-| CLOSED | 17 |
+| CLOSED | 18 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
 | REJECTED | 118 |
@@ -69,7 +69,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
-| I16 | IDEA_INTAKE.md | Replace max-height expand/collapse hacks with interpolate-size | the expanding panels guess a max-height ceiling, so text past the guess is clipped and the easing runs against the wrong height. Grounded 2… |
+| I17 | IDEA_INTAKE.md | Let text areas grow with what the member writes (field-sizing: content) | a long journal entry, work or note scrolls inside a fixed box today. Grounded 2026-11-09: 116 <textarea> on 59 pages; 0 first-party uses of… |
 
 ### PARTIAL (56)
 
@@ -132,14 +132,13 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (24)
+### OPEN_GAP (23)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | G01 | GAP_ANALYSIS.md S | the owner's rule "nothing is visible without prior approval" does not hold for Studios text, and cannot hold… | GAP_ANALYSIS.md section S |
 | G02 | GAP_ANALYSIS.md S | five pages the menu links have no dock; one of the original three navigation faults remains open. | GAP_ANALYSIS.md section S |
 | G03 | GAP_ANALYSIS.md S | no page-usage data since the Cloudflare cutover. Vercel Analytics recorded 3 to 9 visitors a day | GAP_ANALYSIS.md section S |
-| G04 | GAP_ANALYSIS.md S | erasure engine merged dormant; its migration is not yet recorded as applied. | GAP_ANALYSIS.md section S |
 | G05 | GAP_ANALYSIS.md S | the GitHub Pages failover `build` job failed on every merge to `main` | GAP_ANALYSIS.md section S |
 | G06 | GAP_ANALYSIS.md S | Twelve Data's terms do not permit showing quotes to members without a Redistribution | GAP_ANALYSIS.md section S |
 | G07 | GAP_ANALYSIS.md S | page sprawl against real use. 239 pages; 70 opened ever | GAP_ANALYSIS.md section S |
@@ -167,7 +166,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (44)
+### SHIPPED (45)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -215,6 +214,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | I07 | IDEA_INTAKE.md | Certificate PDF per earned certificate | from the Sovereign Terminal board; merged in #885: profile.html:1529 gives each held certificate a download button, omega-passport.js:224 `… |
 | I14 | IDEA_INTAKE.md | Rendered-image alt-text check | built 2026-10-26: scripts/verify-runtime.js:203 collects painted <img> with no alt attribute and :547 fails the page; 0 across all 237 page… |
 | I15 | IDEA_INTAKE.md | Honour prefers-reduced-transparency on the glass layers | built 2026-11-02: css/omega-system.css:1284 removes every backdrop-filter and gives the shared glass surfaces an opaque base colour when th… |
+| I16 | IDEA_INTAKE.md | Replace max-height expand/collapse hacks with interpolate-size | built 2026-11-09: media.html:214 and publishing.html:22 animate height:0→auto under @supports (interpolate-size:allow-keywords), keeping th… |
 
 ### DECIDED (42)
 
@@ -263,10 +263,11 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
-### CLOSED (17)
+### CLOSED (18)
 
 | id | source | idea | evidence |
 |---|---|---|---|
+| G04 | GAP_ANALYSIS.md S | provider migration ledger and D1 financial retention schema reconciled; erasure remains dormant. | GAP_ANALYSIS.md section S |
 | G14 | GAP_ANALYSIS.md S | was: `omega_platform_events.event_id` is NOT NULL with no default live. 7 rows, | GAP_ANALYSIS.md section S |
 | G15 | GAP_ANALYSIS.md S | was: `omega_record_world_action` cannot write its event (42501). It is | GAP_ANALYSIS.md section S |
 | G16 | GAP_ANALYSIS.md S | 2026-10-17 (`20261017093038` + `20261017093316`, `stripe-webhook` v6; verified live | GAP_ANALYSIS.md section S |

@@ -210,6 +210,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .status-dev{color:var(--muted);border-color:var(--border)}
 .film-desc{font-size:var(--fs-1,12px);color:var(--muted);line-height:1.7;margin-top:.7rem;max-height:0;overflow:hidden;transition:max-height .35s ease}
 .film-card.expanded .film-desc{max-height:400px}
+/* I16: animate to the real height where supported; the 400px cap above stays the fallback (it clipped a 506px description at 320px wide). */
+@supports (interpolate-size:allow-keywords){.film-desc{interpolate-size:allow-keywords;max-height:none;height:0;transition:height .35s ease}.film-card.expanded .film-desc{max-height:none;height:auto}}
+@media (prefers-reduced-motion:reduce){.film-desc{transition:none}}
 
 /* Universe tab: franchise cards (.fc, distinct from .franchise-card) */
 .franchise-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}

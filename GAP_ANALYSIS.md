@@ -32,15 +32,9 @@ project's own established convention (security/data-integrity first).
   until 2026-10-19 and nothing after (queried 2026-11-05), because production is served by Cloudflare Pages. Any decision
   to retire pages is therefore blind. Enable Cloudflare Web Analytics on the `sydomega` Pages project, then revisit
   `docs/PLATFORM_SIMPLIFICATION_PLAN.md` (15 sections to 8 proposed, nothing deleted).
-- **OPEN 2026-11-04 — erasure engine merged dormant; its migration is not yet recorded as applied.**
-  `20261103230000_erasure_pipeline_dormant.sql` merged in #1156 (`7895655`). It is registered
-  `PENDING_REVIEW` in `supabase/pending-migrations.json`, so `migration-drift.py` fails the push-time
-  `readiness` job on `main` ("a release may not ship a pending migration"): red on #1156 only, green on every
-  merge before it (measured 2026-11-04). Clearing it needs provider evidence (`list_migrations` on
-  `ydqhzvvoyufiiqvzcjns`) and the entry moved to `remote-migrations.json`. This session's Supabase connector
-  could not see production (it listed only `nvgedlxlkdzvcelimbvq`), so neither the apply nor the follow-up was
-  verified. The engine is inert (worker flag false, policy empty, no cron job, no API grants); the
-  production gate is `docs/legal/ERASURE_ROLLBACK_TEST.sql`. Plan and decisions: `docs/legal/ERASURE_PLAN.md`.
+- **CLOSED 2026-11-10 — provider migration ledger and D1 financial retention schema reconciled; erasure remains dormant.**
+  Authenticated Supabase `list_migrations` on the configured production project returned **415 unique versions**; the set exactly matched the previous 413-version remote snapshot plus the two entries previously marked pending. `20261103230000` and `20261104090000` are now recorded in `remote-migrations.json`; `pending-migrations.json` is empty. Read-only production SQL verified the erasure tables/functions exist, `private.erasure_policy` has 0 rows, `erasure_worker_enabled=false`, delay is 14 days, `pg_cron` exists but no erasure job is scheduled, and neither erasure function is executable by anon/authenticated/service_role. The three D1 financial tables now have nullable `user_id` columns and `ON DELETE SET NULL` foreign keys. No production rows were modified.
+  **Remaining gap:** this closes the migration-history mismatch and verifies the D1 foreign-key shape; it does not complete table-by-table erasure classification, legal retention review, account-deletion end-to-end testing, or safe activation. Keep the worker disabled until `private.erasure_policy` is populated and independently reviewed.
 - **OPEN 2026-11-04 — the GitHub Pages failover `build` job failed on every merge to `main`
   (measured #1148 to #1157); fix written, not yet seen working.** It is `omega-static-failover.yml`: the
   workflow pinned `actions/upload-pages-artifact` to a SHA, but that composite action calls
@@ -231,26 +225,11 @@ open, recorded in `FIXES_LOG.md`:
   11 `trial_expired`, 1 `permanent_granted`. Owner decision: APPROVE (and RECONSIDER) now call
   `grant_permanent_access`; the trial is a separate, labelled button. Client-only change; the RPCs are
   unchanged (`FIXES_LOG.md`, "APPROVE grants permanent access").
-- **OPEN 2026-10-09 — access requests go unanswered; the owner is never emailed.**
-  `notify-access` (emails the owner on a new request) is `LOCAL_ONLY` — 9 of 25 functions are
-  (`docs/runtime/supabase-edge-functions-live.json`; `list_edge_functions` returns 16). Live:
-  9 accounts, 4 approved, **4 pending for 72–115 days**, 1 rejected; 2 sign-ins in 30 days.
-  (Corrected same day: a first count said 5 pending by including the rejected row.) A signal
-  does exist — `omega-owner-deck.js` `waitingChip()` shows "N WAITING" — but only on
-  `control-plane.html`. Owner: decide each request in `approvals.html`; to deploy
-  `notify-access`, set `RESEND_API_KEY` + `NOTIFY_ACCESS_WEBHOOK_SECRET` and the `profiles`
-  DB webhook first.
+- **OPEN 2026-10-09 — access-request email delivery is not yet proven.**
+  Provider inventory on 2026-11-10 confirms `notify-access` v2 is ACTIVE (`verify_jwt=false`, `SHARED_SECRET`) and its entrypoint matches main. It is no longer LOCAL_ONLY. The provider inventory contains 22 ACTIVE functions; 5 of 27 repository functions remain LOCAL_ONLY: `checkout`, `event-ingest`, `graphify-ai-ingest`, `graphify-ai-query`, and `weekly-digest`. The earlier account counts (9 accounts, 4 approved, 4 pending, 1 rejected; 2 sign-ins in 30 days) are a historical 2026-10-25 snapshot, not current data. The function's source enforces a Vault-backed shared-secret check, but the Vault secret value, `RESEND_API_KEY`, sender-domain verification, and successful email delivery were not verified in this pass. The Supabase unified log query also failed to retrieve logs, so no successful runtime invocation is claimed. Owner: review current requests in `approvals.html`, verify the required secrets and sender domain, and run a real end-to-end delivery test before closing this item.
 - **UPDATE 2026-10-12:** `pg_cron` now **is** installed live (`pg_extension` row present), but `leaderboard_snapshots` still holds 0 rows, so the schedule is not yet producing work — re-measure `cron.job` before closing this item.
-- **OPEN 2026-10-09 — nothing runs on a schedule.** `pg_cron` is **not installed** live
-  (`cron.job` → 42P01; `pg_available_extensions` lists it, `pg_net` is installed). So
-  `rankings`, `snapshot-leaderboard`, `weekly-digest` (also undeployed) and the trial sweep
-  never run. Live row counts are 0 in all eight async tables: `leaderboard_snapshots`,
-  `weekly_digest_queue`, `notification_queue`, `omega_event_queue`, `ai_jobs`,
-  `omega_media_jobs`, `omega_provider_jobs`, `omega_knowledge_embedding_jobs` — the four
-  deployed workers have never had work. **2 expired trials are unswept.** Enforcement does not
-  depend on the sweep (`0082_trial_917.sql:211`), but scheduling it is **not** a safe default:
-  `sweep_expired_trials()` deletes the member's `task_completions` (`0082_trial_917.sql:243`),
-  so its first run wipes those two members' progress. Owner decision before any schedule.
+- **OPEN 2026-11-10 — scheduled operations remain incomplete; only in-app notification delivery is scheduled.**
+  Read-only production checks confirm `pg_cron` is installed and exactly one active job exists: `omega-in-app-notification-delivery` runs `omega_private.deliver_in_app_notifications(100)` every minute. No leaderboard snapshot, weekly digest, media, provider, embedding, or trial-sweep job was found. All eight async queues remain empty: `leaderboard_snapshots`, `weekly_digest_queue`, `notification_queue`, `omega_event_queue`, `ai_jobs`, `omega_media_jobs`, `omega_provider_jobs`, and `omega_knowledge_embedding_jobs`. Two approved trials are expired and unswept. The trial sweep remains intentionally unscheduled because `sweep_expired_trials()` deletes the member's `task_completions` (`0082_trial_917.sql:243)); do not schedule it until that destructive behavior is redesigned and the owner approves the data-preservation plan.
 - **CLOSED 2026-10-12 — `profile.html`'s owner access panel now changes access.** It wrote
   `access_approved`/`is_trial`/`trial_expires_at` directly, which no caller may UPDATE (42501 on
   every click). It now calls `approve_member` / `grant_permanent_access` / `revoke_member`, the

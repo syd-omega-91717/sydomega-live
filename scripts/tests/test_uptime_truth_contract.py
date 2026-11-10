@@ -33,7 +33,9 @@ class UptimeTruthContract(unittest.TestCase):
 
     def test_slo_card_colour_requires_a_computed_budget(self):
         self.assertIn("if(sv.budget_4wk_pct==null)return;", OBS)
-        self.assertIn("if(!slo.error&&slo.data)", OBS)
+        self.assertIn("if(slo.error)", OBS)
+        self.assertIn("var computed=rows.filter", OBS)
+        self.assertIn("surface==='platform'||sv.surface==='platform_service'", OBS)
 
     def test_incident_read_failure_is_not_shown_as_no_incidents(self):
         self.assertIn("if(inc.error)", OBS)

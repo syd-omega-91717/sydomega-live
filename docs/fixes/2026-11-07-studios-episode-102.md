@@ -6,4 +6,4 @@
 
 **Verified.** `studio-canon-check.py` 0 findings, Studios tests, the full `./scripts/ci-local.sh` (35 of 35). The probe was made through Firecrawl because the sandbox cannot reach supabase.co.
 
-**Not done / not verified.** Not verified live: that the deployed code equals the repository's version, the owner path and the non-owner 403 (the snapshot stays `PENDING_DEPLOY`). 147 episodes, 24 screenplays and every game build remain unwritten; nothing here is approved content.
+**Provider update 2026-11-10.** `studio-canon` is ACTIVE at version 4 with `verify_jwt=true`; its entrypoint and returned Studio dependencies match main byte-for-byte. The owner path and non-owner 403 have not been re-run, and the earlier 503 profile-read cause remains unknown because the provider log query failed. 147 episodes, 24 screenplays and every game build remain unwritten; nothing here is approved content.

@@ -46,6 +46,15 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertTrue(filename.startswith(version + "_"), filename)
             pending_versions.add(version)
 
+    def test_provider_confirmed_november_migrations_are_in_remote_not_pending(self) -> None:
+        for version in ("20261103230000", "20261104090000"):
+            self.assertIn(version, self.remote_versions)
+            self.assertNotIn(version, {str(item["version"]) for item in self.pending})
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
+        self.assertEqual(self.remote.get("_captured"), "2026-11-10")
+        self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
+
     def test_source_inventory_replay_contract_includes_pending_without_claiming_live(self) -> None:
         result = run_script("scripts/migration-replay-contract.py")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

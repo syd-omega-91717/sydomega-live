@@ -1,8 +1,8 @@
 /* ==========================================================================
    Ω SYD OMEGA 91717 — omega-insight.js  (insight.html only)
 
-   INSIGHT: the member's evidence graph as one view with four lenses. The
-   same nodes animate between layouts instead of living on six pages
+   INSIGHT: the member's evidence graph as one view with five lenses.
+   The same nodes animate between layouts instead of living on six pages
    (graph-explorer, graph-timeline, graph-centrality, graph-anomalies,
    graph-evidence, graphify), which each read the same four tables.
 

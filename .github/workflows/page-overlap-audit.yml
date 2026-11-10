@@ -13,7 +13,6 @@ on:
     paths:
       - '**.html'
       - 'scripts/page-copy-audit.py'
-      - 'scripts/page-consolidation.py'
       - 'scripts/page-overlap-audit.py'
       - '.github/workflows/page-overlap-audit.yml'
 

@@ -40,3 +40,5 @@ jobs:
           python-version: '3.12'
       - name: Run overlap audit
         run: python scripts/page-overlap-audit.py
+      - name: Report repeated visible page copy
+        run: python scripts/page-copy-audit.py --markdown >> "$GITHUB_STEP_SUMMARY"

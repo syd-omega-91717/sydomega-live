@@ -48,6 +48,26 @@ class ObservatoryEvidenceConsoleTests(unittest.TestCase):
         self.assertRegex(SCRIPT, re.compile(r"@media\(max-width:720px\)"))
         self.assertIn("prefers-reduced-motion:reduce", SCRIPT)
 
+    def test_live_telemetry_coverage_is_explicit(self):
+        for element_id in (
+            'coverage-uptime-state',
+            'coverage-cwv-state',
+            'coverage-budget-state',
+            'coverage-incidents-state',
+        ):
+            self.assertIn('id="' + element_id + '"', PAGE)
+
+    def test_empty_incident_register_is_not_rendered_as_zero_open_incidents(self):
+        self.assertIn("NO INCIDENT RECORDS", PAGE)
+        self.assertIn("absence of records is not uptime evidence", PAGE)
+        self.assertIn("sid('k-incidents','—')", PAGE)
+        self.assertNotIn("sid('k-incidents',0)", PAGE)
+
+    def test_error_budget_seed_rows_are_not_promoted_to_green(self):
+        self.assertIn("NO PLATFORM AGGREGATE", PAGE)
+        self.assertIn("NULL budget values are not green health", PAGE)
+        self.assertEqual(PAGE.count("from('error_budget_policy')"), 1)
+
     def test_existing_uptime_truth_contract_remains_untouched(self):
         uptime_test = (ROOT / "scripts" / "tests" / "test_uptime_truth_contract.py").read_text(encoding="utf-8")
         self.assertIn("test_uptime_is_not_derived_from_an_incident_log", uptime_test)

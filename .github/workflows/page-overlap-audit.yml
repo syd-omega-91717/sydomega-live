@@ -4,6 +4,9 @@ name: Page Content and Purpose Audit
 # answer different questions. The purpose audit is O(n^2) over the page estate.
 # Reports run nightly and on demand; they do not gate merges.
 on:
+  push:
+    branches:
+      - fix/audit-workflow-and-content-dedup-20261111
   schedule:
     - cron: '30 4 * * *'
   workflow_dispatch:
@@ -24,10 +27,10 @@ jobs:
     # 10m13s / 11m44s / 11m52s of queueing before timing out. A check that
     # never runs is not a lenient check, it is an absent one.
     #
-    # The script is platform-independent and was verified on Linux before this
-    # change: `python3 scripts/page-overlap-audit.py` -> "PAGE OVERLAP AUDIT:
-    # PASS (advisory; no files modified)", exit 0. `shell: pwsh` went with the
-    # Windows runner and is dropped; bash is the default here.
+    # The scripts are platform-independent and run on Linux. The visible-copy
+    # audit reports exact and near-duplicate text; the page-purpose audit
+    # reports semantic overlap candidates with supporting evidence. `shell:
+    # pwsh` went with the Windows runner and is dropped; bash is the default here.
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -38,6 +41,6 @@ jobs:
         with:
           python-version: '3.12'
       - name: Report repeated visible page copy
-        run: python scripts/page-copy-audit.py --markdown >> "$GITHUB_STEP_SUMMARY"
+        run: python scripts/page-copy-audit.py --markdown | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Report page-purpose overlap with source evidence
-        run: python scripts/page-consolidation.py --markdown >> "$GITHUB_STEP_SUMMARY"
+        run: python scripts/page-consolidation.py --markdown | tee -a "$GITHUB_STEP_SUMMARY"

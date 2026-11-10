@@ -23,6 +23,17 @@
       <div class="ins-bar">
         <div class="ins-lens" role="tablist" aria-label="Lens" id="ins-lens"></div>
         <input class="inp ins-find" id="ins-find" type="search" placeholder="Find a node" aria-label="Find a node" autocomplete="off">
+        <label class="ins-depth" id="ins-depth-wrap">DEPTH <input class="inp" id="ins-depth" type="number" min="1" max="5" value="2" aria-label="Relationship depth"></label>
+      </div>
+      <div class="ins-actions" aria-label="Graph data tools">
+        <button class="ins-action" id="ins-export-json" type="button" data-omega-task-id="insight.export.graph">EXPORT GRAPH JSON</button>
+        <button class="ins-action" id="ins-export-evidence" type="button" data-omega-task-id="insight.export.evidence">EXPORT EVIDENCE</button>
+        <details class="ins-tools" id="ins-ai-tools">
+          <summary>AI QUERY &amp; INGESTION · HELD</summary>
+          <p>These AI functions are intentionally not deployed. They would send member content to Anthropic, which is not yet disclosed as a processor in the privacy notice, and they do not yet have a per-member daily cost limit.</p>
+          <p class="ins-tools-gate">UNAVAILABLE — unlock only after the processor disclosure, transfer basis, consent path, and enforced daily member limit are verified.</p>
+          <a href="/privacy.html">Review privacy and data processing</a>
+        </details>
       </div>
       <div class="ins-kpis" id="ins-kpis"></div>
 
@@ -43,11 +54,25 @@
 <style>
 .ins{display:flex;flex-direction:column;gap:14px}
 .ins-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.ins-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ins-action{min-height:36px;padding:7px 11px;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.06);color:var(--gold);font:12px var(--M);letter-spacing:1px;cursor:pointer}
+.ins-action:hover{border-color:var(--cyan);color:var(--cyan)}
+.ins-tools{flex:1 1 320px;min-width:min(100%,280px);padding:8px 11px;border:1px solid rgba(255,152,0,.3);background:rgba(255,152,0,.035);font:12px var(--M);color:var(--muted)}
+.ins-tools summary{cursor:pointer;color:#FFB454;letter-spacing:1px}
+.ins-tools p{font:14px var(--R);line-height:1.5;margin:10px 0}
+.ins-tools-gate{color:#FFB454!important}
+.ins-tools a{color:var(--cyan);text-decoration:none}
+.ins-tools a:hover{text-decoration:underline}
 .ins-lens{display:flex;gap:6px;flex-wrap:wrap}
 .ins-lens button{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:7px 12px;background:rgba(255,255,255,.03);color:var(--muted);
   border:1px solid rgba(255,255,255,.1);border-radius:2px;cursor:pointer}
 .ins-lens button[aria-selected="true"]{color:var(--cyan);border-color:var(--cyan);background:rgba(0,229,255,.08)}
 .ins-find{max-width:240px}
+.ins-depth{display:flex;align-items:center;gap:7px;font:11px var(--M);letter-spacing:1px;color:var(--muted)}
+.ins-depth input{width:58px;min-height:34px;padding:5px 7px}
+.ins-node.off{opacity:0;pointer-events:none}
+.ins-lbl.off{display:none}
+#ins-edges line.off{opacity:0}
 .ins-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .ins-kpi{padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:2px}
 .ins-kpi b{display:block;font-family:var(--D);font-size:var(--fs-5,28px);color:var(--ink)}

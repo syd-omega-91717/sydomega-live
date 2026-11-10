@@ -90,7 +90,7 @@ GATES = [
      'no two pages share a title or description',
      ['scripts/content-uniqueness-contract.py']),
     ('page-copy-audit',
-     'report exact repeated visible copy across pages and within pages without rewriting content',
+     'report exact and near-duplicate visible copy across pages and within pages without rewriting content',
      ['scripts/page-copy-audit.py', '--markdown']),
     ('page-copy-audit-tests',
      'visible page copy extraction excludes shared chrome and reports repeated prose separately from CTA reuse',

@@ -6,6 +6,15 @@ ROOT = Path(__file__).resolve().parents[2]
 COVENANT = (ROOT / "sovereign-covenant.html").read_text(encoding="utf-8")
 VAULT = (ROOT / "vault.html").read_text(encoding="utf-8")
 NAV = (ROOT / "nav.js").read_text(encoding="utf-8")
+PROFILE = (ROOT / "profile.html").read_text(encoding="utf-8")
+APPROVALS = (ROOT / "approvals.html").read_text(encoding="utf-8")
+APPROVALS_JS = (ROOT / "approvals.js").read_text(encoding="utf-8")
+OMEGA_USER = (ROOT / "omega-user.js").read_text(encoding="utf-8")
+PRIVACY = (ROOT / "privacy.html").read_text(encoding="utf-8")
+FAMILY = (ROOT / "family.html").read_text(encoding="utf-8")
+MATRIX = (ROOT / "matrix.html").read_text(encoding="utf-8")
+OMEGA_CANON = (ROOT / "omega-canon.json").read_text(encoding="utf-8")
+I18N = (ROOT / "i18n.js").read_text(encoding="utf-8")
 
 
 class CovenantOwnerAccessTests(unittest.TestCase):
@@ -38,12 +47,49 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertIn("No Genesis Block hash or on-chain title transfer is claimed as live.", COVENANT)
         self.assertNotIn("HASHED INTO THE GENESIS BLOCK", COVENANT)
         self.assertNotIn("BEYOND REVISION OR APPEAL", COVENANT)
-        self.assertIn('var DORMANT_ARTICLES=["II","III","IV","VI","VII","VIII","IX","X","XI"];', COVENANT)
+        self.assertNotIn("AUTH FORMULA", COVENANT)
+        self.assertNotIn("GATE THRESHOLDS", COVENANT)
+        self.assertIn("NON-TOKEN DESIGN ARTICLES:</b> III, IV, VI, VII, X and XI", COVENANT)
+        self.assertIn("Articles II, VIII and IX below", COVENANT)
+        self.assertNotIn("DESIGN &middot; NOT OPERATIONAL", COVENANT)
 
     def test_covenant_has_exactly_eleven_canonical_articles(self):
         import re
         article_rows = re.findall(r'\{n:"[IVX]+",title:"[^"]+",text:"', COVENANT)
         self.assertEqual(len(article_rows), 11)
+
+    def test_founder_identity_is_confined_to_owner_surfaces(self):
+        self.assertNotIn("S.Y.D", VAULT)
+        self.assertNotIn("LEBANESE ORDER OF ENGINEERS NO. 30875", VAULT)
+        self.assertIn("SLEIMAN YOUSSEF DAGHER", COVENANT)
+        self.assertIn("profileResult.data.is_owner", COVENANT)
+        self.assertIn("if(!profileResult.data.is_owner)", COVENANT)
+        self.assertNotIn("Sleiman Youssef Dagher", PROFILE)
+        self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", PROFILE)
+        self.assertIn("d.is_owner?'S.Y.D'", PROFILE)
+        self.assertIn('prof_label_public_identity">PUBLIC IDENTITY', PROFILE)
+        self.assertIn("Sleiman Youssef Dagher", APPROVALS)
+        for page in (PROFILE, VAULT, PRIVACY, FAMILY, MATRIX, OMEGA_USER):
+            self.assertNotIn("Sleiman Youssef Dagher", page)
+        self.assertIn("DATA CONTROLLER: S.Y.D", PRIVACY)
+        self.assertIn("display_name    : 'S.Y.D'", OMEGA_USER)
+        self.assertNotIn("Sleiman Youssef Dagher", OMEGA_USER)
+        self.assertNotIn("full_name", OMEGA_USER)
+        self.assertNotIn("order_number", OMEGA_USER)
+        self.assertNotIn("Sleiman Youssef Dagher", OMEGA_CANON)
+        self.assertNotIn("Lebanese Order of Engineers No. 30875", OMEGA_CANON)
+        self.assertIn("Public owner identity: S.Y.D", OMEGA_CANON)
+        self.assertNotIn("hashed into the Genesis Block", OMEGA_CANON)
+        self.assertIn("Governance Record", MATRIX)
+        self.assertNotIn("Irrevocable Genesis", MATRIX)
+        self.assertNotIn("hashed into the <b>Genesis Block</b>", MATRIX)
+        self.assertIn("No Genesis Block hash or on-chain title transfer is claimed as live.", I18N)
+        self.assertNotIn("hashed into the immutable ledger", I18N)
+        self.assertIn("OWNER.display_name : name", OMEGA_USER)
+        self.assertIn("OWNER-ONLY ADMINISTRATION", APPROVALS)
+        self.assertNotIn("S.Y.D &mdash; EXCLUSIVELY", APPROVALS)
+        self.assertIn("if(!pr||!pr.is_owner)", APPROVALS_JS)
+        self.assertIn("['approvals','APPROVALS','/approvals.html','owner']", NAV)
 
     def test_vault_exposes_covenant_link_only_to_verified_owner(self):
         self.assertIn('id="vault-covenant-link"', VAULT)

@@ -519,7 +519,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
     <div class="tab-panel" id="tab-identity">
       <div class="sechead" data-reveal="fade-up" data-i18n="profile_section_identity_official">SOVEREIGN IDENTITY -- OFFICIAL RECORDS</div>
       <div class="id-grid">
-        <div class="id-field"><div class="idf-label" data-i18n="prof_label_full_name">FULL NAME</div><div class="idf-val" id="idf-fullname">--</div></div>
+        <div class="id-field"><div class="idf-label" data-i18n="prof_label_public_identity">PUBLIC IDENTITY</div><div class="idf-val" id="idf-fullname">--</div></div>
         <div id="owner-only-identity" style="display:none">
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_father_name">FATHER'S NAME</div><div class="idf-val">YOUSSEF</div></div>
         <div class="id-field"><div class="idf-label" data-i18n="prof_label_mother_name">MOTHER'S NAME</div><div class="idf-val">ILHAM NADER</div></div>
@@ -1755,7 +1755,7 @@ async function boot(){
     Sagittarius:{agentKey:'profile_agent_beacon',tokenKey:'token_ember',elementKey:'element_fire'},Capricorn:{agentKey:'profile_agent_analyst',tokenKey:'token_ferrum',elementKey:'element_metal'},
     Aquarius:{agentKey:'profile_agent_tutor',tokenKey:'token_prime',elementKey:'element_wind'},Pisces:{agentKey:'profile_agent_historian',tokenKey:'token_abyss',elementKey:'element_water'},
   };
-  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'Sleiman Youssef Dagher':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
+  var idfFull=document.getElementById('idf-fullname');if(idfFull)idfFull.textContent=isOwner?'S.Y.D':(pr.display_name||pr.email||'SOVEREIGN MEMBER').toUpperCase();
   var phn=document.getElementById('ph-name');if(phn)phn.textContent=(pr.display_name||'SOVEREIGN').toUpperCase();
   const bound=pr.sign&&BOUND[pr.sign];
   if(bound){

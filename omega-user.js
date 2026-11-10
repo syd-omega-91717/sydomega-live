@@ -9,9 +9,7 @@
 /* ── CANONICAL OWNER DATA (absolute, locked) ─────────────────────────────── */
 var OWNER = {
   display_name    : 'S.Y.D',
-  full_name       : 'Sleiman Youssef Dagher',
   title           : 'ARCHITECT & SOVEREIGN FOUNDER',
-  order_number    : 'LEBANESE ORDER OF ENGINEERS NO. 30875',
   sign            : 'Aries',
   element         : 'fire',
   god             : 'Ares',
@@ -96,14 +94,13 @@ window.__omegaPopulate = function(pr, user){
   if(heroSub){
     if(isOwner){
       heroSub.innerHTML='PLATFORM IDENTITY: '+OWNER.identity+'<br>'
-        +OWNER.order_number+'<br>'
         +'COSMOLOGY: ARIES \u00b7 FIRE \u00b7 ARES \u00b7 SENTINEL \u00b7 ARENITE';
     }
   }
 
   /* Owner/admin identity surfaces may show the legal full name; public identity uses S.Y.D. */
   var officialName=document.getElementById('idf-fullname');
-  if(officialName) officialName.textContent=isOwner ? OWNER.full_name : name;
+  if(officialName) officialName.textContent=isOwner ? OWNER.display_name : name;
 
   /* ── TITLE / ROLE ── */
   var pht=document.getElementById('ph-title');

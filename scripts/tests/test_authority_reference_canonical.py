@@ -8,6 +8,10 @@ PROFILE = (ROOT / "profile.html").read_text(encoding="utf-8")
 DASHBOARD = (ROOT / "dashboard.html").read_text(encoding="utf-8")
 APPROVALS = (ROOT / "approvals.html").read_text(encoding="utf-8")
 HONORS = (ROOT / "honors.html").read_text(encoding="utf-8")
+ACADEMY = (ROOT / "academy.html").read_text(encoding="utf-8")
+GAMING = (ROOT / "gaming.html").read_text(encoding="utf-8")
+VAULT = (ROOT / "vault.html").read_text(encoding="utf-8")
+COVENANT = (ROOT / "sovereign-covenant.html").read_text(encoding="utf-8")
 
 
 class AuthorityReferenceCanonicalTests(unittest.TestCase):
@@ -27,10 +31,17 @@ class AuthorityReferenceCanonicalTests(unittest.TestCase):
             ("dashboard", DASHBOARD),
             ("approvals", APPROVALS),
             ("honors", HONORS),
+            ("academy", ACADEMY),
+            ("gaming", GAMING),
+            ("vault", VAULT),
+            ("covenant", COVENANT),
         ):
             with self.subTest(page=name):
                 self.assertNotIn("AUTH = &radic;", page)
                 self.assertNotIn("Authority = √(A³+B³+C³)", page)
+                self.assertNotIn("AUTHORITY FORMULA", page)
+                self.assertNotIn("AUTH FORMULA", page)
+                self.assertNotIn("GATE THRESHOLDS", page)
 
     def test_access_approval_uses_policy_not_progression_score(self):
         self.assertIn("PRIVILEGE IS GOVERNED BY POLICY", APPROVALS)

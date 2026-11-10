@@ -1,5 +1,6 @@
 """Keep Academy as the single learning catalogue and Gaming as the play surface."""
 from pathlib import Path
+import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -34,6 +35,15 @@ class AcademyGamingBoundaryTests(unittest.TestCase):
         self.assertIn('data-task="The Apex Trial"', GAMING)
         self.assertIn('data-task-type="mastery"', GAMING)
         self.assertIn('id="tab-progress_tab"', GAMING)
+
+    def test_task_card_ownership_is_disjoint(self):
+        academy_tasks = set(re.findall(r'data-task="([^"]+)"', ACADEMY))
+        gaming_tasks = set(re.findall(r'data-task="([^"]+)"', GAMING))
+        self.assertTrue(academy_tasks)
+        self.assertFalse(academy_tasks & gaming_tasks)
+        self.assertIn('data-task-type="knowledge"', ACADEMY)
+        self.assertNotIn('data-task-type="knowledge"', GAMING)
+        self.assertIn('data-task-type="mastery"', GAMING)
 
     def test_every_visible_tab_button_has_a_live_tab_group(self):
         for tab in ("games", "progress", "science"):

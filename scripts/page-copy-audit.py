@@ -105,7 +105,7 @@ class CopyParser(HTMLParser):
         if parent_skip or own_skip:
             return
         if not self.status_stack and classes & STATUS_CLASSES and tag not in CTA_TAGS:
-            self.status_stack.append({"tag": tag, "classes": sorted(classes & STATUS_CLASSES), "parts": [], "main": self.main_depth > 0})
+            self.status_stack.append({"tag": tag, "depth": len(self.stack), "classes": sorted(classes & STATUS_CLASSES), "parts": [], "main": self.main_depth > 0})
         if tag in BLOCK_TAGS:
             self._flush()
             self.current_tag = tag
@@ -125,14 +125,11 @@ class CopyParser(HTMLParser):
         tag = tag.lower()
         if self.current_tag == tag:
             self._flush()
-        for index in range(len(self.status_stack) - 1, -1, -1):
-            if self.status_stack[index]["tag"] == tag:
-                item = self.status_stack[index]
-                label = " ".join(" ".join(item["parts"]).split())
-                if label:
-                    self.status_labels.append({"tag": tag, "classes": item["classes"], "text": label, "main": item["main"]})
-                del self.status_stack[index:]
-                break
+        if self.status_stack and self.status_stack[-1]["tag"] == tag and self.status_stack[-1]["depth"] == len(self.stack):
+            item = self.status_stack.pop()
+            label = " ".join(" ".join(item["parts"]).split())
+            if label:
+                self.status_labels.append({"tag": tag, "classes": item["classes"], "text": label, "main": item["main"]})
         for index in range(len(self.stack) - 1, -1, -1):
             frame_tag, was_skip, was_main = self.stack[index]
             if was_skip:

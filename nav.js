@@ -101,7 +101,7 @@
           ['blockchain','BLOCKCHAIN','/blockchain.html','folded'],['billing','BILLING','/subscriptions.html#payments','folded'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
           ['marketplace','MARKETPLACE','/marketplace.html'],['income','INCOME','/income.html','folded'],['payments','PAYMENTS','/payments.html'],
           ['ledger','ASSET LEDGER','/ledger.html','folded'],['sigil-alias-1','SIGIL VAULT','/vault.html#nft','folded'],['vault-settings','SYSTEM SETTINGS','/settings.html'],
-          ['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html','folded'],['sovereign-covenant','COVENANT','/sovereign-covenant.html']]},
+          ['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html','folded'],['sovereign-covenant','COVENANT','/sovereign-covenant.html','owner']]},
     {key:'order',   icon:'\u22D4', label:'ORDER',    href:'/order.html',   col:'#D9B86A',
      sub:[['order','ORDER WORKSPACE','/order.html'],['family','FAMILY','/family.html'],['bloodline-alias-1','BLOODLINE','/family.html#bloodline','folded'],['heritage-alias-1','HERITAGE','/family.html#heritage','folded'],
           ['hall','HALL OF THE ORDER','/hall.html'],['sovereigns','SOVEREIGNS','/sovereigns.html'],['factions','FACTIONS','/factions.html'],

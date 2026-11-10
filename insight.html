@@ -23,6 +23,7 @@
       <div class="ins-bar">
         <div class="ins-lens" role="tablist" aria-label="Lens" id="ins-lens"></div>
         <input class="inp ins-find" id="ins-find" type="search" placeholder="Find a node" aria-label="Find a node" autocomplete="off">
+        <label class="ins-depth" id="ins-depth-wrap">DEPTH <input class="inp" id="ins-depth" type="number" min="1" max="5" value="2" aria-label="Relationship depth"></label>
       </div>
       <div class="ins-actions" aria-label="Graph data tools">
         <button class="ins-action" id="ins-export-json" type="button" data-omega-task-id="insight.export.graph">EXPORT GRAPH JSON</button>
@@ -67,6 +68,11 @@
   border:1px solid rgba(255,255,255,.1);border-radius:2px;cursor:pointer}
 .ins-lens button[aria-selected="true"]{color:var(--cyan);border-color:var(--cyan);background:rgba(0,229,255,.08)}
 .ins-find{max-width:240px}
+.ins-depth{display:flex;align-items:center;gap:7px;font:11px var(--M);letter-spacing:1px;color:var(--muted)}
+.ins-depth input{width:58px;min-height:34px;padding:5px 7px}
+.ins-node.off{opacity:0;pointer-events:none}
+.ins-lbl.off{display:none}
+.ins-edges line.off{opacity:0}
 .ins-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .ins-kpi{padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:2px}
 .ins-kpi b{display:block;font-family:var(--D);font-size:var(--fs-5,28px);color:var(--ink)}

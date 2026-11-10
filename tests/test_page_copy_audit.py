@@ -154,8 +154,8 @@ class PageCopyAuditTests(unittest.TestCase):
         self.assertIn("SLEIMAN YOUSSEF DAGHER", covenant)
         self.assertIn("profileResult.data.is_owner", covenant)
         self.assertIn("if(!profileResult.data.is_owner)", covenant)
-        self.assertIn('id="profile-owner-social"', profile)
-        self.assertIn("ownerSocial.style.display=d.is_owner?'flex':'none'", profile)
+        self.assertNotIn("S.Y.D", profile)
+        self.assertNotIn("Sleiman Youssef Dagher", profile)
         self.assertIn("Sleiman Youssef Dagher", approvals)
 
     def test_authority_formula_and_gate_explanation_have_one_canonical_page(self):

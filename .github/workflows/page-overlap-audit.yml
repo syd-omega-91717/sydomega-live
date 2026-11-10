@@ -1,4 +1,4 @@
-name: Page Overlap Audit
+name: Page Content and Purpose Audit
 
 # Advisory only, and O(n^2) over the whole page estate: measured at 2-5
 # minutes locally, against 0.79s for all eleven blocking gates combined. On a
@@ -13,12 +13,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: page-overlap-${{ github.ref }}
+  group: page-quality-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   overlap:
-    name: Detect overlapping pages
+    name: Audit visible copy and page purpose
     # Was [self-hosted, Windows, X64]. That runner is dead -- runner-probe.yml,
     # whose only job is to prove it works, has never completed a run, and this
     # audit therefore never executed ONCE: measured in its own history as
@@ -38,9 +38,6 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - name: Run overlap audit
-        run: python scripts/page-overlap-audit.py
-      - name: Publish evidence-based page-purpose report
       - name: Report repeated visible page copy
         run: python scripts/page-copy-audit.py --markdown >> "$GITHUB_STEP_SUMMARY"
       - name: Report page-purpose overlap with source evidence

@@ -6,6 +6,9 @@ ROOT = Path(__file__).resolve().parents[2]
 COVENANT = (ROOT / "sovereign-covenant.html").read_text(encoding="utf-8")
 VAULT = (ROOT / "vault.html").read_text(encoding="utf-8")
 NAV = (ROOT / "nav.js").read_text(encoding="utf-8")
+PROFILE = (ROOT / "profile.html").read_text(encoding="utf-8")
+APPROVALS = (ROOT / "approvals.html").read_text(encoding="utf-8")
+APPROVALS_JS = (ROOT / "approvals.js").read_text(encoding="utf-8")
 
 
 class CovenantOwnerAccessTests(unittest.TestCase):
@@ -48,6 +51,18 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         import re
         article_rows = re.findall(r'\{n:"[IVX]+",title:"[^"]+",text:"', COVENANT)
         self.assertEqual(len(article_rows), 11)
+
+    def test_founder_identity_is_confined_to_owner_surfaces(self):
+        self.assertNotIn("S.Y.D", VAULT)
+        self.assertNotIn("LEBANESE ORDER OF ENGINEERS NO. 30875", VAULT)
+        self.assertIn("SLEIMAN YOUSSEF DAGHER", COVENANT)
+        self.assertIn("profileResult.data.is_owner", COVENANT)
+        self.assertIn("if(!profileResult.data.is_owner)", COVENANT)
+        self.assertNotIn("Sleiman Youssef Dagher", PROFILE)
+        self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", PROFILE)
+        self.assertIn("d.is_owner?'S.Y.D'", PROFILE)
+        self.assertIn("Sleiman Youssef Dagher", APPROVALS)
+        self.assertIn("if(!pr||!pr.is_owner)", APPROVALS_JS)
 
     def test_vault_exposes_covenant_link_only_to_verified_owner(self):
         self.assertIn('id="vault-covenant-link"', VAULT)

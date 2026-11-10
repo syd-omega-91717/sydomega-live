@@ -38,6 +38,8 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertIn("No Genesis Block hash or on-chain title transfer is claimed as live.", COVENANT)
         self.assertNotIn("HASHED INTO THE GENESIS BLOCK", COVENANT)
         self.assertNotIn("BEYOND REVISION OR APPEAL", COVENANT)
+        self.assertNotIn("AUTH FORMULA", COVENANT)
+        self.assertNotIn("GATE THRESHOLDS", COVENANT)
         self.assertIn("NON-TOKEN DESIGN ARTICLES:</b> III, IV, VI, VII, X and XI", COVENANT)
         self.assertIn("Articles II, VIII and IX below", COVENANT)
         self.assertNotIn("DESIGN &middot; NOT OPERATIONAL", COVENANT)

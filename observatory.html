@@ -191,8 +191,11 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         document.getElementById('coverage-cwv').setAttribute('data-state','bad');
       }else{
         var metricRows=Number(cwv.count||0);
-        sid('coverage-cwv-state',metricRows?'DATA AVAILABLE':'NO FIELD DATA');
-        sid('coverage-cwv-detail',metricRows+' platform metric row(s) reported. Core Web Vitals require populated field measurements.');
+        var d=cwv.data&&cwv.data.dimensions?cwv.data.dimensions:{};
+        var hasCwv=d.lcp_ms!=null||d.inp_ms!=null||d.cls!=null;
+        var cwvState=!metricRows?'NO FIELD DATA':(hasCwv?'DATA AVAILABLE':'NO CWV MEASUREMENTS');
+        sid('coverage-cwv-state',cwvState);
+        sid('coverage-cwv-detail',metricRows+' platform metric row(s) reported; '+(hasCwv?'Core Web Vitals fields are present.':'the latest row contains no LCP, INP or CLS fields.'));
         document.getElementById('coverage-cwv').setAttribute('data-state','unknown');
       }
       if(cwv.data&&cwv.data.dimensions){
@@ -220,9 +223,9 @@ function goodColor(val,thr){return val<=thr?'var(--green)':val<=thr*1.5?'var(--s
         var computed=rows.filter(function(sv){return sv.budget_4wk_pct!==null&&sv.budget_4wk_pct!==undefined&&Number.isFinite(Number(sv.budget_4wk_pct));});
         var latest=rows.filter(function(sv){return !!sv.last_computed;}).sort(function(a,b){return new Date(b.last_computed)-new Date(a.last_computed);})[0];
         var recorded=latest?new Date(latest.last_computed).toLocaleString():'not recorded';
-        sid('coverage-budget-state',computed.length?'COMPUTED':'NOT COMPUTED');
+        sid('coverage-budget-state',computed.length?'COMPUTED':(rows.length?'NOT COMPUTED':'NO CONFIGURED ROWS'));
         sid('coverage-budget-detail',rows.length+' configured surface(s); '+computed.length+' with numeric 4-week budgets. Latest row timestamp: '+recorded+'. NULL budget values are not green health.');
-        document.getElementById('coverage-budget').setAttribute('data-state',computed.length?'unknown':'warn');
+        document.getElementById('coverage-budget').setAttribute('data-state',computed.length?'unknown':(rows.length?'warn':'unknown'));
         /* Only a dedicated platform row may populate the platform-wide budget. */
         var platformBudget=rows.find(function(sv){return sv.surface==='platform'||sv.surface==='platform_service';});
         var fill=document.getElementById('budget-fill');

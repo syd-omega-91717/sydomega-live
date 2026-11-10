@@ -33,6 +33,18 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertNotIn("articles-grid", VAULT)
         self.assertIn("Owner identity and reserved-control documents are restricted to the owner governance workspace.", VAULT)
 
+    def test_covenant_is_a_design_reference_not_a_claim_of_live_immutability(self):
+        self.assertIn("GOVERNANCE STATUS: DESIGN REFERENCE", COVENANT)
+        self.assertIn("No Genesis Block hash or on-chain title transfer is claimed as live.", COVENANT)
+        self.assertNotIn("HASHED INTO THE GENESIS BLOCK", COVENANT)
+        self.assertNotIn("BEYOND REVISION OR APPEAL", COVENANT)
+        self.assertIn('var DORMANT_ARTICLES=["II","III","IV","VI","VII","VIII","IX","X","XI"];', COVENANT)
+
+    def test_covenant_has_exactly_eleven_canonical_articles(self):
+        import re
+        article_rows = re.findall(r'\{n:"[IVX]+",title:"[^"]+",text:"', COVENANT)
+        self.assertEqual(len(article_rows), 11)
+
     def test_vault_exposes_covenant_link_only_to_verified_owner(self):
         self.assertIn('id="vault-covenant-link"', VAULT)
         self.assertIn("if(covenantLink&&pr.is_owner)covenantLink.style.display='inline-flex';", VAULT)

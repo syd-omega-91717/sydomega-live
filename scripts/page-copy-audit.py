@@ -42,6 +42,19 @@ def word_count(value: str) -> int:
     return len(TOKEN_RE.findall(value))
 
 
+def word_shingles(value: str, size: int = 3) -> set[tuple[str, ...]]:
+    tokens = TOKEN_RE.findall(normalise(value))
+    if len(tokens) < size:
+        return set()
+    return {tuple(tokens[index:index + size]) for index in range(len(tokens) - size + 1)}
+
+
+def jaccard_similarity(left: set[tuple[str, ...]], right: set[tuple[str, ...]]) -> float:
+    if not left or not right:
+        return 0.0
+    return len(left & right) / len(left | right)
+
+
 class CopyParser(HTMLParser):
     """Extract meaningful text blocks while excluding shared chrome and code."""
 
@@ -144,7 +157,7 @@ def scan_page(path: Path, root: Path, min_words: int) -> list[dict]:
     return result
 
 
-def build_report(root: Path, min_words: int = 8) -> dict:
+def build_report(root: Path, min_words: int = 8, near_min_words: int = 20, near_threshold: float = 0.78) -> dict:
     pages = sorted(
         p for p in root.rglob("*.html")
         if p.is_file() and not any(part in SKIP_DIRS for part in p.relative_to(root).parts)
@@ -217,6 +230,33 @@ def build_report(root: Path, min_words: int = 8) -> dict:
         else:
             within_page.append(group)
 
+    # Fuzzy copy review catches lightly rewritten paragraphs that exact matching misses.
+    # It is advisory: similarity is a review signal, never an automatic deletion decision.
+    near_duplicate_pairs = []
+    eligible = [
+        block for block in all_blocks
+        if block["kind"] == "copy" and block["words"] >= near_min_words
+    ]
+    shingle_cache = [word_shingles(block["normalised"]) for block in eligible]
+    for left_index, left in enumerate(eligible):
+        left_words = left["words"]
+        left_shingles = shingle_cache[left_index]
+        for right_index in range(left_index + 1, len(eligible)):
+            right = eligible[right_index]
+            if left["normalised"] == right["normalised"]:
+                continue
+            if min(left_words, right["words"]) / max(left_words, right["words"]) < 0.72:
+                continue
+            similarity = jaccard_similarity(left_shingles, shingle_cache[right_index])
+            if similarity >= near_threshold:
+                near_duplicate_pairs.append({
+                    "similarity": round(similarity, 3),
+                    "left": {"page": left["page"], "tag": left["tag"], "text": left["text"]},
+                    "right": {"page": right["page"], "tag": right["tag"], "text": right["text"]},
+                    "same_page": left["page"] == right["page"],
+                })
+    near_duplicate_pairs.sort(key=lambda item: (-item["similarity"], item["left"]["page"], item["right"]["page"]))
+
     sort_key = lambda item: (-item["occurrences"], -item["words"], item["text"].casefold())
     for collection in (cross_page, approved_cross_page, within_page, cta_reuse):
         collection.sort(key=sort_key)
@@ -228,6 +268,9 @@ def build_report(root: Path, min_words: int = 8) -> dict:
         "page_count": len(pages),
         "block_count": sum(1 for b in all_blocks if b["kind"] != "error"),
         "min_words": min_words,
+        "near_min_words": near_min_words,
+        "near_threshold": near_threshold,
+        "near_duplicate_pairs": near_duplicate_pairs,
         "cross_page_duplicate_groups": cross_page,
         "approved_cross_page_duplicate_groups": approved_cross_page,
         "within_page_duplicate_groups": within_page,
@@ -248,8 +291,9 @@ def markdown(report: dict, limit: int = 30) -> str:
         f"- Approved cross-page repeated prose groups: **{len(report['approved_cross_page_duplicate_groups'])}**",
         f"- Within-page repeated prose groups: **{len(report['within_page_duplicate_groups'])}**",
         f"- Reused CTA groups (reported separately): **{len(report['reused_cta_groups'])}**",
+        f"- Near-duplicate prose candidates (word-trigram Jaccard ≥ {report['near_threshold']:.2f}): **{len(report['near_duplicate_pairs'])}**",
         f"- Scan errors: **{len(report['scan_errors'])}**", "",
-        "> Repetition is a review signal, not an automatic defect. Legal, safety, privacy, and standard control copy may intentionally repeat. No page is changed or deleted by this audit.",
+        "> Exact and near repetition are review signals, not automatic defects. Legal, safety, privacy, and standard control copy may intentionally repeat. No page is changed or deleted by this audit.",
         "", "## Repeated prose across pages", "",
     ]
     if not report["cross_page_duplicate_groups"]:
@@ -260,6 +304,17 @@ def markdown(report: dict, limit: int = 30) -> str:
             f"> {item['text']}", "",
             ", ".join(item["pages"]), "",
         ])
+    lines.extend(["## Near-duplicate prose candidates", ""])
+    if not report["near_duplicate_pairs"]:
+        lines.append("No near-duplicate prose candidates met the configured similarity threshold.")
+    for item in report["near_duplicate_pairs"][:limit]:
+        scope = "within " + item["left"]["page"] if item["same_page"] else item["left"]["page"] + " ↔ " + item["right"]["page"]
+        lines.extend([
+            f"- **{item['similarity']:.0%} similarity** · {scope}",
+            f"  - Left: {item['left']['text']}",
+            f"  - Right: {item['right']['text']}",
+        ])
+    lines.append("")
     lines.extend(["## Approved repeated prose", ""])
     if not report["approved_cross_page_duplicate_groups"]:
         lines.append("No repeated prose has an explicit allowlist justification.")
@@ -298,12 +353,16 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     ap.add_argument("--min-words", type=int, default=8)
+    ap.add_argument("--near-min-words", type=int, default=20, help="minimum words for fuzzy-copy candidates")
+    ap.add_argument("--near-threshold", type=float, default=0.78, help="word-trigram Jaccard threshold from 0 to 1")
     ap.add_argument("--json", dest="json_path", type=Path)
     ap.add_argument("--markdown", action="store_true")
     args = ap.parse_args()
-    if args.min_words < 1:
-        ap.error("--min-words must be positive")
-    report = build_report(args.root.resolve(), args.min_words)
+    if args.min_words < 1 or args.near_min_words < 1:
+        ap.error("--min-words and --near-min-words must be positive")
+    if not 0.0 <= args.near_threshold <= 1.0:
+        ap.error("--near-threshold must be between 0 and 1")
+    report = build_report(args.root.resolve(), args.min_words, args.near_min_words, args.near_threshold)
     if args.json_path:
         args.json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     if args.markdown:

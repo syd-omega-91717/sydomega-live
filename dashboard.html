@@ -567,37 +567,31 @@
     <!-- LAYER: SCIENCE -->
     <div id="l-science" class="layer-panel">
       <div class="pad">
-        <div class="sechead" data-i18n="sovereign_constants_system_architecture">SOVEREIGN CONSTANTS &amp; SYSTEM ARCHITECTURE</div>
-        <div style="margin-bottom:24px">
-          <div style="font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:1px;color:var(--gold);padding:16px;border:1px solid rgba(201,168,76,.2);border-radius:2px;background:rgba(201,168,76,.03);line-height:2;margin-bottom:16px">
-            AUTH = sqrt(A&#179; + B&#179; + C&#179;) &times; &phi; / e<br>
-            A = B = C = 9 &rarr; A&#179;+B&#179;+C&#179; = 2187<br>
-            sqrt(2187) &times; 1.6180339887 / 2.7182818285 = <strong>27.8367</strong>
-          </div>
-          <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:1px;line-height:2">
-            <span style="color:var(--muted)" data-i18n="constant_phi">PHI (&phi;)</span><span style="color:var(--gold)">1.6180339887</span>
-            <span style="color:var(--muted)" data-i18n="constant_euler">EULER (e)</span><span style="color:var(--gold)">2.7182818285</span>
-            <span style="color:var(--muted)" data-i18n="constant_authority_apex">AUTHORITY APEX</span><span style="color:var(--gold)">27.8367 — IRREVOCABLE</span>
-            <span style="color:var(--muted)" data-i18n="constant_trial_window">TRIAL WINDOW</span><span>557 SECONDS (9 MIN 17 SEC)</span>
-            <span style="color:var(--muted)" data-i18n="constant_lattice">LATTICE</span><span>12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</span>
-            <span style="color:var(--muted)" data-i18n="constant_platform_pages">PLATFORM PAGES</span><span>170 HTML &middot; 85 JS ENGINES</span>
-            <span style="color:var(--muted)" data-i18n="constant_sql_files">SQL FILES</span><span>109 MIGRATIONS &middot; 95 FUNCTIONS</span>
-          </div>
+        <div class="sechead">THE THREE-AXIS OPERATING MODEL</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:0 0 20px">
+          <article style="position:relative;overflow:hidden;padding:20px;border:1px solid rgba(201,168,76,.24);background:linear-gradient(145deg,rgba(201,168,76,.09),rgba(10,10,15,.72));border-radius:3px">
+            <div style="font-family:var(--D);font-size:32px;color:var(--gold);line-height:1">A</div>
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-top:10px">KNOWLEDGE</div>
+            <p style="font-size:13px;line-height:1.6;color:var(--muted);margin-top:8px">Study, research, learning and demonstrated understanding.</p>
+          </article>
+          <article style="position:relative;overflow:hidden;padding:20px;border:1px solid rgba(155,107,240,.24);background:linear-gradient(145deg,rgba(155,107,240,.09),rgba(10,10,15,.72));border-radius:3px">
+            <div style="font-family:var(--D);font-size:32px;color:var(--purple);line-height:1">B</div>
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--purple);margin-top:10px">MASTERY</div>
+            <p style="font-size:13px;line-height:1.6;color:var(--muted);margin-top:8px">Practice, execution, challenges and skill development.</p>
+          </article>
+          <article style="position:relative;overflow:hidden;padding:20px;border:1px solid rgba(0,229,255,.24);background:linear-gradient(145deg,rgba(0,229,255,.07),rgba(10,10,15,.72));border-radius:3px">
+            <div style="font-family:var(--D);font-size:32px;color:var(--cyan);line-height:1">C</div>
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-top:10px">CONTRIBUTION</div>
+            <p style="font-size:13px;line-height:1.6;color:var(--muted);margin-top:8px">Verified work, service, creation and positive contribution.</p>
+          </article>
         </div>
-        <div class="sechead" data-i18n="gate_thresholds_12_levels">GATE THRESHOLDS &middot; 12 SOVEREIGN LEVELS</div>
-        <div style="display:grid;grid-template-columns:200px 1fr;gap:4px 16px;font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:1px;line-height:2">
-          <span style="color:var(--muted)" data-i18n="gate_1_initiate">GATE 1 — INITIATE</span><span>AUTH &ge; 2.3197</span>
-          <span style="color:var(--muted)" data-i18n="gate_2_acolyte">GATE 2 — ACOLYTE</span><span>AUTH &ge; 4.6394</span>
-          <span style="color:var(--muted)" data-i18n="gate_3_scholar">GATE 3 — SCHOLAR</span><span>AUTH &ge; 6.9592</span>
-          <span style="color:var(--muted)" data-i18n="gate_4_keeper">GATE 4 — KEEPER</span><span>AUTH &ge; 9.2789</span>
-          <span style="color:var(--muted)" data-i18n="gate_5_guardian">GATE 5 — GUARDIAN</span><span>AUTH &ge; 11.5986</span>
-          <span style="color:var(--muted)" data-i18n="gate_6_architect">GATE 6 — ARCHITECT</span><span>AUTH &ge; 13.9183</span>
-          <span style="color:var(--muted)" data-i18n="gate_7_sovereign">GATE 7 — SOVEREIGN</span><span>AUTH &ge; 16.2381</span>
-          <span style="color:var(--muted)" data-i18n="gate_8_vanguard">GATE 8 — VANGUARD</span><span>AUTH &ge; 18.5578</span>
-          <span style="color:var(--muted)" data-i18n="gate_9_herald">GATE 9 — HERALD</span><span>AUTH &ge; 20.8775</span>
-          <span style="color:var(--muted)" data-i18n="gate_10_oracle">GATE 10 — ORACLE</span><span>AUTH &ge; 23.1972</span>
-          <span style="color:var(--muted)" data-i18n="gate_11_prime">GATE 11 — PRIME</span><span>AUTH &ge; 25.517</span>
-          <span style="color:var(--gold)" data-i18n="gate_12_apex">GATE 12 — APEX</span><span style="color:var(--gold)" data-i18n="invisible_architect">AUTH = 27.8367 — INVISIBLE ARCHITECT</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:20px;border:1px solid rgba(201,168,76,.22);background:linear-gradient(110deg,rgba(201,168,76,.07),rgba(10,10,15,.86));border-radius:3px">
+          <div style="min-width:220px;flex:1">
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">CANONICAL REFERENCE</div>
+            <div style="font-family:var(--D);font-size:18px;color:var(--ink);line-height:1.4">Authority calculation and progression thresholds</div>
+            <p style="font-size:13px;line-height:1.6;color:var(--muted);margin-top:6px">The detailed model is maintained in one place to prevent conflicting formulas and gate tables across the platform.</p>
+          </div>
+          <a href="/evolution.html" style="display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border:1px solid rgba(201,168,76,.45);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-decoration:none">OPEN EVOLUTION MODEL ↗</a>
         </div>
       </div>
     </div>

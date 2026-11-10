@@ -14,6 +14,7 @@ PRIVACY = (ROOT / "privacy.html").read_text(encoding="utf-8")
 FAMILY = (ROOT / "family.html").read_text(encoding="utf-8")
 MATRIX = (ROOT / "matrix.html").read_text(encoding="utf-8")
 OMEGA_CANON = (ROOT / "omega-canon.json").read_text(encoding="utf-8")
+I18N = (ROOT / "i18n.js").read_text(encoding="utf-8")
 
 
 class CovenantOwnerAccessTests(unittest.TestCase):
@@ -79,6 +80,11 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertNotIn("Lebanese Order of Engineers No. 30875", OMEGA_CANON)
         self.assertIn("Public owner identity: S.Y.D", OMEGA_CANON)
         self.assertNotIn("hashed into the Genesis Block", OMEGA_CANON)
+        self.assertIn("Governance Record", MATRIX)
+        self.assertNotIn("Irrevocable Genesis", MATRIX)
+        self.assertNotIn("hashed into the <b>Genesis Block</b>", MATRIX)
+        self.assertIn("No Genesis Block hash or on-chain title transfer is claimed as live.", I18N)
+        self.assertNotIn("hashed into the immutable ledger", I18N)
         self.assertIn("OWNER.display_name : name", OMEGA_USER)
         self.assertIn("OWNER-ONLY ADMINISTRATION", APPROVALS)
         self.assertNotIn("S.Y.D &mdash; EXCLUSIVELY", APPROVALS)

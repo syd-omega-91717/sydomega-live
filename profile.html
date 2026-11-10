@@ -2300,7 +2300,7 @@ async function bootCharacterFull(){
   }
   if(ch){
     document.getElementById('cm-sign').textContent=sign.toUpperCase()+' . '+ch.archetype;
-    document.getElementById('cm-name').textContent=d.is_owner?'S.Y.D':(d.display_name||ch.name);
+    document.getElementById('cm-name').textContent=d.display_name||ch.name;
     document.getElementById('cm-role').textContent=ch.role;
     const traits=document.getElementById('cm-traits');
     ch.traits.forEach(t=>{const s=document.createElement('span');s.className='cm-trait';s.textContent=t;traits.appendChild(s);});
@@ -2434,7 +2434,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 var ppSb=sb;
 let ppUid=null;
 
-const PP_RANKS=['Initiate','Seeker','Strategist','Master','Omega Elite','Visionary','Architect','Sovereign','Universal S.Y.D'];
+const PP_RANKS=['Initiate','Seeker','Strategist','Master','Omega Elite','Visionary','Architect','Sovereign','Universal Omega'];
 const PP_MAT=['Sand','Glass','Iron','Steel','Titanium','Carbon','Gold','Platinum','Omega Master'];
 const PP_GLY={Aries:'\u2648',Taurus:'\u2649',Gemini:'\u264A',Cancer:'\u264B',Leo:'\u264C',Virgo:'\u264D',Libra:'\u264E',Scorpio:'\u264F',Sagittarius:'\u2650',Capricorn:'\u2651',Aquarius:'\u2652',Pisces:'\u2653'};
 const PP_AGENT={Aries:'Sentinel',Taurus:'Merchant',Gemini:'Scout',Cancer:'Warden',Leo:'Sovereign',Virgo:'Auditor',Libra:'Proxy',Scorpio:'Oracle',Sagittarius:'Beacon',Capricorn:'Analyst',Aquarius:'Tutor',Pisces:'Historian'};

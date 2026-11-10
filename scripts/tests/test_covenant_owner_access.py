@@ -65,7 +65,7 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertNotIn("Sleiman Youssef Dagher", PROFILE)
         self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", PROFILE)
         self.assertIn("d.is_owner?'S.Y.D'", PROFILE)
-        self.assertIn('prof_label_full_name">PUBLIC IDENTITY', PROFILE)
+        self.assertIn('prof_label_public_identity">PUBLIC IDENTITY', PROFILE)
         self.assertIn("Sleiman Youssef Dagher", APPROVALS)
         for page in (PROFILE, VAULT, PRIVACY, FAMILY, MATRIX, OMEGA_USER):
             self.assertNotIn("Sleiman Youssef Dagher", page)

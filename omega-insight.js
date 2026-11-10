@@ -25,9 +25,11 @@ var sb = window.__omegaSb || (window.__omegaSb = createClient(
   'https://ydqhzvvoyufiiqvzcjns.supabase.co', 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
 
 var W = 1000, H = 620, NS = 'http://www.w3.org/2000/svg';
-var LENSES = [['graph', 'GRAPH'], ['time', 'TIMELINE'], ['central', 'CENTRALITY'], ['anomaly', 'ANOMALIES']];
+var LENSES = [['graph', 'GRAPH'], ['time', 'TIMELINE'], ['central', 'CENTRALITY'], ['anomaly', 'ANOMALIES'], ['evidence', 'EVIDENCE']];
 var COL = { concept: '#C9A84C', event: '#00E5FF' };
-var S = { lens: 'graph', ents: [], rels: [], evts: [], evid: [], byId: {}, deg: {}, flags: {}, pos: {}, sel: null, find: '' };
+var requestedLens = new URLSearchParams(window.location.search).get('lens');
+var validLenses = LENSES.map(function (item) { return item[0]; });
+var S = { lens: validLenses.indexOf(requestedLens) >= 0 ? requestedLens : 'graph', ents: [], rels: [], evts: [], evid: [], byId: {}, deg: {}, flags: {}, pos: {}, sel: null, find: '' };
 var $ = function (id) { return document.getElementById(id); };
 function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function day(iso) { return iso ? String(iso).slice(0, 10) : '–'; }
@@ -58,6 +60,7 @@ function derive() {
 
 /* ── layouts: every lens is a position per entity ───────────────────── */
 function layout(lens) {
+  if (lens === 'evidence') return layout('graph');
   var P = {}, concepts = S.ents.filter(function (e) { return e.entity_type === 'concept'; }),
       others = S.ents.filter(function (e) { return e.entity_type !== 'concept'; });
   if (lens === 'graph') {
@@ -166,10 +169,11 @@ function kpis() {
 
 /* ── panel ──────────────────────────────────────────────────────────── */
 function panelOverview() {
-  var title = { graph: 'Your graph', time: 'In order', central: 'Most connected', anomaly: 'Needs attention' }[S.lens];
+  if (S.lens === 'time') return panelTimeline();
+  if (S.lens === 'evidence') return panelEvidence();
+  var title = { graph: 'Your graph', central: 'Most connected', anomaly: 'Needs attention' }[S.lens];
   var list = S.ents.slice();
   if (S.lens === 'central') list.sort(function (a, b) { return S.deg[b.id] - S.deg[a.id]; });
-  else if (S.lens === 'time') list.sort(function (a, b) { return String(b.first_seen_at).localeCompare(String(a.first_seen_at)); });
   else if (S.lens === 'anomaly') list = list.filter(function (e) { return S.flags[e.id].length; });
   var rows = list.slice(0, 40).map(function (e) {
     var right = S.lens === 'central' ? S.deg[e.id] + ' links' : S.lens === 'anomaly' ? S.flags[e.id].join(', ') : day(e.first_seen_at);
@@ -177,6 +181,61 @@ function panelOverview() {
   }).join('');
   $('ins-panel').innerHTML = '<h3>' + title + '</h3>' + (rows ? '<div class="ins-list">' + rows + '</div>' :
     '<div class="ins-row"><em>NOTHING</em><span>' + (S.lens === 'anomaly' ? 'No entity fails a check.' : 'No entities yet.') + '</span></div>');
+  bindList();
+}
+
+function panelTimeline() {
+  var events = S.evts.slice().sort(function (a, b) {
+    return new Date(b.occurred_at || 0) - new Date(a.occurred_at || 0);
+  });
+  var rows = events.slice(0, 60).map(function (event) {
+    var entity = S.byId[event.entity_id];
+    var title = entity ? name(entity) : 'Unlinked event';
+    return '<button type="button" class="ins-li" data-omega-task-id="insight.event.select" data-event-id="' + esc(event.id) + '"><span>' +
+      esc(String(event.event_type || 'event').replace(/_/g, ' ').toUpperCase()) + ' · ' + esc(title) +
+      '</span><em>' + esc(day(event.occurred_at)) + '</em></button>';
+  }).join('');
+  $('ins-panel').innerHTML = '<h3>Event timeline</h3>' + (rows ? '<div class="ins-list">' + rows + '</div>' :
+    '<div class="ins-row"><em>NO EVENTS</em><span>No graph event records are available for this account.</span></div>');
+  bindList();
+}
+
+function panelEvidence() {
+  var evidence = S.evid.slice();
+  var rows = evidence.slice(0, 60).map(function (item) {
+    var entity = S.byId[item.graph_entity_id];
+    var title = entity ? name(entity) : 'Unlinked evidence';
+    return '<button type="button" class="ins-li" data-omega-task-id="insight.evidence.select" data-evidence-id="' + esc(item.id) + '"><span>' +
+      esc(item.source_type || 'source') + ' · ' + esc(title) +
+      '</span><em>' + (item.human_verified ? 'REVIEWED' : 'UNREVIEWED') + '</em></button>';
+  }).join('');
+  $('ins-panel').innerHTML = '<h3>Evidence register</h3>' + (rows ? '<div class="ins-list">' + rows + '</div>' :
+    '<div class="ins-row"><em>NO EVIDENCE</em><span>No graph evidence records are available for this account.</span></div>');
+  bindList();
+}
+
+function panelEvent(event) {
+  if (!event) return panelTimeline();
+  var entity = S.byId[event.entity_id];
+  $('ins-panel').innerHTML = '<h3>' + esc(String(event.event_type || 'Event').replace(/_/g, ' ').toUpperCase()) + '</h3>' +
+    '<div class="ins-row"><em>OCCURRED</em><span>' + esc(event.occurred_at || 'Not recorded') + '</span></div>' +
+    '<div class="ins-row"><em>ENTITY</em><span>' + esc(entity ? name(entity) : 'Unlinked event') + '</span></div>' +
+    (entity ? '<button type="button" class="btn" data-omega-task-id="insight.node.select" data-id="' + esc(entity.id) + '">OPEN ENTITY</button>' : '') +
+    '<button type="button" class="btn" data-omega-task-id="insight.timeline.back" id="ins-back">← TIMELINE</button>';
+  $('ins-back').onclick = panelTimeline;
+  bindList();
+}
+
+function panelEvidenceItem(item) {
+  if (!item) return panelEvidence();
+  var entity = S.byId[item.graph_entity_id];
+  $('ins-panel').innerHTML = '<h3>' + esc(item.source_type || 'Evidence') + '</h3>' +
+    '<div class="ins-row"><em>METHOD</em><span>' + esc(item.extraction_method || 'Not recorded') + '</span></div>' +
+    '<div class="ins-row"><em>REVIEW</em><span>' + (item.human_verified ? 'HUMAN VERIFIED' : 'NOT HUMAN VERIFIED') + '</span></div>' +
+    '<div class="ins-row"><em>EXTRACTED</em><span>' + esc(item.extracted_text || 'No extracted text recorded') + '</span></div>' +
+    (entity ? '<button type="button" class="btn" data-omega-task-id="insight.node.select" data-id="' + esc(entity.id) + '">OPEN ENTITY</button>' : '') +
+    '<button type="button" class="btn" data-omega-task-id="insight.evidence.back" id="ins-back">← EVIDENCE</button>';
+  $('ins-back').onclick = panelEvidence;
   bindList();
 }
 
@@ -209,9 +268,57 @@ function panelNode(id) {
 }
 
 function bindList() {
-  $('ins-panel').querySelectorAll('.ins-li').forEach(function (b) { b.onclick = function () { select(b.dataset.id); }; });
+  $('ins-panel').querySelectorAll('.ins-li').forEach(function (b) {
+    b.onclick = function () {
+      if (b.dataset.eventId) panelEvent(S.evts.find(function (item) { return item.id === b.dataset.eventId; }));
+      else if (b.dataset.evidenceId) panelEvidenceItem(S.evid.find(function (item) { return item.id === b.dataset.evidenceId; }));
+      else if (b.dataset.id) select(b.dataset.id);
+    };
+  });
 }
 function select(id) { S.sel = id; draw(); if (id) panelNode(id); else panelOverview(); }
+
+function downloadFile(filename, mime, content) {
+  var blob = new Blob([content], { type: mime });
+  var url = URL.createObjectURL(blob);
+  var anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
+function exportGraph() {
+  var payload = {
+    schema_version: 1,
+    exported_at: new Date().toISOString(),
+    source: 'SYD OMEGA INSIGHT',
+    entities: S.ents,
+    relationships: S.rels,
+    events: S.evts,
+    evidence: S.evid
+  };
+  downloadFile('syd-omega-graph-' + new Date().toISOString().slice(0, 10) + '.json',
+    'application/json', JSON.stringify(payload, null, 2));
+}
+
+function exportEvidence() {
+  var lines = ['SYD OMEGA 91717 — EVIDENCE EXPORT', 'Exported: ' + new Date().toISOString(), ''];
+  S.evid.forEach(function (item, index) {
+    var entity = S.byId[item.graph_entity_id];
+    lines.push('RECORD ' + (index + 1));
+    lines.push('Entity: ' + (entity ? name(entity) : 'Unlinked'));
+    lines.push('Source: ' + (item.source_type || 'Not recorded'));
+    lines.push('Method: ' + (item.extraction_method || 'Not recorded'));
+    lines.push('Human verified: ' + (item.human_verified ? 'YES' : 'NO'));
+    lines.push('Extracted text: ' + (item.extracted_text || 'Not recorded'));
+    lines.push('---');
+  });
+  downloadFile('syd-omega-evidence-' + new Date().toISOString().slice(0, 10) + '.txt',
+    'text/plain;charset=utf-8', lines.join('\n'));
+}
 
 /* ── load ───────────────────────────────────────────────────────────── */
 async function load() {
@@ -237,8 +344,11 @@ function boot() {
   $('ins-lens').innerHTML = LENSES.map(function (l) {
     return '<button type="button" role="tab" data-omega-task-id="insight.lens.' + l[0] + '" data-lens="' + l[0] + '" aria-selected="' + (l[0] === S.lens) + '">' + l[1] + '</button>';
   }).join('');
-  $('ins-lens').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; S.lens = b.dataset.lens; draw(); if (!S.sel) panelOverview(); };
+  $('ins-lens').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; S.lens = b.dataset.lens; S.sel = null; draw(); panelOverview(); };
   $('ins-find').oninput = function () { S.find = this.value.trim().toLowerCase(); draw(); };
+  $('ins-export-json').onclick = exportGraph;
+  $('ins-export-evidence').onclick = exportEvidence;
+  if (new URLSearchParams(window.location.search).get('tools') === '1') $('ins-ai-tools').open = true;
   load().catch(function (e) { console.warn('[insight] load failed', e); $('ins-empty').hidden = false; });
 }
 

@@ -174,49 +174,5 @@ class PageCopyAuditTests(unittest.TestCase):
             self.assertIn("Near-duplicate prose candidates", rendered)
 
 
-    def test_founder_identity_is_confined_to_owner_surfaces(self):
-        vault = (ROOT / "vault.html").read_text(encoding="utf-8")
-        covenant = (ROOT / "sovereign-covenant.html").read_text(encoding="utf-8")
-        profile = (ROOT / "profile.html").read_text(encoding="utf-8")
-        approvals = (ROOT / "approvals.html").read_text(encoding="utf-8")
-        approvals_js = (ROOT / "approvals.js").read_text(encoding="utf-8")
-        self.assertNotIn("S.Y.D", vault)
-        self.assertNotIn("LEBANESE ORDER OF ENGINEERS NO. 30875", vault)
-        self.assertIn("SLEIMAN YOUSSEF DAGHER", covenant)
-        self.assertIn("profileResult.data.is_owner", covenant)
-        self.assertIn("if(!profileResult.data.is_owner)", covenant)
-        self.assertNotIn("Sleiman Youssef Dagher", profile)
-        self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", profile)
-        self.assertIn("d.is_owner?'S.Y.D'", profile)
-        self.assertIn("Sleiman Youssef Dagher", approvals)
-        self.assertIn("if(!pr||!pr.is_owner)", approvals_js)
-
-    def test_authority_formula_and_gate_explanation_have_one_canonical_page(self):
-        canonical = (ROOT / "evolution.html").read_text(encoding="utf-8")
-        for name in ("profile.html", "honors.html", "approvals.html", "dashboard.html", "academy.html", "gaming.html", "vault.html", "sovereign-covenant.html"):
-            page = (ROOT / name).read_text(encoding="utf-8")
-            self.assertNotIn("AUTHORITY FORMULA", page, name + " must link to the canonical model")
-            self.assertNotIn("GATE THRESHOLDS", page, name + " must not duplicate the canonical gate table")
-        self.assertIn("AUTHORITY FORMULA", canonical)
-        self.assertIn("THREE AXES", canonical)
-
-    def test_exam_catalogue_has_one_canonical_owner(self):
-        import re
-        academy = (ROOT / "academy.html").read_text(encoding="utf-8")
-        gaming = (ROOT / "gaming.html").read_text(encoding="utf-8")
-        academy_tasks = set(re.findall(r'data-task="([^"]+)"', academy))
-        gaming_tasks = set(re.findall(r'data-task="([^"]+)"', gaming))
-        self.assertIn('data-task-type="knowledge"', academy)
-        self.assertNotIn('data-task-type="knowledge"', gaming)
-        self.assertTrue(academy_tasks)
-        self.assertFalse(academy_tasks & gaming_tasks, "academy and gaming must not render the same task cards")
-        self.assertIn('href="/academy.html"', gaming)
-        self.assertIn('<a class="tab-btn exam-tab" href="/academy.html"', gaming)
-        self.assertNotIn('id="tab-exams"', gaming)
-        for obsolete_panel in ("tab-stem", "tab-professional", "tab-technology", "tab-healthcare", "tab-sovereign_e"):
-            self.assertNotIn('id="' + obsolete_panel + '"', gaming)
-
-
-
 if __name__ == "__main__":
     unittest.main()

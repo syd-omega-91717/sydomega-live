@@ -182,7 +182,7 @@
     "studio-library": {
       "state": "DEPLOYED",
       "verify_jwt": true,
-      "repository_blob_sha": "9a1bb3307e8c416cbd9c17fe37ec08e8ce456be",
+      "repository_blob_sha": "9a1bb3307e8c416cbd9c17fe37ec08e8ce456be1",
       "version": 8,
       "live_sha256": "f1e338fb9cb7a3002a4d89fd2f7b75c467eea8470f01bee8d75f01208b129d32",
       "provider_status": "ACTIVE",

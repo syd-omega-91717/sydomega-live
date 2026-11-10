@@ -16,7 +16,7 @@
     '/vault.html':['wallet','subscriptions','payments','ledger','blockchain','advertising','ad-network','sovereign-covenant'],
     '/order.html':['family','heritage','bloodline','hall','sovereigns','factions','city','approvals','interface-omni'],
     '/services.html':['consultancy','contracts','publishing','marketing','events','travel','health','social','studio','creation-studio','project-studio','creator'],
-    '/intel.html':['research','prediction','intelligence','automation','graphify','graph-admin','graph-timeline','graph-centrality','graph-explorer','graph-anomalies','graph-evidence','atlas','cipher','codex','mindmap','nexus','pulse','sigma','signal','news'],
+    '/intel.html':['insight','research','prediction','intelligence','automation','graph-admin','atlas','cipher','codex','mindmap','nexus','pulse','sigma','signal','news'],
     '/arena.html':['sovereign-ai','agent-network','agents','analytics','queue','gaming'],
     '/govern.html':['governance','observatory','enterprise','privacy','roadmap','ecosystem','knowledge','knowledge-loom','maintenance','control-center','platform-kernel','agent-operations','ops','architecture','autonomous-insights','lab','design-system','design-showcase','design-lab'],
     '/invest.html':['investment','portfolio','treasury','revenue','income','budget','expenses','wealth'],

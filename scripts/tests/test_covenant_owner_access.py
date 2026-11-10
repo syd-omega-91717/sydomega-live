@@ -66,6 +66,7 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertIn("OWNER-ONLY ADMINISTRATION", APPROVALS)
         self.assertNotIn("S.Y.D &mdash; EXCLUSIVELY", APPROVALS)
         self.assertIn("if(!pr||!pr.is_owner)", APPROVALS_JS)
+        self.assertIn("['approvals','APPROVALS','/approvals.html','owner']", NAV)
 
     def test_vault_exposes_covenant_link_only_to_verified_owner(self):
         self.assertIn('id="vault-covenant-link"', VAULT)

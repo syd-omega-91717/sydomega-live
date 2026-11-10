@@ -68,6 +68,10 @@ class ObservatoryEvidenceConsoleTests(unittest.TestCase):
         self.assertIn("NULL budget values are not green health", PAGE)
         self.assertEqual(PAGE.count("from('error_budget_policy')"), 1)
 
+    def test_cwv_data_availability_is_not_confused_with_cwv_measurement(self):
+        self.assertIn("NO CWV MEASUREMENTS", PAGE)
+        self.assertIn("hasCwv=d.lcp_ms!=null||d.inp_ms!=null||d.cls!=null", PAGE)
+
     def test_service_budget_is_not_misrepresented_as_platform_aggregate(self):
         self.assertIn("surface==='platform'||sv.surface==='platform_service'", PAGE)
         self.assertIn("NO PLATFORM AGGREGATE", PAGE)

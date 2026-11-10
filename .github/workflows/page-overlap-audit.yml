@@ -1,9 +1,8 @@
 name: Page Content and Purpose Audit
 
-# Advisory only, and O(n^2) over the whole page estate: measured at 2-5
-# minutes locally, against 0.79s for all eleven blocking gates combined. On a
-# single serial self-hosted runner that cost bought nothing per-push, since a
-# PASS here never blocked a merge. It runs nightly and on demand instead.
+# Advisory-only quality reports: visible-copy repetition and semantic page-purpose overlap
+# answer different questions. The purpose audit is O(n^2) over the page estate;
+# both reports are published nightly and on demand, not used as merge gates.
 on:
   schedule:
     - cron: '30 4 * * *'

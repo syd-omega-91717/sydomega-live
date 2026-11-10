@@ -79,6 +79,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <div id="tp-articles" class="tab-panel active">
       <div class="sec">
         <div class="sechead">THE 11 GOVERNANCE ARTICLES</div>
+        <div class="sc-notice" style="margin-bottom:16px"><b>NON-TOKEN DESIGN ARTICLES:</b> III, IV, VI, VII, X and XI describe planned mechanisms; none is presented as an operational guarantee.</div>
         <div class="articles-grid" id="articles-grid"></div>
       </div>
     </div>
@@ -101,25 +102,19 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
           <div class="kpi" data-reveal="fade-up"><div class="kpi-n">104,976</div><div class="kpi-l">LATTICE NODES</div></div>
           <div class="kpi" data-reveal="fade-up"><div class="kpi-n">729</div><div class="kpi-l">9&times;9&times;9 INNER</div></div>
           <div class="kpi" data-reveal="fade-up"><div class="kpi-n">12</div><div class="kpi-l">OLYMPIAN GATES</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">11</div><div class="kpi-l">IMMUTABLE ARTICLES</div></div>
+          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">11</div><div class="kpi-l">GOVERNANCE ARTICLES</div></div>
         </div>
       </div>
     </div>
     <div id="tp-science" class="tab-panel">
       <div class="sec">
-        <div class="sechead">&#9670; SYSTEM CONSTANTS &middot; THE AUTHORITY ENGINE</div>
+        <div class="sechead">GOVERNANCE IMPLEMENTATION BOUNDARY</div>
         <div class="kpi-row" data-stagger data-stagger-gap="70">
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.6180</div><div class="kpi-l">PHI &phi;</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.7183</div><div class="kpi-l">EULER e</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">&radic;(A&sup3;+B&sup3;+C&sup3;)&times;&phi;/e</div><div class="kpi-l">AUTH FORMULA</div></div>
+          <article class="kpi" data-reveal="fade-up"><div class="kpi-n">01</div><div class="kpi-l">OWNER VERIFICATION</div><p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">The Covenant shell is shown only after the authenticated profile's owner flag is verified.</p></article>
+          <article class="kpi" data-reveal="fade-up"><div class="kpi-n">02</div><div class="kpi-l">VERSIONED DESIGN</div><p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">Articles describe intent; deployed code and approved policy determine operational behavior.</p></article>
+          <article class="kpi" data-reveal="fade-up"><div class="kpi-n">03</div><div class="kpi-l">SERVER ENFORCEMENT</div><p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">Administrative permissions are enforced by server-side roles and authorization policies.</p></article>
         </div>
-        <div class="kpi-row" data-stagger data-stagger-gap="70">
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">0.001</div><div class="kpi-l">INITIATE GATE</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">1.618</div><div class="kpi-l">SOVEREIGN GATE</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">2.718</div><div class="kpi-l">PRIME GATE</div></div>
-          <div class="kpi" data-reveal="fade-up"><div class="kpi-n">9.000</div><div class="kpi-l">APEX GATE</div></div>
-        </div>
+        <a href="/evolution.html" style="display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:12px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-decoration:none">OPEN CANONICAL PROGRESSION MODEL <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     <div data-page-emblem="sovereign-covenant" style="margin:20px auto 0"></div>
@@ -153,14 +148,11 @@ var DORMANT_ARTICLES=["II","III","IV","VI","VII","VIII","IX","X","XI"];
 var grid=document.getElementById("articles-grid");
 if(grid){
   grid.innerHTML=ARTICLES.map(function(a){
-    var dormantTag=DORMANT_ARTICLES.indexOf(a.n)>-1
-      ?"<div class='sc-tag' title='Planned design, not yet active. Gated behind platform_settings.tokens_enabled pending legal sign-off.'><i></i>DESIGN &middot; NOT OPERATIONAL</div>"
-      :"";
-    return "<div class='article-card'>"
+    var statusClass=DORMANT_ARTICLES.indexOf(a.n)>-1?" article-design-only":"";
+    return "<div class='article-card"+statusClass+"'>"
       +"<div class='art-n'>ARTICLE "+a.n+"</div>"
       +"<div class='art-title'>"+a.title+"</div>"
       +"<div class='art-text'>"+a.text+"</div>"
-      +dormantTag
       +"</div>";
   }).join("");
 }

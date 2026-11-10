@@ -214,6 +214,15 @@ def main(argv):
         drift = current != text
         if drift:
             print('ERROR docs/IDEA_LEDGER.md is stale: run python3 scripts/idea-ledger.py')
+            import difflib
+            diff = difflib.unified_diff(
+                current.splitlines(), text.splitlines(),
+                fromfile='committed docs/IDEA_LEDGER.md',
+                tofile='generated docs/IDEA_LEDGER.md',
+                lineterm=''
+            )
+            for line in list(diff)[:80]:
+                print(line)
         ok = not errors and not drift
         print('IDEA LEDGER: %s — %d ideas, %d actionable'
               % ('PASS' if ok else 'FAIL', len(ideas), sum(i[3] in ACTIONABLE for i in ideas)))

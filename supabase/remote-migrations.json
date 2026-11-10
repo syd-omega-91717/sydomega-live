@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-10-25",
-  "source": "Authenticated Supabase query of supabase_migrations.schema_migrations for project ydqhzvvoyufiiqvzcjns, 2026-10-25: 413 unique versions, latest 20261025100000. 20261024110000 and 20261025100000 were applied by the Supabase GitHub integration when #1080 and #1088 merged to main, not by the controlled-push workflow. harden_provider_registry_column_access is recorded under three versions (20261024101622, 20261024102602, 20261024103000), all idempotent privilege changes. This is a provider-history snapshot, not proof that every historical SQL file is byte-identical to applied SQL.",
-  "remoteMigrationCount": 413,
-  "latestRemoteMigration": "20261025100000",
+  "_captured": "2026-11-10",
+  "source": "Authenticated Supabase provider list_migrations query against the configured sydomega production project on 2026-11-10: 415 unique recorded versions, latest 20261104090000. This is migration-ledger evidence only; it does not prove SQL byte parity or semantic schema correctness. A separate read-only SQL query confirmed the erasure engine objects exist, its worker flag is false, and no erasure cron job is scheduled.",
+  "remoteMigrationCount": 415,
+  "latestRemoteMigration": "20261104090000",
   "versions": [
     "0001",
     "0002",
@@ -416,7 +416,9 @@
     "20261024102602",
     "20261024103000",
     "20261024110000",
-    "20261025100000"
+    "20261025100000",
+    "20261103230000",
+    "20261104090000"
   ],
   "migrations": [
     {
@@ -2067,6 +2069,14 @@
     {
       "version": "20261025100000",
       "name": "access_request_alerts"
+    },
+    {
+      "version": "20261103230000",
+      "name": "erasure_pipeline_dormant"
+    },
+    {
+      "version": "20261104090000",
+      "name": "financial_rows_survive_account_deletion"
     }
   ]
 }

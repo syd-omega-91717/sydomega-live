@@ -162,17 +162,18 @@ def build_report(root: Path, min_words: int = 8) -> dict:
 
     errors = []
     allowlist_path = root / "config" / "page-copy-allowlist.json"
-    approved_text: dict[str, str] = {}
+    approved_text: dict[str, dict] = {}
     if allowlist_path.is_file():
         try:
             allowlist = json.loads(allowlist_path.read_text(encoding="utf-8"))
             for item in allowlist.get("approved", []):
                 normal = str(item.get("normalised_text", "")).strip()
                 reason = str(item.get("reason", "")).strip()
-                if normal and reason:
-                    approved_text[normal] = reason
+                scope = item.get("scope", [])
+                if normal and reason and isinstance(scope, list) and scope and all(isinstance(page, str) and page.strip() for page in scope):
+                    approved_text[normal] = {"reason": reason, "scope": set(scope)}
                 else:
-                    errors.append({"page": "config/page-copy-allowlist.json", "tag": "error", "text": "allowlist entries require normalised_text and reason", "normalised": "", "words": 0, "kind": "error"})
+                    errors.append({"page": "config/page-copy-allowlist.json", "tag": "error", "text": "allowlist entries require normalised_text, reason, and a non-empty scope list", "normalised": "", "words": 0, "kind": "error"})
         except (OSError, ValueError) as exc:
             errors.append({"page": "config/page-copy-allowlist.json", "tag": "error", "text": str(exc), "normalised": "", "words": 0, "kind": "error"})
 
@@ -182,6 +183,7 @@ def build_report(root: Path, min_words: int = 8) -> dict:
             groups[(block["kind"], block["normalised"])].append(block)
 
     cross_page, approved_cross_page, within_page, cta_reuse = [], [], [], []
+    allowlist_scope_mismatches = []
     seen_allowlist: set[str] = set()
     for (kind, normal), items in groups.items():
         if len(items) < 2:
@@ -195,11 +197,21 @@ def build_report(root: Path, min_words: int = 8) -> dict:
         if kind == "cta":
             cta_reuse.append(group)
         elif len(paths) > 1:
-            reason = approved_text.get(normal)
-            if reason:
-                group["approved_reason"] = reason
-                approved_cross_page.append(group)
+            approval = approved_text.get(normal)
+            if approval:
                 seen_allowlist.add(normal)
+                if set(paths) == approval["scope"]:
+                    group["approved_reason"] = approval["reason"]
+                    group["approved_scope"] = sorted(approval["scope"])
+                    approved_cross_page.append(group)
+                else:
+                    group["allowlist_scope_expected"] = sorted(approval["scope"])
+                    allowlist_scope_mismatches.append({
+                        "text": items[0]["text"],
+                        "expected_pages": sorted(approval["scope"]),
+                        "actual_pages": paths,
+                    })
+                    cross_page.append(group)
             else:
                 cross_page.append(group)
         else:
@@ -221,6 +233,7 @@ def build_report(root: Path, min_words: int = 8) -> dict:
         "within_page_duplicate_groups": within_page,
         "reused_cta_groups": cta_reuse,
         "unused_allowlist_entries": unused_allowlist,
+        "allowlist_scope_mismatches": allowlist_scope_mismatches,
         "scan_errors": errors,
         "truth_note": "Exact text repetition is a review signal, not proof of an error. Shared legal copy, standard controls, and intentionally repeated instructions may be justified.",
     }
@@ -260,6 +273,10 @@ def markdown(report: dict, limit: int = 30) -> str:
         lines.extend(["", "## Stale allowlist entries", ""])
         for item in report["unused_allowlist_entries"]:
             lines.append(f"- {item}")
+    if report["allowlist_scope_mismatches"]:
+        lines.extend(["", "## Allowlist scope mismatches", ""])
+        for item in report["allowlist_scope_mismatches"]:
+            lines.append(f"- {item['text']} — expected {item['expected_pages']}; found {item['actual_pages']}")
     lines.extend(["## Repeated prose within a page", ""])
     if not report["within_page_duplicate_groups"]:
         lines.append("No within-page repeated prose blocks met the configured word threshold.")
@@ -299,6 +316,7 @@ def main() -> int:
         print(f"WITHIN_PAGE_REPEAT_GROUPS={len(report['within_page_duplicate_groups'])}")
         print(f"REUSED_CTA_GROUPS={len(report['reused_cta_groups'])}")
         print(f"UNUSED_ALLOWLIST_ENTRIES={len(report['unused_allowlist_entries'])}")
+        print(f"ALLOWLIST_SCOPE_MISMATCHES={len(report['allowlist_scope_mismatches'])}")
         print(f"SCAN_ERRORS={len(report['scan_errors'])}")
     return 1 if report["scan_errors"] else 0
 

@@ -151,8 +151,8 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | G17 | GAP_ANALYSIS.md S | `STRIPE_WEBHOOK_SECRET` is not set (owner action). The deployed | GAP_ANALYSIS.md section S |
 | G21 | GAP_ANALYSIS.md S | production is frozen at the 2026-10-06 build. Vercel's newest | GAP_ANALYSIS.md section S |
 | G22 | GAP_ANALYSIS.md S | nothing measures uptime or service health. Live: `incidents`, | GAP_ANALYSIS.md section S |
-| G24 | GAP_ANALYSIS.md S | access requests go unanswered; the owner is never emailed. | GAP_ANALYSIS.md section S |
-| G25 | GAP_ANALYSIS.md S | nothing runs on a schedule. `pg_cron` is not installed live | GAP_ANALYSIS.md section S |
+| G24 | GAP_ANALYSIS.md S | access-request email delivery is not yet proven. | GAP_ANALYSIS.md section S |
+| G25 | GAP_ANALYSIS.md S | scheduled operations remain incomplete; only in-app notification delivery is scheduled. | GAP_ANALYSIS.md section S |
 | G29 | GAP_ANALYSIS.md S | 4 public RPCs stay blocked on purpose: `omega_transition_mission_task` (a | GAP_ANALYSIS.md section S |
 | G30 | GAP_ANALYSIS.md S | `set_consult_status`, `set_contract_status`, `set_reservation_status` can never | GAP_ANALYSIS.md section S |
 | G31 | GAP_ANALYSIS.md S | `evidence-audit.py` misclassifies pages whose data access lives in a module. It reads only a page's inline sc… | GAP_ANALYSIS.md section S |

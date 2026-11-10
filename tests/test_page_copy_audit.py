@@ -163,6 +163,45 @@ class PageCopyAuditTests(unittest.TestCase):
         self.assertIn(str(count) + "-page web estate", readme)
         self.assertIn("Web estate:** " + str(count) + " pages under page-contract governance", readme)
 
+    def test_short_status_chips_repeated_inside_one_page_are_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            badges = "".join('<div class="status-badge"><span>BUILT</span></div>' for _ in range(3))
+            self.write_page(root, "one.html", "<main><h1>Module catalogue</h1>" + badges + "</main>")
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(len(report["repeated_status_labels"]), 1)
+            self.assertEqual(report["repeated_status_labels"][0]["occurrences"], 3)
+            self.assertEqual(report["repeated_status_labels"][0]["pages"], ["one.html"])
+
+    def test_short_status_labels_across_pages_are_not_mistaken_for_in_page_repetition(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            for name in ("one.html", "two.html", "three.html"):
+                self.write_page(root, name, '<main><h1>Distinct page purpose</h1><span class="status-badge">BUILT</span></main>')
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(report["repeated_status_labels"], [])
+
+    def test_status_repetition_is_counted_per_page_even_when_other_pages_use_same_label(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            repeated = "".join('<span class="status-chip">READY</span>' for _ in range(3))
+            self.write_page(root, "one.html", "<main><h1>Operations</h1>" + repeated + "</main>")
+            self.write_page(root, "two.html", '<main><h1>Other purpose</h1><span class="status-chip">READY</span></main>')
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(len(report["repeated_status_labels"]), 1)
+            self.assertEqual(report["repeated_status_labels"][0]["pages"], ["one.html"])
+            self.assertEqual(report["repeated_status_labels"][0]["occurrences"], 3)
+
+    def test_hidden_or_unclassified_short_labels_are_not_status_chip_findings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            body = ('<main><span class="status-badge" hidden>BUILT</span>'
+                    '<span class="ordinary-label">BUILT</span>'
+                    '<span class="status-badge">READY</span></main>')
+            self.write_page(root, "one.html", body)
+            report = MODULE.build_report(root, 8)
+            self.assertEqual(report["repeated_status_labels"], [])
+
     def test_markdown_report_explains_that_repetition_is_a_review_signal(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)

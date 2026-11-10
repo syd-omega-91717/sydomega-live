@@ -26,6 +26,7 @@ SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", "public"}
 SKIP_TAGS = {"script", "style", "noscript", "svg", "template", "nav", "footer", "aside"}
 BLOCK_TAGS = {"h1", "h2", "h3", "h4", "p", "li", "div", "section", "article", "button", "a", "label", "summary", "blockquote", "dt", "dd"}
 CTA_TAGS = {"button", "a"}
+STATUS_CLASSES = {"badge", "chip", "tag", "status", "status-badge", "status-chip", "status-tag", "status-pill", "state", "state-chip", "phase", "rank-badge", "level-badge", "availability", "status-dot", "status-indicator", "status-label", "badge-label", "chip-label", "tag-pill"}
 SKIP_CLASSES = {
     "omega-side", "sidebar", "topbar", "global-nav", "breadcrumbs",
     "cookie-banner", "cookie-consent", "site-header", "site-footer",
@@ -69,6 +70,8 @@ class CopyParser(HTMLParser):
         self.current_main = False
         self.current_exempt = False
         self.blocks: list[dict] = []
+        self.status_stack: list[dict] = []
+        self.status_labels: list[dict] = []
 
     def _flush(self) -> None:
         if self.current_tag:
@@ -101,6 +104,8 @@ class CopyParser(HTMLParser):
             self.skip_depth += 1
         if parent_skip or own_skip:
             return
+        if not self.status_stack and classes & STATUS_CLASSES and tag not in CTA_TAGS:
+            self.status_stack.append({"tag": tag, "depth": len(self.stack), "classes": sorted(classes & STATUS_CLASSES), "parts": [], "main": self.main_depth > 0})
         if tag in BLOCK_TAGS:
             self._flush()
             self.current_tag = tag
@@ -113,11 +118,18 @@ class CopyParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self.skip_depth == 0 and self.current_tag:
             self.current_parts.append(data)
+        if self.skip_depth == 0 and self.status_stack:
+            self.status_stack[-1]["parts"].append(data)
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
         if self.current_tag == tag:
             self._flush()
+        if self.status_stack and self.status_stack[-1]["tag"] == tag and self.status_stack[-1]["depth"] == len(self.stack):
+            item = self.status_stack.pop()
+            label = " ".join(" ".join(item["parts"]).split())
+            if label:
+                self.status_labels.append({"tag": tag, "classes": item["classes"], "text": label, "main": item["main"]})
         for index in range(len(self.stack) - 1, -1, -1):
             frame_tag, was_skip, was_main = self.stack[index]
             if was_skip:
@@ -154,6 +166,14 @@ def scan_page(path: Path, root: Path, min_words: int) -> list[dict]:
             "words": count,
             "kind": "cta" if block["tag"] in CTA_TAGS else "copy",
         })
+    for status in parser.status_labels:
+        if parser.has_main and not status["main"]:
+            continue
+        clean = normalise(status["text"])
+        count = word_count(clean)
+        if 1 <= count <= 5:
+            result.append({"page": rel, "tag": status["tag"], "classes": status["classes"],
+                           "text": status["text"], "normalised": clean, "words": count, "kind": "status"})
     return result
 
 
@@ -195,7 +215,7 @@ def build_report(root: Path, min_words: int = 8, near_min_words: int = 20, near_
         if block["normalised"]:
             groups[(block["kind"], block["normalised"])].append(block)
 
-    cross_page, approved_cross_page, within_page, cta_reuse = [], [], [], []
+    cross_page, approved_cross_page, within_page, cta_reuse, repeated_status_labels = [], [], [], [], []
     allowlist_scope_mismatches = []
     seen_allowlist: set[str] = set()
     for (kind, normal), items in groups.items():
@@ -209,6 +229,19 @@ def build_report(root: Path, min_words: int = 8, near_min_words: int = 20, near_
         }
         if kind == "cta":
             cta_reuse.append(group)
+        elif kind == "status":
+            by_page: dict[str, list[dict]] = defaultdict(list)
+            for item in items:
+                by_page[item["page"]].append(item)
+            for page, page_items in by_page.items():
+                if len(page_items) >= 3:
+                    repeated_status_labels.append({
+                        "kind": "status", "text": page_items[0]["text"],
+                        "normalised": normal, "words": page_items[0]["words"],
+                        "occurrences": len(page_items), "pages": [page],
+                        "locations": [{"page": item["page"], "tag": item["tag"]} for item in page_items],
+                        "classes": sorted({name for item in page_items for name in item.get("classes", [])}),
+                    })
         elif len(paths) > 1:
             approval = approved_text.get(normal)
             if approval:
@@ -258,7 +291,7 @@ def build_report(root: Path, min_words: int = 8, near_min_words: int = 20, near_
     near_duplicate_pairs.sort(key=lambda item: (-item["similarity"], item["left"]["page"], item["right"]["page"]))
 
     sort_key = lambda item: (-item["occurrences"], -item["words"], item["text"].casefold())
-    for collection in (cross_page, approved_cross_page, within_page, cta_reuse):
+    for collection in (cross_page, approved_cross_page, within_page, cta_reuse, repeated_status_labels):
         collection.sort(key=sort_key)
     errors.extend(b for b in all_blocks if b["kind"] == "error")
     unused_allowlist = sorted(set(approved_text) - seen_allowlist)
@@ -275,6 +308,7 @@ def build_report(root: Path, min_words: int = 8, near_min_words: int = 20, near_
         "approved_cross_page_duplicate_groups": approved_cross_page,
         "within_page_duplicate_groups": within_page,
         "reused_cta_groups": cta_reuse,
+        "repeated_status_labels": repeated_status_labels,
         "unused_allowlist_entries": unused_allowlist,
         "allowlist_scope_mismatches": allowlist_scope_mismatches,
         "scan_errors": errors,
@@ -291,6 +325,7 @@ def markdown(report: dict, limit: int = 30) -> str:
         f"- Approved cross-page repeated prose groups: **{len(report['approved_cross_page_duplicate_groups'])}**",
         f"- Within-page repeated prose groups: **{len(report['within_page_duplicate_groups'])}**",
         f"- Reused CTA groups (reported separately): **{len(report['reused_cta_groups'])}**",
+        f"- Repeated short status labels within one page (3+ occurrences): **{len(report['repeated_status_labels'])}**",
         f"- Near-duplicate prose candidates (word-trigram Jaccard ≥ {report['near_threshold']:.2f}): **{len(report['near_duplicate_pairs'])}**",
         f"- Scan errors: **{len(report['scan_errors'])}**", "",
         "> Exact and near repetition are review signals, not automatic defects. Legal, safety, privacy, and standard control copy may intentionally repeat. No page is changed or deleted by this audit.",
@@ -337,6 +372,11 @@ def markdown(report: dict, limit: int = 30) -> str:
         lines.append("No within-page repeated prose blocks met the configured word threshold.")
     for item in report["within_page_duplicate_groups"][:limit]:
         lines.append(f"- **{item['occurrences']}×** in {item['pages'][0]} — {item['text']}")
+    lines.extend(["", "## Repeated status chips within a page", ""])
+    if not report["repeated_status_labels"]:
+        lines.append("No short status labels were repeated three or more times within one page.")
+    for item in report["repeated_status_labels"][:limit]:
+        lines.append("- **{0}×** in {1} — {2} (classes: {3})".format(item["occurrences"], item["pages"][0], item["text"], ", ".join(item.get("classes", []))))
     lines.extend(["", "## Reused calls to action", ""])
     if not report["reused_cta_groups"]:
         lines.append("No repeated CTA labels met the configured word threshold.")
@@ -374,6 +414,7 @@ def main() -> int:
         print(f"APPROVED_REPEAT_GROUPS={len(report['approved_cross_page_duplicate_groups'])}")
         print(f"WITHIN_PAGE_REPEAT_GROUPS={len(report['within_page_duplicate_groups'])}")
         print(f"REUSED_CTA_GROUPS={len(report['reused_cta_groups'])}")
+        print(f"REPEATED_STATUS_LABEL_GROUPS={len(report['repeated_status_labels'])}")
         print(f"NEAR_DUPLICATE_PAIRS={len(report['near_duplicate_pairs'])}")
         print(f"UNUSED_ALLOWLIST_ENTRIES={len(report['unused_allowlist_entries'])}")
         print(f"ALLOWLIST_SCOPE_MISMATCHES={len(report['allowlist_scope_mismatches'])}")

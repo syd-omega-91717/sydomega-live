@@ -57,7 +57,18 @@ That is roughly 11 to 15 pages of 242. The saving that matters is not the count:
 **Two parallel film universes are on the platform.** `cinema`, `movies`, `series`, `trailers`, `universe` and `chronicle` describe "12 Films, 12 Series, one per Olympian" (the Sovereign catalogue), while the Studio Library holds the 7 franchises and 26 films of the Studios canon. They are not the same list and nothing reconciles them. Until one of them is retired or mapped onto the other, a member sees two film catalogues that disagree. This PR removed only what was provably false (below); it did not choose between them.
 
 ## Repeated tags and subjects
+
+The visible-copy audit now also records short status/badge/chip labels (one to five words) and reports labels repeated three or more times within a single page. Reuse across different pages is not treated as an in-page defect: a shared status vocabulary can be intentional. Hidden labels and ordinary text without a status/badge/chip class are excluded. The report remains advisory; a repeated badge should be removed only when its section heading or nearby context already communicates the same state without loss of clarity.
+
 Measured by rendering pages and counting short labels that repeat on one page (`tagscan`, 23 pages before it was stopped as too slow, so this is a sample, not a census): the repeats are per-item status chips such as BUILT x10, CONNECTED x8, LIVE ROUTE x8, 0% COMPLETE x6, START x10. Most are honest status, but ten identical chips in a row carry one fact ten times. The false ones were the trailers page: six identical "OFFICIAL TRAILER" tags and "WATCH TRAILER" buttons over videos that never existed, plus invented running times; they were replaced by one truthful panel. A platform-wide rule is a design decision, with a recommendation: **show a status chip only when it differs from its section's default, and state the default once in the section heading.** Applying it to the 50 or so pages with list-style chips is a separate batch.
 
 ## Pages with no menu entry
 `honors` and `achieve` are reachable only by link; `account`, `enter`, `pending`, `reset`, `terms` and `offline` are public or auth pages and are expected to be absent; `monitoring-dashboard` is an operator page.
+
+## Purpose-overlap audit — upgraded 2026-11-11
+
+The scheduled audit now uses visible main-content text and headings, rare table/RPC references, explicit capability/task markers, and uncommon internal destinations. It excludes scripts, styles, hidden content, shared navigation/chrome, ubiquitous tables, and ubiquitous links before scoring candidate page pairs.
+
+The score is a prioritisation signal, not a merge verdict. The report shows each evidence component and the source-side data/task/capability markers so reviewers can distinguish a genuine duplicate job from two separate experiences that happen to share a profile table, design system, or progression link. The scheduled workflow writes the report to the GitHub Actions summary. Regression tests are part of the blocking local/GitHub contract suite; the full quadratic estate scan remains scheduled/on-demand only.
+
+No page is automatically deleted, redirected, hidden, or merged. A consolidation still requires a verified feature inventory, ownership of data and tasks, authorization review, inbound-link analysis, route preservation, and browser regression tests.

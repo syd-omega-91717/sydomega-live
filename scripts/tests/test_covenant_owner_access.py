@@ -60,7 +60,8 @@ class CovenantOwnerAccessTests(unittest.TestCase):
         self.assertIn("if(!profileResult.data.is_owner)", COVENANT)
         self.assertNotIn("Sleiman Youssef Dagher", PROFILE)
         self.assertNotIn("linkedin.com/search/results/people/?keywords=Sleiman", PROFILE)
-        self.assertIn("d.is_owner?'S.Y.D'", PROFILE)
+        self.assertNotIn("S.Y.D", PROFILE)
+        self.assertIn("d.display_name||ch.name", PROFILE)
         self.assertIn("Sleiman Youssef Dagher", APPROVALS)
         self.assertIn("if(!pr||!pr.is_owner)", APPROVALS_JS)
 

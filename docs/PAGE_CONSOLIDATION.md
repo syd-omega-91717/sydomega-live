@@ -17,6 +17,7 @@ The first attempt (score every pair on raw text and shared database tables) repo
 | Merged | Into | How | Evidence |
 |---|---|---|---|
 | `meditate` | `breath` | techniques, timed sessions, pause, affirmations, streak and science text ported; `/meditate` redirects; both logs kept because other modules read them | `docs/fixes/2026-11-08-breath-meditate-merge.md`, `test_breath_merge.py` |
+| `graph-anomalies`, `graph-centrality`, `graph-evidence`, `graph-explorer`, `graph-timeline`, `graphify` | `insight.html` | graph, event timeline, evidence register, centrality, anomalies, bounded-depth exploration and exports consolidated; legacy routes redirect to their matching lens; AI query/ingestion remain explicitly held | `docs/fixes/2026-11-11-insight-graph-consolidation.md`, `test_insight_legacy_routes.py` |
 
 ## The test "without elimination" gives
 A merge loses nothing only if the page being removed is a subset of the one that stays. Measured on visible text, no candidate pair passes it: every source page has most of its lines to itself (trophies 23 of 27 lines are its own, expenses 66 of 75, levels 38 of 47, series 136 of 138). So each remaining merge is a port of real features, not a deletion, and carries the same cost `breath` + `meditate` did (about 25 files of links and registries plus a browser run). `movies` is not a stub either: it is a poster wall with hover video previews. `budget` + `expenses` already share their storage keys, which makes them the cheapest next port; `series` and `movies` into `cinema` should wait for the decision on the two film catalogues below.
@@ -37,7 +38,7 @@ The Gaming page no longer renders duplicate `knowledge` task cards. Completion t
 | Merge | Evidence | Pages saved |
 |---|---|---|
 | **Honors**: `honors` + `trophies` (+ `achievements` links) into one page with tabs for the Hall, Trophies, Medals, Certificates | the two read the same four tables (`certificates`, `medals`, `trophies`, `profiles`); `honors` (403 words) has **no menu entry at all** while `trophies` (193 words) is folded away, so a member can reach neither easily | 1 |
-| **Knowledge graph**: `graph-anomalies`, `graph-evidence`, `graph-timeline`, `graphify` (and the other thin `graph-*` pages) into tabs of `graph` | each is 29 to 83 words of text over the same `graph_*` tables, every one is folded out of the menu | 4 to 8 |
+| **Knowledge graph**: `graph-anomalies`, `graph-centrality`, `graph-evidence`, `graph-explorer`, `graph-timeline`, `graphify` into `insight.html` | five live lenses plus bounded-depth relationship exploration and exports now share one graph dataset; legacy routes redirect to the matching lens; AI query/ingestion remain held by the Anthropic privacy and per-member cost gates | 6 routes consolidated, URLs preserved |
 | **Budget**: `budget` + `expenses` | text similarity 0.61, 74 and 112 words, `expenses` is folded | 1 |
 | **Progression views**: `grid` + `levels` + `gates` | three near-identical 12-based views of the same member data, 174 to 243 words each, all folded, titles 0.67 similar | 2 |
 | **Films catalogue**: `movies` (43 words) and `series` into `cinema` | all describe the same "12 Films, 12 Series, one per Olympian" list; `movies` is a stub | 2 |
@@ -61,3 +62,9 @@ Measured by rendering pages and counting short labels that repeat on one page (`
 
 ## Pages with no menu entry
 `honors` and `achieve` are reachable only by link; `account`, `enter`, `pending`, `reset`, `terms` and `offline` are public or auth pages and are expected to be absent; `monitoring-dashboard` is an operator page.
+
+## Graph workspace unification — 2026-11-11
+
+The canonical knowledge-graph workspace is **insight.html**, not graph.html. The latter is a separate Cosmos constellation experience and remains separate. Insight now owns the graph, centrality, anomaly, event timeline, and evidence-register lenses; bounded-depth exploration and JSON/evidence exports are included. Six former graph routes remain as compatibility URLs and redirect to their matching Insight lens. Graph Admin remains a separate owner-only curation surface.
+
+Graphify AI query and ingestion are not represented as working capabilities: both Edge Functions are held and absent from the 22-function production inventory because member-content processing by Anthropic lacks the required processor disclosure and enforced per-member daily cost limit. Insight exposes this as an explicit held state rather than issuing calls to undeployed endpoints.

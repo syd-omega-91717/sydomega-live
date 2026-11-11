@@ -38,6 +38,8 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         for route in ("account.html", "profile.html", "world.html", "news.html", "media.html", "privacy.html", "terms.html", "vault.html"):
             self.assertIn(route, PRODUCTION_VERIFY)
         self.assertIn("CLOUDFLARE_PRODUCTION=PASS", PRODUCTION_VERIFY)
+        self.assertIn("actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1", PRODUCTION_VERIFY)
+        self.assertIn("--location --silent", PRODUCTION_VERIFY)
         self.assertNotIn("CLOUDFLARE_API_TOKEN", PRODUCTION_VERIFY)
         self.assertIn("config/omega-page-contracts.json", PRODUCTION_SMOKE)
         self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)

@@ -1,8 +1,8 @@
 -- Reconcile the live runtime dispatcher with all 54 canonical module actions.
--- The previous live dispatcher had drifted behind the applied migration ledger;
--- this migration restores the full module adapter set and adds the wave-3 adapters.
--- All member-owned reads are explicitly scoped to p_actor_user_id. Financial
--- execution and asset mutation remain outside this dispatcher.
+-- The live provider function had drifted behind the applied migration ledger.
+-- Restore the full module adapter set and add the wave-3 handlers.
+-- Member-owned reads are scoped to p_actor_user_id. Financial execution and
+-- asset mutation remain outside this dispatcher.
 begin;
 
 drop index if exists public.consult_requests_runtime_idempotency_uidx;
@@ -149,7 +149,7 @@ begin
         'status','SIMULATED',
         'classification','INTERPRETIVE_CONTENT',
         'sign',p.sign,
-        'themes',case lower(coalesce(p.sign,'')) 
+        'themes',case lower(coalesce(p.sign::text,'')) 
           when 'aries' then jsonb_build_array('initiative','courage','new beginnings')
           when 'taurus' then jsonb_build_array('stability','patience','stewardship')
           when 'gemini' then jsonb_build_array('communication','curiosity','adaptability')
@@ -222,16 +222,7 @@ begin
     v_result:=jsonb_build_object('module_id',v_module,'action_name',v_action_name,'lifecycle',v_lifecycle,'data',coalesce(v_result,'{}'::jsonb));
 
   when 'create_consult_intake' then
-    v_request_id:=omega_private.create_consult_intake(
-      p_actor_user_id,
-      p_payload->>'domain',
-      p_payload->>'message',
-      p_payload->>'idempotency_key',
-      coalesce(p_payload->>'urgency','normal'),
-      p_payload->>'preferred_time',
-      coalesce((p_payload->>'confidentiality_accepted')::boolean,false),
-      p_payload->>'contact'
-    );
+    v_request_id:=omega_private.create_consult_intake(p_actor_user_id,p_payload->>'domain',p_payload->>'message',p_payload->>'idempotency_key',coalesce(p_payload->>'urgency','normal'),p_payload->>'preferred_time',coalesce((p_payload->>'confidentiality_accepted')::boolean,false),p_payload->>'contact');
     v_result:=jsonb_build_object('request_id',v_request_id,'status','PENDING');
   when 'create_media_job' then
     v_result:=private.omega_media_job_create(p_actor_user_id,p_payload->>'job_type',coalesce(p_payload->'request','{}'::jsonb),p_payload->>'idempotency_key',p_payload->>'provider');
@@ -259,7 +250,6 @@ revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from publi
 grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role;
 
 do $$
-declare v_missing text[];
 begin
   if (select count(*) from public.omega_module_runtime_actions) <> 54 then
     raise exception 'omega_runtime_action_count_must_equal_54';

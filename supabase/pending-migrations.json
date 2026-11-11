@@ -9,7 +9,7 @@
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Restores missing live runtime adapters and hardens user-scoped consultancy intake idempotency; requires fresh migration replay and provider application evidence before release."
+      "reason": "Restores all 54 runtime action adapters, adds missing read handlers, enforces user-scoped consultancy intake idempotency and indexes the private Stripe refund reversal foreign key; requires fresh migration replay, all-action probe and provider application evidence before release."
     }
   ]
 }

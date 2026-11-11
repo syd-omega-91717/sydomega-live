@@ -87,6 +87,7 @@ workflow_gates() {
     "omega-rpc-security-policy-contract.py" \
     "omega-runtime-frontier-contract.py" \
     "omega-runtime-gateway-contract.py" \
+    "omega-runtime-adapter-coverage-contract.py" \
     "omega-scale-readiness.py" \
     "omega-schema-evidence.py" \
     "omega-seo-contract.py" \

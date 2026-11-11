@@ -63,8 +63,8 @@ def main() -> int:
         "interpretation": (
             "PASS means the repository contains the evidence machinery and "
             "does not manufacture live-provider success claims. It does not "
-            "replace live Vercel, Supabase, Stripe, Auth, Storage, backup/restore, "
-            "or browser journey verification."
+            "replace live Cloudflare Pages, Supabase, Stripe, Auth, Storage, "
+            "backup/restore, or browser journey verification; Vercel is build-only."
         ),
     }
 

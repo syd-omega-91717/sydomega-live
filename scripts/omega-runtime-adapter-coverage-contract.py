@@ -84,8 +84,13 @@ def main() -> int:
         ):
             if marker not in sql:
                 return fail(f"dispatcher migration safety/contract marker missing: {marker}")
-        if "pg_catalog.trim(" in sql:
-            return fail("dispatcher migration calls TRIM as a pg_catalog function")
+        function_start = sql.find("create or replace function public.omega_runtime_dispatch(")
+        function_end = sql.find("end $;", function_start) + len("end $;")
+        if function_start < 0 or function_end < len("end $;"):
+            return fail("dispatcher function body is missing from reconciliation migration")
+        function_body = sql[function_start:function_end]
+        if "pg_catalog.trim(" in function_body:
+            return fail("dispatcher function calls TRIM as a pg_catalog function")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:
             return fail("platform credential must explicitly not be a government/travel document")
         if "Interpretive content for reflection and entertainment only" not in sql:

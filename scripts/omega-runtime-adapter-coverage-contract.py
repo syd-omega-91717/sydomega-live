@@ -89,6 +89,8 @@ def main() -> int:
         if function_start < 0 or function_end < len("$" + "$;"):
             return fail("dispatcher function body is missing from reconciliation migration")
         function_body = sql[function_start:function_end]
+        if "e.created_at" in function_body and "from public.graph_evidence" in function_body:
+            return fail("graph evidence adapter references absent created_at column")
         if "pg_catalog.trim(" in function_body:
             return fail("dispatcher function calls TRIM as a pg_catalog function")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:

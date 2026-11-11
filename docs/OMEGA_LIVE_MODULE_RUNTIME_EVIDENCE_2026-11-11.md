@@ -255,3 +255,22 @@ This is a production integrity defect and demonstrates why a migration ledger an
 
 
 A second cross-user idempotency defect was found during the write-path review: service orders used a globally unique key and an unscoped lookup. The same reconciliation migration now changes service-order idempotency to `(user_id, idempotency_key)` and uses atomic `ON CONFLICT` handling. The isolated SQL probe reuses the same key for two synthetic users and requires distinct order/request IDs while repeated calls by the same user return the same ID.
+
+## Cross-user idempotency audit
+
+A read-only live-schema review found globally unique idempotency keys on member-owned records. This is a collision/isolation defect class; the audit did not observe an actual cross-user exploit. A member retry key could otherwise collide with another member's operation, and some existing helpers returned or updated the globally matched row.
+
+The reconciliation migration now scopes idempotency to the owner or subject for:
+- consultancy requests — `(user_id, runtime_idempotency_key)`;
+- service orders — `(user_id, idempotency_key)`, while retaining a global partial key for null-user system orders;
+- agent tasks — `(user_id, idempotency_key)`, while retaining a global partial key for null-user system tasks;
+- notifications — `(user_id, idempotency_key)`;
+- sovereign progression events — `(user_id, idempotency_key)`, with a transaction advisory lock so a retry cannot apply the axis delta twice;
+- achievement verifications — `(user_achievement_id, idempotency_key)`;
+- platform events and audit records — `(actor_user_id, idempotency_key)`, while retaining global deduplication for null-actor system records.
+
+The migration preserves global idempotency where the identifier is inherently system-wide, including event-queue, ledger transaction, provider reconciliation and referral-conversion identities. Existing media-job and mission-transition idempotency already uses user-scoped keys.
+
+The SQL regression probe now checks same-user retries, cross-user collisions and null-owner system deduplication. The expected result is one stable record for the same owner/key, distinct records for different owners using the same key, and one globally deduplicated system record. All probe writes run in a transaction that is rolled back.
+
+These changes remain **pending isolated replay and production application**. The live database has not yet been modified by this migration.

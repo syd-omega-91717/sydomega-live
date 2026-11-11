@@ -237,6 +237,8 @@ begin
   select count(*) into v_count from public.omega_agent_tasks
    where user_id is null and idempotency_key='omega-runtime-probe-system-agent-0001';
   if v_count<>1 then raise exception 'system agent task idempotency created % rows, expected 1',v_count; end if;
+  select count(*) into v_count from public.omega_agent_tasks where task_id=v_task_system_one and requested_by='system';
+  if v_count<>1 then raise exception 'system agent task requester classification missing'; end if;
 
   -- Notification idempotency is recipient-scoped.
   v_notification_one:=omega_private.enqueue_notification(v_user,'runtime_probe','Probe','Synthetic notification probe.','in_app','omega-runtime-probe-notification-0001','{}'::jsonb);

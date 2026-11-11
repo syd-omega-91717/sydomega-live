@@ -24,7 +24,7 @@ REQUIRED = {
     "convergence_audit": ROOT / "scripts/omega-convergence-audit.py",
     "surface_contract": ROOT / "scripts/omega-production-surface-contract.py",
     "vercel_build": ROOT / "scripts/vercel-build.sh",
-    "vercel_workflow": ROOT / ".github/workflows/vercel-production.yml",
+    "vercel_artifact_workflow": ROOT / ".github/workflows/vercel-production.yml",
     "progression_migration": ROOT / "supabase/migrations/20261001090000_omega_authoritative_progression_events.sql",
     "event_bus": ROOT / "omega-event-bus.js",
     "workers": ROOT / "omega-workers.js",
@@ -33,7 +33,7 @@ REQUIRED = {
 }
 
 FORBIDDEN_PROOF_PATTERNS = {
-    "vercel_workflow": (
+    "vercel_artifact_workflow": (
         "VERCEL_PRODUCTION_DEPLOYMENT=SUCCESS",
     ),
 }

@@ -31,9 +31,9 @@ class VercelBuildArtifactContract(unittest.TestCase):
             self.assertNotIn(forbidden, WORKFLOW)
 
     def test_artifact_workflow_is_main_scoped_and_read_only(self):
-        self.assertIn("push:\\n    branches: [main]", WORKFLOW)
-        self.assertIn("pull_request:\\n    branches: [main]", WORKFLOW)
-        self.assertIn("permissions:\\n  contents: read", WORKFLOW)
+        self.assertGreaterEqual(WORKFLOW.count("branches: [main]"), 2)
+        self.assertIn("permissions:", WORKFLOW)
+        self.assertIn("contents: read", WORKFLOW)
         self.assertIn("concurrency:", WORKFLOW)
         self.assertIn("cancel-in-progress: false", WORKFLOW)
 

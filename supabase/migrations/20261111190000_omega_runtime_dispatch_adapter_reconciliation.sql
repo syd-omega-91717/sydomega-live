@@ -95,7 +95,7 @@ begin
     elsif v_module='INTELLIGENCE' and v_action_name='agents.read' then
       select coalesce(jsonb_agg(to_jsonb(a) order by a.agent_id),'[]'::jsonb) into v_result from public.omega_agents a;
     elsif v_module='INTELLIGENCE' and v_action_name='evidence.read' then
-      select coalesce(jsonb_agg(to_jsonb(e) order by e.created_at desc),'[]'::jsonb) into v_result from (select * from public.graph_evidence where user_id=p_actor_user_id order by created_at desc limit 100)e;
+      select coalesce(jsonb_agg(to_jsonb(e) order by e.extraction_timestamp desc),'[]'::jsonb) into v_result from (select * from public.graph_evidence where user_id=p_actor_user_id order by extraction_timestamp desc limit 100)e;
     elsif v_module='CREDENTIALS' and v_action_name='certificates.read' then
       select coalesce(jsonb_agg(to_jsonb(c) order by c.issued_at desc),'[]'::jsonb) into v_result from public.omega_certificates c where c.user_id=p_actor_user_id;
     elsif v_module='HIERARCHY' and v_action_name='roles.read' then

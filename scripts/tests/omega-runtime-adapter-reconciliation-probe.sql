@@ -11,9 +11,9 @@ insert into auth.users (
   now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now()
 ) on conflict (id) do nothing;
 
-insert into public.profiles(id,display_name,sign,element,planet,god,birth_date,is_owner,access_approved,is_public)
-values ('10000000-0000-4000-8000-000000000091','Runtime Adapter Probe','Aries','Fire','Mars','Probe',date '1990-03-21',false,true,true)
-on conflict (id) do update set display_name=excluded.display_name,sign=excluded.sign,element=excluded.element,planet=excluded.planet,god=excluded.god,birth_date=excluded.birth_date;
+insert into public.profiles(id,display_name,sign,birth_date)
+values ('10000000-0000-4000-8000-000000000091','Runtime Adapter Probe','Aries',date '1990-03-21')
+on conflict (id) do update set display_name=excluded.display_name,sign=excluded.sign,birth_date=excluded.birth_date;
 
 set local role service_role;
 

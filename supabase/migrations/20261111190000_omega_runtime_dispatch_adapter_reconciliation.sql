@@ -167,7 +167,7 @@ $function$;
 
 create or replace function omega_private.enqueue_notification(
   p_user_id uuid,p_type text,p_title text,p_body text,p_channel text,p_idempotency_key text,p_metadata jsonb default '{}'::jsonb
-) returns uuid language plpgsql security definer set search_path='public','omega_private' as $function$
+) returns uuid language plpgsql security definer set search_path='' as $function$
 declare v_id uuid;
 begin
   if p_user_id is null or not exists(select 1 from auth.users where id=p_user_id) then raise exception 'notification_user_required'; end if;
@@ -184,7 +184,7 @@ $function$;
 create or replace function omega_private.record_platform_event(
   p_event_type text,p_actor_user_id uuid,p_actor_type text,p_source text,p_idempotency_key text,
   p_correlation_id uuid default null,p_entity_type text default null,p_entity_id text default null,p_payload jsonb default '{}'::jsonb
-) returns uuid language plpgsql security definer set search_path='public','omega_private' as $function$
+) returns uuid language plpgsql security definer set search_path='' as $function$
 declare v_id uuid; v_key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency_key,'')),''); v_audit_key text;
 begin
   if v_key is not null and pg_catalog.length(v_key)>128 then raise exception 'idempotency_key_too_long'; end if;

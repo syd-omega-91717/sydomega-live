@@ -253,3 +253,17 @@ Missing live branches:
 
 This is a production integrity defect and demonstrates why a migration ledger and lifecycle field are not proof of runtime behavior. The branch now includes `20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql`, which restores the wave-2 adapters, implements the remaining read/write handlers with actor scoping and explicit simulation/credential boundaries, and adds a CI contract that requires all 54 canonical actions to map to concrete adapters. The migration is explicitly registered as `PENDING_REVIEW / NOT_APPLIED`; no production database mutation has occurred in this work sequence. It must pass fresh replay, then be applied through the authorized Supabase migration action, after which the remote migration snapshot is updated from provider evidence.
 
+
+
+## Live Supabase advisor triage (2026-11-11)
+
+A separate read-only advisor pass was run after the dispatcher inspection.
+
+| Finding | Live observation | Decision |
+|---|---|---|
+| Leaked-password protection | **1 WARN** — Supabase Auth leaked-password protection is disabled | Owner action required in Supabase Dashboard → Authentication → Auth settings / Email provider. Supabase documents this control as Pro plan and above: [Password security](https://supabase.com/docs/guides/auth/password-security). The connected Supabase actions expose no Auth-setting write operation, so this report does not claim it was enabled. |
+| RLS enabled without policies | **3 INFO** — `omega_private.marketplace_listing_assets`, `private.erasure_log`, `private.erasure_policy` | Read-only privilege checks returned `false` for both `anon` and `authenticated` SELECT on all three tables. Keep them private; do not add permissive policies just to silence the informational advisor. |
+| Unindexed foreign key | **1 INFO** — `omega_private.stripe_refund_state.last_reversal_transaction_id` references `omega_ledger_transactions(transaction_id)` | Add a dedicated index in a separate, reviewed migration after the runtime-dispatch migration is applied and reconciled. Do not bundle a second pending production migration into this one. |
+| Unused indexes | **325 INFO candidates** | No index was dropped. The zero-scan sample includes primary-key and Supabase Auth/system indexes, so a single advisor snapshot is not sufficient evidence for deletion. Require a representative workload window, table/index size, query-plan review and owner approval before pruning. |
+
+The advisor pass did not change database state. The RLS findings were triaged as intentionally private rather than “fixed” by broadening access. The leaked-password setting and the unindexed refund-state FK remain explicit release-hardening items.

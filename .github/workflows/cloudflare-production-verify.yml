@@ -1,0 +1,69 @@
+name: Cloudflare Production Release Verification
+
+# Cloudflare Pages is the production host and builds this repository on main.
+# Verify the exact commit deployed by the connected Pages Git integration.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-production-release-verification
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify exact production release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Refuse manual verification from non-main
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+        shell: bash
+        run: |
+          echo "::error title=Production verification refused::Manual production verification is allowed only from refs/heads/main."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify production manifest, headers and core routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://sydomega.com"
+          expected="${GITHUB_SHA}"
+          served=""
+          for attempt in $(seq 1 18); do
+            manifest="$(curl --silent --show-error --fail --max-time 15 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
+            served="$(printf '%s' "${manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
+            if [ "${served}" = "${expected}" ]; then break; fi
+            echo "release_attempt=${attempt} served=${served:-none} expected=${expected}"
+            sleep 10
+          done
+          [ "${served}" = "${expected}" ] || { echo "::error title=Production SHA mismatch::Cloudflare Pages does not serve the exact main commit."; exit 1; }
+
+          root_code="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 20 "${base}/")"
+          [ "${root_code}" = "200" ] || { echo "production root returned ${root_code}"; exit 1; }
+
+          headers="$(curl --silent --show-error --head --max-time 20 "${base}/")"
+          printf '%s\n' "${headers}" | grep -qi '^content-security-policy:' || { echo "CSP header missing"; exit 1; }
+          printf '%s\n' "${headers}" | grep -qi '^strict-transport-security:' || { echo "HSTS header missing"; exit 1; }
+
+          for path in account.html profile.html world.html news.html media.html privacy.html terms.html vault.html; do
+            code="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 20 "${base}/${path}")"
+            [ "${code}" = "200" ] || { echo "core route /${path} returned ${code}"; exit 1; }
+          done
+
+          python scripts/cloudflare-production-smoke.py --base-url "${base}" --workers 16 --timeout 20
+
+          www_code="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 20 "https://www.sydomega.com/")"
+          case "${www_code}" in
+            200|301|302|307|308) ;;
+            *) echo "www alias returned unexpected HTTP ${www_code}"; exit 1 ;;
+          esac
+
+          echo "CLOUDFLARE_PRODUCTION=PASS host=sydomega.com commit=${served} root=${root_code} www=${www_code}"

@@ -1,4 +1,7 @@
-# Cloudflare Pages cutover: sydomega.com off the paused Vercel Hobby team
+# Cloudflare Pages cutover
+
+> **Current operational state (2026-11-11):** The production host cutover is complete. Cloudflare Pages Git integration on `main` is the canonical production release path, and exact-SHA production verification has passed for the current verified main commit. The numbered owner setup steps below are retained as historical cutover/rollback documentation; do not rerun them unless the owner explicitly requests a hosting migration. Vercel is retained for static build-artifact validation only; PR #1240 removes the dormant Vercel production-promotion path.
+: sydomega.com off the paused Vercel Hobby team
 
 **Why Cloudflare Pages.** The Vercel team is paused for **Edge Requests** (dashboard,
 2026-10-06). On Cloudflare Pages' free plan, static requests and bandwidth are **unlimited**,

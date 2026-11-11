@@ -135,7 +135,7 @@ grant execute on function omega_private.create_consult_intake(uuid,text,text,tex
 
 create or replace function omega_private.enqueue_agent_task(
   p_user_id uuid,p_agent_id text,p_task_type text,p_input jsonb,p_idempotency_key text,p_approval_required boolean default true
-) returns uuid language plpgsql security definer set search_path='public','omega_private' as $function$
+) returns uuid language plpgsql security definer set search_path='' as $function$
 declare v_id uuid; v_inserted boolean;
 begin
   if p_agent_id is null or pg_catalog.btrim(p_agent_id)='' then raise exception 'agent_required'; end if;
@@ -159,7 +159,7 @@ begin
   if v_id is null then raise exception 'agent_task_idempotency_resolution_failed'; end if;
   if v_inserted then
     insert into public.omega_agent_task_events(task_id,event_type,actor,payload)
-    values(v_id,'task_queued','system',jsonb_build_object('agent_id',p_agent_id,'approval_required',p_approval_required));
+    values(v_id,'task_queued','system',pg_catalog.jsonb_build_object('agent_id',p_agent_id,'approval_required',p_approval_required));
   end if;
   return v_id;
 end;
@@ -272,7 +272,7 @@ $function$;
 create or replace function private.record_sovereign_event(
   p_event_type text,p_event_data jsonb default '{}'::jsonb,
   p_axis_delta jsonb default '{"a":0,"b":0,"c":0}'::jsonb,p_idempotency text default null
-) returns jsonb language plpgsql security definer set search_path='public' as $function$
+) returns jsonb language plpgsql security definer set search_path='' as $function$
 declare
   _uid uuid:=auth.uid();
   _pr record;
@@ -283,26 +283,26 @@ declare
   _key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency,'')),'');
   _rows integer;
 begin
-  if _uid is null then return jsonb_build_object('ok',false,'error','unauthenticated'); end if;
+  if _uid is null then return pg_catalog.jsonb_build_object('ok',false,'error','unauthenticated'); end if;
   if _key is not null then
     perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(_uid::text||':'||_key,0));
     if exists(select 1 from public.sovereign_events where user_id=_uid and idempotency_key=_key) then
-      return jsonb_build_object('ok',true,'status','duplicate','idempotent',true);
+      return pg_catalog.jsonb_build_object('ok',true,'status','duplicate','idempotent',true);
     end if;
   end if;
 
   select axis_a,axis_b,axis_c into _pr from public.profiles where id=_uid for update;
-  if not found then return jsonb_build_object('ok',false,'error','profile_not_found'); end if;
-  _auth_before:=sqrt(power(_pr.axis_a,3)+power(_pr.axis_b,3)+power(_pr.axis_c,3))*_phi/_eu;
+  if not found then return pg_catalog.jsonb_build_object('ok',false,'error','profile_not_found'); end if;
+  _auth_before:=pg_catalog.sqrt(pg_catalog.power(_pr.axis_a,3)+pg_catalog.power(_pr.axis_b,3)+pg_catalog.power(_pr.axis_c,3))*_phi/_eu;
 
   update public.profiles set
-    axis_a=least(9.000,greatest(0.001,axis_a+coalesce((p_axis_delta->>'a')::numeric,0))),
-    axis_b=least(9.000,greatest(0.001,axis_b+coalesce((p_axis_delta->>'b')::numeric,0))),
-    axis_c=least(9.000,greatest(0.001,axis_c+coalesce((p_axis_delta->>'c')::numeric,0)))
+    axis_a=pg_catalog.least(9.000,pg_catalog.greatest(0.001,axis_a+coalesce((p_axis_delta->>'a')::numeric,0))),
+    axis_b=pg_catalog.least(9.000,pg_catalog.greatest(0.001,axis_b+coalesce((p_axis_delta->>'b')::numeric,0))),
+    axis_c=pg_catalog.least(9.000,pg_catalog.greatest(0.001,axis_c+coalesce((p_axis_delta->>'c')::numeric,0)))
   where id=_uid;
 
   select axis_a,axis_b,axis_c into _pr from public.profiles where id=_uid;
-  _auth_after:=sqrt(power(_pr.axis_a,3)+power(_pr.axis_b,3)+power(_pr.axis_c,3))*_phi/_eu;
+  _auth_after:=pg_catalog.sqrt(pg_catalog.power(_pr.axis_a,3)+pg_catalog.power(_pr.axis_b,3)+pg_catalog.power(_pr.axis_c,3))*_phi/_eu;
 
   insert into public.sovereign_events(user_id,event_type,event_data,axis_delta,auth_before,auth_after,idempotency_key)
   values(_uid,p_event_type,coalesce(p_event_data,'{}'::jsonb),coalesce(p_axis_delta,'{"a":0,"b":0,"c":0}'::jsonb),_auth_before,_auth_after,_key)
@@ -310,21 +310,21 @@ begin
   get diagnostics _rows=row_count;
   if _rows=0 then raise exception 'sovereign_event_idempotency_race'; end if;
 
-  return jsonb_build_object('ok',true,'auth_before',_auth_before,'auth_after',_auth_after,'delta',_auth_after-_auth_before);
+  return pg_catalog.jsonb_build_object('ok',true,'auth_before',_auth_before,'auth_after',_auth_after,'delta',_auth_after-_auth_before);
 end;
 $function$;
 
 create or replace function private.record_task_sovereign_event()
-returns trigger language plpgsql security definer set search_path='public','pg_temp' as $function$
+returns trigger language plpgsql security definer set search_path='' as $function$
 begin
   insert into public.sovereign_events(event_id,user_id,event_type,event_data,axis_delta,auth_before,auth_after,occurred_at,idempotency_key)
   values(
-    gen_random_uuid(),new.user_id,'sovereign.task.completed',
-    jsonb_build_object('taskCompletionId',new.id,'taskName',new.task_name,'taskType',new.task_type,'axisType',new.axis_type,
+    pg_catalog.gen_random_uuid(),new.user_id,'sovereign.task.completed',
+    pg_catalog.jsonb_build_object('taskCompletionId',new.id,'taskName',new.task_name,'taskType',new.task_type,'axisType',new.axis_type,
       'description',new.description,'points',new.points_earned,
       'axisBefore',jsonb_build_object('a',new.axis_a_before,'b',new.axis_b_before,'c',new.axis_c_before),
-      'axisAfter',jsonb_build_object('a',new.axis_a_after,'b',new.axis_b_after,'c',new.axis_c_after)),
-    jsonb_build_object('axis',new.axis_type,'delta',new.points_earned),
+      'axisAfter',pg_catalog.jsonb_build_object('a',new.axis_a_after,'b',new.axis_b_after,'c',new.axis_c_after)),
+    pg_catalog.jsonb_build_object('axis',new.axis_type,'delta',new.points_earned),
     case new.axis_type when 'a' then new.axis_a_before when 'b' then new.axis_b_before else new.axis_c_before end,
     new.auth_after,coalesce(new.completed_at,pg_catalog.now()),'task_completion:'||new.id::text
   )

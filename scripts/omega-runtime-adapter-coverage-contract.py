@@ -80,11 +80,22 @@ def main() -> int:
             "revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from public,anon,authenticated",
             "grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role",
             "on conflict (user_id,runtime_idempotency_key)",
+            "v_idempotency_key:=pg_catalog.btrim(p_idempotency_key)",
+            "do nothing",
+            "where user_id=p_user_id and runtime_idempotency_key=v_idempotency_key",
             "confidentiality_acceptance_required",
             "ADAPTER_REQUIRED",
         ):
             if marker not in sql:
                 return fail(f"dispatcher migration safety/contract marker missing: {marker}")
+        for probe_marker in (
+            "consultancy idempotency key was not isolated by user",
+            "consultancy cases read exposed another user request",
+            "probe_expected_confidentiality_rejection_missing",
+        ):
+            if probe_marker not in (ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql").read_text(encoding="utf-8"):
+                return fail(f"runtime SQL probe marker missing: {probe_marker}")
+
         function_start = sql.find("create or replace function public.omega_runtime_dispatch(")
         function_end = sql.find("$" + "$;", function_start) + len("$" + "$;")
         if function_start < 0 or function_end < len("$" + "$;"):

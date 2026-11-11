@@ -233,7 +233,10 @@
         "status": "SCRIPTS_DRAFT",
         "bible": "docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/BIBLE.md",
         "scripts": [
-          "docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/episodes/E01_THE_NEXT_COUNT.fountain"
+          "docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/episodes/E01_THE_NEXT_COUNT.fountain",
+          "docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/episodes/E02_THE_HEARING.fountain",
+          "docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/episodes/E03_THE_OLD_STORY.fountain",
+          "docs/studios/franchises/zodiac-wars/series/bloodlines/season-1/episodes/E04_WHAT_THE_FOUNDRY_KEPT.fountain"
         ]
       },
       "game": {

@@ -55,12 +55,13 @@
   }
 
   /* ---------- the plan: titles, timed lines, palette. Pure, no DOM. */
-  function plan(franchise, episodeText) {
+  /* `variant` (an episode number) is optional: without it the seed, and so the picture, is exactly the franchise's first-episode one. */
+  function plan(franchise, episodeText, variant) {
     var v = VISUALS[franchise.id];
     if (!v) return null;
     var spoken = coldOpen(episodeText, 4), lines = spoken.length ? spoken : [{ who: '', text: franchise.premise }];
     var slot = (LINE_TO - LINE_FROM) / lines.length;
-    return { id: franchise.id, title: franchise.title, seriesTitle: franchise.series.title, motif: v.motif, palette: v.palette, base: v.base, sub: v.sub, seed: hash(franchise.id), duration: DURATION,
+    return { id: franchise.id, title: franchise.title, seriesTitle: franchise.series.title, motif: v.motif, palette: v.palette, base: v.base, sub: v.sub, seed: hash(franchise.id + (variant ? ':' + variant : '')), duration: DURATION,
       titleAt: TITLE_AT, fromScript: spoken.length > 0, lines: lines.map(function (l, k) { return { who: l.who, text: l.text, at: +(LINE_FROM + k * slot).toFixed(2), dur: +(slot - 0.5).toFixed(2) }; }) };
   }
   function activeLine(p, T) { for (var i = 0; i < p.lines.length; i++) if (T >= p.lines[i].at && T < p.lines[i].at + p.lines[i].dur) return p.lines[i]; return null; }
@@ -169,7 +170,9 @@
     if (cur) lines.push(cur); return lines;
   }
   function draw(c, W, H, T, p) {
-    c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, W, H);
+    /* The caller owns the transform (it scales by devicePixelRatio). Resetting it here drew the film at 1x in the top-left quarter of every
+       2x screen, phones included, so draw() leaves it alone: everything below is balanced by save/restore. */
+    c.clearRect(0, 0, W, H);
     var bg = c.createRadialGradient(W / 2, H * 0.5, 0, W / 2, H * 0.5, Math.max(W, H) * 0.6); bg.addColorStop(0, rgba(p.palette[1], 0.13)); bg.addColorStop(1, rgba(p.palette[1], 0));
     c.fillStyle = p.palette[0]; c.fillRect(0, 0, W, H); c.fillStyle = bg; c.fillRect(0, 0, W, H);                  // deep base, a soft glow where the eye lands
     c.save(); c.beginPath(); c.rect(0, H * BAR, W, H * (1 - 2 * BAR)); c.clip();
@@ -196,7 +199,9 @@
     }
     c.fillStyle = '#000'; c.fillRect(0, 0, W, H * BAR); c.fillRect(0, H * (1 - BAR), W, H * BAR);   // 2.39:1 letterbox
     c.font = '700 ' + Math.round(Math.max(10, H * 0.022)) + 'px "Courier Prime", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = 'rgba(215,218,230,0.7)';
-    c.fillText('ANIMATIC · PROCEDURAL · NOT FOOTAGE · NO VOICE ACTING', W / 2, H * (1 - BAR / 2));
+    var lbl = 'ANIMATIC · PROCEDURAL · NOT FOOTAGE · NO VOICE ACTING', lw = c.measureText(lbl).width;
+    if (lw > W * 0.94) c.font = '700 ' + Math.max(6, Math.floor(Math.max(10, H * 0.022) * W * 0.94 / lw)) + 'px "Courier Prime", monospace';   // the label must never be cut off on a narrow screen
+    c.fillText(lbl, W / 2, H * (1 - BAR / 2));
     var fade = Math.min(smooth(0, FADE_IN, T), 1 - smooth(DURATION - FADE_OUT, DURATION, T));
     if (fade < 1) { c.fillStyle = 'rgba(0,0,0,' + (1 - fade).toFixed(3) + ')'; c.fillRect(0, 0, W, H); }
   }

@@ -1,7 +1,7 @@
 name: Cloudflare Production Release Verification
 
-# Cloudflare Pages is the production host and builds this repository on main.
-# Verify the exact commit deployed by the connected Pages Git integration.
+# Cloudflare Pages Git integration deploys main. Verify the exact deployed SHA
+# and follow canonical redirects before evaluating production routes.
 on:
   push:
     branches: [main]
@@ -39,6 +39,8 @@ jobs:
           served=""
           for attempt in $(seq 1 30); do
             manifest="$(curl --silent --show-error --fail --max-time 15 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
+          for attempt in $(seq 1 18); do
+            manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 10 --max-time 20 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
             served="$(printf '%s' "${manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
             if [ "${served}" = "${expected}" ]; then break; fi
             echo "release_attempt=${attempt} served=${served:-none} expected=${expected}"
@@ -46,12 +48,12 @@ jobs:
           done
           [ "${served}" = "${expected}" ] || { echo "::error title=Production SHA mismatch::Cloudflare Pages does not serve the exact main commit."; exit 1; }
 
-          root_code="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 20 "${base}/")"
-          [ "${root_code}" = "200" ] || { echo "production root returned ${root_code}"; exit 1; }
+          root_code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/")"
+          [ "${root_code}" = "200" ] || { echo "production root final response returned ${root_code}"; exit 1; }
 
-          headers="$(curl --silent --show-error --head --max-time 20 "${base}/")"
-          printf '%s\n' "${headers}" | grep -qi '^content-security-policy:' || { echo "CSP header missing"; exit 1; }
-          printf '%s\n' "${headers}" | grep -qi '^strict-transport-security:' || { echo "HSTS header missing"; exit 1; }
+          curl --location --silent --show-error --dump-header "${RUNNER_TEMP}/production-headers.txt" --output /dev/null --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/"
+          grep -Eiq '^content-security-policy:' "${RUNNER_TEMP}/production-headers.txt" || { echo "CSP header missing"; exit 1; }
+          grep -Eiq '^strict-transport-security:' "${RUNNER_TEMP}/production-headers.txt" || { echo "HSTS header missing"; exit 1; }
 
           for path in account.html profile.html world.html news.html media.html privacy.html terms.html vault.html; do
             code="$(curl --location --silent --output /dev/null --write-out '%{http_code}' --max-time 20 "${base}/${path}")"
@@ -65,5 +67,11 @@ jobs:
             200|301|302|307|308) ;;
             *) echo "www alias returned unexpected HTTP ${www_code}"; exit 1 ;;
           esac
+            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/${path}")"
+            [ "${code}" = "200" ] || { echo "core route /${path} final response returned ${code}"; exit 1; }
+          done
+
+          www_code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "https://www.sydomega.com/")"
+          [ "${www_code}" = "200" ] || { echo "www alias final response returned ${www_code}"; exit 1; }
 
           echo "CLOUDFLARE_PRODUCTION=PASS host=sydomega.com commit=${served} root=${root_code} www=${www_code}"

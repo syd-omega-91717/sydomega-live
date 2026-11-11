@@ -123,7 +123,7 @@ begin
  if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
  if not p_confidentiality_accepted then raise exception 'confidentiality_acceptance_required'; end if;
  insert into public.consult_requests(user_id,domain,message,status,created_at,urgency,contact,preferred_time,confidentiality_accepted,runtime_idempotency_key)
- values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(pg_catalog.btrim(p_urgency),'normal'),40),pg_catalog.left(p_contact,240),pg_catalog.left(p_preferred_time,240),true,p_idempotency_key)
+ values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(nullif(pg_catalog.btrim(p_urgency),''),'normal'),40),pg_catalog.left(nullif(pg_catalog.btrim(p_contact),''),240),pg_catalog.left(nullif(pg_catalog.btrim(p_preferred_time),''),240),true,pg_catalog.btrim(p_idempotency_key))
  on conflict (user_id,runtime_idempotency_key) where runtime_idempotency_key is not null
  do update set runtime_idempotency_key=excluded.runtime_idempotency_key
  returning id into v_id;
@@ -190,8 +190,10 @@ create or replace function omega_private.record_platform_event(
   p_event_type text,p_actor_user_id uuid,p_actor_type text,p_source text,p_idempotency_key text,
   p_correlation_id uuid default null,p_entity_type text default null,p_entity_id text default null,p_payload jsonb default '{}'::jsonb
 ) returns uuid language plpgsql security definer set search_path='public','omega_private' as $function$
-declare v_id uuid; v_audit_key text:=case when p_idempotency_key is null then null else 'audit:'||p_idempotency_key end;
+declare v_id uuid; v_key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency_key,'')),''); v_audit_key text;
 begin
+  if v_key is not null and pg_catalog.length(v_key)>128 then raise exception 'idempotency_key_too_long'; end if;
+  v_audit_key:=case when v_key is null then null else 'audit:'||v_key end;
   if p_event_type not in ('route_view','action_started','action_completed','mission_progress','capability_used','simulation_run','evidence_recorded','replay_checkpoint') then
     raise exception 'event_type_not_allowed';
   end if;
@@ -199,7 +201,7 @@ begin
 
   if p_actor_user_id is null then
     insert into public.omega_platform_events(event_type,actor_user_id,actor_type,correlation_id,idempotency_key,source,entity_type,entity_id,payload)
-    values(p_event_type,null,p_actor_type,p_correlation_id,p_idempotency_key,p_source,p_entity_type,p_entity_id,coalesce(p_payload,'{}'::jsonb))
+    values(p_event_type,null,p_actor_type,p_correlation_id,v_key,p_source,p_entity_type,p_entity_id,coalesce(p_payload,'{}'::jsonb))
     on conflict (idempotency_key) where actor_user_id is null and idempotency_key is not null
     do update set payload=excluded.payload
     returning event_id into v_id;
@@ -210,7 +212,7 @@ begin
     do update set details=excluded.details;
   else
     insert into public.omega_platform_events(event_type,actor_user_id,actor_type,correlation_id,idempotency_key,source,entity_type,entity_id,payload)
-    values(p_event_type,p_actor_user_id,p_actor_type,p_correlation_id,p_idempotency_key,p_source,p_entity_type,p_entity_id,coalesce(p_payload,'{}'::jsonb))
+    values(p_event_type,p_actor_user_id,p_actor_type,p_correlation_id,v_key,p_source,p_entity_type,p_entity_id,coalesce(p_payload,'{}'::jsonb))
     on conflict (actor_user_id,idempotency_key) where actor_user_id is not null and idempotency_key is not null
     do update set payload=excluded.payload
     returning event_id into v_id;

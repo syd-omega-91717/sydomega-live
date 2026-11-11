@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = (ROOT / ".github/workflows/cloudflare-pages.yml").read_text(encoding="utf-8")
 PRODUCTION_VERIFY = (ROOT / ".github/workflows/cloudflare-production-verify.yml").read_text(encoding="utf-8")
 PRODUCTION_SMOKE = (ROOT / "scripts/cloudflare-production-smoke.py").read_text(encoding="utf-8")
+PRODUCTION_SMOKE_WORKFLOW = (ROOT / ".github/workflows/production-smoke.yml").read_text(encoding="utf-8")
 
 
 class CloudflareManualReleaseContract(unittest.TestCase):
@@ -43,6 +44,16 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
+
+    def test_production_smoke_tracks_cloudflare_not_vercel(self):
+        self.assertIn("Wait for exact Cloudflare Pages production release", PRODUCTION_SMOKE_WORKFLOW)
+        self.assertIn("omega-release.json", PRODUCTION_SMOKE_WORKFLOW)
+        self.assertIn('expected = os.environ["GITHUB_SHA"]', PRODUCTION_SMOKE_WORKFLOW)
+        self.assertIn("cloudflare-production-smoke.py", PRODUCTION_SMOKE_WORKFLOW)
+        self.assertIn("--base-url https://sydomega.com", PRODUCTION_SMOKE_WORKFLOW)
+        self.assertNotIn("Vercel", PRODUCTION_SMOKE_WORKFLOW)
+        self.assertIn("production-smoke-", PRODUCTION_SMOKE_WORKFLOW)
+        self.assertIn("17 9 * * *", PRODUCTION_SMOKE_WORKFLOW)
 
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)

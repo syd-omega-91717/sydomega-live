@@ -333,6 +333,18 @@ begin
 end;
 $function$;
 
+revoke all on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) from public,anon,authenticated;
+grant execute on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) to service_role;
+revoke all on function omega_private.enqueue_notification(uuid,text,text,text,text,text,jsonb) from public,anon,authenticated;
+grant execute on function omega_private.enqueue_notification(uuid,text,text,text,text,text,jsonb) to service_role;
+revoke all on function omega_private.record_platform_event(text,uuid,text,text,text,uuid,text,text,jsonb) from public,anon,authenticated;
+grant execute on function omega_private.record_platform_event(text,uuid,text,text,text,uuid,text,text,jsonb) to service_role;
+revoke all on function omega_private.verify_achievement(uuid,text,text,text,jsonb,text) from public,anon,authenticated;
+grant execute on function omega_private.verify_achievement(uuid,text,text,text,jsonb,text) to service_role;
+revoke all on function private.record_sovereign_event(text,jsonb,jsonb,text) from public,anon;
+grant execute on function private.record_sovereign_event(text,jsonb,jsonb,text) to authenticated;
+revoke all on function private.record_task_sovereign_event() from public,anon,authenticated;
+
 create or replace function public.omega_runtime_dispatch(p_actor_user_id uuid,p_action text,p_payload jsonb default '{}'::jsonb)
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare v_result jsonb; v_order_id uuid; v_referral_code text; v_attribution_id uuid; v_task_id uuid; v_request_id bigint; v_certificate_number text; v_query text; v_module text; v_action_name text; v_lifecycle text;
@@ -581,6 +593,34 @@ begin
   end if;
   if not exists (select 1 from pg_indexes where schemaname='public' and tablename='consult_requests' and indexname='consult_requests_runtime_idempotency_uidx') then
     raise exception 'consultancy_user_scoped_idempotency_index_missing';
+  end if;
+  if not has_function_privilege('service_role','omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean)','EXECUTE')
+     or has_function_privilege('anon','omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean)','EXECUTE')
+     or has_function_privilege('authenticated','omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean)','EXECUTE') then
+    raise exception 'agent_task_helper_acl_invalid';
+  end if;
+  if not has_function_privilege('service_role','omega_private.enqueue_notification(uuid,text,text,text,text,text,jsonb)','EXECUTE')
+     or has_function_privilege('anon','omega_private.enqueue_notification(uuid,text,text,text,text,text,jsonb)','EXECUTE')
+     or has_function_privilege('authenticated','omega_private.enqueue_notification(uuid,text,text,text,text,text,jsonb)','EXECUTE') then
+    raise exception 'notification_helper_acl_invalid';
+  end if;
+  if not has_function_privilege('service_role','omega_private.record_platform_event(text,uuid,text,text,text,uuid,text,text,jsonb)','EXECUTE')
+     or has_function_privilege('anon','omega_private.record_platform_event(text,uuid,text,text,text,uuid,text,text,jsonb)','EXECUTE')
+     or has_function_privilege('authenticated','omega_private.record_platform_event(text,uuid,text,text,text,uuid,text,text,jsonb)','EXECUTE') then
+    raise exception 'platform_event_helper_acl_invalid';
+  end if;
+  if not has_function_privilege('service_role','omega_private.verify_achievement(uuid,text,text,text,jsonb,text)','EXECUTE')
+     or has_function_privilege('anon','omega_private.verify_achievement(uuid,text,text,text,jsonb,text)','EXECUTE')
+     or has_function_privilege('authenticated','omega_private.verify_achievement(uuid,text,text,text,jsonb,text)','EXECUTE') then
+    raise exception 'achievement_verification_helper_acl_invalid';
+  end if;
+  if not has_function_privilege('authenticated','private.record_sovereign_event(text,jsonb,jsonb,text)','EXECUTE')
+     or has_function_privilege('anon','private.record_sovereign_event(text,jsonb,jsonb,text)','EXECUTE') then
+    raise exception 'sovereign_event_authenticated_acl_invalid';
+  end if;
+  if has_function_privilege('anon','private.record_task_sovereign_event()','EXECUTE')
+     or has_function_privilege('authenticated','private.record_task_sovereign_event()','EXECUTE') then
+    raise exception 'sovereign_task_trigger_acl_invalid';
   end if;
   if not has_function_privilege('service_role','public.omega_runtime_dispatch(uuid,text,jsonb)','EXECUTE') then
     raise exception 'runtime_dispatch_service_role_execute_missing';

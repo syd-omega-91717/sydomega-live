@@ -90,7 +90,7 @@ def main() -> int:
             return fail("dispatcher function body is missing from reconciliation migration")
         function_body = sql[function_start:function_end]
         evidence_branch = re.search(
-            r"INTELLIGENCE'\\s+and\\s+v_action_name='evidence\\.read'\\s+then(?P<body>.*?)(?:\\n\\s*elsif|\\n\\s*else)",
+            r"INTELLIGENCE'\s+and\s+v_action_name='evidence\.read'\s+then(?P<body>.*?)(?:\n\s*elsif|\n\s*else)",
             function_body,
             re.IGNORECASE | re.DOTALL,
         )

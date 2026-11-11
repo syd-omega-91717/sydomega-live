@@ -6,6 +6,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = (ROOT / ".github/workflows/cloudflare-pages.yml").read_text(encoding="utf-8")
+PRODUCTION_VERIFY = (ROOT / ".github/workflows/cloudflare-production-verify.yml").read_text(encoding="utf-8")
 
 
 class CloudflareManualReleaseContract(unittest.TestCase):
@@ -22,6 +23,20 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn('[ "${served}" = "${GITHUB_SHA}" ] || { echo "::error title=Release manifest mismatch::', smoke)
         self.assertIn("CLOUDFLARE_PAGES=PASS ${url} commit=${served}", smoke)
         self.assertNotIn("release manifest does not name", smoke)
+
+
+    def test_git_connected_production_release_is_verified_by_exact_sha(self):
+        self.assertIn("branches: [main]", PRODUCTION_VERIFY)
+        self.assertIn("github.ref != 'refs/heads/main'", PRODUCTION_VERIFY)
+        self.assertIn("https://sydomega.com/.well-known/omega-release.json", PRODUCTION_VERIFY)
+        self.assertIn("JSON.parse(s).commit_sha", PRODUCTION_VERIFY)
+        self.assertIn('"${served}" = "${expected}"', PRODUCTION_VERIFY)
+        self.assertIn("content-security-policy:", PRODUCTION_VERIFY)
+        self.assertIn("strict-transport-security:", PRODUCTION_VERIFY)
+        for route in ("account.html", "profile.html", "world.html", "news.html", "media.html", "privacy.html", "terms.html", "vault.html"):
+            self.assertIn(route, PRODUCTION_VERIFY)
+        self.assertIn("CLOUDFLARE_PRODUCTION=PASS", PRODUCTION_VERIFY)
+        self.assertNotIn("CLOUDFLARE_API_TOKEN", PRODUCTION_VERIFY)
 
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)

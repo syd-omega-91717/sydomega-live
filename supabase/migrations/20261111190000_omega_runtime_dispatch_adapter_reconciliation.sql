@@ -556,8 +556,31 @@ begin
   if (select count(*) from public.omega_module_runtime_actions) <> 54 then
     raise exception 'omega_runtime_action_count_must_equal_54';
   end if;
-  if not exists (select 1 from pg_constraint where conrelid='public.omega_service_orders'::regclass and conname='omega_service_orders_user_idempotency_key_key' and contype='u') then
-    raise exception 'service_order_user_scoped_idempotency_constraint_missing';
+  if not exists (select 1 from pg_indexes where schemaname='public' and tablename='omega_service_orders' and indexname='omega_service_orders_user_idempotency_uidx')
+     or not exists (select 1 from pg_indexes where schemaname='public' and tablename='omega_service_orders' and indexname='omega_service_orders_system_idempotency_uidx') then
+    raise exception 'service_order_user_scoped_idempotency_indexes_missing';
+  end if;
+  if not exists (select 1 from pg_indexes where schemaname='public' and tablename='omega_agent_tasks' and indexname='omega_agent_tasks_user_idempotency_uidx')
+     or not exists (select 1 from pg_indexes where schemaname='public' and tablename='omega_agent_tasks' and indexname='omega_agent_tasks_system_idempotency_uidx') then
+    raise exception 'agent_task_user_scoped_idempotency_indexes_missing';
+  end if;
+  if not exists (select 1 from pg_constraint where conrelid='public.omega_notifications'::regclass and conname='omega_notifications_user_idempotency_key_key' and contype='u') then
+    raise exception 'notification_user_scoped_idempotency_constraint_missing';
+  end if;
+  if not exists (select 1 from pg_indexes where schemaname='public' and tablename='sovereign_events' and indexname='sovereign_events_user_idempotency_uidx')
+     or not exists (select 1 from pg_indexes where schemaname='public' and tablename='sovereign_events' and indexname='sovereign_events_system_idempotency_uidx') then
+    raise exception 'sovereign_event_user_scoped_idempotency_indexes_missing';
+  end if;
+  if not exists (select 1 from pg_constraint where conrelid='public.omega_achievement_verifications'::regclass and conname='omega_achievement_verifications_subject_idempotency_key_key' and contype='u') then
+    raise exception 'achievement_verification_subject_idempotency_constraint_missing';
+  end if;
+  if not exists (select 1 from pg_indexes where schemaname='public' and tablename='omega_platform_events' and indexname='omega_platform_events_actor_idempotency_uidx')
+     or not exists (select 1 from pg_indexes where schemaname='public' and tablename='omega_platform_events' and indexname='omega_platform_events_system_idempotency_uidx') then
+    raise exception 'platform_event_actor_idempotency_indexes_missing';
+  end if;
+  if not exists (select 1 from pg_indexes where schemaname='public' and tablename='omega_audit_log' and indexname='omega_audit_log_actor_idempotency_uidx')
+     or not exists (select 1 from pg_indexes where schemaname='public' and tablename='omega_audit_log' and indexname='omega_audit_log_system_idempotency_uidx') then
+    raise exception 'audit_log_actor_idempotency_indexes_missing';
   end if;
   if not exists (select 1 from pg_indexes where schemaname='public' and tablename='consult_requests' and indexname='consult_requests_runtime_idempotency_uidx') then
     raise exception 'consultancy_user_scoped_idempotency_index_missing';

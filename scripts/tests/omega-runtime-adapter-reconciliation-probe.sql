@@ -29,12 +29,16 @@ declare
   v_task_one uuid;
   v_task_two uuid;
   v_task_other uuid;
+  v_task_system_one uuid;
+  v_task_system_two uuid;
   v_notification_one uuid;
   v_notification_two uuid;
   v_notification_other uuid;
   v_platform_one uuid;
   v_platform_two uuid;
   v_platform_other uuid;
+  v_platform_system_one uuid;
+  v_platform_system_two uuid;
   v_achievement_one uuid;
   v_achievement_two uuid;
   v_verification_one uuid;
@@ -225,6 +229,14 @@ begin
   select count(*) into v_count from public.omega_agent_task_events
    where task_id in (v_task_one,v_task_other) and event_type='task_queued';
   if v_count<>2 then raise exception 'agent task retry emitted % queue events, expected 2',v_count; end if;
+  v_task_system_one:=omega_private.enqueue_agent_task(null,'sentinel','runtime_probe','{"probe":true}'::jsonb,'omega-runtime-probe-system-agent-0001',true);
+  v_task_system_two:=omega_private.enqueue_agent_task(null,'sentinel','runtime_probe','{"probe":true}'::jsonb,'omega-runtime-probe-system-agent-0001',true);
+  if v_task_system_one is null or v_task_system_one is distinct from v_task_system_two then
+    raise exception 'system agent task global idempotency failed';
+  end if;
+  select count(*) into v_count from public.omega_agent_tasks
+   where user_id is null and idempotency_key='omega-runtime-probe-system-agent-0001';
+  if v_count<>1 then raise exception 'system agent task idempotency created % rows, expected 1',v_count; end if;
 
   -- Notification idempotency is recipient-scoped.
   v_notification_one:=omega_private.enqueue_notification(v_user,'runtime_probe','Probe','Synthetic notification probe.','in_app','omega-runtime-probe-notification-0001','{}'::jsonb);
@@ -256,6 +268,17 @@ begin
   select count(*) into v_count from public.omega_audit_log
    where idempotency_key='audit:omega-runtime-probe-platform-0001' and actor_user_id in (v_user,v_other_user);
   if v_count<>2 then raise exception 'audit log cross-user idempotency created % rows, expected 2',v_count; end if;
+  v_platform_system_one:=omega_private.record_platform_event('route_view',null,'system','runtime-probe','omega-runtime-probe-system-platform-0001',null,'probe','system','{}'::jsonb);
+  v_platform_system_two:=omega_private.record_platform_event('route_view',null,'system','runtime-probe','omega-runtime-probe-system-platform-0001',null,'probe','system','{}'::jsonb);
+  if v_platform_system_one is null or v_platform_system_one is distinct from v_platform_system_two then
+    raise exception 'system platform event global idempotency failed';
+  end if;
+  select count(*) into v_count from public.omega_platform_events
+   where actor_user_id is null and idempotency_key='omega-runtime-probe-system-platform-0001';
+  if v_count<>1 then raise exception 'system platform event idempotency created % rows, expected 1',v_count; end if;
+  select count(*) into v_count from public.omega_audit_log
+   where actor_user_id is null and idempotency_key='audit:omega-runtime-probe-system-platform-0001';
+  if v_count<>1 then raise exception 'system audit log idempotency created % rows, expected 1',v_count; end if;
 
   -- Achievement verification keys are scoped to the subject achievement assignment.
   insert into public.omega_user_achievements(user_id,achievement_id)

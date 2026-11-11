@@ -50,6 +50,8 @@ jobs:
         run: python scripts/production-contract.py
       - name: Capability registry contract
         run: python scripts/capability-audit.py --check
+      - name: Live module runtime evidence contract
+        run: python scripts/omega-live-module-runtime-contract.py
       - name: Platform kernel contract
         run: python scripts/platform-kernel-contract.py
       - name: Capability evidence freshness

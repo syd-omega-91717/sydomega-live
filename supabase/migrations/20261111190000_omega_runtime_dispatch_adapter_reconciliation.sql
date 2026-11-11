@@ -223,7 +223,7 @@ begin
 
   when 'create_consult_intake' then
     v_request_id:=omega_private.create_consult_intake(p_actor_user_id,p_payload->>'domain',p_payload->>'message',p_payload->>'idempotency_key',coalesce(p_payload->>'urgency','normal'),p_payload->>'preferred_time',coalesce((p_payload->>'confidentiality_accepted')::boolean,false),p_payload->>'contact');
-    v_result:=jsonb_build_object('request_id',v_request_id,'status','PENDING');
+    v_result:=jsonb_build_object('request_id',v_request_id,'status','pending');
   when 'create_media_job' then
     v_result:=private.omega_media_job_create(p_actor_user_id,p_payload->>'job_type',coalesce(p_payload->'request','{}'::jsonb),p_payload->>'idempotency_key',p_payload->>'provider');
   when 'upsert_investment_watchlist' then

@@ -21,7 +21,7 @@ begin
  if not exists (select 1 from auth.users where id=p_user_id) then raise exception 'user_not_found'; end if;
  if p_domain is null or pg_catalog.length(pg_catalog.btrim(p_domain)) < 2 then raise exception 'domain_required'; end if;
  if p_message is null or pg_catalog.length(pg_catalog.btrim(p_message)) < 10 or pg_catalog.length(p_message)>10000 then raise exception 'message_length_invalid'; end if;
- if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
+ if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(pg_catalog.btrim(p_idempotency_key))>128 then raise exception 'idempotency_key_invalid'; end if;
  v_idempotency_key:=pg_catalog.btrim(p_idempotency_key);
  if not p_confidentiality_accepted then raise exception 'confidentiality_acceptance_required'; end if;
  insert into public.consult_requests(user_id,domain,message,status,created_at,urgency,contact,preferred_time,confidentiality_accepted,runtime_idempotency_key)

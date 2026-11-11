@@ -2,6 +2,38 @@
 
 **Purpose:** One operational ledger separating what exists from what is proven.
 
+> **Current operational snapshot — 2026-11-11.** This dated section supersedes older rows below wherever they conflict. The original matrix remains as historical context; do not treat its September/October deployment, table-count or Auth statements as current without re-verification.
+
+## Current production snapshot (2026-11-11)
+
+| Area | Current evidence | Truth / remaining gate |
+|---|---|---|
+| Production host | Cloudflare Pages Git integration on `main`; exact release manifest verified for commit `5700c8ac47c6fc129969162a72cd70ba2a1a82eb` | **PRODUCTION-VERIFIED** for that SHA: root and www final HTTP 200, CSP/HSTS present, eight core routes pass after canonical redirects. |
+| Full page/link smoke | New `production-smoke.yml` workflow and `cloudflare-production-smoke.py` are in PR #1240 | **PENDING MERGE/RUN**: 241 registered pages, same-origin links/assets and page identity comparison have not yet been verified by this new workflow. |
+| Vercel | `vercel.json` Git auto-deployment is disabled for `*`, `**` and `main`; current main workflow still contains a gated Vercel promotion path with promotion postponed | PR #1240 converts it to **build-artifact validation only** and removes Vercel deployment credentials/deploy steps. Do not claim this boundary is deployed until PR #1240 merges and its checks pass. |
+| Supabase public schema | Read-only live catalog: **286 public tables; 286/286 have RLS enabled; 0 public RLS tables without policies** | Structural RLS invariant is **PRODUCTION-VERIFIED**. This does not replace policy-semantic and cross-user authorization tests. |
+| Supabase migration ledger | **415 recorded versions**, latest applied version `20261104090000` | Migration ledger is not proof that live function bodies match migration source. |
+| Runtime catalog | **24 capabilities, 24 services, 54 runtime actions, 18 product domains** | Catalog cardinality verified; capability/service lifecycle labels are not end-to-end proof. |
+| Runtime dispatcher | Live `public.omega_runtime_dispatch(uuid,text,jsonb)` has **23/54 concrete action branches**; 31 registered actions fall through to `ADAPTER_REQUIRED` | **OPEN P0**. PR #1240 contains migration `20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql` and a fresh replay/54-action probe. It is not applied to production. |
+| Runtime gateway | Deployed `omega-runtime-gateway` source exactly matches repository `index.ts` at the inspected revision | Gateway source parity verified; this does not repair the stale database dispatcher until the migration is applied. |
+| Supabase Auth | Security Advisor reports **1 WARN**: leaked-password protection disabled | **OPEN P1**. Owner must enable it in Supabase Authentication settings; the connected Supabase tools expose no Auth-setting write action. Supabase documents the control as Pro plan and above: [Password security](https://supabase.com/docs/guides/auth/password-security). |
+| Private RLS tables | Three INFO findings: `omega_private.marketplace_listing_assets`, `private.erasure_log`, `private.erasure_policy` have RLS but no policies | Read-only checks found no SELECT grants for `anon` or `authenticated` on these tables. Keep private; do not add permissive policies to silence the advisor. |
+| Refund-state FK | Advisor reports one unindexed FK: `omega_private.stripe_refund_state.last_reversal_transaction_id` | A full B-tree index is included in the same pending PR #1240 migration; verify after replay/application. |
+| Unused indexes | Advisor reports **325 candidates** | No indexes were dropped. A zero-scan sample includes primary-key and Supabase Auth/system indexes; require workload-window and query-plan evidence before pruning. |
+| Page estate | **241 page contracts**; 205 `domain: UNVERIFIED`; 36 descriptive labels; 34 records contain 36 candidate annotations across 23 labels | Page-to-module mapping remains **PARTIAL/UNVERIFIED**. Do not infer canonical product-domain IDs from similar page labels. |
+| Branch governance | GitHub main branch protection is disabled in the inspected repository state | **OPEN P1**. Enable rules/rulesets requiring the applicable CI, CodeQL, security, migration replay, production contract and review checks. |
+| Current release status | PR #1239 (redirect-aware exact-SHA Cloudflare verifier) merged; main commit `5700c8ac47c6fc129969162a72cd70ba2a1a82eb` passed exact-SHA production verification | Production release is verified for that commit. This is not a 10/10 platform certification. |
+
+### Current release blockers
+
+1. **P0 — Runtime dispatcher drift:** merge PR #1240 only after all required checks, fresh full migration replay and all 54 runtime probes pass; then apply the migration, reconcile the remote migration ledger and verify the live function/privileges/indexes.
+2. **P1 — Leaked-password protection:** owner action in Supabase Dashboard; do not represent the browser-side HIBP check as equivalent.
+3. **P1 — Branch governance:** main branch protection/rulesets are not enabled.
+4. **P1 — Full page proof:** merge and run the Cloudflare smoke workflow against the exact deployed SHA; remediate any failing registered page or same-origin reference.
+5. **P2 — Cross-module page mapping:** reconcile the 241-page estate to the 18 product domains using explicit page-action/data/auth evidence; keep unknown pages unassigned.
+6. **P2 — Auth/MFA/RBAC, payments, backup/restore and critical mobile journeys:** remain unverified until representative end-to-end tests are executed.
+
+
 ## Status key
 
 | Status | Meaning |

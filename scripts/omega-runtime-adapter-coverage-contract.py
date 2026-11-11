@@ -89,8 +89,15 @@ def main() -> int:
         if function_start < 0 or function_end < len("$" + "$;"):
             return fail("dispatcher function body is missing from reconciliation migration")
         function_body = sql[function_start:function_end]
-        if "e.created_at" in function_body and "from public.graph_evidence" in function_body:
-            return fail("graph evidence adapter references absent created_at column")
+        evidence_branch = re.search(
+            r"INTELLIGENCE'\\s+and\\s+v_action_name='evidence\\.read'\\s+then(?P<body>.*?)(?:\\n\\s*elsif|\\n\\s*else)",
+            function_body,
+            re.IGNORECASE | re.DOTALL,
+        )
+        if not evidence_branch:
+            return fail("intelligence evidence adapter branch is missing")
+        if "e.created_at" in evidence_branch.group("body") or "e.extraction_timestamp" not in evidence_branch.group("body"):
+            return fail("graph evidence adapter must use the live extraction_timestamp column")
         if "pg_catalog.trim(" in function_body:
             return fail("dispatcher function calls TRIM as a pg_catalog function")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:

@@ -2,6 +2,8 @@
 """Regression contract for the manual Cloudflare production fallback."""
 
 from pathlib import Path
+import subprocess
+import sys
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -9,6 +11,7 @@ WORKFLOW = (ROOT / ".github/workflows/cloudflare-pages.yml").read_text(encoding=
 PRODUCTION_VERIFY = (ROOT / ".github/workflows/cloudflare-production-verify.yml").read_text(encoding="utf-8")
 PRODUCTION_SMOKE = (ROOT / "scripts/cloudflare-production-smoke.py").read_text(encoding="utf-8")
 PRODUCTION_SMOKE_WORKFLOW = (ROOT / ".github/workflows/production-smoke.yml").read_text(encoding="utf-8")
+RELEASE_AUDIT = ROOT / "scripts/release-contract-audit.py"
 
 
 class CloudflareManualReleaseContract(unittest.TestCase):
@@ -54,6 +57,17 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertNotIn("Vercel", PRODUCTION_SMOKE_WORKFLOW)
         self.assertIn("production-smoke-", PRODUCTION_SMOKE_WORKFLOW)
         self.assertIn("17 9 * * *", PRODUCTION_SMOKE_WORKFLOW)
+
+    def test_release_contract_audit_uses_cloudflare_and_vercel_artifact_only(self):
+        result = subprocess.run(
+            [sys.executable, str(RELEASE_AUDIT)],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("architecture: framework-free static + Cloudflare Pages + Supabase; Vercel artifact validation only", result.stdout)
 
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)

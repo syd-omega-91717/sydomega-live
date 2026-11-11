@@ -44,9 +44,6 @@ declare
   v_verification_one uuid;
   v_verification_two uuid;
   v_verification_other uuid;
-  v_sovereign_one jsonb;
-  v_sovereign_two jsonb;
-  v_sovereign_other jsonb;
   i integer;
   v_count bigint;
   v_actions constant text[][] := array[
@@ -302,27 +299,47 @@ begin
    where idempotency_key='omega-runtime-probe-achievement-0001' and user_achievement_id in (v_achievement_one,v_achievement_two);
   if v_count<>2 then raise exception 'achievement verification cross-subject idempotency created % rows, expected 2',v_count; end if;
 
-  -- Sovereign progression events are per-user and race-safe.
+end;
+$probe$;
+
+reset role;
+set local role authenticated;
+do $sovereign_probe$
+declare
+  v_user uuid := '10000000-0000-4000-8000-000000000091';
+  v_other_user uuid := '10000000-0000-4000-8000-000000000092';
+  v_first jsonb;
+  v_second jsonb;
+  v_other jsonb;
+begin
   perform set_config('request.jwt.claim.sub',v_user::text,true);
-  perform set_config('request.jwt.claim.role','service_role',true);
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',v_user,'role','service_role')::text,true);
-  v_sovereign_one:=private.record_sovereign_event('runtime_probe',jsonb_build_object('probe',true),jsonb_build_object('a',0.01,'b',0,'c',0),'omega-runtime-probe-sovereign-0001');
-  v_sovereign_two:=private.record_sovereign_event('runtime_probe',jsonb_build_object('probe',true),jsonb_build_object('a',0.01,'b',0,'c',0),'omega-runtime-probe-sovereign-0001');
-  if v_sovereign_one->>'ok'<>'true' or v_sovereign_two->>'status'<>'duplicate' then
-    raise exception 'sovereign event same-user idempotency failed: first=% second=%',v_sovereign_one,v_sovereign_two;
+  perform set_config('request.jwt.claim.role','authenticated',true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',v_user,'role','authenticated')::text,true);
+  v_first:=private.record_sovereign_event('runtime_probe',jsonb_build_object('probe',true),jsonb_build_object('a',0.01,'b',0,'c',0),'omega-runtime-probe-sovereign-0001');
+  v_second:=private.record_sovereign_event('runtime_probe',jsonb_build_object('probe',true),jsonb_build_object('a',0.01,'b',0,'c',0),'omega-runtime-probe-sovereign-0001');
+  if v_first->>'ok'<>'true' or v_second->>'status'<>'duplicate' then
+    raise exception 'sovereign event same-user idempotency failed: first=% second=%',v_first,v_second;
   end if;
   perform set_config('request.jwt.claim.sub',v_other_user::text,true);
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',v_other_user,'role','service_role')::text,true);
-  v_sovereign_other:=private.record_sovereign_event('runtime_probe',jsonb_build_object('probe',true),jsonb_build_object('a',0.01,'b',0,'c',0),'omega-runtime-probe-sovereign-0001');
-  if v_sovereign_other->>'ok'<>'true' or v_sovereign_other->>'status'='duplicate' then
-    raise exception 'sovereign event idempotency was not isolated by user: %',v_sovereign_other;
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',v_other_user,'role','authenticated')::text,true);
+  v_other:=private.record_sovereign_event('runtime_probe',jsonb_build_object('probe',true),jsonb_build_object('a',0.01,'b',0,'c',0),'omega-runtime-probe-sovereign-0001');
+  if v_other->>'ok'<>'true' or v_other->>'status'='duplicate' then
+    raise exception 'sovereign event idempotency was not isolated by user: %',v_other;
   end if;
-  select count(*) into v_count from public.sovereign_events
-   where idempotency_key='omega-runtime-probe-sovereign-0001' and user_id in (v_user,v_other_user);
-  if v_count<>2 then raise exception 'sovereign event cross-user idempotency created % rows, expected 2',v_count; end if;
+end;
+$sovereign_probe$;
 
-end
-$probe$;
+reset role;
+set local role service_role;
+do $sovereign_count$
+declare v_count integer;
+begin
+  select count(*) into v_count from public.sovereign_events
+   where idempotency_key='omega-runtime-probe-sovereign-0001'
+     and user_id in ('10000000-0000-4000-8000-000000000091','10000000-0000-4000-8000-000000000092');
+  if v_count<>2 then raise exception 'sovereign event cross-user idempotency created % rows, expected 2',v_count; end if;
+end;
+$sovereign_count$;
 
 reset role;
 rollback;

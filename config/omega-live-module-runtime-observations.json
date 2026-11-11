@@ -1469,5 +1469,85 @@
     "reconciliation_migration": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
     "production_application": "NOT_APPLIED",
     "interpretation": "The provider catalog labels all 54 actions INTEGRATED, but the live dispatcher only has concrete branches for 23. The other 31 fall through to ADAPTER_REQUIRED. The new source migration adds the missing handlers and must pass fresh replay before provider application."
+  },
+  "idempotency_observations": {
+    "observed_date": "2026-11-11",
+    "status": "READ_ONLY_SCHEMA_AUDIT_REMEDIATION_PENDING",
+    "interpretation": "The live schema contains globally unique idempotency keys on member-owned records. The same caller-supplied key can collide across users or subjects. The reconciliation migration replaces these with owner/subject-scoped unique indexes while retaining global deduplication for system rows with null owner/actor where applicable. This is a schema/function finding, not proof of an observed exploit.",
+    "member_owned_scopes": [
+      {
+        "table": "consult_requests",
+        "owner_column": "user_id",
+        "key_column": "runtime_idempotency_key",
+        "remediation": "UNIQUE(user_id,runtime_idempotency_key); atomic conflict handling"
+      },
+      {
+        "table": "omega_service_orders",
+        "owner_column": "user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(user_id,idempotency_key) for member orders; retain global unique key for null-user system orders"
+      },
+      {
+        "table": "omega_agent_tasks",
+        "owner_column": "user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(user_id,idempotency_key) for member tasks; retain global unique key for null-user system tasks"
+      },
+      {
+        "table": "omega_notifications",
+        "owner_column": "user_id",
+        "key_column": "idempotency_key",
+        "remediation": "UNIQUE(user_id,idempotency_key)"
+      },
+      {
+        "table": "sovereign_events",
+        "owner_column": "user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(user_id,idempotency_key) for member events; retain global unique key for null-user system events; advisory lock prevents duplicate axis mutation"
+      },
+      {
+        "table": "omega_achievement_verifications",
+        "owner_column": "user_achievement_id",
+        "key_column": "idempotency_key",
+        "remediation": "UNIQUE(user_achievement_id,idempotency_key)"
+      },
+      {
+        "table": "omega_platform_events",
+        "owner_column": "actor_user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(actor_user_id,idempotency_key) for member events; retain global unique key for null-actor system events"
+      },
+      {
+        "table": "omega_audit_log",
+        "owner_column": "actor_user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(actor_user_id,idempotency_key) for member audit records; retain global unique key for null-actor system records"
+      }
+    ],
+    "preserved_global_scopes": [
+      {
+        "table": "omega_event_queue",
+        "reason": "System event/queue identity is global"
+      },
+      {
+        "table": "omega_ledger_transactions",
+        "reason": "Financial ledger transaction identity is global"
+      },
+      {
+        "table": "omega_payment_reconciliation",
+        "reason": "External provider reconciliation identity is global"
+      },
+      {
+        "table": "omega_referral_conversions",
+        "reason": "Referral conversion identity is global"
+      }
+    ],
+    "existing_user_scoped_tables": [
+      "omega_media_jobs(user_id,idempotency_key)",
+      "omega_mission_transitions(user_id,idempotency_key)",
+      "omega_mission_task_transitions(user_id,idempotency_key)"
+    ],
+    "remediation_migration": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
+    "verification": "Fresh migration replay plus SQL regression probe: same-user retries must return the same record; different users/subjects using the same key must create distinct records; system null-owner keys remain globally deduplicated."
   }
 }

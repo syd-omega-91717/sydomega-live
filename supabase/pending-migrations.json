@@ -2,5 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending. Provider-applied versions belong in remote-migrations.json. A ledger entry alone does not prove the migration's intended behavior has been independently verified.",
-  "pending": []
+  "pending": [
+    {
+      "version": "20261111190000",
+      "file": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Restores missing live runtime adapters and hardens user-scoped consultancy intake idempotency; requires fresh migration replay and provider application evidence before release."
+    }
+  ]
 }

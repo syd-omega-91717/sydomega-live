@@ -5,11 +5,10 @@ begin;
 insert into auth.users (
   id,aud,role,email,encrypted_password,email_confirmed_at,
   raw_app_meta_data,raw_user_meta_data,created_at,updated_at
-) values (
-  '10000000-0000-4000-8000-000000000091',
-  'authenticated','authenticated','omega-runtime-adapter@probe.invalid','',
-  now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now()
-) on conflict (id) do nothing;
+) values
+  ('10000000-0000-4000-8000-000000000091','authenticated','authenticated','omega-runtime-adapter@probe.invalid','',now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now()),
+  ('10000000-0000-4000-8000-000000000092','authenticated','authenticated','omega-runtime-adapter-2@probe.invalid','',now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now())
+on conflict (id) do nothing;
 
 insert into public.profiles(id,display_name,sign,birth_date)
 values ('10000000-0000-4000-8000-000000000091','Runtime Adapter Probe','Aries',date '1990-03-21')
@@ -20,10 +19,11 @@ set local role service_role;
 do $probe$
 declare
   v_user uuid := '10000000-0000-4000-8000-000000000091';
+  v_other_user uuid := '10000000-0000-4000-8000-000000000092';
   v_result jsonb;
   v_first jsonb;
   v_second jsonb;
-  v_request_id bigint;
+  v_other jsonb;
   i integer;
   v_count bigint;
   v_actions constant text[][] := array[
@@ -134,6 +134,21 @@ begin
   select count(*) into v_count from public.consult_requests
    where user_id=v_user and runtime_idempotency_key='omega-runtime-probe-consult-0001';
   if v_count<>1 then raise exception 'consultancy intake idempotency created % rows',v_count; end if;
+  v_other:=public.omega_runtime_dispatch(v_other_user,'create_consult_intake',jsonb_build_object(
+    'domain','runtime-adapter-probe',
+    'message','Synthetic CI probe for a second user using the same idempotency key.',
+    'idempotency_key','omega-runtime-probe-consult-0001',
+    'urgency','normal',
+    'preferred_time','',
+    'confidentiality_accepted',true,
+    'contact','probe2@invalid.example'
+  ));
+  if v_other->>'request_id' is null or v_other->>'request_id' is distinct from v_first->>'request_id' then
+    raise exception 'consultancy idempotency key was not isolated by user: first=% other=%',v_first,v_other;
+  end if;
+  select count(*) into v_count from public.consult_requests
+   where runtime_idempotency_key='omega-runtime-probe-consult-0001' and user_id in (v_user,v_other_user);
+  if v_count<>2 then raise exception 'consultancy cross-user idempotency created % rows, expected 2',v_count; end if;
 
   -- Gateway write adapters remain idempotent and caller-scoped.
   v_first:=public.omega_runtime_dispatch(v_user,'create_media_job',jsonb_build_object(
@@ -155,6 +170,26 @@ begin
   if v_first->>'id' is null or v_first->>'id' is distinct from v_second->>'id' then
     raise exception 'investment watchlist upsert idempotency failed: first=% second=%',v_first,v_second;
   end if;
+
+  -- Service-order idempotency must be scoped by user and race-safe.
+  v_first:=public.omega_runtime_dispatch(v_user,'create_service_order',jsonb_build_object(
+    'service_id','progression-matrix','idempotency_key','omega-runtime-probe-service-0001','metadata','{}'::jsonb
+  ));
+  v_second:=public.omega_runtime_dispatch(v_user,'create_service_order',jsonb_build_object(
+    'service_id','progression-matrix','idempotency_key','omega-runtime-probe-service-0001','metadata','{}'::jsonb
+  ));
+  v_other:=public.omega_runtime_dispatch(v_other_user,'create_service_order',jsonb_build_object(
+    'service_id','progression-matrix','idempotency_key','omega-runtime-probe-service-0001','metadata','{}'::jsonb
+  ));
+  if v_first->>'order_id' is null or v_first->>'order_id' is distinct from v_second->>'order_id' then
+    raise exception 'service order idempotency failed for same user: first=% second=%',v_first,v_second;
+  end if;
+  if v_other->>'order_id' is null or v_other->>'order_id' is not distinct from v_first->>'order_id' then
+    raise exception 'service order idempotency key was not isolated by user: first=% other=%',v_first,v_other;
+  end if;
+  select count(*) into v_count from public.omega_service_orders
+   where idempotency_key='omega-runtime-probe-service-0001' and user_id in (v_user,v_other_user);
+  if v_count<>2 then raise exception 'service-order cross-user idempotency created % rows, expected 2',v_count; end if;
 
 end
 $probe$;

@@ -28,7 +28,8 @@ class CloudflareManualReleaseContract(unittest.TestCase):
     def test_git_connected_production_release_is_verified_by_exact_sha(self):
         self.assertIn("branches: [main]", PRODUCTION_VERIFY)
         self.assertIn("github.ref != 'refs/heads/main'", PRODUCTION_VERIFY)
-        self.assertIn("https://sydomega.com/.well-known/omega-release.json", PRODUCTION_VERIFY)
+        self.assertIn('base="https://sydomega.com"', PRODUCTION_VERIFY)
+        self.assertIn("/.well-known/omega-release.json", PRODUCTION_VERIFY)
         self.assertIn("JSON.parse(s).commit_sha", PRODUCTION_VERIFY)
         self.assertIn('"${served}" = "${expected}"', PRODUCTION_VERIFY)
         self.assertIn("content-security-policy:", PRODUCTION_VERIFY)

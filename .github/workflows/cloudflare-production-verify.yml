@@ -38,6 +38,8 @@ jobs:
           expected="${GITHUB_SHA}"
           served=""
           for attempt in $(seq 1 30); do
+            manifest="$(curl --silent --show-error --fail --max-time 15 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
+          for attempt in $(seq 1 18); do
             manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 10 --max-time 20 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
             served="$(printf '%s' "${manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
             if [ "${served}" = "${expected}" ]; then break; fi
@@ -59,6 +61,15 @@ jobs:
           done
 
           python scripts/cloudflare-production-smoke.py --base-url "${base}" --workers 16 --timeout 20
+
+          www_code="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 20 "https://www.sydomega.com/")"
+          case "${www_code}" in
+            200|301|302|307|308) ;;
+            *) echo "www alias returned unexpected HTTP ${www_code}"; exit 1 ;;
+          esac
+            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/${path}")"
+            [ "${code}" = "200" ] || { echo "core route /${path} final response returned ${code}"; exit 1; }
+          done
 
           www_code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "https://www.sydomega.com/")"
           [ "${www_code}" = "200" ] || { echo "www alias final response returned ${www_code}"; exit 1; }

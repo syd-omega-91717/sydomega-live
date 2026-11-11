@@ -8,7 +8,7 @@
 |---|---|---|---|
 | Franchises | 7 | 7 | 0 |
 | Films with a script (screenplay or short draft) | 2 | 26 | 24 |
-| Series episodes written (short drafts) | 13 | 166 (series with a declared size) | 153 |
+| Series episodes written (short drafts) | 16 | 166 (series with a declared size) | 150 |
 | Playable builds (games plus companions) | 4 | 7 games | 4 games have no build |
 | Characters registered | 65 | - | - |
 
@@ -19,7 +19,7 @@ Series with no declared size (their remaining episodes cannot be counted): The C
 | Franchise | Films (scripted of all) | Series: written of declared | Game | Builds |
 |---|---|---|---|---|
 | MYTH OF THE STONES | 1 of 4 | 8 of 24 (The Chronicles of the Guardians) | Myth of the Stones: Origins: PROTOTYPE | `game-origins.html`, `game-origins-bridge.html` |
-| ZODIAC WARS | 1 of 4 | 1 of 32 (Zodiac Wars: Bloodlines) | Zodiac Wars: Ascension: DESIGNED | none |
+| ZODIAC WARS | 1 of 4 | 4 of 32 (Zodiac Wars: Bloodlines) | Zodiac Wars: Ascension: DESIGNED | none |
 | THE OMEGA CHRONICLES | 0 of 4 | 1 of 30 (Omega: The Human Equation) | Omega: Civilization 91717: PROTOTYPE | `game-omega-civilization.html` |
 | THE LOST CIVILIZATIONS | 0 of 4 | 1 of 24 (The Archives of Humanity) | The Lost Kingdoms: CONCEPT | none |
 | THE LAST GALACTIC EMPIRE | 0 of 4 | 1 of 40 (Galactic Thrones) | Last Galactic Empire: PROTOTYPE | `game-last-galactic-empire.html` |
@@ -29,7 +29,7 @@ Series with no declared size (their remaining episodes cannot be counted): The C
 ## What remains
 
 - **Films:** 24 of 26 have no script at all.
-- **Episodes:** 153 of 166 declared episodes are not written; the 13 that exist are short drafts, so none of the 166 is a finished teleplay.
+- **Episodes:** 150 of 166 declared episodes are not written; the 16 that exist are short drafts, so none of the 166 is a finished teleplay.
 - **Game with no build:** Zodiac Wars: Ascension (DESIGNED).
 - **Game with no build:** The Lost Kingdoms (CONCEPT).
 - **Game with no build:** Frontier: Rebuild Earth (CONCEPT).

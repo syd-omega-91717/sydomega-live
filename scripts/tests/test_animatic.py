@@ -106,6 +106,22 @@ class Animatic(unittest.TestCase):
             self.assertIn(needle, lib)
         self.assertIn("NOT STARTED", lib)
 
+    def test_draw_never_resets_the_callers_transform(self):
+        # The page scales the canvas by devicePixelRatio. draw() used to call setTransform(1,0,0,1,0,0), which drew the whole film at 1x in
+        # the top-left quarter of every 2x screen (found in a 375px render at deviceScaleFactor 2 on 2026-11-10).
+        out = run("""const r={};for(const id of A.ORDER){const R=recorder();A.draw(R.ctx,960,540,8,A.plan(franchise(id),script(id)));r[id]=R.log.filter(x=>/^(setTransform|resetTransform)/.test(x)).length}console.log(JSON.stringify(r))""")
+        self.assertEqual(set(out.values()), {0}, out)
+
+    def test_a_later_episode_has_its_own_seed_and_the_first_keeps_the_franchise_one(self):
+        out = run("""const f=franchise('zodiac-wars'),t=script('zodiac-wars');const a=A.plan(f,t),b=A.plan(f,t,''),c=A.plan(f,t,'102'),d=A.plan(f,t,'103');
+        console.log(JSON.stringify({same:a.seed===b.seed&&a.seed===A.hash('zodiac-wars'),c:c.seed!==a.seed,d:d.seed!==c.seed,motif:c.motif===a.motif}))""")
+        self.assertEqual(out, {"same": True, "c": True, "d": True, "motif": True})
+
+    def test_every_registered_episode_has_a_cold_open_with_spoken_lines_or_says_it_has_none(self):
+        out = run("""const o={};for(const f of reg.franchises){for(const p of (f.series&&f.series.scripts)||[]){o[p.split('/').pop()]=A.coldOpen(fs.readFileSync(p,'utf8'),4).length}}console.log(JSON.stringify(o))""")
+        for name in ("E02_THE_HEARING.fountain", "E03_THE_OLD_STORY.fountain", "E04_WHAT_THE_FOUNDRY_KEPT.fountain"):
+            self.assertGreaterEqual(out[name], 3, name)
+
 
 if __name__ == "__main__":
     unittest.main()

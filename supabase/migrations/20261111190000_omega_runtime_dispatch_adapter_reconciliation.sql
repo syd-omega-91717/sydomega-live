@@ -181,14 +181,14 @@ begin
         'evidence',coalesce((select jsonb_agg(jsonb_build_object('id',e.id,'source_type',e.source_type,'source_table',e.source_table,'source_row_id',e.source_row_id,'extraction_confidence',e.extraction_confidence,'human_verified',e.human_verified,'extraction_timestamp',e.extraction_timestamp) order by e.extraction_timestamp desc) from (select * from public.graph_evidence where user_id=p_actor_user_id order by extraction_timestamp desc limit 100) e),'[]'::jsonb)
       ) into v_result;
     elsif v_module='CREDENTIALS' and v_action_name='passport.read' then
-      select jsonb_build_object('credential_type','PLATFORM_MEMBERSHIP','government_identity',false,'travel_document',false,'display_name',p.display_name,'membership_tier',p.membership_tier,'subscription_status',p.subscription_status,'access_approved',p.access_approved,'issued_at',p.created_at,'active_certificate_count',(select count(*) from public.omega_certificates c where c.user_id=p_actor_user_id and c.revoked_at is null))
+      select jsonb_build_object('credential_type','PLATFORM_MEMBERSHIP','government_identity',false,'travel_document',false,'display_name',p.display_name,'membership_tier',p.membership_tier,'subscription_status',p.subscription_status,'access_approved',p.access_approved,'issued_at',p.created_at,'active_certificate_count',(select count(*) from public.omega_certificates c where c.user_id=p_actor_user_id and c.status='issued' and c.revoked_at is null))
       into v_result from public.profiles p where p.id=p_actor_user_id;
     elsif v_module='CREDENTIALS' and v_action_name='verify.read' then
       v_certificate_number:=nullif(pg_catalog.btrim(p_payload->>'certificate_number'),'');
       if v_certificate_number is null then
         v_result:=jsonb_build_object('verification_status','IDENTIFIER_REQUIRED','scope','PUBLIC_CERTIFICATE_PROOF_ONLY');
       else
-        select jsonb_build_object('certificate_number',c.certificate_number,'achievement_id',c.achievement_id,'status',c.status,'verification_status',case when c.revoked_at is not null then 'REVOKED' when c.issued_at is null then 'NOT_ISSUED' else 'NOT_REVOKED' end,'issued_at',c.issued_at,'revoked_at',c.revoked_at)
+        select jsonb_build_object('certificate_number',c.certificate_number,'achievement_id',c.achievement_id,'status',c.status,'verification_status',case when c.revoked_at is not null then 'REVOKED' when c.status='issued' and c.issued_at is not null then 'VALID' else 'NOT_VALID' end,'issued_at',c.issued_at,'revoked_at',c.revoked_at)
         into v_result from public.omega_certificates c where c.certificate_number=v_certificate_number order by c.issued_at desc limit 1;
         if v_result is null then v_result:=jsonb_build_object('verification_status','NOT_FOUND','certificate_number',v_certificate_number); end if;
       end if;

@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / "config/omega-module-runtime.json"
@@ -132,4 +133,7 @@ def main() -> int:
         return fail(str(exc))
 
 if __name__ == "__main__":
+    if any(arg in {"-h", "--help"} for arg in sys.argv[1:]):
+        print(__doc__ or "")
+        raise SystemExit(0)
     raise SystemExit(main())

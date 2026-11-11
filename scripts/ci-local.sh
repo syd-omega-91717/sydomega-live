@@ -194,10 +194,9 @@ manifest_icons() {
 
 printf '\033[1mLocal CI — complete production verification\033[0m\n'
 
-# Mirrors vercel-production.yml's `validate` job step for step. It was the one
-# blocking GitHub job with no local twin: on 2026-09-27 a new page (world.html)
-# merged without a navigation shell and failed "Vercel Production" four times
-# on main while this script reported 26/26.
+# Mirrors the Vercel Build Artifact Validation workflow's static build job.
+# Cloudflare Pages owns production; this local twin checks the shared static
+# artifact contract without deploying to either provider.
 vercel_artifact() {
   python3 scripts/vercel_static_contract.py &&
   bash scripts/vercel-build.sh >/dev/null &&

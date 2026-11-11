@@ -149,9 +149,9 @@ def main() -> int:
             catalog_errors or workflow_missing
         ) else "FAIL",
         "interpretation": (
-            "Repository evidence only; this gate does not prove live Vercel, "
+            "Repository evidence only; this gate does not prove live Cloudflare Pages, "
             "Supabase, Stripe, authenticated browser journeys, payment "
-            "settlement, backup restoration, or database policy semantics."
+            "settlement, backup restoration, or database policy semantics. Vercel is build-only."
         ),
     }
     print(json.dumps(result, indent=2, sort_keys=True))

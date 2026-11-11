@@ -136,7 +136,7 @@ grant execute on function omega_private.create_consult_intake(uuid,text,text,tex
 create or replace function omega_private.enqueue_agent_task(
   p_user_id uuid,p_agent_id text,p_task_type text,p_input jsonb,p_idempotency_key text,p_approval_required boolean default true
 ) returns uuid language plpgsql security definer set search_path='public','omega_private' as $function$
-declare v_id uuid;
+declare v_id uuid; v_inserted boolean;
 begin
   if p_agent_id is null or pg_catalog.btrim(p_agent_id)='' then raise exception 'agent_required'; end if;
   if p_task_type is null or pg_catalog.btrim(p_task_type)='' then raise exception 'task_type_required'; end if;
@@ -147,25 +147,20 @@ begin
   if p_user_id is null then
     insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required)
     values(null,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required)
-    on conflict (idempotency_key) where user_id is null and idempotency_key is not null do nothing
-    returning task_id into v_id;
+    on conflict (idempotency_key) where user_id is null and idempotency_key is not null do update set input=excluded.input
+    returning task_id,(xmax=0) into v_id,v_inserted;
   else
     insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required)
     values(p_user_id,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required)
-    on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null do nothing
-    returning task_id into v_id;
+    on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null do update set input=excluded.input
+    returning task_id,(xmax=0) into v_id,v_inserted;
   end if;
 
-  if v_id is null then
-    select task_id into v_id from public.omega_agent_tasks
-    where user_id is not distinct from p_user_id and idempotency_key=pg_catalog.btrim(p_idempotency_key)
-    limit 1;
-    if v_id is null then raise exception 'agent_task_idempotency_resolution_failed'; end if;
-    return v_id;
+  if v_id is null then raise exception 'agent_task_idempotency_resolution_failed'; end if;
+  if v_inserted then
+    insert into public.omega_agent_task_events(task_id,event_type,actor,payload)
+    values(v_id,'task_queued','system',jsonb_build_object('agent_id',p_agent_id,'approval_required',p_approval_required));
   end if;
-
-  insert into public.omega_agent_task_events(task_id,event_type,actor,payload)
-  values(v_id,'task_queued','system',jsonb_build_object('agent_id',p_agent_id,'approval_required',p_approval_required));
   return v_id;
 end;
 $function$;

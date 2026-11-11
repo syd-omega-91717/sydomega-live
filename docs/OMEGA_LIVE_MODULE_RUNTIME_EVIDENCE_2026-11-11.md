@@ -212,3 +212,44 @@ A row labelled `INTEGRATED` is a provider-side catalog declaration, not an end-t
 ## Reconciliation
 
 The machine-readable snapshot is `config/omega-live-module-runtime-observations.json`. Each historical product domain references it through `runtime_observation_ref`. A validator is added in this branch to enforce the 18-domain mapping, catalog shape and financial/sensitive-data guardrails. No live Supabase schema, data, edge function, auth setting, or provider configuration was changed.
+
+
+## Critical live dispatcher drift found after catalog reconciliation
+
+A read-only `pg_get_functiondef('public.omega_runtime_dispatch(uuid,text,jsonb)')` inspection on 2026-11-11 found live definition hash `f4fcee65d41c94a2f8491a2aa53b6612`. Although the provider migration ledger records the wave-2/wave-3 adapter migrations and the live action table labels all 54 actions `INTEGRATED`, the actual live dispatcher contains concrete module/action branches for only **23 of 54** actions. The other **31** are returned by its `ADAPTER_REQUIRED` fallback.
+
+Missing live branches:
+- `CORE.search.read`
+- `CONSULTANCY.intake.create`
+- `CONSULTANCY.cases.read`
+- `CONSULTANCY.deliverables.read`
+- `GAMING.missions.read`
+- `GAMING.leaderboard.read`
+- `FAMILY.graph.read`
+- `FAMILY.heritage.read`
+- `FAMILY.vault.read`
+- `MEDIA.library.read`
+- `MEDIA.publishing.read`
+- `BLOCKCHAIN_NFT.marketplace.read`
+- `COMMUNICATION.presence.read`
+- `COMMUNICATION.events.read`
+- `HOROSCOPE.reading.generate`
+- `HOROSCOPE.provenance.read`
+- `NEWS.feed.read`
+- `NEWS.topics.read`
+- `NEWS.provenance.read`
+- `HERITAGE.timeline.read`
+- `HERITAGE.documents.read`
+- `HERITAGE.access.read`
+- `PROGRESS.tasks.read`
+- `PROGRESS.verification.read`
+- `CREDENTIALS.passport.read`
+- `CREDENTIALS.verify.read`
+- `INVESTMENT.research.read`
+- `INVESTMENT.simulation.read`
+- `INTELLIGENCE.retrieval.read`
+- `HIERARCHY.roles.read`
+- `HIERARCHY.governance.read`
+
+This is a production integrity defect and demonstrates why a migration ledger and lifecycle field are not proof of runtime behavior. The branch now includes `20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql`, which restores the wave-2 adapters, implements the remaining read/write handlers with actor scoping and explicit simulation/credential boundaries, and adds a CI contract that requires all 54 canonical actions to map to concrete adapters. The migration is explicitly registered as `PENDING_REVIEW / NOT_APPLIED`; no production database mutation has occurred in this work sequence. It must pass fresh replay, then be applied through the authorized Supabase migration action, after which the remote migration snapshot is updated from provider evidence.
+

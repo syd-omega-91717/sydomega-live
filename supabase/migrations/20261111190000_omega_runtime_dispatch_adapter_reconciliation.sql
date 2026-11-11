@@ -14,13 +14,77 @@ alter table public.omega_service_orders
   drop constraint if exists omega_service_orders_idempotency_key_key;
 alter table public.omega_service_orders
   drop constraint if exists omega_service_orders_user_idempotency_key_key;
-alter table public.omega_service_orders
-  add constraint omega_service_orders_user_idempotency_key_key
+drop index if exists public.omega_service_orders_user_idempotency_uidx;
+drop index if exists public.omega_service_orders_system_idempotency_uidx;
+create unique index omega_service_orders_user_idempotency_uidx
+  on public.omega_service_orders(user_id,idempotency_key)
+  where user_id is not null and idempotency_key is not null;
+create unique index omega_service_orders_system_idempotency_uidx
+  on public.omega_service_orders(idempotency_key)
+  where user_id is null and idempotency_key is not null;
+
+alter table public.omega_agent_tasks
+  drop constraint if exists omega_agent_tasks_idempotency_key_key;
+drop index if exists public.omega_agent_tasks_user_idempotency_uidx;
+drop index if exists public.omega_agent_tasks_system_idempotency_uidx;
+create unique index omega_agent_tasks_user_idempotency_uidx
+  on public.omega_agent_tasks(user_id,idempotency_key)
+  where user_id is not null and idempotency_key is not null;
+create unique index omega_agent_tasks_system_idempotency_uidx
+  on public.omega_agent_tasks(idempotency_key)
+  where user_id is null and idempotency_key is not null;
+
+alter table public.omega_notifications
+  drop constraint if exists omega_notifications_idempotency_key_key;
+alter table public.omega_notifications
+  drop constraint if exists omega_notifications_user_idempotency_key_key;
+alter table public.omega_notifications
+  add constraint omega_notifications_user_idempotency_key_key
   unique (user_id,idempotency_key);
+
+alter table public.sovereign_events
+  drop constraint if exists sovereign_events_idempotency_key_key;
+drop index if exists public.sovereign_events_user_idempotency_uidx;
+drop index if exists public.sovereign_events_system_idempotency_uidx;
+create unique index sovereign_events_user_idempotency_uidx
+  on public.sovereign_events(user_id,idempotency_key)
+  where user_id is not null and idempotency_key is not null;
+create unique index sovereign_events_system_idempotency_uidx
+  on public.sovereign_events(idempotency_key)
+  where user_id is null and idempotency_key is not null;
+
+alter table public.omega_achievement_verifications
+  drop constraint if exists omega_achievement_verifications_idempotency_key_key;
+alter table public.omega_achievement_verifications
+  drop constraint if exists omega_achievement_verifications_subject_idempotency_key_key;
+alter table public.omega_achievement_verifications
+  add constraint omega_achievement_verifications_subject_idempotency_key_key
+  unique (user_achievement_id,idempotency_key);
+
+drop index if exists public.omega_platform_events_idempotency_uidx;
+drop index if exists public.omega_platform_events_actor_idempotency_uidx;
+drop index if exists public.omega_platform_events_system_idempotency_uidx;
+create unique index omega_platform_events_actor_idempotency_uidx
+  on public.omega_platform_events(actor_user_id,idempotency_key)
+  where actor_user_id is not null and idempotency_key is not null;
+create unique index omega_platform_events_system_idempotency_uidx
+  on public.omega_platform_events(idempotency_key)
+  where actor_user_id is null and idempotency_key is not null;
+
+alter table public.omega_audit_log
+  drop constraint if exists omega_audit_log_idempotency_key_key;
+drop index if exists public.omega_audit_log_actor_idempotency_uidx;
+drop index if exists public.omega_audit_log_system_idempotency_uidx;
+create unique index omega_audit_log_actor_idempotency_uidx
+  on public.omega_audit_log(actor_user_id,idempotency_key)
+  where actor_user_id is not null and idempotency_key is not null;
+create unique index omega_audit_log_system_idempotency_uidx
+  on public.omega_audit_log(idempotency_key)
+  where actor_user_id is null and idempotency_key is not null;
 
 create or replace function omega_private.create_service_order(
   p_user_id uuid,p_service_id text,p_idempotency_key text,p_metadata jsonb default '{}'::jsonb
-) returns uuid language plpgsql security definer set search_path='' as $
+) returns uuid language plpgsql security definer set search_path='' as $function$
 declare v_order_id uuid;
 begin
   if p_user_id is null then raise exception 'user_required'; end if;
@@ -36,12 +100,12 @@ begin
   end if;
   insert into public.omega_service_orders(service_id,user_id,status,idempotency_key,metadata)
   values(pg_catalog.btrim(p_service_id),p_user_id,'PENDING',pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
-  on conflict (user_id,idempotency_key)
+  on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null
   do update set idempotency_key=excluded.idempotency_key
   returning order_id into v_order_id;
   return v_order_id;
 end;
-$;
+$function$;
 revoke all on function omega_private.create_service_order(uuid,text,text,jsonb) from public,anon,authenticated;
 grant execute on function omega_private.create_service_order(uuid,text,text,jsonb) to service_role;
 

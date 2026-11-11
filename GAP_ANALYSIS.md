@@ -63,12 +63,12 @@ project's own established convention (security/data-integrity first).
   none of it is closed. Function go-live conditions: `docs/legal/FUNCTION_GO_LIVE.md`.
 - **POSTPONED 2026-10-18 — blocked on credits, resume when renewed.** Each item is parked
   behind one switch and nothing else depends on it, so renewing is a one-line change:
-  - **Vercel promotion.** Hobby team blocked for Edge Requests since 2026-10-06. Switch:
-    `VERCEL_PROMOTION_POSTPONED` in `.github/workflows/vercel-production.yml`. Set it to
-    `'false'` and add `VERCEL_TOKEN` to resume. While it is `'true'`, a `main` push proves that
-    sydomega.com (Cloudflare Pages) serves that commit, and fails if not. The red "Account is
-    blocked" status on PRs comes from the Vercel GitHub App, so the repo cannot silence it.
-    Disconnecting the repo in Vercel stops it, and that is reversible.
+  - **Vercel production promotion — RETIRED 2026-11-11.** Cloudflare Pages Git integration is
+    the production host. Vercel is retained only for static build-artifact validation. PR #1240
+    removes the dormant Vercel credential/deploy path from `.github/workflows/vercel-production.yml`.
+    Do not restore Vercel promotion or add `VERCEL_TOKEN` to CI unless the owner explicitly changes
+    the hosting architecture and approves a new release decision record. The Vercel GitHub App's
+    historical "Account is blocked" status is not production evidence.
   - **Codex PR reviews.** Every run fails on the usage limit. Treat its "Failed" summary as
     no review, not as a finding.
   - **Supabase leaked-password protection.** An Auth dashboard toggle (issue #375). It may need

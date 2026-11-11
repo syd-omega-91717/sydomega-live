@@ -44,6 +44,11 @@ for required in (
     ".claude/skills/present-concept-build/SKILL.md",
     "vercel.json",
     "scripts/vercel-build.sh",
+    "scripts/cloudflare-production-smoke.py",
+    "scripts/vercel-production-surface-smoke.py",
+    ".github/workflows/vercel-production.yml",
+    ".github/workflows/cloudflare-production-verify.yml",
+    ".github/workflows/production-smoke.yml",
     "scripts/audit.py",
 ):
     require_file(required)

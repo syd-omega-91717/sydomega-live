@@ -10,6 +10,41 @@ create unique index consult_requests_runtime_idempotency_uidx
   on public.consult_requests(user_id,runtime_idempotency_key)
   where runtime_idempotency_key is not null;
 
+alter table public.omega_service_orders
+  drop constraint if exists omega_service_orders_idempotency_key_key;
+alter table public.omega_service_orders
+  drop constraint if exists omega_service_orders_user_idempotency_key_key;
+alter table public.omega_service_orders
+  add constraint omega_service_orders_user_idempotency_key_key
+  unique (user_id,idempotency_key);
+
+create or replace function omega_private.create_service_order(
+  p_user_id uuid,p_service_id text,p_idempotency_key text,p_metadata jsonb default '{}'::jsonb
+) returns uuid language plpgsql security definer set search_path='' as $
+declare v_order_id uuid;
+begin
+  if p_user_id is null then raise exception 'user_required'; end if;
+  if p_service_id is null or pg_catalog.length(pg_catalog.btrim(p_service_id)) < 2 then raise exception 'service_required'; end if;
+  if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
+  if not exists (select 1 from auth.users where id=p_user_id) then raise exception 'user_not_found'; end if;
+  if not exists (
+    select 1 from public.omega_services
+    where service_id=pg_catalog.btrim(p_service_id)
+      and status in ('INTEGRATED','TESTED','DEPLOYED','VERIFIED')
+  ) then
+    raise exception 'service_not_orderable';
+  end if;
+  insert into public.omega_service_orders(service_id,user_id,status,idempotency_key,metadata)
+  values(pg_catalog.btrim(p_service_id),p_user_id,'PENDING',pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
+  on conflict (user_id,idempotency_key)
+  do update set idempotency_key=excluded.idempotency_key
+  returning order_id into v_order_id;
+  return v_order_id;
+end;
+$;
+revoke all on function omega_private.create_service_order(uuid,text,text,jsonb) from public,anon,authenticated;
+grant execute on function omega_private.create_service_order(uuid,text,text,jsonb) to service_role;
+
 create or replace function omega_private.create_consult_intake(
   p_user_id uuid,p_domain text,p_message text,p_idempotency_key text,
   p_urgency text default 'normal',p_preferred_time text default null,
@@ -253,6 +288,12 @@ do $$
 begin
   if (select count(*) from public.omega_module_runtime_actions) <> 54 then
     raise exception 'omega_runtime_action_count_must_equal_54';
+  end if;
+  if not exists (select 1 from pg_constraint where conrelid='public.omega_service_orders'::regclass and conname='omega_service_orders_user_idempotency_key_key' and contype='u') then
+    raise exception 'service_order_user_scoped_idempotency_constraint_missing';
+  end if;
+  if not exists (select 1 from pg_indexes where schemaname='public' and tablename='consult_requests' and indexname='consult_requests_runtime_idempotency_uidx') then
+    raise exception 'consultancy_user_scoped_idempotency_index_missing';
   end if;
   if not has_function_privilege('service_role','public.omega_runtime_dispatch(uuid,text,jsonb)','EXECUTE') then
     raise exception 'runtime_dispatch_service_role_execute_missing';

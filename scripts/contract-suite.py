@@ -261,6 +261,9 @@ GATES = [
     ('live-module-runtime-evidence',
      'live Supabase module runtime observations remain complete, mapped and non-promoted',
      ['scripts/omega-live-module-runtime-contract.py']),
+    ('runtime-adapter-coverage',
+     'all 54 canonical module actions have a concrete authenticated runtime adapter',
+     ['scripts/omega-runtime-adapter-coverage-contract.py']),
     # Eight tables shipped on 2026-10-06 with member policies and no GRANT; every
     # member query failed 42501 and rls-auditor (policy text only) passed them.
     ('migration-grant',

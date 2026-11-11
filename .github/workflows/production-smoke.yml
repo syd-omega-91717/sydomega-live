@@ -77,6 +77,19 @@ jobs:
           set -euo pipefail
           python3 scripts/cloudflare-production-smoke.py --base-url https://sydomega.com --workers 12 --timeout 20
 
+      - name: Build exact release artifact for page identity comparison
+        env:
+          OMEGA_RELEASE_SHA: ${{ github.sha }}
+        run: bash scripts/vercel-build.sh
+
+      - name: Verify production page identity against the exact release artifact
+        env:
+          OMEGA_PRODUCTION_BASE_URL: https://sydomega.com
+          OMEGA_PUBLIC_DIR: public
+          OMEGA_SMOKE_WORKERS: '12'
+          OMEGA_SMOKE_RETRIES: '2'
+        run: python3 scripts/vercel-production-surface-smoke.py
+
       - name: Verify canonical production entrypoints and security headers
         shell: bash
         run: |

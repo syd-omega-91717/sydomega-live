@@ -93,6 +93,7 @@ def main() -> int:
             "on conflict (user_id,runtime_idempotency_key)",
             "omega_service_orders_user_idempotency_uidx",
             "omega_service_orders_system_idempotency_uidx",
+            "consult_requests_runtime_idempotency_uidx",
             "omega_agent_tasks_user_idempotency_uidx",
             "omega_agent_tasks_system_idempotency_uidx",
             "omega_notifications_user_idempotency_key_key",

@@ -594,6 +594,16 @@ begin
   if not exists (select 1 from pg_indexes where schemaname='public' and tablename='consult_requests' and indexname='consult_requests_runtime_idempotency_uidx') then
     raise exception 'consultancy_user_scoped_idempotency_index_missing';
   end if;
+  if not has_function_privilege('service_role','omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text)','EXECUTE')
+     or has_function_privilege('anon','omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text)','EXECUTE')
+     or has_function_privilege('authenticated','omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text)','EXECUTE') then
+    raise exception 'consultancy_intake_helper_acl_invalid';
+  end if;
+  if not has_function_privilege('service_role','omega_private.create_service_order(uuid,text,text,jsonb)','EXECUTE')
+     or has_function_privilege('anon','omega_private.create_service_order(uuid,text,text,jsonb)','EXECUTE')
+     or has_function_privilege('authenticated','omega_private.create_service_order(uuid,text,text,jsonb)','EXECUTE') then
+    raise exception 'service_order_helper_acl_invalid';
+  end if;
   if not has_function_privilege('service_role','omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean)','EXECUTE')
      or has_function_privilege('anon','omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean)','EXECUTE')
      or has_function_privilege('authenticated','omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean)','EXECUTE') then

@@ -143,7 +143,7 @@ begin
     'confidentiality_accepted',true,
     'contact','probe2@invalid.example'
   ));
-  if v_other->>'request_id' is null or v_other->>'request_id' is distinct from v_first->>'request_id' then
+  if v_other->>'request_id' is null or v_other->>'request_id' is not distinct from v_first->>'request_id' then
     raise exception 'consultancy idempotency key was not isolated by user: first=% other=%',v_first,v_other;
   end if;
   select count(*) into v_count from public.consult_requests

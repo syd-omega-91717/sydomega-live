@@ -13,8 +13,7 @@ create unique index consult_requests_runtime_idempotency_uidx
 -- The advisor identified an unindexed FK used by the private Stripe refund
 -- state machine. Keep the nullable reversal reference indexed for RI checks.
 create index if not exists stripe_refund_state_last_reversal_transaction_idx
-  on omega_private.stripe_refund_state(last_reversal_transaction_id)
-  where last_reversal_transaction_id is not null;
+  on omega_private.stripe_refund_state(last_reversal_transaction_id);
 
 create or replace function omega_private.create_consult_intake(
   p_user_id uuid,p_domain text,p_message text,p_idempotency_key text,

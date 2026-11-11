@@ -128,6 +128,8 @@ def main() -> int:
             return fail("dispatcher function calls TRIM as a pg_catalog function")
         if "where idempotency_key=p_idempotency_key" in sql:
             return fail("service-order idempotency lookup is not actor-scoped")
+        if sql.lower().count("security definer set search_path=''") != 9:
+            return fail("all nine reconciliation helper/dispatcher functions must pin an empty search_path")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:
             return fail("platform credential must explicitly not be a government/travel document")
         if "Interpretive content for reflection and entertainment only" not in sql:

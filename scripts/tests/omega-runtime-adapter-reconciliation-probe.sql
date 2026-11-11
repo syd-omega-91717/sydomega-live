@@ -174,13 +174,13 @@ begin
     'module_id','CONSULTANCY','action_name','cases.read'
   ));
   if not exists (
-    select 1 from jsonb_array_elements(v_cases->'requests') request
+    select 1 from jsonb_array_elements(v_cases->'data'->'requests') request
     where request->>'id'=v_request_id::text
   ) then
     raise exception 'consultancy cases read omitted caller-owned request';
   end if;
   if exists (
-    select 1 from jsonb_array_elements(v_cases->'requests') request
+    select 1 from jsonb_array_elements(v_cases->'data'->'requests') request
     where request->>'id'=v_other_request_id::text
   ) then
     raise exception 'consultancy cases read exposed another user request';

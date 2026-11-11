@@ -74,7 +74,7 @@ def main() -> int:
             if marker not in gateway:
                 return fail(f"authenticated gateway marker missing: {marker}")
         for marker in (
-            "SECURITY DEFINER",
+            "security definer",
             "set search_path=''",
             "revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from public,anon,authenticated",
             "grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role",

@@ -296,9 +296,9 @@ begin
   _auth_before:=pg_catalog.sqrt(pg_catalog.power(_pr.axis_a,3)+pg_catalog.power(_pr.axis_b,3)+pg_catalog.power(_pr.axis_c,3))*_phi/_eu;
 
   update public.profiles set
-    axis_a=pg_catalog.least(9.000,pg_catalog.greatest(0.001,axis_a+coalesce((p_axis_delta->>'a')::numeric,0))),
-    axis_b=pg_catalog.least(9.000,pg_catalog.greatest(0.001,axis_b+coalesce((p_axis_delta->>'b')::numeric,0))),
-    axis_c=pg_catalog.least(9.000,pg_catalog.greatest(0.001,axis_c+coalesce((p_axis_delta->>'c')::numeric,0)))
+    axis_a=least(9.000,greatest(0.001,axis_a+coalesce((p_axis_delta->>'a')::numeric,0))),
+    axis_b=least(9.000,greatest(0.001,axis_b+coalesce((p_axis_delta->>'b')::numeric,0))),
+    axis_c=least(9.000,greatest(0.001,axis_c+coalesce((p_axis_delta->>'c')::numeric,0)))
   where id=_uid;
 
   select axis_a,axis_b,axis_c into _pr from public.profiles where id=_uid;

@@ -156,7 +156,7 @@ class ConfigShapeTests(unittest.TestCase):
     def test_help_prints_the_docstring_without_running(self):
         code, out = self.fx.run_contract("--help")
         self.assertEqual(code, 0, out)
-        self.assertIn("Vercel static deployment contract", out)
+        self.assertIn("shared framework-free static build configuration", out)
         self.assertNotIn("VERCEL_STATIC_CONTRACT=", out)
 
     def test_a_framework_preset_is_rejected(self):
@@ -189,7 +189,7 @@ class ConfigShapeTests(unittest.TestCase):
         self.assertIn("automatic_git_deploy_must_be_disabled_for_slashed_branches", out)
 
     def test_main_git_auto_deploy_left_on_is_rejected(self):
-        """The GitHub Actions promotion workflow must be the sole production deploy path."""
+        """Cloudflare Pages Git integration is the production deploy path; Vercel Git deployment remains disabled."""
         self.fx.config_with(git={"deploymentEnabled": {"*": False, "**": False, "main": True}})
         code, out = self.fx.run_contract()
         self.assertEqual(code, 1, out)

@@ -15,19 +15,23 @@ create or replace function omega_private.create_consult_intake(
   p_urgency text default 'normal',p_preferred_time text default null,
   p_confidentiality_accepted boolean default false,p_contact text default null
 ) returns bigint language plpgsql security definer set search_path='' as $$
-declare v_id bigint;
+declare v_id bigint; v_idempotency_key text;
 begin
  if p_user_id is null then raise exception 'user_required'; end if;
  if not exists (select 1 from auth.users where id=p_user_id) then raise exception 'user_not_found'; end if;
  if p_domain is null or pg_catalog.length(pg_catalog.btrim(p_domain)) < 2 then raise exception 'domain_required'; end if;
  if p_message is null or pg_catalog.length(pg_catalog.btrim(p_message)) < 10 or pg_catalog.length(p_message)>10000 then raise exception 'message_length_invalid'; end if;
  if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
+ v_idempotency_key:=pg_catalog.btrim(p_idempotency_key);
  if not p_confidentiality_accepted then raise exception 'confidentiality_acceptance_required'; end if;
  insert into public.consult_requests(user_id,domain,message,status,created_at,urgency,contact,preferred_time,confidentiality_accepted,runtime_idempotency_key)
- values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(pg_catalog.btrim(p_urgency),'normal'),40),pg_catalog.left(p_contact,240),pg_catalog.left(p_preferred_time,240),true,p_idempotency_key)
+ values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(pg_catalog.btrim(p_urgency),'normal'),40),pg_catalog.left(p_contact,240),pg_catalog.left(p_preferred_time,240),true,v_idempotency_key)
  on conflict (user_id,runtime_idempotency_key) where runtime_idempotency_key is not null
- do update set runtime_idempotency_key=excluded.runtime_idempotency_key
+ do nothing
  returning id into v_id;
+ if v_id is null then
+   select id into v_id from public.consult_requests where user_id=p_user_id and runtime_idempotency_key=v_idempotency_key;
+ end if;
  return v_id;
 end;
 $$;

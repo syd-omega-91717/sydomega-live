@@ -79,6 +79,9 @@ def main() -> int:
             "revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from public,anon,authenticated",
             "grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role",
             "on conflict (user_id,runtime_idempotency_key)",
+            "omega_service_orders_user_idempotency_key_key",
+            "unique (user_id,idempotency_key)",
+            "on conflict (user_id,idempotency_key)",
             "confidentiality_acceptance_required",
             "ADAPTER_REQUIRED",
         ):
@@ -100,6 +103,8 @@ def main() -> int:
             return fail("graph evidence adapter must use the live extraction_timestamp column")
         if "pg_catalog.trim(" in function_body:
             return fail("dispatcher function calls TRIM as a pg_catalog function")
+        if "where idempotency_key=p_idempotency_key" in sql:
+            return fail("service-order idempotency lookup is not actor-scoped")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:
             return fail("platform credential must explicitly not be a government/travel document")
         if "Interpretive content for reflection and entertainment only" not in sql:

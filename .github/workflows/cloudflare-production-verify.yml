@@ -56,8 +56,8 @@ jobs:
           grep -Eiq '^strict-transport-security:' "${RUNNER_TEMP}/production-headers.txt" || { echo "HSTS header missing"; exit 1; }
 
           for path in account.html profile.html world.html news.html media.html privacy.html terms.html vault.html; do
-            code="$(curl --location --silent --output /dev/null --write-out '%{http_code}' --max-time 20 "${base}/${path}")"
-            [ "${code}" = "200" ] || { echo "core route /${path} returned ${code}"; exit 1; }
+            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/${path}")"
+            [ "${code}" = "200" ] || { echo "core route /${path} final response returned ${code}"; exit 1; }
           done
 
           python scripts/cloudflare-production-smoke.py --base-url "${base}" --workers 16 --timeout 20

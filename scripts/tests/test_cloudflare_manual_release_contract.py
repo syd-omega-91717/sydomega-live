@@ -7,6 +7,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = (ROOT / ".github/workflows/cloudflare-pages.yml").read_text(encoding="utf-8")
 PRODUCTION_VERIFY = (ROOT / ".github/workflows/cloudflare-production-verify.yml").read_text(encoding="utf-8")
+PRODUCTION_SMOKE = (ROOT / "scripts/cloudflare-production-smoke.py").read_text(encoding="utf-8")
 
 
 class CloudflareManualReleaseContract(unittest.TestCase):
@@ -38,6 +39,11 @@ class CloudflareManualReleaseContract(unittest.TestCase):
             self.assertIn(route, PRODUCTION_VERIFY)
         self.assertIn("CLOUDFLARE_PRODUCTION=PASS", PRODUCTION_VERIFY)
         self.assertNotIn("CLOUDFLARE_API_TOKEN", PRODUCTION_VERIFY)
+        self.assertIn("cloudflare-production-smoke.py", PRODUCTION_VERIFY)
+        self.assertIn("config/omega-page-contracts.json", PRODUCTION_SMOKE)
+        self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)
+        self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
+        self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
 
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)

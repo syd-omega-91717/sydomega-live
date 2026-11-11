@@ -94,3 +94,8 @@ Each step has a check. Do not start the next step until the check passes.
 ## Production release verification added (2026-11-11)
 
 The repository now has `.github/workflows/cloudflare-production-verify.yml`. On every push to `main`, it waits for Cloudflare Pages Git integration to publish the exact commit, checks `/.well-known/omega-release.json` against `GITHUB_SHA`, validates CSP and HSTS, and smoke-tests eight core routes plus the `www` alias. This is the production deployment verification path; the Vercel integration is not required for Cloudflare Pages production deployment. The workflow fails closed if the production manifest does not match the pushed SHA.
+
+
+## Cloudflare-only production smoke (2026-11-11)
+
+The scheduled and main-push production smoke path now follows the actual production host, Cloudflare Pages. It waits for `/.well-known/omega-release.json` to match the exact GitHub SHA, runs `scripts/cloudflare-production-smoke.py` across all 241 registered page contracts and same-origin HTML references, checks the root/www/health entrypoints and CSP/HSTS, and verifies Supabase health endpoints. The stale Vercel-propagation wording and Vercel-host assumption were removed from this production workflow. External links and API references are reported/deferred rather than incorrectly treated as same-origin static assets.

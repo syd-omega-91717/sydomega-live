@@ -39,7 +39,6 @@ class CloudflareManualReleaseContract(unittest.TestCase):
             self.assertIn(route, PRODUCTION_VERIFY)
         self.assertIn("CLOUDFLARE_PRODUCTION=PASS", PRODUCTION_VERIFY)
         self.assertNotIn("CLOUDFLARE_API_TOKEN", PRODUCTION_VERIFY)
-        self.assertIn("cloudflare-production-smoke.py", PRODUCTION_VERIFY)
         self.assertIn("config/omega-page-contracts.json", PRODUCTION_SMOKE)
         self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)

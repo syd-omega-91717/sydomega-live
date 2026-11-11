@@ -49,6 +49,9 @@ def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
         return 0, "", str(exc)
 
 def main() -> int:
+    if any(arg in {"--help", "-h"} for arg in sys.argv[1:]):
+        print(__doc__ or "")
+        return 0
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url", default="https://sydomega.com")
     parser.add_argument("--workers", type=int, default=12)

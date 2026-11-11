@@ -145,13 +145,13 @@ begin
   if not exists(select 1 from public.omega_agents where agent_id=p_agent_id) then raise exception 'unknown_agent'; end if;
 
   if p_user_id is null then
-    insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required)
-    values(null,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required)
+    insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required,requested_by)
+    values(null,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required,'system')
     on conflict (idempotency_key) where user_id is null and idempotency_key is not null do update set input=excluded.input
     returning task_id,(xmax=0) into v_id,v_inserted;
   else
-    insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required)
-    values(p_user_id,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required)
+    insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required,requested_by)
+    values(p_user_id,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required,'user')
     on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null do update set input=excluded.input
     returning task_id,(xmax=0) into v_id,v_inserted;
   end if;

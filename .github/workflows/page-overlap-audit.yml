@@ -1,9 +1,8 @@
-name: Page Overlap Audit
+name: Page Content and Purpose Audit
 
-# Advisory only, and O(n^2) over the whole page estate: measured at 2-5
-# minutes locally, against 0.79s for all eleven blocking gates combined. On a
-# single serial self-hosted runner that cost bought nothing per-push, since a
-# PASS here never blocked a merge. It runs nightly and on demand instead.
+# Advisory-only quality reports: visible-copy repetition and semantic page-purpose overlap
+# answer different questions. The purpose audit is O(n^2) over the page estate.
+# Reports run nightly and on demand; they do not gate merges.
 on:
   schedule:
     - cron: '30 4 * * *'
@@ -13,22 +12,22 @@ permissions:
   contents: read
 
 concurrency:
-  group: page-overlap-${{ github.ref }}
+  group: page-quality-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   overlap:
-    name: Detect overlapping pages
+    name: Audit visible copy and page purpose
     # Was [self-hosted, Windows, X64]. That runner is dead -- runner-probe.yml,
     # whose only job is to prove it works, has never completed a run, and this
     # audit therefore never executed ONCE: measured in its own history as
     # 10m13s / 11m44s / 11m52s of queueing before timing out. A check that
     # never runs is not a lenient check, it is an absent one.
     #
-    # The script is platform-independent and was verified on Linux before this
-    # change: `python3 scripts/page-overlap-audit.py` -> "PAGE OVERLAP AUDIT:
-    # PASS (advisory; no files modified)", exit 0. `shell: pwsh` went with the
-    # Windows runner and is dropped; bash is the default here.
+    # The scripts are platform-independent and run on Linux. The visible-copy
+    # audit reports exact and near-duplicate text; the page-purpose audit
+    # reports semantic overlap candidates with supporting evidence. `shell:
+    # pwsh` went with the Windows runner and is dropped; bash is the default here.
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -38,10 +37,7 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - name: Run overlap audit
-        run: python scripts/page-overlap-audit.py
-      - name: Publish evidence-based page-purpose report
       - name: Report repeated visible page copy
-        run: python scripts/page-copy-audit.py --markdown >> "$GITHUB_STEP_SUMMARY"
+        run: python scripts/page-copy-audit.py --markdown | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Report page-purpose overlap with source evidence
-        run: python scripts/page-consolidation.py --markdown >> "$GITHUB_STEP_SUMMARY"
+        run: python scripts/page-consolidation.py --markdown | tee -a "$GITHUB_STEP_SUMMARY"

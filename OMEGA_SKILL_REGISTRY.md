@@ -96,7 +96,7 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 241 |
 | pages loading `bg.js` | 241 of 241 |
-| `omega-*.js` modules | 275 (2683 KB) |
+| `omega-*.js` modules | 275 (2690 KB) |
 | root `.js` files | 292 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 415 (107 numbered `NNNN_`, 308 timestamped) |
@@ -113,12 +113,12 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 | Source | Keys |
 |---|---|
 | `T_EN` (English, inlined in `i18n.js`) | 1195 |
-| `i18n/ar.json` | 1195 |
-| `i18n/es.json` | 1195 |
-| `i18n/fr.json` | 1195 |
-| `i18n/hi.json` | 1195 |
-| `i18n/nl.json` | 1195 |
-| `i18n/zh.json` | 1195 |
+| `i18n/ar.json` | 1194 — 1 short of `T_EN` |
+| `i18n/es.json` | 1194 — 1 short of `T_EN` |
+| `i18n/fr.json` | 1194 — 1 short of `T_EN` |
+| `i18n/hi.json` | 1194 — 1 short of `T_EN` |
+| `i18n/nl.json` | 1194 — 1 short of `T_EN` |
+| `i18n/zh.json` | 1194 — 1 short of `T_EN` |
 
 Migration replay and production migration-history evidence are maintained in
 [`supabase/migrations/README.md`](supabase/migrations/README.md). This generated

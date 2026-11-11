@@ -26,6 +26,7 @@ The cases that matter:
 Run: python3 -m unittest scripts/tests/test_reachability_contract.py -v
 """
 
+import json
 import os
 import shutil
 import subprocess
@@ -75,6 +76,10 @@ class Fixture:
 
     def path(self, *parts):
         return os.path.join(self.dir, *parts)
+
+    def redirects(self, mapping):
+        write(self.path("config/page-cores.json"),
+              json.dumps({"redirects": mapping}, indent=2))
 
     def run(self, *args):
         return subprocess.run(
@@ -223,6 +228,53 @@ class ReachabilityContractTest(unittest.TestCase):
         self.fx.nav([("dashboard", "DASHBOARD", "/dashboard.html")], ["dashboard"])
         r = self.fx.run()
         self.assertEqual(r.returncode, 0, r.stdout)
+
+    def test_registered_compatibility_redirect_is_not_a_member_destination(self):
+        self.fx.page("dashboard")
+        self.fx.page("insight")
+        self.fx.page("graphify")
+        self.fx.nav([("dashboard", "DASHBOARD", "/dashboard.html"),
+                     ("insight", "INSIGHT", "/insight.html")],
+                    ["dashboard", "insight"])
+        self.fx.redirects({"graphify": "/insight.html?lens=graph&tools=1"})
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertIn("1 compatibility redirects", r.stdout)
+        self.assertNotIn("graphify.html", r.stdout)
+
+    def test_stale_compatibility_redirect_is_blocking(self):
+        self.fx.page("dashboard")
+        self.fx.page("insight")
+        self.fx.nav([("dashboard", "DASHBOARD", "/dashboard.html"),
+                     ("insight", "INSIGHT", "/insight.html")],
+                    ["dashboard", "insight"])
+        self.fx.redirects({"graphify": "/insight.html"})
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("STALE COMPATIBILITY REDIRECT", r.stdout)
+
+    def test_compatibility_redirect_target_must_exist(self):
+        self.fx.page("dashboard")
+        self.fx.page("graphify")
+        self.fx.nav([("dashboard", "DASHBOARD", "/dashboard.html")],
+                    ["dashboard"])
+        self.fx.redirects({"graphify": "/missing.html"})
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("INVALID COMPATIBILITY REDIRECT TARGET", r.stdout)
+
+    def test_compatibility_redirect_must_not_be_in_navigation(self):
+        self.fx.page("dashboard")
+        self.fx.page("insight")
+        self.fx.page("graphify")
+        self.fx.nav([("dashboard", "DASHBOARD", "/dashboard.html"),
+                     ("insight", "INSIGHT", "/insight.html"),
+                     ("graphify", "OLD GRAPH", "/graphify.html")],
+                    ["dashboard", "insight", "graphify"])
+        self.fx.redirects({"graphify": "/insight.html?lens=graph"})
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("COMPATIBILITY REDIRECT IN NAV", r.stdout)
 
     def test_stale_exemption_is_reported(self):
         """A SYSTEM_PAGES entry whose page no longer exists is dead bookkeeping."""

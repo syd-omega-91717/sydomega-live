@@ -68,8 +68,11 @@ class InsightLegacyRouteTests(unittest.TestCase):
     def test_page_core_and_contract_registry_record_redirects(self):
         cores = json.loads((ROOT / "config/page-cores.json").read_text(encoding="utf-8"))
         intel = next(item for item in cores["cores"] if item["core"] == "intel")
-        for legacy in ROUTES:
-            self.assertIn(legacy, intel["pages"], "compatibility routes remain registered even though navigation exposes only Insight")
+        redirects = cores.get("redirects", {})
+        for legacy, lens in ROUTES.items():
+            self.assertNotIn(legacy, intel["pages"])
+            expected = "/insight.html?lens=" + lens + ("&tools=1" if legacy == "graphify" else "")
+            self.assertEqual(redirects.get(legacy), expected)
         contracts = json.loads((ROOT / "config/omega-page-contracts.json").read_text(encoding="utf-8"))
         by_id = {item["page_id"]: item for item in contracts["contracts"]}
         for page, lens in ROUTES.items():

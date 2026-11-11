@@ -40,6 +40,11 @@ navigation -- each with the reason recorded, because "it is exempt" with no
 reason is how an unreachable page gets quietly normalised. Adding to that list
 is a product decision and should look like one in the diff.
 
+Compatibility redirects are a separate category, loaded from
+config/page-cores.json. They preserve old bookmarks but are not navigation
+destinations: each alias file and local target must exist, and aliases must
+not be reintroduced into nav.js.
+
 WHAT THIS CANNOT CHECK, stated plainly: that the link actually works at
 runtime. `nav.js` only renders into an element with id `omega-side`, and a page
 without that container gets no sidebar at all however well it is registered
@@ -51,6 +56,7 @@ Reachability findings are BLOCKING. Active-state and container findings are
 reported but do not block: they degrade navigation rather than removing it.
 """
 
+import json
 import os
 import re
 import sys
@@ -79,16 +85,25 @@ SYSTEM_PAGES = {
     # wired into primary navigation; part of autonomous-insights suite
     'monitoring-dashboard': 'Phase 5 autonomous monitoring, pending nav wiring',
     # Infrastructure pages not member-facing
-    'agent':               'agent configuration page, infrastructure only',
     'healthz':             'health check endpoint, not a member destination',
-    'investor-dashboard':  'investor relations page, not member-facing',
-    'venture-pipeline':    'venture pipeline tool, infrastructure only',
 }
 
 
 def read(path):
     with open(os.path.join(ROOT, path), encoding='utf-8') as fh:
         return fh.read()
+
+
+def compatibility_redirects():
+    """Legacy URL aliases are preserved, but are not member-navigation destinations."""
+    path = os.path.join(ROOT, 'config', 'page-cores.json')
+    if not os.path.isfile(path):
+        return {}
+    data = json.loads(read('config/page-cores.json'))
+    redirects = data.get('redirects', {})
+    if not isinstance(redirects, dict):
+        raise ValueError("config/page-cores.json redirects must be an object")
+    return redirects
 
 
 def nav_maps():
@@ -134,7 +149,14 @@ def main(argv):
 
     linked, ps = nav_maps()
     all_pages = pages()
-    destinations = [p for p in all_pages if p not in SYSTEM_PAGES]
+    try:
+        redirects = compatibility_redirects()
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print('  INVALID COMPATIBILITY REDIRECT REGISTRY -- %s' % exc)
+        return 1
+    redirect_slugs = set(redirects)
+    destinations = [p for p in all_pages
+                    if p not in SYSTEM_PAGES and p not in redirect_slugs]
 
     unreachable = [p for p in destinations if p not in linked]
     no_active = [p for p in destinations if p not in ps]
@@ -150,12 +172,20 @@ def main(argv):
     # A system page listed here that no longer exists is stale bookkeeping.
     stale = sorted(k for k in SYSTEM_PAGES
                    if k not in all_pages and k != 'index')
+    stale_redirects = sorted(k for k in redirect_slugs if k not in all_pages)
+    invalid_redirect_targets = []
+    for slug, target in redirects.items():
+        target_path = re.split(r'[?#]', str(target), maxsplit=1)[0].lstrip('/')
+        if (not target_path.endswith('.html')
+                or not os.path.isfile(os.path.join(ROOT, target_path))):
+            invalid_redirect_targets.append((slug, target))
+    redirects_in_nav = sorted(redirect_slugs & linked)
 
     print('=' * 68)
     print('REACHABILITY CONTRACT')
     print('=' * 68)
-    print('  %d pages, %d destinations, %d exempt (system/diagnostic)'
-          % (len(all_pages), len(destinations), len(SYSTEM_PAGES)))
+    print('  %d pages, %d destinations, %d exempt (system/diagnostic), %d compatibility redirects'
+          % (len(all_pages), len(destinations), len(SYSTEM_PAGES), len(redirects)))
     print()
 
     if unreachable:
@@ -189,13 +219,34 @@ def main(argv):
             print('    %s' % p)
         print()
 
-    if not unreachable:
+    if stale_redirects:
+        print('  STALE COMPATIBILITY REDIRECT -- registry alias has no legacy HTML route (BLOCKING)')
+        for p in stale_redirects:
+            print('    %s.html' % p)
+        print()
+
+    if invalid_redirect_targets:
+        print('  INVALID COMPATIBILITY REDIRECT TARGET -- target must resolve to a local HTML page (BLOCKING)')
+        for slug, target in invalid_redirect_targets:
+            print('    %s.html -> %s' % (slug, target))
+        print()
+
+    if redirects_in_nav:
+        print('  COMPATIBILITY REDIRECT IN NAV -- navigation must link to its canonical destination (BLOCKING)')
+        for p in redirects_in_nav:
+            print('    %s.html' % p)
+        print()
+
+    if not unreachable and not stale_redirects and not invalid_redirect_targets and not redirects_in_nav:
         print('  OK -- every destination page is linked from navigation.')
         if no_active or no_container:
             print('  (advisory findings above do not block)')
         return 0
 
-    print('  %d unreachable page(s) -- BLOCKING.' % len(unreachable))
+    if unreachable:
+        print('  %d unreachable page(s) -- BLOCKING.' % len(unreachable))
+    if stale_redirects or invalid_redirect_targets or redirects_in_nav:
+        print('  Compatibility redirect contract failed -- BLOCKING.')
     return 1
 
 

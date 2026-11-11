@@ -15,14 +15,16 @@ insert into public.profiles(id,display_name,sign,element,planet,god,birth_date,i
 values ('10000000-0000-4000-8000-000000000091','Runtime Adapter Probe','Aries','Fire','Mars','Probe',date '1990-03-21',false,true,true,1,'free','active')
 on conflict (id) do update set display_name=excluded.display_name,sign=excluded.sign,element=excluded.element,planet=excluded.planet,god=excluded.god,birth_date=excluded.birth_date;
 
+set local role service_role;
+
 do $probe$
 declare
   v_user uuid := '10000000-0000-4000-8000-000000000091';
   v_result jsonb;
   v_first jsonb;
   v_second jsonb;
-  v_action record;
   v_request_id bigint;
+  i integer;
   v_count bigint;
   v_actions constant text[][] := array[
     array['CORE','profile.read'],
@@ -83,8 +85,6 @@ begin
   perform set_config('request.jwt.claim.sub',v_user::text,true);
   perform set_config('request.jwt.claim.role','service_role',true);
   perform set_config('request.jwt.claims',jsonb_build_object('sub',v_user,'role','service_role')::text,true);
-  set local role service_role;
-
   for i in 1..array_length(v_actions,1) loop
     v_result:=public.omega_runtime_dispatch(
       v_user,
@@ -156,8 +156,8 @@ begin
     raise exception 'investment watchlist upsert idempotency failed: first=% second=%',v_first,v_second;
   end if;
 
-  reset role;
 end
 $probe$;
 
+reset role;
 rollback;

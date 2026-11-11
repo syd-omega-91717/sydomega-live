@@ -133,7 +133,7 @@ begin
   v_second:=public.omega_runtime_dispatch(v_user,'create_consult_intake',jsonb_build_object(
     'domain','runtime-adapter-probe',
     'message','Synthetic CI probe for the authenticated consultation intake adapter.',
-    'idempotency_key','omega-runtime-probe-consult-0001',
+    'idempotency_key',' omega-runtime-probe-consult-0001 ',
     'urgency','normal',
     'preferred_time','',
     'confidentiality_accepted',true,

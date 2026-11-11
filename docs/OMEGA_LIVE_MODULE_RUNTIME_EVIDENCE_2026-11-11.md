@@ -267,3 +267,13 @@ A separate read-only advisor pass was run after the dispatcher inspection.
 | Unused indexes | **325 INFO candidates** | No index was dropped. The zero-scan sample includes primary-key and Supabase Auth/system indexes, so a single advisor snapshot is not sufficient evidence for deletion. Require a representative workload window, table/index size, query-plan review and owner approval before pruning. |
 
 The advisor pass did not change database state. The RLS findings were triaged as intentionally private rather than “fixed” by broadening access. The leaked-password setting and the unindexed refund-state FK remain explicit release-hardening items.
+
+
+## Page-estate traceability boundary
+
+The current mainline page-contract registry contains **241 page contracts**. At the same snapshot:
+- **205/241** page contracts still carry `domain: UNVERIFIED`.
+- **36/241** carry descriptive domain labels.
+- **34** page records carry **36** candidate-domain annotations across 23 candidate labels.
+
+These labels (for example, “AI”, “Identity”, “Payments”, “Research” and “Projects / Workflows”) are descriptive page taxonomy, not canonical IDs from the 18-domain product registry. No automatic page-to-module promotion is made from name similarity. The page estate is therefore not yet proven to be fully integrated with the 18 runtime modules. A separate, evidence-backed page-to-domain reconciliation must preserve the 205 unknowns until page actions, data sources, authorization and end-to-end tests establish the mapping.

@@ -3,7 +3,7 @@
   "name": "Ω SYD OMEGA 91717 Product Domain Registry",
   "version": 1,
   "status": "GOVERNANCE_TAXONOMY_NOT_PRODUCTION_PROOF",
-  "source_basis": "docs/OMEGA_MASTER_SOURCE_TRACEABILITY_V2.md §6 historical 18-module product contract; current workspace reconciliation remains authoritative for implementation state.",
+  "source_basis": "docs/OMEGA_MASTER_SOURCE_TRACEABILITY_V2.md §6 historical 18-module product contract; current workspace reconciliation remains authoritative for implementation state. Runtime catalog observations are separately captured in config/omega-live-module-runtime-observations.json; those observations do not promote implementation state or canonical capability claims.",
   "authority_rule": "This registry defines product-domain identity and ownership boundaries. It does not assert that a domain, capability, provider, payment flow, or page is production-live.",
   "unknown_policy": "UNVERIFIED is preserved until repository and runtime evidence proves the field.",
   "domains": [
@@ -30,7 +30,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#platform-core"
     },
     {
       "domain_id": "consultancy",
@@ -55,7 +56,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#consultancy"
     },
     {
       "domain_id": "gaming",
@@ -80,7 +82,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#gaming"
     },
     {
       "domain_id": "achievements",
@@ -105,7 +108,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#achievements"
     },
     {
       "domain_id": "family",
@@ -130,7 +134,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#family"
     },
     {
       "domain_id": "media",
@@ -155,7 +160,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#media"
     },
     {
       "domain_id": "blockchain",
@@ -180,7 +186,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#blockchain"
     },
     {
       "domain_id": "communication-security",
@@ -205,7 +212,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#communication-security"
     },
     {
       "domain_id": "horoscope-elements",
@@ -230,7 +238,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#horoscope-elements"
     },
     {
       "domain_id": "news",
@@ -255,7 +264,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#news"
     },
     {
       "domain_id": "heritage",
@@ -280,7 +290,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#heritage"
     },
     {
       "domain_id": "progress",
@@ -305,7 +316,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#progress"
     },
     {
       "domain_id": "passport",
@@ -330,7 +342,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#passport"
     },
     {
       "domain_id": "legal",
@@ -355,7 +368,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#legal"
     },
     {
       "domain_id": "cosmology",
@@ -380,7 +394,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#cosmology"
     },
     {
       "domain_id": "investment",
@@ -405,7 +420,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#investment"
     },
     {
       "domain_id": "intelligence",
@@ -430,7 +446,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#intelligence"
     },
     {
       "domain_id": "hierarchy",
@@ -455,7 +472,8 @@
       "acceptance_tests": [],
       "cost_and_operational_owner": "UNASSIGNED",
       "release_evidence": [],
-      "rollback_or_retirement": "UNVERIFIED"
+      "rollback_or_retirement": "UNVERIFIED",
+      "runtime_observation_ref": "config/omega-live-module-runtime-observations.json#hierarchy"
     }
   ]
 }

@@ -1,0 +1,1553 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Ω SYD OMEGA 91717 Live Module Runtime Observations",
+  "version": 1,
+  "status": "READ_ONLY_PROVIDER_SNAPSHOT_NOT_PRODUCTION_PROOF",
+  "source": {
+    "provider": "Supabase",
+    "project_id": "ydqhzvvoyufiiqvzcjns",
+    "schemas": [
+      "public"
+    ],
+    "tables": [
+      "omega_capabilities",
+      "omega_services",
+      "omega_module_runtime_actions"
+    ],
+    "observed_date": "2026-11-11",
+    "capture_method": "read-only SQL through connected Supabase project",
+    "row_counts": {
+      "omega_capabilities": 24,
+      "omega_services": 24,
+      "omega_module_runtime_actions": 54
+    }
+  },
+  "interpretation": "This snapshot records provider-side catalog and runtime-action declarations. INTEGRATED means the database catalog labels the action as integrated; it does not prove that the HTTP endpoint is reachable, authorization is correct at runtime, data persists, the user journey works, or production serves the current repository revision.",
+  "domain_observations": [
+    {
+      "domain_id": "platform-core",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "CORE",
+          "capability": {
+            "id": "core-orchestration",
+            "name": "Core Orchestration",
+            "purpose": "Platform routing, identity context and governed state transitions",
+            "lifecycle": "DESIGNED",
+            "data_class": "INTERNAL",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "core-orchestration",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "CORE.catalog.read",
+              "name": "catalog.read",
+              "purpose": "Read governed capability/product/service catalog",
+              "endpoint": "/api/core/catalog",
+              "executor": "omega_capabilities+omega_services",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "CORE.profile.read",
+              "name": "profile.read",
+              "purpose": "Read caller identity and platform profile state",
+              "endpoint": "/api/core/profile",
+              "executor": "public.profiles",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": false,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "CORE.search.read",
+              "name": "search.read",
+              "purpose": "Search indexed platform surfaces without exposing private member data",
+              "endpoint": "/api/core/search",
+              "executor": "search adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "consultancy",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "CONSULTANCY",
+          "capability": {
+            "id": "consultancy-workbench",
+            "name": "Consultancy Workbench",
+            "purpose": "Structured consultancy workflows and evidence-backed deliverables",
+            "lifecycle": "DESIGNED",
+            "data_class": "CONFIDENTIAL",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "consultancy-workbench",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "CONSULTANCY.cases.read",
+              "name": "cases.read",
+              "purpose": "Read caller-owned consultation cases",
+              "endpoint": "/api/consultancy/cases",
+              "executor": "consultancy adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "CONSULTANCY.deliverables.read",
+              "name": "deliverables.read",
+              "purpose": "Read caller-owned consultation deliverables",
+              "endpoint": "/api/consultancy/deliverables",
+              "executor": "consultancy adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "CONSULTANCY.intake.create",
+              "name": "intake.create",
+              "purpose": "Create a governed consultation intake request",
+              "endpoint": "/api/consultancy/intake",
+              "executor": "consultancy adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "WRITE",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": true,
+              "rollback": "cancel pending intake"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "gaming",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "GAMING",
+          "capability": {
+            "id": "gaming-engine",
+            "name": "Gaming Engine",
+            "purpose": "Governed game-loop and simulation experiences",
+            "lifecycle": "DESIGNED",
+            "data_class": "INTERNAL",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "gaming-engine",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "GAMING.leaderboard.read",
+              "name": "leaderboard.read",
+              "purpose": "Read published leaderboard projections",
+              "endpoint": "/api/gaming/leaderboard",
+              "executor": "leaderboard adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "PUBLIC_PROJECTION",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "GAMING.matrix.read",
+              "name": "matrix.read",
+              "purpose": "Read progression matrix and caller progress",
+              "endpoint": "/api/gaming/matrix",
+              "executor": "matrix runtime",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "GAMING.missions.read",
+              "name": "missions.read",
+              "purpose": "Read governed mission state",
+              "endpoint": "/api/gaming/missions",
+              "executor": "mission state",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "achievements",
+      "scope_notes": "Observed actions read definitions, caller achievements and certificates; no award-issuance write action appears in this snapshot.",
+      "observations": [
+        {
+          "runtime_module_id": "ACHIEVEMENTS",
+          "capability": {
+            "id": "achievement-engine",
+            "name": "Achievement Engine",
+            "purpose": "Evidence-gated achievements and certificate lifecycle",
+            "lifecycle": "DESIGNED",
+            "data_class": "PRIVATE",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "achievement-engine",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "ACHIEVEMENTS.certificate.read",
+              "name": "certificate.read",
+              "purpose": "Read caller-issued certificates",
+              "endpoint": "/api/achievements/certificates",
+              "executor": "omega_certificates",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "ACHIEVEMENTS.definitions.read",
+              "name": "definitions.read",
+              "purpose": "Read active achievement definitions",
+              "endpoint": "/api/achievements/definitions",
+              "executor": "omega_achievement_definitions",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "ACHIEVEMENTS.mine.read",
+              "name": "mine.read",
+              "purpose": "Read caller achievements and verification state",
+              "endpoint": "/api/achievements/mine",
+              "executor": "omega_user_achievements",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "family",
+      "scope_notes": "Observed family actions are SELF-scoped and sensitive; this does not replace end-to-end cross-member authorization tests.",
+      "observations": [
+        {
+          "runtime_module_id": "FAMILY",
+          "capability": {
+            "id": "family-space",
+            "name": "Family Space",
+            "purpose": "Consent-aware family/heritage experiences",
+            "lifecycle": "DESIGNED",
+            "data_class": "PRIVATE",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "family-space",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "FAMILY.graph.read",
+              "name": "graph.read",
+              "purpose": "Read caller-authorized family graph",
+              "endpoint": "/api/family/graph",
+              "executor": "family graph adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "FAMILY.heritage.read",
+              "name": "heritage.read",
+              "purpose": "Read caller-authorized heritage records",
+              "endpoint": "/api/family/heritage",
+              "executor": "heritage adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "FAMILY.vault.read",
+              "name": "vault.read",
+              "purpose": "Read caller-authorized private legacy vault metadata",
+              "endpoint": "/api/family/vault",
+              "executor": "legacy vault adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "media",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "MEDIA",
+          "capability": {
+            "id": "media-studio",
+            "name": "Media Studio",
+            "purpose": "Governed media generation and asset workflows",
+            "lifecycle": "DESIGNED",
+            "data_class": "PRIVATE",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "media-studio",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "MEDIA.jobs.read",
+              "name": "jobs.read",
+              "purpose": "Read caller-owned media generation jobs",
+              "endpoint": "/api/media/jobs",
+              "executor": "media job adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "MEDIA.library.read",
+              "name": "library.read",
+              "purpose": "Read governed media catalog",
+              "endpoint": "/api/media/library",
+              "executor": "media adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "MEDIA.publishing.read",
+              "name": "publishing.read",
+              "purpose": "Read caller-authorized publishing state",
+              "endpoint": "/api/media/publishing",
+              "executor": "publishing adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "blockchain",
+      "scope_notes": "Observed actions are asset read, marketplace simulation and external ownership-proof verification. No mint, transfer, custody or trading action is present in this snapshot.",
+      "observations": [
+        {
+          "runtime_module_id": "BLOCKCHAIN_NFT",
+          "capability": {
+            "id": "blockchain-lab",
+            "name": "Blockchain Lab",
+            "purpose": "Signed transaction and digital-asset research/simulation layer",
+            "lifecycle": "DESIGNED",
+            "data_class": "RESTRICTED",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "blockchain-lab",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "BLOCKCHAIN_NFT.assets.read",
+              "name": "assets.read",
+              "purpose": "Read internal asset registry",
+              "endpoint": "/api/blockchain/assets",
+              "executor": "asset registry adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "BLOCKCHAIN_NFT.marketplace.read",
+              "name": "marketplace.read",
+              "purpose": "Read marketplace simulation/catalog state",
+              "endpoint": "/api/blockchain/marketplace",
+              "executor": "marketplace simulation adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "SIMULATION",
+              "data_class": "PUBLIC_PROJECTION",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "simulation-only"
+            },
+            {
+              "id": "BLOCKCHAIN_NFT.ownership.verify",
+              "name": "ownership.verify",
+              "purpose": "Verify externally confirmed ownership proof",
+              "endpoint": "/api/blockchain/ownership/verify",
+              "executor": "external-chain verification gateway",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "EXTERNAL",
+              "data_class": "PUBLIC_PROOF",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": true,
+              "rollback": "no state mutation without signed proof"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "communication-security",
+      "scope_notes": "Communication actions are observed. Security is a cross-cutting control domain; no separate SECURITY runtime module appears in this 18-module action table.",
+      "observations": [
+        {
+          "runtime_module_id": "COMMUNICATION",
+          "capability": {
+            "id": "communication-hub",
+            "name": "Communication Hub",
+            "purpose": "User-scoped communication and notification workflows",
+            "lifecycle": "DESIGNED",
+            "data_class": "PRIVATE",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "communication-hub",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "COMMUNICATION.events.read",
+              "name": "events.read",
+              "purpose": "Read caller-visible platform events",
+              "endpoint": "/api/communication/events",
+              "executor": "event fabric",
+              "authorization": "SELF_OR_POLICY",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "COMMUNICATION.notifications.read",
+              "name": "notifications.read",
+              "purpose": "Read caller notifications",
+              "endpoint": "/api/communication/notifications",
+              "executor": "omega_notifications",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "COMMUNICATION.presence.read",
+              "name": "presence.read",
+              "purpose": "Read privacy-scoped member presence",
+              "endpoint": "/api/communication/presence",
+              "executor": "member presence adapter",
+              "authorization": "SELF_OR_POLICY",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "horoscope-elements",
+      "scope_notes": "HOROSCOPE actions are mapped here; ELEMENTAL simulation/cosmology actions are mapped to the separate cosmology domain.",
+      "observations": [
+        {
+          "runtime_module_id": "HOROSCOPE",
+          "capability": {
+            "id": "horoscope-oracle",
+            "name": "Horoscope Oracle",
+            "purpose": "Deterministic interpretive oracle experiences with provenance boundaries",
+            "lifecycle": "DESIGNED",
+            "data_class": "PUBLIC",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "horoscope-oracle",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "HOROSCOPE.profile.read",
+              "name": "profile.read",
+              "purpose": "Read caller birth/cosmology inputs",
+              "endpoint": "/api/horoscope/profile",
+              "executor": "profile adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "HOROSCOPE.provenance.read",
+              "name": "provenance.read",
+              "purpose": "Read source/method provenance for an interpretive reading",
+              "endpoint": "/api/horoscope/provenance",
+              "executor": "provenance registry",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "HOROSCOPE.reading.generate",
+              "name": "reading.generate",
+              "purpose": "Generate deterministic interpretive reading with provenance labels",
+              "endpoint": "/api/horoscope/reading",
+              "executor": "interpretive runtime",
+              "authorization": "SELF",
+              "execution_mode": "SIMULATION",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": true,
+              "rollback": "no persistent mutation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "news",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "NEWS",
+          "capability": {
+            "id": "news-intelligence",
+            "name": "News Intelligence",
+            "purpose": "Trusted-source news discovery and evidence synthesis",
+            "lifecycle": "DESIGNED",
+            "data_class": "PUBLIC",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "news-intelligence",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "NEWS.feed.read",
+              "name": "feed.read",
+              "purpose": "Read cited public-source news feed",
+              "endpoint": "/api/news/feed",
+              "executor": "news adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "PUBLIC_SOURCE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "NEWS.provenance.read",
+              "name": "provenance.read",
+              "purpose": "Read source/citation provenance",
+              "endpoint": "/api/news/provenance",
+              "executor": "news provenance adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "PUBLIC_SOURCE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "NEWS.topics.read",
+              "name": "topics.read",
+              "purpose": "Read topic/category metadata",
+              "endpoint": "/api/news/topics",
+              "executor": "news adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "PUBLIC_SOURCE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "heritage",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "HERITAGE",
+          "capability": {
+            "id": "heritage-archive",
+            "name": "Heritage Archive",
+            "purpose": "Provenance-aware family and legacy archive",
+            "lifecycle": "DESIGNED",
+            "data_class": "PRIVATE",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "heritage-archive",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "HERITAGE.access.read",
+              "name": "access.read",
+              "purpose": "Read access policy for caller heritage records",
+              "endpoint": "/api/heritage/access",
+              "executor": "heritage policy adapter",
+              "authorization": "SELF_OR_POLICY",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "HERITAGE.documents.read",
+              "name": "documents.read",
+              "purpose": "Read caller-authorized heritage documents",
+              "endpoint": "/api/heritage/documents",
+              "executor": "heritage storage adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "HERITAGE.timeline.read",
+              "name": "timeline.read",
+              "purpose": "Read caller legacy timeline",
+              "endpoint": "/api/heritage/timeline",
+              "executor": "heritage adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "progress",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "PROGRESS",
+          "capability": {
+            "id": "progression-matrix",
+            "name": "Progression Matrix",
+            "purpose": "729-node governed progression and verification",
+            "lifecycle": "INTEGRATED",
+            "data_class": "PRIVATE",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [
+              "omega_matrix_nodes",
+              "omega_matrix_node_semantics"
+            ],
+            "evidence": [
+              "target-project verification 2026-10-02"
+            ]
+          },
+          "service": {
+            "id": "progression-matrix",
+            "status": "INTEGRATED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "PROGRESS.matrix.read",
+              "name": "matrix.read",
+              "purpose": "Read caller matrix position and verified progress",
+              "endpoint": "/api/progress/matrix",
+              "executor": "matrix runtime",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "PROGRESS.tasks.read",
+              "name": "tasks.read",
+              "purpose": "Read caller task/completion state",
+              "endpoint": "/api/progress/tasks",
+              "executor": "task runtime",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "PROGRESS.verification.read",
+              "name": "verification.read",
+              "purpose": "Read evidence and verification state for caller progress",
+              "endpoint": "/api/progress/verification",
+              "executor": "evidence graph",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "passport",
+      "scope_notes": "Credential/member passport presentation only; it is not a government identity or travel document.",
+      "observations": [
+        {
+          "runtime_module_id": "CREDENTIALS",
+          "capability": {
+            "id": "credentials-passport",
+            "name": "Credentials Passport",
+            "purpose": "Evidence-backed credential and certificate presentation",
+            "lifecycle": "DESIGNED",
+            "data_class": "PRIVATE",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [
+              "omega_certificates"
+            ],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "credentials-passport",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "CREDENTIALS.certificates.read",
+              "name": "certificates.read",
+              "purpose": "Read caller certificates",
+              "endpoint": "/api/credentials/certificates",
+              "executor": "omega_certificates",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "CREDENTIALS.passport.read",
+              "name": "passport.read",
+              "purpose": "Read caller credential/passport metadata",
+              "endpoint": "/api/credentials/passport",
+              "executor": "credential adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "CREDENTIALS.verify.read",
+              "name": "verify.read",
+              "purpose": "Verify a published credential by proof identifier",
+              "endpoint": "/api/credentials/verify",
+              "executor": "credential verification adapter",
+              "authorization": "PUBLIC_PROOF",
+              "execution_mode": "READ",
+              "data_class": "PUBLIC_PROOF",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "legal",
+      "scope_notes": "Observed actions are read-only terms, privacy and caller consent reads; this does not prove legal compliance or that erasure/export workflows are active.",
+      "observations": [
+        {
+          "runtime_module_id": "LEGAL",
+          "capability": {
+            "id": "legal-compliance",
+            "name": "Legal Compliance",
+            "purpose": "Consent, terms, policy and compliance workflow surfaces",
+            "lifecycle": "DESIGNED",
+            "data_class": "RESTRICTED",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "legal-compliance",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "LEGAL.consent.read",
+              "name": "consent.read",
+              "purpose": "Read caller consent state",
+              "endpoint": "/api/legal/consent",
+              "executor": "consent records",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "SENSITIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "LEGAL.privacy.read",
+              "name": "privacy.read",
+              "purpose": "Read current privacy version",
+              "endpoint": "/api/legal/privacy",
+              "executor": "legal content",
+              "authorization": "PUBLIC",
+              "execution_mode": "READ",
+              "data_class": "PUBLIC",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "LEGAL.terms.read",
+              "name": "terms.read",
+              "purpose": "Read current terms version",
+              "endpoint": "/api/legal/terms",
+              "executor": "legal content",
+              "authorization": "PUBLIC",
+              "execution_mode": "READ",
+              "data_class": "PUBLIC",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "cosmology",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "ELEMENTAL",
+          "capability": {
+            "id": "elemental-simulation",
+            "name": "Elemental Simulation",
+            "purpose": "Safe digital simulation of future/experimental concepts",
+            "lifecycle": "DESIGNED",
+            "data_class": "SIMULATION",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "elemental-simulation",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "ELEMENTAL.cosmology.read",
+              "name": "cosmology.read",
+              "purpose": "Read deterministic cosmology mapping",
+              "endpoint": "/api/elemental/cosmology",
+              "executor": "omega_elemental_runtime",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "SIMULATION",
+              "data_class": "INTERPRETIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "no external effect"
+            },
+            {
+              "id": "ELEMENTAL.interpretation.read",
+              "name": "interpretation.read",
+              "purpose": "Read interpretive elemental content",
+              "endpoint": "/api/elemental/interpretation",
+              "executor": "omega_elemental_runtime",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "SIMULATION",
+              "data_class": "INTERPRETIVE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "no external effect"
+            },
+            {
+              "id": "ELEMENTAL.simulation.run",
+              "name": "simulation.run",
+              "purpose": "Run a bounded deterministic simulation",
+              "endpoint": "/api/elemental/simulation",
+              "executor": "omega_elemental_runtime",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "SIMULATION",
+              "data_class": "SIMULATION",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": true,
+              "rollback": "discard simulation state"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "investment",
+      "scope_notes": "Observed actions are research read, caller-owned simulation read and watchlist read. No trade execution, custody or yield action is present in this snapshot.",
+      "observations": [
+        {
+          "runtime_module_id": "INVESTMENT",
+          "capability": {
+            "id": "investment-intelligence",
+            "name": "Investment Intelligence",
+            "purpose": "Financial information and analysis without unauthorized execution",
+            "lifecycle": "DESIGNED",
+            "data_class": "CONFIDENTIAL",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [
+              "ledger"
+            ],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "investment-intelligence",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "INVESTMENT.research.read",
+              "name": "research.read",
+              "purpose": "Read cited market research",
+              "endpoint": "/api/investment/research",
+              "executor": "research adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "PUBLIC_SOURCE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "INVESTMENT.simulation.read",
+              "name": "simulation.read",
+              "purpose": "Read caller portfolio simulation state",
+              "endpoint": "/api/investment/simulation",
+              "executor": "simulation adapter",
+              "authorization": "SELF",
+              "execution_mode": "SIMULATION",
+              "data_class": "SIMULATION",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "simulation-only"
+            },
+            {
+              "id": "INVESTMENT.watchlist.read",
+              "name": "watchlist.read",
+              "purpose": "Read caller watchlist",
+              "endpoint": "/api/investment/watchlist",
+              "executor": "investment adapter",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "intelligence",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "INTELLIGENCE",
+          "capability": {
+            "id": "intelligence-fabric",
+            "name": "Intelligence Fabric",
+            "purpose": "Governed agent orchestration, evidence and tool policy",
+            "lifecycle": "INTEGRATED",
+            "data_class": "RESTRICTED",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [
+              "omega_agents",
+              "omega_agent_tasks"
+            ],
+            "evidence": [
+              "12 agents target-project verified"
+            ]
+          },
+          "service": {
+            "id": "intelligence-fabric",
+            "status": "INTEGRATED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "INTELLIGENCE.agents.read",
+              "name": "agents.read",
+              "purpose": "Read governed agent registry and policy metadata",
+              "endpoint": "/api/intelligence/agents",
+              "executor": "omega_agents",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "INTELLIGENCE.evidence.read",
+              "name": "evidence.read",
+              "purpose": "Read caller evidence graph",
+              "endpoint": "/api/intelligence/evidence",
+              "executor": "graph_evidence",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "INTELLIGENCE.retrieval.read",
+              "name": "retrieval.read",
+              "purpose": "Read provenance-aware knowledge retrieval results",
+              "endpoint": "/api/intelligence/retrieval",
+              "executor": "retrieval adapter",
+              "authorization": "AUTHENTICATED",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "domain_id": "hierarchy",
+      "scope_notes": "Catalog and runtime action observations only; route reachability, persistence, provider operation and end-to-end user behavior remain separately unverified.",
+      "observations": [
+        {
+          "runtime_module_id": "HIERARCHY",
+          "capability": {
+            "id": "hierarchy-governance",
+            "name": "Hierarchy Governance",
+            "purpose": "Roles, authority and policy boundaries",
+            "lifecycle": "DESIGNED",
+            "data_class": "RESTRICTED",
+            "default_authorization": "DENY_BY_DEFAULT",
+            "dependencies": [],
+            "evidence": [
+              "catalogued"
+            ]
+          },
+          "service": {
+            "id": "hierarchy-governance",
+            "status": "DESIGNED",
+            "policy": {
+              "defaultAgentAccess": "DENY",
+              "humanApprovalRequired": true,
+              "productionStatusRequired": "VERIFIED"
+            }
+          },
+          "runtime_actions": [
+            {
+              "id": "HIERARCHY.entitlements.read",
+              "name": "entitlements.read",
+              "purpose": "Read caller active entitlements",
+              "endpoint": "/api/hierarchy/entitlements",
+              "executor": "omega_entitlements",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "HIERARCHY.governance.read",
+              "name": "governance.read",
+              "purpose": "Read caller-visible governance decisions/audit metadata",
+              "endpoint": "/api/hierarchy/governance",
+              "executor": "governance audit",
+              "authorization": "POLICY",
+              "execution_mode": "READ",
+              "data_class": "INTERNAL",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            },
+            {
+              "id": "HIERARCHY.roles.read",
+              "name": "roles.read",
+              "purpose": "Read caller role and entitlement projection",
+              "endpoint": "/api/hierarchy/roles",
+              "executor": "role registry",
+              "authorization": "SELF",
+              "execution_mode": "READ",
+              "data_class": "PRIVATE",
+              "lifecycle": "INTEGRATED",
+              "evidence_required": true,
+              "idempotency_required": false,
+              "rollback": "read-only"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "unmapped_capabilities": [
+    {
+      "module_id": "CrossPlatform",
+      "capability_id": "event-fabric",
+      "lifecycle": "DESIGNED",
+      "data_class": "RESTRICTED",
+      "default_authorization": "DENY_BY_DEFAULT"
+    },
+    {
+      "module_id": "CrossPlatform",
+      "capability_id": "referral-economy",
+      "lifecycle": "INTEGRATED",
+      "data_class": "FINANCIAL",
+      "default_authorization": "DENY_BY_DEFAULT"
+    },
+    {
+      "module_id": "CrossPlatform",
+      "capability_id": "notification-delivery",
+      "lifecycle": "INTEGRATED",
+      "data_class": "PRIVATE",
+      "default_authorization": "DENY_BY_DEFAULT"
+    },
+    {
+      "module_id": "CrossPlatform",
+      "capability_id": "agent-task-control",
+      "lifecycle": "INTEGRATED",
+      "data_class": "RESTRICTED",
+      "default_authorization": "DENY_BY_DEFAULT"
+    },
+    {
+      "module_id": "CrossPlatform",
+      "capability_id": "commerce-settlement",
+      "lifecycle": "INTEGRATED",
+      "data_class": "FINANCIAL",
+      "default_authorization": "DENY_BY_DEFAULT"
+    },
+    {
+      "module_id": "CrossPlatform",
+      "capability_id": "observability-audit",
+      "lifecycle": "DESIGNED",
+      "data_class": "RESTRICTED",
+      "default_authorization": "DENY_BY_DEFAULT"
+    }
+  ],
+  "release_guards": {
+    "financial_execution": "BLOCKED_PENDING_LEGAL_ACCOUNTING_CUSTODY_RISK_AND_PROVIDER_APPROVAL",
+    "blockchain_asset_mutation": "NOT_PRESENT_IN_OBSERVED_RUNTIME_ACTIONS",
+    "passport_semantics": "PLATFORM_CREDENTIAL_ONLY",
+    "sensitive_family_data": "SELF_OR_POLICY_SCOPE_REQUIRES_RUNTIME_NEGATIVE_TESTS",
+    "production_status": "UNVERIFIED"
+  },
+  "runtime_dispatch_drift": {
+    "observed_date": "2026-11-11",
+    "live_function": "public.omega_runtime_dispatch(uuid,text,jsonb)",
+    "live_definition_md5": "f4fcee65d41c94a2f8491a2aa53b6612",
+    "provider_ledger_versions": [
+      "20261002084948",
+      "20261002085421",
+      "20261002085816",
+      "20261002085943",
+      "20261017094629"
+    ],
+    "database_action_rows_labelled_integrated": 54,
+    "live_dispatcher_covered_actions": 23,
+    "live_dispatcher_missing_actions": 31,
+    "missing_actions": [
+      "CORE.search.read",
+      "CONSULTANCY.intake.create",
+      "CONSULTANCY.cases.read",
+      "CONSULTANCY.deliverables.read",
+      "GAMING.missions.read",
+      "GAMING.leaderboard.read",
+      "FAMILY.graph.read",
+      "FAMILY.heritage.read",
+      "FAMILY.vault.read",
+      "MEDIA.library.read",
+      "MEDIA.publishing.read",
+      "BLOCKCHAIN_NFT.marketplace.read",
+      "COMMUNICATION.presence.read",
+      "COMMUNICATION.events.read",
+      "HOROSCOPE.reading.generate",
+      "HOROSCOPE.provenance.read",
+      "NEWS.feed.read",
+      "NEWS.topics.read",
+      "NEWS.provenance.read",
+      "HERITAGE.timeline.read",
+      "HERITAGE.documents.read",
+      "HERITAGE.access.read",
+      "PROGRESS.tasks.read",
+      "PROGRESS.verification.read",
+      "CREDENTIALS.passport.read",
+      "CREDENTIALS.verify.read",
+      "INVESTMENT.research.read",
+      "INVESTMENT.simulation.read",
+      "INTELLIGENCE.retrieval.read",
+      "HIERARCHY.roles.read",
+      "HIERARCHY.governance.read"
+    ],
+    "status": "DRIFT_DETECTED_RECONCILIATION_MIGRATION_PENDING",
+    "reconciliation_migration": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
+    "production_application": "NOT_APPLIED",
+    "interpretation": "The provider catalog labels all 54 actions INTEGRATED, but the live dispatcher only has concrete branches for 23. The other 31 fall through to ADAPTER_REQUIRED. The new source migration adds the missing handlers and must pass fresh replay before provider application."
+  },
+  "idempotency_observations": {
+    "observed_date": "2026-11-11",
+    "status": "READ_ONLY_SCHEMA_AUDIT_REMEDIATION_PENDING",
+    "interpretation": "The live schema contains globally unique idempotency keys on member-owned records. The same caller-supplied key can collide across users or subjects. The reconciliation migration replaces these with owner/subject-scoped unique indexes while retaining global deduplication for system rows with null owner/actor where applicable. This is a schema/function finding, not proof of an observed exploit.",
+    "member_owned_scopes": [
+      {
+        "table": "consult_requests",
+        "owner_column": "user_id",
+        "key_column": "runtime_idempotency_key",
+        "remediation": "UNIQUE(user_id,runtime_idempotency_key); atomic conflict handling"
+      },
+      {
+        "table": "omega_service_orders",
+        "owner_column": "user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(user_id,idempotency_key) for member orders; retain global unique key for null-user system orders"
+      },
+      {
+        "table": "omega_agent_tasks",
+        "owner_column": "user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(user_id,idempotency_key) for member tasks; retain global unique key for null-user system tasks"
+      },
+      {
+        "table": "omega_notifications",
+        "owner_column": "user_id",
+        "key_column": "idempotency_key",
+        "remediation": "UNIQUE(user_id,idempotency_key)"
+      },
+      {
+        "table": "sovereign_events",
+        "owner_column": "user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(user_id,idempotency_key) for member events; retain global unique key for null-user system events; advisory lock prevents duplicate axis mutation"
+      },
+      {
+        "table": "omega_achievement_verifications",
+        "owner_column": "user_achievement_id",
+        "key_column": "idempotency_key",
+        "remediation": "UNIQUE(user_achievement_id,idempotency_key)"
+      },
+      {
+        "table": "omega_platform_events",
+        "owner_column": "actor_user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(actor_user_id,idempotency_key) for member events; retain global unique key for null-actor system events"
+      },
+      {
+        "table": "omega_audit_log",
+        "owner_column": "actor_user_id",
+        "key_column": "idempotency_key",
+        "remediation": "partial UNIQUE(actor_user_id,idempotency_key) for member audit records; retain global unique key for null-actor system records"
+      }
+    ],
+    "preserved_global_scopes": [
+      {
+        "table": "omega_event_queue",
+        "reason": "System event/queue identity is global"
+      },
+      {
+        "table": "omega_ledger_transactions",
+        "reason": "Financial ledger transaction identity is global"
+      },
+      {
+        "table": "omega_payment_reconciliation",
+        "reason": "External provider reconciliation identity is global"
+      },
+      {
+        "table": "omega_referral_conversions",
+        "reason": "Referral conversion identity is global"
+      }
+    ],
+    "existing_user_scoped_tables": [
+      "omega_media_jobs(user_id,idempotency_key)",
+      "omega_mission_transitions(user_id,idempotency_key)",
+      "omega_mission_task_transitions(user_id,idempotency_key)"
+    ],
+    "remediation_migration": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
+    "verification": "Fresh migration replay plus SQL regression probe: same-user retries must return the same record; different users/subjects using the same key must create distinct records; system null-owner keys remain globally deduplicated."
+  }
+}

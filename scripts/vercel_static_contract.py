@@ -1,4 +1,4 @@
-"""Validate the repository's native Vercel static deployment contract."""
+"""Validate the shared framework-free static build configuration for Cloudflare Pages and Vercel artifact builds."""
 from __future__ import annotations
 
 import json
@@ -111,7 +111,9 @@ def main() -> int:
     print("git_auto_deploy=disabled")
     print("git_auto_deploy_main=disabled")
     print("git_auto_deploy_non_main=disabled")
-    print("promotion_workflow=.github/workflows/vercel-production.yml")
+    print("artifact_validation_workflow=.github/workflows/vercel-production.yml")
+    print("production_host=Cloudflare Pages")
+    print("vercel_role=build_artifact_validation_only")
     print("build_output_verified=references_resolve_in_public")
     print("artifact_shell=normalized")
     return 0

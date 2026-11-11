@@ -85,8 +85,8 @@ def main() -> int:
             if marker not in sql:
                 return fail(f"dispatcher migration safety/contract marker missing: {marker}")
         function_start = sql.find("create or replace function public.omega_runtime_dispatch(")
-        function_end = sql.find("end $;", function_start) + len("end $;")
-        if function_start < 0 or function_end < len("end $;"):
+        function_end = sql.find("$" + "$;", function_start) + len("$" + "$;")
+        if function_start < 0 or function_end < len("$" + "$;"):
             return fail("dispatcher function body is missing from reconciliation migration")
         function_body = sql[function_start:function_end]
         if "pg_catalog.trim(" in function_body:

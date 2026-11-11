@@ -85,6 +85,7 @@ def main() -> int:
             "where user_id=p_user_id and runtime_idempotency_key=v_idempotency_key",
             "confidentiality_acceptance_required",
             "ADAPTER_REQUIRED",
+            "stripe_refund_state_last_reversal_transaction_idx",
         ):
             if marker not in sql:
                 return fail(f"dispatcher migration safety/contract marker missing: {marker}")

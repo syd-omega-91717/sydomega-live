@@ -48,7 +48,7 @@ for required in (
 ):
     require_file(required)
 
-# 2. Preserve the present Vercel/static architecture.
+# 2. Preserve the framework-free static build and Cloudflare production boundary.
 try:
     vercel = json.loads(read("vercel.json"))
 except json.JSONDecodeError as exc:
@@ -56,35 +56,65 @@ except json.JSONDecodeError as exc:
     vercel = {}
 
 if vercel.get("framework") is not None:
-    errors.append("vercel.json framework changed: current canonical runtime is framework-free static delivery")
+    errors.append("vercel.json framework changed: canonical runtime must remain framework-free static delivery")
 if vercel.get("outputDirectory") != "public":
     errors.append("vercel.json outputDirectory must remain public")
 if vercel.get("buildCommand") != "bash scripts/vercel-build.sh":
-    errors.append("vercel.json buildCommand no longer points to the canonical static build")
-# Git-triggered Vercel deployments are intentionally disabled after the
-# provider account block and deployment-budget incident. The only authorized
-# production path is the validated GitHub Actions workflow below, which
-# requires a project-scoped VERCEL_TOKEN and checks the served release SHA.
+    errors.append("vercel.json buildCommand must remain the shared static builder")
+
 deployment_enabled = vercel.get("git", {}).get("deploymentEnabled", {})
 for branch_pattern in ("*", "**", "main"):
     if deployment_enabled.get(branch_pattern) is not False:
         errors.append(
             f"Vercel Git auto-deployment for {branch_pattern!r} must remain disabled; "
-            "production promotion is owned by the validated workflow"
+            "Cloudflare Pages Git integration owns production"
         )
 
-workflow = read(".github/workflows/vercel-production.yml")
+vercel_workflow = read(".github/workflows/vercel-production.yml")
 for required in (
-    "push:",
-    "branches: [main]",
-    "Controlled state when token is unavailable",
-    "DEPLOY_REQUESTED:",
-    "needs.credentials.outputs.ready == 'true'",
-    'npx --yes vercel@59.6.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"',
-    "Verify production domain smoke routes",
+    "name: Vercel Build Artifact Validation",
+    "Validate static build artifact and release contracts",
+    "bash scripts/vercel-build.sh",
+    "STATIC_BUILD_ARTIFACT=PASS",
 ):
-    if required not in workflow:
-        errors.append(f"controlled Vercel production workflow missing invariant: {required}")
+    if required not in vercel_workflow:
+        errors.append(f"Vercel artifact-only workflow missing invariant: {required}")
+for forbidden in (
+    "VERCEL_TOKEN",
+    "VERCEL_ORG_ID",
+    "VERCEL_PROJECT_ID",
+    "vercel deploy",
+    "deploy --prebuilt --prod",
+    "Production promotion",
+    "credentials:",
+):
+    if forbidden in vercel_workflow:
+        errors.append(f"Vercel workflow must not contain production deployment capability: {forbidden}")
+
+cloudflare_workflow = read(".github/workflows/cloudflare-production-verify.yml")
+for required in (
+    "branches: [main]",
+    "GITHUB_SHA",
+    "CLOUDFLARE_PRODUCTION=PASS",
+    "curl --location",
+    "content-security-policy:",
+    "strict-transport-security:",
+):
+    if required not in cloudflare_workflow:
+        errors.append(f"Cloudflare production verifier missing invariant: {required}")
+
+production_smoke = read(".github/workflows/production-smoke.yml")
+for required in (
+    "Wait for exact Cloudflare Pages production release",
+    "omega-release.json",
+    "cloudflare-production-smoke.py",
+    "vercel-production-surface-smoke.py",
+    "expected = os.environ[\"GITHUB_SHA\"]",
+):
+    if required not in production_smoke:
+        errors.append(f"Cloudflare production smoke missing invariant: {required}")
+if "Vercel" in production_smoke:
+    errors.append("production-smoke.yml must not describe Vercel as the production host")
 
 # 3. Security headers are release invariants.
 headers = json.dumps(vercel.get("headers", []))
@@ -106,7 +136,7 @@ for required in ("index.html", "healthz.html", "bg.js", "nav.js"):
 # Documentation, tests, repository-only agent/CI instructions, and local MCP
 # configuration may legitimately reference provider control-plane endpoints;
 # they are not browser-delivered production source. The public directory is
-# deliberately included because it is the actual Vercel output.
+# deliberately included because it is the static output published by Cloudflare Pages.
 canonical_host = "ydqhzvvoyufiiqvzcjns.supabase.co"
 supabase_host_re = re.compile(r"https://([a-z0-9-]+\.supabase\.co)", re.I)
 source_extensions = {".html", ".js", ".css", ".json", ".yml", ".yaml", ".sql", ".sh", ".ts", ".tsx"}
@@ -170,7 +200,7 @@ if "PRODUCTION-VERIFIED" not in truth:
 print("Ω RELEASE CONTRACT AUDIT")
 print("=========================")
 print(f"repository: {ROOT}")
-print("architecture: current framework-free static + Vercel + Supabase")
+print("architecture: framework-free static + Cloudflare Pages + Supabase; Vercel artifact validation only")
 print(f"errors: {len(errors)}")
 print(f"warnings: {len(warnings)}")
 for message in errors:

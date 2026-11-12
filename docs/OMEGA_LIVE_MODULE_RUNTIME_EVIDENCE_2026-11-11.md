@@ -274,3 +274,20 @@ The migration preserves global idempotency where the identifier is inherently sy
 The SQL regression probe now checks same-user retries, cross-user collisions and null-owner system deduplication. The expected result is one stable record for the same owner/key, distinct records for different owners using the same key, and one globally deduplicated system record. All probe writes run in a transaction that is rolled back.
 
 These changes remain **pending isolated replay and production application**. The live database has not yet been modified by this migration.
+
+## Idempotency payload integrity follow-up
+
+The owner-scoped uniqueness fix is paired with immutable request semantics. Reusing the same owner/subject and idempotency key with a different payload now fails explicitly instead of silently returning or overwriting the original record:
+- consultancy intake compares domain, message, urgency, contact, preferred time and confidentiality acceptance;
+- service orders compare service ID and metadata;
+- agent tasks compare agent, task type, input, approval requirement and requester class, and retries do not enqueue a second task event;
+- notifications compare type, title, body, channel and metadata;
+- platform events and their audit records compare the original event/audit envelope and payload;
+- achievement verifications compare decision, verifier, verification type and evidence;
+- sovereign progression events compare event type, event data and axis delta before returning a duplicate.
+
+The regression probe now exercises changed-payload reuse for each of those workflows. A mismatch must raise its specific idempotency-conflict error. This prevents an accidental key collision from silently changing evidence, losing a legitimate operation, or returning another request's result.
+
+The production verifier workflow was also repaired after review found duplicated nested shell loops in the previously merged version. It now has one bounded exact-SHA polling loop, one canonical-route loop, follows redirects consistently, and runs the full registered page/link smoke test. A unit contract guards against reintroducing the duplicate loops.
+
+The migration remains **PENDING_REVIEW / NOT_APPLIED**. These are repository-side changes only until isolated replay and all required CI checks pass.

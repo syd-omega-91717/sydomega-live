@@ -130,6 +130,8 @@ def main() -> int:
             return fail("consultancy intake helper must return the inserted or idempotently reused row ID")
         if "v_request_id text" not in normalized_consultancy_sql:
             return fail("runtime dispatcher request ID variable must accept UUID and BIGINT source IDs")
+        if "sort_order,created_at from public.media_items" not in normalized_consultancy_sql:
+            return fail("MEDIA.library.read must retain created_at in its ordered derived-table projection")
         if "owner_id=(select auth.uid())" not in normalized_consultancy_sql:
             return fail("search-index policy must use an initplan-safe scalar auth.uid() call")
         if "owner_id=auth.uid()" in normalized_consultancy_sql:

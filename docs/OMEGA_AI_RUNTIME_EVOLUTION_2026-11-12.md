@@ -4,7 +4,7 @@
 
 ## 1. Live baseline observed on 2026-11-12
 
-- The production Supabase project has Edge Functions for `concierge`, `concierge-orchestrator`, `growth-orchestrator`, `product-orchestrator`, `agent-execute`, `omega-runtime-gateway`, provider workers and knowledge-embedding workers.
+- The production Supabase project has Edge Functions for `concierge`, `concierge-orchestrator`, `growth-orchestrator`, `product-orchestrator`, `agent-execute`, `omega-runtime-gateway`, provider workers and knowledge-embedding workers. Graphify query/ingest functions exist but are deliberately held back and are not registered in `supabase/config.toml`.
 - `platform_settings.autonomous_agents_enabled` is currently `false`. The three decision orchestrators remain dormant behind this owner-controlled switch.
 - The 12 records in `omega_agents` are `DESIGNED`; the agent registry defaults to disabled, tool access `DENY`, no external side effects and human approval for financial actions.
 - `omega_ai_requests` exists with request IDs, provider/model, risk, token counts, latency, trace ID, citations and evaluation metadata, but had **zero rows** at the time of inspection.
@@ -39,6 +39,7 @@ The active `concierge` path and the three owner-gated orchestrators now use the 
 ### Safety corrections
 
 - Product adaptation now produces proposed feature flags only. It does not write to `member_feature_flags`; the response explicitly reports `applied=false` and `approval_required=true`.
+- Graphify query/ingestion now has a server-side default-off gate plus mandatory account-level AI personalization and sensitive-data consent. Its functions remain held and are not registered for routine deployment; a pending migration creates `graphify_ai_enabled=false`. The code is not considered live until the held functions are updated in production.
 - Growth orchestration no longer invents a 15% revenue uplift or writes a model estimate to `revenue_impact_usd`. Estimated impact remains `null` with status `NOT_CALIBRATED`; an unvalidated model estimate, if returned, is retained only as clearly labelled proposal metadata.
 - Existing member binding, the owner-controlled autonomous-agent switch, and tool-deny defaults remain in place.
 

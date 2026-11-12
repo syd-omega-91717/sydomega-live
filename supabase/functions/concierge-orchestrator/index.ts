@@ -87,19 +87,25 @@ Guidelines:
 async function saveConciergeDecision(
   memberId: string,
   decision: Record<string, unknown>,
-  reasoning: string,
   modelUsed: string,
 ): Promise<string> {
+  const safeDecision = {
+    action: typeof decision.action === "string" ? decision.action.slice(0, 80) : "provide_guidance",
+    escalate: decision.escalate === true,
+    escalation_reason: typeof decision.escalation_reason === "string" ? decision.escalation_reason.slice(0, 240) : null,
+    confidence: Number.isFinite(Number(decision.confidence)) ? Math.max(0, Math.min(1, Number(decision.confidence))) : 0.85,
+    response_length: typeof decision.response === "string" ? Math.min(3000, decision.response.length) : 0,
+  };
   const { data, error } = await supabase
     .from("autonomous_decisions")
     .insert({
       agent_id: "concierge",
       member_id: memberId,
       decision_type: "support_response",
-      context_snapshot: decision,
-      reasoning: reasoning,
-      decision_payload: decision,
-      confidence_score: decision.confidence || 0.85,
+      context_snapshot: safeDecision,
+      reasoning: "Structured support decision metadata only; member response text is not persisted.",
+      decision_payload: safeDecision,
+      confidence_score: safeDecision.confidence,
       model_used: modelUsed,
       temperature: null,
       outcome_recorded: false,
@@ -155,17 +161,28 @@ ${JSON.stringify(req.context.member_profile, null, 2)}
 
   try {
     const jsonMatch = claudeResponse.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      decision = JSON.parse(jsonMatch[0]);
-    }
+    if (jsonMatch) decision = JSON.parse(jsonMatch[0]);
   } catch (e) {
     console.error("Failed to parse response:", e);
   }
 
+  const allowedActions = new Set(["provide_guidance", "escalate", "handoff", "request_information"]);
+  decision.action = typeof decision.action === "string" && allowedActions.has(decision.action)
+    ? decision.action
+    : "provide_guidance";
+  decision.escalate = decision.escalate === true;
+  decision.confidence = Number.isFinite(Number(decision.confidence))
+    ? Math.max(0, Math.min(1, Number(decision.confidence)))
+    : 0.85;
+  decision.response = typeof decision.response === "string"
+    ? decision.response.slice(0, 3000)
+    : claudeResponse.slice(0, 3000);
+  const churnRisk = Number(req.context?.propensity_scores?.churn_risk ?? 0);
+
   // Check escalation criteria
   const shouldEscalate =
-    req.context.propensity_scores.churn_risk > 0.85 ||
-    decision.escalate ||
+    churnRisk > 0.85 ||
+    decision.escalate === true ||
     req.issue_type === "escalation_review";
 
   // Save decision

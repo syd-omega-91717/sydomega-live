@@ -48,16 +48,20 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             pending_versions.add(version)
 
     def test_provider_confirmed_november_migrations_are_in_remote_not_pending(self) -> None:
-        for version in ("20261103230000", "20261104090000", "20261111190000"):
+        for version in (
+            "20261103230000",
+            "20261104090000",
+            "20261111190000",
+            "20261112091300",
+            "20261112091400",
+            "20261112091500",
+        ):
             self.assertIn(version, self.remote_versions)
             self.assertNotIn(version, {str(item["version"]) for item in self.pending})
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
-        self.assertIn("20261111190000", self.remote_versions)
-        self.assertNotIn("20261111190000", {str(item["version"]) for item in self.pending})
-        self.assertIn("20261112091300", {str(item["version"]) for item in self.pending})
-        self.assertIn("20261112091400", {str(item["version"]) for item in self.pending})
-        self.assertIn("20261112091500", {str(item["version"]) for item in self.pending})
-        self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112091500")
+        self.assertIn("20261112110000", {str(item["version"]) for item in self.pending})
+        self.assertEqual(len(self.pending), 1)
         self.assertEqual(self.remote.get("_captured"), "2026-11-12")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 

@@ -103,6 +103,29 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         timestamped = sum(bool(re.match(r"^\d{8}", path.name)) for path in migrations)
         self.assertEqual(tuple(map(int, match.groups())), (len(migrations), numbered, timestamped))
 
+    def test_search_index_reconciliation_preserves_both_shapes_and_tightens_rls(self) -> None:
+        path = MIGRATIONS / "20261112091500_omega_search_index_schema_reconciliation.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        for column in (
+            "add column if not exists body text",
+            "add column if not exists content text",
+            "add column if not exists keywords text",
+            "add column if not exists owner_id uuid",
+            "add column if not exists organization_id uuid",
+            "add column if not exists indexed_at timestamptz",
+            "add column if not exists updated_at timestamptz",
+            "add column if not exists created_at timestamptz",
+        ):
+            self.assertIn(column, sql)
+        self.assertIn("coalesce(body,content)", sql)
+        self.assertIn("coalesce(content,body)", sql)
+        self.assertIn("owner_id is null and organization_id is null", sql)
+        self.assertIn("owner_id=auth.uid()", sql)
+        self.assertIn("coalesce(body,content) as body", sql)
+        self.assertNotIn("drop table", sql)
+        self.assertNotIn("drop column", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
     def test_refund_state_foreign_key_index_migration_is_narrow_and_non_destructive(self) -> None:
         path = MIGRATIONS / "20261112091400_omega_stripe_refund_state_fk_index.sql"
         sql = path.read_text(encoding="utf-8").lower()

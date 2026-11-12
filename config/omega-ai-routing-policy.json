@@ -18,7 +18,7 @@
   "profiles": {
     "fast": {
       "defaultProvider": "anthropic",
-      "anthropicModel": "claude-haiku-4-5-20251001",
+      "anthropicModel": "claude-haiku-5-5",
       "openaiModel": "gpt-6-luna",
       "maxOutputTokens": 512,
       "timeoutMs": 20000,
@@ -37,7 +37,7 @@
     },
     "balanced": {
       "defaultProvider": "anthropic",
-      "anthropicModel": "claude-haiku-4-5-20251001",
+      "anthropicModel": "claude-haiku-5-5",
       "openaiModel": "gpt-6.1-sol",
       "maxOutputTokens": 2048,
       "timeoutMs": 30000,
@@ -55,7 +55,7 @@
     },
     "reasoning": {
       "defaultProvider": "anthropic",
-      "anthropicModel": "claude-opus-5",
+      "anthropicModel": "claude-opus-5-5",
       "openaiModel": "gpt-6-astra",
       "maxOutputTokens": 4096,
       "timeoutMs": 60000,
@@ -84,6 +84,14 @@
       "ultrafast"
     ],
     "defaultOpenAiServiceTier": "standard"
+  },
+  "catalogGovernance": {
+    "verificationDate": "2026-11-12",
+    "verificationCadenceDays": 30,
+    "openaiCatalog": "https://developers.openai.com/api/docs/models",
+    "anthropicCatalog": "https://platform.claude.com/docs/en/models/overview",
+    "automaticModelPromotion": false,
+    "retiredModelPolicy": "BLOCK_NEW_TRAFFIC_AND_REQUIRE_REVIEW"
   },
   "governance": {
     "toolAccess": "DENY",

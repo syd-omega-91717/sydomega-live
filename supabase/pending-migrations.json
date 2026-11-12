@@ -18,6 +18,14 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "Creates graphify_ai_enabled=false by default. Graphify query/ingestion remain held until privacy, per-member cost controls and explicit AI personalization plus sensitive-data consent are approved."
+    },
+    {
+      "version": "20261112120000",
+      "file": "20261112120000_omega_ai_member_quota_guard.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Adds service-role-only profile-weighted rolling per-member AI request quotas using the existing rate_limits table; no prompt content is stored."
     }
   ]
 }

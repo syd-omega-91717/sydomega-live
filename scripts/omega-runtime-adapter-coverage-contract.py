@@ -113,6 +113,7 @@ def main() -> int:
             "runtime_dispatch_acl_invalid",
             "sort_order,created_at from public.media_items",
             "where user_id=p_actor_user_id order by last_seen desc limit 20",
+            "jsonb_agg(to_jsonb(p) order by p.last_seen desc)",
             "where actor_user_id=p_actor_user_id order by created_at desc limit 100",
         ):
             if marker not in consultancy_compat_sql:

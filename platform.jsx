@@ -7,6 +7,18 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
+/* Legacy visual prototype only. AI requests must go through the authenticated
+   Supabase Edge Function; provider credentials never belong in browser code. */
+async function callOmegaConcierge(message) {
+  const client = window.omegaSupabase || window.supabase;
+  if (!client?.functions?.invoke) throw new Error("authenticated_ai_client_unavailable");
+  const { data, error } = await client.functions.invoke("concierge", { body: { message } });
+  if (error || typeof data?.reply !== "string" || !data.reply.trim()) {
+    throw new Error("concierge_runtime_unavailable");
+  }
+  return data.reply;
+}
+
 // ─── DESIGN TOKENS ──────────────────────────────────────────────────────────
 const T = {
   bg:       "#07080F",
@@ -351,18 +363,9 @@ function RightPanel({ setPage }) {
     setLoading(true);
     setAiResp("");
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 150,
-          system: "You are the Sovereign AI of SYD OMEGA 91717, a cinematic intelligence platform. Respond in 1-2 sentences, concisely and with mystique.",
-          messages: [{ role: "user", content: aiQuery }]
-        })
-      });
-      const d = await res.json();
-      setAiResp(d.content?.[0]?.text || "The Sovereign remains silent…");
-    } catch { setAiResp("The Sovereign AI is awakening… Connect your API key to activate."); }
+      const reply = await callOmegaConcierge(aiQuery);
+      setAiResp(reply);
+    } catch { setAiResp("Sign in to the production platform to use Concierge. This prototype does not accept or expose provider API keys."); }
     setLoading(false);
   };
   return (
@@ -757,23 +760,13 @@ function AIAgentsPage({ selectedAgent, setSelectedAgent }) {
     setMessages(prev => [...prev, { role: "user", text: userMsg }]);
     setLoading(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 300,
-          system: `You are the ${active.name} agent of SYD OMEGA 91717 platform. Role: ${active.role}. Respond with authority and mystique in 2-3 sentences max. Prefix with "Ω ${active.name}:"`,
-          messages: [{ role: "user", content: userMsg }]
-        })
-      });
-      const d = await res.json();
-      const text = d.content?.[0]?.text || `The ${active.name} agent contemplates in silence… Activate your API connection.`;
-      setMessages(prev => [...prev, { role: "assistant", text, agent: active.name }]);
+      const reply = await callOmegaConcierge(userMsg);
+      setMessages(prev => [...prev, { role: "assistant", text: "Ω Concierge: " + reply, agent: "Omega Concierge" }]);
     } catch {
-      setMessages(prev => [...prev, { role: "assistant", text: `Ω ${active.name}: The signal is disrupted. Ensure your API connection is live.`, agent: active.name }]);
+      setMessages(prev => [...prev, { role: "assistant", text: "Ω Concierge: The authenticated AI runtime is unavailable. No direct provider call was attempted.", agent: "Omega Concierge" }]);
     }
     setLoading(false);
-  }, [query, active]);
+  }, [query]);
 
   return (
     <div style={{ animation: "fade-in 0.5s ease", height: "calc(100vh - 120px)", display: "flex", flexDirection: "column" }}>

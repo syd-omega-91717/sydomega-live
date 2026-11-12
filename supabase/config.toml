@@ -59,7 +59,7 @@ verify_jwt = true
 [functions.stripe-webhook]
 verify_jwt = false
 
-# Provider inventory last verified 2026-11-10: all 22 configured functions are ACTIVE and
+# Provider inventory last verified 2026-11-12: all 22 configured functions are ACTIVE and
 # match the auth registry. Deployed entrypoint source parity is recorded in
 # docs/runtime/supabase-edge-functions-live.json. Held back on purpose, not registered:
 # graphify-ai-query, graphify-ai-ingest, checkout, weekly-digest, event-ingest

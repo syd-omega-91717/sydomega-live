@@ -60,3 +60,20 @@ After repairing the pending registry, the next isolated replay passed migration-
 Postgres reported `syntax error at or near "on" (SQLSTATE 42601)`. The version `20260818082309` is present in `supabase/remote-migrations.json` and is therefore treated as provider-applied. The replay did **not** reach the later November migrations, including `20261111190000` or the pending `20261112130000`.
 
 Do not edit or renumber the August migration. The schema owner must compare the exact provider-applied SQL history and the repository source, identify why the fresh replay diverges, and choose an explicit history-preserving resolution. A new migration cannot make an earlier syntactically invalid migration parse on a clean database. Until that decision is made, fresh replay remains a release blocker.
+
+
+## PR #1254 verification snapshot
+
+The latest completed GitHub checks on the PR head report:
+
+- Static contract suite: PASS, including the new merge-integrity gate (**6 regression tests passed**).
+- Runtime syntax and configuration contract: PASS.
+- Readiness: PASS.
+- Runtime adapter coverage contract: PASS as part of the static contract suite.
+- Repository integrity: PASS.
+- Intelligence Fabric: PASS.
+- Source-vs-live Edge Function reconciliation: PASS.
+- Supabase runtime health: PASS.
+- Workflow contract, CodeQL, JavaScript/TypeScript analysis, and Gitleaks: PASS.
+
+At the time of this update, the fresh isolated database replay, blocking supply-chain scan, evidence job, and Cloudflare Pages preview were still running. No merge or production release is claimed.

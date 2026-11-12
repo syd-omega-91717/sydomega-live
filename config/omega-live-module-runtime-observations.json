@@ -1729,5 +1729,15 @@
       "Cloudflare exact-SHA production verification has not passed for a merged main commit"
     ],
     "last_checked": "2026-11-12"
+  },
+  "runtime_probe_status": {
+    "observed_date": "2026-11-12",
+    "migration_replay": "PASS on the preceding PR head",
+    "migration_security_audit": "PASS on the preceding PR head",
+    "stripe_refund_lifecycle_probe": "PASS on the preceding PR head",
+    "runtime_adapter_probe": "BLOCKED at MEDIA.library.read on the preceding PR head",
+    "failure": "The media_items derived projection omitted created_at while the outer aggregate ordered by m.created_at; the live table itself has created_at.",
+    "remediation": "The pending migration now includes created_at in the derived projection. All 54 probes must be rerun on the latest branch head.",
+    "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF"
   }
 }

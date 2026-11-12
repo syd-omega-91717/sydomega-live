@@ -89,7 +89,7 @@ const PROFILE_DEFAULTS: Record<OmegaAiProfile, {
 }> = {
   fast: {
     provider: "anthropic",
-    anthropicModel: "claude-haiku-4-5-20251001",
+    anthropicModel: "claude-haiku-5-5",
     openaiModel: "gpt-6-luna",
     maxOutputTokens: 512,
     timeoutMs: 20000,
@@ -97,7 +97,7 @@ const PROFILE_DEFAULTS: Record<OmegaAiProfile, {
   },
   balanced: {
     provider: "anthropic",
-    anthropicModel: "claude-haiku-4-5-20251001",
+    anthropicModel: "claude-sonnet-5-5",
     openaiModel: "gpt-6.1-sol",
     maxOutputTokens: 2048,
     timeoutMs: 30000,
@@ -105,7 +105,7 @@ const PROFILE_DEFAULTS: Record<OmegaAiProfile, {
   },
   reasoning: {
     provider: "anthropic",
-    anthropicModel: "claude-opus-5",
+    anthropicModel: "claude-opus-5-5",
     openaiModel: "gpt-6-astra",
     maxOutputTokens: 4096,
     timeoutMs: 60000,

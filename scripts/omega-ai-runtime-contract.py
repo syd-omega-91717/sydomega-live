@@ -43,9 +43,9 @@ def main() -> int:
         require(policy["governance"]["evaluationDefault"] == "NOT_RUN", "evaluation must not be claimed without execution")
 
         expected_models = {
-            "fast": ("claude-haiku-4-5-20251001", "gpt-6-luna", 512),
-            "balanced": ("claude-haiku-4-5-20251001", "gpt-6.1-sol", 2048),
-            "reasoning": ("claude-opus-5", "gpt-6-astra", 4096),
+            "fast": ("claude-haiku-5-5", "gpt-6-luna", 512),
+            "balanced": ("claude-sonnet-5-5", "gpt-6.1-sol", 2048),
+            "reasoning": ("claude-opus-5-5", "gpt-6-astra", 4096),
         }
         for name, (anthropic, openai, budget) in expected_models.items():
             profile = profiles[name]

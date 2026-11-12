@@ -16,12 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # On pull requests, reconcile the currently deployed main source with
-      # the live snapshot. The proposed PR source is checked by syntax and
-      # contract jobs; after merge, the push run compares new main to the
-      # deployed snapshot and blocks release until runtime evidence is refreshed.
+      # Validate the proposed source and its explicit runtime classification together.
+      # PENDING_DEPLOY is a truthful non-live state, not a claim of provider parity.
+      # On push to main, github.sha is the exact deployed-branch source to reconcile.
       - name: Checkout deployed-source baseline
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Validate Edge Function reconciliation
         run: python3 scripts/supabase-edge-runtime-reconciliation.py

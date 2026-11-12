@@ -47,9 +47,7 @@ begin
     elsif v_module='ACHIEVEMENTS' and v_action_name='certificate.read' then
       select coalesce(jsonb_agg(to_jsonb(c) order by c.issued_at desc),'[]'::jsonb) into v_result from public.omega_certificates c where c.user_id=p_actor_user_id;
     elsif v_module='CONSULTANCY' and v_action_name='cases.read' then
-      -- The legacy/live consultancy schemas differ. Project only stable row keys
-      -- from to_jsonb(row), so absent historical columns remain NULL instead of
-      -- making the entire authenticated module dispatcher fail at parse/runtime.
+      -- Project stable row keys from JSON so historical optional columns remain NULL.
       select jsonb_build_object(
         'requests',
         coalesce((
@@ -147,7 +145,6 @@ begin
       select coalesce(jsonb_agg(to_jsonb(h) order by h.created_at desc),'[]'::jsonb) into v_result from (select id,domain,title,body,created_at from public.research_hypotheses where user_id=p_actor_user_id order by created_at desc limit 100)h;
     elsif v_module='INVESTMENT' and v_action_name='simulation.read' then
       select coalesce(jsonb_agg(to_jsonb(a) order by a.created_at desc),'[]'::jsonb) into v_result from (select id,name,quantity,asset_type,track_name,created_at from public.user_assets where user_id=p_actor_user_id and lower(coalesce(asset_type,'')) like '%simulation%' order by created_at desc limit 100)a;
-    
     elsif v_module='MEDIA' and v_action_name='jobs.read' then
       select coalesce(jsonb_agg(jsonb_build_object('id',j.id,'job_type',j.job_type,'status',j.status,'provider',j.provider,'request',j.request,'result',j.result,'error_code',j.error_code,'created_at',j.created_at,'updated_at',j.updated_at) order by j.created_at desc),'[]'::jsonb)
       into v_result
@@ -174,7 +171,7 @@ begin
         'status','SIMULATED',
         'classification','INTERPRETIVE_CONTENT',
         'sign',p.sign,
-        'themes',case lower(coalesce(p.sign::text,'')) 
+        'themes',case lower(coalesce(p.sign::text,''))
           when 'aries' then jsonb_build_array('initiative','courage','new beginnings')
           when 'taurus' then jsonb_build_array('stability','patience','stewardship')
           when 'gemini' then jsonb_build_array('communication','curiosity','adaptability')
@@ -240,12 +237,10 @@ begin
       into v_result from public.governance_policies g where g.status='active';
     elsif v_module='ELEMENTAL' and v_action_name in ('cosmology.read','simulation.run','interpretation.read') then
       v_result:=public.omega_elemental_runtime(v_action_name,coalesce(p_payload,'{}'::jsonb));
-
     else
       v_result:=jsonb_build_object('implementation_status',case when v_lifecycle in ('INTEGRATED','TESTED','DEPLOYED','VERIFIED') then 'ADAPTER_REQUIRED' else 'CONTRACT_ONLY' end,'module_id',v_module,'action_name',v_action_name,'lifecycle',v_lifecycle,'message','The runtime contract is registered, but this module action has not been promoted to a server data adapter yet. No synthetic business data is returned.');
     end if;
     v_result:=jsonb_build_object('module_id',v_module,'action_name',v_action_name,'lifecycle',v_lifecycle,'data',coalesce(v_result,'{}'::jsonb));
-
   when 'create_consult_intake' then
     v_request_id:=omega_private.create_consult_intake(p_actor_user_id,p_payload->>'domain',p_payload->>'message',p_payload->>'idempotency_key',coalesce(p_payload->>'urgency','normal'),p_payload->>'preferred_time',coalesce((p_payload->>'confidentiality_accepted')::boolean,false),p_payload->>'contact');
     v_result:=jsonb_build_object('request_id',v_request_id,'status','pending');

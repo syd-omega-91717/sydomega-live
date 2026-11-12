@@ -94,13 +94,13 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertFalse(module.is_safe_http_url("https://other.example/", "sydomega.com", 443))
         self.assertTrue(module.is_safe_http_url("https://sydomega.com/", "sydomega.com", 443))
         handler = module.SameOriginRedirectHandler("sydomega.com", 443)
-        request = module.Request("https://sydomega.com/")
+        request = object()
         self.assertIsNone(handler.redirect_request(
             request, None, 302, "Found", {}, "https://other.example/"
         ))
         status, _, detail = module.request_url("file:///etc/passwd", "GET", 1)
         self.assertEqual(status, 0)
-        self.assertIn("unsupported URL", detail)
+        self.assertEqual(detail, "unsupported_url_scheme_or_authority")
     def test_production_smoke_dependency_is_pinned_and_installed_only_for_verification(self):
         self.assertIn("requests==2.34.2", SMOKE_REQUIREMENTS)
         self.assertIn("scripts/requirements.txt", WORKFLOW)

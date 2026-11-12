@@ -165,7 +165,7 @@ begin
     elsif v_module='COMMUNICATION' and v_action_name='notifications.read' then
       select coalesce(jsonb_agg(to_jsonb(n) order by n.created_at desc),'[]'::jsonb) into v_result from (select * from public.omega_notifications where user_id=p_actor_user_id order by created_at desc limit 100)n;
     elsif v_module='COMMUNICATION' and v_action_name='presence.read' then
-      select coalesce(jsonb_agg(to_jsonb(p) order by p.last_seen_at desc),'[]'::jsonb) into v_result from (select * from public.member_presence where user_id=p_actor_user_id order by last_seen_at desc limit 20)p;
+      select coalesce(jsonb_agg(to_jsonb(p) order by p.last_seen desc),'[]'::jsonb) into v_result from (select * from public.member_presence where user_id=p_actor_user_id order by last_seen desc limit 20)p;
     elsif v_module='COMMUNICATION' and v_action_name='events.read' then
       select coalesce(jsonb_agg(to_jsonb(e) order by e.created_at desc),'[]'::jsonb) into v_result from (select * from public.omega_platform_events where user_id=p_actor_user_id order by created_at desc limit 100)e;
     elsif v_module='INTELLIGENCE' and v_action_name='agents.read' then
@@ -325,6 +325,7 @@ end $$;
 revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from public,anon,authenticated;
 grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role;
 
+-- The canonical member_presence table stores last_seen (not last_seen_at).
 -- The outer MEDIA.library.read aggregate orders by m.created_at; retain that
 -- key in the derived projection rather than dropping it from the subquery.
 -- The scalar subquery lets PostgreSQL evaluate auth.uid() once per statement.

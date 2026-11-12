@@ -49,3 +49,14 @@ The fresh migration replay job stopped at **Validate migration inventory**. It d
 ## Safety
 
 No live database, Edge Function, provider setting, production deployment, secret, auth policy, or member data was changed. No applied migration file was edited. This PR is a source/CI integrity repair only.
+
+
+## Fresh replay follow-up (PR #1254)
+
+After repairing the pending registry, the next isolated replay passed migration-inventory validation and began applying migrations. It then stopped at:
+
+`20260818082309_add_missing_fk_indexes_real_schema.sql`
+
+Postgres reported `syntax error at or near "on" (SQLSTATE 42601)`. The version `20260818082309` is present in `supabase/remote-migrations.json` and is therefore treated as provider-applied. The replay did **not** reach the later November migrations, including `20261111190000` or the pending `20261112130000`.
+
+Do not edit or renumber the August migration. The schema owner must compare the exact provider-applied SQL history and the repository source, identify why the fresh replay diverges, and choose an explicit history-preserving resolution. A new migration cannot make an earlier syntactically invalid migration parse on a clean database. Until that decision is made, fresh replay remains a release blocker.

@@ -13,6 +13,7 @@ MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_ad
 IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
 REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe_refund_state_fk_index.sql"
 SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
+EXPERT_BOOKINGS_MIGRATION = ROOT / "supabase/migrations/20261112103000_omega_expert_bookings_domain_compatibility.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
 def fail(message: str) -> int:
@@ -27,7 +28,8 @@ def main() -> int:
         idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
         refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
         search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql))
+        expert_bookings_sql = EXPERT_BOOKINGS_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, expert_bookings_sql))
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
@@ -119,6 +121,8 @@ def main() -> int:
                 return fail(f"search-index schema/RLS/runtime marker missing: {marker}")
         if search_index_sql.lower().count("security definer set search_path=''") != 1:
             return fail("search-index dispatcher replacement must pin an empty search_path")
+        if "alter table public.expert_bookings" not in expert_bookings_sql.lower() or "add column if not exists domain text" not in expert_bookings_sql.lower() or "expert_bookings_domain_compatibility_column_missing" not in expert_bookings_sql:
+            return fail("fresh replay must provide the expert_bookings.domain column required by consultancy cases.read")
         for marker in (
             "createSupabaseContext(req, { auth: 'user' })",
             "ctx.userClaims.sub",

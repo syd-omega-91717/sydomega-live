@@ -106,6 +106,16 @@ begin
   perform set_config('request.jwt.claim.sub',v_user::text,true);
   perform set_config('request.jwt.claim.role','service_role',true);
   perform set_config('request.jwt.claims',jsonb_build_object('sub',v_user,'role','service_role')::text,true);
+
+  -- Search index fixtures exercise the canonical/live compatibility shape and owner/org isolation.
+  insert into public.search_index(
+    entity_type,entity_id,title,body,content,keywords,owner_id,organization_id,indexed_at,updated_at,created_at
+  ) values
+    ('runtime_probe','search-shared','Shared probe','shared body','shared content','shared',null,null,now(),now(),now()),
+    ('runtime_probe','search-owner-one','Owner one probe','owner one body','owner one content','owner-one',v_user,null,now(),now(),now()),
+    ('runtime_probe','search-owner-two','Owner two probe','owner two body','owner two content','owner-two',v_other_user,null,now(),now(),now()),
+    ('runtime_probe','search-org-only','Org-only probe','org body','org content','org-only',null,'20000000-0000-4000-8000-000000000001',now(),now(),now());
+
   for i in 1..array_length(v_actions,1) loop
     v_result:=public.omega_runtime_dispatch(
       v_user,
@@ -126,6 +136,15 @@ begin
     end if;
     if v_result->'data' is null then
       raise exception 'runtime action returned no data envelope: %.%',v_actions[i][1],v_actions[i][2];
+    end if;
+    if v_actions[i][1]='CORE' and v_actions[i][2]='search.read' then
+      if jsonb_array_length(v_result->'data')<>2
+         or not (v_result->'data' @> '[{"entity_id":"search-shared"}]'::jsonb)
+         or not (v_result->'data' @> '[{"entity_id":"search-owner-one"}]'::jsonb)
+         or (v_result->'data' @> '[{"entity_id":"search-owner-two"}]'::jsonb)
+         or (v_result->'data' @> '[{"entity_id":"search-org-only"}]'::jsonb) then
+        raise exception 'search dispatcher owner/org isolation failed: %',v_result->'data';
+      end if;
     end if;
   end loop;
 
@@ -344,6 +363,27 @@ begin
 
 end;
 $probe$;
+
+reset role;
+set local role authenticated;
+do $search_rls_probe$
+declare
+  v_user uuid := '10000000-0000-4000-8000-000000000091';
+  v_other_user uuid := '10000000-0000-4000-8000-000000000092';
+  v_count bigint;
+begin
+  perform set_config('request.jwt.claim.sub',v_user::text,true);
+  perform set_config('request.jwt.claim.role','authenticated',true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',v_user,'role','authenticated')::text,true);
+  select count(*) into v_count from public.search_index where entity_type='runtime_probe';
+  if v_count<>2 then raise exception 'search_index RLS exposed % rows to user one, expected 2',v_count; end if;
+
+  perform set_config('request.jwt.claim.sub',v_other_user::text,true);
+  perform set_config('request.jwt.claims',jsonb_build_object('sub',v_other_user,'role','authenticated')::text,true);
+  select count(*) into v_count from public.search_index where entity_type='runtime_probe';
+  if v_count<>2 then raise exception 'search_index RLS exposed % rows to user two, expected 2',v_count; end if;
+end;
+$search_rls_probe$;
 
 reset role;
 set local role authenticated;

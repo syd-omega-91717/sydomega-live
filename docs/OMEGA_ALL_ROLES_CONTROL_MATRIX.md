@@ -73,3 +73,19 @@ A page, SQL file, prompt, or successful static check is not by itself production
 - Do not promote `VERIFIED` from historical text.
 - Do not treat a missing live-provider check as successful.
 - Do not activate financial/token functionality merely because schema or UI exists.
+
+
+## Provider evidence update — 2026-11-12
+
+The evidence ladder remains authoritative; module status is not promoted solely because dispatcher branches or Edge Functions exist.
+
+- The canonical runtime registry contains **18 modules and 54 actions**. A read-only inspection of the live `public.omega_runtime_dispatch(uuid,text,jsonb)` definition found all 53 module-read branches plus the dedicated consultancy-intake write adapter (**54/54**).
+- The production Supabase project reports **22/22 configured Edge Functions ACTIVE**. All 22 deployed `index.ts` entrypoints were retrieved and compared byte-for-byte with the repository files (**22/22 exact**); JWT verification flags and provider versions are captured in `docs/runtime/supabase-edge-functions-live.json`.
+- The canonical page contract estate covers **241 root HTML pages**; the CI contract maps all 241 to one world district. The production exact-SHA smoke test is repaired in PR #1242 but has not yet passed against a production merge SHA.
+- The full fresh-database replay and the expanded SQL probe for all 54 adapters plus changed-payload idempotency conflicts are still required before the follow-up migrations are applied.
+
+**Interpretation:** these results establish provider activation, source parity and SQL dispatch coverage. They do not establish full user journeys, persistence for every action, cross-user isolation for every module, third-party provider health, storage object lifecycle, financial settlement, or a live production release. Therefore the existing `PARTIAL`, `BUILT / PARTIAL`, and `DECISION REQUIRED` states remain unchanged until their module-specific next proof is collected.
+
+## Search-index evidence — 2026-11-12
+
+The live `public.search_index` table was inspected directly: zero rows, live-only `body`/`keywords`/`owner_id`/`organization_id`/`indexed_at`/`updated_at` columns, and an authenticated SELECT policy with `USING (true)`. The canonical 0016 migration instead creates `content`/`created_at`. The new 20261112091500 migration preserves both column sets, backfills compatible body/content and timestamp values, restricts direct reads to shared rows or the owner, and updates the runtime adapter to apply the same owner/org filter. The isolated probe tests both dispatcher filtering and direct RLS isolation.

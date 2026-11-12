@@ -52,24 +52,30 @@ class VisualPageSurveyTests(unittest.TestCase):
                 survey.ROOT = original_root
         self.assertEqual(result["h1"], "Visible heading")
 
-    def test_survey_records_a_unique_relative_path_and_keeps_basename(self) -> None:
+    def test_same_basename_pages_have_distinct_relative_paths(self) -> None:
         html = """
         <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Dashboard</title></head><body><h1>Dashboard</h1></body></html>
         """
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            page = root / "root" / "dashboard.html"
-            page.parent.mkdir(parents=True)
-            page.write_text(html, encoding="utf-8")
+            root_page = root / "dashboard.html"
+            nested_page = root / "root" / "dashboard.html"
+            nested_page.parent.mkdir(parents=True)
+            root_page.write_text(html, encoding="utf-8")
+            nested_page.write_text(html, encoding="utf-8")
             original_root = survey.ROOT
             try:
                 survey.ROOT = root
-                result = survey.scan(page)
+                root_result = survey.scan(root_page)
+                nested_result = survey.scan(nested_page)
             finally:
                 survey.ROOT = original_root
-        self.assertEqual(result["page"], "dashboard.html")
-        self.assertEqual(result["path"], "root/dashboard.html")
+        self.assertEqual(root_result["page"], nested_result["page"])
+        self.assertEqual(root_result["page"], "dashboard.html")
+        self.assertEqual(root_result["path"], "dashboard.html")
+        self.assertEqual(nested_result["path"], "root/dashboard.html")
+        self.assertNotEqual(root_result["path"], nested_result["path"])
 
     def test_button_tags_and_styled_non_button_actions_are_counted_once(self) -> None:
         html = """

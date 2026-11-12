@@ -10,10 +10,11 @@ This directory is the canonical, ordered, automatically-appliable schema history
 
 The repository contains timestamped reconciliation migrations for changes that were historically applied directly to the live database. Those files preserve the recorded migration versions so `supabase db push` does not encounter `Remote migration versions not found in local migrations directory`.
 
-## Current provider-verified state — 2026-11-10
+## Current provider-verified state — 2026-11-12
 
-- The live Supabase migration ledger contains **415 unique recorded versions**; the latest is `20261104090000_financial_rows_survive_account_deletion`.
-- The provider inventory exactly reconciles with the prior repository snapshot plus its two pending entries: 413 previously recorded + 2 provider-confirmed = 415 live. `supabase/remote-migrations.json` now records all 415; `supabase/pending-migrations.json` is empty.
+- The live Supabase migration ledger contains **416 unique recorded versions**; the latest is `20261111190000_omega_runtime_dispatch_adapter_reconciliation`.
+- `supabase/remote-migrations.json` records the provider-confirmed 416 versions. `supabase/pending-migrations.json` contains one unapplied follow-up migration, `20261112091300_omega_idempotency_payload_integrity`; it remains release-blocking until full replay and security/adapter probes pass.
+- Read-only inspection of the live runtime dispatcher found all 53 canonical `module_read` branches plus the dedicated consultancy-intake write branch (**54/54**). This is SQL dispatcher coverage evidence, not proof of every route, user journey, provider integration or production release.
 - Provider history confirms `20261103230000_erasure_pipeline_dormant` and `20261104090000_financial_rows_survive_account_deletion` are recorded as applied. This confirms migration-ledger presence, not byte-for-byte SQL parity or every downstream business behavior.
 - Read-only production SQL confirms the erasure tables and functions exist; `private.erasure_policy` contains **0 rows**, `erasure_worker_enabled=false`, `erasure_delay_days=14`, the `pg_cron` extension exists, and there is **no erasure cron job**.
 - Read-only production SQL confirms the three D1 financial tables (`commission_contracts`, `sovereign_points_ledger`, `omega_service_orders`) have nullable `user_id` columns and foreign keys using `ON DELETE SET NULL`. No rows were changed by these checks.

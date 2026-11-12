@@ -10,6 +10,14 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "Makes the consultancy cases.read adapter tolerant of historical/live table-shape differences. Fresh full migration replay exposed a static reference to optional consultancy columns. Must pass replay and 54-action regression probes before provider application."
+    },
+    {
+      "version": "20261112120000",
+      "file": "20261112120000_omega_news_schema_baseline.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Adds the legacy public.news read-model table to the migration history with the existing deny-by-default RLS contract. No content rows are seeded. Fresh replay failed because the dispatcher references public.news, which existed only in the live schema snapshot and not in migrations."
     }
   ]
 }

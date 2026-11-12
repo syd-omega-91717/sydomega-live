@@ -41,8 +41,8 @@ declare
   v_second jsonb;
   v_other jsonb;
   v_cases jsonb;
-  v_request_id bigint;
-  v_other_request_id bigint;
+  v_request_id text;
+  v_other_request_id text;
   i integer;
   v_count bigint;
   v_task_one uuid;
@@ -203,7 +203,7 @@ begin
   if v_first->>'request_id' is null or v_first->>'request_id' is distinct from v_second->>'request_id' then
     raise exception 'consultancy intake idempotency failed: first=% second=%',v_first,v_second;
   end if;
-  v_request_id:=(v_first->>'request_id')::bigint;
+  v_request_id:=v_first->>'request_id';
   select count(*) into v_count from public.consult_requests
    where user_id=v_user and runtime_idempotency_key='omega-runtime-probe-consult-0001';
   if v_count<>1 then raise exception 'consultancy intake idempotency created % rows for one actor',v_count; end if;
@@ -223,7 +223,7 @@ begin
       'contact','other-probe@invalid.example'
     )
   );
-  v_other_request_id:=(v_other->>'request_id')::bigint;
+  v_other_request_id:=v_other->>'request_id';
   if v_other_request_id is null or v_other_request_id=v_request_id then
     raise exception 'consultancy idempotency key was not isolated by user: first=% other=%',v_request_id,v_other;
   end if;

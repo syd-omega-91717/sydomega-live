@@ -132,6 +132,8 @@ def main() -> int:
             return fail("runtime dispatcher request ID variable must accept UUID and BIGINT source IDs")
         if "sort_order,created_at from public.media_items" not in normalized_consultancy_sql:
             return fail("MEDIA.library.read must retain created_at in its ordered derived-table projection")
+        if "order by p.last_seen desc" not in normalized_consultancy_sql or "p.last_seen_at" in normalized_consultancy_sql:
+            return fail("COMMUNICATION.presence.read must use the canonical member_presence.last_seen column")
         if "owner_id=(select auth.uid())" not in normalized_consultancy_sql:
             return fail("search-index policy must use an initplan-safe scalar auth.uid() call")
         if "owner_id=auth.uid()" in normalized_consultancy_sql:

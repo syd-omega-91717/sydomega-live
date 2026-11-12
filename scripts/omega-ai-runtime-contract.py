@@ -54,11 +54,13 @@ def main() -> int:
             require(profile["maxOutputTokens"] == budget, f"{name} output budget drift")
             require(profile["maxOutputTokens"] <= 4096, f"{name} output budget exceeds hard cap")
             require(profile["defaultProvider"] == "anthropic", f"{name} default provider must preserve current integration")
+            require(profile["allowedRisk"] == (["low", "medium", "high"] if name == "reasoning" else ["low", "medium"]), f"{name} risk allowlist drift")
             require(anthropic in router and openai in router, f"{name} model missing from router implementation")
 
         require("https://api.anthropic.com/v1/messages" in router, "Anthropic adapter missing")
         require("https://api.openai.com/v1/responses" in router, "OpenAI Responses adapter missing")
         require("OMEGA_AI_PROVIDER_" in router, "per-profile provider routing missing")
+        require("PROFILE_RISK_ALLOWLIST" in router and "ai_profile_risk_not_allowed" in router, "risk-to-profile enforcement missing")
         require("ai_provider_not_configured" in router and "ai_profile_risk_not_allowed" in router and 'record("blocked"' in router, "provider and risk-profile violations must fail closed")
         require("estimated_cost: null" in router, "unknown model cost must not be reported as zero")
         require("input_tokens: inputTokens" in router and "output_tokens: outputTokens" in router, "token usage telemetry missing")
@@ -97,9 +99,11 @@ def main() -> int:
             source = read(consumers[name])
             require("autonomous_agents_enabled" in source, f"{name} owner-controlled dormant gate missing")
             require("member_id !== caller.userId" in source, f"{name} member binding missing")
+            require("[UNTRUSTED MEMBER CONTEXT" in source, f"{name} must structurally label member context as untrusted")
 
         product = read(consumers["product-orchestrator"])
         require("proposed_feature_flags" in product and "applied: false" in product and "approval_required: true" in product, "product adaptation must remain proposal-only")
+        require('confidence_status: "MODEL_REPORTED_NOT_CALIBRATED"' in product, "product confidence must be labelled uncalibrated")
         require("pendingFeatures.includes(feature)" in product, "product proposals must be bounded by the request feature allowlist")
         require("updateMemberFeatureFlags" not in product and '.from("member_feature_flags").upsert' not in product, "product agent must not mutate member entitlements")
 
@@ -107,6 +111,9 @@ def main() -> int:
         require("revenue_impact_usd: null" in growth and "estimated_revenue_impact: null" in growth, "uncalibrated revenue must not be stored or reported as a KPI")
         require("NOT_CALIBRATED" in growth and "MODEL_REPORTED_NOT_CALIBRATED" in growth, "model estimate/confidence labels missing")
         require("* 0.15" not in growth, "uncalibrated 15% revenue heuristic remains")
+        require('confidence_status: "MODEL_REPORTED_NOT_CALIBRATED"' in growth, "growth confidence must be labelled uncalibrated")
+        concierge_orchestrator = read(consumers["concierge-orchestrator"])
+        require("member response text is not persisted" in concierge_orchestrator, "concierge response text must not be retained in decision history")
 
         cases = eval_cases["cases"]
         case_ids = [case["id"] for case in cases]

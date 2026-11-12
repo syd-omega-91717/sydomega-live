@@ -3,6 +3,8 @@
 from __future__ import annotations
 import json
 import re
+from pathlib import Path
+import sys
 import sys
 from pathlib import Path
 
@@ -203,6 +205,12 @@ def main() -> int:
             "set search_path=''",
             "revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from public,anon,authenticated",
             "grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role",
+            "on conflict (user_id,runtime_idempotency_key)",
+            "confidentiality_acceptance_required",
+            "ADAPTER_REQUIRED",
+        ):
+            if marker not in sql:
+                return fail(f"dispatcher migration safety/contract marker missing: {marker}")
             "revoke all on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) from public,anon,authenticated",
             "grant execute on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) to service_role",
             "grant execute on function private.record_sovereign_event(text,jsonb,jsonb,text) to authenticated",
@@ -331,6 +339,7 @@ def main() -> int:
         return fail(str(exc))
 
 if __name__ == "__main__":
+    if any(arg in {"-h", "--help"} for arg in sys.argv[1:]):
     if "--help" in sys.argv[1:]:
         print(__doc__ or "")
         raise SystemExit(0)

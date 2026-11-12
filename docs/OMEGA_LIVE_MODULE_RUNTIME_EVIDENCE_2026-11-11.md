@@ -251,6 +251,8 @@ Missing live branches:
 - `HIERARCHY.roles.read`
 - `HIERARCHY.governance.read`
 
+This is a production integrity defect and demonstrates why a migration ledger and lifecycle field are not proof of runtime behavior. The branch now includes `20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql`, which restores the wave-2 adapters, implements the remaining read/write handlers with actor scoping and explicit simulation/credential boundaries, and adds a CI contract that requires all 54 canonical actions to map to concrete adapters. The migration is explicitly registered as `PENDING_REVIEW / NOT_APPLIED`; no production database mutation has occurred in this work sequence. It must pass fresh replay, then be applied through the authorized Supabase migration action, after which the remote migration snapshot is updated from provider evidence.
+
 At the time of the original audit this was a production integrity defect. PR #1238 added 20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql, restoring the 54-action dispatcher and its actor-scoped adapters. A subsequent read-only provider query on 2026-11-12 confirms that version is present in the live migration ledger (416 applied versions total), and direct inspection of public.omega_runtime_dispatch(uuid,text,jsonb) now finds all 53 canonical module_read branches plus the dedicated consultancy intake write branch (54/54). The provider-side indexes are also present. This confirms the original runtime reconciliation migration was applied; it does not prove all routes, external providers, user journeys or production pages are live.
 
 

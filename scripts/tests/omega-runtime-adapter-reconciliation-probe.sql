@@ -354,6 +354,7 @@ declare
   v_first jsonb;
   v_second jsonb;
   v_other jsonb;
+  v_error text;
 begin
   perform set_config('request.jwt.claim.sub',v_user::text,true);
   perform set_config('request.jwt.claim.role','authenticated',true);

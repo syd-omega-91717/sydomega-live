@@ -363,7 +363,7 @@ begin
   select pg_get_expr(polqual,polrelid) into v_policy
   from pg_policy
   where polrelid='public.search_index'::regclass and polname='search_index_read';
-  if v_policy is null or pg_catalog.position('select auth.uid()' in pg_catalog.lower(v_policy))=0 then
+  if v_policy is null or pg_catalog.strpos(pg_catalog.lower(v_policy),'select auth.uid()')=0 then
     raise exception 'search_index_policy_must_use_initplan_safe_auth_uid';
   end if;
 end;

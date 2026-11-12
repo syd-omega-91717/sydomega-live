@@ -8,6 +8,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+    print(__doc__.strip())
+    raise SystemExit(0)
+
 CLIENT_SUFFIXES = {".js", ".html", ".json"}
 INTERNAL_EVIDENCE = {
     "config/omega-implementation-ledger.json",

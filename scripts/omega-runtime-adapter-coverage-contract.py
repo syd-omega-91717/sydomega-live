@@ -103,7 +103,22 @@ def main() -> int:
             "omega_audit_log_system_idempotency_uidx",
             "on conflict (idempotency_key) where user_id is null and idempotency_key is not null",
             "on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null",
-            "on conflict (user_id,idempotency_key) do update set metadata=excluded.metadata",
+            "where omega_service_orders.metadata=excluded.metadata",
+            "where consult_requests.message=excluded.message",
+            "where omega_agent_tasks.input=excluded.input",
+            "where omega_notifications.body=excluded.body",
+            "omega_platform_events.payload is not distinct from excluded.payload",
+            "omega_audit_log.details=excluded.details",
+            "service_order_idempotency_conflict",
+            "consult_intake_idempotency_conflict",
+            "agent_task_idempotency_conflict",
+            "notification_idempotency_conflict",
+            "platform_event_idempotency_conflict",
+            "platform_event_audit_idempotency_conflict",
+            "verification_idempotency_conflict",
+            "sovereign_event_idempotency_conflict",
+            "v_existing_evidence is distinct from coalesce(p_evidence,'{}'::jsonb)",
+            "length(v_key)>122",
             "on conflict (idempotency_key) where actor_user_id is null and idempotency_key is not null",
             "on conflict (actor_user_id,idempotency_key) where actor_user_id is not null and idempotency_key is not null",
             "on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null do nothing",
@@ -143,6 +158,10 @@ def main() -> int:
             return fail("service-order idempotency lookup is not actor-scoped")
         if sql.lower().count("security definer set search_path=''") != 9:
             return fail("all nine reconciliation helper/dispatcher functions must pin an empty search_path")
+        if "do update set input=excluded.input" in sql:
+            return fail("agent task idempotency retry must not overwrite the original task input")
+        if "do update set payload=excluded.payload" in sql or "do update set details=excluded.details" in sql:
+            return fail("event/audit idempotency retries must not overwrite original event evidence")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:
             return fail("platform credential must explicitly not be a government/travel document")
         if "Interpretive content for reflection and entertainment only" not in sql:

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-11-12",
+  "captured_at": "2026-11-12T07:32:53.361Z",
   "source_directory": "supabase/functions",
   "functions": {
     "concierge": {
@@ -297,5 +297,6 @@
       "STRIPE_SIGNATURE": 1
     }
   },
-  "reconciliation_note": "Four AI runtime entrypoints have changed in source and are explicitly classified PENDING_DEPLOY. Their currently active provider versions are not claimed to match the new repository source."
+  "reconciliation_note": "Four AI runtime entrypoints have changed in source and are explicitly classified PENDING_DEPLOY. Their currently active provider versions are not claimed to match the new repository source.",
+  "classification_updated_at": "2026-11-12T20:06:52Z"
 }

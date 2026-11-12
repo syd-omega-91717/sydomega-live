@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "omega-ai-routing-policy",
+  "status": "SOURCE_INTEGRATED__PRODUCTION_DEPLOYMENT_PENDING",
+  "principle": "Route by task complexity and risk; providers are replaceable; credentials remain server-side; no model receives authority to execute tools.",
+  "providers": {
+    "anthropic": {
+      "credentialEnv": "ANTHROPIC_API_KEY",
+      "defaultForProfiles": true,
+      "activation": "CURRENT_DEFAULT__REQUIRES_SECRET"
+    },
+    "openai": {
+      "credentialEnv": "OPENAI_API_KEY",
+      "defaultForProfiles": false,
+      "activation": "OPT_IN_PER_PROFILE__REQUIRES_SECRET_AND_MODEL_ACCESS"
+    }
+  },
+  "profiles": {
+    "fast": {
+      "defaultProvider": "anthropic",
+      "anthropicModel": "claude-haiku-4-5-20251001",
+      "openaiModel": "gpt-6-luna",
+      "maxOutputTokens": 512,
+      "timeoutMs": 20000,
+      "reasoningEffort": "low",
+      "allowedRisk": [
+        "low",
+        "medium"
+      ],
+      "useCases": [
+        "member_concierge",
+        "classification",
+        "short_summary",
+        "graph_query_plan"
+      ],
+      "openaiServiceTier": "standard"
+    },
+    "balanced": {
+      "defaultProvider": "anthropic",
+      "anthropicModel": "claude-haiku-4-5-20251001",
+      "openaiModel": "gpt-6.1-sol",
+      "maxOutputTokens": 2048,
+      "timeoutMs": 30000,
+      "reasoningEffort": "medium",
+      "allowedRisk": [
+        "low",
+        "medium"
+      ],
+      "useCases": [
+        "support_decision",
+        "campaign_draft",
+        "product_recommendation"
+      ],
+      "openaiServiceTier": "standard"
+    },
+    "reasoning": {
+      "defaultProvider": "anthropic",
+      "anthropicModel": "claude-opus-5",
+      "openaiModel": "gpt-6-astra",
+      "maxOutputTokens": 4096,
+      "timeoutMs": 60000,
+      "reasoningEffort": "high",
+      "allowedRisk": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "useCases": [
+        "escalation_review",
+        "complex_analysis",
+        "high_uncertainty_review",
+        "graph_entity_extraction"
+      ],
+      "openaiServiceTier": "standard"
+    }
+  },
+  "environment": {
+    "providerPattern": "OMEGA_AI_PROVIDER_{PROFILE}",
+    "anthropicModelPattern": "OMEGA_AI_ANTHROPIC_MODEL_{PROFILE}",
+    "openaiModelPattern": "OMEGA_AI_OPENAI_MODEL_{PROFILE}",
+    "openaiServiceTierPattern": "OMEGA_AI_OPENAI_SERVICE_TIER_{PROFILE}",
+    "allowedOpenAiServiceTiers": [
+      "standard",
+      "ultrafast"
+    ],
+    "defaultOpenAiServiceTier": "standard"
+  },
+  "governance": {
+    "toolAccess": "DENY",
+    "autonomousExternalSideEffects": false,
+    "silentProviderFallback": false,
+    "storePrompts": false,
+    "storeMemberContent": false,
+    "telemetry": "METADATA_ONLY",
+    "estimatedCost": "OMITTED_UNTIL_PROVIDER_PRICE_CATALOG_IS_VERIFIED",
+    "evaluationDefault": "NOT_RUN",
+    "humanApprovalRequiredFor": [
+      "financial",
+      "identity",
+      "legal",
+      "account_security",
+      "external_side_effects",
+      "feature_flag_mutation"
+    ],
+    "untrustedContext": "DATA_NOT_INSTRUCTIONS"
+  },
+  "heldFeatures": {
+    "graphify": {
+      "status": "HELD",
+      "platformSetting": "graphify_ai_enabled",
+      "requiredPreferences": [
+        "ai_personalization_enabled",
+        "sensitive_data_processing_enabled"
+      ],
+      "reason": "Privacy, explicit consent and per-member cost controls must be approved before enablement.",
+      "registeredInSupabaseConfig": false
+    }
+  }
+}

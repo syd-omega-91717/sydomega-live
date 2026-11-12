@@ -63,6 +63,9 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertNotIn("urlopen(", PRODUCTION_SMOKE)
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
+        self.assertIn("CLOUDFLARE_EMAIL_PLACEHOLDER_PATH", PRODUCTION_SMOKE)
+        self.assertIn("unsupported_url_scheme_or_authority", PRODUCTION_SMOKE)
+        self.assertIn("cloudflare_email_placeholders_skipped", PRODUCTION_SMOKE)
 
     def test_git_connected_verifier_shell_is_syntactically_valid(self):
         step = PRODUCTION_VERIFY.split(

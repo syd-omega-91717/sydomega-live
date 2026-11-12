@@ -45,6 +45,8 @@ jobs:
           expected="${GITHUB_SHA}"
           served=""
 
+          # Cloudflare Pages Git integration may finish after the GitHub push event.
+          # Allow up to four minutes for the exact main SHA to become publicly served.
           # Cloudflare Pages Git integration can finish after the GitHub push event.
           # Each bounded request follows canonical redirects; 24 attempts allow convergence.
           for attempt in $(seq 1 24); do

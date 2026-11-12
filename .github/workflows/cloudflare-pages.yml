@@ -1,31 +1,13 @@
 name: Cloudflare Pages
 
-# Deploys the same artifact Vercel would build (scripts/vercel-build.sh, which
-# also writes _headers/_redirects from vercel.json) to Cloudflare Pages, whose
-# free plan has unlimited requests -- the limit that paused the Vercel Hobby
-# team on 2026-10-06. Direct upload: no Cloudflare-side Git connection needed.
-#
-# Dormant until the owner adds two repository secrets:
-#   CLOUDFLARE_API_TOKEN   (Cloudflare -> My Profile -> API Tokens -> Create
-#                           Token -> "Edit Cloudflare Workers" template, which
-#                           includes Cloudflare Pages: Edit)
-#   CLOUDFLARE_ACCOUNT_ID  (Cloudflare dashboard -> Workers & Pages, right column)
-# Without them every run skips with a notice and stays green.
-#
-# Serves <project>.pages.dev only. sydomega.com moves here when its
-# nameservers point at Cloudflare: docs/CLOUDFLARE_PAGES_CUTOVER.md.
-#
-# Since 2026-10-18 the Pages project is also connected to this repository and
-# builds every push to main itself (build command `bash scripts/vercel-build.sh`,
-# output `public`), so this workflow no longer runs on push: two deploy paths
-# for one branch would race. It stays as the manual fallback.
+# Deploys the same artifact Vercel would build to Cloudflare Pages.
+# This is a manual fallback; the connected Pages integration normally deploys main.
 on:
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# Fixed group: the newest main wins; an older deploy still in flight is moot.
 concurrency:
   group: cloudflare-pages
   cancel-in-progress: true
@@ -69,6 +51,16 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Set up Python
+        if: steps.creds.outputs.ready == 'true'
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install pinned smoke-test dependency
+        if: steps.creds.outputs.ready == 'true'
+        run: python -m pip install --disable-pip-version-check -r scripts/requirements.txt
+
       - name: Build artifact
         if: steps.creds.outputs.ready == 'true'
         shell: bash
@@ -94,19 +86,19 @@ jobs:
             --project-name "${PROJECT}" --branch main \
             --commit-hash "${GITHUB_SHA}" --commit-dirty=true
 
-      - name: Smoke test the deployment
+      - name: Verify release manifest and smoke-test production
         if: steps.creds.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
           url="https://${PROJECT}.pages.dev"
           for attempt in 1 2 3 4 5 6; do
-            code="$(curl -s -o /dev/null -w '%{http_code}' "${url}/")" || code=000
+            code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "${url}/")" || code=000
             [ "${code}" = "200" ] && break
             sleep 10
           done
           [ "${code}" = "200" ] || { echo "root returned ${code}"; exit 1; }
-          curl -sI "${url}/" | grep -qi '^content-security-policy:' || { echo "CSP header missing"; exit 1; }
+          curl --silent --show-error --head --max-time 20 "${url}/" | grep -qi '^content-security-policy:' || { echo "CSP header missing"; exit 1; }
           served=""
           for attempt in 1 2 3 4 5 6; do
             served="$(curl --silent --show-error --fail --max-time 15 "${url}/.well-known/omega-release.json" \
@@ -116,4 +108,5 @@ jobs:
             sleep 10
           done
           [ "${served}" = "${GITHUB_SHA}" ] || { echo "::error title=Release manifest mismatch::Cloudflare Pages does not serve the exact commit deployed by this workflow."; exit 1; }
+          python scripts/cloudflare-production-smoke.py --base-url "${url}" --workers 16 --timeout 20
           echo "CLOUDFLARE_PAGES=PASS ${url} commit=${served}"

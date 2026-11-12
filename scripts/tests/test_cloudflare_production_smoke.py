@@ -20,7 +20,7 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
         self.assertFalse(SMOKE.is_safe_http_url("https://user:secret@sydomega.com/"))
         self.assertEqual(
             SMOKE.request_url("file:///etc/passwd", "GET", 1),
-            (0, "", "blocked unsupported URL scheme or authority"),
+            (0, "", "unsupported_url_scheme_or_authority"),
         )
 
     def test_only_approved_https_hosts_are_accepted(self):

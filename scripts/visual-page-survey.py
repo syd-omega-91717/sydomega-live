@@ -64,6 +64,9 @@ class _VisibleParser(HTMLParser):
         self.hidden_depth = 0
         self._hidden_stack: list[bool] = []
         self.parts: list[str] = []
+        self.h1_texts: list[str] = []
+        self._h1_depth = 0
+        self._h1_parts: list[str] = []
 
     @staticmethod
     def _hidden(attrs: list[tuple[str, str | None]], parent_hidden: bool) -> bool:
@@ -85,6 +88,10 @@ class _VisibleParser(HTMLParser):
         self._hidden_stack.append(is_hidden)
         if is_hidden:
             self.hidden_depth += 1
+        if tag == "h1" and self.hidden_depth == 0:
+            self._h1_depth += 1
+            if self._h1_depth == 1:
+                self._h1_parts = []
 
     def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -92,6 +99,14 @@ class _VisibleParser(HTMLParser):
             self.handle_data(" ")
 
     def handle_endtag(self, tag: str) -> None:
+        tag = tag.lower()
+        if tag == "h1" and self._h1_depth:
+            self._h1_depth -= 1
+            if self._h1_depth == 0:
+                heading = re.sub(r"\s+", " ", " ".join(self._h1_parts)).strip()
+                if heading:
+                    self.h1_texts.append(heading)
+                self._h1_parts = []
         if not self._hidden_stack:
             return
         is_hidden = self._hidden_stack.pop()
@@ -101,6 +116,8 @@ class _VisibleParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self.hidden_depth == 0:
             self.parts.append(data)
+            if self._h1_depth:
+                self._h1_parts.append(data)
 
     def text(self) -> str:
         return " ".join(self.parts)
@@ -115,6 +132,13 @@ def visible_fragment(s: str) -> str:
 
 def clean(s: str) -> str:
     return re.sub(r"\s+", " ", TAG_RE.sub(" ", visible_fragment(s))).strip()
+
+
+def visible_h1(s: str) -> str:
+    parser = _VisibleParser()
+    parser.feed(s)
+    parser.close()
+    return parser.h1_texts[0] if parser.h1_texts else ""
 
 
 def count_words(s: str) -> int:
@@ -145,8 +169,7 @@ def scan(path: Path) -> dict:
     images = len(re.findall(r"<img\b", body, re.I))
 
     title = clean(TITLE_RE.search(text).group(1)) if TITLE_RE.search(text) else ""
-    h1_candidates = H1_RE.findall(text)
-    h1 = next((candidate for candidate in (clean(x) for x in h1_candidates) if candidate), "")
+    h1 = visible_h1(text)
     topm = TOPBAR_TITLE_RE.search(text)
     topbar = clean(topm.group(1)) if topm else ""
     duplicate_title = bool(h1 and topbar and h1.lower() == topbar.lower())

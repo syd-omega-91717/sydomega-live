@@ -1427,7 +1427,7 @@
   "runtime_dispatch_drift": {
     "observed_date": "2026-11-12",
     "live_function": "public.omega_runtime_dispatch(uuid,text,jsonb)",
-    "live_definition_md5": "9973930f41eb7bebdf14b48670f3e06d",
+    "live_definition_md5": "6441f11c033610c0e227f01386b487bd",
     "provider_ledger_versions": [
       "20261002084948",
       "20261002085421",
@@ -1442,7 +1442,7 @@
     "status": "DISPATCHER_BRANCHES_VERIFIED_54_OF_54; BEHAVIORAL_PROBES_PENDING",
     "reconciliation_migration": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
     "production_application": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
-    "interpretation": "The earlier 23-of-54 observation is superseded. Read-only inspection of the live public.omega_runtime_dispatch(uuid,text,jsonb) definition found all 53 canonical module_read branches plus the dedicated consultancy intake write branch (54/54), and the provider migration ledger records 20261111190000 as applied. This verifies branch presence only. The separate 54-action behavioral SQL probe remains RERUN_REQUIRED_NOT_PRODUCTION_PROOF, including the member_presence last_seen ordering regression; do not represent every adapter as behaviorally verified until that probe passes."
+    "interpretation": "Read-only provider inspection confirms all 53 canonical module_read branches plus the dedicated consultancy intake write branch (54/54). The live dispatcher definition hash is 6441f11c033610c0e227f01386b487bd. The live omega_private.create_consult_intake helper now returns text (definition hash 0ac1e7dddd0fa1aa94ca6459d633517d) and is consistent with the provider-applied 20261112130000 compatibility migration; consult_requests.id remains bigint and is returned as text. This does not make the source chain replayable: the earlier provider-applied 20261111190000 repository file still contains a duplicate standalone VALUES/ON CONFLICT fragment and stops clean replay. The separate 54-action behavioral probe remains RERUN_REQUIRED_NOT_PRODUCTION_PROOF."
   },
   "idempotency_observations": {
     "observed_date": "2026-11-12",
@@ -1554,14 +1554,14 @@
     "observed_date": "2026-11-12",
     "status": "LIVE_DATABASE_VERIFIED",
     "migration_ledger": {
-      "applied_count": 419,
-      "latest_version": "20261112091500",
-      "latest_name": "omega_search_index_schema_reconciliation"
+      "applied_count": 426,
+      "latest_version": "20261112130000",
+      "latest_name": "omega_consultancy_request_id_text_compat"
     },
     "dispatcher": {
       "function": "public.omega_runtime_dispatch(uuid,text,jsonb)",
-      "md5": "9973930f41eb7bebdf14b48670f3e06d",
-      "definition_characters": 27041,
+      "md5": "6441f11c033610c0e227f01386b487bd",
+      "definition_characters": 28614,
       "canonical_module_actions_expected": 54,
       "module_read_actions_expected": 53,
       "module_read_actions_found": 53,
@@ -1613,6 +1613,14 @@
       "expected_policy": "(owner_id IS NULL AND organization_id IS NULL) OR owner_id=(SELECT auth.uid())",
       "runtime_adapter_filter": "(owner_id IS NULL AND organization_id IS NULL) OR owner_id=p_actor_user_id",
       "performance_followup_migration": "20261112091600_omega_consultancy_runtime_schema_parity.sql"
+    },
+    "consultancy_intake_helper": {
+      "function": "omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text)",
+      "return_type": "text",
+      "definition_md5": "0ac1e7dddd0fa1aa94ca6459d633517d",
+      "definition_characters": 2558,
+      "source_migration": "20261112130000_omega_consultancy_request_id_text_compat.sql",
+      "verification": "LIVE_READ_ONLY_PG_GET_FUNCTIONDEF"
     }
   },
   "provider_advisor_observations": {
@@ -1693,8 +1701,9 @@
   "release_readiness": {
     "status": "RELEASE_BLOCKED",
     "blockers": [
-      "20261112091600_omega_consultancy_runtime_schema_parity.sql has not passed a fresh isolated migration replay and runtime probe",
-      "Cloudflare exact-SHA production verification has not passed for a merged main commit"
+      "Fresh isolated replay stops in provider-applied 20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql because the repository source contains a duplicate standalone VALUES/ON CONFLICT fragment after return v_id; provider history and current source must be reconciled without silently rewriting applied migration history.",
+      "The 54-action behavioral SQL probe remains RERUN_REQUIRED_NOT_PRODUCTION_PROOF.",
+      "Cloudflare exact-SHA production verification has not passed for the current merged main commit."
     ],
     "last_checked": "2026-11-12"
   },

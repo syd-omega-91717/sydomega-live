@@ -136,6 +136,7 @@ Deno.serve(async (req) => {
 
     const decision = classify(message);
     const requestId = crypto.randomUUID();
+    const modelProfile: "fast" | "reasoning" = decision.risk === "HIGH" ? "reasoning" : "fast";
     const governance = {
       request_id: requestId,
       policy: "OMEGA_CANONICAL",
@@ -144,7 +145,7 @@ Deno.serve(async (req) => {
       permission: "AUTHENTICATED_MEMBER",
       approval: decision.approval,
       adapter: "omega-model-router",
-      model_profile: "fast",
+      model_profile: modelProfile,
       model_provider: "policy_selected",
       evidence: "RUNTIME_RESPONSE",
       fabric_stage: "EDGE_GOVERNANCE_ADAPTER",

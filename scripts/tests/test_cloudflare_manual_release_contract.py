@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = (ROOT / ".github/workflows/cloudflare-pages.yml").read_text(encoding="utf-8")
 PRODUCTION_VERIFY = (ROOT / ".github/workflows/cloudflare-production-verify.yml").read_text(encoding="utf-8")
 PRODUCTION_SMOKE = (ROOT / "scripts/cloudflare-production-smoke.py").read_text(encoding="utf-8")
+SMOKE_REQUIREMENTS = (ROOT / "scripts/requirements-smoke.txt").read_text(encoding="utf-8")
 
 
 class CloudflareManualReleaseContract(unittest.TestCase):
@@ -58,6 +59,11 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertNotIn("urlopen(", PRODUCTION_SMOKE)
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
+
+    def test_production_smoke_dependency_is_pinned_and_installed_only_for_verification(self):
+        self.assertIn("requests==2.34.2", SMOKE_REQUIREMENTS)
+        self.assertIn("scripts/requirements-smoke.txt", WORKFLOW)
+        self.assertIn("python -m pip install", WORKFLOW)
 
     def test_production_smoke_rejects_unsafe_url_schemes_and_hosts(self):
         import importlib.util

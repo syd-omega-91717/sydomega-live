@@ -13,6 +13,7 @@ MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_ad
 IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
 REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe_refund_state_fk_index.sql"
 SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
+CONSULTANCY_COMPAT_MIGRATION = ROOT / "supabase/migrations/20261112110000_omega_consultancy_adapter_schema_compat.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
 def fail(message: str) -> int:
@@ -27,7 +28,8 @@ def main() -> int:
         idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
         refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
         search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql))
+        consultancy_compat_sql = CONSULTANCY_COMPAT_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, consultancy_compat_sql))
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
@@ -75,28 +77,46 @@ def main() -> int:
         search_dispatcher_actions: set[str] = set()
         for match in re.finditer(
             r"(?:if|elsif)\s+v_module\s*=\s*'([A-Z0-9_]+)'\s+and\s+v_action_name\s*=\s*'([^']+)'",
-            search_index_sql,
+            consultancy_compat_sql,
             re.IGNORECASE,
         ):
             search_dispatcher_actions.add(f"{match.group(1).upper()}.{match.group(2)}")
         for match in re.finditer(
             r"(?:if|elsif)\s+v_module\s+in\s*\(([^)]+)\)\s+and\s+v_action_name\s*=\s*'([^']+)'",
-            search_index_sql,
+            consultancy_compat_sql,
             re.IGNORECASE,
         ):
             modules = re.findall(r"'([A-Z0-9_]+)'", match.group(1), re.IGNORECASE)
             search_dispatcher_actions.update(f"{module.upper()}.{match.group(2)}" for module in modules)
         elemental_search = re.search(
             r"elsif\s+v_module\s*=\s*'ELEMENTAL'\s+and\s+v_action_name\s+in\s*\(([^)]+)\)",
-            search_index_sql,
+            consultancy_compat_sql,
             re.IGNORECASE,
         )
         if elemental_search:
             search_dispatcher_actions.update(
                 f"ELEMENTAL.{action}" for action in re.findall(r"'([^']+)'", elemental_search.group(1))
             )
-        if "when 'create_consult_intake' then" in search_index_sql and "omega_private.create_consult_intake(" in search_index_sql:
+        if "when 'create_consult_intake' then" in consultancy_compat_sql and "omega_private.create_consult_intake(" in consultancy_compat_sql:
             search_dispatcher_actions.add("CONSULTANCY.intake.create")
+        if consultancy_compat_sql.lower().count("create or replace function public.omega_runtime_dispatch(") != 1:
+            return fail("consultancy compatibility migration must replace the canonical dispatcher exactly once")
+        if consultancy_compat_sql.lower().count("security definer set search_path=''") != 1:
+            return fail("consultancy compatibility dispatcher must pin an empty search_path")
+        for marker in (
+            "to_jsonb(c) as row_data",
+            "to_jsonb(b) as row_data",
+            "c.row_data->'domain'",
+            "b.row_data->'domain'",
+            "consult_requests_adapter_stable_columns_missing",
+            "expert_bookings_adapter_stable_columns_missing",
+            "runtime_dispatch_acl_invalid",
+        ):
+            if marker not in consultancy_compat_sql:
+                return fail(f"consultancy schema-compatibility marker missing: {marker}")
+        if re.search(r"select\s+id\s*,\s*domain\s*,\s*message\s*,\s*status\s*,\s*created_at\s*,\s*urgency\s*,\s*preferred_time\s+from\s+public\.consult_requests", consultancy_compat_sql, re.IGNORECASE):
+            return fail("consultancy adapter must not statically reference optional request columns")
+
         if search_dispatcher_actions != expected:
             return fail(
                 "search-index dispatcher replacement lost canonical actions; "

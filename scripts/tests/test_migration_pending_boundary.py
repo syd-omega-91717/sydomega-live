@@ -151,6 +151,11 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         path = MIGRATIONS / "20261112091600_omega_consultancy_runtime_schema_parity.sql"
         sql = path.read_text(encoding="utf-8").lower()
         self.assertIn("add column if not exists domain text", sql)
+        self.assertIn("alter column user_id set not null", sql)
+        self.assertIn("alter column domain set not null", sql)
+        self.assertIn("alter column message set not null", sql)
+        self.assertIn("alter column commission_rate set default 9.17", sql)
+        self.assertIn("alter column status set default 'received'", sql)
         self.assertIn("returns text language plpgsql security definer set search_path=''", sql)
         self.assertIn("returning id::text into v_id", sql)
         self.assertIn("return v_id;", sql)

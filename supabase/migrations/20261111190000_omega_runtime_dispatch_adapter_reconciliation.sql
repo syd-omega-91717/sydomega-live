@@ -1,117 +1,3 @@
--- Reconcile the live runtime dispatcher with all 54 canonical module actions.
--- The live provider function had drifted behind the applied migration ledger.
--- Restore the full module adapter set and add the wave-3 handlers.
--- Member-owned reads are scoped to p_actor_user_id. Financial execution and
--- asset mutation remain outside this dispatcher.
-begin;
-
-drop index if exists public.consult_requests_runtime_idempotency_uidx;
-create unique index consult_requests_runtime_idempotency_uidx
-  on public.consult_requests(user_id,runtime_idempotency_key)
-  where runtime_idempotency_key is not null;
-
-alter table public.omega_service_orders
-  drop constraint if exists omega_service_orders_idempotency_key_key;
-alter table public.omega_service_orders
-  drop constraint if exists omega_service_orders_user_idempotency_key_key;
-drop index if exists public.omega_service_orders_user_idempotency_uidx;
-drop index if exists public.omega_service_orders_system_idempotency_uidx;
-create unique index omega_service_orders_user_idempotency_uidx
-  on public.omega_service_orders(user_id,idempotency_key)
-  where user_id is not null and idempotency_key is not null;
-create unique index omega_service_orders_system_idempotency_uidx
-  on public.omega_service_orders(idempotency_key)
-  where user_id is null and idempotency_key is not null;
-
-alter table public.omega_agent_tasks
-  drop constraint if exists omega_agent_tasks_idempotency_key_key;
-drop index if exists public.omega_agent_tasks_user_idempotency_uidx;
-drop index if exists public.omega_agent_tasks_system_idempotency_uidx;
-create unique index omega_agent_tasks_user_idempotency_uidx
-  on public.omega_agent_tasks(user_id,idempotency_key)
-  where user_id is not null and idempotency_key is not null;
-create unique index omega_agent_tasks_system_idempotency_uidx
-  on public.omega_agent_tasks(idempotency_key)
-  where user_id is null and idempotency_key is not null;
-
-alter table public.omega_notifications
-  drop constraint if exists omega_notifications_idempotency_key_key;
-alter table public.omega_notifications
-  drop constraint if exists omega_notifications_user_idempotency_key_key;
-alter table public.omega_notifications
-  add constraint omega_notifications_user_idempotency_key_key
-  unique (user_id,idempotency_key);
-
-alter table public.sovereign_events
-  drop constraint if exists sovereign_events_idempotency_key_key;
-drop index if exists public.sovereign_events_user_idempotency_uidx;
-drop index if exists public.sovereign_events_system_idempotency_uidx;
-create unique index sovereign_events_user_idempotency_uidx
-  on public.sovereign_events(user_id,idempotency_key)
-  where user_id is not null and idempotency_key is not null;
-create unique index sovereign_events_system_idempotency_uidx
-  on public.sovereign_events(idempotency_key)
-  where user_id is null and idempotency_key is not null;
-
-alter table public.omega_achievement_verifications
-  drop constraint if exists omega_achievement_verifications_idempotency_key_key;
-alter table public.omega_achievement_verifications
-  drop constraint if exists omega_achievement_verifications_subject_idempotency_key_key;
-alter table public.omega_achievement_verifications
-  add constraint omega_achievement_verifications_subject_idempotency_key_key
-  unique (user_achievement_id,idempotency_key);
-
-drop index if exists public.omega_platform_events_idempotency_uidx;
-drop index if exists public.omega_platform_events_actor_idempotency_uidx;
-drop index if exists public.omega_platform_events_system_idempotency_uidx;
-create unique index omega_platform_events_actor_idempotency_uidx
-  on public.omega_platform_events(actor_user_id,idempotency_key)
-  where actor_user_id is not null and idempotency_key is not null;
-create unique index omega_platform_events_system_idempotency_uidx
-  on public.omega_platform_events(idempotency_key)
-  where actor_user_id is null and idempotency_key is not null;
-
-alter table public.omega_audit_log
-  drop constraint if exists omega_audit_log_idempotency_key_key;
-drop index if exists public.omega_audit_log_actor_idempotency_uidx;
-drop index if exists public.omega_audit_log_system_idempotency_uidx;
-create unique index omega_audit_log_actor_idempotency_uidx
-  on public.omega_audit_log(actor_user_id,idempotency_key)
-  where actor_user_id is not null and idempotency_key is not null;
-create unique index omega_audit_log_system_idempotency_uidx
-  on public.omega_audit_log(idempotency_key)
-  where actor_user_id is null and idempotency_key is not null;
-
-create or replace function omega_private.create_service_order(
-  p_user_id uuid,p_service_id text,p_idempotency_key text,p_metadata jsonb default '{}'::jsonb
-) returns uuid language plpgsql security definer set search_path='' as $function$
-declare v_order_id uuid;
-begin
-  if p_user_id is null then raise exception 'user_required'; end if;
-  if p_service_id is null or pg_catalog.length(pg_catalog.btrim(p_service_id)) < 2 then raise exception 'service_required'; end if;
-  if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
-  if not exists (select 1 from auth.users where id=p_user_id) then raise exception 'user_not_found'; end if;
-  if not exists (
-    select 1 from public.omega_services
-    where service_id=pg_catalog.btrim(p_service_id)
-      and status in ('INTEGRATED','TESTED','DEPLOYED','VERIFIED')
-  ) then
-    raise exception 'service_not_orderable';
-  end if;
-  insert into public.omega_service_orders(service_id,user_id,status,idempotency_key,metadata)
-  values(pg_catalog.btrim(p_service_id),p_user_id,'PENDING',pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
-  on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null
-  do update set idempotency_key=excluded.idempotency_key
-    where omega_service_orders.service_id=excluded.service_id
-      and omega_service_orders.metadata=excluded.metadata
-  returning order_id into v_order_id;
-  if v_order_id is null then raise exception 'service_order_idempotency_conflict'; end if;
-  return v_order_id;
-end;
-$function$;
-revoke all on function omega_private.create_service_order(uuid,text,text,jsonb) from public,anon,authenticated;
-grant execute on function omega_private.create_service_order(uuid,text,text,jsonb) to service_role;
-
 create or replace function omega_private.create_consult_intake(
   p_user_id uuid,p_domain text,p_message text,p_idempotency_key text,
   p_urgency text default 'normal',p_preferred_time text default null,
@@ -126,25 +12,14 @@ begin
  if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
  if not p_confidentiality_accepted then raise exception 'confidentiality_acceptance_required'; end if;
  insert into public.consult_requests(user_id,domain,message,status,created_at,urgency,contact,preferred_time,confidentiality_accepted,runtime_idempotency_key)
- values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(pg_catalog.btrim(p_urgency),'normal'),40),pg_catalog.left(p_contact,240),pg_catalog.left(p_preferred_time,240),true,p_idempotency_key)
+ values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(nullif(pg_catalog.btrim(p_urgency),''),'normal'),40),pg_catalog.left(nullif(pg_catalog.btrim(p_contact),''),240),pg_catalog.left(nullif(pg_catalog.btrim(p_preferred_time),''),240),true,pg_catalog.btrim(p_idempotency_key))
  on conflict (user_id,runtime_idempotency_key) where runtime_idempotency_key is not null
  do update set runtime_idempotency_key=excluded.runtime_idempotency_key
  returning id into v_id;
  return v_id;
- values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(nullif(pg_catalog.btrim(p_urgency),''),'normal'),40),pg_catalog.left(nullif(pg_catalog.btrim(p_contact),''),240),pg_catalog.left(nullif(pg_catalog.btrim(p_preferred_time),''),240),true,pg_catalog.btrim(p_idempotency_key))
- on conflict (user_id,runtime_idempotency_key) where runtime_idempotency_key is not null
- do update set runtime_idempotency_key=excluded.runtime_idempotency_key
-   where consult_requests.domain=excluded.domain
-     and consult_requests.message=excluded.message
-     and consult_requests.urgency is not distinct from excluded.urgency
-     and consult_requests.contact is not distinct from excluded.contact
-     and consult_requests.preferred_time is not distinct from excluded.preferred_time
-     and consult_requests.confidentiality_accepted=excluded.confidentiality_accepted
- returning id into v_id;
- if v_id is null then raise exception 'consult_intake_idempotency_conflict'; end if;
 end;
 $$;
-revoke all on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) from public,anon,authenticated;
+evoke all on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) from public,anon,authenticated;
 grant execute on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) to service_role;
 
 create or replace function omega_private.enqueue_agent_task(

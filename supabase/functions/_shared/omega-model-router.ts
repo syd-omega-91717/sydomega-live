@@ -18,6 +18,7 @@ export interface OmegaAiUsageRecord {
   status: "completed" | "failed" | "blocked";
   input_tokens: number | null;
   output_tokens: number | null;
+  estimated_cost: null;
   latency_ms: number;
   citations: unknown[];
   evaluation: Record<string, unknown>;
@@ -245,6 +246,7 @@ export async function runOmegaModel(request: OmegaAiRequest): Promise<OmegaAiRes
       status,
       input_tokens: inputTokens,
       output_tokens: outputTokens,
+      estimated_cost: null,
       latency_ms: Math.max(0, Date.now() - startedAt),
       citations: [],
       evaluation: { status: "NOT_RUN", policy_version: "omega-ai-routing-v1" },

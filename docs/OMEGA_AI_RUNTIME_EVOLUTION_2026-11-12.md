@@ -85,7 +85,7 @@ The evaluation cases in `config/omega-ai-evaluation-cases.json` are policy test 
 5. Confirm one real, non-sensitive `omega_ai_requests` record is written; do not create synthetic production usage.
 
 ### P1 — prove quality before model promotion
-1. Add deterministic JSON-schema validation to every orchestrator response.
+1. Upgrade the current field allowlists and bounds to a versioned JSON Schema validator for every orchestrator response.
 2. Run the policy cases against mocked provider responses and adversarial inputs.
 3. Establish a reviewed golden set for concierge, growth and product tasks.
 4. Compare providers on task success, refusal correctness, latency, token usage, cost and human override rate.

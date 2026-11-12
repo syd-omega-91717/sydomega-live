@@ -53,15 +53,15 @@ No live database, Edge Function, provider setting, production deployment, secret
 
 ## Fresh replay follow-up (PR #1254)
 
-After repairing the pending registry, the isolated replay passed migration-inventory validation and applied the migrations through the earlier August/October chain. It then stopped in:
+After repairing the pending registry, the isolated replay passed migration-inventory validation and applied the earlier August/October chain. It then stopped in:
 
 `20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql`
 
-The failing statement is the `omega_private.create_consult_intake(...)` function (statement 38), with PostgreSQL reporting `syntax error at or near "on" (SQLSTATE 42601)`. Source inspection shows a second standalone `VALUES ... ON CONFLICT ... RETURNING` fragment immediately after `return v_id;`, with no preceding `INSERT INTO`. This is the malformed source fragment that causes the replay failure.
+The failing statement is `omega_private.create_consult_intake(...)` (statement 38), with PostgreSQL reporting `syntax error at or near "on" (SQLSTATE 42601)`. Source inspection shows a second standalone `VALUES ... ON CONFLICT ... RETURNING` fragment immediately after `return v_id;`, with no preceding `INSERT INTO`. This malformed repository fragment stops a clean replay.
 
-Version `20261111190000` is present in the authenticated provider migration ledger and `supabase/remote-migrations.json`; it is therefore treated as provider-applied. **Do not edit, renumber, delete, or silently skip this migration.** The clean replay cannot proceed past it, so later November migrations and the pending `20261112130000` have not been replay-verified.
+A fresh read-only Supabase provider-ledger query now returns **426 applied migrations**, latest `20261112130000_omega_consultancy_request_id_text_compat`. The previously pending `20261112130000` migration is therefore **provider-applied**, not pending. The live helper `omega_private.create_consult_intake` returns `text` (definition MD5 `0ac1e7dddd0fa1aa94ca6459d633517d`); `public.consult_requests.id` remains `bigint` and the helper returns `id::text`. The live dispatcher definition MD5 is `6441f11c033610c0e227f01386b487bd`. The remote migration snapshot and pending registry have been reconciled to this read-only provider evidence; pending is now empty.
 
-The schema owner must explicitly decide how to reconcile the provider-applied migration history with the malformed repository source. Any decision must preserve the live database state and provider migration ledger, document the source-history correction, and keep clean replay as a blocking check. The pending `20261112130000` migration remains `PENDING_REVIEW / NOT_APPLIED`.
+Version `20261111190000` is also provider-applied. **Do not edit, renumber, delete, or silently skip it.** The clean replay cannot proceed past it, so later migrations cannot be replay-verified from zero until the schema owner explicitly resolves the applied-history/source mismatch. No migration was applied by this work.
 
 ## PR #1254 verification snapshot
 

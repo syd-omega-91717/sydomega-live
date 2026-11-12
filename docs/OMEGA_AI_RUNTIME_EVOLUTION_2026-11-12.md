@@ -25,7 +25,7 @@
 
 Anthropic remains the default to preserve the existing production integration. OpenAI routing is **opt-in per profile** and requires a separately configured `OPENAI_API_KEY`. The router never silently falls back to another provider.
 
-Migration `20261112121000_omega_ai_member_quota_guard` is also provider-recorded as applied. The service-role-only per-member rolling quota RPC is now available to the deployed router. The global migration ledger contains 425 provider-recorded versions, latest `20261112121000`, with no pending source migrations at the time of this verification.
+Migration `20261112121000_omega_ai_member_quota_guard` is also provider-recorded as applied. The service-role-only per-member rolling quota RPC is now available to the deployed router. The provider ledger contains 425 applied versions through `20261112121000`. A new forward-only migration `20261112130000` is pending because clean replay exposed a UUID/BIGINT consultancy dispatcher variable mismatch. Production release remains blocked until that migration passes fresh replay and the full 54-action probe, then is provider-recorded as applied.
 
 The router adds:
 - profile-specific timeouts and bounded retry for transient network/429/5xx failures;

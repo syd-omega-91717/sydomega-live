@@ -283,6 +283,15 @@ Deno.serve(async (req) => {
         risk: decision.risk.toLowerCase() as "low" | "medium" | "high",
         promptVersion: "concierge-v2",
         profile: modelProfile,
+        consumeQuota: async () => {
+          if (!telemetryClient) return { allowed: false, reason: "ai_quota_unavailable" };
+          const { data, error } = await telemetryClient.rpc("omega_consume_ai_request_quota", {
+            p_user_id: who.data.user.id,
+            p_profile: modelProfile,
+          });
+          if (error || !data) return { allowed: false, reason: "ai_quota_unavailable" };
+          return { allowed: data.allowed === true, reason: typeof data.reason === "string" ? data.reason : undefined };
+        },
         system: effectiveSystem,
         input: userMessage,
         requestId,

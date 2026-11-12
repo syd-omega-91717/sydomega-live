@@ -3,12 +3,16 @@
 from __future__ import annotations
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / "config/omega-module-runtime.json"
 OBSERVATIONS = ROOT / "config/omega-live-module-runtime-observations.json"
 MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql"
+IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
+REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe_refund_state_fk_index.sql"
+SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
 def fail(message: str) -> int:
@@ -20,6 +24,10 @@ def main() -> int:
         runtime = json.loads(RUNTIME.read_text(encoding="utf-8"))
         snapshot = json.loads(OBSERVATIONS.read_text(encoding="utf-8"))
         sql = MIGRATION.read_text(encoding="utf-8")
+        idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
+        refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
+        search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql))
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
@@ -63,6 +71,54 @@ def main() -> int:
         extra = sorted(implemented - expected)
         if missing or extra:
             return fail(f"module action coverage mismatch; missing={missing}; extra={extra}")
+
+        search_dispatcher_actions: set[str] = set()
+        for match in re.finditer(
+            r"(?:if|elsif)\s+v_module\s*=\s*'([A-Z0-9_]+)'\s+and\s+v_action_name\s*=\s*'([^']+)'",
+            search_index_sql,
+            re.IGNORECASE,
+        ):
+            search_dispatcher_actions.add(f"{match.group(1).upper()}.{match.group(2)}")
+        for match in re.finditer(
+            r"(?:if|elsif)\s+v_module\s+in\s*\(([^)]+)\)\s+and\s+v_action_name\s*=\s*'([^']+)'",
+            search_index_sql,
+            re.IGNORECASE,
+        ):
+            modules = re.findall(r"'([A-Z0-9_]+)'", match.group(1), re.IGNORECASE)
+            search_dispatcher_actions.update(f"{module.upper()}.{match.group(2)}" for module in modules)
+        elemental_search = re.search(
+            r"elsif\s+v_module\s*=\s*'ELEMENTAL'\s+and\s+v_action_name\s+in\s*\(([^)]+)\)",
+            search_index_sql,
+            re.IGNORECASE,
+        )
+        if elemental_search:
+            search_dispatcher_actions.update(
+                f"ELEMENTAL.{action}" for action in re.findall(r"'([^']+)'", elemental_search.group(1))
+            )
+        if "when 'create_consult_intake' then" in search_index_sql and "omega_private.create_consult_intake(" in search_index_sql:
+            search_dispatcher_actions.add("CONSULTANCY.intake.create")
+        if search_dispatcher_actions != expected:
+            return fail(
+                "search-index dispatcher replacement lost canonical actions; "
+                f"missing={sorted(expected - search_dispatcher_actions)}; "
+                f"extra={sorted(search_dispatcher_actions - expected)}"
+            )
+        for marker in (
+            "coalesce(body,content) as body",
+            "owner_id is null and organization_id is null",
+            "owner_id=p_actor_user_id",
+            "create policy search_index_read",
+            "using ((owner_id is null and organization_id is null) or owner_id=auth.uid())",
+            "add column if not exists content text",
+            "add column if not exists body text",
+            "add column if not exists organization_id uuid",
+            "revoke all on table public.search_index from anon,authenticated",
+            "search_index_owner_updated_idx",
+        ):
+            if marker not in search_index_sql:
+                return fail(f"search-index schema/RLS/runtime marker missing: {marker}")
+        if search_index_sql.lower().count("security definer set search_path=''") != 1:
+            return fail("search-index dispatcher replacement must pin an empty search_path")
         for marker in (
             "createSupabaseContext(req, { auth: 'user' })",
             "ctx.userClaims.sub",
@@ -103,7 +159,22 @@ def main() -> int:
             "omega_audit_log_system_idempotency_uidx",
             "on conflict (idempotency_key) where user_id is null and idempotency_key is not null",
             "on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null",
-            "on conflict (user_id,idempotency_key) do update set metadata=excluded.metadata",
+            "and omega_service_orders.metadata=excluded.metadata",
+            "and consult_requests.message=excluded.message",
+            "and omega_agent_tasks.input=excluded.input",
+            "and omega_notifications.body=excluded.body",
+            "and omega_platform_events.payload is not distinct from excluded.payload",
+            "and omega_audit_log.details=excluded.details",
+            "service_order_idempotency_conflict",
+            "consult_intake_idempotency_conflict",
+            "agent_task_idempotency_conflict",
+            "notification_idempotency_conflict",
+            "platform_event_idempotency_conflict",
+            "platform_event_audit_idempotency_conflict",
+            "verification_idempotency_conflict",
+            "sovereign_event_idempotency_conflict",
+            "v_existing_evidence is distinct from coalesce(p_evidence,'{}'::jsonb)",
+            "length(v_key)>122",
             "on conflict (idempotency_key) where actor_user_id is null and idempotency_key is not null",
             "on conflict (actor_user_id,idempotency_key) where actor_user_id is not null and idempotency_key is not null",
             "on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null do nothing",
@@ -121,8 +192,8 @@ def main() -> int:
             "confidentiality_acceptance_required",
             "ADAPTER_REQUIRED",
         ):
-            if marker not in sql:
-                return fail(f"dispatcher migration safety/contract marker missing: {marker}")
+            if marker not in all_sql:
+                return fail(f"dispatcher/idempotency migration safety marker missing: {marker}")
         function_start = sql.find("create or replace function public.omega_runtime_dispatch(")
         function_end = sql.find("$" + "$;", function_start) + len("$" + "$;")
         if function_start < 0 or function_end < len("$" + "$;"):
@@ -143,6 +214,22 @@ def main() -> int:
             return fail("service-order idempotency lookup is not actor-scoped")
         if sql.lower().count("security definer set search_path=''") != 9:
             return fail("all nine reconciliation helper/dispatcher functions must pin an empty search_path")
+        if len(re.findall(r"create or replace function", idempotency_sql, re.IGNORECASE)) != 7:
+            return fail("idempotency follow-up must replace exactly seven existing helper functions")
+        if idempotency_sql.lower().count("security definer set search_path=''") != 7:
+            return fail("all seven idempotency helper functions must pin an empty search_path")
+        if not idempotency_sql.lstrip().startswith("--") or "\nbegin;" not in idempotency_sql or not idempotency_sql.rstrip().endswith("commit;"):
+            return fail("idempotency follow-up must be a transactional migration")
+        if re.search(r"\b(create|drop)\s+(unique\s+)?index\b|\balter\s+table\b", idempotency_sql, re.IGNORECASE):
+            return fail("idempotency follow-up must not rewrite already-applied index/schema history")
+        if "do update set input=excluded.input" in idempotency_sql:
+            return fail("agent task idempotency retry must not overwrite the original task input")
+        if "do update set payload=excluded.payload" in idempotency_sql or "do update set details=excluded.details" in idempotency_sql:
+            return fail("event/audit idempotency retries must not overwrite original event evidence")
+        if not re.search(r"create index if not exists stripe_refund_state_last_reversal_transaction_idx\s+on omega_private\.stripe_refund_state\s*\(last_reversal_transaction_id\)", refund_index_sql, re.IGNORECASE):
+            return fail("refund-state last-reversal foreign key index migration is missing its exact covering index")
+        if re.search(r"\bdrop\b|create\s+unique\s+index|\balter\s+table\b", refund_index_sql, re.IGNORECASE):
+            return fail("refund-state index migration must remain additive and non-destructive")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:
             return fail("platform credential must explicitly not be a government/travel document")
         if "Interpretive content for reflection and entertainment only" not in sql:
@@ -175,4 +262,7 @@ def main() -> int:
         return fail(str(exc))
 
 if __name__ == "__main__":
+    if "--help" in sys.argv[1:]:
+        print(__doc__ or "")
+        raise SystemExit(0)
     raise SystemExit(main())

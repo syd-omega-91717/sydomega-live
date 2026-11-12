@@ -175,9 +175,9 @@ def main() -> int:
             return fail("agent task idempotency retry must not overwrite the original task input")
         if "do update set payload=excluded.payload" in idempotency_sql or "do update set details=excluded.details" in idempotency_sql:
             return fail("event/audit idempotency retries must not overwrite original event evidence")
-        if not re.search(r"create index if not exists stripe_refund_state_last_reversal_transaction_idx\\s+on omega_private\\.stripe_refund_state\\s*\\(last_reversal_transaction_id\\)", refund_index_sql, re.IGNORECASE):
+        if not re.search(r"create index if not exists stripe_refund_state_last_reversal_transaction_idx\s+on omega_private\.stripe_refund_state\s*\(last_reversal_transaction_id\)", refund_index_sql, re.IGNORECASE):
             return fail("refund-state last-reversal foreign key index migration is missing its exact covering index")
-        if re.search(r"\\bdrop\\b|create\\s+unique\\s+index|\\balter\\s+table\\b", refund_index_sql, re.IGNORECASE):
+        if re.search(r"\bdrop\b|create\s+unique\s+index|\balter\s+table\b", refund_index_sql, re.IGNORECASE):
             return fail("refund-state index migration must remain additive and non-destructive")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:
             return fail("platform credential must explicitly not be a government/travel document")

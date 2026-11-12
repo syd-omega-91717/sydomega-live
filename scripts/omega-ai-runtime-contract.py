@@ -41,6 +41,12 @@ def main() -> int:
         require(policy["governance"]["silentProviderFallback"] is False, "provider fallback must never be silent")
         require(policy["governance"]["storePrompts"] is False and policy["governance"]["storeMemberContent"] is False, "prompt and member content persistence must remain disabled")
         require(policy["governance"]["evaluationDefault"] == "NOT_RUN", "evaluation must not be claimed without execution")
+        catalog = policy["catalogGovernance"]
+        require(catalog["verificationCadenceDays"] == 30, "provider model catalog must be reviewed every 30 days")
+        require(catalog["automaticModelPromotion"] is False, "provider model changes must not be auto-promoted")
+        require(catalog["retiredModelPolicy"] == "BLOCK_NEW_TRAFFIC_AND_REQUIRE_REVIEW", "retired model routing must fail closed")
+        require(catalog["openaiCatalog"].startswith("https://developers.openai.com/"), "OpenAI model catalog source must be official HTTPS documentation")
+        require(catalog["anthropicCatalog"].startswith("https://platform.claude.com/"), "Anthropic model catalog source must be official HTTPS documentation")
 
         expected_models = {
             "fast": ("claude-haiku-5-5", "gpt-6-luna", 512),
@@ -112,7 +118,7 @@ def main() -> int:
         require("graphify_ai_enabled" in graphify_helper and "ai_personalization_enabled" in graphify_helper and "sensitive_data_processing_enabled" in graphify_helper, "Graphify gate must require global enablement and both explicit consents")
         supabase_config = read("supabase/config.toml")
         require("[functions.graphify-ai-query]" not in supabase_config and "[functions.graphify-ai-ingest]" not in supabase_config, "Graphify must remain held outside routine function registration")
-        graphify_migration = read("supabase/migrations/20261112110000_omega_graphify_ai_safety_gate.sql")
+        graphify_migration = read("supabase/migrations/20261112111000_omega_graphify_ai_safety_gate.sql")
         require("'graphify_ai_enabled'" in graphify_migration and "false" in graphify_migration, "Graphify default-off migration missing")
         require(policy["heldFeatures"]["graphify"]["status"] == "HELD", "Graphify release state must remain held")
         legacy_prototype = read("platform.jsx")

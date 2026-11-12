@@ -84,6 +84,44 @@ Visible entries per section drop from about 7 to about 6, and the 6 double-listi
 | **IDENTITY** | IDENTITY + ARCHIVE | Manage profile, security, credentials, passport, membership and identity records |
 | **COMMAND** | GOVERN + ARENA + selected system/evidence routes | Access governance, approvals, agent operations, audit/evidence and owner controls |
 
+### Navigation inventory verified against `nav.js` and the main-tree route files (2026-11-12)
+
+The current baseline is:
+
+- **15 canonical navigation sections**
+- **248 navigation entries**
+- **242 distinct exact hrefs**
+- **0 missing local HTML targets** across the 248 entries
+- **6 exact duplicate hrefs**, which must not appear twice in the seven-destination member navigation:
+  - `/life.html` — `identity:life` and `life:life`; retain one HOME placement
+  - `/horoscope.html` — `cosmos:horoscope` and `intel:horoscope-page`; retain one UNIVERSE placement
+  - `/subscriptions.html` — VAULT and INVEST entries; retain one FINANCE placement
+  - `/income.html` — VAULT and INVEST entries; retain one FINANCE placement
+  - `/payments.html` — VAULT and INVEST entries; retain one FINANCE placement
+  - `/ledger.html` — VAULT and INVEST entries; retain one FINANCE placement
+
+Twelve base-page groups also contain multiple navigation entries because they point to different anchors or sub-areas: `profile.html`, `life.html`, `honors.html`, `matrix.html`, `horoscope.html`, `elements.html`, `vault.html`, `subscriptions.html`, `income.html`, `payments.html`, `ledger.html`, and `family.html`. Preserve meaningful anchor destinations, but expose them as page-level sections, tabs, or contextual links rather than duplicating the same page as multiple primary destinations.
+
+The `simulation-arena` item is an **entry ID**, not a route filename: its current href is `/arena.html`. Any route override or automated validation must use the actual href. The shorthand `/simulation-arena.html` would be a nonexistent target.
+
+The following existing cross-section entries are validated examples for navigation-only overrides; the canonical `PS` / `OmegaAxis` page identity and permissions remain unchanged:
+
+| Member destination | Existing navigation entries | Current canonical sections |
+|---|---|---|
+| COMMUNITY | `/social.html`, `/contacts.html`, `/network.html`, `/feed.html`, `/heritage.html`, `/bloodline.html` | SERVICES, COMMAND, COMMAND, MEDIA, ARCHIVE, ARCHIVE |
+| UNIVERSE | `/world.html`, `/world-atlas.html` | COMMAND, COMMAND |
+| DISCOVER | `/search.html`, `/chatbot.html` | COMMAND, COMMAND |
+| COMMAND | `/evidence.html`, `/replay.html`, `/recovery.html`, `/eternity.html`, `/data-observatory.html`, `/command-center.html`, `/decisions.html`, `/compliance.html`, `/agent-operations.html`, `/sovereign-ai.html`, `/agent-network.html`, `/analytics.html`, `/queue.html`, `/arena.html`, `/graph-admin.html` | COMMAND, COMMAND, COMMAND, COMMAND, COMMAND, COMMAND, COMMAND, INTEL, GOVERN, ARENA, ARENA, ARENA, ARENA, ARENA, INTEL |
+
+This is a validated starting set, not a claim that every other route has been semantically reviewed. Routes such as GUIDE, BEACON, MISSIONS, PROJECTS, NEWS, and NOTIFICATIONS still require a destination decision from their actual page purpose and role model before implementation.
+
+### Duplicate-route acceptance rule
+
+- Every exact href is displayed in one member-facing destination only.
+- Different anchors on the same page remain available as contextual page navigation when they represent genuinely distinct tasks.
+- The searchable ALL PAGES directory may preserve the full canonical workspace catalogue, but it must not create duplicate top-level links.
+- All 248 existing entry IDs, URLs, anchors, and route targets remain compatible. Consolidation changes placement and discoverability, not page deletion or authorization.
+
 ### Navigation implementation contract
 
 1. The seven destination labels and order above are the only primary navigation groups.

@@ -45,7 +45,7 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn("for attempt in $(seq 1 30)", PRODUCTION_VERIFY)
         self.assertIn("for path in account.html profile.html world.html news.html media.html privacy.html terms.html vault.html", PRODUCTION_VERIFY)
         self.assertIn("python scripts/cloudflare-production-smoke.py", PRODUCTION_VERIFY)
-        self.assertIn("www_code=\\"$(curl --location", PRODUCTION_VERIFY)
+        self.assertIn('www_code="$(curl --location', PRODUCTION_VERIFY)
         self.assertNotIn("CLOUDFLARE_API_TOKEN", PRODUCTION_VERIFY)
         self.assertIn("config/omega-page-contracts.json", PRODUCTION_SMOKE)
         self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)

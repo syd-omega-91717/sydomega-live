@@ -10,6 +10,7 @@ RUNTIME = ROOT / "config/omega-module-runtime.json"
 OBSERVATIONS = ROOT / "config/omega-live-module-runtime-observations.json"
 MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql"
 IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
+REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe_refund_state_fk_index.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
 def fail(message: str) -> int:
@@ -22,6 +23,7 @@ def main() -> int:
         snapshot = json.loads(OBSERVATIONS.read_text(encoding="utf-8"))
         sql = MIGRATION.read_text(encoding="utf-8")
         idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
+        refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
         all_sql = sql + "\\n" + idempotency_sql
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
@@ -173,6 +175,10 @@ def main() -> int:
             return fail("agent task idempotency retry must not overwrite the original task input")
         if "do update set payload=excluded.payload" in idempotency_sql or "do update set details=excluded.details" in idempotency_sql:
             return fail("event/audit idempotency retries must not overwrite original event evidence")
+        if not re.search(r"create index if not exists stripe_refund_state_last_reversal_transaction_idx\\s+on omega_private\\.stripe_refund_state\\s*\\(last_reversal_transaction_id\\)", refund_index_sql, re.IGNORECASE):
+            return fail("refund-state last-reversal foreign key index migration is missing its exact covering index")
+        if re.search(r"\\bdrop\\b|create\\s+unique\\s+index|\\balter\\s+table\\b", refund_index_sql, re.IGNORECASE):
+            return fail("refund-state index migration must remain additive and non-destructive")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:
             return fail("platform credential must explicitly not be a government/travel document")
         if "Interpretive content for reflection and entertainment only" not in sql:

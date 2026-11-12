@@ -38,18 +38,16 @@ jobs:
           IMAGE=semgrep/semgrep@sha256:d1825c2c72110b5bfbf0602ff68f7f117322597a7c33037a79dba9f897f5f1f0
           # Keep Semgrep on parser-stable source formats. HTML inline scripts are
           # checked by the dedicated inline-JS/XSS contracts; workflow YAML is
-          # checked by workflow-contract-lint. Exclude ci.yml because its embedded
-          # Python heredocs are misclassified as Bash metavariable snippets by
-          # Semgrep's auto GitHub Actions rules. Do not suppress findings or errors.
+          # checked by workflow-contract-lint. Tracked TSX/JSX inspiration sources
+          # are not part of the framework-free production build. Do not suppress
+          # findings or errors in the supported production source set.
           SCAN_SCOPE=(
             --include '*.js'
+            --include '*.mjs'
+            --include '*.cjs'
             --include '*.py'
             --include '*.sql'
             --include '*.ts'
-            --include '*.tsx'
-            --include '*.yml'
-            --include '*.yaml'
-            --exclude '.github/workflows/ci.yml'
           )
           if docker pull "$IMAGE"; then
             docker run --rm -v "${PWD}:/src" "$IMAGE" semgrep scan --config=auto --error --sarif --output=/src/semgrep.sarif "${SCAN_SCOPE[@]}" /src
@@ -68,13 +66,11 @@ jobs:
           # the gate; this diagnostic pass cannot turn a failed scan green.
           SCAN_SCOPE=(
             --include '*.js'
+            --include '*.mjs'
+            --include '*.cjs'
             --include '*.py'
             --include '*.sql'
             --include '*.ts'
-            --include '*.tsx'
-            --include '*.yml'
-            --include '*.yaml'
-            --exclude '.github/workflows/ci.yml'
           )
           if docker image inspect "$IMAGE" >/dev/null 2>&1; then
             docker run --rm -v "${PWD}:/src" "$IMAGE" semgrep scan --config=auto --error --json --output=/src/semgrep-diagnostics.json "${SCAN_SCOPE[@]}" /src || true

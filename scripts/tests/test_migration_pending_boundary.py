@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 import unittest
@@ -97,8 +98,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         )
         self.assertIsNotNone(match, "generated registry migration census row is missing")
         migrations = list(MIGRATIONS.glob("*.sql"))
-        numbered = sum(bool(re.match(r"^\\d{4}_", path.name)) for path in migrations)
-        timestamped = sum(bool(re.match(r"^\\d{8}", path.name)) for path in migrations)
+        numbered = sum(bool(re.match(r"^\d{4}_", path.name)) for path in migrations)
+        timestamped = sum(bool(re.match(r"^\d{8}", path.name)) for path in migrations)
         self.assertEqual(tuple(map(int, match.groups())), (len(migrations), numbered, timestamped))
 
     def test_refund_state_foreign_key_index_migration_is_narrow_and_non_destructive(self) -> None:

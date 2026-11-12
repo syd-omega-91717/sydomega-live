@@ -108,6 +108,17 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
         )
 
+    def test_agent_task_service_role_grants_are_materialized_without_member_or_anon_expansion(self) -> None:
+        path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select on table", sql)
+        self.assertIn("public.omega_agent_tasks", sql)
+        self.assertIn("public.omega_agent_task_events", sql)
+        self.assertIn("to service_role", sql)
+        self.assertIn("has_table_privilege('anon'", sql)
+        self.assertNotIn("to authenticated", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
     def test_public_points_projection_remains_privacy_scoped(self) -> None:
         path = MIGRATIONS / "20261013160000_secure_public_points_leaderboard_projection.sql"
         sql = path.read_text(encoding="utf-8").lower()

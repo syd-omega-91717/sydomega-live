@@ -109,7 +109,7 @@ async function saveProductDecision(
       context_snapshot: decision,
       reasoning: `Product adaptation decision for ${decision.persona}`,
       decision_payload: decision,
-      confidence_score: decision.confidence || 0.8,
+      confidence_score: decision.confidence,
       model_used: modelUsed,
       temperature: null,
       outcome_recorded: false,
@@ -197,7 +197,7 @@ ${req.context.pending_features.join("\n")}
   decision.ux_complexity = allowedComplexities.has(decision.ux_complexity)
     ? decision.ux_complexity
     : getComplexityLevel(req.context.persona);
-  decision.confidence = Number.isFinite(Number(decision.confidence))
+  decision.confidence = decision.confidence !== null && decision.confidence !== undefined && Number.isFinite(Number(decision.confidence))
     ? Math.max(0, Math.min(1, Number(decision.confidence)))
     : 0.8;
   decision.confidence_status = "MODEL_REPORTED_NOT_CALIBRATED";

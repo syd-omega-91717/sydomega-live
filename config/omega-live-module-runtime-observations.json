@@ -1598,5 +1598,59 @@
       "status": "NOT_LIVE_VERIFIED",
       "reason": "The public release manifest URL could not be retrieved through the available web inspection channel. The repository's exact-SHA production verifier was malformed on main and is being repaired in PR #1242."
     }
+  },
+  "provider_advisor_observations": {
+    "observed_date": "2026-11-12",
+    "security": {
+      "leaked_password_protection": "DISABLED_WARNING",
+      "rls_enabled_no_policy_info_findings": 3,
+      "findings": [
+        {
+          "schema": "omega_private",
+          "table": "marketplace_listing_assets",
+          "client_table_privileges": {
+            "anon": false,
+            "authenticated": false,
+            "service_role": false
+          }
+        },
+        {
+          "schema": "private",
+          "table": "erasure_log",
+          "client_table_privileges": {
+            "anon": false,
+            "authenticated": false,
+            "service_role": false
+          }
+        },
+        {
+          "schema": "private",
+          "table": "erasure_policy",
+          "client_table_privileges": {
+            "anon": false,
+            "authenticated": false,
+            "service_role": false
+          }
+        }
+      ],
+      "interpretation": "The three RLS-enabled/no-policy findings are fail-closed informational findings; direct privilege probes found no table access for anon/authenticated. Do not remove RLS or add broad policies to silence the linter."
+    },
+    "performance": {
+      "unindexed_foreign_key_findings": 1,
+      "finding": {
+        "schema": "omega_private",
+        "table": "stripe_refund_state",
+        "column": "last_reversal_transaction_id",
+        "references": "omega_ledger_transactions(transaction_id)",
+        "on_delete": "RESTRICT",
+        "observed_row_count": 0
+      },
+      "remediation_migration": "20261112091400_omega_stripe_refund_state_fk_index.sql",
+      "unused_index_findings": 325,
+      "unused_index_action": "NO_AUTOMATIC_DROPS; require workload/retention review before removing indexes"
+    },
+    "health": {
+      "lint_findings": 0
+    }
   }
 }

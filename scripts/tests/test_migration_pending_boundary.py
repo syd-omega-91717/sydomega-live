@@ -47,7 +47,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             pending_versions.add(version)
         local_versions: set[str] = set()
         for path in MIGRATIONS.glob("*.sql"):
-            match = re.match(r"^(\\d+)_.*\\.sql$", path.name)
+            match = re.match(r"^(\d+)_.*\.sql$", path.name)
             self.assertIsNotNone(match, path.name)
             local_versions.add(match.group(1))
         self.assertEqual(pending_versions, local_versions - self.remote_versions)
@@ -56,7 +56,9 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         applied_versions = {
             "20261103230000", "20261104090000", "20261111190000",
             "20261112091300", "20261112091400", "20261112091500",
-            "20261112091600", "20261112103000", "20261112110000", "20261112111000", "20261112120000", "20261112121000", "20261112130000",
+            "20261112091600",
+            "20261112103000", "20261112110000", "20261112111000",
+            "20261112120000", "20261112121000", "20261112130000",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))

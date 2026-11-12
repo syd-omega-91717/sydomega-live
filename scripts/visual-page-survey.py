@@ -72,10 +72,10 @@ class _VisibleParser(HTMLParser):
         a = {str(k).lower(): (v or "") for k, v in attrs}
         if "hidden" in a or a.get("aria-hidden", "").lower() == "true":
             return True
-        if re.search(r"display\\s*:\\s*none", a.get("style", ""), re.I):
+        if re.search(r"display\s*:\s*none", a.get("style", ""), re.I):
             return True
         classes = a.get("class", "")
-        if re.search(r"\\btab-panel\\b", classes, re.I) and not re.search(r"\\b(?:active|on)\\b", classes, re.I):
+        if re.search(r"\btab-panel\b", classes, re.I) and not re.search(r"\b(?:active|on)\b", classes, re.I):
             return True
         return False
 
@@ -137,14 +137,16 @@ def scan(path: Path) -> dict:
     cards = len(re.findall(r'class=["\'][^"\']*\b(?:card|kpi|tile|panel|module|widget|tier-card|pred-card|lab-card)\b', text, re.I))
     sections = len(re.findall(r'class=["\'][^"\']*\b(?:sechead|section-head|section-title|section-hd|sect-hd)\b', text, re.I))
     tabs = len(re.findall(r'class=["\'][^"\']*\b(?:tab-btn|tab-link)\b', text, re.I))
-    buttons = len(re.findall(r'<button\\b', text, re.I)) + len(re.findall(r'class=[\"\'][^\"\']*\\bbtn(?:-|\\b)[^\"\']*[\"\']', text, re.I))
+    button_tags = len(re.findall(r"<button\b[^>]*>", text, re.I))
+    styled_actions = len(re.findall(r"""<(?!button\b)[a-z][\w:-]*\b[^>]*class=["'][^"']*\bbtn(?:-[\w-]+)?\b[^"']*["'][^>]*>""", text, re.I))
+    buttons = button_tags + styled_actions
     links = len(re.findall(r"<a\b", body, re.I))
     forms = len(re.findall(r"<(?:input|select|textarea)\b", body, re.I))
     images = len(re.findall(r"<img\b", body, re.I))
 
     title = clean(TITLE_RE.search(text).group(1)) if TITLE_RE.search(text) else ""
-    h1m = H1_RE.search(text)
-    h1 = clean(h1m.group(1)) if h1m else ""
+    h1_candidates = H1_RE.findall(text)
+    h1 = next((candidate for candidate in (clean(x) for x in h1_candidates) if candidate), "")
     topm = TOPBAR_TITLE_RE.search(text)
     topbar = clean(topm.group(1)) if topm else ""
     duplicate_title = bool(h1 and topbar and h1.lower() == topbar.lower())
@@ -202,6 +204,7 @@ def scan(path: Path) -> dict:
 
     return {
         "page": path.name,
+        "path": path.relative_to(ROOT).as_posix(),
         "title": title,
         "h1": h1,
         "body_words": body_words,
@@ -235,7 +238,9 @@ def main() -> int:
     review = [r for r in rows if r["findings"]]
     severe = [r for r in rows if any(x.startswith("CONTRACT:") for x in r["findings"])]
 
-    print(f"VISUAL PAGE SURVEY: {len(rows)} HTML pages scanned (root + nested application surfaces)")
+    root_count = sum(1 for p in HTML_FILES if p.parent == ROOT)
+    nested_count = len(HTML_FILES) - root_count
+    print(f"VISUAL PAGE SURVEY: {len(rows)} HTML documents scanned ({root_count} root pages, {nested_count} nested surfaces)")
     print(f"Pages requiring visual review: {len(review)}")
     print(f"Pages with structural contract findings: {len(severe)}")
     if rows:
@@ -251,7 +256,7 @@ def main() -> int:
 
     print("\nHighest-density pages:")
     for r in sorted(rows, key=lambda x: (x["cards"], x["sections"], x["body_words"]), reverse=True)[:20]:
-        print(f"  {r['page']}: cards={r['cards']} sections={r['sections']} tabs={r['tabs']} words={r['body_words']} focus={r['focus_score']}")
+        print(f"  {r['path']}: cards={r['cards']} sections={r['sections']} tabs={r['tabs']} words={r['body_words']} focus={r['focus_score']}")
 
     if args.json_path:
         Path(args.json_path).write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")

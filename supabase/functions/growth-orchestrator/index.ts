@@ -1,9 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { publishableKey, secretKey } from "../_shared/keys.ts";
+import { runOmegaModel, type OmegaAiUsageRecord } from "../_shared/omega-model-router.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseKey = secretKey()!;
-const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -54,21 +54,19 @@ interface GrowthResponse {
   estimated_revenue_impact: number;
 }
 
-async function callClaudeForGrowth(
+async function callOmegaGrowthModel(
   prompt: string,
-  context: string
-): Promise<string> {
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "x-api-key": anthropicKey,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "claude-opus-5",
-      max_tokens: 16000,
-      system: `You are the Ω Growth Agent, orchestrating personalized revenue expansion campaigns.
+  context: string,
+  profile: "fast" | "balanced" | "reasoning",
+  risk: "low" | "medium" | "high",
+) {
+  return runOmegaModel({
+    agentId: "growth",
+    task: "member_growth_campaign_recommendation",
+    risk,
+    promptVersion: "growth-orchestrator-v2",
+    profile,
+    system: `You are the Ω Growth Agent, orchestrating personalized revenue expansion campaigns.
 
 Your role:
 - Compose multi-touch campaigns personalized to member context
@@ -81,31 +79,19 @@ Rules:
 - Respect engagement patterns
 - Consider lifecycle stage transitions
 - Recommend email, in-app, or multi-channel`,
-      messages: [
-        {
-          role: "user",
-          content: `Context:\n${context}\n\nGrowth Opportunity:\n${prompt}`,
-        },
-      ],
-    }),
+    input: `Context:\n${context}\n\nGrowth Opportunity:\n${prompt}`,
+    recordUsage: async (record: OmegaAiUsageRecord) => {
+      const { error } = await supabase.from("omega_ai_requests").insert(record);
+      if (error) throw new Error("ai_telemetry_write_failed");
+    },
   });
-
-  const data = await response.json();
-  /* The API answers errors as JSON with no `content`; claude-opus-5 also runs
-     adaptive thinking, so the first block is a thinking block, not text. */
-  if (!response.ok) {
-    throw new Error(`Anthropic API ${response.status}: ${data?.error?.type ?? "error"}`);
-  }
-  if (data.stop_reason === "refusal") throw new Error("Anthropic API refusal");
-  const text = (data.content ?? []).find((b: { type: string }) => b.type === "text");
-  if (!text) throw new Error("Anthropic API returned no text block");
-  return text.text;
 }
 
 async function saveGrowthDecision(
   memberId: string,
   campaign: Record<string, unknown>,
-  propensityType: string
+  propensityType: string,
+  modelUsed: string,
 ): Promise<string> {
   const { data, error } = await supabase
     .from("autonomous_decisions")
@@ -117,7 +103,7 @@ async function saveGrowthDecision(
       reasoning: `Autonomous campaign composition for ${propensityType} growth`,
       decision_payload: campaign,
       confidence_score: campaign.confidence || 0.75,
-      model_used: "claude-opus-5",
+      model_used: modelUsed,
       temperature: null,
       outcome_recorded: false,
       revenue_impact_usd: campaign.estimated_impact || 0,
@@ -166,8 +152,12 @@ ${Object.entries(req.context.engagement_metrics).map(([k, v]) => `- ${k}: ${v}`)
 
   // Call Claude
   let claudeResponse: string;
+  let modelResult: Awaited<ReturnType<typeof callOmegaGrowthModel>>;
   try {
-    claudeResponse = await callClaudeForGrowth(prompt, contextString);
+    const profile = "balanced";
+  const risk = "medium";
+    modelResult = await callOmegaGrowthModel(prompt, contextString, profile, risk);
+    claudeResponse = modelResult.text;
   } catch (error) {
     console.error("Claude API error:", error);
     throw error;
@@ -193,10 +183,11 @@ ${Object.entries(req.context.engagement_metrics).map(([k, v]) => `- ${k}: ${v}`)
   }
 
   // Save decision
-  const campaignId = await saveGrowthDecision(
+const campaignId = await saveGrowthDecision(
     req.member_id,
     campaign,
-    req.propensity_type
+    req.propensity_type,
+    `${modelResult.provider}:${modelResult.model}`
   );
 
   return {

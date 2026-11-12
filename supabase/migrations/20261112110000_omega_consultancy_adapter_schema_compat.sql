@@ -104,7 +104,7 @@ begin
     elsif v_module='FAMILY' and v_action_name='vault.read' then
       select jsonb_build_object('heritage_record_count',count(*),'family_node_count',(select count(*) from public.family_nodes where user_id=p_actor_user_id),'privacy','caller_scoped') into v_result from public.heritage_records where user_id=p_actor_user_id;
     elsif v_module='MEDIA' and v_action_name='library.read' then
-      select coalesce(jsonb_agg(to_jsonb(m) order by m.sort_order nulls last,m.created_at desc),'[]'::jsonb) into v_result from (select id,media_type,title,subtitle,description,olympian,track_id,element,duration_min,thumbnail_url,video_url,phase,sort_order from public.media_items where status='published' order by sort_order nulls last,created_at desc limit 100)m;
+      select coalesce(jsonb_agg(to_jsonb(m) order by m.sort_order nulls last,m.created_at desc),'[]'::jsonb) into v_result from (select id,media_type,title,subtitle,description,olympian,track_id,element,duration_min,thumbnail_url,video_url,phase,sort_order,created_at from public.media_items where status='published' order by sort_order nulls last,created_at desc limit 100)m;
     elsif v_module='MEDIA' and v_action_name='publishing.read' then
       select coalesce(jsonb_agg(to_jsonb(p) order by p.created_at desc),'[]'::jsonb) into v_result from (select id,kind,title,status,created_at,file_path from public.publications where user_id=p_actor_user_id order by created_at desc limit 100)p;
     elsif v_module='BLOCKCHAIN_NFT' and v_action_name='assets.read' then

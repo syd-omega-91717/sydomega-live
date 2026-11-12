@@ -61,6 +61,7 @@ def main() -> int:
         require("https://api.openai.com/v1/responses" in router, "OpenAI Responses adapter missing")
         require("OMEGA_AI_PROVIDER_" in router, "per-profile provider routing missing")
         require("PROFILE_RISK_ALLOWLIST" in router and "ai_profile_risk_not_allowed" in router, "risk-to-profile enforcement missing")
+        require("PROFILE_INPUT_CHAR_LIMITS" in router and "MAX_SYSTEM_CHARS" in router and "ai_request_too_large" in router, "profile-specific input size limits missing")
         require("ai_provider_not_configured" in router and "ai_profile_risk_not_allowed" in router and 'record("blocked"' in router, "provider and risk-profile violations must fail closed")
         require("estimated_cost: null" in router, "unknown model cost must not be reported as zero")
         require("input_tokens: inputTokens" in router and "output_tokens: outputTokens" in router, "token usage telemetry missing")

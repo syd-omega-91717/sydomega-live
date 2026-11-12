@@ -75,6 +75,8 @@ def main() -> int:
         "mkdir -p public",
         "public/index.html",
         "internal_ledger_exposed",
+        "internal_runtime_evidence_exposed",
+        '! -e "public/config/omega-live-module-runtime-observations.json"',
         "VERCEL_BUILD=PASS",
         "for dir in vendor i18n",
         "! -path './config/omega-implementation-ledger.json'",

@@ -2,12 +2,16 @@
 """Regression contract for the manual Cloudflare production fallback."""
 
 from pathlib import Path
+import importlib.util
+import subprocess
+import textwrap
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = (ROOT / ".github/workflows/cloudflare-pages.yml").read_text(encoding="utf-8")
 PRODUCTION_VERIFY = (ROOT / ".github/workflows/cloudflare-production-verify.yml").read_text(encoding="utf-8")
 PRODUCTION_SMOKE = (ROOT / "scripts/cloudflare-production-smoke.py").read_text(encoding="utf-8")
+SMOKE_REQUIREMENTS = (ROOT / "scripts/requirements.txt").read_text(encoding="utf-8")
 
 
 class CloudflareManualReleaseContract(unittest.TestCase):
@@ -50,11 +54,80 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertNotIn("CLOUDFLARE_API_TOKEN", PRODUCTION_VERIFY)
         self.assertIn("config/omega-page-contracts.json", PRODUCTION_SMOKE)
         self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)
+        self.assertIn("session.request(", PRODUCTION_SMOKE)
+        self.assertIn("session.trust_env = False", PRODUCTION_SMOKE)
+        self.assertIn("allow_redirects=False", PRODUCTION_SMOKE)
+        self.assertIn("verify=True", PRODUCTION_SMOKE)
+        self.assertIn("timeout=timeout", PRODUCTION_SMOKE)
+        self.assertNotIn("HTTPSConnection(", PRODUCTION_SMOKE)
+        self.assertNotIn("urlopen(", PRODUCTION_SMOKE)
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE_EMAIL_PLACEHOLDER_PATH", PRODUCTION_SMOKE)
         self.assertIn("unsupported_url_scheme_or_authority", PRODUCTION_SMOKE)
         self.assertIn("cloudflare_email_placeholders_skipped", PRODUCTION_SMOKE)
+
+    def test_git_connected_verifier_shell_is_syntactically_valid(self):
+        step = PRODUCTION_VERIFY.split(
+            "      - name: Verify production manifest, headers and complete page estate", 1
+        )[1]
+        script = textwrap.dedent(step.split("        run: |", 1)[1])
+        result = subprocess.run(
+            ["bash", "-n"],
+            input=script,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_production_smoke_rejects_unsafe_url_schemes_and_cross_origin_redirects(self):
+        source = ROOT / "scripts/cloudflare-production-smoke.py"
+        spec = importlib.util.spec_from_file_location("omega_production_smoke", source)
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        self.assertFalse(module.is_safe_http_url("file:///etc/passwd"))
+        self.assertFalse(module.is_safe_http_url("https://user:secret@sydomega.com/"))
+        self.assertFalse(module.is_safe_http_url("https://other.example/", "sydomega.com", 443))
+        self.assertTrue(module.is_safe_http_url("https://sydomega.com/", "sydomega.com", 443))
+        handler = module.SameOriginRedirectHandler("sydomega.com", 443)
+        request = module.Request("https://sydomega.com/")
+        self.assertIsNone(handler.redirect_request(
+            request, None, 302, "Found", {}, "https://other.example/"
+        ))
+        status, _, detail = module.request_url("file:///etc/passwd", "GET", 1)
+        self.assertEqual(status, 0)
+        self.assertIn("unsupported URL", detail)
+    def test_production_smoke_dependency_is_pinned_and_installed_only_for_verification(self):
+        self.assertIn("requests==2.34.2", SMOKE_REQUIREMENTS)
+        self.assertIn("scripts/requirements.txt", WORKFLOW)
+        self.assertIn("python -m pip install", WORKFLOW)
+
+    def test_production_smoke_rejects_unsafe_url_schemes_and_hosts(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "cloudflare_production_smoke", ROOT / "scripts/cloudflare-production-smoke.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        self.assertEqual(module.validate_request_url("https://sydomega.com"), "https://sydomega.com")
+        self.assertEqual(
+            module.validate_request_url("https://preview.sydomega-live.pages.dev"),
+            "https://preview.sydomega-live.pages.dev",
+        )
+        for unsafe in (
+            "file:///etc/passwd",
+            "http://sydomega.com",
+            "https://evil.example",
+            "https://sydomega.com@evil.example",
+            "https://sydomega.com:444",
+        ):
+            with self.assertRaises(ValueError, msg=unsafe):
+                module.validate_request_url(unsafe)
 
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)

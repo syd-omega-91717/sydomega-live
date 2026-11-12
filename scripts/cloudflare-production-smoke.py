@@ -7,9 +7,8 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import sys
-from urllib.error import HTTPError, URLError
 from urllib.parse import urldefrag, urljoin, urlsplit
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "config/omega-page-contracts.json"
@@ -42,6 +41,35 @@ class RefParser(HTMLParser):
                 if url:
                     self.refs.add(url)
 
+def is_safe_http_url(url: str, allowed_host: str | None = None, allowed_port: int | None = None) -> bool:
+    """Reject file/custom schemes, credentials and cross-origin redirects."""
+    try:
+        parts = urlsplit(url)
+        port = parts.port or (443 if parts.scheme.lower() == "https" else 80)
+    except ValueError:
+        return False
+    return (
+        parts.scheme.lower() in {"http", "https"}
+        and bool(parts.hostname)
+        and not parts.username
+        and not parts.password
+        and (allowed_host is None or parts.hostname.lower() == allowed_host.lower())
+        and (allowed_port is None or port == allowed_port)
+    )
+
+
+class SameOriginRedirectHandler(HTTPRedirectHandler):
+    def __init__(self, allowed_host: str, allowed_port: int) -> None:
+        super().__init__()
+        self.allowed_host = allowed_host
+        self.allowed_port = allowed_port
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if not is_safe_http_url(newurl, self.allowed_host, self.allowed_port):
+            return None
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
     parts = urlsplit(url)
     if parts.scheme.lower() not in {"http", "https"} or not parts.netloc or parts.username or parts.password:
@@ -52,6 +80,14 @@ def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
         # The URL is restricted to credential-free HTTP(S) above; the caller also
         # constrains discovered references to the selected production origin.
         with urlopen(req, timeout=timeout) as response:
+    if not is_safe_http_url(url):
+        return 0, "", "blocked unsupported URL scheme or authority"
+    parts = urlsplit(url)
+    allowed_port = parts.port or (443 if parts.scheme.lower() == "https" else 80)
+    opener = build_opener(SameOriginRedirectHandler(parts.hostname.lower(), allowed_port))
+    req = Request(url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
+    try:
+        with opener.open(req, timeout=timeout) as response:
             content_type = response.headers.get("Content-Type", "")
             body = response.read() if method == "GET" else b""
             return response.status, content_type, body.decode("utf-8", errors="replace")
@@ -60,7 +96,73 @@ def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
             return request_url(url, "GET", timeout)
         return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", ""
     except (URLError, TimeoutError, OSError) as exc:
+def validate_request_url(url: str) -> str:
+    """Allow only HTTPS production/preview hosts; never pass file or arbitrary schemes to urllib."""
+    try:
+        parts = urlsplit(url)
+        port = parts.port
+    except ValueError as exc:
+        raise ValueError("invalid production smoke URL") from exc
+    host = (parts.hostname or "").lower()
+    allowed_host = (
+        host == "sydomega.com"
+        or host.endswith(".sydomega.com")
+        or host.endswith(".pages.dev")
+        or host.endswith(".vercel.app")
+    )
+    if (
+        parts.scheme.lower() != "https"
+        or not parts.netloc
+        or parts.username is not None
+        or parts.password is not None
+        or port not in (None, 443)
+        or parts.fragment
+        or not allowed_host
+    ):
+        raise ValueError("production smoke URL must be HTTPS on an approved SYD OMEGA, Pages, or Vercel host")
+    return url
+
+
+def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tuple[int, str, str]:
+    safe_url = validate_request_url(url)
+    import requests
+
+    session = requests.Session()
+    session.trust_env = False
+    try:
+        response = session.request(
+            method,
+            safe_url,
+            headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"},
+            timeout=timeout,
+            allow_redirects=False,
+            verify=True,
+        )
+        status = response.status_code
+        content_type = response.headers.get("Content-Type", "")
+
+        if status in {301, 302, 303, 307, 308}:
+            location = response.headers.get("Location")
+            response.close()
+            if not location:
+                return status, content_type, "redirect response has no Location header"
+            if redirects >= 5:
+                return status, content_type, "redirect limit exceeded"
+            next_url = urljoin(safe_url, location)
+            next_method = "GET" if status == 303 or (status in {301, 302} and method not in {"GET", "HEAD"}) else method
+            return request_url(next_url, next_method, timeout, redirects + 1)
+
+        if method == "HEAD" and status in {405, 501}:
+            response.close()
+            return request_url(safe_url, "GET", timeout, redirects)
+
+        body = response.text if method == "GET" else ""
+        response.close()
+        return status, content_type, body
+    except requests.RequestException as exc:
         return 0, "", str(exc)
+    finally:
+        session.close()
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -78,6 +180,12 @@ def main() -> int:
         if base_parts.scheme.lower() not in {"http", "https"} or not base_parts.netloc or base_parts.username or base_parts.password:
             raise ValueError("--base-url must be a credential-free HTTP(S) URL")
         base_host = base_parts.netloc.lower()
+        safe_base = validate_request_url(args.base_url)
+        base_parts = urlsplit(safe_base)
+        if base_parts.query or base_parts.fragment:
+            raise ValueError("base URL must not include a query or fragment")
+        base = safe_base.rstrip("/") + "/"
+        base_host = urlsplit(base).netloc.lower()
         pages = sorted({urljoin(base, str(item["path"]).lstrip("/")) for item in contracts})
         page_failures: list[tuple[str, int, str]] = []
         refs: set[str] = set()

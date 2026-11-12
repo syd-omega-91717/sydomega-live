@@ -1,6 +1,8 @@
 {
   "_captured": "2026-11-12",
   "source": "Authenticated read-only Supabase migration-ledger query against production project ydqhzvvoyufiiqvzcjns on 2026-11-12 confirmed 419 recorded versions, latest 20261112091500. Independently verified the three newest applied migrations by inspecting their live helper definitions, refund-state index, search_index compatibility columns, owner-scoped policy and covering index. Ledger presence alone is not treated as semantic proof.",
+  "source": "Authenticated read-only Supabase migration-ledger query against the configured production project on 2026-11-12. Provider returned all recorded migration versions and names; ledger presence does not prove SQL byte parity or semantic correctness.",
+  "source": "Authenticated read-only Supabase migration-ledger query on 2026-11-12: 419 recorded versions, latest 20261112091500. The three November 12 follow-up migrations are provider-recorded as applied; ledger presence is not proof of fresh replay or semantic equivalence.",
   "remoteMigrationCount": 419,
   "latestRemoteMigration": "20261112091500",
   "versions": [
@@ -946,7 +948,8 @@
       "name": "schema_sync_point"
     },
     {
-      "version": "20260822000000"
+      "version": "20260822000000",
+      "name": "undefined"
     },
     {
       "version": "20260822024048",
@@ -1461,10 +1464,12 @@
       "name": "omega_agent_audit_rpc_service_only_20260929"
     },
     {
-      "version": "20260929172000"
+      "version": "20260929172000",
+      "name": "undefined"
     },
     {
-      "version": "20260929174000"
+      "version": "20260929174000",
+      "name": "undefined"
     },
     {
       "version": "20260930090758",

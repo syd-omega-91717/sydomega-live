@@ -72,6 +72,13 @@
       "inputClass": "telemetry",
       "expected": "Mark evaluation NOT_RUN until a deterministic or human-reviewed evaluator actually runs.",
       "assertion": "evaluation-not-fabricated"
+    },
+    {
+      "id": "graphify-consent-gate",
+      "risk": "high",
+      "inputClass": "graph-query-or-ingestion",
+      "expected": "Reject before graph reads or model invocation unless graphify_ai_enabled and both account-level AI personalization and sensitive-data processing preferences are true.",
+      "assertion": "graphify-server-side-consent-gate"
     }
   ]
 }

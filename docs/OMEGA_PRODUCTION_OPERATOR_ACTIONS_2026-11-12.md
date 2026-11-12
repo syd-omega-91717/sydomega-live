@@ -7,12 +7,13 @@ This register separates code-controlled work from provider/account settings that
 
 ## P0 — Complete the release-safe runtime change
 
-1. Pass the full isolated Supabase migration replay for all local migrations, including the 54-action runtime probe and immutable-payload conflict tests.
+1. Pass the full isolated Supabase migration replay for all local migrations, including the 54-action runtime probe, immutable-payload conflict tests and refund-state FK index migration.
 2. Pass the migration security audit, Contracts, Production Contract, CI, CodeQL, Secret Detection, Supply Chain/SBOM, Repository Integrity and release-readiness checks.
 3. After successful isolated replay, apply only `20261112091300_omega_idempotency_payload_integrity.sql` to the production Supabase project through the authorized migration action.
 4. Verify the provider ledger records the new migration version and re-query the seven helper definitions, their execute grants, and the owner-scoped indexes.
-5. Update `remote-migrations.json` and `pending-migrations.json` from the actual provider result; do not infer application from a green repository workflow.
-6. Merge the reviewed PR and require Cloudflare's exact-SHA production verification to pass for the merge commit. The 241-page and same-origin reference smoke test must pass. A Cloudflare branch preview is not production evidence.
+5. Recheck the Supabase security/performance/health advisors. The expected result is no unindexed refund-state FK warning; do not drop unused indexes without workload evidence.
+6. Update `remote-migrations.json` and `pending-migrations.json` from the actual provider result; do not infer application from a green repository workflow.
+7. Merge the reviewed PR and require Cloudflare's exact-SHA production verification to pass for the merge commit. The 241-page and same-origin reference smoke test must pass. A Cloudflare branch preview is not production evidence.
 
 ## P1 — GitHub repository protection
 

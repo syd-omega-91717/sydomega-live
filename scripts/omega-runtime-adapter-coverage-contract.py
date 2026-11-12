@@ -121,19 +121,20 @@ def main() -> int:
                 return fail(f"search-index schema/RLS/runtime marker missing: {marker}")
         if search_index_sql.lower().count("security definer set search_path=''") != 1:
             return fail("search-index dispatcher replacement must pin an empty search_path")
-        if "alter table public.consult_requests add column if not exists domain text" not in consultancy_schema_sql.lower():
+        normalized_consultancy_sql = " ".join(consultancy_schema_sql.lower().split())
+        if "alter table public.consult_requests add column if not exists domain text" not in normalized_consultancy_sql:
             return fail("clean-replay consultancy domain column reconciliation is missing")
-        if "returns text language plpgsql security definer set search_path=''" not in consultancy_schema_sql.lower():
+        if "returns text language plpgsql security definer set search_path=''" not in normalized_consultancy_sql:
             return fail("consultancy intake helper must return a schema-neutral text ID and pin an empty search_path")
-        if "returning id::text into v_id" not in consultancy_schema_sql.lower() or "return v_id;" not in consultancy_schema_sql.lower():
+        if "returning id::text into v_id" not in normalized_consultancy_sql or "return v_id;" not in normalized_consultancy_sql:
             return fail("consultancy intake helper must return the inserted or idempotently reused row ID")
-        if "v_request_id text" not in consultancy_schema_sql.lower():
+        if "v_request_id text" not in normalized_consultancy_sql:
             return fail("runtime dispatcher request ID variable must accept UUID and BIGINT source IDs")
-        if "owner_id=(select auth.uid())" not in consultancy_schema_sql.lower():
+        if "owner_id=(select auth.uid())" not in normalized_consultancy_sql:
             return fail("search-index policy must use an initplan-safe scalar auth.uid() call")
-        if "owner_id=auth.uid()" in consultancy_schema_sql.lower():
+        if "owner_id=auth.uid()" in normalized_consultancy_sql:
             return fail("search-index follow-up must not retain per-row auth.uid() evaluation")
-        if re.search(r"alter\\s+table\\s+public\\.consult_requests\\s+alter\\s+column\\s+id\\s+type|drop\\s+table", consultancy_schema_sql, re.IGNORECASE):
+        if "alter table public.consult_requests alter column id type" in normalized_consultancy_sql or "drop table" in normalized_consultancy_sql:
             return fail("consultancy schema parity migration must not rewrite or drop historical request IDs")
         for marker in (
             "createSupabaseContext(req, { auth: 'user' })",

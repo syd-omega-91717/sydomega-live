@@ -44,6 +44,15 @@ interface GrowthRequest {
   };
 }
 
+interface GrowthCampaign extends Record<string, unknown> {
+  campaign_type: string;
+  offer: string;
+  channel: string;
+  timing: string;
+  confidence: number;
+  estimated_impact: number | null;
+}
+
 interface GrowthResponse {
   campaign_id: string;
   campaign_type: string;
@@ -168,7 +177,7 @@ ${Object.entries(req.context.engagement_metrics).map(([k, v]) => `- ${k}: ${v}`)
   }
 
   // Parse response
-  let campaign = {
+  let campaign: GrowthCampaign = {
     campaign_type: req.propensity_type,
     offer: "Personalized recommendation",
     channel: "email",

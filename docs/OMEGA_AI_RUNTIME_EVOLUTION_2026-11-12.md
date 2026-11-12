@@ -19,9 +19,9 @@
 
 | Profile | Default Anthropic | Optional OpenAI | Output ceiling | Intended work |
 |---|---|---|---:|---|
-| fast | Claude Haiku 4.5 | GPT-6 Luna | 512 | Short member responses, classification |
-| balanced | Claude Haiku 4.5 | GPT-6.1 Sol | 2,048 | Support decisions, campaign drafts, product recommendations |
-| reasoning | Claude Opus 5 | GPT-6 Astra | 4,096 | Escalation review and complex analysis |
+| fast | Claude Haiku 5.5 | GPT-6 Luna | 512 | Short member responses, classification |
+| balanced | Claude Sonnet 5.5 | GPT-6.1 Sol | 2,048 | Support decisions, campaign drafts, product recommendations |
+| reasoning | Claude Opus 5.5 | GPT-6 Astra | 4,096 | Escalation review and complex analysis |
 
 Anthropic remains the default to preserve the existing production integration. OpenAI routing is **opt-in per profile** and requires a separately configured `OPENAI_API_KEY`. The router never silently falls back to another provider.
 
@@ -57,10 +57,14 @@ The active `concierge` path and the three owner-gated orchestrators now use the 
 
 The current OpenAI API documentation recommends the Responses API for new integrations. It separates system guidance into top-level `instructions`, accepts `input`, and returns text through `output_text`. The router uses that contract; it does not introduce a second conversation store.
 
+The current provider catalogs were checked against the official OpenAI and Anthropic model documentation on 2026-11-12. The routing defaults are pinned to documented model IDs; monthly review is required and automatic promotion is disabled.
+
 The current model catalog distinguishes:
 - **GPT-6 Luna** for focused, high-volume and cost-sensitive workloads;
 - **GPT-6.1 Sol** for a balance of intelligence and cost;
 - **GPT-6 Astra** for demanding reasoning and coding.
+
+Anthropic defaults are **Claude Haiku 5.5** for fast tasks, **Claude Sonnet 5.5** for balanced tasks, and **Claude Opus 5.5** for complex reasoning. Claude's Models API exposes lifecycle state and retirement metadata; catalog checks should block new traffic to retired models rather than silently substitute another model.
 
 GPT-6.1 Terra is a candidate for future image/computer-use work, but the present router is text-only. OpenAI Ultrafast processing is optional and remains disabled by default; enable it only after latency, spend, rate-limit and regional-processing review.
 

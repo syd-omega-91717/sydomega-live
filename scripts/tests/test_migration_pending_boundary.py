@@ -57,7 +57,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertTrue(applied_versions.issubset(self.remote_versions))
         self.assertTrue(applied_versions.isdisjoint(pending_versions))
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112091500")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112120000")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-12")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))

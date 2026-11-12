@@ -1,6 +1,6 @@
 {
   "_captured": "2026-11-12",
-  "source": "Authenticated read-only Supabase migration-ledger query against production project ydqhzvvoyufiiqvzcjns on 2026-11-12: 416 recorded versions, latest 20261111190000. Ledger presence is provider evidence only; it does not prove SQL byte parity or semantic correctness.",
+  "source": "Authenticated read-only Supabase migration-ledger query against the configured production project on 2026-11-12: 416 recorded versions, latest 20261111190000. Ledger presence is provider evidence only; it does not prove SQL byte parity or semantic correctness.",
   "remoteMigrationCount": 416,
   "latestRemoteMigration": "20261111190000",
   "versions": [

@@ -9,7 +9,10 @@ import json
 from pathlib import Path
 from urllib.parse import urldefrag, urljoin, urlsplit
 
-import requests
+try:
+    import requests
+except ImportError:  # Unit tests can inspect URL policy without the CI-only HTTP client.
+    requests = None
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "config/omega-page-contracts.json"
@@ -117,6 +120,8 @@ def request_url(
     except (TypeError, ValueError):
         return 0, "", "blocked unsupported URL scheme or authority"
 
+    if requests is None:
+        return 0, "", "requests dependency is not installed; install scripts/requirements.txt"
     session = requests.Session()
     session.trust_env = False
     try:

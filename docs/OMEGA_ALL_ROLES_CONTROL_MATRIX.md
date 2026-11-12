@@ -85,3 +85,7 @@ The evidence ladder remains authoritative; module status is not promoted solely 
 - The full fresh-database replay and the expanded SQL probe for all 54 adapters plus changed-payload idempotency conflicts are still required before the follow-up migrations are applied.
 
 **Interpretation:** these results establish provider activation, source parity and SQL dispatch coverage. They do not establish full user journeys, persistence for every action, cross-user isolation for every module, third-party provider health, storage object lifecycle, financial settlement, or a live production release. Therefore the existing `PARTIAL`, `BUILT / PARTIAL`, and `DECISION REQUIRED` states remain unchanged until their module-specific next proof is collected.
+
+## Search-index evidence — 2026-11-12
+
+The live `public.search_index` table was inspected directly: zero rows, live-only `body`/`keywords`/`owner_id`/`organization_id`/`indexed_at`/`updated_at` columns, and an authenticated SELECT policy with `USING (true)`. The canonical 0016 migration instead creates `content`/`created_at`. The new 20261112091500 migration preserves both column sets, backfills compatible body/content and timestamp values, restricts direct reads to shared rows or the owner, and updates the runtime adapter to apply the same owner/org filter. The isolated probe tests both dispatcher filtering and direct RLS isolation.

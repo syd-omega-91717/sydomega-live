@@ -45,12 +45,13 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertTrue((MIGRATIONS / filename).is_file(), filename)
             self.assertTrue(filename.startswith(version + "_"), filename)
             pending_versions.add(version)
-        self.assertEqual(len(pending_versions), 6)
+        self.assertEqual(pending_versions, {"20261112111000", "20261112121000"})
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
             "20261103230000", "20261104090000", "20261111190000",
             "20261112091300", "20261112091400", "20261112091500",
+            "20261112091600", "20261112103000", "20261112110000", "20261112120000",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))

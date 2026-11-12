@@ -47,10 +47,12 @@ interface ProductRequest {
 interface ProductResponse {
   decision_id: string;
   action: string;
-  feature_flags: Record<string, boolean>;
+  proposed_feature_flags: Record<string, boolean>;
   ux_config: Record<string, unknown>;
   reasoning: string;
   confidence: number;
+  applied: false;
+  approval_required: true;
 }
 
 async function callOmegaProductModel(
@@ -116,28 +118,6 @@ async function saveProductDecision(
   return data.id;
 }
 
-async function updateMemberFeatureFlags(
-  memberId: string,
-  features: Record<string, boolean>
-): Promise<void> {
-  for (const [featureId, enabled] of Object.entries(features)) {
-    // onConflict must name the (member_id, feature_id) unique key: without it
-    // PostgREST conflicts on the primary key, which this payload never carries,
-    // so the second write to a flag would raise 23505 forever (CLAUDE.md 8.1 #7).
-    const { error } = await supabase.from("member_feature_flags").upsert({
-      member_id: memberId,
-      feature_id: featureId,
-      enabled: enabled,
-      set_by_agent: true,
-      set_reason: "product_agent_adaptation",
-      set_timestamp: new Date().toISOString(),
-    }, { onConflict: "member_id,feature_id" });
-
-    if (error) {
-      console.error('Error setting feature flag %s:', featureId, error);
-    }
-  }
-}
 
 async function processProductRequest(req: ProductRequest): Promise<ProductResponse> {
   // Determine persona UX complexity
@@ -239,20 +219,21 @@ ${req.context.pending_features.join("\n")}
   // Save decision
 const decisionId = await saveProductDecision(req.member_id, {
     ...decision,
-    feature_flags: featureFlags,
+    proposed_feature_flags: featureFlags,
     ux_config: uxConfig,
+    applied: false,
+    approval_required: true,
   }, `${modelResult.provider}:${modelResult.model}`);
-
-  // Update feature flags
-  await updateMemberFeatureFlags(req.member_id, featureFlags);
 
   return {
     decision_id: decisionId,
-    action: "product_adaptation",
-    feature_flags: featureFlags,
+    action: "product_adaptation_proposal",
+    proposed_feature_flags: featureFlags,
     ux_config: uxConfig,
     reasoning: claudeResponse,
     confidence: decision.confidence || 0.8,
+    applied: false,
+    approval_required: true,
   };
 }
 

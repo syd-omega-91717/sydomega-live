@@ -9,7 +9,7 @@
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Restores missing live runtime adapters and hardens user-scoped consultancy intake idempotency; requires fresh migration replay and provider application evidence before release."
+      "reason": "Restores the 54-action runtime dispatcher and adds owner/subject-scoped idempotency with immutable retry-payload checks for consultancy, service orders, agent tasks, notifications, achievement verifications, sovereign events, platform events and audit records. Requires successful fresh migration replay, security/adapter probes, and provider application evidence before release."
     }
   ]
 }

@@ -142,6 +142,7 @@ broken_assets() {
 }
 
 service_role_scan() {
+  python3 scripts/client-credential-scan.py
   # Mirror ci.yml's "Client credential scan" scope exactly, including its
   # exemptions: that workflow skips any path with a '.git' or 'scripts'
   # component. scripts/ is provably not client-shipped -- vercel-build.sh:28
@@ -163,7 +164,6 @@ service_role_scan() {
   fi
   return 0
 }
-
 sw_precache() {
   local bad=0 assets
   assets=$(node -e "

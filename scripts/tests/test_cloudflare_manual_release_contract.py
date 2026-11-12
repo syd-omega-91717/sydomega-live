@@ -2,6 +2,9 @@
 """Regression contract for the manual Cloudflare production fallback."""
 
 from pathlib import Path
+import importlib.util
+import subprocess
+import textwrap
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -61,6 +64,40 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
 
+    def test_git_connected_verifier_shell_is_syntactically_valid(self):
+        step = PRODUCTION_VERIFY.split(
+            "      - name: Verify production manifest, headers and complete page estate", 1
+        )[1]
+        script = textwrap.dedent(step.split("        run: |", 1)[1])
+        result = subprocess.run(
+            ["bash", "-n"],
+            input=script,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_production_smoke_rejects_unsafe_url_schemes_and_cross_origin_redirects(self):
+        source = ROOT / "scripts/cloudflare-production-smoke.py"
+        spec = importlib.util.spec_from_file_location("omega_production_smoke", source)
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        self.assertFalse(module.is_safe_http_url("file:///etc/passwd"))
+        self.assertFalse(module.is_safe_http_url("https://user:secret@sydomega.com/"))
+        self.assertFalse(module.is_safe_http_url("https://other.example/", "sydomega.com", 443))
+        self.assertTrue(module.is_safe_http_url("https://sydomega.com/", "sydomega.com", 443))
+        handler = module.SameOriginRedirectHandler("sydomega.com", 443)
+        request = module.Request("https://sydomega.com/")
+        self.assertIsNone(handler.redirect_request(
+            request, None, 302, "Found", {}, "https://other.example/"
+        ))
+        status, _, detail = module.request_url("file:///etc/passwd", "GET", 1)
+        self.assertEqual(status, 0)
+        self.assertIn("unsupported URL", detail)
     def test_production_smoke_dependency_is_pinned_and_installed_only_for_verification(self):
         self.assertIn("requests==2.34.2", SMOKE_REQUIREMENTS)
         self.assertIn("scripts/requirements.txt", WORKFLOW)

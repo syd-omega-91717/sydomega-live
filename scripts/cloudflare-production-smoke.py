@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import sys
 from urllib.parse import urldefrag, urljoin, urlsplit
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "config/omega-page-contracts.json"
@@ -32,6 +33,52 @@ class RefParser(HTMLParser):
                 if url:
                     self.refs.add(url)
 
+def is_safe_http_url(url: str, allowed_host: str | None = None, allowed_port: int | None = None) -> bool:
+    """Reject file/custom schemes, credentials and cross-origin redirects."""
+    try:
+        parts = urlsplit(url)
+        port = parts.port or (443 if parts.scheme.lower() == "https" else 80)
+    except ValueError:
+        return False
+    return (
+        parts.scheme.lower() in {"http", "https"}
+        and bool(parts.hostname)
+        and not parts.username
+        and not parts.password
+        and (allowed_host is None or parts.hostname.lower() == allowed_host.lower())
+        and (allowed_port is None or port == allowed_port)
+    )
+
+
+class SameOriginRedirectHandler(HTTPRedirectHandler):
+    def __init__(self, allowed_host: str, allowed_port: int) -> None:
+        super().__init__()
+        self.allowed_host = allowed_host
+        self.allowed_port = allowed_port
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if not is_safe_http_url(newurl, self.allowed_host, self.allowed_port):
+            return None
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
+    if not is_safe_http_url(url):
+        return 0, "", "blocked unsupported URL scheme or authority"
+    parts = urlsplit(url)
+    allowed_port = parts.port or (443 if parts.scheme.lower() == "https" else 80)
+    opener = build_opener(SameOriginRedirectHandler(parts.hostname.lower(), allowed_port))
+    req = Request(url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
+    try:
+        with opener.open(req, timeout=timeout) as response:
+            content_type = response.headers.get("Content-Type", "")
+            body = response.read() if method == "GET" else b""
+            return response.status, content_type, body.decode("utf-8", errors="replace")
+    except HTTPError as exc:
+        if method == "HEAD" and exc.code in {405, 501}:
+            return request_url(url, "GET", timeout)
+        return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", ""
+    except (URLError, TimeoutError, OSError) as exc:
 def validate_request_url(url: str) -> str:
     """Allow only HTTPS production/preview hosts; never pass file or arbitrary schemes to urllib."""
     try:

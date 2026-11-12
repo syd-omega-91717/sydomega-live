@@ -7,6 +7,31 @@ This register separates code-controlled work from provider/account settings that
 
 ## P0 — Complete the release-safe runtime change
 
+### Provider-applied migrations — verified 2026-11-12
+
+- [x] The authenticated production migration ledger returns **419 versions**, latest `20261112091500`.
+- [x] The ledger includes `20261112091300_omega_idempotency_payload_integrity`, `20261112091400_omega_stripe_refund_state_fk_index`, and `20261112091500_omega_search_index_schema_reconciliation`.
+- [x] The remote migration snapshot has been reconciled to the provider's 419 version/name records. Ledger evidence is not treated as proof of SQL byte parity.
+- [x] The three applied migrations are no longer listed as pending. The two new follow-ups `20261112110000` (runtime adapter schema compatibility) and `20261112120000` (versioned news read-model schema baseline) remain pending review and block release.
+
+### Live database verification — verified 2026-11-12
+
+- [x] Live dispatcher coverage: **54/54** canonical actions (53 module-read branches plus the dedicated consultancy intake write action).
+- [x] All seven idempotency helper definitions were re-queried. Each is SECURITY DEFINER with an empty search path and the expected execute boundary: six service-role-only helpers; sovereign event recording is authenticated-only and denied to anon.
+- [x] Owner/subject-scoped unique indexes are present for consultancy requests, service orders, agent tasks, notifications, achievement verifications, sovereign events, platform events and audit records. Null-owner system deduplication indexes are present where required.
+- [x] The refund-state last-reversal foreign-key index is present.
+- [x] All seven compatibility columns on `public.search_index` are present; the authenticated read policy permits only shared or owner rows.
+- [x] Security/performance/health advisors were re-run. Health: **0 lints**. Performance: no remaining unindexed refund-state FK finding; one search-index RLS initialization-plan warning and 326 unused-index notices remain. Security: leaked-password protection remains disabled and three internal RLS/no-policy findings remain informational and fail-closed.
+
+### Remaining blocking work
+
+- [ ] Complete a fresh full migration replay and all 54 adapter probes. PR #1242's replay first failed in `CONSULTANCY.cases.read` because optional legacy columns were statically referenced. Follow-up replays then exposed: a missing `created_at` projection in `MEDIA.library.read`; `member_presence.last_seen` versus `last_seen_at`; `omega_platform_events.actor_user_id` versus `user_id`; and `public.news` existing only in the live schema snapshot, not the migration history. PR #1245 now adds schema-safe consultancy projections, the media/presence/event corrections, and a deny-by-default versioned `public.news` baseline with no seeded content. The latest clean replay must still prove all 54 actions before either migration is applied to production.
+- [ ] Require all blocking checks to pass. PR #1242 was merged while Full Migration Replay, Contracts, CI and Supply Chain/SBOM were failing. PR #1245 corrects the known failures and adds regression coverage; its checks must be inspected before merge.
+- [ ] Merge PR #1245 only after all required checks pass.
+- [ ] Require Cloudflare's exact-SHA production verifier to pass for the resulting main commit, including the 241-page and same-origin reference smoke test, CSP/HSTS and the www alias.
+- [ ] Record the exact deployed SHA and rollback target. The public release manifest has not yet been independently retrieved through the current inspection channel.
+
+No production schema changes were made by PR #1245. Do not call the platform fully production-ready until the fresh replay, blocking checks, exact-SHA production verification and external owner controls are complete.
 1. **Provider ledger reconciliation is complete:** read-only Supabase migration listing confirms **419 applied versions**, latest `20261112091500`. The three follow-up migrations `20261112091300`, `20261112091400`, and `20261112091500` are recorded as applied. The repository snapshot and pending register now match that provider evidence.
 2. **Catalog verification is complete for those three migrations:** all seven payload-conflict guards are present in the live helper definitions; owner/subject-scoped idempotency indexes are present; the Stripe refund-state FK index exists; and `search_index` has the reconciled columns and owner/shared-only read policy. This is catalog/schema evidence, not a substitute for clean replay or end-to-end tests.
 3. **Fresh replay exposed a historical consultancy schema mismatch:** the clean migration chain creates `consult_requests.id` as UUID and can omit `domain`, while production uses BIGINT IDs and a required `domain`. The live helper also lacked a successful `RETURN`. The pending migration adds the missing column, preserves IDs via text return values, aligns verified required/default fields, restores the return and updates the dispatcher variable without rewriting IDs or creating fake requests. The full replay and migration-security audit now pass on a preceding PR head. The 54-action probe then found two runtime SQL defects in sequence: `MEDIA.library.read` omitted `created_at` from a derived projection used by the outer order, and `COMMUNICATION.presence.read` referenced `member_presence.last_seen_at` instead of the canonical `last_seen`. Both are corrected in the pending migration; the complete 54-action probe is still required.

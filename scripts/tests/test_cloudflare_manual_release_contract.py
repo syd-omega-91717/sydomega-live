@@ -52,6 +52,9 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
+        self.assertIn("CLOUDFLARE_EMAIL_PLACEHOLDER_PATH", PRODUCTION_SMOKE)
+        self.assertIn("unsupported_url_scheme_or_authority", PRODUCTION_SMOKE)
+        self.assertIn("cloudflare_email_placeholders_skipped", PRODUCTION_SMOKE)
 
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)

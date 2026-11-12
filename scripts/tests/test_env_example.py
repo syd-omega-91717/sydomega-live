@@ -4,6 +4,7 @@ The example is the one tracked place secret NAMES appear. It must list exactly
 the variables the Edge Functions read (minus those the platform injects), and
 every value must be an obvious placeholder -- so a real key pasted in fails CI.
 """
+import json
 import re
 import unittest
 from pathlib import Path
@@ -21,6 +22,16 @@ def read_by_functions():
     names = set()
     for f in FUNCS.rglob("*.ts"):
         names |= set(re.findall(r"env\.get\(\s*['\"]([A-Z0-9_]+)['\"]", f.read_text(encoding="utf-8")))
+    policy = json.loads((ROOT / "config" / "omega-ai-routing-policy.json").read_text(encoding="utf-8"))
+    names |= {provider["credentialEnv"] for provider in policy["providers"].values()}
+    profiles = policy["profiles"]
+    patterns = policy["environment"]
+    for profile in profiles:
+        upper = profile.upper()
+        names.add(patterns["providerPattern"].replace("{PROFILE}", upper))
+        names.add(patterns["anthropicModelPattern"].replace("{PROFILE}", upper))
+        names.add(patterns["openaiModelPattern"].replace("{PROFILE}", upper))
+        names.add(patterns["openaiServiceTierPattern"].replace("{PROFILE}", upper))
     return names - PLATFORM
 
 

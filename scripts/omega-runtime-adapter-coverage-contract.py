@@ -5,6 +5,9 @@ import json
 import re
 import sys
 from pathlib import Path
+import sys
+import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / "config/omega-module-runtime.json"
@@ -13,6 +16,10 @@ MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_ad
 IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
 REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe_refund_state_fk_index.sql"
 SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
+EXPERT_BOOKINGS_MIGRATION = ROOT / "supabase/migrations/20261112103000_omega_expert_bookings_domain_compatibility.sql"
+NEWS_MIGRATION = ROOT / "supabase/migrations/20261112120000_omega_news_schema_baseline.sql"
+CONSULTANCY_COMPAT_MIGRATION = ROOT / "supabase/migrations/20261112130000_omega_consultancy_request_id_text_compat.sql"
+CONSULTANCY_SCHEMA_MIGRATION = ROOT / "supabase/migrations/20261112091600_omega_consultancy_runtime_schema_parity.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
 def fail(message: str) -> int:
@@ -28,6 +35,13 @@ def main() -> int:
         refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
         search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
         all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql))
+        expert_bookings_sql = EXPERT_BOOKINGS_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, expert_bookings_sql))
+        consultancy_compat_sql = CONSULTANCY_COMPAT_MIGRATION.read_text(encoding="utf-8")
+        news_sql = NEWS_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, consultancy_compat_sql, news_sql))
+        consultancy_schema_sql = CONSULTANCY_SCHEMA_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, consultancy_schema_sql))
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
@@ -76,12 +90,14 @@ def main() -> int:
         for match in re.finditer(
             r"(?:if|elsif)\s+v_module\s*=\s*'([A-Z0-9_]+)'\s+and\s+v_action_name\s*=\s*'([^']+)'",
             search_index_sql,
+            consultancy_compat_sql,
             re.IGNORECASE,
         ):
             search_dispatcher_actions.add(f"{match.group(1).upper()}.{match.group(2)}")
         for match in re.finditer(
             r"(?:if|elsif)\s+v_module\s+in\s*\(([^)]+)\)\s+and\s+v_action_name\s*=\s*'([^']+)'",
             search_index_sql,
+            consultancy_compat_sql,
             re.IGNORECASE,
         ):
             modules = re.findall(r"'([A-Z0-9_]+)'", match.group(1), re.IGNORECASE)
@@ -89,6 +105,7 @@ def main() -> int:
         elemental_search = re.search(
             r"elsif\s+v_module\s*=\s*'ELEMENTAL'\s+and\s+v_action_name\s+in\s*\(([^)]+)\)",
             search_index_sql,
+            consultancy_compat_sql,
             re.IGNORECASE,
         )
         if elemental_search:
@@ -100,6 +117,49 @@ def main() -> int:
         if search_dispatcher_actions != expected:
             return fail(
                 "search-index dispatcher replacement lost canonical actions; "
+        if "when 'create_consult_intake' then" in consultancy_compat_sql and "omega_private.create_consult_intake(" in consultancy_compat_sql:
+            search_dispatcher_actions.add("CONSULTANCY.intake.create")
+        if consultancy_compat_sql.lower().count("create or replace function public.omega_runtime_dispatch(") != 1:
+            return fail("consultancy compatibility migration must replace the canonical dispatcher exactly once")
+        if consultancy_compat_sql.lower().count("security definer set search_path=''") != 1:
+            return fail("consultancy compatibility dispatcher must pin an empty search_path")
+        for marker in (
+            "to_jsonb(c) as row_data",
+            "to_jsonb(b) as row_data",
+            "c.row_data->'domain'",
+            "b.row_data->'domain'",
+            "consult_requests_adapter_stable_columns_missing",
+            "expert_bookings_adapter_stable_columns_missing",
+            "runtime_dispatch_acl_invalid",
+            "sort_order,created_at from public.media_items",
+            "where user_id=p_actor_user_id order by last_seen desc limit 20",
+            "jsonb_agg(to_jsonb(p) order by p.last_seen desc)",
+            "where actor_user_id=p_actor_user_id order by created_at desc limit 100",
+        ):
+            if marker not in consultancy_compat_sql:
+                return fail(f"consultancy schema-compatibility marker missing: {marker}")
+        if re.search(r"select\s+id\s*,\s*domain\s*,\s*message\s*,\s*status\s*,\s*created_at\s*,\s*urgency\s*,\s*preferred_time\s+from\s+public\.consult_requests", consultancy_compat_sql, re.IGNORECASE):
+            return fail("consultancy adapter must not statically reference optional request columns")
+
+        if "create table if not exists public.news" not in news_sql.lower():
+            return fail("news schema baseline must create the public.news read model")
+        for marker in (
+            "alter table public.news enable row level security",
+            "create policy omega_deny_by_default",
+            "using (false)",
+            "with check (false)",
+            "revoke all on table public.news from public, anon, service_role",
+            "grant select on table public.news to authenticated",
+            "news_deny_by_default_policy_missing",
+            "news_table_acl_invalid",
+        ):
+            if marker not in news_sql:
+                return fail(f"news schema baseline security marker missing: {marker}")
+        if "public.news" not in consultancy_compat_sql or "is_published" not in consultancy_compat_sql:
+            return fail("NEWS provenance adapter must use the versioned news read model")
+        if search_dispatcher_actions != expected:
+            return fail(
+                "latest dispatcher replacement lost canonical actions; "
                 f"missing={sorted(expected - search_dispatcher_actions)}; "
                 f"extra={sorted(search_dispatcher_actions - expected)}"
             )
@@ -119,6 +179,27 @@ def main() -> int:
                 return fail(f"search-index schema/RLS/runtime marker missing: {marker}")
         if search_index_sql.lower().count("security definer set search_path=''") != 1:
             return fail("search-index dispatcher replacement must pin an empty search_path")
+        if "alter table public.expert_bookings" not in expert_bookings_sql.lower() or "add column if not exists domain text" not in expert_bookings_sql.lower() or "expert_bookings_domain_compatibility_column_missing" not in expert_bookings_sql:
+            return fail("fresh replay must provide the expert_bookings.domain column required by consultancy cases.read")
+        normalized_consultancy_sql = " ".join(consultancy_schema_sql.lower().split())
+        if "alter table public.consult_requests add column if not exists domain text" not in normalized_consultancy_sql:
+            return fail("clean-replay consultancy domain column reconciliation is missing")
+        if "returns text language plpgsql security definer set search_path=''" not in normalized_consultancy_sql:
+            return fail("consultancy intake helper must return a schema-neutral text ID and pin an empty search_path")
+        if "returning id::text into v_id" not in normalized_consultancy_sql or "return v_id;" not in normalized_consultancy_sql:
+            return fail("consultancy intake helper must return the inserted or idempotently reused row ID")
+        if "v_request_id text" not in normalized_consultancy_sql:
+            return fail("runtime dispatcher request ID variable must accept UUID and BIGINT source IDs")
+        if "sort_order,created_at from public.media_items" not in normalized_consultancy_sql:
+            return fail("MEDIA.library.read must retain created_at in its ordered derived-table projection")
+        if "order by p.last_seen desc" not in normalized_consultancy_sql or "p.last_seen_at" in normalized_consultancy_sql:
+            return fail("COMMUNICATION.presence.read must use the canonical member_presence.last_seen column")
+        if "owner_id=(select auth.uid())" not in normalized_consultancy_sql:
+            return fail("search-index policy must use an initplan-safe scalar auth.uid() call")
+        if "owner_id=auth.uid()" in normalized_consultancy_sql:
+            return fail("search-index follow-up must not retain per-row auth.uid() evaluation")
+        if "alter table public.consult_requests alter column id type" in normalized_consultancy_sql or "drop table" in normalized_consultancy_sql:
+            return fail("consultancy schema parity migration must not rewrite or drop historical request IDs")
         for marker in (
             "createSupabaseContext(req, { auth: 'user' })",
             "ctx.userClaims.sub",
@@ -134,6 +215,12 @@ def main() -> int:
             "set search_path=''",
             "revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from public,anon,authenticated",
             "grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role",
+            "on conflict (user_id,runtime_idempotency_key)",
+            "confidentiality_acceptance_required",
+            "ADAPTER_REQUIRED",
+        ):
+            if marker not in sql:
+                return fail(f"dispatcher migration safety/contract marker missing: {marker}")
             "revoke all on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) from public,anon,authenticated",
             "grant execute on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) to service_role",
             "grant execute on function private.record_sovereign_event(text,jsonb,jsonb,text) to authenticated",
@@ -262,6 +349,7 @@ def main() -> int:
         return fail(str(exc))
 
 if __name__ == "__main__":
+    if any(arg in {"-h", "--help"} for arg in sys.argv[1:]):
     if "--help" in sys.argv[1:]:
         print(__doc__ or "")
         raise SystemExit(0)

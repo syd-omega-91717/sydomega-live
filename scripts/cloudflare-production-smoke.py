@@ -63,8 +63,10 @@ def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tupl
     safe_url = validate_request_url(url)
     import requests
 
+    session = requests.Session()
+    session.trust_env = False
     try:
-        response = requests.request(
+        response = session.request(
             method,
             safe_url,
             headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"},
@@ -95,6 +97,8 @@ def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tupl
         return status, content_type, body
     except requests.RequestException as exc:
         return 0, "", str(exc)
+    finally:
+        session.close()
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)

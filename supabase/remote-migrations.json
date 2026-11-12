@@ -1,8 +1,8 @@
 {
   "_captured": "2026-11-12",
-  "source": "Authenticated read-only Supabase migration-ledger query against the configured production project on 2026-11-12: 416 recorded versions, latest 20261111190000. Ledger presence is provider evidence only; it does not prove SQL byte parity or semantic correctness.",
-  "remoteMigrationCount": 416,
-  "latestRemoteMigration": "20261111190000",
+  "source": "Authenticated read-only Supabase migration-ledger query against production project ydqhzvvoyufiiqvzcjns on 2026-11-12 confirmed 419 recorded versions, latest 20261112091500. Independently verified the three newest applied migrations by inspecting their live helper definitions, refund-state index, search_index compatibility columns, owner-scoped policy and covering index. Ledger presence alone is not treated as semantic proof.",
+  "remoteMigrationCount": 419,
+  "latestRemoteMigration": "20261112091500",
   "versions": [
     "0001",
     "0002",
@@ -419,7 +419,10 @@
     "20261025100000",
     "20261103230000",
     "20261104090000",
-    "20261111190000"
+    "20261111190000",
+    "20261112091300",
+    "20261112091400",
+    "20261112091500"
   ],
   "migrations": [
     {
@@ -2082,6 +2085,18 @@
     {
       "version": "20261111190000",
       "name": "omega_runtime_dispatch_adapter_reconciliation"
+    },
+    {
+      "version": "20261112091300",
+      "name": "omega_idempotency_payload_integrity"
+    },
+    {
+      "version": "20261112091400",
+      "name": "omega_stripe_refund_state_fk_index"
+    },
+    {
+      "version": "20261112091500",
+      "name": "omega_search_index_schema_reconciliation"
     }
   ]
 }

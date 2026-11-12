@@ -135,5 +135,16 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertTrue(sql.strip().endswith("commit;"))
 
 
+    def test_latest_consultancy_dispatcher_normalizes_uuid_and_bigint_ids_to_text(self) -> None:
+        path = MIGRATIONS / "20261112130000_omega_consultancy_request_id_text_compat.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("v_request_id text", sql)
+        self.assertNotIn("v_request_id bigint", sql)
+        self.assertIn("omega_private.create_consult_intake", sql)
+        self.assertIn("returning id::text into v_id", sql)
+        self.assertIn("grant execute on function public.omega_runtime_dispatch", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
+
 if __name__ == "__main__":
     unittest.main()

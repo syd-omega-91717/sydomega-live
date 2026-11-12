@@ -93,7 +93,7 @@ def main() -> int:
 
         concierge = read(consumers["concierge"])
         require("supabase.auth.getUser" in concierge and "ai_personalization_enabled" in concierge, "concierge auth/consent gate missing")
-        require("model_profile: "fast"" in concierge, "concierge must use the fast profile")
+        require("model_profile: modelProfile" in concierge and 'decision.risk === "HIGH" ? "reasoning" : "fast"' in concierge, "concierge must route high-risk requests to reasoning")
 
         for name in ("concierge-orchestrator", "growth-orchestrator", "product-orchestrator"):
             source = read(consumers[name])
@@ -140,7 +140,7 @@ def main() -> int:
         case_ids = [case["id"] for case in cases]
         require(eval_cases["executionMode"] == "STATIC_CONTRACT_ONLY", "policy cases must not be misrepresented as executed model evaluations")
         require(len(case_ids) == len(set(case_ids)) and len(cases) >= 10, "AI adversarial policy case coverage incomplete")
-        required_cases = {"untrusted-memory-injection", "financial-action-request", "cross-member-context", "provider-unconfigured", "prompt-persistence", "model-estimated-revenue", "feature-flag-mutation", "tool-execution", "fabricated-citations", "unvalidated-evaluation"}
+        required_cases = {"untrusted-memory-injection", "financial-action-request", "cross-member-context", "provider-unconfigured", "prompt-persistence", "model-estimated-revenue", "feature-flag-mutation", "tool-execution", "fabricated-citations", "unvalidated-evaluation", "graphify-consent-gate"}
         require(required_cases.issubset(set(case_ids)), "required AI safety evaluation cases missing")
 
         env_keys = {line.split("=", 1)[0].strip() for line in env_example.splitlines() if line.strip() and not line.lstrip().startswith("#") and "=" in line}

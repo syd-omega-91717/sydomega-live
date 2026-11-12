@@ -280,6 +280,7 @@ jobs:
           import subprocess, sys
           sys.exit(subprocess.run(['node', 'scripts/tests/test_omega_execution_program.js']).returncode)
       - name: Client credential scan
+        shell: bash
         run: python scripts/client-credential-scan.py
       - name: Execution marker
         shell: python

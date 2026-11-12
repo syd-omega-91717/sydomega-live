@@ -14,10 +14,11 @@ class SupplyChainSastScopeTests(unittest.TestCase):
         end = WORKFLOW.index("      - name: Identify blocking Semgrep findings", start)
         scan = WORKFLOW[start:end]
         self.assertIn("semgrep scan --config=auto --error --sarif", scan)
-        for pattern in ("*.js", "*.py", "*.sql", "*.ts", "*.tsx", "*.yml", "*.yaml"):
+        for pattern in ("*.js", "*.mjs", "*.cjs", "*.py", "*.sql", "*.ts"):
             self.assertIn(f"--include '{pattern}'", scan)
-        self.assertIn("--exclude '.github/workflows/ci.yml'", scan)
         self.assertIn("SCAN_SCOPE", scan)
+        self.assertNotIn("--include '*.tsx'", scan)
+        self.assertNotIn("--include '*.yml'", scan)
         self.assertNotIn("--no-errors", scan)
         self.assertNotIn("|| true", scan)
 
@@ -29,11 +30,12 @@ class SupplyChainSastScopeTests(unittest.TestCase):
         self.assertIn("--include '*.js'", diagnostic)
         self.assertIn("--include '*.py'", diagnostic)
         self.assertIn("--include '*.sql'", diagnostic)
-        self.assertIn("--exclude '.github/workflows/ci.yml'", diagnostic)
+        self.assertIn("--include '*.mjs'", diagnostic)
         self.assertIn("|| true", diagnostic)  # diagnostics cannot change the failed blocking scan
 
     def test_html_inline_script_coverage_is_not_silently_claimed_by_semgrep(self):
         self.assertIn("HTML inline scripts are", WORKFLOW)
+        self.assertIn("TSX/JSX inspiration sources", WORKFLOW)
         self.assertIn("workflow-contract-lint", WORKFLOW)
 
 

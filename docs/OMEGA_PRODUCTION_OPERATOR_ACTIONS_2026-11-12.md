@@ -7,13 +7,31 @@ This register separates code-controlled work from provider/account settings that
 
 ## P0 — Complete the release-safe runtime change
 
-1. Pass the full isolated Supabase migration replay for all local migrations, including the 54-action runtime probe, immutable-payload conflict tests, refund-state FK index migration and search-index owner/org RLS probes.
-2. Pass the migration security audit, Contracts, Production Contract, CI, CodeQL, Secret Detection, Supply Chain/SBOM, Repository Integrity and release-readiness checks.
-3. After successful isolated replay, apply `20261112091300_omega_idempotency_payload_integrity.sql`, `20261112091400_omega_stripe_refund_state_fk_index.sql` and `20261112091500_omega_search_index_schema_reconciliation.sql` to the production Supabase project through the authorized migration action.
-4. Verify the provider ledger records all three new migration versions (expected 419 applied versions), re-query the seven helper definitions, the runtime dispatcher definition and their execute grants; confirm the new refund-state FK index, reconciled search-index columns/RLS policy, and all owner-scoped indexes.
-5. Recheck the Supabase security/performance/health advisors. The expected result is no unindexed refund-state FK warning; do not drop unused indexes without workload evidence.
-6. Update `remote-migrations.json` and `pending-migrations.json` from the actual provider result; do not infer application from a green repository workflow.
-7. Merge the reviewed PR and require Cloudflare's exact-SHA production verification to pass for the merge commit. The 241-page and same-origin reference smoke test must pass. A Cloudflare branch preview is not production evidence.
+### Provider-applied migrations — verified 2026-11-12
+
+- [x] The authenticated production migration ledger returns **419 versions**, latest `20261112091500`.
+- [x] The ledger includes `20261112091300_omega_idempotency_payload_integrity`, `20261112091400_omega_stripe_refund_state_fk_index`, and `20261112091500_omega_search_index_schema_reconciliation`.
+- [x] The remote migration snapshot has been reconciled to the provider's 419 version/name records. Ledger evidence is not treated as proof of SQL byte parity.
+- [x] The three applied migrations are no longer listed as pending. The new consultancy compatibility follow-up `20261112110000` remains pending review and blocks release.
+
+### Live database verification — verified 2026-11-12
+
+- [x] Live dispatcher coverage: **54/54** canonical actions (53 module-read branches plus the dedicated consultancy intake write action).
+- [x] All seven idempotency helper definitions were re-queried. Each is SECURITY DEFINER with an empty search path and the expected execute boundary: six service-role-only helpers; sovereign event recording is authenticated-only and denied to anon.
+- [x] Owner/subject-scoped unique indexes are present for consultancy requests, service orders, agent tasks, notifications, achievement verifications, sovereign events, platform events and audit records. Null-owner system deduplication indexes are present where required.
+- [x] The refund-state last-reversal foreign-key index is present.
+- [x] All seven compatibility columns on `public.search_index` are present; the authenticated read policy permits only shared or owner rows.
+- [x] Security/performance/health advisors were re-run. Health: **0 lints**. Performance: no remaining unindexed refund-state FK finding; one search-index RLS initialization-plan warning and 326 unused-index notices remain. Security: leaked-password protection remains disabled and three internal RLS/no-policy findings remain informational and fail-closed.
+
+### Remaining blocking work
+
+- [ ] Complete a fresh full migration replay and all 54 adapter probes. PR #1242's replay failed in `CONSULTANCY.cases.read` because the dispatcher referenced optional legacy columns not guaranteed by the fresh schema. PR #1245 adds a follow-up using JSON row projections; it is not yet merged or provider-applied.
+- [ ] Require all blocking checks to pass. PR #1242 was merged while Full Migration Replay, Contracts, CI and Supply Chain/SBOM were failing. PR #1245 corrects the known failures and adds regression coverage; its checks must be inspected before merge.
+- [ ] Merge PR #1245 only after all required checks pass.
+- [ ] Require Cloudflare's exact-SHA production verifier to pass for the resulting main commit, including the 241-page and same-origin reference smoke test, CSP/HSTS and the www alias.
+- [ ] Record the exact deployed SHA and rollback target. The public release manifest has not yet been independently retrieved through the current inspection channel.
+
+No production schema changes were made by PR #1245. Do not call the platform fully production-ready until the fresh replay, blocking checks, exact-SHA production verification and external owner controls are complete.
 
 ## P1 — GitHub repository protection
 

@@ -10,6 +10,14 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "Adds the expert_bookings.domain column required by the consultancy cases.read adapter. Production already has the field; fresh migration replay proved the canonical clean-install history omitted it. Must pass fresh replay and adapter probe before applying this additive compatibility migration to production."
+    },
+    {
+      "version": "20261112110000",
+      "file": "20261112110000_omega_graphify_ai_safety_gate.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Creates graphify_ai_enabled=false by default. Graphify query/ingestion remain held until privacy, per-member cost controls and explicit AI personalization plus sensitive-data consent are approved."
     }
   ]
 }

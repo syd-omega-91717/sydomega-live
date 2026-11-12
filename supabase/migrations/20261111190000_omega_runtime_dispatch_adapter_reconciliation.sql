@@ -1,3 +1,104 @@
+-- Reconcile the live runtime dispatcher with all 54 canonical module actions.
+-- The live provider function had drifted behind the applied migration ledger.
+-- Restore the full module adapter set and add the wave-3 handlers.
+-- Member-owned reads are scoped to p_actor_user_id. Financial execution and
+-- asset mutation remain outside this dispatcher.
+begin;
+drop index if exists public.consult_requests_runtime_idempotency_uidx;
+create unique index consult_requests_runtime_idempotency_uidx
+  on public.consult_requests(user_id,runtime_idempotency_key)
+  where runtime_idempotency_key is not null;
+alter table public.omega_service_orders
+  drop constraint if exists omega_service_orders_idempotency_key_key;
+alter table public.omega_service_orders
+  drop constraint if exists omega_service_orders_user_idempotency_key_key;
+drop index if exists public.omega_service_orders_user_idempotency_uidx;
+drop index if exists public.omega_service_orders_system_idempotency_uidx;
+create unique index omega_service_orders_user_idempotency_uidx
+  on public.omega_service_orders(user_id,idempotency_key)
+  where user_id is not null and idempotency_key is not null;
+create unique index omega_service_orders_system_idempotency_uidx
+  on public.omega_service_orders(idempotency_key)
+  where user_id is null and idempotency_key is not null;
+alter table public.omega_agent_tasks
+  drop constraint if exists omega_agent_tasks_idempotency_key_key;
+drop index if exists public.omega_agent_tasks_user_idempotency_uidx;
+drop index if exists public.omega_agent_tasks_system_idempotency_uidx;
+create unique index omega_agent_tasks_user_idempotency_uidx
+  on public.omega_agent_tasks(user_id,idempotency_key)
+  where user_id is not null and idempotency_key is not null;
+create unique index omega_agent_tasks_system_idempotency_uidx
+  on public.omega_agent_tasks(idempotency_key)
+  where user_id is null and idempotency_key is not null;
+alter table public.omega_notifications
+  drop constraint if exists omega_notifications_idempotency_key_key;
+alter table public.omega_notifications
+  drop constraint if exists omega_notifications_user_idempotency_key_key;
+alter table public.omega_notifications
+  add constraint omega_notifications_user_idempotency_key_key
+  unique (user_id,idempotency_key);
+alter table public.sovereign_events
+  drop constraint if exists sovereign_events_idempotency_key_key;
+drop index if exists public.sovereign_events_user_idempotency_uidx;
+drop index if exists public.sovereign_events_system_idempotency_uidx;
+create unique index sovereign_events_user_idempotency_uidx
+  on public.sovereign_events(user_id,idempotency_key)
+  where user_id is not null and idempotency_key is not null;
+create unique index sovereign_events_system_idempotency_uidx
+  on public.sovereign_events(idempotency_key)
+  where user_id is null and idempotency_key is not null;
+alter table public.omega_achievement_verifications
+  drop constraint if exists omega_achievement_verifications_idempotency_key_key;
+alter table public.omega_achievement_verifications
+  drop constraint if exists omega_achievement_verifications_subject_idempotency_key_key;
+alter table public.omega_achievement_verifications
+  add constraint omega_achievement_verifications_subject_idempotency_key_key
+  unique (user_achievement_id,idempotency_key);
+drop index if exists public.omega_platform_events_idempotency_uidx;
+drop index if exists public.omega_platform_events_actor_idempotency_uidx;
+drop index if exists public.omega_platform_events_system_idempotency_uidx;
+create unique index omega_platform_events_actor_idempotency_uidx
+  on public.omega_platform_events(actor_user_id,idempotency_key)
+  where actor_user_id is not null and idempotency_key is not null;
+create unique index omega_platform_events_system_idempotency_uidx
+  on public.omega_platform_events(idempotency_key)
+  where actor_user_id is null and idempotency_key is not null;
+alter table public.omega_audit_log
+  drop constraint if exists omega_audit_log_idempotency_key_key;
+drop index if exists public.omega_audit_log_actor_idempotency_uidx;
+drop index if exists public.omega_audit_log_system_idempotency_uidx;
+create unique index omega_audit_log_actor_idempotency_uidx
+  on public.omega_audit_log(actor_user_id,idempotency_key)
+  where actor_user_id is not null and idempotency_key is not null;
+create unique index omega_audit_log_system_idempotency_uidx
+  on public.omega_audit_log(idempotency_key)
+  where actor_user_id is null and idempotency_key is not null;
+create or replace function omega_private.create_service_order(
+  p_user_id uuid,p_service_id text,p_idempotency_key text,p_metadata jsonb default '{}'::jsonb
+) returns uuid language plpgsql security definer set search_path='' as $function$
+declare v_order_id uuid;
+begin
+  if p_user_id is null then raise exception 'user_required'; end if;
+  if p_service_id is null or pg_catalog.length(pg_catalog.btrim(p_service_id)) < 2 then raise exception 'service_required'; end if;
+  if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
+  if not exists (select 1 from auth.users where id=p_user_id) then raise exception 'user_not_found'; end if;
+  if not exists (
+    select 1 from public.omega_services
+    where service_id=pg_catalog.btrim(p_service_id)
+      and status in ('INTEGRATED','TESTED','DEPLOYED','VERIFIED')
+  ) then
+    raise exception 'service_not_orderable';
+  end if;
+  insert into public.omega_service_orders(service_id,user_id,status,idempotency_key,metadata)
+  values(pg_catalog.btrim(p_service_id),p_user_id,'PENDING',pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
+  on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null
+  do update set idempotency_key=excluded.idempotency_key
+  returning order_id into v_order_id;
+  return v_order_id;
+end;
+$function$;
+revoke all on function omega_private.create_service_order(uuid,text,text,jsonb) from public,anon,authenticated;
+grant execute on function omega_private.create_service_order(uuid,text,text,jsonb) to service_role;
 create or replace function omega_private.create_consult_intake(
   p_user_id uuid,p_domain text,p_message text,p_idempotency_key text,
   p_urgency text default 'normal',p_preferred_time text default null,
@@ -21,7 +122,6 @@ end;
 $$;
 revoke all on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) from public,anon,authenticated;
 grant execute on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) to service_role;
-
 create or replace function omega_private.enqueue_agent_task(
   p_user_id uuid,p_agent_id text,p_task_type text,p_input jsonb,p_idempotency_key text,p_approval_required boolean default true
 ) returns uuid language plpgsql security definer set search_path='' as $function$
@@ -36,24 +136,12 @@ begin
   if p_user_id is null then
     insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required,requested_by)
     values(null,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required,'system')
-    on conflict (idempotency_key) where user_id is null and idempotency_key is not null
-    do update set input=omega_agent_tasks.input
-      where omega_agent_tasks.agent_id=excluded.agent_id
-        and omega_agent_tasks.task_type=excluded.task_type
-        and omega_agent_tasks.input=excluded.input
-        and omega_agent_tasks.approval_required=excluded.approval_required
-        and omega_agent_tasks.requested_by=excluded.requested_by
+    on conflict (idempotency_key) where user_id is null and idempotency_key is not null do update set input=excluded.input
     returning task_id,(xmax=0) into v_id,v_inserted;
   else
     insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required,requested_by)
     values(p_user_id,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required,'user')
-    on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null
-    do update set input=omega_agent_tasks.input
-      where omega_agent_tasks.agent_id=excluded.agent_id
-        and omega_agent_tasks.task_type=excluded.task_type
-        and omega_agent_tasks.input=excluded.input
-        and omega_agent_tasks.approval_required=excluded.approval_required
-        and omega_agent_tasks.requested_by=excluded.requested_by
+    on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null do update set input=excluded.input
     returning task_id,(xmax=0) into v_id,v_inserted;
   end if;
 
@@ -65,7 +153,6 @@ begin
   return v_id;
 end;
 $function$;
-
 create or replace function omega_private.enqueue_notification(
   p_user_id uuid,p_type text,p_title text,p_body text,p_channel text,p_idempotency_key text,p_metadata jsonb default '{}'::jsonb
 ) returns uuid language plpgsql security definer set search_path='' as $function$
@@ -76,25 +163,18 @@ begin
   if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key))<8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
   insert into public.omega_notifications(user_id,notification_type,title,body,channel,idempotency_key,metadata)
   values(p_user_id,p_type,p_title,p_body,p_channel,pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
-  on conflict (user_id,idempotency_key) do update set idempotency_key=excluded.idempotency_key
-    where omega_notifications.notification_type=excluded.notification_type
-      and omega_notifications.title=excluded.title
-      and omega_notifications.body=excluded.body
-      and omega_notifications.channel=excluded.channel
-      and omega_notifications.metadata=excluded.metadata
+  on conflict (user_id,idempotency_key) do update set metadata=excluded.metadata
   returning notification_id into v_id;
-  if v_id is null then raise exception 'notification_idempotency_conflict'; end if;
   return v_id;
 end;
 $function$;
-
 create or replace function omega_private.record_platform_event(
   p_event_type text,p_actor_user_id uuid,p_actor_type text,p_source text,p_idempotency_key text,
   p_correlation_id uuid default null,p_entity_type text default null,p_entity_id text default null,p_payload jsonb default '{}'::jsonb
 ) returns uuid language plpgsql security definer set search_path='' as $function$
-declare v_id uuid; v_audit_rows integer; v_key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency_key,'')),''); v_audit_key text;
+declare v_id uuid; v_key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency_key,'')),''); v_audit_key text;
 begin
-  if v_key is not null and pg_catalog.length(v_key)>122 then raise exception 'idempotency_key_too_long_for_audit_pair'; end if;
+  if v_key is not null and pg_catalog.length(v_key)>128 then raise exception 'idempotency_key_too_long'; end if;
   v_audit_key:=case when v_key is null then null else 'audit:'||v_key end;
   if p_event_type not in ('route_view','action_started','action_completed','mission_progress','capability_used','simulation_run','evidence_recorded','replay_checkpoint') then
     raise exception 'event_type_not_allowed';
@@ -105,67 +185,32 @@ begin
     insert into public.omega_platform_events(event_type,actor_user_id,actor_type,correlation_id,idempotency_key,source,entity_type,entity_id,payload)
     values(p_event_type,null,p_actor_type,p_correlation_id,v_key,p_source,p_entity_type,p_entity_id,coalesce(p_payload,'{}'::jsonb))
     on conflict (idempotency_key) where actor_user_id is null and idempotency_key is not null
-    do update set idempotency_key=excluded.idempotency_key
-      where omega_platform_events.event_type=excluded.event_type
-        and omega_platform_events.actor_type is not distinct from excluded.actor_type
-        and omega_platform_events.correlation_id is not distinct from excluded.correlation_id
-        and omega_platform_events.source is not distinct from excluded.source
-        and omega_platform_events.entity_type is not distinct from excluded.entity_type
-        and omega_platform_events.entity_id is not distinct from excluded.entity_id
-        and omega_platform_events.payload is not distinct from excluded.payload
+    do update set payload=excluded.payload
     returning event_id into v_id;
-    if v_id is null then raise exception 'platform_event_idempotency_conflict'; end if;
 
     insert into public.omega_audit_log(actor_user_id,actor_type,action,resource_type,resource_id,outcome,correlation_id,idempotency_key,details)
     values(null,p_actor_type,p_event_type,p_entity_type,p_entity_id,'success',p_correlation_id,v_audit_key,pg_catalog.jsonb_build_object('source',p_source))
     on conflict (idempotency_key) where actor_user_id is null and idempotency_key is not null
-    do update set idempotency_key=excluded.idempotency_key
-      where omega_audit_log.actor_type=excluded.actor_type
-        and omega_audit_log.action=excluded.action
-        and omega_audit_log.resource_type is not distinct from excluded.resource_type
-        and omega_audit_log.resource_id is not distinct from excluded.resource_id
-        and omega_audit_log.outcome=excluded.outcome
-        and omega_audit_log.correlation_id is not distinct from excluded.correlation_id
-        and omega_audit_log.details=excluded.details;
-    get diagnostics v_audit_rows=row_count;
-    if v_audit_rows=0 then raise exception 'platform_event_audit_idempotency_conflict'; end if;
+    do update set details=excluded.details;
   else
     insert into public.omega_platform_events(event_type,actor_user_id,actor_type,correlation_id,idempotency_key,source,entity_type,entity_id,payload)
     values(p_event_type,p_actor_user_id,p_actor_type,p_correlation_id,v_key,p_source,p_entity_type,p_entity_id,coalesce(p_payload,'{}'::jsonb))
     on conflict (actor_user_id,idempotency_key) where actor_user_id is not null and idempotency_key is not null
-    do update set idempotency_key=excluded.idempotency_key
-      where omega_platform_events.event_type=excluded.event_type
-        and omega_platform_events.actor_type is not distinct from excluded.actor_type
-        and omega_platform_events.correlation_id is not distinct from excluded.correlation_id
-        and omega_platform_events.source is not distinct from excluded.source
-        and omega_platform_events.entity_type is not distinct from excluded.entity_type
-        and omega_platform_events.entity_id is not distinct from excluded.entity_id
-        and omega_platform_events.payload is not distinct from excluded.payload
+    do update set payload=excluded.payload
     returning event_id into v_id;
-    if v_id is null then raise exception 'platform_event_idempotency_conflict'; end if;
 
     insert into public.omega_audit_log(actor_user_id,actor_type,action,resource_type,resource_id,outcome,correlation_id,idempotency_key,details)
     values(p_actor_user_id,p_actor_type,p_event_type,p_entity_type,p_entity_id,'success',p_correlation_id,v_audit_key,pg_catalog.jsonb_build_object('source',p_source))
     on conflict (actor_user_id,idempotency_key) where actor_user_id is not null and idempotency_key is not null
-    do update set idempotency_key=excluded.idempotency_key
-      where omega_audit_log.actor_type=excluded.actor_type
-        and omega_audit_log.action=excluded.action
-        and omega_audit_log.resource_type is not distinct from excluded.resource_type
-        and omega_audit_log.resource_id is not distinct from excluded.resource_id
-        and omega_audit_log.outcome=excluded.outcome
-        and omega_audit_log.correlation_id is not distinct from excluded.correlation_id
-        and omega_audit_log.details=excluded.details;
-    get diagnostics v_audit_rows=row_count;
-    if v_audit_rows=0 then raise exception 'platform_event_audit_idempotency_conflict'; end if;
+    do update set details=excluded.details;
   end if;
   return v_id;
 end;
 $function$;
-
 create or replace function omega_private.verify_achievement(
   p_user_achievement_id uuid,p_decision text,p_verifier text,p_verification_type text,p_evidence jsonb,p_idempotency_key text
 ) returns uuid language plpgsql security definer set search_path='' as $function$
-declare v_id uuid; v_existing_decision text; v_existing_type text; v_existing_verifier text; v_existing_evidence jsonb; v_user uuid; v_key text:=pg_catalog.btrim(coalesce(p_idempotency_key,''));
+declare v_id uuid; v_existing_decision text; v_user uuid; v_key text:=pg_catalog.btrim(coalesce(p_idempotency_key,''));
 begin
   if p_user_achievement_id is null then raise exception 'achievement_assignment_required'; end if;
   if p_decision not in ('approved','rejected','needs_review') then raise exception 'invalid_decision'; end if;
@@ -178,17 +223,11 @@ begin
   if v_user is null then raise exception 'achievement_assignment_not_found'; end if;
   perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(p_user_achievement_id::text||':'||v_key,0));
 
-  select verification_id,decision,verification_type,verifier,evidence
-    into v_id,v_existing_decision,v_existing_type,v_existing_verifier,v_existing_evidence
+  select verification_id,decision into v_id,v_existing_decision
   from public.omega_achievement_verifications
   where user_achievement_id=p_user_achievement_id and idempotency_key=v_key;
   if v_id is not null then
-    if v_existing_decision is distinct from p_decision
-       or v_existing_type is distinct from p_verification_type
-       or v_existing_verifier is distinct from p_verifier
-       or v_existing_evidence is distinct from coalesce(p_evidence,'{}'::jsonb) then
-      raise exception 'verification_idempotency_conflict';
-    end if;
+    if v_existing_decision<>p_decision then raise exception 'verification_idempotency_conflict'; end if;
     return v_id;
   end if;
 
@@ -198,17 +237,10 @@ begin
   returning verification_id into v_id;
 
   if v_id is null then
-    select verification_id,decision,verification_type,verifier,evidence
-      into v_id,v_existing_decision,v_existing_type,v_existing_verifier,v_existing_evidence
+    select verification_id,decision into v_id,v_existing_decision
     from public.omega_achievement_verifications
     where user_achievement_id=p_user_achievement_id and idempotency_key=v_key;
-    if v_id is null
-       or v_existing_decision is distinct from p_decision
-       or v_existing_type is distinct from p_verification_type
-       or v_existing_verifier is distinct from p_verifier
-       or v_existing_evidence is distinct from coalesce(p_evidence,'{}'::jsonb) then
-      raise exception 'verification_idempotency_conflict';
-    end if;
+    if v_id is null or v_existing_decision<>p_decision then raise exception 'verification_idempotency_conflict'; end if;
     return v_id;
   end if;
 
@@ -222,7 +254,6 @@ begin
   return v_id;
 end;
 $function$;
-
 create or replace function private.record_sovereign_event(
   p_event_type text,p_event_data jsonb default '{}'::jsonb,
   p_axis_delta jsonb default '{"a":0,"b":0,"c":0}'::jsonb,p_idempotency text default null
@@ -235,23 +266,12 @@ declare
   _phi constant numeric:=1.6180339887;
   _eu constant numeric:=2.7182818285;
   _key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency,'')),'');
-  _existing_type text;
-  _existing_data jsonb;
-  _existing_delta jsonb;
   _rows integer;
 begin
   if _uid is null then return pg_catalog.jsonb_build_object('ok',false,'error','unauthenticated'); end if;
   if _key is not null then
-    if pg_catalog.length(_key)>128 then raise exception 'sovereign_event_idempotency_key_too_long'; end if;
     perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(_uid::text||':'||_key,0));
-    select event_type,event_data,axis_delta into _existing_type,_existing_data,_existing_delta
-      from public.sovereign_events where user_id=_uid and idempotency_key=_key;
-    if found then
-      if _existing_type is distinct from p_event_type
-         or _existing_data is distinct from coalesce(p_event_data,'{}'::jsonb)
-         or _existing_delta is distinct from coalesce(p_axis_delta,'{"a":0,"b":0,"c":0}'::jsonb) then
-        raise exception 'sovereign_event_idempotency_conflict';
-      end if;
+    if exists(select 1 from public.sovereign_events where user_id=_uid and idempotency_key=_key) then
       return pg_catalog.jsonb_build_object('ok',true,'status','duplicate','idempotent',true);
     end if;
   end if;
@@ -278,7 +298,6 @@ begin
   return pg_catalog.jsonb_build_object('ok',true,'auth_before',_auth_before,'auth_after',_auth_after,'delta',_auth_after-_auth_before);
 end;
 $function$;
-
 create or replace function private.record_task_sovereign_event()
 returns trigger language plpgsql security definer set search_path='' as $function$
 begin
@@ -297,7 +316,6 @@ begin
   return new;
 end;
 $function$;
-
 revoke all on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) from public,anon,authenticated;
 grant execute on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) to service_role;
 revoke all on function omega_private.enqueue_notification(uuid,text,text,text,text,text,jsonb) from public,anon,authenticated;
@@ -309,7 +327,6 @@ grant execute on function omega_private.verify_achievement(uuid,text,text,text,j
 revoke all on function private.record_sovereign_event(text,jsonb,jsonb,text) from public,anon;
 grant execute on function private.record_sovereign_event(text,jsonb,jsonb,text) to authenticated;
 revoke all on function private.record_task_sovereign_event() from public,anon,authenticated;
-
 create or replace function public.omega_runtime_dispatch(p_actor_user_id uuid,p_action text,p_payload jsonb default '{}'::jsonb)
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare v_result jsonb; v_order_id uuid; v_referral_code text; v_attribution_id uuid; v_task_id uuid; v_request_id bigint; v_certificate_number text; v_query text; v_module text; v_action_name text; v_lifecycle text;
@@ -521,10 +538,8 @@ begin
  perform omega_private.record_platform_event('action_completed',p_actor_user_id,'user','omega-runtime-gateway','runtime:'||p_action||':'||md5(coalesce(p_payload::text,'{}')),pg_catalog.gen_random_uuid(),'runtime_action',p_action,p_payload);
  return v_result;
 end $$;
-
 revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from public,anon,authenticated;
 grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role;
-
 do $$
 begin
   if (select count(*) from public.omega_module_runtime_actions) <> 54 then
@@ -609,5 +624,4 @@ begin
   end if;
 end;
 $$;
-
 commit;

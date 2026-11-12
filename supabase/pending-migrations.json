@@ -2,30 +2,5 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "A source migration absent from live history must be explicitly pending. Provider-applied versions belong in remote-migrations.json. A ledger entry alone does not prove the migration's intended behavior has been independently verified.",
-  "pending": [
-    {
-      "version": "20261112091300",
-      "file": "20261112091300_omega_idempotency_payload_integrity.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Adds immutable request-payload conflict guards to the already-applied owner-scoped idempotency helpers. Requires fresh full migration replay, security review and the expanded SQL regression probe before provider application."
-    },
-    {
-      "version": "20261112091400",
-      "file": "20261112091400_omega_stripe_refund_state_fk_index.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Adds the missing covering index for omega_private.stripe_refund_state.last_reversal_transaction_id, identified by the live Supabase performance advisor. The table was observed empty; validate by fresh replay and provider advisor recheck before application."
-    },
-    {
-      "version": "20261112091500",
-      "file": "20261112091500_omega_search_index_schema_reconciliation.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Reconciles the live and fresh-replay search_index column shapes, replaces the broad authenticated read policy with owner/shared-only visibility, and updates the 54-action dispatcher search adapter to use the compatibility schema. Live search_index currently has zero rows; fresh replay exposed missing columns in the canonical migration shape."
-    }
-  ]
+  "pending": []
 }

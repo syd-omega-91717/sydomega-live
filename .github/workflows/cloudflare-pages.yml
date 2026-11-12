@@ -86,7 +86,7 @@ jobs:
             --project-name "${PROJECT}" --branch main \
             --commit-hash "${GITHUB_SHA}" --commit-dirty=true
 
-      - name: Verify release manifest and smoke-test production
+      - name: Smoke test the deployment
         if: steps.creds.outputs.ready == 'true'
         shell: bash
         run: |

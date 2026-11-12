@@ -281,7 +281,7 @@ Deno.serve(async (req) => {
         task: "member_concierge_response",
         risk: decision.risk.toLowerCase() as "low" | "medium" | "high",
         promptVersion: "concierge-v2",
-        profile: "fast",
+        profile: modelProfile,
         system: effectiveSystem,
         input: userMessage,
         requestId,

@@ -2,6 +2,8 @@
 """Regression contract for the manual Cloudflare production fallback."""
 
 from pathlib import Path
+import subprocess
+import textwrap
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -52,6 +54,20 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
+
+    def test_git_connected_verifier_shell_is_syntactically_valid(self):
+        step = PRODUCTION_VERIFY.split(
+            "      - name: Verify production manifest, headers and complete page estate", 1
+        )[1]
+        script = textwrap.dedent(step.split("        run: |", 1)[1])
+        result = subprocess.run(
+            ["bash", "-n"],
+            input=script,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)

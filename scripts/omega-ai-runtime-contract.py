@@ -114,6 +114,8 @@ def main() -> int:
         graphify_migration = read("supabase/migrations/20261112110000_omega_graphify_ai_safety_gate.sql")
         require("'graphify_ai_enabled'" in graphify_migration and "false" in graphify_migration, "Graphify default-off migration missing")
         require(policy["heldFeatures"]["graphify"]["status"] == "HELD", "Graphify release state must remain held")
+        legacy_prototype = read("platform.jsx")
+        require("api.anthropic.com" not in legacy_prototype and 'functions.invoke("concierge"' in legacy_prototype, "legacy prototype must use authenticated server-side AI, never a direct provider call")
 
         product = read(consumers["product-orchestrator"])
         require("proposed_feature_flags" in product and "applied: false" in product and "approval_required: true" in product, "product adaptation must remain proposal-only")

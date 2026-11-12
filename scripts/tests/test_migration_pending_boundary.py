@@ -161,6 +161,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("returning id::text into v_id", sql)
         self.assertIn("return v_id;", sql)
         self.assertIn("v_request_id text", sql)
+        self.assertIn("sort_order,created_at from public.media_items", sql)
         self.assertIn("owner_id=(select auth.uid())", sql)
         self.assertNotRegex(sql, r"alter\\s+table\\s+public\\.consult_requests\\s+alter\\s+column\\s+id\\s+type")
         self.assertNotIn("drop table", sql)

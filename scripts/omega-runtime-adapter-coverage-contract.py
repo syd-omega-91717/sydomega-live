@@ -86,23 +86,23 @@ def main() -> int:
         if missing or extra:
             return fail(f"module action coverage mismatch; missing={missing}; extra={extra}")
 
-        dispatcher_sql = "\\n".join((search_index_sql, consultancy_compat_sql))
+        dispatcher_sql = "\n".join((search_index_sql, consultancy_compat_sql))
         search_dispatcher_actions: set[str] = set()
         for match in re.finditer(
-            r"(?:if|elsif)\\s+v_module\\s*=\\s*'([A-Z0-9_]+)'\\s+and\\s+v_action_name\\s*=\\s*'([^']+)'",
+            r"(?:if|elsif)\s+v_module\s*=\s*'([A-Z0-9_]+)'\s+and\s+v_action_name\s*=\s*'([^']+)'",
             dispatcher_sql,
             re.IGNORECASE,
         ):
             search_dispatcher_actions.add(f"{match.group(1).upper()}.{match.group(2)}")
         for match in re.finditer(
-            r"(?:if|elsif)\\s+v_module\\s+in\\s*\\(([^)]+)\\)\\s+and\\s+v_action_name\\s*=\\s*'([^']+)'",
+            r"(?:if|elsif)\s+v_module\s+in\s*\(([^)]+)\)\s+and\s+v_action_name\s*=\s*'([^']+)'",
             dispatcher_sql,
             re.IGNORECASE,
         ):
             modules = re.findall(r"'([A-Z0-9_]+)'", match.group(1), re.IGNORECASE)
             search_dispatcher_actions.update(f"{module.upper()}.{match.group(2)}" for module in modules)
         elemental_search = re.search(
-            r"elsif\\s+v_module\\s*=\\s*'ELEMENTAL'\\s+and\\s+v_action_name\\s+in\\s*\\(([^)]+)\\)",
+            r"elsif\s+v_module\s*=\s*'ELEMENTAL'\s+and\s+v_action_name\s+in\s*\(([^)]+)\)",
             dispatcher_sql,
             re.IGNORECASE,
         )

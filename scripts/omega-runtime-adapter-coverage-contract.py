@@ -119,7 +119,7 @@ def main() -> int:
 
         if search_dispatcher_actions != expected:
             return fail(
-                "search-index dispatcher replacement lost canonical actions; "
+                "latest dispatcher replacement lost canonical actions; "
                 f"missing={sorted(expected - search_dispatcher_actions)}; "
                 f"extra={sorted(search_dispatcher_actions - expected)}"
             )

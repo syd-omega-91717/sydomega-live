@@ -46,6 +46,7 @@ declare
   v_verification_other uuid;
   i integer;
   v_count bigint;
+  v_error text;
   v_actions constant text[][] := array[
     array['CORE','profile.read'],
     array['CORE','catalog.read'],
@@ -153,6 +154,13 @@ begin
   select count(*) into v_count from public.consult_requests
    where user_id=v_user and runtime_idempotency_key='omega-runtime-probe-consult-0001';
   if v_count<>1 then raise exception 'consultancy intake idempotency created % rows',v_count; end if;
+  begin
+    perform omega_private.create_consult_intake(v_user,'runtime-adapter-probe','Different content must not reuse an existing idempotency key.','omega-runtime-probe-consult-0001','normal',null,true,'probe@invalid.example');
+    raise exception 'expected consult_intake_idempotency_conflict';
+  exception when others then
+    get stacked diagnostics v_error=message_text;
+    if v_error<>'consult_intake_idempotency_conflict' then raise; end if;
+  end;
   v_other:=public.omega_runtime_dispatch(v_other_user,'create_consult_intake',jsonb_build_object(
     'domain','runtime-adapter-probe',
     'message','Synthetic CI probe for a second user using the same idempotency key.',
@@ -209,6 +217,13 @@ begin
   select count(*) into v_count from public.omega_service_orders
    where idempotency_key='omega-runtime-probe-service-0001' and user_id in (v_user,v_other_user);
   if v_count<>2 then raise exception 'service-order cross-user idempotency created % rows, expected 2',v_count; end if;
+  begin
+    perform omega_private.create_service_order(v_user,'progression-matrix','omega-runtime-probe-service-0001','{"different":true}'::jsonb);
+    raise exception 'expected service_order_idempotency_conflict';
+  exception when others then
+    get stacked diagnostics v_error=message_text;
+    if v_error<>'service_order_idempotency_conflict' then raise; end if;
+  end;
 
   -- Agent task idempotency is scoped by user and emits only one queued event.
   v_task_one:=omega_private.enqueue_agent_task(v_user,'sentinel','runtime_probe','{"probe":true}'::jsonb,'omega-runtime-probe-agent-0001',true);
@@ -217,6 +232,13 @@ begin
   if v_task_one is null or v_task_one is distinct from v_task_two then
     raise exception 'agent task same-user idempotency failed';
   end if;
+  begin
+    perform omega_private.enqueue_agent_task(v_user,'sentinel','runtime_probe','{"probe":"changed"}'::jsonb,'omega-runtime-probe-agent-0001',true);
+    raise exception 'expected agent_task_idempotency_conflict';
+  exception when others then
+    get stacked diagnostics v_error=message_text;
+    if v_error<>'agent_task_idempotency_conflict' then raise; end if;
+  end;
   if v_task_other is null or v_task_other is not distinct from v_task_one then
     raise exception 'agent task idempotency was not isolated by user';
   end if;
@@ -244,6 +266,13 @@ begin
   if v_notification_one is null or v_notification_one is distinct from v_notification_two then
     raise exception 'notification same-user idempotency failed';
   end if;
+  begin
+    perform omega_private.enqueue_notification(v_user,'runtime_probe','Probe','Different body must not reuse the existing key.','in_app','omega-runtime-probe-notification-0001','{}'::jsonb);
+    raise exception 'expected notification_idempotency_conflict';
+  exception when others then
+    get stacked diagnostics v_error=message_text;
+    if v_error<>'notification_idempotency_conflict' then raise; end if;
+  end;
   if v_notification_other is null or v_notification_other is not distinct from v_notification_one then
     raise exception 'notification idempotency was not isolated by recipient';
   end if;
@@ -258,6 +287,13 @@ begin
   if v_platform_one is null or v_platform_one is distinct from v_platform_two then
     raise exception 'platform event same-actor idempotency failed';
   end if;
+  begin
+    perform omega_private.record_platform_event('route_view',v_user,'user','runtime-probe','omega-runtime-probe-platform-0001',null,'probe','member-1','{"changed":true}'::jsonb);
+    raise exception 'expected platform_event_idempotency_conflict';
+  exception when others then
+    get stacked diagnostics v_error=message_text;
+    if v_error<>'platform_event_idempotency_conflict' then raise; end if;
+  end;
   if v_platform_other is null or v_platform_other is not distinct from v_platform_one then
     raise exception 'platform event idempotency was not isolated by actor';
   end if;
@@ -292,6 +328,13 @@ begin
   if v_verification_one is null or v_verification_one is distinct from v_verification_two then
     raise exception 'achievement verification same-subject idempotency failed';
   end if;
+  begin
+    perform omega_private.verify_achievement(v_achievement_one,'needs_review','runtime-probe','ci','{"changed":true}'::jsonb,'omega-runtime-probe-achievement-0001');
+    raise exception 'expected verification_idempotency_conflict';
+  exception when others then
+    get stacked diagnostics v_error=message_text;
+    if v_error<>'verification_idempotency_conflict' then raise; end if;
+  end;
   if v_verification_other is null or v_verification_other is not distinct from v_verification_one then
     raise exception 'achievement verification idempotency was not isolated by subject';
   end if;
@@ -320,6 +363,13 @@ begin
   if v_first->>'ok'<>'true' or v_second->>'status'<>'duplicate' then
     raise exception 'sovereign event same-user idempotency failed: first=% second=%',v_first,v_second;
   end if;
+  begin
+    perform private.record_sovereign_event('runtime_probe',jsonb_build_object('probe',true),jsonb_build_object('a',0.02,'b',0,'c',0),'omega-runtime-probe-sovereign-0001');
+    raise exception 'expected sovereign_event_idempotency_conflict';
+  exception when others then
+    get stacked diagnostics v_error=message_text;
+    if v_error<>'sovereign_event_idempotency_conflict' then raise; end if;
+  end;
   perform set_config('request.jwt.claim.sub',v_other_user::text,true);
   perform set_config('request.jwt.claims',jsonb_build_object('sub',v_other_user,'role','authenticated')::text,true);
   v_other:=private.record_sovereign_event('runtime_probe',jsonb_build_object('probe',true),jsonb_build_object('a',0.01,'b',0,'c',0),'omega-runtime-probe-sovereign-0001');

@@ -34,8 +34,37 @@ class RefParser(HTMLParser):
                 if url:
                     self.refs.add(url)
 
+def validate_request_url(url: str) -> str:
+    """Allow only HTTPS production/preview hosts; never pass file or arbitrary schemes to urllib."""
+    try:
+        parts = urlsplit(url)
+        port = parts.port
+    except ValueError as exc:
+        raise ValueError("invalid production smoke URL") from exc
+    host = (parts.hostname or "").lower()
+    allowed_host = (
+        host == "sydomega.com"
+        or host.endswith(".sydomega.com")
+        or host.endswith(".pages.dev")
+        or host.endswith(".vercel.app")
+    )
+    if (
+        parts.scheme.lower() != "https"
+        or not parts.netloc
+        or parts.username is not None
+        or parts.password is not None
+        or port not in (None, 443)
+        or parts.query
+        or parts.fragment
+        or not allowed_host
+    ):
+        raise ValueError("production smoke URL must be HTTPS on an approved SYD OMEGA, Pages, or Vercel host")
+    return url
+
+
 def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
-    req = Request(url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
+    safe_url = validate_request_url(url)
+    req = Request(safe_url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
     try:
         with urlopen(req, timeout=timeout) as response:
             content_type = response.headers.get("Content-Type", "")
@@ -59,7 +88,8 @@ def main() -> int:
         contracts = registry.get("contracts", [])
         if registry.get("page_count") != len(contracts) or not contracts:
             raise ValueError("page contract registry count does not match its records")
-        base = args.base_url.rstrip("/") + "/"
+        safe_base = validate_request_url(args.base_url)
+        base = safe_base.rstrip("/") + "/"
         base_host = urlsplit(base).netloc.lower()
         pages = sorted({urljoin(base, str(item["path"]).lstrip("/")) for item in contracts})
         page_failures: list[tuple[str, int, str]] = []

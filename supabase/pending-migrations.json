@@ -1,15 +1,31 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
-  "policy": "A source migration absent from live history must be explicitly pending. Provider-applied versions belong in remote-migrations.json. A ledger entry alone does not prove the migration's intended behavior has been independently verified.",
+  "policy": "A source migration absent from live history must be explicitly pending. Provider-applied versions belong in remote-migrations.json. A ledger entry alone does not prove that the migration's intended behavior has been independently verified.",
   "pending": [
+    {
+      "version": "20261112091600",
+      "file": "20261112091600_omega_consultancy_runtime_schema_parity.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Fresh replay exposed historical consultancy schema drift. This additive migration must pass clean replay, all runtime adapter probes, migration security audit and provider advisor recheck before production application."
+    },
     {
       "version": "20261112103000",
       "file": "20261112103000_omega_expert_bookings_domain_compatibility.sql",
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Adds the expert_bookings.domain column required by the consultancy cases.read adapter. Production already has the field; fresh migration replay proved the canonical clean-install history omitted it. Must pass fresh replay and adapter probe before applying this additive compatibility migration to production."
+      "reason": "Adds the expert_bookings.domain column required by the consultancy cases.read adapter. Production already has the field; clean migration history omitted it. Must pass fresh replay and adapter probes before provider application."
+    },
+    {
+      "version": "20261112104500",
+      "file": "20261112104500_omega_consultancy_adapter_schema_compat.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Makes the consultancy cases.read adapter tolerant of historical/live table-shape differences. Must pass clean replay and the full runtime adapter regression suite before provider application."
     },
     {
       "version": "20261112110000",
@@ -17,21 +33,7 @@
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Creates graphify_ai_enabled=false by default. Graphify query/ingestion remain held until privacy, per-member cost controls and explicit AI personalization plus sensitive-data consent are approved."
-    },
-    {
-      "version": "20261112120000",
-      "file": "20261112120000_omega_ai_member_quota_guard.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Adds service-role-only profile-weighted rolling per-member AI request quotas using the existing rate_limits table; no prompt content is stored."
-      "version": "20261112110000",
-      "file": "20261112110000_omega_consultancy_adapter_schema_compat.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Makes the consultancy cases.read adapter tolerant of historical/live table-shape differences. Fresh full migration replay exposed a static reference to optional consultancy columns. Must pass replay and 54-action regression probes before provider application."
+      "reason": "Creates graphify_ai_enabled=false by default. Graphify query and ingestion remain held until privacy, explicit AI personalization and sensitive-data consent, and per-member cost controls are approved."
     },
     {
       "version": "20261112120000",
@@ -39,13 +41,15 @@
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Adds the legacy public.news read-model table to the migration history with the existing deny-by-default RLS contract. No content rows are seeded. Fresh replay failed because the dispatcher references public.news, which existed only in the live schema snapshot and not in migrations."
-      "version": "20261112091600",
-      "file": "20261112091600_omega_consultancy_runtime_schema_parity.sql",
+      "reason": "Adds the legacy public.news read model to clean migration history with deny-by-default RLS. No content rows are seeded."
+    },
+    {
+      "version": "20261112121000",
+      "file": "20261112121000_omega_ai_member_quota_guard.sql",
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Fresh replay exposed historical consult_requests drift: the baseline creates UUID IDs and does not reliably add domain, while production has BIGINT IDs and required domain. This additive migration adds the missing required domain, preserves existing ID types by returning IDs as text, restores the missing successful return, aligns required/default fields to the verified provider shape, and makes search_index auth.uid() evaluation initplan-safe. Must pass full fresh migration replay, all 54 runtime probes, migration security audit and Supabase advisor recheck before provider application."
+      "reason": "Adds service-role-only profile-weighted rolling per-member AI request quotas using the existing rate_limits table. This is a request-budget control, not a monetary cost estimate."
     }
   ]
 }

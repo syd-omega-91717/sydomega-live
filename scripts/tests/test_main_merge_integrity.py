@@ -21,6 +21,14 @@ class MainMergeIntegrityTests(unittest.TestCase):
             with self.subTest(path=path.relative_to(ROOT).as_posix()):
                 json.loads(path.read_text(encoding="utf-8"))
 
+    def test_runtime_dispatch_evidence_separates_branch_coverage_from_behavior(self) -> None:
+        snapshot = json.loads((ROOT / "config/omega-live-module-runtime-observations.json").read_text(encoding="utf-8"))
+        drift = snapshot["runtime_dispatch_drift"]
+        self.assertEqual(drift["live_dispatcher_covered_actions"], 54)
+        self.assertEqual(drift["live_dispatcher_missing_actions"], 0)
+        self.assertIn("BEHAVIORAL_PROBES_PENDING", drift["status"])
+        self.assertEqual(snapshot["runtime_probe_status"]["status"], "RERUN_REQUIRED_NOT_PRODUCTION_PROOF")
+
     def test_pending_registry_contains_only_unapplied_source_migrations(self) -> None:
         remote = json.loads((ROOT / "supabase/remote-migrations.json").read_text(encoding="utf-8"))
         pending = json.loads((ROOT / "supabase/pending-migrations.json").read_text(encoding="utf-8"))

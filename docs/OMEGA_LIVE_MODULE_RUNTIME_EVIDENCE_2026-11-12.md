@@ -23,14 +23,14 @@ This record separates provider catalog evidence, repository source evidence, CI 
 
 ## Clean-replay defect found
 
-The full migration replay for PR #1242 failed when the consultancy read probe attempted to select `consult_requests.domain`. Source review identifies the historical chain defect:
+The first full migration replay for PR #1242 failed when the consultancy read probe attempted to select `consult_requests.domain`. Source review identified the historical chain defect:
 
 1. The early baseline creates `consult_requests` with a UUID primary key and without the `domain` column.
 2. The later consultancy migration contains `CREATE TABLE IF NOT EXISTS` with a fuller definition. Because the table already exists, that statement does not add the missing column; its subsequent `ALTER TABLE` list also omits `domain`.
 3. Production has a different but valid historical shape: the primary key is BIGINT and `domain` is required.
 4. The live `omega_private.create_consult_intake` definition returned BIGINT and did not return the generated ID on its successful path. That is incompatible with the UUID shape in a fresh replay and breaks the success path even where the live ID is BIGINT.
 
-The fix must not rewrite existing IDs or fabricate request rows.
+The consultancy schema fix preserves both UUID and BIGINT source IDs as text, restores the missing successful return and does not rewrite existing IDs or fabricate request rows. On the next replay run, the complete migration chain and migration-security audit passed. The 54-action probe then reached `MEDIA.library.read` and failed because the derived `media_items` projection omitted `created_at` even though its outer aggregate ordered by `m.created_at`. PR #1244 now adds `created_at` to that projection; the full probe must be rerun before this migration can be applied.
 
 ## Remediation in PR #1244
 
@@ -41,6 +41,7 @@ The pending migration `20261112091600_omega_consultancy_runtime_schema_parity.sq
 - preserves the underlying UUID or BIGINT ID type;
 - returns `id::text` from the helper and restores the successful `RETURN`;
 - changes the dispatcher request-ID variable to text;
+- retains `created_at` in the `MEDIA.library.read` derived projection used by the outer aggregate;
 - replaces the search-index policy's per-row `auth.uid()` expression with the initplan-safe `(select auth.uid())` expression;
 - preserves service-role-only execute access for the consultancy helper and runtime dispatcher.
 

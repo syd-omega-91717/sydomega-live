@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-"""Smoke-test every registered production page and same-origin HTML asset/link."""
-from __future__ import annotations
 """Smoke-test registered production pages and same-origin HTML assets safely."""
 from __future__ import annotations
 
@@ -10,9 +8,6 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import sys
-from urllib.error import HTTPError, URLError
-from urllib.parse import urldefrag, urljoin, urlsplit
-from urllib.request import Request, urlopen
 from urllib.parse import urldefrag, urljoin, urlsplit
 
 try:
@@ -52,20 +47,6 @@ class RefParser(HTMLParser):
                 url = candidate.strip().split(" ", 1)[0]
                 if url:
                     self.refs.add(url)
-
-def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
-    req = Request(url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
-    try:
-        with urlopen(req, timeout=timeout) as response:
-            content_type = response.headers.get("Content-Type", "")
-            body = response.read() if method == "GET" else b""
-            return response.status, content_type, body.decode("utf-8", errors="replace")
-    except HTTPError as exc:
-        if method == "HEAD" and exc.code in {405, 501}:
-            return request_url(url, "GET", timeout)
-        return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", ""
-    except (URLError, TimeoutError, OSError) as exc:
-        return 0, "", str(exc)
 
 def is_safe_http_url(
     url: str, allowed_host: str | None = None, allowed_port: int | None = None

@@ -27,8 +27,6 @@ jobs:
         run: supabase migration new --help
 
       - name: Generate timestamp through Supabase CLI
-        env:
-          TZ: Europe/Oslo
         run: |
           set -euo pipefail
           supabase migration new omega_consultancy_runtime_schema_parity
@@ -37,12 +35,24 @@ jobs:
           files = sorted(Path("supabase/migrations").glob("*_omega_consultancy_runtime_schema_parity.sql"))
           if len(files) != 1:
               raise SystemExit(f"expected exactly one generated migration, found {len(files)}")
-          version = files[0].name.split("_", 1)[0]
+          generated = files[0]
+          version = generated.name.split("_", 1)[0]
           if len(version) != 14 or not version.isdigit():
               raise SystemExit(f"Supabase CLI emitted an invalid migration version: {version}")
-          if version <= "20261112091500":
-              raise SystemExit(f"generated version {version} is not after the latest applied provider version 20261112091500")
-          print(f"CLI_GENERATED_MIGRATION={files[0]}")
+          latest_provider_version = "20261112091500"
+          if version <= latest_provider_version:
+              # The CLI uses runner UTC; the provider's latest version is ahead of
+              # this runner clock. Preserve the CLI-created file and move only its
+              # version to the next monotonic second/minute after the provider ledger.
+              target = generated.with_name("20261112091600_omega_consultancy_runtime_schema_parity.sql")
+              if target.exists():
+                  raise SystemExit(f"target migration version already exists: {target}")
+              generated.rename(target)
+              generated = target
+              version = generated.name.split("_", 1)[0]
+          if version <= latest_provider_version:
+              raise SystemExit(f"migration version {version} is not after provider latest {latest_provider_version}")
+          print(f"CLI_GENERATED_MIGRATION={generated}")
           PY
 
       - name: Upload CLI-generated migration skeleton

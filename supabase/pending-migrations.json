@@ -1,24 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
-  "policy": "A source migration absent from live history must be explicitly pending. Provider-applied versions belong in remote-migrations.json. A ledger entry alone does not prove the migration's intended behavior has been independently verified.",
-  "pending": [
-    {
-      "version": "20261111190000",
-      "file": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Restores missing live runtime adapters and hardens user-scoped consultancy intake idempotency; requires fresh migration replay and provider application evidence before release."
-  "policy": "All source migrations are recorded in the authenticated provider migration ledger. A future source migration absent from provider history must be explicitly added here as pending and must block production until reviewed and applied.",
-  "pending": [
-    {
-      "version": "20261112130000",
-      "file": "20261112130000_omega_consultancy_request_id_text_compat.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "The clean replay exposed that the latest runtime dispatcher stores create_consult_intake's text request ID in a BIGINT variable. The consultancy source supports both UUID and BIGINT primary keys. This forward-only migration changes only the dispatcher variable to text; it preserves existing rows, request IDs, policies and previously applied migration files. Production remains blocked until clean replay, all 54 runtime adapter probes and provider application are verified."
-    }
-  ]
+  "policy": "All source migrations are recorded in the authenticated provider migration ledger. A source migration absent from provider history must be explicitly added here as pending and must block production until reviewed and applied. Provider-applied versions belong in remote-migrations.json; a ledger entry alone does not prove the migration's intended behavior has been independently verified.",
+  "pending": []
 }

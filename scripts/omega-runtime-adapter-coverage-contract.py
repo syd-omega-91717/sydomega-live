@@ -167,7 +167,7 @@ def main() -> int:
             return fail("all seven idempotency helper functions must pin an empty search_path")
         if not idempotency_sql.lstrip().startswith("--") or "\nbegin;" not in idempotency_sql or not idempotency_sql.rstrip().endswith("commit;"):
             return fail("idempotency follow-up must be a transactional migration")
-        if re.search(r"\\b(create|drop)\\s+(unique\\s+)?index\\b|\\balter\\s+table\\b", idempotency_sql, re.IGNORECASE):
+        if re.search(r"\b(create|drop)\s+(unique\s+)?index\b|\balter\s+table\b", idempotency_sql, re.IGNORECASE):
             return fail("idempotency follow-up must not rewrite already-applied index/schema history")
         if "do update set input=excluded.input" in idempotency_sql:
             return fail("agent task idempotency retry must not overwrite the original task input")

@@ -53,14 +53,15 @@ No live database, Edge Function, provider setting, production deployment, secret
 
 ## Fresh replay follow-up (PR #1254)
 
-After repairing the pending registry, the next isolated replay passed migration-inventory validation and began applying migrations. It then stopped at:
+After repairing the pending registry, the isolated replay passed migration-inventory validation and applied the migrations through the earlier August/October chain. It then stopped in:
 
-`20260818082309_add_missing_fk_indexes_real_schema.sql`
+`20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql`
 
-Postgres reported `syntax error at or near "on" (SQLSTATE 42601)`. The version `20260818082309` is present in `supabase/remote-migrations.json` and is therefore treated as provider-applied. The replay did **not** reach the later November migrations, including `20261111190000` or the pending `20261112130000`.
+The failing statement is the `omega_private.create_consult_intake(...)` function (statement 38), with PostgreSQL reporting `syntax error at or near "on" (SQLSTATE 42601)`. Source inspection shows a second standalone `VALUES ... ON CONFLICT ... RETURNING` fragment immediately after `return v_id;`, with no preceding `INSERT INTO`. This is the malformed source fragment that causes the replay failure.
 
-Do not edit or renumber the August migration. The schema owner must compare the exact provider-applied SQL history and the repository source, identify why the fresh replay diverges, and choose an explicit history-preserving resolution. A new migration cannot make an earlier syntactically invalid migration parse on a clean database. Until that decision is made, fresh replay remains a release blocker.
+Version `20261111190000` is present in the authenticated provider migration ledger and `supabase/remote-migrations.json`; it is therefore treated as provider-applied. **Do not edit, renumber, delete, or silently skip this migration.** The clean replay cannot proceed past it, so later November migrations and the pending `20261112130000` have not been replay-verified.
 
+The schema owner must explicitly decide how to reconcile the provider-applied migration history with the malformed repository source. Any decision must preserve the live database state and provider migration ledger, document the source-history correction, and keep clean replay as a blocking check. The pending `20261112130000` migration remains `PENDING_REVIEW / NOT_APPLIED`.
 
 ## PR #1254 verification snapshot
 

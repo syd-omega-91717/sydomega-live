@@ -13,6 +13,7 @@ MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_ad
 IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
 REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe_refund_state_fk_index.sql"
 SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
+NEWS_MIGRATION = ROOT / "supabase/migrations/20261112120000_omega_news_schema_baseline.sql"
 CONSULTANCY_COMPAT_MIGRATION = ROOT / "supabase/migrations/20261112110000_omega_consultancy_adapter_schema_compat.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
@@ -29,7 +30,8 @@ def main() -> int:
         refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
         search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
         consultancy_compat_sql = CONSULTANCY_COMPAT_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, consultancy_compat_sql))
+        news_sql = NEWS_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, consultancy_compat_sql, news_sql))
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
@@ -121,6 +123,22 @@ def main() -> int:
         if re.search(r"select\s+id\s*,\s*domain\s*,\s*message\s*,\s*status\s*,\s*created_at\s*,\s*urgency\s*,\s*preferred_time\s+from\s+public\.consult_requests", consultancy_compat_sql, re.IGNORECASE):
             return fail("consultancy adapter must not statically reference optional request columns")
 
+        if "create table if not exists public.news" not in news_sql.lower():
+            return fail("news schema baseline must create the public.news read model")
+        for marker in (
+            "alter table public.news enable row level security",
+            "create policy omega_deny_by_default",
+            "using (false)",
+            "with check (false)",
+            "revoke all on table public.news from public, anon, service_role",
+            "grant select on table public.news to authenticated",
+            "news_deny_by_default_policy_missing",
+            "news_table_acl_invalid",
+        ):
+            if marker not in news_sql:
+                return fail(f"news schema baseline security marker missing: {marker}")
+        if "public.news" not in consultancy_compat_sql or "is_published" not in consultancy_compat_sql:
+            return fail("NEWS provenance adapter must use the versioned news read model")
         if search_dispatcher_actions != expected:
             return fail(
                 "latest dispatcher replacement lost canonical actions; "

@@ -102,7 +102,10 @@ begin
   values(pg_catalog.btrim(p_service_id),p_user_id,'PENDING',pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
   on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null
   do update set idempotency_key=excluded.idempotency_key
+    where omega_service_orders.service_id=excluded.service_id
+      and omega_service_orders.metadata=excluded.metadata
   returning order_id into v_order_id;
+  if v_order_id is null then raise exception 'service_order_idempotency_conflict'; end if;
   return v_order_id;
 end;
 $function$;
@@ -126,8 +129,14 @@ begin
  values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(nullif(pg_catalog.btrim(p_urgency),''),'normal'),40),pg_catalog.left(nullif(pg_catalog.btrim(p_contact),''),240),pg_catalog.left(nullif(pg_catalog.btrim(p_preferred_time),''),240),true,pg_catalog.btrim(p_idempotency_key))
  on conflict (user_id,runtime_idempotency_key) where runtime_idempotency_key is not null
  do update set runtime_idempotency_key=excluded.runtime_idempotency_key
+   where consult_requests.domain=excluded.domain
+     and consult_requests.message=excluded.message
+     and consult_requests.urgency is not distinct from excluded.urgency
+     and consult_requests.contact is not distinct from excluded.contact
+     and consult_requests.preferred_time is not distinct from excluded.preferred_time
+     and consult_requests.confidentiality_accepted=excluded.confidentiality_accepted
  returning id into v_id;
- return v_id;
+ if v_id is null then raise exception 'consult_intake_idempotency_conflict'; end if;
 end;
 $$;
 revoke all on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) from public,anon,authenticated;
@@ -147,12 +156,24 @@ begin
   if p_user_id is null then
     insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required,requested_by)
     values(null,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required,'system')
-    on conflict (idempotency_key) where user_id is null and idempotency_key is not null do update set input=excluded.input
+    on conflict (idempotency_key) where user_id is null and idempotency_key is not null
+    do update set input=omega_agent_tasks.input
+      where omega_agent_tasks.agent_id=excluded.agent_id
+        and omega_agent_tasks.task_type=excluded.task_type
+        and omega_agent_tasks.input=excluded.input
+        and omega_agent_tasks.approval_required=excluded.approval_required
+        and omega_agent_tasks.requested_by=excluded.requested_by
     returning task_id,(xmax=0) into v_id,v_inserted;
   else
     insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required,requested_by)
     values(p_user_id,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required,'user')
-    on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null do update set input=excluded.input
+    on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null
+    do update set input=omega_agent_tasks.input
+      where omega_agent_tasks.agent_id=excluded.agent_id
+        and omega_agent_tasks.task_type=excluded.task_type
+        and omega_agent_tasks.input=excluded.input
+        and omega_agent_tasks.approval_required=excluded.approval_required
+        and omega_agent_tasks.requested_by=excluded.requested_by
     returning task_id,(xmax=0) into v_id,v_inserted;
   end if;
 
@@ -175,8 +196,14 @@ begin
   if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key))<8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
   insert into public.omega_notifications(user_id,notification_type,title,body,channel,idempotency_key,metadata)
   values(p_user_id,p_type,p_title,p_body,p_channel,pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
-  on conflict (user_id,idempotency_key) do update set metadata=excluded.metadata
+  on conflict (user_id,idempotency_key) do update set idempotency_key=excluded.idempotency_key
+    where omega_notifications.notification_type=excluded.notification_type
+      and omega_notifications.title=excluded.title
+      and omega_notifications.body=excluded.body
+      and omega_notifications.channel=excluded.channel
+      and omega_notifications.metadata=excluded.metadata
   returning notification_id into v_id;
+  if v_id is null then raise exception 'notification_idempotency_conflict'; end if;
   return v_id;
 end;
 $function$;

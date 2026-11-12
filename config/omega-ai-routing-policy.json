@@ -30,7 +30,8 @@
       "useCases": [
         "member_concierge",
         "classification",
-        "short_summary"
+        "short_summary",
+        "graph_query_plan"
       ],
       "openaiServiceTier": "standard"
     },
@@ -67,7 +68,8 @@
       "useCases": [
         "escalation_review",
         "complex_analysis",
-        "high_uncertainty_review"
+        "high_uncertainty_review",
+        "graph_entity_extraction"
       ],
       "openaiServiceTier": "standard"
     }
@@ -101,5 +103,17 @@
       "feature_flag_mutation"
     ],
     "untrustedContext": "DATA_NOT_INSTRUCTIONS"
+  },
+  "heldFeatures": {
+    "graphify": {
+      "status": "HELD",
+      "platformSetting": "graphify_ai_enabled",
+      "requiredPreferences": [
+        "ai_personalization_enabled",
+        "sensitive_data_processing_enabled"
+      ],
+      "reason": "Privacy, explicit consent and per-member cost controls must be approved before enablement.",
+      "registeredInSupabaseConfig": false
+    }
   }
 }

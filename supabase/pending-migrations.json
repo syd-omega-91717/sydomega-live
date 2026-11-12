@@ -4,12 +4,12 @@
   "policy": "A source migration absent from live history must be explicitly pending. Provider-applied versions belong in remote-migrations.json. A ledger entry alone does not prove the migration's intended behavior has been independently verified.",
   "pending": [
     {
-      "version": "20261111190000",
-      "file": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
+      "version": "20261112091300",
+      "file": "20261112091300_omega_idempotency_payload_integrity.sql",
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Restores the 54-action runtime dispatcher and adds owner/subject-scoped idempotency with immutable retry-payload checks for consultancy, service orders, agent tasks, notifications, achievement verifications, sovereign events, platform events and audit records. Requires successful fresh migration replay, security/adapter probes, and provider application evidence before release."
+      "reason": "Adds immutable request-payload conflict guards to the already-applied owner-scoped idempotency helpers. Requires fresh full migration replay, security review and the expanded SQL regression probe before provider application."
     }
   ]
 }

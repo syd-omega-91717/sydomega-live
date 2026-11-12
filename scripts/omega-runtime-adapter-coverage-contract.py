@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / "config/omega-module-runtime.json"
 OBSERVATIONS = ROOT / "config/omega-live-module-runtime-observations.json"
 MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql"
+IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
 def fail(message: str) -> int:
@@ -20,6 +21,8 @@ def main() -> int:
         runtime = json.loads(RUNTIME.read_text(encoding="utf-8"))
         snapshot = json.loads(OBSERVATIONS.read_text(encoding="utf-8"))
         sql = MIGRATION.read_text(encoding="utf-8")
+        idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
+        all_sql = sql + "\\n" + idempotency_sql
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
@@ -136,8 +139,8 @@ def main() -> int:
             "confidentiality_acceptance_required",
             "ADAPTER_REQUIRED",
         ):
-            if marker not in sql:
-                return fail(f"dispatcher migration safety/contract marker missing: {marker}")
+            if marker not in all_sql:
+                return fail(f"dispatcher/idempotency migration safety marker missing: {marker}")
         function_start = sql.find("create or replace function public.omega_runtime_dispatch(")
         function_end = sql.find("$" + "$;", function_start) + len("$" + "$;")
         if function_start < 0 or function_end < len("$" + "$;"):
@@ -158,9 +161,9 @@ def main() -> int:
             return fail("service-order idempotency lookup is not actor-scoped")
         if sql.lower().count("security definer set search_path=''") != 9:
             return fail("all nine reconciliation helper/dispatcher functions must pin an empty search_path")
-        if "do update set input=excluded.input" in sql:
+        if "do update set input=excluded.input" in idempotency_sql:
             return fail("agent task idempotency retry must not overwrite the original task input")
-        if "do update set payload=excluded.payload" in sql or "do update set details=excluded.details" in sql:
+        if "do update set payload=excluded.payload" in idempotency_sql or "do update set details=excluded.details" in idempotency_sql:
             return fail("event/audit idempotency retries must not overwrite original event evidence")
         if "government_identity',false" not in sql or "travel_document',false" not in sql:
             return fail("platform credential must explicitly not be a government/travel document")

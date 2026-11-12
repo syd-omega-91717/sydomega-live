@@ -1,9 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { publishableKey, secretKey } from "../_shared/keys.ts";
+import { runOmegaModel, type OmegaAiUsageRecord } from "../_shared/omega-model-router.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseKey = secretKey()!;
-const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY")!;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -53,21 +53,19 @@ interface ProductResponse {
   confidence: number;
 }
 
-async function callClaudeForProduct(
+async function callOmegaProductModel(
   prompt: string,
-  context: string
-): Promise<string> {
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "x-api-key": anthropicKey,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "claude-opus-5",
-      max_tokens: 16000,
-      system: `You are the Ω Product Agent, orchestrating real-time product adaptation.
+  context: string,
+  profile: "fast" | "balanced" | "reasoning",
+  risk: "low" | "medium" | "high",
+) {
+  return runOmegaModel({
+    agentId: "product",
+    task: "member_product_adaptation_recommendation",
+    risk,
+    promptVersion: "product-orchestrator-v2",
+    profile,
+    system: `You are the Ω Product Agent, orchestrating real-time product adaptation.
 
 Your role:
 - Decide feature availability per member cohort
@@ -80,30 +78,18 @@ Personas and UX complexity levels:
 - Regular Users: Core features, step-by-step guides
 - Casual Users: Simplified UI, fewer options, contextual help
 - Explorers: Discovery mode, tutorials, feature highlights`,
-      messages: [
-        {
-          role: "user",
-          content: `Context:\n${context}\n\nProduct Decision:\n${prompt}`,
-        },
-      ],
-    }),
+    input: `Context:\n${context}\n\nProduct Decision:\n${prompt}`,
+    recordUsage: async (record: OmegaAiUsageRecord) => {
+      const { error } = await supabase.from("omega_ai_requests").insert(record);
+      if (error) throw new Error("ai_telemetry_write_failed");
+    },
   });
-
-  const data = await response.json();
-  /* The API answers errors as JSON with no `content`; claude-opus-5 also runs
-     adaptive thinking, so the first block is a thinking block, not text. */
-  if (!response.ok) {
-    throw new Error(`Anthropic API ${response.status}: ${data?.error?.type ?? "error"}`);
-  }
-  if (data.stop_reason === "refusal") throw new Error("Anthropic API refusal");
-  const text = (data.content ?? []).find((b: { type: string }) => b.type === "text");
-  if (!text) throw new Error("Anthropic API returned no text block");
-  return text.text;
 }
 
 async function saveProductDecision(
   memberId: string,
-  decision: Record<string, unknown>
+  decision: Record<string, unknown>,
+  modelUsed: string,
 ): Promise<string> {
   const { data, error } = await supabase
     .from("autonomous_decisions")
@@ -115,7 +101,7 @@ async function saveProductDecision(
       reasoning: `Product adaptation decision for ${decision.persona}`,
       decision_payload: decision,
       confidence_score: decision.confidence || 0.8,
-      model_used: "claude-opus-5",
+      model_used: modelUsed,
       temperature: null,
       outcome_recorded: false,
     })
@@ -185,8 +171,12 @@ ${req.context.pending_features.join("\n")}
 
   // Call Claude
   let claudeResponse: string;
+  let modelResult: Awaited<ReturnType<typeof callOmegaProductModel>>;
   try {
-    claudeResponse = await callClaudeForProduct(prompt, contextString);
+    const profile = "balanced";
+  const risk = "medium";
+    modelResult = await callOmegaProductModel(prompt, contextString, profile, risk);
+    claudeResponse = modelResult.text;
   } catch (error) {
     console.error("Claude API error:", error);
     throw error;
@@ -247,11 +237,11 @@ ${req.context.pending_features.join("\n")}
   const uxConfig = uxConfigs[decision.ux_complexity] || uxConfigs.standard;
 
   // Save decision
-  const decisionId = await saveProductDecision(req.member_id, {
+const decisionId = await saveProductDecision(req.member_id, {
     ...decision,
     feature_flags: featureFlags,
     ux_config: uxConfig,
-  });
+  }, `${modelResult.provider}:${modelResult.model}`);
 
   // Update feature flags
   await updateMemberFeatureFlags(req.member_id, featureFlags);

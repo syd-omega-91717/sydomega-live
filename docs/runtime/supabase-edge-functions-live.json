@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "captured_at": "2026-11-12T07:32:53.361Z",
   "captured_at": "2026-11-12T20:18:00Z",
   "source_directory": "supabase/functions",
   "functions": {
@@ -11,6 +12,8 @@
       "repository_blob_sha": "ed0a0224b0e423090df7beeda5abc713547dbb71",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
       "provider_observed_at": "2026-11-12T20:18:00Z",
       "provider_updated_at": "2026-11-12T20:15:39.144Z"
     },
@@ -22,6 +25,8 @@
       "repository_blob_sha": "e8f15128ea3157e98474ecc12dc5b87bdc91c289",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
       "provider_observed_at": "2026-11-12T20:18:00Z",
       "provider_updated_at": "2026-11-12T20:15:39.144Z"
     },
@@ -33,6 +38,8 @@
       "repository_blob_sha": "890c2664ae6ada43f9bc75b43af303a2bb13bcea",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
       "provider_observed_at": "2026-11-12T20:18:00Z",
       "provider_updated_at": "2026-11-12T20:15:39.144Z"
     },
@@ -44,6 +51,8 @@
       "repository_blob_sha": "b75928ec0f40beb4b3f34b5c5fcad0da4daace7f",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
       "provider_observed_at": "2026-11-12T20:18:00Z",
       "provider_updated_at": "2026-11-12T20:15:39.144Z"
     },

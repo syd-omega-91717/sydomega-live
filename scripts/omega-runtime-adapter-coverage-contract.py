@@ -219,6 +219,7 @@ def main() -> int:
         ):
             if marker not in sql:
                 return fail(f"dispatcher migration safety/contract marker missing: {marker}")
+        for marker in (
             "revoke all on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) from public,anon,authenticated",
             "grant execute on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) to service_role",
             "grant execute on function private.record_sovereign_event(text,jsonb,jsonb,text) to authenticated",

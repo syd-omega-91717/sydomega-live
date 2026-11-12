@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "name": "omega-ai-routing-policy",
-  "status": "ACTIVE_POLICY_DEFAULTS__PROVIDER_SWITCHING_OPT_IN",
+  "status": "SOURCE_INTEGRATED__PRODUCTION_DEPLOYMENT_PENDING",
   "principle": "Route by task complexity and risk; providers are replaceable; credentials remain server-side; no model receives authority to execute tools.",
   "providers": {
     "anthropic": {

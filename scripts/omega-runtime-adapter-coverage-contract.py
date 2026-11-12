@@ -13,6 +13,7 @@ MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_ad
 IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
 REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe_refund_state_fk_index.sql"
 SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
+CONSULTANCY_SCHEMA_MIGRATION = ROOT / "supabase/migrations/20261112091600_omega_consultancy_runtime_schema_parity.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
 def fail(message: str) -> int:
@@ -27,7 +28,8 @@ def main() -> int:
         idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
         refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
         search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql))
+        consultancy_schema_sql = CONSULTANCY_SCHEMA_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, consultancy_schema_sql))
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
@@ -119,6 +121,20 @@ def main() -> int:
                 return fail(f"search-index schema/RLS/runtime marker missing: {marker}")
         if search_index_sql.lower().count("security definer set search_path=''") != 1:
             return fail("search-index dispatcher replacement must pin an empty search_path")
+        if "alter table public.consult_requests add column if not exists domain text" not in consultancy_schema_sql.lower():
+            return fail("clean-replay consultancy domain column reconciliation is missing")
+        if "returns text language plpgsql security definer set search_path=''" not in consultancy_schema_sql.lower():
+            return fail("consultancy intake helper must return a schema-neutral text ID and pin an empty search_path")
+        if "returning id::text into v_id" not in consultancy_schema_sql.lower() or "return v_id;" not in consultancy_schema_sql.lower():
+            return fail("consultancy intake helper must return the inserted or idempotently reused row ID")
+        if "v_request_id text" not in consultancy_schema_sql.lower():
+            return fail("runtime dispatcher request ID variable must accept UUID and BIGINT source IDs")
+        if "owner_id=(select auth.uid())" not in consultancy_schema_sql.lower():
+            return fail("search-index policy must use an initplan-safe scalar auth.uid() call")
+        if "owner_id=auth.uid()" in consultancy_schema_sql.lower():
+            return fail("search-index follow-up must not retain per-row auth.uid() evaluation")
+        if re.search(r"alter\\s+table\\s+public\\.consult_requests\\s+alter\\s+column\\s+id\\s+type|drop\\s+table", consultancy_schema_sql, re.IGNORECASE):
+            return fail("consultancy schema parity migration must not rewrite or drop historical request IDs")
         for marker in (
             "createSupabaseContext(req, { auth: 'user' })",
             "ctx.userClaims.sub",

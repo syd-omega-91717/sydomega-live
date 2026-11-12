@@ -41,7 +41,7 @@
       "version": 10,
       "verify_jwt": true,
       "live_sha256": "36d65a667b723defa4b69519e221c5c6e2dbf489bdefd76cb25d1b7c337ed573",
-      "repository_blob_sha": "13a8b41c72143377c2ba393fdb17f9ba99fbed7",
+      "repository_blob_sha": "13a8b41c72143377c2ba393fdb17f9ba99fbed7d",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
       "provider_observed_at": "2026-11-12T07:32:53.361Z",

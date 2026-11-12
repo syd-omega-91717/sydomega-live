@@ -37,7 +37,7 @@
     },
     "balanced": {
       "defaultProvider": "anthropic",
-      "anthropicModel": "claude-haiku-5-5",
+      "anthropicModel": "claude-sonnet-5-5",
       "openaiModel": "gpt-6.1-sol",
       "maxOutputTokens": 2048,
       "timeoutMs": 30000,

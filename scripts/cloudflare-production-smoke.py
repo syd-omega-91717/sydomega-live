@@ -118,7 +118,7 @@ def request_url(
         if (parts.hostname.lower(), port) != origin:
             return 0, "", "cross_origin_redirect_blocked"
     except (TypeError, ValueError):
-        return 0, "", "blocked unsupported URL scheme or authority"
+        return 0, "", "unsupported_url_scheme_or_authority"
 
     if requests is None:
         return 0, "", "requests dependency is not installed; install scripts/requirements.txt"

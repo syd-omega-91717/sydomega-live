@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "Ω SYD OMEGA 91717 Live Module Runtime Observations",
   "version": 1,
-  "status": "LIVE_DATABASE_VERIFIED_WITH_CLEAN_REPLAY_AND_RELEASE_BLOCKERS",
+  "status": "READ_ONLY_PROVIDER_SNAPSHOT_NOT_PRODUCTION_PROOF",
   "source": "[object Object] Live migration ledger, helper definitions, consultancy schema and Supabase advisors were rechecked on 2026-11-12; provider ledger now records 419 applied versions through 20261112091500.",
   "interpretation": "This snapshot records provider-side catalog and runtime-action declarations. INTEGRATED means the database catalog labels the action as integrated; it does not prove that the HTTP endpoint is reachable, authorization is correct at runtime, data persists, the user journey works, or production serves the current repository revision.",
   "domain_observations": [
@@ -1697,5 +1697,13 @@
     "pending_migration": "20261112091600_omega_consultancy_runtime_schema_parity.sql",
     "status": "PENDING_REVIEW_NOT_APPLIED",
     "intended_remediation": "Add the missing required domain column, align verified required/default fields, return source IDs as text for UUID/BIGINT compatibility, add the missing successful RETURN, update the dispatcher request ID variable to text, and preserve the underlying ID column without conversion."
+  },
+  "release_readiness": {
+    "status": "RELEASE_BLOCKED",
+    "blockers": [
+      "20261112091600_omega_consultancy_runtime_schema_parity.sql has not passed a fresh isolated migration replay and runtime probe",
+      "Cloudflare exact-SHA production verification has not passed for a merged main commit"
+    ],
+    "last_checked": "2026-11-12"
   }
 }

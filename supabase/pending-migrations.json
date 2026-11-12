@@ -18,6 +18,12 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "Adds the legacy public.news read-model table to the migration history with the existing deny-by-default RLS contract. No content rows are seeded. Fresh replay failed because the dispatcher references public.news, which existed only in the live schema snapshot and not in migrations."
+      "version": "20261112091600",
+      "file": "20261112091600_omega_consultancy_runtime_schema_parity.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Fresh replay exposed historical consult_requests drift: the baseline creates UUID IDs and does not reliably add domain, while production has BIGINT IDs and required domain. This additive migration adds the missing required domain, preserves existing ID types by returning IDs as text, restores the missing successful return, aligns required/default fields to the verified provider shape, and makes search_index auth.uid() evaluation initplan-safe. Must pass full fresh migration replay, all 54 runtime probes, migration security audit and Supabase advisor recheck before provider application."
     }
   ]
 }

@@ -33,7 +33,7 @@
     var oscs=[174.61,220,261.63].map(function(freq,i){
       var o=ctx.createOscillator(),g=ctx.createGain();
       o.type=i===1?"triangle":"sine";o.frequency.value=freq;
-      g.gain.value=i===1?.025:.018;o.connect(g);g.connect(master);o.start();
+      g.gain.value=i===1 ? .025 : .018;o.connect(g);g.connect(master);o.start();
       return {o:o,g:g};
     });
     music={ctx:ctx,master:master,oscs:oscs};

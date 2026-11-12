@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = (ROOT / ".github/workflows/cloudflare-pages.yml").read_text(encoding="utf-8")
 PRODUCTION_VERIFY = (ROOT / ".github/workflows/cloudflare-production-verify.yml").read_text(encoding="utf-8")
 PRODUCTION_SMOKE = (ROOT / "scripts/cloudflare-production-smoke.py").read_text(encoding="utf-8")
+SMOKE_REQUIREMENTS = (ROOT / "scripts/requirements.txt").read_text(encoding="utf-8")
 
 
 class CloudflareManualReleaseContract(unittest.TestCase):
@@ -53,6 +54,13 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertNotIn("CLOUDFLARE_API_TOKEN", PRODUCTION_VERIFY)
         self.assertIn("config/omega-page-contracts.json", PRODUCTION_SMOKE)
         self.assertIn("class RefParser(HTMLParser)", PRODUCTION_SMOKE)
+        self.assertIn("session.request(", PRODUCTION_SMOKE)
+        self.assertIn("session.trust_env = False", PRODUCTION_SMOKE)
+        self.assertIn("allow_redirects=False", PRODUCTION_SMOKE)
+        self.assertIn("verify=True", PRODUCTION_SMOKE)
+        self.assertIn("timeout=timeout", PRODUCTION_SMOKE)
+        self.assertNotIn("HTTPSConnection(", PRODUCTION_SMOKE)
+        self.assertNotIn("urlopen(", PRODUCTION_SMOKE)
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
 
@@ -90,6 +98,33 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         status, _, detail = module.request_url("file:///etc/passwd", "GET", 1)
         self.assertEqual(status, 0)
         self.assertIn("unsupported URL", detail)
+    def test_production_smoke_dependency_is_pinned_and_installed_only_for_verification(self):
+        self.assertIn("requests==2.34.2", SMOKE_REQUIREMENTS)
+        self.assertIn("scripts/requirements.txt", WORKFLOW)
+        self.assertIn("python -m pip install", WORKFLOW)
+
+    def test_production_smoke_rejects_unsafe_url_schemes_and_hosts(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "cloudflare_production_smoke", ROOT / "scripts/cloudflare-production-smoke.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        self.assertEqual(module.validate_request_url("https://sydomega.com"), "https://sydomega.com")
+        self.assertEqual(
+            module.validate_request_url("https://preview.sydomega-live.pages.dev"),
+            "https://preview.sydomega-live.pages.dev",
+        )
+        for unsafe in (
+            "file:///etc/passwd",
+            "http://sydomega.com",
+            "https://evil.example",
+            "https://sydomega.com@evil.example",
+            "https://sydomega.com:444",
+        ):
+            with self.assertRaises(ValueError, msg=unsafe):
+                module.validate_request_url(unsafe)
 
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)

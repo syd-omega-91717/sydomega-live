@@ -7,7 +7,6 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import sys
-from urllib.error import HTTPError, URLError
 from urllib.parse import urldefrag, urljoin, urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
@@ -80,7 +79,73 @@ def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
             return request_url(url, "GET", timeout)
         return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", ""
     except (URLError, TimeoutError, OSError) as exc:
+def validate_request_url(url: str) -> str:
+    """Allow only HTTPS production/preview hosts; never pass file or arbitrary schemes to urllib."""
+    try:
+        parts = urlsplit(url)
+        port = parts.port
+    except ValueError as exc:
+        raise ValueError("invalid production smoke URL") from exc
+    host = (parts.hostname or "").lower()
+    allowed_host = (
+        host == "sydomega.com"
+        or host.endswith(".sydomega.com")
+        or host.endswith(".pages.dev")
+        or host.endswith(".vercel.app")
+    )
+    if (
+        parts.scheme.lower() != "https"
+        or not parts.netloc
+        or parts.username is not None
+        or parts.password is not None
+        or port not in (None, 443)
+        or parts.fragment
+        or not allowed_host
+    ):
+        raise ValueError("production smoke URL must be HTTPS on an approved SYD OMEGA, Pages, or Vercel host")
+    return url
+
+
+def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tuple[int, str, str]:
+    safe_url = validate_request_url(url)
+    import requests
+
+    session = requests.Session()
+    session.trust_env = False
+    try:
+        response = session.request(
+            method,
+            safe_url,
+            headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"},
+            timeout=timeout,
+            allow_redirects=False,
+            verify=True,
+        )
+        status = response.status_code
+        content_type = response.headers.get("Content-Type", "")
+
+        if status in {301, 302, 303, 307, 308}:
+            location = response.headers.get("Location")
+            response.close()
+            if not location:
+                return status, content_type, "redirect response has no Location header"
+            if redirects >= 5:
+                return status, content_type, "redirect limit exceeded"
+            next_url = urljoin(safe_url, location)
+            next_method = "GET" if status == 303 or (status in {301, 302} and method not in {"GET", "HEAD"}) else method
+            return request_url(next_url, next_method, timeout, redirects + 1)
+
+        if method == "HEAD" and status in {405, 501}:
+            response.close()
+            return request_url(safe_url, "GET", timeout, redirects)
+
+        body = response.text if method == "GET" else ""
+        response.close()
+        return status, content_type, body
+    except requests.RequestException as exc:
         return 0, "", str(exc)
+    finally:
+        session.close()
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -93,7 +158,11 @@ def main() -> int:
         contracts = registry.get("contracts", [])
         if registry.get("page_count") != len(contracts) or not contracts:
             raise ValueError("page contract registry count does not match its records")
-        base = args.base_url.rstrip("/") + "/"
+        safe_base = validate_request_url(args.base_url)
+        base_parts = urlsplit(safe_base)
+        if base_parts.query or base_parts.fragment:
+            raise ValueError("base URL must not include a query or fragment")
+        base = safe_base.rstrip("/") + "/"
         base_host = urlsplit(base).netloc.lower()
         pages = sorted({urljoin(base, str(item["path"]).lstrip("/")) for item in contracts})
         page_failures: list[tuple[str, int, str]] = []

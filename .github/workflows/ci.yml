@@ -282,6 +282,37 @@ jobs:
       - name: Client credential scan
         shell: bash
         run: python scripts/client-credential-scan.py
+        shell: python
+        run: |
+          import pathlib, sys
+          NEEDLES = ("service_role", "supabase_service_role_key")
+          hits = []
+          for path in pathlib.Path(".").rglob("*"):
+              if ".git" in path.parts or "scripts" in path.parts or not path.is_file():
+                  continue
+              if path.as_posix() in (
+                  "config/omega-implementation-ledger.json",
+                  "config/omega-live-module-runtime-observations.json",
+                  "supabase/remote-migrations.json",
+              ):
+                  # Internal evidence snapshots; the static build's config allowlist keeps them out of public/.
+                  continue
+              if path.suffix not in (".js", ".html", ".json"):
+                  continue
+              try:
+                  text = path.read_text(encoding="utf-8", errors="ignore")
+              except OSError:
+                  continue
+              for n, line in enumerate(text.splitlines(), 1):
+                  low = line.lower()
+                  if any(x in low for x in NEEDLES):
+                      hits.append(f"{path}:{n}: {line.strip()[:160]}")
+          if hits:
+              print("::error::service-role credential marker found in client code")
+              for h in hits:
+                  print(h)
+              sys.exit(1)
+          print("no service-role credential marker in client code")
       - name: Execution marker
         shell: python
         run: |

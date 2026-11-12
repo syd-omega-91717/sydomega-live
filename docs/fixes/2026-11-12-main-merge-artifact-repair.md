@@ -21,7 +21,7 @@ A review of the first main-branch CI run after PRs #1251–#1253 found multiple 
 4. `supabase/pending-migrations.json`
    - Rebuilt the registry as valid JSON.
    - Removed the stale 2026-11-11 migration from the pending list because `20261111190000` is present in the authenticated provider migration ledger and in `supabase/remote-migrations.json`.
-   - Retained `20261112130000_omega_consultancy_request_id_text_compat.sql` as `PENDING_REVIEW / NOT_APPLIED`, with `blocksProduction: true`. It is not marked applied.
+   - A fresh read-only provider-ledger query later confirmed `20261112130000_omega_consultancy_request_id_text_compat` is applied. The remote snapshot now records all 426 provider-applied versions and the pending registry is empty.
 5. `docs/runtime/supabase-edge-functions-live.json`
    - Repaired invalid JSON caused by duplicate capture/provider timestamp properties and missing separators, retaining the latest recorded capture values.
 6. Added `scripts/tests/test_main_merge_integrity.py` and a blocking contract-suite gate. It validates all three snapshots, pending-vs-applied migration separation, the validated smoke-request path, runtime dispatcher source composition, Python syntax, and the distinction between static branch coverage and behavioral verification.
@@ -37,14 +37,14 @@ At commit `5ad3b1a73c3d6cb57b3647649afe4965c568d566`, the following failures wer
 - Semgrep reported one dynamic-URL finding in the shadowing urllib implementation.
 - Exact-SHA production verification failed: the public release manifest reported `87083b6d8b05249afd86da52f27c0b6792d6f762` while main expected `5ad3b1a73c3d6cb57b3647649afe4965c568d566`.
 
-The fresh migration replay job stopped at **Validate migration inventory**. It did not reach the actual clean SQL replay. After the registry is repaired, the next run must establish whether the SQL chain itself replays successfully.
+The initial main-branch replay stopped at **Validate migration inventory** because the registry was malformed. After the registry repair, a subsequent replay passed inventory validation and exposed the applied November migration source mismatch documented below.
 
 ## Explicitly unresolved / do not bypass
 
 - `20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql` appears to contain a duplicated standalone `VALUES` fragment in the consultancy helper. The version is recorded as provider-applied. The repository contract forbids rewriting an applied migration. Do not edit, renumber, delete, or silently skip it. The clean replay must expose the exact result; any repair requires an explicit migration-history decision from the schema owner.
 - The 54-action live dispatcher has 54/54 branch presence in the read-only observation, but the separate behavioral SQL probe remains unverified.
 - Production remains behind main at the last exact-SHA check. This PR does not deploy or promote anything. Cloudflare production must serve the exact merged main SHA and pass the production manifest/route verification before release can be claimed.
-- The `20261112130000` migration remains pending. No Supabase migration was applied by this work.
+- The `20261112130000` migration is now provider-applied according to the read-only Supabase ledger; the repository snapshot is reconciled and no pending source migrations remain. No Supabase migration was applied by this work.
 
 ## Safety
 

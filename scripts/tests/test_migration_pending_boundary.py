@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 import unittest
@@ -47,12 +48,17 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             pending_versions.add(version)
 
     def test_provider_confirmed_november_migrations_are_in_remote_not_pending(self) -> None:
-        for version in ("20261103230000", "20261104090000"):
+        for version in ("20261103230000", "20261104090000", "20261111190000"):
             self.assertIn(version, self.remote_versions)
             self.assertNotIn(version, {str(item["version"]) for item in self.pending})
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
+        self.assertIn("20261111190000", self.remote_versions)
+        self.assertNotIn("20261111190000", {str(item["version"]) for item in self.pending})
+        self.assertIn("20261112091300", {str(item["version"]) for item in self.pending})
+        self.assertIn("20261112091400", {str(item["version"]) for item in self.pending})
+        self.assertIn("20261112091500", {str(item["version"]) for item in self.pending})
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
-        self.assertEqual(self.remote.get("_captured"), "2026-11-10")
+        self.assertEqual(self.remote.get("_captured"), "2026-11-12")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
     def test_source_inventory_replay_contract_includes_pending_without_claiming_live(self) -> None:
@@ -84,6 +90,63 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(" ".join(body.split()), "select * from private.get_points_leaderboard($1);")
         self.assertIn("revoke all on function public.get_points_leaderboard(integer) from public, anon", sql.lower())
         self.assertIn("grant execute on function public.get_points_leaderboard(integer) to authenticated", sql.lower())
+
+    def test_generated_skill_registry_migration_census_matches_disk(self) -> None:
+        registry = (ROOT / "OMEGA_SKILL_REGISTRY.md").read_text(encoding="utf-8")
+        match = re.search(
+            r"\| `supabase/migrations/\*\.sql` \| (\d+) \((\d+) numbered.*?, (\d+) timestamped\) \|",
+            registry,
+        )
+        self.assertIsNotNone(match, "generated registry migration census row is missing")
+        migrations = list(MIGRATIONS.glob("*.sql"))
+        numbered = sum(bool(re.match(r"^\d{4}_", path.name)) for path in migrations)
+        timestamped = sum(bool(re.match(r"^\d{8}", path.name)) for path in migrations)
+        self.assertEqual(tuple(map(int, match.groups())), (len(migrations), numbered, timestamped))
+
+    def test_search_index_runtime_probe_checks_dispatch_and_direct_rls_isolation(self) -> None:
+        probe = (ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql").read_text(encoding="utf-8")
+        for marker in (
+            "search-shared",
+            "search-owner-one",
+            "search-owner-two",
+            "search-org-only",
+            "search dispatcher owner/org isolation failed",
+            "$search_rls_probe$",
+            "search_index RLS exposed",
+        ):
+            self.assertIn(marker, probe)
+
+    def test_search_index_reconciliation_preserves_both_shapes_and_tightens_rls(self) -> None:
+        path = MIGRATIONS / "20261112091500_omega_search_index_schema_reconciliation.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        for column in (
+            "add column if not exists body text",
+            "add column if not exists content text",
+            "add column if not exists keywords text",
+            "add column if not exists owner_id uuid",
+            "add column if not exists organization_id uuid",
+            "add column if not exists indexed_at timestamptz",
+            "add column if not exists updated_at timestamptz",
+            "add column if not exists created_at timestamptz",
+        ):
+            self.assertIn(column, sql)
+        self.assertIn("coalesce(body,content)", sql)
+        self.assertIn("coalesce(content,body)", sql)
+        self.assertIn("owner_id is null and organization_id is null", sql)
+        self.assertIn("owner_id=auth.uid()", sql)
+        self.assertIn("coalesce(body,content) as body", sql)
+        self.assertNotIn("drop table", sql)
+        self.assertNotIn("drop column", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
+    def test_refund_state_foreign_key_index_migration_is_narrow_and_non_destructive(self) -> None:
+        path = MIGRATIONS / "20261112091400_omega_stripe_refund_state_fk_index.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("create index if not exists stripe_refund_state_last_reversal_transaction_idx", sql)
+        self.assertIn("on omega_private.stripe_refund_state(last_reversal_transaction_id)", sql)
+        self.assertNotIn("drop index", sql)
+        self.assertNotIn("drop table", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
 
     def test_source_only_gate_and_strict_release_gate_are_distinct(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")

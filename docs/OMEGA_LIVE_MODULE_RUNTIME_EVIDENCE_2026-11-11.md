@@ -251,7 +251,7 @@ Missing live branches:
 - `HIERARCHY.roles.read`
 - `HIERARCHY.governance.read`
 
-This is a production integrity defect and demonstrates why a migration ledger and lifecycle field are not proof of runtime behavior. The branch now includes `20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql`, which restores the wave-2 adapters, implements the remaining read/write handlers with actor scoping and explicit simulation/credential boundaries, and adds a CI contract that requires all 54 canonical actions to map to concrete adapters. The migration is explicitly registered as `PENDING_REVIEW / NOT_APPLIED`; no production database mutation has occurred in this work sequence. It must pass fresh replay, then be applied through the authorized Supabase migration action, after which the remote migration snapshot is updated from provider evidence.
+At the time of the original audit this was a production integrity defect. PR #1238 added 20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql, restoring the 54-action dispatcher and its actor-scoped adapters. A subsequent read-only provider query on 2026-11-12 confirms that version is present in the live migration ledger (416 applied versions total), and direct inspection of public.omega_runtime_dispatch(uuid,text,jsonb) now finds all 53 canonical module_read branches plus the dedicated consultancy intake write branch (54/54). The provider-side indexes are also present. This confirms the original runtime reconciliation migration was applied; it does not prove all routes, external providers, user journeys or production pages are live.
 
 
 A second cross-user idempotency defect was found during the write-path review: service orders used a globally unique key and an unscoped lookup. The same reconciliation migration now changes service-order idempotency to `(user_id, idempotency_key)` and uses atomic `ON CONFLICT` handling. The isolated SQL probe reuses the same key for two synthetic users and requires distinct order/request IDs while repeated calls by the same user return the same ID.
@@ -273,4 +273,42 @@ The migration preserves global idempotency where the identifier is inherently sy
 
 The SQL regression probe now checks same-user retries, cross-user collisions and null-owner system deduplication. The expected result is one stable record for the same owner/key, distinct records for different owners using the same key, and one globally deduplicated system record. All probe writes run in a transaction that is rolled back.
 
-These changes remain **pending isolated replay and production application**. The live database has not yet been modified by this migration.
+The original owner-scoped idempotency indexes from migration 20261111190000 are now confirmed applied in the live provider schema. The first read-only duplicate scan found zero duplicate groups across the eight scoped datasets.
+
+## Idempotency payload integrity follow-up
+
+The owner-scoped uniqueness fix is paired with immutable request semantics. Reusing the same owner/subject and idempotency key with a different payload now fails explicitly instead of silently returning or overwriting the original record:
+- consultancy intake compares domain, message, urgency, contact, preferred time and confidentiality acceptance;
+- service orders compare service ID and metadata;
+- agent tasks compare agent, task type, input, approval requirement and requester class, and retries do not enqueue a second task event;
+- notifications compare type, title, body, channel and metadata;
+- platform events and their audit records compare the original event/audit envelope and payload;
+- achievement verifications compare decision, verifier, verification type and evidence;
+- sovereign progression events compare event type, event data and axis delta before returning a duplicate.
+
+The regression probe now exercises changed-payload reuse for each of those workflows. A mismatch must raise its specific idempotency-conflict error. This prevents an accidental key collision from silently changing evidence, losing a legitimate operation, or returning another request's result.
+
+The production verifier workflow was also repaired after review found duplicated nested shell loops in the previously merged version. It now has one bounded exact-SHA polling loop, one canonical-route loop, follows redirects consistently, and runs the full registered page/link smoke test. A unit contract guards against reintroducing the duplicate loops.
+
+The immutable-payload follow-up is now isolated in 20261112091300_omega_idempotency_payload_integrity.sql; it is **PENDING_REVIEW / NOT_APPLIED**. The live helper definitions do not yet contain the full payload-mismatch guards. The follow-up must pass fresh full migration replay, the expanded conflict probes and security checks before provider application. The production verification workflow repair is also pending PR #1242; the production release SHA has not been live-verified in this session.
+
+
+## Provider reconciliation — 2026-11-12
+
+The live Supabase migration ledger was queried directly and returned **416 applied versions**, latest `20261111190000`. The repository's prior remote-migrations.json snapshot contained 415 versions and ended at `20261104090000`; this PR updates the snapshot to match the provider's 416-version result. The original runtime reconciliation migration is removed from the pending list. Three follow-up migrations are pending: 20261112091300_omega_idempotency_payload_integrity.sql for immutable retry payloads, 20261112091400_omega_stripe_refund_state_fk_index.sql for the missing refund-state foreign-key index, and 20261112091500_omega_search_index_schema_reconciliation.sql for the known live/fresh search-index schema drift and overly broad authenticated read policy.
+
+A fresh inspection of the live dispatcher definition returned MD5 9973930f41eb7bebdf14b48670f3e06d (27,041 characters). All 53 canonical module-read branches and the dedicated consultancy-intake write branch were found. The provider's owner/subject-scoped unique indexes were also inspected, and the duplicate scan returned zero duplicate groups. Existing helper execute privileges were checked: service-role-only helpers remain unavailable to anon/authenticated, while the sovereign event helper is available to authenticated and unavailable to anon.
+
+The public production release manifest could not be retrieved through the available inspection channel. Production is therefore **not live-verified** by this evidence. The main-branch exact-SHA verifier had duplicated shell loops; PR #1242 repairs it and adds a structural regression test. The Cloudflare branch preview is not a substitute for production release verification.
+
+## Live performance advisor follow-up — 2026-11-12
+
+The live Supabase performance advisor reported one unindexed foreign key: `omega_private.stripe_refund_state.last_reversal_transaction_id` referencing `omega_ledger_transactions(transaction_id)`. A read-only inspection found the table currently has **0 rows** and already indexes `original_transaction_id`; the missing index is therefore a forward-looking integrity/performance safeguard, not a current workload bottleneck. The branch adds `20261112091400_omega_stripe_refund_state_fk_index.sql`, which remains pending fresh replay and provider application. The advisor also reported 325 unused indexes; no mass index removal is proposed because usage statistics alone do not justify dropping indexes without workload and retention analysis. The health advisor returned no lints. The security advisor still reports leaked-password protection disabled and three RLS-enabled/no-policy tables; direct privilege checks found no anon/authenticated table access on those tables, so the RLS findings are fail-closed informational findings rather than permission to disable RLS.
+
+A fresh provider Edge Function inventory on 2026-11-12 found **22/22 configured functions ACTIVE**. Each deployed entrypoint was retrieved and compared byte-for-byte with its repository `supabase/functions/<slug>/index.ts` file: **22/22 exact matches**. The live versions, JWT flags, provider hashes and repository blob hashes are refreshed in `docs/runtime/supabase-edge-functions-live.json`. This is source parity and provider activation evidence; it does not by itself prove third-party dependencies, downstream secrets, or end-to-end user journeys.
+
+## Search-index compatibility and access-control reconciliation — 2026-11-12
+
+The fresh migration replay exposed a known schema-shape drift: canonical migration 0016 creates `content`/`created_at`, while the live provider has `body`/`keywords`/`organization_id`/`owner_id`/`indexed_at`/`updated_at`. The live table currently has **zero rows**, so no indexed content is at risk. A direct policy inspection also found `search_index_read` was `USING (true)` for all authenticated users. Although there are currently no rows, that policy would expose future owner- or organization-scoped search records through direct PostgREST reads.
+
+Migration `20261112091500_omega_search_index_schema_reconciliation.sql` adds the missing compatibility columns without dropping either schema's fields, backfills paired content/timestamp columns, restricts direct reads to shared rows or the authenticated owner, and updates the runtime search adapter to apply the same owner/organization filter. The SQL probe now verifies the dispatcher returns only shared and own rows and that direct RLS reads cannot see another member's or organization-only rows. This migration remains pending fresh replay and provider application.

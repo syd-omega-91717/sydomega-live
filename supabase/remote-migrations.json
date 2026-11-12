@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-11-10",
-  "source": "Authenticated Supabase provider list_migrations query against the configured sydomega production project on 2026-11-10: 415 unique recorded versions, latest 20261104090000. This is migration-ledger evidence only; it does not prove SQL byte parity or semantic schema correctness. A separate read-only SQL query confirmed the erasure engine objects exist, its worker flag is false, and no erasure cron job is scheduled.",
-  "remoteMigrationCount": 415,
-  "latestRemoteMigration": "20261104090000",
+  "_captured": "2026-11-12",
+  "source": "Authenticated read-only Supabase migration-ledger query against the configured production project on 2026-11-12: 416 recorded versions, latest 20261111190000. Ledger presence is provider evidence only; it does not prove SQL byte parity or semantic correctness.",
+  "remoteMigrationCount": 416,
+  "latestRemoteMigration": "20261111190000",
   "versions": [
     "0001",
     "0002",
@@ -418,7 +418,8 @@
     "20261024110000",
     "20261025100000",
     "20261103230000",
-    "20261104090000"
+    "20261104090000",
+    "20261111190000"
   ],
   "migrations": [
     {
@@ -2077,6 +2078,10 @@
     {
       "version": "20261104090000",
       "name": "financial_rows_survive_account_deletion"
+    },
+    {
+      "version": "20261111190000",
+      "name": "omega_runtime_dispatch_adapter_reconciliation"
     }
   ]
 }

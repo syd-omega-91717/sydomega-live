@@ -51,7 +51,8 @@ interface GrowthResponse {
   channel_recommendation: string;
   send_timing: string;
   confidence: number;
-  estimated_revenue_impact: number;
+  estimated_revenue_impact: number | null;
+  estimated_revenue_impact_status: "NOT_CALIBRATED";
 }
 
 async function callOmegaGrowthModel(
@@ -72,7 +73,8 @@ Your role:
 - Compose multi-touch campaigns personalized to member context
 - Recommend timing, channels, and offers
 - Maximize revenue while respecting frequency caps
-- Return JSON with: campaign_type, offer, channel, timing, confidence, estimated_impact
+- Return JSON with: campaign_type, offer, channel, timing, confidence
+- Do not estimate revenue or claim a financial outcome; revenue impact is not calibrated.
 
 Rules:
 - Max 1 campaign per member per week
@@ -106,7 +108,7 @@ async function saveGrowthDecision(
       model_used: modelUsed,
       temperature: null,
       outcome_recorded: false,
-      revenue_impact_usd: campaign.estimated_impact || 0,
+      revenue_impact_usd: null,
     })
     .select("id")
     .single();
@@ -129,7 +131,8 @@ async function processGrowthRequest(req: GrowthRequest): Promise<GrowthResponse>
       channel_recommendation: "none",
       send_timing: "none",
       confidence: 0,
-      estimated_revenue_impact: 0,
+      estimated_revenue_impact: null,
+      estimated_revenue_impact_status: "NOT_CALIBRATED",
     };
   }
 
@@ -170,7 +173,7 @@ ${Object.entries(req.context.engagement_metrics).map(([k, v]) => `- ${k}: ${v}`)
     channel: "email",
     timing: "immediate",
     confidence: 0.75,
-    estimated_impact: req.context.propensity_score * req.context.ltv_estimate * 0.15,
+    estimated_impact: null,
   };
 
   try {
@@ -181,6 +184,16 @@ ${Object.entries(req.context.engagement_metrics).map(([k, v]) => `- ${k}: ${v}`)
   } catch (e) {
     console.error("Failed to parse campaign response:", e);
   }
+
+  const modelEstimate = Number.isFinite(Number(campaign.estimated_impact))
+    ? Number(campaign.estimated_impact)
+    : null;
+  campaign = {
+    ...campaign,
+    model_estimate_unvalidated: modelEstimate,
+    estimated_impact: null,
+    estimated_impact_status: "NOT_CALIBRATED",
+  };
 
   // Save decision
 const campaignId = await saveGrowthDecision(
@@ -197,7 +210,8 @@ const campaignId = await saveGrowthDecision(
     channel_recommendation: campaign.channel || "email",
     send_timing: campaign.timing || "optimal_window",
     confidence: campaign.confidence || 0.75,
-    estimated_revenue_impact: campaign.estimated_impact || 0,
+    estimated_revenue_impact: null,
+    estimated_revenue_impact_status: "NOT_CALIBRATED",
   };
 }
 

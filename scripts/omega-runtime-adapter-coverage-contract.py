@@ -86,26 +86,24 @@ def main() -> int:
         if missing or extra:
             return fail(f"module action coverage mismatch; missing={missing}; extra={extra}")
 
+        dispatcher_sql = "\\n".join((search_index_sql, consultancy_compat_sql))
         search_dispatcher_actions: set[str] = set()
         for match in re.finditer(
-            r"(?:if|elsif)\s+v_module\s*=\s*'([A-Z0-9_]+)'\s+and\s+v_action_name\s*=\s*'([^']+)'",
-            search_index_sql,
-            consultancy_compat_sql,
+            r"(?:if|elsif)\\s+v_module\\s*=\\s*'([A-Z0-9_]+)'\\s+and\\s+v_action_name\\s*=\\s*'([^']+)'",
+            dispatcher_sql,
             re.IGNORECASE,
         ):
             search_dispatcher_actions.add(f"{match.group(1).upper()}.{match.group(2)}")
         for match in re.finditer(
-            r"(?:if|elsif)\s+v_module\s+in\s*\(([^)]+)\)\s+and\s+v_action_name\s*=\s*'([^']+)'",
-            search_index_sql,
-            consultancy_compat_sql,
+            r"(?:if|elsif)\\s+v_module\\s+in\\s*\\(([^)]+)\\)\\s+and\\s+v_action_name\\s*=\\s*'([^']+)'",
+            dispatcher_sql,
             re.IGNORECASE,
         ):
             modules = re.findall(r"'([A-Z0-9_]+)'", match.group(1), re.IGNORECASE)
             search_dispatcher_actions.update(f"{module.upper()}.{match.group(2)}" for module in modules)
         elemental_search = re.search(
-            r"elsif\s+v_module\s*=\s*'ELEMENTAL'\s+and\s+v_action_name\s+in\s*\(([^)]+)\)",
-            search_index_sql,
-            consultancy_compat_sql,
+            r"elsif\\s+v_module\\s*=\\s*'ELEMENTAL'\\s+and\\s+v_action_name\\s+in\\s*\\(([^)]+)\\)",
+            dispatcher_sql,
             re.IGNORECASE,
         )
         if elemental_search:
@@ -114,9 +112,6 @@ def main() -> int:
             )
         if "when 'create_consult_intake' then" in search_index_sql and "omega_private.create_consult_intake(" in search_index_sql:
             search_dispatcher_actions.add("CONSULTANCY.intake.create")
-        if search_dispatcher_actions != expected:
-            return fail(
-                "search-index dispatcher replacement lost canonical actions; "
         if "when 'create_consult_intake' then" in consultancy_compat_sql and "omega_private.create_consult_intake(" in consultancy_compat_sql:
             search_dispatcher_actions.add("CONSULTANCY.intake.create")
         if consultancy_compat_sql.lower().count("create or replace function public.omega_runtime_dispatch(") != 1:

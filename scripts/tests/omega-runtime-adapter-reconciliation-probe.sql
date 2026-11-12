@@ -116,6 +116,15 @@ begin
     ('runtime_probe','search-owner-two','Owner two probe','owner two body','owner two content','owner-two',v_other_user,null,now(),now(),now()),
     ('runtime_probe','search-org-only','Org-only probe','org body','org content','org-only',null,'20000000-0000-4000-8000-000000000001',now(),now(),now());
 
+  insert into public.member_presence(user_id,is_online,current_page,session_started_at,last_seen,client_info)
+  values
+    (v_user,true,'/runtime-probe',now(),now(),'{"probe":true}'::jsonb),
+    (v_other_user,true,'/runtime-probe-other',now(),now(),'{"probe":true}'::jsonb)
+  on conflict (user_id) do update
+    set is_online=excluded.is_online,current_page=excluded.current_page,
+        session_started_at=excluded.session_started_at,last_seen=excluded.last_seen,
+        client_info=excluded.client_info;
+
   for i in 1..array_length(v_actions,1) loop
     v_result:=public.omega_runtime_dispatch(
       v_user,
@@ -136,6 +145,13 @@ begin
     end if;
     if v_result->'data' is null then
       raise exception 'runtime action returned no data envelope: %.%',v_actions[i][1],v_actions[i][2];
+    end if;
+    if v_actions[i][1]='COMMUNICATION' and v_actions[i][2]='presence.read' then
+      if jsonb_array_length(v_result->'data')<>1
+         or v_result->'data'->0->>'user_id' is distinct from v_user::text
+         or v_result->'data'->0->>'last_seen' is null then
+        raise exception 'presence dispatcher owner isolation or last_seen projection failed: %',v_result->'data';
+      end if;
     end if;
     if v_actions[i][1]='CORE' and v_actions[i][2]='search.read' then
       if jsonb_array_length(v_result->'data')<>2

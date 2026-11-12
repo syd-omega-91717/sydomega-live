@@ -1,6 +1,6 @@
 # SYD OMEGA — AI runtime evolution and technology radar
 
-**State:** source integrated in this branch; production Edge Function deployment and first live usage records are still pending.
+**State:** source integrated and four AI Edge Function entrypoints deployed to production with exact entrypoint/shared-source parity verified on 2026-11-12; first real usage/evaluation evidence is still pending.
 
 ## 1. Live baseline observed on 2026-11-12
 
@@ -25,6 +25,8 @@
 
 Anthropic remains the default to preserve the existing production integration. OpenAI routing is **opt-in per profile** and requires a separately configured `OPENAI_API_KEY`. The router never silently falls back to another provider.
 
+Migration `20261112121000_omega_ai_member_quota_guard` is also provider-recorded as applied. The service-role-only per-member rolling quota RPC is now available to the deployed router. The provider ledger contains 425 applied versions through `20261112121000`. A new forward-only migration `20261112130000` is pending because clean replay exposed a UUID/BIGINT consultancy dispatcher variable mismatch. Production release remains blocked until that migration passes fresh replay and the full 54-action probe, then is provider-recorded as applied.
+
 The router adds:
 - profile-specific timeouts and bounded retry for transient network/429/5xx failures;
 - explicit refusal, incomplete-response, timeout and provider-configuration error codes;
@@ -34,12 +36,12 @@ The router adds:
 - `evaluation.status = NOT_RUN` until a real evaluator has run;
 - no cost estimate until a verified provider pricing catalog and billing reconciliation are available.
 
-The active `concierge` path and the three owner-gated orchestrators now use the shared router. The three dormant orchestrators use the balanced profile by default; the concierge escalation-review path selects reasoning. Their `model_used` field now records the actual provider and model.
+The active `concierge` path and the three owner-gated orchestrators use the shared router. Their production Edge Function versions are concierge 14, concierge-orchestrator 8, growth-orchestrator 10 and product-orchestrator 11. Provider function downloads were compared byte-for-byte with the repository entrypoints and shared `keys.ts`/`omega-model-router.ts`; all six comparisons matched. The three dormant orchestrators use the balanced profile by default; the concierge escalation-review path selects reasoning. Their `model_used` field now records the actual provider and model.
 
 ### Safety corrections
 
 - Product adaptation now produces proposed feature flags only. It does not write to `member_feature_flags`; the response explicitly reports `applied=false` and `approval_required=true`.
-- Graphify query/ingestion now has a server-side default-off gate plus mandatory account-level AI personalization and sensitive-data consent. Its functions remain held and are not registered for routine deployment; a pending migration creates `graphify_ai_enabled=false`. The code is not considered live until the held functions are updated in production.
+- Graphify query/ingestion now has a server-side default-off gate plus mandatory account-level AI personalization and sensitive-data consent. Its functions remain held and are not registered for routine deployment; the provider-applied migration `20261112111000` keeps `graphify_ai_enabled=false`. The code is not considered live until the held functions are updated in production.
 - Growth orchestration no longer invents a 15% revenue uplift or writes a model estimate to `revenue_impact_usd`. Estimated impact remains `null` with status `NOT_CALIBRATED`; an unvalidated model estimate, if returned, is retained only as clearly labelled proposal metadata.
 - Existing member binding, the owner-controlled autonomous-agent switch, and tool-deny defaults remain in place.
 
@@ -91,11 +93,10 @@ The evaluation cases in `config/omega-ai-evaluation-cases.json` are policy test 
 ## 5. Roadmap and priorities
 
 ### P0 — finish this release wave
-1. Pass clean migration replay and the runtime adapter SQL probe.
-2. Pass the AI routing, Edge Function, secret, CodeQL and release contracts.
-3. Deploy the shared router and four dependent Edge Functions through the controlled production deployment path.
-4. Verify function versions and source hashes against the repository.
-5. Confirm one real, non-sensitive `omega_ai_requests` record is written; do not create synthetic production usage.
+1. Complete a fresh all-425-migration replay and the full 54-action runtime adapter SQL probe after the provider-ledger metadata correction.
+2. Preserve passing AI routing, Edge Function, secret, CodeQL and release contracts.
+3. Confirm the four shared-router Edge Functions remain deployed and source-identical to the repository.
+4. Confirm one real, non-sensitive `omega_ai_requests` record is written; do not create synthetic production usage.
 
 ### P1 — prove quality before model promotion
 1. Upgrade the current field allowlists and bounds to a versioned JSON Schema validator for every orchestrator response.

@@ -45,19 +45,21 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertTrue((MIGRATIONS / filename).is_file(), filename)
             self.assertTrue(filename.startswith(version + "_"), filename)
             pending_versions.add(version)
-        self.assertEqual(pending_versions, {"20261112111000", "20261112121000"})
+        self.assertEqual(pending_versions, {"20261112130000"})
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
             "20261103230000", "20261104090000", "20261111190000",
             "20261112091300", "20261112091400", "20261112091500",
-            "20261112091600", "20261112103000", "20261112110000", "20261112120000",
+            "20261112091600", "20261112103000", "20261112110000", "20261112111000", "20261112120000", "20261112121000",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
         self.assertTrue(applied_versions.isdisjoint(pending_versions))
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112120000")
+        self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
+        self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112121000")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-12")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
@@ -78,7 +80,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_only_drift_check_passes_but_release_check_remains_blocked(self) -> None:
+    def test_source_inventory_passes_but_production_drift_gate_blocks_pending_compatibility(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
@@ -130,6 +132,19 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIn(marker, sql)
         self.assertNotIn("drop table", sql)
         self.assertNotIn("delete from public.consult_requests", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
+
+    def test_latest_consultancy_dispatcher_normalizes_uuid_and_bigint_ids_to_text(self) -> None:
+        path = MIGRATIONS / "20261112130000_omega_consultancy_request_id_text_compat.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("v_request_id text", sql)
+        self.assertNotIn("v_request_id bigint", sql)
+        self.assertIn("omega_private.create_consult_intake", sql)
+        self.assertIn("v_request_id:=omega_private.create_consult_intake", sql)
+        parity_sql = (MIGRATIONS / "20261112091600_omega_consultancy_runtime_schema_parity.sql").read_text(encoding="utf-8").lower()
+        self.assertIn("returning id::text into v_id", parity_sql)
+        self.assertIn("grant execute on function public.omega_runtime_dispatch", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
 
 

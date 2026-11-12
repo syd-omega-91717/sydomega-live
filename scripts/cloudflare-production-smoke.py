@@ -4,8 +4,6 @@ from __future__ import annotations
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from html.parser import HTMLParser
-from http.client import HTTPSConnection, HTTPException
-import ssl
 import json
 from pathlib import Path
 import sys
@@ -63,32 +61,23 @@ def validate_request_url(url: str) -> str:
 
 def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tuple[int, str, str]:
     safe_url = validate_request_url(url)
-    parts = urlsplit(safe_url)
-    host = parts.hostname
-    if host is None:
-        return 0, "", "missing hostname"
-    target = parts.path or "/"
-    if parts.query:
-        target += "?" + parts.query
-    connection = HTTPSConnection(
-        host,
-        parts.port or 443,
-        timeout=timeout,
-        context=ssl.create_default_context(),
-    )
+    import requests
+
     try:
-        connection.request(
+        response = requests.request(
             method,
-            target,
+            safe_url,
             headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"},
+            timeout=timeout,
+            allow_redirects=False,
+            verify=True,
         )
-        response = connection.getresponse()
-        content_type = response.getheader("Content-Type", "")
-        status = response.status
+        status = response.status_code
+        content_type = response.headers.get("Content-Type", "")
 
         if status in {301, 302, 303, 307, 308}:
-            location = response.getheader("Location")
-            response.read()
+            location = response.headers.get("Location")
+            response.close()
             if not location:
                 return status, content_type, "redirect response has no Location header"
             if redirects >= 5:
@@ -98,15 +87,14 @@ def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tupl
             return request_url(next_url, next_method, timeout, redirects + 1)
 
         if method == "HEAD" and status in {405, 501}:
-            response.read()
+            response.close()
             return request_url(safe_url, "GET", timeout, redirects)
 
-        body = response.read() if method == "GET" else b""
-        return status, content_type, body.decode("utf-8", errors="replace")
-    except (HTTPException, TimeoutError, OSError) as exc:
+        body = response.text if method == "GET" else ""
+        response.close()
+        return status, content_type, body
+    except requests.RequestException as exc:
         return 0, "", str(exc)
-    finally:
-        connection.close()
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)

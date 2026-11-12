@@ -59,6 +59,12 @@ export interface OmegaAiRequest {
   recordUsage?: (record: OmegaAiUsageRecord) => Promise<void>;
 }
 
+const PROFILE_RISK_ALLOWLIST: Record<OmegaAiProfile, OmegaAiRisk[]> = {
+  fast: ["low", "medium"],
+  balanced: ["low", "medium"],
+  reasoning: ["low", "medium", "high"],
+};
+
 const PROFILE_DEFAULTS: Record<OmegaAiProfile, {
   provider: OmegaAiProvider;
   anthropicModel: string;
@@ -265,6 +271,10 @@ export async function runOmegaModel(request: OmegaAiRequest): Promise<OmegaAiRes
     }
   };
 
+  if (!PROFILE_RISK_ALLOWLIST[request.profile].includes(request.risk)) {
+    await record("blocked", "ai_profile_risk_not_allowed");
+    throw new Error("ai_profile_risk_not_allowed");
+  }
   if (!route.apiKey) {
     await record("blocked", "ai_provider_not_configured");
     throw new Error("ai_provider_not_configured");

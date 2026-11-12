@@ -112,6 +112,8 @@ def main() -> int:
             "expert_bookings_adapter_stable_columns_missing",
             "runtime_dispatch_acl_invalid",
             "sort_order,created_at from public.media_items",
+            "where user_id=p_actor_user_id order by last_seen desc limit 20",
+            "where actor_user_id=p_actor_user_id order by created_at desc limit 100",
         ):
             if marker not in consultancy_compat_sql:
                 return fail(f"consultancy schema-compatibility marker missing: {marker}")

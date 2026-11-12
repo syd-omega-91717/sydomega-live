@@ -53,6 +53,29 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn("same_origin_references_checked", PRODUCTION_SMOKE)
         self.assertIn("CLOUDFLARE PRODUCTION SMOKE: PASS", PRODUCTION_SMOKE)
 
+    def test_production_smoke_rejects_unsafe_url_schemes_and_hosts(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "cloudflare_production_smoke", ROOT / "scripts/cloudflare-production-smoke.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        self.assertEqual(module.validate_request_url("https://sydomega.com"), "https://sydomega.com")
+        self.assertEqual(
+            module.validate_request_url("https://preview.sydomega-live.pages.dev"),
+            "https://preview.sydomega-live.pages.dev",
+        )
+        for unsafe in (
+            "file:///etc/passwd",
+            "http://sydomega.com",
+            "https://evil.example",
+            "https://sydomega.com@evil.example",
+            "https://sydomega.com:444",
+        ):
+            with self.assertRaises(ValueError, msg=unsafe):
+                module.validate_request_url(unsafe)
+
     def test_missing_credentials_never_attempts_deploy(self):
         self.assertIn("ready=false", WORKFLOW)
         self.assertIn("steps.creds.outputs.ready == 'true'", WORKFLOW)

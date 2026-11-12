@@ -4,12 +4,12 @@ from __future__ import annotations
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from html.parser import HTMLParser
+from http.client import HTTPSConnection, HTTPException
+import ssl
 import json
 from pathlib import Path
 import sys
-from urllib.error import HTTPError, URLError
 from urllib.parse import urldefrag, urljoin, urlsplit
-from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "config/omega-page-contracts.json"
@@ -54,7 +54,6 @@ def validate_request_url(url: str) -> str:
         or parts.username is not None
         or parts.password is not None
         or port not in (None, 443)
-        or parts.query
         or parts.fragment
         or not allowed_host
     ):
@@ -62,20 +61,52 @@ def validate_request_url(url: str) -> str:
     return url
 
 
-def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
+def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tuple[int, str, str]:
     safe_url = validate_request_url(url)
-    req = Request(safe_url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
+    parts = urlsplit(safe_url)
+    host = parts.hostname
+    if host is None:
+        return 0, "", "missing hostname"
+    target = parts.path or "/"
+    if parts.query:
+        target += "?" + parts.query
+    connection = HTTPSConnection(
+        host,
+        parts.port or 443,
+        timeout=timeout,
+        context=ssl.create_default_context(),
+    )
     try:
-        with urlopen(req, timeout=timeout) as response:
-            content_type = response.headers.get("Content-Type", "")
-            body = response.read() if method == "GET" else b""
-            return response.status, content_type, body.decode("utf-8", errors="replace")
-    except HTTPError as exc:
-        if method == "HEAD" and exc.code in {405, 501}:
-            return request_url(url, "GET", timeout)
-        return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", ""
-    except (URLError, TimeoutError, OSError) as exc:
+        connection.request(
+            method,
+            target,
+            headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"},
+        )
+        response = connection.getresponse()
+        content_type = response.getheader("Content-Type", "")
+        status = response.status
+
+        if status in {301, 302, 303, 307, 308}:
+            location = response.getheader("Location")
+            response.read()
+            if not location:
+                return status, content_type, "redirect response has no Location header"
+            if redirects >= 5:
+                return status, content_type, "redirect limit exceeded"
+            next_url = urljoin(safe_url, location)
+            next_method = "GET" if status == 303 or (status in {301, 302} and method not in {"GET", "HEAD"}) else method
+            return request_url(next_url, next_method, timeout, redirects + 1)
+
+        if method == "HEAD" and status in {405, 501}:
+            response.read()
+            return request_url(safe_url, "GET", timeout, redirects)
+
+        body = response.read() if method == "GET" else b""
+        return status, content_type, body.decode("utf-8", errors="replace")
+    except (HTTPException, TimeoutError, OSError) as exc:
         return 0, "", str(exc)
+    finally:
+        connection.close()
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -89,6 +120,9 @@ def main() -> int:
         if registry.get("page_count") != len(contracts) or not contracts:
             raise ValueError("page contract registry count does not match its records")
         safe_base = validate_request_url(args.base_url)
+        base_parts = urlsplit(safe_base)
+        if base_parts.query or base_parts.fragment:
+            raise ValueError("base URL must not include a query or fragment")
         base = safe_base.rstrip("/") + "/"
         base_host = urlsplit(base).netloc.lower()
         pages = sorted({urljoin(base, str(item["path"]).lstrip("/")) for item in contracts})

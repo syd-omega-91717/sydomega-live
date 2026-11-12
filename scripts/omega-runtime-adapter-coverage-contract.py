@@ -15,7 +15,7 @@ REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe
 SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
 EXPERT_BOOKINGS_MIGRATION = ROOT / "supabase/migrations/20261112103000_omega_expert_bookings_domain_compatibility.sql"
 NEWS_MIGRATION = ROOT / "supabase/migrations/20261112120000_omega_news_schema_baseline.sql"
-CONSULTANCY_COMPAT_MIGRATION = ROOT / "supabase/migrations/20261112110000_omega_consultancy_adapter_schema_compat.sql"
+CONSULTANCY_COMPAT_MIGRATION = ROOT / "supabase/migrations/20261112104500_omega_consultancy_adapter_schema_compat.sql"
 CONSULTANCY_SCHEMA_MIGRATION = ROOT / "supabase/migrations/20261112091600_omega_consultancy_runtime_schema_parity.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 

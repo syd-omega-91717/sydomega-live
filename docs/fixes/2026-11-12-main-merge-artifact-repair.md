@@ -41,7 +41,7 @@ The initial main-branch replay stopped at **Validate migration inventory** becau
 
 ## Explicitly unresolved / do not bypass
 
-- `20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql` appears to contain a duplicated standalone `VALUES` fragment in the consultancy helper. The version is recorded as provider-applied. The repository contract forbids rewriting an applied migration. Do not edit, renumber, delete, or silently skip it. The clean replay must expose the exact result; any repair requires an explicit migration-history decision from the schema owner.
+- The provider's `supabase_migrations.schema_migrations.statements` record for `20261111190000` contains the valid consultancy helper statement: one `INSERT`, one `VALUES`, one `ON CONFLICT`, and `RETURN v_id`. The current repository file contains an extra second `VALUES ... ON CONFLICT` fragment, introduced by PR #1251. The provider-recorded statement is the source of truth. Restoring the source file to that exact recorded statement would be a source-only history restoration, not a schema change; it still requires explicit owner approval because applied migration files are normally immutable. Do not rewrite it to different SQL, renumber it, delete it, or skip it.
 - The 54-action live dispatcher has 54/54 branch presence in the read-only observation, but the separate behavioral SQL probe remains unverified.
 - Production remains behind main at the last exact-SHA check. This PR does not deploy or promote anything. Cloudflare production must serve the exact merged main SHA and pass the production manifest/route verification before release can be claimed.
 - The `20261112130000` migration is now provider-applied according to the read-only Supabase ledger; the repository snapshot is reconciled and no pending source migrations remain. No Supabase migration was applied by this work.
@@ -78,3 +78,15 @@ The latest completed GitHub checks on the PR head report:
 - Workflow contract, CodeQL, JavaScript/TypeScript analysis, and Gitleaks: PASS.
 
 At the time of this update, the fresh isolated database replay, blocking supply-chain scan, evidence job, and Cloudflare Pages preview were still running. No merge or production release is claimed.
+
+
+## Provider migration-history evidence
+
+A read-only query of `supabase_migrations.schema_migrations` established:
+
+- The ledger contains **426 applied versions**, through `20261112130000`; the repository's remote snapshot now matches and `pending-migrations.json` is empty.
+- The provider-stored statement for `20261111190000` has the valid, single-insert `create_consult_intake` body. The malformed duplicate fragment exists only in the current repository copy after PR #1251.
+- The later provider-applied `20261112091600` migration explicitly drops and recreates `omega_private.create_consult_intake` with a `text` return type. The live function returns `text`, while `public.consult_requests.id` remains `bigint`; the helper returns `id::text`. This later schema state is consistent with the live function and provider ledger.
+- The current live `public.omega_runtime_dispatch` definition hash is `6441f11c033610c0e227f01386b487bd`; it contains 54 action branches. This is branch-presence evidence only; the separate behavioral probe remains unverified.
+
+**Potential resolution, awaiting owner approval:** restore only the corrupted helper statement in the repository's `20261111190000` file from the exact statement stored in the provider migration ledger, then rerun clean replay. Do not run SQL against production as part of this restoration. If approved, the resulting source must be byte-for-byte/semantically identical to the provider-recorded statement for that migration; no new behavior may be introduced.

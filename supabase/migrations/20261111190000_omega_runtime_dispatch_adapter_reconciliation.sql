@@ -19,7 +19,7 @@ begin
  return v_id;
 end;
 $$;
-evoke all on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) from public,anon,authenticated;
+revoke all on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) from public,anon,authenticated;
 grant execute on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) to service_role;
 
 create or replace function omega_private.enqueue_agent_task(

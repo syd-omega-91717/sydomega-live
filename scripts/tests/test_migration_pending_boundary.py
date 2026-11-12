@@ -89,6 +89,15 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("revoke all on function public.get_points_leaderboard(integer) from public, anon", sql.lower())
         self.assertIn("grant execute on function public.get_points_leaderboard(integer) to authenticated", sql.lower())
 
+    def test_refund_state_foreign_key_index_migration_is_narrow_and_non_destructive(self) -> None:
+        path = MIGRATIONS / "20261112091400_omega_stripe_refund_state_fk_index.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("create index if not exists stripe_refund_state_last_reversal_transaction_idx", sql)
+        self.assertIn("on omega_private.stripe_refund_state(last_reversal_transaction_id)", sql)
+        self.assertNotIn("drop index", sql)
+        self.assertNotIn("drop table", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
     def test_source_only_gate_and_strict_release_gate_are_distinct(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)

@@ -44,6 +44,12 @@ interface ProductRequest {
   };
 }
 
+interface ProductDecision extends Record<string, unknown> {
+  features_to_enable: string[];
+  ux_complexity: string;
+  confidence: number;
+}
+
 interface ProductResponse {
   decision_id: string;
   action: string;
@@ -51,6 +57,7 @@ interface ProductResponse {
   ux_config: Record<string, unknown>;
   reasoning: string;
   confidence: number;
+  confidence_status: "MODEL_REPORTED_NOT_CALIBRATED";
   applied: false;
   approval_required: true;
 }
@@ -163,7 +170,7 @@ ${req.context.pending_features.join("\n")}
   }
 
   // Parse response
-  let decision = {
+  let decision: ProductDecision = {
     features_to_enable: [],
     ux_complexity: getComplexityLevel(req.context.persona),
     confidence: 0.8,
@@ -178,13 +185,26 @@ ${req.context.pending_features.join("\n")}
     console.error("Failed to parse product response:", e);
   }
 
-  // Create feature flags
-  const featureFlags: Record<string, boolean> = {};
-  const featuresToEnable = decision.features_to_enable || [];
+  // The model may only propose features already present in this request's allowlist.
+  const pendingFeatures = Array.isArray(req.context.pending_features)
+    ? req.context.pending_features.filter((feature): feature is string => typeof feature === "string" && feature.length <= 80).slice(0, 50)
+    : [];
+  const requestedFeatures = Array.isArray(decision.features_to_enable) ? decision.features_to_enable : [];
+  decision.features_to_enable = requestedFeatures
+    .filter((feature): feature is string => typeof feature === "string" && pendingFeatures.includes(feature))
+    .slice(0, 50);
+  const allowedComplexities = new Set(["advanced", "standard", "simplified", "discovery"]);
+  decision.ux_complexity = allowedComplexities.has(decision.ux_complexity)
+    ? decision.ux_complexity
+    : getComplexityLevel(req.context.persona);
+  decision.confidence = Number.isFinite(Number(decision.confidence))
+    ? Math.max(0, Math.min(1, Number(decision.confidence)))
+    : 0.8;
+  decision.confidence_status = "MODEL_REPORTED_NOT_CALIBRATED";
 
-  for (const feature of req.context.pending_features) {
-    featureFlags[feature] = featuresToEnable.includes(feature);
-  }
+  const featureFlags: Record<string, boolean> = {};
+  const featuresToEnable = new Set(decision.features_to_enable);
+  for (const feature of pendingFeatures) featureFlags[feature] = featuresToEnable.has(feature);
 
   // Determine UX config based on persona
   const uxConfigs: Record<string, Record<string, unknown>> = {
@@ -231,7 +251,8 @@ const decisionId = await saveProductDecision(req.member_id, {
     proposed_feature_flags: featureFlags,
     ux_config: uxConfig,
     reasoning: claudeResponse,
-    confidence: decision.confidence || 0.8,
+    confidence: decision.confidence,
+    confidence_status: "MODEL_REPORTED_NOT_CALIBRATED",
     applied: false,
     approval_required: true,
   };

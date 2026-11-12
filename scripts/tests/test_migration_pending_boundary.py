@@ -141,7 +141,9 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("v_request_id text", sql)
         self.assertNotIn("v_request_id bigint", sql)
         self.assertIn("omega_private.create_consult_intake", sql)
-        self.assertIn("returning id::text into v_id", sql)
+        self.assertIn("v_request_id:=omega_private.create_consult_intake", sql)
+        parity_sql = (MIGRATIONS / "20261112091600_omega_consultancy_runtime_schema_parity.sql").read_text(encoding="utf-8").lower()
+        self.assertIn("returning id::text into v_id", parity_sql)
         self.assertIn("grant execute on function public.omega_runtime_dispatch", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
 

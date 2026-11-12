@@ -1739,6 +1739,7 @@
     "resolved_prior_probe_failure": "MEDIA.library.read derived projection now retains created_at; the next run passed that action.",
     "failure": "The presence adapter ordered by member_presence.last_seen_at, but the canonical table exposes last_seen.",
     "remediation": "The pending migration now uses p.last_seen for both the derived query ordering and aggregate ordering. All 54 probes must be rerun on the latest branch head.",
-    "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF"
+    "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
+    "presence_regression": "The SQL probe now inserts two synthetic member_presence rows inside a rolled-back transaction and asserts COMMUNICATION.presence.read returns only the actor's row with a non-null last_seen."
   }
 }

@@ -111,6 +111,7 @@ def main() -> int:
             "consult_requests_adapter_stable_columns_missing",
             "expert_bookings_adapter_stable_columns_missing",
             "runtime_dispatch_acl_invalid",
+            "sort_order,created_at from public.media_items",
         ):
             if marker not in consultancy_compat_sql:
                 return fail(f"consultancy schema-compatibility marker missing: {marker}")

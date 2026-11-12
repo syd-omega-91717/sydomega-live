@@ -84,7 +84,7 @@ The existing `omega_ai_requests` table is the first telemetry sink. It intention
 
 The evaluation cases in `config/omega-ai-evaluation-cases.json` are policy test cases, **not model benchmark results**. They cover prompt injection, member isolation, unconfigured providers, telemetry privacy, uncalibrated financial estimates, feature-flag mutation, tool execution, fabricated citations and evaluation truthfulness.
 
-## 8. Roadmap and priorities
+## 5. Roadmap and priorities
 
 ### P0 — finish this release wave
 1. Pass clean migration replay and the runtime adapter SQL probe.
@@ -113,7 +113,7 @@ The evaluation cases in `config/omega-ai-evaluation-cases.json` are policy test 
 - Use canary traffic and measured rollback thresholds for provider/model changes.
 - Keep AI agents non-authoritative for identity, money, legal status, KYC/AML, custody and entitlement grants.
 
-## 9. Acceptance criteria
+## 6. Acceptance criteria
 
 This AI layer is not declared production-ready until:
 - provider keys are confirmed present without exposing their values;

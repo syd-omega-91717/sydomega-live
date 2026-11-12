@@ -10,6 +10,14 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "Adds immutable request-payload conflict guards to the already-applied owner-scoped idempotency helpers. Requires fresh full migration replay, security review and the expanded SQL regression probe before provider application."
+    },
+    {
+      "version": "20261112091400",
+      "file": "20261112091400_omega_stripe_refund_state_fk_index.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "Adds the missing covering index for omega_private.stripe_refund_state.last_reversal_transaction_id, identified by the live Supabase performance advisor. The table was observed empty; validate by fresh replay and provider advisor recheck before application."
     }
   ]
 }

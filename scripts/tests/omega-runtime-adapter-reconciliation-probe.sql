@@ -23,10 +23,6 @@ insert into auth.users (
   'authenticated','authenticated','omega-runtime-adapter-other@probe.invalid','',
   now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now()
 ) on conflict (id) do nothing;
-) values
-  ('10000000-0000-4000-8000-000000000091','authenticated','authenticated','omega-runtime-adapter@probe.invalid','',now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now()),
-  ('10000000-0000-4000-8000-000000000092','authenticated','authenticated','omega-runtime-adapter-2@probe.invalid','',now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now())
-on conflict (id) do nothing;
 
 insert into public.profiles(id,display_name,sign,birth_date)
 values
@@ -67,8 +63,6 @@ declare
   v_verification_one uuid;
   v_verification_two uuid;
   v_verification_other uuid;
-  i integer;
-  v_count bigint;
   v_error text;
   v_actions constant text[][] := array[
     array['CORE','profile.read'],
@@ -313,10 +307,6 @@ begin
     raise exception 'investment watchlist upsert idempotency failed: first=% second=%',v_first,v_second;
   end if;
 
-end
-$probe$;
-
-reset role;
   -- Service-order idempotency must be scoped by user and race-safe.
   v_first:=public.omega_runtime_dispatch(v_user,'create_service_order',jsonb_build_object(
     'service_id','progression-matrix','idempotency_key','omega-runtime-probe-service-0001','metadata','{}'::jsonb

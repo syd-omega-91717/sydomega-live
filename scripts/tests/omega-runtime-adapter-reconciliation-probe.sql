@@ -5,6 +5,24 @@ begin;
 insert into auth.users (
   id,aud,role,email,encrypted_password,email_confirmed_at,
   raw_app_meta_data,raw_user_meta_data,created_at,updated_at
+) values (
+  '10000000-0000-4000-8000-000000000091',
+  'authenticated','authenticated','omega-runtime-adapter@probe.invalid','',
+  now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now()
+) on conflict (id) do nothing;
+
+insert into public.profiles(id,display_name,sign,element,planet,god,birth_date,is_owner,access_approved,is_public)
+values ('10000000-0000-4000-8000-000000000091','Runtime Adapter Probe','Aries','Fire','Mars','Probe',date '1990-03-21',false,true,true)
+on conflict (id) do update set display_name=excluded.display_name,sign=excluded.sign,element=excluded.element,planet=excluded.planet,god=excluded.god,birth_date=excluded.birth_date;
+
+insert into auth.users (
+  id,aud,role,email,encrypted_password,email_confirmed_at,
+  raw_app_meta_data,raw_user_meta_data,created_at,updated_at
+) values (
+  '10000000-0000-4000-8000-000000000092',
+  'authenticated','authenticated','omega-runtime-adapter-other@probe.invalid','',
+  now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now()
+) on conflict (id) do nothing;
 ) values
   ('10000000-0000-4000-8000-000000000091','authenticated','authenticated','omega-runtime-adapter@probe.invalid','',now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now()),
   ('10000000-0000-4000-8000-000000000092','authenticated','authenticated','omega-runtime-adapter-2@probe.invalid','',now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now())
@@ -26,6 +44,11 @@ declare
   v_first jsonb;
   v_second jsonb;
   v_other jsonb;
+  v_cases jsonb;
+  v_request_id bigint;
+  v_other_request_id bigint;
+  i integer;
+  v_count bigint;
   v_task_one uuid;
   v_task_two uuid;
   v_task_other uuid;
@@ -186,6 +209,63 @@ begin
   if v_first->>'request_id' is null or v_first->>'request_id' is distinct from v_second->>'request_id' then
     raise exception 'consultancy intake idempotency failed: first=% second=%',v_first,v_second;
   end if;
+  v_request_id:=(v_first->>'request_id')::bigint;
+  select count(*) into v_count from public.consult_requests
+   where user_id=v_user and runtime_idempotency_key='omega-runtime-probe-consult-0001';
+  if v_count<>1 then raise exception 'consultancy intake idempotency created % rows for one actor',v_count; end if;
+
+  -- The same idempotency key is isolated per user; one member must never
+  -- receive another member's request ID or case rows.
+  v_other:=public.omega_runtime_dispatch(
+    '10000000-0000-4000-8000-000000000092',
+    'create_consult_intake',
+    jsonb_build_object(
+      'domain','runtime-adapter-probe',
+      'message','Second synthetic CI actor verifies per-user idempotency isolation.',
+      'idempotency_key','omega-runtime-probe-consult-0001',
+      'urgency','normal',
+      'preferred_time','',
+      'confidentiality_accepted',true,
+      'contact','other-probe@invalid.example'
+    )
+  );
+  v_other_request_id:=(v_other->>'request_id')::bigint;
+  if v_other_request_id is null or v_other_request_id=v_request_id then
+    raise exception 'consultancy idempotency key was not isolated by user: first=% other=%',v_request_id,v_other;
+  end if;
+  select count(*) into v_count from public.consult_requests
+   where runtime_idempotency_key='omega-runtime-probe-consult-0001';
+  if v_count<>2 then raise exception 'same idempotency key should create one request per actor; found % rows',v_count; end if;
+
+  v_cases:=public.omega_runtime_dispatch(v_user,'module_read',jsonb_build_object(
+    'module_id','CONSULTANCY','action_name','cases.read'
+  ));
+  if not exists (
+    select 1 from jsonb_array_elements(v_cases->'data'->'requests') request
+    where request->>'id'=v_request_id::text
+  ) then
+    raise exception 'consultancy cases read omitted caller-owned request';
+  end if;
+  if exists (
+    select 1 from jsonb_array_elements(v_cases->'data'->'requests') request
+    where request->>'id'=v_other_request_id::text
+  ) then
+    raise exception 'consultancy cases read exposed another user request';
+  end if;
+
+  -- Confidentiality acceptance is mandatory; reject before persistence.
+  begin
+    perform public.omega_runtime_dispatch(v_user,'create_consult_intake',jsonb_build_object(
+      'domain','runtime-adapter-probe',
+      'message','This probe must be rejected because confidentiality was not accepted.',
+      'idempotency_key','omega-runtime-probe-consult-reject-0001',
+      'confidentiality_accepted',false
+    ));
+    raise exception 'probe_expected_confidentiality_rejection_missing';
+  exception when others then
+    if sqlerrm='probe_expected_confidentiality_rejection_missing' then raise; end if;
+    if sqlerrm<>'confidentiality_acceptance_required' then raise; end if;
+  end;
   select count(*) into v_count from public.consult_requests
    where user_id=v_user and runtime_idempotency_key='omega-runtime-probe-consult-0001';
   if v_count<>1 then raise exception 'consultancy intake idempotency created % rows',v_count; end if;
@@ -233,6 +313,10 @@ begin
     raise exception 'investment watchlist upsert idempotency failed: first=% second=%',v_first,v_second;
   end if;
 
+end
+$probe$;
+
+reset role;
   -- Service-order idempotency must be scoped by user and race-safe.
   v_first:=public.omega_runtime_dispatch(v_user,'create_service_order',jsonb_build_object(
     'service_id','progression-matrix','idempotency_key','omega-runtime-probe-service-0001','metadata','{}'::jsonb

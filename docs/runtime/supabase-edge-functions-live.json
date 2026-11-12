@@ -1,55 +1,60 @@
 {
   "schema_version": 1,
   "captured_at": "2026-11-12T07:32:53.361Z",
+  "captured_at": "2026-11-12T20:18:00Z",
   "source_directory": "supabase/functions",
   "functions": {
     "concierge": {
-      "state": "PENDING_DEPLOY",
-      "version": 13,
+      "state": "DEPLOYED",
+      "version": 14,
       "verify_jwt": true,
-      "live_sha256": "65bdacb253bd8a3b6c686a01c4a8a6ee91a8d2f309690fa22866ef3fb3b85b08",
+      "live_sha256": "6d6fa3700366e86c707a237871eed957577207905f8133c19ec7fb1e1f1090fd",
       "repository_blob_sha": "ed0a0224b0e423090df7beeda5abc713547dbb71",
       "provider_status": "ACTIVE",
-      "source_parity": "SOURCE_CHANGED_AWAITING_CONTROLLED_DEPLOYMENT",
+      "source_parity": "EXACT_ENTRYPOINT_MATCH",
       "provider_observed_at": "2026-11-12T07:32:53.361Z",
-      "provider_updated_at": "2026-11-04T19:46:05.492Z",
-      "pending_deploy_reason": "PR #1246 introduced shared AI router integration. Keep prior active provider version serving until migration replay, provider secrets, function configuration and controlled deployment are verified."
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T20:18:00Z",
+      "provider_updated_at": "2026-11-12T20:15:39.144Z"
     },
     "concierge-orchestrator": {
-      "state": "PENDING_DEPLOY",
-      "version": 7,
+      "state": "DEPLOYED",
+      "version": 8,
       "verify_jwt": true,
-      "live_sha256": "2a61a7ab47ddad30e295a0c912db5680541c57efd029ef5b71bebb7e235ac6fd",
+      "live_sha256": "aa32adf57882993806371e65590b6bd862865a7203fffe55a231f4bc1a23d49d",
       "repository_blob_sha": "e8f15128ea3157e98474ecc12dc5b87bdc91c289",
       "provider_status": "ACTIVE",
-      "source_parity": "SOURCE_CHANGED_AWAITING_CONTROLLED_DEPLOYMENT",
+      "source_parity": "EXACT_ENTRYPOINT_MATCH",
       "provider_observed_at": "2026-11-12T07:32:53.361Z",
-      "provider_updated_at": "2026-11-04T19:46:05.492Z",
-      "pending_deploy_reason": "PR #1246 introduced shared AI router integration. Keep prior active provider version serving until migration replay, provider secrets, function configuration and controlled deployment are verified."
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T20:18:00Z",
+      "provider_updated_at": "2026-11-12T20:15:39.144Z"
     },
     "growth-orchestrator": {
-      "state": "PENDING_DEPLOY",
-      "version": 9,
-      "verify_jwt": true,
-      "live_sha256": "abe4dafb0212cde61491380762878363a49f84b764f1b2f8cd55de6aa0073c97",
-      "repository_blob_sha": "890c2664ae6ada43f9bc75b43af303a2bb13bcea",
-      "provider_status": "ACTIVE",
-      "source_parity": "SOURCE_CHANGED_AWAITING_CONTROLLED_DEPLOYMENT",
-      "provider_observed_at": "2026-11-12T07:32:53.361Z",
-      "provider_updated_at": "2026-11-04T19:46:05.492Z",
-      "pending_deploy_reason": "PR #1246 introduced shared AI router integration. Keep prior active provider version serving until migration replay, provider secrets, function configuration and controlled deployment are verified."
-    },
-    "product-orchestrator": {
-      "state": "PENDING_DEPLOY",
+      "state": "DEPLOYED",
       "version": 10,
       "verify_jwt": true,
-      "live_sha256": "36d65a667b723defa4b69519e221c5c6e2dbf489bdefd76cb25d1b7c337ed573",
+      "live_sha256": "a30fc96c6bd940a21797388a2a8f5e2ff31b89de871bdde3d128312db8f65d0b",
+      "repository_blob_sha": "890c2664ae6ada43f9bc75b43af303a2bb13bcea",
+      "provider_status": "ACTIVE",
+      "source_parity": "EXACT_ENTRYPOINT_MATCH",
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T20:18:00Z",
+      "provider_updated_at": "2026-11-12T20:15:39.144Z"
+    },
+    "product-orchestrator": {
+      "state": "DEPLOYED",
+      "version": 11,
+      "verify_jwt": true,
+      "live_sha256": "42e9c2f4612d59af97f22cc993caf601928249befe3797fea28a9a4cb29ce71f",
       "repository_blob_sha": "b75928ec0f40beb4b3f34b5c5fcad0da4daace7f",
       "provider_status": "ACTIVE",
-      "source_parity": "SOURCE_CHANGED_AWAITING_CONTROLLED_DEPLOYMENT",
+      "source_parity": "EXACT_ENTRYPOINT_MATCH",
       "provider_observed_at": "2026-11-12T07:32:53.361Z",
-      "provider_updated_at": "2026-11-04T19:46:05.492Z",
-      "pending_deploy_reason": "PR #1246 introduced shared AI router integration. Keep prior active provider version serving until migration replay, provider secrets, function configuration and controlled deployment are verified."
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T20:18:00Z",
+      "provider_updated_at": "2026-11-12T20:15:39.144Z"
     },
     "stripe-webhook": {
       "state": "DEPLOYED",
@@ -297,6 +302,6 @@
       "STRIPE_SIGNATURE": 1
     }
   },
-  "reconciliation_note": "Four AI runtime entrypoints have changed in source and are explicitly classified PENDING_DEPLOY. Their currently active provider versions are not claimed to match the new repository source.",
-  "classification_updated_at": "2026-11-12T20:06:52Z"
+  "reconciliation_note": "The four AI runtime entrypoints were verified against live Supabase Edge Function source using get_edge_function. Entry points and shared keys/model-router source are byte-for-byte identical to main. Live deployed versions: concierge 14, concierge-orchestrator 8, growth-orchestrator 10, product-orchestrator 11.",
+  "classification_updated_at": "2026-11-12T20:18:00Z"
 }

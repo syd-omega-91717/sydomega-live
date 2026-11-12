@@ -5,6 +5,9 @@ import json
 import re
 import sys
 from pathlib import Path
+import sys
+import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / "config/omega-module-runtime.json"
@@ -15,7 +18,7 @@ REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe
 SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
 EXPERT_BOOKINGS_MIGRATION = ROOT / "supabase/migrations/20261112103000_omega_expert_bookings_domain_compatibility.sql"
 NEWS_MIGRATION = ROOT / "supabase/migrations/20261112120000_omega_news_schema_baseline.sql"
-CONSULTANCY_COMPAT_MIGRATION = ROOT / "supabase/migrations/20261112110000_omega_consultancy_adapter_schema_compat.sql"
+CONSULTANCY_COMPAT_MIGRATION = ROOT / "supabase/migrations/20261112130000_omega_consultancy_request_id_text_compat.sql"
 CONSULTANCY_SCHEMA_MIGRATION = ROOT / "supabase/migrations/20261112091600_omega_consultancy_runtime_schema_parity.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
@@ -31,6 +34,7 @@ def main() -> int:
         idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
         refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
         search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql))
         expert_bookings_sql = EXPERT_BOOKINGS_MIGRATION.read_text(encoding="utf-8")
         all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, expert_bookings_sql))
         consultancy_compat_sql = CONSULTANCY_COMPAT_MIGRATION.read_text(encoding="utf-8")
@@ -85,12 +89,14 @@ def main() -> int:
         search_dispatcher_actions: set[str] = set()
         for match in re.finditer(
             r"(?:if|elsif)\s+v_module\s*=\s*'([A-Z0-9_]+)'\s+and\s+v_action_name\s*=\s*'([^']+)'",
+            search_index_sql,
             consultancy_compat_sql,
             re.IGNORECASE,
         ):
             search_dispatcher_actions.add(f"{match.group(1).upper()}.{match.group(2)}")
         for match in re.finditer(
             r"(?:if|elsif)\s+v_module\s+in\s*\(([^)]+)\)\s+and\s+v_action_name\s*=\s*'([^']+)'",
+            search_index_sql,
             consultancy_compat_sql,
             re.IGNORECASE,
         ):
@@ -98,6 +104,7 @@ def main() -> int:
             search_dispatcher_actions.update(f"{module.upper()}.{match.group(2)}" for module in modules)
         elemental_search = re.search(
             r"elsif\s+v_module\s*=\s*'ELEMENTAL'\s+and\s+v_action_name\s+in\s*\(([^)]+)\)",
+            search_index_sql,
             consultancy_compat_sql,
             re.IGNORECASE,
         )
@@ -105,6 +112,11 @@ def main() -> int:
             search_dispatcher_actions.update(
                 f"ELEMENTAL.{action}" for action in re.findall(r"'([^']+)'", elemental_search.group(1))
             )
+        if "when 'create_consult_intake' then" in search_index_sql and "omega_private.create_consult_intake(" in search_index_sql:
+            search_dispatcher_actions.add("CONSULTANCY.intake.create")
+        if search_dispatcher_actions != expected:
+            return fail(
+                "search-index dispatcher replacement lost canonical actions; "
         if "when 'create_consult_intake' then" in consultancy_compat_sql and "omega_private.create_consult_intake(" in consultancy_compat_sql:
             search_dispatcher_actions.add("CONSULTANCY.intake.create")
         if consultancy_compat_sql.lower().count("create or replace function public.omega_runtime_dispatch(") != 1:
@@ -203,6 +215,12 @@ def main() -> int:
             "set search_path=''",
             "revoke all on function public.omega_runtime_dispatch(uuid,text,jsonb) from public,anon,authenticated",
             "grant execute on function public.omega_runtime_dispatch(uuid,text,jsonb) to service_role",
+            "on conflict (user_id,runtime_idempotency_key)",
+            "confidentiality_acceptance_required",
+            "ADAPTER_REQUIRED",
+        ):
+            if marker not in sql:
+                return fail(f"dispatcher migration safety/contract marker missing: {marker}")
             "revoke all on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) from public,anon,authenticated",
             "grant execute on function omega_private.enqueue_agent_task(uuid,text,text,jsonb,text,boolean) to service_role",
             "grant execute on function private.record_sovereign_event(text,jsonb,jsonb,text) to authenticated",
@@ -331,6 +349,7 @@ def main() -> int:
         return fail(str(exc))
 
 if __name__ == "__main__":
+    if any(arg in {"-h", "--help"} for arg in sys.argv[1:]):
     if "--help" in sys.argv[1:]:
         print(__doc__ or "")
         raise SystemExit(0)

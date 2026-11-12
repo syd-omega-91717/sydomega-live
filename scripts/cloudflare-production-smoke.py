@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Smoke-test every registered production page and same-origin HTML asset/link."""
+from __future__ import annotations
 """Smoke-test registered production pages and same-origin HTML assets safely."""
 from __future__ import annotations
 
@@ -7,6 +9,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from html.parser import HTMLParser
 import json
 from pathlib import Path
+import sys
+from urllib.error import HTTPError, URLError
+from urllib.parse import urldefrag, urljoin, urlsplit
+from urllib.request import Request, urlopen
 from urllib.parse import urldefrag, urljoin, urlsplit
 
 try:
@@ -32,6 +38,7 @@ class RefParser(HTMLParser):
     def handle_starttag(self, tag: str, attrs) -> None:
         values = dict(attrs)
         if tag in {"a", "area", "link"} and values.get("href"):
+            self.refs.add(values["href"].strip())
             href = values["href"].strip()
             if urlsplit(href).path == CLOUDFLARE_EMAIL_PLACEHOLDER_PATH:
                 self.cloudflare_email_placeholders_skipped += 1
@@ -46,6 +53,19 @@ class RefParser(HTMLParser):
                 if url:
                     self.refs.add(url)
 
+def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
+    req = Request(url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
+    try:
+        with urlopen(req, timeout=timeout) as response:
+            content_type = response.headers.get("Content-Type", "")
+            body = response.read() if method == "GET" else b""
+            return response.status, content_type, body.decode("utf-8", errors="replace")
+    except HTTPError as exc:
+        if method == "HEAD" and exc.code in {405, 501}:
+            return request_url(url, "GET", timeout)
+        return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", ""
+    except (URLError, TimeoutError, OSError) as exc:
+        return 0, "", str(exc)
 
 def is_safe_http_url(
     url: str, allowed_host: str | None = None, allowed_port: int | None = None
@@ -184,6 +204,8 @@ def main() -> int:
         contracts = registry.get("contracts", [])
         if registry.get("page_count") != len(contracts) or not contracts:
             raise ValueError("page contract registry count does not match its records")
+        base = args.base_url.rstrip("/") + "/"
+        base_host = urlsplit(base).netloc.lower()
         pages = sorted({urljoin(base, str(item["path"]).lstrip("/")) for item in contracts})
         page_failures: list[tuple[str, int, str]] = []
         refs: set[str] = set()
@@ -204,6 +226,17 @@ def main() -> int:
                 if "html" not in content_type.lower():
                     page_failures.append((url, status, f"unexpected content type: {content_type}"))
                     continue
+                parser = RefParser()
+                parser.feed(body)
+                for ref in parser.refs:
+                    if not ref or ref.startswith("#"):
+                        continue
+                    scheme = urlsplit(ref).scheme.lower()
+                    if scheme in SKIP_SCHEMES:
+                        continue
+                    absolute = urldefrag(urljoin(url, ref))[0]
+                    parts = urlsplit(absolute)
+                    if parts.scheme not in {"http", "https"}:
                 ref_parser = RefParser()
                 ref_parser.feed(body)
                 placeholders_skipped += ref_parser.cloudflare_email_placeholders_skipped
@@ -223,6 +256,12 @@ def main() -> int:
                     refs.add(absolute)
 
         ref_failures: list[tuple[str, int, str]] = []
+        def check_ref(url: str):
+            return url, request_url(url, "HEAD", args.timeout)
+        with ThreadPoolExecutor(max_workers=args.workers) as pool:
+            futures = [pool.submit(check_ref, url) for url in sorted(refs)]
+            for future in as_completed(futures):
+                url, (status, content_type, detail) = future.result()
 
         def check_ref(url: str):
             return url, request_url(url, "HEAD", args.timeout)

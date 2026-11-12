@@ -126,6 +126,11 @@ begin
  if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key)) < 8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
  if not p_confidentiality_accepted then raise exception 'confidentiality_acceptance_required'; end if;
  insert into public.consult_requests(user_id,domain,message,status,created_at,urgency,contact,preferred_time,confidentiality_accepted,runtime_idempotency_key)
+ values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(pg_catalog.btrim(p_urgency),'normal'),40),pg_catalog.left(p_contact,240),pg_catalog.left(p_preferred_time,240),true,p_idempotency_key)
+ on conflict (user_id,runtime_idempotency_key) where runtime_idempotency_key is not null
+ do update set runtime_idempotency_key=excluded.runtime_idempotency_key
+ returning id into v_id;
+ return v_id;
  values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(nullif(pg_catalog.btrim(p_urgency),''),'normal'),40),pg_catalog.left(nullif(pg_catalog.btrim(p_contact),''),240),pg_catalog.left(nullif(pg_catalog.btrim(p_preferred_time),''),240),true,pg_catalog.btrim(p_idempotency_key))
  on conflict (user_id,runtime_idempotency_key) where runtime_idempotency_key is not null
  do update set runtime_idempotency_key=excluded.runtime_idempotency_key

@@ -37,6 +37,12 @@ export interface OmegaAiRoute {
   serviceTier?: "ultrafast";
 }
 
+export interface OmegaAiQuotaResult {
+  allowed: boolean;
+  reason?: string;
+  retryAfterSeconds?: number;
+}
+
 export interface OmegaAiResult {
   requestId: string;
   provider: OmegaAiProvider;
@@ -56,6 +62,7 @@ export interface OmegaAiRequest {
   system: string;
   input: string;
   requestId?: string;
+  consumeQuota: () => Promise<OmegaAiQuotaResult>;
   recordUsage?: (record: OmegaAiUsageRecord) => Promise<void>;
 }
 
@@ -262,7 +269,7 @@ export async function runOmegaModel(request: OmegaAiRequest): Promise<OmegaAiRes
       estimated_cost: null,
       latency_ms: Math.max(0, Date.now() - startedAt),
       citations: [],
-      evaluation: { status: "NOT_RUN", policy_version: "omega-ai-routing-v1" },
+      evaluation: { status: "NOT_RUN", policy_version: "omega-ai-routing-v1", profile: request.profile },
       trace_id: requestId,
       error,
       completed_at: new Date().toISOString(),
@@ -289,6 +296,21 @@ export async function runOmegaModel(request: OmegaAiRequest): Promise<OmegaAiRes
   if (!route.apiKey) {
     await record("blocked", "ai_provider_not_configured");
     throw new Error("ai_provider_not_configured");
+  }
+
+  let quota: OmegaAiQuotaResult;
+  try {
+    quota = await request.consumeQuota();
+  } catch {
+    await record("blocked", "ai_quota_unavailable");
+    throw new Error("ai_quota_unavailable");
+  }
+  if (!quota.allowed) {
+    const reason = quota.reason && /^ai_[a-z0-9_]{1,80}$/.test(quota.reason)
+      ? quota.reason
+      : "ai_rate_limit_exceeded";
+    await record("blocked", reason);
+    throw new Error(reason);
   }
 
   try {

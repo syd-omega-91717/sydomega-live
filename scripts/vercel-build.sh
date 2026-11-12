@@ -88,6 +88,7 @@ for _pass in 1 2 3 4 5; do
   [ "${added}" -eq 1 ] || break
 done
 [ ! -e "public/config/omega-implementation-ledger.json" ] || { echo 'VERCEL_BUILD=FAIL internal_ledger_exposed'; exit 1; }
+[ ! -e "public/config/omega-live-module-runtime-observations.json" ] || { echo 'VERCEL_BUILD=FAIL internal_runtime_evidence_exposed'; exit 1; }
 
 # Copy directories that cannot be copied by the extension-based find above.
 for dir in vendor i18n; do

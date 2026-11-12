@@ -1,8 +1,8 @@
 {
   "_captured": "2026-11-12",
-  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-12. The versions and migrations arrays are generated from the same provider response; provider history is authoritative for applied versions, while pending source migrations are tracked separately.",
-  "remoteMigrationCount": 425,
-  "latestRemoteMigration": "20261112121000",
+  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-12 (read-only). The provider ledger is authoritative for applied versions; source migration inventory and fresh replay are validated separately.",
+  "remoteMigrationCount": 426,
+  "latestRemoteMigration": "20261112130000",
   "versions": [
     "0001",
     "0002",
@@ -428,7 +428,8 @@
     "20261112110000",
     "20261112111000",
     "20261112120000",
-    "20261112121000"
+    "20261112121000",
+    "20261112130000"
   ],
   "migrations": [
     {
@@ -2127,6 +2128,10 @@
     {
       "version": "20261112121000",
       "name": "omega_ai_member_quota_guard"
+    },
+    {
+      "version": "20261112130000",
+      "name": "omega_consultancy_request_id_text_compat"
     }
   ]
 }

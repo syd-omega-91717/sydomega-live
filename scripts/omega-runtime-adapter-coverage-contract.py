@@ -161,6 +161,14 @@ def main() -> int:
             return fail("service-order idempotency lookup is not actor-scoped")
         if sql.lower().count("security definer set search_path=''") != 9:
             return fail("all nine reconciliation helper/dispatcher functions must pin an empty search_path")
+        if len(re.findall(r"create or replace function", idempotency_sql, re.IGNORECASE)) != 7:
+            return fail("idempotency follow-up must replace exactly seven existing helper functions")
+        if idempotency_sql.lower().count("security definer set search_path=''") != 7:
+            return fail("all seven idempotency helper functions must pin an empty search_path")
+        if not idempotency_sql.lstrip().startswith("--") or "\nbegin;" not in idempotency_sql or not idempotency_sql.rstrip().endswith("commit;"):
+            return fail("idempotency follow-up must be a transactional migration")
+        if re.search(r"\\b(create|drop)\\s+(unique\\s+)?index\\b|\\balter\\s+table\\b", idempotency_sql, re.IGNORECASE):
+            return fail("idempotency follow-up must not rewrite already-applied index/schema history")
         if "do update set input=excluded.input" in idempotency_sql:
             return fail("agent task idempotency retry must not overwrite the original task input")
         if "do update set payload=excluded.payload" in idempotency_sql or "do update set details=excluded.details" in idempotency_sql:

@@ -272,15 +272,17 @@ begin
   end;
   v_other:=public.omega_runtime_dispatch(v_other_user,'create_consult_intake',jsonb_build_object(
     'domain','runtime-adapter-probe',
-    'message','Synthetic CI probe for a second user using the same idempotency key.',
+    'message','Second synthetic CI actor verifies per-user idempotency isolation.',
     'idempotency_key','omega-runtime-probe-consult-0001',
     'urgency','normal',
     'preferred_time','',
     'confidentiality_accepted',true,
-    'contact','probe2@invalid.example'
+    'contact','other-probe@invalid.example'
   ));
-  if v_other->>'request_id' is null or v_other->>'request_id' is not distinct from v_first->>'request_id' then
-    raise exception 'consultancy idempotency key was not isolated by user: first=% other=%',v_first,v_other;
+  if v_other->>'request_id' is null
+     or v_other->>'request_id' is not distinct from v_other_request_id
+     or v_other->>'request_id' is not distinct from v_first->>'request_id' then
+    raise exception 'consultancy cross-user retry or isolation failed: first=% other=% expected_other_id=%',v_first,v_other,v_other_request_id;
   end if;
   select count(*) into v_count from public.consult_requests
    where runtime_idempotency_key='omega-runtime-probe-consult-0001' and user_id in (v_user,v_other_user);

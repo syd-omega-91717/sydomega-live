@@ -1,23 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
-  "policy": "A source migration absent from the authenticated provider migration ledger must be explicitly pending. Provider-applied versions belong in remote-migrations.json. A ledger entry alone does not prove that the migration's intended behavior has been independently verified.",
+  "policy": "All source migrations are recorded in the authenticated provider migration ledger. A future source migration absent from provider history must be explicitly added here as pending and must block production until reviewed and applied.",
   "pending": [
     {
-      "version": "20261112111000",
-      "file": "20261112111000_omega_graphify_ai_safety_gate.sql",
+      "version": "20261112130000",
+      "file": "20261112130000_omega_consultancy_request_id_text_compat.sql",
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Creates graphify_ai_enabled=false by default. Graphify query and ingestion remain held until privacy, explicit AI personalization and sensitive-data consent, and per-member cost controls are approved."
-    },
-    {
-      "version": "20261112121000",
-      "file": "20261112121000_omega_ai_member_quota_guard.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "Adds service-role-only profile-weighted rolling per-member AI request quotas using the existing rate_limits table. This is a request-budget control, not a monetary cost estimate."
+      "reason": "The clean replay exposed that the latest runtime dispatcher stores create_consult_intake's text request ID in a BIGINT variable. The consultancy source supports both UUID and BIGINT primary keys. This forward-only migration changes only the dispatcher variable to text; it preserves existing rows, request IDs, policies and previously applied migration files. Production remains blocked until clean replay, all 54 runtime adapter probes and provider application are verified."
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "_captured": "2026-11-12",
-  "source": "Authenticated Supabase migration-ledger read for production project; exact provider version list refreshed on 2026-11-12. Provider history is authoritative for applied versions; pending source migrations are tracked separately and are never counted as applied.",
-  "remoteMigrationCount": 423,
-  "latestRemoteMigration": "20261112120000",
+  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-12. The versions and migrations arrays are generated from the same provider response; provider history is authoritative for applied versions, while pending source migrations are tracked separately.",
+  "remoteMigrationCount": 425,
+  "latestRemoteMigration": "20261112121000",
   "versions": [
     "0001",
     "0002",
@@ -426,7 +426,9 @@
     "20261112091600",
     "20261112103000",
     "20261112110000",
-    "20261112120000"
+    "20261112111000",
+    "20261112120000",
+    "20261112121000"
   ],
   "migrations": [
     {
@@ -950,8 +952,7 @@
       "name": "schema_sync_point"
     },
     {
-      "version": "20260822000000",
-      "name": "undefined"
+      "version": "20260822000000"
     },
     {
       "version": "20260822024048",
@@ -1466,12 +1467,10 @@
       "name": "omega_agent_audit_rpc_service_only_20260929"
     },
     {
-      "version": "20260929172000",
-      "name": "undefined"
+      "version": "20260929172000"
     },
     {
-      "version": "20260929174000",
-      "name": "undefined"
+      "version": "20260929174000"
     },
     {
       "version": "20260930090758",
@@ -2104,6 +2103,30 @@
     {
       "version": "20261112091500",
       "name": "omega_search_index_schema_reconciliation"
+    },
+    {
+      "version": "20261112091600",
+      "name": "omega_consultancy_runtime_schema_parity"
+    },
+    {
+      "version": "20261112103000",
+      "name": "omega_expert_bookings_domain_compatibility"
+    },
+    {
+      "version": "20261112110000",
+      "name": "omega_consultancy_adapter_schema_compat"
+    },
+    {
+      "version": "20261112111000",
+      "name": "omega_graphify_ai_safety_gate"
+    },
+    {
+      "version": "20261112120000",
+      "name": "omega_news_schema_baseline"
+    },
+    {
+      "version": "20261112121000",
+      "name": "omega_ai_member_quota_guard"
     }
   ]
 }

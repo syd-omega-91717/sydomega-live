@@ -3,7 +3,31 @@
   "name": "Ω SYD OMEGA 91717 Live Module Runtime Observations",
   "version": 1,
   "status": "READ_ONLY_PROVIDER_SNAPSHOT_NOT_PRODUCTION_PROOF",
-  "source": "[object Object] Live migration ledger, helper definitions, consultancy schema and Supabase advisors were rechecked on 2026-11-12; provider ledger now records 419 applied versions through 20261112091500.",
+  "source": {
+    "provider": "Supabase",
+    "project_id": "ydqhzvvoyufiiqvzcjns",
+    "schemas": [
+      "public"
+    ],
+    "tables": [
+      "omega_capabilities",
+      "omega_services",
+      "omega_module_runtime_actions"
+    ],
+    "observed_date": "2026-11-12",
+    "capture_method": "Read-only SQL through connected Supabase project; provider migration ledger, runtime dispatcher definition, scoped unique indexes, helper function definitions, consultancy table schema and Supabase advisors independently queried on 2026-11-12.",
+    "row_counts": {
+      "omega_capabilities": 24,
+      "omega_services": 24,
+      "omega_module_runtime_actions": 54
+    },
+    "provider_migration_ledger": {
+      "applied_count": 419,
+      "latest_version": "20261112091500",
+      "latest_name": "omega_search_index_schema_reconciliation",
+      "captured_date": "2026-11-12"
+    }
+  },
   "interpretation": "This snapshot records provider-side catalog and runtime-action declarations. INTEGRATED means the database catalog labels the action as integrated; it does not prove that the HTTP endpoint is reachable, authorization is correct at runtime, data persists, the user journey works, or production serves the current repository revision.",
   "domain_observations": [
     {

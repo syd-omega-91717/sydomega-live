@@ -48,18 +48,26 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             pending_versions.add(version)
 
     def test_provider_confirmed_november_migrations_are_in_remote_not_pending(self) -> None:
-        for version in ("20261103230000", "20261104090000", "20261111190000"):
+        applied_versions = (
+            "20261103230000",
+            "20261104090000",
+            "20261111190000",
+            "20261112091300",
+            "20261112091400",
+            "20261112091500",
+        )
+        pending_versions = {str(item["version"]) for item in self.pending}
+        for version in applied_versions:
             self.assertIn(version, self.remote_versions)
-            self.assertNotIn(version, {str(item["version"]) for item in self.pending})
+            self.assertNotIn(version, pending_versions)
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
-        self.assertIn("20261111190000", self.remote_versions)
-        self.assertNotIn("20261111190000", {str(item["version"]) for item in self.pending})
-        self.assertIn("20261112091300", {str(item["version"]) for item in self.pending})
-        self.assertIn("20261112091400", {str(item["version"]) for item in self.pending})
-        self.assertIn("20261112091500", {str(item["version"]) for item in self.pending})
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 419)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112091500")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-12")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
+        self.assertEqual(len(self.pending), 1)
+        self.assertEqual(self.pending[0]["version"], "20261112091600")
 
     def test_source_inventory_replay_contract_includes_pending_without_claiming_live(self) -> None:
         result = run_script("scripts/migration-replay-contract.py")
@@ -138,6 +146,36 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop table", sql)
         self.assertNotIn("drop column", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
+
+    def test_consultancy_runtime_schema_parity_is_non_destructive_and_id_type_neutral(self) -> None:
+        path = MIGRATIONS / "20261112091600_omega_consultancy_runtime_schema_parity.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("add column if not exists domain text", sql)
+        self.assertIn("alter column user_id set not null", sql)
+        self.assertIn("alter column domain set not null", sql)
+        self.assertIn("alter column message set not null", sql)
+        self.assertIn("alter column commission_rate set default 9.17", sql)
+        self.assertIn("alter column status set default 'received'", sql)
+        normalized_sql = " ".join(sql.split())
+        self.assertIn("returns text language plpgsql security definer set search_path=''", normalized_sql)
+        self.assertIn("returning id::text into v_id", sql)
+        self.assertIn("return v_id;", sql)
+        self.assertIn("v_request_id text", sql)
+        self.assertIn("sort_order,created_at from public.media_items", sql)
+        self.assertIn("order by p.last_seen desc", sql)
+        self.assertNotIn("p.last_seen_at", sql)
+        self.assertIn("owner_id=(select auth.uid())", sql)
+        self.assertNotRegex(sql, r"alter\\s+table\\s+public\\.consult_requests\\s+alter\\s+column\\s+id\\s+type")
+        self.assertNotIn("drop table", sql)
+        self.assertNotIn("delete from public.consult_requests", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
+    def test_search_index_followup_uses_initplan_safe_auth_uid(self) -> None:
+        path = MIGRATIONS / "20261112091600_omega_consultancy_runtime_schema_parity.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        policy = sql.split("create policy search_index_read", 1)[1].split(";", 1)[0]
+        self.assertIn("(select auth.uid())", policy)
+        self.assertNotIn("owner_id=auth.uid()", policy)
 
     def test_refund_state_foreign_key_index_migration_is_narrow_and_non_destructive(self) -> None:
         path = MIGRATIONS / "20261112091400_omega_stripe_refund_state_fk_index.sql"

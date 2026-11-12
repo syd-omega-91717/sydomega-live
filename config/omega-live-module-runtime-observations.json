@@ -15,11 +15,17 @@
       "omega_module_runtime_actions"
     ],
     "observed_date": "2026-11-12",
-    "capture_method": "Read-only SQL through connected Supabase project; provider migration ledger, runtime dispatcher definition, scoped unique indexes, and function execute privileges independently queried.",
+    "capture_method": "Read-only SQL through connected Supabase project; provider migration ledger, runtime dispatcher definition, scoped unique indexes, helper function definitions, consultancy table schema and Supabase advisors independently queried on 2026-11-12.",
     "row_counts": {
       "omega_capabilities": 24,
       "omega_services": 24,
       "omega_module_runtime_actions": 54
+    },
+    "provider_migration_ledger": {
+      "applied_count": 419,
+      "latest_version": "20261112091500",
+      "latest_name": "omega_search_index_schema_reconciliation",
+      "captured_date": "2026-11-12"
     }
   },
   "interpretation": "This snapshot records provider-side catalog and runtime-action declarations. INTEGRATED means the database catalog labels the action as integrated; it does not prove that the HTTP endpoint is reachable, authorization is correct at runtime, data persists, the user journey works, or production serves the current repository revision.",
@@ -1471,8 +1477,8 @@
     "interpretation": "The provider catalog labels all 54 actions INTEGRATED, but the live dispatcher only has concrete branches for 23. The other 31 fall through to ADAPTER_REQUIRED. The new source migration adds the missing handlers and must pass fresh replay before provider application."
   },
   "idempotency_observations": {
-    "observed_date": "2026-11-11",
-    "status": "OWNER_SCOPED_INDEXES_APPLIED_PAYLOAD_INTEGRITY_PENDING",
+    "observed_date": "2026-11-12",
+    "status": "OWNER_SCOPED_INDEXES_AND_PAYLOAD_INTEGRITY_APPLIED_CLEAN_REPLAY_PENDING",
     "interpretation": "The live schema contains globally unique idempotency keys on member-owned records. The same caller-supplied key can collide across users or subjects. The reconciliation migration replaces these with owner/subject-scoped unique indexes while retaining global deduplication for system rows with null owner/actor where applicable. This is a schema/function finding, not proof of an observed exploit.",
     "member_owned_scopes": [
       {
@@ -1548,7 +1554,7 @@
       "omega_mission_task_transitions(user_id,idempotency_key)"
     ],
     "remediation_migration": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
-    "verification": "Provider ledger and scoped indexes are confirmed. The live helper definitions do not yet contain the complete immutable payload-conflict guards. Apply the new follow-up migration only after fresh replay and security/adapter regression probes pass.",
+    "verification": "Read-only provider ledger records 20261112091300 as applied. All seven live helper definitions contain their immutable payload-conflict guards; owner/subject-scoped indexes and null-owner system indexes are present. The fresh replay probe still exposed the separate historical consultancy domain/ID-type mismatch. The 20261112091600 schema-parity migration remains pending; no production data or schema was changed by this audit.",
     "applied_migration": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
     "applied_provider_version": "20261111190000",
     "applied_provider_index_evidence": {
@@ -1572,16 +1578,17 @@
       ]
     },
     "payload_integrity_followup_migration": "20261112091300_omega_idempotency_payload_integrity.sql",
-    "payload_integrity_followup_status": "PENDING_REVIEW / NOT_APPLIED",
-    "live_payload_conflict_guards": "NOT_FULLY_PRESENT"
+    "payload_integrity_followup_status": "APPLIED_PROVIDER_LEDGER_AND_ALL_SEVEN_HELPER_GUARDS_VERIFIED; CLEAN_REPLAY_PENDING",
+    "live_payload_conflict_guards": "PRESENT_FOR_ALL_SEVEN_HELPERS",
+    "payload_integrity_applied_provider_version": "20261112091300"
   },
   "provider_runtime_verification": {
     "observed_date": "2026-11-12",
     "status": "LIVE_DATABASE_VERIFIED",
     "migration_ledger": {
-      "applied_count": 416,
-      "latest_version": "20261111190000",
-      "latest_name": "omega_runtime_dispatch_adapter_reconciliation"
+      "applied_count": 419,
+      "latest_version": "20261112091500",
+      "latest_name": "omega_search_index_schema_reconciliation"
     },
     "dispatcher": {
       "function": "public.omega_runtime_dispatch(uuid,text,jsonb)",
@@ -1596,7 +1603,7 @@
     },
     "production_release": {
       "status": "NOT_LIVE_VERIFIED",
-      "reason": "The public release manifest URL could not be retrieved through the available web inspection channel. The repository's exact-SHA production verifier was malformed on main and is being repaired in PR #1242."
+      "reason": "The main-branch exact-SHA verifier contained duplicated retry and route-smoke blocks. PR #1244 repairs the verifier, but no successful exact-SHA production verification has yet been observed; production remains NOT_LIVE_VERIFIED."
     },
     "edge_functions": {
       "observed_date": "2026-11-12",
@@ -1630,13 +1637,14 @@
         "created_at"
       ],
       "detected_schema_drift": true,
-      "live_authenticated_select_policy": "USING (true)",
+      "live_authenticated_select_policy": "USING ((owner_id IS NULL AND organization_id IS NULL) OR owner_id=auth.uid())",
       "current_table_grant": "authenticated SELECT",
-      "risk": "The broad policy would expose future owner/org-scoped rows to any authenticated reader; current table has zero rows.",
+      "risk": "The broad authenticated policy is removed. Current owner/shared-only policy protects future rows; the remaining direct auth.uid() call triggers one performance init-plan finding. The table currently has zero rows.",
       "remediation_migration": "20261112091500_omega_search_index_schema_reconciliation.sql",
-      "remediation_status": "PENDING_REVIEW / NOT_APPLIED",
-      "expected_policy": "(owner_id IS NULL AND organization_id IS NULL) OR owner_id=auth.uid()",
-      "runtime_adapter_filter": "(owner_id IS NULL AND organization_id IS NULL) OR owner_id=p_actor_user_id"
+      "remediation_status": "APPLIED_PROVIDER_LEDGER_AND_SCHEMA_VERIFIED; INITPLAN_PERFORMANCE_FOLLOWUP_PENDING",
+      "expected_policy": "(owner_id IS NULL AND organization_id IS NULL) OR owner_id=(SELECT auth.uid())",
+      "runtime_adapter_filter": "(owner_id IS NULL AND organization_id IS NULL) OR owner_id=p_actor_user_id",
+      "performance_followup_migration": "20261112091600_omega_consultancy_runtime_schema_parity.sql"
     }
   },
   "provider_advisor_observations": {
@@ -1676,21 +1684,62 @@
       "interpretation": "The three RLS-enabled/no-policy findings are fail-closed informational findings; direct privilege probes found no table access for anon/authenticated. Do not remove RLS or add broad policies to silence the linter."
     },
     "performance": {
-      "unindexed_foreign_key_findings": 1,
-      "finding": {
-        "schema": "omega_private",
-        "table": "stripe_refund_state",
-        "column": "last_reversal_transaction_id",
-        "references": "omega_ledger_transactions(transaction_id)",
-        "on_delete": "RESTRICT",
-        "observed_row_count": 0
-      },
+      "unindexed_foreign_key_findings": 0,
+      "finding": null,
       "remediation_migration": "20261112091400_omega_stripe_refund_state_fk_index.sql",
-      "unused_index_findings": 325,
-      "unused_index_action": "NO_AUTOMATIC_DROPS; require workload/retention review before removing indexes"
+      "unused_index_findings": 326,
+      "unused_index_action": "NO_AUTOMATIC_DROPS; require workload/retention review before removing indexes",
+      "auth_rls_initplan_findings": 1,
+      "auth_rls_initplan_finding": {
+        "schema": "public",
+        "table": "search_index",
+        "policy": "search_index_read",
+        "expression": "owner_id=auth.uid()",
+        "remediation_migration": "20261112091600_omega_consultancy_runtime_schema_parity.sql"
+      }
     },
     "health": {
       "lint_findings": 0
     }
+  },
+  "consultancy_schema_parity": {
+    "observed_date": "2026-11-12",
+    "live_table": "public.consult_requests",
+    "live_row_count": 0,
+    "live_null_user_rows": 0,
+    "live_null_domain_rows": 0,
+    "live_id_type": "bigint",
+    "fresh_replay_id_type": "uuid",
+    "live_domain": "text NOT NULL",
+    "fresh_replay_domain": "missing after historical CREATE TABLE IF NOT EXISTS skips adding the column",
+    "live_user_id": "uuid NOT NULL",
+    "live_message": "text NOT NULL",
+    "live_commission_rate_default": "9.17",
+    "live_status_default": "received",
+    "helper_live_return_type_before_followup": "bigint",
+    "helper_live_successful_return_before_followup": "missing",
+    "pending_migration": "20261112091600_omega_consultancy_runtime_schema_parity.sql",
+    "status": "PENDING_REVIEW_NOT_APPLIED",
+    "intended_remediation": "Add the missing required domain column, align verified required/default fields, return source IDs as text for UUID/BIGINT compatibility, add the missing successful RETURN, update the dispatcher request ID variable to text, and preserve the underlying ID column without conversion."
+  },
+  "release_readiness": {
+    "status": "RELEASE_BLOCKED",
+    "blockers": [
+      "20261112091600_omega_consultancy_runtime_schema_parity.sql has not passed a fresh isolated migration replay and runtime probe",
+      "Cloudflare exact-SHA production verification has not passed for a merged main commit"
+    ],
+    "last_checked": "2026-11-12"
+  },
+  "runtime_probe_status": {
+    "observed_date": "2026-11-12",
+    "migration_replay": "PASS on the preceding PR head",
+    "migration_security_audit": "PASS on the preceding PR head",
+    "stripe_refund_lifecycle_probe": "PASS on the preceding PR head",
+    "runtime_adapter_probe": "BLOCKED at COMMUNICATION.presence.read on the preceding PR head",
+    "resolved_prior_probe_failure": "MEDIA.library.read derived projection now retains created_at; the next run passed that action.",
+    "failure": "The presence adapter ordered by member_presence.last_seen_at, but the canonical table exposes last_seen.",
+    "remediation": "The pending migration now uses p.last_seen for both the derived query ordering and aggregate ordering. All 54 probes must be rerun on the latest branch head.",
+    "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
+    "presence_regression": "The SQL probe now inserts two synthetic member_presence rows inside a rolled-back transaction and asserts COMMUNICATION.presence.read returns only the actor's row with a non-null last_seen."
   }
 }

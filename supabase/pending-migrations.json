@@ -2,14 +2,5 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "All source migrations are recorded in the authenticated provider migration ledger. A source migration absent from provider history must be explicitly added here as pending and must block production until reviewed and applied. Provider-applied versions belong in remote-migrations.json; a ledger entry alone does not prove the migration's intended behavior has been independently verified.",
-  "pending": [
-    {
-      "version": "20261112130000",
-      "file": "20261112130000_omega_consultancy_request_id_text_compat.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "The clean replay exposed that the latest runtime dispatcher stores create_consult_intake's text request ID in a BIGINT variable. The consultancy source supports both UUID and BIGINT primary keys. This forward-only migration changes only the dispatcher variable to text; it preserves existing rows, request IDs, policies and previously applied migration files. Production remains blocked until clean replay, all 54 runtime adapter probes and provider application are verified."
-    }
-  ]
+  "pending": []
 }

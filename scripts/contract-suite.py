@@ -145,7 +145,7 @@ GATES = [
      ['scripts/migration-replay-contract.py']),
     ('main-merge-integrity',
      'runtime snapshots, migration truth, and safety-critical Python tooling remain valid after parallel merges',
-     ['python3', '-m', 'unittest', 'scripts.tests.test_main_merge_integrity']),
+     ['scripts/tests/test_main_merge_integrity.py']),
     ('migration-drift',
      'live migration history plus explicit pending registry reconcile with source migrations',
      ['scripts/migration-drift.py', '--source-only']),

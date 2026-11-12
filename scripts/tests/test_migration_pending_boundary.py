@@ -93,7 +93,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
     def test_generated_skill_registry_migration_census_matches_disk(self) -> None:
         registry = (ROOT / "OMEGA_SKILL_REGISTRY.md").read_text(encoding="utf-8")
         match = re.search(
-            r"\| `supabase/migrations/\*\.sql` \| (\d+) (\(\d+) numbered.*?, (\d+) timestamped\) \|",
+            r"\| `supabase/migrations/\*\.sql` \| (\d+) \((\d+) numbered.*?, (\d+) timestamped\) \|",
             registry,
         )
         self.assertIsNotNone(match, "generated registry migration census row is missing")

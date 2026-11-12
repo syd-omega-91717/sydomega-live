@@ -204,8 +204,6 @@ def main() -> int:
         contracts = registry.get("contracts", [])
         if registry.get("page_count") != len(contracts) or not contracts:
             raise ValueError("page contract registry count does not match its records")
-        base = args.base_url.rstrip("/") + "/"
-        base_host = urlsplit(base).netloc.lower()
         pages = sorted({urljoin(base, str(item["path"]).lstrip("/")) for item in contracts})
         page_failures: list[tuple[str, int, str]] = []
         refs: set[str] = set()
@@ -226,17 +224,6 @@ def main() -> int:
                 if "html" not in content_type.lower():
                     page_failures.append((url, status, f"unexpected content type: {content_type}"))
                     continue
-                parser = RefParser()
-                parser.feed(body)
-                for ref in parser.refs:
-                    if not ref or ref.startswith("#"):
-                        continue
-                    scheme = urlsplit(ref).scheme.lower()
-                    if scheme in SKIP_SCHEMES:
-                        continue
-                    absolute = urldefrag(urljoin(url, ref))[0]
-                    parts = urlsplit(absolute)
-                    if parts.scheme not in {"http", "https"}:
                 ref_parser = RefParser()
                 ref_parser.feed(body)
                 placeholders_skipped += ref_parser.cloudflare_email_placeholders_skipped
@@ -256,13 +243,6 @@ def main() -> int:
                     refs.add(absolute)
 
         ref_failures: list[tuple[str, int, str]] = []
-        def check_ref(url: str):
-            return url, request_url(url, "HEAD", args.timeout)
-        with ThreadPoolExecutor(max_workers=args.workers) as pool:
-            futures = [pool.submit(check_ref, url) for url in sorted(refs)]
-            for future in as_completed(futures):
-                url, (status, content_type, detail) = future.result()
-
         def check_ref(url: str):
             return url, request_url(url, "HEAD", args.timeout)
 

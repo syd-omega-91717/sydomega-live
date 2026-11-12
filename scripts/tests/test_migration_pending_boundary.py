@@ -103,6 +103,19 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         timestamped = sum(bool(re.match(r"^\d{8}", path.name)) for path in migrations)
         self.assertEqual(tuple(map(int, match.groups())), (len(migrations), numbered, timestamped))
 
+    def test_search_index_runtime_probe_checks_dispatch_and_direct_rls_isolation(self) -> None:
+        probe = (ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql").read_text(encoding="utf-8")
+        for marker in (
+            "search-shared",
+            "search-owner-one",
+            "search-owner-two",
+            "search-org-only",
+            "search dispatcher owner/org isolation failed",
+            "$search_rls_probe$",
+            "search_index RLS exposed",
+        ):
+            self.assertIn(marker, probe)
+
     def test_search_index_reconciliation_preserves_both_shapes_and_tightens_rls(self) -> None:
         path = MIGRATIONS / "20261112091500_omega_search_index_schema_reconciliation.sql"
         sql = path.read_text(encoding="utf-8").lower()

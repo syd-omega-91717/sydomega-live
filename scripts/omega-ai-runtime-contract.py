@@ -116,6 +116,11 @@ def main() -> int:
         require(policy["heldFeatures"]["graphify"]["status"] == "HELD", "Graphify release state must remain held")
         legacy_prototype = read("platform.jsx")
         require("api.anthropic.com" not in legacy_prototype and 'functions.invoke("concierge"' in legacy_prototype, "legacy prototype must use authenticated server-side AI, never a direct provider call")
+        secrets_health = read("supabase/functions/secrets-health/index.ts")
+        require("api.anthropic.com" in secrets_health and "max_tokens: 1" in secrets_health, "the only direct provider exception must remain a fixed one-token health probe")
+        require("req.json()" not in secrets_health and "omega_ai_requests" not in secrets_health, "provider health probe must not process member prompts or create inference records")
+        legacy_sql = read("supabase/index.sql")
+        require(legacy_sql.startswith("-- LEGACY REFERENCE ONLY"), "legacy provider sketch must be clearly marked non-deployable")
 
         product = read(consumers["product-orchestrator"])
         require("proposed_feature_flags" in product and "applied: false" in product and "approval_required: true" in product, "product adaptation must remain proposal-only")

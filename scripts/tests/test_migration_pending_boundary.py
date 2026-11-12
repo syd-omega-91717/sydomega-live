@@ -45,7 +45,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertTrue((MIGRATIONS / filename).is_file(), filename)
             self.assertTrue(filename.startswith(version + "_"), filename)
             pending_versions.add(version)
-        self.assertEqual(pending_versions, set())
+        self.assertEqual(pending_versions, {"20261112130000"})
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
@@ -80,11 +80,13 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_only_and_strict_release_drift_checks_pass_when_provider_ledger_is_current(self) -> None:
+    def test_source_inventory_passes_but_production_drift_gate_blocks_pending_compatibility(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
-        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
+        self.assertIn("production release is blocked", strict.stdout)
 
     def test_public_points_projection_remains_privacy_scoped(self) -> None:
         path = MIGRATIONS / "20261013160000_secure_public_points_leaderboard_projection.sql"

@@ -65,6 +65,13 @@ const PROFILE_RISK_ALLOWLIST: Record<OmegaAiProfile, OmegaAiRisk[]> = {
   reasoning: ["low", "medium", "high"],
 };
 
+const PROFILE_INPUT_CHAR_LIMITS: Record<OmegaAiProfile, number> = {
+  fast: 16000,
+  balanced: 24000,
+  reasoning: 30000,
+};
+const MAX_SYSTEM_CHARS = 12000;
+
 const PROFILE_DEFAULTS: Record<OmegaAiProfile, {
   provider: OmegaAiProvider;
   anthropicModel: string;
@@ -274,6 +281,10 @@ export async function runOmegaModel(request: OmegaAiRequest): Promise<OmegaAiRes
   if (!PROFILE_RISK_ALLOWLIST[request.profile].includes(request.risk)) {
     await record("blocked", "ai_profile_risk_not_allowed");
     throw new Error("ai_profile_risk_not_allowed");
+  }
+  if (request.system.length > MAX_SYSTEM_CHARS || request.input.length > PROFILE_INPUT_CHAR_LIMITS[request.profile]) {
+    await record("blocked", "ai_request_too_large");
+    throw new Error("ai_request_too_large");
   }
   if (!route.apiKey) {
     await record("blocked", "ai_provider_not_configured");

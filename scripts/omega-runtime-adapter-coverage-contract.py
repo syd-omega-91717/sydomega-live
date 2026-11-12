@@ -12,6 +12,7 @@ OBSERVATIONS = ROOT / "config/omega-live-module-runtime-observations.json"
 MIGRATION = ROOT / "supabase/migrations/20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql"
 IDEMPOTENCY_MIGRATION = ROOT / "supabase/migrations/20261112091300_omega_idempotency_payload_integrity.sql"
 REFUND_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091400_omega_stripe_refund_state_fk_index.sql"
+SEARCH_INDEX_MIGRATION = ROOT / "supabase/migrations/20261112091500_omega_search_index_schema_reconciliation.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 
 def fail(message: str) -> int:
@@ -25,7 +26,8 @@ def main() -> int:
         sql = MIGRATION.read_text(encoding="utf-8")
         idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
         refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
-        all_sql = sql + "\\n" + idempotency_sql
+        search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
+        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql))
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
@@ -69,6 +71,54 @@ def main() -> int:
         extra = sorted(implemented - expected)
         if missing or extra:
             return fail(f"module action coverage mismatch; missing={missing}; extra={extra}")
+
+        search_dispatcher_actions: set[str] = set()
+        for match in re.finditer(
+            r"(?:if|elsif)\\s+v_module\\s*=\\s*'([A-Z0-9_]+)'\\s+and\\s+v_action_name\\s*=\\s*'([^']+)'",
+            search_index_sql,
+            re.IGNORECASE,
+        ):
+            search_dispatcher_actions.add(f"{match.group(1).upper()}.{match.group(2)}")
+        for match in re.finditer(
+            r"(?:if|elsif)\\s+v_module\\s+in\\s*\\(([^)]+)\\)\\s+and\\s+v_action_name\\s*=\\s*'([^']+)'",
+            search_index_sql,
+            re.IGNORECASE,
+        ):
+            modules = re.findall(r"'([A-Z0-9_]+)'", match.group(1), re.IGNORECASE)
+            search_dispatcher_actions.update(f"{module.upper()}.{match.group(2)}" for module in modules)
+        elemental_search = re.search(
+            r"elsif\\s+v_module\\s*=\\s*'ELEMENTAL'\\s+and\\s+v_action_name\\s+in\\s*\\(([^)]+)\\)",
+            search_index_sql,
+            re.IGNORECASE,
+        )
+        if elemental_search:
+            search_dispatcher_actions.update(
+                f"ELEMENTAL.{action}" for action in re.findall(r"'([^']+)'", elemental_search.group(1))
+            )
+        if "when 'create_consult_intake' then" in search_index_sql and "omega_private.create_consult_intake(" in search_index_sql:
+            search_dispatcher_actions.add("CONSULTANCY.intake.create")
+        if search_dispatcher_actions != expected:
+            return fail(
+                "search-index dispatcher replacement lost canonical actions; "
+                f"missing={sorted(expected - search_dispatcher_actions)}; "
+                f"extra={sorted(search_dispatcher_actions - expected)}"
+            )
+        for marker in (
+            "coalesce(body,content) as body",
+            "owner_id is null and organization_id is null",
+            "owner_id=p_actor_user_id",
+            "create policy search_index_read",
+            "using ((owner_id is null and organization_id is null) or owner_id=auth.uid())",
+            "add column if not exists content text",
+            "add column if not exists body text",
+            "add column if not exists organization_id uuid",
+            "revoke all on table public.search_index from anon,authenticated",
+            "search_index_owner_updated_idx",
+        ):
+            if marker not in search_index_sql:
+                return fail(f"search-index schema/RLS/runtime marker missing: {marker}")
+        if search_index_sql.lower().count("security definer set search_path=''") != 1:
+            return fail("search-index dispatcher replacement must pin an empty search_path")
         for marker in (
             "createSupabaseContext(req, { auth: 'user' })",
             "ctx.userClaims.sub",

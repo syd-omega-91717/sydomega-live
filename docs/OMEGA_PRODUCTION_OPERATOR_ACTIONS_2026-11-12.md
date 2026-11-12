@@ -25,7 +25,7 @@ This register separates code-controlled work from provider/account settings that
 
 ### Remaining blocking work
 
-- [ ] Complete a fresh full migration replay and all 54 adapter probes. PR #1242's replay failed in `CONSULTANCY.cases.read` because the dispatcher referenced optional legacy columns not guaranteed by the fresh schema. PR #1245 adds a follow-up using JSON row projections; it is not yet merged or provider-applied.
+- [ ] Complete a fresh full migration replay and all 54 adapter probes. PR #1242's replay failed in `CONSULTANCY.cases.read` because the dispatcher referenced optional legacy columns not guaranteed by the fresh schema. The first PR #1245 replay passed that branch and exposed a second `MEDIA.library.read` projection error (`created_at` was omitted from a subquery projection); the latest PR #1245 head fixes both and adds regression assertions. The fresh replay is running again; the migration is not yet merged or provider-applied.
 - [ ] Require all blocking checks to pass. PR #1242 was merged while Full Migration Replay, Contracts, CI and Supply Chain/SBOM were failing. PR #1245 corrects the known failures and adds regression coverage; its checks must be inspected before merge.
 - [ ] Merge PR #1245 only after all required checks pass.
 - [ ] Require Cloudflare's exact-SHA production verifier to pass for the resulting main commit, including the 241-page and same-origin reference smoke test, CSP/HSTS and the www alias.

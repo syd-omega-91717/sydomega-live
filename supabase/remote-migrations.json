@@ -1,7 +1,5 @@
 {
   "_captured": "2026-11-12",
-  "source": "Authenticated read-only Supabase migration-ledger query against production project ydqhzvvoyufiiqvzcjns on 2026-11-12 confirmed 419 recorded versions, latest 20261112091500. Independently verified the three newest applied migrations by inspecting their live helper definitions, refund-state index, search_index compatibility columns, owner-scoped policy and covering index. Ledger presence alone is not treated as semantic proof.",
-  "source": "Authenticated read-only Supabase migration-ledger query against the configured production project on 2026-11-12. Provider returned all recorded migration versions and names; ledger presence does not prove SQL byte parity or semantic correctness.",
   "source": "Authenticated read-only Supabase migration-ledger query on 2026-11-12: 419 recorded versions, latest 20261112091500. The three November 12 follow-up migrations are provider-recorded as applied; ledger presence is not proof of fresh replay or semantic equivalence.",
   "remoteMigrationCount": 419,
   "latestRemoteMigration": "20261112091500",

@@ -35,7 +35,7 @@ def main() -> int:
         consultancy_compat_sql = CONSULTANCY_COMPAT_MIGRATION.read_text(encoding="utf-8")
         news_sql = NEWS_MIGRATION.read_text(encoding="utf-8")
         consultancy_schema_sql = CONSULTANCY_SCHEMA_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((
+        all_sql = "\n".join((
             sql,
             idempotency_sql,
             refund_index_sql,

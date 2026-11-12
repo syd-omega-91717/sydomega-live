@@ -55,13 +55,15 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300",
             "20261112091400",
             "20261112091500",
+            "20261112110000",
         ):
             self.assertIn(version, self.remote_versions)
             self.assertNotIn(version, {str(item["version"]) for item in self.pending})
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112091500")
         self.assertIn("20261112110000", {str(item["version"]) for item in self.pending})
-        self.assertEqual(len(self.pending), 1)
+        self.assertIn("20261112120000", {str(item["version"]) for item in self.pending})
+        self.assertEqual(len(self.pending), 2)
         self.assertEqual(self.remote.get("_captured"), "2026-11-12")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 

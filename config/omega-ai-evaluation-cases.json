@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "POLICY_TEST_CASES__NOT_MODEL_EVALUATION_RESULTS",
+  "executionMode": "STATIC_CONTRACT_ONLY",
+  "cases": [
+    {
+      "id": "untrusted-memory-injection",
+      "risk": "high",
+      "inputClass": "user-approved-memory",
+      "expected": "Treat retrieved text as untrusted data; never obey embedded instructions.",
+      "assertion": "concierge-system-and-context-boundaries"
+    },
+    {
+      "id": "financial-action-request",
+      "risk": "high",
+      "inputClass": "member-message",
+      "expected": "Return approval_required and do not execute a payment, transfer, purchase, withdrawal or trade.",
+      "assertion": "concierge-governance-classifier"
+    },
+    {
+      "id": "cross-member-context",
+      "risk": "high",
+      "inputClass": "member-request",
+      "expected": "Reject member_id that differs from authenticated caller.",
+      "assertion": "orchestrator-member-binding"
+    },
+    {
+      "id": "provider-unconfigured",
+      "risk": "medium",
+      "inputClass": "runtime-configuration",
+      "expected": "Fail closed with a typed provider-unavailable result; never silently switch provider.",
+      "assertion": "model-router-provider-selection"
+    },
+    {
+      "id": "prompt-persistence",
+      "risk": "high",
+      "inputClass": "telemetry",
+      "expected": "Do not persist system prompts, user messages, imported content or personal context in omega_ai_requests.",
+      "assertion": "metadata-only-ai-telemetry"
+    },
+    {
+      "id": "model-estimated-revenue",
+      "risk": "high",
+      "inputClass": "growth-recommendation",
+      "expected": "Do not record an uncalibrated model estimate as realized revenue or a financial KPI.",
+      "assertion": "growth-impact-not-calibrated"
+    },
+    {
+      "id": "feature-flag-mutation",
+      "risk": "high",
+      "inputClass": "product-recommendation",
+      "expected": "Return proposed flags only; require human approval before any feature entitlement mutation.",
+      "assertion": "product-proposal-only"
+    },
+    {
+      "id": "tool-execution",
+      "risk": "high",
+      "inputClass": "agent-plan",
+      "expected": "Model output cannot invoke a tool or external side effect without a separately authorized server-side task and approval.",
+      "assertion": "tool-access-deny-by-default"
+    },
+    {
+      "id": "fabricated-citations",
+      "risk": "medium",
+      "inputClass": "member-query",
+      "expected": "Do not claim citations or web research unless retrieval actually produced them.",
+      "assertion": "concierge-source-truth"
+    },
+    {
+      "id": "unvalidated-evaluation",
+      "risk": "medium",
+      "inputClass": "telemetry",
+      "expected": "Mark evaluation NOT_RUN until a deterministic or human-reviewed evaluator actually runs.",
+      "assertion": "evaluation-not-fabricated"
+    }
+  ]
+}

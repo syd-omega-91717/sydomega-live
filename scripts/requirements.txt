@@ -1,0 +1,2 @@
+# CI-only dependency for scripts/cloudflare-production-smoke.py; not a site runtime dependency.
+requests==2.34.2

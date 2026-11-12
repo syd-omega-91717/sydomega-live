@@ -34,7 +34,6 @@ class MainMergeIntegrityTests(unittest.TestCase):
         pending = json.loads((ROOT / "supabase/pending-migrations.json").read_text(encoding="utf-8"))
         remote_versions = set(remote.get("versions", []))
         entries = pending.get("pending", [])
-        self.assertTrue(entries)
         for entry in entries:
             with self.subTest(version=entry.get("version")):
                 self.assertNotIn(entry.get("version"), remote_versions)

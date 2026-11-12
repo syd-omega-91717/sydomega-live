@@ -101,6 +101,20 @@ def main() -> int:
             require("member_id !== caller.userId" in source, f"{name} member binding missing")
             require("[UNTRUSTED MEMBER CONTEXT" in source, f"{name} must structurally label member context as untrusted")
 
+        graphify_query = read("supabase/functions/graphify-ai-query/index.ts")
+        graphify_ingest = read("supabase/functions/graphify-ai-ingest/index.ts")
+        graphify_helper = read("supabase/functions/_shared/graphify-consent.ts")
+        for name, source in (("graphify-query", graphify_query), ("graphify-ingest", graphify_ingest)):
+            require("runOmegaModel(" in source and "omega_ai_requests" in source, f"{name} must use governed AI routing and metadata telemetry")
+            require("checkGraphifyAiConsent" in source, f"{name} server-side consent gate missing")
+            require("api.anthropic.com" not in source and "@anthropic-ai/sdk" not in source, f"{name} retains a direct provider SDK")
+        require("graphify_ai_enabled" in graphify_helper and "ai_personalization_enabled" in graphify_helper and "sensitive_data_processing_enabled" in graphify_helper, "Graphify gate must require global enablement and both explicit consents")
+        supabase_config = read("supabase/config.toml")
+        require("[functions.graphify-ai-query]" not in supabase_config and "[functions.graphify-ai-ingest]" not in supabase_config, "Graphify must remain held outside routine function registration")
+        graphify_migration = read("supabase/migrations/20261112110000_omega_graphify_ai_safety_gate.sql")
+        require("'graphify_ai_enabled'" in graphify_migration and "false" in graphify_migration, "Graphify default-off migration missing")
+        require(policy["heldFeatures"]["graphify"]["status"] == "HELD", "Graphify release state must remain held")
+
         product = read(consumers["product-orchestrator"])
         require("proposed_feature_flags" in product and "applied: false" in product and "approval_required: true" in product, "product adaptation must remain proposal-only")
         require('confidence_status: "MODEL_REPORTED_NOT_CALIBRATED"' in product, "product confidence must be labelled uncalibrated")
@@ -126,7 +140,7 @@ def main() -> int:
         required_env = {"ANTHROPIC_API_KEY", "OPENAI_API_KEY"}
         require(required_env.issubset(env_keys), "provider secret names missing from .env.example")
         require(all(env_keys), "empty environment key found")
-        print(f"OMEGA_AI_RUNTIME_CONTRACT=PASS profiles={len(profiles)} providers=2 consumers={len(consumers)} policy_cases={len(cases)} telemetry=metadata_only")
+        print(f"OMEGA_AI_RUNTIME_CONTRACT=PASS profiles={len(profiles)} providers=2 consumers={len(consumers) + 2} policy_cases={len(cases)} telemetry=metadata_only")
         return 0
     except Exception as exc:
         print(f"OMEGA_AI_RUNTIME_CONTRACT=FAIL {exc}")

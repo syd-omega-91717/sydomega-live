@@ -142,28 +142,8 @@ broken_assets() {
 }
 
 service_role_scan() {
-  # Mirror ci.yml's "Client credential scan" scope exactly, including its
-  # exemptions: that workflow skips any path with a '.git' or 'scripts'
-  # component. scripts/ is provably not client-shipped -- vercel-build.sh:28
-  # excludes './scripts/*' from the production copy -- so a match there is not
-  # the leak this gate exists to catch. Without the exemption this mirror went
-  # red on main over a SQL GRANT assertion inside a test
-  # (scripts/tests/test_stripe_webhook_guard.js) while GitHub stayed green,
-  # which is the failure mode a mirror must never have: it trains a session to
-  # ignore its own gate.
-  # ci.yml also exempts two internal evidence snapshots by exact path
-  # (config/omega-implementation-ledger.json, supabase/remote-migrations.json);
-  # they name service_role in prose and migration titles, never a key.
-  if grep -rIn --include='*.js' --include='*.html' --include='*.json' \
-       --exclude-dir='.git' --exclude-dir='scripts' \
-       -e 'service_role' -e 'SUPABASE_SERVICE' . \
-       | grep -v -e '^\./config/omega-implementation-ledger\.json:' -e '^\./supabase/remote-migrations\.json:' ; then
-    echo "  service_role reference found in client code"
-    return 1
-  fi
-  return 0
+  python3 scripts/client-credential-scan.py
 }
-
 sw_precache() {
   local bad=0 assets
   assets=$(node -e "

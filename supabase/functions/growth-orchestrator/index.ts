@@ -114,7 +114,7 @@ async function saveGrowthDecision(
       context_snapshot: campaign,
       reasoning: `Autonomous campaign composition for ${propensityType} growth`,
       decision_payload: campaign,
-      confidence_score: campaign.confidence || 0.75,
+      confidence_score: campaign.confidence,
       model_used: modelUsed,
       temperature: null,
       outcome_recorded: false,
@@ -143,6 +143,7 @@ async function processGrowthRequest(req: GrowthRequest): Promise<GrowthResponse>
       confidence: 0,
       estimated_revenue_impact: null,
       estimated_revenue_impact_status: "NOT_CALIBRATED",
+      confidence_status: "MODEL_REPORTED_NOT_CALIBRATED",
     };
   }
 
@@ -207,7 +208,7 @@ ${Object.entries(req.context.engagement_metrics).map(([k, v]) => `- ${k}: ${v}`)
     offer: typeof campaign.offer === "string" ? campaign.offer.slice(0, 500) : "Personalized recommendation",
     channel: typeof campaign.channel === "string" && allowedChannels.has(campaign.channel) ? campaign.channel : "in_app",
     timing: typeof campaign.timing === "string" && allowedTimings.has(campaign.timing) ? campaign.timing : "optimal_window",
-    confidence: Number.isFinite(Number(campaign.confidence))
+    confidence: campaign.confidence !== null && campaign.confidence !== undefined && Number.isFinite(Number(campaign.confidence))
       ? Math.max(0, Math.min(1, Number(campaign.confidence)))
       : 0.75,
     confidence_status: "MODEL_REPORTED_NOT_CALIBRATED",

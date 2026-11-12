@@ -349,7 +349,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     if any(arg in {"-h", "--help"} for arg in sys.argv[1:]):
-    if "--help" in sys.argv[1:]:
         print(__doc__ or "")
         raise SystemExit(0)
     raise SystemExit(main())

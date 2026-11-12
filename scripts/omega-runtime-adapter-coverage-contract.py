@@ -3,11 +3,8 @@
 from __future__ import annotations
 import json
 import re
-import sys
 from pathlib import Path
 import sys
-import sys
-from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / "config/omega-module-runtime.json"
@@ -34,14 +31,20 @@ def main() -> int:
         idempotency_sql = IDEMPOTENCY_MIGRATION.read_text(encoding="utf-8")
         refund_index_sql = REFUND_INDEX_MIGRATION.read_text(encoding="utf-8")
         search_index_sql = SEARCH_INDEX_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql))
         expert_bookings_sql = EXPERT_BOOKINGS_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, expert_bookings_sql))
         consultancy_compat_sql = CONSULTANCY_COMPAT_MIGRATION.read_text(encoding="utf-8")
         news_sql = NEWS_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, consultancy_compat_sql, news_sql))
         consultancy_schema_sql = CONSULTANCY_SCHEMA_MIGRATION.read_text(encoding="utf-8")
-        all_sql = "\\n".join((sql, idempotency_sql, refund_index_sql, search_index_sql, consultancy_schema_sql))
+        all_sql = "\\n".join((
+            sql,
+            idempotency_sql,
+            refund_index_sql,
+            search_index_sql,
+            expert_bookings_sql,
+            consultancy_compat_sql,
+            news_sql,
+            consultancy_schema_sql,
+        ))
         gateway = GATEWAY.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"

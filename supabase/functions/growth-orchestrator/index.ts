@@ -53,6 +53,7 @@ interface GrowthResponse {
   confidence: number;
   estimated_revenue_impact: number | null;
   estimated_revenue_impact_status: "NOT_CALIBRATED";
+  confidence_status: "MODEL_REPORTED_NOT_CALIBRATED";
 }
 
 async function callOmegaGrowthModel(
@@ -185,11 +186,22 @@ ${Object.entries(req.context.engagement_metrics).map(([k, v]) => `- ${k}: ${v}`)
     console.error("Failed to parse campaign response:", e);
   }
 
-  const modelEstimate = Number.isFinite(Number(campaign.estimated_impact))
-    ? Number(campaign.estimated_impact)
+  const rawModelEstimate = campaign.estimated_impact;
+  const modelEstimate = typeof rawModelEstimate === "number" && Number.isFinite(rawModelEstimate)
+    ? rawModelEstimate
     : null;
+  const allowedChannels = new Set(["email", "in_app", "multi_channel", "none"]);
+  const allowedTimings = new Set(["immediate", "optimal_window", "next_week", "none"]);
   campaign = {
     ...campaign,
+    campaign_type: req.propensity_type,
+    offer: typeof campaign.offer === "string" ? campaign.offer.slice(0, 500) : "Personalized recommendation",
+    channel: typeof campaign.channel === "string" && allowedChannels.has(campaign.channel) ? campaign.channel : "in_app",
+    timing: typeof campaign.timing === "string" && allowedTimings.has(campaign.timing) ? campaign.timing : "optimal_window",
+    confidence: Number.isFinite(Number(campaign.confidence))
+      ? Math.max(0, Math.min(1, Number(campaign.confidence)))
+      : 0.75,
+    confidence_status: "MODEL_REPORTED_NOT_CALIBRATED",
     model_estimate_unvalidated: modelEstimate,
     estimated_impact: null,
     estimated_impact_status: "NOT_CALIBRATED",
@@ -209,7 +221,8 @@ const campaignId = await saveGrowthDecision(
     personalized_offer: campaign.offer || "Exclusive offer based on your profile",
     channel_recommendation: campaign.channel || "email",
     send_timing: campaign.timing || "optimal_window",
-    confidence: campaign.confidence || 0.75,
+    confidence: campaign.confidence,
+    confidence_status: "MODEL_REPORTED_NOT_CALIBRATED",
     estimated_revenue_impact: null,
     estimated_revenue_impact_status: "NOT_CALIBRATED",
   };

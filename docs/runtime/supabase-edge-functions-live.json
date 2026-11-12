@@ -11,7 +11,8 @@
       "repository_blob_sha": "3fc1bf525d718044d35c053de420ca0199c935f2",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
     },
     "concierge-orchestrator": {
       "state": "DEPLOYED",
@@ -21,7 +22,8 @@
       "repository_blob_sha": "ac3e09af10fcce118edfa24c5861232680045cf3",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
     },
     "growth-orchestrator": {
       "state": "DEPLOYED",
@@ -31,7 +33,8 @@
       "repository_blob_sha": "9cec2653d62f52d87b95329aad09a2546b4a3bf7",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
     },
     "product-orchestrator": {
       "state": "DEPLOYED",
@@ -41,7 +44,8 @@
       "repository_blob_sha": "13a8b41c72143377c2ba393fdb17f9ba99fbed7",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
     },
     "stripe-webhook": {
       "state": "DEPLOYED",
@@ -51,7 +55,8 @@
       "repository_blob_sha": "0e31e2a14aef211a11f7b489c5d09cd2730ff2e1",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-10-24T23:41:05.351Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-10-24T23:41:05.351Z"
     },
     "secrets-health": {
       "state": "DEPLOYED",
@@ -61,7 +66,8 @@
       "repository_blob_sha": "b78b470eba3d141052295d25b83e77336489a83f",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
     },
     "agent-execute": {
       "state": "DEPLOYED",
@@ -71,7 +77,8 @@
       "repository_blob_sha": "d5ef6fbf9e7b64e9f409675f88558465994b1fa6",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-04T19:46:05.492Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-04T19:46:05.492Z"
     },
     "evidence-graph": {
       "state": "DEPLOYED",
@@ -81,7 +88,8 @@
       "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-11T20:28:41.893Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-11T20:28:41.893Z"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
@@ -91,7 +99,8 @@
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-11T20:28:41.893Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-11T20:28:41.893Z"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
@@ -101,7 +110,8 @@
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-11T20:28:41.893Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-11T20:28:41.893Z"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
@@ -111,7 +121,8 @@
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-11T20:28:41.893Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-11T20:28:41.893Z"
     },
     "intel-feed": {
       "state": "DEPLOYED",
@@ -121,7 +132,8 @@
       "repository_blob_sha": "d7f272478432c211794d57be5a06bebaff6a84ae",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-10-16T19:35:12.806Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-10-16T19:35:12.806Z"
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
@@ -131,7 +143,8 @@
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-11T20:28:41.893Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-11T20:28:41.893Z"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
@@ -141,7 +154,8 @@
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-11T20:28:41.893Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-11T20:28:41.893Z"
     },
     "content-ingest": {
       "state": "DEPLOYED",
@@ -151,7 +165,8 @@
       "repository_blob_sha": "9f8dbddcb9901d55e20afe98e2b7794c7f2c10d7",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-10T20:23:30.058Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-10T20:23:30.058Z"
     },
     "content-delivery": {
       "state": "DEPLOYED",
@@ -161,7 +176,8 @@
       "repository_blob_sha": "410d77e9f8267406b40291830ac85f5191a63665",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-10T20:23:30.058Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-10T20:23:30.058Z"
     },
     "checkout": {
       "state": "LOCAL_ONLY",
@@ -177,7 +193,8 @@
       "live_sha256": "8c54c2e387c88b1de25d3c10bce60d13a71f52efd81433c798027b08df1d22b7",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-07T23:10:07.820Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-07T23:10:07.820Z"
     },
     "studio-library": {
       "state": "DEPLOYED",
@@ -187,7 +204,8 @@
       "live_sha256": "8a98b76641c22add20a2a5e585a34b9425f24a158cc50cc0c9feb5e262820f62",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-11T20:22:03.571Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-11T20:22:03.571Z"
     },
     "event-ingest": {
       "state": "LOCAL_ONLY",
@@ -203,7 +221,8 @@
       "repository_blob_sha": "0e25cc5286c7d5a1d093fb9c637f90088d450308",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-10-25T13:51:29.021Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-10-25T13:51:29.021Z"
     },
     "rankings": {
       "state": "DEPLOYED",
@@ -213,7 +232,8 @@
       "repository_blob_sha": "bdb535d5a6f4334ba03535411fcc637a6d20cbb3",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-01T19:24:45.437Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-01T19:24:45.437Z"
     },
     "snapshot-leaderboard": {
       "state": "DEPLOYED",
@@ -223,7 +243,8 @@
       "repository_blob_sha": "02321e42cdc0b227aac08b52719c309cce46369e",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-01T19:24:45.437Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-01T19:24:45.437Z"
     },
     "weekly-digest": {
       "state": "LOCAL_ONLY",
@@ -251,7 +272,8 @@
       "repository_blob_sha": "c7510e61ac1ff3a298c69f014898e624a2564c46",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-03T21:59:59.448Z"
+      "provider_observed_at": "2026-11-12T07:32:53.361Z",
+      "provider_updated_at": "2026-11-03T21:59:59.448Z"
     }
   },
   "verification_note": "Read-only provider inventory refreshed 2026-11-10T21:08:37.628Z. Supabase list_edge_functions reports 22 ACTIVE functions. All 22 names match supabase/config.toml and config/omega-edge-function-auth.json, and verify_jwt agrees for every function. get_edge_function was used to read all 22 deployed entrypoints; every entrypoint matched its repository file byte-for-byte. The returned additional files for studio-canon and studio-library (shared keys/access modules and generated payloads) also matched repository files byte-for-byte. Provider version, verify_jwt, ezbr_sha256 (stored as live_sha256), and GitHub blob SHA (stored as repository_blob_sha) are recorded. Five repository functions remain LOCAL_ONLY and absent from the provider inventory: checkout, event-ingest, graphify-ai-ingest, graphify-ai-query, weekly-digest. No function was deployed or modified during this verification. Source parity at capture time does not prove runtime request behavior, secret availability, provider quotas, or end-to-end workflows.",

@@ -1605,6 +1605,38 @@
       "inactive": 0,
       "exact_repository_entrypoint_matches": 22,
       "verification": "All 22 live Edge Function entrypoints were retrieved from Supabase and compared byte-for-byte with the corresponding repository index.ts files. Provider version, verify_jwt, live SHA-256 and repository blob SHA are refreshed in docs/runtime/supabase-edge-functions-live.json."
+    },
+    "search_index": {
+      "observed_date": "2026-11-12",
+      "live_row_count": 0,
+      "live_columns": [
+        "id",
+        "entity_type",
+        "entity_id",
+        "title",
+        "body",
+        "keywords",
+        "organization_id",
+        "owner_id",
+        "indexed_at",
+        "updated_at"
+      ],
+      "canonical_migration_columns": [
+        "id",
+        "entity_type",
+        "entity_id",
+        "title",
+        "content",
+        "created_at"
+      ],
+      "detected_schema_drift": true,
+      "live_authenticated_select_policy": "USING (true)",
+      "current_table_grant": "authenticated SELECT",
+      "risk": "The broad policy would expose future owner/org-scoped rows to any authenticated reader; current table has zero rows.",
+      "remediation_migration": "20261112091500_omega_search_index_schema_reconciliation.sql",
+      "remediation_status": "PENDING_REVIEW / NOT_APPLIED",
+      "expected_policy": "(owner_id IS NULL AND organization_id IS NULL) OR owner_id=auth.uid()",
+      "runtime_adapter_filter": "(owner_id IS NULL AND organization_id IS NULL) OR owner_id=p_actor_user_id"
     }
   },
   "provider_advisor_observations": {

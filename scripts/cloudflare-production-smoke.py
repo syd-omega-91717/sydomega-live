@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
-"""Smoke-test every registered production page and same-origin HTML asset/link."""
+"""Smoke-test registered production pages and same-origin HTML assets safely."""
 from __future__ import annotations
+
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from html.parser import HTMLParser
 import json
 from pathlib import Path
-import sys
 from urllib.parse import urldefrag, urljoin, urlsplit
-from urllib.request import HTTPRedirectHandler, Request, build_opener
+
+import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "config/omega-page-contracts.json"
 SKIP_SCHEMES = {"data", "blob", "javascript", "mailto", "tel", "sms", "about"}
 API_PREFIXES = ("/api/", "/functions/v1/")
 CLOUDFLARE_EMAIL_PLACEHOLDER_PATH = "/cdn-cgi/l/email-protection"
+ALLOWED_HOST_SUFFIXES = (".sydomega.com", ".pages.dev", ".vercel.app")
+ALLOWED_ROOT_HOSTS = {"sydomega.com"}
+
 
 class RefParser(HTMLParser):
     def __init__(self) -> None:
@@ -27,8 +31,6 @@ class RefParser(HTMLParser):
         if tag in {"a", "area", "link"} and values.get("href"):
             href = values["href"].strip()
             if urlsplit(href).path == CLOUDFLARE_EMAIL_PLACEHOLDER_PATH:
-                # Cloudflare rewrites protected email addresses to this client-decoded
-                # placeholder. It is not a page or asset endpoint to crawl with HEAD.
                 self.cloudflare_email_placeholders_skipped += 1
             else:
                 self.refs.add(href)
@@ -41,8 +43,11 @@ class RefParser(HTMLParser):
                 if url:
                     self.refs.add(url)
 
-def is_safe_http_url(url: str, allowed_host: str | None = None, allowed_port: int | None = None) -> bool:
-    """Reject file/custom schemes, credentials and cross-origin redirects."""
+
+def is_safe_http_url(
+    url: str, allowed_host: str | None = None, allowed_port: int | None = None
+) -> bool:
+    """Reject unsafe schemes, credentials and optionally cross-origin hosts."""
     try:
         parts = urlsplit(url)
         port = parts.port or (443 if parts.scheme.lower() == "https" else 80)
@@ -58,57 +63,29 @@ def is_safe_http_url(url: str, allowed_host: str | None = None, allowed_port: in
     )
 
 
-class SameOriginRedirectHandler(HTTPRedirectHandler):
+class SameOriginRedirectHandler:
+    """Small compatibility guard used by unit tests and redirect policy checks."""
+
     def __init__(self, allowed_host: str, allowed_port: int) -> None:
-        super().__init__()
-        self.allowed_host = allowed_host
+        self.allowed_host = allowed_host.lower()
         self.allowed_port = allowed_port
 
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         if not is_safe_http_url(newurl, self.allowed_host, self.allowed_port):
             return None
-        return super().redirect_request(req, fp, code, msg, headers, newurl)
+        return req
 
 
-def request_url(url: str, method: str, timeout: int) -> tuple[int, str, str]:
-    parts = urlsplit(url)
-    if parts.scheme.lower() not in {"http", "https"} or not parts.netloc or parts.username or parts.password:
-        return 0, "", "unsupported_url_scheme_or_authority"
-    req = Request(url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
-    try:
-        # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
-        # The URL is restricted to credential-free HTTP(S) above; the caller also
-        # constrains discovered references to the selected production origin.
-        with urlopen(req, timeout=timeout) as response:
-    if not is_safe_http_url(url):
-        return 0, "", "blocked unsupported URL scheme or authority"
-    parts = urlsplit(url)
-    allowed_port = parts.port or (443 if parts.scheme.lower() == "https" else 80)
-    opener = build_opener(SameOriginRedirectHandler(parts.hostname.lower(), allowed_port))
-    req = Request(url, method=method, headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"})
-    try:
-        with opener.open(req, timeout=timeout) as response:
-            content_type = response.headers.get("Content-Type", "")
-            body = response.read() if method == "GET" else b""
-            return response.status, content_type, body.decode("utf-8", errors="replace")
-    except HTTPError as exc:
-        if method == "HEAD" and exc.code in {405, 501}:
-            return request_url(url, "GET", timeout)
-        return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", ""
-    except (URLError, TimeoutError, OSError) as exc:
 def validate_request_url(url: str) -> str:
-    """Allow only HTTPS production/preview hosts; never pass file or arbitrary schemes to urllib."""
+    """Allow only HTTPS on the platform's known production/preview host families."""
     try:
         parts = urlsplit(url)
         port = parts.port
     except ValueError as exc:
         raise ValueError("invalid production smoke URL") from exc
     host = (parts.hostname or "").lower()
-    allowed_host = (
-        host == "sydomega.com"
-        or host.endswith(".sydomega.com")
-        or host.endswith(".pages.dev")
-        or host.endswith(".vercel.app")
+    approved_host = host in ALLOWED_ROOT_HOSTS or any(
+        host.endswith(suffix) for suffix in ALLOWED_HOST_SUFFIXES
     )
     if (
         parts.scheme.lower() != "https"
@@ -117,15 +94,28 @@ def validate_request_url(url: str) -> str:
         or parts.password is not None
         or port not in (None, 443)
         or parts.fragment
-        or not allowed_host
+        or not approved_host
     ):
-        raise ValueError("production smoke URL must be HTTPS on an approved SYD OMEGA, Pages, or Vercel host")
+        raise ValueError(
+            "production smoke URL must be HTTPS on an approved SYD OMEGA, Pages, or Vercel host"
+        )
     return url
 
 
-def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tuple[int, str, str]:
-    safe_url = validate_request_url(url)
-    import requests
+def request_url(
+    url: str, method: str, timeout: int, redirects: int = 0,
+    _origin: tuple[str, int] | None = None,
+) -> tuple[int, str, str]:
+    """Request a URL without proxy-env inheritance or cross-origin redirects."""
+    try:
+        safe_url = validate_request_url(url)
+        parts = urlsplit(safe_url)
+        port = parts.port or 443
+        origin = _origin or (parts.hostname.lower(), port)
+        if (parts.hostname.lower(), port) != origin:
+            return 0, "", "cross_origin_redirect_blocked"
+    except (TypeError, ValueError):
+        return 0, "", "blocked unsupported URL scheme or authority"
 
     session = requests.Session()
     session.trust_env = False
@@ -133,14 +123,16 @@ def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tupl
         response = session.request(
             method,
             safe_url,
-            headers={"User-Agent": "SYD-OMEGA-Production-Smoke/1.0", "Accept": "*/*"},
+            headers={
+                "User-Agent": "SYD-OMEGA-Production-Smoke/1.0",
+                "Accept": "*/*",
+            },
             timeout=timeout,
             allow_redirects=False,
             verify=True,
         )
         status = response.status_code
         content_type = response.headers.get("Content-Type", "")
-
         if status in {301, 302, 303, 307, 308}:
             location = response.headers.get("Location")
             response.close()
@@ -149,13 +141,18 @@ def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tupl
             if redirects >= 5:
                 return status, content_type, "redirect limit exceeded"
             next_url = urljoin(safe_url, location)
-            next_method = "GET" if status == 303 or (status in {301, 302} and method not in {"GET", "HEAD"}) else method
-            return request_url(next_url, next_method, timeout, redirects + 1)
-
+            next_parts = urlsplit(next_url)
+            next_port = next_parts.port or 443
+            if (next_parts.hostname or "").lower() != origin[0] or next_port != origin[1]:
+                return status, content_type, "cross_origin_redirect_blocked"
+            next_method = (
+                "GET" if status == 303 or (status in {301, 302} and method not in {"GET", "HEAD"})
+                else method
+            )
+            return request_url(next_url, next_method, timeout, redirects + 1, origin)
         if method == "HEAD" and status in {405, 501}:
             response.close()
-            return request_url(safe_url, "GET", timeout, redirects)
-
+            return request_url(safe_url, "GET", timeout, redirects, origin)
         body = response.text if method == "GET" else ""
         response.close()
         return status, content_type, body
@@ -164,6 +161,7 @@ def request_url(url: str, method: str, timeout: int, redirects: int = 0) -> tupl
     finally:
         session.close()
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url", default="https://sydomega.com")
@@ -171,27 +169,22 @@ def main() -> int:
     parser.add_argument("--timeout", type=int, default=20)
     args = parser.parse_args()
     try:
-        registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
-        contracts = registry.get("contracts", [])
-        if registry.get("page_count") != len(contracts) or not contracts:
-            raise ValueError("page contract registry count does not match its records")
-        base = args.base_url.rstrip("/") + "/"
-        base_parts = urlsplit(base)
-        if base_parts.scheme.lower() not in {"http", "https"} or not base_parts.netloc or base_parts.username or base_parts.password:
-            raise ValueError("--base-url must be a credential-free HTTP(S) URL")
-        base_host = base_parts.netloc.lower()
         safe_base = validate_request_url(args.base_url)
         base_parts = urlsplit(safe_base)
         if base_parts.query or base_parts.fragment:
             raise ValueError("base URL must not include a query or fragment")
         base = safe_base.rstrip("/") + "/"
-        base_host = urlsplit(base).netloc.lower()
+        base_host = base_parts.netloc.lower()
+        registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+        contracts = registry.get("contracts", [])
+        if registry.get("page_count") != len(contracts) or not contracts:
+            raise ValueError("page contract registry count does not match its records")
         pages = sorted({urljoin(base, str(item["path"]).lstrip("/")) for item in contracts})
         page_failures: list[tuple[str, int, str]] = []
         refs: set[str] = set()
         external_count = 0
         api_count = 0
-        cloudflare_email_placeholders_skipped = 0
+        placeholders_skipped = 0
 
         def fetch_page(url: str):
             return url, request_url(url, "GET", args.timeout)
@@ -206,18 +199,15 @@ def main() -> int:
                 if "html" not in content_type.lower():
                     page_failures.append((url, status, f"unexpected content type: {content_type}"))
                     continue
-                parser = RefParser()
-                parser.feed(body)
-                cloudflare_email_placeholders_skipped += parser.cloudflare_email_placeholders_skipped
-                for ref in parser.refs:
-                    if not ref or ref.startswith("#"):
-                        continue
-                    scheme = urlsplit(ref).scheme.lower()
-                    if scheme in SKIP_SCHEMES:
+                ref_parser = RefParser()
+                ref_parser.feed(body)
+                placeholders_skipped += ref_parser.cloudflare_email_placeholders_skipped
+                for ref in ref_parser.refs:
+                    if not ref or ref.startswith("#") or urlsplit(ref).scheme.lower() in SKIP_SCHEMES:
                         continue
                     absolute = urldefrag(urljoin(url, ref))[0]
                     parts = urlsplit(absolute)
-                    if parts.scheme not in {"http", "https"}:
+                    if parts.scheme.lower() not in {"http", "https"}:
                         continue
                     if parts.netloc.lower() != base_host:
                         external_count += 1
@@ -228,12 +218,14 @@ def main() -> int:
                     refs.add(absolute)
 
         ref_failures: list[tuple[str, int, str]] = []
+
         def check_ref(url: str):
             return url, request_url(url, "HEAD", args.timeout)
+
         with ThreadPoolExecutor(max_workers=args.workers) as pool:
             futures = [pool.submit(check_ref, url) for url in sorted(refs)]
             for future in as_completed(futures):
-                url, (status, content_type, detail) = future.result()
+                url, (status, _, detail) = future.result()
                 if status not in {200, 206}:
                     ref_failures.append((url, status, detail[:240]))
 
@@ -245,7 +237,7 @@ def main() -> int:
             "references_passed": len(refs) - len(ref_failures),
             "external_references_not_checked": external_count,
             "same_origin_api_references_deferred_to_api_contracts": api_count,
-            "cloudflare_email_placeholders_skipped": cloudflare_email_placeholders_skipped,
+            "cloudflare_email_placeholders_skipped": placeholders_skipped,
             "page_failures": page_failures[:30],
             "reference_failures": ref_failures[:30],
         }
@@ -258,6 +250,7 @@ def main() -> int:
     except (OSError, json.JSONDecodeError, KeyError, ValueError) as exc:
         print(f"CLOUDFLARE PRODUCTION SMOKE: FAIL — {exc}")
         return 1
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

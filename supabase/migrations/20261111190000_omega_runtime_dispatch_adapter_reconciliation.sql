@@ -102,7 +102,10 @@ begin
   values(pg_catalog.btrim(p_service_id),p_user_id,'PENDING',pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
   on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null
   do update set idempotency_key=excluded.idempotency_key
+    where omega_service_orders.service_id=excluded.service_id
+      and omega_service_orders.metadata=excluded.metadata
   returning order_id into v_order_id;
+  if v_order_id is null then raise exception 'service_order_idempotency_conflict'; end if;
   return v_order_id;
 end;
 $function$;
@@ -126,8 +129,14 @@ begin
  values(p_user_id,pg_catalog.left(pg_catalog.btrim(p_domain),120),pg_catalog.left(pg_catalog.btrim(p_message),10000),'pending',pg_catalog.now(),pg_catalog.left(coalesce(nullif(pg_catalog.btrim(p_urgency),''),'normal'),40),pg_catalog.left(nullif(pg_catalog.btrim(p_contact),''),240),pg_catalog.left(nullif(pg_catalog.btrim(p_preferred_time),''),240),true,pg_catalog.btrim(p_idempotency_key))
  on conflict (user_id,runtime_idempotency_key) where runtime_idempotency_key is not null
  do update set runtime_idempotency_key=excluded.runtime_idempotency_key
+   where consult_requests.domain=excluded.domain
+     and consult_requests.message=excluded.message
+     and consult_requests.urgency is not distinct from excluded.urgency
+     and consult_requests.contact is not distinct from excluded.contact
+     and consult_requests.preferred_time is not distinct from excluded.preferred_time
+     and consult_requests.confidentiality_accepted=excluded.confidentiality_accepted
  returning id into v_id;
- return v_id;
+ if v_id is null then raise exception 'consult_intake_idempotency_conflict'; end if;
 end;
 $$;
 revoke all on function omega_private.create_consult_intake(uuid,text,text,text,text,text,boolean,text) from public,anon,authenticated;
@@ -147,12 +156,24 @@ begin
   if p_user_id is null then
     insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required,requested_by)
     values(null,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required,'system')
-    on conflict (idempotency_key) where user_id is null and idempotency_key is not null do update set input=excluded.input
+    on conflict (idempotency_key) where user_id is null and idempotency_key is not null
+    do update set input=omega_agent_tasks.input
+      where omega_agent_tasks.agent_id=excluded.agent_id
+        and omega_agent_tasks.task_type=excluded.task_type
+        and omega_agent_tasks.input=excluded.input
+        and omega_agent_tasks.approval_required=excluded.approval_required
+        and omega_agent_tasks.requested_by=excluded.requested_by
     returning task_id,(xmax=0) into v_id,v_inserted;
   else
     insert into public.omega_agent_tasks(user_id,agent_id,task_type,input,idempotency_key,approval_required,requested_by)
     values(p_user_id,p_agent_id,p_task_type,coalesce(p_input,'{}'::jsonb),pg_catalog.btrim(p_idempotency_key),p_approval_required,'user')
-    on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null do update set input=excluded.input
+    on conflict (user_id,idempotency_key) where user_id is not null and idempotency_key is not null
+    do update set input=omega_agent_tasks.input
+      where omega_agent_tasks.agent_id=excluded.agent_id
+        and omega_agent_tasks.task_type=excluded.task_type
+        and omega_agent_tasks.input=excluded.input
+        and omega_agent_tasks.approval_required=excluded.approval_required
+        and omega_agent_tasks.requested_by=excluded.requested_by
     returning task_id,(xmax=0) into v_id,v_inserted;
   end if;
 
@@ -175,8 +196,14 @@ begin
   if p_idempotency_key is null or pg_catalog.length(pg_catalog.btrim(p_idempotency_key))<8 or pg_catalog.length(p_idempotency_key)>128 then raise exception 'idempotency_key_invalid'; end if;
   insert into public.omega_notifications(user_id,notification_type,title,body,channel,idempotency_key,metadata)
   values(p_user_id,p_type,p_title,p_body,p_channel,pg_catalog.btrim(p_idempotency_key),coalesce(p_metadata,'{}'::jsonb))
-  on conflict (user_id,idempotency_key) do update set metadata=excluded.metadata
+  on conflict (user_id,idempotency_key) do update set idempotency_key=excluded.idempotency_key
+    where omega_notifications.notification_type=excluded.notification_type
+      and omega_notifications.title=excluded.title
+      and omega_notifications.body=excluded.body
+      and omega_notifications.channel=excluded.channel
+      and omega_notifications.metadata=excluded.metadata
   returning notification_id into v_id;
+  if v_id is null then raise exception 'notification_idempotency_conflict'; end if;
   return v_id;
 end;
 $function$;
@@ -185,9 +212,9 @@ create or replace function omega_private.record_platform_event(
   p_event_type text,p_actor_user_id uuid,p_actor_type text,p_source text,p_idempotency_key text,
   p_correlation_id uuid default null,p_entity_type text default null,p_entity_id text default null,p_payload jsonb default '{}'::jsonb
 ) returns uuid language plpgsql security definer set search_path='' as $function$
-declare v_id uuid; v_key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency_key,'')),''); v_audit_key text;
+declare v_id uuid; v_audit_rows integer; v_key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency_key,'')),''); v_audit_key text;
 begin
-  if v_key is not null and pg_catalog.length(v_key)>128 then raise exception 'idempotency_key_too_long'; end if;
+  if v_key is not null and pg_catalog.length(v_key)>122 then raise exception 'idempotency_key_too_long_for_audit_pair'; end if;
   v_audit_key:=case when v_key is null then null else 'audit:'||v_key end;
   if p_event_type not in ('route_view','action_started','action_completed','mission_progress','capability_used','simulation_run','evidence_recorded','replay_checkpoint') then
     raise exception 'event_type_not_allowed';
@@ -198,24 +225,58 @@ begin
     insert into public.omega_platform_events(event_type,actor_user_id,actor_type,correlation_id,idempotency_key,source,entity_type,entity_id,payload)
     values(p_event_type,null,p_actor_type,p_correlation_id,v_key,p_source,p_entity_type,p_entity_id,coalesce(p_payload,'{}'::jsonb))
     on conflict (idempotency_key) where actor_user_id is null and idempotency_key is not null
-    do update set payload=excluded.payload
+    do update set idempotency_key=excluded.idempotency_key
+      where omega_platform_events.event_type=excluded.event_type
+        and omega_platform_events.actor_type is not distinct from excluded.actor_type
+        and omega_platform_events.correlation_id is not distinct from excluded.correlation_id
+        and omega_platform_events.source is not distinct from excluded.source
+        and omega_platform_events.entity_type is not distinct from excluded.entity_type
+        and omega_platform_events.entity_id is not distinct from excluded.entity_id
+        and omega_platform_events.payload is not distinct from excluded.payload
     returning event_id into v_id;
+    if v_id is null then raise exception 'platform_event_idempotency_conflict'; end if;
 
     insert into public.omega_audit_log(actor_user_id,actor_type,action,resource_type,resource_id,outcome,correlation_id,idempotency_key,details)
     values(null,p_actor_type,p_event_type,p_entity_type,p_entity_id,'success',p_correlation_id,v_audit_key,pg_catalog.jsonb_build_object('source',p_source))
     on conflict (idempotency_key) where actor_user_id is null and idempotency_key is not null
-    do update set details=excluded.details;
+    do update set idempotency_key=excluded.idempotency_key
+      where omega_audit_log.actor_type=excluded.actor_type
+        and omega_audit_log.action=excluded.action
+        and omega_audit_log.resource_type is not distinct from excluded.resource_type
+        and omega_audit_log.resource_id is not distinct from excluded.resource_id
+        and omega_audit_log.outcome=excluded.outcome
+        and omega_audit_log.correlation_id is not distinct from excluded.correlation_id
+        and omega_audit_log.details=excluded.details;
+    get diagnostics v_audit_rows=row_count;
+    if v_audit_rows=0 then raise exception 'platform_event_audit_idempotency_conflict'; end if;
   else
     insert into public.omega_platform_events(event_type,actor_user_id,actor_type,correlation_id,idempotency_key,source,entity_type,entity_id,payload)
     values(p_event_type,p_actor_user_id,p_actor_type,p_correlation_id,v_key,p_source,p_entity_type,p_entity_id,coalesce(p_payload,'{}'::jsonb))
     on conflict (actor_user_id,idempotency_key) where actor_user_id is not null and idempotency_key is not null
-    do update set payload=excluded.payload
+    do update set idempotency_key=excluded.idempotency_key
+      where omega_platform_events.event_type=excluded.event_type
+        and omega_platform_events.actor_type is not distinct from excluded.actor_type
+        and omega_platform_events.correlation_id is not distinct from excluded.correlation_id
+        and omega_platform_events.source is not distinct from excluded.source
+        and omega_platform_events.entity_type is not distinct from excluded.entity_type
+        and omega_platform_events.entity_id is not distinct from excluded.entity_id
+        and omega_platform_events.payload is not distinct from excluded.payload
     returning event_id into v_id;
+    if v_id is null then raise exception 'platform_event_idempotency_conflict'; end if;
 
     insert into public.omega_audit_log(actor_user_id,actor_type,action,resource_type,resource_id,outcome,correlation_id,idempotency_key,details)
     values(p_actor_user_id,p_actor_type,p_event_type,p_entity_type,p_entity_id,'success',p_correlation_id,v_audit_key,pg_catalog.jsonb_build_object('source',p_source))
     on conflict (actor_user_id,idempotency_key) where actor_user_id is not null and idempotency_key is not null
-    do update set details=excluded.details;
+    do update set idempotency_key=excluded.idempotency_key
+      where omega_audit_log.actor_type=excluded.actor_type
+        and omega_audit_log.action=excluded.action
+        and omega_audit_log.resource_type is not distinct from excluded.resource_type
+        and omega_audit_log.resource_id is not distinct from excluded.resource_id
+        and omega_audit_log.outcome=excluded.outcome
+        and omega_audit_log.correlation_id is not distinct from excluded.correlation_id
+        and omega_audit_log.details=excluded.details;
+    get diagnostics v_audit_rows=row_count;
+    if v_audit_rows=0 then raise exception 'platform_event_audit_idempotency_conflict'; end if;
   end if;
   return v_id;
 end;
@@ -224,7 +285,7 @@ $function$;
 create or replace function omega_private.verify_achievement(
   p_user_achievement_id uuid,p_decision text,p_verifier text,p_verification_type text,p_evidence jsonb,p_idempotency_key text
 ) returns uuid language plpgsql security definer set search_path='' as $function$
-declare v_id uuid; v_existing_decision text; v_user uuid; v_key text:=pg_catalog.btrim(coalesce(p_idempotency_key,''));
+declare v_id uuid; v_existing_decision text; v_existing_type text; v_existing_verifier text; v_existing_evidence jsonb; v_user uuid; v_key text:=pg_catalog.btrim(coalesce(p_idempotency_key,''));
 begin
   if p_user_achievement_id is null then raise exception 'achievement_assignment_required'; end if;
   if p_decision not in ('approved','rejected','needs_review') then raise exception 'invalid_decision'; end if;
@@ -237,11 +298,17 @@ begin
   if v_user is null then raise exception 'achievement_assignment_not_found'; end if;
   perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(p_user_achievement_id::text||':'||v_key,0));
 
-  select verification_id,decision into v_id,v_existing_decision
+  select verification_id,decision,verification_type,verifier,evidence
+    into v_id,v_existing_decision,v_existing_type,v_existing_verifier,v_existing_evidence
   from public.omega_achievement_verifications
   where user_achievement_id=p_user_achievement_id and idempotency_key=v_key;
   if v_id is not null then
-    if v_existing_decision<>p_decision then raise exception 'verification_idempotency_conflict'; end if;
+    if v_existing_decision is distinct from p_decision
+       or v_existing_type is distinct from p_verification_type
+       or v_existing_verifier is distinct from p_verifier
+       or v_existing_evidence is distinct from coalesce(p_evidence,'{}'::jsonb) then
+      raise exception 'verification_idempotency_conflict';
+    end if;
     return v_id;
   end if;
 
@@ -251,10 +318,17 @@ begin
   returning verification_id into v_id;
 
   if v_id is null then
-    select verification_id,decision into v_id,v_existing_decision
+    select verification_id,decision,verification_type,verifier,evidence
+      into v_id,v_existing_decision,v_existing_type,v_existing_verifier,v_existing_evidence
     from public.omega_achievement_verifications
     where user_achievement_id=p_user_achievement_id and idempotency_key=v_key;
-    if v_id is null or v_existing_decision<>p_decision then raise exception 'verification_idempotency_conflict'; end if;
+    if v_id is null
+       or v_existing_decision is distinct from p_decision
+       or v_existing_type is distinct from p_verification_type
+       or v_existing_verifier is distinct from p_verifier
+       or v_existing_evidence is distinct from coalesce(p_evidence,'{}'::jsonb) then
+      raise exception 'verification_idempotency_conflict';
+    end if;
     return v_id;
   end if;
 
@@ -281,12 +355,23 @@ declare
   _phi constant numeric:=1.6180339887;
   _eu constant numeric:=2.7182818285;
   _key text:=nullif(pg_catalog.btrim(coalesce(p_idempotency,'')),'');
+  _existing_type text;
+  _existing_data jsonb;
+  _existing_delta jsonb;
   _rows integer;
 begin
   if _uid is null then return pg_catalog.jsonb_build_object('ok',false,'error','unauthenticated'); end if;
   if _key is not null then
+    if pg_catalog.length(_key)>128 then raise exception 'sovereign_event_idempotency_key_too_long'; end if;
     perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(_uid::text||':'||_key,0));
-    if exists(select 1 from public.sovereign_events where user_id=_uid and idempotency_key=_key) then
+    select event_type,event_data,axis_delta into _existing_type,_existing_data,_existing_delta
+      from public.sovereign_events where user_id=_uid and idempotency_key=_key;
+    if found then
+      if _existing_type is distinct from p_event_type
+         or _existing_data is distinct from coalesce(p_event_data,'{}'::jsonb)
+         or _existing_delta is distinct from coalesce(p_axis_delta,'{"a":0,"b":0,"c":0}'::jsonb) then
+        raise exception 'sovereign_event_idempotency_conflict';
+      end if;
       return pg_catalog.jsonb_build_object('ok',true,'status','duplicate','idempotent',true);
     end if;
   end if;

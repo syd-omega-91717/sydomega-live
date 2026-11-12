@@ -177,7 +177,7 @@ begin
     returning task_id,(xmax=0) into v_id,v_inserted;
   end if;
 
-  if v_id is null then raise exception 'agent_task_idempotency_resolution_failed'; end if;
+  if v_id is null then raise exception 'agent_task_idempotency_conflict'; end if;
   if v_inserted then
     insert into public.omega_agent_task_events(task_id,event_type,actor,payload)
     values(v_id,'task_queued','system',pg_catalog.jsonb_build_object('agent_id',p_agent_id,'approval_required',p_approval_required));

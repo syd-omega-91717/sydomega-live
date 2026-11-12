@@ -45,13 +45,20 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertTrue((MIGRATIONS / filename).is_file(), filename)
             self.assertTrue(filename.startswith(version + "_"), filename)
             pending_versions.add(version)
-        self.assertEqual(pending_versions, {"20261112130000"})
+        local_versions: set[str] = set()
+        for path in MIGRATIONS.glob("*.sql"):
+            match = re.match(r"^(\d+)_.*\.sql$", path.name)
+            self.assertIsNotNone(match, path.name)
+            local_versions.add(match.group(1))
+        self.assertEqual(pending_versions, local_versions - self.remote_versions)
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
             "20261103230000", "20261104090000", "20261111190000",
             "20261112091300", "20261112091400", "20261112091500",
-            "20261112091600", "20261112103000", "20261112110000", "20261112111000", "20261112120000", "20261112121000",
+            "20261112091600",
+            "20261112103000", "20261112110000", "20261112111000",
+            "20261112120000", "20261112121000", "20261112130000",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -59,7 +66,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112121000")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112130000")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-12")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
@@ -80,13 +87,26 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_inventory_passes_but_production_drift_gate_blocks_pending_compatibility(self) -> None:
+    def test_source_inventory_and_strict_drift_pass_when_provider_history_matches(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
-        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
-        self.assertIn("production release is blocked", strict.stdout)
+        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
+
+    def test_release_readiness_stays_blocked_by_unverified_replay_and_production_proof(self) -> None:
+        snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
+        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        readiness = snapshot["release_readiness"]
+        self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
+        blockers = " ".join(str(item) for item in readiness.get("blockers", []))
+        self.assertIn("20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql", blockers)
+        self.assertIn("54-action behavioral SQL probe", blockers)
+        self.assertIn("Cloudflare exact-SHA production verification", blockers)
+        self.assertEqual(
+            snapshot["runtime_probe_status"].get("status"),
+            "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
+        )
 
     def test_public_points_projection_remains_privacy_scoped(self) -> None:
         path = MIGRATIONS / "20261013160000_secure_public_points_leaderboard_projection.sql"

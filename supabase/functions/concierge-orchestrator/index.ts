@@ -94,6 +94,7 @@ async function saveConciergeDecision(
     escalate: decision.escalate === true,
     escalation_reason: typeof decision.escalation_reason === "string" ? decision.escalation_reason.slice(0, 240) : null,
     confidence: Number.isFinite(Number(decision.confidence)) ? Math.max(0, Math.min(1, Number(decision.confidence))) : 0.85,
+    confidence_status: "MODEL_REPORTED_NOT_CALIBRATED",
     response_length: typeof decision.response === "string" ? Math.min(3000, decision.response.length) : 0,
   };
   const { data, error } = await supabase

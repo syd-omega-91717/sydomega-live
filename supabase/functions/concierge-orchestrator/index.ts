@@ -177,8 +177,6 @@ ${JSON.stringify(req.context.member_profile, null, 2)}
   decision.response = typeof decision.response === "string"
     ? decision.response.slice(0, 3000)
     : claudeResponse.slice(0, 3000);
-  const churnRisk = Number(req.context?.propensity_scores?.churn_risk ?? 0);
-
   // Check escalation criteria
   const shouldEscalate =
     churnRisk > 0.85 ||

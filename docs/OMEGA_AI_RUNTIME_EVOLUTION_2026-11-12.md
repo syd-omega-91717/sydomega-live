@@ -43,7 +43,15 @@ The active `concierge` path and the three owner-gated orchestrators now use the 
 - Growth orchestration no longer invents a 15% revenue uplift or writes a model estimate to `revenue_impact_usd`. Estimated impact remains `null` with status `NOT_CALIBRATED`; an unvalidated model estimate, if returned, is retained only as clearly labelled proposal metadata.
 - Existing member binding, the owner-controlled autonomous-agent switch, and tool-deny defaults remain in place.
 
-## 3. Current model and API technology choices
+## 3. Provider call inventory and held paths
+
+- User-facing Concierge and the three owner-gated orchestrators use the shared router.
+- Graphify query/ingestion source now uses the shared router, but remains held behind the default-off platform setting and both explicit consent preferences. The functions are intentionally absent from routine Supabase function registration and must not be enabled until the separate privacy/cost review is complete.
+- `secrets-health` retains a direct, fixed one-token provider health probe. It is an administrative connectivity check, not a member prompt or content-generation path.
+- The legacy `platform.jsx` prototype no longer calls a provider from the browser; it invokes the authenticated Concierge function only when a logged-in Supabase client is supplied.
+- `supabase/index.sql` is explicitly marked as a non-deployable historical provider sketch. It is not a migration and must not be run in the SQL editor.
+
+## 4. Current model and API technology choices
 
 ### OpenAI
 
@@ -76,7 +84,7 @@ The existing `omega_ai_requests` table is the first telemetry sink. It intention
 
 The evaluation cases in `config/omega-ai-evaluation-cases.json` are policy test cases, **not model benchmark results**. They cover prompt injection, member isolation, unconfigured providers, telemetry privacy, uncalibrated financial estimates, feature-flag mutation, tool execution, fabricated citations and evaluation truthfulness.
 
-## 4. Roadmap and priorities
+## 8. Roadmap and priorities
 
 ### P0 — finish this release wave
 1. Pass clean migration replay and the runtime adapter SQL probe.
@@ -105,7 +113,7 @@ The evaluation cases in `config/omega-ai-evaluation-cases.json` are policy test 
 - Use canary traffic and measured rollback thresholds for provider/model changes.
 - Keep AI agents non-authoritative for identity, money, legal status, KYC/AML, custody and entitlement grants.
 
-## 5. Acceptance criteria
+## 9. Acceptance criteria
 
 This AI layer is not declared production-ready until:
 - provider keys are confirmed present without exposing their values;

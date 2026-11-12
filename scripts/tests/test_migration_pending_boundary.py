@@ -89,6 +89,18 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("revoke all on function public.get_points_leaderboard(integer) from public, anon", sql.lower())
         self.assertIn("grant execute on function public.get_points_leaderboard(integer) to authenticated", sql.lower())
 
+    def test_generated_skill_registry_migration_census_matches_disk(self) -> None:
+        registry = (ROOT / "OMEGA_SKILL_REGISTRY.md").read_text(encoding="utf-8")
+        match = re.search(
+            r"\\| `supabase/migrations/\\*\\.sql` \\| (\\d+) \\( (\\d+) numbered.*?, (\\d+) timestamped \\|",
+            registry,
+        )
+        self.assertIsNotNone(match, "generated registry migration census row is missing")
+        migrations = list(MIGRATIONS.glob("*.sql"))
+        numbered = sum(bool(re.match(r"^\\d{4}_", path.name)) for path in migrations)
+        timestamped = sum(bool(re.match(r"^\\d{8}", path.name)) for path in migrations)
+        self.assertEqual(tuple(map(int, match.groups())), (len(migrations), numbered, timestamped))
+
     def test_refund_state_foreign_key_index_migration_is_narrow_and_non_destructive(self) -> None:
         path = MIGRATIONS / "20261112091400_omega_stripe_refund_state_fk_index.sql"
         sql = path.read_text(encoding="utf-8").lower()

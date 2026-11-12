@@ -3,6 +3,7 @@
 from __future__ import annotations
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -211,4 +212,7 @@ def main() -> int:
         return fail(str(exc))
 
 if __name__ == "__main__":
+    if "--help" in sys.argv[1:]:
+        print(__doc__ or "")
+        raise SystemExit(0)
     raise SystemExit(main())

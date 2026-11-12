@@ -114,7 +114,7 @@ begin
     elsif v_module='COMMUNICATION' and v_action_name='notifications.read' then
       select coalesce(jsonb_agg(to_jsonb(n) order by n.created_at desc),'[]'::jsonb) into v_result from (select * from public.omega_notifications where user_id=p_actor_user_id order by created_at desc limit 100)n;
     elsif v_module='COMMUNICATION' and v_action_name='presence.read' then
-      select coalesce(jsonb_agg(to_jsonb(p) order by p.last_seen_at desc),'[]'::jsonb) into v_result from (select * from public.member_presence where user_id=p_actor_user_id order by last_seen desc limit 20)p;
+      select coalesce(jsonb_agg(to_jsonb(p) order by p.last_seen desc),'[]'::jsonb) into v_result from (select * from public.member_presence where user_id=p_actor_user_id order by last_seen desc limit 20)p;
     elsif v_module='COMMUNICATION' and v_action_name='events.read' then
       select coalesce(jsonb_agg(to_jsonb(e) order by e.created_at desc),'[]'::jsonb) into v_result from (select * from public.omega_platform_events where actor_user_id=p_actor_user_id order by created_at desc limit 100)e;
     elsif v_module='INTELLIGENCE' and v_action_name='agents.read' then

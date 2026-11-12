@@ -263,7 +263,7 @@ begin
     v_result:=jsonb_build_object('task_id',v_task_id);
   else raise exception 'runtime_action_not_allowed';
  end case;
- perform omega_private.record_platform_event('action_completed',p_actor_user_id,'user','omega-runtime-gateway','runtime:'||p_action||':'||md5(coalesce(p_payload::text,'{}')),pg_catalog.gen_random_uuid(),'runtime_action',p_action,p_payload);
+ perform omega_private.record_platform_event('action_completed',p_actor_user_id,'user','omega-runtime-gateway','runtime:'||p_action||':'||pg_catalog.md5(coalesce(p_payload::text,'{}')),pg_catalog.md5(p_actor_user_id::text||':runtime:'||p_action||':'||pg_catalog.md5(coalesce(p_payload::text,'{}')))::uuid,'runtime_action',p_action,p_payload);
  return v_result;
 end $$;
 

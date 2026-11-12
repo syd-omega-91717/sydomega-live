@@ -133,6 +133,8 @@ This AI layer is not declared production-ready until:
 
 - [OpenAI Responses API migration guide](https://developers.openai.com/api/docs/guides/migrate-to-responses)
 - [OpenAI model catalog](https://developers.openai.com/api/docs/models)
+- [Anthropic model catalog](https://platform.claude.com/docs/en/models/overview)
+- [Anthropic model IDs and versioning](https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions)
 - [OpenAI API changelog](https://developers.openai.com/api/docs/changelog)
 - [OpenAI Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview)
 - [OWASP Top 10 for Agentic Applications 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)

@@ -92,6 +92,12 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
+        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
+        self.assertIn("20261113020000", strict.stdout)
+        self.assertIn("20261113030000", strict.stdout)
+        self.assertNotIn("20261113010000", strict.stdout)
+        self.assertIn("production release is blocked", strict.stdout)
         self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
         self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
         self.assertNotIn("production release is blocked", strict.stdout)
@@ -100,6 +106,14 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
         snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
         readiness = snapshot["release_readiness"]
+        self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
+        blockers = " ".join(str(item) for item in readiness.get("blockers", []))
+        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql is now present in the authenticated provider ledger as applied version 427", blockers)
+        self.assertIn("20261113020000_omega_notification_service_role_read_grant.sql", blockers)
+        self.assertIn("20261113030000_omega_user_achievement_service_role_insert_grant.sql", blockers)
+        self.assertIn("54-action behavioral SQL probe", blockers)
+        self.assertIn("Cloudflare exact-SHA production verification", blockers)
+        self.assertIn("Cloudflare exact-SHA production verification", blockers)
         self.assertEqual(
             readiness.get("status"),
             "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED",
@@ -178,6 +192,16 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("create policy", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
         self.assertIn("20261113062812", self.remote_versions)
+
+    def test_achievement_assignment_insert_remains_server_only_and_matches_live_acl(self) -> None:
+        path = MIGRATIONS / "20261113030000_omega_user_achievement_service_role_insert_grant.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant insert on table public.omega_user_achievements to service_role", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_user_achievements','insert')", sql)
+        self.assertNotIn("create policy", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
 
     def test_runtime_probe_uses_transaction_scoped_definer_inspector_for_restricted_evidence_tables(self) -> None:
         path = ROOT / "scripts" / "tests" / "omega-runtime-adapter-reconciliation-probe.sql"

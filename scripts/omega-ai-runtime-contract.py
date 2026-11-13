@@ -7,6 +7,11 @@ import json
 from pathlib import Path
 import sys
 
+if __name__ == "__main__" and ("--help" in sys.argv or "-h" in sys.argv):
+    print(__doc__)
+    raise SystemExit(0)
+
+
 ROOT = Path(__file__).resolve().parents[1]
 
 

@@ -1425,7 +1425,7 @@
     "production_status": "UNVERIFIED"
   },
   "runtime_dispatch_drift": {
-    "observed_date": "2026-11-12",
+    "observed_date": "2026-11-13",
     "live_function": "public.omega_runtime_dispatch(uuid,text,jsonb)",
     "live_definition_md5": "6441f11c033610c0e227f01386b487bd",
     "provider_ledger_versions": [
@@ -1439,10 +1439,10 @@
     "live_dispatcher_covered_actions": 54,
     "live_dispatcher_missing_actions": 0,
     "missing_actions": [],
-    "status": "DISPATCHER_BRANCHES_VERIFIED_54_OF_54; BEHAVIORAL_PROBES_PENDING",
+    "status": "DISPATCHER_BRANCHES_VERIFIED_54_OF_54; BEHAVIORAL_PROBES_PASS",
     "reconciliation_migration": "20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql",
     "production_application": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
-    "interpretation": "Read-only provider inspection confirms all 53 canonical module_read branches plus the dedicated consultancy intake write branch (54/54). The live dispatcher definition hash is 6441f11c033610c0e227f01386b487bd. The live omega_private.create_consult_intake helper now returns text (definition hash 0ac1e7dddd0fa1aa94ca6459d633517d) and is consistent with the provider-applied 20261112130000 compatibility migration; consult_requests.id remains bigint and is returned as text. This does not make the source chain replayable: the earlier provider-applied 20261111190000 repository file still contains a duplicate standalone VALUES/ON CONFLICT fragment and stops clean replay. The separate 54-action behavioral probe remains RERUN_REQUIRED_NOT_PRODUCTION_PROOF."
+    "interpretation": "Read-only provider inspection confirms all 53 canonical module_read branches plus the dedicated consultancy intake write branch (54/54). The live dispatcher definition hash is 6441f11c033610c0e227f01386b487bd. The live omega_private.create_consult_intake helper returns text and is consistent with the provider-applied 20261112130000 compatibility migration; consult_requests.id remains bigint and is returned as text. The source migration chain now replays from zero. On PR #1265 head e366d4099e93af0b562cdee953ba7ef3df05f7d6, all 54 runtime adapter actions, family-access authorization/privacy probes, and authenticated content-pipeline E2E passed. Production exact-SHA verification remains a separate release gate."
   },
   "idempotency_observations": {
     "observed_date": "2026-11-12",
@@ -1699,14 +1699,52 @@
     "intended_remediation": "Add the missing required domain column, align verified required/default fields, return source IDs as text for UUID/BIGINT compatibility, add the missing successful RETURN, update the dispatcher request ID variable to text, and preserve the underlying ID column without conversion."
   },
   "release_readiness": {
-    "status": "RELEASE_BLOCKED",
+    "status": "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED",
     "blockers": [
       "Forward-only migrations 20261113020000_omega_notification_service_role_read_grant.sql and 20261113030000_omega_user_achievement_service_role_insert_grant.sql remain pending provider application. Migration 20261113010000_omega_agent_task_service_role_read_grants.sql is confirmed applied as provider migration 427. The pending migrations materialize only existing production service_role privileges; they add no anon/authenticated privileges and do not change RLS.",
       "The 54-action behavioral SQL probe passed migration replay, migration inventory, security audit, hardening, and Stripe lifecycle stages, then failed at the synthetic omega_user_achievements INSERT because clean replay lacks its existing production service_role INSERT grant. The current PR adds this narrowly scoped parity migration and retains fixed-key transaction-scoped evidence assertions; the next rerun is required.",
       "Family-access authorization/privacy probes and authenticated content-pipeline end-to-end probes were skipped because the runtime adapter probe failed first; they remain unverified.",
       "Cloudflare exact-SHA production verification has not passed for the current merged main commit."
+      "Vercel production deployment remains intentionally postponed. The main-push Vercel Production workflow confirms VERCEL_PROMOTION_POSTPONED=true because the Vercel Hobby team was blocked for Edge Requests by account credits since 2026-10-06. The workflow's Cloudflare live-commit check passed, but Vercel project setup, immutable artifact build, deployment, and Vercel-domain smoke steps were skipped. Restore Vercel account capacity, authorize the project team, verify VERCEL_TOKEN and project scope, then deliberately resume promotion; do not infer Vercel deployment from a successful workflow conclusion."
     ],
-    "last_checked": "2026-11-13"
+    "last_checked": "2026-11-13",
+    "production_verification": {
+      "provider": "Cloudflare Pages",
+      "status": "PASS",
+      "commit_sha": "426ec70562e3f97d56707002a3bc25eb43f46328",
+      "workflow_run_id": 43384712260,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43384712260",
+      "job_id": 131750360938,
+      "verification_step": "Verify production manifest, headers and complete page estate",
+      "conclusion": "success",
+      "verified_at": "2026-11-13T07:18:40Z"
+    },
+    "vercel_promotion": {
+      "status": "POSTPONED_NOT_DEPLOYED",
+      "reason": "VERCEL_PROMOTION_POSTPONED=true; Vercel Hobby team blocked for Edge Requests by account credits since 2026-10-06 (documented in .github/workflows/vercel-production.yml)",
+      "workflow_run_id": 43384712049,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43384712049",
+      "job_id": 131750599639,
+      "cloudflare_live_commit_check": "PASS",
+      "vercel_deployment_steps": "SKIPPED",
+      "required_to_resume": [
+        "Vercel account Edge Request capacity restored",
+        "Vercel team access authorization approved",
+        "VERCEL_TOKEN and intended project scope verified",
+        "explicitly clear VERCEL_PROMOTION_POSTPONED only after preflight passes"
+      ]
+    },
+    "failover_verification": {
+      "provider": "GitHub Pages",
+      "status": "PASS",
+      "commit_sha": "426ec70562e3f97d56707002a3bc25eb43f46328",
+      "workflow_run_id": 43384712215,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43384712215",
+      "build_job_id": 131750361335,
+      "deploy_job_id": 131750488374,
+      "verification_step": "Smoke test deployed Pages site",
+      "conclusion": "success"
+    }
   },
   "runtime_probe_status": {
     "observed_date": "2026-11-13",
@@ -1719,15 +1757,31 @@
     "production_privilege_evidence": "Live provider ACL inspection confirms service_role SELECT on omega_notifications, omega_agent_tasks, and omega_agent_task_events; anon has no SELECT on these tables. Live provider ACL inspection also confirms service_role does not have SELECT on omega_platform_events, omega_audit_log, or sovereign_events.",
     "remediation": "The clean replay now passes all source migrations, inventory, migration security audit, hardening contract, Stripe static contract, and Stripe ledger probe. It then reaches the achievement fixture and fails because service_role lacks INSERT on omega_user_achievements. Follow-up branch adds forward-only migration 20261113030000 to reproduce only the existing service_role INSERT privilege, explicitly verifies authenticated/anon INSERT remain denied, and does not modify RLS. It retains 20261113020000 for the already verified notification SELECT parity and the fixed-key transaction-scoped SECURITY DEFINER evidence inspector. Full 54-action, family privacy, and authenticated content pipeline probes must rerun.",
     "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
+    "migration_replay": "PASS on PR #1265 head e366d4099e93af0b562cdee953ba7ef3df05f7d6; all 429 source migrations replayed from zero",
+    "migration_security_audit": "PASS on PR #1265 head",
+    "hardening_contract": "PASS on PR #1265 head",
+    "stripe_refund_lifecycle_probe": "PASS on PR #1265 head",
+    "runtime_adapter_probe": "PASS — 54/54 governed actions",
+    "failure": null,
+    "production_privilege_evidence": "Live provider ACL verification confirms service_role SELECT on omega_notifications, omega_agent_tasks, omega_agent_task_events, omega_user_achievements, and omega_achievement_verifications; service_role INSERT on omega_user_achievements. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with the existing owner-read-only policy.",
+    "remediation": "Database and behavioral verification is green: 429 source migrations replayed from zero; migration inventory and security audit pass; hardening and Stripe lifecycle probes pass; all 54 runtime actions pass; family-access authorization/privacy probes pass; authenticated content pipeline E2E passes. The provider ledger contains 429 applied versions through 20261113062812; source migration history is reconciled and pending-migrations.json is empty. Cloudflare Pages exact-SHA production verification passed for main commit 426ec70562e3f97d56707002a3bc25eb43f46328. GitHub Pages failover build, deployment, and smoke test also passed. Vercel production promotion remains intentionally postponed because the workflow records the Hobby team's Edge Request credit block; Vercel deploy steps were skipped.",
+    "status": "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION",
     "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
     "provider_migration_ledger": {
       "observed_date": "2026-11-13",
-      "applied_count": 427,
-      "latest_version": "20261113010000",
-      "latest_name": "omega_agent_task_service_role_read_grants",
-      "notification_migration": "20261113020000_NOT_APPLIED"
+      "applied_count": 429,
+      "latest_version": "20261113062812",
+      "latest_name": "omega_user_achievement_service_role_insert_grant",
+      "task_grant_migration": "20261113010000_APPLIED",
+      "notification_migration": "20261113020000_APPLIED",
+      "achievement_migration": "20261113062812_APPLIED"
     },
     "task_grant_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
     "achievement_assignment_acl_evidence": "Live provider ACL inspection confirms omega_user_achievements has RLS enabled with an owner-read-only authenticated policy; service_role has INSERT, while authenticated and anon do not. No policy or client privilege change is proposed."
+    "achievement_assignment_acl_evidence": "Live provider ACL inspection confirms service_role has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with owner-read-only authenticated policy.",
+    "family_access_probe": "PASS",
+    "content_pipeline_e2e": "PASS — authenticated local-only content pipeline",
+    "notification_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
+    "achievement_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED"
   }
 }

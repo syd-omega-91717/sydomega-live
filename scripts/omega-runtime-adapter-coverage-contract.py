@@ -22,6 +22,7 @@ PROBE = ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql"
 SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113010000_omega_agent_task_service_role_read_grants.sql"
 NOTIFICATION_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113020000_omega_notification_service_role_read_grant.sql"
 ACHIEVEMENT_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113030000_omega_user_achievement_service_role_insert_grant.sql"
+ACHIEVEMENT_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113062812_omega_user_achievement_service_role_insert_grant.sql"
 
 def fail(message: str) -> int:
     print(f"OMEGA RUNTIME ADAPTER COVERAGE: FAIL — {message}")
@@ -377,6 +378,15 @@ def main() -> int:
             "has_table_privilege('service_role','public.omega_user_achievements','insert')",
             "has_table_privilege('authenticated','public.omega_user_achievements','insert')",
             "has_table_privilege('anon','public.omega_user_achievements','insert')",
+            "grant select, insert on table public.omega_user_achievements to service_role",
+            "grant select on table public.omega_achievement_verifications to service_role",
+            "has_table_privilege('service_role','public.omega_user_achievements','select')",
+            "has_table_privilege('service_role','public.omega_user_achievements','insert')",
+            "has_table_privilege('service_role','public.omega_achievement_verifications','select')",
+            "has_table_privilege('authenticated','public.omega_user_achievements','insert')",
+            "has_table_privilege('anon','public.omega_user_achievements','insert')",
+            "has_table_privilege('authenticated','public.omega_achievement_verifications','select')",
+            "has_table_privilege('anon','public.omega_achievement_verifications','select')",
         ):
             if marker not in achievement_service_role_grants_sql:
                 return fail(f"achievement server-only insert grant marker missing: {marker}")

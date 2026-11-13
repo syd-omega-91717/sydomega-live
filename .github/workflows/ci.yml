@@ -280,11 +280,12 @@ jobs:
           import subprocess, sys
           sys.exit(subprocess.run(['node', 'scripts/tests/test_omega_execution_program.js']).returncode)
       - name: Client credential scan
-        shell: bash
-        run: python scripts/client-credential-scan.py
         shell: python
         run: |
-          import pathlib, sys
+          import pathlib, subprocess, sys
+          credential_scan = subprocess.run(['python', 'scripts/client-credential-scan.py'])
+          if credential_scan.returncode:
+              sys.exit(credential_scan.returncode)
           NEEDLES = ("service_role", "supabase_service_role_key")
           hits = []
           for path in pathlib.Path(".").rglob("*"):

@@ -51,6 +51,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIsNotNone(match, path.name)
             local_versions.add(match.group(1))
         self.assertEqual(pending_versions, local_versions - self.remote_versions)
+        self.assertEqual(self.pending, [], "all provider-applied migrations must be removed from pending registry")
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
@@ -58,7 +59,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300", "20261112091400", "20261112091500",
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
-            "20261112120000", "20261112121000", "20261112130000", "20261113010000",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113062812",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -66,7 +67,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261113010000")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261113062812")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-13")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
@@ -87,7 +88,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_inventory_passes_but_strict_drift_blocks_pending_migration(self) -> None:
+    def test_source_and_strict_drift_pass_when_provider_ledger_is_reconciled(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
@@ -97,8 +98,11 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("20261113030000", strict.stdout)
         self.assertNotIn("20261113010000", strict.stdout)
         self.assertIn("production release is blocked", strict.stdout)
+        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
+        self.assertNotIn("production release is blocked", strict.stdout)
 
-    def test_release_readiness_stays_blocked_by_unverified_replay_and_production_proof(self) -> None:
+    def test_release_readiness_records_cloudflare_pass_and_vercel_postponement(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
         snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
         readiness = snapshot["release_readiness"]
@@ -111,9 +115,44 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("Cloudflare exact-SHA production verification", blockers)
         self.assertIn("Cloudflare exact-SHA production verification", blockers)
         self.assertEqual(
-            snapshot["runtime_probe_status"].get("status"),
-            "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
+            readiness.get("status"),
+            "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED",
         )
+        self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
+        self.assertEqual(
+            readiness.get("production_verification", {}).get("commit_sha"),
+            "426ec70562e3f97d56707002a3bc25eb43f46328",
+        )
+        self.assertEqual(
+            readiness.get("production_verification", {}).get("workflow_run_id"),
+            43384712260,
+        )
+        vercel = readiness.get("vercel_promotion", {})
+        self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")
+        self.assertEqual(vercel.get("vercel_deployment_steps"), "SKIPPED")
+        self.assertIn("VERCEL_PROMOTION_POSTPONED=true", vercel.get("reason", ""))
+        failover = readiness.get("failover_verification", {})
+        self.assertEqual(failover.get("provider"), "GitHub Pages")
+        self.assertEqual(failover.get("status"), "PASS")
+        self.assertEqual(failover.get("commit_sha"), "426ec70562e3f97d56707002a3bc25eb43f46328")
+        self.assertEqual(failover.get("workflow_run_id"), 43384712215)
+        blockers = " ".join(str(item) for item in readiness.get("blockers", []))
+        self.assertIn("Vercel production deployment remains intentionally postponed", blockers)
+        self.assertNotIn("Cloudflare exact-SHA production verification has not passed", blockers)
+        self.assertNotIn("54-action behavioral SQL probe", blockers)
+        self.assertNotIn("migration", blockers.lower())
+        runtime = snapshot["runtime_probe_status"]
+        self.assertEqual(runtime.get("status"), "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
+        self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions")
+        self.assertEqual(runtime.get("family_access_probe"), "PASS")
+        self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline")
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 429)
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261113062812")
+        self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
+        remediation = runtime.get("remediation", "").lower()
+        self.assertIn("vercel production promotion remains", remediation)
+        self.assertIn("intentionally postponed", remediation)
+        self.assertIn("vercel deploy steps were skipped", remediation)
 
     def test_agent_task_service_role_grants_are_provider_applied_without_anon_expansion(self) -> None:
         path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"
@@ -136,6 +175,23 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("has_table_privilege('anon','public.omega_notifications','select')", sql)
         self.assertNotIn("to authenticated", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
+        self.assertIn("20261113020000", self.remote_versions)
+
+    def test_achievement_assignment_insert_remains_server_only_and_matches_live_acl(self) -> None:
+        path = MIGRATIONS / "20261113062812_omega_user_achievement_service_role_insert_grant.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select, insert on table public.omega_user_achievements to service_role", sql)
+        self.assertIn("grant select on table public.omega_achievement_verifications to service_role", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','select')", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_achievement_verifications','select')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_achievement_verifications','select')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_achievement_verifications','select')", sql)
+        self.assertNotIn("create policy", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+        self.assertIn("20261113062812", self.remote_versions)
 
     def test_achievement_assignment_insert_remains_server_only_and_matches_live_acl(self) -> None:
         path = MIGRATIONS / "20261113030000_omega_user_achievement_service_role_insert_grant.sql"

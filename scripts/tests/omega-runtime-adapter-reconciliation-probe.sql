@@ -583,7 +583,9 @@ $sovereign_probe$;
 reset role;
 set local role service_role;
 do $sovereign_count$
-declare v_count integer;
+declare
+  v_count integer;
+  v_probe_counts jsonb;
 begin
   v_probe_counts:=public.omega_runtime_probe_assert_counts_20261113(
     'omega-runtime-probe-platform-0001',

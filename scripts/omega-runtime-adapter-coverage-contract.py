@@ -373,10 +373,15 @@ def main() -> int:
         if "to authenticated" in notification_service_role_grants_sql:
             return fail("notification service-role grant migration must not expand authenticated privileges")
         for marker in (
-            "grant insert on table public.omega_user_achievements to service_role",
+            "grant select, insert on table public.omega_user_achievements to service_role",
+            "grant select on table public.omega_achievement_verifications to service_role",
+            "has_table_privilege('service_role','public.omega_user_achievements','select')",
             "has_table_privilege('service_role','public.omega_user_achievements','insert')",
+            "has_table_privilege('service_role','public.omega_achievement_verifications','select')",
             "has_table_privilege('authenticated','public.omega_user_achievements','insert')",
             "has_table_privilege('anon','public.omega_user_achievements','insert')",
+            "has_table_privilege('authenticated','public.omega_achievement_verifications','select')",
+            "has_table_privilege('anon','public.omega_achievement_verifications','select')",
         ):
             if marker not in achievement_service_role_grants_sql:
                 return fail(f"achievement server-only insert grant marker missing: {marker}")

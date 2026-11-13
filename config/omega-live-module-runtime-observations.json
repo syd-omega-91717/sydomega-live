@@ -1701,23 +1701,24 @@
   "release_readiness": {
     "status": "RELEASE_BLOCKED",
     "blockers": [
-      "Forward-only migration 20261113010000_omega_agent_task_service_role_read_grants.sql is pending provider application. It materializes only the existing production service_role SELECT privileges on omega_agent_tasks and omega_agent_task_events; no anon or authenticated privilege expansion is allowed.",
-      "The fresh all-migration replay succeeds, but the 54-action behavioral SQL probe currently stops at a direct service_role SELECT on omega_agent_tasks. The new privilege-parity migration must be replayed and the full probe rerun.",
+      "Forward-only migrations 20261113010000_omega_agent_task_service_role_read_grants.sql and 20261113020000_omega_notification_service_role_read_grant.sql are pending provider application. They materialize only service_role SELECT privileges independently observed on omega_agent_tasks, omega_agent_task_events, and omega_notifications; no anon or authenticated grants are added and no RLS policy is changed.",
+      "The complete source migration replay passes, but the 54-action runtime adapter probe fails at omega_notifications because the clean replay lacks its existing production service_role SELECT grant. The current PR adds that narrow parity grant and moves restricted evidence-table row-count assertions into a transaction-scoped SECURITY DEFINER test helper; the rerun has not yet passed.",
+      "Family-access authorization/privacy probes and authenticated content-pipeline end-to-end probes were skipped because the runtime adapter probe failed first; they remain unverified.",
       "Cloudflare exact-SHA production verification has not passed for the current merged main commit."
     ],
     "last_checked": "2026-11-13"
   },
   "runtime_probe_status": {
     "observed_date": "2026-11-13",
-    "migration_replay": "PASS on PR #1262 head; all source migrations replayed from zero, including consultancy UUID/BIGINT compatibility",
-    "migration_security_audit": "PASS on PR #1262 head",
-    "hardening_contract": "PASS on PR #1262 head",
-    "stripe_refund_lifecycle_probe": "PASS on PR #1262 head",
-    "runtime_adapter_probe": "BLOCKED at agent-task row-count verification",
-    "failure": "permission denied for table omega_agent_tasks when the 54-action SQL probe runs direct row-count assertions as service_role",
-    "production_privilege_evidence": "Authenticated Supabase live privilege query confirms service_role has SELECT on omega_agent_tasks and omega_agent_task_events; anon and authenticated are not being granted new privileges by the proposed migration.",
-    "remediation": "Added pending forward-only migration 20261113010000_omega_agent_task_service_role_read_grants.sql to materialize the two existing production service_role SELECT grants in clean replays. Rerun all migrations and all 54 adapter probes; then run family-access and authenticated content pipeline probes.",
+    "migration_replay": "PASS on merged PR #1262 commit fa3d6e6043cf29aa65904e2da5013d26facf8f03; all source migrations replayed from zero",
+    "migration_security_audit": "PASS on merged PR #1262 commit",
+    "hardening_contract": "PASS on merged PR #1262 commit",
+    "stripe_refund_lifecycle_probe": "PASS on merged PR #1262 commit",
+    "runtime_adapter_probe": "FAILED at notification row-count verification; rerun pending in follow-up PR",
+    "failure": "permission denied for table omega_notifications at line 457 of scripts/tests/omega-runtime-adapter-reconciliation-probe.sql when service_role performs a direct row-count assertion",
+    "production_privilege_evidence": "Live provider ACL inspection confirms service_role SELECT on omega_notifications, omega_agent_tasks, and omega_agent_task_events; anon has no SELECT on these tables. Live provider ACL inspection also confirms service_role does not have SELECT on omega_platform_events, omega_audit_log, or sovereign_events.",
+    "remediation": "Follow-up branch fix/runtime-probe-privilege-parity-20261113 adds forward-only migration 20261113020000 to materialize the existing omega_notifications service_role SELECT grant. It retains the 20261113010000 task grant migration. Direct CI-only row-count assertions for omega_platform_events, omega_audit_log, and sovereign_events now use a narrowly scoped SECURITY DEFINER helper created inside the probe transaction, executable only by service_role and rolled back with all fixtures; no production role grants are broadened. Full replay and all behavioral probes must rerun.",
     "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
-    "prior_consultancy_idempotency_assertion": "Corrected in PR #1262: same-user retries must return the same request ID; cross-user isolation is checked separately."
+    "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately."
   }
 }

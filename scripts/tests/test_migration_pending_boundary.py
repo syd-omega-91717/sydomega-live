@@ -58,7 +58,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300", "20261112091400", "20261112091500",
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
-            "20261112120000", "20261112121000", "20261112130000",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -66,9 +66,9 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112130000")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261113010000")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
-        self.assertEqual(self.remote.get("_captured"), "2026-11-12")
+        self.assertEqual(self.remote.get("_captured"), "2026-11-13")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
@@ -93,7 +93,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         strict = run_script("scripts/migration-drift.py")
         self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
         self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
-        self.assertIn("20261113010000", strict.stdout)
+        self.assertIn("20261113020000", strict.stdout)
+        self.assertNotIn("20261113010000", strict.stdout)
         self.assertIn("production release is blocked", strict.stdout)
 
     def test_release_readiness_stays_blocked_by_unverified_replay_and_production_proof(self) -> None:
@@ -102,7 +103,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         readiness = snapshot["release_readiness"]
         self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
-        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql", blockers)
+        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql is now present in the authenticated provider ledger as applied version 427", blockers)
+        self.assertIn("20261113020000_omega_notification_service_role_read_grant.sql", blockers)
         self.assertIn("54-action behavioral SQL probe", blockers)
         self.assertIn("Cloudflare exact-SHA production verification", blockers)
         self.assertIn("Cloudflare exact-SHA production verification", blockers)
@@ -111,7 +113,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
         )
 
-    def test_agent_task_service_role_grants_are_materialized_without_member_or_anon_expansion(self) -> None:
+    def test_agent_task_service_role_grants_are_provider_applied_without_anon_expansion(self) -> None:
         path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"
         sql = path.read_text(encoding="utf-8").lower()
         self.assertIn("grant select on table", sql)
@@ -121,6 +123,30 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("has_table_privilege('anon'", sql)
         self.assertNotIn("to authenticated", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
+        self.assertIn("20261113010000", self.remote_versions)
+        self.assertNotIn("20261113010000", {str(x["version"]) for x in self.pending})
+
+    def test_notification_service_role_grant_matches_existing_live_privilege_without_anon_expansion(self) -> None:
+        path = MIGRATIONS / "20261113020000_omega_notification_service_role_read_grant.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select on table public.omega_notifications to service_role", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_notifications','select')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_notifications','select')", sql)
+        self.assertNotIn("to authenticated", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
+    def test_runtime_probe_uses_transaction_scoped_definer_inspector_for_restricted_evidence_tables(self) -> None:
+        path = ROOT / "scripts" / "tests" / "omega-runtime-adapter-reconciliation-probe.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("create or replace function public.omega_runtime_probe_assert_counts_20261113(", sql)
+        self.assertIn("security definer", sql)
+        self.assertIn("set search_path = ''", sql)
+        self.assertIn("revoke all on function public.omega_runtime_probe_assert_counts_20261113", sql)
+        self.assertIn("grant execute on function public.omega_runtime_probe_assert_counts_20261113", sql)
+        self.assertIn("rollback;", sql)
+        self.assertNotIn("select count(*) into v_count from public.omega_platform_events", sql)
+        self.assertNotIn("select count(*) into v_count from public.omega_audit_log", sql)
+        self.assertNotIn("select count(*) into v_count from public.sovereign_events", sql)
 
     def test_public_points_projection_remains_privacy_scoped(self) -> None:
         path = MIGRATIONS / "20261013160000_secure_public_points_leaderboard_projection.sql"

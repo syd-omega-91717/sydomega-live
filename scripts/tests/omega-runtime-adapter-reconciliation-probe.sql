@@ -30,6 +30,70 @@ values
  ('10000000-0000-4000-8000-000000000092','Runtime Adapter Probe 2','Taurus',date '1990-04-21')
 on conflict (id) do update set display_name=excluded.display_name,sign=excluded.sign,birth_date=excluded.birth_date;
 
+-- Test-only SECURITY DEFINER inspector: preserve least-privilege service_role table grants
+-- while still asserting persisted event/audit rows inside this rolled-back CI transaction.
+create or replace function public.omega_runtime_probe_assert_counts_20261113()
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+declare
+  v_platform_actor bigint;
+  v_audit_actor bigint;
+  v_platform_system bigint;
+  v_audit_system bigint;
+  v_sovereign bigint;
+begin
+  select count(*) into v_platform_actor
+  from public.omega_platform_events
+  where idempotency_key='omega-runtime-probe-platform-0001'
+    and actor_user_id in (
+      '10000000-0000-4000-8000-000000000091'::uuid,
+      '10000000-0000-4000-8000-000000000092'::uuid
+    );
+
+  select count(*) into v_audit_actor
+  from public.omega_audit_log
+  where idempotency_key='audit:omega-runtime-probe-platform-0001'
+    and actor_user_id in (
+      '10000000-0000-4000-8000-000000000091'::uuid,
+      '10000000-0000-4000-8000-000000000092'::uuid
+    );
+
+  select count(*) into v_platform_system
+  from public.omega_platform_events
+  where idempotency_key='omega-runtime-probe-system-platform-0001'
+    and actor_user_id is null;
+
+  select count(*) into v_audit_system
+  from public.omega_audit_log
+  where idempotency_key='audit:omega-runtime-probe-system-platform-0001'
+    and actor_user_id is null;
+
+  select count(*) into v_sovereign
+  from public.sovereign_events
+  where idempotency_key='omega-runtime-probe-sovereign-0001'
+    and user_id in (
+      '10000000-0000-4000-8000-000000000091'::uuid,
+      '10000000-0000-4000-8000-000000000092'::uuid
+    );
+
+  return jsonb_build_object(
+    'platform_actor',v_platform_actor,
+    'audit_actor',v_audit_actor,
+    'platform_system',v_platform_system,
+    'audit_system',v_audit_system,
+    'sovereign',v_sovereign
+  );
+end;
+$function$;
+
+revoke all on function public.omega_runtime_probe_assert_counts_20261113()
+  from public,anon,authenticated;
+grant execute on function public.omega_runtime_probe_assert_counts_20261113()
+  to service_role;
+
 set local role service_role;
 
 do $probe$
@@ -64,6 +128,7 @@ declare
   v_verification_two uuid;
   v_verification_other uuid;
   v_error text;
+  v_probe_counts jsonb;
   v_actions constant text[][] := array[
     array['CORE','profile.read'],
     array['CORE','catalog.read'],
@@ -408,23 +473,24 @@ begin
   if v_platform_other is null or v_platform_other is not distinct from v_platform_one then
     raise exception 'platform event idempotency was not isolated by actor';
   end if;
-  select count(*) into v_count from public.omega_platform_events
-   where idempotency_key='omega-runtime-probe-platform-0001' and actor_user_id in (v_user,v_other_user);
-  if v_count<>2 then raise exception 'platform event cross-user idempotency created % rows, expected 2',v_count; end if;
-  select count(*) into v_count from public.omega_audit_log
-   where idempotency_key='audit:omega-runtime-probe-platform-0001' and actor_user_id in (v_user,v_other_user);
-  if v_count<>2 then raise exception 'audit log cross-user idempotency created % rows, expected 2',v_count; end if;
   v_platform_system_one:=omega_private.record_platform_event('route_view',null,'system','runtime-probe','omega-runtime-probe-system-platform-0001',null,'probe','system','{}'::jsonb);
   v_platform_system_two:=omega_private.record_platform_event('route_view',null,'system','runtime-probe','omega-runtime-probe-system-platform-0001',null,'probe','system','{}'::jsonb);
   if v_platform_system_one is null or v_platform_system_one is distinct from v_platform_system_two then
     raise exception 'system platform event global idempotency failed';
   end if;
-  select count(*) into v_count from public.omega_platform_events
-   where actor_user_id is null and idempotency_key='omega-runtime-probe-system-platform-0001';
-  if v_count<>1 then raise exception 'system platform event idempotency created % rows, expected 1',v_count; end if;
-  select count(*) into v_count from public.omega_audit_log
-   where actor_user_id is null and idempotency_key='audit:omega-runtime-probe-system-platform-0001';
-  if v_count<>1 then raise exception 'system audit log idempotency created % rows, expected 1',v_count; end if;
+  v_probe_counts:=public.omega_runtime_probe_assert_counts_20261113();
+  if (v_probe_counts->>'platform_actor')::bigint<>2 then
+    raise exception 'platform event cross-user idempotency created % rows, expected 2',v_probe_counts->>'platform_actor';
+  end if;
+  if (v_probe_counts->>'audit_actor')::bigint<>2 then
+    raise exception 'audit log cross-user idempotency created % rows, expected 2',v_probe_counts->>'audit_actor';
+  end if;
+  if (v_probe_counts->>'platform_system')::bigint<>1 then
+    raise exception 'system platform event idempotency created % rows, expected 1',v_probe_counts->>'platform_system';
+  end if;
+  if (v_probe_counts->>'audit_system')::bigint<>1 then
+    raise exception 'system audit log idempotency created % rows, expected 1',v_probe_counts->>'audit_system';
+  end if;
 
   -- Achievement verification keys are scoped to the subject achievement assignment.
   insert into public.omega_user_achievements(user_id,achievement_id)
@@ -515,12 +581,14 @@ $sovereign_probe$;
 reset role;
 set local role service_role;
 do $sovereign_count$
-declare v_count integer;
+declare
+  v_count integer;
+  v_probe_counts jsonb;
 begin
-  select count(*) into v_count from public.sovereign_events
-   where idempotency_key='omega-runtime-probe-sovereign-0001'
-     and user_id in ('10000000-0000-4000-8000-000000000091','10000000-0000-4000-8000-000000000092');
-  if v_count<>2 then raise exception 'sovereign event cross-user idempotency created % rows, expected 2',v_count; end if;
+  v_probe_counts:=public.omega_runtime_probe_assert_counts_20261113();
+  if (v_probe_counts->>'sovereign')::bigint<>2 then
+    raise exception 'sovereign event cross-user idempotency created % rows, expected 2',v_probe_counts->>'sovereign';
+  end if;
 end;
 $sovereign_count$;
 

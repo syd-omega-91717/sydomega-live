@@ -20,6 +20,7 @@ CONSULTANCY_SCHEMA_MIGRATION = ROOT / "supabase/migrations/20261112091600_omega_
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 PROBE = ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql"
 SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113010000_omega_agent_task_service_role_read_grants.sql"
+NOTIFICATION_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113020000_omega_notification_service_role_read_grant.sql"
 
 def fail(message: str) -> int:
     print(f"OMEGA RUNTIME ADAPTER COVERAGE: FAIL — {message}")
@@ -38,6 +39,7 @@ def main() -> int:
         news_sql = NEWS_MIGRATION.read_text(encoding="utf-8")
         consultancy_schema_sql = CONSULTANCY_SCHEMA_MIGRATION.read_text(encoding="utf-8")
         service_role_grants_sql = SERVICE_ROLE_GRANTS_MIGRATION.read_text(encoding="utf-8").lower()
+        notification_service_role_grants_sql = NOTIFICATION_SERVICE_ROLE_GRANTS_MIGRATION.read_text(encoding="utf-8").lower()
         all_sql = "\n".join((
             sql,
             idempotency_sql,
@@ -48,6 +50,7 @@ def main() -> int:
             news_sql,
             consultancy_schema_sql,
             service_role_grants_sql,
+            notification_service_role_grants_sql,
         ))
         gateway = GATEWAY.read_text(encoding="utf-8")
         probe = PROBE.read_text(encoding="utf-8")
@@ -357,6 +360,24 @@ def main() -> int:
                 return fail(f"narrow agent-task service-role grant migration marker missing: {marker}")
         if "to authenticated" in service_role_grants_sql:
             return fail("agent-task service-role grant migration must not expand authenticated privileges")
+        for marker in (
+            "grant select on table public.omega_notifications to service_role",
+            "has_table_privilege('service_role','public.omega_notifications','select')",
+            "has_table_privilege('anon','public.omega_notifications','select')",
+        ):
+            if marker not in notification_service_role_grants_sql:
+                return fail(f"notification service-role grant migration marker missing: {marker}")
+        if "to authenticated" in notification_service_role_grants_sql:
+            return fail("notification service-role grant migration must not expand authenticated privileges")
+        for marker in (
+            "create or replace function public.omega_runtime_probe_assert_counts_20261113(",
+            "security definer",
+            "set search_path = ''",
+            "revoke all on function public.omega_runtime_probe_assert_counts_20261113",
+            "grant execute on function public.omega_runtime_probe_assert_counts_20261113",
+        ):
+            if marker not in probe.lower():
+                return fail(f"test-only least-privilege evidence inspector marker missing: {marker}")
         if "or v_other->>'request_id' is distinct from v_other_request_id" not in probe:
             return fail("consultancy retry probe must require the same actor to receive the same idempotent request ID")
         if "or v_other->>'request_id' is not distinct from v_other_request_id" in probe:

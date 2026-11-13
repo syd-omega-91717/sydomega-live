@@ -17,7 +17,7 @@
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "The clean replay's 54-action behavioral SQL probe reached achievement seeding and failed because service_role lacked INSERT on omega_user_achievements. A read-only live ACL inspection confirms service_role already has INSERT, SELECT, UPDATE, DELETE, REFERENCES, TRIGGER, and TRUNCATE; authenticated has SELECT only and anon has no table grant. This forward-only migration materializes only the existing service_role INSERT privilege; it does not add authenticated or anon write access and does not alter RLS. Production remains blocked until the complete replay and all downstream behavioral probes pass."
+      "reason": "The clean replay's 54-action behavioral SQL probe first failed on INSERT, and after the narrow INSERT parity grant it progressed to a SELECT on omega_user_achievements and failed because clean replay also lacked service_role SELECT. A read-only live ACL inspection confirms service_role already has both INSERT and SELECT (as well as its existing remaining table privileges); authenticated has SELECT only and anon has no table grant. This forward-only migration materializes only the existing service_role SELECT and INSERT privileges, preserves authenticated SELECT, adds no anon access or authenticated write access, and does not alter RLS. Production remains blocked until the complete replay and all downstream behavioral probes pass."
     }
   ]
 }

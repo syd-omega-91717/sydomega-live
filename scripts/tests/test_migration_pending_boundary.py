@@ -51,7 +51,6 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIsNotNone(match, path.name)
             local_versions.add(match.group(1))
         self.assertEqual(pending_versions, local_versions - self.remote_versions)
-        self.assertEqual(self.pending, [], "all provider-applied migrations must be reconciled")
         self.assertEqual(self.pending, [], "all provider-applied migrations must be removed from pending registry")
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:

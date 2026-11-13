@@ -196,3 +196,17 @@ The corpus is reconciled only when:
 - no secret, fictional metric, simulated balance, unearned award, unverified KYC status or lore claim is represented as live truth.
 
 **Audit conclusion:** the five documents provide a broad product vision and substantial engineering direction, but they are not a single internally consistent, fully specified, deployable build instruction. The current repository is the implementation authority. This reconciliation prevents the historical prompts from causing a destructive rewrite, unsafe financial activation, false verification or fabricated completeness.
+
+
+## 10. Release-state addendum — 2026-11-13
+
+This section updates the release facts without rewriting the historical 2026-11-11 source audit baseline.
+
+- Current `main`: `342d9b391762a2dba2ad5280b53895dd2672f4f0` (merge of PR #1273).
+- GitHub main commit checks: 25/25 completed successfully at the time of verification.
+- Cloudflare Pages production: exact-SHA release verification passed for the current main commit; the release manifest, root domains, production route surface and security-header checks passed.
+- GitHub Pages failover: deployment and smoke checks passed for the same release sequence.
+- Supabase: runtime health and fresh all-migrations replay checks passed in the main release workflow.
+- Vercel: no production deployment record exists for the current main SHA. The latest READY production deployment returned by the Vercel API is for older commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28`; the project API reports `live=false`. The repository workflow currently sets `VERCEL_PROMOTION_POSTPONED=true` and documents a prior Hobby Edge Request credit block. The team is on the Hobby plan; current billing/credit status could not be independently confirmed through the available billing endpoint.
+
+**Release interpretation:** Cloudflare Pages is the currently verified production authority for the audited main SHA. Do not describe the current SHA as deployed to Vercel. Do not remove the Vercel promotion hold until account capacity, team access, deployment credentials, project scope and exact-SHA post-deploy checks are all verified.

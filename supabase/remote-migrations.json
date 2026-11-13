@@ -1,8 +1,8 @@
 {
   "_captured": "2026-11-13",
-  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-13 (read-only). The provider ledger is authoritative for applied versions; source migration inventory and fresh replay are validated separately.",
-  "remoteMigrationCount": 427,
-  "latestRemoteMigration": "20261113010000",
+  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-13 (read-only). Provider versions and names are copied exactly; source files must use the same version prefixes.",
+  "remoteMigrationCount": 429,
+  "latestRemoteMigration": "20261113062812",
   "versions": [
     "0001",
     "0002",
@@ -430,7 +430,9 @@
     "20261112120000",
     "20261112121000",
     "20261112130000",
-    "20261113010000"
+    "20261113010000",
+    "20261113020000",
+    "20261113062812"
   ],
   "migrations": [
     {
@@ -2140,6 +2142,14 @@
     {
       "version": "20261113010000",
       "name": "omega_agent_task_service_role_read_grants"
+    },
+    {
+      "version": "20261113020000",
+      "name": "omega_notification_service_role_read_grant"
+    },
+    {
+      "version": "20261113062812",
+      "name": "omega_user_achievement_service_role_insert_grant"
     }
   ]
 }

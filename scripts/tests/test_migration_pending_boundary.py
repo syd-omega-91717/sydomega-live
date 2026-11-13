@@ -140,10 +140,15 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
     def test_achievement_assignment_insert_remains_server_only_and_matches_live_acl(self) -> None:
         path = MIGRATIONS / "20261113030000_omega_user_achievement_service_role_insert_grant.sql"
         sql = path.read_text(encoding="utf-8").lower()
-        self.assertIn("grant insert on table public.omega_user_achievements to service_role", sql)
+        self.assertIn("grant select, insert on table public.omega_user_achievements to service_role", sql)
+        self.assertIn("grant select on table public.omega_achievement_verifications to service_role", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','select')", sql)
         self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_achievement_verifications','select')", sql)
         self.assertIn("has_table_privilege('authenticated','public.omega_user_achievements','insert')", sql)
         self.assertIn("has_table_privilege('anon','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_achievement_verifications','select')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_achievement_verifications','select')", sql)
         self.assertNotIn("create policy", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
 

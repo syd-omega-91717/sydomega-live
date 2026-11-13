@@ -90,7 +90,7 @@ The following ranges are absent as top-level numbered bullet entries. A missing 
 
 ## 4. Security and implementation defects in the build prompt
 
-The build prompt contains credential-like values and hard-coded example passwords in its environment and Docker sections. **Treat all real credentials copied into the source files as exposed: revoke/rotate them and inspect provider audit logs.** This report intentionally does not reproduce any values.
+Both the master build prompt and the 18-module product document contain credential-like values. The master prompt includes AI-provider, Stripe, database, Redis, JWT, social/cloud and webhook-shaped values; the product document repeats several provider/payment values and adds social/video/cloud token-shaped values. The product document also contains wallet addresses and personal contact references. **Treat every credential-like value that may be genuine as exposed: revoke/rotate it and inspect provider audit logs.** This report intentionally does not reproduce any values. The uploaded source files are not copied into the repository.
 
 Additional issues:
 

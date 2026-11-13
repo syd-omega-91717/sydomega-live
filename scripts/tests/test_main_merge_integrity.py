@@ -58,6 +58,19 @@ class MainMergeIntegrityTests(unittest.TestCase):
         self.assertIn("consultancy_schema_sql,", source)
         self.assertNotIn("consultancy_compat_sql,\n            re.IGNORECASE", source)
 
+    def test_ci_workflow_steps_do_not_duplicate_shell_or_run_keys(self) -> None:
+        source = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+        blocks = source.split("      - name: ")
+        for block in blocks[1:]:
+            name = block.splitlines()[0].strip()
+            shell_keys = [line for line in block.splitlines() if line.startswith("        shell:")]
+            run_keys = [line for line in block.splitlines() if line.startswith("        run:")]
+            self.assertLessEqual(len(shell_keys), 1, f"{name}: duplicate shell keys")
+            self.assertLessEqual(len(run_keys), 1, f"{name}: duplicate run keys")
+        credential_step = next(block for block in blocks if block.startswith("Client credential scan"))
+        self.assertIn("scripts/client-credential-scan.py", credential_step)
+        self.assertIn("no service-role credential marker in client code", credential_step)
+
     def test_repaired_python_contracts_parse(self) -> None:
         for relative in (
             "scripts/cloudflare-production-smoke.py",

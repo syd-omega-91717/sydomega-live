@@ -10,7 +10,18 @@ This directory is the canonical, ordered, automatically-appliable schema history
 
 The repository contains timestamped reconciliation migrations for changes that were historically applied directly to the live database. Those files preserve the recorded migration versions so `supabase db push` does not encounter `Remote migration versions not found in local migrations directory`.
 
-## Current provider-verified state — 2026-11-12
+## Current provider-verified state — 2026-11-13
+
+- A fresh, read-only read of the authenticated Supabase provider ledger returned **430 unique applied versions**; the latest is `20261113062812_omega_user_achievement_service_role_insert_grant`. The repository's `supabase/remote-migrations.json` records the same 430 versions.
+- The source directory contains **430 unique migration files**. The source-version set and provider-version set match exactly: no local-only versions, no provider-only versions, and no duplicates. `supabase/pending-migrations.json` contains **zero pending migrations**.
+- Versions `20261112091600`, `20261113030000`, and `20261113062812` are present in both source history and the live provider ledger. Do not remove, rewrite, renumber, or reapply an already-recorded migration to correct documentation or inventory drift.
+- The isolated fresh-database replay on main commit `016bf9276143abe82d18317f4e8005187c92c6fe` passed all 430 migrations. The same replay passed the migration security audit, 54 module runtime adapter probes, family-access authorization/privacy probes, and the authenticated content-pipeline E2E test (`local_only=true`). This proves clean replay and the named test contracts; it does not prove every module journey or external provider is production-complete.
+- PR #1281 reconciled the source inventory and provider snapshot. It did not apply a migration to the production database or change production data.
+- The exact-SHA Cloudflare production verifier passed for `016bf9276143abe82d18317f4e8005187c92c6fe`: root and `www` returned HTTP 200, CSP and HSTS were present, and **241/241 pages plus 361/361 references** passed the production smoke audit.
+- Vercel promotion remains postponed because the Vercel account's credits/capacity are not confirmed as restored. A successful workflow run that explicitly reports promotion postponed is not evidence of a Vercel production deployment. Cloudflare Pages is the currently verified production host.
+- Supabase Auth leaked-password protection remains a separate dashboard-level hardening action. Owner MFA enforcement remains dormant until both owner accounts have individually verified TOTP factors and the sign-in step-up path is validated. Do not enable the enforcement flag before those prerequisites are met.
+
+## Historical provider snapshot — 2026-11-12 (superseded by 2026-11-13)
 
 - The live Supabase migration ledger contains **419 unique recorded versions**; the latest is `20261112091500_omega_search_index_schema_reconciliation`. `supabase/remote-migrations.json` now records those 419 provider-confirmed versions.
 - The three follow-up migrations previously listed as pending — `20261112091300_omega_idempotency_payload_integrity`, `20261112091400_omega_stripe_refund_state_fk_index`, and `20261112091500_omega_search_index_schema_reconciliation` — are now present in the live provider ledger. Read-only catalog checks verified the seven payload-conflict guards, the consultancy/service/task/notification/event/achievement owner-scoped idempotency structures, the Stripe refund-state index, and the reconciled `search_index` columns and owner/shared read policy. Ledger presence alone is not proof of clean replay or complete end-to-end behavior.

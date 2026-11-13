@@ -223,3 +223,10 @@ The current main registries show that runtime wiring and product-domain completi
 
 **Implementation priority:** map each module's customer job, canonical capability, authoritative data source, authorization boundary, failure path, telemetry, acceptance tests and release evidence from observed repository/runtime proof. Keep the domain UNVERIFIED until that complete evidence set passes. Do not fill empty registry fields from names or assumptions.
 
+### Repository merge governance
+
+The current repository ruleset `sydomega_merged` exists but has `enforcement=disabled`. Its configured rules only cover deletion and non-fast-forward updates; no required status checks or pull-request review rules are configured in that ruleset. The branch-protection endpoint is not readable through the current GitHub integration (HTTP 403), and no ruleset mutation action is available in this session.
+
+**Required administrator action:** enable the ruleset and configure required CI/security checks, pull-request review requirements, stale-review dismissal or approval reset as appropriate, and protection against force-push/deletion. Until that is done, passing checks are evidence but are not enforced by repository branch protection.
+
+

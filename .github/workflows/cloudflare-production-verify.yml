@@ -46,10 +46,10 @@ jobs:
           served=""
 
           # Cloudflare Pages Git integration may finish after the GitHub push event.
-          # Allow up to four minutes for the exact main SHA to become publicly served.
+          # Allow up to five minutes for the exact main SHA to become publicly served.
           # Cloudflare Pages Git integration can finish after the GitHub push event.
-          # Each bounded request follows canonical redirects; 24 attempts allow convergence.
-          for attempt in $(seq 1 24); do
+          # Each bounded request follows canonical redirects; 30 attempts allow convergence.
+          for attempt in $(seq 1 30); do
             manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
             served="$(printf '%s' "${manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
             if [ "${served}" = "${expected}" ]; then break; fi

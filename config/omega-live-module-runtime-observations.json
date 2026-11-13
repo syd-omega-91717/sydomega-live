@@ -1701,8 +1701,8 @@
   "release_readiness": {
     "status": "RELEASE_BLOCKED",
     "blockers": [
-      "Forward-only migrations 20261113010000_omega_agent_task_service_role_read_grants.sql and 20261113020000_omega_notification_service_role_read_grant.sql are pending provider application. They materialize only service_role SELECT privileges independently observed on omega_agent_tasks, omega_agent_task_events, and omega_notifications; no anon or authenticated grants are added and no RLS policy is changed.",
-      "The complete source migration replay passes, but the 54-action behavioral SQL probe (runtime adapter probe) fails at omega_notifications because the clean replay lacks its existing production service_role SELECT grant. The current PR adds that narrow parity grant and moves restricted evidence-table row-count assertions into a transaction-scoped SECURITY DEFINER test helper; the rerun has not yet passed.",
+      "Forward-only migration 20261113020000_omega_notification_service_role_read_grant.sql remains pending provider application. Migration 20261113010000_omega_agent_task_service_role_read_grants.sql is now present in the authenticated provider ledger as applied version 427. The notification migration materializes only the existing production service_role SELECT privilege; no anon or authenticated grants are added and no RLS policy is changed.",
+      "The 54-action behavioral SQL probe failed at omega_notifications because the clean replay lacked its existing production service_role SELECT grant. The follow-up PR adds that narrow parity grant and uses a transaction-scoped SECURITY DEFINER test helper for restricted evidence-table row-count assertions; the rerun has not yet passed.",
       "Family-access authorization/privacy probes and authenticated content-pipeline end-to-end probes were skipped because the runtime adapter probe failed first; they remain unverified.",
       "Cloudflare exact-SHA production verification has not passed for the current merged main commit."
     ],
@@ -1717,8 +1717,16 @@
     "runtime_adapter_probe": "FAILED at notification row-count verification; rerun pending in follow-up PR",
     "failure": "permission denied for table omega_notifications at line 457 of scripts/tests/omega-runtime-adapter-reconciliation-probe.sql when service_role performs a direct row-count assertion",
     "production_privilege_evidence": "Live provider ACL inspection confirms service_role SELECT on omega_notifications, omega_agent_tasks, and omega_agent_task_events; anon has no SELECT on these tables. Live provider ACL inspection also confirms service_role does not have SELECT on omega_platform_events, omega_audit_log, or sovereign_events.",
-    "remediation": "Follow-up branch fix/runtime-probe-privilege-parity-20261113 adds forward-only migration 20261113020000 to materialize the existing omega_notifications service_role SELECT grant. It retains the 20261113010000 task grant migration. Direct CI-only row-count assertions for omega_platform_events, omega_audit_log, and sovereign_events now use a narrowly scoped SECURITY DEFINER helper created inside the probe transaction, executable only by service_role and rolled back with all fixtures; no production role grants are broadened. Full replay and all behavioral probes must rerun.",
+    "remediation": "Provider ledger read confirms 20261113010000 is applied as migration 427; remote-migrations.json now mirrors all 427 provider versions and pending-migrations.json no longer marks it pending. Follow-up branch fix/runtime-probe-privilege-parity-20261113 adds forward-only migration 20261113020000 to materialize the existing omega_notifications service_role SELECT grant. Direct CI-only row-count assertions for omega_platform_events, omega_audit_log, and sovereign_events use a narrowly scoped SECURITY DEFINER helper created inside the probe transaction, executable only by service_role and rolled back with all fixtures; no production role grants are broadened. Full replay and all behavioral probes must rerun.",
     "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
-    "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately."
+    "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
+    "provider_migration_ledger": {
+      "observed_date": "2026-11-13",
+      "applied_count": 427,
+      "latest_version": "20261113010000",
+      "latest_name": "omega_agent_task_service_role_read_grants",
+      "notification_migration": "20261113020000_NOT_APPLIED"
+    },
+    "task_grant_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED"
   }
 }

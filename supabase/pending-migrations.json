@@ -10,6 +10,14 @@
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
       "reason": "The clean replay reached the notification idempotency assertion and failed because service_role lacked SELECT on omega_notifications. A live provider ACL inspection confirms service_role already has SELECT on this table while anon has none. This additive migration materializes only that existing service_role SELECT privilege; it does not expand anon or authenticated grants and does not alter RLS. Production remains blocked pending full 54-action, family-privacy, content-pipeline, and release verification."
+    },
+    {
+      "version": "20261113030000",
+      "file": "20261113030000_omega_user_achievements_service_role_insert_grant.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "The clean replay's 54-action behavioral SQL probe reached achievement seeding and failed because service_role lacked INSERT on omega_user_achievements. A read-only live ACL inspection confirms service_role already has INSERT, SELECT, UPDATE, DELETE, REFERENCES, TRIGGER, and TRUNCATE; authenticated has SELECT only and anon has no table grant. This forward-only migration materializes only the existing service_role INSERT privilege; it does not add authenticated or anon write access and does not alter RLS. Production remains blocked until the complete replay and all downstream behavioral probes pass."
     }
   ]
 }

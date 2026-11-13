@@ -1701,33 +1701,33 @@
   "release_readiness": {
     "status": "RELEASE_BLOCKED",
     "blockers": [
-      "Forward-only migrations 20261113020000_omega_notification_service_role_read_grant.sql and 20261113030000_omega_user_achievement_service_role_insert_grant.sql remain pending provider application. Migration 20261113010000_omega_agent_task_service_role_read_grants.sql is confirmed applied as provider migration 427. The pending migrations materialize only existing production service_role privileges; they add no anon/authenticated privileges and do not change RLS.",
-      "The 54-action behavioral SQL probe passed migration replay, migration inventory, security audit, hardening, and Stripe lifecycle stages, then failed at the synthetic omega_user_achievements INSERT because clean replay lacks its existing production service_role INSERT grant. The current PR adds this narrowly scoped parity migration and retains fixed-key transaction-scoped evidence assertions; the next rerun is required.",
-      "Family-access authorization/privacy probes and authenticated content-pipeline end-to-end probes were skipped because the runtime adapter probe failed first; they remain unverified.",
-      "Cloudflare exact-SHA production verification has not passed for the current merged main commit."
+      "Cloudflare exact-SHA production verification has not passed for main commit 6ff56739fe48b903f454b7e1c2e9eeea065c0f25. The verification observed the previous deployed commit while the Cloudflare Pages Git deployment was still converging. The 241-page estate passed all page checks; 361 of 362 same-origin references passed. The sole reference failure was Cloudflare's email-protection placeholder (/cdn-cgi/l/email-protection), which the smoke parser incorrectly added before its skip check. The parser fix and regression test are included in the current follow-up; rerun exact-SHA verification after the next Pages deployment."
     ],
     "last_checked": "2026-11-13"
   },
   "runtime_probe_status": {
     "observed_date": "2026-11-13",
-    "migration_replay": "PASS on merged PR #1262 commit fa3d6e6043cf29aa65904e2da5013d26facf8f03; all source migrations replayed from zero",
-    "migration_security_audit": "PASS on merged PR #1262 commit",
-    "hardening_contract": "PASS on merged PR #1262 commit",
-    "stripe_refund_lifecycle_probe": "PASS on merged PR #1262 commit",
-    "runtime_adapter_probe": "FAILED at omega_user_achievements synthetic INSERT privilege check; notification privilege parity now passes in the latest clean replay",
-    "failure": "permission denied for table omega_user_achievements at line 523 of scripts/tests/omega-runtime-adapter-reconciliation-probe.sql; service_role needs the INSERT privilege already present in production",
-    "production_privilege_evidence": "Live provider ACL inspection confirms service_role SELECT on omega_notifications, omega_agent_tasks, and omega_agent_task_events; anon has no SELECT on these tables. Live provider ACL inspection also confirms service_role does not have SELECT on omega_platform_events, omega_audit_log, or sovereign_events.",
-    "remediation": "The clean replay passes all source migrations, inventory, migration security audit, hardening contract, Stripe static contract, and Stripe ledger probe. It then reaches the achievement fixture and fails because service_role lacks the existing production SELECT/INSERT privileges on omega_user_achievements and SELECT on omega_achievement_verifications. Follow-up migration 20261113030000 materializes only those provider-observed service_role grants and verifies authenticated INSERT and verification SELECT remain denied, plus anon denials; no RLS policies change. It retains 20261113020000 for notification SELECT parity and the fixed-key transaction-scoped SECURITY DEFINER evidence inspector. Full 54-action, family privacy, and authenticated content pipeline probes must rerun.",
-    "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
+    "migration_replay": "PASS on main commit 6ff56739fe48b903f454b7e1c2e9eeea065c0f25; all source migrations replayed from zero",
+    "migration_security_audit": "PASS on main commit 6ff56739fe48b903f454b7e1c2e9eeea065c0f25",
+    "hardening_contract": "PASS on main commit 6ff56739fe48b903f454b7e1c2e9eeea065c0f25",
+    "stripe_refund_lifecycle_probe": "PASS on main commit 6ff56739fe48b903f454b7e1c2e9eeea065c0f25",
+    "runtime_adapter_probe": "PASS — 54/54 concrete runtime actions in clean isolated Supabase replay",
+    "failure": null,
+    "production_privilege_evidence": "Read-only provider ACL inspection confirmed service_role SELECT on omega_notifications, omega_agent_tasks, omega_agent_task_events, omega_user_achievements and omega_achievement_verifications; service_role INSERT on omega_user_achievements; anon has no SELECT on the inspected restricted tables; authenticated retains only the existing owner-scoped SELECT on omega_user_achievements and no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications.",
+    "remediation": "The authenticated provider migration ledger now contains 429 applied versions, including 20261113020000 omega_notification_service_role_read_grant and 20261113062812 omega_user_achievement_service_role_insert_grant. remote-migrations.json is reconciled to the exact provider versions and names. The source migration file uses the exact provider version prefix 20261113062812; no local-only 20261113030000 remains. The clean replay passed migration inventory, security audit, hardening, Stripe lifecycle, all 54 runtime actions, family privacy and authenticated content-pipeline probes. Production promotion remains blocked only until Cloudflare serves and verifies the exact main SHA.",
+    "status": "PASS_BEHAVIORAL_PROBES_NOT_PRODUCTION_PROOF",
     "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
     "provider_migration_ledger": {
       "observed_date": "2026-11-13",
-      "applied_count": 427,
-      "latest_version": "20261113010000",
-      "latest_name": "omega_agent_task_service_role_read_grants",
-      "notification_migration": "20261113020000_NOT_APPLIED"
+      "applied_count": 429,
+      "latest_version": "20261113062812",
+      "latest_name": "omega_user_achievement_service_role_insert_grant",
+      "notification_migration": "20261113020000_APPLIED_PROVIDER_CONFIRMED",
+      "achievement_migration": "20261113062812_APPLIED_PROVIDER_CONFIRMED"
     },
     "task_grant_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
-    "achievement_assignment_acl_evidence": "Live provider ACL inspection confirms service_role has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with owner-read-only authenticated policy."
+    "achievement_assignment_acl_evidence": "Live provider ACL inspection confirms service_role has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with owner-read-only authenticated policy.",
+    "family_access_probe": "PASS — family-access authorization and privacy probes completed successfully in the same clean replay",
+    "authenticated_content_pipeline_probe": "PASS — authenticated content-pipeline end-to-end probe completed successfully in the same clean replay"
   }
 }

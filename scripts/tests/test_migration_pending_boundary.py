@@ -162,6 +162,17 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("select count(*) into v_count from public.omega_audit_log", sql)
         self.assertNotIn("select count(*) into v_count from public.sovereign_events", sql)
 
+    def test_achievement_verification_service_role_read_grant_matches_live_acl_without_member_expansion(self) -> None:
+        path = MIGRATIONS / "20261113040000_omega_achievement_verifications_service_role_read_grant.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select on table public.omega_achievement_verifications to service_role", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_achievement_verifications','select')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_achievement_verifications','select')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_achievement_verifications','select')", sql)
+        self.assertNotIn("to authenticated", sql)
+        self.assertNotIn("to anon", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
     def test_public_points_projection_remains_privacy_scoped(self) -> None:
         path = MIGRATIONS / "20261013160000_secure_public_points_leaderboard_projection.sql"
         sql = path.read_text(encoding="utf-8").lower()

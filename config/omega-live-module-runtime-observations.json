@@ -1702,7 +1702,7 @@
     "status": "RELEASE_BLOCKED",
     "blockers": [
       "Forward-only migrations 20261113010000_omega_agent_task_service_role_read_grants.sql and 20261113020000_omega_notification_service_role_read_grant.sql are pending provider application. They materialize only service_role SELECT privileges independently observed on omega_agent_tasks, omega_agent_task_events, and omega_notifications; no anon or authenticated grants are added and no RLS policy is changed.",
-      "The complete source migration replay passes, but the 54-action runtime adapter probe fails at omega_notifications because the clean replay lacks its existing production service_role SELECT grant. The current PR adds that narrow parity grant and moves restricted evidence-table row-count assertions into a transaction-scoped SECURITY DEFINER test helper; the rerun has not yet passed.",
+      "The complete source migration replay passes, but the 54-action behavioral SQL probe (runtime adapter probe) fails at omega_notifications because the clean replay lacks its existing production service_role SELECT grant. The current PR adds that narrow parity grant and moves restricted evidence-table row-count assertions into a transaction-scoped SECURITY DEFINER test helper; the rerun has not yet passed.",
       "Family-access authorization/privacy probes and authenticated content-pipeline end-to-end probes were skipped because the runtime adapter probe failed first; they remain unverified.",
       "Cloudflare exact-SHA production verification has not passed for the current merged main commit."
     ],

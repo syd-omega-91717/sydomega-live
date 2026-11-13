@@ -21,7 +21,7 @@ GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 PROBE = ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql"
 SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113010000_omega_agent_task_service_role_read_grants.sql"
 NOTIFICATION_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113020000_omega_notification_service_role_read_grant.sql"
-ACHIEVEMENT_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113030000_omega_user_achievement_service_role_insert_grant.sql"
+ACHIEVEMENT_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113062812_omega_user_achievement_service_role_insert_grant.sql"
 
 def fail(message: str) -> int:
     print(f"OMEGA RUNTIME ADAPTER COVERAGE: FAIL — {message}")

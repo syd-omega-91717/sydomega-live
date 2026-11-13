@@ -9,7 +9,15 @@
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "Fresh migration replay exposed that service_role cannot inspect agent task rows during the runtime adapter probe, while authenticated live privilege checks confirm production already has SELECT on omega_agent_tasks and omega_agent_task_events. This additive migration materializes only those existing service_role SELECT grants; it does not grant anon or authenticated access and does not change RLS policies. Production application remains blocked until CI replay and the 54-action, family-privacy, and content-pipeline probes pass."
+      "reason": "Fresh replay exposed that service_role cannot inspect agent task rows during the runtime adapter probe. Live provider ACL inspection confirms service_role already has SELECT on omega_agent_tasks and omega_agent_task_events while anon has none. This additive migration materializes only those existing service_role SELECT privileges; it does not expand anon or authenticated grants and does not alter RLS. Production remains blocked pending full behavioral probes and release verification."
+    },
+    {
+      "version": "20261113020000",
+      "file": "20261113020000_omega_notification_service_role_read_grant.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "The clean replay reached the notification idempotency assertion and failed because service_role lacks SELECT on omega_notifications. A live provider ACL inspection confirms service_role already has SELECT on this table while anon has none. This additive migration materializes only that existing service_role SELECT privilege; it does not expand anon or authenticated grants and does not alter RLS. Production remains blocked pending full 54-action, family-privacy, content-pipeline, and release verification."
     }
   ]
 }

@@ -104,7 +104,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         readiness = snapshot["release_readiness"]
         self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
-        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql is now present in the authenticated provider ledger as applied version 427", blockers)
+        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql is confirmed applied as provider migration 427", blockers)
         self.assertIn("20261113020000_omega_notification_service_role_read_grant.sql", blockers)
         self.assertIn("20261113030000_omega_user_achievement_service_role_insert_grant.sql", blockers)
         self.assertIn("54-action behavioral SQL probe", blockers)

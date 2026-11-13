@@ -26,14 +26,15 @@ class MainMergeIntegrityTests(unittest.TestCase):
         drift = snapshot["runtime_dispatch_drift"]
         self.assertEqual(drift["live_dispatcher_covered_actions"], 54)
         self.assertEqual(drift["live_dispatcher_missing_actions"], 0)
-        self.assertIn("BEHAVIORAL_PROBES_PENDING", drift["status"])
-        self.assertEqual(snapshot["runtime_probe_status"]["status"], "RERUN_REQUIRED_NOT_PRODUCTION_PROOF")
+        self.assertIn("BEHAVIORAL_PROBES_PASS", drift["status"])
+        self.assertEqual(snapshot["runtime_probe_status"]["status"], "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
 
     def test_pending_registry_contains_only_unapplied_source_migrations(self) -> None:
         remote = json.loads((ROOT / "supabase/remote-migrations.json").read_text(encoding="utf-8"))
         pending = json.loads((ROOT / "supabase/pending-migrations.json").read_text(encoding="utf-8"))
         remote_versions = set(remote.get("versions", []))
         entries = pending.get("pending", [])
+        self.assertEqual(entries, [], "provider ledger and source migration inventory must be fully reconciled")
         for entry in entries:
             with self.subTest(version=entry.get("version")):
                 self.assertNotIn(entry.get("version"), remote_versions)

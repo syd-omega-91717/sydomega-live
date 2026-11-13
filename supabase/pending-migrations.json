@@ -2,22 +2,5 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "All source migrations are recorded in the authenticated provider migration ledger. A source migration absent from provider history must be explicitly added here as pending and must block production until reviewed and applied. Provider-applied versions belong in remote-migrations.json; a ledger entry alone does not prove the migration's intended behavior has been independently verified.",
-  "pending": [
-    {
-      "version": "20261113020000",
-      "file": "20261113020000_omega_notification_service_role_read_grant.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "The clean replay reached the notification idempotency assertion and failed because service_role lacked SELECT on omega_notifications. A live provider ACL inspection confirms service_role already has SELECT on this table while anon has none. This additive migration materializes only that existing service_role SELECT privilege; it does not expand anon or authenticated grants and does not alter RLS. Production remains blocked pending full 54-action, family-privacy, content-pipeline, and release verification."
-    },
-    {
-      "version": "20261113030000",
-      "file": "20261113030000_omega_user_achievement_service_role_insert_grant.sql",
-      "status": "PENDING_REVIEW",
-      "liveStatus": "NOT_APPLIED",
-      "blocksProduction": true,
-      "reason": "The clean replay reached the synthetic achievement-assignment fixture and failed because service_role lacks INSERT on omega_user_achievements. Live provider ACL inspection confirms service_role already has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications, while authenticated INSERT and verification SELECT remain denied and anon has no access. This additive migration materializes only those existing service_role privileges; it does not broaden client permissions or alter RLS. Production remains blocked pending the complete replay and behavioral verification chain."
-    }
-  ]
+  "pending": []
 }

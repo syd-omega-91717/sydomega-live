@@ -1701,7 +1701,7 @@
   "release_readiness": {
     "status": "RELEASE_BLOCKED",
     "blockers": [
-      "Cloudflare exact-SHA production verification has not passed for the current merged main commit. Vercel production promotion remains postponed; no production deployment is claimed."
+      "Cloudflare exact-SHA production verification has not passed for the current main commit. The prior verifier observed the previous deployed SHA while Cloudflare Pages Git deployment was still converging; its production smoke also falsely treated the Cloudflare email-protection placeholder (/cdn-cgi/l/email-protection) as a broken same-origin reference. The page estate itself passed 241/241 pages and 361/362 same-origin references. The current follow-up fixes the placeholder parser and extends exact-SHA polling to five minutes. Production promotion remains blocked until the merged main SHA is served and the exact-SHA verifier passes."
     ],
     "last_checked": "2026-11-13"
   },

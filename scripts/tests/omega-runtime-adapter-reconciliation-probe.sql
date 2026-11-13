@@ -280,7 +280,7 @@ begin
     'contact','other-probe@invalid.example'
   ));
   if v_other->>'request_id' is null
-     or v_other->>'request_id' is not distinct from v_other_request_id
+     or v_other->>'request_id' is distinct from v_other_request_id
      or v_other->>'request_id' is not distinct from v_first->>'request_id' then
     raise exception 'consultancy cross-user retry or isolation failed: first=% other=% expected_other_id=%',v_first,v_other,v_other_request_id;
   end if;

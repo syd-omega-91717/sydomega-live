@@ -33,7 +33,6 @@ class RefParser(HTMLParser):
     def handle_starttag(self, tag: str, attrs) -> None:
         values = dict(attrs)
         if tag in {"a", "area", "link"} and values.get("href"):
-            self.refs.add(values["href"].strip())
             href = values["href"].strip()
             if urlsplit(href).path == CLOUDFLARE_EMAIL_PLACEHOLDER_PATH:
                 self.cloudflare_email_placeholders_skipped += 1

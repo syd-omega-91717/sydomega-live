@@ -210,3 +210,16 @@ This section updates the release facts without rewriting the historical 2026-11-
 - Vercel: no production deployment record exists for the current main SHA. The latest READY production deployment returned by the Vercel API is for older commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28`; the project API reports `live=false`. The repository workflow currently sets `VERCEL_PROMOTION_POSTPONED=true` and documents a prior Hobby Edge Request credit block. The team is on the Hobby plan; current billing/credit status could not be independently confirmed through the available billing endpoint.
 
 **Release interpretation:** Cloudflare Pages is the currently verified production authority for the audited main SHA. Do not describe the current SHA as deployed to Vercel. Do not remove the Vercel promotion hold until account capacity, team access, deployment credentials, project scope and exact-SHA post-deploy checks are all verified.
+
+### Product-domain and page-contract traceability snapshot
+
+The current main registries show that runtime wiring and product-domain completion are separate states:
+
+- Product-domain registry: **18/18 domains remain UNVERIFIED**; 0 have canonical capability links, authoritative data-source links, accountable owners, acceptance-test links or release-evidence links. The runtime contract deliberately prevents a provider catalog snapshot from promoting these fields without reviewed implementation evidence.
+- Runtime observations: **18 modules, 54 integrated actions**. Capability and service lifecycle: 16 DESIGNED, 2 INTEGRATED. Action modes: 46 READ, 6 SIMULATION, 1 WRITE (consultancy intake), 1 EXTERNAL (ownership verification). The recorded 54-action behavioral probe passed, but this does not prove every complete user journey or external provider flow.
+- Six cross-platform capabilities remain unmapped to a product domain: event fabric, referral economy, notification delivery, agent-task control, commerce settlement and observability audit.
+- Page contracts: **241/241 source-audited**, 0 remaining source-audit pages; 205/241 still have domain UNVERIFIED, all 241 retain OPEN_TASK review items, and truth/authorization remain unverified.
+- Release guards remain explicit: financial execution is blocked pending legal/accounting/custody/risk/provider approval; blockchain asset mutation is absent from observed actions; passport semantics are platform credential only; sensitive family data still requires runtime negative tests; production status is not inferred from the catalog.
+
+**Implementation priority:** map each module's customer job, canonical capability, authoritative data source, authorization boundary, failure path, telemetry, acceptance tests and release evidence from observed repository/runtime proof. Keep the domain UNVERIFIED until that complete evidence set passes. Do not fill empty registry fields from names or assumptions.
+

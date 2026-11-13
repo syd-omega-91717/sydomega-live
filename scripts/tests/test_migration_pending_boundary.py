@@ -123,7 +123,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(failover.get("commit_sha"), "426ec70562e3f97d56707002a3bc25eb43f46328")
         self.assertEqual(failover.get("workflow_run_id"), 43384712215)
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
-        self.assertIn("Vercel production deployment remains unverified", blockers)
+        self.assertIn("Vercel production deployment remains intentionally postponed", blockers)
         self.assertNotIn("Cloudflare exact-SHA production verification has not passed", blockers)
         self.assertNotIn("54-action behavioral SQL probe", blockers)
         self.assertNotIn("migration", blockers.lower())

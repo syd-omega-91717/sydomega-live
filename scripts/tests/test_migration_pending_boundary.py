@@ -87,12 +87,14 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_inventory_and_strict_drift_pass_when_provider_history_matches(self) -> None:
+    def test_source_inventory_passes_but_strict_drift_blocks_pending_migration(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
-        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
+        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
+        self.assertIn("20261113010000", strict.stdout)
+        self.assertIn("production release is blocked", strict.stdout)
 
     def test_release_readiness_stays_blocked_by_unverified_replay_and_production_proof(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
@@ -100,13 +102,25 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         readiness = snapshot["release_readiness"]
         self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
-        self.assertIn("20261111190000_omega_runtime_dispatch_adapter_reconciliation.sql", blockers)
+        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql", blockers)
         self.assertIn("54-action behavioral SQL probe", blockers)
+        self.assertIn("Cloudflare exact-SHA production verification", blockers)
         self.assertIn("Cloudflare exact-SHA production verification", blockers)
         self.assertEqual(
             snapshot["runtime_probe_status"].get("status"),
             "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
         )
+
+    def test_agent_task_service_role_grants_are_materialized_without_member_or_anon_expansion(self) -> None:
+        path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select on table", sql)
+        self.assertIn("public.omega_agent_tasks", sql)
+        self.assertIn("public.omega_agent_task_events", sql)
+        self.assertIn("to service_role", sql)
+        self.assertIn("has_table_privilege('anon'", sql)
+        self.assertNotIn("to authenticated", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
 
     def test_public_points_projection_remains_privacy_scoped(self) -> None:
         path = MIGRATIONS / "20261013160000_secure_public_points_leaderboard_projection.sql"

@@ -18,6 +18,8 @@ NEWS_MIGRATION = ROOT / "supabase/migrations/20261112120000_omega_news_schema_ba
 CONSULTANCY_COMPAT_MIGRATION = ROOT / "supabase/migrations/20261112130000_omega_consultancy_request_id_text_compat.sql"
 CONSULTANCY_SCHEMA_MIGRATION = ROOT / "supabase/migrations/20261112091600_omega_consultancy_runtime_schema_parity.sql"
 GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
+PROBE = ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql"
+SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113010000_omega_agent_task_service_role_read_grants.sql"
 
 def fail(message: str) -> int:
     print(f"OMEGA RUNTIME ADAPTER COVERAGE: FAIL — {message}")
@@ -35,6 +37,7 @@ def main() -> int:
         consultancy_compat_sql = CONSULTANCY_COMPAT_MIGRATION.read_text(encoding="utf-8")
         news_sql = NEWS_MIGRATION.read_text(encoding="utf-8")
         consultancy_schema_sql = CONSULTANCY_SCHEMA_MIGRATION.read_text(encoding="utf-8")
+        service_role_grants_sql = SERVICE_ROLE_GRANTS_MIGRATION.read_text(encoding="utf-8").lower()
         all_sql = "\n".join((
             sql,
             idempotency_sql,
@@ -44,8 +47,10 @@ def main() -> int:
             consultancy_compat_sql,
             news_sql,
             consultancy_schema_sql,
+            service_role_grants_sql,
         ))
         gateway = GATEWAY.read_text(encoding="utf-8")
+        probe = PROBE.read_text(encoding="utf-8")
         expected = {
             f"{module['id']}.{action}"
             for module in runtime.get("modules", [])
@@ -341,6 +346,23 @@ def main() -> int:
         }
         if any(token in action_id for action_id in blockchain_ids for token in ("mint", "transfer", "custody", "trade")):
             return fail("unapproved blockchain mutation action present")
+        for marker in (
+            "grant select on table",
+            "public.omega_agent_tasks",
+            "public.omega_agent_task_events",
+            "to service_role",
+            "has_table_privilege('anon'",
+        ):
+            if marker not in service_role_grants_sql:
+                return fail(f"narrow agent-task service-role grant migration marker missing: {marker}")
+        if "to authenticated" in service_role_grants_sql:
+            return fail("agent-task service-role grant migration must not expand authenticated privileges")
+        if "or v_other->>'request_id' is distinct from v_other_request_id" not in probe:
+            return fail("consultancy retry probe must require the same actor to receive the same idempotent request ID")
+        if "or v_other->>'request_id' is not distinct from v_other_request_id" in probe:
+            return fail("consultancy retry probe contains an inverted idempotency assertion")
+        if "v_other_request_id=v_request_id" not in probe:
+            return fail("consultancy probe must verify cross-user request isolation")
         print("OMEGA RUNTIME ADAPTER COVERAGE: PASS — 18 modules / 54 concrete actions")
         print("Member reads are actor-scoped; investment remains read/simulation; blockchain mutation remains absent.")
         return 0

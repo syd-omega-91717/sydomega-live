@@ -17,7 +17,7 @@
       "status": "PENDING_REVIEW",
       "liveStatus": "NOT_APPLIED",
       "blocksProduction": true,
-      "reason": "The 54-action clean-replay probe reached its synthetic achievement-assignment fixture and failed because service_role lacks INSERT on omega_user_achievements. A live provider ACL and RLS inspection confirms service_role already has INSERT, while authenticated and anon do not; the owner-read RLS policy remains enabled. This additive migration materializes only that existing server-only INSERT privilege, with no client INSERT expansion and no RLS changes. Production remains blocked pending the complete replay and behavioral verification chain."
+      "reason": "The clean replay reached the synthetic achievement-assignment fixture and failed because service_role lacks INSERT on omega_user_achievements. Live provider ACL inspection confirms service_role already has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications, while authenticated INSERT and verification SELECT remain denied and anon has no access. This additive migration materializes only those existing service_role privileges; it does not broaden client permissions or alter RLS. Production remains blocked pending the complete replay and behavioral verification chain."
     }
   ]
 }

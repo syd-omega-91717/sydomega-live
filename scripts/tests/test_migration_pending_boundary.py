@@ -135,7 +135,10 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 429)
         self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261113062812")
         self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
-        self.assertIn("Vercel production promotion remains postponed", runtime.get("remediation", ""))
+        remediation = runtime.get("remediation", "").lower()
+        self.assertIn("vercel production promotion remains", remediation)
+        self.assertIn("intentionally postponed", remediation)
+        self.assertIn("vercel deploy steps were skipped", remediation)
 
     def test_agent_task_service_role_grants_are_provider_applied_without_anon_expansion(self) -> None:
         path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"

@@ -21,6 +21,7 @@ GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 PROBE = ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql"
 SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113010000_omega_agent_task_service_role_read_grants.sql"
 NOTIFICATION_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113020000_omega_notification_service_role_read_grant.sql"
+ACHIEVEMENT_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113030000_omega_user_achievement_service_role_insert_grant.sql"
 
 def fail(message: str) -> int:
     print(f"OMEGA RUNTIME ADAPTER COVERAGE: FAIL — {message}")
@@ -40,6 +41,7 @@ def main() -> int:
         consultancy_schema_sql = CONSULTANCY_SCHEMA_MIGRATION.read_text(encoding="utf-8")
         service_role_grants_sql = SERVICE_ROLE_GRANTS_MIGRATION.read_text(encoding="utf-8").lower()
         notification_service_role_grants_sql = NOTIFICATION_SERVICE_ROLE_GRANTS_MIGRATION.read_text(encoding="utf-8").lower()
+        achievement_service_role_grants_sql = ACHIEVEMENT_SERVICE_ROLE_GRANTS_MIGRATION.read_text(encoding="utf-8").lower()
         all_sql = "\n".join((
             sql,
             idempotency_sql,
@@ -51,6 +53,7 @@ def main() -> int:
             consultancy_schema_sql,
             service_role_grants_sql,
             notification_service_role_grants_sql,
+            achievement_service_role_grants_sql,
         ))
         gateway = GATEWAY.read_text(encoding="utf-8")
         probe = PROBE.read_text(encoding="utf-8")
@@ -370,6 +373,16 @@ def main() -> int:
         if "to authenticated" in notification_service_role_grants_sql:
             return fail("notification service-role grant migration must not expand authenticated privileges")
         for marker in (
+            "grant insert on table public.omega_user_achievements to service_role",
+            "has_table_privilege('service_role','public.omega_user_achievements','insert')",
+            "has_table_privilege('authenticated','public.omega_user_achievements','insert')",
+            "has_table_privilege('anon','public.omega_user_achievements','insert')",
+        ):
+            if marker not in achievement_service_role_grants_sql:
+                return fail(f"achievement server-only insert grant marker missing: {marker}")
+        if "create policy" in achievement_service_role_grants_sql:
+            return fail("achievement privilege parity migration must not change RLS policies")
+        for marker in (
             "create or replace function public.omega_runtime_probe_assert_counts_20261113(",
             "security definer",
             "set search_path = ''",
@@ -378,6 +391,10 @@ def main() -> int:
         ):
             if marker not in probe.lower():
                 return fail(f"test-only least-privilege evidence inspector marker missing: {marker}")
+        if "create or replace function public.omega_runtime_probe_assert_counts_20261113()" not in probe.lower():
+            return fail("test-only evidence inspector must have no caller-controlled arguments")
+        if any(token in probe.lower() for token in ("p_platform_actor_key", "p_audit_actor_key", "p_sovereign_key")):
+            return fail("test-only evidence inspector must use fixed synthetic probe keys")
         if "or v_other->>'request_id' is distinct from v_other_request_id" not in probe:
             return fail("consultancy retry probe must require the same actor to receive the same idempotent request ID")
         if "or v_other->>'request_id' is not distinct from v_other_request_id" in probe:

@@ -129,8 +129,11 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
     def test_achievement_service_role_insert_grant_matches_existing_live_privilege_without_member_expansion(self) -> None:
         path = MIGRATIONS / "20261113030000_omega_user_achievements_service_role_insert_grant.sql"
         sql = path.read_text(encoding="utf-8").lower()
-        self.assertIn("grant insert on table public.omega_user_achievements to service_role", sql)
+        self.assertIn("grant select, insert on table public.omega_user_achievements to service_role", sql)
         self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','select')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_user_achievements','select')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_user_achievements','select')", sql)
         self.assertIn("has_table_privilege('anon','public.omega_user_achievements','insert')", sql)
         self.assertIn("has_table_privilege('authenticated','public.omega_user_achievements','insert')", sql)
         self.assertNotIn("to authenticated", sql)

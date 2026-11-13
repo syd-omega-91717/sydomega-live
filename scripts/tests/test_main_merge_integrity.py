@@ -27,7 +27,7 @@ class MainMergeIntegrityTests(unittest.TestCase):
         self.assertEqual(drift["live_dispatcher_covered_actions"], 54)
         self.assertEqual(drift["live_dispatcher_missing_actions"], 0)
         self.assertIn("BEHAVIORAL_PROBES_PENDING", drift["status"])
-        self.assertEqual(snapshot["runtime_probe_status"]["status"], "RERUN_REQUIRED_NOT_PRODUCTION_PROOF")
+        self.assertEqual(snapshot["runtime_probe_status"]["status"], "PASS_BEHAVIORAL_PROBES_NOT_PRODUCTION_PROOF")
 
     def test_pending_registry_contains_only_unapplied_source_migrations(self) -> None:
         remote = json.loads((ROOT / "supabase/remote-migrations.json").read_text(encoding="utf-8"))

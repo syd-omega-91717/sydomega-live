@@ -66,9 +66,9 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261112130000")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261113010000")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
-        self.assertEqual(self.remote.get("_captured"), "2026-11-12")
+        self.assertEqual(self.remote.get("_captured"), "2026-11-13")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
@@ -103,7 +103,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         readiness = snapshot["release_readiness"]
         self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
-        self.assertNotIn("20261113010000_omega_agent_task_service_role_read_grants.sql", blockers)
+        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql is now present in the authenticated provider ledger as applied version 427", blockers)
         self.assertIn("20261113020000_omega_notification_service_role_read_grant.sql", blockers)
         self.assertIn("54-action behavioral SQL probe", blockers)
         self.assertIn("Cloudflare exact-SHA production verification", blockers)

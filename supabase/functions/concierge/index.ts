@@ -14,7 +14,8 @@
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.112.4";
-import { publishableKey } from "../_shared/keys.ts";
+import { publishableKey, secretKey } from "../_shared/keys.ts";
+import { runOmegaModel, type OmegaAiUsageRecord } from "../_shared/omega-model-router.ts";
 
 const allowedOrigin = (origin: string | null) => {
   if (!origin) return null;
@@ -96,6 +97,19 @@ Deno.serve(async (req) => {
     const who = await supabase.auth.getUser(authHeader.slice(7).trim());
     if (who.error || !who.data.user) return json({ error: "authentication_required" }, 401, origin);
 
+    // A separate service-role client is used only for metadata-only AI usage records.
+    // Member context and reads continue through the caller's RLS-scoped client above.
+    const serviceKey = secretKey();
+    const telemetryClient = serviceKey
+      ? createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } })
+      : null;
+    const recordAiUsage = telemetryClient
+      ? async (record: OmegaAiUsageRecord) => {
+          const { error } = await telemetryClient.from("omega_ai_requests").insert(record);
+          if (error) throw new Error("ai_telemetry_write_failed");
+        }
+      : undefined;
+
     /* Personal context is a separate opt-in. Missing rows, query errors, and
        unavailable preferences all disable personalized context without blocking
        non-personal concierge assistance. This is enforced server-side so callers
@@ -122,6 +136,7 @@ Deno.serve(async (req) => {
 
     const decision = classify(message);
     const requestId = crypto.randomUUID();
+    const modelProfile: "fast" | "reasoning" = decision.risk === "HIGH" ? "reasoning" : "fast";
     const governance = {
       request_id: requestId,
       policy: "OMEGA_CANONICAL",
@@ -129,7 +144,9 @@ Deno.serve(async (req) => {
       agent: decision.agent,
       permission: "AUTHENTICATED_MEMBER",
       approval: decision.approval,
-      adapter: "anthropic",
+      adapter: "omega-model-router",
+      model_profile: modelProfile,
+      model_provider: "policy_selected",
       evidence: "RUNTIME_RESPONSE",
       fabric_stage: "EDGE_GOVERNANCE_ADAPTER",
       personalization: personalizationState,
@@ -144,9 +161,6 @@ Deno.serve(async (req) => {
         governance,
       }, 403, origin);
     }
-
-    const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!apiKey) return json({ enabled: false, message: "Concierge AI is not configured yet.", governance }, 200, origin);
 
     let memoryLine = "";
     if (personalizationAllowed) {
@@ -261,28 +275,36 @@ Deno.serve(async (req) => {
       `[MEMBER QUERY]\n${message}`,
     ].filter(Boolean).join("\n\n");
 
-    const upstream = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 400,
+    let modelResult;
+    try {
+      modelResult = await runOmegaModel({
+        agentId: decision.agent.toLowerCase(),
+        task: "member_concierge_response",
+        risk: decision.risk.toLowerCase() as "low" | "medium" | "high",
+        promptVersion: "concierge-v2",
+        profile: modelProfile,
+        consumeQuota: async () => {
+          if (!telemetryClient) return { allowed: false, reason: "ai_quota_unavailable" };
+          const { data, error } = await telemetryClient.rpc("omega_consume_ai_request_quota", {
+            p_user_id: who.data.user.id,
+            p_profile: modelProfile,
+          });
+          if (error || !data) return { allowed: false, reason: "ai_quota_unavailable" };
+          return { allowed: data.allowed === true, reason: typeof data.reason === "string" ? data.reason : undefined };
+        },
         system: effectiveSystem,
-        messages: [{ role: "user", content: userMessage }],
-      }),
-    });
+        input: userMessage,
+        requestId,
+        recordUsage: recordAiUsage,
+      });
+    } catch (error) {
+      const errorCode = error instanceof Error ? error.message : "ai_provider_error";
+      console.warn(JSON.stringify({ event: "OMEGA_AI_REQUEST_FAILED", request_id: requestId, error_code: errorCode }));
+      return json({ error: "ai_provider_unavailable", governance }, 503, origin);
+    }
 
-    if (!upstream.ok) return json({ error: "upstream_error", governance }, 502, origin);
-    const data = await upstream.json();
-    if (data?.stop_reason === "refusal") return json({ error: "declined", governance }, 422, origin);
-    const block = (data?.content ?? []).find((b: { type?: string }) => b?.type === "text");
-    const reply = typeof block?.text === "string" ? block.text.trim() : "";
-    if (!reply) return json({ error: "empty_reply", governance }, 502, origin);
-
+    governance.model_provider = modelResult.provider;
+    const reply = modelResult.text;
     return json({ reply, governance }, 200, origin);
   } catch {
     return json({ error: "invalid_request" }, 400, origin);

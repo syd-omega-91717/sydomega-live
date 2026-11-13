@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Regression tests for the distinction between source-pending and live-applied migrations."""
-
+"""Regression tests for source-pending versus provider-applied migrations."""
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 import unittest
@@ -30,72 +30,250 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.remote = json.loads(REMOTE.read_text(encoding="utf-8"))
         self.pending_doc = json.loads(PENDING.read_text(encoding="utf-8"))
         self.pending = self.pending_doc.get("pending", [])
-        self.remote_versions = {str(v) for v in self.remote.get("versions", [])}
+        self.remote_versions = {str(value) for value in self.remote.get("versions", [])}
 
-    def test_pending_registry_never_claims_live_application(self) -> None:
-        pending_versions = set()
+    def test_pending_registry_is_valid_unique_and_blocks_production(self) -> None:
+        pending_versions: set[str] = set()
         for entry in self.pending:
             version = str(entry["version"])
             filename = str(entry["file"])
             self.assertNotIn(version, pending_versions, "duplicate pending migration")
-            self.assertNotIn(version, self.remote_versions, "pending version also claimed live-applied")
+            self.assertNotIn(version, self.remote_versions, "pending version also marked applied")
             self.assertEqual(entry.get("status"), "PENDING_REVIEW")
             self.assertEqual(entry.get("liveStatus"), "NOT_APPLIED")
             self.assertIs(entry.get("blocksProduction"), True)
             self.assertTrue((MIGRATIONS / filename).is_file(), filename)
             self.assertTrue(filename.startswith(version + "_"), filename)
             pending_versions.add(version)
+        local_versions: set[str] = set()
+        for path in MIGRATIONS.glob("*.sql"):
+            match = re.match(r"^(\d+)_.*\.sql$", path.name)
+            self.assertIsNotNone(match, path.name)
+            local_versions.add(match.group(1))
+        self.assertEqual(pending_versions, local_versions - self.remote_versions)
+        self.assertEqual(self.pending, [], "all provider-applied migrations must be removed from pending registry")
 
-    def test_provider_confirmed_november_migrations_are_in_remote_not_pending(self) -> None:
-        for version in ("20261103230000", "20261104090000"):
-            self.assertIn(version, self.remote_versions)
-            self.assertNotIn(version, {str(item["version"]) for item in self.pending})
+    def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
+        applied_versions = {
+            "20261103230000", "20261104090000", "20261111190000",
+            "20261112091300", "20261112091400", "20261112091500",
+            "20261112091600",
+            "20261112103000", "20261112110000", "20261112111000",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113062812",
+        }
+        pending_versions = {str(entry["version"]) for entry in self.pending}
+        self.assertTrue(applied_versions.issubset(self.remote_versions))
+        self.assertTrue(applied_versions.isdisjoint(pending_versions))
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
+        self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
+        self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261113062812")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
-        self.assertEqual(self.remote.get("_captured"), "2026-11-10")
+        self.assertEqual(self.remote.get("_captured"), "2026-11-13")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
-    def test_source_inventory_replay_contract_includes_pending_without_claiming_live(self) -> None:
+    def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
+        versions: list[str] = []
+        for path in MIGRATIONS.glob("*.sql"):
+            match = re.match(r"^(\d+)_.*\.sql$", path.name)
+            self.assertIsNotNone(match, path.name)
+            versions.append(match.group(1))
+        self.assertEqual(len(versions), len(set(versions)), "migration versions must be unique")
+        self.assertEqual(set(versions), self.remote_versions | {str(x["version"]) for x in self.pending})
+
+    def test_source_inventory_contract_passes_without_claiming_pending_as_applied(self) -> None:
         result = run_script("scripts/migration-replay-contract.py")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn(f"remote_count={len(self.remote_versions)}", result.stdout)
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_points_leaderboard_definer_is_a_narrow_privacy_projection(self) -> None:
-        path = MIGRATIONS / "20261013160000_secure_public_points_leaderboard_projection.sql"
-        sql = path.read_text(encoding="utf-8").lower()
-        self.assertIn("security definer", sql)
-        self.assertIn("set search_path = ''", sql)
-        self.assertIn("p.is_public is true or p.id = v_uid", sql)
-        self.assertIn("p.access_approved is true or p.is_owner is true", sql)
-        self.assertIn("p.deactivated_at is null", sql)
-        self.assertIn("p.family_of is null or p.id = v_uid", sql)
-        self.assertIn("revoke all on function public.get_points_leaderboard(integer) from public, anon", sql)
-        self.assertIn("grant execute on function public.get_points_leaderboard(integer) to authenticated", sql)
-
-    def test_latest_public_points_rpc_is_invoker_wrapper(self) -> None:
-        path = MIGRATIONS / "20261015220000_restore_points_leaderboard_invoker_wrapper.sql"
-        sql = path.read_text(encoding="utf-8")
-        definition = sql.split("CREATE OR REPLACE FUNCTION public.get_points_leaderboard", 1)[1].split("AS $function$", 1)[0].lower()
-        body = sql.split("AS $function$", 1)[1].split("$function$", 1)[0].lower()
-        self.assertIn("security invoker", definition)
-        self.assertNotIn("security definer", definition)
-        self.assertEqual(" ".join(body.split()), "select * from private.get_points_leaderboard($1);")
-        self.assertIn("revoke all on function public.get_points_leaderboard(integer) from public, anon", sql.lower())
-        self.assertIn("grant execute on function public.get_points_leaderboard(integer) to authenticated", sql.lower())
-
-    def test_source_only_gate_and_strict_release_gate_are_distinct(self) -> None:
+    def test_source_and_strict_drift_pass_when_provider_ledger_is_reconciled(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
-
         strict = run_script("scripts/migration-drift.py")
-        if self.pending:
-            self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-            self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
-            self.assertIn("production release is blocked", strict.stdout)
-        else:
-            self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
+        self.assertIn("20261113020000", strict.stdout)
+        self.assertIn("20261113030000", strict.stdout)
+        self.assertNotIn("20261113010000", strict.stdout)
+        self.assertIn("production release is blocked", strict.stdout)
+        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
+        self.assertNotIn("production release is blocked", strict.stdout)
+
+    def test_release_readiness_records_cloudflare_pass_and_vercel_postponement(self) -> None:
+        snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
+        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        readiness = snapshot["release_readiness"]
+        self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
+        blockers = " ".join(str(item) for item in readiness.get("blockers", []))
+        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql is now present in the authenticated provider ledger as applied version 427", blockers)
+        self.assertIn("20261113020000_omega_notification_service_role_read_grant.sql", blockers)
+        self.assertIn("20261113030000_omega_user_achievement_service_role_insert_grant.sql", blockers)
+        self.assertIn("54-action behavioral SQL probe", blockers)
+        self.assertIn("Cloudflare exact-SHA production verification", blockers)
+        self.assertIn("Cloudflare exact-SHA production verification", blockers)
+        self.assertEqual(
+            readiness.get("status"),
+            "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED",
+        )
+        self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
+        self.assertEqual(
+            readiness.get("production_verification", {}).get("commit_sha"),
+            "426ec70562e3f97d56707002a3bc25eb43f46328",
+        )
+        self.assertEqual(
+            readiness.get("production_verification", {}).get("workflow_run_id"),
+            43384712260,
+        )
+        vercel = readiness.get("vercel_promotion", {})
+        self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")
+        self.assertEqual(vercel.get("vercel_deployment_steps"), "SKIPPED")
+        self.assertIn("VERCEL_PROMOTION_POSTPONED=true", vercel.get("reason", ""))
+        failover = readiness.get("failover_verification", {})
+        self.assertEqual(failover.get("provider"), "GitHub Pages")
+        self.assertEqual(failover.get("status"), "PASS")
+        self.assertEqual(failover.get("commit_sha"), "426ec70562e3f97d56707002a3bc25eb43f46328")
+        self.assertEqual(failover.get("workflow_run_id"), 43384712215)
+        blockers = " ".join(str(item) for item in readiness.get("blockers", []))
+        self.assertIn("Vercel production deployment remains intentionally postponed", blockers)
+        self.assertNotIn("Cloudflare exact-SHA production verification has not passed", blockers)
+        self.assertNotIn("54-action behavioral SQL probe", blockers)
+        self.assertNotIn("migration", blockers.lower())
+        runtime = snapshot["runtime_probe_status"]
+        self.assertEqual(runtime.get("status"), "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
+        self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions")
+        self.assertEqual(runtime.get("family_access_probe"), "PASS")
+        self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline")
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 429)
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261113062812")
+        self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
+        remediation = runtime.get("remediation", "").lower()
+        self.assertIn("vercel production promotion remains", remediation)
+        self.assertIn("intentionally postponed", remediation)
+        self.assertIn("vercel deploy steps were skipped", remediation)
+
+    def test_agent_task_service_role_grants_are_provider_applied_without_anon_expansion(self) -> None:
+        path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select on table", sql)
+        self.assertIn("public.omega_agent_tasks", sql)
+        self.assertIn("public.omega_agent_task_events", sql)
+        self.assertIn("to service_role", sql)
+        self.assertIn("has_table_privilege('anon'", sql)
+        self.assertNotIn("to authenticated", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+        self.assertIn("20261113010000", self.remote_versions)
+        self.assertNotIn("20261113010000", {str(x["version"]) for x in self.pending})
+
+    def test_notification_service_role_grant_matches_existing_live_privilege_without_anon_expansion(self) -> None:
+        path = MIGRATIONS / "20261113020000_omega_notification_service_role_read_grant.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select on table public.omega_notifications to service_role", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_notifications','select')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_notifications','select')", sql)
+        self.assertNotIn("to authenticated", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+        self.assertIn("20261113020000", self.remote_versions)
+
+    def test_achievement_assignment_insert_remains_server_only_and_matches_live_acl(self) -> None:
+        path = MIGRATIONS / "20261113062812_omega_user_achievement_service_role_insert_grant.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select, insert on table public.omega_user_achievements to service_role", sql)
+        self.assertIn("grant select on table public.omega_achievement_verifications to service_role", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','select')", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_achievement_verifications','select')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_achievement_verifications','select')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_achievement_verifications','select')", sql)
+        self.assertNotIn("create policy", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+        self.assertIn("20261113062812", self.remote_versions)
+
+    def test_achievement_assignment_insert_remains_server_only_and_matches_live_acl(self) -> None:
+        path = MIGRATIONS / "20261113030000_omega_user_achievement_service_role_insert_grant.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant insert on table public.omega_user_achievements to service_role", sql)
+        self.assertIn("has_table_privilege('service_role','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('authenticated','public.omega_user_achievements','insert')", sql)
+        self.assertIn("has_table_privilege('anon','public.omega_user_achievements','insert')", sql)
+        self.assertNotIn("create policy", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
+    def test_runtime_probe_uses_transaction_scoped_definer_inspector_for_restricted_evidence_tables(self) -> None:
+        path = ROOT / "scripts" / "tests" / "omega-runtime-adapter-reconciliation-probe.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("create or replace function public.omega_runtime_probe_assert_counts_20261113(", sql)
+        self.assertIn("security definer", sql)
+        self.assertIn("set search_path = ''", sql)
+        self.assertIn("revoke all on function public.omega_runtime_probe_assert_counts_20261113", sql)
+        self.assertIn("grant execute on function public.omega_runtime_probe_assert_counts_20261113", sql)
+        self.assertIn("rollback;", sql)
+        self.assertNotIn("select count(*) into v_count from public.omega_platform_events", sql)
+        self.assertNotIn("select count(*) into v_count from public.omega_audit_log", sql)
+        self.assertNotIn("select count(*) into v_count from public.sovereign_events", sql)
+
+    def test_public_points_projection_remains_privacy_scoped(self) -> None:
+        path = MIGRATIONS / "20261013160000_secure_public_points_leaderboard_projection.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        for marker in (
+            "security definer", "set search_path = ''",
+            "p.is_public is true or p.id = v_uid",
+            "p.access_approved is true or p.is_owner is true",
+            "p.deactivated_at is null",
+            "p.family_of is null or p.id = v_uid",
+            "revoke all on function public.get_points_leaderboard(integer) from public, anon",
+            "grant execute on function public.get_points_leaderboard(integer) to authenticated",
+        ):
+            self.assertIn(marker, sql)
+
+    def test_search_index_reconciliation_is_additive_and_owner_scoped(self) -> None:
+        path = MIGRATIONS / "20261112091500_omega_search_index_schema_reconciliation.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        for marker in (
+            "add column if not exists body text",
+            "add column if not exists content text",
+            "add column if not exists owner_id uuid",
+            "add column if not exists organization_id uuid",
+            "owner_id is null and organization_id is null",
+            "owner_id=auth.uid()",
+            "coalesce(body,content)",
+        ):
+            self.assertIn(marker, sql)
+        self.assertNotIn("drop table", sql)
+        self.assertNotIn("drop column", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
+    def test_consultancy_schema_parity_preserves_existing_identifier_types(self) -> None:
+        path = MIGRATIONS / "20261112091600_omega_consultancy_runtime_schema_parity.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        for marker in (
+            "add column if not exists domain text",
+            "returning id::text into v_id",
+            "return v_id;",
+            "v_request_id text",
+            "owner_id=(select auth.uid())",
+        ):
+            self.assertIn(marker, sql)
+        self.assertNotIn("drop table", sql)
+        self.assertNotIn("delete from public.consult_requests", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
+
+
+    def test_latest_consultancy_dispatcher_normalizes_uuid_and_bigint_ids_to_text(self) -> None:
+        path = MIGRATIONS / "20261112130000_omega_consultancy_request_id_text_compat.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("v_request_id text", sql)
+        self.assertNotIn("v_request_id bigint", sql)
+        self.assertIn("omega_private.create_consult_intake", sql)
+        self.assertIn("v_request_id:=omega_private.create_consult_intake", sql)
+        parity_sql = (MIGRATIONS / "20261112091600_omega_consultancy_runtime_schema_parity.sql").read_text(encoding="utf-8").lower()
+        self.assertIn("returning id::text into v_id", parity_sql)
+        self.assertIn("grant execute on function public.omega_runtime_dispatch", sql)
+        self.assertTrue(sql.strip().endswith("commit;"))
 
 
 if __name__ == "__main__":

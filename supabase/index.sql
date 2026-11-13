@@ -1,3 +1,7 @@
+-- LEGACY REFERENCE ONLY — NOT A MIGRATION OR DEPLOYABLE EDGE FUNCTION.
+-- Do not apply this file in the SQL editor. It is a historical provider-integration sketch.
+-- Current deployable Edge Function source lives under supabase/functions/.
+
 // ============================================================================
 // SYD OMEGA 91717 -- THE CONCIERGE (Supabase Edge Function)
 // Server-side Claude proxy for chatbot.html. Holds the Anthropic key as a

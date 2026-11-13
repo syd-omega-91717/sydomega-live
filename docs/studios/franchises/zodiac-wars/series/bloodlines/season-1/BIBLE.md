@@ -1,7 +1,7 @@
 # ZODIAC WARS: BLOODLINES — Season 1: The Soul Door (Bible, Draft 1, PROPOSED)
 
-**Status: SEASON BIBLE DRAFT 1.** Not approved, not produced. A bible, eight beat sheets, and a short first draft of episode 101
-(`episodes/E01_THE_NEXT_COUNT.fountain`). Written under the founder's delegation on 2026-11-07 ("start another franchise"), after
+**Status: SEASON BIBLE DRAFT 1.** Not approved, not produced. A bible, eight beat sheets, and short first drafts of episodes 101 to 104
+(`episodes/E01_THE_NEXT_COUNT.fountain` to `episodes/E04_WHAT_THE_FOUNDRY_KEPT.fountain`; 105 to 108 are not written). Written under the founder's delegation on 2026-11-07 ("start another franchise"), after
 `The Rise of Aries` (screenplay draft 1, itself **not** founder-approved) and the Zodiac Wars canon draft
 (`docs/canon/zodiac-wars/BIBLE.md`, whose own header says everything after the founder's pitch is the assistant's proposal).
 **Everything here is therefore a proposal on top of a proposal.** Format: 8 episodes of about 50 minutes. Registry ids:
@@ -131,7 +131,7 @@ regents and appear only in flashback.
 - The Null is not a season. Whether it returns to the series is open (conflict C-24).
 
 ## Production notes
-Eight episodes need eight screenplays (one short draft exists), a visual bible for the Foundry, the Hall of the Seats and the Deep Archive, and
+Eight episodes need eight screenplays (four short drafts exist), a visual bible for the Foundry, the Hall of the Seats and the Deep Archive, and
 a score on 9.1717 Hz. Nothing in this bible has footage, voice, music or art. Rights: none recorded.
 
 ## Open questions
@@ -140,3 +140,23 @@ a score on 9.1717 Hz. Nothing in this bible has footage, voice, music or art. Ri
 3. Which nine Houses belong to which of Seasons 2 to 4?
 4. Do Orla's notebook, the Schedule of Cost and the fourth signature stay? All three are new objects in this bible (the film supplies only clause nine and its reason).
 5. Do the Light rulers stay voices for the whole series, or appear?
+
+## Scripting changes (episodes 102 to 104, drafted 2026-11-10)
+
+Each is a proposal on top of this bible and is the founder's to accept or strike. Each episode's own Notes field lists the same.
+
+- **102 adds the season's legal engine.** Adaeze's amendment in the film ("No clause of this Accord stands unless the people it binds can
+  read the reason for it"), read against the blank Schedule, leaves every clause but nine without standing. The beat sheet said only that
+  Ossara "changes what the Court thinks it is for"; the draft makes that concrete: a count made to close an account is a receipt, and the
+  clerks' instinct to draft four hundred and eleven reasons by the end of the month would do to the old dead what he did to his forty thousand.
+  New facts: 411 clauses; clause one reads "No House shall bear arms within the orbit of another."
+- **103 gives the Archive's silence a mechanism.** The catalogue begins at Year One; the archivists' oath, sworn in a dead tongue, ends
+  "what comes from before the peace shall be kept, and shall not be found", signed by Phaedra Mir; the Drowned was that oath without its
+  limit. Under the tanks is a dry hall: the war's records are labelled, and one aisle of personal objects has no labels at all.
+- **104 answers what the first Aries cost was.** The Aries tongue was cast from the name-tags of the Aries dead, on Ares Valorian's order, so
+  they would be heard; eleven thousand four hundred and six by weight. Orla's "eleven thousand pours" (the film's number) were her count of
+  them, one pour each; she died four hundred and six short and Tamsin takes it up. Whether the other eleven tongues were made the same way
+  is asked and deliberately not answered: it is a decision for 105.
+- **Carried forward to 105 to 108:** who the first name is (nobody knows yet); how Orla copied a page of a book that never left the Hall
+  (the notebook's last page, which is this bible's 104 cliffhanger); the Court's vote to let Ossara look, under watch, without a pen.
+

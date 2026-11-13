@@ -37,7 +37,46 @@ jobs:
         run: python3 scripts/migration-replay-contract.py
 
       - name: Start isolated Supabase stack
-        run: supabase start
+        shell: bash
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Authenticated pulls avoid Docker Hub's anonymous shared-runner rate limit.
+          if [[ -n "${DOCKERHUB_USERNAME}" && -n "${DOCKERHUB_TOKEN}" ]]; then
+            printf '%s' "$DOCKERHUB_TOKEN" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+          else
+            echo "DOCKERHUB_AUTH=unconfigured; bounded retry mode enabled"
+          fi
+
+          cleanup_supabase() {
+            supabase stop --no-backup >/dev/null 2>&1 || true
+            local stale_containers
+            stale_containers="$(docker ps -aq --filter 'name=supabase_')"
+            if [[ -n "$stale_containers" ]]; then
+              printf '%s\n' "$stale_containers" | xargs -r docker rm -f >/dev/null 2>&1 || true
+            fi
+          }
+
+          # Remove partial containers before the first start and between retries.
+          cleanup_supabase
+          for attempt in 1 2 3; do
+            echo "SUPABASE_START_ATTEMPT=$attempt/3"
+            if supabase start; then
+              echo "SUPABASE_START=PASS"
+              exit 0
+            fi
+            echo "SUPABASE_START=RETRYABLE_FAILURE attempt=$attempt" >&2
+            cleanup_supabase
+            if [[ "$attempt" -lt 3 ]]; then
+              sleep $((attempt * 30))
+            fi
+          done
+
+          echo "SUPABASE_START=FAIL after 3 bounded attempts" >&2
+          exit 1
 
       - name: Replay every migration from zero
         run: supabase db reset
@@ -61,6 +100,14 @@ jobs:
           db_url="$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')"
           test -n "$db_url"
           psql "$db_url" -v ON_ERROR_STOP=1 -f scripts/tests/stripe-refund-lifecycle-probe.sql
+
+      - name: Run all 54 module runtime adapter probes
+        shell: bash
+        run: |
+          set -euo pipefail
+          db_url="$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')"
+          test -n "$db_url"
+          psql "$db_url" -v ON_ERROR_STOP=1 -f scripts/tests/omega-runtime-adapter-reconciliation-probe.sql
 
       - name: Run family-access authorization and privacy probes
         shell: bash

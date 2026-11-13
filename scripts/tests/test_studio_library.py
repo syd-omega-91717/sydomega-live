@@ -38,7 +38,7 @@ class StudioLibrary(unittest.TestCase):
         self.assertEqual(sum(len(f["films"]) for f in p["franchises"]), 26)
         self.assertEqual(sum(len(f["characters"]) for f in p["franchises"]), len(REG["characters"]))
         kinds = sorted(d["kind"] for d in p["documents"].values())
-        self.assertEqual(kinds, ["design"] * 4 + ["screenplay"] * 2 + ["teleplay"] * 13)
+        self.assertEqual(kinds, ["design"] * 4 + ["screenplay"] * 2 + ["teleplay"] * 16)
 
     def test_an_episode_title_comes_from_its_own_header_so_an_apostrophe_survives(self):
         docs = lib.build()["documents"]
@@ -46,7 +46,7 @@ class StudioLibrary(unittest.TestCase):
         self.assertIn("105 The Traitor's Memory", titles)
         self.assertEqual(sorted(t[:3] for t in titles), [str(n) for n in range(101, 109)])
         zw = [v["title"] for k, v in docs.items() if k.startswith("episode:zodiac-wars:")]
-        self.assertEqual(zw, ["101 The Next Count"])
+        self.assertEqual(zw, ["101 The Next Count", "102 The Hearing", "103 The Old Story", "104 What The Foundry Kept"])
         new = {k.split(":")[1]: v["title"] for k, v in docs.items() if k.startswith("episode:") and k.split(":")[1] in ("the-omega-chronicles", "the-lost-civilizations", "the-last-galactic-empire", "the-human-frontier")}
         self.assertEqual(new, {"the-omega-chronicles": "101 The Calibration", "the-lost-civilizations": "101 The Same Sentence",
                                "the-last-galactic-empire": "101 The Unregistered Fleet", "the-human-frontier": "101 Ration Day"})

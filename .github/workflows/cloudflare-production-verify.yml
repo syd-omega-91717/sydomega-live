@@ -1,0 +1,78 @@
+name: Cloudflare Production Release Verification
+
+# Cloudflare Pages Git integration deploys main. Verify the exact deployed SHA
+# and follow canonical redirects before evaluating production routes.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-production-release-verification
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify exact production release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Refuse manual verification from non-main
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+        shell: bash
+        run: |
+          echo "::error title=Production verification refused::Manual production verification is allowed only from refs/heads/main."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install pinned production smoke client
+        run: python -m pip install --disable-pip-version-check -r scripts/requirements.txt
+
+      - name: Verify production manifest, headers and complete page estate
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://sydomega.com"
+          expected="${GITHUB_SHA}"
+          served=""
+
+          # Cloudflare Pages Git integration may finish after the GitHub push event.
+          # Allow up to five minutes for the exact main SHA to become publicly served.
+          # Cloudflare Pages Git integration can finish after the GitHub push event.
+          # Each bounded request follows canonical redirects; 30 attempts allow convergence.
+          for attempt in $(seq 1 30); do
+            manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
+            served="$(printf '%s' "${manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
+            if [ "${served}" = "${expected}" ]; then break; fi
+            echo "release_attempt=${attempt} served=${served:-none} expected=${expected}"
+            sleep 10
+          done
+          [ "${served}" = "${expected}" ] || { echo "::error title=Production SHA mismatch::Cloudflare Pages does not serve the exact main commit."; exit 1; }
+
+          root_code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/")"
+          [ "${root_code}" = "200" ] || { echo "production root final response returned ${root_code}"; exit 1; }
+
+          curl --location --silent --show-error --dump-header "${RUNNER_TEMP}/production-headers.txt" --output /dev/null --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/"
+          grep -Eiq '^content-security-policy:' "${RUNNER_TEMP}/production-headers.txt" || { echo "CSP header missing"; exit 1; }
+          grep -Eiq '^strict-transport-security:' "${RUNNER_TEMP}/production-headers.txt" || { echo "HSTS header missing"; exit 1; }
+
+          for path in account.html profile.html world.html news.html media.html privacy.html terms.html vault.html; do
+            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/${path}")"
+            [ "${code}" = "200" ] || { echo "core route /${path} final response returned ${code}"; exit 1; }
+          done
+
+          python scripts/cloudflare-production-smoke.py --base-url "${base}" --workers 16 --timeout 20
+
+          www_code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "https://www.sydomega.com/")"
+          [ "${www_code}" = "200" ] || { echo "www alias final response returned ${www_code}"; exit 1; }
+
+          echo "CLOUDFLARE_PRODUCTION=PASS host=sydomega.com commit=${served} root=${root_code} www=${www_code}"

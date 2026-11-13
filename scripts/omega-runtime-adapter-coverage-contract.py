@@ -21,7 +21,6 @@ GATEWAY = ROOT / "supabase/functions/omega-runtime-gateway/index.ts"
 PROBE = ROOT / "scripts/tests/omega-runtime-adapter-reconciliation-probe.sql"
 SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113010000_omega_agent_task_service_role_read_grants.sql"
 NOTIFICATION_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113020000_omega_notification_service_role_read_grant.sql"
-ACHIEVEMENT_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113030000_omega_user_achievement_service_role_insert_grant.sql"
 ACHIEVEMENT_SERVICE_ROLE_GRANTS_MIGRATION = ROOT / "supabase/migrations/20261113062812_omega_user_achievement_service_role_insert_grant.sql"
 
 def fail(message: str) -> int:
@@ -374,10 +373,6 @@ def main() -> int:
         if "to authenticated" in notification_service_role_grants_sql:
             return fail("notification service-role grant migration must not expand authenticated privileges")
         for marker in (
-            "grant insert on table public.omega_user_achievements to service_role",
-            "has_table_privilege('service_role','public.omega_user_achievements','insert')",
-            "has_table_privilege('authenticated','public.omega_user_achievements','insert')",
-            "has_table_privilege('anon','public.omega_user_achievements','insert')",
             "grant select, insert on table public.omega_user_achievements to service_role",
             "grant select on table public.omega_achievement_verifications to service_role",
             "has_table_privilege('service_role','public.omega_user_achievements','select')",

@@ -1699,30 +1699,47 @@
     "intended_remediation": "Add the missing required domain column, align verified required/default fields, return source IDs as text for UUID/BIGINT compatibility, add the missing successful RETURN, update the dispatcher request ID variable to text, and preserve the underlying ID column without conversion."
   },
   "release_readiness": {
-    "status": "CLOUDFLARE_PRODUCTION_VERIFIED_VERCEL_PROMOTION_POSTPONED",
+    "status": "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED",
     "blockers": [
-      "Vercel production deployment remains unverified: the 2026-11-13 Vercel Production workflow completed its Cloudflare live-commit check successfully, but all Vercel project setup, artifact build, deployment, and Vercel-domain smoke steps were skipped. Do not interpret this workflow's success conclusion as a Vercel production deployment."
+      "Vercel production deployment remains intentionally postponed. The main-push Vercel Production workflow confirms VERCEL_PROMOTION_POSTPONED=true because the Vercel Hobby team was blocked for Edge Requests by account credits since 2026-10-06. The workflow's Cloudflare live-commit check passed, but Vercel project setup, immutable artifact build, deployment, and Vercel-domain smoke steps were skipped. Restore Vercel account capacity, authorize the project team, verify VERCEL_TOKEN and project scope, then deliberately resume promotion; do not infer Vercel deployment from a successful workflow conclusion."
     ],
     "last_checked": "2026-11-13",
     "production_verification": {
       "provider": "Cloudflare Pages",
       "status": "PASS",
-      "commit_sha": "63ecb5f471c8712c095ea60e6358a31cf113d965",
-      "workflow_run_id": 43382062870,
-      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43382062870",
-      "job_id": 131741869680,
+      "commit_sha": "426ec70562e3f97d56707002a3bc25eb43f46328",
+      "workflow_run_id": 43384712260,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43384712260",
+      "job_id": 131750360938,
       "verification_step": "Verify production manifest, headers and complete page estate",
       "conclusion": "success",
-      "verified_at": "2026-11-13T06:56:12Z"
+      "verified_at": "2026-11-13T07:18:40Z"
     },
     "vercel_promotion": {
       "status": "POSTPONED_NOT_DEPLOYED",
-      "workflow_run_id": 43382062894,
-      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43382062894",
-      "job_id": 131742105287,
+      "reason": "VERCEL_PROMOTION_POSTPONED=true; Vercel Hobby team blocked for Edge Requests by account credits since 2026-10-06 (documented in .github/workflows/vercel-production.yml)",
+      "workflow_run_id": 43384712049,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43384712049",
+      "job_id": 131750599639,
       "cloudflare_live_commit_check": "PASS",
       "vercel_deployment_steps": "SKIPPED",
-      "verified_at": "2026-11-13T06:56:30Z"
+      "required_to_resume": [
+        "Vercel account Edge Request capacity restored",
+        "Vercel team access authorization approved",
+        "VERCEL_TOKEN and intended project scope verified",
+        "explicitly clear VERCEL_PROMOTION_POSTPONED only after preflight passes"
+      ]
+    },
+    "failover_verification": {
+      "provider": "GitHub Pages",
+      "status": "PASS",
+      "commit_sha": "426ec70562e3f97d56707002a3bc25eb43f46328",
+      "workflow_run_id": 43384712215,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43384712215",
+      "build_job_id": 131750361335,
+      "deploy_job_id": 131750488374,
+      "verification_step": "Smoke test deployed Pages site",
+      "conclusion": "success"
     }
   },
   "runtime_probe_status": {
@@ -1734,7 +1751,7 @@
     "runtime_adapter_probe": "PASS — 54/54 governed actions",
     "failure": null,
     "production_privilege_evidence": "Live provider ACL verification confirms service_role SELECT on omega_notifications, omega_agent_tasks, omega_agent_task_events, omega_user_achievements, and omega_achievement_verifications; service_role INSERT on omega_user_achievements. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with the existing owner-read-only policy.",
-    "remediation": "Database and behavioral verification is green: 429 source migrations replayed from zero; migration inventory and security audit pass; hardening and Stripe lifecycle probes pass; all 54 runtime actions pass; family-access authorization/privacy probes pass; authenticated content pipeline E2E passes. The provider ledger contains 429 applied versions through 20261113062812; the source achievement migration filename matches the provider-generated version, remote-migrations.json mirrors the provider ledger, and pending-migrations.json is empty. Cloudflare Pages exact-SHA production verification passed for main commit 63ecb5f471c8712c095ea60e6358a31cf113d965. Vercel production promotion remains postponed and is not represented as deployed.",
+    "remediation": "Database and behavioral verification is green: 429 source migrations replayed from zero; migration inventory and security audit pass; hardening and Stripe lifecycle probes pass; all 54 runtime actions pass; family-access authorization/privacy probes pass; authenticated content pipeline E2E passes. The provider ledger contains 429 applied versions through 20261113062812; source migration history is reconciled and pending-migrations.json is empty. Cloudflare Pages exact-SHA production verification passed for main commit 426ec70562e3f97d56707002a3bc25eb43f46328. GitHub Pages failover build, deployment, and smoke test also passed. Vercel production promotion remains intentionally postponed because the workflow records the Hobby team's Edge Request credit block; Vercel deploy steps were skipped.",
     "status": "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION",
     "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
     "provider_migration_ledger": {

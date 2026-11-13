@@ -51,6 +51,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIsNotNone(match, path.name)
             local_versions.add(match.group(1))
         self.assertEqual(pending_versions, local_versions - self.remote_versions)
+        self.assertEqual(self.pending, [], "all provider-applied migrations must be reconciled")
         self.assertEqual(self.pending, [], "all provider-applied migrations must be removed from pending registry")
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
@@ -92,8 +93,6 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
-        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
         self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
         self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
         self.assertNotIn("production release is blocked", strict.stdout)
@@ -106,13 +105,14 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
         self.assertIn("Cloudflare exact-SHA production verification", blockers)
         self.assertNotIn("54-action behavioral SQL probe", blockers)
-        self.assertNotIn("20261113020000_omega_notification_service_role_read_grant.sql", blockers)
-        self.assertNotIn("20261113062812_omega_user_achievement_service_role_insert_grant.sql", blockers)
+        self.assertNotIn("migration", blockers.lower())
         runtime = snapshot["runtime_probe_status"]
         self.assertEqual(runtime.get("status"), "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
         self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions")
         self.assertEqual(runtime.get("family_access_probe"), "PASS")
-        self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS")
+        self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline")
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 429)
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261113062812")
 
     def test_agent_task_service_role_grants_are_provider_applied_without_anon_expansion(self) -> None:
         path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"

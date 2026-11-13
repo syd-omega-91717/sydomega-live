@@ -96,13 +96,29 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
         self.assertNotIn("production release is blocked", strict.stdout)
 
-    def test_release_readiness_blocks_only_unverified_production_sha(self) -> None:
+    def test_release_readiness_records_cloudflare_pass_and_vercel_postponement(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
         snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
         readiness = snapshot["release_readiness"]
-        self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
+        self.assertEqual(
+            readiness.get("status"),
+            "CLOUDFLARE_PRODUCTION_VERIFIED_VERCEL_PROMOTION_POSTPONED",
+        )
+        self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
+        self.assertEqual(
+            readiness.get("production_verification", {}).get("commit_sha"),
+            "63ecb5f471c8712c095ea60e6358a31cf113d965",
+        )
+        self.assertEqual(
+            readiness.get("production_verification", {}).get("workflow_run_id"),
+            43382062870,
+        )
+        vercel = readiness.get("vercel_promotion", {})
+        self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")
+        self.assertEqual(vercel.get("vercel_deployment_steps"), "SKIPPED")
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
-        self.assertIn("Cloudflare exact-SHA production verification", blockers)
+        self.assertIn("Vercel production deployment remains unverified", blockers)
+        self.assertNotIn("Cloudflare exact-SHA production verification has not passed", blockers)
         self.assertNotIn("54-action behavioral SQL probe", blockers)
         self.assertNotIn("migration", blockers.lower())
         runtime = snapshot["runtime_probe_status"]
@@ -112,6 +128,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline")
         self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 429)
         self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261113062812")
+        self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
+        self.assertIn("Vercel production promotion remains postponed", runtime.get("remediation", ""))
 
     def test_agent_task_service_role_grants_are_provider_applied_without_anon_expansion(self) -> None:
         path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"

@@ -1701,8 +1701,8 @@
   "release_readiness": {
     "status": "RELEASE_BLOCKED",
     "blockers": [
-      "Forward-only migration 20261113020000_omega_notification_service_role_read_grant.sql remains pending provider application. Migration 20261113010000_omega_agent_task_service_role_read_grants.sql is now present in the authenticated provider ledger as applied version 427. The notification migration materializes only the existing production service_role SELECT privilege; no anon or authenticated grants are added and no RLS policy is changed.",
-      "The 54-action behavioral SQL probe failed at omega_notifications because the clean replay lacked its existing production service_role SELECT grant. The follow-up PR adds that narrow parity grant and uses a transaction-scoped SECURITY DEFINER test helper for restricted evidence-table row-count assertions; the rerun has not yet passed.",
+      "Forward-only migrations 20261113020000_omega_notification_service_role_read_grant.sql and 20261113030000_omega_user_achievement_service_role_insert_grant.sql remain pending provider application. Migration 20261113010000_omega_agent_task_service_role_read_grants.sql is confirmed applied as provider migration 427. The pending migrations materialize only existing production service_role privileges; they add no anon/authenticated privileges and do not change RLS.",
+      "The 54-action behavioral SQL probe passed migration replay, migration inventory, security audit, hardening, and Stripe lifecycle stages, then failed at the synthetic omega_user_achievements INSERT because clean replay lacks its existing production service_role INSERT grant. The current PR adds this narrowly scoped parity migration and retains fixed-key transaction-scoped evidence assertions; the next rerun is required.",
       "Family-access authorization/privacy probes and authenticated content-pipeline end-to-end probes were skipped because the runtime adapter probe failed first; they remain unverified.",
       "Cloudflare exact-SHA production verification has not passed for the current merged main commit."
     ],
@@ -1714,10 +1714,10 @@
     "migration_security_audit": "PASS on merged PR #1262 commit",
     "hardening_contract": "PASS on merged PR #1262 commit",
     "stripe_refund_lifecycle_probe": "PASS on merged PR #1262 commit",
-    "runtime_adapter_probe": "FAILED at notification row-count verification; rerun pending in follow-up PR",
-    "failure": "permission denied for table omega_notifications at line 457 of scripts/tests/omega-runtime-adapter-reconciliation-probe.sql when service_role performs a direct row-count assertion",
+    "runtime_adapter_probe": "FAILED at omega_user_achievements synthetic INSERT privilege check; notification privilege parity now passes in the latest clean replay",
+    "failure": "permission denied for table omega_user_achievements at line 523 of scripts/tests/omega-runtime-adapter-reconciliation-probe.sql; service_role needs the INSERT privilege already present in production",
     "production_privilege_evidence": "Live provider ACL inspection confirms service_role SELECT on omega_notifications, omega_agent_tasks, and omega_agent_task_events; anon has no SELECT on these tables. Live provider ACL inspection also confirms service_role does not have SELECT on omega_platform_events, omega_audit_log, or sovereign_events.",
-    "remediation": "Provider ledger read confirms 20261113010000 is applied as migration 427; remote-migrations.json now mirrors all 427 provider versions and pending-migrations.json no longer marks it pending. Follow-up branch fix/runtime-probe-privilege-parity-20261113 adds forward-only migration 20261113020000 to materialize the existing omega_notifications service_role SELECT grant. Direct CI-only row-count assertions for omega_platform_events, omega_audit_log, and sovereign_events use a narrowly scoped SECURITY DEFINER helper created inside the probe transaction, executable only by service_role and rolled back with all fixtures; no production role grants are broadened. Full replay and all behavioral probes must rerun.",
+    "remediation": "The clean replay passes all source migrations, inventory, migration security audit, hardening contract, Stripe static contract, and Stripe ledger probe. It then reaches the achievement fixture and fails because service_role lacks the existing production SELECT/INSERT privileges on omega_user_achievements and SELECT on omega_achievement_verifications. Follow-up migration 20261113030000 materializes only those provider-observed service_role grants and verifies authenticated INSERT and verification SELECT remain denied, plus anon denials; no RLS policies change. It retains 20261113020000 for notification SELECT parity and the fixed-key transaction-scoped SECURITY DEFINER evidence inspector. Full 54-action, family privacy, and authenticated content pipeline probes must rerun.",
     "status": "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
     "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
     "provider_migration_ledger": {
@@ -1727,6 +1727,7 @@
       "latest_name": "omega_agent_task_service_role_read_grants",
       "notification_migration": "20261113020000_NOT_APPLIED"
     },
-    "task_grant_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED"
+    "task_grant_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
+    "achievement_assignment_acl_evidence": "Live provider ACL inspection confirms service_role has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with owner-read-only authenticated policy."
   }
 }

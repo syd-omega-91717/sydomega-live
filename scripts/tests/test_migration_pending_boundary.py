@@ -59,6 +59,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
             "20261112120000", "20261112121000", "20261112130000", "20261113010000",
+            "20261113020000", "20261113062812",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -66,7 +67,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261113010000")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261113062812")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 429)
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-13")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
@@ -87,33 +89,27 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_inventory_passes_but_strict_drift_blocks_pending_migration(self) -> None:
+    def test_source_inventory_and_strict_drift_pass_after_provider_reconciliation(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
-        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
-        self.assertIn("20261113020000", strict.stdout)
-        self.assertIn("20261113030000", strict.stdout)
-        self.assertNotIn("20261113010000", strict.stdout)
-        self.assertIn("production release is blocked", strict.stdout)
+        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
+        self.assertNotIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
 
-    def test_release_readiness_stays_blocked_by_unverified_replay_and_production_proof(self) -> None:
+    def test_release_readiness_is_blocked_only_by_unverified_exact_production_release(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
         snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
         readiness = snapshot["release_readiness"]
         self.assertEqual(readiness.get("status"), "RELEASE_BLOCKED")
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
-        self.assertIn("20261113010000_omega_agent_task_service_role_read_grants.sql is confirmed applied as provider migration 427", blockers)
-        self.assertIn("20261113020000_omega_notification_service_role_read_grant.sql", blockers)
-        self.assertIn("20261113030000_omega_user_achievement_service_role_insert_grant.sql", blockers)
-        self.assertIn("54-action behavioral SQL probe", blockers)
         self.assertIn("Cloudflare exact-SHA production verification", blockers)
-        self.assertIn("Cloudflare exact-SHA production verification", blockers)
-        self.assertEqual(
-            snapshot["runtime_probe_status"].get("status"),
-            "RERUN_REQUIRED_NOT_PRODUCTION_PROOF",
-        )
+        self.assertNotIn("pending migration", blockers.lower())
+        runtime = snapshot["runtime_probe_status"]
+        self.assertEqual(runtime.get("status"), "PASS_BEHAVIORAL_PROBES_NOT_PRODUCTION_PROOF")
+        self.assertIn("54/54", runtime.get("runtime_adapter_probe", ""))
+        self.assertIn("PASS", runtime.get("family_access_probe", ""))
+        self.assertIn("PASS", runtime.get("authenticated_content_pipeline_probe", ""))
 
     def test_agent_task_service_role_grants_are_provider_applied_without_anon_expansion(self) -> None:
         path = MIGRATIONS / "20261113010000_omega_agent_task_service_role_read_grants.sql"
@@ -138,7 +134,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertTrue(sql.strip().endswith("commit;"))
 
     def test_achievement_assignment_insert_remains_server_only_and_matches_live_acl(self) -> None:
-        path = MIGRATIONS / "20261113030000_omega_user_achievement_service_role_insert_grant.sql"
+        path = MIGRATIONS / "20261113062812_omega_user_achievement_service_role_insert_grant.sql"
         sql = path.read_text(encoding="utf-8").lower()
         self.assertIn("grant select, insert on table public.omega_user_achievements to service_role", sql)
         self.assertIn("grant select on table public.omega_achievement_verifications to service_role", sql)

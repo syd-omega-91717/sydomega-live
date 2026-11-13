@@ -102,20 +102,26 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         readiness = snapshot["release_readiness"]
         self.assertEqual(
             readiness.get("status"),
-            "CLOUDFLARE_PRODUCTION_VERIFIED_VERCEL_PROMOTION_POSTPONED",
+            "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED",
         )
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(
             readiness.get("production_verification", {}).get("commit_sha"),
-            "63ecb5f471c8712c095ea60e6358a31cf113d965",
+            "426ec70562e3f97d56707002a3bc25eb43f46328",
         )
         self.assertEqual(
             readiness.get("production_verification", {}).get("workflow_run_id"),
-            43382062870,
+            43384712260,
         )
         vercel = readiness.get("vercel_promotion", {})
         self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")
         self.assertEqual(vercel.get("vercel_deployment_steps"), "SKIPPED")
+        self.assertIn("VERCEL_PROMOTION_POSTPONED=true", vercel.get("reason", ""))
+        failover = readiness.get("failover_verification", {})
+        self.assertEqual(failover.get("provider"), "GitHub Pages")
+        self.assertEqual(failover.get("status"), "PASS")
+        self.assertEqual(failover.get("commit_sha"), "426ec70562e3f97d56707002a3bc25eb43f46328")
+        self.assertEqual(failover.get("workflow_run_id"), 43384712215)
         blockers = " ".join(str(item) for item in readiness.get("blockers", []))
         self.assertIn("Vercel production deployment remains unverified", blockers)
         self.assertNotIn("Cloudflare exact-SHA production verification has not passed", blockers)

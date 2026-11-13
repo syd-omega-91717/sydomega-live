@@ -90,7 +90,7 @@ The following ranges are absent as top-level numbered bullet entries. A missing 
 
 ## 4. Security and implementation defects in the build prompt
 
-The build prompt contains credential-like values and hard-coded example passwords in its environment and Docker sections. **Treat all real credentials copied into the source files as exposed: revoke/rotate them and inspect provider audit logs.** This report intentionally does not reproduce any values.
+Both the master build prompt and the 18-module product document contain credential-like values. The master prompt includes AI-provider, Stripe, database, Redis, JWT, social/cloud and webhook-shaped values; the product document repeats several provider/payment values and adds social/video/cloud token-shaped values. The product document also contains wallet addresses and personal contact references. **Treat every credential-like value that may be genuine as exposed: revoke/rotate it and inspect provider audit logs.** This report intentionally does not reproduce any values. The uploaded source files are not copied into the repository.
 
 Additional issues:
 
@@ -196,3 +196,37 @@ The corpus is reconciled only when:
 - no secret, fictional metric, simulated balance, unearned award, unverified KYC status or lore claim is represented as live truth.
 
 **Audit conclusion:** the five documents provide a broad product vision and substantial engineering direction, but they are not a single internally consistent, fully specified, deployable build instruction. The current repository is the implementation authority. This reconciliation prevents the historical prompts from causing a destructive rewrite, unsafe financial activation, false verification or fabricated completeness.
+
+
+## 10. Release-state addendum — 2026-11-13
+
+This section updates the release facts without rewriting the historical 2026-11-11 source audit baseline.
+
+- Current `main`: `342d9b391762a2dba2ad5280b53895dd2672f4f0` (merge of PR #1273).
+- GitHub main commit checks: 25/25 completed successfully at the time of verification.
+- Cloudflare Pages production: exact-SHA release verification passed for the current main commit; the release manifest, root domains, production route surface and security-header checks passed.
+- GitHub Pages failover: deployment and smoke checks passed for the same release sequence.
+- Supabase: runtime health and fresh all-migrations replay checks passed in the main release workflow.
+- Vercel: no production deployment record exists for the current main SHA. The latest READY production deployment returned by the Vercel API is for older commit `7d70ce14ef3c8c7e5cc3e4a3c39e15ecad579d28`; the project API reports `live=false`. The repository workflow currently sets `VERCEL_PROMOTION_POSTPONED=true` and documents a prior Hobby Edge Request credit block. The team is on the Hobby plan; current billing/credit status could not be independently confirmed through the available billing endpoint.
+
+**Release interpretation:** Cloudflare Pages is the currently verified production authority for the audited main SHA. Do not describe the current SHA as deployed to Vercel. Do not remove the Vercel promotion hold until account capacity, team access, deployment credentials, project scope and exact-SHA post-deploy checks are all verified.
+
+### Product-domain and page-contract traceability snapshot
+
+The current main registries show that runtime wiring and product-domain completion are separate states:
+
+- Product-domain registry: **18/18 domains remain UNVERIFIED**; 0 have canonical capability links, authoritative data-source links, accountable owners, acceptance-test links or release-evidence links. The runtime contract deliberately prevents a provider catalog snapshot from promoting these fields without reviewed implementation evidence.
+- Runtime observations: **18 modules, 54 integrated actions**. Capability and service lifecycle: 16 DESIGNED, 2 INTEGRATED. Action modes: 46 READ, 6 SIMULATION, 1 WRITE (consultancy intake), 1 EXTERNAL (ownership verification). The recorded 54-action behavioral probe passed, but this does not prove every complete user journey or external provider flow.
+- Six cross-platform capabilities remain unmapped to a product domain: event fabric, referral economy, notification delivery, agent-task control, commerce settlement and observability audit.
+- Page contracts: **241/241 source-audited**, 0 remaining source-audit pages; 205/241 still have domain UNVERIFIED, all 241 retain OPEN_TASK review items, and truth/authorization remain unverified.
+- Release guards remain explicit: financial execution is blocked pending legal/accounting/custody/risk/provider approval; blockchain asset mutation is absent from observed actions; passport semantics are platform credential only; sensitive family data still requires runtime negative tests; production status is not inferred from the catalog.
+
+**Implementation priority:** map each module's customer job, canonical capability, authoritative data source, authorization boundary, failure path, telemetry, acceptance tests and release evidence from observed repository/runtime proof. Keep the domain UNVERIFIED until that complete evidence set passes. Do not fill empty registry fields from names or assumptions.
+
+### Repository merge governance
+
+The current repository ruleset `sydomega_merged` exists but has `enforcement=disabled`. Its configured rules only cover deletion and non-fast-forward updates; no required status checks or pull-request review rules are configured in that ruleset. The branch-protection endpoint is not readable through the current GitHub integration (HTTP 403), and no ruleset mutation action is available in this session.
+
+**Required administrator action:** enable the ruleset and configure required CI/security checks, pull-request review requirements, stale-review dismissal or approval reset as appropriate, and protection against force-push/deletion. Until that is done, passing checks are evidence but are not enforced by repository branch protection.
+
+

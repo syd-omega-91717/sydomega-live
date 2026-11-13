@@ -134,6 +134,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("has_table_privilege('anon','public.omega_notifications','select')", sql)
         self.assertNotIn("to authenticated", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
+        self.assertIn("20261113020000", self.remote_versions)
 
     def test_achievement_assignment_insert_remains_server_only_and_matches_live_acl(self) -> None:
         path = MIGRATIONS / "20261113062812_omega_user_achievement_service_role_insert_grant.sql"
@@ -149,6 +150,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("has_table_privilege('anon','public.omega_achievement_verifications','select')", sql)
         self.assertNotIn("create policy", sql)
         self.assertTrue(sql.strip().endswith("commit;"))
+        self.assertIn("20261113062812", self.remote_versions)
 
     def test_runtime_probe_uses_transaction_scoped_definer_inspector_for_restricted_evidence_tables(self) -> None:
         path = ROOT / "scripts" / "tests" / "omega-runtime-adapter-reconciliation-probe.sql"

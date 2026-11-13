@@ -98,7 +98,6 @@ declare
   v_second jsonb;
   v_other jsonb;
   v_cases jsonb;
-  v_probe_counts jsonb;
   v_request_id text;
   v_other_request_id text;
   i integer;

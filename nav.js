@@ -148,8 +148,8 @@
           ['credentials','CREDENTIALS','/credentials.html','folded'],['charter','CHARTER','/charter.html'],['sigil','SIGIL','/sigil.html'],
           ['membership','MEMBERSHIP','/membership.html']]},
     {key:'media',  icon:'\u25B6', label:'MEDIA',   href:'/media.html',       col:'#AB82F2',
-     sub:[['media','CREATIVE UNIVERSE','/media.html'],['cinema','CINEMA','/cinema.html','folded'],['movies','MOVIES','/movies.html'],['characters','CHARACTERS','/characters.html'],
-          ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html'],['universe','UNIVERSE','/universe.html','folded'],
+     sub:[['media','CREATIVE UNIVERSE','/media.html'],['cinema','CINEMA','/cinema.html','folded'],['movies','WATCH','/movies.html'],['characters','CHARACTERS','/characters.html'],
+          ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html','folded'],['universe','UNIVERSE','/universe.html','folded'],
           ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html'],['game-origins','ORIGINS SLICE 0','/game-origins.html'],['game-origins-bridge','TWO-HAND BRIDGE','/game-origins-bridge.html'],['game-omega-civilization','CIVILIZATION 91717','/game-omega-civilization.html'],['game-last-galactic-empire','LAST GALACTIC EMPIRE','/game-last-galactic-empire.html'],['worlds','WORLDS','/worlds.html'],['studio-library','STUDIO LIBRARY','/studio-library.html']]},
   ];
 
@@ -424,7 +424,7 @@
   var GROUP_COMPACT={
     identity:['profile','life','journal','targets','membership'],
     ascend:['ascend','academy','courses','focus','achievements'],
-    cosmos:['cosmos','horoscope','media','movies','trailers'],
+    cosmos:['cosmos','horoscope','media','movies'],
     vault:['vault','wallet','budget','portfolio','subscriptions']
   };
   /* PLAIN WORDS ON THE SIX DOORS (draft, 2026-11-14). Two independent reviewers said the menu was hard to read:

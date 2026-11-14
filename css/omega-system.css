@@ -1288,3 +1288,17 @@ a[href]:hover:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) {
     background-color:var(--void2,#020206)!important
   }
 }
+
+/* WATCH TABS (2026-11-14). movies.html, cinema.html and series.html are three views of one catalogue (the
+   first two list the same twelve films), so they share one tab bar and one menu entry instead of three
+   doors. Plain links, no script: each tab is a real page, and the bar is in the page's own markup so it
+   paints with the first frame. The colour rules repeat this file's own link selector
+   (a[href]:not(.on)...) because that rule tints every link with the member's element accent at
+   specificity (0,5,1); anything weaker painted gold text on the gold active tab. */
+:where(.watch-tabs){display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px;padding:0}
+:where(.watch-tabs) a{flex:0 0 auto;min-height:44px;display:inline-flex;align-items:center;padding:0 18px;
+  border:1px solid rgba(201,168,76,.22);border-radius:8px;text-decoration:none;
+  font:600 var(--fs-2,14px)/1 var(--M,"Courier Prime",monospace);letter-spacing:1.6px}
+.watch-tabs a[href]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link){color:#B8B6AE;text-decoration:none}
+.watch-tabs a[href]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link):hover{color:#E8C966;border-color:rgba(201,168,76,.5)}
+.watch-tabs a[href][aria-current="page"]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link){color:#0A0A0F;background:#C9A84C;border-color:#C9A84C}

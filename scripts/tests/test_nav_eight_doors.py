@@ -73,6 +73,27 @@ class NavEightDoors(unittest.TestCase):
         self.assertIn("(lk[3]?' ds-extra':'')", SRC)
         self.assertIn("#omega-drawer:not(.ds-all) .ds-link.ds-extra{display:none}", SRC)
 
+    def test_the_trail_and_the_hub_pages_use_the_door_name(self):
+        """The dock said GROW while the breadcrumb said ASCEND and the page said ASCEND WORKSPACE."""
+        self.assertIn("home.textContent='Ω '+door.label;", SRC)
+        self.assertNotIn("home.textContent='Ω '+sec.label;", SRC)
+        self.assertIn("function doorOf(secKey){", SRC)
+        for old in ("'COMMAND BRIDGE'", "'ASCEND WORKSPACE'", "'COSMOS HUB'", "'SOVEREIGN VAULT'", "'ORDER WORKSPACE'"):
+            self.assertNotIn(old, SRC, old)
+        root = pathlib.Path(__file__).resolve().parents[2]
+        for page, text in (("dashboard", "HOME &middot; COMMAND BRIDGE"), ("ascend", "<h1>GROW</h1>"),
+                           ("cosmos", "UNIVERSE &middot; COSMOS HUB"), ("vault", "MONEY &middot; SOVEREIGN VAULT"),
+                           ("order", '<h1 class="title">PEOPLE</h1>')):
+            self.assertIn(text, (root / (page + ".html")).read_text(encoding="utf-8"), page)
+
+    def test_home_has_no_chip_strip_and_the_other_hubs_keep_theirs(self):
+        root = pathlib.Path(__file__).resolve().parents[2]
+        js = (root / "omega-single-page-workspaces.js").read_text(encoding="utf-8")
+        skip = js.index("if(location.pathname==='/dashboard.html'){")
+        self.assertLess(skip, js.index("var picker=document.createElement('nav')"))
+        self.assertLess(js.index("location.replace(route(k0))"), skip, "old #module= links must still redirect on HOME")
+        self.assertEqual(js.count("location.pathname==='/"), 1, "only HOME drops the strip")
+
     def test_dock_and_drawer_render_from_groups_not_sections(self):
         self.assertIn("GROUPS.forEach(function(sec){\n    var isAct=sec.key===ACTIVE_GROUP;", SRC)
         self.assertIn("var DRAWER_SECTIONS=GROUPS.map(", SRC)

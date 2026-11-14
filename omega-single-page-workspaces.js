@@ -50,6 +50,10 @@
 
   var main=document.querySelector('main');
   if(!main)return;
+  /* HOME shows no chip strip (2026-11-14): seventeen links above the dashboard's own content was a third
+     row of navigation on the first page a member sees. Every one of them is in the menu, the full
+     launcher or search, and the old #module= links above still redirect. */
+  if(location.pathname==='/dashboard.html'){window.OmegaSinglePage={open:function(k){if(modules.indexOf(k)>=0)location.href=route(k);},close:function(){},modules:modules.slice()};return;}
   var picker=document.createElement('nav');picker.className='omega-module-picker';picker.setAttribute('aria-label','Workspace capabilities');
   modules.forEach(function(k){
     var a=document.createElement('a');a.href=route(k);a.className='omega-module-chip';a.textContent=label(k);a.dataset.module=k;

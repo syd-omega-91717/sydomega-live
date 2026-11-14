@@ -376,7 +376,7 @@
     /* search, notifications, chatbot and points are folded: the dashboard's
        command dock (omega-command-dock.js) carries ASK / POINTS / INBOX, and
        Ctrl/Cmd K is search. */
-    command:['dashboard','missions','projects','world','evidence'],
+    command:['dashboard','missions','projects','guide'],
     identity:['profile','security'],
     life:['life'],
     ascend:['ascend','academy','focus','evolution','contributions','forge'],
@@ -417,11 +417,18 @@
                 vault:'vault',invest:'vault',services:'vault'};
   function groupOf(k){return GROUP_OF[k]||k;}
   var GROUP_COMPACT={
-    identity:['profile','life','archive','passport','membership'],
-    ascend:['ascend','academy','gaming','focus','achievements','ladder','my-quests','sovereign-ai'],
-    cosmos:['cosmos','orrery','elements','horoscope','pantheons','media','movies','trailers'],
-    vault:['vault','wallet','marketplace','subscriptions','invest','portfolio','consultancy','services']
+    identity:['profile','life','journal','targets','membership'],
+    ascend:['ascend','academy','courses','focus','achievements'],
+    cosmos:['cosmos','horoscope','media','movies','trailers'],
+    vault:['vault','wallet','budget','portfolio','subscriptions']
   };
+  /* PLAIN WORDS ON THE SIX DOORS (draft, 2026-11-14). Two independent reviewers said the menu was hard to read:
+     COMMAND, ASCEND, VAULT and ORDER are brand names, so a newcomer has to click each one to learn what it holds.
+     The dock, its tooltip heading and the phone drawer now say what the door is FOR. Only these labels change:
+     SECTIONS, PS, OmegaAxis, every page's own hero and every URL keep the section names. To undo: delete
+     DOOR_LABEL (the doors fall back to their section label and nav_sec_ key). */
+  var DOOR_LABEL={command:'HOME',identity:'ME',ascend:'GROW',vault:'MONEY',order:'PEOPLE',cosmos:'UNIVERSE'};
+  var DOOR_I18N={command:'nav_door_command',identity:'nav_door_identity',ascend:'nav_door_ascend',vault:'nav_door_vault',order:'nav_door_order',cosmos:'nav_sec_universe'};
   var GROUPS=[],seenGroup={};
   SECTIONS.forEach(function(sec){
     var g=groupOf(sec.key);if(seenGroup[g])return;seenGroup[g]=1;
@@ -433,7 +440,7 @@
       if(!have){byKey[e[0]]=e;sub.push(e);}
       else if(have[3]==='folded'&&e[3]!=='folded'){sub[sub.indexOf(have)]=e;byKey[e[0]]=e;}
     });});
-    GROUPS.push({key:head.key,icon:head.icon,label:head.label,col:head.col,href:head.href,sub:sub,compact:GROUP_COMPACT[g]});
+    GROUPS.push({key:head.key,icon:head.icon,label:DOOR_LABEL[head.key]||head.label,lk:DOOR_I18N[head.key]||('nav_sec_'+head.key),col:head.col,href:head.href,sub:sub,compact:GROUP_COMPACT[g]});
   });
   var ACTIVE_GROUP=groupOf(activeSection);
   /* PROGRESSIVE DISCLOSURE. 15 sections and ~107 links on every page is more doors than a member can hold in
@@ -442,7 +449,7 @@
      Nothing is removed: the folded sections stay in search, the full menu, the phone drawer and the owner deck, and
      the section you are IN is always shown, so you never lose where you are. A member who wants everything taps
      MORE once; the choice is remembered (omega_nav_all). */
-  var CORE_SECTIONS=['command','identity','ascend','cosmos','order','vault','intel'];
+  var CORE_SECTIONS=['command','identity','ascend','vault','order','cosmos'];
   var NAV_ALL=false; try{NAV_ALL=localStorage.getItem('omega_nav_all')==='1';}catch(e){}
   var h='';
   h+='<div class="on-hb">';
@@ -466,14 +473,14 @@
     h+='<div class="on-item'+(CORE_SECTIONS.indexOf(sec.key)<0&&!isAct?' on-more-item':'')+'">';
     h+='<a class="on-icon'+(isAct?' on-active':'')+'" href="'+sec.href+'" style="--col:'+sec.col+'">';
     h+='<span class="on-glyph" style="color:'+(isAct?sec.col:'var(--muted)')+'">'+sec.icon+'</span>';
-    h+='<span class="on-lbl" data-i18n="nav_sec_'+sec.key+'">'+sec.label+'</span>';
+    h+='<span class="on-lbl" data-i18n="'+sec.lk+'">'+sec.label+'</span>';
     h+='</a>';
     /* Tooltip -- a SIBLING of the icon, never a child. It contains .tip-a
        anchors, and an <a> inside an <a> is invalid: the HTML parser's adoption
        agency algorithm hoists .on-tip out of .on-icon and re-parents the icon
        INSIDE the tooltip, so `.on-icon:hover .on-tip` matched 0 elements and
        all 15 section tooltips were permanently invisible on all 202 pages. */
-    h+='<div class="on-tip"><div class="tip-head" data-i18n="nav_sec_'+sec.key+'" style="color:'+sec.col+'">'+sec.label+'</div>';
+    h+='<div class="on-tip"><div class="tip-head" data-i18n="'+sec.lk+'" style="color:'+sec.col+'">'+sec.label+'</div>';
     compactSub(sec).forEach(function(sub){
       var on=sub[0]===dp;
       var own=sub[3]==='owner';
@@ -657,7 +664,7 @@
       '.drawer-sections{display:grid;grid-template-columns:1fr 1fr;gap:0}',
       '.ds-section{border-right:1px solid rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.08);padding:14px 16px}',
       '.ds-section:nth-child(2n){border-right:none}',
-      '#omega-drawer:not(.ds-all) .ds-section.ds-more{display:none}',
+      '#omega-drawer:not(.ds-all) .ds-section.ds-more{display:none}#omega-drawer:not(.ds-all) .ds-link.ds-extra{display:none}',
       '#omega-drawer .dm-less,#omega-drawer.ds-all .dm-more{display:none}',
       '#omega-drawer.ds-all .dm-less{display:inline}',
       /* padding here is what carries these to a real touch size: the drawer is
@@ -717,8 +724,11 @@
     /* DRAWER — derived from SECTIONS so mobile and desktop cannot drift. */
     var DRAWER_SECTIONS=GROUPS.map(function(sec){
       return {
-        icon:sec.icon,label:sec.label,col:sec.col,href:sec.href,key:sec.key,
-        links:sec.sub.filter(function(sub){return sub[3]!=='folded';}).map(function(sub){return [sub[1],sub[2],sub[3]==='owner'];})
+        icon:sec.icon,label:sec.label,lk:sec.lk,col:sec.col,href:sec.href,key:sec.key,
+        /* The drawer leads with the same short list as the dock tooltip; the rest of the door's links are
+           marked ds-extra and appear with MORE SECTIONS (ds-all), so nothing is lost on a phone. */
+        links:(function(){var short={};compactSub(sec).forEach(function(x){short[x[0]]=1;});
+          return sec.sub.filter(function(sub){return sub[3]!=='folded';}).map(function(sub){return [sub[1],sub[2],sub[3]==='owner',!short[sub[0]]];});})()
       };
     });
 
@@ -761,11 +771,11 @@
       var ds=document.createElement('div');ds.className='ds-section'+(CORE_SECTIONS.indexOf(sec.key)<0&&sec.key!==ACTIVE_GROUP?' ds-more':'');
       var head=document.createElement('a');head.className='dss-head'+(sec.key===ACTIVE_GROUP?' ds-on':'');head.href=sec.href;
       var emblemHTML='';if(window.OmegaEmblems&&window.OmegaEmblems[sec.key]){emblemHTML='<span class="dss-emblem" style="color:'+sec.col+';font-size:20px;display:inline-block;margin-right:8px;">'+window.OmegaEmblems[sec.key]+'</span>';}
-      head.innerHTML=emblemHTML+'<span class="dss-icon" style="color:'+(sec.key===ACTIVE_GROUP?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="nav_sec_'+sec.key+'" style="color:'+(sec.key===ACTIVE_GROUP?sec.col:'')+'">'+sec.label+'</span>';
+      head.innerHTML=emblemHTML+'<span class="dss-icon" style="color:'+(sec.key===ACTIVE_GROUP?sec.col:'')+'">'+sec.icon+'</span><span class="dss-label" data-i18n="'+sec.lk+'" style="color:'+(sec.key===ACTIVE_GROUP?sec.col:'')+'">'+sec.label+'</span>';
       ds.appendChild(head);
       var links=document.createElement('div');links.className='ds-links';
       sec.links.forEach(function(lk){
-        var a=document.createElement('a');a.className='ds-link'+(lk[2]?' ds-owner':'');a.href=lk[1];a.textContent=lk[0];
+        var a=document.createElement('a');a.className='ds-link'+(lk[2]?' ds-owner':'')+(lk[3]?' ds-extra':'');a.href=lk[1];a.textContent=lk[0];
         /* Owner-only entries stay hidden until the owner is confirmed; the
            drawer used to list OWNER DECK for every member on a phone. */
         if(lk[2])a.style.display='none';

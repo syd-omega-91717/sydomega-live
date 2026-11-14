@@ -66,7 +66,7 @@
 
   var SECTIONS=[
     {key:'command', icon:'\u2316', label:'COMMAND', href:'/dashboard.html',  col:'#C9A84C',
-     sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','COMMAND BRIDGE','/dashboard.html'],['command-center','COMMAND CENTER','/command-center.html','folded'],['beacon','BEACON','/beacon.html','folded'],
+     sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','HOME','/dashboard.html'],['command-center','COMMAND CENTER','/command-center.html','folded'],['beacon','BEACON','/beacon.html','folded'],
           ['search','SEARCH','/search.html','folded'],['data-observatory','DATA OBSERVATORY','/data-observatory.html','folded'],['notifications','NOTIFICATIONS','/notifications.html','folded'],['chatbot','CONCIERGE','/chatbot.html','folded'],
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['world-atlas','CIVILIZATION ATLAS','/world-atlas.html','folded'],['eternity','CONTINUITY','/eternity.html','folded'],['replay','REPLAY','/replay.html','folded'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html','folded'],['command','COMMAND BRIEF','/command.html','folded'],
           ['contacts','CONTACTS','/contacts.html','folded'],['decisions','DECISIONS','/decisions.html','folded'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html','folded'],
@@ -76,7 +76,7 @@
      sub:[['identity-alias-1','IDENTITY HUB','/profile.html#identity','folded'],['profile','PROFILE','/profile.html'],['life','Ω LIFE','/life.html','folded'],['personal-context','PERSONAL CONTEXT','/life.html#personal-context','folded'],['passport-alias-1','PASSPORT','/profile.html#passport','folded'],
           ['kyc-alias-1','KYC VERIFY','/profile.html#kyc','folded'],['character-alias-1','CHARACTER','/profile.html#character','folded'],['portfolio-alias-1','PORTFOLIO','/profile.html#portfolio','folded'],['settings','SETTINGS','/profile.html#settings','folded'],['security','SECURITY','/security.html','folded']]},
     {key:'ascend',  icon:'▲', label:'ASCEND',   href:'/ascend.html',col:'#E86A3A',
-     sub:[['ascend','ASCEND WORKSPACE','/ascend.html'],['ascension-alias-1','ASCENSION MAP','/honors.html#ascension','folded'],['matrix','THE MATRIX','/matrix.html','folded'],['triads-alias-1','12 TRIADS','/matrix.html#triads','folded'],['grid-alias-1','THE GRID','/matrix.html#grid','folded'],['charter-alias-1','CHARTER','/matrix.html#charter','folded'],['achievements-alias-1','MY RECORD','/honors.html#record','folded'],
+     sub:[['ascend','GROW HOME','/ascend.html'],['ascension-alias-1','ASCENSION MAP','/honors.html#ascension','folded'],['matrix','THE MATRIX','/matrix.html','folded'],['triads-alias-1','12 TRIADS','/matrix.html#triads','folded'],['grid-alias-1','THE GRID','/matrix.html#grid','folded'],['charter-alias-1','CHARTER','/matrix.html#charter','folded'],['achievements-alias-1','MY RECORD','/honors.html#record','folded'],
           ['standing-dashboard','STANDING DASHBOARD','/standing-dashboard.html','folded'],
           ['academy','ACADEMY','/academy.html'],['courses','COURSES','/courses.html'],['exam','EXAMINATION','/exam.html','folded'],['gaming','GAMES & MASTERY','/gaming.html'],
           ['contributions','CONTRIBUTIONS','/contributions.html','folded'],['evolution','EVOLUTION','/evolution.html'],
@@ -89,7 +89,7 @@
         wheel. A 4th field 'folded' keeps an entry in search (Ctrl/Cmd K), the
         owner deck and the reachability gate, but out of the sidebar and the
         mobile drawer: the wheel is the door, its facets deep-link here. */
-     sub:[['orrery','ORRERY','/orrery.html'],['cosmos','COSMOS HUB','/cosmos.html'],['cosmic-ledger','SOLAR SYSTEM LEDGER','/cosmic-ledger.html','folded'],['sculpture','SCULPTURE HALL','/sculpture.html','folded'],['realms','18 REALMS','/realms.html','folded'],
+     sub:[['orrery','ORRERY','/orrery.html'],['cosmos','UNIVERSE HOME','/cosmos.html'],['cosmic-ledger','SOLAR SYSTEM LEDGER','/cosmic-ledger.html','folded'],['sculpture','SCULPTURE HALL','/sculpture.html','folded'],['realms','18 REALMS','/realms.html','folded'],
           ['horoscope','HOROSCOPE','/horoscope.html'],['agents','AGENTS','/agents.html'],['elements','THE NINE ELEMENTS','/elements.html'],
           ['pantheons','PANTHEONS','/pantheons.html'],['gates-alias-1','12 GATES','/elements.html#gates','folded'],['houses','ASTRAL HOUSES','/houses.html'],
           ['kings-alias-1','28 KINGS','/elements.html#kings','folded'],['chronicle','CHRONICLE','/chronicle.html','folded'],['dna','SOVEREIGN DNA','/dna.html','folded'],
@@ -97,13 +97,13 @@
           ['oracle','ORACLE','/oracle.html'],['realm','REALM','/realm.html','folded'],['rune','RUNES','/rune.html','folded'],
           ['tribe','TRIBE','/tribe.html','folded']]},
     {key:'vault',   icon:'\u03A9', label:'VAULT',    href:'/vault.html',    col:'#C9A84C',
-     sub:[['vault','SOVEREIGN VAULT','/vault.html'],['treasury-alias-1','RESERVE','/vault.html#reserve','folded'],['wallet-alias-1','WALLET','/vault.html#wallet','folded'],
+     sub:[['vault','MONEY HOME','/vault.html'],['treasury-alias-1','RESERVE','/vault.html#reserve','folded'],['wallet-alias-1','WALLET','/vault.html#wallet','folded'],
           ['blockchain','BLOCKCHAIN','/blockchain.html','folded'],['billing','BILLING','/subscriptions.html#payments','folded'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
           ['marketplace','MARKETPLACE','/marketplace.html'],['income','INCOME','/income.html','folded'],['payments','PAYMENTS','/payments.html'],
           ['ledger','ASSET LEDGER','/ledger.html','folded'],['sigil-alias-1','SIGIL VAULT','/vault.html#nft','folded'],['vault-settings','SYSTEM SETTINGS','/settings.html'],
           ['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html','folded'],['sovereign-covenant','COVENANT','/sovereign-covenant.html','owner']]},
     {key:'order',   icon:'\u22D4', label:'ORDER',    href:'/order.html',   col:'#D9B86A',
-     sub:[['order','ORDER WORKSPACE','/order.html'],['family','FAMILY','/family.html'],['bloodline-alias-1','BLOODLINE','/family.html#bloodline','folded'],['heritage-alias-1','HERITAGE','/family.html#heritage','folded'],
+     sub:[['order','PEOPLE HOME','/order.html'],['family','FAMILY','/family.html'],['bloodline-alias-1','BLOODLINE','/family.html#bloodline','folded'],['heritage-alias-1','HERITAGE','/family.html#heritage','folded'],
           ['hall','HALL OF THE ORDER','/hall.html'],['sovereigns','SOVEREIGNS','/sovereigns.html'],['factions','FACTIONS','/factions.html'],
           ['city','CITY','/city.html'],['approvals','APPROVALS','/approvals.html','owner'],['interface-omni','CONTROL DECK','/interface-omni.html','folded']]},
     {key:'life', icon:'\u2665', label:'LIFE', href:'/life.html', col:'#00E5FF',
@@ -356,11 +356,16 @@
     rail.id='omega-workspace';
     rail.className='omega-workspace';
     rail.setAttribute('aria-label',sec.label+' workspace navigation');
+    /* The trail starts at the DOOR the member clicked (HOME, ME, GROW...), not at the section's brand name:
+       the dock said GROW and this row said ASCEND. A section merged into a door (LIFE inside ME) keeps its
+       own step; a hub does not repeat itself as the current page. */
+    var door=doorOf(sec.key),here=location.pathname,pathOf=function(u){return String(u).split('#')[0];};
     var home=document.createElement('a');
-    home.className='ow-home';home.href=sec.href;home.textContent='Ω '+sec.label;
+    home.className='ow-home';home.href=door.href;home.textContent='Ω '+door.label;
     rail.appendChild(home);
-    var sep=document.createElement('span');sep.className='ow-sep';sep.textContent='›';rail.appendChild(sep);
-    var cur=document.createElement('span');cur.className='ow-current';cur.textContent=currentLabel;rail.appendChild(cur);
+    var addSep=function(){var sep=document.createElement('span');sep.className='ow-sep';sep.textContent='›';rail.appendChild(sep);};
+    if(door.merged&&pathOf(sec.href)!==here){addSep();var up=document.createElement('a');up.className='ow-link';up.href=sec.href;up.textContent=sec.label;rail.appendChild(up);}
+    if(pathOf(door.href)!==here){addSep();var cur=document.createElement('span');cur.className='ow-current';cur.textContent=(door.merged&&pathOf(sec.href)===here)?sec.label:currentLabel;rail.appendChild(cur);}
     compactSub(sec).filter(function(x){return x[0]!==dp;}).slice(0,5).forEach(function(x){
       var a=document.createElement('a');a.className='ow-link';a.href=x[2];a.textContent=x[1];rail.appendChild(a);
     });
@@ -429,6 +434,10 @@
      DOOR_LABEL (the doors fall back to their section label and nav_sec_ key). */
   var DOOR_LABEL={command:'HOME',identity:'ME',ascend:'GROW',vault:'MONEY',order:'PEOPLE',cosmos:'UNIVERSE'};
   var DOOR_I18N={command:'nav_door_command',identity:'nav_door_identity',ascend:'nav_door_ascend',vault:'nav_door_vault',order:'nav_door_order',cosmos:'nav_sec_universe'};
+  function doorOf(secKey){
+    var g=groupOf(secKey),head=SECTIONS.filter(function(x){return x.key===g;})[0]||SECTIONS[0];
+    return {key:g,label:DOOR_LABEL[g]||head.label,href:head.href,merged:g!==secKey};
+  }
   var GROUPS=[],seenGroup={};
   SECTIONS.forEach(function(sec){
     var g=groupOf(sec.key);if(seenGroup[g])return;seenGroup[g]=1;
@@ -1079,11 +1088,11 @@
     }
 
     var rail=document.createElement('nav');rail.id='omega-context-rail';rail.className='omega-context-rail';rail.setAttribute('aria-label','Current location');
-    var parent=document.createElement('a');parent.href=sec.href;parent.textContent=sec.label;parent.setAttribute('aria-label','Open '+sec.label+' hub');
+    var parent=document.createElement('a');var crumb=doorOf(sec.key).merged?sec.label:doorOf(sec.key).label;parent.href=sec.href;parent.textContent=crumb;parent.setAttribute('aria-label','Open '+crumb+' hub');
     var sep=document.createElement('span');sep.className='omega-context-sep';sep.textContent='›';
     var here=document.createElement('span');here.className='omega-context-current';here.textContent=current[1];here.setAttribute('aria-current','page');
     var actions=document.createElement('span');actions.className='omega-context-actions';
-    var back=document.createElement('a');back.className='omega-context-btn';back.href=sec.href;back.textContent='HUB';back.setAttribute('aria-label','Open '+sec.label+' hub');
+    var back=document.createElement('a');back.className='omega-context-btn';back.href=sec.href;back.textContent='HUB';back.setAttribute('aria-label','Open '+crumb+' hub');
     var fav=document.createElement('button');fav.type='button';fav.className='omega-context-btn';fav.innerHTML='<span class="omega-context-fav-label">PIN </span>☆';fav.setAttribute('aria-pressed','false');fav.setAttribute('aria-label','Pin this page on this device');
     /* On a section's own hub the parent link and HUB both point at this page
        and repeat its name; the rail then carries only PIN. */

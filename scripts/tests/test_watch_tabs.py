@@ -1,18 +1,19 @@
-"""movies.html, cinema.html and series.html are three views of one catalogue and share one tab bar.
+"""movies.html and series.html are the two views of one catalogue and share one tab bar.
 
-movies and cinema list the same twelve films; trailers.html says no trailer has been filmed. The menu shows
-one WATCH entry and the three pages link to each other with plain anchors (no script, each tab a real page).
+cinema.html listed the same twelve films as movies.html, so its descriptions moved onto the film tiles and it
+left the tab bar (the file stays: search, the launcher and the media hub still reach it). trailers.html says
+no trailer has been filmed. The menu shows one WATCH entry; the tabs are plain anchors, each a real page.
 """
 import pathlib
 import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-TABS = [("movies", "FILMS"), ("cinema", "FILM GUIDE"), ("series", "SERIES")]
+TABS = [("movies", "FILMS"), ("series", "SERIES")]
 
 
 class WatchTabs(unittest.TestCase):
-    def test_each_page_has_the_same_three_tabs_and_marks_itself(self):
+    def test_each_page_has_the_same_tabs_and_marks_itself(self):
         for page, _ in TABS:
             html = (ROOT / (page + ".html")).read_text(encoding="utf-8")
             bars = re.findall(r'<nav class="watch-tabs" aria-label="Watch">(.*?)</nav>', html, re.S)
@@ -20,6 +21,30 @@ class WatchTabs(unittest.TestCase):
             links = re.findall(r'<a href="/([a-z]+)\.html"( aria-current="page")?>([A-Z ]+)</a>', bars[0])
             self.assertEqual([(k, l) for k, _, l in links], TABS, page)
             self.assertEqual([k for k, cur, _ in links if cur], [page], page)
+
+    def test_cinema_keeps_the_bar_but_is_not_a_tab(self):
+        html = (ROOT / "cinema.html").read_text(encoding="utf-8")
+        bars = re.findall(r'<nav class="watch-tabs" aria-label="Watch">(.*?)</nav>', html, re.S)
+        self.assertEqual(len(bars), 1)
+        self.assertEqual(re.findall(r'<a href="/([a-z]+)\.html">([A-Z ]+)</a>', bars[0]), TABS)
+        self.assertNotIn("aria-current", bars[0])
+
+    def test_every_film_tile_says_what_the_film_is(self):
+        html = (ROOT / "movies.html").read_text(encoding="utf-8")
+        tiles = re.findall(r'<figure class="omv-tile card".*?</figure>', html, re.S)
+        self.assertEqual(len(tiles), 12)
+        for tile in tiles:
+            desc = re.search(r'<p class="omv-desc">(.+?)</p>', tile)
+            self.assertTrue(desc and len(desc.group(1)) > 40, tile[:80])
+            self.assertEqual(len(re.findall(r"<span>[A-Z]+</span>", re.search(r'<p class="omv-tags">(.*?)</p>', tile).group(1))), 2)
+        # a GATE tag would claim a lock the player does not enforce: every film plays for every member
+        self.assertNotIn("GATE", "".join(tiles))
+
+    def test_cinema_no_longer_shows_the_four_score_tiles(self):
+        html = (ROOT / "cinema.html").read_text(encoding="utf-8")
+        for dead in ('id="stat-auth"', 'id="stat-a"', 'id="stat-b"', 'id="stat-c"'):
+            self.assertNotIn(dead, html)
+        self.assertIn('data-omega-spatial-realm="cinema"', html)
 
     def test_every_tab_is_a_real_page(self):
         for page, _ in TABS:

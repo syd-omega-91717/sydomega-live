@@ -23,6 +23,9 @@
 .omv-play{position:absolute;right:12px;bottom:12px;width:38px;height:38px;border-radius:50%;border:1px solid var(--omv-c);background:rgba(0,0,0,.55);opacity:.85;transition:opacity .3s,transform .3s}
 .omv-play::before{content:"";position:absolute;left:15px;top:11px;border-style:solid;border-width:8px 0 8px 12px;border-color:transparent transparent transparent var(--gold)}
 .omv-tile.is-playing .omv-play{opacity:0;transform:scale(.8)}
+.omv-desc{margin:0;padding:0 12px 8px;font-family:var(--R);font-size:14px;line-height:1.55;color:#B8B6AE}
+.omv-tags{margin:0;padding:0 12px 12px;display:flex;gap:6px;flex-wrap:wrap}
+.omv-tags span{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:#B8B6AE}
 .omv-cap{margin:0;padding:10px 12px 11px;font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .omv-cap b{font-weight:400;color:var(--omv-c)}
 .omv-lb{padding:0;border:1px solid rgba(201,168,76,.35);border-radius:4px;background:#000;color:var(--ink);width:min(1120px,94vw);max-width:94vw;max-height:94vh;overflow:hidden}
@@ -68,7 +71,7 @@
 <header class="topbar">
   <div class="topbar-title">MOVIES<span class="topbar-sub">12 FRANCHISE FILMS</span></div>
 </header>
-<nav class="watch-tabs" aria-label="Watch"><a href="/movies.html" aria-current="page">FILMS</a><a href="/cinema.html">FILM GUIDE</a><a href="/series.html">SERIES</a></nav>
+<nav class="watch-tabs" aria-label="Watch"><a href="/movies.html" aria-current="page">FILMS</a><a href="/series.html">SERIES</a></nav>
 <section id="mh3d" aria-label="Franchise films, 3-D carousel">
   <div class="mh-stage" id="mh-stage" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Twelve franchise films. Drag or swipe to rotate, arrow keys to move, Enter to play."></div>
   <div class="mh-bar">
@@ -88,6 +91,8 @@
         <span class="omv-num" aria-hidden="true">I</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>ARES</b> &middot; WAR SOVEREIGN</figcaption>
+      <p class="omv-desc">The first sovereign rises through battle. A war epic spanning 9 fronts across the elemental lattice.</p>
+      <p class="omv-tags"><span>ACTION</span><span>FIRE</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#9B6BF0" data-film="02">
       <button class="omv-hit" type="button" data-title="APHRODITE &middot; LOVE SOVEREIGN" aria-label="Play Love Sovereign, Aphrodite &middot; Taurus, franchise II">
@@ -96,6 +101,8 @@
         <span class="omv-num" aria-hidden="true">II</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>APHRODITE</b> &middot; LOVE SOVEREIGN</figcaption>
+      <p class="omv-desc">Sovereign bonds forged across element lines. The most decorated film in the Omega canon.</p>
+      <p class="omv-tags"><span>DRAMA</span><span>METAL</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#00E5FF" data-film="03">
       <button class="omv-hit" type="button" data-title="HERMES &middot; MESSENGER SOVEREIGN" aria-label="Play Messenger Sovereign, Hermes &middot; Gemini, franchise III">
@@ -104,6 +111,8 @@
         <span class="omv-num" aria-hidden="true">III</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>HERMES</b> &middot; MESSENGER SOVEREIGN</figcaption>
+      <p class="omv-desc">The fastest sovereign on the lattice carries a message that will reshape 12 houses.</p>
+      <p class="omv-tags"><span>THRILLER</span><span>WIND</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#3fb27f" data-film="04">
       <button class="omv-hit" type="button" data-title="ARTEMIS &middot; HUNT SOVEREIGN" aria-label="Play Hunt Sovereign, Artemis &middot; Cancer, franchise IV">
@@ -112,6 +121,8 @@
         <span class="omv-num" aria-hidden="true">IV</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>ARTEMIS</b> &middot; HUNT SOVEREIGN</figcaption>
+      <p class="omv-desc">Under the silver light of the lattice moon, one sovereign hunts the rogue element that threatens the nine.</p>
+      <p class="omv-tags"><span>ADVENTURE</span><span>WATER</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#E2C86D" data-film="05">
       <button class="omv-hit" type="button" data-title="APOLLO &middot; LIGHT SOVEREIGN" aria-label="Play Light Sovereign, Apollo &middot; Leo, franchise V">
@@ -120,6 +131,8 @@
         <span class="omv-num" aria-hidden="true">V</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>APOLLO</b> &middot; LIGHT SOVEREIGN</figcaption>
+      <p class="omv-desc">A musical sovereign epic. The bearer of the solar element composes the frequency that unlocks Gate X.</p>
+      <p class="omv-tags"><span>EPIC</span><span>FIRE</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#C9A84C" data-film="06">
       <button class="omv-hit" type="button" data-title="ATHENA &middot; WISDOM SOVEREIGN" aria-label="Play Wisdom Sovereign, Athena &middot; Virgo, franchise VI">
@@ -128,6 +141,8 @@
         <span class="omv-num" aria-hidden="true">VI</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>ATHENA</b> &middot; WISDOM SOVEREIGN</figcaption>
+      <p class="omv-desc">The architect of the lattice reveals the 9-fold formula. A cerebral thriller for the sovereign mind.</p>
+      <p class="omv-tags"><span>STRATEGY</span><span>SAND</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#9B6BF0" data-film="07">
       <button class="omv-hit" type="button" data-title="HERA &middot; QUEEN SOVEREIGN" aria-label="Play Queen Sovereign, Hera &middot; Libra, franchise VII">
@@ -136,6 +151,8 @@
         <span class="omv-num" aria-hidden="true">VII</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>HERA</b> &middot; QUEEN SOVEREIGN</figcaption>
+      <p class="omv-desc">The sovereign court of 12 houses must reach balance. A political epic at the height of the lattice.</p>
+      <p class="omv-tags"><span>POLITICAL</span><span>WIND</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#3fb27f" data-film="08">
       <button class="omv-hit" type="button" data-title="DEMETER &middot; EARTH SOVEREIGN" aria-label="Play Earth Sovereign, Demeter &middot; Scorpio, franchise VIII">
@@ -144,6 +161,8 @@
         <span class="omv-num" aria-hidden="true">VIII</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>DEMETER</b> &middot; EARTH SOVEREIGN</figcaption>
+      <p class="omv-desc">The lattice root system awakens. A sovereign must descend to the void to reclaim the ninth element.</p>
+      <p class="omv-tags"><span>MYSTERY</span><span>WATER</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#E2C86D" data-film="09">
       <button class="omv-hit" type="button" data-title="ZEUS &middot; THUNDER SOVEREIGN" aria-label="Play Thunder Sovereign, Zeus &middot; Sagittarius, franchise IX">
@@ -152,6 +171,8 @@
         <span class="omv-num" aria-hidden="true">IX</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>ZEUS</b> &middot; THUNDER SOVEREIGN</figcaption>
+      <p class="omv-desc">Authority at its apex. Zeus calls the 12 sovereigns to the summit. The lattice balance will be decided.</p>
+      <p class="omv-tags"><span>EPIC</span><span>FIRE</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#E86A3A" data-film="10">
       <button class="omv-hit" type="button" data-title="HESTIA &middot; HEARTH SOVEREIGN" aria-label="Play Hearth Sovereign, Hestia &middot; Capricorn, franchise X">
@@ -160,6 +181,8 @@
         <span class="omv-num" aria-hidden="true">X</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>HESTIA</b> &middot; HEARTH SOVEREIGN</figcaption>
+      <p class="omv-desc">Where the first flame was lit, the sovereign origin is revealed. A prequel spanning the initial lattice age.</p>
+      <p class="omv-tags"><span>ORIGIN</span><span>METAL</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#C9A84C" data-film="11">
       <button class="omv-hit" type="button" data-title="HEPHAESTUS &middot; FORGE SOVEREIGN" aria-label="Play Forge Sovereign, Hephaestus &middot; Aquarius, franchise XI">
@@ -168,6 +191,8 @@
         <span class="omv-num" aria-hidden="true">XI</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>HEPHAESTUS</b> &middot; FORGE SOVEREIGN</figcaption>
+      <p class="omv-desc">The architect sovereign builds the final lattice gate. A techno-mythic epic of creation and sacrifice.</p>
+      <p class="omv-tags"><span>CRAFT</span><span>WIND</span></p>
     </figure>
     <figure class="omv-tile card" style="--omv-c:#00E5FF" data-film="12">
       <button class="omv-hit" type="button" data-title="POSEIDON &middot; OCEAN SOVEREIGN" aria-label="Play Ocean Sovereign, Poseidon &middot; Pisces, franchise XII">
@@ -176,6 +201,8 @@
         <span class="omv-num" aria-hidden="true">XII</span><span class="omv-play" aria-hidden="true"></span>
       </button>
       <figcaption class="omv-cap"><b>POSEIDON</b> &middot; OCEAN SOVEREIGN</figcaption>
+      <p class="omv-desc">The final sovereign film. The depths of the lattice hold the Omega key. AUTH = 27.8367 required.</p>
+      <p class="omv-tags"><span>APEX</span><span>WATER</span></p>
     </figure>
 </section>
 <dialog class="omv-lb" id="omv-lb" aria-labelledby="omv-lb-title">

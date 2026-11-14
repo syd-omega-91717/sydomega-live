@@ -707,10 +707,10 @@
 
     /* BOTTOM BAR - 5 items + menu */
     var MOB5=[
-      {icon:'\u2302',label:'HOME',href:'/dashboard.html',key:'command'},
-      {icon:'\u25B2',label:'ASCEND',href:'/honors.html#ascension',key:'ascend'},
-      {icon:'\u03A9',label:'VAULT',href:'/vault.html',key:'vault'},
-      {icon:'\u2609',label:'COSMOS',href:'/cosmos.html',key:'cosmos'},
+      {icon:'\u2302',label:DOOR_LABEL.command,lk:DOOR_I18N.command,href:'/dashboard.html',key:'command'},
+      {icon:'\u25B2',label:DOOR_LABEL.ascend,lk:DOOR_I18N.ascend,href:'/honors.html#ascension',key:'ascend'},
+      {icon:'\u03A9',label:DOOR_LABEL.vault,lk:DOOR_I18N.vault,href:'/vault.html',key:'vault'},
+      {icon:'\u2609',label:DOOR_LABEL.cosmos,lk:DOOR_I18N.cosmos,href:'/cosmos.html',key:'cosmos'},
       {icon:'\u2630',label:'MENU',key:'menu',isMenu:true},
     ];
 
@@ -721,7 +721,9 @@
       var a=document.createElement('a');
       a.className='mob-item'+(m.isMenu?' mob-menu-btn':m.key===activeSection?' m-on':'');
       if(!m.isMenu){a.href=m.href;}else{a.href='#';}
-      a.innerHTML='<span class="mi">'+m.icon+'</span><span class="ml">'+m.label+'</span>';
+      var mi=document.createElement('span');mi.className='mi';mi.textContent=m.icon;
+      var ml=document.createElement('span');ml.className='ml';ml.textContent=m.label;if(m.lk)ml.setAttribute('data-i18n',m.lk);
+      a.appendChild(mi);a.appendChild(ml);
       if(m.isMenu){
         a.addEventListener('click',function(e){e.preventDefault();toggleDrawer();});
       }

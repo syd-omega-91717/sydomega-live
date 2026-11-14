@@ -179,6 +179,16 @@
     var a = el('a', null, '↗', h);
     a.href = d.href;
     a.setAttribute('aria-label', d.label + ' tracker');
+    /* The tracker opens in place when this page hosts it (omega-panels.js); the real href stays for
+       no-JS, middle-click, and any tracker the host does not carry. */
+    a.addEventListener('click', function (e) {
+      var host = document.querySelector('[data-omega-panels]');
+      var key = d.href.replace(/^\//, '').replace(/\.html$/, '');
+      if (!host || !host.__omegaPanels || !host.__omegaPanels.has(key)) return;
+      e.preventDefault();
+      host.__omegaPanels.open(key, true);
+      history.replaceState(null, '', '#' + key);
+    });
     var v = el('div', 'oll-val', null, t);
     var spark = el('div', null, null, t);
     spark.setAttribute('data-omega-spark', '');

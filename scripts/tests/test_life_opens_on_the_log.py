@@ -18,14 +18,19 @@ class LifeOpensOnTheLog(unittest.TestCase):
         self.assertIn('<p class="life-kicker">Ω ME · LIFE</p><h1>LIFE</h1>', HTML)
         self.assertNotIn("governed member surface", HTML)
 
-    def test_the_chips_left_out_are_exactly_the_trackers_the_log_links_to(self):
+    def test_the_chips_left_out_are_exactly_the_tabs_life_hosts(self):
         hidden = re.search(r"var IN_PAGE=location\.pathname==='/life\.html'\?'([a-z ]+)'\.split", PICKER)
         self.assertTrue(hidden)
         hidden = set(hidden.group(1).split(" "))
+        tabs = re.search(r"data-omega-panels='(\[.*?\])'", HTML)
+        self.assertTrue(tabs)
+        import json
+        hosted = {t[0] for t in json.loads(tabs.group(1))}
+        self.assertEqual(hidden, hosted)
         linked = set(re.findall(r"href: '/([a-z]+)\.html'", LOG))
-        self.assertEqual(hidden, linked)
+        self.assertTrue(linked <= hosted, "every tile arrow must have a tab to open in place")
         life = re.search(r"'/life\.html':\[([^\]]*)\],\n", PICKER)
-        self.assertTrue(hidden <= set(re.findall(r"'([a-z]+)'", life.group(1))), "hidden chips must stay in WORKSPACES")
+        self.assertTrue(hosted <= set(re.findall(r"'([a-z]+)'", life.group(1))), "hidden chips must stay in WORKSPACES")
 
     def test_the_explanatory_sections_are_one_closed_disclosure_and_nothing_was_removed(self):
         m = re.search(r'<details class="life-more"><summary>([^<]+)</summary>(.*?)</details>', HTML, re.S)

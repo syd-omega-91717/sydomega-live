@@ -97,6 +97,14 @@ class NavEightDoors(unittest.TestCase):
         self.assertEqual(js.count("location.pathname==='/dashboard.html'"), 1, "only HOME drops the strip")
         self.assertEqual(js.count("location.pathname==='/"), 2, "HOME drops the strip; LIFE trims nine chips")
 
+    def test_phone_bottom_bar_uses_the_same_door_words_as_the_dock(self):
+        bar = re.search(r"var MOB5=\[(.*?)\];", SRC, re.S).group(1)
+        for key in ("command", "ascend", "vault", "cosmos"):
+            self.assertIn("label:DOOR_LABEL.%s,lk:DOOR_I18N.%s" % (key, key), bar, key)
+        for old in ("'ASCEND'", "'VAULT'", "'COSMOS'"):
+            self.assertNotIn("label:" + old, bar)
+        self.assertIn("label:'MENU'", bar)
+
     def test_dock_and_drawer_render_from_groups_not_sections(self):
         self.assertIn("GROUPS.forEach(function(sec){\n    var isAct=sec.key===ACTIVE_GROUP;", SRC)
         self.assertIn("var DRAWER_SECTIONS=GROUPS.map(", SRC)

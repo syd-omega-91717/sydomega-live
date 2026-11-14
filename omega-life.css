@@ -5,3 +5,12 @@
 .life-surface-card b{font-size:var(--fs-1,12px);letter-spacing:.12em;opacity:.72}
 .life-surface-card strong{font-size:var(--fs-4,20px);line-height:1.1}
 .life-surface-card span{font-size:var(--fs-1,12px);opacity:.68}
+/* LIFE opens on the daily log. The six explanatory sections (how the page sources and labels its data) are
+   one closed disclosure below it: still on the page, still filled by their scripts, no longer 2,800px of scroll. */
+.life-more{margin:26px 0 0;border-top:1px solid rgba(201,168,76,.16)}
+.life-more>summary{min-height:44px;display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;font-family:var(--M);font-size:12px;letter-spacing:2.4px;color:#B8B6AE}
+.life-more>summary::-webkit-details-marker{display:none}
+.life-more>summary::before{content:"+";color:#C9A84C;font-size:16px;line-height:1}
+.life-more[open]>summary::before{content:"\2212"}
+.life-more>summary:hover{color:#E8C966}
+.life-more>summary:focus-visible{outline:2px solid #C9A84C;outline-offset:3px}

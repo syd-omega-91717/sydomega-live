@@ -92,7 +92,10 @@ class NavEightDoors(unittest.TestCase):
         skip = js.index("if(location.pathname==='/dashboard.html'){")
         self.assertLess(skip, js.index("var picker=document.createElement('nav')"))
         self.assertLess(js.index("location.replace(route(k0))"), skip, "old #module= links must still redirect on HOME")
-        self.assertEqual(js.count("location.pathname==='/"), 1, "only HOME drops the strip")
+        # HOME is the only page that drops the whole strip (it returns before the picker is built); LIFE only
+        # leaves out the nine chips its own daily log already links to (test_life_opens_on_the_log.py).
+        self.assertEqual(js.count("location.pathname==='/dashboard.html'"), 1, "only HOME drops the strip")
+        self.assertEqual(js.count("location.pathname==='/"), 2, "HOME drops the strip; LIFE trims nine chips")
 
     def test_dock_and_drawer_render_from_groups_not_sections(self):
         self.assertIn("GROUPS.forEach(function(sec){\n    var isAct=sec.key===ACTIVE_GROUP;", SRC)

@@ -43,12 +43,35 @@ class NavEightDoors(unittest.TestCase):
         for door, items in lists:
             self.assertLessEqual(len(re.findall(r"'[^']+'", items)), 8, door)
 
-    def test_core_doors_are_seven_and_govern_stays_behind_more(self):
+    def test_core_doors_are_six_and_the_system_doors_stay_behind_more(self):
         core = re.search(r"var CORE_SECTIONS=\[(.*?)\];", SRC).group(1)
         core = set(re.findall(r"'([a-z]+)'", core))
-        self.assertEqual(len(core), 7)
+        self.assertEqual(core, {"command", "identity", "ascend", "vault", "order", "cosmos"})
         self.assertTrue(core <= DOORS)
-        self.assertNotIn("govern", core)
+
+    def test_every_core_door_says_what_it_is_for(self):
+        """Brand names (COMMAND, VAULT, ORDER) made a newcomer click to learn what a door holds."""
+        body = re.search(r"var DOOR_LABEL=\{(.*?)\};", SRC).group(1)
+        labels = dict(re.findall(r"([a-z]+):'([A-Z]+)'", body))
+        self.assertEqual(labels, {"command": "HOME", "identity": "ME", "ascend": "GROW",
+                                  "vault": "MONEY", "order": "PEOPLE", "cosmos": "UNIVERSE"})
+        keys = dict(re.findall(r"([a-z]+):'(nav_[a-z_]+)'", re.search(r"var DOOR_I18N=\{(.*?)\};", SRC).group(1)))
+        self.assertEqual(set(keys), set(labels))
+        root = pathlib.Path(__file__).resolve().parents[2]
+        en = (root / "i18n.js").read_text(encoding="utf-8")
+        for door, key in keys.items():
+            self.assertIn('"%s":"%s"' % (key, labels[door].capitalize()), en, key)
+            for pack in sorted((root / "i18n").glob("*.json")):
+                self.assertIn('"%s"' % key, pack.read_text(encoding="utf-8"), "%s lacks %s" % (pack.name, key))
+        # the dock, the tooltip heading and the drawer all read the door's key, never nav_sec_<key> directly
+        self.assertEqual(SRC.count("data-i18n=\"'+sec.lk+'\""), 3)
+
+    def test_a_door_lists_at_most_five_links_and_the_drawer_keeps_the_rest_one_tap_away(self):
+        body = re.search(r"var GROUP_COMPACT=\{(.*?)\n  \};", SRC, re.S).group(1)
+        for door, items in re.findall(r"([a-z]+):\[(.*?)\]", body):
+            self.assertLessEqual(len(re.findall(r"'[^']+'", items)), 5, door)
+        self.assertIn("(lk[3]?' ds-extra':'')", SRC)
+        self.assertIn("#omega-drawer:not(.ds-all) .ds-link.ds-extra{display:none}", SRC)
 
     def test_dock_and_drawer_render_from_groups_not_sections(self):
         self.assertIn("GROUPS.forEach(function(sec){\n    var isAct=sec.key===ACTIVE_GROUP;", SRC)

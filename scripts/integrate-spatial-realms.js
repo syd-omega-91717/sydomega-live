@@ -51,7 +51,9 @@ function addNavigationEntries(){
     src=src.slice(0,end)+",['characters','CHARACTERS','/characters.html']"+src.slice(end);
   }
   const mediaAnchor="['cinema','CINEMA & SAGA','/media.html']";
-  if(!src.includes("['movies','MOVIES','/movies.html'")){
+  // Match the entry by key and URL, not by its label: the label is member-facing copy and was
+  // renamed MOVIES -> WATCH (2026-11-14), after which this check threw on every run.
+  if(!/\['movies','[^']+','\/movies\.html'/.test(src)){
     const at=src.indexOf(mediaAnchor);
     if(at<0) throw new Error('nav.js has no canonical universe navigation anchor; refusing unsafe edit');
     const end=at+mediaAnchor.length;

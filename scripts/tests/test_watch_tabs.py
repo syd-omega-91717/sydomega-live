@@ -37,5 +37,25 @@ class WatchTabs(unittest.TestCase):
         self.assertIn('.watch-tabs a[href][aria-current="page"]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link){color:#0A0A0F;background:#C9A84C', css)
 
 
+class SpatialIntegrationStillAgrees(unittest.TestCase):
+    """spatial-nav-materialize.yml runs integrate-spatial-realms.js and then `git diff --exit-code`.
+    The script looked for the literal label MOVIES, so renaming the entry to WATCH made it throw
+    (run 43537200579). ci-local.sh did not mirror that workflow, so the failure reached main."""
+
+    def test_the_script_runs_clean_and_changes_nothing(self):
+        import subprocess
+        files = ["nav.js", "gaming.html", "cinema.html", "movies.html", "characters.html"]
+        before = {f: (ROOT / f).read_bytes() for f in files if (ROOT / f).exists()}
+        try:
+            r = subprocess.run(["node", "scripts/integrate-spatial-realms.js"], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr[-400:])
+            changed = [f for f, b in before.items() if (ROOT / f).read_bytes() != b]
+            self.assertEqual(changed, [], "the integration script rewrote files it should find already integrated")
+        finally:
+            for f, b in before.items():
+                if (ROOT / f).read_bytes() != b:
+                    (ROOT / f).write_bytes(b)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -395,6 +395,61 @@
     seal.visible = false;
     scene.add(seal);
 
+    /* RADIANT (opt-in: data-sculpt-glow="radiant"). The owner's reference art (assets/concept/board-01, reel-01, franchise-01) has one thing in
+       common: a LUMINOUS gold mark with a halo and rays, drifting embers around it. The default mark is dark bronze with a ~9% halo, which is
+       the right restraint for a page the member did not ask to be impressed by and the wrong one for the front door. So this is a mode, and
+       only the front door asks for it; every other signet on the site is untouched. Everything is generated here (canvas gradients, a point
+       cloud), no image is loaded, and the embers come from a seeded generator so two renders are the same picture and can be measured. */
+    var radiant = !!(opt && opt.el && opt.el.getAttribute && opt.el.getAttribute('data-sculpt-glow') === 'radiant');
+    var glow = null, rays = null, embers = null, emberSeed = [];
+    if (radiant) {
+      mark.traverse(function (o) {
+        if (o.material && o.material.emissive) { o.material.emissive = new T.Color(p.gold); o.material.emissiveIntensity = 0.34; }
+      });
+      var canvasTex = function (draw) {
+        var c = document.createElement('canvas'); c.width = c.height = 512;
+        draw(c.getContext('2d'), 512);
+        return new T.CanvasTexture(c);
+      };
+      var glowTex = canvasTex(function (g, n) {
+        var r = g.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2);
+        r.addColorStop(0, 'rgba(255,200,95,0.85)'); r.addColorStop(0.12, 'rgba(240,184,80,0.6)');
+        r.addColorStop(0.3, 'rgba(214,158,60,0.28)'); r.addColorStop(0.55, 'rgba(201,150,56,0.08)');
+        r.addColorStop(0.8, 'rgba(201,168,76,0.015)'); r.addColorStop(1, 'rgba(201,168,76,0)');
+        g.fillStyle = r; g.fillRect(0, 0, n, n);
+      });
+      glow = new T.Mesh(new T.PlaneGeometry(3.4, 3.4), new T.MeshBasicMaterial({
+        map: glowTex, transparent: true, opacity: 0.85, blending: T.AdditiveBlending, depthWrite: false }));
+      glow.position.z = -0.6;
+      scene.add(glow);
+
+      var rayTex = canvasTex(function (g, n) {
+        g.translate(n / 2, n / 2);
+        for (var i = 0; i < 24; i++) {
+          g.save(); g.rotate(i / 24 * Math.PI * 2);
+          var len = n / 2 * (i % 2 ? 0.6 : 0.98), lg = g.createLinearGradient(0, 0, len, 0);
+          lg.addColorStop(0, 'rgba(255,214,130,0)'); lg.addColorStop(0.14, 'rgba(255,214,130,0.5)'); lg.addColorStop(1, 'rgba(255,214,130,0)');   /* start OUT from the centre: 24 wedges stacking at the exact middle burn it to white */
+          g.fillStyle = lg; g.beginPath(); g.moveTo(0, -9); g.lineTo(len, -1.5); g.lineTo(len, 1.5); g.lineTo(0, 9); g.closePath(); g.fill();
+          g.restore();
+        }
+      });
+      rays = new T.Mesh(new T.PlaneGeometry(3.5, 3.5), new T.MeshBasicMaterial({
+        map: rayTex, transparent: true, opacity: 0.5, blending: T.AdditiveBlending, depthWrite: false }));
+      rays.position.z = -0.7;
+      scene.add(rays);
+
+      /* every layer is sized to what the camera sees (about 1.75 units half-width at the glow's depth), so it has faded to nothing before the canvas edge: a
+         glow still 12% bright at the edge shows the edge as a box (measured) */
+      var seedN = 7, rnd = function () { seedN = (seedN * 16807) % 2147483647; return (seedN - 1) / 2147483646; };
+      var EMBERS = 90, ep = new Float32Array(EMBERS * 3);
+      for (var e = 0; e < EMBERS; e++) emberSeed.push({ x: (rnd() - 0.5) * 3.4, y: rnd() * 4.4, z: (rnd() - 0.5) * 1.8 - 0.1, v: 0.05 + rnd() * 0.17, ph: rnd() * 6.28 });
+      var eg = new T.BufferGeometry();
+      eg.setAttribute('position', new T.BufferAttribute(ep, 3));
+      embers = new T.Points(eg, new T.PointsMaterial({ color: 0xFFB84D, size: 0.045, transparent: true, opacity: 0.85,
+        blending: T.AdditiveBlending, depthWrite: false }));
+      scene.add(embers);
+    }
+
     var state = (opt && opt.state) || 'idle';
     if (state === 'cube') lattice.visible = true;
     if (state === 'seal') { seal.visible = true; lattice.visible = true; }
@@ -443,6 +498,20 @@
         halo.rotation.z = -t * 0.16;
         halo.material.opacity = 0.085 + Math.sin(t * 0.9) * 0.030;
         orbit.rotation.z = t * 0.30;
+      }
+      if (radiant) {
+        var tt = reduceMotion ? 0 : t;                       /* reduced motion: one still frame, glow and all */
+        glow.material.opacity = 0.82 + Math.sin(tt * 0.9) * 0.08;
+        rays.rotation.z = tt * 0.045;
+        rays.material.opacity = 0.5 + Math.sin(tt * 0.7 + 1) * 0.08;
+        var pos = embers.geometry.attributes.position.array;
+        for (var k = 0; k < emberSeed.length; k++) {
+          var sd = emberSeed[k];
+          pos[k * 3] = sd.x + Math.sin(tt * 0.6 + sd.ph) * 0.12;
+          pos[k * 3 + 1] = ((sd.y + tt * sd.v) % 4.4) - 2.2;
+          pos[k * 3 + 2] = sd.z;
+        }
+        embers.geometry.attributes.position.needsUpdate = true;
       }
       orbit.material.emissiveIntensity = 0.3 + taskPulse * 0.5;
       cam.position.x = px * 0.34;

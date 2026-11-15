@@ -2,12 +2,14 @@
 
 Static contract only; the render proof lives in docs/fixes/2026-11-15-character-card.md.
 """
+import json
 import re
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = (ROOT / "omega-character-card.js").read_text(encoding="utf-8")
+CARD_SRC = SRC
 
 
 class CharacterCard(unittest.TestCase):
@@ -128,6 +130,61 @@ class CharacterCard(unittest.TestCase):
         self.assertIn("data-omega-character-sigil-note", page)
         self.assertIn("/omega-relearn-sigil-mana.js", page)
         self.assertIn("data-omega-character-sigil-note", (ROOT / "bg.js").read_text(encoding="utf-8"))
+
+
+class EntityFacets(unittest.TestCase):
+    """One entity, not six services: the facets a sign already has in the canon, joined, each linking to the page that owns it."""
+
+    CANON = json.loads((ROOT / "omega-canon.json").read_text(encoding="utf-8"))
+    ELEM = json.loads((ROOT / "omega-elements.json").read_text(encoding="utf-8"))
+
+    def join(self, sign):
+        """The same join facets() does in the browser, so the data contract runs without one."""
+        track = next((t for t in self.CANON["tracks"] if t["sign"] == sign), None)
+        ename = (self.ELEM["sign_element"].get(sign) or (track or {}).get("element") or "").upper()
+        elem = next((e for e in self.ELEM["elements"] if e["name"].upper() == ename), None)
+        house = next((h for h in self.CANON["lore_lattice"]["houses"] if h["sign"] == sign), None)
+        return track, elem, house
+
+    def test_every_sign_resolves_every_facet_from_the_canon(self):
+        signs = [t["sign"] for t in self.CANON["tracks"]]
+        self.assertEqual(len(signs), 12)
+        for sign in signs:
+            track, elem, house = self.join(sign)
+            self.assertTrue(track and track["god"] and track["agent"] and track["gate"], sign)
+            self.assertTrue(elem and elem["domain"], "%s: element has no canon text" % sign)
+            self.assertTrue(house and house["domain"] and house["desc"], "%s: house has no domain" % sign)
+            for k in ("medal", "trophy", "certificate"):
+                self.assertTrue(track[k], "%s: %s" % (sign, k))
+
+    def test_the_join_can_fail(self):
+        """Zero findings only counts if a missing facet is seen."""
+        track, elem, house = self.join("Ophiuchus")
+        self.assertIsNone(track)
+        self.assertIsNone(house)
+
+    def test_loader_publishes_the_house_table(self):
+        loader = (ROOT / "omega-canon.js").read_text(encoding="utf-8")
+        self.assertIn("api.houses", loader)
+        self.assertIn("lore_lattice", loader)
+
+    def test_every_facet_links_to_a_page_that_exists(self):
+        body = re.search(r"function facets\(track, canon\) \{(.*?)\n  \}\n", CARD_SRC, re.S)
+        self.assertTrue(body, "facets() not found")
+        hrefs = re.findall(r"href: '(/[a-z0-9_-]+\.html)'", body.group(1))
+        self.assertEqual(len(hrefs), 6)
+        for h in hrefs:
+            self.assertTrue((ROOT / h.lstrip("/")).is_file(), h)
+
+    def test_facets_are_built_from_text_nodes_only(self):
+        body = re.search(r"function facets\(track, canon\) \{(.*?)\n  \}\n", CARD_SRC, re.S).group(1)
+        self.assertNotRegex(body, r"innerHTML|insertAdjacentHTML|document\.write")
+
+    def test_row_css_beats_the_global_a_href_rule(self):
+        """A global sheet styles every a[href] as centred inline-flex (more specific than a bare class), which turned
+        these rows into one centred line. Measured in a render; the selector must carry the .occ ancestor."""
+        self.assertIn(".occ .occ-f{", CARD_SRC)
+        self.assertNotRegex(CARD_SRC, r"'\.occ-f\{")
 
 
 if __name__ == "__main__":

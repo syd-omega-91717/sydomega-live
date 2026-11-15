@@ -58,6 +58,7 @@
     if (canon) {
       api.tracks = canon.tracks || []; api.structure = canon.structure; api.elementSystem = canon.element_system;
       api.nineFold = canon.nine_fold || null;
+      api.houses = (canon.lore_lattice && canon.lore_lattice.houses) || [];   /* sign, house, domain, desc */
       api.authority = canon.authority || null;   /* gates + gate_names: the one owner of the gate ladder */
       /* Guard: both lattices must satisfy their formulas exactly.
          twelve-fold = 12 x 12 x 9 x 9 x 9 = 104,976

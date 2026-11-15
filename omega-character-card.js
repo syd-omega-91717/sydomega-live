@@ -70,6 +70,13 @@
       '.occ-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:.9rem;overflow:hidden}' +
       '.occ-bar>i{display:block;height:100%;background:var(--occ-accent)}' +
       '.occ-note{font-size:.82rem;color:var(--muted,#8b93a3);margin-top:.45rem}' +
+      '.occ-fl{display:grid;gap:.5rem;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid rgba(255,255,255,.08)}' +
+      /* `.occ .occ-f`, not `.occ-f`: a global sheet styles every a[href] as centred inline-flex, which is more specific than a bare class
+         and turned these rows into one centred line. The reset below is explicit so no other sheet's alignment leaks in. */
+      '.occ .occ-f{display:grid;grid-template-columns:5.2rem 1fr;justify-content:stretch;align-items:start;justify-items:start;text-align:start;gap:.1rem .8rem;padding:.55rem .65rem;border:1px solid rgba(255,255,255,.08);border-radius:4px;text-decoration:none;color:inherit;min-height:44px}' +
+      '.occ .occ-f:hover,.occ .occ-f:focus-visible{border-color:var(--occ-accent);outline:none}' +
+      '.occ .occ-fv{font-weight:600;color:var(--occ-accent)}' +
+      '.occ .occ-fg{grid-column:2;font-size:.82rem;color:var(--muted,#8b93a3);line-height:1.4;font-weight:400}' +
       '.occ a{color:var(--occ-accent)}' +
       '.ocr{display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:.6rem;font-family:var(--R,Rajdhani,sans-serif);color:var(--ink,#e8e6df)}' +
       '.ocr-t{border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.6rem .7rem;background:rgba(255,255,255,.02)}' +
@@ -120,6 +127,31 @@
     return { passed: n, total: gates.length, apex: gates[gates.length - 1] };
   }
 
+  /* One entity, read from the canon only: the six facets of a sign that the platform already defines, each with the
+     words the canon itself uses for what it is, and the page that owns it. Nothing here is invented or computed; a
+     facet whose canon text is missing simply shows no second line. Pure (no DOM), so a test can run all 12 signs. */
+  function facets(track, canon) {
+    if (!track) return [];
+    var ename = String(canon.elementFor(track.sign) || track.element || '').toUpperCase();
+    var elem = null, i;
+    for (i = 0; i < (canon.elements || []).length; i++) {
+      if (String(canon.elements[i].name || '').toUpperCase() === ename) { elem = canon.elements[i]; break; }
+    }
+    var house = null;
+    for (i = 0; i < (canon.houses || []).length; i++) {
+      if (canon.houses[i].sign === track.sign) { house = canon.houses[i]; break; }
+    }
+    function cap(x) { x = String(x || ''); return x.charAt(0) + x.slice(1).toLowerCase(); }
+    return [
+      { k: 'Element', v: ename ? cap(ename) : '\u2014', g: elem && elem.domain, href: '/elements.html' },
+      { k: 'God', v: track.god, g: null, href: '/pantheons.html' },
+      { k: 'House', v: track.house + (house && house.domain ? ' \u00B7 ' + house.domain : ''), g: house && house.desc, href: '/houses.html' },
+      { k: 'Gate', v: track.gate, g: 'Crossed by your recorded axes, not by choosing it.', href: '/evolution.html' },
+      { k: 'Agent', v: track.agent, g: null, href: '/agents.html' },
+      { k: 'Honors', v: track.medal + ' \u00B7 ' + track.trophy + ' \u00B7 ' + track.certificate, g: 'What this sign\u2019s path awards. Your recorded counts are above.', href: '/honors.html' }
+    ];
+  }
+
   function render(root, p, canon) {
     root.textContent = '';
     root.classList.add('occ');
@@ -157,6 +189,14 @@
       cell('Authority', '—');
       el('div', 'occ-note', 'Authority needs all three axes recorded — this card shows only what your profile holds.', root);
     }
+    var fl = el('div', 'occ-fl', null, root);
+    facets(track, canon).forEach(function (f) {
+      var a = el('a', 'occ-f', null, fl);
+      a.setAttribute('href', f.href);
+      el('span', 'occ-k', f.k, a);
+      el('span', 'occ-fv', f.v, a);
+      if (f.g) el('span', 'occ-fg', f.g, a);
+    });
   }
 
   /* rows: my_matrix() rows ({track,sign,a,b,c,node,pct,phase}). Only phase 1
@@ -312,7 +352,7 @@
     if (hasRoster) await bootRoster(sb, s, window.OmegaCanon);
   }
 
-  window.OmegaCharacterCard = { render: render, renderRoster: renderRoster, renderStory: renderStory, gatesPassed: gatesPassed, authorityOf: authorityOf };
+  window.OmegaCharacterCard = { render: render, renderRoster: renderRoster, renderStory: renderStory, gatesPassed: gatesPassed, authorityOf: authorityOf, facets: facets };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();

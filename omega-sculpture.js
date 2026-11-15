@@ -404,7 +404,7 @@
     var glow = null, rays = null, embers = null, emberSeed = [];
     if (radiant) {
       mark.traverse(function (o) {
-        if (o.material && o.material.emissive) { o.material.emissive = new T.Color(p.gold); o.material.emissiveIntensity = 0.42; }
+        if (o.material && o.material.emissive) { o.material.emissive = new T.Color(p.gold); o.material.emissiveIntensity = 0.34; }
       });
       var canvasTex = function (draw) {
         var c = document.createElement('canvas'); c.width = c.height = 512;
@@ -413,8 +413,8 @@
       };
       var glowTex = canvasTex(function (g, n) {
         var r = g.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2);
-        r.addColorStop(0, 'rgba(255,226,150,0.95)'); r.addColorStop(0.12, 'rgba(226,200,109,0.6)');
-        r.addColorStop(0.3, 'rgba(201,168,76,0.28)'); r.addColorStop(0.55, 'rgba(201,168,76,0.08)');
+        r.addColorStop(0, 'rgba(255,200,95,0.85)'); r.addColorStop(0.12, 'rgba(240,184,80,0.6)');
+        r.addColorStop(0.3, 'rgba(214,158,60,0.28)'); r.addColorStop(0.55, 'rgba(201,150,56,0.08)');
         r.addColorStop(0.8, 'rgba(201,168,76,0.015)'); r.addColorStop(1, 'rgba(201,168,76,0)');
         g.fillStyle = r; g.fillRect(0, 0, n, n);
       });
@@ -428,7 +428,7 @@
         for (var i = 0; i < 24; i++) {
           g.save(); g.rotate(i / 24 * Math.PI * 2);
           var len = n / 2 * (i % 2 ? 0.6 : 0.98), lg = g.createLinearGradient(0, 0, len, 0);
-          lg.addColorStop(0, 'rgba(255,226,160,0.5)'); lg.addColorStop(1, 'rgba(255,226,160,0)');
+          lg.addColorStop(0, 'rgba(255,214,130,0)'); lg.addColorStop(0.14, 'rgba(255,214,130,0.5)'); lg.addColorStop(1, 'rgba(255,214,130,0)');   /* start OUT from the centre: 24 wedges stacking at the exact middle burn it to white */
           g.fillStyle = lg; g.beginPath(); g.moveTo(0, -9); g.lineTo(len, -1.5); g.lineTo(len, 1.5); g.lineTo(0, 9); g.closePath(); g.fill();
           g.restore();
         }
@@ -445,7 +445,7 @@
       for (var e = 0; e < EMBERS; e++) emberSeed.push({ x: (rnd() - 0.5) * 3.4, y: rnd() * 4.4, z: (rnd() - 0.5) * 1.8 - 0.1, v: 0.05 + rnd() * 0.17, ph: rnd() * 6.28 });
       var eg = new T.BufferGeometry();
       eg.setAttribute('position', new T.BufferAttribute(ep, 3));
-      embers = new T.Points(eg, new T.PointsMaterial({ color: p.bright, size: 0.05, transparent: true, opacity: 0.85,
+      embers = new T.Points(eg, new T.PointsMaterial({ color: 0xFFB84D, size: 0.045, transparent: true, opacity: 0.85,
         blending: T.AdditiveBlending, depthWrite: false }));
       scene.add(embers);
     }

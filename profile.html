@@ -2484,7 +2484,12 @@ async function bootPassportExtra(){
   document.getElementById('pp-auth').textContent=auth.toFixed(2)+' / 27.8367';
   var sid='\u03A9-91717-'+sign.slice(0,3).toUpperCase()+'-'+ppUid.replace(/-/g,'').slice(0,6).toUpperCase();
   document.getElementById('pp-id').textContent=sid;
-  if(d.avatar_url){ var ph=document.getElementById('pp-photo'); if(ph){ph.style.backgroundImage='url('+d.avatar_url+')'; ph.textContent='';} }
+  if(d.avatar_url){ var ph=document.getElementById('pp-photo');
+    /* avatar_url is member-written text. This is hardening, not a patched exploit: assigning through style.backgroundImage already
+       makes the browser drop a value that tries to smuggle in other declarations (measured). It accepts https only and encodes the
+       characters that end a CSS url or string, so a hand-written value cannot be a javascript:/data: URL or break the quoting. */
+    var av=null; try{ var au=new URL(String(d.avatar_url)); if(au.protocol==='https:') av=au.href.replace(/[()'"\\\s]/g,function(c){return '%'+c.charCodeAt(0).toString(16).toUpperCase();}); }catch(e){}
+    if(ph&&av){ph.style.backgroundImage='url("'+av+'")'; ph.textContent='';} }
   ppArt(sign, tier);
   ppSetStatus(d.kyc_status||'none');
   kycGate();

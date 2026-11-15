@@ -3,7 +3,7 @@
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
   "page_count": 241,
-  "open_task_count": 3247,
+  "open_task_count": 3253,
   "pages": [
     {
       "page_id": "404",
@@ -103,7 +103,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -897,7 +897,7 @@
           "buttons": 16,
           "forms": 0,
           "inputs": 3,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -1225,7 +1225,7 @@
       "evidence": {
         "title": "Ω SYD OMEGA 91717 — ASCEND Workspace",
         "h1": [
-          "ASCEND"
+          "GROW"
         ],
         "scripts": [
           "/bg.js",
@@ -2064,6 +2064,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-morph.js",
+          "/omega-relearn-sigil-mana.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -2437,7 +2438,7 @@
           "buttons": 7,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 3
         },
         "media_counts": {
           "images": 0,
@@ -4048,7 +4049,7 @@
           "buttons": 26,
           "forms": 0,
           "inputs": 14,
-          "links": 8
+          "links": 10
         },
         "media_counts": {
           "images": 0,
@@ -6095,10 +6096,10 @@
           }
         ],
         "interactive_counts": {
-          "buttons": 5,
+          "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 3
         },
         "media_counts": {
           "images": 0,
@@ -6588,28 +6589,24 @@
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Graph Anomalies",
+        "title": "Ω SYD OMEGA 91717 — Graph Anomalies Route",
         "h1": [
-          "⚠ GRAPH ANOMALIES"
+          "ANOMALY REVIEW → INSIGHT"
         ],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
-        "supabase_tables": [
-          "graph_entities",
-          "graph_relationships"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": [],
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 2,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 2,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -6624,6 +6621,7 @@
         "accessibility",
         "asset_requirements",
         "authorization",
+        "data_sources",
         "domain",
         "events",
         "failure_paths",
@@ -6639,6 +6637,7 @@
         "PAGE::graph-anomalies::MISSING::ACCESSIBILITY",
         "PAGE::graph-anomalies::MISSING::ASSET_REQUIREMENTS",
         "PAGE::graph-anomalies::MISSING::AUTHORIZATION",
+        "PAGE::graph-anomalies::MISSING::DATA_SOURCES",
         "PAGE::graph-anomalies::MISSING::DOMAIN",
         "PAGE::graph-anomalies::MISSING::EVENTS",
         "PAGE::graph-anomalies::MISSING::FAILURE_PATHS",
@@ -6658,28 +6657,24 @@
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Entity Centrality",
+        "title": "Ω SYD OMEGA 91717 — Entity Centrality Route",
         "h1": [
-          "◆ ENTITY CENTRALITY"
+          "CENTRALITY → INSIGHT"
         ],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
-        "supabase_tables": [
-          "graph_entities",
-          "graph_relationships"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": [],
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 2,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 2,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -6694,6 +6689,7 @@
         "accessibility",
         "asset_requirements",
         "authorization",
+        "data_sources",
         "domain",
         "events",
         "failure_paths",
@@ -6709,6 +6705,7 @@
         "PAGE::graph-centrality::MISSING::ACCESSIBILITY",
         "PAGE::graph-centrality::MISSING::ASSET_REQUIREMENTS",
         "PAGE::graph-centrality::MISSING::AUTHORIZATION",
+        "PAGE::graph-centrality::MISSING::DATA_SOURCES",
         "PAGE::graph-centrality::MISSING::DOMAIN",
         "PAGE::graph-centrality::MISSING::EVENTS",
         "PAGE::graph-centrality::MISSING::FAILURE_PATHS",
@@ -6728,28 +6725,24 @@
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Evidence Chain",
+        "title": "Ω SYD OMEGA 91717 — Graph Evidence Route",
         "h1": [
-          "⌘ EVIDENCE CHAIN"
+          "EVIDENCE REGISTER → INSIGHT"
         ],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
-        "supabase_tables": [
-          "graph_entities",
-          "graph_events"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": [],
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 1,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 2,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -6764,6 +6757,7 @@
         "accessibility",
         "asset_requirements",
         "authorization",
+        "data_sources",
         "domain",
         "events",
         "failure_paths",
@@ -6779,6 +6773,7 @@
         "PAGE::graph-evidence::MISSING::ACCESSIBILITY",
         "PAGE::graph-evidence::MISSING::ASSET_REQUIREMENTS",
         "PAGE::graph-evidence::MISSING::AUTHORIZATION",
+        "PAGE::graph-evidence::MISSING::DATA_SOURCES",
         "PAGE::graph-evidence::MISSING::DOMAIN",
         "PAGE::graph-evidence::MISSING::EVENTS",
         "PAGE::graph-evidence::MISSING::FAILURE_PATHS",
@@ -6798,28 +6793,24 @@
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Entity Relationship Explorer",
+        "title": "Ω SYD OMEGA 91717 — Graph Explorer Route",
         "h1": [
-          "◈ ENTITY RELATIONSHIPS"
+          "RELATIONSHIP EXPLORER → INSIGHT"
         ],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
-        "supabase_tables": [
-          "graph_entities",
-          "graph_relationships"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": [],
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 1,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 2,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -6834,6 +6825,7 @@
         "accessibility",
         "asset_requirements",
         "authorization",
+        "data_sources",
         "domain",
         "events",
         "failure_paths",
@@ -6849,6 +6841,7 @@
         "PAGE::graph-explorer::MISSING::ACCESSIBILITY",
         "PAGE::graph-explorer::MISSING::ASSET_REQUIREMENTS",
         "PAGE::graph-explorer::MISSING::AUTHORIZATION",
+        "PAGE::graph-explorer::MISSING::DATA_SOURCES",
         "PAGE::graph-explorer::MISSING::DOMAIN",
         "PAGE::graph-explorer::MISSING::EVENTS",
         "PAGE::graph-explorer::MISSING::FAILURE_PATHS",
@@ -6868,27 +6861,24 @@
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Graph Timeline",
+        "title": "Ω SYD OMEGA 91717 — Graph Timeline Route",
         "h1": [
-          "⟳ GRAPH TIMELINE"
+          "EVENT TIMELINE → INSIGHT"
         ],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
-        "supabase_tables": [
-          "graph_events"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": [],
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 1,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 3,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -6903,6 +6893,7 @@
         "accessibility",
         "asset_requirements",
         "authorization",
+        "data_sources",
         "domain",
         "events",
         "failure_paths",
@@ -6918,6 +6909,7 @@
         "PAGE::graph-timeline::MISSING::ACCESSIBILITY",
         "PAGE::graph-timeline::MISSING::ASSET_REQUIREMENTS",
         "PAGE::graph-timeline::MISSING::AUTHORIZATION",
+        "PAGE::graph-timeline::MISSING::DATA_SOURCES",
         "PAGE::graph-timeline::MISSING::DOMAIN",
         "PAGE::graph-timeline::MISSING::EVENTS",
         "PAGE::graph-timeline::MISSING::FAILURE_PATHS",
@@ -7004,31 +6996,24 @@
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Graphify",
+        "title": "Ω SYD OMEGA 91717 — Graphify Route",
         "h1": [
-          "GRAPHIFY: KNOWLEDGE GRAPH INTELLIGENCE"
+          "GRAPHIFY → INSIGHT"
         ],
         "scripts": [
           "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-esc.js",
-          "/omega-graphify.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/nav.js",
+          "/omega-morph.js"
         ],
-        "supabase_tables": [
-          "graph_entities",
-          "graph_evidence",
-          "graph_relationships"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": [],
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 13,
+          "buttons": 0,
           "forms": 0,
-          "inputs": 5,
-          "links": 0
+          "inputs": 0,
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -7043,6 +7028,7 @@
         "accessibility",
         "asset_requirements",
         "authorization",
+        "data_sources",
         "domain",
         "events",
         "failure_paths",
@@ -7058,6 +7044,7 @@
         "PAGE::graphify::MISSING::ACCESSIBILITY",
         "PAGE::graphify::MISSING::ASSET_REQUIREMENTS",
         "PAGE::graphify::MISSING::AUTHORIZATION",
+        "PAGE::graphify::MISSING::DATA_SOURCES",
         "PAGE::graphify::MISSING::DOMAIN",
         "PAGE::graphify::MISSING::EVENTS",
         "PAGE::graphify::MISSING::FAILURE_PATHS",
@@ -7729,7 +7716,7 @@
           "buttons": 7,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -8151,10 +8138,10 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 0,
+          "buttons": 2,
           "forms": 0,
-          "inputs": 1,
-          "links": 1
+          "inputs": 2,
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -9355,7 +9342,7 @@
       "evidence": {
         "title": "Ω SYD OMEGA 91717 — Life",
         "h1": [
-          "YOUR LIFE. YOUR LEARNING. YOUR CAPACITY. YOUR WORLD."
+          "LIFE"
         ],
         "scripts": [
           "/bg.js",
@@ -9365,6 +9352,7 @@
           "/omega-life-surface.js",
           "/omega-life.js",
           "/omega-morph.js",
+          "/omega-panels.js",
           "/omega-personal-context.js",
           "/omega-product-reality.js",
           "/omega-relearn-sigil-mana.js",
@@ -10376,7 +10364,7 @@
           "buttons": 16,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 2
         },
         "media_counts": {
           "images": 12,
@@ -11008,6 +10996,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-morph.js",
+          "/omega-observatory-evidence.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -11353,7 +11342,7 @@
       "evidence": {
         "title": "Ω SYD OMEGA 91717 — ORDER WORKSPACE",
         "h1": [
-          "ORDER WORKSPACE"
+          "PEOPLE"
         ],
         "scripts": [
           "/bg.js",
@@ -14136,7 +14125,7 @@
           "buttons": 8,
           "forms": 0,
           "inputs": 0,
-          "links": 1
+          "links": 3
         },
         "media_counts": {
           "images": 0,
@@ -14854,7 +14843,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -16038,7 +16027,7 @@
           "buttons": 5,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 2
         },
         "media_counts": {
           "images": 0,

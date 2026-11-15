@@ -114,4 +114,4 @@ submit to OpenTimestamps behind its flag. 5. Phase 3: VERIFY panel. 6. Only if n
 ## 11. Out of scope
 
 Tokens, NFTs, any tradable or ownable on-chain asset; writing member data to a chain; our own chain; one transaction per event; showing
-member names or ids publicly; the mana/wardrobe economy (`MANA_WARDROBE_ECONOMY_PLAN.md`).
+member names or ids publicly; **mana** (a derived value that fades with disuse: stamping it as permanent would be false, so it is never anchored; see `MANA_SIGIL_PLAN.md`); the wardrobe/payments plan (`MANA_WARDROBE_ECONOMY_PLAN.md`, partly superseded).

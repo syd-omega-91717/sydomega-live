@@ -22,6 +22,8 @@
 
 **Correction.** I first described the `profile.html` avatar line as a CSS injection. A control run in the same browser showed the old expression was **not** exploitable: assigning through `style.backgroundImage` makes the browser drop a value that tries to smuggle in other declarations. The change stays as hardening, and the comments say so. The real reason to validate `avatar_url` is that the card will show it to other members, so an arbitrary URL would leak each viewer's IP address to a host the member chose.
 
+**Correction (found after merge, 2026-11-15, same day).** The merged proposal enforced the `bio` limits with a `NOT VALID` CHECK, which I described as "old rows are not re-judged". That was wrong: Postgres enforces even a NOT VALID check on every later update of the row, so a member whose existing bio was over 280 characters or contained `<` or `>` would have been refused when changing anything else (nickname, visibility). Three new cases (legacy bio with markup, legacy 400-character bio, visibility change) failed 3 of 3 under the CHECK and pass 31 of 31 under the fix, a trigger that fires only when the bio itself changes, like the avatar one. The proposal was never applied, so no member was affected. `test_public_card_migration.py` now refuses a bio CHECK.
+
 **Not done / not verified.**
 - **Not run on Supabase.** The stubs are mine; real `profiles` has triggers, grants and policies the harness does not (for example `derive_cosmology`, `trg_lock_birth_date` if applied). Before applying: a real impersonation probe on a non-production copy (`CLAUDE.md` §8.4) and a fresh replay.
 - The editing UI is not built, on purpose: a page that selects columns before the migration is live empties the whole query (§8.1 class 2).

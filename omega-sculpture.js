@@ -923,6 +923,175 @@
     }};
   };
 
+  /* ── CHRONOS ────────────────────────────────────────────────────────
+     The Chronos Omega Tree. Drawn from the owner's blueprint board (assets/concept/board-01.jpg): a golden twin
+     helix grown as a tree around an Omega axis, nine stages up the trunk, the twelve houses in a crown. The board
+     is the brief, not the texture: nothing here loads the picture, every shape is built in code.
+
+     THE FIVE DIMENSIONS ARE THE CANON'S, NOT A STYLING WORD. omega-canon.json `nine_fold` says every nine-fold
+     system expands to a 9x9x9x9x9 lattice of 59,049 nodes. A screen has two, so the other three are carried:
+       x y z  space      the three lattice axes a,b,c place a node in the cube
+       d      rotation   the fourth coordinate turns the cube about the trunk, one ninth of a turn per step
+       e      scale      the fifth coordinate is a shell: nine nested sizes, gold inside to cyan outside
+     Time is not one of the five. It is the motion: the nine stages pulse as a wave up the trunk.
+
+     WHAT IS SAMPLED, SAID PLAINLY: drawing all 59,049 points would cost the page and show nothing more, so every
+     LATTICE_STRIDE-th node is drawn (2,953 of 59,049). The count is published as scene.count so a harness can check it.
+
+     NOTHING IS INVENTED ABOUT THE MEMBER. A stage is lit only from a measured tier progress (OmegaSculptureDataViz or
+     opt.tierProgress); with none, no marker is drawn. A sign is highlighted only if the mount names one with
+     data-sculpt-sign; otherwise all twelve houses read alike. */
+  var LATTICE_STRIDE = 20;
+  var SIGN_FALLBACK = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+
+  SCENES.chronos = function (T, opt) {
+    var p = palette();
+    var STAGES = 9, TURNS = 3.2, H = 6.0;
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(42, 1, 0.1, 100);
+    cam.position.set(0, 1.9, 12.6);
+    rig(T, scene, p);
+    starfield(T, scene, 320, 28, p.cyan);
+
+    var tree = new T.Group();
+    scene.add(tree);
+
+    /* root flare, narrow waist, spreading crown */
+    function radius(k) { return 0.38 + 1.0 * Math.pow(1 - k, 3) + 0.85 * Math.pow(k, 3); }
+    function helixPoint(k, phase) {
+      var a = phase + k * TURNS * Math.PI * 2, r = radius(k);
+      return new T.Vector3(Math.cos(a) * r, (k - 0.5) * H, Math.sin(a) * r);
+    }
+    function strand(phase, colour) {
+      var pts = [];
+      for (var i = 0; i <= 160; i++) pts.push(helixPoint(i / 160, phase));
+      var mesh = new T.Mesh(
+        new T.TubeGeometry(new T.CatmullRomCurve3(pts), 360, 0.034, 8, false),
+        new T.MeshStandardMaterial({ color: colour, emissive: colour, emissiveIntensity: 0.4,
+          metalness: 0.94, roughness: 0.24 }));
+      tree.add(mesh);
+      return mesh;
+    }
+    var gold = strand(0, p.gold), cyan = strand(Math.PI, p.cyan);
+
+    /* nine stages: a rung across the helix and a node on the axis */
+    var stages = [], links = [];
+    for (var s = 0; s < STAGES; s++) {
+      var k = (s + 0.5) / STAGES;
+      var a = helixPoint(k, 0), b = helixPoint(k, Math.PI);
+      var rung = new T.Line(new T.BufferGeometry().setFromPoints([a, b]),
+        new T.LineBasicMaterial({ color: p.solar, transparent: true, opacity: 0.35 }));
+      tree.add(rung);
+      var node = new T.Mesh(new T.OctahedronGeometry(0.16, 0),
+        new T.MeshStandardMaterial({ color: p.bright, emissive: p.bright, emissiveIntensity: 0.4,
+          metalness: 1, roughness: 0.1 }));
+      node.position.set(0, (k - 0.5) * H, 0);
+      tree.add(node);
+      stages.push({ node: node, rung: rung, s: s });
+      links.push({ object: node, href: '/ascension.html', label: 'Stage ' + (s + 1) + ' of 9' });
+    }
+
+    /* the twelve houses, as a crown ring above the trunk */
+    var houses = [], mine = (opt && opt.el && opt.el.getAttribute('data-sculpt-sign')) || '';
+    mine = mine.trim().toLowerCase();
+    var crown = new T.Group();
+    crown.position.y = H / 2 + 0.85;
+    tree.add(crown);
+    for (var h = 0; h < 12; h++) {
+      var ang = (h / 12) * Math.PI * 2;
+      var med = new T.Group();
+      med.position.set(Math.cos(ang) * 1.9, 0, Math.sin(ang) * 1.9);
+      var ringM = new T.Mesh(new T.TorusGeometry(0.2, 0.022, 8, 40),
+        new T.MeshStandardMaterial({ color: p.gold, emissive: p.gold, emissiveIntensity: 0.35,
+          metalness: 0.95, roughness: 0.2 }));
+      var gem = new T.Mesh(new T.OctahedronGeometry(0.085, 0),
+        new T.MeshStandardMaterial({ color: p.cyan, emissive: p.cyan, emissiveIntensity: 0.6,
+          metalness: 0.8, roughness: 0.2 }));
+      med.add(ringM); med.add(gem);
+      crown.add(med);
+      houses.push({ g: med, ring: ringM, gem: gem, h: h, name: SIGN_FALLBACK[h] });
+      links.push({ object: ringM, href: '/houses.html', label: SIGN_FALLBACK[h] });
+    }
+    try {
+      var C = window.OmegaCanon;
+      if (C && typeof C.onReady === 'function') C.onReady(function (api) {
+        var t = api && api.tracks;
+        if (!t || !t.length) return;
+        for (var i = 0; i < houses.length && i < t.length; i++) {
+          if (t[i].sign) { houses[i].name = t[i].sign; links[STAGES + i].label = t[i].sign; }
+        }
+      });
+    } catch (e) { /* the fallback names stand */ }
+
+    /* the 9^5 lattice, sampled and projected (see the header for the mapping) */
+    var pos = [], col = [], total = 0, drawn = 0;
+    var cIn = new T.Color(p.gold), cOut = new T.Color(p.cyan), tmp = new T.Color();
+    for (var A = 0; A < 9; A++) for (var B = 0; B < 9; B++) for (var Cc = 0; Cc < 9; Cc++)
+      for (var D = 0; D < 9; D++) for (var E = 0; E < 9; E++) {
+        if ((total++) % LATTICE_STRIDE !== 0) continue;
+        var u = (A - 4) / 4, v = (B - 4) / 4, w = (Cc - 4) / 4;
+        var th = (D / 9) * Math.PI * 2, sc = 1.15 + E * 0.22;
+        var x = (u * Math.cos(th) + w * Math.sin(th)) * sc;
+        var z = (-u * Math.sin(th) + w * Math.cos(th)) * sc;
+        pos.push(x, v * sc * 1.15, z);
+        tmp.copy(cIn).lerp(cOut, E / 8);
+        col.push(tmp.r, tmp.g, tmp.b);
+        drawn++;
+      }
+    var lg = new T.BufferGeometry();
+    lg.setAttribute('position', new T.BufferAttribute(new Float32Array(pos), 3));
+    lg.setAttribute('color', new T.BufferAttribute(new Float32Array(col), 3));
+    var lattice = new T.Points(lg, new T.PointsMaterial({ size: 0.028, vertexColors: true,
+      transparent: true, opacity: 0.5, depthWrite: false }));
+    scene.add(lattice);
+
+    var wq = new T.Quaternion();
+    var marker = new T.Mesh(new T.OctahedronGeometry(0.3, 0),
+      new T.MeshBasicMaterial({ color: p.bright, transparent: true, opacity: 0.9, wireframe: true }));
+    marker.visible = false;
+    tree.add(marker);
+
+    return { scene: scene, camera: cam, links: links, count: drawn, update: function (t, px, py) {
+      var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var prog = 0;
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getTierProgress) {
+        prog = (window.OmegaSculptureDataViz.getTierProgress() || 0) / 100;
+      }
+      if (opt && opt.tierProgress !== undefined) prog = opt.tierProgress;
+      prog = Math.max(0, Math.min(1, +prog || 0));
+      var reached = Math.ceil(prog * STAGES);
+      tree.rotation.y = calm ? 0.4 : t * 0.16 + px * 0.5;
+      lattice.rotation.y = calm ? 0 : -t * 0.04;
+      crown.rotation.y = calm ? 0 : t * 0.1;
+      for (var i = 0; i < stages.length; i++) {
+        var wave = calm ? 0 : Math.sin(t * 1.1 - i * 0.7);
+        var lit = i < reached ? 0.35 : 0;
+        stages[i].node.material.emissiveIntensity = 0.4 + lit + wave * 0.18;
+        stages[i].node.rotation.y = calm ? 0 : t * 0.8 + i;
+        stages[i].rung.material.opacity = 0.3 + lit * 0.6 + (wave > 0 ? wave * 0.15 : 0);
+      }
+      /* The medallions keep their place in the crown but turn their faces to the viewer: a flat ring seen edge-on
+         is a sliver, and twelve slivers do not read as twelve houses. */
+      scene.updateMatrixWorld(true);
+      for (var j = 0; j < houses.length; j++) {
+        houses[j].g.getWorldQuaternion(wq).invert();
+        houses[j].ring.quaternion.copy(wq).multiply(cam.quaternion);
+        var me = mine && houses[j].name.toLowerCase() === mine;
+        houses[j].ring.scale.setScalar(me ? 1.5 : 1);
+        houses[j].ring.material.emissiveIntensity = me ? 1.0 : 0.35;
+        houses[j].gem.rotation.y = calm ? 0 : t * 1.2 + j;
+      }
+      marker.visible = reached > 0;
+      if (reached > 0) {
+        marker.position.set(0, ((reached - 0.5) / STAGES - 0.5) * H, 0);
+        marker.rotation.y = calm ? 0 : t * 1.4;
+      }
+      cam.position.y = 1.9 - py * 0.8;
+      cam.lookAt(0, -0.05, 0);
+    }};
+  };
+
   /* ── AGENTS ───────────────────────────────────────────────────────────
      The twelve executors in orbit around the core. Twelve is not a styling
      choice: omega-agents.json defines exactly twelve personas (CLAUDE.md 6),

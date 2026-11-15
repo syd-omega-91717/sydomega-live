@@ -71,6 +71,84 @@ class CanonConsistency(unittest.TestCase):
     def test_multi_sign_rows_are_not_pairings(self):
         self.assertEqual(self.check("Aries Taurus Gemini Cronus"), [])
 
+    # --- whole-table shapes (check_tables): a one-line map and parallel arrays -----------------------------
+    SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+
+    def god_map(self, **over):
+        t = {s: self.t[s]["god"] for s in self.SIGNS}
+        t.update(over)
+        return "var SIGN_GOD={" + ",".join("%s:'%s'" % (k, v) for k, v in t.items()) + "};"
+
+    def element_map(self, **over):
+        t = {s: self.t[s]["element"].title() for s in self.SIGNS}
+        t.update(over)
+        return "var SIGN_ELEM={" + ",".join("%s:'%s'" % (k, v) for k, v in t.items()) + "};"
+
+    def test_a_correct_god_map_passes(self):
+        self.assertEqual(self.check(self.god_map()), [])
+        self.assertEqual(self.check(self.element_map()), [])
+
+    def test_wrong_god_in_a_map_is_caught(self):
+        found = self.check(self.god_map(Gemini="Ares"))
+        self.assertTrue(any("Gemini" in x and "god Ares" in x for x in found), found)
+
+    def test_wrong_element_in_a_map_is_caught(self):
+        found = self.check(self.element_map(Virgo="Metal"))
+        self.assertTrue(any("Virgo" in x and "element METAL" in x for x in found), found)
+
+    def test_wrong_agent_in_a_map_is_caught(self):
+        t = {s: self.t[s]["agent"] for s in self.SIGNS}
+        t["Leo"] = "Scout"
+        found = self.check("const PP_AGENT={" + ",".join("%s:'%s'" % kv for kv in t.items()) + "};")
+        self.assertTrue(any("Leo" in x and "agent Scout" in x for x in found), found)
+
+    def test_an_agent_keyed_map_with_the_wrong_sign_is_caught(self):
+        t = {self.t[s]["agent"].upper(): s for s in self.SIGNS}
+        t["SCOUT"] = "Taurus"
+        found = self.check("window.m={" + ",".join("%s:'%s'" % kv for kv in t.items()) + "};")
+        self.assertTrue(any("SCOUT" in x for x in found), found)
+
+    def test_maps_that_claim_nothing_are_left_alone(self):
+        glyphs = "var GLY={" + ",".join("%s:'\\u26%02d'" % (s, i) for i, s in enumerate(self.SIGNS)) + "};"
+        factions = "var F={Aries:'Aegis Order',Taurus:'Gilded Hand',Gemini:'Lumen Choir',Cancer:'Tidewardens',Leo:'Solar Crown',Virgo:'Grain Covenant',Aquarius:'Aether Senate'};"
+        self.assertEqual(self.check(glyphs), [])
+        self.assertEqual(self.check(factions), [], "a faction called 'Aether Senate' is not a claim about the element")
+
+    def test_a_small_map_is_not_a_table(self):
+        self.assertEqual(self.check("var m={Aries:'Zeus',Taurus:'Zeus',Gemini:'Zeus'};"), [])
+
+    def arrays(self, gods=None, elems=None):
+        gods = gods or [self.t[s]["god"] for s in self.SIGNS]
+        elems = elems or [self.t[s]["element"].title() + " *" for s in self.SIGNS]
+        q = lambda xs: "[" + ",".join("'%s'" % x for x in xs) + "]"
+        return "var SIGNS=%s;\nvar GODS=%s;\nvar ELEMS=%s;" % (q(self.SIGNS), q(gods), q(elems))
+
+    def test_correct_parallel_arrays_pass(self):
+        self.assertEqual(self.check(self.arrays()), [])
+
+    def test_two_swapped_gods_in_parallel_arrays_are_caught(self):
+        gods = [self.t[s]["god"] for s in self.SIGNS]
+        gods[2], gods[3] = gods[3], gods[2]
+        found = self.check(self.arrays(gods=gods))
+        self.assertEqual(len(found), 2, found)
+
+    def test_a_wrong_element_in_a_parallel_array_is_caught(self):
+        elems = [self.t[s]["element"].title() + " *" for s in self.SIGNS]
+        elems[11] = "Fire *"
+        found = self.check(self.arrays(elems=elems))
+        self.assertTrue(any("Pisces" in x for x in found), found)
+
+    def test_an_array_of_twelve_signs_alone_is_not_a_finding(self):
+        self.assertEqual(self.check("var SIGNS=[" + ",".join("'%s'" % s for s in self.SIGNS) + "];"), [])
+
+    def test_the_planted_estate_cases_from_2026_11_15_are_caught(self):
+        # the three plants that passed the gate before check_tables existed
+        self.assertTrue(self.check(self.god_map(Gemini="Ares")))
+        self.assertTrue(self.check(self.element_map(Pisces="Fire")))
+        gods = [self.t[s]["god"] for s in self.SIGNS]
+        gods[2], gods[3] = gods[3], gods[2]
+        self.assertTrue(self.check(self.arrays(gods=gods)))
+
     def test_the_estate_passes(self):
         r = subprocess.run([sys.executable, SCRIPT], cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stdout[-2000:])

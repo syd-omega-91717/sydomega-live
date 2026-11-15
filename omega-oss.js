@@ -281,7 +281,14 @@
           ].join('');
           (document.head||document.documentElement).appendChild(s);
         }
-        tippy('[data-tooltip]',{
+        /* omega-tooltip.js owns [data-tooltip] (placement, tap, glow). Mount here only on an element nothing
+           has claimed yet; this function is re-run on every populate event, and without the filter each run
+           stacked another instance on every element (3 identical boxes per hover, measured). */
+        var unclaimed=[].filter.call(document.querySelectorAll('[data-tooltip]'),function(el){
+          return !el._tippy && !el.hasAttribute('data-tippy-content');
+        });
+        if(!unclaimed.length) return;
+        tippy(unclaimed,{
           content: function(el){ return el.getAttribute('data-tooltip'); },
           theme: 'omega',
           animation: 'shift-away',

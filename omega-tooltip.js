@@ -130,6 +130,11 @@
         /* transfer to Tippy's own attribute so we don't double-init */
         el.setAttribute('data-tippy-content', text);
         var placement = el.getAttribute('data-tooltip-placement') || 'top';
+        /* This module owns [data-tooltip]. omega-oss.js used to mount a second instance on every one of
+           them (and again on each re-scan), so a single hover drew three identical boxes and
+           data-tooltip-placement was honoured by only one of them. If another initializer got here
+           first, replace its instance rather than stack on top of it. */
+        if (el._tippy) el._tippy.destroy();
         window.tippy(el, {
           theme: 'omega',
           animation: 'shift-away',
@@ -137,7 +142,9 @@
           delay: [180, 80],
           arrow: true,
           allowHTML: false,
-          touch: ['hold', 400], /* long-press on mobile */
+          /* A tap opens it. The long-press this used to ask for is invisible to anyone who does not already
+             know it exists, and tap was what omega-oss's duplicate instance was giving members anyway. */
+          touch: true,
           onShow: function (instance) {
             /* tiny gold pulse on trigger element */
             var ref = instance.reference;

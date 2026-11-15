@@ -1197,5 +1197,11 @@
   "courses_heading": "课程目录",
   "ui_read_more": "更多",
   "ui_read_less": "收起",
-  "btn_approve": "批准"
+  "btn_approve": "批准",
+  "tip_auth": "AUTH 是你的权威值：由你资料中的三个维度计算出的一个分数。它代表你在平台中的地位，不是金钱。",
+  "tip_gate": "你的大门是你已到达的等级。共有 12 道，从 INITIATE 到 APEX，每一道都会解锁平台的更多内容。",
+  "tip_element": "你的元素来自你的出生星座，它会为你调整平台的色调。",
+  "profile_placeholder_character_name": "你的主权之名...",
+  "profile_placeholder_legacy_statement": "你想传承的内容...",
+  "prof_label_public_identity": "公开身份"
 }

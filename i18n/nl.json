@@ -1197,5 +1197,11 @@
   "courses_heading": "CURSUSCATALOGUS",
   "ui_read_more": "MEER",
   "ui_read_less": "MINDER",
-  "btn_approve": "GOEDKEUREN"
+  "btn_approve": "GOEDKEUREN",
+  "tip_auth": "AUTH is je gezag: één score berekend uit de drie assen van je profiel. Het is een positie op het platform, geen geld.",
+  "tip_gate": "Je poort is het niveau dat je hebt bereikt. Er zijn er 12, van INITIATE tot APEX, en elke poort ontgrendelt meer van het platform.",
+  "tip_element": "Je element komt van je geboortesterrenbeeld. Het kleurt het platform naar jou.",
+  "profile_placeholder_character_name": "Je soevereine naam...",
+  "profile_placeholder_legacy_statement": "Wat je doorgeeft...",
+  "prof_label_public_identity": "Openbare identiteit"
 }

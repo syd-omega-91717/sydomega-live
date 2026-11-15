@@ -35,6 +35,12 @@ WHAT IS BLOCKING, AND WHY EACH ONE IS SAFE TO BLOCK ON
                                                         `T_EN`, so such a key
                                                         is dead weight
   D. no value in any source contains an HTML entity  -- defect 3
+  E. every static `data-i18n-placeholder|title|aria-label|tooltip` key resolves
+     in `T_EN`, and the English authored on that element equals the entry --
+     the engine writes the dictionary text over the attribute in every
+     language including English, so a difference would change a page (and
+     before these hooks were implemented, `profile.html` carried two of them
+     that nothing read, leaving both placeholders English in every language)
 
 WHAT IS REPORTED BUT NOT BLOCKING
 
@@ -75,6 +81,43 @@ ENTITY = re.compile(r"&(?:[a-zA-Z][a-zA-Z0-9]{1,31}|#\d{1,7}|#[xX][0-9a-fA-F]{1,
 # are skipped rather than guessed at -- see _static_keys.
 ATTR = re.compile(r"""data-i18n\s*=\s*(?:"([^"]*)"|'([^']*)')""")
 DYNAMIC = re.compile(r"[+${}<>\\]|\bthis\b")
+
+# data-i18n-<hook> names an attribute the engine writes (i18n.js, apply()).
+HOOK_TARGET = {"placeholder": "placeholder", "title": "title", "aria-label": "aria-label", "tooltip": "data-tooltip"}
+HOOK_TAG = re.compile(r"""<[^<>]*?(?<![\w-])data-i18n-(placeholder|title|aria-label|tooltip)\s*=\s*"([^"]*)"[^<>]*>""")
+
+
+def hook_refs(text):
+    """(hook, key, authored English or None) for every static attribute hook in one document."""
+    out = []
+    for m in HOOK_TAG.finditer(text):
+        hook, key = m.group(1), m.group(2)
+        if not key or DYNAMIC.search(key):
+            continue
+        tgt = re.search(r'(?<![\w-])%s\s*=\s*"([^"]*)"' % re.escape(HOOK_TARGET[hook]), m.group(0))
+        out.append((hook, key, tgt.group(1) if tgt else None))
+    return out
+
+
+def hook_problems(refs, en):
+    """Blocking problems for a list of (hook, key, authored) against the English dictionary."""
+    problems = []
+    for hook, key, authored in refs:
+        if key not in en:
+            problems.append('data-i18n-%s="%s" has no T_EN entry, so it can never be translated' % (hook, key))
+        elif authored is not None and authored.strip() and authored != en[key]:
+            problems.append('data-i18n-%s="%s": the authored English differs from T_EN, and the engine would replace it'
+                            % (hook, key))
+    return problems
+
+
+def markup_hook_refs():
+    """(page, hook, key, authored) over every root page."""
+    out = []
+    for page in sorted(ROOT.glob("*.html")):
+        for hook, key, authored in hook_refs(page.read_text(encoding="utf-8", errors="ignore")):
+            out.append((page.name, hook, key, authored))
+    return out
 
 
 def load_t_en():
@@ -130,6 +173,9 @@ def main():
     en = load_t_en()
     packs = load_packs()
     used = markup_keys()
+    hooks = markup_hook_refs()
+    for page, _hook, key, _authored in hooks:
+        used.setdefault(key, []).append(page)
     errors = []
 
     # A. packs parse
@@ -143,6 +189,11 @@ def main():
         errors.append(
             "data-i18n=\"%s\" has no T_EN entry, so it can never be translated "
             "(referenced by %s)" % (key, ", ".join(pages)))
+
+    # E. attribute hooks resolve, and the authored English equals the dictionary
+    for page, hook, key, authored in hooks:
+        for problem in hook_problems([(hook, key, authored)], en):
+            errors.append("%s: %s" % (page, problem))
 
     # C. no pack key the English dictionary lacks
     for lang, (data, _) in sorted(packs.items()):

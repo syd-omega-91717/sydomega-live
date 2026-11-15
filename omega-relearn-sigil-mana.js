@@ -182,6 +182,31 @@
     };
   }
 
+  /* The ONE place that reads a member's own activity for mana. Pages call this and
+     never rebuild the queries (CLAUDE.md 8.1 class 8). Returns
+     { mana, failed } where failed lists the sources that could not be read; if any
+     failed, mana is null: a partial number would be a guess. Read-only. */
+  async function fetchMana(sb, userId, windowDays) {
+    const days = Math.max(1, Math.min(365, Math.round(Number(windowDays) || 30)));
+    if (!sb || !userId) return { mana: null, failed: ["client"] };
+    const since = new Date(Date.now() - days * 86400000).toISOString();
+    const reads = {
+      tasks: sb.from("task_completions").select("completed_at,points_earned").eq("user_id", userId).gte("completed_at", since).limit(1000),
+      evolution: sb.from("evolution_events").select("created_at").eq("user_id", userId).gte("created_at", since).limit(1000),
+      events: sb.from("omega_platform_events").select("created_at").eq("actor_user_id", userId).gte("created_at", since).limit(1000),
+      missions: sb.from("omega_member_mission_state").select("status,started_at,completed_at,last_transition_at").eq("user_id", userId).limit(500)
+    };
+    const names = Object.keys(reads);
+    let results;
+    try { results = await Promise.all(names.map((k) => reads[k])); }
+    catch (e) { return { mana: null, failed: names }; }
+    const failed = names.filter((k, i) => !results[i] || results[i].error);
+    if (failed.length) return { mana: null, failed };
+    const data = {};
+    names.forEach((k, i) => { data[k] = results[i].data || []; });
+    return { mana: calculateMana({ userId, windowDays: days, tasks: data.tasks, evolution: data.evolution, events: data.events, missions: data.missions }), failed: [] };
+  }
+
   function spendMana(input) {
     if (!required(input, ["userId", "component", "amount", "authorizationId"])) {
       return { truth: TRUTH.BLOCKED, reason: "userId, component, amount and authorizationId are required" };
@@ -241,6 +266,6 @@
 
   root.OmegaRelearnSigilMana = Object.freeze({
     TRUTH, LIFECYCLE, EVENTS, createRelearn, verifyRelearn, createSigil,
-    evolveSigil, calculateMana, spendMana, recoverMana, representCivilization
+    evolveSigil, calculateMana, fetchMana, spendMana, recoverMana, representCivilization
   });
 })(typeof globalThis !== "undefined" ? globalThis : window);

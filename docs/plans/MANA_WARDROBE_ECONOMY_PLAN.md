@@ -1,5 +1,19 @@
 # Mana & Wardrobe economy — design plan (HIGH-RISK: money, RLS, new RPC, flags)
 
+> **PARTLY SUPERSEDED (2026-11-15, same day it merged). Read this before anything below.**
+> This plan treated **mana as a spendable currency** (a `MANA` ledger currency, Stripe mana packs, wardrobe priced in mana, the `mana_*` flags). That was a
+> misreading. The owner means mana as **the user's inner power, gained by using the platform, with a sigil**, and the repo already defines it so
+> (`config/omega-relearn-sigil-mana.json`: "non-financial ... neverMeans money").
+>
+> **Withdrawn:** every mention of a MANA currency or ledger account, mana packs, mana prices, buying or spending mana, the `mana_earn_enabled` /
+> `mana_purchase_enabled` flags, the "earn-only mana" phase, and decision 5's mana-account point.
+> **Replaced by:** `docs/plans/MANA_SIGIL_PLAN.md` (open as PR #1297 when this note was written): mana is derived from the member's own recent activity,
+> fades without use, is never sold, never anchored on a chain and never grants authority. Paid cosmetics, if wanted, are sold directly for real money at a
+> real price with no virtual currency (`MANA_SIGIL_PLAN.md` §6).
+> **Still valid:** §2 (what already exists), §3 (the closed-loop rule is the legal line, to be confirmed by counsel), §4 (sell appearance, never progress), §6
+> (threat surface, for any future cosmetics purchase path), §8 (counsel questions, ignoring the mana-specific ones) and the `advance_matrix` prerequisite.
+> Nothing in this file is built or approved.
+
 Status: **PROPOSAL. Nothing built, nothing applied, no flag flipped.** Written 2026-11-15.
 **Not reviewed by a lawyer or by an adversarial reviewer** (the Codex review step is unavailable: usage limit). Nothing here is legal advice.
 **The controller and the governing law are not recorded anywhere in the repo** (`docs/legal/COUNSEL_BRIEF.md`, top); the database is in

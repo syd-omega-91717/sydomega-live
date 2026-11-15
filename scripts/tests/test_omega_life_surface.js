@@ -6,13 +6,15 @@ const css=fs.readFileSync('omega-life.css','utf8');
 const primitive=fs.readFileSync('omega-relearn-sigil-mana.js','utf8');
 assert(html.includes('omega-life.js')&&html.includes('omega-relearn-sigil-mana.js'));
 assert(js.includes("task_completions")&&js.includes("omega_platform_events")&&js.includes("capability_registry"));
-assert(js.includes("calculateMana")&&js.includes("createSigil"));
+assert(js.includes("fetchMana")&&js.includes("createSigil"));
 assert(js.includes("SIGN IN REQUIRED")&&js.includes("SOURCE READ FAILED"));
-// mana is the member's own windowed activity: the platform-wide capability registry and profile fields never feed it
-const manaCall=js.slice(js.indexOf('calculateMana('),js.indexOf('calculateMana(')+400);
-assert(!/verifiedCapabilities|explicitPreferences|systemCapacity/.test(manaCall));
-assert(js.includes("gte('completed_at',manaSince)")&&js.includes('no source yet'));
+// mana is the member's own windowed activity, read in ONE place (the module's fetchMana), never rebuilt on the page
+assert(!/verifiedCapabilities|explicitPreferences|systemCapacity|calculateMana\(/.test(js));
+assert(js.includes('no source yet'));
 assert(!/'ACTIVE'|'HEALTHY'|'IN_PROGRESS'/.test(js));
+assert(!js.includes("from('omega_member_mission_state')"));
+assert(/gte\("completed_at", since\)/.test(primitive)&&/gte\("created_at", since\)/.test(primitive));
+assert(!/capability_registry|verifiedCapabilities/.test(primitive.slice(primitive.indexOf('async function fetchMana'),primitive.indexOf('function spendMana'))));
 assert(!js.includes('innerHTML'));
 assert(!js.includes('localStorage'));
 assert(primitive.includes('not an authentication credential')||primitive.includes('not an authentication'));

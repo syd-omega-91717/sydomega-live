@@ -76,6 +76,8 @@
       '.occ .occ-f{display:grid;grid-template-columns:5.2rem 1fr;justify-content:stretch;align-items:start;justify-items:start;text-align:start;gap:.1rem .8rem;padding:.55rem .65rem;border:1px solid rgba(255,255,255,.08);border-radius:4px;text-decoration:none;color:inherit;min-height:44px}' +
       '.occ .occ-f:hover,.occ .occ-f:focus-visible{border-color:var(--occ-accent);outline:none}' +
       '.occ .occ-fv{font-weight:600;color:var(--occ-accent)}' +
+      '.occ .occs-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.6rem}' +
+      '.occ .occs-btn{min-height:44px;padding:.55rem 1rem;letter-spacing:.12em}' +
       '.occ .occ-fg{grid-column:2;font-size:.82rem;color:var(--muted,#8b93a3);line-height:1.4;font-weight:400}' +
       '.occ a{color:var(--occ-accent)}' +
       '.ocr{display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:.6rem;font-family:var(--R,Rajdhani,sans-serif);color:var(--ink,#e8e6df)}' +
@@ -302,6 +304,77 @@
     say(parts.join(' \u00B7 ') + '. Drawn only from your recorded activity; hollow means no source yet.');
   }
 
+  /* YOUR SIGN, SEEN AND HEARD. One source for all of it: the sign decides the house (canon.houses), the element
+     (canon.elementFor) and the god (the track); the tree highlights that house, the music plays that element, the voice
+     reads that house. Nothing is copied: no sign table here, and the music module is handed the element's name only.
+     Sound starts ONLY from a button press, never on load. The voice is the browser's own speech engine, so no text is sent
+     anywhere; it reads the canon's English text, so it asks for an English voice and does not pretend to be multilingual. */
+  function bootSense(canon, p) {
+    var roots = document.querySelectorAll('[data-omega-character-sense]');
+    if (!roots.length) return;
+    var track = (canon && p && p.sign) ? canon.trackBySign(p.sign) : null;
+    var stage = document.querySelector('[data-omega-sculpture="chronos"]');
+    for (var r = 0; r < roots.length; r++) {
+      var root = roots[r];
+      root.textContent = '';
+      root.classList.add('occ');
+      if (!track) { el('div', 'ocr-msg', 'Set your sign to see your place in the tree and to hear your house.', root); continue; }
+      if (stage) stage.setAttribute('data-sculpt-sign', track.sign);
+      var elemName = paletteKey(canon.elementFor(track.sign) || track.element);
+      var house = null;
+      for (var i = 0; i < (canon.houses || []).length; i++) if (canon.houses[i].sign === track.sign) { house = canon.houses[i]; break; }
+      var line = [track.sign + '.', house && house.domain ? house.domain + '.' : '', house && house.desc ? house.desc : '',
+        track.god ? 'Your god is ' + track.god + '.' : '', elemName ? 'Your element is ' + elemName + '.' : ''].filter(Boolean).join(' ');
+
+      var row = el('div', 'occs-row', null, root);
+      var music = el('button', 'btn occs-btn', 'PLAY MY ELEMENT', row);
+      music.type = 'button';
+      music.setAttribute('aria-pressed', 'false');
+      var voice = el('button', 'btn occs-btn', 'READ MY HOUSE ALOUD', row);
+      voice.type = 'button';
+      voice.setAttribute('aria-pressed', 'false');
+      var note = el('div', 'ocr-msg', null, root);
+      note.setAttribute('role', 'status');
+      note.setAttribute('data-no-clamp', '');   /* the platform's read-more clamp would fold the caveats below behind a MORE button; they must stay readable */
+      note.textContent = 'Your tree: nine stages up the trunk, twelve houses in the crown, yours enlarged (' + track.sign + '). ' +
+        'The fine dots are a sample of the 59,049-node lattice. It does not show your progress yet: no stage is measured for you. ' +
+        'Music is made in your browser from your element (' + (elemName || 'unknown') + '), no audio file; the voice is your browser’s own and sends nothing anywhere. Both start only when you press.';
+
+      (function (music, voice, note, elemName, line) {
+        var SS = window.speechSynthesis;
+        var canSpeak = !!(SS && typeof SpeechSynthesisUtterance !== 'undefined');
+        if (!canSpeak) { voice.disabled = true; voice.title = 'This browser has no speech engine.'; }
+        function syncMusic() {
+          var on = !!(window.OmegaMusic && window.OmegaMusic.isPlaying && window.OmegaMusic.isPlaying());
+          music.setAttribute('aria-pressed', on ? 'true' : 'false');
+          music.textContent = on ? 'STOP THE MUSIC' : 'PLAY MY ELEMENT';
+        }
+        music.addEventListener('click', function () {
+          var M = window.OmegaMusic;
+          if (!M || typeof M.play !== 'function') { note.textContent = 'The music engine is not loaded yet. Reload the page and try again.'; return; }
+          if (M.isPlaying()) M.stop(); else M.play(elemName);
+          syncMusic();
+          setTimeout(syncMusic, 400); setTimeout(syncMusic, 1800);   /* Tone loads on first press */
+        });
+        voice.addEventListener('click', function () {
+          if (!canSpeak) return;
+          if (SS.speaking) { SS.cancel(); voice.setAttribute('aria-pressed', 'false'); voice.textContent = 'READ MY HOUSE ALOUD'; return; }
+          var u = new SpeechSynthesisUtterance(line);
+          u.lang = 'en';
+          var vs = SS.getVoices ? SS.getVoices() : [];
+          for (var k = 0; k < vs.length; k++) if (/^en/i.test(vs[k].lang)) { u.voice = vs[k]; break; }
+          u.onend = u.onerror = function () { voice.setAttribute('aria-pressed', 'false'); voice.textContent = 'READ MY HOUSE ALOUD'; };
+          voice.setAttribute('aria-pressed', 'true'); voice.textContent = 'STOP READING';
+          SS.speak(u);
+        });
+        window.addEventListener('pagehide', function () {
+          try { if (SS) SS.cancel(); } catch (e) {}
+          try { if (window.OmegaMusic && window.OmegaMusic.isPlaying()) window.OmegaMusic.stop(); } catch (e) {}
+        });
+      })(music, voice, note, elemName, line);
+    }
+  }
+
   async function bootRoster(sb, session, canon) {
     var roots = document.querySelectorAll('[data-omega-character-roster]');
     if (!roots.length) return;
@@ -315,16 +388,17 @@
 
   async function boot() {
     var mounts = document.querySelectorAll('[data-omega-character-card]');
+    var senseMounts = document.querySelectorAll('[data-omega-character-sense]');
     var hasRoster = document.querySelectorAll('[data-omega-character-roster]').length > 0;
     var storyMounts = document.querySelectorAll('[data-omega-character-story]');
     var sigilNotes = document.querySelectorAll('[data-omega-character-sigil-note]');
-    if (!mounts.length && !hasRoster && !storyMounts.length && !sigilNotes.length) return;
+    if (!mounts.length && !hasRoster && !storyMounts.length && !sigilNotes.length && !senseMounts.length) return;
     style();
     var sb = null;
     try { sb = window.OmegaSB && window.OmegaSB.get ? await window.OmegaSB.get() : (window.__omegaSb || null); } catch (e) { sb = null; }
     var fail = function (msg) {
       for (var i = 0; i < mounts.length; i++) { mounts[i].classList.add('occ'); mounts[i].textContent = msg; }
-      var rr = document.querySelectorAll('[data-omega-character-roster],[data-omega-character-story],[data-omega-character-sigil-note]');
+      var rr = document.querySelectorAll('[data-omega-character-roster],[data-omega-character-story],[data-omega-character-sigil-note],[data-omega-character-sense]');
       for (var k = 0; k < rr.length; k++) { rr[k].textContent = msg; }
     };
     if (!sb) { fail('Character unavailable: no data connection.'); return; }
@@ -332,7 +406,7 @@
     try { s = (await sb.auth.getSession()).data.session; } catch (e) { s = null; }
     if (!s || !s.user) { fail('Sign in to see your character.'); return; }
     var r = { data: null, error: null };
-    if (mounts.length || storyMounts.length || sigilNotes.length) {
+    if (mounts.length || storyMounts.length || sigilNotes.length || senseMounts.length) {
       r = await sb.from('profiles').select(COLS).eq('id', s.user.id).maybeSingle();
       if (r.error || !r.data) { fail('Character unavailable: your profile could not be read.'); return; }
     }
@@ -349,6 +423,7 @@
       }
     }
     if (sigilNotes.length) await bootSigil(sb, s, window.OmegaCanon, r.data);
+    if (senseMounts.length) bootSense(window.OmegaCanon, r.data);
     if (hasRoster) await bootRoster(sb, s, window.OmegaCanon);
   }
 

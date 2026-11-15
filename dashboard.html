@@ -192,7 +192,7 @@
         <div class="mb-item"><div class="mb-dot" id="health-dot" style="background:var(--green)"></div><span id="health-label" data-i18n="operational">OPERATIONAL</span></div>
         <div class="mb-item">&#9678; <span id="mb-time">--:--:--</span></div>
         <div class="mb-item">&#9670; <span id="mb-date">--</span></div>
-        <div class="mb-item">AUTH <span id="hdr-auth" style="color:var(--gold);font-family:var(--D);font-size:var(--fs-2,14px)">--</span></div>
+        <div class="mb-item" data-tooltip="AUTH is your authority: one score calculated from your three profile axes. It is a standing in the platform, not money." data-tooltip-placement="bottom" tabindex="0">AUTH <span id="hdr-auth" style="color:var(--gold);font-family:var(--D);font-size:var(--fs-2,14px)">--</span></div>
         <div class="mb-item">PMI <span style="color:rgba(63,178,127,.5)" id="mb-pmi">87</span></div>
       </div>
     </div>
@@ -200,8 +200,8 @@
     <!-- STATUS STRIP -->
     <div class="status-strip" role="status" aria-label="Platform status">
       <div class="ss-item"><div class="ss-label" data-i18n="active_members">MEMBERS</div><div class="ss-val" id="ss-members" data-live-members>--</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="my_gate">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
-      <div class="ss-item"><div class="ss-label" data-i18n="my_element">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
+      <div class="ss-item" data-tooltip="Your gate is the level you have reached. There are 12, from INITIATE to APEX, and each one unlocks more of the platform." data-tooltip-placement="bottom" tabindex="0"><div class="ss-label" data-i18n="my_gate">MY GATE</div><div class="ss-val" id="ss-gate" style="--vc:var(--gold)">--</div></div>
+      <div class="ss-item" data-tooltip="Your element comes from your birth sign. It tints the platform to you." data-tooltip-placement="bottom" tabindex="0"><div class="ss-label" data-i18n="my_element">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
     </div>
 
     <!-- DAILY THREE: the member's daily loop (omega-daily.js) -->

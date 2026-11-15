@@ -14,6 +14,11 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-11-15 — `life.html`'s mana does not measure the member: two of its five components read a platform-wide table, through a filter that cannot match.**
+  `omega-life.js` passes `capability_registry` rows (no `user_id`; policy "authenticated reads") as `verifiedCapabilities`, filtered by
+  `lifecycle_status==='ACTIVE' || health_status==='HEALTHY'`; `0061_omega_capability_registry.sql:30-31` only allows lowercase `'live'`/`'healthy'`, no later
+  migration changes it, nothing writes uppercase. From source the list is empty, so FOCUS (`caps*8`) and EXECUTION (`caps*6`) come only from missions and profile
+  fields, and CREATIVE gives `explicit*4` for filling in sign/element/agent. Not checked against live data (access refused). Fix and tests: `docs/plans/MANA_SIGIL_PLAN.md` §7 step 1.
 - **OPEN 2026-11-15 — `advance_matrix(p_track, p_axis)` appears to let any signed-in member raise any sign's axes with no real event behind it; not verified live.**
   Evidence from source only: `supabase/migrations/0004_omega_nested_matrix.sql:73-92` defines it `SECURITY DEFINER`, `GRANT EXECUTE ... TO authenticated`;
   `20260818000551_revoke_anon_execute_and_harden_search_path.sql:118` revokes only `PUBLIC`. It adds 1 to the named axis (max 9) of the caller's own

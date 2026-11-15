@@ -1265,7 +1265,12 @@ var T_EN={
 "prof_gate_omega_threshold":"OMEGA THRESHOLD",
 "prof_gate_omega_master":"OMEGA MASTER",
 "ui_read_more":"MORE",
-"ui_read_less":"LESS"
+"ui_read_less":"LESS",
+"tip_auth":"AUTH is your authority: one score calculated from your three profile axes. It is a standing in the platform, not money.",
+"tip_gate":"Your gate is the level you have reached. There are 12, from INITIATE to APEX, and each one unlocks more of the platform.",
+"tip_element":"Your element comes from your birth sign. It tints the platform to you.",
+"profile_placeholder_character_name":"Your sovereign name...",
+"profile_placeholder_legacy_statement":"What you pass forward..."
 };
 
 /* T is the merged dictionary in the original {key:{lang:string}} shape, so
@@ -1383,6 +1388,27 @@ function apply(lang){
         setOwnText(el,txt);
       }
     }
+  });
+
+  /* Attribute translations. apply() above reaches element text, input placeholders and image alt only, so a
+     title, an aria-label, a placeholder on a non-input, or a tooltip had no way to be translated: profile.html
+     carried data-i18n-placeholder on two fields for a long time while nothing read it (no script, and the two
+     keys were in no dictionary), so both stayed English in every language. These four hooks name the attribute
+     to write. English is written too, from T_EN, so switching back from another language restores it; a
+     contract check (scripts/i18n-contract.py, E) keeps the authored English equal to T_EN so that cannot
+     change a page. A tooltip that is already mounted is updated in place. */
+  [['data-i18n-placeholder','placeholder'],['data-i18n-title','title'],['data-i18n-aria-label','aria-label'],['data-i18n-tooltip','data-tooltip']].forEach(function(h){
+    document.querySelectorAll('['+h[0]+']').forEach(function(el){
+      var entry=T[el.getAttribute(h[0])];
+      if(!entry)return;
+      var txt=entry[lang]||entry['en'];
+      if(!txt)return;
+      el.setAttribute(h[1],txt);
+      if(h[1]==='data-tooltip'){
+        if(el.hasAttribute('data-tippy-content'))el.setAttribute('data-tippy-content',txt);
+        if(el._tippy&&el._tippy.setContent)el._tippy.setContent(txt);
+      }
+    });
   });
 
   /* Update lang selector buttons */

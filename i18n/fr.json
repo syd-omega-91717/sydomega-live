@@ -1197,5 +1197,11 @@
   "courses_heading": "CATALOGUE DES COURS",
   "ui_read_more": "PLUS",
   "ui_read_less": "MOINS",
-  "btn_approve": "APPROUVER"
+  "btn_approve": "APPROUVER",
+  "tip_auth": "AUTH est votre autorité : un score calculé à partir des trois axes de votre profil. C'est un rang dans la plateforme, pas de l'argent.",
+  "tip_gate": "Votre porte est le niveau que vous avez atteint. Il y en a 12, d'INITIATE à APEX, et chacune débloque une plus grande partie de la plateforme.",
+  "tip_element": "Votre élément vient de votre signe de naissance. Il teinte la plateforme à votre image.",
+  "profile_placeholder_character_name": "Votre nom souverain...",
+  "profile_placeholder_legacy_statement": "Ce que vous transmettez...",
+  "prof_label_public_identity": "Identité publique"
 }

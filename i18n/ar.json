@@ -1197,5 +1197,11 @@
   "courses_heading": "كتالوج الدورات",
   "ui_read_more": "المزيد",
   "ui_read_less": "أقل",
-  "btn_approve": "موافقة"
+  "btn_approve": "موافقة",
+  "tip_auth": "AUTH هي سلطتك: رقم واحد يُحسب من محاور ملفك الثلاثة. هي مكانة داخل المنصة وليست مالاً.",
+  "tip_gate": "بوابتك هي المستوى الذي وصلت إليه. هناك 12 بوابة، من INITIATE إلى APEX، وكل واحدة تفتح لك جزءاً أكبر من المنصة.",
+  "tip_element": "عنصرك يأتي من برج ميلادك. وهو يلوّن المنصة بما يناسبك.",
+  "profile_placeholder_character_name": "اسمك السيادي...",
+  "profile_placeholder_legacy_statement": "ما ستورّثه للأجيال القادمة...",
+  "prof_label_public_identity": "الهوية العامة"
 }

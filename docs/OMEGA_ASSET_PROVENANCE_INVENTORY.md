@@ -38,6 +38,10 @@ These are candidates for adapters, not claims of existing integration or blanket
 
 **Integration state:** `PLANNED`. No provider is represented as wired, licensed, reachable, or production-verified by this inventory tool.
 
+## Rights register (enforced)
+
+`scripts/media-rights-gate.py` (in the static contract suite) fails when a **new** audio, video or image file is committed without a record in `docs/media-rights.json`: source, creator, licence from an allowed list, evidence, and the date added. The files that existed on 2026-11-15 are a frozen `unreviewed` baseline, which is not clearance. The audit above reports; this gate blocks. It proves a claim was written down, not that it is true.
+
 ## Promotion requirements
 
 Before an asset is used as an authoritative platform asset, creator upload, commercial media item, game reward, planet/realm source, NFT, or credential:

@@ -202,6 +202,10 @@ GATES = [
      'every sign, god, agent, element and token on every page agrees with '
      'the one canon table (omega-canon.json tracks)',
      ['scripts/canon-consistency.py']),
+    ('media-rights',
+     'every new audio, video or image file has a rights record (source, creator, licence, evidence); '
+     'the 519 files that predate the rule are a frozen, unreviewed baseline',
+     ['scripts/media-rights-gate.py']),
     ('csp-inline-ratchet',
      "no file gains inline on*= handlers or inline <script> blocks -- the "
      "migration to a script-src without 'unsafe-inline' only moves one way",

@@ -2,6 +2,13 @@
 # REPOSITORY_AUDIT.md §4). Mark them binary so they're never diffed/merged as text.
 *.mp4 -diff -text
 *.docx -diff -text
+# Raster images are bytes, never text: a text-mode conversion rewrote every CR/LF in 31 of them to CRLF
+# and appended one more after the JPEG end marker (docs/fixes/2026-11-15-corrupt-phase-images.md).
+*.jpg -diff -text
+*.jpeg -diff -text
+*.png -diff -text
+*.gif -diff -text
+*.webp -diff -text
 
 # scripts/context-budget.py measures CLAUDE.md by raw byte size (bytes // 4).
 # On a checkout with core.autocrlf=true, CRLF adds ~1 byte per line (~970 for

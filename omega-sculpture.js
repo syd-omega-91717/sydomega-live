@@ -993,8 +993,7 @@
     }
 
     /* the twelve houses, as a crown ring above the trunk */
-    var houses = [], mine = (opt && opt.el && opt.el.getAttribute('data-sculpt-sign')) || '';
-    mine = mine.trim().toLowerCase();
+    var houses = [];
     var crown = new T.Group();
     crown.position.y = H / 2 + 0.85;
     tree.add(crown);
@@ -1074,6 +1073,8 @@
       /* The medallions keep their place in the crown but turn their faces to the viewer: a flat ring seen edge-on
          is a sliver, and twelve slivers do not read as twelve houses. */
       scene.updateMatrixWorld(true);
+      /* read every frame: omega-character-card.js sets the attribute after the member's profile loads, which is after this scene starts */
+      var mine = ((opt && opt.el && opt.el.getAttribute('data-sculpt-sign')) || '').trim().toLowerCase();
       for (var j = 0; j < houses.length; j++) {
         houses[j].g.getWorldQuaternion(wq).invert();
         houses[j].ring.quaternion.copy(wq).multiply(cam.quaternion);

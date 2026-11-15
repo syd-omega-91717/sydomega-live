@@ -138,6 +138,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | G01 | GAP_ANALYSIS.md S | the 3-D layer's data bindings (`omega-sculpture-dataviz.js` and the mount attributes) do not reach the scenes… | GAP_ANALYSIS.md section S |
 | G03 | GAP_ANALYSIS.md S | `advertising.html` sells placements against "104,976-NODE REACH", which is the canon's lattice size, not an a… | GAP_ANALYSIS.md section S |
+| G03 | GAP_ANALYSIS.md S | eight personal identity values of the owner stayed in the git history of a public repository after the page w… | GAP_ANALYSIS.md section S |
 | G04 | GAP_ANALYSIS.md S | two pages give opposite answers about whether identity documents are stored; the intake is off only because a… | GAP_ANALYSIS.md section S |
 | G05 | GAP_ANALYSIS.md S | the canon holds two 12-rung ladders whose names collide: earned gates and priced tiers. | GAP_ANALYSIS.md section S |
 | G06 | GAP_ANALYSIS.md S | the dashboard still shows a hand-typed score as if it were measured: `PMI` in the mission bar (`#mb-pmi`) and… | GAP_ANALYSIS.md section S |

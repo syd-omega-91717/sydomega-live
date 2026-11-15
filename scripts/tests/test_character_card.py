@@ -43,6 +43,12 @@ class CharacterCard(unittest.TestCase):
         self.assertIn("/omega-character-card.js", bg)
         self.assertIn("data-omega-character-card", (ROOT / "character.html").read_text(encoding="utf-8"))
 
+    def test_character_page_never_guesses_a_sign(self):
+        page = (ROOT / "character.html").read_text(encoding="utf-8")
+        self.assertNotIn("getMonth()", page)
+        self.assertIn("hasSign", page)
+        self.assertNotRegex(page, r"if\(signIdx<0\)signIdx=0")
+
 
 if __name__ == "__main__":
     unittest.main()

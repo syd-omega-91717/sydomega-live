@@ -317,9 +317,11 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   };
   var TRIAD_NAMES=['Primal','Primal','Primal','Middle','Middle','Middle','Supreme','Supreme','Supreme','Primal','Middle','Supreme'];
 
-  var sign=pr.sign||SIGNS[Math.floor(new Date().getMonth()%12)];
-  var signIdx=SIGNS.indexOf(sign);if(signIdx<0)signIdx=0;
-  var god=GODS[signIdx],elem=ELEMS[signIdx],elemId=ELEM_IDS[signIdx];
+  /* A member with no recorded sign has NO sign here: never guess one from the
+     calendar or default to Aries (CLAUDE.md 8.1 class 9, fabricated data). */
+  var signIdx=SIGNS.indexOf(pr.sign),hasSign=signIdx>=0,NOSET='NOT SET';
+  var sign=hasSign?pr.sign:'';
+  var god=hasSign?GODS[signIdx]:NOSET,elem=hasSign?ELEMS[signIdx]:NOSET,elemId=hasSign?ELEM_IDS[signIdx]:'';
   var gateIdx=THRESHOLDS.findIndex(function(t){return auth<t;});
   var highGrade=GNAMES[0];
   THRESHOLDS.forEach(function(t,i){if(auth>=t)highGrade=GNAMES[i];});
@@ -327,7 +329,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   sid('stat-auth',auth.toFixed(4));sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
   sid('chr-display-name',(pr.display_name||s.user.email||'--').toUpperCase());
   sid('chr-uid-short','UID '+s.user.id.substr(0,8).toUpperCase());
-  sid('chr-sign',sign||'--');sid('chr-element',elem);sid('chr-olympian',god);
+  sid('chr-sign',hasSign?sign:NOSET);sid('chr-element',elem);sid('chr-olympian',god);
   (function mountChrRealm(){
     var canvas=document.getElementById('chr-realm-canvas');
     if(!canvas)return;
@@ -339,17 +341,17 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   sid('chr-auth',auth.toFixed(4));sid('chr-grade',highGrade);
   sid('chr-agent','SOVEREIGN AGENT CLASS '+(gateIdx>0?gateIdx:1));
   sid('chr-token',elem);
-  sid('chr-track','TRACK '+(signIdx+1)+' OF 12');
-  sid('chr-triad',(TRIAD_NAMES[signIdx]||'Primal')+' TRIAD');
+  sid('chr-track',hasSign?'TRACK '+(signIdx+1)+' OF 12':NOSET);
+  sid('chr-triad',hasSign?(TRIAD_NAMES[signIdx]||'Primal')+' TRIAD':NOSET);
 
   var activeEl=document.getElementById('el-'+elemId);
   if(activeEl)activeEl.classList.add('active');
   sid('chr-elem-display',elem);
   var loreDesc=LORE_MAP[sign];
-  sid('chr-elem-desc',loreDesc?loreDesc.split('—')[1]||elem:elem+' — your elemental affinity.');
-  sid('chr-token-display',elem+' TOKEN');
-  sid('lore-sign-title',sign.toUpperCase()+' · '+god.toUpperCase()+' · '+elem);
-  sid('lore-body',LORE_MAP[sign]||'Sovereign lore for '+sign+' is being woven into the lattice.');
+  sid('chr-elem-desc',!hasSign?'Set your sign in your profile to see your element.':loreDesc?loreDesc.split('—')[1]||elem:elem+' — your elemental affinity.');
+  sid('chr-token-display',hasSign?elem+' TOKEN':NOSET);
+  sid('lore-sign-title',hasSign?sign.toUpperCase()+' · '+god.toUpperCase()+' · '+elem:'SIGN NOT SET');
+  sid('lore-body',!hasSign?'Set your sign in your profile to read your sovereign lore.':LORE_MAP[sign]||'Sovereign lore for '+sign+' is being woven into the lattice.');
 
   sid('mx-a',a.toFixed(3));sid('mx-b',b.toFixed(3));sid('mx-c',c.toFixed(3));
   var cubeSum=Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3);

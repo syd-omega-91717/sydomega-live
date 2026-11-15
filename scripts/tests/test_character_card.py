@@ -13,7 +13,12 @@ SRC = (ROOT / "omega-character-card.js").read_text(encoding="utf-8")
 class CharacterCard(unittest.TestCase):
     def test_no_html_sinks_and_no_writes(self):
         self.assertNotRegex(SRC, r"innerHTML|outerHTML|insertAdjacentHTML|document\.write")
-        self.assertNotRegex(SRC, r"\.(insert|update|upsert|delete|rpc)\(")
+        self.assertNotRegex(SRC, r"\.(insert|update|upsert|delete)\(")
+        # The only RPC allowed is the read my_matrix() (it seeds the caller's own
+        # missing matrix_progress rows, as it does on every page that calls it);
+        # never advance_matrix or any other writer.
+        self.assertEqual(set(re.findall(r"\.rpc\('([a-z_]+)'", SRC)), {"my_matrix"})
+        self.assertNotIn("advance_matrix", re.sub(r"/\*.*?\*/", "", SRC, flags=re.S))
 
     def test_no_invented_values(self):
         self.assertNotRegex(SRC, r"Math\.random|getMonth\(\)")
@@ -48,6 +53,22 @@ class CharacterCard(unittest.TestCase):
         self.assertNotIn("getMonth()", page)
         self.assertIn("hasSign", page)
         self.assertNotRegex(page, r"if\(signIdx<0\)signIdx=0")
+
+    def test_roster_reads_my_matrix_and_checks_the_error(self):
+        self.assertIn("rpc('my_matrix')", SRC)
+        self.assertRegex(SRC, r"if \(m\.error\)")
+
+    def test_roster_never_uses_platform_layout_class_tokens(self):
+        """`.main` is the content column: omega-legal.js / omega-ui.js append the
+        footer to it, so a tile classed `main` swallowed the site footer."""
+        for cls in re.findall(r"el\('div', '([^']*)'", SRC) + re.findall(r"'(ocr-t[^']*)'", SRC):
+            for tok in cls.split():
+                self.assertNotIn(tok, {"main", "on", "lf", "card", "side", "shell"}, cls)
+        self.assertNotRegex(SRC, r"\.ocr-t\.(main|on)\b")
+
+    def test_roster_mount_exists_and_is_injected(self):
+        self.assertIn("data-omega-character-roster", (ROOT / "character.html").read_text(encoding="utf-8"))
+        self.assertIn("data-omega-character-roster", (ROOT / "bg.js").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

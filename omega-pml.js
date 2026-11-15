@@ -116,7 +116,11 @@
       el.textContent=PAGE_DATA.pmi||'--';
       el.title='Platform Meaning Index: '+(PAGE_DATA.pmi||'unscored')+'/100 for this page';
     }
-    document.querySelectorAll('[data-omega-pmi]').forEach(function(n){
+    /* Only the two values this module owns. bg.js loads THIS script with a guard attribute data-omega-pmi="1", and the bare
+       [data-omega-pmi] selector matched that <script> tag and wrote a score and a tooltip into it (a guard attribute is the
+       module's identity, not the feature's -- CLAUDE.md 8.1 class 5). Nothing on the dashboard displays a score any more
+       (owner, 2026-09-27: a hand-typed figure shown as if measured), so today this finds nothing. */
+    document.querySelectorAll('[data-omega-pmi="page"],[data-omega-pmi="platform"]').forEach(function(n){
       var want=n.getAttribute('data-omega-pmi');
       var v=want==='platform'?PLATFORM_PMI:PAGE_DATA.pmi;
       n.textContent=v||'--';

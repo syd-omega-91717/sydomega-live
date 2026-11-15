@@ -20,7 +20,9 @@
     },
     "mana": {
       "meaning": "A non-financial, transparent capacity abstraction representing currently available user/system agency for governed actions.",
-      "sources": ["verified_capabilities","active_missions","completed_learning","explicit_user_preferences","system_capacity"],
+      "sources": ["member_active_days","member_completed_learning","member_active_missions","member_completed_missions"],
+      "window": "trailing 30 days; recomputed on read, nothing stored, so it fades without use",
+      "noSourceYet": ["CREATIVE"],
       "neverMeans": ["money","creditworthiness","social_worth","employment_score","health_score","legal_status"],
       "components": ["FOCUS","LEARNING","CREATIVE","COLLABORATION","EXECUTION"],
       "rules": ["show_sources","show_freshness","never_fabricate","never_hide_constraints","never_grant_authority"],

@@ -117,6 +117,33 @@ create trigger trg_validate_avatar_url
   when (new.avatar_url is distinct from old.avatar_url)
   execute function private.validate_avatar_url();
 
+-- Erasure (GDPR Art. 17): request_account_erasure() (0070_privacy_gdpr.sql) clears display_name, bio and avatar_url but knows nothing
+-- about the columns added here, so username and nickname would survive an erasure request and the username would stay reserved.
+-- The function is the canonical definition and must stay in one file (scripts/rpc-consolidation-gate.py), so the clearing is a trigger
+-- on the flag it sets. It also closes the member's public card and resets the birthday choice.
+create or replace function private.clear_public_face_on_erasure()
+returns trigger
+language plpgsql
+set search_path = pg_catalog, public
+as $$
+begin
+  new.username := null;
+  new.nickname := null;
+  new.birthday_visibility := 'private';
+  new.is_public := false;
+  return new;
+end;
+$$;
+
+revoke all on function private.clear_public_face_on_erasure() from public, anon, authenticated;
+
+drop trigger if exists trg_clear_public_face_on_erasure on public.profiles;
+create trigger trg_clear_public_face_on_erasure
+  before update of erasure_requested_at on public.profiles
+  for each row
+  when (new.erasure_requested_at is not null and old.erasure_requested_at is null)
+  execute function private.clear_public_face_on_erasure();
+
 -- the member may edit these columns on their own row (profiles_update already scopes the row to auth.uid())
 grant update (username, nickname, birthday_visibility) on public.profiles to authenticated;
 
@@ -153,6 +180,7 @@ as $$
     and p.deactivated_at is null
     and p.is_rejected is not true
     and p.pending_deletion is not true
+    and p.erasure_requested_at is null
 $$;
 
 revoke all on function public.get_public_card(text) from public, anon;

@@ -19,6 +19,8 @@
 > (live access refused)**. Gating real evolution to recorded events is the genuine remaining HIGH-RISK change; it needs the owner's
 > read-only check first. Tracked in `GAP_ANALYSIS.md` §S.
 >
+> **Correction 2026-11-15 (later):** point 2 above overstated. `omega-elements.json` does tie FIRE to the Mastery axis ("Drives the Mastery axis") and WIND loosely to Knowledge; the other elements name no axis. The mapping is partial, not absent (`ENTITY_UNITY_PLAN.md` §4).
+>
 > Still open from §5: visibility of a member's roster to others (default stays private: own rows + owner).
 
 

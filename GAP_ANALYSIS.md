@@ -14,6 +14,14 @@ project's own established convention (security/data-integrity first).
 ---
 
 ## S. Standing open items (moved out of `CLAUDE.md` §8.2, 2026-09-05)
+- **OPEN 2026-11-15 — `advance_matrix(p_track, p_axis)` appears to let any signed-in member raise any sign's axes with no real event behind it; not verified live.**
+  Evidence from source only: `supabase/migrations/0004_omega_nested_matrix.sql:73-92` defines it `SECURITY DEFINER`, `GRANT EXECUTE ... TO authenticated`;
+  `20260818000551_revoke_anon_execute_and_harden_search_path.sql:118` revokes only `PUBLIC`. It adds 1 to the named axis (max 9) of the caller's own
+  `matrix_progress` row on every call, with no check against `task_completions`/`evolution_events`. `matrix_progress` has table-level `GRANT SELECT` only, so
+  direct writes are refused; this RPC is the open door. No page or script calls it (`grep` of root `.html`/`.js`: only an `automation.html` option label).
+  **Not checked:** whether a later migration redefined or revoked it, and the live grants (the live-database query was refused in this session, 2026-11-15).
+  First step is the owner's read-only `select grantee, privilege_type from information_schema.routine_privileges where routine_name='advance_matrix'`
+  and `select pg_get_functiondef('public.advance_matrix(int,text)'::regprocedure)`. If still open, the fix is a HIGH-RISK migration (revoke from `authenticated`, or tie it to a recorded event) and goes through `docs/plans/CHARACTER_LAB_PLAN.md`'s revision note, not a quick patch.
 - **OPEN 2026-11-07 — the owner's rule "nothing is visible without prior approval" does not hold for Studios text, and cannot hold for any static file.**
   Measured the same day: `curl https://raw.githubusercontent.com/syd-omega-91717/sydomega-live/main/docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_1.fountain` returns HTTP 200 with no login, because the repository is public
   (so are the canon registry, the bibles and every other `docs/studios` file). Separately, every file the site serves is fetchable by

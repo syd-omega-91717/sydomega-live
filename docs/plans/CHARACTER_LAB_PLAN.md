@@ -1,5 +1,27 @@
 # Character Lab — design plan (HIGH-RISK: new table, RLS, new RPC, flag)
 
+> **REVISION 2026-11-15 (after merge, same day) — §2, §4 and §5.1 below are SUPERSEDED. Read this first.**
+> Reading `0004_omega_nested_matrix.sql` and `omega-canon.json` after the plan merged showed the plan was wrong in two ways:
+> 1. **The collection already exists.** `public.matrix_progress` holds one row per member per sign (12 tracks, `PRIMARY KEY (user_id, track)`),
+>    each with its own axes `a,b,c` and `phase`; `my_matrix()` returns all 12 and seeds missing rows; `matrix_tracks` is the 12-sign table.
+>    The proposed `member_characters` table is therefore **not needed**, and no migration is proposed any more for the Lab.
+>    "Collected" is derivable: a sign is *started* when any of its axes has moved off the starting value 1.
+> 2. **The recommended unlock rule had no basis.** It said "the axis tied to the character's element", but the canon's axes are
+>    Knowledge / Mastery / Contribution (`omega-canon.json` `axes`), not elements. There is no axis-to-element mapping to build on.
+>
+> What shipped instead (no schema): a read-only roster of the 12 characters with the member's per-sign progress from `my_matrix()`,
+> on the MATRIX tab of `character.html` (`omega-character-card.js`, `data-omega-character-roster`). Phase-1 rows only, as `matrix.html` does.
+>
+> **New finding, unverified live:** `advance_matrix(p_track, p_axis)` is `SECURITY DEFINER` and granted to `authenticated`
+> (`0004_omega_nested_matrix.sql:92`; only `PUBLIC` was revoked in `20260818000551`). It advances any track's axis by one for the caller
+> with no check that a real event happened, so a signed-in member could raise every sign's axes by calling it repeatedly (§8.1 class 6b/9).
+> No page calls it (`automation.html` names it in an option). Whether it is still callable live, or was superseded, **was not checked
+> (live access refused)**. Gating real evolution to recorded events is the genuine remaining HIGH-RISK change; it needs the owner's
+> read-only check first. Tracked in `GAP_ANALYSIS.md` §S.
+>
+> Still open from §5: visibility of a member's roster to others (default stays private: own rows + owner).
+
+
 Status: **PROPOSAL, nothing built, nothing applied.** Written 2026-11-15 for the owner's decision.
 **Not adversarially reviewed**: the Codex review step of `grill-me-codex` could not run (Codex usage limit
 reached on every PR this week). Treat every claim below as the author's, not a reviewer's. A human or a

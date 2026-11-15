@@ -9,6 +9,17 @@
    house and gate come from the canon track; progress is what the profile
    RECORDS (authority, nodes cleared, medals, trophies, certificates).
 
+   Roster: <div data-omega-character-roster></div> lists the 12 canon characters
+   with the member's own per-sign progress from rpc('my_matrix') (phase 1 rows,
+   the same data matrix.html shows). The member's main sign is marked. A sign
+   whose axes are all still at their starting value of 1 reads "Not started";
+   nothing is "collected" or levelled beyond what those recorded numbers say.
+
+   Class names: never a bare `main`, `on`, `lf` or `card` token. `.main` is the
+   platform's content column (bg.js layout; omega-legal.js and omega-ui.js
+   append the footer to the first `.main`), so a tile classed `main` swallowed
+   the site footer. Modifiers here are `is-started` / `is-mine`.
+
    What it refuses to do (CLAUDE.md 8.1 class 9): invent a value. A member with
    no sign gets "not set yet" and a link to set it, never a sign guessed from
    the calendar. A column that is empty shows a dash, never a made-up number.
@@ -46,7 +57,16 @@
       '.occ-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:.9rem;overflow:hidden}' +
       '.occ-bar>i{display:block;height:100%;background:var(--occ-accent)}' +
       '.occ-note{font-size:.82rem;color:var(--muted,#8b93a3);margin-top:.45rem}' +
-      '.occ a{color:var(--occ-accent)}';
+      '.occ a{color:var(--occ-accent)}' +
+      '.ocr{display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:.6rem;font-family:var(--R,Rajdhani,sans-serif);color:var(--ink,#e8e6df)}' +
+      '.ocr-t{border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.6rem .7rem;background:rgba(255,255,255,.02)}' +
+      '.ocr-t.is-started{border-color:rgba(212,175,55,.45)}' +
+      '.ocr-t.is-mine{border-color:var(--gold,#d4af37);box-shadow:0 0 0 1px rgba(212,175,55,.35) inset}' +
+      '.ocr-n{font-family:var(--D,"Cinzel Decorative",serif);font-size:1rem;color:var(--gold,#d4af37)}' +
+      '.ocr-s{font-size:.82rem;color:var(--muted,#8b93a3)}' +
+      '.ocr-p{font-family:var(--M,"Courier Prime",monospace);font-size:.74rem;margin-top:.3rem}' +
+      '.ocr-tag{font-family:var(--M,"Courier Prime",monospace);font-size:.6rem;letter-spacing:.14em;color:var(--gold,#d4af37)}' +
+      '.ocr-msg{font-size:.9rem;color:var(--muted,#8b93a3)}';
     document.head.appendChild(s);
   }
 
@@ -119,26 +139,77 @@
     }
   }
 
+  /* rows: my_matrix() rows ({track,sign,a,b,c,node,pct,phase}). Only phase 1
+     (or rows with no phase column) are used, as matrix.html does. A row is
+     "started" when any axis has moved off its starting value of 1. */
+  function startedRow(r) { return r && (num(r.a) > 1 || num(r.b) > 1 || num(r.c) > 1); }
+
+  function renderRoster(root, rows, canon, mainSign) {
+    root.textContent = '';
+    root.classList.add('ocr');
+    var tracks = canon && canon.tracks ? canon.tracks : [];
+    if (!tracks.length) { el('div', 'ocr-msg', 'The canon did not load.', root); return; }
+    var bySign = {};
+    (rows || []).forEach(function (r) {
+      if (r && (r.phase === undefined || r.phase === null || Number(r.phase) === 1) && r.sign) bySign[String(r.sign).toLowerCase()] = r;
+    });
+    var main = mainSign ? String(mainSign).toLowerCase() : '';
+    tracks.forEach(function (t) {
+      var r = bySign[String(t.sign).toLowerCase()];
+      var isMain = main && String(t.sign).toLowerCase() === main;
+      var started = startedRow(r);
+      var tile = el('div', 'ocr-t' + (started ? ' is-started' : '') + (isMain ? ' is-mine' : ''), null, root);
+      if (isMain) el('div', 'ocr-tag', 'MAIN CHARACTER', tile);
+      el('div', 'ocr-n', t.sign, tile);
+      el('div', 'ocr-s', t.god + ' \u00B7 ' + t.agent, tile);
+      var line;
+      if (!r) line = 'No progress data';
+      else if (!started) line = 'Not started';
+      else line = '(' + show(num(r.a)) + ',' + show(num(r.b)) + ',' + show(num(r.c)) + ') \u00B7 ' + show(num(r.pct)) + '%';
+      el('div', 'ocr-p', line, tile);
+    });
+  }
+
+  async function bootRoster(sb, session, canon) {
+    var roots = document.querySelectorAll('[data-omega-character-roster]');
+    if (!roots.length) return;
+    var failR = function (msg) { for (var i = 0; i < roots.length; i++) { roots[i].textContent = ''; el('div', 'ocr-msg', msg, roots[i]); } };
+    var m = await sb.rpc('my_matrix');
+    if (m.error) { failR('Roster unavailable: your progress could not be read.'); return; }
+    var pr = await sb.from('profiles').select('sign').eq('id', session.user.id).maybeSingle();
+    var sign = (!pr.error && pr.data) ? pr.data.sign : null;
+    for (var j = 0; j < roots.length; j++) renderRoster(roots[j], m.data || [], canon, sign);
+  }
+
   async function boot() {
     var mounts = document.querySelectorAll('[data-omega-character-card]');
-    if (!mounts.length) return;
+    var hasRoster = document.querySelectorAll('[data-omega-character-roster]').length > 0;
+    if (!mounts.length && !hasRoster) return;
     style();
     var sb = null;
     try { sb = window.OmegaSB && window.OmegaSB.get ? await window.OmegaSB.get() : (window.__omegaSb || null); } catch (e) { sb = null; }
-    var fail = function (msg) { for (var i = 0; i < mounts.length; i++) { mounts[i].classList.add('occ'); mounts[i].textContent = msg; } };
+    var fail = function (msg) {
+      for (var i = 0; i < mounts.length; i++) { mounts[i].classList.add('occ'); mounts[i].textContent = msg; }
+      var rr = document.querySelectorAll('[data-omega-character-roster]');
+      for (var k = 0; k < rr.length; k++) { rr[k].textContent = msg; }
+    };
     if (!sb) { fail('Character unavailable: no data connection.'); return; }
     var s = null;
     try { s = (await sb.auth.getSession()).data.session; } catch (e) { s = null; }
     if (!s || !s.user) { fail('Sign in to see your character.'); return; }
-    var r = await sb.from('profiles').select(COLS).eq('id', s.user.id).maybeSingle();
-    if (r.error || !r.data) { fail('Character unavailable: your profile could not be read.'); return; }
+    var r = { data: null, error: null };
+    if (mounts.length) {
+      r = await sb.from('profiles').select(COLS).eq('id', s.user.id).maybeSingle();
+      if (r.error || !r.data) { fail('Character unavailable: your profile could not be read.'); return; }
+    }
     /* OmegaCanon loads asynchronously; wait briefly, never render from a copy. */
     for (var i = 0; i < 25 && !(window.OmegaCanon && window.OmegaCanon.ready); i++) await new Promise(function (res) { setTimeout(res, 150); });
     if (!(window.OmegaCanon && window.OmegaCanon.ready)) { fail('Character unavailable: the canon did not load.'); return; }
     for (var j = 0; j < mounts.length; j++) render(mounts[j], r.data, window.OmegaCanon);
+    if (hasRoster) await bootRoster(sb, s, window.OmegaCanon);
   }
 
-  window.OmegaCharacterCard = { render: render, gatesPassed: gatesPassed, authorityOf: authorityOf };
+  window.OmegaCharacterCard = { render: render, renderRoster: renderRoster, gatesPassed: gatesPassed, authorityOf: authorityOf };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();

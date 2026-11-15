@@ -116,41 +116,69 @@
     };
   }
 
+  /* Mana = the member's CURRENT inner power: how much they really used the platform in a trailing window.
+     Every input is the member's own recorded activity with a timestamp; anything without a valid timestamp
+     inside the window is ignored, never guessed. A component with no recorded source is null (shown as
+     "no source yet"), never filled in. Nothing platform-wide (capability registry, profile completeness) counts.
+     Because the window trails, mana rises with use and fades without it, with nothing stored. */
   function calculateMana(input) {
     if (!required(input, ["userId"])) {
       return { truth: TRUTH.BLOCKED, reason: "userId is required" };
     }
-    const capabilities = Array.isArray(input.verifiedCapabilities) ? input.verifiedCapabilities : [];
-    const missions = Array.isArray(input.activeMissions) ? input.activeMissions : [];
-    const learning = Array.isArray(input.verifiedLearning) ? input.verifiedLearning : [];
-    const explicit = Array.isArray(input.explicitPreferences) ? input.explicitPreferences : [];
-    const capacity = input.systemCapacity && typeof input.systemCapacity === "object"
-      ? input.systemCapacity
-      : {};
-    const clamp = (n) => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
-    const values = {
-      FOCUS: clamp((capabilities.length * 8) + (explicit.length * 3)),
-      LEARNING: clamp(learning.length * 10),
-      CREATIVE: clamp((explicit.length * 4) + (learning.length * 2)),
-      COLLABORATION: clamp(missions.length * 7),
-      EXECUTION: clamp((capabilities.length * 6) + (missions.length * 4))
+    const windowDays = Math.max(1, Math.min(365, Math.round(Number(input.windowDays) || 30)));
+    const nowMs = Number.isFinite(Date.parse(input.now)) ? Date.parse(input.now) : Date.now();
+    const sinceMs = nowMs - windowDays * 86400000;
+    const list = (v) => (Array.isArray(v) ? v : []);
+    const inWindow = (value) => {
+      const t = Date.parse(value);
+      return Number.isFinite(t) && t >= sinceMs && t <= nowMs;
     };
-    const total = Math.round(Object.values(values).reduce((a, b) => a + b, 0) / 5);
+    const dayOf = (value) => new Date(Date.parse(value)).toISOString().slice(0, 10);
+    const clamp = (n) => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+    const status = (row) => String((row && row.status) || "").toLowerCase();
+
+    const tasks = list(input.tasks).filter((row) => row && inWindow(row.completed_at));
+    const evolution = list(input.evolution).filter((row) => row && inWindow(row.created_at));
+    const events = list(input.events).filter((row) => row && inWindow(row.created_at));
+    const learning = tasks.filter((row) => Number(row.points_earned || 0) > 0);
+    const activeDays = new Set(
+      tasks.map((r) => dayOf(r.completed_at))
+        .concat(evolution.map((r) => dayOf(r.created_at)))
+        .concat(events.map((r) => dayOf(r.created_at)))
+    ).size;
+    const missions = list(input.missions).filter(Boolean);
+    const activeMissions = missions.filter((row) =>
+      status(row) === "active" && inWindow(row.last_transition_at || row.started_at));
+    const completedMissions = missions.filter((row) =>
+      status(row) === "completed" && inWindow(row.completed_at));
+
+    const values = {
+      FOCUS: clamp((activeDays / windowDays) * 100),
+      LEARNING: clamp(learning.length * 10),
+      CREATIVE: null,
+      COLLABORATION: clamp(activeMissions.length * 7),
+      EXECUTION: clamp(completedMissions.length * 10)
+    };
+    const sourced = Object.keys(values).filter((k) => values[k] !== null);
+    const total = Math.round(sourced.reduce((sum, k) => sum + values[k], 0) / sourced.length);
     return {
       truth: TRUTH.CALCULATED,
       userId: input.userId,
+      windowDays,
       components: values,
       total,
+      sourcedComponents: sourced,
+      unsourcedComponents: Object.keys(values).filter((k) => values[k] === null),
       sources: {
-        verifiedCapabilities: capabilities.length,
-        activeMissions: missions.length,
-        verifiedLearning: learning.length,
-        explicitPreferences: explicit.length,
-        systemCapacityProvided: Object.keys(capacity).length > 0
+        windowDays,
+        activeDays,
+        learningTasks: learning.length,
+        activeMissions: activeMissions.length,
+        completedMissions: completedMissions.length
       },
-      disclaimer: "Mana is a non-financial capacity abstraction. It does not determine authority, creditworthiness, health, employment, legal status, or social worth.",
+      disclaimer: "Mana is a non-financial capacity abstraction from your own recent activity. It does not determine authority, creditworthiness, health, employment, legal status, or social worth.",
       event: EVENTS.MANA_CALCULATED,
-      calculatedAt: now()
+      calculatedAt: new Date(nowMs).toISOString()
     };
   }
 

@@ -1,0 +1,34 @@
+-- Close public.advance_matrix(integer, text) to members.
+--
+-- FOUND. advance_matrix is SECURITY DEFINER and executable by every signed-in member (0004_omega_nested_matrix.sql: GRANT EXECUTE ... TO authenticated;
+-- 20260818000551 revokes only PUBLIC). It adds 1 to the named axis of the caller's own matrix_progress row on every call, with no check against any
+-- real event, and trg_award_matrix_points (0005_omega_sovereign_points.sql) awards 2 sovereign points for every rise. So a member can fill
+-- their own matrix and mint points by calling one function in a loop.
+--
+-- PROVED on a throwaway Postgres 16 using the real function text from both migrations: 324 calls (12 tracks x 3 axes x 9) were all accepted
+-- and left the member with 576 sovereign points and 8,748 of 8,748 matrix nodes. With the revoke below, the same loop is 324 refusals
+-- (permission denied), 0 points, 0 nodes; anon is refused; the migration owner and service_role are still allowed; a SECURITY DEFINER wrapper
+-- called by a member still works. NOT run on Supabase (the connector refused every call this session).
+--
+-- WHY IT BREAKS NOTHING (each checked in the repository, not assumed):
+--   * no page, script or Edge Function calls it (automation.html has an option whose VALUE is "advance_matrix", but the page only stores
+--     it as text in automation_rules.action_key, and no code anywhere reads action_key and runs it);
+--   * no SQL function calls it (0003_omega_exams.sql mentions it in a comment; its body does not);
+--   * the owner of the function and service_role keep EXECUTE, so a future server-side feature that really needs it can use it.
+--
+-- WHAT THIS REVEALS, NOT FIXED HERE: advance_matrix is the ONLY code in the repository that raises matrix_progress (grep of supabase/migrations/
+-- for UPDATE/INSERT on the table: my_matrix() only inserts the default 1/1/1 rows; the one UPDATE is inside advance_matrix). So there is no
+-- legitimate, event-checked progression path at all: for every member who did not call the function by hand, the matrix has never moved, and after
+-- this it cannot move through the database. That is what an honest ledger shows (no real event is wired to it), but it means the per-sign progress
+-- on the character roster is flat for everyone. Which real event (a task, an exam, a gate) should advance which axis of which track is a design
+-- decision for the owner, not something to guess here. The trigger would still award points on any future real UPDATE, so that path must check its event.
+--
+-- Status: PROPOSAL. Deliberately NOT in supabase/migrations/ and NOT in supabase/pending-migrations.json (see
+-- 20261115200000_omega_lock_birth_date_after_first_entry.sql for why). Applying it means the controlled path, and this one has no downside
+-- the proof could find, so it is the one to apply first.
+
+-- advance_matrix(int, text) lets ANY signed-in member raise any track's axes with no event behind it, and each rise awards 2 sovereign points
+-- (trg_award_matrix_points, 0005_omega_sovereign_points.sql): a loop of 324 calls maxes all 12 tracks and mints 576 points.
+-- Nothing in the app calls it (only an option label in automation.html) and no SQL function does, so closing it breaks nothing.
+-- The function stays for the migration owner and service_role.
+revoke execute on function public.advance_matrix(integer, text) from public, anon, authenticated;

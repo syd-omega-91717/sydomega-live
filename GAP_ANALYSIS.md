@@ -47,14 +47,16 @@ project's own established convention (security/data-integrity first).
   typed `PAGE_SCORES` table (the bar read 91, the tile 87). The table and `window.OmegaPMI` stay for the owner's tooling. The grid keeps no hole (`#kpi-platform .kpi:last-child{grid-column:span 2}`). The module
   also wrote its score into its own `<script>` tag, because `bg.js` loads it with a guard attribute `data-omega-pmi="1"` and the display selector matched that too: now narrowed to `="page"|"platform"`.
   Evidence and the before/after render: `docs/fixes/2026-11-15-dashboard-hand-typed-pmi.md`; kept shut by `scripts/tests/test_no_hand_typed_score_shown.py`. Not touched: the unused translations `platform_pmi` and `meaning_index`.
-- **OPEN 2026-11-15 — `advance_matrix(p_track, p_axis)` appears to let any signed-in member raise any sign's axes with no real event behind it; not verified live.**
-  Evidence from source only: `supabase/migrations/0004_omega_nested_matrix.sql:73-92` defines it `SECURITY DEFINER`, `GRANT EXECUTE ... TO authenticated`;
-  `20260818000551_revoke_anon_execute_and_harden_search_path.sql:118` revokes only `PUBLIC`. It adds 1 to the named axis (max 9) of the caller's own
-  `matrix_progress` row on every call, with no check against `task_completions`/`evolution_events`. `matrix_progress` has table-level `GRANT SELECT` only, so
-  direct writes are refused; this RPC is the open door. No page or script calls it (`grep` of root `.html`/`.js`: only an `automation.html` option label).
-  **Not checked:** whether a later migration redefined or revoked it, and the live grants (the live-database query was refused in this session, 2026-11-15).
-  First step is the owner's read-only `select grantee, privilege_type from information_schema.routine_privileges where routine_name='advance_matrix'`
-  and `select pg_get_functiondef('public.advance_matrix(int,text)'::regprocedure)`. If still open, the fix is a HIGH-RISK migration (revoke from `authenticated`, or tie it to a recorded event) and goes through `docs/plans/CHARACTER_LAB_PLAN.md`'s revision note, not a quick patch.
+- **OPEN 2026-11-15 — any signed-in member can fill their own matrix and mint sovereign points by calling `advance_matrix(p_track, p_axis)` in a loop. Proposal drafted, not applied.**
+  `0004_omega_nested_matrix.sql:73-92` defines it `SECURITY DEFINER` with `GRANT EXECUTE ... TO authenticated`; `20260818000551_...sql:118` revokes only `PUBLIC`; no later migration touches it, and
+  `supabase/live-grants.json` (generated, 2026-10-12, `authenticated`) lists it among the 142 functions members may execute. Each call adds 1 to the named axis of the caller's own `matrix_progress` row with no check
+  against any event, and `trg_award_matrix_points` (`0005_omega_sovereign_points.sql:208-222`) awards 2 points per rise. **Proved on a throwaway Postgres 16 with the real function text from both migrations:** 324 accepted
+  calls left a member with 576 sovereign points and 8,748 of 8,748 nodes; with the proposed revoke the same loop is 324 refusals, 0 points, 0 nodes. Not run on Supabase; the live database was not readable (2026-11-15).
+  **Closing it breaks nothing** (each checked): no page, script or Edge Function calls it, no SQL function calls it, and the one mention in a page (`automation.html`) is an `<option value>` stored as text that nothing reads and runs.
+  Proposal: `docs/proposed-migrations/20261115230000_omega_close_advance_matrix.sql` (a single REVOKE from `public, anon, authenticated`); kept honest by `scripts/tests/test_advance_matrix_closed.py`. **What this reveals:**
+  `advance_matrix` is the only code that ever raises `matrix_progress`, so there is no legitimate, event-checked progression path at all: the per-sign progress on the character roster has never moved except by hand.
+  Which real event (a task, an exam, a gate) should advance which axis of which track is a design decision for the owner. Still open: today's live grants (the owner's read-only
+  `select grantee, privilege_type from information_schema.routine_privileges where routine_name='advance_matrix'`).
 - **OPEN 2026-11-07 — the owner's rule "nothing is visible without prior approval" does not hold for Studios text, and cannot hold for any static file.**
   Measured the same day: `curl https://raw.githubusercontent.com/syd-omega-91717/sydomega-live/main/docs/studios/franchises/myth-of-the-stones/films/the-seven-stones/ACT_1.fountain` returns HTTP 200 with no login, because the repository is public
   (so are the canon registry, the bibles and every other `docs/studios` file). Separately, every file the site serves is fetchable by

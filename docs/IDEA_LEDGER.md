@@ -144,7 +144,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | G07 | GAP_ANALYSIS.md S | eight personal identity values of the owner stayed in the git history of a public repository after the page w… | GAP_ANALYSIS.md section S |
 | G08 | GAP_ANALYSIS.md S | two pages give opposite answers about whether identity documents are stored; the intake is off only because a… | GAP_ANALYSIS.md section S |
 | G09 | GAP_ANALYSIS.md S | the canon holds two 12-rung ladders whose names collide: earned gates and priced tiers. | GAP_ANALYSIS.md section S |
-| G10 | GAP_ANALYSIS.md S | `advance_matrix(p_track, p_axis)` appears to let any signed-in member raise any sign's axes with no real even… | GAP_ANALYSIS.md section S |
+| G10 | GAP_ANALYSIS.md S | any signed-in member can fill their own matrix and mint sovereign points by calling `advance_matrix(p_track,… | GAP_ANALYSIS.md section S |
 | G11 | GAP_ANALYSIS.md S | the owner's rule "nothing is visible without prior approval" does not hold for Studios text, and cannot hold… | GAP_ANALYSIS.md section S |
 | G12 | GAP_ANALYSIS.md S | five pages the menu links have no dock; one of the original three navigation faults remains open. | GAP_ANALYSIS.md section S |
 | G13 | GAP_ANALYSIS.md S | no page-usage data since the Cloudflare cutover. Vercel Analytics recorded 3 to 9 visitors a day | GAP_ANALYSIS.md section S |

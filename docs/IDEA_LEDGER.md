@@ -13,11 +13,11 @@ production serves it.
 | NEEDS_DECISION | 16 |
 | PROPOSED | 18 |
 | PARTIAL | 56 |
-| OPEN_GAP | 25 |
+| OPEN_GAP | 24 |
 | DORMANT | 1 |
 | SHIPPED | 45 |
 | DECIDED | 42 |
-| CLOSED | 18 |
+| CLOSED | 19 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
 | REJECTED | 118 |
@@ -132,11 +132,10 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 
-### OPEN_GAP (25)
+### OPEN_GAP (24)
 
 | id | source | idea | evidence |
 |---|---|---|---|
-| G01 | GAP_ANALYSIS.md S | `life.html`'s mana does not measure the member: two of its five components read a platform-wide table, throug… | GAP_ANALYSIS.md section S |
 | G02 | GAP_ANALYSIS.md S | `advance_matrix(p_track, p_axis)` appears to let any signed-in member raise any sign's axes with no real even… | GAP_ANALYSIS.md section S |
 | G03 | GAP_ANALYSIS.md S | the owner's rule "nothing is visible without prior approval" does not hold for Studios text, and cannot hold… | GAP_ANALYSIS.md section S |
 | G04 | GAP_ANALYSIS.md S | five pages the menu links have no dock; one of the original three navigation faults remains open. | GAP_ANALYSIS.md section S |
@@ -265,10 +264,11 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
-### CLOSED (18)
+### CLOSED (19)
 
 | id | source | idea | evidence |
 |---|---|---|---|
+| G01 | GAP_ANALYSIS.md S | `life.html`'s mana did not measure the member: two of its five components read a platform-wide table, through… | GAP_ANALYSIS.md section S |
 | G06 | GAP_ANALYSIS.md S | provider migration ledger and D1 financial retention schema reconciled; erasure remains dormant. | GAP_ANALYSIS.md section S |
 | G16 | GAP_ANALYSIS.md S | was: `omega_platform_events.event_id` is NOT NULL with no default live. 7 rows, | GAP_ANALYSIS.md section S |
 | G17 | GAP_ANALYSIS.md S | was: `omega_record_world_action` cannot write its event (42501). It is | GAP_ANALYSIS.md section S |

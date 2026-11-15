@@ -504,6 +504,7 @@
       .update({ birth_date:prof.dob }).eq('id',currentUser.id).select('sign');
     btn.disabled=false;
     if(!error && (!saved || !saved.length)){ err.textContent='Could not save (no profile found). Sign out and back in, then try again.'; return; }
+    if(error&&/birth_date_locked/.test(error.message||'')){ err.textContent='Your date of birth is already recorded and cannot be changed here. Ask the platform owner to correct it.'; return; }
     if(error){ err.textContent='Could not save ('+(error.code||error.message||'')+'). Try again.'; console.log('save error',error); return; }
     const { data } = await supabase.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
     window.location.href='/dashboard.html'; return;

@@ -14,3 +14,4 @@
 .life-more[open]>summary::before{content:"\2212"}
 .life-more>summary:hover{color:#E8C966}
 .life-more>summary:focus-visible{outline:2px solid #C9A84C;outline-offset:3px}
+.mana-note{font-family:var(--M);font-size:11px;letter-spacing:.5px;color:var(--muted);line-height:1.5}

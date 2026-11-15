@@ -61,8 +61,12 @@ the real hubs were tested, which found problems the throwaway host could not (se
 - Tested against stubbed Supabase and one signed-in non-owner profile only. An owner profile, a trial member,
   or real data could behave differently. Not checked on a real phone, with a screen reader, or in Safari/Firefox.
 
-**Follow-up (CodeQL on this PR).** CodeQL raised two high-severity "incomplete string escaping" alerts at the line that
-builds a RegExp from a handler name (it escaped `$` but not the backslash). The names are identifier characters only,
-so it was not exploitable, but the escape was incomplete. Replaced with an `escapeRe` helper covering every
-metacharacter; checked on `a$b`, `a\b`, `x.y*z`, `(a|b)`, `[x]`, `a+b?` and `$`. Re-ran the loader tests, both
-ratchets, the 12-tracker parity run and two hub sequences: unchanged.
+**Follow-up (CodeQL and Semgrep on this PR).** Two code-scanning tools objected to the one line that built a
+RegExp from a handler name: CodeQL (two high-severity "incomplete string escaping" alerts, backslash not escaped) and
+the blocking Semgrep rule `detect-non-literal-regexp`. The names are identifier characters only, so neither was
+exploitable. A first fix (a full `escapeRe` helper) answered CodeQL but not Semgrep, whose rule objects to the
+non-literal pattern itself, so the helper was removed too: `declares()` now finds the declaration with
+`indexOf` and literal patterns on a short window, and `omega-panels.js` builds no RegExp from data at all.
+Compared against the regex it replaced on every handler name in all 241 pages (144 names): zero differences.
+Re-ran the loader tests, both ratchets, the 12-tracker parity run, the host-globals check and three hub sequences:
+unchanged.

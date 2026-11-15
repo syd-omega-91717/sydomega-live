@@ -152,11 +152,6 @@
   }
 
   /* ---- scripts ----------------------------------------------------------- */
-  /* Every regular-expression metacharacter, including the backslash. The names this is used on are identifiers
-     (letters, digits, _ and $), but a name is never trusted to stay that way. */
-  function escapeRe(str) {
-    return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
   var RESERVED = /^(if|for|while|switch|return|function|typeof|new|catch|void|delete|in|of|do|else|try|with|alert|confirm|prompt|event|this)$/;
   /* Every function the markup (or a template string in the script) calls from an on*= attribute, kept only
      when the code declares it: that is the set the page needs on window, and nothing else is touched. */
@@ -169,10 +164,21 @@
         while ((c = call.exec(m[1]))) if (!RESERVED.test(c[1])) called[c[1]] = 1;
       }
     });
-    return Object.keys(called).filter(function (n) {
-      var e = escapeRe(n);
-      return new RegExp('function\\s+' + e + '\\b|(?:const|let|var)\\s+' + e + '\\s*=').test(js);
-    });
+    return Object.keys(called).filter(function (n) { return declares(js, n); });
+  }
+
+  /* Does the code declare `n` as a function, or as a variable that is assigned? Plain string search plus
+     LITERAL patterns on a short window around each hit: no regular expression is ever built from a name. */
+  function declares(js, n) {
+    var from = 0, i;
+    while ((i = js.indexOf(n, from)) >= 0) {
+      from = i + 1;
+      if (/[\w$]/.test(js.charAt(i - 1)) || /[\w$]/.test(js.charAt(i + n.length))) continue; /* part of a longer name */
+      var before = js.slice(Math.max(0, i - 40), i);
+      if (/(?:^|[^\w$])function\s+$/.test(before)) return true;
+      if (/(?:^|[^\w$])(?:const|let|var)\s+$/.test(before) && /^\s*=/.test(js.slice(i + n.length, i + n.length + 40))) return true;
+    }
+    return false;
   }
 
   /* Returns a promise that resolves when the script has run. A classic script runs inside this call. A

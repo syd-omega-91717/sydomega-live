@@ -3093,7 +3093,7 @@ setTimeout(function(){
   }
   /* Main-character card: injected only where a mount exists. Guard attribute
      is this module's own identity (CLAUDE.md 8.1 class 5b). */
-  if(document.querySelector('[data-omega-character-card],[data-omega-character-roster],[data-omega-character-story]') && !document.querySelector('script[data-omega-character-card-js]')){
+  if(document.querySelector('[data-omega-character-card],[data-omega-character-roster],[data-omega-character-story],[data-omega-character-sigil-note]') && !document.querySelector('script[data-omega-character-card-js]')){
     var _occ=document.createElement('script');_occ.src='/omega-character-card.js';
     _occ.setAttribute('data-omega-character-card-js','1');_occ.defer=true;__omegaAppend(_occ);
   }

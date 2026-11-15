@@ -21,6 +21,13 @@
    needs and its text is never rendered. The file holds stories only: gods, agents and gates are read
    from the canon, never copied.
 
+   Alive: <div data-omega-sculpture="character"></div> plus <div data-omega-character-sigil-note></div>
+   puts the member's character into the 3-D layer (omega-sculpture.js, scene `character`): gate nodes
+   lit by the gates really passed, five satellites sized by the five mana components, the core in the
+   sign's element colour. This module only SETS the scene's data attributes from the same rules as the
+   card (gates from authority, mana from OmegaRelearnSigilMana.fetchMana) and writes one plain-text line
+   saying what the picture shows. A component with no recorded source stays a ghost.
+
    Class names: never a bare `main`, `on`, `lf` or `card` token. `.main` is the
    platform's content column (bg.js layout; omega-legal.js and omega-ui.js
    append the footer to the first `.main`), so a tile classed `main` swallowed
@@ -217,6 +224,44 @@
     if (story.variant) el('div', '', 'Variant: ' + story.variant, foot);
   }
 
+  /* Elements come from the canon as UPPER CASE names; OmegaRealm.palette keys are Title case. */
+  function paletteKey(name) { return name ? String(name).charAt(0).toUpperCase() + String(name).slice(1).toLowerCase() : ''; }
+
+  async function bootSigil(sb, session, canon, p) {
+    var stage = document.querySelector('[data-omega-sculpture="character"]');
+    var notes = document.querySelectorAll('[data-omega-character-sigil-note]');
+    var say = function (txt) { for (var i = 0; i < notes.length; i++) notes[i].textContent = txt; };
+    var track = (canon && p && p.sign) ? canon.trackBySign(p.sign) : null;
+    var parts = [];
+    if (!track) {
+      if (stage) { stage.removeAttribute('data-sculpt-gates'); stage.removeAttribute('data-sculpt-element'); stage.setAttribute('data-sculpt-mana', ''); }
+      say('Set your sign to give your character its element, and its gates.');
+      return;
+    }
+    var auth = authorityOf(p, canon), g = gatesPassed(auth, canon);
+    if (stage) {
+      stage.setAttribute('data-sculpt-element', paletteKey(canon.elementFor(track.sign) || track.element));
+      if (g) stage.setAttribute('data-sculpt-gates', String(g.passed)); else stage.removeAttribute('data-sculpt-gates');
+    }
+    parts.push(g ? g.passed + ' of ' + g.total + ' gates lit' : 'gates unknown (authority needs all three axes recorded)');
+    var read = { mana: null, failed: ['module'] };
+    try {
+      if (window.OmegaRelearnSigilMana && typeof window.OmegaRelearnSigilMana.fetchMana === 'function')
+        read = await window.OmegaRelearnSigilMana.fetchMana(sb, session.user.id, 30);
+    } catch (e) { read = { mana: null, failed: ['read'] }; }
+    var names = ['FOCUS', 'LEARNING', 'CREATIVE', 'COLLABORATION', 'EXECUTION'];
+    if (read.mana) {
+      var vals = names.map(function (n) { var v = read.mana.components[n]; return v === null || v === undefined ? '-' : String(Math.max(0, Math.min(100, Number(v))) / 100); });
+      if (stage) stage.setAttribute('data-sculpt-mana', vals.join(','));
+      parts.push('mana ' + read.mana.total + '/100 over your last ' + read.mana.windowDays + ' days: ' +
+        names.map(function (n) { var v = read.mana.components[n]; return n + ' ' + (v === null || v === undefined ? '\u2014' : v); }).join(' \u00B7 '));
+    } else {
+      if (stage) stage.setAttribute('data-sculpt-mana', '');
+      parts.push('mana unavailable (could not read your ' + (read.failed || []).join(', ') + '), satellites drawn as ghosts');
+    }
+    say(parts.join(' \u00B7 ') + '. Drawn only from your recorded activity; hollow means no source yet.');
+  }
+
   async function bootRoster(sb, session, canon) {
     var roots = document.querySelectorAll('[data-omega-character-roster]');
     if (!roots.length) return;
@@ -232,13 +277,14 @@
     var mounts = document.querySelectorAll('[data-omega-character-card]');
     var hasRoster = document.querySelectorAll('[data-omega-character-roster]').length > 0;
     var storyMounts = document.querySelectorAll('[data-omega-character-story]');
-    if (!mounts.length && !hasRoster && !storyMounts.length) return;
+    var sigilNotes = document.querySelectorAll('[data-omega-character-sigil-note]');
+    if (!mounts.length && !hasRoster && !storyMounts.length && !sigilNotes.length) return;
     style();
     var sb = null;
     try { sb = window.OmegaSB && window.OmegaSB.get ? await window.OmegaSB.get() : (window.__omegaSb || null); } catch (e) { sb = null; }
     var fail = function (msg) {
       for (var i = 0; i < mounts.length; i++) { mounts[i].classList.add('occ'); mounts[i].textContent = msg; }
-      var rr = document.querySelectorAll('[data-omega-character-roster],[data-omega-character-story]');
+      var rr = document.querySelectorAll('[data-omega-character-roster],[data-omega-character-story],[data-omega-character-sigil-note]');
       for (var k = 0; k < rr.length; k++) { rr[k].textContent = msg; }
     };
     if (!sb) { fail('Character unavailable: no data connection.'); return; }
@@ -246,7 +292,7 @@
     try { s = (await sb.auth.getSession()).data.session; } catch (e) { s = null; }
     if (!s || !s.user) { fail('Sign in to see your character.'); return; }
     var r = { data: null, error: null };
-    if (mounts.length || storyMounts.length) {
+    if (mounts.length || storyMounts.length || sigilNotes.length) {
       r = await sb.from('profiles').select(COLS).eq('id', s.user.id).maybeSingle();
       if (r.error || !r.data) { fail('Character unavailable: your profile could not be read.'); return; }
     }
@@ -262,6 +308,7 @@
         else storyMounts[m].textContent = 'Story unavailable: the story file could not be read.';
       }
     }
+    if (sigilNotes.length) await bootSigil(sb, s, window.OmegaCanon, r.data);
     if (hasRoster) await bootRoster(sb, s, window.OmegaCanon);
   }
 

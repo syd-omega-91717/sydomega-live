@@ -676,6 +676,157 @@
     }};
   };
 
+  /* ── CHARACTER ─────────────────────────────────────────────────────
+     The member's own character as a living object: the sigil made 3-D.
+     It draws ONLY what the page hands it, read from the mount's attributes
+     EVERY FRAME (the other data-binding attributes are read once at mount
+     and, from the scene's side, never arrive; this one cannot go stale):
+
+       data-sculpt-gates="N"            gates the member has really passed, 0-12.
+                                        Absent or invalid = unknown, drawn dim.
+       data-sculpt-element="Fire"       the element key of OmegaRealm.palette (Fire, Water,
+                                        Wind, Metal, Sand...): the core's colour.
+       data-sculpt-mana="a,b,c,d,e"     FOCUS,LEARNING,CREATIVE,COLLABORATION,
+                                        EXECUTION, each 0-1. A "-" or an empty
+                                        slot = no recorded source: drawn as a
+                                        hollow ghost, never as a small value.
+
+     Structure it always shows (and claims nothing by): the core, a ring of
+     twelve gate nodes, five orbiting satellites. What it shows from data:
+     how many gate nodes are lit, how large each satellite is, how bright the
+     core burns (the mean of the sourced mana components, with a floor so the
+     mark is never invisible). No attribute, no claim: everything neutral. */
+  SCENES.character = function (T, opt) {
+    var p = palette();
+    var accent = new T.Color(opt.accent || p.gold);
+    var dim = new T.Color(p.void_ || 0x08080f).lerp(new T.Color(p.cyan), 0.18);
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(40, 1, 0.1, 100);
+    cam.position.set(0, 0.35, 5.2);
+    rig(T, scene, p);
+    starfield(T, scene, 200, 16, p.cyan);
+
+    var grp = new T.Group();
+    scene.add(grp);
+
+    var core = new T.Mesh(
+      new T.IcosahedronGeometry(0.52, 1),
+      new T.MeshStandardMaterial({ color: accent, emissive: accent, emissiveIntensity: 0.3,
+        metalness: 0.9, roughness: 0.22 }));
+    grp.add(core);
+
+    var halo = new T.Mesh(
+      new T.RingGeometry(0.75, 1.15, 72),
+      new T.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.10,
+        side: T.DoubleSide, blending: T.AdditiveBlending, depthWrite: false }));
+    halo.position.z = -0.4;
+    grp.add(halo);
+
+    /* ring of the twelve gates */
+    var N = 12, R = 1.65, gates = [];
+    for (var i = 0; i < N; i++) {
+      /* gate 1 at the top, then clockwise (screen y points up in this scene) */
+      var a = Math.PI / 2 - (i / N) * Math.PI * 2;
+      var node = new T.Mesh(
+        new T.OctahedronGeometry(0.11, 0),
+        new T.MeshStandardMaterial({ color: dim, emissive: dim, emissiveIntensity: 0.1,
+          metalness: 0.8, roughness: 0.4 }));
+      node.position.set(Math.cos(a) * R, Math.sin(a) * R, 0);
+      grp.add(node);
+      gates.push({ mesh: node, lit: 0 });
+    }
+    var band = new T.Mesh(new T.TorusGeometry(R, 0.006, 8, 160),
+      new T.MeshBasicMaterial({ color: p.gold, transparent: true, opacity: 0.22 }));
+    grp.add(band);
+
+    /* five satellites, one per mana component */
+    var sats = [];
+    for (var k = 0; k < 5; k++) {
+      var holder = new T.Group();
+      holder.rotation.x = 0.35 + k * 0.28;
+      holder.rotation.z = k * 1.13;
+      var body = new T.Mesh(
+        new T.OctahedronGeometry(1, 0),
+        new T.MeshStandardMaterial({ color: accent, emissive: accent, emissiveIntensity: 0.55,
+          metalness: 0.85, roughness: 0.25 }));
+      var ghost = new T.Mesh(
+        new T.OctahedronGeometry(1, 0),
+        new T.MeshBasicMaterial({ color: p.cyan, wireframe: true, transparent: true, opacity: 0.28 }));
+      body.position.x = ghost.position.x = 0.98;
+      holder.add(body); holder.add(ghost);
+      grp.add(holder);
+      sats.push({ holder: holder, body: body, ghost: ghost, size: 0.1, speed: 0.35 + k * 0.11 });
+    }
+
+    var glow = 0.3, lastKey = null;
+    /* Element colour, resolved from the canon's own palette (OmegaRealm.palette),
+       read live so a page can set it after its data arrives. No copy of the
+       nine colours lives here: an unknown or absent key keeps the mount's accent. */
+    function applyElement() {
+      var key = (opt.el.getAttribute('data-sculpt-element') || '').trim();
+      if (key === lastKey) return;
+      lastKey = key;
+      if (!key) return;
+      accent.set(elementColour(key, '#C9A84C'));
+      core.material.color.copy(accent); core.material.emissive.copy(accent);
+      halo.material.color.copy(accent);
+      for (var q = 0; q < sats.length; q++) {
+        sats[q].body.material.color.copy(accent); sats[q].body.material.emissive.copy(accent);
+      }
+    }
+    function readGates() {
+      var v = parseInt(opt.el.getAttribute('data-sculpt-gates'), 10);
+      return (isFinite(v) && v >= 0 && v <= N) ? v : -1;
+    }
+    function readMana() {
+      var raw = (opt.el.getAttribute('data-sculpt-mana') || '').split(',');
+      var out = [];
+      for (var j = 0; j < 5; j++) {
+        var s = (raw[j] || '').trim();
+        var f = s === '' || s === '-' ? NaN : parseFloat(s);
+        out.push(isFinite(f) ? Math.max(0, Math.min(1, f)) : null);
+      }
+      return out;
+    }
+
+    return { scene: scene, camera: cam, links: [], update: function (t, px, py) {
+      var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      applyElement();
+      var passed = readGates();
+      var mana = readMana();
+      var known = mana.filter(function (v) { return v !== null; });
+      var target = known.length ? 0.3 + 0.7 * (known.reduce(function (a, b) { return a + b; }, 0) / known.length) : 0.3;
+      glow += (target - glow) * 0.06;
+      core.material.emissiveIntensity = glow + (reduceMotion ? 0 : Math.sin(t * 1.6) * 0.06);
+      core.scale.setScalar(1 + glow * 0.12);
+      halo.material.opacity = 0.06 + glow * 0.12;
+      if (!reduceMotion) { core.rotation.y = t * 0.5; core.rotation.x = t * 0.22; grp.rotation.y = px * 0.45; }
+
+      for (var i = 0; i < gates.length; i++) {
+        var on = passed >= 0 && i < passed;
+        var g = gates[i];
+        g.lit += ((on ? 1 : 0) - g.lit) * 0.08;
+        g.mesh.material.color.copy(dim).lerp(accent, g.lit);
+        g.mesh.material.emissive.copy(dim).lerp(accent, g.lit);
+        g.mesh.material.emissiveIntensity = 0.1 + g.lit * 0.9;
+        g.mesh.scale.setScalar(0.8 + g.lit * 0.5 + (on && !reduceMotion ? Math.sin(t * 2 + i) * 0.05 : 0));
+        if (!reduceMotion) g.mesh.rotation.y = t * 0.6 + i;
+      }
+      for (var k = 0; k < sats.length; k++) {
+        var s = sats[k], v = mana[k];
+        var want = v === null ? 0.07 : 0.07 + v * 0.17;
+        s.size += (want - s.size) * 0.08;
+        s.body.scale.setScalar(s.size);
+        s.ghost.scale.setScalar(0.1);
+        s.body.visible = v !== null;
+        s.ghost.visible = v === null;
+        if (!reduceMotion) s.holder.rotation.y = t * s.speed + k;
+      }
+      cam.position.y = 0.35 - py * 0.5;
+      cam.lookAt(0, 0, 0);
+    }};
+  };
+
   /* ── ASCENSION ────────────────────────────────────────────────────────
      The twelve tiers as a tower you climb, not a list you scroll. Each ring
      is one tier, widest at Initiate and tightest at Ascendant, so the climb
@@ -1963,6 +2114,7 @@
     agents: 'The twelve agent executors in orbit around the Omega core',
     matrix: 'The nine by nine by nine matrix of 729 nodes, with the Crystal-Omega at its centre',
     gates:  'The twelve gates receding into depth toward the Crystal-Omega',
+    character: 'Your character: a core, twelve gate nodes lit by the gates you have passed, and five satellites for your mana',
     sky:    'Your own record as a sky: one star for each task, lesson and certificate you have completed',
     'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'
   };

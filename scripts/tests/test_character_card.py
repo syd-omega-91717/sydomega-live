@@ -98,6 +98,37 @@ class CharacterCard(unittest.TestCase):
         self.assertIn("data-omega-character-story", (ROOT / "character.html").read_text(encoding="utf-8"))
         self.assertIn("data-omega-character-story", (ROOT / "bg.js").read_text(encoding="utf-8"))
 
+    def test_alive_character_scene_is_data_only_and_never_invents(self):
+        sc = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
+        i = sc.index("SCENES.character = function")
+        body = sc[i:sc.index("  /* \u2500\u2500 ASCENSION", i)]
+        # data arrives after mount, so the scene must read its attributes every frame (inside update)
+        upd = body[body.index("update: function"):]
+        for attr in ("readGates()", "readMana()", "applyElement()"):
+            self.assertIn(attr, upd)
+        self.assertIn("data-sculpt-gates", body)
+        self.assertIn("data-sculpt-mana", body)
+        # unknown gates are never drawn as lit; a null mana component is a hollow ghost, not a small value
+        self.assertIn("passed >= 0 && i < passed", body)
+        self.assertIn("s.body.visible = v !== null", body)
+        self.assertIn("s.ghost.visible = v === null", body)
+        # colours come from the palette, never from a copy of the nine element colours or a sign table
+        self.assertIn("elementColour(key", body)
+        self.assertNotRegex(body, r"#[0-9a-fA-F]{6}'\s*,\s*'#")
+        for sign in ("Aries", "Taurus", "Capricorn", "Ares", "Poseidon"):
+            self.assertNotIn(sign, body)
+        self.assertNotRegex(body, r"Math\.random")
+
+    def test_card_feeds_the_scene_from_the_same_rules(self):
+        self.assertIn("bootSigil", SRC)
+        self.assertIn("fetchMana", SRC)           # the one owner of the member-activity read
+        self.assertIn("gatesPassed(auth, canon)", SRC.replace("authorityOf(p, canon)", "auth"))
+        page = (ROOT / "character.html").read_text(encoding="utf-8")
+        self.assertIn('data-omega-sculpture="character"', page)
+        self.assertIn("data-omega-character-sigil-note", page)
+        self.assertIn("/omega-relearn-sigil-mana.js", page)
+        self.assertIn("data-omega-character-sigil-note", (ROOT / "bg.js").read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

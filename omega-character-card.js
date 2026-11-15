@@ -15,6 +15,12 @@
    whose axes are all still at their starting value of 1 reads "Not started";
    nothing is "collected" or levelled beyond what those recorded numbers say.
 
+   Story: <div data-omega-character-story></div> shows the member's sign story from /omega-stories.json
+   (original retellings of the classical constellation myths). Chapter k opens when the member has
+   really passed N authority gates (same arithmetic as the card); a locked chapter shows the gate it
+   needs and its text is never rendered. The file holds stories only: gods, agents and gates are read
+   from the canon, never copied.
+
    Class names: never a bare `main`, `on`, `lf` or `card` token. `.main` is the
    platform's content column (bg.js layout; omega-legal.js and omega-ui.js
    append the footer to the first `.main`), so a tile classed `main` swallowed
@@ -66,7 +72,14 @@
       '.ocr-s{font-size:.82rem;color:var(--muted,#8b93a3)}' +
       '.ocr-p{font-family:var(--M,"Courier Prime",monospace);font-size:.74rem;margin-top:.3rem}' +
       '.ocr-tag{font-family:var(--M,"Courier Prime",monospace);font-size:.6rem;letter-spacing:.14em;color:var(--gold,#d4af37)}' +
-      '.ocr-msg{font-size:.9rem;color:var(--muted,#8b93a3)}';
+      '.ocr-msg{font-size:.9rem;color:var(--muted,#8b93a3)}' +
+      '.ocs{max-width:44rem;font-family:var(--R,Rajdhani,sans-serif);color:var(--ink,#e8e6df)}' +
+      '.ocs-h{font-family:var(--D,"Cinzel Decorative",serif);font-size:1.25rem;color:var(--gold,#d4af37)}' +
+      '.ocs-ch{border-left:2px solid rgba(212,175,55,.45);padding:.1rem 0 .1rem .8rem;margin:.9rem 0}' +
+      '.ocs-ch.is-locked{border-left-color:rgba(255,255,255,.14);opacity:.7}' +
+      '.ocs-t{font-family:var(--M,"Courier Prime",monospace);font-size:.68rem;letter-spacing:.16em;color:var(--muted,#8b93a3);text-transform:uppercase}' +
+      '.ocs-p{margin:.25rem 0 0;line-height:1.55}' +
+      '.ocs-f{font-size:.78rem;color:var(--muted,#8b93a3);margin-top:1rem;line-height:1.5}';
     document.head.appendChild(s);
   }
 
@@ -170,6 +183,40 @@
     });
   }
 
+  /* doc = omega-stories.json; p = the member's profile row. Pure DOM, textContent only. */
+  function renderStory(root, doc, p, canon) {
+    root.textContent = '';
+    root.classList.add('ocs');
+    var track = (canon && p && p.sign) ? canon.trackBySign(p.sign) : null;
+    var story = (track && doc && doc.stories) ? doc.stories[track.sign] : null;
+    if (!track) {
+      el('div', 'ocr-msg', 'Your sign story opens once your sign is set. ', root);
+      var a = el('a', '', 'Set it on your profile', root);
+      a.href = '/profile.html';
+      return;
+    }
+    if (!story) { el('div', 'ocr-msg', 'No story is written for ' + track.sign + ' yet.', root); return; }
+    var g = gatesPassed(authorityOf(p, canon), canon);
+    var passed = g ? g.passed : 0;
+    var gates = Array.isArray(doc.chapter_gates) ? doc.chapter_gates : [0, 0, 0, 0];
+    var titles = Array.isArray(doc.chapter_titles) ? doc.chapter_titles : [];
+    el('div', 'ocs-h', story.constellation, root);
+    var opened = 0;
+    story.chapters.forEach(function (text, i) {
+      var need = Number(gates[i]) || 0;
+      var open = passed >= need;
+      if (open) opened++;
+      var ch = el('div', 'ocs-ch' + (open ? '' : ' is-locked'), null, root);
+      el('div', 'ocs-t', 'Chapter ' + (i + 1) + ' \u00B7 ' + (titles[i] || ''), ch);
+      if (open) el('p', 'ocs-p', text, ch);
+      else el('p', 'ocs-p', 'Opens at gate ' + need + '. ' + (g ? 'You have passed ' + passed + ' of ' + g.total + '.' : 'Authority needs all three axes recorded.'), ch);
+    });
+    var foot = el('div', 'ocs-f', null, root);
+    el('div', '', opened + ' of ' + story.chapters.length + ' chapters open, by the gates you have really passed.', foot);
+    el('div', '', 'A retelling written for this platform. Sources: ' + (story.sources || []).join('; ') + '.', foot);
+    if (story.variant) el('div', '', 'Variant: ' + story.variant, foot);
+  }
+
   async function bootRoster(sb, session, canon) {
     var roots = document.querySelectorAll('[data-omega-character-roster]');
     if (!roots.length) return;
@@ -184,13 +231,14 @@
   async function boot() {
     var mounts = document.querySelectorAll('[data-omega-character-card]');
     var hasRoster = document.querySelectorAll('[data-omega-character-roster]').length > 0;
-    if (!mounts.length && !hasRoster) return;
+    var storyMounts = document.querySelectorAll('[data-omega-character-story]');
+    if (!mounts.length && !hasRoster && !storyMounts.length) return;
     style();
     var sb = null;
     try { sb = window.OmegaSB && window.OmegaSB.get ? await window.OmegaSB.get() : (window.__omegaSb || null); } catch (e) { sb = null; }
     var fail = function (msg) {
       for (var i = 0; i < mounts.length; i++) { mounts[i].classList.add('occ'); mounts[i].textContent = msg; }
-      var rr = document.querySelectorAll('[data-omega-character-roster]');
+      var rr = document.querySelectorAll('[data-omega-character-roster],[data-omega-character-story]');
       for (var k = 0; k < rr.length; k++) { rr[k].textContent = msg; }
     };
     if (!sb) { fail('Character unavailable: no data connection.'); return; }
@@ -198,7 +246,7 @@
     try { s = (await sb.auth.getSession()).data.session; } catch (e) { s = null; }
     if (!s || !s.user) { fail('Sign in to see your character.'); return; }
     var r = { data: null, error: null };
-    if (mounts.length) {
+    if (mounts.length || storyMounts.length) {
       r = await sb.from('profiles').select(COLS).eq('id', s.user.id).maybeSingle();
       if (r.error || !r.data) { fail('Character unavailable: your profile could not be read.'); return; }
     }
@@ -206,10 +254,18 @@
     for (var i = 0; i < 25 && !(window.OmegaCanon && window.OmegaCanon.ready); i++) await new Promise(function (res) { setTimeout(res, 150); });
     if (!(window.OmegaCanon && window.OmegaCanon.ready)) { fail('Character unavailable: the canon did not load.'); return; }
     for (var j = 0; j < mounts.length; j++) render(mounts[j], r.data, window.OmegaCanon);
+    if (storyMounts.length) {
+      var doc = null;
+      try { var resp = await fetch('/omega-stories.json'); doc = resp.ok ? await resp.json() : null; } catch (e) { doc = null; }
+      for (var m = 0; m < storyMounts.length; m++) {
+        if (doc) renderStory(storyMounts[m], doc, r.data, window.OmegaCanon);
+        else storyMounts[m].textContent = 'Story unavailable: the story file could not be read.';
+      }
+    }
     if (hasRoster) await bootRoster(sb, s, window.OmegaCanon);
   }
 
-  window.OmegaCharacterCard = { render: render, renderRoster: renderRoster, gatesPassed: gatesPassed, authorityOf: authorityOf };
+  window.OmegaCharacterCard = { render: render, renderRoster: renderRoster, renderStory: renderStory, gatesPassed: gatesPassed, authorityOf: authorityOf };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();

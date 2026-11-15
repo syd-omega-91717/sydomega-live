@@ -70,6 +70,34 @@ class CharacterCard(unittest.TestCase):
         self.assertIn("data-omega-character-roster", (ROOT / "character.html").read_text(encoding="utf-8"))
         self.assertIn("data-omega-character-roster", (ROOT / "bg.js").read_text(encoding="utf-8"))
 
+    def test_stories_match_the_canon_and_stay_safe(self):
+        import json
+        canon = json.loads((ROOT / "omega-canon.json").read_text(encoding="utf-8"))
+        doc = json.loads((ROOT / "omega-stories.json").read_text(encoding="utf-8"))
+        self.assertEqual(doc["truth"], "RETELLING")
+        self.assertEqual(len(doc["chapter_gates"]), 4)
+        self.assertEqual(doc["chapter_gates"], sorted(doc["chapter_gates"]))
+        self.assertEqual(doc["chapter_gates"][0], 0)  # chapter I is open to everyone
+        self.assertLessEqual(max(doc["chapter_gates"]), len(canon["authority"]["gates"]))
+        self.assertEqual(sorted(doc["stories"]), sorted(t["sign"] for t in canon["tracks"]))
+        for t in canon["tracks"]:
+            st = doc["stories"][t["sign"]]
+            self.assertEqual(len(st["chapters"]), 4, t["sign"])
+            # gods, agents and gates are canon: a story may name them but must name the canon's, so it cannot drift
+            self.assertIn(t["agent"], st["chapters"][1], t["sign"])
+            self.assertIn(t["god"], st["chapters"][2], t["sign"])
+            self.assertIn(t["gate"], st["chapters"][3], t["sign"])
+            self.assertTrue(st["sources"], t["sign"])
+            self.assertTrue(st["variant"], t["sign"])
+            for ch in st["chapters"]:
+                self.assertRegex(ch, r"^[^<>]+$")  # plain prose, no markup
+
+    def test_story_never_ships_locked_text_and_is_mounted(self):
+        self.assertIn("renderStory", SRC)
+        self.assertIn("if (open) el('p', 'ocs-p', text, ch);", SRC)  # locked chapters get a gate line, never the text
+        self.assertIn("data-omega-character-story", (ROOT / "character.html").read_text(encoding="utf-8"))
+        self.assertIn("data-omega-character-story", (ROOT / "bg.js").read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

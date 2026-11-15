@@ -50,6 +50,8 @@ def problems(sql):
     if "grant execute on function public.get_public_card(text) to authenticated" not in s: out.append("card is not granted to authenticated")
     if "security definer" in re.sub(r"function public\.get_public_card.*", "", s, flags=re.S): out.append("only the card function may be security definer")
     if not re.search(r"values\s*\('public_cards_enabled',\s*false", s): out.append("flag does not default to false")
+    if re.search(r"add constraint profiles_bio_shape", s): out.append("bio must be validated by a trigger: even a NOT VALID CHECK runs on every later update of the row")
+    if "trg_validate_bio" not in s or "before update of bio" not in s: out.append("bio trigger missing")
     if re.search(r"policy\s+\w+\s+on\s+public\.profiles", s): out.append("must not add or change a profiles policy (that would widen who reads a row)")
     return out
 

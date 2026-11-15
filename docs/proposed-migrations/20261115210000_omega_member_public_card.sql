@@ -43,11 +43,39 @@ alter table public.profiles drop constraint if exists profiles_birthday_visibili
 alter table public.profiles add constraint profiles_birthday_visibility_check
   check (birthday_visibility in ('private', 'month_day', 'full'));
 
--- a bio is shown to other members, so bound it and keep markup out of it
+-- a bio is shown to other members, so bound it and keep markup out of it. A trigger, not a CHECK: even a NOT VALID check is
+-- enforced on EVERY later update of the row, so a member whose existing bio is long or contains < > would be refused when they
+-- changed something unrelated (proved on the throwaway database: 3 of 3 legacy-bio cases failed under the CHECK).
 alter table public.profiles drop constraint if exists profiles_bio_shape;
-alter table public.profiles add constraint profiles_bio_shape check (
-  bio is null or (char_length(bio) <= 280 and bio !~ '[<>]')
-) not valid;  -- NOT VALID: old rows are not re-checked; the check applies to rows written from now on
+
+create or replace function private.validate_bio()
+returns trigger
+language plpgsql
+set search_path = pg_catalog, public
+as $$
+begin
+  if new.bio is not null and (char_length(new.bio) > 280 or new.bio ~ '[<>]') then
+    raise exception 'bio_not_allowed' using errcode = '23514';
+  end if;
+  return new;
+end;
+$$;
+
+revoke all on function private.validate_bio() from public, anon, authenticated;
+
+drop trigger if exists trg_validate_bio_ins on public.profiles;
+create trigger trg_validate_bio_ins
+  before insert on public.profiles
+  for each row
+  when (new.bio is not null)
+  execute function private.validate_bio();
+
+drop trigger if exists trg_validate_bio on public.profiles;
+create trigger trg_validate_bio
+  before update of bio on public.profiles
+  for each row
+  when (new.bio is distinct from old.bio)
+  execute function private.validate_bio();
 
 create unique index if not exists profiles_username_lower_uq on public.profiles (username) where username is not null;
 

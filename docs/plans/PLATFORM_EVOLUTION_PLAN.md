@@ -18,12 +18,12 @@ highest security; learn from worldwide platforms; bring new ideas without confli
 |---|---|---|
 | username | new column, unique, `^[a-z0-9_]{3,24}$`, reserved names refused | proposed, proved |
 | nickname | new column, 1-40 chars, no markup or control characters | proposed, proved |
-| thoughts (summary text) | **reuse `profiles.bio`**, which already exists and is already member-writable; capped at 280, no `<` or `>`; the CHECK is `NOT VALID` so old rows are not re-judged | proposed, proved |
+| thoughts (summary text) | **reuse `profiles.bio`**, which already exists and is already member-writable; capped at 280, no `<` or `>`, enforced by a trigger that fires only when the bio changes (a CHECK, even `NOT VALID`, would refuse a member with an old bio when they edit anything else) | proposed, proved |
 | avatar | `avatar_url` must be an object under the member's own folder of the `avatars` bucket; enforced by trigger (a CHECK would re-run on every unrelated update of a row whose avatar came from a sign-in provider) | proposed, proved |
 | birthday | `birthday_visibility`: `private` (default), `month_day` (returns `MM-DD`, no year), `full`. Age is never returned | proposed, proved |
 | the door | `public.get_public_card(username)`: members only, flag-gated, returns `null` for missing, private, rejected, unapproved, deactivated or pending-deletion members, so "no such member" and "private member" look the same | proposed, proved |
 
-Proof: `docs/proposed-migrations/20261115210000_omega_member_public_card.sql` on a throwaway Postgres 16, 28 cases, and a mutation run: removing the `is_public`, approval, deactivated,
+Proof: `docs/proposed-migrations/20261115210000_omega_member_public_card.sql` on a throwaway Postgres 16, 31 cases (28 first, 3 added after a bug was found post-merge), and a mutation run: removing the `is_public`, approval, deactivated,
 pending-deletion, signed-in or birthday-precision guard each fails the case written for it. Two of those guards were first unprotected (a weak `LIKE`-style assertion passed a leaked year,
 and deactivated/pending-deletion had no case); the mutation run found both before this was written up. **Not run on Supabase**, whose read access was refused this session.
 

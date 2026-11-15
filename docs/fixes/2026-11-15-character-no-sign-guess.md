@@ -1,0 +1,9 @@
+### character.html no longer invents a sign for a member who has none (2026-11-15)
+
+**Why.** `character.html` read `var sign=pr.sign||SIGNS[Math.floor(new Date().getMonth()%12)]` and then `if(signIdx<0)signIdx=0`: a member with no recorded sign was shown the sign of the current calendar month, and an unrecognised sign silently became Aries. Both feed the header (sign, god, element, track, triad), the element highlight, the lore text and the reference-table highlight. It is §8.1 class 9 (fabricated data rendered as fact) and it disagreed with the new main-character card on the same page, which already says "Not set yet" (found while building #1292).
+
+**Fix.** `hasSign` is true only when the profile's sign is one of the 12. Without it every sign-derived field reads `NOT SET` (lore: "Set your sign in your profile…"), no element tile is highlighted and no reference row is marked. With a valid sign nothing changes. `getMonth` and the default-to-Aries line are gone; `test_character_card.py` pins both.
+
+**Verified.** Headless Chromium on `character.html`, stubbed Supabase, two runs. Profile `sign:null`: sign/god/element/track/triad all `NOT SET`, lore title `SIGN NOT SET`, 0 highlighted element tiles, 0 highlighted rows, card "Not set yet", 0 page errors. Profile `sign:'Aries'`: Aries / Ares / Fire / TRACK 1 OF 12 / Primal TRIAD, 1 element tile, 1 row highlighted, card shows Aries, 0 page errors. `check-inline-js.py` clean; new test passes.
+
+**Not done / not verified.** The stub is not production: not checked with a real member who has no sign, nor how bg.js's own onboarding redirect treats such a member. The other ~28 files with their own sign tables are untouched (this was the one with a calendar guess). Unrecognised non-empty signs now show NOT SET rather than being named; whether any real profile holds one is unchecked (the live query was refused).

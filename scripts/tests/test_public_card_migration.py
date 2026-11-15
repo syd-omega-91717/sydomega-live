@@ -51,6 +51,9 @@ def problems(sql):
     if "security definer" in re.sub(r"function public\.get_public_card.*", "", s, flags=re.S): out.append("only the card function may be security definer")
     if not re.search(r"values\s*\('public_cards_enabled',\s*false", s): out.append("flag does not default to false")
     if re.search(r"add constraint profiles_bio_shape", s): out.append("bio must be validated by a trigger: even a NOT VALID CHECK runs on every later update of the row")
+    if "trg_clear_public_face_on_erasure" not in s or "before update of erasure_requested_at" not in s: out.append("erasure does not clear username and nickname")
+    if not re.search(r"new\.username := null;\s*new\.nickname := null;", s): out.append("erasure trigger does not null username and nickname")
+    if "p.erasure_requested_at is null" not in body: out.append("card does not refuse an erased member (second layer)")
     if "trg_validate_bio" not in s or "before update of bio" not in s: out.append("bio trigger missing")
     if re.search(r"policy\s+\w+\s+on\s+public\.profiles", s): out.append("must not add or change a profiles policy (that would widen who reads a row)")
     return out
@@ -69,6 +72,8 @@ class PublicCardMigration(unittest.TestCase):
             ("when 'month_day' then to_char(p.birth_date, 'MM-DD')", "when 'month_day' then to_char(p.birth_date, 'YYYY-MM-DD')", "birthday precision"),
             ("values ('public_cards_enabled', false", "values ('public_cards_enabled', true", "flag default"),
             ("default 'private'", "default 'full'", "birthday default"),
+            ("new.username := null;", "new.username := new.username;", "erasure keeps the username"),
+            ("and p.erasure_requested_at is null", "and true", "card erasure guard"),
         ]:
             with self.subTest(label):
                 mutated = SQL.replace(old, new, 1) if old in SQL else SQL.replace(old.replace("and auth.uid()", "where auth.uid()"), new.replace("and true", "where true"), 1)

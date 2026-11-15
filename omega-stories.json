@@ -1,0 +1,199 @@
+{
+ "schema": 1,
+ "truth": "RETELLING",
+ "note": "Original retellings of public-domain classical myths, written for this platform. Where traditions differ, one version is told and the variant is named in the story's own `variant` field. Gods, agents and gates come from omega-canon.json; this file holds only the stories. Not scholarship, not a claim about astrology.",
+ "chapter_titles": [
+  "The Myth",
+  "The Trial",
+  "The Patron",
+  "The Star"
+ ],
+ "chapter_gates": [
+  0,
+  2,
+  5,
+  9
+ ],
+ "stories": {
+  "Aries": {
+   "constellation": "Aries, the Ram",
+   "sources": [
+    "Apollodorus, Library 1.9.1",
+    "Apollonius of Rhodes, Argonautica",
+    "Hyginus, Astronomica 2.20"
+   ],
+   "variant": "Some tellings have the ram sent by the children's mother, others by Hermes; the fleece's grove and its sleepless dragon come from the Argonaut tradition.",
+   "chapters": [
+    "A king's two children, Phrixus and Helle, were hunted by a jealous stepmother. A ram with a coat of gold came to carry them away across land and sea. Helle lost her grip and fell into the narrow water that now bears her name, the Hellespont. Phrixus rode on alone to Colchis, gave the ram to the gods in thanks, and gave its golden fleece to the king, who hung it in a grove under a dragon that never slept. Years later heroes would sail for it. The ram rose among the stars.",
+    "Aries is the sign of the first step. Your trial is to begin before anyone is ready, when nothing promises an ending. The Sentinel watches the gate beside you: it guards what you start, it does not walk for you.",
+    "Ares, in this world, lends you courage under pressure, not cruelty. Courage here is small and daily: finishing the next thing you said you would finish.",
+    "The Ram is a small, modest constellation, and its brightest star, Hamal, is no great blaze. A beginning does not need to be loud to be remembered. When the Gate of Ignition is behind you, your sigil carries its mark."
+   ]
+  },
+  "Taurus": {
+   "constellation": "Taurus, the Bull",
+   "sources": [
+    "Ovid, Metamorphoses 2.833-875",
+    "Hyginus, Astronomica 2.21",
+    "Moschus, Europa"
+   ],
+   "variant": "Europa is the best-known rider; some sources link the sky bull to other myths, such as Io.",
+   "chapters": [
+    "Europa, a princess of Phoenicia, was gathering flowers by the sea when a gentle white bull walked out of the herd and knelt before her. She climbed on his back to play. The bull rose, waded into the waves and swam, carrying her across the water to the island of Crete, and only there did he show he was Zeus. A continent would one day carry her name. The bull was set in the sky, drawn only as far as his front half, as if still rising out of the water.",
+    "Taurus is the sign of what lasts: patience, the thing built slowly and kept. Your trial is to value what you hold without clutching it. The Merchant keeps the accounts honest; it counts, it does not tempt.",
+    "Aphrodite, in this world, is the patron of worth and of beauty that is earned, not bought. She asks one thing of anything you gather: that it be worth the attention you gave it.",
+    "The Bull holds two great gatherings: the Hyades, a V-shaped face, and the Pleiades, the small bright cluster that sailors and farmers once read as a calendar. Its red eye is Aldebaran. After the Gate of Abundance your sigil carries its mark."
+   ]
+  },
+  "Gemini": {
+   "constellation": "Gemini, the Twins",
+   "sources": [
+    "Apollodorus, Library 3.11",
+    "Pindar, Nemean 10",
+    "Homer, Odyssey 11.298-304"
+   ],
+   "variant": "Which twin is mortal varies by telling; the common version makes Pollux the son of Zeus and Castor mortal.",
+   "chapters": [
+    "Castor and Pollux were twins and inseparable: one a master of horses, the other a boxer without equal. Castor was mortal; Pollux was not. When Castor fell in a quarrel, Pollux begged Zeus to let him die too. Zeus offered a bargain: they would share one immortality between them, one day beneath the earth, one day among the gods, so neither would ever be alone for long. In the sky they stand side by side.",
+    "Gemini is the sign of the message and the second voice. Your trial is to carry one truth between two places without bending it. The Scout travels ahead of you and brings back what is there, not what you hoped.",
+    "Hermes, in this world, is the patron of crossings: roads, words, trade, thresholds. He asks that what you pass on arrives the way you meant it.",
+    "Castor and Pollux are the two bright stars at the heads of the Twins, named for the brothers themselves. Once you have passed the Gate of Discourse, your sigil carries their pair."
+   ]
+  },
+  "Cancer": {
+   "constellation": "Cancer, the Crab",
+   "sources": [
+    "Apollodorus, Library 2.5.2",
+    "Hyginus, Astronomica 2.23",
+    "Eratosthenes, Catasterisms 11"
+   ],
+   "variant": "In the oldest telling the crab is only a small distraction; later authors made it a proud fighter.",
+   "chapters": [
+    "While Heracles fought the many-headed Hydra in the marsh of Lerna, Hera, who hated him, sent a crab to pinch at his foot and break his focus. He crushed it underfoot and went on to win. Hera set the crab among the stars as a reward for its loyalty, even though it had failed. It is the faintest sign of the zodiac, and the one that holds a whole village of stars inside it.",
+    "Cancer is the sign of the home and the shell: what you protect, and who you let in. Your trial is to be soft inside and firm at the edge. The Warden stands at the door of your inner circle and asks nothing you did not offer.",
+    "Artemis, in this world, is the patron of wild places and of the boundary of the private. She teaches that closing a door is not the same as turning your back.",
+    "The Crab is dim, but its centre holds Praesepe, the Beehive, a cluster visible as a soft glow in dark skies. A small sign with a crowd inside. After the Gate of the Hearth, your sigil carries its shell."
+   ]
+  },
+  "Leo": {
+   "constellation": "Leo, the Lion",
+   "sources": [
+    "Apollodorus, Library 2.5.1",
+    "Hyginus, Astronomica 2.24",
+    "Theocritus, Idyll 25"
+   ],
+   "variant": "Some tellings say the lion fell from the Moon; its role as the first labour of Heracles is the common core.",
+   "chapters": [
+    "In the valley of Nemea lived a lion whose hide no arrow or blade could cut. It had emptied the countryside. Heracles shot, struck with his club, and found nothing worked, so he cornered it in its cave and won with his bare arms. He wore the pelt as armour, cutting it with the lion's own claws. Zeus put the lion in the sky as a record of the first great labour.",
+    "Leo is the sign of the one who is seen. Your trial is to lead without needing to be worshipped. The Sovereign holds the whole view; it advises the throne, it never sits on it for you.",
+    "Apollo, in this world, is the patron of light, music and clear sight. He asks that your brilliance be useful to someone else the same day.",
+    "The brightest star in the Lion is Regulus, 'the little king', set almost exactly on the path the Sun and Moon travel. After the Gate of Radiance, your sigil carries the mane."
+   ]
+  },
+  "Virgo": {
+   "constellation": "Virgo, the Maiden",
+   "sources": [
+    "Aratus, Phaenomena 96-136",
+    "Hyginus, Astronomica 2.25",
+    "Ovid, Metamorphoses 1.149-150"
+   ],
+   "variant": "Virgo is also linked to Demeter and Persephone, and to Erigone; this telling follows Aratus's Astraea.",
+   "chapters": [
+    "In the first age, the gods lived beside people and justice walked the fields. As people grew greedy the gods withdrew one by one, until only Astraea, the maiden of justice, still stayed. In the last age she too left, rising into the sky. The old poets said she would come back when people were fair again. She holds an ear of grain in her hand, a reminder that fairness is something grown.",
+    "Virgo is the sign of the careful eye. Your trial is to check what is true before you repeat it. The Auditor checks the record twice and tells you the plain result, including when it is not the one you wanted.",
+    "Athena, in this world, is the patron of craft and strategy, thinking before acting. She asks that your work be correct before it is clever.",
+    "The Maiden's brightest star is Spica, the ear of grain, a hot blue-white star that is much brighter than it looks from here. After the Gate of Precision, your sigil carries the ear."
+   ]
+  },
+  "Libra": {
+   "constellation": "Libra, the Scales",
+   "sources": [
+    "Aratus, Phaenomena",
+    "Ptolemy, Almagest (the 'claws')",
+    "Manilius, Astronomica"
+   ],
+   "variant": "Libra was long counted as the claws of the neighbouring Scorpion; the scales as a separate sign are a later, Roman tradition.",
+   "chapters": [
+    "Libra is the only sign of the zodiac that is a thing, not a creature. The Greeks first called its stars the claws of the Scorpion. The Romans gave them a new shape: the scales held by the maiden of justice, who had left the earth. The scales are the tool by which every promise and every quarrel is weighed. Their stars still carry the old name: the northern and southern claw.",
+    "Libra is the sign of the fair trade and the kept agreement. Your trial is to weigh two sides when you are standing on one. The Proxy carries out what you have agreed, exactly, and nothing you did not.",
+    "Hera, in this world, is the patron of vows and of what binds people together. She asks that you keep the small promises, because the large ones are made of them.",
+    "The two main stars of Libra are Zubenelgenubi and Zubeneschamali, whose names mean 'the southern claw' and 'the northern claw' in Arabic. The sign remembers what it used to be. After the Gate of Balance, your sigil carries the beam."
+   ]
+  },
+  "Scorpio": {
+   "constellation": "Scorpio, the Scorpion",
+   "sources": [
+    "Hyginus, Astronomica 2.26",
+    "Ovid, Fasti 5.539-544",
+    "Apollodorus, Library 1.4.3"
+   ],
+   "variant": "Why the scorpion was sent varies: boasting by Orion, a plot by Artemis or Hera, or an attack on Leto.",
+   "chapters": [
+    "Orion, the great hunter, boasted that no creature on earth could beat him. The earth answered with a scorpion that stung him in the heel. The gods placed both among the stars, set on opposite sides of the sky so they would never meet. As Scorpio rises in the east, Orion sinks below the western horizon. The old poets read it as a lesson about pride, and also as a picture of a pursuit that never ends.",
+    "Scorpio is the sign of depth and of change you cannot reverse. Your trial is to look at what is coming and still act. The Oracle shows you the likely road and its cost; it does not promise you the road.",
+    "Demeter, in this world, is the patron of the season: what is sown, what dies back, what returns. She teaches that loss is a stage and not the end.",
+    "The heart of the Scorpion is Antares, a huge red supergiant whose name means 'rival of Mars'. After the Gate of Transmutation, your sigil carries the sting."
+   ]
+  },
+  "Sagittarius": {
+   "constellation": "Sagittarius, the Archer",
+   "sources": [
+    "Eratosthenes, Catasterisms 28",
+    "Hyginus, Astronomica 2.27 and 2.38",
+    "Apollodorus, Library 2.5.4"
+   ],
+   "variant": "The best-attested ancient identification of the Archer is Crotus, a satyr and friend of the Muses. The Chiron identification told here is the later popular one; Chiron also has his own constellation, Centaurus.",
+   "chapters": [
+    "Chiron was a centaur unlike the others: patient, learned, a teacher of heroes, among them Achilles and Asclepius. He was struck by one of Heracles's poisoned arrows by accident. Immortal, he could not die, only suffer, and in the end he gave up his immortality so the pain would end. In this telling Zeus set him among the stars as the Archer, bow drawn, aimed toward the heart of the Scorpion.",
+    "Sagittarius is the sign of the far aim. Your trial is to point your effort at something you cannot yet see. The Beacon stands at the threshold and shows new arrivals where the path begins.",
+    "Zeus, in this world, is the patron of the wide view and of law applied to all. He asks that your ambition be something other people can live under.",
+    "In the direction of Sagittarius lies the centre of our galaxy, the thick heart of the Milky Way. Few signs point at anything so large. After the Gate of Vision, your sigil carries the bow."
+   ]
+  },
+  "Capricorn": {
+   "constellation": "Capricorn, the Sea-Goat",
+   "sources": [
+    "Eratosthenes, Catasterisms 27",
+    "Hyginus, Astronomica 2.28",
+    "Apollodorus, Library 1.6.3"
+   ],
+   "variant": "Some sources link the sea-goat to Amalthea, the goat who nursed Zeus, others to Pan; this telling follows Pan.",
+   "chapters": [
+    "When the monster Typhon attacked the gods, they fled in every shape. Pan leapt into the Nile to hide, and in his haste changed only half of himself: below the water, a fish's tail; above it, a goat. In some tellings he then helped Zeus recover what Typhon had stolen from him. Zeus remembered the odd shape and set it among the stars.",
+    "Capricorn is the sign of the long climb and of structure that holds. Your trial is to keep going when the work is slow and nobody is watching. The Analyst reads the numbers without flattery and hands you the real picture.",
+    "Hestia, in this world, is the patron of the hearth, the still centre of any house. She asks that your ambition leave a warm room behind it.",
+    "The Sea-Goat is a dim sign without a single bright star, and yet one of the oldest named in the sky. Endurance needs no glare. After the Gate of Sovereignty, your sigil carries the horn."
+   ]
+  },
+  "Aquarius": {
+   "constellation": "Aquarius, the Water-Bearer",
+   "sources": [
+    "Hyginus, Astronomica 2.29",
+    "Homer, Iliad 20.231-235",
+    "Ovid, Metamorphoses 10.155-161"
+   ],
+   "variant": "Aquarius is also linked to the flood of Deucalion and to Cecrops; the Ganymede story is the most common classical identification.",
+   "chapters": [
+    "Ganymede, a young prince of Troy, was said to be the most beautiful of mortals. While he tended his father's flocks, an eagle of Zeus swept him up to Olympus. There he became cupbearer to the gods and never grew old. His father was given a gift of horses as compensation, and the boy poured out the gods' wine forever. In the sky he is the Water-Bearer, pouring a stream that falls toward the southern fish.",
+    "Aquarius is the sign of the shared cup: knowledge handed on so that it can be used. Your trial is to teach what you know, even when it would be easier to keep it. The Tutor never does your homework; it shows you how the problem was built.",
+    "Hephaestus, in this world, is the patron of the forge and of the made thing. He asks that you finish what you invented, and that you made it for someone else.",
+    "The sign is dim and wide, a loose scatter of stars. Its pouring stream, in the sky, runs toward a single bright star called Fomalhaut. After the Gate of Innovation, your sigil carries the vessel."
+   ]
+  },
+  "Pisces": {
+   "constellation": "Pisces, the Fishes",
+   "sources": [
+    "Hyginus, Astronomica 2.30",
+    "Ovid, Fasti 2.457-474",
+    "Eratosthenes, Catasterisms 38"
+   ],
+   "variant": "In some tellings the two fishes carry Aphrodite and Eros on their backs rather than being their disguise.",
+   "chapters": [
+    "When Typhon came, Aphrodite and her son Eros fled to the river Euphrates. To escape together, they turned into two fishes and bound themselves to each other with a cord so they would not be separated in the water. Zeus honoured them by placing the pair of fishes, tied by their cord, among the stars. Two fishes swimming in opposite directions, never apart.",
+    "Pisces is the sign of the deep: imagination, memory, what the day cannot hold. Your trial is to keep the thread to those you love while you drift. The Historian keeps every record and gives it back when you ask; it does not rewrite it to comfort you.",
+    "Poseidon, in this world, is the patron of the deep water and of what lies beneath the surface, including your own past. He asks that you not be afraid of the depth.",
+    "The knot that ties the two fishes is a star named Alrescha, from the Arabic for 'the cord'. After the Gate of Dreams, the last gate, your sigil carries the whole circle: twelve signs, one cord."
+   ]
+  }
+ }
+}

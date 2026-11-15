@@ -28,6 +28,23 @@ Stripe Identity's "Access verification results" page lists `verified_outputs` wi
 8. **Writes are checked:** every webhook handler and RPC reads `.error` before recording "verified" (CLAUDE.md 8.1 class 1). A vendor outage leaves the member pending, never approved.
 9. **Privileges:** member `SELECT` on own row only, no member `INSERT/UPDATE/DELETE`, writes by the service role only, `REVOKE EXECUTE ... FROM PUBLIC` on any new function (class 6).
 
+## What may decide what a member gets (the entitlement basis)
+Requested direction: use the details on an identity document to decide which services a member is offered. **My recommendation is the opposite for most of them.**
+
+| may decide access or price | may NOT decide access or price |
+|---|---|
+| identity verified: yes or no | origin, ethnicity or national origin |
+| adult: yes or no (from the verified date of birth, kept as a yes or no) | parents' names |
+| country of residence, only where a law requires a different rule | religion, health, blood type |
+| the plan the member holds | home address beyond the country |
+| standing earned from recorded activity | place of birth, civil registry |
+
+Why: origin and religion are special categories of personal data in many laws, and offering or refusing a service by them is discrimination in most places. Parents' names belong to people who did not agree to anything. Profiling a member from such details without a lawful basis, and deciding an outcome by it automatically, is restricted in the EU and elsewhere. None of this is needed to decide what a member may buy: a yes or no on identity and age, the country where a law requires it, and the plan held are enough.
+
+Consequences for the design above: the platform does not even need to receive these fields. The vendor reads the document; we receive a result, the fingerprints, an adult flag and a country code. Anything the member types about themselves (for example `profiles.nationality`) is display-only and must never reach a pricing, quota, approval or eligibility decision.
+
+Checked 2026-11-15: no Edge Function or access, price, quota or eligibility function in `supabase/migrations/` reads any of these fields; `scripts/tests/test_entitlement_basis.py` keeps it that way.
+
 ## What this cannot do
 Stop someone with two genuine documents, someone using another person's documents (that needs a liveness check), or families who share a household. In some countries the national ID number is itself restricted data, which is why only a keyed fingerprint is kept. The fingerprints are still personal data: retention, and what happens when a person deletes their account and later returns, are open questions for counsel.
 

@@ -3091,6 +3091,12 @@ setTimeout(function(){
     var _osc=document.createElement('script');_osc.src='/omega-sculpture.js';
     _osc.setAttribute('data-omega-sculpture-js','1');_osc.defer=true;__omegaAppend(_osc);
   }
+  /* Main-character card: injected only where a mount exists. Guard attribute
+     is this module's own identity (CLAUDE.md 8.1 class 5b). */
+  if(document.querySelector('[data-omega-character-card]') && !document.querySelector('script[data-omega-character-card-js]')){
+    var _occ=document.createElement('script');_occ.src='/omega-character-card.js';
+    _occ.setAttribute('data-omega-character-card-js','1');_occ.defer=true;__omegaAppend(_occ);
+  }
 
   /* Sculpture data binding — real-time member data synchronization for WebGL transforms */
   if(!document.querySelector('script[data-omega-sculpture-dataviz]')){

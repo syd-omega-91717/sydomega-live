@@ -152,6 +152,11 @@
   }
 
   /* ---- scripts ----------------------------------------------------------- */
+  /* Every regular-expression metacharacter, including the backslash. The names this is used on are identifiers
+     (letters, digits, _ and $), but a name is never trusted to stay that way. */
+  function escapeRe(str) {
+    return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
   var RESERVED = /^(if|for|while|switch|return|function|typeof|new|catch|void|delete|in|of|do|else|try|with|alert|confirm|prompt|event|this)$/;
   /* Every function the markup (or a template string in the script) calls from an on*= attribute, kept only
      when the code declares it: that is the set the page needs on window, and nothing else is touched. */
@@ -165,7 +170,8 @@
       }
     });
     return Object.keys(called).filter(function (n) {
-      return new RegExp('function\\s+' + n.replace(/\$/g, '\\$') + '\\b|(?:const|let|var)\\s+' + n.replace(/\$/g, '\\$') + '\\s*=').test(js);
+      var e = escapeRe(n);
+      return new RegExp('function\\s+' + e + '\\b|(?:const|let|var)\\s+' + e + '\\s*=').test(js);
     });
   }
 

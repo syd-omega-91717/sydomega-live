@@ -60,3 +60,9 @@ the real hubs were tested, which found problems the throwaway host could not (se
 - Promise callbacks (`fetch().then`) started by a panel are still not tied to it.
 - Tested against stubbed Supabase and one signed-in non-owner profile only. An owner profile, a trial member,
   or real data could behave differently. Not checked on a real phone, with a screen reader, or in Safari/Firefox.
+
+**Follow-up (CodeQL on this PR).** CodeQL raised two high-severity "incomplete string escaping" alerts at the line that
+builds a RegExp from a handler name (it escaped `$` but not the backslash). The names are identifier characters only,
+so it was not exploitable, but the escape was incomplete. Replaced with an `escapeRe` helper covering every
+metacharacter; checked on `a$b`, `a\b`, `x.y*z`, `(a|b)`, `[x]`, `a+b?` and `$`. Re-ran the loader tests, both
+ratchets, the 12-tracker parity run and two hub sequences: unchanged.

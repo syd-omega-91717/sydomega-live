@@ -24,7 +24,19 @@ with it:
   - ninth   -- the ninth element has one name, the canon's ("THE ALL"); a
                second name for it outside a comment is a finding.
 A record naming several signs (a list, a table header) is not a pairing and
-is skipped. "Sovereign" is both an agent and the platform's adjective, so it
+is skipped BY THE LINE CHECK ABOVE; the two shapes that carry a whole table in
+one literal are read by check_tables() instead, because they are how a page
+actually keeps its own copy:
+  - a map  {Aries:'Ares', Taurus:'Aphrodite', ...}  (keyed by sign, or by
+    agent with signs as values): each value that is a god, element, agent or
+    token must be the one the canon pairs with its key;
+  - parallel arrays  SIGNS=[...12 signs...]; GODS=[...12 gods...]  near each
+    other: item i of the second must be the canon pairing of sign i of the first.
+Both were invisible to the gate until 2026-11-15: a wrong god planted in
+oracle.html's SIGN_GOD, a wrong element in SIGN_ELEM, and two gods swapped in
+character.html's GODS array all passed. (The estate agreed with the canon when
+this was written: the gate closes the door, it did not find a drifted table.)
+ "Sovereign" is both an agent and the platform's adjective, so it
 only counts as an agent next to `agent`/`name` keys or a `//` pairing.
 
 Exit 1 with one line per contradiction; 0 when the estate agrees.
@@ -69,6 +81,90 @@ def records(line):
     if len(line) <= 400:
         return [line]
     return re.split(r'[}\]]\s*,\s*[{\[]', line)
+
+
+MAP_LITERAL = re.compile(r'\{([^{}]{20,2000})\}')
+ARRAY_LITERAL = re.compile(r"\[((?:\s*(?:'[^'\n]{1,40}'|\"[^\"\n]{1,40}\")\s*,){11}\s*(?:'[^'\n]{1,40}'|\"[^\"\n]{1,40}\")\s*,?\s*)\]")
+ITEM = re.compile(r"""['"]([^'"\n]{1,40})['"]""")
+
+
+def lead_word(v):
+    m = re.match(r'[A-Za-z]+(?: [A-Za-z]+)?', v.strip())
+    return m.group(0) if m else ''
+
+
+def kind_of(value, tracks, elements):
+    v = value.strip()
+    if v in GODS_ALL:
+        return 'god'
+    if lead_word(v).upper() in elements:
+        return 'element'
+    if any(v.upper() == t['agent'].upper() for t in tracks):
+        return 'agent'
+    if v in {t['token'] for t in tracks}:
+        return 'token'
+    return None
+
+
+def check_tables(text, name, tracks, elements):
+    out = []
+    by_sign = {t['sign']: t for t in tracks}
+    by_agent = {t['agent'].upper(): t for t in tracks}
+    sign_alt = '|'.join(by_sign)
+    pair = re.compile(r"""(?<![A-Za-z])['"]?(""" + sign_alt + '|' + '|'.join(by_agent) + r""")['"]?\s*:\s*(['"])([^'"\n]{1,40})\2""", re.I)
+
+    # shape 1: a map literal that pairs at least six signs (or agents) with values
+    for m in MAP_LITERAL.finditer(text):
+        pairs = [(k, v) for k, _, v in pair.findall(m.group(1))]
+        keys = set()
+        for k, v in pairs:
+            kk = k if k in by_sign else k.title() if k.title() in by_sign else k.upper()
+            keys.add(kk)
+        if len(keys) < 6:
+            continue
+        line = text.count('\n', 0, m.start()) + 1
+        for k, v in pairs:
+            t = by_sign.get(k) or by_sign.get(k.title()) or by_agent.get(k.upper())
+            if not t:
+                continue
+            # keyed by agent, valued by sign: {SENTINEL:'Aries'}
+            if k.upper() in by_agent and k.title() not in by_sign and v.title() in by_sign:
+                if by_sign[v.title()]['agent'].upper() != k.upper():
+                    out.append('%s:%d %s is paired with sign %s in a map; canon pairs it with %s' % (name, line, k, v, t['sign']))
+                continue
+            kind = kind_of(v, tracks, elements)
+            if kind == 'god' and v != t['god']:
+                out.append('%s:%d %s is paired with god %s in a map; canon: %s' % (name, line, t['sign'], v, t['god']))
+            elif kind == 'element' and lead_word(v).upper() != t['element'].upper():
+                out.append('%s:%d %s is paired with element %s in a map; canon: %s' % (name, line, t['sign'], lead_word(v).upper(), t['element'].upper()))
+            elif kind == 'agent' and v.upper() != t['agent'].upper():
+                out.append('%s:%d %s is paired with agent %s in a map; canon: %s' % (name, line, t['sign'], v, t['agent']))
+            elif kind == 'token' and v != t['token']:
+                out.append('%s:%d %s is paired with token %s in a map; canon: %s' % (name, line, t['sign'], v, t['token']))
+
+    # shape 2: parallel arrays of twelve strings, near a twelve-sign array
+    arrays = []
+    for m in ARRAY_LITERAL.finditer(text):
+        items = ITEM.findall(m.group(1))
+        arrays.append((text.count('\n', 0, m.start()) + 1, items))
+    for line, items in arrays:
+        if sorted(items) != sorted(by_sign):
+            continue
+        for line2, other in arrays:
+            if other is items or abs(line2 - line) > 12:
+                continue
+            kinds = [kind_of(v, tracks, elements) for v in other]
+            top = max(set(kinds), key=kinds.count)
+            if top is None or kinds.count(top) < 9:
+                continue
+            for i, v in enumerate(other):
+                t = by_sign[items[i]]
+                want = {'god': t['god'], 'element': t['element'].upper(), 'agent': t['agent'], 'token': t['token']}[top]
+                said = lead_word(v).upper() if top == 'element' else v.upper() if top == 'agent' else v
+                if (top == 'agent' and said != want.upper()) or (top != 'agent' and said != want):
+                    out.append('%s:%d item %d of a twelve-item %s array sits beside the sign list at line %d: %s gets %r; canon: %s'
+                               % (name, line2, i + 1, top, line, items[i], v, want))
+    return out
 
 
 def check_file(path, tracks, elements):
@@ -125,6 +221,7 @@ def check_file(path, tracks, elements):
             els = {m.group(1).strip().upper() for m in field_el.finditer(rec)}
             if len(els) == 1 and next(iter(els)) in elements and next(iter(els)) != t['element'].upper():
                 out.append('%s:%d %s is paired with element %s; canon: %s' % (name, i, t['sign'], next(iter(els)), t['element'].upper()))
+    out.extend(check_tables(''.join(lines), name, tracks, elements))
     return out
 
 

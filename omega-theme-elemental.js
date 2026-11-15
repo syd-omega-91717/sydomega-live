@@ -9,10 +9,12 @@
 (function(){
   if(window.__omegaThemeElemental) return; window.__omegaThemeElemental=true;
 
-  // Zodiac sign → element mapping (omega-agents.json reference)
+  // Zodiac sign → element mapping. The canon (omega-canon.json tracks / omega-elements.json sign_element) gives Taurus and
+  // Capricorn METAL but Virgo SAND; this table put Virgo under Metal, so every Virgo member was themed as steel. Held to the canon
+  // by scripts/canon-consistency.py (check_tables).
   var ELEMENT_MAP = {
     'Aries': 'Fire', 'Leo': 'Fire', 'Sagittarius': 'Fire',
-    'Taurus': 'Metal', 'Virgo': 'Metal', 'Capricorn': 'Metal',
+    'Taurus': 'Metal', 'Virgo': 'Sand', 'Capricorn': 'Metal',
     'Gemini': 'Wind', 'Libra': 'Wind', 'Aquarius': 'Wind',
     'Cancer': 'Water', 'Scorpio': 'Water', 'Pisces': 'Water'
   };
@@ -42,6 +44,15 @@
       summer: {accent:'#A1887F', soft:'#8D6E63', glow:'rgba(161,136,127,0.1)', primary:'#D7CCC8'},
       fall: {accent:'#795548', soft:'#6D4C41', glow:'rgba(121,85,72,0.11)', primary:'#A1887F'},
       winter: {accent:'#455A64', soft:'#37474F', glow:'rgba(69,90,100,0.09)', primary:'#607D8B'}
+    },
+    /* Sand: anchored on the three Sand colours the canon's own realm module defines (omega-realm.js PALETTE.Sand: core #FFD54F,
+       mid #C9A84C, outer #A1887F), one per season-end, so the theme and the element sphere agree. The in-between values are
+       my own tints of those; nobody has reviewed them as a design. */
+    Sand: {
+      spring: {accent:'#FFD54F', soft:'#E6BE47', glow:'rgba(255,213,79,0.12)', primary:'#FFE79A'},
+      summer: {accent:'#F5C842', soft:'#D9AE35', glow:'rgba(245,200,66,0.14)', primary:'#FFE07A'},
+      fall: {accent:'#C9A84C', soft:'#B08F3F', glow:'rgba(201,168,76,0.13)', primary:'#DCC06E'},
+      winter: {accent:'#A1887F', soft:'#8A7269', glow:'rgba(161,136,127,0.1)', primary:'#BCA9A1'}
     }
   };
 

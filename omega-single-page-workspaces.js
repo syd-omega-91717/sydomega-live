@@ -54,10 +54,10 @@
      row of navigation on the first page a member sees. Every one of them is in the menu, the full
      launcher or search, and the old #module= links above still redirect. */
   if(location.pathname==='/dashboard.html'){window.OmegaSinglePage={open:function(k){if(modules.indexOf(k)>=0)location.href=route(k);},close:function(){},modules:modules.slice()};return;}
-  /* LIFE: the daily log on life.html already has a tile, with a link, for each of these nine trackers
-     (omega-life-log.js KINDS), so a chip for each was the same nine links twice. They stay in WORKSPACES:
+  /* LIFE: life.html shows each of these twelve as a tab under the daily log (omega-panels.js; nine of them
+     also have a tile in omega-life-log.js KINDS), so a chip for each was the same links twice. They stay in WORKSPACES:
      the #module= redirect, search and the launcher still reach them. */
-  var IN_PAGE=location.pathname==='/life.html'?'body workout sleep mood breath habits fasting gratitude water'.split(' '):[];
+  var IN_PAGE=location.pathname==='/life.html'?'body workout sleep mood breath habits fasting gratitude water affirmations stoic rituals'.split(' '):[];
   var picker=document.createElement('nav');picker.className='omega-module-picker';picker.setAttribute('aria-label','Workspace capabilities');
   modules.forEach(function(k){
     if(IN_PAGE.indexOf(k)>=0)return;

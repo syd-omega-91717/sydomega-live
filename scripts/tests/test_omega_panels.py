@@ -20,6 +20,30 @@ def code(s):
     return re.sub(r"(?m)^\s*//.*$", "", s)
 
 
+WS = (ROOT / "omega-single-page-workspaces.js").read_text(encoding="utf-8")
+
+
+def hub_lists():
+    return {m.group(1): re.findall(r"'([^']+)'", m.group(2))
+            for m in re.finditer(r"'(/[a-z-]+\.html)':\[([^\]]*)\]", WS)}
+
+
+def panel_map():
+    block = WS[WS.index("var PANELS={"):WS.index("};", WS.index("var PANELS={"))]
+    return {h: v.split(" ") for h, v in re.findall(r"'(/[a-z-]+\.html)':'([^']*)'", block)}
+
+
+# Pages a UI mistake could cost money or privacy on, or that redirect a member who lacks a role, are never
+# tabs: they stay plain links until someone decides otherwise on purpose.
+NEVER_A_TAB = {
+    "payments", "wallet", "subscriptions", "ledger", "blockchain", "advertising", "ad-network", "sovereign-covenant",
+    "investment", "portfolio", "treasury", "revenue", "income", "budget", "expenses", "wealth", "contracts",
+    "kyc", "privacy", "membership", "credentials", "identity", "passport", "health", "graph-admin",
+    "observatory", "enterprise", "map",
+}
+NO_TABS_HERE = {"/vault.html", "/invest.html", "/profile.html", "/archive.html", "/arena.html", "/media.html", "/dashboard.html"}
+
+
 class OmegaPanels(unittest.TestCase):
     def test_no_framing_and_no_string_into_innerhtml(self):
         c = code(JS)
@@ -49,15 +73,55 @@ class OmegaPanels(unittest.TestCase):
         for needle in ("p.dead = true", "clearInterval", "cancelAnimationFrame", "removeEventListener", "tie(cur"):
             self.assertIn(needle, JS, needle)
 
-    def test_modals_outside_main_are_carried_over(self):
-        self.assertIn('[id$="-modal"]', JS)
+    def test_the_pages_wrapper_and_authored_elements_outside_it_are_carried_over(self):
+        # scripts look up getElementById('app') and modals/toasts that sit outside <main>
+        self.assertIn("doc.querySelector('#app')", JS)
+        self.assertIn("doc.body.children", JS)
         for page in ("rituals", "habits"):
-            src = (ROOT / (page + ".html")).read_text(encoding="utf-8")
-            self.assertIn("-modal", src)
+            self.assertIn("-modal", (ROOT / (page + ".html")).read_text(encoding="utf-8"))
+
+    def test_page_scripts_share_one_scope_and_expose_their_globals_without_recursing(self):
+        self.assertIn("function runClassic", JS)
+        self.assertIn("function declaredNames", JS)
+        # a getter that reads its own name recursed forever when a host global or window.n of that name existed
+        self.assertIn("free(n) && !(n in window)", JS)
+
+    def test_external_module_scripts_are_loaded_as_modules_and_run_again_on_reopen(self):
+        self.assertIn("s.type = 'module'", JS)
+        self.assertIn("'op=' + (++extSeq)", JS)
+
+    def test_events_inside_the_stage_run_with_the_panel_current(self):
+        self.assertIn("'pointerdown'", JS)
+        self.assertIn("cur = panel;", JS)
 
     def test_a_failed_tab_links_to_its_own_page(self):
         self.assertIn("could not load here", JS)
         self.assertIn("ON ITS OWN PAGE", JS)
+
+    def test_hub_tabs_are_real_pages_listed_in_that_hub(self):
+        lists, panels = hub_lists(), panel_map()
+        self.assertGreaterEqual(sum(len(v) for v in panels.values()), 80)
+        for hub, keys in panels.items():
+            self.assertIn(hub, lists, hub)
+            self.assertEqual(len(keys), len(set(keys)), hub)
+            for k in keys:
+                self.assertIn(k, lists[hub], "%s is not listed in %s" % (k, hub))
+                self.assertTrue((ROOT / (k + ".html")).exists(), k)
+
+    def test_no_money_consent_identity_or_role_gated_page_is_a_tab(self):
+        panels = panel_map()
+        for hub, keys in panels.items():
+            self.assertNotIn(hub, NO_TABS_HERE, hub)
+            self.assertEqual(NEVER_A_TAB & set(keys), set(), hub)
+
+    def test_a_hub_with_no_main_cannot_host_tabs(self):
+        # the picker (and so the tabs) needs <main>; media.html has none, so it must not claim tabs
+        self.assertNotIn("<main", (ROOT / "media.html").read_text(encoding="utf-8"))
+        self.assertNotIn("/media.html", panel_map())
+
+    def test_the_picker_loads_the_module_only_when_a_hub_has_tabs(self):
+        self.assertIn("script[src=\"/omega-panels.js\"]", WS)
+        self.assertIn("AS_TABS.length", WS)
 
 
 if __name__ == "__main__":

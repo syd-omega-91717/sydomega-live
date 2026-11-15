@@ -24,6 +24,21 @@
     '/archive.html':['kyc','charter','sigil'],
     '/media.html':['cinema','movies','series','trailers','universe','feed','publications','visual-atlas','characters']
   };
+  /* PANELS: pages shown as TABS that open in place (omega-panels.js) instead of chips that leave the hub.
+     Space-separated strings, not arrays, so the hub-list parser in test_hub_picker_links.py does not read this
+     as a second chip list. Only pages that PASSED a measured comparison with their own standalone page are
+     here (same controls, same storage written, no errors, content present); every other page in the hub
+     stays a chip. Payments, KYC, consent and privacy pages and the ARENA agent tools are deliberately left
+     out of this first batch. */
+  var PANELS={
+    '/ascend.html':'academy focus contributions evolution levels phases ascension domain-mastery clarity flashcard library mentors principles reading skills vocabulary architect forge',
+    '/cosmos.html':'horoscope elements dna graph mirror oracle realm rune tribe realms sculpture cosmic-ledger',
+    '/order.html':'family heritage bloodline hall sovereigns factions city',
+    '/services.html':'consultancy publishing marketing events social studio creation-studio',
+    '/intel.html':'intelligence automation atlas cipher codex mindmap nexus pulse sigma signal news',
+    '/govern.html':'governance roadmap ecosystem knowledge knowledge-loom maintenance control-center platform-kernel agent-operations ops architecture autonomous-insights lab design-system design-showcase design-lab',
+    '/achieve.html':'achievements leaderboard domain-mastery gates grades levels phases ascension kings triads grid hercules trophies'
+  };
   var modules=WORKSPACES[location.pathname]||[];
   if(!modules.length)return;
 
@@ -57,13 +72,24 @@
   /* LIFE: life.html shows each of these twelve as a tab under the daily log (omega-panels.js; nine of them
      also have a tile in omega-life-log.js KINDS), so a chip for each was the same links twice. They stay in WORKSPACES:
      the #module= redirect, search and the launcher still reach them. */
+  var AS_TABS=(PANELS[location.pathname]||'').split(' ').filter(Boolean);
   var IN_PAGE=location.pathname==='/life.html'?'body workout sleep mood breath habits fasting gratitude water affirmations stoic rituals'.split(' '):[];
   var picker=document.createElement('nav');picker.className='omega-module-picker';picker.setAttribute('aria-label','Workspace capabilities');
   modules.forEach(function(k){
-    if(IN_PAGE.indexOf(k)>=0)return;
+    if(IN_PAGE.indexOf(k)>=0||AS_TABS.indexOf(k)>=0)return;
     var a=document.createElement('a');a.href=route(k);a.className='omega-module-chip';a.textContent=label(k);a.dataset.module=k;
     picker.appendChild(a);
   });
   main.insertBefore(picker,main.firstChild);
+  if(AS_TABS.length){
+    var host=document.createElement('section');
+    host.id='hub-tools';
+    host.setAttribute('aria-label','Tools in this workspace');
+    host.setAttribute('data-omega-panels',JSON.stringify(AS_TABS.map(function(k){return [k,label(k).toUpperCase(),route(k)];})));
+    host.setAttribute('data-omega-panels-label','Tools in this workspace');
+    main.insertBefore(host,picker.nextSibling);
+    if(window.OmegaPanels){window.OmegaPanels.boot();}
+    else if(!document.querySelector('script[src="/omega-panels.js"]')){var ps=document.createElement('script');ps.src='/omega-panels.js';ps.defer=true;document.head.appendChild(ps);}
+  }
   window.OmegaSinglePage={open:function(k){if(modules.indexOf(k)>=0)location.href=route(k);},close:function(){},modules:modules.slice()};
 })();

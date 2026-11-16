@@ -1,8 +1,8 @@
 {
   "_captured": "2026-11-16",
-  "source": "Authenticated Supabase provider migration-ledger read via Supabase list_migrations on 2026-11-16 (read-only after applying media_items_authenticated_select). The provider ledger is authoritative for applied versions; source migration inventory and fresh replay are validated separately.",
-  "remoteMigrationCount": 431,
-  "latestRemoteMigration": "20261116214052",
+  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-16 after applying media_items_authenticated_select and authenticated_safe_column_read_grants. Provider ledger is authoritative for applied versions; source migration inventory and fresh replay are validated separately.",
+  "remoteMigrationCount": 432,
+  "latestRemoteMigration": "20261116214842",
   "versions": [
     "0001",
     "0002",
@@ -434,7 +434,8 @@
     "20261113020000",
     "20261113030000",
     "20261113062812",
-    "20261116214052"
+    "20261116214052",
+    "20261116214842"
   ],
   "migrations": [
     {
@@ -2157,6 +2158,10 @@
     {
       "version": "20261116214052",
       "name": "media_items_authenticated_select"
+    },
+    {
+      "version": "20261116214842",
+      "name": "authenticated_safe_column_read_grants"
     }
   ]
 }

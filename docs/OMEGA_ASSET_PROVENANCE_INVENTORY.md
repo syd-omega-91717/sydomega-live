@@ -124,3 +124,19 @@ python3 scripts/omega-media-review-gallery.py --manifest docs/media-visual-revie
 The browser checkbox and notes remain temporary and do not write to the manifest. Review decisions must be entered into the JSON manifest with reviewer, timestamp and evidence. The manifest is a review workflow record, not a legal determination. A SHA-256 proves bytes only; no generator can establish ownership or permission. The rights gate in `docs/media-rights.json` remains the separate release control.
 
 The gallery is read-only and must not be deployed as a public asset catalogue. The scanner excludes symbolic links and verifies resolved paths remain within the repository root.
+
+### Video frame and metadata sampling
+
+For a technical review of all repository videos, run:
+
+```bash
+python3 scripts/omega-media-review-video-sampler.py
+python3 -m unittest scripts/tests/test_omega_media_review_video_sampler.py
+```
+
+The sampler requires local `ffprobe` and `ffmpeg` binaries. It samples up to five bounded timestamps per video, records container/codec/duration/dimension/frame-rate metadata, and writes local outputs under:
+
+- `artifacts/media-visual-review/video-frames/`
+- `artifacts/media-visual-review/video-samples.json`
+
+Each result is bound to the repository-relative asset path and SHA-256. If a video cannot be probed or sampled, its record remains `UNAVAILABLE` with an error code; the command exits non-zero rather than silently treating it as reviewed. Sampled frames are representative technical previews, not a full playback audit, authenticity check, or rights determination. All video rights remain `UNVERIFIED` until evidence-backed human review is recorded.

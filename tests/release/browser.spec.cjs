@@ -111,8 +111,8 @@ test.describe('Omega production release surface', () => {
     await expect(pulse).toHaveAttribute('aria-label', /Live data status:/);
     const box = await pulse.boundingBox();
     expect(box).not.toBeNull();
-    expect(box.width).toBeGreaterThanOrEqual(24);
-    expect(box.height).toBeGreaterThanOrEqual(24);
+    expect(box.width).toBeGreaterThanOrEqual(36);
+    expect(box.height).toBeGreaterThanOrEqual(36);
     await pulse.evaluate((el) => {
       window.__omegaPulseKeyboardActivations = 0;
       el.addEventListener('click', () => { window.__omegaPulseKeyboardActivations += 1; });

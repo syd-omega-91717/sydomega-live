@@ -103,6 +103,28 @@ test.describe('Omega production release surface', () => {
     expect(body).toMatch(/UNAVAILABLE|PARTIAL|LIVE|CALCULATED|SIMULATED|sign\s*in|log\s*in|authenticate/i);
   });
 
+  test('shared live pulse is a keyboard-operable status button', async ({ page }) => {
+    await visit(page, new URL('/dashboard.html', BASE_URL).toString());
+    const pulse = page.locator('#omega-pulse');
+    await expect(pulse).toBeVisible();
+    await expect(pulse).toHaveAttribute('type', 'button');
+    await expect(pulse).toHaveAttribute('aria-label', /Live data status:/);
+    const box = await pulse.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(36);
+    expect(box.height).toBeGreaterThanOrEqual(36);
+    await pulse.evaluate((el) => {
+      window.__omegaPulseKeyboardActivations = 0;
+      el.addEventListener('click', () => { window.__omegaPulseKeyboardActivations += 1; });
+    });
+    await pulse.focus();
+    await expect(pulse).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => page.evaluate(() => window.__omegaPulseKeyboardActivations)).toBe(1);
+    await page.keyboard.press('Space');
+    await expect.poll(() => page.evaluate(() => window.__omegaPulseKeyboardActivations)).toBe(2);
+  });
+
   for (const [route] of MODULE_ROUTES.slice(0, 5)) {
     test('accessibility: ' + route, async ({ page }) => {
       await visit(page, new URL(route, BASE_URL).toString());

@@ -48,7 +48,7 @@ label{display:block;font:12px var(--M,monospace);letter-spacing:1.2px;color:var(
 <div class="title">CREATE PROJECT</div>
 <form id="project-form">
 <label for="project-name">NAME</label><input id="project-name" required maxlength="160" placeholder="e.g. Omega Visual Forge">
-<label for="project-description">DESCRIPTION</label><textarea id="project-description" maxlength="4000" placeholder="What is this production project for?"></textarea>
+<label for="project-description">DESCRIPTION</label><textarea id="project-description" data-autogrow maxlength="4000" placeholder="What is this production project for?"></textarea>
 <label for="project-type">TYPE</label><select id="project-type"><option>IMAGE</option><option>VIDEO</option><option>MOVIE</option><option>GAME</option><option>WORLD</option><option selected>MIXED</option></select>
 <div class="actions"><button type="submit">CREATE DRAFT</button></div>
 <div id="project-message" class="note" aria-live="polite"></div>

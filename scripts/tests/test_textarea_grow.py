@@ -33,13 +33,17 @@ class TextareaGrow(unittest.TestCase):
         self.assertNotRegex(BLOCK, r"(?m)^\s*textarea\s*\{")
 
     def test_the_resting_size_follows_rows_and_a_settable_chrome(self):
-        self.assertIn("min-block-size:max(48px,calc(attr(rows type(<number>),2)*1lh + var(--oa-ta-chrome,20px)))", BLOCK)
+        self.assertIn("min-block-size:max(48px,calc(attr(rows type(<number>),2)*1lh + var(--oa-ta-chrome)))", BLOCK)
 
-    def test_the_default_chrome_is_the_skins_own_padding_and_border(self):
+    def test_the_chrome_is_what_each_kind_of_area_really_carries(self):
+        """Measured, not assumed: a classed area takes omega-accessibility-audit.css's padding + border, an unclassed one takes the skin's (it outranks that sheet)."""
+        a11y = (ROOT / "omega-accessibility-audit.css").read_text(encoding="utf-8")
+        rule = re.search(r"input,\s*textarea,\s*select\s*\{([^}]*)\}", a11y[a11y.index("min-height: 44px") - 200:]).group(1)
+        classed = 2 * int(re.search(r"padding:\s*(\d+)px", rule).group(1)) + 2 * int(re.search(r"border:\s*(\d+)px solid", rule).group(1))
         skin = re.search(r":where\(\.inp\),input:not\(\[class\]\),textarea:not\(\[class\]\),select:not\(\[class\]\)\{([^}]*)\}", CSS).group(1)
-        pad = int(re.search(r"padding:(\d+)px", skin).group(1))
-        border = int(re.search(r"border:(\d+)px solid", skin).group(1))
-        self.assertIn("var(--oa-ta-chrome,%dpx)" % (2 * pad + 2 * border), BLOCK)
+        unclassed = 2 * int(re.search(r"padding:(\d+)px", skin).group(1)) + 2 * int(re.search(r"border:(\d+)px solid", skin).group(1))
+        self.assertIn("--oa-ta-chrome:%dpx;" % classed, BLOCK)
+        self.assertIn("textarea[data-autogrow]:not([class]){--oa-ta-chrome:%dpx}" % unclassed, BLOCK)
 
     def test_a_long_paste_stops_before_the_save_button_leaves_the_screen(self):
         self.assertIn("max-block-size:60vh", BLOCK)
@@ -53,6 +57,16 @@ class TextareaGrow(unittest.TestCase):
                 if m.group(1).lower() != "textarea":
                     bad.append("%s <%s>" % (pathlib.Path(f).name, m.group(1)))
         self.assertEqual(bad, [])
+
+    def test_the_measured_opt_ins_are_these_three_and_the_placeholder_caveat_is_recorded(self):
+        """Opted in and measured identical at rest: heritage #h-notes, principles #p-body, creation-studio #project-description. creation-studio #asset-prompt was measured too and left out:
+        field-sizing:content sizes an empty area to its placeholder, and its long one grew it 70.4 -> 93.6."""
+        on = []
+        for f in sorted(glob.glob(str(ROOT / "*.html"))):
+            text = pathlib.Path(f).read_text(encoding="utf-8", errors="ignore")
+            on += ["%s#%s" % (pathlib.Path(f).name, m.group(1)) for m in re.finditer(r"<textarea id=\"([^\"]+)\"[^>]*\bdata-autogrow\b", text)]
+        self.assertEqual(sorted(on), ["creation-studio.html#project-description", "heritage.html#h-notes", "principles.html#p-body"])
+        self.assertIn("also sizes an EMPTY area to fit its placeholder", RAW)
 
 
 if __name__ == "__main__":

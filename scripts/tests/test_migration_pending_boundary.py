@@ -136,6 +136,9 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop column", sql)
         self.assertNotIn("drop table", sql)
         self.assertNotIn("grant ", sql)
+        preflight = entry.get("livePreflight", {})
+        self.assertEqual(preflight.get("status"), "VERIFIED")
+        self.assertEqual({column.get("name") for column in preflight.get("columns", [])}, {"name", "active"})
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []

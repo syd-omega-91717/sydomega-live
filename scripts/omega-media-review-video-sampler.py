@@ -10,8 +10,10 @@ import argparse
 import importlib.util
 import json
 import math
+import os
 import shutil
 import subprocess
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -68,16 +70,24 @@ def _probe_video(path: Path, ffprobe: str) -> dict:
 
 def _extract_frame(path: Path, destination: Path, timestamp: float, ffmpeg: str) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
-    command = [
-        ffmpeg, "-nostdin", "-hide_banner", "-loglevel", "error", "-y",
-        "-ss", f"{timestamp:.3f}", "-protocol_whitelist", "file,pipe",
-        "-i", str(path), "-map", "0:v:0", "-frames:v", "1",
-        "-vf", "scale=640:-2", "-an", "-sn", "-dn", "-f", "image2",
-        str(destination),
-    ]
-    subprocess.run(command, capture_output=True, text=True, check=True, timeout=90)
-    if not destination.is_file() or destination.stat().st_size <= 0:
-        raise ValueError("frame extractor produced no image")
+    descriptor, temporary_name = tempfile.mkstemp(prefix=".omega-frame-", suffix=".jpg", dir=destination.parent)
+    os.close(descriptor)
+    temporary = Path(temporary_name)
+    try:
+        command = [
+            ffmpeg, "-nostdin", "-hide_banner", "-loglevel", "error", "-y",
+            "-ss", f"{timestamp:.6f}", "-protocol_whitelist", "file,pipe",
+            "-i", str(path), "-map", "0:v:0", "-frames:v", "1",
+            "-vf", "scale=640:-2", "-an", "-sn", "-dn", "-f", "image2",
+            str(temporary),
+        ]
+        subprocess.run(command, capture_output=True, text=True, check=True, timeout=90)
+        if not temporary.is_file() or temporary.stat().st_size <= 0:
+            raise ValueError("frame extractor produced no image")
+        # os.replace replaces a destination symlink itself instead of following it.
+        os.replace(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def build_video_samples(
@@ -122,6 +132,9 @@ def build_video_samples(
                 raise ValueError("video path is not a safe in-repository regular file")
             metadata = _probe_video(path, ffprobe)
             frame_dir = output_dir / asset["record_id"][:20]
+            frame_dir.mkdir(parents=True, exist_ok=True)
+            if frame_dir.is_symlink() or not frame_dir.resolve(strict=True).is_relative_to(output_dir):
+                raise ValueError("frame output directory is not safely contained")
             for index, timestamp in enumerate(sample_times(metadata["duration_seconds"]), start=1):
                 micros = int(round(timestamp * 1_000_000))
                 frame_path = frame_dir / f"frame-{index:02d}-{micros:09d}us.jpg"
@@ -156,9 +169,14 @@ def build_video_samples(
         "videos": records,
     }
     manifest_path = output_dir.parent / "video-samples.json"
-    temporary = manifest_path.with_suffix(".json.tmp")
-    temporary.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(manifest_path)
+    descriptor, temporary_name = tempfile.mkstemp(prefix=".omega-video-samples-", suffix=".json", dir=manifest_path.parent)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+            stream.write(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+        # os.replace replaces a destination symlink itself instead of following it.
+        os.replace(temporary_name, manifest_path)
+    finally:
+        Path(temporary_name).unlink(missing_ok=True)
     return manifest
 
 

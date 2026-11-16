@@ -102,7 +102,14 @@ jobs:
         run: |
           set -euo pipefail
           supabase migration list --linked | tee "${RUNNER_TEMP}/migrations-before.txt"
-          supabase db push --dry-run --linked 2>&1 | tee "${RUNNER_TEMP}/migration-dry-run.txt"
+          push_args=(--linked)
+          if [ "${MIGRATION_VERSION}" = "20261116214700" ]; then
+            # The compatibility version is intentionally earlier than the
+            # already-applied grant migration. --include-all selects missing
+            # local versions; the Python preflight below proves there is only one.
+            push_args+=(--include-all)
+          fi
+          supabase db push --dry-run "${push_args[@]}" 2>&1 | tee "${RUNNER_TEMP}/migration-dry-run.txt"
           python - <<'PY'
           import os, pathlib, re, sys
           version = os.environ["MIGRATION_VERSION"]
@@ -129,7 +136,11 @@ jobs:
           MIGRATION_VERSION: ${{ inputs.migration_version }}
         run: |
           set -euo pipefail
-          supabase db push --linked --yes
+          push_args=(--linked --yes)
+          if [ "${MIGRATION_VERSION}" = "20261116214700" ]; then
+            push_args+=(--include-all)
+          fi
+          supabase db push "${push_args[@]}"
 
       - name: Verify remote migration history after push
         env:

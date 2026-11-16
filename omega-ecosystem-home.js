@@ -52,9 +52,9 @@
     var s = document.createElement('style');
     s.id = 'oeh-style';
     s.textContent =
-      '.oeh{display:grid;grid-template-columns:minmax(212px,248px) minmax(0,1fr) minmax(252px,296px);gap:14px;margin:0 0 24px;align-items:start}' +
+      '.oeh{display:grid;grid-template-columns:minmax(212px,248px) minmax(0,1fr) minmax(252px,296px);gap:12px;margin:0 0 20px;align-items:start}' +
       '.oeh-col{display:flex;flex-direction:column;gap:14px;min-width:0}' +
-      '.oeh-box{position:relative;border:1px solid rgba(201,168,76,.27);border-radius:10px;padding:14px 14px 16px;min-width:0;' +
+      '.oeh-box{position:relative;border:1px solid rgba(201,168,76,.27);border-radius:10px;padding:12px 14px 12px;min-width:0;' +
         'background:linear-gradient(180deg,rgba(17,14,7,.8),rgba(5,6,10,.88));' +
         'box-shadow:inset 0 0 0 1px rgba(255,214,130,.04),0 12px 34px rgba(0,0,0,.45)}' +
       '.oeh-box::before{content:"";position:absolute;left:16px;right:16px;top:-1px;height:2px;pointer-events:none;' +
@@ -66,15 +66,15 @@
       /* agents */
       '.oeh-agents{display:flex;flex-direction:column;gap:3px}' +
       '.oeh .oeh-agent{display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:3px 8px;border:1px solid transparent;border-radius:7px;' +
-        'text-decoration:none;color:var(--ink,#E9E6DC);min-height:46px;transition:border-color .15s,background .15s}' +
+        'text-decoration:none;color:var(--ink,#E9E6DC);min-height:40px;transition:border-color .15s,background .15s}' +
       '.oeh .oeh-agent:hover,.oeh .oeh-agent:focus-visible{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.07);outline:none}' +
-      '.oeh-agent img{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:0 0 34px;border:1px solid rgba(201,168,76,.45);background:#07070c}' +
+      '.oeh-agent img{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:0 0 30px;border:1px solid rgba(201,168,76,.45);background:#07070c}' +
       '.oeh-agent-t{display:flex;flex-direction:column;min-width:0;flex:1;text-align:left}' +
       '.oeh-agent-n{font-family:var(--R,Rajdhani,sans-serif);font-size:16px;font-weight:600;line-height:1.1;color:var(--ink,#E9E6DC)}' +
       '.oeh-agent-r{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:.06em;color:var(--muted,#8796A1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
       '.oeh-agent-c{color:var(--gold,#C9A84C);font-size:18px;line-height:1}' +
       /* hero */
-      '.oeh-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);align-items:center;gap:6px;overflow:hidden;padding:18px 8px 16px 22px;min-height:300px;' +
+      '.oeh-hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);align-items:center;gap:6px;overflow:hidden;padding:18px 8px 16px 22px;min-height:300px;' +
         'background:radial-gradient(110% 130% at 80% 42%,rgba(201,168,76,.17),rgba(201,168,76,0) 62%),linear-gradient(180deg,rgba(17,14,7,.82),rgba(5,6,10,.9))}' +
       '.oeh-eyebrow{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:.26em;color:var(--cyan,#00E5FF);text-transform:uppercase}' +
       '.oeh-title{margin:8px 0 12px;font-family:var(--D,"Cinzel Decorative",serif);font-weight:900;font-size:clamp(22px,2.35vw,36px);line-height:1.06;letter-spacing:0;' +
@@ -91,7 +91,7 @@
       '.oeh-art{position:relative;min-width:0;align-self:stretch;min-height:250px}' +
       /* universe */
       '.oeh-strip{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 10px;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.4) transparent}' +
-      '.oeh .oeh-poster{position:relative;flex:0 0 clamp(210px,24vw,262px);aspect-ratio:16/9;border-radius:8px;overflow:hidden;scroll-snap-align:start;display:block;' +
+      '.oeh .oeh-poster{position:relative;flex:0 0 max(150px,calc((100% - 36px)/4));aspect-ratio:16/9;border-radius:8px;overflow:hidden;scroll-snap-align:start;display:block;' +
         'border:1px solid rgba(201,168,76,.32);background:#07070c;text-decoration:none;transition:border-color .15s,transform .15s}' +
       '.oeh .oeh-poster:hover,.oeh .oeh-poster:focus-visible{border-color:rgba(226,200,109,.8);transform:translateY(-2px);outline:none}' +
       '.oeh-poster img{width:100%;height:100%;object-fit:cover;display:block}' +
@@ -99,15 +99,21 @@
         'color:#F3EBD0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.82));display:flex;justify-content:space-between;gap:8px}' +
       /* trio */
       '.oeh-trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}' +
-      '.oeh-wheel{display:flex;justify-content:center;align-items:center;min-height:220px}' +
-      '.oeh-bars{display:flex;flex-direction:column;gap:12px;margin-top:4px}' +
+      '.oeh-wheel{display:flex;justify-content:center;align-items:center;min-height:224px}' +
+      '.oeh-ring{position:relative;width:min(100%,224px);aspect-ratio:1;margin:0 auto}' +
+      '.oeh-ring::before{content:"";position:absolute;inset:10%;border-radius:50%;border:1px dashed rgba(201,168,76,.32)}' +
+      '.oeh-ring-c{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--D,"Cinzel Decorative",serif);font-size:38px;color:var(--solar,#E2C86D);text-shadow:0 0 22px rgba(226,200,109,.55)}' +
+      '.oeh .oeh-ring-n{position:absolute;display:block;width:44px;height:44px;margin:-22px 0 0 -22px;padding:5px;box-sizing:border-box;border-radius:50%;transition:transform .15s}' +
+      '.oeh .oeh-ring-n:hover,.oeh .oeh-ring-n:focus-visible{transform:scale(1.18);outline:none}' +
+      '.oeh-ring-n img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;border:1px solid rgba(201,168,76,.5);background:#07070c}' +
+      '.oeh-bars{display:flex;flex-direction:column;gap:8px;margin-top:2px}' +
       '.oeh-bar-t{display:flex;justify-content:space-between;font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:.1em;color:var(--muted,#8796A1);margin-bottom:4px}' +
       '.oeh-bar-t b{color:var(--ink,#E9E6DC);font-weight:700}' +
       '.oeh-track{height:8px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}' +
       '.oeh-fill{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#8A6A22,#E2C86D);box-shadow:0 0 10px rgba(226,200,109,.5)}' +
-      '.oeh-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}' +
-      '.oeh-stat{border:1px solid rgba(201,168,76,.2);border-radius:7px;padding:8px 6px;text-align:center}' +
-      '.oeh-stat b{display:block;font-family:var(--D,"Cinzel Decorative",serif);font-size:20px;color:var(--solar,#E2C86D)}' +
+      '.oeh-stats{display:flex;flex-direction:column;gap:5px;margin-top:8px}' +
+      '.oeh-stat{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid rgba(201,168,76,.2);border-radius:7px;padding:2px 10px;text-align:left}' +
+      '.oeh-stat b{order:2;display:block;font-family:var(--D,"Cinzel Decorative",serif);font-size:18px;color:var(--solar,#E2C86D)}' +
       '.oeh-stat span{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:.08em;color:var(--muted,#8796A1)}' +
       '.oeh-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}' +
       '.oeh-li{display:flex;gap:9px;align-items:flex-start;font-family:var(--R,Rajdhani,sans-serif);font-size:15px;line-height:1.3;color:var(--ink,#E9E6DC)}' +
@@ -121,12 +127,12 @@
       '.oeh-big{font-family:var(--D,"Cinzel Decorative",serif);font-size:34px;line-height:1.1;color:var(--solar,#E2C86D);text-shadow:0 0 22px rgba(226,200,109,.5)}' +
       '.oeh-cap{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:.12em;color:var(--muted,#8796A1);margin-top:4px;line-height:1.5}' +
       '.oeh-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}' +
-      '.oeh .oeh-q{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:62px;padding:8px 10px;border:1px solid rgba(201,168,76,.26);border-radius:8px;' +
+      '.oeh .oeh-q{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:54px;padding:6px 10px;border:1px solid rgba(201,168,76,.26);border-radius:8px;' +
         'text-decoration:none;color:var(--ink,#E9E6DC);background:rgba(201,168,76,.04);text-align:left;align-items:flex-start;transition:border-color .15s,background .15s}' +
       '.oeh .oeh-q:hover,.oeh .oeh-q:focus-visible{border-color:rgba(226,200,109,.75);background:rgba(201,168,76,.1);outline:none}' +
       '.oeh-q b{font-family:var(--D,"Cinzel Decorative",serif);font-size:12px;letter-spacing:.14em;color:var(--solar,#E2C86D)}' +
       '.oeh-q span{font-family:var(--R,Rajdhani,sans-serif);font-size:14px;color:var(--muted,#8796A1)}' +
-      '.oeh-tree{min-height:230px;border-radius:8px;overflow:hidden;margin-bottom:8px}' +
+      '.oeh-tree{min-height:176px;border-radius:8px;overflow:hidden;margin-bottom:8px}' +
       '@media(max-width:1180px){.oeh{grid-template-columns:minmax(0,1fr) minmax(252px,300px)}.oeh-left{grid-column:1/-1}' +
         '.oeh-agents{flex-direction:row;overflow-x:auto;gap:8px}.oeh .oeh-agent{flex:0 0 auto;min-width:176px}.oeh-trio{grid-template-columns:repeat(2,minmax(0,1fr))}}' +
       '@media(max-width:760px){.oeh{grid-template-columns:minmax(0,1fr)}.oeh-hero{grid-template-columns:minmax(0,1fr);padding:20px 16px 8px}.oeh-art{min-height:210px}' +
@@ -142,11 +148,30 @@
       var row = el('a', 'oeh-agent', null, list);
       row.href = a.href || '/agents.html';
       var img = el('img', null, null, row);
-      img.src = signArt(a.sign); img.alt = ''; img.width = 34; img.height = 34; img.loading = 'lazy'; img.decoding = 'async';
+      img.src = signArt(a.sign); img.alt = ''; img.width = 30; img.height = 30; img.loading = 'lazy'; img.decoding = 'async';
       var t = el('span', 'oeh-agent-t', null, row);
       el('span', 'oeh-agent-n', a.name, t);
       el('span', 'oeh-agent-r', a.role || '', t);
       el('span', 'oeh-agent-c', '›', row);
+    });
+  }
+
+  /* The twelve signs as a compact ring, built from the agents' own sign order and the same sign medallion art the agent list uses (signArt), so no second sign table exists.
+     omega-constellation.js was tried here and is the wrong widget for a narrow box: its ring is a minimum 860px square, which made this panel 941px tall. */
+  function renderWheel(root, agents) {
+    clear(root);
+    var ring = el('div', 'oeh-ring', null, root);
+    el('span', 'oeh-ring-c', '\u03A9', ring);
+    var n = agents.length;
+    agents.forEach(function (a, i) {
+      var ang = (i / n) * 2 * Math.PI - Math.PI / 2;
+      var node = el('a', 'oeh-ring-n', null, ring);
+      node.href = a.href || '/agents.html';
+      node.setAttribute('aria-label', a.name + ', ' + a.sign);
+      node.style.left = (Math.round((50 + 40 * Math.cos(ang)) * 100) / 100) + '%';
+      node.style.top = (Math.round((50 + 40 * Math.sin(ang)) * 100) / 100) + '%';
+      var mark = el('img', null, null, node);
+      mark.src = signArt(a.sign); mark.alt = ''; mark.width = 34; mark.height = 34; mark.loading = 'lazy'; mark.decoding = 'async';
     });
   }
 
@@ -295,8 +320,8 @@
     var q = function (k) { return root.querySelector('[data-oeh="' + k + '"]'); };
 
     var agents = null, catalog = null;
-    var agentsP = getJSON('/omega-agents.json').then(function (j) { agents = j.agents || j; renderAgents(q('agents'), agents); })
-      .catch(function () { note(q('agents'), 'The agent roster could not be read.'); });
+    var agentsP = getJSON('/omega-agents.json').then(function (j) { agents = j.agents || j; renderAgents(q('agents'), agents); renderWheel(q('wheel'), agents); })
+      .catch(function () { note(q('agents'), 'The agent roster could not be read.'); note(q('wheel'), 'The agent roster could not be read.'); });
     var catP = getJSON('/omega-catalog.json').then(function (j) { catalog = j; renderUniverse(q('universe'), j); })
       .catch(function () { note(q('universe'), 'The franchises could not be read.'); });
     await Promise.all([agentsP, catP]);

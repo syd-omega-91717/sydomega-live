@@ -132,7 +132,7 @@ def render_video_review_html(root: Path, page_dir: Path, manifest: dict) -> str:
             f'<span class="status">{html.escape(video["sampling_status"])}</span></header>'
             f'<video controls preload="metadata"><source src="{html.escape(source_url, quote=True)}"></video>'
             f'<dl>{detail_html}</dl>'
-            f'<p class="trust">Visual review: PENDING · Rights: UNVERIFIED</p>'
+            f'<p class="trust">Visual review: {html.escape(video["visual_review_status"])} · Rights: {html.escape(video["rights_review_status"])}</p>'
             f'{error_html}<div class="frames">{frame_html}</div>'
             f'<p class="hash">Record: {html.escape(video["record_id"])}</p>'
             '</article>'
@@ -190,6 +190,16 @@ def build_video_samples(
     if not ffprobe or not ffmpeg:
         raise RuntimeError("ffprobe and ffmpeg are required; install FFmpeg and retry")
 
+    review_manifest_path = output_dir.parent / "review-manifest.json"
+    review_by_id = {}
+    if review_manifest_path.exists():
+        try:
+            review_manifest = json.loads(review_manifest_path.read_text(encoding="utf-8"))
+            GALLERY.validate_review_manifest(review_manifest)
+        except (OSError, json.JSONDecodeError, ValueError) as error:
+            raise ValueError(f"canonical review manifest is invalid; refusing to infer review state: {type(error).__name__}") from error
+        review_by_id = {item["record_id"]: item for item in review_manifest["assets"]}
+
     if assets is None:
         assets = [item for item in GALLERY.collect_assets(root) if item["kind"] == "video"]
 
@@ -199,13 +209,14 @@ def build_video_samples(
             continue
         path = asset["_path"]
         relative = asset["path"]
+        review = review_by_id.get(asset["record_id"], {})
         record = {
             "record_id": asset["record_id"],
             "path": relative,
             "sha256": asset["sha256"],
             "sampling_status": "UNAVAILABLE",
-            "visual_review_status": "PENDING",
-            "rights_review_status": "UNVERIFIED",
+            "visual_review_status": review.get("visual_review", {}).get("status", "PENDING"),
+            "rights_review_status": review.get("rights_review", {}).get("status", "UNVERIFIED"),
             "metadata": None,
             "frames": [],
             "error_code": None,

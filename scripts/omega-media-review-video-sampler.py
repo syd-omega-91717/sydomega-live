@@ -7,6 +7,7 @@ publication permission, or production deployment state.
 from __future__ import annotations
 
 import argparse
+import html
 import importlib.util
 import json
 import math
@@ -16,6 +17,7 @@ import subprocess
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 
 GALLERY_SCRIPT = Path(__file__).with_name("omega-media-review-gallery.py")
@@ -88,6 +90,85 @@ def _extract_frame(path: Path, destination: Path, timestamp: float, ffmpeg: str)
         os.replace(temporary, destination)
     finally:
         temporary.unlink(missing_ok=True)
+
+
+def render_video_review_html(root: Path, page_dir: Path, manifest: dict) -> str:
+    """Render a local-only frame contact sheet with clear non-approval states."""
+    cards = []
+    for video in manifest["videos"]:
+        source_path = root / video["path"]
+        source_relative = Path(__import__("os").path.relpath(source_path, page_dir)).as_posix()
+        source_url = quote(source_relative, safe="/._-")
+        metadata = video.get("metadata") or {}
+        details = [
+            ("Duration", f'{metadata.get("duration_seconds", "—")} s' if metadata else "Unavailable"),
+            ("Container", metadata.get("format_name", "Unavailable")),
+            ("Codec", metadata.get("video_codec", "Unavailable")),
+            ("Dimensions", f'{metadata.get("width", "—")} × {metadata.get("height", "—")}' if metadata else "Unavailable"),
+            ("Frame rate", metadata.get("frame_rate", "Unavailable")),
+            ("SHA-256", video["sha256"]),
+        ]
+        detail_html = "".join(
+            f"<dt>{html.escape(label)}</dt><dd>{html.escape(str(value))}</dd>"
+            for label, value in details
+        )
+        frames = []
+        for frame in video["frames"]:
+            frame_relative = (root / frame["path"]).relative_to(page_dir).as_posix()
+            frame_url = quote(frame_relative, safe="/._-")
+            frames.append(
+                f'<figure><img loading="lazy" src="{html.escape(frame_url, quote=True)}" '
+                f'alt="Representative frame at {frame["timestamp_seconds"]:.6f} seconds">'
+                f'<figcaption>{frame["timestamp_seconds"]:.3f}s</figcaption></figure>'
+            )
+        frame_html = "".join(frames) or '<p class="empty">No representative frames available.</p>'
+        error_html = (
+            f'<p class="error">Sampling unavailable: {html.escape(str(video["error_code"]))}</p>'
+            if video["error_code"] else ""
+        )
+        cards.append(
+            '<article class="video-card">'
+            f'<header><h2>{html.escape(video["path"])}</h2>'
+            f'<span class="status">{html.escape(video["sampling_status"])}</span></header>'
+            f'<video controls preload="metadata"><source src="{html.escape(source_url, quote=True)}"></video>'
+            f'<dl>{detail_html}</dl>'
+            f'<p class="trust">Visual review: PENDING · Rights: UNVERIFIED</p>'
+            f'{error_html}<div class="frames">{frame_html}</div>'
+            f'<p class="hash">Record: {html.escape(video["record_id"])}</p>'
+            '</article>'
+        )
+    summary = manifest["summary"]
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; media-src 'self'; style-src 'unsafe-inline'">
+<title>Local video technical review</title>
+<style>
+:root{{color-scheme:dark;background:#08080c;color:#eee;font:15px/1.5 system-ui,sans-serif}}
+body{{margin:0;padding:24px;max-width:1500px;margin-inline:auto}}
+h1{{color:#d8b75b}} .summary{{color:#bbb}} .video-card{{border:1px solid #39343a;border-radius:12px;padding:18px;margin:22px 0;background:#111116}}
+header{{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}}
+h2{{font-size:1.05rem;overflow-wrap:anywhere}} .status{{padding:4px 9px;border:1px solid #8c7440;border-radius:20px;color:#e7cb81}}
+video{{width:100%;max-height:420px;background:#000;margin:10px 0}}
+dl{{display:grid;grid-template-columns:150px 1fr;gap:4px 12px}} dt{{color:#aaa}} dd{{margin:0;overflow-wrap:anywhere}}
+.frames{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}}
+figure{{margin:0;background:#08080c;border:1px solid #34343a;border-radius:8px;overflow:hidden}}
+img{{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#000}}
+figcaption{{padding:6px 9px;color:#ccc}} .trust{{color:#e5c978;font-weight:600}}
+.hash{{font:11px ui-monospace,monospace;color:#777;overflow-wrap:anywhere}}
+.error{{color:#ff9b9b}} .empty{{color:#aaa}}
+</style>
+</head>
+<body>
+<h1>Local video technical review</h1>
+<p class="summary">{summary["video_count"]} videos · {summary["sampled"]} sampled · {summary["unavailable"]} unavailable · {summary["frames"]} frames</p>
+<p>Technical sampling only. Sampling is not human visual review, authenticity verification, copyright clearance, or publication approval. Every item remains Visual PENDING / Rights UNVERIFIED until a separate evidence-backed review is recorded.</p>
+{"".join(cards)}
+</body>
+</html>
+"""
 
 
 def build_video_samples(
@@ -179,6 +260,15 @@ def build_video_samples(
         os.replace(temporary_name, manifest_path)
     finally:
         Path(temporary_name).unlink(missing_ok=True)
+
+    html_path = output_dir.parent / "video-samples.html"
+    html_descriptor, html_temporary_name = tempfile.mkstemp(prefix=".omega-video-review-", suffix=".html", dir=html_path.parent)
+    try:
+        with os.fdopen(html_descriptor, "w", encoding="utf-8") as stream:
+            stream.write(render_video_review_html(root, html_path.parent, manifest))
+        os.replace(html_temporary_name, html_path)
+    finally:
+        Path(html_temporary_name).unlink(missing_ok=True)
     return manifest
 
 

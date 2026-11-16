@@ -51,7 +51,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIsNotNone(match, path.name)
             local_versions.add(match.group(1))
         self.assertEqual(pending_versions, local_versions - self.remote_versions)
-        self.assertEqual(pending_versions, {"20261116214700"}, "only the api_keys compatibility migration may remain pending")
+        self.assertEqual(pending_versions, set(), "no source migrations may remain pending after provider confirmation")
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
@@ -59,7 +59,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300", "20261112091400", "20261112091500",
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
-            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214842",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -69,7 +69,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
         self.assertEqual(self.remote.get("latestRemoteMigration"), "20261116214842")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
-        self.assertEqual(self.remote.get("_captured"), "2026-11-16")
+        self.assertEqual(self.remote.get("_captured"), "2026-11-17")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
     def test_media_catalog_select_migration_is_authenticated_only_and_provider_applied(self) -> None:
@@ -120,15 +120,12 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(version, self.remote_versions)
         self.assertNotIn(version, {str(entry["version"]) for entry in self.pending})
 
-    def test_api_keys_live_column_compatibility_is_registered_pending(self) -> None:
+    def test_api_keys_live_column_compatibility_is_provider_applied(self) -> None:
         version = "20261116214700"
-        entry = next(item for item in self.pending if str(item["version"]) == version)
         path = MIGRATIONS / f"{version}_api_keys_live_column_compatibility.sql"
         sql = path.read_text(encoding="utf-8").lower()
-        self.assertEqual(entry.get("status"), "PENDING_REVIEW")
-        self.assertEqual(entry.get("liveStatus"), "NOT_APPLIED")
-        self.assertIs(entry.get("blocksProduction"), True)
-        self.assertNotIn(version, self.remote_versions)
+        self.assertIn(version, self.remote_versions)
+        self.assertNotIn(version, {str(entry["version"]) for entry in self.pending})
         self.assertIn("rename column key_name to name", sql)
         self.assertIn("rename column is_active to active", sql)
         self.assertIn("add column name text", sql)
@@ -136,9 +133,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop column", sql)
         self.assertNotIn("drop table", sql)
         self.assertNotIn("grant ", sql)
-        preflight = entry.get("livePreflight", {})
-        self.assertEqual(preflight.get("status"), "VERIFIED")
-        self.assertEqual({column.get("name") for column in preflight.get("columns", [])}, {"name", "active"})
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 433)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261116214842")
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []
@@ -156,14 +152,13 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_drift_passes_while_strict_release_is_blocked_by_pending_migration(self) -> None:
+    def test_source_and_strict_release_drift_pass_with_no_pending_migrations(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
-        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
-        self.assertIn("20261116214700", strict.stdout)
-        self.assertIn("production release is blocked", strict.stdout.lower())
+        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
+        self.assertNotIn("20261116214700", strict.stdout)
 
     def test_release_readiness_records_stale_cloudflare_and_migration_blockers(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
@@ -171,21 +166,23 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         readiness = snapshot["release_readiness"]
         self.assertEqual(
             readiness.get("status"),
-            "CLOUDFLARE_PRODUCTION_STALE_MIGRATION_PENDING_VERCEL_PROMOTION_POSTPONED",
+            "CLOUDFLARE_PRODUCTION_VERIFIED_VERCEL_PROMOTION_POSTPONED",
         )
         latest_probe = readiness.get("latest_production_probe", {})
-        self.assertEqual(latest_probe.get("status"), "FAIL_STALE_COMMIT")
-        self.assertEqual(latest_probe.get("expected_commit_sha"), "15b96312dd46b18913cd001dbc57072b52695eda")
-        self.assertEqual(latest_probe.get("served_commit_sha"), "3e60abedcbfc16b747b6ad920afc3aa3aec2c406")
-        self.assertEqual(latest_probe.get("workflow_run_id"), 43965323786)
+        self.assertEqual(latest_probe.get("status"), "PASS")
+        self.assertEqual(latest_probe.get("expected_commit_sha"), "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75")
+        self.assertEqual(latest_probe.get("served_commit_sha"), "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75")
+        self.assertEqual(latest_probe.get("workflow_run_id"), 43971518946)
+        self.assertEqual(latest_probe.get("pages_passed"), 241)
+        self.assertEqual(latest_probe.get("references_passed"), 368)
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(
             readiness.get("production_verification", {}).get("commit_sha"),
-            "77756855246c39f072c2468bc3e671edd0b381c8",
+            "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75",
         )
         self.assertEqual(
             readiness.get("production_verification", {}).get("workflow_run_id"),
-            43406980583,
+            43971518946,
         )
         vercel = readiness.get("vercel_promotion", {})
         self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")
@@ -201,18 +198,20 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("Vercel production deployment remains intentionally postponed", blockers)
         self.assertNotIn("Cloudflare exact-SHA production verification has not passed", blockers)
         self.assertNotIn("54-action behavioral SQL probe", blockers)
-        self.assertIn("20261116214700", blockers)
-        self.assertIn("production release remains blocked", blockers.lower())
-        self.assertIn("15b96312dd46b18913cd001dbc57072b52695eda", blockers)
-        self.assertIn("issue #1346", blockers)
+        self.assertNotIn("20261116214700", blockers)
+        self.assertNotIn("production release remains blocked", blockers.lower())
+        self.assertNotIn("15b96312dd46b18913cd001dbc57072b52695eda", blockers)
+        self.assertNotIn("issue #1346", blockers)
         runtime = snapshot["runtime_probe_status"]
         self.assertEqual(runtime.get("status"), "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
         self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions")
         self.assertEqual(runtime.get("family_access_probe"), "PASS")
         self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline")
-        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 432)
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 433)
         self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261116214842")
         self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
+        self.assertIn("241/241 registered pages", runtime.get("remediation", ""))
+        self.assertIn("no pending migrations remain", runtime.get("remediation", ""))
         remediation = runtime.get("remediation", "").lower()
         self.assertIn("vercel production promotion remains", remediation)
         self.assertIn("intentionally postponed", remediation)

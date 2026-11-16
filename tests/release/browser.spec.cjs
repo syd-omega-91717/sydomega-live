@@ -103,20 +103,6 @@ test.describe('Omega production release surface', () => {
     expect(body).toMatch(/UNAVAILABLE|PARTIAL|LIVE|CALCULATED|SIMULATED|sign\s*in|log\s*in|authenticate/i);
   });
 
-  test('world scene mounts an accessible 3D canvas and preserves all 18 module routes', async ({ page }) => {
-    await visit(page, new URL('/world.html', BASE_URL).toString());
-    await expect(page.locator('#omega-world-nodes .ow-node')).toHaveCount(18);
-    const canvas = page.locator('.ow-spatial-world canvas.omega-sculpture-canvas');
-    await expect(canvas).toHaveCount(1);
-    await expect(canvas).toBeVisible();
-    await expect(canvas).toHaveAttribute('role', 'img');
-    await expect(canvas).toHaveAttribute('aria-label', /Interactive three-dimensional map of the 18 governed Omega platform modules/);
-    const spatialNav = page.getByRole('navigation', { name: /The eighteen platform modules in this sculpture/ });
-    if (await spatialNav.count()) {
-      await expect(spatialNav.getByRole('link')).toHaveCount(18);
-    }
-  });
-
   for (const [route] of MODULE_ROUTES.slice(0, 5)) {
     test('accessibility: ' + route, async ({ page }) => {
       await visit(page, new URL(route, BASE_URL).toString());

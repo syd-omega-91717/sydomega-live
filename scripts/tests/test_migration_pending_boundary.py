@@ -72,6 +72,19 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("_captured"), "2026-11-16")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
+    def test_media_catalog_select_migration_is_authenticated_only_and_provider_applied(self) -> None:
+        version = "20261116214052"
+        path = MIGRATIONS / f"{version}_media_items_authenticated_select.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn("grant select on table public.media_items to authenticated", sql)
+        self.assertNotIn("to anon", sql)
+        self.assertNotIn("to public", sql)
+        self.assertNotIn("grant insert", sql)
+        self.assertNotIn("grant update", sql)
+        self.assertNotIn("grant delete", sql)
+        self.assertIn(version, self.remote_versions)
+        self.assertNotIn(version, {str(entry["version"]) for entry in self.pending})
+
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []
         for path in MIGRATIONS.glob("*.sql"):

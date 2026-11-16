@@ -11,7 +11,7 @@ Run:
 ```bash
 python3 scripts/omega-asset-provenance-audit.py
 python3 scripts/omega-asset-provenance-audit.py --output artifacts/omega-asset-provenance.json
-python3 -m unittest scripts/tests/test_omega-asset-provenance-audit.py
+python3 -m unittest scripts/tests/test_omega_asset_provenance_audit.py
 ```
 
 The audit produces stable asset IDs from SHA-256 content hashes, file sizes, inferred MIME types, source paths, source-code references, and a separate inventory of remote URLs. It is read-only with respect to the repository and does not make network requests or upload files.

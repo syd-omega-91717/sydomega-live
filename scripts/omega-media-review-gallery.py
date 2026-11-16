@@ -12,6 +12,7 @@ import hashlib
 import html
 import json
 import os
+import re
 import stat
 from pathlib import Path, PurePosixPath
 from urllib.parse import quote, urlsplit

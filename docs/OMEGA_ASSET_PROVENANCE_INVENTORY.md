@@ -67,3 +67,35 @@ Before an asset is used as an authoritative platform asset, creator upload, comm
 ## Boundaries
 
 This scanner does not inventory objects that exist only in Supabase Storage, query live providers, verify external links, establish copyright ownership, upload content, or prove production deployment. Those require authenticated provider checks and end-to-end tests. Missing evidence remains `UNVERIFIED`, never silently promoted to `LIVE`.
+
+
+## Repository media inventory snapshot — 2026-11-16
+
+This snapshot was derived from the recursive Git tree at main commit `568619eb19c97174f2e9991c3419b7517208d260`, then reconciled against `docs/media-rights.json`. It is a repository inventory, not a visual inspection or rights determination.
+
+| Measure | Result |
+|---|---:|
+| In-scope tracked media files | 532 |
+| Raster/vector images | 501 |
+| Videos | 31 |
+| Audio-only files | 0 |
+| Rights baseline entries | 532 |
+| Individual rights records | 0 |
+| Files outside the baseline or with a record | 0 |
+| Exact duplicate-content groups (Git blob SHA) | 119 |
+| Files participating in duplicate groups | 241 |
+| Redundant copies within those groups | 122 |
+| Estimated bytes represented by redundant copies | 13,354,861 bytes |
+
+The inventory contains 176 JPEG, 244 JPG, 21 PNG, 47 WebP, 13 SVG and 31 MP4 files. Five `vendor/images/` files are intentionally outside the rights-gate scope. The path `BlockChain_Market_Analysis_syd_omega_91717/logo_stage_1to9.png` is a directory, not a media file; it is not a missing asset record.
+
+**Interpretation and controls:**
+
+- The 532 baseline entries are all unreviewed. There are currently no per-file rights records, so none of these assets has been individually cleared by this register.
+- Git blob SHA equality proves byte-identical copies within the repository. It does not prove that two differently named assets are semantically interchangeable, unused, or safe to delete.
+- Do not remove duplicate paths automatically. First inspect visual content, references, page/domain ownership, source history, and whether each path is intentionally retained for compatibility.
+- All 31 MP4 files require duration/frame sampling and provenance review. A still image contact sheet does not audit a video.
+- The 13 legacy SVGs are now covered by the gate; their rights remain unreviewed like the rest of the baseline.
+- Supabase Storage-only objects and database-only media records are not included in this Git-tree count.
+
+**Next audit stage:** generate visual contact sheets for the 501 image files, extract representative frames and metadata from all 31 videos, then reconcile each asset's visual identity and references before making any rights-register change. No rights status should be promoted without evidence supplied by the owner or an authoritative licence/source.

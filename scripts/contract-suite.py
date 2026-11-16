@@ -204,7 +204,7 @@ GATES = [
      ['scripts/canon-consistency.py']),
     ('media-rights',
      'every new audio, video or image file has a rights record (source, creator, licence, evidence); '
-     'the 519 files that predate the rule are a frozen, unreviewed baseline',
+     'the 532 in-scope files that predate the rule are a frozen, unreviewed baseline',
      ['scripts/media-rights-gate.py']),
     ('csp-inline-ratchet',
      "no file gains inline on*= handlers or inline <script> blocks -- the "

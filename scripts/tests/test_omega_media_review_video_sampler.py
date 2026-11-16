@@ -65,8 +65,14 @@ class MediaVideoSamplerTests(unittest.TestCase):
             self.assertEqual(video["rights_review_status"], "UNVERIFIED")
             self.assertEqual(len(video["frames"]), 5)
             self.assertTrue(all((root / frame["path"]).is_file() for frame in video["frames"]))
-            self.assertTrue((root / "artifacts" / "video-samples.json").is_file())
+            review_dir = root / "artifacts"
+            self.assertTrue((review_dir / "video-samples.json").is_file())
+            review_html = (review_dir / "video-samples.html").read_text(encoding="utf-8")
+            self.assertIn("Visual review: PENDING", review_html)
+            self.assertIn("Rights: UNVERIFIED", review_html)
+            self.assertIn("Local video technical review", review_html)
             self.assertNotIn(str(root), json.dumps(manifest))
+            self.assertNotIn(str(root), review_html)
 
     def test_probe_failure_is_recorded_as_unavailable_not_silently_omitted(self):
         with tempfile.TemporaryDirectory() as temp:

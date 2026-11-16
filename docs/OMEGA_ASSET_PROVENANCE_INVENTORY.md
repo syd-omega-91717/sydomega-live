@@ -123,6 +123,8 @@ python3 scripts/omega-media-review-gallery.py --manifest docs/media-visual-revie
 
 The browser checkbox and notes remain temporary and do not write to the manifest. Review decisions must be entered into the JSON manifest with reviewer, timestamp and evidence. The manifest is a review workflow record, not a legal determination. A SHA-256 proves bytes only; no generator can establish ownership or permission. The rights gate in `docs/media-rights.json` remains the separate release control.
 
+The manifest generator now validates the complete record schema before writing or preserving prior decisions. Visual states are restricted to `PENDING`, `REVIEWED`, and `NEEDS_ATTENTION`; completed visual reviews require a reviewer and timezone-aware ISO-8601 timestamp. Rights states are restricted to `UNVERIFIED`, `VERIFIED`, `REJECTED`, and `EXPIRED`; verified rights require reviewer, timestamp, creator, HTTP(S) source, licence, and evidence. `publication_approved=true` additionally requires `VERIFIED` rights and explicit territories. Invalid prior records fail closed and are not overwritten. On POSIX, the gallery hashes through no-follow file and directory descriptors to reject symlink/path-swap races.
+
 The gallery is read-only and must not be deployed as a public asset catalogue. The scanner excludes symbolic links and verifies resolved paths remain within the repository root.
 
 ### Video frame and metadata sampling

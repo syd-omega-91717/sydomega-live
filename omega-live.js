@@ -195,7 +195,7 @@
       control.className='omega-pulse-control';
       control.setAttribute('aria-label','Live data status: '+_pulseStatus);
       control.title='Live data status: '+_pulseStatus;
-      control.style.cssText='appearance:none;border:0;padding:0;margin:0;width:24px;height:24px;min-width:24px;min-height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:transparent;flex-shrink:0;cursor:pointer';
+      control.style.cssText='appearance:none;border:0;padding:0;margin:0;width:36px;height:36px;min-width:36px;min-height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:transparent;flex-shrink:0;cursor:pointer';
       var indicator=document.createElement('span');
       indicator.className='omega-pulse-dot';
       indicator.setAttribute('aria-hidden','true');

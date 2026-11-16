@@ -173,7 +173,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         latest_probe = readiness.get("latest_production_probe", {})
         self.assertEqual(latest_probe.get("status"), "FAIL_STALE_COMMIT")
         self.assertEqual(latest_probe.get("expected_commit_sha"), "15b96312dd46b18913cd001dbc57072b52695eda")
-        self.assertEqual(latest_probe.get("served_commit_sha"), "3e60a...")
+        self.assertEqual(latest_probe.get("served_commit_sha"), "3e60abedcbfc16b747b6ad920afc3aa3aec2c406")
         self.assertEqual(latest_probe.get("workflow_run_id"), 43965323786)
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(

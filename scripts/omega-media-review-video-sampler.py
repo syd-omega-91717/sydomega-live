@@ -122,7 +122,9 @@ def build_video_samples(
             "record_id": asset["record_id"],
             "path": relative,
             "sha256": asset["sha256"],
-            "status": "UNAVAILABLE",
+            "sampling_status": "UNAVAILABLE",
+            "visual_review_status": "PENDING",
+            "rights_review_status": "UNVERIFIED",
             "metadata": None,
             "frames": [],
             "error_code": None,
@@ -144,7 +146,7 @@ def build_video_samples(
                     "path": frame_path.relative_to(root).as_posix(),
                 })
             record["metadata"] = metadata
-            record["status"] = "SAMPLED"
+            record["sampling_status"] = "SAMPLED"
         except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError, subprocess.SubprocessError) as error:
             record["error_code"] = type(error).__name__
         records.append(record)
@@ -162,8 +164,8 @@ def build_video_samples(
         },
         "summary": {
             "video_count": len(records),
-            "sampled": sum(1 for item in records if item["status"] == "SAMPLED"),
-            "unavailable": sum(1 for item in records if item["status"] != "SAMPLED"),
+            "sampled": sum(1 for item in records if item["sampling_status"] == "SAMPLED"),
+            "unavailable": sum(1 for item in records if item["sampling_status"] != "SAMPLED"),
             "frames": sum(len(item["frames"]) for item in records),
         },
         "videos": records,

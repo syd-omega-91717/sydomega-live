@@ -28,14 +28,9 @@
   if (window.__omegaCommandWall) return;
   window.__omegaCommandWall = 1;
 
-  var FLAGS = [
-    ['payments_enabled', 'Payments'],
-    ['tokens_enabled', 'Tokens'],
-    ['ad_network_enabled', 'Ad network'],
-    ['creator_earnings_enabled', 'Creator earnings'],
-    ['courses_enabled', 'Courses'],
-    ['mfa_enrolment_enabled', 'Two-factor enrolment']
-  ];
+  /* Shown by their literal platform_settings key, as omega-flags.js's own dormancy notice does. The panel reports the state of a setting; it does not
+     describe, name or promise what the feature would pay, which is also what scripts/commerce-contract.py requires of any copy that mentions earnings. */
+  var FLAGS = ['payments_enabled', 'tokens_enabled', 'ad_network_enabled', 'creator_earnings_enabled', 'courses_enabled', 'mfa_enrolment_enabled'];
 
   function el(tag, cls, text, parent) {
     var n = document.createElement(tag);
@@ -99,6 +94,7 @@
       /* flags */
       '.ocw-flags{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}' +
       '.ocw-flag{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 10px;border:1px solid rgba(255,255,255,.1);border-radius:6px;font-family:var(--R,Rajdhani,sans-serif);font-size:15px;color:var(--ink,#E9E6DC)}' +
+      '.ocw-flag-k{font-family:var(--M,"Courier Prime",monospace);font-size:13px;letter-spacing:.04em;overflow-wrap:anywhere}' +
       '.ocw-flag code{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:.12em;font-weight:700}' +
       '.ocw-flag.on code{color:#58D68D}.ocw-flag.off code{color:var(--gold,#C9A84C)}.ocw-flag.unk code{color:var(--muted,#8796A1)}' +
       '@media(max-width:900px){.ocw-grid{grid-template-columns:minmax(0,1fr)}}' +
@@ -202,9 +198,9 @@
     var ul = el('ul', 'ocw-flags', null, root);
     var rows = FLAGS.map(function (f) {
       var li = el('li', 'ocw-flag unk', null, ul);
-      el('span', null, f[1], li);
+      el('span', 'ocw-flag-k', f, li);
       var code = el('code', null, '[UNKNOWN]', li);
-      return { key: f[0], li: li, code: code };
+      return { key: f, li: li, code: code };
     });
     rows.forEach(function (r) {
       sb.rpc('get_platform_flag', { p_key: r.key }).then(function (res) {

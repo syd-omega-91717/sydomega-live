@@ -10,8 +10,10 @@
 
 **Verified.**
 - Render (headless Chromium, signed-in stub, webfonts): the wall is 829px tall at 1440 wide in a 2x2 grid, 12 gates with the first 2 lit (matching "2 OF 12" on the home surface), 12 agents, six flags all `[UNKNOWN]` because the stub returns no flag values (the fail-closed path, exercised), 0 page errors. At 390 wide it stacks to 1,965px and at 900 wide to 1,456px; `overflowX` is 0 at all three; 0 errors.
-- `python3 -m unittest scripts.tests.test_command_wall`: 16 tests. Seven reintroduced faults each caught: an invented "9.17Hz" line, a flag that starts `on`, an error counted as active, a guessed Supabase accessor, a gate name typed into the module, a renamed mount, and a private column added to the profile read.
+- `python3 -m unittest scripts.tests.test_command_wall`: 17 tests. Seven reintroduced faults each caught: an invented "9.17Hz" line, a flag that starts `on`, an error counted as active, a guessed Supabase accessor, a gate name typed into the module, a renamed mount, and a private column added to the profile read.
 - `OMEGA_REQUIRE_BROWSER=1 node scripts/verify-runtime.js` run directly: PASS on 13 pages. `silent-failure-detector.py`, `csp-inline-ratchet.py`, `module-contract.py` clean; `audit.py` 0 critical.
+
+- The first full local gate failed one blocking check, **Commerce contract**: `scripts/commerce-contract.py` flagged the friendly label "Creator earnings" on the flag list as an ungated earnings claim (`omega-command-wall.js:35`, and the built copy under `public/`). The panel only reports a setting's state and promises no money, so this was a false positive in intent, but the gate says not to silence it by deleting the word. The flag rows now show the literal setting key (`creator_earnings_enabled`), as `omega-flags.js`'s own dormancy notice does, which is also what the panel actually reports; a test pins that no label mentions earnings, revenue or payout. `commerce-contract.py` exits 0 after the change, and 17 tests pass.
 
 **Not done / not verified.**
 - The flag panel's `[ACTIVE]` and `[DORMANT]` branches were never rendered: the test stub returns no flag values, so only `[UNKNOWN]` was seen. They are pinned by test and read by inspection, not by a populated render, and `get_platform_flag` was not called against the live database.

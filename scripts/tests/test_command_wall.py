@@ -55,7 +55,7 @@ class CommandWall(unittest.TestCase):
             self.assertNotIn(guessed, JS, "a guessed accessor is a shared global nothing publishes (CLAUDE.md 8.1 class 4b)")
 
     def test_the_flags_are_real_and_fail_closed(self):
-        keys = re.findall(r"\['([a-z_]+_enabled)',\s*'[^']+'\]", JS)
+        keys = re.findall(r"'([a-z_]+_enabled)'", JS[JS.index("var FLAGS"):JS.index("function el(")])
         self.assertEqual(len(keys), 6)
         for k in keys:
             self.assertIn("'%s'" % k, MIGRATIONS, "%s is not seeded by any migration, so the wall would show a flag that does not exist" % k)
@@ -63,6 +63,10 @@ class CommandWall(unittest.TestCase):
         self.assertIn("!res.error && res.data === true", JS)
         self.assertIn("'[UNKNOWN]'", JS)
         self.assertNotRegex(JS, r"className = 'ocw-flag on'|'ocw-flag on'\s*;", "nothing may start as on")
+
+    def test_no_label_makes_an_earnings_claim(self):
+        """scripts/commerce-contract.py blocked a friendly 'Creator earnings' label as an ungated earnings claim. The panel reports a setting's state, so it names the setting by its key and says nothing about money."""
+        self.assertNotRegex(JS, r"(?i)creators?\s+earn|\bearnings\b|revenue|payout")
 
     def test_a_flag_that_cannot_be_read_is_never_shown_active(self):
         block = JS[JS.index("function renderFlags"):JS.index("async function boot")]

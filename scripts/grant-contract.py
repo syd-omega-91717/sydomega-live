@@ -29,9 +29,11 @@ supabase/live-grants.json (the `authenticated` role, captured live):
            `functions`). recovery.html called two functions that existed only in
            the private schema, so both of its buttons failed for every member until
            migration 20261012014343 bridged them. EXECUTE on the public function is
-           not enough: a SECURITY INVOKER wrapper calls private.<fn> as the caller,
+           not enough: a SECURITY INVOKER wrapper calls private.<fn> or omega_private.<fn> as the caller,
            and 12 client-called wrappers (approvals, delete-account, KYC, creation
-           studio) failed 42501 that way until 20261012064126.
+           studio) failed 42501 that way until 20261012064126. The same rule
+           applies to omega_private wrappers: both schema USAGE and nested
+           function EXECUTE are required.
 
 Tables missing from the snapshot are skipped (scripts/schema-dictionary.py owns
 names that do not exist). Embedded resources in a select (`rel!inner(col)`) are
@@ -67,16 +69,19 @@ replace `relations` in supabase/live-grants.json; read-only):
   from tbl;
 
 FUNCTIONS (replace `functions`): public functions authenticated may EXECUTE, minus
-SECURITY INVOKER ones that call a private function authenticated may not execute:
+SECURITY INVOKER wrappers whose nested function in `private` or `omega_private`
+cannot be called by authenticated:
 
   with pub as (select p.proname, p.prosecdef, p.prosrc from pg_proc p
                where p.pronamespace = 'public'::regnamespace
                  and has_function_privilege('authenticated', p.oid, 'EXECUTE')),
   blocked as (select distinct pub.proname from pub,
-                regexp_matches(pub.prosrc, 'private\\.([a-z0-9_]+)\\s*\\(', 'g') m
-              where not pub.prosecdef and not exists (select 1 from pg_proc pp
-                where pp.pronamespace = 'private'::regnamespace and pp.proname = m[1]
-                  and has_function_privilege('authenticated', pp.oid, 'EXECUTE')))
+                regexp_matches(pub.prosrc, '((?:omega_private|private))\\.([a-z0-9_]+)\\s*\\(', 'g') m
+              where not pub.prosecdef and not exists (
+                select 1 from pg_proc pp join pg_namespace pn on pn.oid = pp.pronamespace
+                where pn.nspname = m[1] and pp.proname = m[2]
+                  and has_function_privilege('authenticated', pp.oid, 'EXECUTE')
+                  and has_schema_privilege('authenticated', pn.oid, 'USAGE')))
   select jsonb_agg(distinct proname order by proname) from pub
   where proname not in (select proname from blocked);
 

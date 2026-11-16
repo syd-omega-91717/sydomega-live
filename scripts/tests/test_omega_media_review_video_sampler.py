@@ -29,6 +29,7 @@ class MediaVideoSamplerTests(unittest.TestCase):
             "path": "media/clip.mp4",
             "sha256": sha256,
             "kind": "video",
+            "size_bytes": path.stat().st_size,
             "_path": path,
         }
 

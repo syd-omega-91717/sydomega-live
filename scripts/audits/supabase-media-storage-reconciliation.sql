@@ -102,6 +102,7 @@ select jsonb_build_object(
   'media_items', (select rows from media_catalog),
   'creative_assets', (select rows from creative_assets),
   'media_jobs', (select rows from media_jobs),
+  'user_assets', jsonb_build_object('rows', (select count(*)::bigint from public.user_assets)),
   'media_reservations', (select jsonb_build_object(
     'rows', count(*)::bigint,
     'with_file_path', count(*) filter (where file_path is not null and btrim(file_path) <> '')::bigint

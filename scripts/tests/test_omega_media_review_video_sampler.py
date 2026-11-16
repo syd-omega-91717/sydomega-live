@@ -2,6 +2,7 @@
 """Tests for local video metadata and representative-frame sampling."""
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -21,10 +22,12 @@ class MediaVideoSamplerTests(unittest.TestCase):
         path = root / "media" / "clip.mp4"
         path.parent.mkdir(parents=True)
         path.write_bytes(b"video-bytes")
+        sha256 = hashlib.sha256(b"video-bytes").hexdigest()
+        record_id = hashlib.sha256(f"media/clip.mp4\\0{sha256}".encode("utf-8")).hexdigest()
         return {
-            "record_id": "a" * 64,
+            "record_id": record_id,
             "path": "media/clip.mp4",
-            "sha256": "b" * 64,
+            "sha256": sha256,
             "kind": "video",
             "_path": path,
         }
@@ -73,6 +76,48 @@ class MediaVideoSamplerTests(unittest.TestCase):
             self.assertIn("Local video technical review", review_html)
             self.assertNotIn(str(root), json.dumps(manifest))
             self.assertNotIn(str(root), review_html)
+
+    def test_human_review_states_are_loaded_from_validated_canonical_manifest(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            asset = self._asset(root)
+            review_dir = root / "artifacts"
+            review_dir.mkdir()
+            record = {key: value for key, value in asset.items() if key != "_path"}
+            record.update(MODULE.GALLERY._review_defaults())
+            record["visual_review"].update({
+                "status": "REVIEWED",
+                "reviewer": "reviewer",
+                "reviewed_at": "2026-11-17T00:00:00Z",
+            })
+            (review_dir / "review-manifest.json").write_text(
+                json.dumps({"schema_version": 1, "assets": [record]}), encoding="utf-8"
+            )
+
+            def fake_run(command, **kwargs):
+                if command[0] == "ffprobe":
+                    payload = {
+                        "format": {"duration": "1.0", "size": "11", "format_name": "mov,mp4"},
+                        "streams": [{
+                            "codec_type": "video", "codec_name": "h264",
+                            "width": 640, "height": 360, "r_frame_rate": "24/1",
+                        }],
+                    }
+                    return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+                Path(command[-1]).write_bytes(b"jpeg-frame")
+                return subprocess.CompletedProcess(command, 0, "", "")
+
+            with patch.object(MODULE.shutil, "which", side_effect=lambda name: name):
+                with patch.object(MODULE.subprocess, "run", side_effect=fake_run):
+                    manifest = MODULE.build_video_samples(
+                        root, review_dir / "video-frames", assets=[asset]
+                    )
+            video = manifest["videos"][0]
+            self.assertEqual(video["visual_review_status"], "REVIEWED")
+            self.assertEqual(video["rights_review_status"], "UNVERIFIED")
+            review_html = (review_dir / "video-samples.html").read_text(encoding="utf-8")
+            self.assertIn("Visual review: REVIEWED", review_html)
+            self.assertIn("Rights: UNVERIFIED", review_html)
 
     def test_probe_failure_is_recorded_as_unavailable_not_silently_omitted(self):
         with tempfile.TemporaryDirectory() as temp:

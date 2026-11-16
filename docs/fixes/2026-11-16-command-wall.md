@@ -1,0 +1,20 @@
+### A command wall for the PLATFORM tab, built from what the platform can measure, not from the board's invented telemetry (2026-11-16)
+
+**Why.** The owner asked for the platform to be built as the reference boards show, as one surface and not separate pages, and the last open piece was `assets/concept/board-03.jpg`: a four-panel command wall. Read against the repo, most of what it draws has no real counterpart: a world map of server nodes, "ports 4000-4018", "G7 servers", "PPO RL agents", "multi-agent consensus 100%", "network resonance 9.17Hz", "Node 812 malware purge <10ms", a "revenue fortress" buying physical gold, and an "owner's absolute terminal, override active". The agents are a naming system for domains, not a running network (`CLAUDE.md` 6); payments and tokens ship dormant (`CLAUDE.md` 9); the board's 9-stage SAND-to-OMEGA_MASTER ladder is already `REJECTED` in `docs/IDEA_INTAKE.md` because it conflicts with the 12 canon gates. Drawing any of it would be §8.1 class 9 (fabricated data rendered as fact), which this repo has already shipped once as a revenue figure. So the wall keeps the board's composition and replaces every panel's content with something the platform can actually measure.
+
+**Fix.** `omega-command-wall.js` (new) fills a static skeleton at the top of the PLATFORM tab in `dashboard.html`, above the existing page index. Four panels, one real source each:
+- Sovereign foundation: the architecture the repo really has (static pages, Supabase auth, Postgres with row security, edge functions, storage) and this page's own backend-read counters, `window.__omegaData`, kept by `bg.js`'s fetch recorder.
+- The twelve agents: `omega-agents.json`, a ring with the same sign medallion art the agent list uses, captioned "A naming system, not a running network."
+- Ascension and certificates: the canon's own twelve `authority.gate_names`, lit only where the member's authority (`OmegaCharacterCard.authorityOf`) reaches; `certificates_earned` from their own profile row.
+- Live and dormant: `get_platform_flag` for six named flags, fail-closed: only a confirmed `true` reads `[ACTIVE]`; an error or no answer reads `[UNKNOWN]`, never active. This is the board's `[ACTIVE]/[LOCKED]` log lines, with real states.
+
+**Verified.**
+- Render (headless Chromium, signed-in stub, webfonts): the wall is 829px tall at 1440 wide in a 2x2 grid, 12 gates with the first 2 lit (matching "2 OF 12" on the home surface), 12 agents, six flags all `[UNKNOWN]` because the stub returns no flag values (the fail-closed path, exercised), 0 page errors. At 390 wide it stacks to 1,965px and at 900 wide to 1,456px; `overflowX` is 0 at all three; 0 errors.
+- `python3 -m unittest scripts.tests.test_command_wall`: 16 tests. Seven reintroduced faults each caught: an invented "9.17Hz" line, a flag that starts `on`, an error counted as active, a guessed Supabase accessor, a gate name typed into the module, a renamed mount, and a private column added to the profile read.
+- `OMEGA_REQUIRE_BROWSER=1 node scripts/verify-runtime.js` run directly: PASS on 13 pages. `silent-failure-detector.py`, `csp-inline-ratchet.py`, `module-contract.py` clean; `audit.py` 0 critical.
+
+**Not done / not verified.**
+- The flag panel's `[ACTIVE]` and `[DORMANT]` branches were never rendered: the test stub returns no flag values, so only `[UNKNOWN]` was seen. They are pinned by test and read by inspection, not by a populated render, and `get_platform_flag` was not called against the live database.
+- The ascension panel was rendered only with the stub profile; a member with real axes and certificates was not rendered.
+- Deliberately not built, as the board draws them: the world map, per-agent consensus or latency, the revenue panel and the owner terminal. If the owner wants a real owner-only status panel, it needs its own decision (what state is real, and who may see it).
+- Chromium only; a first-visit welcome modal from the platform overlays the page on a fresh profile and was present in the screenshots.

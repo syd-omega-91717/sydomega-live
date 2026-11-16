@@ -96,6 +96,27 @@ jobs:
           set -euo pipefail
           supabase link --project-ref ydqhzvvoyufiiqvzcjns --password "${SUPABASE_DB_PASSWORD}"
 
+      - name: Verify live api_keys shape before compatibility no-op
+        if: inputs.migration_version == '20261116214700'
+        run: |
+          set -euo pipefail
+          supabase db dump --linked --schema public --file "${RUNNER_TEMP}/live-public-schema.sql"
+          python - <<'PY'
+          import pathlib, re, sys
+          dump = pathlib.Path(__import__("os").environ["RUNNER_TEMP"], "live-public-schema.sql").read_text(encoding="utf-8")
+          match = re.search(r"CREATE TABLE(?: IF NOT EXISTS)? public\\.api_keys\\s*\\((.*?)\\n\\);", dump, re.IGNORECASE | re.DOTALL)
+          if not match:
+              sys.exit("Could not verify the live public.api_keys table definition; refusing compatibility migration.")
+          body = match.group(1).lower()
+          if not re.search(r"\\bname\\s+text\\b", body):
+              sys.exit("Live public.api_keys.name text column is missing; refusing no-op compatibility migration.")
+          if not re.search(r"\\bactive\\s+boolean\\b", body):
+              sys.exit("Live public.api_keys.active boolean column is missing; refusing no-op compatibility migration.")
+          if re.search(r"\\bkey_name\\b|\\bis_active\\b", body):
+              sys.exit("Live public.api_keys still has legacy column names; refusing a production schema change.")
+          print("Live api_keys has name/active and no legacy columns; compatibility migration is a verified no-op.")
+          PY
+
       - name: Verify remote history and dry-run contains exactly the selected migration
         env:
           MIGRATION_VERSION: ${{ inputs.migration_version }}

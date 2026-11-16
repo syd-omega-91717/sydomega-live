@@ -18,7 +18,7 @@ spec = importlib.util.spec_from_file_location("media_rights_gate", SCRIPT)
 gate = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gate)
 
-BASELINE_CEILING = 519   # the number of media files on 2026-11-15. A new file gets a RECORD; raising this number is how a file would be blessed unseen.
+BASELINE_CEILING = 532   # the number of media files on 2026-11-15. A new file gets a RECORD; raising this number is how a file would be blessed unseen.
 
 
 def doc(**over):
@@ -45,7 +45,7 @@ class MediaRightsGate(unittest.TestCase):
         self.assertIn("assets/film.mp4", out[0])
 
     def test_every_media_kind_is_covered(self):
-        for ext in (".mp3", ".wav", ".ogg", ".m4a", ".flac", ".mp4", ".webm", ".mov", ".jpg", ".png", ".webp", ".gif"):
+        for ext in (".mp3", ".wav", ".ogg", ".m4a", ".flac", ".mp4", ".webm", ".mov", ".jpg", ".png", ".webp", ".gif", ".svg", ".bmp", ".tif", ".tiff"):
             with self.subTest(ext):
                 self.assertTrue(gate.evaluate(["assets/x" + ext], doc()), ext + " must need a record")
 

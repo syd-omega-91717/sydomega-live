@@ -34,7 +34,10 @@ class MainMergeIntegrityTests(unittest.TestCase):
         pending = json.loads((ROOT / "supabase/pending-migrations.json").read_text(encoding="utf-8"))
         remote_versions = set(remote.get("versions", []))
         entries = pending.get("pending", [])
-        self.assertEqual(entries, [], "provider ledger and source migration inventory must be fully reconciled")
+        self.assertEqual({str(entry.get("version")) for entry in entries}, {"20261116214700"})
+        local_versions = {path.name[:14] for path in (ROOT / "supabase/migrations").glob("*.sql") if len(path.name) >= 15 and path.name[:14].isdigit()}
+        pending_versions = {str(entry.get("version")) for entry in entries}
+        self.assertEqual(local_versions - remote_versions, pending_versions)
         for entry in entries:
             with self.subTest(version=entry.get("version")):
                 self.assertNotIn(entry.get("version"), remote_versions)

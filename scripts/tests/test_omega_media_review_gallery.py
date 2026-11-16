@@ -158,6 +158,40 @@ class MediaReviewGalleryTests(unittest.TestCase):
                 MODULE.build_review_manifest(root, manifest_path)
             self.assertEqual(manifest_path.read_text(encoding="utf-8"), invalid)
 
+    def test_non_string_review_states_fail_with_validation_errors(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            (media / "asset.png").write_bytes(b"asset")
+            manifest_path = root / "review.json"
+            manifest = MODULE.build_review_manifest(root, manifest_path)
+            manifest["assets"][0]["visual_review"]["status"] = ["REVIEWED"]
+            invalid = json.dumps(manifest, indent=2)
+            manifest_path.write_text(invalid, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "visual_review.status"):
+                MODULE.build_review_manifest(root, manifest_path)
+            self.assertEqual(manifest_path.read_text(encoding="utf-8"), invalid)
+
+    def test_review_timestamps_must_be_timezone_aware_iso8601(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            (media / "asset.png").write_bytes(b"asset")
+            manifest_path = root / "review.json"
+            manifest = MODULE.build_review_manifest(root, manifest_path)
+            manifest["assets"][0]["visual_review"].update({
+                "status": "REVIEWED",
+                "reviewer": "reviewer",
+                "reviewed_at": "yesterday",
+            })
+            invalid = json.dumps(manifest, indent=2)
+            manifest_path.write_text(invalid, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "ISO-8601"):
+                MODULE.build_review_manifest(root, manifest_path)
+            self.assertEqual(manifest_path.read_text(encoding="utf-8"), invalid)
+
     def test_publication_approval_requires_verified_rights_evidence(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

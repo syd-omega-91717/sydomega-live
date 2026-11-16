@@ -6,12 +6,12 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**523 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 51, IDEA_INTAKE.md 17.
+**524 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 51, IDEA_INTAKE.md 18.
 
 | status | count |
 |---|---|
 | NEEDS_DECISION | 16 |
-| PROPOSED | 18 |
+| PROPOSED | 19 |
 | PARTIAL | 56 |
 | OPEN_GAP | 32 |
 | DORMANT | 1 |
@@ -48,7 +48,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | I08 | IDEA_INTAKE.md | Member sticker and logo pack | from the Unified Blueprint board; no sticker surface exists in the repo (2026-10-13) |
 | I13 | IDEA_INTAKE.md | Align the passport PDF's 12 gate names with the canon tiers | omega-passport.js GATE_NAMES (INITIATE, ACOLYTE, SCHOLAR...) differ from omega-canon.json tiers (Initiate, Seeker, Adept...); its authority… |
 
-### PROPOSED (18)
+### PROPOSED (19)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -70,6 +70,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
 | I17 | IDEA_INTAKE.md | Let text areas grow with what the member writes (field-sizing: content) | a long journal entry, work or note scrolls inside a fixed box today. Grounded 2026-11-09: 116 <textarea> on 59 pages; 0 first-party uses of… |
+| I18 | IDEA_INTAKE.md | Review scheduling that predicts recall (FSRS) instead of a fixed ease factor | one scheduler decides every flashcard and word review: omega-srs.js:45-68 sets the next interval as interval × a per-item ease (starting 2.… |
 
 ### PARTIAL (56)
 

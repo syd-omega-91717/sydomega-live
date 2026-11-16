@@ -59,8 +59,10 @@ class MediaVideoSamplerTests(unittest.TestCase):
                 "video_count": 1, "sampled": 1, "unavailable": 0, "frames": 5,
             })
             video = manifest["videos"][0]
-            self.assertEqual(video["status"], "SAMPLED")
+            self.assertEqual(video["sampling_status"], "SAMPLED")
             self.assertEqual(video["metadata"]["video_codec"], "h264")
+            self.assertEqual(video["visual_review_status"], "PENDING")
+            self.assertEqual(video["rights_review_status"], "UNVERIFIED")
             self.assertEqual(len(video["frames"]), 5)
             self.assertTrue(all((root / frame["path"]).is_file() for frame in video["frames"]))
             self.assertTrue((root / "artifacts" / "video-samples.json").is_file())
@@ -77,7 +79,7 @@ class MediaVideoSamplerTests(unittest.TestCase):
                         root, root / "artifacts" / "video-frames", assets=[asset]
                     )
             self.assertEqual(manifest["summary"]["unavailable"], 1)
-            self.assertEqual(manifest["videos"][0]["status"], "UNAVAILABLE")
+            self.assertEqual(manifest["videos"][0]["sampling_status"], "UNAVAILABLE")
             self.assertEqual(manifest["videos"][0]["error_code"], "JSONDecodeError")
             self.assertEqual(manifest["videos"][0]["frames"], [])
 

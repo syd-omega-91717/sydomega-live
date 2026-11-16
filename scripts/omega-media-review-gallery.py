@@ -12,20 +12,60 @@ import hashlib
 import html
 import json
 import os
-from pathlib import Path
-from urllib.parse import quote
+import stat
+from pathlib import Path, PurePosixPath
+from urllib.parse import quote, urlsplit
 
 IMAGE_EXTENSIONS = {".avif", ".bmp", ".gif", ".jpeg", ".jpg", ".png", ".svg", ".tif", ".tiff", ".webp"}
 VIDEO_EXTENSIONS = {".m4v", ".mkv", ".mov", ".mp4", ".ogv", ".webm"}
 SKIP_DIRS = {".git", ".vercel", ".next", "node_modules", "__pycache__", ".pytest_cache"}
 
 
-def digest(path: Path) -> str:
+def digest(path: Path, root: Path) -> tuple[str, int]:
+    """Hash a regular file through a no-follow descriptor beneath root."""
+    root = root.resolve()
+    relative = path.relative_to(root)
     hasher = hashlib.sha256()
+
+    if os.name == "posix" and hasattr(os, "O_NOFOLLOW") and hasattr(os, "O_DIRECTORY"):
+        directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+        file_flags = os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0)
+        directory_fd = os.open(root, directory_flags)
+        file_fd = None
+        try:
+            for part in relative.parts[:-1]:
+                next_fd = os.open(part, directory_flags, dir_fd=directory_fd)
+                os.close(directory_fd)
+                directory_fd = next_fd
+            file_fd = os.open(relative.parts[-1], file_flags, dir_fd=directory_fd)
+        finally:
+            os.close(directory_fd)
+        try:
+            with os.fdopen(file_fd, "rb") as stream:
+                metadata = os.fstat(stream.fileno())
+                if not stat.S_ISREG(metadata.st_mode):
+                    raise ValueError(f"media candidate is not a regular file: {relative.as_posix()}")
+                for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                    hasher.update(chunk)
+                return hasher.hexdigest(), metadata.st_size
+        except Exception:
+            if file_fd is not None:
+                try:
+                    os.close(file_fd)
+                except OSError:
+                    pass
+            raise
+
+    # Platforms without dir_fd/O_NOFOLLOW support use a conservative fallback.
+    if path.is_symlink() or not path.resolve(strict=True).is_relative_to(root):
+        raise ValueError(f"media path escaped repository root: {relative.as_posix()}")
     with path.open("rb") as stream:
+        metadata = os.fstat(stream.fileno())
+        if not stat.S_ISREG(metadata.st_mode):
+            raise ValueError(f"media candidate is not a regular file: {relative.as_posix()}")
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             hasher.update(chunk)
-    return hasher.hexdigest()
+        return hasher.hexdigest(), metadata.st_size
 
 
 def media_files(root: Path):
@@ -53,13 +93,13 @@ def collect_assets(root: Path) -> list[dict]:
     assets = []
     for path, kind in sorted(media_files(root), key=lambda item: item[0].as_posix().casefold()):
         relative_path = path.relative_to(root).as_posix()
-        sha256 = digest(path)
+        sha256, size_bytes = digest(path, root)
         record_id = hashlib.sha256(f"{relative_path}\0{sha256}".encode("utf-8")).hexdigest()
         assets.append({
             "record_id": record_id,
             "path": relative_path,
             "kind": kind,
-            "size_bytes": path.stat().st_size,
+            "size_bytes": size_bytes,
             "sha256": sha256,
             "_path": path,
         })
@@ -76,6 +116,8 @@ def _review_defaults() -> dict:
         },
         "rights_review": {
             "status": "UNVERIFIED",
+            "reviewer": None,
+            "reviewed_at": None,
             "creator": None,
             "source_url": None,
             "license": None,
@@ -86,6 +128,99 @@ def _review_defaults() -> dict:
             "publication_approved": False,
         },
     }
+
+
+def _nonempty(value) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _valid_evidence_reference(value: str) -> bool:
+    parsed = urlsplit(value)
+    if parsed.scheme:
+        return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+    path = PurePosixPath(value)
+    return not path.is_absolute() and ".." not in path.parts and bool(value.strip())
+
+
+def validate_review_manifest(manifest: dict) -> None:
+    """Fail closed on malformed, ambiguous, or unsupported human review data."""
+    if not isinstance(manifest, dict) or manifest.get("schema_version") != 1:
+        raise ValueError("review manifest must use schema_version 1")
+    assets = manifest.get("assets")
+    if not isinstance(assets, list):
+        raise ValueError("review manifest assets must be a list")
+
+    seen_ids = set()
+    for index, asset in enumerate(assets):
+        prefix = f"assets[{index}]"
+        if not isinstance(asset, dict):
+            raise ValueError(f"{prefix} must be an object")
+        record_id = asset.get("record_id")
+        relative_path = asset.get("path")
+        sha256 = asset.get("sha256")
+        kind = asset.get("kind")
+        size_bytes = asset.get("size_bytes")
+        if not _nonempty(record_id) or not re.fullmatch(r"[0-9a-f]{64}", record_id):
+            raise ValueError(f"{prefix}.record_id must be a lowercase SHA-256")
+        if record_id in seen_ids:
+            raise ValueError(f"duplicate review record_id: {record_id}")
+        seen_ids.add(record_id)
+        if not _nonempty(relative_path):
+            raise ValueError(f"{prefix}.path is required")
+        posix_path = PurePosixPath(relative_path)
+        if posix_path.is_absolute() or ".." in posix_path.parts or "\\" in relative_path:
+            raise ValueError(f"{prefix}.path must be repository-relative and traversal-free")
+        if not _nonempty(sha256) or not re.fullmatch(r"[0-9a-f]{64}", sha256):
+            raise ValueError(f"{prefix}.sha256 must be a lowercase SHA-256")
+        expected_id = hashlib.sha256(f"{relative_path}\0{sha256}".encode("utf-8")).hexdigest()
+        if record_id != expected_id:
+            raise ValueError(f"{prefix}.record_id does not match path and SHA-256")
+        if kind not in {"image", "video"}:
+            raise ValueError(f"{prefix}.kind must be image or video")
+        if isinstance(size_bytes, bool) or not isinstance(size_bytes, int) or size_bytes < 0:
+            raise ValueError(f"{prefix}.size_bytes must be a non-negative integer")
+
+        visual = asset.get("visual_review")
+        if not isinstance(visual, dict):
+            raise ValueError(f"{prefix}.visual_review must be an object")
+        visual_status = visual.get("status")
+        if visual_status not in {"PENDING", "REVIEWED", "NEEDS_ATTENTION"}:
+            raise ValueError(f"{prefix}.visual_review.status is unsupported")
+        findings = visual.get("findings")
+        if not isinstance(findings, list) or any(not _nonempty(item) for item in findings):
+            raise ValueError(f"{prefix}.visual_review.findings must be a list of non-empty strings")
+        if visual_status != "PENDING" and not (
+            _nonempty(visual.get("reviewer")) and _nonempty(visual.get("reviewed_at"))
+        ):
+            raise ValueError(f"{prefix}.visual_review requires reviewer and reviewed_at")
+
+        rights = asset.get("rights_review")
+        if not isinstance(rights, dict):
+            raise ValueError(f"{prefix}.rights_review must be an object")
+        rights_status = rights.get("status")
+        if rights_status not in {"UNVERIFIED", "VERIFIED", "REJECTED", "EXPIRED"}:
+            raise ValueError(f"{prefix}.rights_review.status is unsupported")
+        for field in ("evidence", "territories"):
+            value = rights.get(field)
+            if not isinstance(value, list) or any(not _nonempty(item) for item in value):
+                raise ValueError(f"{prefix}.rights_review.{field} must be a list of non-empty strings")
+        evidence = rights.get("evidence")
+        if any(not _valid_evidence_reference(item) for item in evidence):
+            raise ValueError(f"{prefix}.rights_review.evidence contains an unsafe reference")
+        approved = rights.get("publication_approved")
+        if not isinstance(approved, bool):
+            raise ValueError(f"{prefix}.rights_review.publication_approved must be boolean")
+        if rights_status == "VERIFIED" or approved:
+            required = ("reviewer", "reviewed_at", "creator", "source_url", "license")
+            if any(not _nonempty(rights.get(field)) for field in required):
+                raise ValueError(f"{prefix}.verified rights require reviewer, timestamp, creator, source_url and license")
+            source = urlsplit(rights["source_url"])
+            if source.scheme not in {"http", "https"} or not source.netloc:
+                raise ValueError(f"{prefix}.rights_review.source_url must be an http(s) URL")
+            if not evidence:
+                raise ValueError(f"{prefix}.verified rights require at least one evidence reference")
+        if approved and (rights_status != "VERIFIED" or not rights.get("territories")):
+            raise ValueError(f"{prefix}.publication_approved requires VERIFIED rights and explicit territories")
 
 
 def build_review_manifest(root: Path, output: Path, assets: list[dict] | None = None) -> dict:
@@ -100,8 +235,10 @@ def build_review_manifest(root: Path, output: Path, assets: list[dict] | None = 
             previous = json.loads(output.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as error:
             raise ValueError(f"existing review manifest cannot be read safely: {error}") from error
-        if not isinstance(previous, dict) or not isinstance(previous.get("assets"), list):
-            raise ValueError("existing review manifest has an invalid schema; refusing to overwrite it")
+        try:
+            validate_review_manifest(previous)
+        except ValueError as error:
+            raise ValueError(f"existing review manifest is invalid; refusing to overwrite it: {error}") from error
     else:
         previous = {}
 
@@ -141,6 +278,7 @@ def build_review_manifest(root: Path, output: Path, assets: list[dict] | None = 
             "rights_unverified": sum(1 for item in records if item["rights_review"]["status"] == "UNVERIFIED"),
         },
     }
+    validate_review_manifest(manifest)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return manifest

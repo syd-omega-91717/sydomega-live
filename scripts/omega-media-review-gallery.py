@@ -12,8 +12,6 @@ import hashlib
 import html
 import json
 import os
-from pathlib import Path
-from urllib.parse import quote
 import re
 import stat
 from datetime import datetime
@@ -25,8 +23,6 @@ VIDEO_EXTENSIONS = {".m4v", ".mkv", ".mov", ".mp4", ".ogv", ".webm"}
 SKIP_DIRS = {".git", ".vercel", ".next", "node_modules", "__pycache__", ".pytest_cache"}
 
 
-def digest(path: Path) -> str:
-    hasher = hashlib.sha256()
 def digest(path: Path, root: Path) -> tuple[str, int]:
     """Hash a regular file through a no-follow descriptor beneath root."""
     root = root.resolve()
@@ -71,7 +67,6 @@ def digest(path: Path, root: Path) -> tuple[str, int]:
             raise ValueError(f"media candidate is not a regular file: {relative.as_posix()}")
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             hasher.update(chunk)
-    return hasher.hexdigest()
         return hasher.hexdigest(), metadata.st_size
 
 
@@ -100,14 +95,12 @@ def collect_assets(root: Path) -> list[dict]:
     assets = []
     for path, kind in sorted(media_files(root), key=lambda item: item[0].as_posix().casefold()):
         relative_path = path.relative_to(root).as_posix()
-        sha256 = digest(path)
         sha256, size_bytes = digest(path, root)
         record_id = hashlib.sha256(f"{relative_path}\0{sha256}".encode("utf-8")).hexdigest()
         assets.append({
             "record_id": record_id,
             "path": relative_path,
             "kind": kind,
-            "size_bytes": path.stat().st_size,
             "size_bytes": size_bytes,
             "sha256": sha256,
             "_path": path,
@@ -139,68 +132,6 @@ def _review_defaults() -> dict:
     }
 
 
-def build_review_manifest(root: Path, output: Path, assets: list[dict] | None = None) -> dict:
-    """Write a deterministic inventory while preserving matching human reviews."""
-    root = root.resolve()
-    output = output.resolve()
-    if not output.is_relative_to(root):
-        raise ValueError("manifest output must be inside the repository root")
-
-    if output.exists():
-        try:
-            previous = json.loads(output.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as error:
-            raise ValueError(f"existing review manifest cannot be read safely: {error}") from error
-        if not isinstance(previous, dict) or not isinstance(previous.get("assets"), list):
-            raise ValueError("existing review manifest has an invalid schema; refusing to overwrite it")
-    else:
-        previous = {}
-
-    previous_by_id = {
-        item.get("record_id"): item
-        for item in previous.get("assets", [])
-        if isinstance(item, dict) and isinstance(item.get("record_id"), str)
-    }
-    assets = collect_assets(root) if assets is None else assets
-    records = []
-    for asset in assets:
-        record = {key: value for key, value in asset.items() if key != "_path"}
-        record.update(_review_defaults())
-        prior = previous_by_id.get(asset["record_id"])
-        if prior and prior.get("path") == asset["path"] and prior.get("sha256") == asset["sha256"]:
-            for section in ("visual_review", "rights_review"):
-                old_section = prior.get(section)
-                if isinstance(old_section, dict):
-                    record[section].update(old_section)
-        records.append(record)
-
-    manifest = {
-        "schema_version": 1,
-        "purpose": "Hash-bound human review inventory; not a rights certification.",
-        "policy": {
-            "new_or_changed_bytes_reset_review": True,
-            "hash_proves_bytes_not_ownership": True,
-            "unverified_is_not_approved": True,
-            "generated_by": "scripts/omega-media-review-gallery.py",
-        },
-        "assets": records,
-        "summary": {
-            "asset_count": len(records),
-            "image_count": sum(1 for item in records if item["kind"] == "image"),
-            "video_count": sum(1 for item in records if item["kind"] == "video"),
-            "visual_review_pending": sum(1 for item in records if item["visual_review"]["status"] == "PENDING"),
-            "rights_unverified": sum(1 for item in records if item["rights_review"]["status"] == "UNVERIFIED"),
-        },
-    }
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return manifest
-
-
-def build_gallery(root: Path, output: Path, manifest_output: Path | None = None) -> dict:
-    root = root.resolve()
-    output = output.resolve()
-    if not output.is_relative_to(root):
 def _nonempty(value) -> bool:
     return isinstance(value, str) and bool(value.strip())
 

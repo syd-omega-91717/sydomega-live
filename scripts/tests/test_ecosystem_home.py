@@ -88,7 +88,7 @@ class EcosystemHome(unittest.TestCase):
             self.assertIn('data-oeh="%s"' % key, block, key)
         self.assertEqual(len(re.findall(r'data-sculpt-glow="radiant"', block)), 1)
         self.assertEqual(len(re.findall(r'data-omega-sculpture="chronos"', block)), 1)
-        self.assertIn('data-omega-constellation="signs"', block)
+        self.assertNotIn('data-omega-constellation', block, "omega-constellation.js is a minimum 860px square: in this 231px box it made the panel 941px tall")
 
     def test_the_loaded_scripts_are_in_the_page(self):
         self.assertIn('<script src="/omega-character-card.js" defer></script>', HTML)
@@ -118,6 +118,21 @@ class EcosystemHome(unittest.TestCase):
         rest = re.search(r"'(\.oeh\.oeh \.oeh-btns a\.btn\.btn-fill\[href\])\{color:#120d02;-webkit-text-fill-color:#120d02", JS)
         self.assertIsNotNone(rest)
         self.assertRegex(JS, r"a\.btn\.btn-fill\[href\]:hover[^{]*\{color:#E2C86D;-webkit-text-fill-color:#E2C86D\}")
+
+    def test_the_ring_uses_the_agents_own_signs_and_existing_art_not_a_second_table(self):
+        """The ring is built from the agents list (name, sign, href) and the same signArt() medallion the agent list uses; it carries no sign table of its own."""
+        self.assertRegex(JS, r"renderWheel\(q\('wheel'\), agents\)")
+        wheel = JS[JS.index("function renderWheel"):JS.index("function renderUniverse")]
+        self.assertIn("signArt(a.sign)", wheel)
+        for sign in ("Aries", "Taurus", "Gemini", "Virgo", "Pisces"):
+            self.assertNotIn(sign, wheel, "a literal sign name in the ring would be a second copy of the canon table")
+        self.assertNotIn("innerHTML", wheel)
+
+    def test_the_ring_keeps_the_44px_tap_target(self):
+        self.assertIn("width:44px;height:44px;margin:-22px 0 0 -22px", RAW)
+
+    def test_the_posters_show_four_across_not_a_fixed_pixel_width(self):
+        self.assertIn("flex:0 0 max(150px,calc((100% - 36px)/4))", RAW)
 
     def test_it_declares_itself_once(self):
         self.assertIn("window.__omegaEcosystemHome", JS)

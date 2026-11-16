@@ -160,7 +160,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
         self.assertNotIn("20261116214700", strict.stdout)
 
-    def test_release_readiness_records_stale_cloudflare_and_migration_blockers(self) -> None:
+    def test_release_readiness_records_current_cloudflare_and_remaining_vercel_blocker(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
         snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
         readiness = snapshot["release_readiness"]
@@ -170,19 +170,19 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         )
         latest_probe = readiness.get("latest_production_probe", {})
         self.assertEqual(latest_probe.get("status"), "PASS")
-        self.assertEqual(latest_probe.get("expected_commit_sha"), "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75")
-        self.assertEqual(latest_probe.get("served_commit_sha"), "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75")
-        self.assertEqual(latest_probe.get("workflow_run_id"), 43971518946)
+        self.assertEqual(latest_probe.get("expected_commit_sha"), "20f8dcfa9e20da66f129420f736c3470431c2c70")
+        self.assertEqual(latest_probe.get("served_commit_sha"), "20f8dcfa9e20da66f129420f736c3470431c2c70")
+        self.assertEqual(latest_probe.get("workflow_run_id"), 43981760083)
         self.assertEqual(latest_probe.get("pages_passed"), 241)
         self.assertEqual(latest_probe.get("references_passed"), 368)
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(
             readiness.get("production_verification", {}).get("commit_sha"),
-            "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75",
+            "20f8dcfa9e20da66f129420f736c3470431c2c70",
         )
         self.assertEqual(
             readiness.get("production_verification", {}).get("workflow_run_id"),
-            43971518946,
+            43981760083,
         )
         vercel = readiness.get("vercel_promotion", {})
         self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")
@@ -191,8 +191,10 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         failover = readiness.get("failover_verification", {})
         self.assertEqual(failover.get("provider"), "GitHub Pages")
         self.assertEqual(failover.get("status"), "PASS")
-        self.assertEqual(failover.get("commit_sha"), "77756855246c39f072c2468bc3e671edd0b381c8")
-        self.assertEqual(failover.get("workflow_run_id"), 43406979843)
+        self.assertEqual(failover.get("commit_sha"), "20f8dcfa9e20da66f129420f736c3470431c2c70")
+        self.assertEqual(failover.get("workflow_run_id"), 43981760114)
+        self.assertEqual(failover.get("build_job_id"), 133699729352)
+        self.assertEqual(failover.get("deploy_job_id"), 133699871659)
         raw_blockers = readiness.get("blockers", [])
         blockers = raw_blockers if isinstance(raw_blockers, str) else " ".join(str(item) for item in raw_blockers)
         self.assertIn("Vercel production deployment remains intentionally postponed", blockers)
@@ -204,14 +206,19 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("issue #1346", blockers)
         runtime = snapshot["runtime_probe_status"]
         self.assertEqual(runtime.get("status"), "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
-        self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions")
-        self.assertEqual(runtime.get("family_access_probe"), "PASS")
-        self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline")
+        self.assertEqual(runtime.get("migration_replay"), "PASS — all 433 source migrations replayed from zero on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
+        self.assertEqual(runtime.get("migration_security_audit"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
+        self.assertEqual(runtime.get("hardening_contract"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
+        self.assertEqual(runtime.get("stripe_refund_lifecycle_probe"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
+        self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
+        self.assertEqual(runtime.get("family_access_probe"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
+        self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
         self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 433)
         self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261116214842")
         self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
         self.assertIn("241/241 registered pages", runtime.get("remediation", ""))
         self.assertIn("no pending migrations remain", runtime.get("remediation", ""))
+        self.assertIn("auth.mfa_factors count returned 0 total factors and 0 verified factors", runtime.get("remediation", ""))
         remediation = runtime.get("remediation", "").lower()
         self.assertIn("vercel production promotion remains", remediation)
         self.assertIn("intentionally postponed", remediation)

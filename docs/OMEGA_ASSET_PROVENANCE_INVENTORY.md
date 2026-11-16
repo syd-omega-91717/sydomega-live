@@ -123,4 +123,23 @@ python3 scripts/omega-media-review-gallery.py --manifest docs/media-visual-revie
 
 The browser checkbox and notes remain temporary and do not write to the manifest. Review decisions must be entered into the JSON manifest with reviewer, timestamp and evidence. The manifest is a review workflow record, not a legal determination. A SHA-256 proves bytes only; no generator can establish ownership or permission. The rights gate in `docs/media-rights.json` remains the separate release control.
 
+The manifest generator now validates the complete record schema before writing or preserving prior decisions. Visual states are restricted to `PENDING`, `REVIEWED`, and `NEEDS_ATTENTION`; completed visual reviews require a reviewer and timezone-aware ISO-8601 timestamp. Rights states are restricted to `UNVERIFIED`, `VERIFIED`, `REJECTED`, and `EXPIRED`; verified rights require reviewer, timestamp, creator, HTTP(S) source, licence, and evidence. `publication_approved=true` additionally requires `VERIFIED` rights and explicit territories. Invalid prior records fail closed and are not overwritten. On POSIX, the gallery hashes through no-follow file and directory descriptors to reject symlink/path-swap races.
+
 The gallery is read-only and must not be deployed as a public asset catalogue. The scanner excludes symbolic links and verifies resolved paths remain within the repository root.
+
+### Video frame and metadata sampling
+
+For a technical review of all repository videos, run:
+
+```bash
+python3 scripts/omega-media-review-video-sampler.py
+python3 -m unittest scripts/tests/test_omega_media_review_video_sampler.py
+```
+
+The sampler requires local `ffprobe` and `ffmpeg` binaries. It samples up to five bounded timestamps per video, records container/codec/duration/dimension/frame-rate metadata, and writes local outputs under:
+
+- `artifacts/media-visual-review/video-frames/`
+- `artifacts/media-visual-review/video-samples.json`
+- `artifacts/media-visual-review/video-samples.html` — local frame contact sheet with native video playback, technical metadata, and current review states from the validated canonical manifest
+
+Each result is bound to the repository-relative asset path and SHA-256. The technical `sampling_status` is separate from the human visual and rights review states. When a valid `review-manifest.json` exists, the sampler reads the current states by matching path+SHA-256; otherwise it defaults to Visual `PENDING` and Rights `UNVERIFIED`. Sampled frames never imply that a person has reviewed or cleared the video. If a video cannot be probed or sampled, its sampling status remains `UNAVAILABLE` with an error code; the command exits non-zero rather than silently treating it as sampled. Sampled frames are representative technical previews, not a full playback audit, authenticity check, or rights determination. All video rights remain `UNVERIFIED` until evidence-backed human review is recorded.

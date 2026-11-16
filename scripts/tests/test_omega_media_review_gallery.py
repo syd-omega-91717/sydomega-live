@@ -91,6 +91,17 @@ class MediaReviewGalleryTests(unittest.TestCase):
                 MODULE.build_review_manifest(root, root.parent / "outside.json")
             outside.unlink(missing_ok=True)
 
+    def test_generated_artifacts_are_not_reingested_as_source_media(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "media").mkdir()
+            (root / "media" / "source.png").write_bytes(b"source")
+            generated = root / "artifacts" / "media-visual-review" / "video-frames"
+            generated.mkdir(parents=True)
+            (generated / "sample.jpg").write_bytes(b"generated")
+            found = {path.relative_to(root).as_posix() for path, _kind in MODULE.media_files(root)}
+            self.assertEqual(found, {"media/source.png"})
+
     def test_symlink_loops_directories_and_broken_links_are_skipped(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

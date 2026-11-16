@@ -97,7 +97,8 @@ class MediaVideoSamplerTests(unittest.TestCase):
 
     def test_short_video_uses_unique_bounded_timestamps(self):
         values = MODULE.sample_times(0.02)
-        self.assertEqual(values, [0.0])
+        self.assertEqual(len(values), 5)
+        self.assertEqual(len(values), len(set(values)))
         self.assertTrue(all(0 <= value < 0.02 for value in values))
 
 

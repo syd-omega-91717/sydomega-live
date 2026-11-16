@@ -97,7 +97,7 @@ def render_video_review_html(root: Path, page_dir: Path, manifest: dict) -> str:
     cards = []
     for video in manifest["videos"]:
         source_path = root / video["path"]
-        source_relative = Path(__import__("os").path.relpath(source_path, page_dir)).as_posix()
+        source_relative = Path(os.path.relpath(source_path, page_dir)).as_posix()
         source_url = quote(source_relative, safe="/._-")
         metadata = video.get("metadata") or {}
         details = [
@@ -164,7 +164,7 @@ figcaption{{padding:6px 9px;color:#ccc}} .trust{{color:#e5c978;font-weight:600}}
 <body>
 <h1>Local video technical review</h1>
 <p class="summary">{summary["video_count"]} videos · {summary["sampled"]} sampled · {summary["unavailable"]} unavailable · {summary["frames"]} frames</p>
-<p>Technical sampling only. Sampling is not human visual review, authenticity verification, copyright clearance, or publication approval. Every item remains Visual PENDING / Rights UNVERIFIED until a separate evidence-backed review is recorded.</p>
+<p>Technical sampling only. Sampling is not human visual review, authenticity verification, copyright clearance, or publication approval. Status badges reflect the validated canonical review manifest; sampling does not change human review or rights decisions.</p>
 {"".join(cards)}
 </body>
 </html>

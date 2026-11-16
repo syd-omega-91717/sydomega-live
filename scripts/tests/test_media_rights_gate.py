@@ -18,7 +18,7 @@ spec = importlib.util.spec_from_file_location("media_rights_gate", SCRIPT)
 gate = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gate)
 
-BASELINE_CEILING = 519   # the number of media files on 2026-11-15. A new file gets a RECORD; raising this number is how a file would be blessed unseen.
+BASELINE_CEILING = 532   # the number of media files on 2026-11-15. A new file gets a RECORD; raising this number is how a file would be blessed unseen.
 
 
 def doc(**over):
@@ -45,7 +45,7 @@ class MediaRightsGate(unittest.TestCase):
         self.assertIn("assets/film.mp4", out[0])
 
     def test_every_media_kind_is_covered(self):
-        for ext in (".mp3", ".wav", ".ogg", ".m4a", ".flac", ".mp4", ".webm", ".mov", ".jpg", ".png", ".webp", ".gif"):
+        for ext in (".mp3", ".wav", ".ogg", ".m4a", ".flac", ".mp4", ".webm", ".mov", ".jpg", ".png", ".webp", ".gif", ".svg", ".bmp", ".tif", ".tiff"):
             with self.subTest(ext):
                 self.assertTrue(gate.evaluate(["assets/x" + ext], doc()), ext + " must need a record")
 
@@ -112,6 +112,19 @@ class MediaRightsGate(unittest.TestCase):
         self.assertLessEqual(len(real["baseline"]), BASELINE_CEILING,
                              "a new file gets a record in `records`; do not add it to the baseline")
         self.assertEqual(len(real["baseline"]), len(set(real["baseline"])), "duplicate baseline paths")
+
+    def test_legacy_svg_assets_are_explicitly_in_the_unreviewed_baseline(self):
+        with open(os.path.join(ROOT, "docs", "media-rights.json"), encoding="utf-8") as fh:
+            real = json.load(fh)
+        expected = {
+            "assets/omega-banner.svg", "assets/omega-divider.svg", "assets/omega-sigil.svg",
+            "assets/omega/sovereign-core.svg", "assets/realms/ascend.svg", "assets/realms/command.svg",
+            "assets/realms/cosmos.svg", "assets/realms/identity.svg", "assets/realms/intel.svg",
+            "assets/realms/order.svg", "assets/realms/services.svg", "assets/realms/universe.svg",
+            "assets/realms/vault.svg",
+        }
+        self.assertTrue(expected.issubset(set(real["baseline"])))
+        self.assertEqual(len(real["baseline"]), BASELINE_CEILING)
 
     def test_every_licence_note_names_an_allowed_licence(self):
         with open(os.path.join(ROOT, "docs", "media-rights.json"), encoding="utf-8") as fh:

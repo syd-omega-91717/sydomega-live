@@ -162,7 +162,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("20261116214700", strict.stdout)
         self.assertIn("production release is blocked", strict.stdout.lower())
 
-    def test_release_readiness_records_cloudflare_pass_and_vercel_postponement(self) -> None:
+    def test_release_readiness_records_stale_cloudflare_and_migration_blockers(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
         snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
         readiness = snapshot["release_readiness"]

@@ -81,6 +81,9 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
         self.assertIn("if mismatches != [(version, None)]", workflow)
         self.assertIn("push_args=(--linked --yes)", workflow)
         self.assertIn("push_args+=(--include-all)", workflow)
+        self.assertIn("supabase db dump --linked --schema public", workflow)
+        self.assertIn("public.api_keys.name text column is missing", workflow)
+        self.assertIn("public.api_keys.active boolean column is missing", workflow)
         self.assertIn("This controlled workflow is not authorized for the requested migration version.", workflow)
         self.assertIn("supabase migration list --linked", workflow)
 

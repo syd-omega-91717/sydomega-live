@@ -68,7 +68,6 @@ Before an asset is used as an authoritative platform asset, creator upload, comm
 
 This scanner does not inventory objects that exist only in Supabase Storage, query live providers, verify external links, establish copyright ownership, upload content, or prove production deployment. Those require authenticated provider checks and end-to-end tests. Missing evidence remains `UNVERIFIED`, never silently promoted to `LIVE`.
 
-
 ## Repository media inventory snapshot — 2026-11-16
 
 This snapshot was derived from the recursive Git tree at main commit `568619eb19c97174f2e9991c3419b7517208d260`, then reconciled against `docs/media-rights.json`. It is a repository inventory, not a visual inspection or rights determination.
@@ -100,18 +99,28 @@ The inventory contains 176 JPEG, 244 JPG, 21 PNG, 47 WebP, 13 SVG and 31 MP4 fil
 
 **Next audit stage:** generate visual contact sheets for the 501 image files, extract representative frames and metadata from all 31 videos, then reconcile each asset's visual identity and references before making any rights-register change. No rights status should be promoted without evidence supplied by the owner or an authoritative licence/source.
 
-## Human visual review gallery
+## Human visual review gallery and durable manifest
 
-Generate a local gallery for visual inspection of every repository image and video:
+Generate a local gallery and a hash-bound JSON review manifest:
 
 ```bash
 python3 scripts/omega-media-review-gallery.py
-```
-
-The default output is `artifacts/media-visual-review/index.html`. Open it from the local checkout. Images are lazy-loaded; videos use native browser controls and are not auto-played. Each card shows the repository path, byte size and SHA-256, plus a local review checkbox and notes field. The checkbox and notes are a temporary browser aid only: they do not persist, update the rights register, or certify ownership. Record durable findings through a reviewed evidence-backed change. The gallery is read-only and must not be deployed as a public asset catalogue.
-
-Run its regression tests with:
-
-```bash
 python3 -m unittest scripts/tests/test_omega_media_review_gallery.py
 ```
+
+Default outputs are:
+
+- `artifacts/media-visual-review/index.html`
+- `artifacts/media-visual-review/review-manifest.json`
+
+The manifest records each asset's repository-relative path, media type, byte size, SHA-256 and a path-plus-hash record ID. It starts with `visual_review.status=PENDING` and `rights_review.status=UNVERIFIED`. It preserves human-entered review fields only when both path and SHA-256 still match; changed bytes create a fresh pending record. A malformed existing manifest is not overwritten.
+
+To create a source-controlled review ledger after human review, explicitly target a tracked path:
+
+```bash
+python3 scripts/omega-media-review-gallery.py --manifest docs/media-visual-review.json
+```
+
+The browser checkbox and notes remain temporary and do not write to the manifest. Review decisions must be entered into the JSON manifest with reviewer, timestamp and evidence. The manifest is a review workflow record, not a legal determination. A SHA-256 proves bytes only; no generator can establish ownership or permission. The rights gate in `docs/media-rights.json` remains the separate release control.
+
+The gallery is read-only and must not be deployed as a public asset catalogue. The scanner excludes symbolic links and verifies resolved paths remain within the repository root.

@@ -62,8 +62,8 @@ class LiveBindingTruthContract(unittest.TestCase):
         self.assertIn("function updateMemberCount()", self.source)
         self.assertIn("function startTicker()", self.source)
         pulse = self.source[self.source.index('function createPulseIndicator'):self.source.index('function verifyPulse')]
-        self.assertIn("var dot=document.getElementById('omega-pulse')", pulse)
-        self.assertIn('verifyPulse(dot)', pulse)
+        self.assertIn("var control=document.getElementById('omega-pulse')", pulse)
+        self.assertIn('verifyPulse(control,dot||control)', pulse)
         self.assertIn("setLiveState(el,'error','—')", self.source)
         self.assertIn("setLiveState(ticker,'unavailable','—')", self.source)
 

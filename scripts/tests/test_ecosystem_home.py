@@ -134,6 +134,13 @@ class EcosystemHome(unittest.TestCase):
     def test_the_posters_show_four_across_not_a_fixed_pixel_width(self):
         self.assertIn("flex:0 0 max(150px,calc((100% - 36px)/4))", RAW)
 
+    def test_an_avatar_that_fails_to_load_falls_back_to_the_medallion_once(self):
+        """A populated-data render found a valid https avatar URL that did not load showing as a black disc with a broken-image icon. Scheme validation is not load validation."""
+        block = JS[JS.index("function renderProfile"):JS.index("function num(")]
+        self.assertIn("img.addEventListener('error'", block)
+        self.assertIn("if (img.getAttribute('src') !== medallion) img.src = medallion;", block)
+        self.assertNotRegex(block, r"\.onerror\s*=|onerror=", "no inline or property handler; addEventListener only")
+
     def test_it_declares_itself_once(self):
         self.assertIn("window.__omegaEcosystemHome", JS)
         self.assertIn("if (window.__omegaEcosystemHome) return;", JS)

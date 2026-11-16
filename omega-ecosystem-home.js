@@ -211,8 +211,14 @@
     var img = el('img', null, null, me);
     var av = null;
     try { var u = new URL(String(p.avatar_url || '')); if (u.protocol === 'https:') av = u.href; } catch (e) { av = null; }
-    img.src = av || signArt(p.sign); img.alt = ''; img.width = 58; img.height = 58;
-    if (av) img.referrerPolicy = 'no-referrer';
+    var medallion = signArt(p.sign);
+    img.src = av || medallion; img.alt = ''; img.width = 58; img.height = 58;
+    if (av) {
+      img.referrerPolicy = 'no-referrer';
+      /* A valid https address is not a loadable image: a deleted or moved avatar rendered as a black disc with a broken-image icon (found by a populated-data render).
+         Fall back once to the sign medallion the agent list uses; the guard stops a loop if the medallion itself fails. */
+      img.addEventListener('error', function () { if (img.getAttribute('src') !== medallion) img.src = medallion; });
+    }
     var t = el('div', null, null, me);
     el('div', 'oeh-me-n', p.display_name || 'Member', t);
     var bits = [];

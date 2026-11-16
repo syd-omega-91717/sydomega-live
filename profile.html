@@ -2489,7 +2489,11 @@ async function bootPassportExtra(){
        makes the browser drop a value that tries to smuggle in other declarations (measured). It accepts https only and encodes the
        characters that end a CSS url or string, so a hand-written value cannot be a javascript:/data: URL or break the quoting. */
     var av=null; try{ var au=new URL(String(d.avatar_url)); if(au.protocol==='https:') av=au.href.replace(/[()'"\\\s]/g,function(c){return '%'+c.charCodeAt(0).toString(16).toUpperCase();}); }catch(e){}
-    if(ph&&av){ph.style.backgroundImage='url("'+av+'")'; ph.textContent='';} }
+    /* A valid https address is not a loadable image: a deleted or moved avatar used to clear the placeholder and leave a blank photo box.
+       Probe first and apply it only once it has loaded, so a dead URL keeps the \u03A9. */
+    if(ph&&av){ var probe=new Image(); probe.referrerPolicy='no-referrer';
+      probe.addEventListener('load',function(){ph.style.backgroundImage='url("'+av+'")'; ph.textContent='';});
+      probe.src=av; } }
   ppArt(sign, tier);
   ppSetStatus(d.kyc_status||'none');
   kycGate();

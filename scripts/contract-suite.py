@@ -202,6 +202,9 @@ GATES = [
      'every sign, god, agent, element and token on every page agrees with '
      'the one canon table (omega-canon.json tracks)',
      ['scripts/canon-consistency.py']),
+    ('media-visual-review-tests',
+     'the local media visual review gallery preserves safe paths, exact-byte hashes, and explicit unverified rights state',
+     ['scripts/tests/test_omega_media_review_gallery.py']),
     ('media-rights',
      'every new audio, video or image file has a rights record (source, creator, licence, evidence); '
      'the 532 in-scope files that predate the rule are a frozen, unreviewed baseline',

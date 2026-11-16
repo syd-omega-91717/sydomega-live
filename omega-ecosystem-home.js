@@ -321,7 +321,7 @@
 
     var reads = await Promise.all([
       sb.from('profiles').select(COLS).eq('id', s.user.id).maybeSingle(),
-      sb.rpc('my_sovereign_summary'),
+      sb.rpc('my_sovereign_summary').then(function (r) { return r && r.error ? { data: null, error: r.error } : r; }, function (e) { return { data: null, error: e || new Error('rpc failed') }; }),
       sb.from('news').select('id,title,category,created_at').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
       sb.from('activity_feed').select('id,activity_type,title,created_at').eq('user_id', s.user.id).order('created_at', { ascending: false }).limit(5)
     ]);

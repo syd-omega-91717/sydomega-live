@@ -7,6 +7,8 @@
 <title>&#937; SYD OMEGA 91717 &mdash; Command Bridge</title>
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
+<script src="/omega-character-card.js" defer></script>
+<script src="/omega-ecosystem-home.js" defer></script>
 <script src="/omega-daily.js" defer></script>
 <script src="/omega-weather.js" defer></script>
 <style>
@@ -205,10 +207,6 @@
       <div class="ss-item" data-tooltip="Your element comes from your birth sign. It tints the platform to you." data-i18n-tooltip="tip_element" data-tooltip-placement="bottom" tabindex="0"><div class="ss-label" data-i18n="my_element">MY ELEMENT</div><div class="ss-val" id="ss-element">--</div></div>
     </div>
 
-    <!-- DAILY THREE: the member's daily loop (omega-daily.js) -->
-    <div class="pad" style="padding-bottom:0"><div data-omega-daily></div></div>
-    <!-- COMMAND DOCK: concierge, points and inbox folded in (omega-command-dock.js) -->
-    <div class="pad" style="padding-bottom:0"><section data-omega-command-dock aria-label="Command dock"></section></div>
 
     <!-- PLATFORM HEALTH BAR -->
     <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:100%;background:var(--line,rgba(201,168,76,.15))"></div></div>
@@ -288,6 +286,77 @@
     <!-- LAYER: TODAY (the former command.html: daily brief) -->
     <div id="l-today" class="layer-panel active">
       <div class="pad">
+<section class="oeh" data-omega-ecosystem-home aria-label="The Omega ecosystem">
+  <aside class="oeh-col oeh-left">
+    <div class="oeh-box">
+      <h2 class="oeh-h"><span>AI Agents</span><a href="/agents.html">VIEW ALL</a></h2>
+      <div data-oeh="agents"><div class="oeh-note">Reading the twelve agents.</div></div>
+    </div>
+  </aside>
+  <div class="oeh-col oeh-mid">
+    <div class="oeh-box oeh-hero">
+      <div class="oeh-copy">
+        <div class="oeh-eyebrow">Welcome to the</div>
+        <h2 class="oeh-title">Omega Ecosystem</h2>
+        <p class="oeh-sub">One platform for learning, finance, media, community and personal progression.</p>
+        <p class="oeh-facts" data-oeh="facts"></p>
+        <div class="oeh-btns">
+          <a class="btn btn-fill" href="/character.html">Enter my character</a>
+          <a class="btn" href="/ecosystem.html">Open the map</a>
+          <a class="btn" href="#oeh-today-loop">Today&rsquo;s three</a>
+        </div>
+      </div>
+      <div class="oeh-art">
+        <div data-omega-sculpture="signet" data-sculpt-glow="radiant" data-sculpt-height="290px"
+             data-sculpt-label="The Omega signet, glowing gold, ringed by its orbit"></div>
+      </div>
+    </div>
+    <div class="oeh-box">
+      <h2 class="oeh-h"><span>Cinematic universe</span><a href="/movies.html">EXPLORE ALL</a></h2>
+      <div data-oeh="universe"><div class="oeh-note">Reading the franchises.</div></div>
+    </div>
+    <div class="oeh-trio">
+      <div class="oeh-box">
+        <h2 class="oeh-h"><span>Ecosystem overview</span></h2>
+        <div class="oeh-wheel"><div data-omega-constellation="signs" data-cn-title="THE TWELVE"></div></div>
+      </div>
+      <div class="oeh-box">
+        <h2 class="oeh-h"><span>Your standing</span></h2>
+        <div data-oeh="axes"><div class="oeh-note">Reading your axes.</div></div>
+        <div class="oeh-stats" data-oeh-honors></div>
+      </div>
+      <div class="oeh-box">
+        <h2 class="oeh-h"><span>Recent activity</span></h2>
+        <div data-oeh="activity"><div class="oeh-note">Reading your activity.</div></div>
+      </div>
+    </div>
+  </div>
+  <aside class="oeh-col oeh-right">
+    <div class="oeh-box"><div data-oeh="profile"><div class="oeh-note">Reading your profile.</div></div></div>
+    <div class="oeh-box">
+      <h2 class="oeh-h"><span>Wallet</span></h2>
+      <div data-oeh="wallet"><div class="oeh-note">Reading your points.</div></div>
+    </div>
+    <div class="oeh-box">
+      <h2 class="oeh-h"><span>Quick access</span></h2>
+      <div class="oeh-quick" data-oeh="quick"></div>
+    </div>
+    <div class="oeh-box">
+      <h2 class="oeh-h"><span>Latest news</span></h2>
+      <div data-oeh="news"><div class="oeh-note">Reading the news.</div></div>
+    </div>
+    <div class="oeh-box">
+      <h2 class="oeh-h"><span>Ascension</span><a href="/character.html">MY TREE</a></h2>
+      <div class="oeh-tree" data-omega-sculpture="chronos" data-oeh-tree data-sculpt-height="230px" data-sculpt-bloom="off"
+           data-sculpt-label="Your place in the Chronos tree, your own house enlarged"></div>
+      <div data-oeh="ascension"></div>
+    </div>
+  </aside>
+</section>
+    <!-- DAILY THREE: the member's daily loop (omega-daily.js). It sits directly under the ecosystem surface, inside TODAY; the hero links here. -->
+    <div class="pad" id="oeh-today-loop" style="padding:0 0 12px"><div data-omega-daily></div></div>
+    <!-- COMMAND DOCK: concierge, points and inbox folded in (omega-command-dock.js) -->
+    <div class="pad" style="padding:0 0 12px"><section data-omega-command-dock aria-label="Command dock"></section></div>
 <div class="cmd-hero">
       <div class="cmd-clock">
         <div class="clock-time" id="clockTime">00:00:00</div>

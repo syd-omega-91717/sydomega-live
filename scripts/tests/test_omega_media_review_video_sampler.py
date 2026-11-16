@@ -23,7 +23,7 @@ class MediaVideoSamplerTests(unittest.TestCase):
         path.parent.mkdir(parents=True)
         path.write_bytes(b"video-bytes")
         sha256 = hashlib.sha256(b"video-bytes").hexdigest()
-        record_id = hashlib.sha256(f"media/clip.mp4\\0{sha256}".encode("utf-8")).hexdigest()
+        record_id = hashlib.sha256(f"media/clip.mp4\0{sha256}".encode("utf-8")).hexdigest()
         return {
             "record_id": record_id,
             "path": "media/clip.mp4",

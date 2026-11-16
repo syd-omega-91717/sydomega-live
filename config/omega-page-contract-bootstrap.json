@@ -4018,6 +4018,7 @@
           "/omega-analytics-init.js",
           "/omega-character-card.js",
           "/omega-command-dock.js",
+          "/omega-command-wall.js",
           "/omega-constellation.js",
           "/omega-daily.js",
           "/omega-ecosystem-home.js",

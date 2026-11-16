@@ -4016,9 +4016,11 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-character-card.js",
           "/omega-command-dock.js",
           "/omega-constellation.js",
           "/omega-daily.js",
+          "/omega-ecosystem-home.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
@@ -4049,7 +4051,7 @@
           "buttons": 26,
           "forms": 0,
           "inputs": 14,
-          "links": 10
+          "links": 16
         },
         "media_counts": {
           "images": 0,

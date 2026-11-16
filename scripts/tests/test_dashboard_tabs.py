@@ -109,20 +109,46 @@ class NoCountsInHeadings(unittest.TestCase):
             self.assertTrue(json.loads(pack.read_text(encoding="utf-8")).get("tab_today"), pack.name)
 
 
-class DailyThreeIsNotPushedDown(unittest.TestCase):
-    """The 220px signet hero sat above the Daily Three, so on a 900px desktop the member's own loop started at y=509
-    (measured). It is decoration and lives on OVERVIEW; it only paints when scrolled into view (IntersectionObserver)."""
+class TodayOpensOnTheEcosystemSurface(unittest.TestCase):
+    """History, so the next reader does not undo either decision. Until 2026-11-16 the Daily Three sat ABOVE the tabs and this class pinned that nothing tall
+    preceded it: a 220px signet hero had pushed the member's own loop to y=509 (measured), so the hero was moved to OVERVIEW. The owner's reference design
+    (assets/concept/reel-01.jpg: agents on the left, a cinematic hero, the twelve franchises, an overview, the member's standing, a right rail with profile,
+    wallet, news and ascension) opens on ONE composed surface, and the owner directed that it be built as the home. So TODAY now opens on that surface, and the
+    Daily Three and the concierge sit directly under it inside TODAY, with a link to them in the hero. The trade-off is real and chosen: the member's loop now
+    starts below the surface instead of at the top. What stays pinned: the OVERVIEW backdrop is still the only plain signet, the surface is where the glowing one is,
+    and the loop is still on the page, still on TODAY, and still one click from the hero."""
     HTML = read("dashboard.html")
 
-    def test_the_signet_hero_is_inside_the_overview_panel_only(self):
-        self.assertEqual(self.HTML.count('data-omega-sculpture="signet"'), 1)
-        i_hero = self.HTML.index('data-omega-sculpture="signet"')
-        self.assertGreater(i_hero, self.HTML.index('<div id="l-overview"'))
-        self.assertLess(i_hero, self.HTML.index('<div id="l-today"'))
+    def today(self):
+        return self.HTML[self.HTML.index('<div id="l-today"'):self.HTML.index('<div id="l-platform"')] if '<div id="l-platform"' in self.HTML else self.HTML[self.HTML.index('<div id="l-today"'):]
 
-    def test_nothing_tall_precedes_the_daily_three(self):
-        head = self.HTML[:self.HTML.index("data-omega-daily")]
-        self.assertNotIn("osc-stage", head.split("</style>", 1)[1])
+    def test_the_overview_backdrop_is_still_the_only_plain_signet(self):
+        plain = [m for m in re.finditer(r'data-omega-sculpture="signet"(?![^>]*data-sculpt-glow)', self.HTML)]
+        self.assertEqual(len(plain), 1)
+        self.assertGreater(plain[0].start(), self.HTML.index('<div id="l-overview"'))
+        self.assertLess(plain[0].start(), self.HTML.index('<div id="l-today"'))
+
+    def test_the_glowing_signet_is_the_surfaces_hero_and_nothing_else_is(self):
+        glowing = [m.start() for m in re.finditer(r'data-omega-sculpture="signet"[^>]*data-sculpt-glow="radiant"', self.HTML)]
+        self.assertEqual(len(glowing), 1)
+        t = self.HTML.index('<div id="l-today"')
+        self.assertGreater(glowing[0], t)
+        self.assertLess(glowing[0], self.HTML.index("data-omega-daily"))
+
+    def test_today_opens_on_the_surface_then_the_loop_then_the_concierge(self):
+        t = self.HTML.index('<div id="l-today"')
+        order = [self.HTML.index(k, t) for k in ("data-omega-ecosystem-home", "data-omega-daily", "data-omega-command-dock")]
+        self.assertEqual(order, sorted(order))
+
+    def test_the_loop_is_one_click_from_the_hero(self):
+        self.assertIn('href="#oeh-today-loop"', self.HTML)
+        self.assertIn('id="oeh-today-loop"', self.HTML)
+        self.assertLess(self.HTML.index('href="#oeh-today-loop"'), self.HTML.index('id="oeh-today-loop"'))
+
+    def test_the_loop_and_the_concierge_are_no_longer_above_the_tabs(self):
+        tabs = self.HTML.index('class="layer-tabs"')
+        self.assertGreater(self.HTML.index("data-omega-daily"), tabs)
+        self.assertGreater(self.HTML.index("data-omega-command-dock"), tabs)
 
 
 if __name__ == "__main__":

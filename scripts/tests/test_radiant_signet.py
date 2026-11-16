@@ -30,7 +30,9 @@ class RadiantSignet(unittest.TestCase):
             with open(f, encoding="utf-8", errors="ignore") as fh:
                 if 'data-sculpt-glow="radiant"' in fh.read():
                     users.append(os.path.basename(f))
-        self.assertEqual(users, ["index.html"], "every other signet on the site keeps the default look")
+        # The front door asked first; on 2026-11-16 the owner directed that the member's home be the reference's composed ecosystem surface (assets/concept/reel-01.jpg), whose hero is the same
+        # luminous mark, so dashboard.html is the second and last opt-in. Its single use, and that no other signet in it opts in, is pinned in test_dashboard_tabs.
+        self.assertEqual(users, ["dashboard.html", "index.html"], "every other signet on the site keeps the default look")
 
     def test_nothing_the_glow_draws_reaches_the_canvas_edge(self):
         sizes = plane_sizes(BLOCK)

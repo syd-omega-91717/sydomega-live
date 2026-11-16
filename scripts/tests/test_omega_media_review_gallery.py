@@ -6,6 +6,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 from importlib.util import module_from_spec, spec_from_file_location
 
 SCRIPT = Path(__file__).resolve().parents[1] / "omega-media-review-gallery.py"
@@ -89,6 +90,107 @@ class MediaReviewGalleryTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 MODULE.build_review_manifest(root, root.parent / "outside.json")
             outside.unlink(missing_ok=True)
+
+    def test_symlink_loops_directories_and_broken_links_are_skipped(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            (media / "real.png").write_bytes(b"real")
+            outside = root / "outside"
+            outside.mkdir()
+            (outside / "outside.png").write_bytes(b"outside")
+            links = [
+                (media / "external-dir", outside, True),
+                (media / "broken.png", root / "missing.png", False),
+                (media / "loop.png", media / "loop.png", False),
+            ]
+            created = []
+            for link, target, is_dir in links:
+                try:
+                    link.symlink_to(target, target_is_directory=is_dir)
+                    created.append(link)
+                except (OSError, NotImplementedError):
+                    continue
+            found = {path.relative_to(root).as_posix() for path, _kind in MODULE.media_files(root)}
+            self.assertEqual(found, {"media/real.png"})
+            self.assertFalse(any("outside.png" in path for path in found))
+
+    def test_path_replaced_with_symlink_after_discovery_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            candidate = media / "asset.png"
+            candidate.write_bytes(b"inside")
+            outside = root.parent / (root.name + "-outside.png")
+            outside.write_bytes(b"outside")
+
+            def raced_candidates(_root):
+                yield candidate, "image"
+                candidate.unlink()
+                candidate.symlink_to(outside)
+
+            try:
+                with patch.object(MODULE, "media_files", side_effect=raced_candidates):
+                    with self.assertRaises((OSError, ValueError)):
+                        MODULE.collect_assets(root)
+            finally:
+                candidate.unlink(missing_ok=True)
+                outside.unlink(missing_ok=True)
+
+    def test_invalid_review_status_is_rejected_without_overwriting_manifest(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            (media / "asset.png").write_bytes(b"asset")
+            manifest_path = root / "review.json"
+            manifest = MODULE.build_review_manifest(root, manifest_path)
+            manifest["assets"][0]["visual_review"]["status"] = "AUTO_APPROVED"
+            invalid = json.dumps(manifest, indent=2)
+            manifest_path.write_text(invalid, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "visual_review.status"):
+                MODULE.build_review_manifest(root, manifest_path)
+            self.assertEqual(manifest_path.read_text(encoding="utf-8"), invalid)
+
+    def test_publication_approval_requires_verified_rights_evidence(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            (media / "asset.png").write_bytes(b"asset")
+            manifest_path = root / "review.json"
+            manifest = MODULE.build_review_manifest(root, manifest_path)
+            manifest["assets"][0]["rights_review"]["publication_approved"] = True
+            invalid = json.dumps(manifest, indent=2)
+            manifest_path.write_text(invalid, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "verified rights"):
+                MODULE.build_review_manifest(root, manifest_path)
+            self.assertEqual(manifest_path.read_text(encoding="utf-8"), invalid)
+
+    def test_evidence_backed_rights_review_can_be_validated_without_auto_approval(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            (media / "asset.png").write_bytes(b"asset")
+            manifest_path = root / "review.json"
+            manifest = MODULE.build_review_manifest(root, manifest_path)
+            rights = manifest["assets"][0]["rights_review"]
+            rights.update({
+                "status": "VERIFIED",
+                "reviewer": "rights-reviewer",
+                "reviewed_at": "2026-11-17T00:00:00Z",
+                "creator": "Verified creator",
+                "source_url": "https://example.invalid/source",
+                "license": "CC-BY-4.0",
+                "evidence": ["https://example.invalid/license"],
+                "territories": ["worldwide"],
+                "publication_approved": False,
+            })
+            MODULE.validate_review_manifest(manifest)
+            self.assertFalse(rights["publication_approved"])
 
     def test_invalid_existing_manifest_is_not_overwritten(self):
         with tempfile.TemporaryDirectory() as temp:

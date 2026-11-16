@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-11-13",
-  "source": "Authenticated Supabase provider migration-ledger read via Supabase list_migrations on 2026-11-13 (read-only). The provider ledger is authoritative for applied versions; source migration inventory and fresh replay are validated separately.",
-  "remoteMigrationCount": 430,
-  "latestRemoteMigration": "20261113062812",
+  "_captured": "2026-11-16",
+  "source": "Authenticated Supabase provider migration-ledger read via Supabase list_migrations on 2026-11-16 (read-only after applying media_items_authenticated_select). The provider ledger is authoritative for applied versions; source migration inventory and fresh replay are validated separately.",
+  "remoteMigrationCount": 431,
+  "latestRemoteMigration": "20261116214052",
   "versions": [
     "0001",
     "0002",
@@ -433,7 +433,8 @@
     "20261113010000",
     "20261113020000",
     "20261113030000",
-    "20261113062812"
+    "20261113062812",
+    "20261116214052"
   ],
   "migrations": [
     {
@@ -2152,6 +2153,10 @@
     {
       "version": "20261113062812",
       "name": "omega_user_achievement_service_role_insert_grant"
+    },
+    {
+      "version": "20261116214052",
+      "name": "media_items_authenticated_select"
     }
   ]
 }

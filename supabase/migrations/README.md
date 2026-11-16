@@ -10,7 +10,7 @@ This directory is the canonical, ordered, automatically-appliable schema history
 
 The repository contains timestamped reconciliation migrations for changes that were historically applied directly to the live database. Those files preserve the recorded migration versions so `supabase db push` does not encounter `Remote migration versions not found in local migrations directory`.
 
-## Current provider-verified state — 2026-11-16
+## Historical provider-verified state — 2026-11-16 (superseded by 2026-11-17)
 
 - A fresh, read-only read of the authenticated Supabase provider ledger returned **432 unique applied versions**; the latest is `20261116214842_authenticated_safe_column_read_grants`. The repository's `supabase/remote-migrations.json` records the same 432 versions.
 - The source directory now contains **433 migration files**: 432 provider-applied versions plus one explicitly registered pending migration. The pending registry is part of source inventory and is not provider-applied state.
@@ -123,3 +123,19 @@ A fresh read-only query against the configured production Supabase project retur
 Direct inspection of `public.omega_runtime_dispatch(uuid,text,jsonb)` found all 53 canonical module-read branches and the dedicated consultancy-intake write branch (54/54). The owner/subject-scoped unique indexes introduced by the applied migration are present in the provider schema. This is runtime-definition and migration-ledger evidence, not proof that every route, user journey, external provider or production release is live.
 
 Three follow-up migrations are registered as `PENDING_REVIEW / NOT_APPLIED`: `20261112091300_omega_idempotency_payload_integrity.sql` adds immutable request-payload checks; `20261112091400_omega_stripe_refund_state_fk_index.sql` covers the unindexed refund-state FK; and `20261112091500_omega_search_index_schema_reconciliation.sql` reconciles the known live/fresh search-index schema drift and tightens owner/org RLS. All three block production until fresh full replay, SQL regression probes and security checks pass. Do not edit the already-applied `20261111190000` migration; subsequent changes must use new timestamped migrations.
+
+
+## Current provider-verified state — 2026-11-17
+
+The following is the latest independently checked state. It supersedes the 2026-11-16 pending-migration and stale-production statements above.
+
+- The authenticated Supabase provider migration ledger contains **433 unique applied versions**, latest `20261116214842_authenticated_safe_column_read_grants`. The source directory contains **433 unique migration files**. `supabase/remote-migrations.json` records 433 versions; `supabase/pending-migrations.json` is empty.
+- Migration `20261116214700_api_keys_live_column_compatibility` is provider-applied. A read-only query of `information_schema.columns` confirms `public.api_keys.name text NOT NULL` and `public.api_keys.active boolean DEFAULT true`. No API-key or secret values were queried.
+- A fresh full migration replay passed on main commit `8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75`. The migration source/provider snapshot is reconciled; strict `migration-drift.py` reports 433 matching versions and no pending versions.
+- The sensitive-column grant boundary remains unchanged: authenticated can read only the required non-secret columns on `public.api_keys` and `public.consent_records`; no table-wide SELECT was added, and `api_key`, `api_secret`, `ip_hash`, and `user_agent` remain excluded.
+- Cloudflare Pages exact-SHA production verification passed for main commit `8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75` ([run #43971518946](https://github.com/syd-omega-91717/sydomega-live/actions/runs/43971518946)). The public release manifest matched the exact commit; root and `www` returned HTTP 200; CSP and HSTS passed; the complete smoke test passed **241/241 registered pages and 368/368 references**.
+- GitHub Pages failover build, deployment, and its six-route smoke test also passed. Cloudflare Pages remains the primary production host. Vercel promotion remains explicitly postponed by the account-credit/capacity gate and is not claimed as deployed.
+- Current Supabase Security Advisor findings: one warning for disabled leaked-password protection; three informational RLS-enabled/no-policy findings on private/internal tables; 326 informational unused-index findings. These are tracked for separate remediation/review. Do not add blanket policies to private tables or drop indexes solely from an unused-index finding.
+- The production auth setting for leaked-password protection still requires an authorized dashboard change and post-change verification. Owner MFA enforcement remains dormant until the required owner-factor prerequisites and sign-in step-up validation are complete.
+
+The repository snapshot reconciliation and current release evidence are being committed through [PR #1347](https://github.com/syd-omega-91717/sydomega-live/pull/1347). The values above are point-in-time evidence for the stated commit and provider query, not a promise that future deployments remain healthy.

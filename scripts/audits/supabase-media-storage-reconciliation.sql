@@ -25,26 +25,6 @@ with bucket_inventory as (
   group by b.id, b.name, b.public, b.file_size_limit,
            b.allowed_mime_types, b.type, b.versioning_status
 ),
-storage_file_inventory as (
-  select
-    count(*)::bigint as rows,
-    count(*) filter (where storage_path is null or btrim(storage_path) = '')::bigint as missing_path,
-    count(*) filter (where checksum is null or btrim(checksum) = '')::bigint as missing_checksum,
-    coalesce(jsonb_agg(jsonb_build_object('visibility', visibility, 'rows', n)
-      order by visibility), '[]'::jsonb) as by_visibility
-  from (
-    select visibility, count(*)::bigint as n
-    from public.storage_files
-    group by visibility
-  ) grouped
-  cross join (select count(*)::bigint as total from public.storage_files) total
-  cross join lateral (
-    select
-      (select count(*)::bigint from public.storage_files) as rows,
-      (select count(*)::bigint from public.storage_files where storage_path is null or btrim(storage_path) = '') as missing_path,
-      (select count(*)::bigint from public.storage_files where checksum is null or btrim(checksum) = '') as missing_checksum
-  ) unused
-),
 media_catalog as (
   select coalesce(jsonb_agg(jsonb_build_object(
     'media_type', media_type,

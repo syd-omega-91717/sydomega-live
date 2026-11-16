@@ -210,7 +210,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(runtime.get("migration_security_audit"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
         self.assertEqual(runtime.get("hardening_contract"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
         self.assertEqual(runtime.get("stripe_refund_lifecycle_probe"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
-        self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062)")
+        self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
         self.assertEqual(runtime.get("family_access_probe"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062)")
         self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062)")
         self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 433)

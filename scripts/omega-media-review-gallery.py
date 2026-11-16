@@ -22,7 +22,7 @@ from urllib.parse import quote, urlsplit
 
 IMAGE_EXTENSIONS = {".avif", ".bmp", ".gif", ".jpeg", ".jpg", ".png", ".svg", ".tif", ".tiff", ".webp"}
 VIDEO_EXTENSIONS = {".m4v", ".mkv", ".mov", ".mp4", ".ogv", ".webm"}
-SKIP_DIRS = {".git", ".vercel", ".next", "node_modules", "__pycache__", ".pytest_cache"}
+SKIP_DIRS = {".git", ".vercel", ".next", "node_modules", "__pycache__", ".pytest_cache", "artifacts"}
 
 
 def digest(path: Path) -> str:

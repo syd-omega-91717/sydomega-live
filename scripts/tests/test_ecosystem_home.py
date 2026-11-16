@@ -112,6 +112,13 @@ class EcosystemHome(unittest.TestCase):
         self.assertIsNotNone(css)
         self.assertNotRegex("".join(re.findall(r"'\.oeh[^{]*\{", JS)), r"card")
 
+    def test_the_primary_button_label_beats_the_platform_link_colour_and_survives_hover(self):
+        """The platform's a[href]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) weighs 5 classes, so a scoped `.oeh .oeh-btns a.btn-fill` (3) lost and `color` computed gold on the gold fill: the runtime contrast gate
+        read 1:1 in CI (the label looked right only because -webkit-text-fill-color was dark). The rule must outweigh it, set `color` itself, and restate hover, where the platform swaps to a dark fill."""
+        rest = re.search(r"'(\.oeh\.oeh \.oeh-btns a\.btn\.btn-fill\[href\])\{color:#120d02;-webkit-text-fill-color:#120d02", JS)
+        self.assertIsNotNone(rest)
+        self.assertRegex(JS, r"a\.btn\.btn-fill\[href\]:hover[^{]*\{color:#E2C86D;-webkit-text-fill-color:#E2C86D\}")
+
     def test_it_declares_itself_once(self):
         self.assertIn("window.__omegaEcosystemHome", JS)
         self.assertIn("if (window.__omegaEcosystemHome) return;", JS)

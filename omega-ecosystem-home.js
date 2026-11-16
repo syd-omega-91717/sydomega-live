@@ -84,7 +84,10 @@
       '.oeh-facts{font-family:var(--M,"Courier Prime",monospace);font-size:12px;letter-spacing:.12em;color:var(--muted,#8796A1);margin:0 0 16px}' +
       '.oeh-btns{display:flex;flex-wrap:wrap;gap:8px}' +
       '.oeh .oeh-btns .btn{padding:9px 13px;font-size:12px;letter-spacing:.08em;white-space:nowrap}' +
-      '.oeh .oeh-btns a.btn-fill{color:#120d02;-webkit-text-fill-color:#120d02;font-weight:700}' +
+      /* The platform's a[href]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link) link colour weighs 5 classes, so a plain scoped rule loses and the label computes gold on gold (the contrast gate read 1:1);
+         .oeh.oeh doubles this surface's weight. Hover is restated because the platform swaps to a dark fill there and a forced dark label would vanish. */
+      '.oeh.oeh .oeh-btns a.btn.btn-fill[href]{color:#120d02;-webkit-text-fill-color:#120d02;font-weight:700}' +
+      '.oeh.oeh .oeh-btns a.btn.btn-fill[href]:hover,.oeh.oeh .oeh-btns a.btn.btn-fill[href]:focus-visible{color:#E2C86D;-webkit-text-fill-color:#E2C86D}' +
       '.oeh-art{position:relative;min-width:0;align-self:stretch;min-height:250px}' +
       /* universe */
       '.oeh-strip{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 10px;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.4) transparent}' +

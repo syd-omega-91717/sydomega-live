@@ -14,6 +14,9 @@
 - `python3 -m unittest scripts.tests.test_ecosystem_home`: 17 tests. Six reintroduced faults were each caught (activity unfiltered, `innerHTML` added, `phone` added to the column list, a mount renamed, a money glyph added, `Math.random` added).
 - `test_dashboard_tabs.py`: the old `DailyThreeIsNotPushedDown` class pinned the opposite design decision (the loop above everything) and was rewritten as `TodayOpensOnTheEcosystemSurface`, which records the history and the trade-off, and pins the order surface -> Daily Three -> dock, the single glowing signet, and the one-click link.
 
+- CI's `evidence` job failed on the first push: `verify-runtime.js` read the hero's primary button at 1:1 (`color` computed gold on the gold fill, because the platform's `a[href]:not(.on):not(.nav-home):not(.nav-back):not(.skip-link)` weighs 5 classes against my 3; the label only looked right through `-webkit-text-fill-color`). Fixed with a `.oeh.oeh` rule that sets `color` itself and restates hover (the platform swaps to a dark fill there, so a forced dark label would have vanished); pinned in `test_ecosystem_home` and shown to fail when the selector is weakened. After the fix `OMEGA_REQUIRE_BROWSER=1 node scripts/verify-runtime.js` reports PASS on all 13 pages.
+- Why local gating missed it: `ci-local.sh` runs `verify-runtime.js` with `|| true`, so the 1:1 finding was non-fatal there; read that step's output, not the summary line.
+
 **Not done / not verified.**
 - With the stub every data panel is empty (the stub returns `[]`), so the populated states of profile counts, wallet, news and activity were exercised by code reading and the empty/error states by render, not by a populated-data render.
 - The member's loop now starts below the surface rather than at the top; that is a chosen trade-off, not a free one. On a 1600x900 screen the Daily Three is below the first screen.

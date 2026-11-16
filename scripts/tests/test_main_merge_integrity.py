@@ -29,12 +29,15 @@ class MainMergeIntegrityTests(unittest.TestCase):
         self.assertIn("BEHAVIORAL_PROBES_PASS", drift["status"])
         self.assertEqual(snapshot["runtime_probe_status"]["status"], "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
 
-    def test_pending_registry_contains_only_unapplied_source_migrations(self) -> None:
+    def test_pending_registry_is_empty_when_provider_ledger_covers_source(self) -> None:
         remote = json.loads((ROOT / "supabase/remote-migrations.json").read_text(encoding="utf-8"))
         pending = json.loads((ROOT / "supabase/pending-migrations.json").read_text(encoding="utf-8"))
         remote_versions = set(remote.get("versions", []))
         entries = pending.get("pending", [])
-        self.assertEqual(entries, [], "provider ledger and source migration inventory must be fully reconciled")
+        self.assertEqual({str(entry.get("version")) for entry in entries}, set())
+        local_versions = {path.name[:14] for path in (ROOT / "supabase/migrations").glob("*.sql") if len(path.name) >= 15 and path.name[:14].isdigit()}
+        pending_versions = {str(entry.get("version")) for entry in entries}
+        self.assertEqual(local_versions - remote_versions, pending_versions)
         for entry in entries:
             with self.subTest(version=entry.get("version")):
                 self.assertNotIn(entry.get("version"), remote_versions)

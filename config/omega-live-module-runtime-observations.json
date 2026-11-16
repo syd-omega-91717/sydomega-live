@@ -1699,21 +1699,24 @@
     "intended_remediation": "Add the missing required domain column, align verified required/default fields, return source IDs as text for UUID/BIGINT compatibility, add the missing successful RETURN, update the dispatcher request ID variable to text, and preserve the underlying ID column without conversion."
   },
   "release_readiness": {
-    "status": "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED",
-    "blockers": [
-      "Vercel production deployment remains intentionally postponed. The main-push Vercel Production workflow confirms VERCEL_PROMOTION_POSTPONED=true because the Vercel Hobby team was blocked for Edge Requests by account credits since 2026-10-06. The workflow's Cloudflare live-commit check passed, but Vercel project setup, immutable artifact build, deployment, and Vercel-domain smoke steps were skipped. Restore Vercel account capacity, authorize the project team, verify VERCEL_TOKEN and project scope, then deliberately resume promotion; do not infer Vercel deployment from a successful workflow conclusion."
-    ],
-    "last_checked": "2026-11-13",
+    "status": "CLOUDFLARE_PRODUCTION_VERIFIED_VERCEL_PROMOTION_POSTPONED",
+    "blockers": "Vercel production deployment remains intentionally postponed. The main-push Vercel Production workflow confirms VERCEL_PROMOTION_POSTPONED=true because the Vercel Hobby team was blocked for Edge Requests by account credits since 2026-10-06. The workflow's Cloudflare live-commit check passed, but Vercel project setup, immutable artifact build, deployment, and Vercel-domain smoke steps were skipped. Restore Vercel account capacity, authorize the project team, verify VERCEL_TOKEN and project scope, then deliberately resume promotion; do not infer Vercel deployment from a successful workflow conclusion.",
+    "last_checked": "2026-11-17",
     "production_verification": {
       "provider": "Cloudflare Pages",
       "status": "PASS",
-      "commit_sha": "77756855246c39f072c2468bc3e671edd0b381c8",
-      "workflow_run_id": 43406980583,
-      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43406980583",
-      "job_id": 131823603932,
+      "commit_sha": "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75",
+      "workflow_run_id": 43971518946,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43971518946",
+      "job_id": 133664585723,
       "verification_step": "Verify production manifest, headers and complete page estate",
       "conclusion": "success",
-      "verified_at": "2026-11-13T10:10:37Z"
+      "verified_at": "2026-11-16T22:36:35Z",
+      "registered_pages": 241,
+      "pages_passed": 241,
+      "references_passed": 368,
+      "root_http": 200,
+      "www_http": 200
     },
     "vercel_promotion": {
       "status": "POSTPONED_NOT_DEPLOYED",
@@ -1740,10 +1743,25 @@
       "deploy_job_id": 131823766464,
       "verification_step": "Smoke test deployed Pages site",
       "conclusion": "success"
+    },
+    "latest_production_probe": {
+      "provider": "Cloudflare Pages",
+      "status": "PASS",
+      "expected_commit_sha": "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75",
+      "served_commit_sha": "8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75",
+      "workflow_run_id": 43971518946,
+      "job_id": 133664585723,
+      "verified_at": "2026-11-16T22:36:35Z",
+      "registered_pages": 241,
+      "pages_passed": 241,
+      "references_passed": 368,
+      "root_http": 200,
+      "www_http": 200,
+      "evidence": "GitHub Actions production verification job; exact manifest SHA, CSP/HSTS, 241-page and 368-reference smoke checks passed."
     }
   },
   "runtime_probe_status": {
-    "observed_date": "2026-11-13",
+    "observed_date": "2026-11-17",
     "migration_replay": "PASS on PR #1265 head e366d4099e93af0b562cdee953ba7ef3df05f7d6; all 429 source migrations replayed from zero",
     "migration_security_audit": "PASS on PR #1265 head",
     "hardening_contract": "PASS on PR #1265 head",
@@ -1751,17 +1769,22 @@
     "runtime_adapter_probe": "PASS — 54/54 governed actions",
     "failure": null,
     "production_privilege_evidence": "Live provider ACL verification confirms service_role SELECT on omega_notifications, omega_agent_tasks, omega_agent_task_events, omega_user_achievements, and omega_achievement_verifications; service_role INSERT on omega_user_achievements. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with the existing owner-read-only policy.",
-    "remediation": "Database and behavioral verification is green: 429 source migrations replayed from zero; migration inventory and security audit pass; hardening and Stripe lifecycle probes pass; all 54 runtime actions pass; family-access authorization/privacy probes pass; authenticated content pipeline E2E passes. The provider ledger contains 429 applied versions through 20261113062812; source migration history is reconciled and pending-migrations.json is empty. Cloudflare Pages exact-SHA production verification passed for main commit 426ec70562e3f97d56707002a3bc25eb43f46328. GitHub Pages failover build, deployment, and smoke test also passed. Vercel production promotion remains intentionally postponed because the workflow records the Hobby team's Edge Request credit block; Vercel deploy steps were skipped.",
+    "remediation": "2026-11-17 provider and release verification: the authenticated Supabase migration ledger contains 433 applied versions, including 20261116214700_api_keys_live_column_compatibility; no pending migrations remain. Read-only information_schema inspection confirms public.api_keys.name text NOT NULL and active boolean DEFAULT true. Fresh full migration replay passed on main commit 8569b7ec3e75d740fa0f4b77ffb5d6a693b72a75. Cloudflare Pages exact-SHA production verification passed for that commit: 241/241 registered pages and 368/368 references passed, root and www returned HTTP 200, and CSP/HSTS checks passed. GitHub Pages failover build, deployment, and smoke test passed. Vercel production promotion remains intentionally postponed because the workflow records the Hobby team's Edge Request credit block; Vercel deploy steps were skipped. Supabase Security Advisor currently reports leaked-password protection disabled (one warning) and three informational RLS-enabled/no-policy findings on private/internal tables; review the access model and enable leaked-password protection in Auth settings.",
     "status": "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION",
     "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
     "provider_migration_ledger": {
-      "observed_date": "2026-11-13",
-      "applied_count": 430,
-      "latest_version": "20261113062812",
-      "latest_name": "omega_user_achievement_service_role_insert_grant",
+      "observed_date": "2026-11-17",
+      "applied_count": 433,
+      "latest_version": "20261116214842",
+      "latest_name": "authenticated_safe_column_read_grants",
       "task_grant_migration": "20261113010000_APPLIED",
       "notification_migration": "20261113020000_APPLIED",
-      "achievement_migration": "20261113062812_APPLIED"
+      "achievement_migration": "20261113062812_APPLIED",
+      "media_catalog_read_grant_migration": "20261116214052_APPLIED_PROVIDER_LEDGER_CONFIRMED",
+      "api_keys_live_column_compatibility_migration": "20261116214700_APPLIED_PROVIDER_LEDGER_CONFIRMED",
+      "safe_column_read_grants_migration": "20261116214842_APPLIED_PROVIDER_LEDGER_CONFIRMED",
+      "pending_count": 0,
+      "pending_versions": []
     },
     "task_grant_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
     "achievement_assignment_acl_evidence": "Live provider ACL inspection confirms service_role has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with owner-read-only authenticated policy.",

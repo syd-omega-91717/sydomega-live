@@ -63,13 +63,29 @@ jobs:
           file = pathlib.Path("supabase/migrations") / item["file"]
           if not file.is_file() or not file.name.startswith(version + "_"):
               sys.exit("The pending manifest does not point to the expected local migration file.")
-          if version != "20261022130000":
-              sys.exit("This controlled workflow is currently authorized only for the consent-audit hardening migration.")
           sql = file.read_text(encoding="utf-8")
-          owner_guard = "auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM NEW.user_id"
-          if owner_guard not in sql:
-              sys.exit("Consent audit owner guard is missing; refusing production migration.")
-          print(f"Validated one pending migration with authenticated-owner guard: {file.name}")
+          if version == "20261022130000":
+              owner_guard = "auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM NEW.user_id"
+              if owner_guard not in sql:
+                  sys.exit("Consent audit owner guard is missing; refusing production migration.")
+              print(f"Validated one pending consent-audit migration: {file.name}")
+          elif version == "20261116214700":
+              required = (
+                  "rename column key_name to name",
+                  "rename column is_active to active",
+                  "add column name text",
+                  "add column active boolean default true",
+              )
+              missing = [marker for marker in required if marker not in sql.lower()]
+              if missing:
+                  sys.exit(f"API-key compatibility migration is missing required idempotent column handling: {missing!r}")
+              if "drop column" in sql.lower() or "drop table" in sql.lower():
+                  sys.exit("Destructive API-key schema operation detected; refusing production migration.")
+              if "grant " in sql.lower():
+                  sys.exit("Privilege changes are not allowed in the API-key compatibility migration.")
+              print(f"Validated replay-safe API-key metadata compatibility migration: {file.name}")
+          else:
+              sys.exit("This controlled workflow is not authorized for the requested migration version.")
           PY
 
       - name: Link the authorized production project
@@ -80,13 +96,41 @@ jobs:
           set -euo pipefail
           supabase link --project-ref ydqhzvvoyufiiqvzcjns --password "${SUPABASE_DB_PASSWORD}"
 
+      - name: Verify live api_keys shape before compatibility no-op
+        if: inputs.migration_version == '20261116214700'
+        run: |
+          set -euo pipefail
+          supabase db dump --linked --schema public --file "${RUNNER_TEMP}/live-public-schema.sql"
+          python - <<'PY'
+          import pathlib, re, sys
+          dump = pathlib.Path(__import__("os").environ["RUNNER_TEMP"], "live-public-schema.sql").read_text(encoding="utf-8")
+          match = re.search(r"CREATE TABLE(?: IF NOT EXISTS)? public\.api_keys\s*\((.*?)\n\);", dump, re.IGNORECASE | re.DOTALL)
+          if not match:
+              sys.exit("Could not verify the live public.api_keys table definition; refusing compatibility migration.")
+          body = match.group(1).lower()
+          if not re.search(r"\bname\s+text\b", body):
+              sys.exit("Live public.api_keys.name text column is missing; refusing no-op compatibility migration.")
+          if not re.search(r"\bactive\s+boolean\b", body):
+              sys.exit("Live public.api_keys.active boolean column is missing; refusing no-op compatibility migration.")
+          if re.search(r"\bkey_name\b|\bis_active\b", body):
+              sys.exit("Live public.api_keys still has legacy column names; refusing a production schema change.")
+          print("Live api_keys has name/active and no legacy columns; compatibility migration is a verified no-op.")
+          PY
+
       - name: Verify remote history and dry-run contains exactly the selected migration
         env:
           MIGRATION_VERSION: ${{ inputs.migration_version }}
         run: |
           set -euo pipefail
           supabase migration list --linked | tee "${RUNNER_TEMP}/migrations-before.txt"
-          supabase db push --dry-run --linked 2>&1 | tee "${RUNNER_TEMP}/migration-dry-run.txt"
+          push_args=(--linked)
+          if [ "${MIGRATION_VERSION}" = "20261116214700" ]; then
+            # The compatibility version is intentionally earlier than the
+            # already-applied grant migration. --include-all selects missing
+            # local versions; the Python preflight below proves there is only one.
+            push_args+=(--include-all)
+          fi
+          supabase db push --dry-run "${push_args[@]}" 2>&1 | tee "${RUNNER_TEMP}/migration-dry-run.txt"
           python - <<'PY'
           import os, pathlib, re, sys
           version = os.environ["MIGRATION_VERSION"]
@@ -113,7 +157,11 @@ jobs:
           MIGRATION_VERSION: ${{ inputs.migration_version }}
         run: |
           set -euo pipefail
-          supabase db push --linked --yes
+          push_args=(--linked --yes)
+          if [ "${MIGRATION_VERSION}" = "20261116214700" ]; then
+            push_args+=(--include-all)
+          fi
+          supabase db push "${push_args[@]}"
 
       - name: Verify remote migration history after push
         env:

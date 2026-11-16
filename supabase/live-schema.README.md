@@ -4,6 +4,8 @@
 every table, view, materialized view and partitioned table, mapped to its
 columns in `attnum` order.
 
+Latest verified capture: **2026-11-16**, **295 relations**, **2,777 columns**.
+
 ## Why it exists
 
 `scripts/schema-dictionary.py` gates the second most expensive recurring bug
@@ -56,7 +58,7 @@ If the file is missing or unparseable the gate falls back to
 Run this against the production project and rewrite the `tables` object:
 
 ```sql
-select jsonb_pretty(jsonb_object_agg(t, cols))
+select jsonb_pretty(jsonb_object_agg('public.' || t, cols))
 from (
   select c.relname as t,
          to_jsonb(array_agg(a.attname order by a.attnum)) as cols

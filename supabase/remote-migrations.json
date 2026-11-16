@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-11-13",
-  "source": "Authenticated Supabase provider migration-ledger read via Supabase list_migrations on 2026-11-13 (read-only). The provider ledger is authoritative for applied versions; source migration inventory and fresh replay are validated separately.",
-  "remoteMigrationCount": 430,
-  "latestRemoteMigration": "20261113062812",
+  "_captured": "2026-11-17",
+  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-17 confirms 20261116214700_api_keys_live_column_compatibility is applied; source migration inventory and fresh replay independently pass.",
+  "remoteMigrationCount": 433,
+  "latestRemoteMigration": "20261116214842",
   "versions": [
     "0001",
     "0002",
@@ -433,7 +433,10 @@
     "20261113010000",
     "20261113020000",
     "20261113030000",
-    "20261113062812"
+    "20261113062812",
+    "20261116214052",
+    "20261116214700",
+    "20261116214842"
   ],
   "migrations": [
     {
@@ -2152,6 +2155,18 @@
     {
       "version": "20261113062812",
       "name": "omega_user_achievement_service_role_insert_grant"
+    },
+    {
+      "version": "20261116214052",
+      "name": "media_items_authenticated_select"
+    },
+    {
+      "version": "20261116214700",
+      "name": "api_keys_live_column_compatibility"
+    },
+    {
+      "version": "20261116214842",
+      "name": "authenticated_safe_column_read_grants"
     }
   ]
 }

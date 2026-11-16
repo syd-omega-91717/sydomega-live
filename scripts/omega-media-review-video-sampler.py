@@ -31,7 +31,7 @@ def sample_times(duration: float) -> list[float]:
     latest = max(0.0, duration - min(0.05, duration / 10))
     values = []
     for fraction in (0.05, 0.25, 0.50, 0.75, 0.95):
-        timestamp = round(min(duration * fraction, latest), 3)
+        timestamp = round(min(duration * fraction, latest), 6)
         if timestamp not in values:
             values.append(timestamp)
     return values
@@ -91,7 +91,7 @@ def build_video_samples(
     """Create a hash-bound frame/metadata manifest; failures remain explicit."""
     root = root.resolve()
     output_dir = output_dir.resolve()
-    if not output_dir.is_relative_to(root):
+    if output_dir == root or not output_dir.is_relative_to(root):
         raise ValueError("video sample output must be inside the repository root")
 
     ffprobe = ffprobe or shutil.which("ffprobe")
@@ -123,8 +123,8 @@ def build_video_samples(
             metadata = _probe_video(path, ffprobe)
             frame_dir = output_dir / asset["record_id"][:20]
             for index, timestamp in enumerate(sample_times(metadata["duration_seconds"]), start=1):
-                millis = int(round(timestamp * 1000))
-                frame_path = frame_dir / f"frame-{index:02d}-{millis:07d}ms.jpg"
+                micros = int(round(timestamp * 1_000_000))
+                frame_path = frame_dir / f"frame-{index:02d}-{micros:09d}us.jpg"
                 _extract_frame(path, frame_path, timestamp, ffmpeg)
                 record["frames"].append({
                     "timestamp_seconds": timestamp,

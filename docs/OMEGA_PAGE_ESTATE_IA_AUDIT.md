@@ -39,9 +39,9 @@ The current contract registry has source-scanned all 241 canonical pages. Source
 
 The following survey reflects the older repository state at the time it was produced. Its 231 HTML / 235 survey-record counts are historical, not the current estate count.
 
-## Executive finding
+## Historical executive finding (2026-09-30)
 
-Main currently contains **231 HTML files**; the visual survey contains **235 records**. The optimization target is the number of **user-facing destinations**, not the number of capabilities. Related capabilities should become sections, tabs, drawers, or workspaces inside canonical product hubs while system routes and genuinely distinct workflows remain independently addressable.
+At the time of this survey, the repository contained **231 HTML files**; the visual survey contained **235 records**. The optimization target is the number of **user-facing destinations**, not the number of capabilities. Related capabilities should become sections, tabs, drawers, or workspaces inside canonical product hubs while system routes and genuinely distinct workflows remain independently addressable.
 
 ## Canonical hub model
 

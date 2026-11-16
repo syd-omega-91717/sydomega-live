@@ -9,6 +9,7 @@
 <script src="/bg.js" defer></script>
 <script src="/omega-character-card.js" defer></script>
 <script src="/omega-ecosystem-home.js" defer></script>
+<script src="/omega-command-wall.js" defer></script>
 <script src="/omega-daily.js" defer></script>
 <script src="/omega-weather.js" defer></script>
 <style>
@@ -554,6 +555,16 @@
     <!-- LAYER: PLATFORM (platform index + intelligence + sovereign ops) -->
     <div id="l-platform" class="layer-panel">
       <div class="pad">
+        <section class="ocw" data-omega-command-wall aria-label="Platform command wall">
+          <h2 class="ocw-title">Command wall</h2>
+          <p class="ocw-sub">What the platform is made of and what is switched on, drawn from what it can actually measure. Nothing here is a simulated figure.</p>
+          <div class="ocw-grid">
+            <div class="ocw-box"><h3 class="ocw-h">Sovereign foundation</h3><div data-ocw="foundation"><div class="ocw-note">Reading the foundation.</div></div></div>
+            <div class="ocw-box"><h3 class="ocw-h">The twelve agents</h3><div data-ocw="agents"><div class="ocw-note">Reading the roster.</div></div></div>
+            <div class="ocw-box"><h3 class="ocw-h">Ascension and certificates</h3><div data-ocw="ascension"><div class="ocw-note">Reading your gates.</div></div></div>
+            <div class="ocw-box"><h3 class="ocw-h">Live and dormant</h3><div data-ocw="flags"><div class="ocw-note">Reading what is on.</div></div></div>
+          </div>
+        </section>
         <div class="sechead" data-i18n="dash_platform_index">PLATFORM COMMAND INDEX <span class="sechead-action" data-nav-action="/ecosystem.html" data-i18n="dash_ecosystem_map">ECOSYSTEM MAP &#8594;</span></div>
         <input id="platform-search" class="inp" type="search" placeholder="Search all pages…" style="width:100%;margin-bottom:14px" oninput="filterPlatformSections(this.value)" aria-label="Search all platform pages">
         <div id="platform-search-empty" style="display:none;font-family:var(--M);font-size:var(--fs-1,12px);color:var(--muted);padding:14px 0">NO PAGES MATCH</div>

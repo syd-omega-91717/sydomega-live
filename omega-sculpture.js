@@ -1251,6 +1251,142 @@
     }};
   };
 
+  /* ── WORLD ────────────────────────────────────────────────────────────
+     Eighteen real platform destinations in three orbital layers. The module
+     registry is owned by omega-world-engine.js; this scene reads it rather
+     than maintaining a second list. The HTML directory remains the readable
+     and accessible route surface when WebGL is unavailable or motion is reduced. */
+  SCENES.world = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(46, 1, 0.1, 100);
+    rig(T, scene, p);
+    starfield(T, scene, 360, 26, p.cyan);
+
+    var root = new T.Group();
+    scene.add(root);
+
+    var core = new T.Group();
+    core.add(buildSignet(T, p.solar));
+    core.scale.setScalar(0.72);
+    root.add(core);
+
+    var coreRing = new T.Mesh(
+      new T.TorusGeometry(1.48, 0.018, 8, 120),
+      new T.MeshBasicMaterial({ color: p.cyan, transparent: true, opacity: 0.34, depthWrite: false })
+    );
+    coreRing.rotation.x = Math.PI / 2;
+    root.add(coreRing);
+
+    var modules = window.OmegaWorldEngine && Array.isArray(window.OmegaWorldEngine.modules)
+      ? window.OmegaWorldEngine.modules.slice(0, 18) : [];
+    var links = [], nodes = [], linePos = [];
+    var radii = [3.45, 4.65, 5.85];
+    var nodeGeometry = new T.IcosahedronGeometry(0.22, 1);
+
+    modules.forEach(function (mod, i) {
+      var layer = Math.floor(i / 6);
+      var slot = i % 6;
+      var angle = (slot / 6) * Math.PI * 2 + layer * 0.18;
+      var radius = radii[layer] || radii[2];
+      var x = Math.cos(angle) * radius;
+      var z = Math.sin(angle) * radius;
+      var y = (layer - 1) * 0.82 + Math.sin(angle * 2) * 0.24;
+      var colour = /^#[0-9a-f]{6}$/i.test(mod.accent || '')
+        ? parseInt(mod.accent.slice(1), 16) : p.gold;
+
+      var group = new T.Group();
+      group.position.set(x, y, z);
+
+      var mesh = new T.Mesh(nodeGeometry, new T.MeshStandardMaterial({
+        color: colour, emissive: colour, emissiveIntensity: 0.62,
+        metalness: 0.82, roughness: 0.24
+      }));
+      group.add(mesh);
+
+      var ring = new T.Mesh(
+        new T.TorusGeometry(0.34, 0.016, 6, 40),
+        new T.MeshBasicMaterial({ color: colour, transparent: true, opacity: 0.82, depthWrite: false })
+      );
+      ring.rotation.x = Math.PI / 2;
+      group.add(ring);
+
+      var labelCanvas = document.createElement('canvas');
+      labelCanvas.width = 512;
+      labelCanvas.height = 96;
+      var labelContext = labelCanvas.getContext('2d');
+      if (labelContext) {
+        labelContext.clearRect(0, 0, 512, 96);
+        labelContext.font = '700 32px Rajdhani, sans-serif';
+        labelContext.textAlign = 'center';
+        labelContext.textBaseline = 'middle';
+        labelContext.fillStyle = token('--ink', '#E9E6DC');
+        labelContext.shadowColor = token('--gold', '#C9A84C');
+        labelContext.shadowBlur = 12;
+        labelContext.fillText(String(mod.name || mod.id || '').toUpperCase(), 256, 48, 490);
+      }
+      var labelTexture = new T.CanvasTexture(labelCanvas);
+      if (T.SRGBColorSpace) labelTexture.colorSpace = T.SRGBColorSpace;
+      labelTexture.generateMipmaps = false;
+      labelTexture.minFilter = T.LinearFilter;
+      var label = new T.Sprite(new T.SpriteMaterial({
+        map: labelTexture, transparent: true, depthWrite: false
+      }));
+      label.scale.set(1.7, 0.32, 1);
+      label.position.set(0, 0.56, 0);
+      group.add(label);
+
+      root.add(group);
+      nodes.push({ group: group, mesh: mesh, ring: ring, phase: angle });
+      links.push({ object: group, href: mod.href, label: mod.name || mod.id });
+      linePos.push(0, 0, 0, x, y, z);
+    });
+
+    var connections = new T.BufferGeometry();
+    connections.setAttribute('position', new T.BufferAttribute(new Float32Array(linePos), 3));
+    root.add(new T.LineSegments(connections, new T.LineBasicMaterial({
+      color: p.gold, transparent: true, opacity: 0.17, depthWrite: false
+    })));
+
+    radii.forEach(function (radius, i) {
+      var orbit = new T.Mesh(
+        new T.TorusGeometry(radius, 0.008, 4, 144),
+        new T.MeshBasicMaterial({
+          color: i === 1 ? p.cyan : p.gold,
+          transparent: true, opacity: 0.19, depthWrite: false
+        })
+      );
+      orbit.rotation.x = Math.PI / 2;
+      root.add(orbit);
+    });
+
+    return {
+      scene: scene,
+      camera: cam,
+      links: links,
+      update: function (t, px, py) {
+        root.rotation.y = t * 0.055 + px * 0.12;
+        root.rotation.x = py * 0.035;
+        core.rotation.y = -t * 0.14;
+        core.rotation.z = Math.sin(t * 0.22) * 0.03;
+        coreRing.rotation.z = t * 0.08;
+        nodes.forEach(function (node) {
+          node.mesh.rotation.x = t * 0.45 + node.phase;
+          node.mesh.rotation.y = t * 0.55;
+          node.ring.rotation.z = t * 0.18;
+          if (!node.group.userData.omegaHovered) {
+            node.group.scale.setScalar(1 + Math.sin(t * 1.35 + node.phase) * 0.04);
+          }
+        });
+        var el = opt && opt.el;
+        var aspect = el ? el.clientWidth / Math.max(1, el.clientHeight) : 1.6;
+        var distance = aspect < 0.9 ? 18 : aspect < 1.3 ? 16 : 13.8;
+        cam.position.set(px * 0.42, distance * 0.44 - py * 0.65, distance);
+        cam.lookAt(0, 0, 0);
+      }
+    };
+  };
+
   /* ── MATRIX ───────────────────────────────────────────────────────────
      9 x 9 x 9 = 729 nodes, the lattice drawn in the platform's own concept
      art, with the Crystal-Omega at 9-9-9 burning at its centre.
@@ -2230,6 +2366,7 @@
     wrap.className = 'omega-sculpt-links';
     wrap.setAttribute('aria-label', (m.kind === 'agents' ? 'The twelve executors'
       : m.kind === 'gates' ? 'The twelve gates' : m.kind === 'sky' ? 'Your records'
+      : m.kind === 'world' ? 'The eighteen platform modules'
       : 'Destinations') + ' in this sculpture');
     wrap.style.cssText = 'position:absolute;left:0;right:0;top:0;bottom:0;' +
       'pointer-events:none;overflow:hidden';
@@ -2355,6 +2492,7 @@
     gates:  'The twelve gates receding into depth toward the Crystal-Omega',
     character: 'Your character: a core, twelve gate nodes lit by the gates you have passed, and five satellites for your mana',
     sky:    'Your own record as a sky: one star for each task, lesson and certificate you have completed',
+    world: 'The eighteen governed platform modules arranged as an interactive three-dimensional Omega world',
     'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'
   };
 

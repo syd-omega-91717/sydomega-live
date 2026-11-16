@@ -97,7 +97,7 @@ class MediaReviewGalleryTests(unittest.TestCase):
             media = root / "media"
             media.mkdir()
             (media / "real.png").write_bytes(b"real")
-            outside = root / "outside"
+            outside = root.parent / (root.name + "-outside-dir")
             outside.mkdir()
             (outside / "outside.png").write_bytes(b"outside")
             links = [
@@ -105,16 +105,20 @@ class MediaReviewGalleryTests(unittest.TestCase):
                 (media / "broken.png", root / "missing.png", False),
                 (media / "loop.png", media / "loop.png", False),
             ]
-            created = []
             for link, target, is_dir in links:
                 try:
                     link.symlink_to(target, target_is_directory=is_dir)
-                    created.append(link)
                 except (OSError, NotImplementedError):
                     continue
-            found = {path.relative_to(root).as_posix() for path, _kind in MODULE.media_files(root)}
-            self.assertEqual(found, {"media/real.png"})
-            self.assertFalse(any("outside.png" in path for path in found))
+            try:
+                found = {path.relative_to(root).as_posix() for path, _kind in MODULE.media_files(root)}
+                self.assertEqual(found, {"media/real.png"})
+                self.assertFalse(any("outside.png" in path for path in found))
+            finally:
+                for link, _target, _is_dir in links:
+                    link.unlink(missing_ok=True)
+                (outside / "outside.png").unlink(missing_ok=True)
+                outside.rmdir()
 
     def test_path_replaced_with_symlink_after_discovery_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:

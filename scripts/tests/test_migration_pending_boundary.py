@@ -218,6 +218,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
         self.assertIn("241/241 registered pages", runtime.get("remediation", ""))
         self.assertIn("no pending migrations remain", runtime.get("remediation", ""))
+        self.assertIn("auth.mfa_factors count returned 0 total factors and 0 verified factors", runtime.get("remediation", ""))
         remediation = runtime.get("remediation", "").lower()
         self.assertIn("vercel production promotion remains", remediation)
         self.assertIn("intentionally postponed", remediation)

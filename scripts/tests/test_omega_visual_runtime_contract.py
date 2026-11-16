@@ -10,6 +10,7 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
         self.opening = (ROOT / "omega-opening-system.css").read_text(encoding="utf-8")
         self.elevation = (ROOT / "omega-page-elevation.css").read_text(encoding="utf-8")
         self.index = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.visual = (ROOT / "omega-visual-universe.css").read_text(encoding="utf-8")
 
     def test_opening_runtime_preserves_canonical_mount(self):
         self.assertIn("if(page!=='index') return;", self.runtime)
@@ -47,6 +48,16 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
         self.assertIn("perspective:1400px", self.elevation)
         self.assertIn("prefers-reduced-motion:reduce", self.elevation)
         self.assertNotIn("display:none", self.elevation)
+
+    def test_visual_universe_uses_bg_canonical_tokens_and_type(self):
+        self.assertIn("--omega-void:var(--void,#0A0A0F)", self.visual)
+        self.assertIn("--omega-gold:var(--gold,#C9A84C)", self.visual)
+        self.assertIn("--omega-cyan:var(--cyan,#00E5FF)", self.visual)
+        self.assertIn("font-family:var(--R,", self.visual)
+        self.assertIn("font-family:var(--D,", self.visual)
+        self.assertIn("font-family:var(--M,", self.visual)
+        self.assertNotIn("font-family:Inter", self.visual)
+        self.assertNotIn("@import", self.visual)
 
     def test_entrypoint_remains_deferred(self):
         self.assertIn('<script src="/omega-visual-runtime.js" defer></script>', self.index)

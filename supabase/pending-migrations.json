@@ -2,5 +2,38 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": "1.0.0",
   "policy": "All source migrations are recorded in the authenticated provider migration ledger. A source migration absent from provider history must be explicitly added here as pending and must block production until reviewed and applied. Provider-applied versions belong in remote-migrations.json; a ledger entry alone does not prove the migration's intended behavior has been independently verified.",
-  "pending": []
+  "pending": [
+    {
+      "version": "20261116214700",
+      "file": "20261116214700_api_keys_live_column_compatibility.sql",
+      "status": "PENDING_REVIEW",
+      "liveStatus": "NOT_APPLIED",
+      "blocksProduction": true,
+      "reason": "The source migration 0062 creates key_name/is_active while the live enterprise page and provider schema use name/active. This forward-only compatibility migration renames the legacy columns during clean replay and is expected to be a no-op on current production, where name/active already exist.",
+      "requiredValidation": [
+        "Fresh full migration replay passes with this migration ordered before 20261116214842.",
+        "Production controlled-push dry-run lists only this pending version.",
+        "Live schema preflight confirms public.api_keys.name and public.api_keys.active already exist.",
+        "No API-key secret columns are granted to authenticated clients."
+      ],
+      "livePreflight": {
+        "status": "VERIFIED",
+        "verifiedAt": "2026-11-16",
+        "columns": [
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "nullable": true,
+            "default": "true"
+          }
+        ],
+        "source": "Read-only information_schema.columns and pg_constraint inspection of the connected Supabase production project."
+      }
+    }
+  ]
 }

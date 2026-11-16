@@ -51,7 +51,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIsNotNone(match, path.name)
             local_versions.add(match.group(1))
         self.assertEqual(pending_versions, local_versions - self.remote_versions)
-        self.assertEqual(self.pending, [], "all provider-applied migrations must be removed from pending registry")
+        self.assertEqual(pending_versions, {"20261116214700"}, "only the api_keys compatibility migration may remain pending")
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
@@ -120,6 +120,26 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(version, self.remote_versions)
         self.assertNotIn(version, {str(entry["version"]) for entry in self.pending})
 
+    def test_api_keys_live_column_compatibility_is_registered_pending(self) -> None:
+        version = "20261116214700"
+        entry = next(item for item in self.pending if str(item["version"]) == version)
+        path = MIGRATIONS / f"{version}_api_keys_live_column_compatibility.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertEqual(entry.get("status"), "PENDING_REVIEW")
+        self.assertEqual(entry.get("liveStatus"), "NOT_APPLIED")
+        self.assertIs(entry.get("blocksProduction"), True)
+        self.assertNotIn(version, self.remote_versions)
+        self.assertIn("rename column key_name to name", sql)
+        self.assertIn("rename column is_active to active", sql)
+        self.assertIn("add column name text", sql)
+        self.assertIn("add column active boolean default true", sql)
+        self.assertNotIn("drop column", sql)
+        self.assertNotIn("drop table", sql)
+        self.assertNotIn("grant ", sql)
+        preflight = entry.get("livePreflight", {})
+        self.assertEqual(preflight.get("status"), "VERIFIED")
+        self.assertEqual({column.get("name") for column in preflight.get("columns", [])}, {"name", "active"})
+
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []
         for path in MIGRATIONS.glob("*.sql"):
@@ -136,22 +156,28 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_and_strict_drift_pass_when_provider_ledger_is_reconciled(self) -> None:
+    def test_source_drift_passes_while_strict_release_is_blocked_by_pending_migration(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
         strict = run_script("scripts/migration-drift.py")
-        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
-        self.assertNotIn("production release is blocked", strict.stdout)
+        self.assertNotEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
+        self.assertIn("20261116214700", strict.stdout)
+        self.assertIn("production release is blocked", strict.stdout.lower())
 
-    def test_release_readiness_records_cloudflare_pass_and_vercel_postponement(self) -> None:
+    def test_release_readiness_records_stale_cloudflare_and_migration_blockers(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
         snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
         readiness = snapshot["release_readiness"]
         self.assertEqual(
             readiness.get("status"),
-            "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED",
+            "CLOUDFLARE_PRODUCTION_STALE_MIGRATION_PENDING_VERCEL_PROMOTION_POSTPONED",
         )
+        latest_probe = readiness.get("latest_production_probe", {})
+        self.assertEqual(latest_probe.get("status"), "FAIL_STALE_COMMIT")
+        self.assertEqual(latest_probe.get("expected_commit_sha"), "15b96312dd46b18913cd001dbc57072b52695eda")
+        self.assertEqual(latest_probe.get("served_commit_sha"), "3e60abedcbfc16b747b6ad920afc3aa3aec2c406")
+        self.assertEqual(latest_probe.get("workflow_run_id"), 43965323786)
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(
             readiness.get("production_verification", {}).get("commit_sha"),
@@ -170,11 +196,15 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(failover.get("status"), "PASS")
         self.assertEqual(failover.get("commit_sha"), "77756855246c39f072c2468bc3e671edd0b381c8")
         self.assertEqual(failover.get("workflow_run_id"), 43406979843)
-        blockers = " ".join(str(item) for item in readiness.get("blockers", []))
+        raw_blockers = readiness.get("blockers", [])
+        blockers = raw_blockers if isinstance(raw_blockers, str) else " ".join(str(item) for item in raw_blockers)
         self.assertIn("Vercel production deployment remains intentionally postponed", blockers)
         self.assertNotIn("Cloudflare exact-SHA production verification has not passed", blockers)
         self.assertNotIn("54-action behavioral SQL probe", blockers)
-        self.assertNotIn("migration", blockers.lower())
+        self.assertIn("20261116214700", blockers)
+        self.assertIn("production release remains blocked", blockers.lower())
+        self.assertIn("15b96312dd46b18913cd001dbc57072b52695eda", blockers)
+        self.assertIn("issue #1346", blockers)
         runtime = snapshot["runtime_probe_status"]
         self.assertEqual(runtime.get("status"), "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
         self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions")

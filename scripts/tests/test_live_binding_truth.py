@@ -45,7 +45,7 @@ class LiveBindingTruthContract(unittest.TestCase):
         self.assertIn("document.createElement('button')", pulse)
         self.assertIn("control.type='button'", pulse)
         self.assertIn("control.setAttribute('aria-label'", pulse)
-        self.assertIn("width:24px;height:24px", pulse)
+        self.assertIn("width:36px;height:36px", pulse)
         self.assertIn("indicator.setAttribute('aria-hidden','true')", pulse)
 
     def test_pulse_status_is_exposed_on_the_button_not_the_decorative_dot(self):

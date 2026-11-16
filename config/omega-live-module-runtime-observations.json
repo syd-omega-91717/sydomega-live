@@ -1743,7 +1743,7 @@
       "provider": "Cloudflare Pages",
       "status": "FAIL_STALE_COMMIT",
       "expected_commit_sha": "15b96312dd46b18913cd001dbc57072b52695eda",
-      "served_commit_sha": "3e60a...",
+      "served_commit_sha": "3e60abedcbfc16b747b6ad920afc3aa3aec2c406",
       "workflow_run_id": 43965323786,
       "job_id": 133643064288,
       "artifact": "production-http-evidence.json",

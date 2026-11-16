@@ -187,14 +187,21 @@
   function createPulseIndicator(){
     var topbar=document.querySelector('.topbar');
     if(!topbar)return;
-    var dot=document.getElementById('omega-pulse');
-    if(!dot){
-      dot=document.createElement('div');
-      dot.id='omega-pulse';
-      dot.title='Live data status';
-      dot.setAttribute('aria-label','Live data status: '+_pulseStatus);
-      dot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--muted,#666);flex-shrink:0;animation:oa-pulse 2s ease-in-out infinite;cursor:pointer';
-      dot.addEventListener('click',function(){
+    var control=document.getElementById('omega-pulse');
+    if(!control){
+      control=document.createElement('button');
+      control.type='button';
+      control.id='omega-pulse';
+      control.className='omega-pulse-control';
+      control.setAttribute('aria-label','Live data status: '+_pulseStatus);
+      control.title='Live data status: '+_pulseStatus;
+      control.style.cssText='appearance:none;border:0;padding:0;margin:0;width:24px;height:24px;min-width:24px;min-height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:transparent;flex-shrink:0;cursor:pointer';
+      var indicator=document.createElement('span');
+      indicator.className='omega-pulse-dot';
+      indicator.setAttribute('aria-hidden','true');
+      indicator.style.cssText='display:block;width:7px;height:7px;border-radius:50%;background:var(--muted,#666);animation:oa-pulse 2s ease-in-out infinite;pointer-events:none';
+      control.appendChild(indicator);
+      control.addEventListener('click',function(){
         var msg=_pulseStatus==='connected'
           ? 'Live data connection verified.'
           : _pulseStatus==='unavailable'
@@ -203,32 +210,35 @@
         if(window.OmegaNotify)window.OmegaNotify.showToast(msg,_pulseStatus==='connected'?'success':'info');
       });
       var style=document.createElement('style');
-      style.textContent='@keyframes oa-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}';
+      style.textContent='@keyframes oa-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}'
+        +'@media(prefers-reduced-motion:reduce){.omega-pulse-dot{animation:none!important}}';
       document.head.appendChild(style);
-      topbar.appendChild(dot);
+      topbar.appendChild(control);
     }
-    verifyPulse(dot);
+    var dot=control.querySelector('.omega-pulse-dot');
+    verifyPulse(control,dot||control);
   }
 
-  function verifyPulse(dot){
+  function verifyPulse(control,dot){
     if(!window.__omegaSb){
       _pulseStatus='unavailable';
       dot.style.background='var(--red,#8B0000)';
-      dot.setAttribute('aria-label','Live data status: unavailable');
+      control.setAttribute('aria-label','Live data status: unavailable');
+      control.title='Live data status: unavailable';
       return;
     }
     window.__omegaSb.from('profiles').select('id',{count:'exact',head:true}).limit(1)
       .then(function(r){
         _pulseStatus=(r&&r.error)?'unavailable':'connected';
         dot.style.background=_pulseStatus==='connected'?'var(--green,#3fb27f)':'var(--red,#8B0000)';
-        dot.setAttribute('aria-label','Live data status: '+_pulseStatus);
-        dot.title='Live data status: '+_pulseStatus;
+        control.setAttribute('aria-label','Live data status: '+_pulseStatus);
+        control.title='Live data status: '+_pulseStatus;
       })
       .catch(function(){
         _pulseStatus='unavailable';
         dot.style.background='var(--red,#8B0000)';
-        dot.setAttribute('aria-label','Live data status: unavailable');
-        dot.title='Live data status: unavailable';
+        control.setAttribute('aria-label','Live data status: unavailable');
+        control.title='Live data status: unavailable';
       });
   }
 

@@ -1747,7 +1747,7 @@
       "workflow_run_id": 43965323786,
       "job_id": 133643064288,
       "artifact": "production-http-evidence.json",
-      "verified_at": "2026-11-16T21:58:00Z",
+      "verified_at": "2026-11-16",
       "blocker": "The public production manifest served the previous main commit; manual Cloudflare Pages fallback deployment and exact-SHA smoke verification are required."
     }
   },

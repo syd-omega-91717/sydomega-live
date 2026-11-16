@@ -12,8 +12,8 @@ The repository contains timestamped reconciliation migrations for changes that w
 
 ## Current provider-verified state — 2026-11-16
 
-- A fresh, read-only read of the authenticated Supabase provider ledger returned **431 unique applied versions**; the latest is `20261116214052_media_items_authenticated_select`. The repository's `supabase/remote-migrations.json` records the same 431 versions.
-- The source directory now includes the exact migration file for the 431st provider version. The source-version set and provider-version set are intended to match; PR validation must confirm no local-only versions, provider-only versions, or duplicates. `supabase/pending-migrations.json` remains the release-pending registry.
+- A fresh, read-only read of the authenticated Supabase provider ledger returned **432 unique applied versions**; the latest is `20261116214842_authenticated_safe_column_read_grants`. The repository's `supabase/remote-migrations.json` records the same 432 versions.
+- The source directory now includes the exact migration file for the 432nd provider version. The source-version set and provider-version set are intended to match; PR validation must confirm no local-only versions, provider-only versions, or duplicates. `supabase/pending-migrations.json` remains the release-pending registry.
 - Versions `20261112091600`, `20261113030000`, and `20261113062812` are present in both source history and the live provider ledger. Do not remove, rewrite, renumber, or reapply an already-recorded migration to correct documentation or inventory drift.
 - The prior isolated fresh-database replay on main commit `016bf9276143abe82d18317f4e8005187c92c6fe` passed all 430 migrations at that earlier revision, plus the migration security audit, 54 module runtime adapter probes, family-access authorization/privacy probes, and the authenticated content-pipeline E2E test (`local_only=true`). It predates migration `20261116214052`; the new migration's fresh replay is pending PR validation.
 - PR #1281 reconciled the source inventory and provider snapshot. It did not apply a migration to the production database or change production data.

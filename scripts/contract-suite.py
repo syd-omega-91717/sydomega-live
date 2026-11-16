@@ -205,6 +205,9 @@ GATES = [
     ('media-visual-review-tests',
      'the local media visual review gallery preserves safe paths, exact-byte hashes, and explicit unverified rights state',
      ['scripts/tests/test_omega_media_review_gallery.py']),
+    ('media-video-sampler-tests',
+     'local video frame sampling preserves hash-bound provenance and explicit unavailable states',
+     ['scripts/tests/test_omega_media_review_video_sampler.py']),
     ('media-rights',
      'every new audio, video or image file has a rights record (source, creator, licence, evidence); '
      'the 532 in-scope files that predate the rule are a frozen, unreviewed baseline',

@@ -15,7 +15,25 @@
         "Production controlled-push dry-run lists only this pending version.",
         "Live schema preflight confirms public.api_keys.name and public.api_keys.active already exist.",
         "No API-key secret columns are granted to authenticated clients."
-      ]
+      ],
+      "livePreflight": {
+        "status": "VERIFIED",
+        "verifiedAt": "2026-11-16",
+        "columns": [
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "nullable": true,
+            "default": "true"
+          }
+        ],
+        "source": "Read-only information_schema.columns and pg_constraint inspection of the connected Supabase production project."
+      }
     }
   ]
 }

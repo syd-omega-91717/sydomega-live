@@ -1,6 +1,43 @@
 # Ω SYD OMEGA 91717 — Page Estate & Information Architecture Audit
 
-Source basis: current `main` repository page estate plus `visual-page-survey.json`.
+## Current registry snapshot — 2026-11-16
+
+This section is the current source-of-truth count. The detailed page-by-page table below is a historical visual survey and must not be read as a current file count.
+
+| Measure | Current value |
+|---|---:|
+| Shipped HTML files | 249 |
+| Canonical page contracts | 241 |
+| Declared legacy aliases | 8 |
+| Shipped HTML missing a contract or alias | 0 |
+| Declared contracts/aliases not shipped | 0 |
+| Unresolved required-field tasks | 3,270 |
+
+The current contract registry has source-scanned all 241 canonical pages. Source scanning is not production verification. The 3,270 unresolved tasks remain open and include workspace, domain, role, data-source, capability, task, authorization, truth-state, asset, event, failure-path, accessibility, responsive, and traceability evidence.
+
+| Required field | Open tasks |
+|---|---:|
+| workspace | 239 |
+| domain | 205 |
+| primary_role | 205 |
+| data_sources | 224 |
+| capabilities | 228 |
+| tasks | 241 |
+| authorization | 241 |
+| truth_states | 241 |
+| asset_requirements | 241 |
+| events | 241 |
+| failure_paths | 241 |
+| accessibility | 241 |
+| responsive | 241 |
+| traceability | 241 |
+| **Total** | **3,270** |
+
+**Interpretation:** coverage is complete at the page-file level, but semantic contracts and runtime evidence are not complete. Do not set `production_complete=true` while authorization, evidence, traceability, or failure paths are unresolved. Keep unknowns as `UNVERIFIED`; do not bulk-fill them from page titles or naming patterns.
+
+## Historical visual survey snapshot — 2026-09-30
+
+The following survey reflects the older repository state at the time it was produced. Its 231 HTML / 235 survey-record counts are historical, not the current estate count.
 
 ## Executive finding
 
@@ -27,7 +64,7 @@ Main currently contains **231 HTML files**; the visual survey contains **235 rec
 | Commerce / services | marketplace, contracts, consultancy, publishing, marketing, advertising | `/services.html` + `/marketplace.html` |
 | Communication | chatbot, social, network, contacts, notifications, notes, decisions, projects, quotes, time, vision | `/dashboard.html` + contextual workspaces |
 
-## Page-by-page survey disposition
+## Historical page-by-page survey disposition (2026-09-30)
 
 | Page | Family | Disposition | Words | Cards | Sections | Focus | Findings |
 |---|---|---|---:|---:|---:|---:|---|

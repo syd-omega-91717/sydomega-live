@@ -63,13 +63,29 @@ jobs:
           file = pathlib.Path("supabase/migrations") / item["file"]
           if not file.is_file() or not file.name.startswith(version + "_"):
               sys.exit("The pending manifest does not point to the expected local migration file.")
-          if version != "20261022130000":
-              sys.exit("This controlled workflow is currently authorized only for the consent-audit hardening migration.")
           sql = file.read_text(encoding="utf-8")
-          owner_guard = "auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM NEW.user_id"
-          if owner_guard not in sql:
-              sys.exit("Consent audit owner guard is missing; refusing production migration.")
-          print(f"Validated one pending migration with authenticated-owner guard: {file.name}")
+          if version == "20261022130000":
+              owner_guard = "auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM NEW.user_id"
+              if owner_guard not in sql:
+                  sys.exit("Consent audit owner guard is missing; refusing production migration.")
+              print(f"Validated one pending consent-audit migration: {file.name}")
+          elif version == "20261116214700":
+              required = (
+                  "rename column key_name to name",
+                  "rename column is_active to active",
+                  "add column name text",
+                  "add column active boolean default true",
+              )
+              missing = [marker for marker in required if marker not in sql.lower()]
+              if missing:
+                  sys.exit(f"API-key compatibility migration is missing required idempotent column handling: {missing!r}")
+              if "drop column" in sql.lower() or "drop table" in sql.lower():
+                  sys.exit("Destructive API-key schema operation detected; refusing production migration.")
+              if "grant " in sql.lower():
+                  sys.exit("Privilege changes are not allowed in the API-key compatibility migration.")
+              print(f"Validated replay-safe API-key metadata compatibility migration: {file.name}")
+          else:
+              sys.exit("This controlled workflow is not authorized for the requested migration version.")
           PY
 
       - name: Link the authorized production project

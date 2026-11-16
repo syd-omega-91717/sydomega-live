@@ -14,6 +14,7 @@ import json
 import os
 import re
 import stat
+from datetime import datetime
 from pathlib import Path, PurePosixPath
 from urllib.parse import quote, urlsplit
 
@@ -135,6 +136,16 @@ def _nonempty(value) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
 
+def _valid_timestamp(value) -> bool:
+    if not _nonempty(value):
+        return False
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
+
+
 def _valid_evidence_reference(value: str) -> bool:
     parsed = urlsplit(value)
     if parsed.scheme:
@@ -176,7 +187,7 @@ def validate_review_manifest(manifest: dict) -> None:
         expected_id = hashlib.sha256(f"{relative_path}\0{sha256}".encode("utf-8")).hexdigest()
         if record_id != expected_id:
             raise ValueError(f"{prefix}.record_id does not match path and SHA-256")
-        if kind not in {"image", "video"}:
+        if not isinstance(kind, str) or kind not in {"image", "video"}:
             raise ValueError(f"{prefix}.kind must be image or video")
         if isinstance(size_bytes, bool) or not isinstance(size_bytes, int) or size_bytes < 0:
             raise ValueError(f"{prefix}.size_bytes must be a non-negative integer")
@@ -185,39 +196,58 @@ def validate_review_manifest(manifest: dict) -> None:
         if not isinstance(visual, dict):
             raise ValueError(f"{prefix}.visual_review must be an object")
         visual_status = visual.get("status")
-        if visual_status not in {"PENDING", "REVIEWED", "NEEDS_ATTENTION"}:
+        if not isinstance(visual_status, str) or visual_status not in {"PENDING", "REVIEWED", "NEEDS_ATTENTION"}:
             raise ValueError(f"{prefix}.visual_review.status is unsupported")
         findings = visual.get("findings")
         if not isinstance(findings, list) or any(not _nonempty(item) for item in findings):
             raise ValueError(f"{prefix}.visual_review.findings must be a list of non-empty strings")
+        for field in ("reviewer", "reviewed_at"):
+            value = visual.get(field)
+            if value is not None and not _nonempty(value):
+                raise ValueError(f"{prefix}.visual_review.{field} must be a non-empty string or null")
         if visual_status != "PENDING" and not (
-            _nonempty(visual.get("reviewer")) and _nonempty(visual.get("reviewed_at"))
+            _nonempty(visual.get("reviewer")) and _valid_timestamp(visual.get("reviewed_at"))
         ):
-            raise ValueError(f"{prefix}.visual_review requires reviewer and reviewed_at")
+            raise ValueError(f"{prefix}.visual_review requires reviewer and an ISO-8601 timestamp")
 
         rights = asset.get("rights_review")
         if not isinstance(rights, dict):
             raise ValueError(f"{prefix}.rights_review must be an object")
         rights_status = rights.get("status")
-        if rights_status not in {"UNVERIFIED", "VERIFIED", "REJECTED", "EXPIRED"}:
+        if not isinstance(rights_status, str) or rights_status not in {"UNVERIFIED", "VERIFIED", "REJECTED", "EXPIRED"}:
             raise ValueError(f"{prefix}.rights_review.status is unsupported")
         for field in ("evidence", "territories"):
             value = rights.get(field)
             if not isinstance(value, list) or any(not _nonempty(item) for item in value):
                 raise ValueError(f"{prefix}.rights_review.{field} must be a list of non-empty strings")
+        for field in ("reviewer", "reviewed_at", "creator", "source_url", "license", "attribution", "expires_at"):
+            value = rights.get(field)
+            if value is not None and not _nonempty(value):
+                raise ValueError(f"{prefix}.rights_review.{field} must be a non-empty string or null")
+        if rights.get("reviewed_at") is not None and not _valid_timestamp(rights["reviewed_at"]):
+            raise ValueError(f"{prefix}.rights_review.reviewed_at must be an ISO-8601 timestamp")
+        if rights.get("expires_at") is not None and not _valid_timestamp(rights["expires_at"]):
+            raise ValueError(f"{prefix}.rights_review.expires_at must be an ISO-8601 timestamp")
+        if rights.get("source_url") is not None:
+            source = urlsplit(rights["source_url"])
+            if source.scheme not in {"http", "https"} or not source.netloc:
+                raise ValueError(f"{prefix}.rights_review.source_url must be an http(s) URL")
         evidence = rights.get("evidence")
         if any(not _valid_evidence_reference(item) for item in evidence):
             raise ValueError(f"{prefix}.rights_review.evidence contains an unsafe reference")
         approved = rights.get("publication_approved")
         if not isinstance(approved, bool):
             raise ValueError(f"{prefix}.rights_review.publication_approved must be boolean")
+        if rights_status != "UNVERIFIED" and not (
+            _nonempty(rights.get("reviewer")) and _valid_timestamp(rights.get("reviewed_at"))
+        ):
+            raise ValueError(f"{prefix}.rights_review requires reviewer and an ISO-8601 timestamp")
         if rights_status == "VERIFIED" or approved:
             required = ("reviewer", "reviewed_at", "creator", "source_url", "license")
             if any(not _nonempty(rights.get(field)) for field in required):
                 raise ValueError(f"{prefix}.verified rights require reviewer, timestamp, creator, source_url and license")
-            source = urlsplit(rights["source_url"])
-            if source.scheme not in {"http", "https"} or not source.netloc:
-                raise ValueError(f"{prefix}.rights_review.source_url must be an http(s) URL")
+            if not _valid_timestamp(rights.get("reviewed_at")):
+                raise ValueError(f"{prefix}.verified rights require an ISO-8601 reviewed_at timestamp")
             if not evidence:
                 raise ValueError(f"{prefix}.verified rights require at least one evidence reference")
         if approved and (rights_status != "VERIFIED" or not rights.get("territories")):

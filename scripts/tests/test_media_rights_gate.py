@@ -113,6 +113,19 @@ class MediaRightsGate(unittest.TestCase):
                              "a new file gets a record in `records`; do not add it to the baseline")
         self.assertEqual(len(real["baseline"]), len(set(real["baseline"])), "duplicate baseline paths")
 
+    def test_legacy_svg_assets_are_explicitly_in_the_unreviewed_baseline(self):
+        with open(os.path.join(ROOT, "docs", "media-rights.json"), encoding="utf-8") as fh:
+            real = json.load(fh)
+        expected = {
+            "assets/omega-banner.svg", "assets/omega-divider.svg", "assets/omega-sigil.svg",
+            "assets/omega/sovereign-core.svg", "assets/realms/ascend.svg", "assets/realms/command.svg",
+            "assets/realms/cosmos.svg", "assets/realms/identity.svg", "assets/realms/intel.svg",
+            "assets/realms/order.svg", "assets/realms/services.svg", "assets/realms/universe.svg",
+            "assets/realms/vault.svg",
+        }
+        self.assertTrue(expected.issubset(set(real["baseline"])))
+        self.assertEqual(len(real["baseline"]), BASELINE_CEILING)
+
     def test_every_licence_note_names_an_allowed_licence(self):
         with open(os.path.join(ROOT, "docs", "media-rights.json"), encoding="utf-8") as fh:
             real = json.load(fh)

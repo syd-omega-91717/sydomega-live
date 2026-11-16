@@ -17,8 +17,7 @@
   "in scripts/grant-contract.py's --help against project ydqhzvvoyufiiqvzcjns and replace",
   "`relations`. A stale snapshot gives false findings in both directions.",
   "",
-  "functions: every public function the `authenticated` role can CALL END TO END (142, captured",
-  "2026-11-16). EXECUTE on the public function is not enough: a SECURITY INVOKER wrapper runs",
+  "functions: every public function the `authenticated` role can CALL END TO END (provider snapshot 2026-11-16). SECURITY INVOKER wrappers may call functions in `private` or `omega_private`; the caller needs EXECUTE on the nested function and USAGE on its schema.",
   "`select private.<fn>(...)` as the caller, so it also needs EXECUTE on every private function it",
   "calls. 35 wrappers held the first grant and lacked the second -- approvals, delete-account, KYC,",
   "creation studio and knowledge search all failed 42501 until 20261012064126 (12 restored; the",
@@ -59,7 +58,18 @@
    "table": "----"
   },
   "api_keys": {
-   "table": "-IUD"
+   "table": "-IUD",
+   "columns": {
+    "SELECT": [
+     "active",
+     "created_at",
+     "expires_at",
+     "id",
+     "last_used_at",
+     "name",
+     "scopes"
+    ]
+   }
   },
   "feedback": {
    "table": "SI--"
@@ -404,7 +414,16 @@
    "table": "SIUD"
   },
   "consent_records": {
-   "table": "-IUD"
+   "table": "-IUD",
+   "columns": {
+    "SELECT": [
+     "consent_type",
+     "granted",
+     "granted_at",
+     "revoked_at",
+     "user_id"
+    ]
+   }
   },
   "expert_bookings": {
    "table": "----"
@@ -1071,6 +1090,8 @@
   "omega_knowledge_search",
   "omega_member_mission_task_surface",
   "omega_publish_experience",
+  "omega_record_simulation_run",
+  "omega_record_world_action",
   "omega_revoke_certificate",
   "omega_start_experience_run",
   "omega_start_mission",

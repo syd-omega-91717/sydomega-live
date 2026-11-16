@@ -1699,9 +1699,9 @@
     "intended_remediation": "Add the missing required domain column, align verified required/default fields, return source IDs as text for UUID/BIGINT compatibility, add the missing successful RETURN, update the dispatcher request ID variable to text, and preserve the underlying ID column without conversion."
   },
   "release_readiness": {
-    "status": "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED_MIGRATION_PENDING",
-    "blockers": "Vercel production deployment remains intentionally postponed. The main-push Vercel Production workflow confirms VERCEL_PROMOTION_POSTPONED=true because the Vercel Hobby team was blocked for Edge Requests by account credits since 2026-10-06. The workflow's Cloudflare live-commit check passed, but Vercel project setup, immutable artifact build, deployment, and Vercel-domain smoke steps were skipped. Restore Vercel account capacity, authorize the project team, verify VERCEL_TOKEN and project scope, then deliberately resume promotion; do not infer Vercel deployment from a successful workflow conclusion.; Pending migration 20261116214700_api_keys_live_column_compatibility is not provider-applied; production release remains blocked until the controlled migration push succeeds.",
-    "last_checked": "2026-11-13",
+    "status": "CLOUDFLARE_PRODUCTION_STALE_MIGRATION_PENDING_VERCEL_PROMOTION_POSTPONED",
+    "blockers": "Vercel production deployment remains intentionally postponed. The main-push Vercel Production workflow confirms VERCEL_PROMOTION_POSTPONED=true because the Vercel Hobby team was blocked for Edge Requests by account credits since 2026-10-06. The workflow's Cloudflare live-commit check passed, but Vercel project setup, immutable artifact build, deployment, and Vercel-domain smoke steps were skipped. Restore Vercel account capacity, authorize the project team, verify VERCEL_TOKEN and project scope, then deliberately resume promotion; do not infer Vercel deployment from a successful workflow conclusion.; Pending migration 20261116214700_api_keys_live_column_compatibility is not provider-applied; production release remains blocked until the controlled migration push succeeds. The 2026-11-16 main-push production HTTP probe expected commit 15b96312dd46b18913cd001dbc57072b52695eda but sydomega.com served 3e60a...; current main is not yet verified on Cloudflare production. Dispatch the existing main-only manual Cloudflare Pages fallback after the migration compatibility PR merges, then re-run exact-SHA production evidence. See issue #1346.",
+    "last_checked": "2026-11-16",
     "production_verification": {
       "provider": "Cloudflare Pages",
       "status": "PASS",
@@ -1738,6 +1738,17 @@
       "deploy_job_id": 131823766464,
       "verification_step": "Smoke test deployed Pages site",
       "conclusion": "success"
+    },
+    "latest_production_probe": {
+      "provider": "Cloudflare Pages",
+      "status": "FAIL_STALE_COMMIT",
+      "expected_commit_sha": "15b96312dd46b18913cd001dbc57072b52695eda",
+      "served_commit_sha": "3e60a...",
+      "workflow_run_id": 43965323786,
+      "job_id": 133643064288,
+      "artifact": "production-http-evidence.json",
+      "verified_at": "2026-11-16T21:58:00Z",
+      "blocker": "The public production manifest served the previous main commit; manual Cloudflare Pages fallback deployment and exact-SHA smoke verification are required."
     }
   },
   "runtime_probe_status": {
@@ -1749,7 +1760,7 @@
     "runtime_adapter_probe": "PASS — 54/54 governed actions",
     "failure": null,
     "production_privilege_evidence": "Live provider ACL verification confirms service_role SELECT on omega_notifications, omega_agent_tasks, omega_agent_task_events, omega_user_achievements, and omega_achievement_verifications; service_role INSERT on omega_user_achievements. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with the existing owner-read-only policy.",
-    "remediation": "Historical database and behavioral verification baseline (2026-11-13): 429 source migrations replayed from zero; migration inventory and security audit passed; hardening and Stripe lifecycle probes passed; all 54 runtime actions passed; family-access authorization/privacy probes passed; authenticated content pipeline E2E passed. The provider ledger was refreshed on 2026-11-16 and contains 432 applied versions through 20261116214842. The live provider has the enterprise metadata columns name/active; migration 20261116214700_api_keys_live_column_compatibility is registered PENDING_REVIEW so clean replay can rename the legacy key_name/is_active columns before the 20261116214842 safe column grants. This pending version is not claimed provider-applied and blocks production release until the controlled migration push succeeds. Cloudflare Pages exact-SHA production verification passed for main commit 426ec70562e3f97d56707002a3bc25eb43f46328. GitHub Pages failover build, deployment, and smoke test also passed. Vercel production promotion remains intentionally postponed because the workflow records the Hobby team's Edge Request credit block; Vercel deploy steps were skipped.",
+    "remediation": "Historical database and behavioral verification baseline (2026-11-13): 429 source migrations replayed from zero; migration inventory and security audit passed; hardening and Stripe lifecycle probes passed; all 54 runtime actions passed; family-access authorization/privacy probes passed; authenticated content pipeline E2E passed. The provider ledger was refreshed on 2026-11-16 and contains 432 applied versions through 20261116214842. The live provider has the enterprise metadata columns name/active; migration 20261116214700_api_keys_live_column_compatibility is registered PENDING_REVIEW so clean replay can rename the legacy key_name/is_active columns before the 20261116214842 safe column grants. This pending version is not claimed provider-applied and blocks production release until the controlled migration push succeeds. Cloudflare Pages exact-SHA production verification passed for main commit 426ec70562e3f97d56707002a3bc25eb43f46328. GitHub Pages failover build, deployment, and smoke test also passed. Vercel production promotion remains intentionally postponed because the workflow records the Hobby team's Edge Request credit block; Vercel deploy steps were skipped. Latest main-push production HTTP probe (workflow 43965323786) expected commit 15b96312dd46b18913cd001dbc57072b52695eda but sydomega.com served 3e60a..., so Cloudflare production is stale. After PR #1345 resolves migration replay, dispatch the existing main-only Cloudflare Pages fallback and verify the exact SHA, CSP, and full smoke test; see issue #1346.",
     "status": "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION",
     "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
     "provider_migration_ledger": {

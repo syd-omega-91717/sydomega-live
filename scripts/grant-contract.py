@@ -31,7 +31,9 @@ supabase/live-grants.json (the `authenticated` role, captured live):
            migration 20261012014343 bridged them. EXECUTE on the public function is
            not enough: a SECURITY INVOKER wrapper calls private.<fn> as the caller,
            and 12 client-called wrappers (approvals, delete-account, KYC, creation
-           studio) failed 42501 that way until 20261012064126.
+           studio) failed 42501 that way until 20261012064126. The same rule
+           applies to omega_private wrappers: both schema USAGE and nested
+           function EXECUTE are required.
 
 Tables missing from the snapshot are skipped (scripts/schema-dictionary.py owns
 names that do not exist). Embedded resources in a select (`rel!inner(col)`) are
@@ -67,7 +69,8 @@ replace `relations` in supabase/live-grants.json; read-only):
   from tbl;
 
 FUNCTIONS (replace `functions`): public functions authenticated may EXECUTE, minus
-SECURITY INVOKER ones that call a private function authenticated may not execute:
+SECURITY INVOKER ones that call a function in `private` or `omega_private` that
+authenticated may not execute:
 
   with pub as (select p.proname, p.prosecdef, p.prosrc from pg_proc p
                where p.pronamespace = 'public'::regnamespace

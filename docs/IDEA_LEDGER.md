@@ -6,13 +6,13 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**523 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 51, IDEA_INTAKE.md 17.
+**524 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 51, IDEA_INTAKE.md 18.
 
 | status | count |
 |---|---|
 | NEEDS_DECISION | 16 |
 | PROPOSED | 18 |
-| PARTIAL | 56 |
+| PARTIAL | 57 |
 | OPEN_GAP | 32 |
 | DORMANT | 1 |
 | SHIPPED | 45 |
@@ -69,9 +69,9 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
 | B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
-| I17 | IDEA_INTAKE.md | Let text areas grow with what the member writes (field-sizing: content) | a long journal entry, work or note scrolls inside a fixed box today. Grounded 2026-11-09: 116 <textarea> on 59 pages; 0 first-party uses of… |
+| I18 | IDEA_INTAKE.md | Review scheduling that predicts recall (FSRS) instead of a fixed ease factor | one scheduler decides every flashcard and word review: omega-srs.js:45-68 sets the next interval as interval × a per-item ease (starting 2.… |
 
-### PARTIAL (56)
+### PARTIAL (57)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -131,6 +131,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N212 | 999 blueprint [APPENDIX_NODE] | Birth-Date/Horoscope Logic (sign-themed tools) | horoscope.html sign profiles; theming by sign is fine, gating by sign is not |
 | N250 | 999 blueprint [APPENDIX_NODE] | Unified Need Fulfillment (meet every need inside the platform) | copilot + command.html TODAY; keeping members inside is not a goal |
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
+| I17 | IDEA_INTAKE.md | Let text areas grow with what the member writes (field-sizing: content) | opt-in shipped, not global. The global form in the original plan was built and measured on 2026-11-16 and rejected: across the 37 pages wit… |
 
 ### OPEN_GAP (32)
 

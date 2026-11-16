@@ -564,6 +564,25 @@ body:has(> aside#omega-side:not([style*="display:none"]):not([hidden])){display:
   border-color:rgba(201,168,76,.5);
   box-shadow:0 0 0 3px rgba(201,168,76,.12),0 0 20px -6px var(--gvp-glow-gold)
 }
+/* ── TEXT AREAS THAT GROW WITH WHAT THE MEMBER WRITES (idea I17), OPT-IN: <textarea data-autogrow> ──
+   A long journal entry or note used to scroll inside a fixed box. `field-sizing:content` alone is NOT safe: it ignores rows=, and measured in
+   Chromium 153 a rows=6 area collapses to 40px (one line). So the resting size is restated from the element's own rows (typed attr(), default 2 =
+   the HTML default) plus --oa-ta-chrome (its vertical padding + border: 24px for a classed area, which omega-accessibility-audit.css gives 10px + 2px twice; 20px for an unclassed one, which this skin's 9px + 1px twice wins), and a long paste stops at 60vh and
+   scrolls there so the save button is never pushed off screen. The 48px floor of omega-accessibility-audit.css is kept.
+   It is OPT-IN on purpose. Applied to every unclassed and .inp textarea it was measured across the 37 pages that have one: 4 of 18 visible areas
+   changed resting size (contracts.html 70 -> 66.4, life.html 150 -> 116, sleep.html 60 -> 66.4) because those pages size their own area with a
+   rule this one ties or outranks, and a shared rule cannot both beat the platform's 48px floor and yield to a page's own min-height. So a page opts
+   an area in by attribute, after measuring it, and sets --oa-ta-chrome when its padding + border is not what those two give. A caveat found by measuring: `field-sizing:content` also sizes an EMPTY area to fit its placeholder, so one with a placeholder longer than its resting rows
+   grows when empty (creation-studio.html #asset-prompt went 70.4 -> 93.6 and was left out). One the member resized by hand has an inline height,
+   which beats an auto size. A browser without either feature skips the whole block and keeps today's fixed box. */
+@supports (field-sizing:content) and (min-height:calc(attr(rows type(<number>),2)*1lh)){
+  textarea[data-autogrow]{
+    --oa-ta-chrome:24px;
+    field-sizing:content;max-block-size:60vh;
+    min-block-size:max(48px,calc(attr(rows type(<number>),2)*1lh + var(--oa-ta-chrome)))
+  }
+  textarea[data-autogrow]:not([class]){--oa-ta-chrome:20px}
+}
 .field{position:relative;margin-bottom:14px}
 .field label{
   position:absolute;left:12px;top:9px;font-family:var(--M);font-size:12px;color:var(--muted);

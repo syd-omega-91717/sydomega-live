@@ -59,7 +59,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300", "20261112091400", "20261112091500",
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
-            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -67,9 +67,9 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261113062812")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261116214052")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
-        self.assertEqual(self.remote.get("_captured"), "2026-11-13")
+        self.assertEqual(self.remote.get("_captured"), "2026-11-16")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
@@ -132,8 +132,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions")
         self.assertEqual(runtime.get("family_access_probe"), "PASS")
         self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline")
-        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 430)
-        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261113062812")
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 431)
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261116214052")
         self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
         remediation = runtime.get("remediation", "").lower()
         self.assertIn("vercel production promotion remains", remediation)

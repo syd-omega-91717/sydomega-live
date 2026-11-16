@@ -168,8 +168,13 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         readiness = snapshot["release_readiness"]
         self.assertEqual(
             readiness.get("status"),
-            "CLOUDFLARE_AND_FAILOVER_VERIFIED_VERCEL_PROMOTION_POSTPONED_MIGRATION_PENDING",
+            "CLOUDFLARE_PRODUCTION_STALE_MIGRATION_PENDING_VERCEL_PROMOTION_POSTPONED",
         )
+        latest_probe = readiness.get("latest_production_probe", {})
+        self.assertEqual(latest_probe.get("status"), "FAIL_STALE_COMMIT")
+        self.assertEqual(latest_probe.get("expected_commit_sha"), "15b96312dd46b18913cd001dbc57072b52695eda")
+        self.assertEqual(latest_probe.get("served_commit_sha"), "3e60a...")
+        self.assertEqual(latest_probe.get("workflow_run_id"), 43965323786)
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(
             readiness.get("production_verification", {}).get("commit_sha"),
@@ -195,6 +200,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("54-action behavioral SQL probe", blockers)
         self.assertIn("20261116214700", blockers)
         self.assertIn("production release remains blocked", blockers.lower())
+        self.assertIn("15b96312dd46b18913cd001dbc57072b52695eda", blockers)
+        self.assertIn("issue #1346", blockers)
         runtime = snapshot["runtime_probe_status"]
         self.assertEqual(runtime.get("status"), "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
         self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions")

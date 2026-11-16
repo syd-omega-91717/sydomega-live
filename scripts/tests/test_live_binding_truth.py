@@ -40,12 +40,30 @@ class LiveBindingTruthContract(unittest.TestCase):
         self.assertIn("if(!window.__omegaSb||!_uid||el.dataset.liveBound!=='1')return;", self.source)
         self.assertIn("delete el.dataset.liveBound", self.source)
 
+    def test_pulse_is_a_keyboard_operable_button_with_a_real_target(self):
+        pulse = self.source[self.source.index("function createPulseIndicator"):self.source.index("function verifyPulse")]
+        self.assertIn("document.createElement('button')", pulse)
+        self.assertIn("control.type='button'", pulse)
+        self.assertIn("control.setAttribute('aria-label'", pulse)
+        self.assertIn("width:36px;height:36px", pulse)
+        self.assertIn("indicator.setAttribute('aria-hidden','true')", pulse)
+
+    def test_pulse_status_is_exposed_on_the_button_not_the_decorative_dot(self):
+        pulse = self.source[self.source.index("function verifyPulse"):self.source.index("/* ── C. LIVE MEMBER COUNT")]
+        self.assertIn("control.setAttribute('aria-label','Live data status: unavailable')", pulse)
+        self.assertIn("control.setAttribute('aria-label','Live data status: '+_pulseStatus)", pulse)
+        self.assertIn("dot.style.background", pulse)
+
+    def test_pulse_animation_respects_reduced_motion(self):
+        pulse = self.source[self.source.index("function createPulseIndicator"):self.source.index("function verifyPulse")]
+        self.assertIn("@media(prefers-reduced-motion:reduce)", pulse)
+
     def test_public_count_and_ticker_report_empty_and_error_states(self):
         self.assertIn("function updateMemberCount()", self.source)
         self.assertIn("function startTicker()", self.source)
         pulse = self.source[self.source.index('function createPulseIndicator'):self.source.index('function verifyPulse')]
-        self.assertIn("var dot=document.getElementById('omega-pulse')", pulse)
-        self.assertIn('verifyPulse(dot)', pulse)
+        self.assertIn("var control=document.getElementById('omega-pulse')", pulse)
+        self.assertIn('verifyPulse(control,dot||control)', pulse)
         self.assertIn("setLiveState(el,'error','—')", self.source)
         self.assertIn("setLiveState(ticker,'unavailable','—')", self.source)
 

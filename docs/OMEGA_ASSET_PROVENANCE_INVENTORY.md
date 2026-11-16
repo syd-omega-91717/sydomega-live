@@ -99,3 +99,19 @@ The inventory contains 176 JPEG, 244 JPG, 21 PNG, 47 WebP, 13 SVG and 31 MP4 fil
 - Supabase Storage-only objects and database-only media records are not included in this Git-tree count.
 
 **Next audit stage:** generate visual contact sheets for the 501 image files, extract representative frames and metadata from all 31 videos, then reconcile each asset's visual identity and references before making any rights-register change. No rights status should be promoted without evidence supplied by the owner or an authoritative licence/source.
+
+## Human visual review gallery
+
+Generate a local gallery for visual inspection of every repository image and video:
+
+```bash
+python3 scripts/omega-media-review-gallery.py
+```
+
+The default output is `artifacts/media-visual-review/index.html`. Open it from the local checkout. Images are lazy-loaded; videos use native browser controls and are not auto-played. Each card shows the repository path, byte size and SHA-256, plus a local review checkbox and notes field. The checkbox and notes are a temporary browser aid only: they do not persist, update the rights register, or certify ownership. Record durable findings through a reviewed evidence-backed change. The gallery is read-only and must not be deployed as a public asset catalogue.
+
+Run its regression tests with:
+
+```bash
+python3 -m unittest scripts/tests/test_omega_media_review_gallery.py
+```

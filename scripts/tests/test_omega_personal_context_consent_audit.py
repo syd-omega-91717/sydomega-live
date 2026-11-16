@@ -73,11 +73,15 @@ class PersonalContextConsentAuditContract(unittest.TestCase):
         self.assertNotIn("\n  pull_request:", workflow)
         self.assertIn("if: github.ref == 'refs/heads/main'", workflow)
         self.assertIn("CONFIRM_PRODUCTION_APPLY", workflow)
-        self.assertIn("supabase db push --dry-run --linked", workflow)
-        self.assertIn('version != "20261022130000"', workflow)
+        self.assertIn("supabase db push --dry-run", workflow)
+        self.assertIn("push_args=(--linked)", workflow)
+        self.assertIn('version == "20261022130000"', workflow)
+        self.assertIn('version == "20261116214700"', workflow)
         self.assertIn("auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM NEW.user_id", workflow)
         self.assertIn("if mismatches != [(version, None)]", workflow)
-        self.assertIn("supabase db push --linked --yes", workflow)
+        self.assertIn("push_args=(--linked --yes)", workflow)
+        self.assertIn("push_args+=(--include-all)", workflow)
+        self.assertIn("This controlled workflow is not authorized for the requested migration version.", workflow)
         self.assertIn("supabase migration list --linked", workflow)
 
 

@@ -33,7 +33,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTER = os.path.join(ROOT, 'docs', 'media-rights.json')
 
 MEDIA_EXT = {'.mp4', '.webm', '.mov', '.m4v', '.mp3', '.ogg', '.oga', '.wav', '.m4a', '.flac', '.aac', '.opus',
-             '.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif'}
+             '.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif', '.svg', '.bmp', '.tif', '.tiff'}
 SKIP_PREFIX = ('vendor/', 'docs/', 'supabase/', 'scripts/', '.claude/', 'public/', 'node_modules/', 'tests/', 'artifacts/')
 REQUIRED = ('path', 'source', 'creator', 'licence', 'evidence', 'added')
 OWNER_LICENCES = {'owner-original', 'owner-generated'}

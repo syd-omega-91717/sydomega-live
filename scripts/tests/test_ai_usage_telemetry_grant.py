@@ -59,7 +59,7 @@ class AiUsageTelemetryGrantTests(unittest.TestCase):
         self.assertIn("omega_ai_requests_rls_must_remain_enabled", sql)
         self.assertIn("omega_ai_requests_client_deny_policy_missing", sql)
         for privilege in ("SELECT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER", "MAINTAIN"):
-            self.assertIn(f"'{privilege}'", sql)
+            self.assertIn(f"'{privilege.lower()}'", sql)
 
     def test_no_client_grant_or_privilege_expansion(self):
         for path in (SCHEMA, TIGHTENING):

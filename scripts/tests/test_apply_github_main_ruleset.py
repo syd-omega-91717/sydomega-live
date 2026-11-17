@@ -139,7 +139,7 @@ class RulesetApplyTests(unittest.TestCase):
     def test_request_rejects_token_line_breaks_before_process(self):
         with patch.object(MODULE.subprocess, "run") as run:
             with self.assertRaisesRegex(ValueError, "invalid line break"):
-                MODULE.request("GET", "test-token\\nInjected: header")
+                MODULE.request("GET", "test-token\nInjected: header")
         run.assert_not_called()
 
     def test_request_rejects_unsupported_method_before_process(self):

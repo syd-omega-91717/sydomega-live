@@ -169,8 +169,6 @@ class MediaReviewGalleryTests(unittest.TestCase):
                 MODULE.build_review_manifest(root, manifest_path)
             self.assertEqual(manifest_path.read_text(encoding="utf-8"), invalid)
 
-            manifest.pop("assets")[0] if False else None
-
     def test_unknown_manifest_top_level_field_is_rejected_without_overwrite(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

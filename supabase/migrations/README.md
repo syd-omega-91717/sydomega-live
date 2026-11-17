@@ -129,7 +129,7 @@ Three follow-up migrations are registered as `PENDING_REVIEW / NOT_APPLIED`: `20
 
 The following is the latest independently checked state. It supersedes the 2026-11-16 pending-migration and stale-production statements above.
 
-- The authenticated Supabase provider migration ledger contains **433 unique applied versions**, latest `20261116214842_authenticated_safe_column_read_grants`. The source directory contains **433 unique migration files**. `supabase/remote-migrations.json` records 433 versions; `supabase/pending-migrations.json` is empty.
+- The authenticated Supabase provider migration ledger contains **435 unique applied versions**, latest `20261117003721_omega_ai_requests_privilege_tightening`. The source directory contains **435 unique migration files**. `supabase/remote-migrations.json` records 435 versions; `supabase/pending-migrations.json` is empty.
 - Migration `20261116214700_api_keys_live_column_compatibility` is provider-applied. A read-only query of `information_schema.columns` confirms `public.api_keys.name text NOT NULL` and `public.api_keys.active boolean DEFAULT true`. No API-key or secret values were queried.
 - A fresh full migration replay and migration security audit passed on main commit `d62168f2d8dd3504d5f2809128c64af1113984b1` (run #43985648591). The migration source/provider snapshot is reconciled; strict `migration-drift.py` reports 433 matching versions and no pending versions. The prior 20f8 replay is historical evidence.
 - The sensitive-column grant boundary remains unchanged: authenticated can read only the required non-secret columns on `public.api_keys` and `public.consent_records`; no table-wide SELECT was added, and `api_key`, `api_secret`, `ip_hash`, and `user_agent` remain excluded.
@@ -139,3 +139,12 @@ The following is the latest independently checked state. It supersedes the 2026-
 - The production auth setting for leaked-password protection still requires an authorized dashboard change and post-change verification. Owner MFA enforcement remains dormant until the required owner-factor prerequisites and sign-in step-up validation are complete.
 
 The repository snapshot reconciliation was merged through [PR #1347](https://github.com/syd-omega-91717/sydomega-live/pull/1347); subsequent release evidence is refreshed against the exact main commit. The values above are point-in-time evidence for the stated commit and provider query, not a promise that future deployments remain healthy.
+
+
+## 2026-11-17 — AI telemetry schema and exact privilege reconciliation
+
+The live provider already contained `public.omega_ai_requests`, but no source migration created it. The prior grant migration therefore failed on an isolated fresh replay. Source migration `20261117002651_omega_ai_requests_service_role_insert_grant.sql` now includes an idempotent table baseline matching the inspected live columns, primary/unique/check constraints, indexes, RLS and deny-by-default client policy before applying its grant. This is a replay compatibility baseline; it does not claim that the historical production apply created the table.
+
+The original grant left PostgreSQL 17 `TRUNCATE`, `REFERENCES`, `TRIGGER` and `MAINTAIN` privileges in the role ACL even though SELECT/UPDATE/DELETE were denied. Follow-up migration `20261117003721_omega_ai_requests_privilege_tightening.sql` revokes all table privileges from `anon`, `authenticated` and `service_role`, then grants only INSERT to `service_role`. Live post-apply checks confirm the eight table privileges: service_role has INSERT only; anon and authenticated have none. RLS and the existing deny policy remain enabled. No synthetic usage row was created.
+
+The provider migration ledger contains 435 applied versions, latest `20261117003721`; `supabase/remote-migrations.json` and the source migration directory are reconciled. A fresh 435-migration replay and strict source/provider drift check remain required CI acceptance gates for the source baseline.

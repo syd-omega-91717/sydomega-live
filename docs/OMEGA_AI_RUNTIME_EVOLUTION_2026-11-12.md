@@ -141,3 +141,12 @@ This AI layer is not declared production-ready until:
 - [OWASP AI Agent Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html)
 - [MCP 2026-07-28 authorization security considerations](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/security-considerations)
 - [OpenTelemetry GenAI agent span conventions](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md)
+
+
+## Live telemetry and provider state — 2026-11-17
+
+A live read-only ACL audit found that the first service-role INSERT grant also left PostgreSQL 17 `TRUNCATE`, `REFERENCES`, `TRIGGER` and `MAINTAIN` privileges. This did not satisfy the intended INSERT-only boundary. Provider migration `20261117003721` now revokes all table privileges from `anon`, `authenticated` and `service_role`, then grants INSERT only to `service_role`. Live privilege checks confirm all eight table privileges: service_role has INSERT only; anon and authenticated have none. RLS and `omega_deny_by_default` remain enabled.
+
+The live `omega_ai_requests` table was absent from the source migration chain, which caused the first clean 434-migration replay to fail. The source migration `20261117002651` now includes an idempotent table/schema baseline matching the live catalog, so fresh replay creates the table before the grant. This baseline must pass the fresh 435-migration replay before merge. No synthetic production usage row was written.
+
+The shared model router still reports `ai_provider_not_configured`. Real model responses remain BLOCKED until an authorized provider endpoint and secret are configured and verified. The telemetry privilege repair does not activate AI inference.

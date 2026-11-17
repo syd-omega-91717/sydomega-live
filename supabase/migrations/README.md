@@ -139,3 +139,8 @@ The following is the latest independently checked state. It supersedes the 2026-
 - The production auth setting for leaked-password protection still requires an authorized dashboard change and post-change verification. Owner MFA enforcement remains dormant until the required owner-factor prerequisites and sign-in step-up validation are complete.
 
 The repository snapshot reconciliation was merged through [PR #1347](https://github.com/syd-omega-91717/sydomega-live/pull/1347); subsequent release evidence is refreshed against the exact main commit. The values above are point-in-time evidence for the stated commit and provider query, not a promise that future deployments remain healthy.
+
+
+## AI usage telemetry grant — 2026-11-17
+
+Provider migration `20261117002651` adds INSERT-only access on `public.omega_ai_requests` to `service_role`. Live ACL verification confirms service_role has INSERT and no SELECT/UPDATE/DELETE; anon and authenticated retain no privileges. No synthetic telemetry row was written. The shared AI model router remains blocked until a real provider endpoint and secret are configured.

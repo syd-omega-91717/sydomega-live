@@ -158,6 +158,20 @@ def validate_review_manifest(manifest: dict) -> None:
     """Fail closed on malformed, ambiguous, or unsupported human review data."""
     if not isinstance(manifest, dict) or manifest.get("schema_version") != 1:
         raise ValueError("review manifest must use schema_version 1")
+    allowed_manifest_fields = {"schema_version", "purpose", "policy", "assets", "summary"}
+    unknown_manifest_fields = set(manifest) - allowed_manifest_fields
+    if unknown_manifest_fields:
+        raise ValueError(f"review manifest contains unsupported fields: {', '.join(sorted(unknown_manifest_fields))}")
+    if not isinstance(manifest.get("purpose"), str) or not manifest["purpose"].strip():
+        raise ValueError("review manifest purpose must be a non-empty string")
+    policy = manifest.get("policy")
+    allowed_policy_fields = {"new_or_changed_bytes_reset_review", "hash_proves_bytes_not_ownership", "unverified_is_not_approved", "generated_by"}
+    if not isinstance(policy, dict) or set(policy) != allowed_policy_fields:
+        raise ValueError("review manifest policy must contain exactly the supported policy fields")
+    if any(not isinstance(policy.get(field), bool) for field in ("new_or_changed_bytes_reset_review", "hash_proves_bytes_not_ownership", "unverified_is_not_approved")):
+        raise ValueError("review manifest policy flags must be boolean")
+    if not _nonempty(policy.get("generated_by")):
+        raise ValueError("review manifest policy generated_by must be a non-empty string")
     assets = manifest.get("assets")
     if not isinstance(assets, list):
         raise ValueError("review manifest assets must be a list")
@@ -167,6 +181,10 @@ def validate_review_manifest(manifest: dict) -> None:
         prefix = f"assets[{index}]"
         if not isinstance(asset, dict):
             raise ValueError(f"{prefix} must be an object")
+        allowed_asset_fields = {"record_id", "path", "kind", "size_bytes", "sha256", "visual_review", "rights_review"}
+        unknown_asset_fields = set(asset) - allowed_asset_fields
+        if unknown_asset_fields:
+            raise ValueError(f"{prefix} contains unsupported fields: {', '.join(sorted(unknown_asset_fields))}")
         record_id = asset.get("record_id")
         relative_path = asset.get("path")
         sha256 = asset.get("sha256")
@@ -195,6 +213,9 @@ def validate_review_manifest(manifest: dict) -> None:
         visual = asset.get("visual_review")
         if not isinstance(visual, dict):
             raise ValueError(f"{prefix}.visual_review must be an object")
+        allowed_visual_fields = {"status", "reviewer", "reviewed_at", "findings"}
+        if set(visual) - allowed_visual_fields:
+            raise ValueError(f"{prefix}.visual_review contains unsupported fields: {', '.join(sorted(set(visual) - allowed_visual_fields))}")
         visual_status = visual.get("status")
         if not isinstance(visual_status, str) or visual_status not in {"PENDING", "REVIEWED", "NEEDS_ATTENTION"}:
             raise ValueError(f"{prefix}.visual_review.status is unsupported")
@@ -213,6 +234,9 @@ def validate_review_manifest(manifest: dict) -> None:
         rights = asset.get("rights_review")
         if not isinstance(rights, dict):
             raise ValueError(f"{prefix}.rights_review must be an object")
+        allowed_rights_fields = {"status", "reviewer", "reviewed_at", "creator", "source_url", "license", "evidence", "attribution", "territories", "expires_at", "publication_approved"}
+        if set(rights) - allowed_rights_fields:
+            raise ValueError(f"{prefix}.rights_review contains unsupported fields: {', '.join(sorted(set(rights) - allowed_rights_fields))}")
         rights_status = rights.get("status")
         if not isinstance(rights_status, str) or rights_status not in {"UNVERIFIED", "VERIFIED", "REJECTED", "EXPIRED"}:
             raise ValueError(f"{prefix}.rights_review.status is unsupported")

@@ -123,9 +123,56 @@ python3 scripts/omega-media-review-gallery.py --manifest docs/media-visual-revie
 
 The browser checkbox and notes remain temporary and do not write to the manifest. Review decisions must be entered into the JSON manifest with reviewer, timestamp and evidence. The manifest is a review workflow record, not a legal determination. A SHA-256 proves bytes only; no generator can establish ownership or permission. The rights gate in `docs/media-rights.json` remains the separate release control.
 
-The manifest generator now validates the complete record schema before writing or preserving prior decisions. Visual states are restricted to `PENDING`, `REVIEWED`, and `NEEDS_ATTENTION`; completed visual reviews require a reviewer and timezone-aware ISO-8601 timestamp. Rights states are restricted to `UNVERIFIED`, `VERIFIED`, `REJECTED`, and `EXPIRED`; verified rights require reviewer, timestamp, creator, HTTP(S) source, licence, and evidence. `publication_approved=true` additionally requires `VERIFIED` rights and explicit territories. Invalid prior records fail closed and are not overwritten. On POSIX, the gallery hashes through no-follow file and directory descriptors to reject symlink/path-swap races.
+The manifest generator now validates the complete, closed record schema before writing or preserving prior decisions; unknown top-level, asset, policy, visual-review, and rights-review fields fail closed rather than being carried forward. Visual states are restricted to `PENDING`, `REVIEWED`, and `NEEDS_ATTENTION`; completed visual reviews require a reviewer and timezone-aware ISO-8601 timestamp. Rights states are restricted to `UNVERIFIED`, `VERIFIED`, `REJECTED`, and `EXPIRED`; verified rights require reviewer, timestamp, creator, HTTP(S) source, licence, and evidence. `publication_approved=true` additionally requires `VERIFIED` rights and explicit territories. Invalid prior records fail closed and are not overwritten. On POSIX, the gallery hashes through no-follow file and directory descriptors to reject symlink/path-swap races.
 
 The gallery is read-only and must not be deployed as a public asset catalogue. The scanner excludes symbolic links and verifies resolved paths remain within the repository root.
+
+#### Record a human review without hand-editing the manifest
+
+Use the validated editor to apply one JSON patch to one asset. Copy the asset's `record_id` from the manifest and prepare a local patch file:
+
+```json
+{
+  "visual_review": {
+    "status": "REVIEWED",
+    "reviewer": "reviewer identifier",
+    "reviewed_at": "2026-11-17T12:00:00Z",
+    "findings": ["identity, quality, intended use and references inspected"]
+  }
+}
+```
+
+Apply it:
+
+```bash
+python3 scripts/omega-media-review-update.py \
+  --manifest artifacts/media-visual-review/review-manifest.json \
+  --record-id <record_id> \
+  --patch /path/to/review-patch.json
+```
+
+The editor rejects unknown sections/fields, invalid statuses, missing reviewer/timestamp data, unsupported evidence references, and any publication approval that lacks VERIFIED rights, creator, source URL, licence, evidence and explicit territories. It rechecks the asset's current bytes and record ID before writing, then atomically replaces the manifest. If the file changed, regenerate the manifest and review the new record; do not reuse the prior decision. Run the editor tests and gallery tests before committing any review ledger.
+
+Example rights patch (only use when each fact is supported by evidence):
+
+```json
+{
+  "rights_review": {
+    "status": "VERIFIED",
+    "reviewer": "rights reviewer",
+    "reviewed_at": "2026-11-17T12:00:00Z",
+    "creator": "verified creator",
+    "source_url": "https://example.org/source",
+    "license": "exact licence or permission basis",
+    "evidence": ["https://example.org/licence-evidence"],
+    "attribution": "required attribution text",
+    "territories": ["worldwide"],
+    "publication_approved": false
+  }
+}
+```
+
+A verified rights record does not automatically approve publication. Set `publication_approved=true` only after a human reviewer has confirmed the permitted use, territories and licence conditions.
 
 ### Video frame and metadata sampling
 

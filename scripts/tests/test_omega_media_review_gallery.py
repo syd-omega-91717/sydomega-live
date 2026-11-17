@@ -154,6 +154,36 @@ class MediaReviewGalleryTests(unittest.TestCase):
                 candidate.unlink(missing_ok=True)
                 outside.unlink(missing_ok=True)
 
+    def test_unknown_manifest_and_review_fields_are_rejected_without_overwrite(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            (media / "asset.png").write_bytes(b"asset")
+            manifest_path = root / "review.json"
+            manifest = MODULE.build_review_manifest(root, manifest_path)
+            manifest["assets"][0]["rights_review"]["unexpected"] = "ignored"
+            invalid = json.dumps(manifest, indent=2)
+            manifest_path.write_text(invalid, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "rights_review contains unsupported fields"):
+                MODULE.build_review_manifest(root, manifest_path)
+            self.assertEqual(manifest_path.read_text(encoding="utf-8"), invalid)
+
+    def test_unknown_manifest_top_level_field_is_rejected_without_overwrite(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            media = root / "media"
+            media.mkdir()
+            (media / "asset.png").write_bytes(b"asset")
+            manifest_path = root / "review.json"
+            manifest = MODULE.build_review_manifest(root, manifest_path)
+            manifest["unreviewed_override"] = True
+            invalid = json.dumps(manifest, indent=2)
+            manifest_path.write_text(invalid, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "unsupported fields"):
+                MODULE.build_review_manifest(root, manifest_path)
+            self.assertEqual(manifest_path.read_text(encoding="utf-8"), invalid)
+
     def test_invalid_review_status_is_rejected_without_overwriting_manifest(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

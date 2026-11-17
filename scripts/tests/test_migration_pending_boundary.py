@@ -151,7 +151,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("20261117002651", self.remote_versions)
         self.assertIn("20261117003721", self.remote_versions)
         for privilege in ("select", "update", "delete", "truncate", "references", "trigger", "maintain"):
-            self.assertIn(f"'{privilege.upper()}'", privileges)
+            self.assertIn(f"'{privilege.lower()}'", privileges)
         self.assertIn("omega_ai_requests_service_role_privilege_too_broad", privileges)
         self.assertIn("omega_ai_requests_client_privilege_must_remain_denied", privileges)
         self.assertEqual(self.remote.get("remoteMigrationCount"), 435)

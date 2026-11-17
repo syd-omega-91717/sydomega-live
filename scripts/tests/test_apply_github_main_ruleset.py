@@ -97,7 +97,7 @@ class RulesetApplyTests(unittest.TestCase):
         self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("if: github.ref == 'refs/heads/main'", workflow)
         self.assertIn("environment: github-repository-admin", workflow)
-        self.assertNotRegex(workflow, r"(?m)^\\s*(?:push|pull_request|schedule):")
+        self.assertNotRegex(workflow, r"(?m)^\s*(?:push|pull_request|schedule):")
         self.assertIn("python3 scripts/apply-github-main-ruleset.py", workflow)
 
 

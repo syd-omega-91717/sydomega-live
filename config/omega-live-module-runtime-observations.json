@@ -1896,11 +1896,11 @@
       "file_size_limit_mib": 50,
       "allowed_mime_types": null,
       "verified_at": "2026-11-17",
-      "note": "Bucket-level limit matches the existing 50 MiB client upload ceiling. MIME allowlist intentionally remains null because publishing accepts arbitrary binary attachments; actual signature validation and malware scanning are not implemented and remain separate gates."
+      "note": "The private uploads bucket has a server-enforced 50 MiB limit. The deployed content-ingest function verifies actual byte signatures and records SHA-256; malware scanning remains unavailable, and rights/publication review remains mandatory. The bucket MIME allowlist is still NULL by explicit design pending a platform-wide accepted-format policy."
     },
     "content_ingest_validation": {
-      "status": "PENDING_DEPLOY",
-      "live_function_version": 10,
+      "status": "DEPLOYED_ENTRYPOINT_VERIFIED",
+      "live_function_version": 11,
       "source_state": "SIGNATURE_DETECTION_AND_SHA256_IMPLEMENTED",
       "source_features": [
         "server-side 50 MiB validation",
@@ -1912,18 +1912,18 @@
       ],
       "scan_state": "UNAVAILABLE",
       "rights_state": "UNVERIFIED",
-      "deployment_required": true,
-      "note": "Source and imported helper hashes are captured in docs/runtime/supabase-edge-functions-live.json. The live Edge Function remains version 10 until deployment and post-deploy E2E verification."
+      "deployment_required": false,
+      "note": "Provider version 11 is ACTIVE and the deployed entrypoint matches repository source byte-for-byte. The isolated Supabase CI stack passes authenticated upload, server-side size/signature/hash validation, owner-path enforcement, registration idempotency and audit probes. Production has zero Storage objects and zero storage_files rows, so a real member upload transaction has not yet been observed. Malware scanning and rights/publication clearance remain separate gates."
     },
     "content_delivery_validation": {
-      "status": "PENDING_DEPLOY",
-      "live_function_version": 10,
+      "status": "DEPLOYED_ENTRYPOINT_VERIFIED",
+      "live_function_version": 11,
       "source_state": "SIGNED_ATTACHMENT",
       "security_control": "createSignedUrl(download=true)",
       "signed_url_ttl_seconds": 900,
       "audit_event": "content_asset_signed_download",
       "owner_scope": "VERIFIED_SOURCE_CONTRACT",
-      "note": "Source forces Content-Disposition attachment for arbitrary user uploads so HTML/SVG/binary cannot be rendered inline. Provider deployment and isolated E2E are still required."
+      "note": "Provider version 11 is ACTIVE and the deployed entrypoint matches repository source byte-for-byte. The isolated Supabase CI stack passes authenticated owner-scoped delivery, signed URL expiry, forced attachment disposition and audit probes. Production currently has no registered Storage objects, so production member delivery has not yet been observed."
     }
   }
 }

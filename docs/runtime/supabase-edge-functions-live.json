@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-11-17T07:32:00.000Z",
+  "captured_at": "2026-11-17T07:48:00.000Z",
   "source_directory": "supabase/functions",
   "functions": {
     "concierge": {
@@ -11,7 +11,7 @@
       "repository_blob_sha": "ed0a0224b0e423090df7beeda5abc713547dbb71",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "concierge-orchestrator": {
@@ -22,7 +22,7 @@
       "repository_blob_sha": "e8f15128ea3157e98474ecc12dc5b87bdc91c289",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "growth-orchestrator": {
@@ -33,7 +33,7 @@
       "repository_blob_sha": "890c2664ae6ada43f9bc75b43af303a2bb13bcea",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "product-orchestrator": {
@@ -44,7 +44,7 @@
       "repository_blob_sha": "b75928ec0f40beb4b3f34b5c5fcad0da4daace7f",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "stripe-webhook": {
@@ -55,7 +55,7 @@
       "repository_blob_sha": "0e31e2a14aef211a11f7b489c5d09cd2730ff2e1",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "secrets-health": {
@@ -66,7 +66,7 @@
       "repository_blob_sha": "b78b470eba3d141052295d25b83e77336489a83f",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "agent-execute": {
@@ -77,52 +77,52 @@
       "repository_blob_sha": "d5ef6fbf9e7b64e9f409675f88558465994b1fa6",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "evidence-graph": {
       "state": "DEPLOYED",
-      "version": 345,
+      "version": 346,
       "verify_jwt": false,
-      "live_sha256": "db6cafa1d297894eb86721706594c55f8f5d4083d21cb87eea9d8e8325865796",
+      "live_sha256": "5210381b3505cebf54a67eca3f801fdee847f3e28ea5b90e7d50e3331b0be262",
       "repository_blob_sha": "d184dc4fa3258f23339e60b011f1c04e1e1b3e25",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
-      "provider_updated_at": "2026-11-17T07:24:05.455Z"
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
+      "provider_updated_at": "2026-11-17T07:44:58.295Z"
     },
     "omega-notification-worker": {
       "state": "DEPLOYED",
-      "version": 524,
+      "version": 525,
       "verify_jwt": false,
-      "live_sha256": "0246a3422afd98507b9c643eef703e698032b260eefd401df67b50df5f10fbcb",
+      "live_sha256": "1910fb2d67b921fe8f7df01d5f263567114c06b827782eedae9da8a8a9e4748e",
       "repository_blob_sha": "19e98c11dacbf7c4910974d374bca183fe95ef35",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
-      "provider_updated_at": "2026-11-17T07:24:05.455Z"
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
+      "provider_updated_at": "2026-11-17T07:44:58.295Z"
     },
     "omega-runtime-gateway": {
       "state": "DEPLOYED",
-      "version": 529,
+      "version": 530,
       "verify_jwt": true,
-      "live_sha256": "1d9fe42e1a28da909fa8244a846d83dca2b18ab8574c7f2a51344021220d251b",
+      "live_sha256": "b9b32fcf765fa9c950450ce2224ce83c8296d1554af63e79900b5cb175501430",
       "repository_blob_sha": "f4a024634c70b7e7fe96aaebaba83c60c9d6729b",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
-      "provider_updated_at": "2026-11-17T07:24:05.455Z"
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
+      "provider_updated_at": "2026-11-17T07:44:58.295Z"
     },
     "omega-media-worker": {
       "state": "DEPLOYED",
-      "version": 524,
+      "version": 525,
       "verify_jwt": false,
-      "live_sha256": "ae027bf307677281cc0462970f9001ff267d07ddbd8dcd681a05225a436a4cfa",
+      "live_sha256": "c257dd63f1b992a771ab909653dbeac8eab6300ec27212bb511c4938884c420e",
       "repository_blob_sha": "4a6c822f4417aff67ba728e5fd3d3daff2320dcc",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
-      "provider_updated_at": "2026-11-17T07:24:05.455Z"
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
+      "provider_updated_at": "2026-11-17T07:44:58.295Z"
     },
     "intel-feed": {
       "state": "DEPLOYED",
@@ -132,30 +132,30 @@
       "repository_blob_sha": "d7f272478432c211794d57be5a06bebaff6a84ae",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-10-16T19:35:12.806Z"
     },
     "omega-provider-worker": {
       "state": "DEPLOYED",
-      "version": 345,
+      "version": 346,
       "verify_jwt": false,
-      "live_sha256": "6d34c3f690333bb65ca7ac86c870c4f1012f92a7ed3fe67e34a6b05ee41ce04c",
+      "live_sha256": "91e69f8af173309a18690253b7329dae0b87a8752f9d23303f815198e1aa9722",
       "repository_blob_sha": "17e26b6c58435d0b9277b9b935434cd0131c9b0b",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
-      "provider_updated_at": "2026-11-17T07:24:05.455Z"
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
+      "provider_updated_at": "2026-11-17T07:44:58.295Z"
     },
     "omega-knowledge-embedding-worker": {
       "state": "DEPLOYED",
-      "version": 434,
+      "version": 435,
       "verify_jwt": false,
-      "live_sha256": "2feeb02fd41ec78943049185d7517e0e3905c96793fbeba56268b5fb68e6f1a6",
+      "live_sha256": "ad1a3305b8693a10e1f7a47326f874dd048afd5e63ed2ec99f223e55f035f01c",
       "repository_blob_sha": "5bdba681e3a755280d4b16f0d46322a2f3288181",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
-      "provider_updated_at": "2026-11-17T07:24:05.455Z"
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
+      "provider_updated_at": "2026-11-17T07:44:58.295Z"
     },
     "content-ingest": {
       "state": "DEPLOYED",
@@ -165,7 +165,7 @@
       "repository_blob_sha": "9c1fa3b61d4a798711a21ee92bbd8eb6503c9ebd",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-17T07:24:05.455Z",
       "repository_files_blob_sha": {
         "index.ts": "9c1fa3b61d4a798711a21ee92bbd8eb6503c9ebd",
@@ -180,7 +180,7 @@
       "repository_blob_sha": "6be5b62467cdd96751e3eaa16156130853c41405",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-17T07:24:05.455Z",
       "repository_files_blob_sha": {
         "index.ts": "6be5b62467cdd96751e3eaa16156130853c41405"
@@ -200,7 +200,7 @@
       "repository_blob_sha": "08d86b1b26b47a3a08e98ee42e998c2089febbec",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "studio-library": {
@@ -211,7 +211,7 @@
       "repository_blob_sha": "9a1bb3307e8c416cbd9c17fe37ec08e8ce456be1",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "event-ingest": {
@@ -228,7 +228,7 @@
       "repository_blob_sha": "0e25cc5286c7d5a1d093fb9c637f90088d450308",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-10-25T13:51:29.021Z"
     },
     "rankings": {
@@ -239,7 +239,7 @@
       "repository_blob_sha": "bdb535d5a6f4334ba03535411fcc637a6d20cbb3",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-01T19:24:45.437Z"
     },
     "snapshot-leaderboard": {
@@ -250,7 +250,7 @@
       "repository_blob_sha": "02321e42cdc0b227aac08b52719c309cce46369e",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-16T21:32:05.682Z"
     },
     "weekly-digest": {
@@ -279,11 +279,11 @@
       "repository_blob_sha": "c7510e61ac1ff3a298c69f014898e624a2564c46",
       "provider_status": "ACTIVE",
       "source_parity": "EXACT_ENTRYPOINT_MATCH",
-      "provider_observed_at": "2026-11-17T07:32:00.000Z",
+      "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-03T21:59:59.448Z"
     }
   },
-  "verification_note": "Read-only provider inventory refreshed 2026-11-17T07:32:00.000Z. Supabase list_edge_functions reports 22 ACTIVE functions. All 22 names match supabase/config.toml and config/omega-edge-function-auth.json; verify_jwt agrees for every function. get_edge_function was used to read every deployed entrypoint; all 22 entrypoints matched their repository files byte-for-byte at source tree commit 6fe67460024b9d9cd083398eca99f6c411a0be39. Provider versions, verify_jwt, provider ezbr_sha256 (stored as live_sha256), and GitHub blob SHA (stored as repository_blob_sha) are recorded. Five repository functions remain LOCAL_ONLY and absent from the provider inventory: checkout, event-ingest, graphify-ai-ingest, graphify-ai-query, weekly-digest. Source parity at capture time does not prove runtime request behavior, secret availability, provider quotas, or end-to-end workflows.",
+  "verification_note": "Read-only provider inventory refreshed 2026-11-17T07:48:00.000Z. Supabase list_edge_functions reports 22 ACTIVE functions. All 22 names match supabase/config.toml and config/omega-edge-function-auth.json; verify_jwt agrees for every function. get_edge_function source was previously compared byte-for-byte with all repository entrypoints at commit 6fe67460024b9d9cd083398eca99f6c411a0be39; commit 04f87ca71168986d200cab7fefdce5e229a74a85 changes no Edge Function source files. Provider versions, verify_jwt, provider ezbr_sha256 (stored as live_sha256), and GitHub blob SHA are recorded. Five repository functions remain LOCAL_ONLY and absent from the provider inventory: checkout, event-ingest, graphify-ai-ingest, graphify-ai-query, weekly-digest. Source parity at capture time does not prove runtime request behavior, secret availability, provider quotas, or end-to-end workflows.",
   "inventory_summary": {
     "local_function_count": 27,
     "provider_active_count": 22,
@@ -300,9 +300,9 @@
       "STRIPE_SIGNATURE": 1
     }
   },
-  "reconciliation_note": "All 22 provider functions were re-read on 2026-11-17. The previously marked PENDING_DEPLOY content-ingest and content-delivery functions are now ACTIVE at provider version 11; both deployed entrypoints match the repository byte-for-byte. Their deployment status is now reflected as DEPLOYED rather than PENDING_DEPLOY. The four AI runtime entrypoints remain byte-for-byte matched with the repository.",
-  "classification_updated_at": "2026-11-17T07:32:00.000Z",
+  "reconciliation_note": "All 22 provider functions remain ACTIVE as of 2026-11-17T07:48:00.000Z. The content-ingest and content-delivery functions are active at provider version 11; both deployed entrypoints were independently compared byte-for-byte with repository source. The latest provider versions and timestamps are reflected in this inventory. The four AI runtime entrypoints remain byte-for-byte matched with the repository.",
+  "classification_updated_at": "2026-11-17T07:48:00.000Z",
   "provider_project_id": "ydqhzvvoyufiiqvzcjns",
   "provider_function_count": 22,
-  "source_tree_commit": "6fe67460024b9d9cd083398eca99f6c411a0be39"
+  "source_tree_commit": "04f87ca71168986d200cab7fefdce5e229a74a85"
 }

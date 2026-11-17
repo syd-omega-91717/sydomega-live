@@ -48,11 +48,11 @@
       "purpose": "Server-side size ceiling matching the existing upload.js client cap; MIME allowlist remains open for arbitrary binary attachments."
     },
     "validation": {
-      "content_signature": "SOURCE_IMPLEMENTED_PENDING_DEPLOYMENT",
-      "sha256": "SOURCE_IMPLEMENTED_PENDING_DEPLOYMENT",
+      "content_signature": "PROVIDER_DEPLOYED_ENTRYPOINT_VERIFIED",
+      "sha256": "PROVIDER_DEPLOYED_ENTRYPOINT_VERIFIED",
       "malware_scan": "UNAVAILABLE",
       "rights_review": "REQUIRED_BEFORE_PUBLICATION",
-      "note": "content-ingest downloads the private object, enforces the 50 MiB limit, identifies common byte signatures and records SHA-256. Signature identification is not malware scanning or rights clearance."
+      "note": "content-ingest downloads the private object, enforces the 50 MiB limit, identifies common byte signatures and records SHA-256. The provider is active at version 11 and its entrypoint matches repository source. Signature identification is not malware scanning or rights clearance; no production Storage object currently exists to exercise a member upload transaction."
     }
   },
   "download": {
@@ -94,22 +94,26 @@
     "source": "docs/runtime/supabase-edge-functions-live.json",
     "functions": {
       "content-ingest": {
-        "status": "PENDING_DEPLOY",
-        "live_version": 10,
+        "status": "DEPLOYED",
+        "live_version": 11,
         "verify_jwt": true,
         "source": "supabase/functions/content-ingest/index.ts",
         "dependencies": [
           "supabase/functions/_shared/content-validation.mjs"
-        ]
+        ],
+        "source_parity": "EXACT_ENTRYPOINT_MATCH",
+        "provider_observed_at": "2026-11-17T07:48:00.000Z"
       },
       "content-delivery": {
-        "status": "PENDING_DEPLOY",
-        "live_version": 10,
+        "status": "DEPLOYED",
+        "live_version": 11,
         "verify_jwt": true,
         "source": "supabase/functions/content-delivery/index.ts",
-        "dependencies": []
+        "dependencies": [],
+        "source_parity": "EXACT_ENTRYPOINT_MATCH",
+        "provider_observed_at": "2026-11-17T07:48:00.000Z"
       }
     },
-    "limitation": "The live provider still serves the previous active versions until exact source deployment. The new source is not counted as live until post-deploy version/hash verification and authenticated upload/download E2E pass. Malware scanning and rights review remain separate gates."
+    "limitation": "Both content functions are ACTIVE at provider version 11 and their deployed entrypoints match repository source byte-for-byte. The isolated Supabase CI stack passes authenticated upload/download, owner isolation, path guard, idempotency, expiry and audit probes. Production currently has zero Storage objects and zero storage_files rows, so no production user upload/download transaction has yet been observed. Malware scanning, rights review, publication approval and entitlements remain separate fail-closed gates."
   }
 }

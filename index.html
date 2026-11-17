@@ -31,15 +31,12 @@
        60 governed skills  — scripts/omega_fabric_audit.py
         9 realms           — nav.js SECTIONS, primary sections
       241 surfaces         — the repository's .html page count
-       17 edge services    — DEPLOYED in docs/runtime/supabase-edge-functions-live.json
-       22 edge services    — DEPLOYED in docs/runtime/supabase-edge-functions-live.json (22 ACTIVE, provider read-back 2026-11-17; entrypoints match main)
-                             (live only; source-only functions are not services)
-     RE-DERIVED after merging main, which brought in further surfaces
-     and edge functions. Both figures were first written against this
-     branch's own base and were stale by the time the branch merged --
-     which is the whole point of deriving them: a figure in
-     member-visible copy drifts silently, and scripts/page-count-claims.py
-     gates exactly this.
+       22 edge services    — DEPLOYED and ACTIVE in the provider snapshot
+                             (22/22 entrypoints match main as of 2026-11-17;
+                              source-only functions are not counted as services)
+     These figures are derived from the repository page estate and the dated
+     live Edge Function snapshot. scripts/page-count-claims.py checks the
+     visible claims; provider state and page behavior remain separate evidence.
      The reference image's own stat row ("50+ AI MODELS · 18 MODULES ·
      9 TIERS") is NOT reproduced: those are its invented figures, and
      none of them is true of this platform.

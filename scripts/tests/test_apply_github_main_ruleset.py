@@ -98,6 +98,9 @@ class RulesetApplyTests(unittest.TestCase):
             result = MODULE.request("GET", "test-token")
         args = run.call_args.args[0]
         self.assertEqual(args[0], "curl")
+        self.assertIn("--disable", args)
+        self.assertIn("--noproxy", args)
+        self.assertIn("*", args)
         self.assertIn("--config", args)
         self.assertIn("-", args)
         self.assertIn("--proto", args)

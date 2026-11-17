@@ -1,8 +1,8 @@
 {
   "_captured": "2026-11-17",
-  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-17 confirms 20261116214700_api_keys_live_column_compatibility is applied; source migration inventory and fresh replay independently pass.",
-  "remoteMigrationCount": 433,
-  "latestRemoteMigration": "20261116214842",
+  "source": "Authenticated Supabase provider migration-ledger read on 2026-11-17 confirms 20261117002651 (apply_migration name 20261117010000_omega_ai_requests_service_role_insert_grant) is applied. Read-only ACL inspection confirms service_role has INSERT only on public.omega_ai_requests; anon/authenticated remain denied. No telemetry rows were fabricated.",
+  "remoteMigrationCount": 434,
+  "latestRemoteMigration": "20261117002651",
   "versions": [
     "0001",
     "0002",
@@ -436,7 +436,8 @@
     "20261113062812",
     "20261116214052",
     "20261116214700",
-    "20261116214842"
+    "20261116214842",
+    "20261117002651"
   ],
   "migrations": [
     {
@@ -2167,6 +2168,10 @@
     {
       "version": "20261116214842",
       "name": "authenticated_safe_column_read_grants"
+    },
+    {
+      "version": "20261117002651",
+      "name": "20261117010000_omega_ai_requests_service_role_insert_grant"
     }
   ]
 }

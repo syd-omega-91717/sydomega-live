@@ -74,11 +74,10 @@ class RulesetApplyTests(unittest.TestCase):
     def test_apply_reads_identity_then_puts_and_verifies(self):
         import contextlib
         import copy
-        import io
+        output = io.StringIO()
         before = {"id": MODULE.RULESET_ID, "name": self.config["name"]}
         after = copy.deepcopy(self.config)
         after["id"] = MODULE.RULESET_ID
-        output = io.StringIO()
         with patch.dict("os.environ", {"GH_REPO_ADMIN_TOKEN": "test-token"}), patch.object(
             MODULE, "request", side_effect=[before, {}, after]
         ) as request, contextlib.redirect_stdout(output):
@@ -90,12 +89,13 @@ class RulesetApplyTests(unittest.TestCase):
         self.assertIn("GITHUB_MAIN_RULESET=ACTIVE", output.getvalue())
         self.assertNotIn("test-token", output.getvalue())
 
-    def test_request_uses_fixed_github_api_endpoint_and_rejects_unsupported_method(self):
+    def test_request_uses_literal_github_api_endpoint_and_rejects_unsupported_method(self):
+        endpoint = "https://api.github.com/repos/syd-omega-91717/sydomega-live/rulesets/20176798"
         with patch.object(MODULE.urllib.request, "urlopen") as urlopen:
             urlopen.return_value.__enter__.return_value.read.return_value = b"{}"
             MODULE.request("GET", "test-token")
             request = urlopen.call_args.args[0]
-            self.assertEqual(request.full_url, MODULE.API)
+            self.assertEqual(request.full_url, endpoint)
             self.assertEqual(request.method, "GET")
             with self.assertRaisesRegex(ValueError, "unsupported GitHub API method"):
                 MODULE.request("POST", "test-token")
@@ -108,7 +108,6 @@ class RulesetApplyTests(unittest.TestCase):
         self.assertIn("environment: github-repository-admin", workflow)
         self.assertNotRegex(workflow, r"(?m)^\s*(?:push|pull_request|schedule):")
         self.assertIn("python3 scripts/apply-github-main-ruleset.py", workflow)
-
 
 
 if __name__ == "__main__":

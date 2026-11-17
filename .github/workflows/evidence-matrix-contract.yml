@@ -1,0 +1,46 @@
+name: Evidence Matrix Contract
+
+on:
+  pull_request:
+    paths:
+      - "*.html"
+      - "*.js"
+      - "nav.js"
+      - "supabase/**/*.sql"
+      - "scripts/evidence-audit.py"
+      - "docs/runtime/supabase-edge-functions-live.json"
+      - "EVIDENCE_MATRIX.md"
+
+permissions:
+  contents: read
+
+jobs:
+  regenerate:
+    name: Regenerate and verify evidence matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR tree
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate evidence matrix
+        run: python3 scripts/evidence-audit.py
+
+      - name: Publish generated matrix for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-matrix-generated
+          path: EVIDENCE_MATRIX.md
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Require committed matrix to match generated output
+        run: git diff --exit-code -- EVIDENCE_MATRIX.md

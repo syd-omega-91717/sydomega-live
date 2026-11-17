@@ -6,6 +6,5 @@
   "tests/test_content_pipeline_e2e.py": "Needs the `supabase` CLI and a database (FileNotFoundError: 'supabase' locally); runs in supabase-full-migration-replay.yml.",
   "vercel-deployment-auth-check.sh": "Needs a valid VERCEL_TOKEN secret (exits VERCEL_AUTH=FAIL without one); the deploy path is postponed anyway (see vercel-production.yml env).",
   "vercel-production-smoke.sh": "Fetches the live production site over the network; its result depends on what is deployed, not on the diff.",
-  "vercel-production-surface-smoke.py": "Fetches the live production site over the network (64 s locally); depends on what is deployed, not on the diff.",
-  "apply-github-main-ruleset.py": "Manual-only repository administration workflow. Requires GH_REPO_ADMIN_TOKEN with Administration:write in a protected GitHub environment and mutates the live main ruleset; deliberately excluded from local CI to prevent privileged repository-policy changes."
+  "vercel-production-surface-smoke.py": "Fetches the live production site over the network (64 s locally); depends on what is deployed, not on the diff."
 }

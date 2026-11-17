@@ -59,7 +59,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300", "20261112091400", "20261112091500",
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
-            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842", "20261117002651",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -67,7 +67,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261116214842")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117002651")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-17")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
@@ -133,8 +133,22 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop column", sql)
         self.assertNotIn("drop table", sql)
         self.assertNotIn("grant ", sql)
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 433)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 434)
         self.assertEqual(self.remote.get("latestRemoteMigration"), "20261116214842")
+
+    def test_ai_usage_telemetry_grant_is_provider_applied(self) -> None:
+        version = "20261117002651"
+        path = MIGRATIONS / f"{version}_omega_ai_requests_service_role_insert_grant.sql"
+        sql = path.read_text(encoding="utf-8").lower()
+        self.assertIn(version, self.remote_versions)
+        self.assertNotIn(version, {str(entry["version"]) for entry in self.pending})
+        self.assertIn("grant insert on table public.omega_ai_requests to service_role", sql)
+        self.assertNotIn("grant select", sql)
+        self.assertNotIn("grant update", sql)
+        self.assertNotIn("grant delete", sql)
+        self.assertIn("omega_ai_requests_client_insert_must_remain_denied", sql)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 434)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), version)
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []

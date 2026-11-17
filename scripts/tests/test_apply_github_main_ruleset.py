@@ -84,17 +84,22 @@ class RulesetApplyTests(unittest.TestCase):
         ) as request, contextlib.redirect_stdout(output):
             self.assertEqual(MODULE.main(), 0)
         self.assertEqual(request.call_count, 3)
-        self.assertEqual(request.call_args_list[0].args[:3], ("GET", MODULE.API, "test-token"))
-        self.assertEqual(request.call_args_list[1].args[:3], ("PUT", MODULE.API, "test-token"))
-        self.assertEqual(request.call_args_list[2].args[:3], ("GET", MODULE.API, "test-token"))
+        self.assertEqual(request.call_args_list[0].args, ("GET", "test-token"))
+        self.assertEqual(request.call_args_list[1].args, ("PUT", "test-token", self.config))
+        self.assertEqual(request.call_args_list[2].args, ("GET", "test-token"))
         self.assertIn("GITHUB_MAIN_RULESET=ACTIVE", output.getvalue())
         self.assertNotIn("test-token", output.getvalue())
 
-    def test_request_rejects_non_github_https_before_network(self):
+    def test_request_uses_fixed_github_api_endpoint_and_rejects_unsupported_method(self):
         with patch.object(MODULE.urllib.request, "urlopen") as urlopen:
-            with self.assertRaisesRegex(ValueError, "non-GitHub HTTPS"):
-                MODULE.request("GET", "http://example.invalid", "test-token")
-        urlopen.assert_not_called()
+            urlopen.return_value.__enter__.return_value.read.return_value = b"{}"
+            MODULE.request("GET", "test-token")
+            request = urlopen.call_args.args[0]
+            self.assertEqual(request.full_url, MODULE.API)
+            self.assertEqual(request.method, "GET")
+            with self.assertRaisesRegex(ValueError, "unsupported GitHub API method"):
+                MODULE.request("POST", "test-token")
+        urlopen.assert_called_once()
 
     def test_manual_workflow_is_main_only_and_environment_protected(self):
         workflow = (ROOT / ".github/workflows/github-main-ruleset-activation.yml").read_text(encoding="utf-8")

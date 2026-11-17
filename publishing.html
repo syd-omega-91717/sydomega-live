@@ -160,8 +160,34 @@ document.getElementById('p-go').addEventListener('click',async function(){
     filePath=up.path||null;
     if(!filePath){btn.disabled=false;showMsg(false,'Upload failed: storage returned no path. Nothing was committed.');return;}
   }
-  var ins=await sb.from('publications').insert({user_id:userId,kind:kind,title:title,body:body,file_path:filePath});
-  if(ins.error){btn.disabled=false;showMsg(false,'Could not commit ('+(ins.error.code||ins.error.message||'')+').');return;}
+  var ins=null;
+  try{
+    ins=await sb.from('publications').insert({user_id:userId,kind:kind,title:title,body:body,file_path:filePath});
+    var insertError=ins&&ins.error;
+  }catch(_error){
+    btn.disabled=false;
+    showMsg(false,filePath
+      ?'COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED. Refresh your archive before retrying to avoid a duplicate.'
+      :'COMMIT STATUS UNKNOWN — Refresh your archive before retrying to avoid a duplicate.');
+    return;
+  }
+  if(!ins||insertError){
+    var code=insertError&&typeof insertError.code==='string'?insertError.code:'';
+    if(filePath&&/^[0-9A-Z]{5}$/.test(code)){
+      var cleanup=null;
+      try{cleanup=await window.OmegaStorage.remove('uploads',filePath);}catch(_error){cleanup={error:'cleanup_unconfirmed'};}
+      btn.disabled=false;
+      showMsg(false,cleanup&&!cleanup.error
+        ?'PUBLICATION REJECTED ('+code+'). UPLOAD ROLLED BACK.'
+        :'PUBLICATION REJECTED ('+code+'). FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED.');
+      return;
+    }
+    btn.disabled=false;
+    showMsg(false,filePath
+      ?'COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED. Refresh your archive before retrying.'
+      :'Could not commit ('+(code||'response unavailable')+'). Refresh your archive before retrying.');
+    return;
+  }
   var axisMsg='';
   try{
     var rpc=await sb.rpc('complete_task',{p_task_name:'first-publication',p_task_type:'contribution',p_axis_type:'c',p_description:'First Publication',p_points:0.12});

@@ -313,40 +313,39 @@ This scanner reads the repository. It has no database connection, so:
 ## Edge Functions
 
 Deployment state is cross-referenced to \`docs/runtime/supabase-edge-functions-live.json\`,
-captured **2026-11-17T00:13:31.606Z**. This is a dated provider snapshot, not a live invocation test.
-captured **2026-11-17T07:48:00.000Z**. This is a dated provider snapshot, not a live invocation test.
+captured **unknown**. This is a dated provider snapshot, not a live invocation test.
 \`MISSING_DEPLOYMENT\` means a source/client/server invocation exists but the runtime manifest marks the function local-only or omits it.
 \`UNWIRED\` means the manifest marks the function deployed but this scan found no client/server call path; \`LOCAL_ONLY\` means source-only with no call path.
 
 | function | state | evidence |
 |---|---|---|
-| `agent-execute` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `checkout` | `LOCAL_ONLY` | source exists; runtime manifest marks LOCAL_ONLY and no call path was found |
-| `concierge` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `concierge-orchestrator` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `content-delivery` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `content-ingest` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `event-ingest` | `LOCAL_ONLY` | source exists; runtime manifest marks LOCAL_ONLY and no call path was found |
-| `evidence-graph` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `graphify-ai-ingest` | `MISSING_DEPLOYMENT` | runtime manifest marks LOCAL_ONLY, but an invocation reference exists; deployment is missing |
-| `graphify-ai-query` | `LOCAL_ONLY` | source exists; runtime manifest marks LOCAL_ONLY and no call path was found |
-| `growth-orchestrator` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `intel-feed` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `market-price` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `notify-access` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `omega-knowledge-embedding-worker` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `omega-media-worker` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `omega-notification-worker` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `omega-provider-worker` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `omega-runtime-gateway` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `product-orchestrator` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `rankings` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `secrets-health` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `snapshot-leaderboard` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
-| `stripe-webhook` | `SERVER_INVOKED` | deployed in runtime manifest; server/external invocation evidence found |
-| `studio-canon` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `studio-library` | `WIRED` | deployed in runtime manifest; client invocation found |
-| `weekly-digest` | `LOCAL_ONLY` | source exists; runtime manifest marks LOCAL_ONLY and no call path was found |
+| `agent-execute` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `checkout` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `concierge` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `concierge-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `content-delivery` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `content-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `event-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `evidence-graph` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `graphify-ai-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `graphify-ai-query` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `growth-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `intel-feed` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `market-price` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `notify-access` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-knowledge-embedding-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-media-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-notification-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-provider-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-runtime-gateway` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `product-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `rankings` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `secrets-health` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `snapshot-leaderboard` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `stripe-webhook` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `studio-canon` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `studio-library` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `weekly-digest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
 
 ## Declared backend surface
 

@@ -48,10 +48,11 @@
       "purpose": "Server-side size ceiling matching the existing upload.js client cap; MIME allowlist remains open for arbitrary binary attachments."
     },
     "validation": {
-      "content_signature": "UNIMPLEMENTED",
-      "sha256": "UNIMPLEMENTED",
+      "content_signature": "SOURCE_IMPLEMENTED_PENDING_DEPLOYMENT",
+      "sha256": "SOURCE_IMPLEMENTED_PENDING_DEPLOYMENT",
       "malware_scan": "UNAVAILABLE",
-      "rights_review": "REQUIRED_BEFORE_PUBLICATION"
+      "rights_review": "REQUIRED_BEFORE_PUBLICATION",
+      "note": "content-ingest downloads the private object, enforces the 50 MiB limit, identifies common byte signatures and records SHA-256. Signature identification is not malware scanning or rights clearance."
     }
   },
   "download": {

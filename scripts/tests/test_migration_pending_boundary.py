@@ -170,19 +170,21 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         )
         latest_probe = readiness.get("latest_production_probe", {})
         self.assertEqual(latest_probe.get("status"), "PASS")
-        self.assertEqual(latest_probe.get("expected_commit_sha"), "20f8dcfa9e20da66f129420f736c3470431c2c70")
-        self.assertEqual(latest_probe.get("served_commit_sha"), "20f8dcfa9e20da66f129420f736c3470431c2c70")
-        self.assertEqual(latest_probe.get("workflow_run_id"), 43981760083)
+        self.assertEqual(latest_probe.get("expected_commit_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
+        self.assertEqual(latest_probe.get("served_commit_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
+        self.assertEqual(latest_probe.get("workflow_run_id"), 43985648597)
         self.assertEqual(latest_probe.get("pages_passed"), 241)
         self.assertEqual(latest_probe.get("references_passed"), 368)
+        self.assertEqual(latest_probe.get("root_manifest_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
+        self.assertEqual(latest_probe.get("www_manifest_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(
             readiness.get("production_verification", {}).get("commit_sha"),
-            "20f8dcfa9e20da66f129420f736c3470431c2c70",
+            "d62168f2d8dd3504d5f2809128c64af1113984b1",
         )
         self.assertEqual(
             readiness.get("production_verification", {}).get("workflow_run_id"),
-            43981760083,
+            43985648597,
         )
         vercel = readiness.get("vercel_promotion", {})
         self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")
@@ -191,10 +193,10 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         failover = readiness.get("failover_verification", {})
         self.assertEqual(failover.get("provider"), "GitHub Pages")
         self.assertEqual(failover.get("status"), "PASS")
-        self.assertEqual(failover.get("commit_sha"), "20f8dcfa9e20da66f129420f736c3470431c2c70")
-        self.assertEqual(failover.get("workflow_run_id"), 43981760114)
-        self.assertEqual(failover.get("build_job_id"), 133699729352)
-        self.assertEqual(failover.get("deploy_job_id"), 133699871659)
+        self.assertEqual(failover.get("commit_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
+        self.assertEqual(failover.get("workflow_run_id"), 43985648579)
+        self.assertEqual(failover.get("build_job_id"), 133712987454)
+        self.assertEqual(failover.get("deploy_job_id"), 133713176244)
         raw_blockers = readiness.get("blockers", [])
         blockers = raw_blockers if isinstance(raw_blockers, str) else " ".join(str(item) for item in raw_blockers)
         self.assertIn("Vercel production deployment remains intentionally postponed", blockers)

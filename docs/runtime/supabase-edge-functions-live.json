@@ -158,15 +158,21 @@
       "provider_updated_at": "2026-11-17T00:12:42.314Z"
     },
     "content-ingest": {
-      "state": "DEPLOYED",
+      "state": "PENDING_DEPLOY",
       "version": 10,
       "verify_jwt": true,
       "live_sha256": "1302291414a2e2bbea94f1688d6043b50fb4e38cacbd4aab7b1ae0d6ba752230",
-      "repository_blob_sha": "9f8dbddcb9901d55e20afe98e2b7794c7f2c10d7",
+      "repository_blob_sha": "9c1fa3b61d4a798711a21ee92bbd8eb6503c9ebd",
       "provider_status": "ACTIVE",
-      "source_parity": "EXACT_ENTRYPOINT_MATCH",
+      "source_parity": "PENDING_DEPLOY_SOURCE_AND_IMPORT_BLOB_HASHES_RECORDED",
       "provider_observed_at": "2026-11-17T00:13:31.606Z",
-      "provider_updated_at": "2026-11-12T21:50:40.966Z"
+      "provider_updated_at": "2026-11-12T21:50:40.966Z",
+      "repository_files_blob_sha": {
+        "index.ts": "9c1fa3b61d4a798711a21ee92bbd8eb6503c9ebd",
+        "../_shared/content-validation.mjs": "babef294c4325e47c9870638c53432b009ce02d4"
+      },
+      "pending_deploy_reason": "Server-side object byte-size enforcement, signature detection and SHA-256 registration are implemented in source but not yet deployed to the live Edge Function. Existing provider version 10 remains active until post-merge deployment and smoke verification.",
+      "pending_deploy_since": "2026-11-17"
     },
     "content-delivery": {
       "state": "DEPLOYED",

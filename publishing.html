@@ -23,6 +23,9 @@
 @media (prefers-reduced-motion:reduce){.work-body{transition:none}}
 .work-item.open .work-arrow{transform:rotate(180deg)}
 .work-content{padding:0 16px 16px;font-size:12px;color:var(--muted);line-height:1.85;white-space:pre-wrap}
+.work-attachment{display:inline-flex;align-items:center;margin:0 16px 16px;padding:9px 12px;border:1px solid rgba(201,168,76,.45);background:transparent;color:var(--solar);font-family:var(--M);font-size:12px;letter-spacing:1px;cursor:pointer}
+.work-attachment:disabled{opacity:.55;cursor:wait}
+.work-attachment-status{display:inline-block;margin:0 12px 16px;font-family:var(--M);font-size:12px;color:var(--muted)}
 .howit-step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
 .howit-num{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);min-width:32px;flex-shrink:0}
 .howit-body .ht{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--solar);margin-bottom:4px}
@@ -121,10 +124,39 @@ function showMsg(ok,text){
   el.style.display='block';el.style.color=ok?'var(--green)':'var(--crim)';el.textContent=text;
 }
 
+function isOwnedUploadPath(path){
+  if(typeof path!=='string'||!userId||path.indexOf(userId+'/')!==0)return false;
+  var name=path.slice(userId.length+1);
+  return !!name&&name.indexOf('/')===-1&&name!=='.'&&name!=='..'&&/^[A-Za-z0-9._-]+$/.test(name);
+}
+
+function attachPrivateDownload(container,path){
+  if(!isOwnedUploadPath(path)||!window.OmegaStorage||typeof window.OmegaStorage.signedUrl!=='function')return;
+  var button=document.createElement('button');button.type='button';button.className='work-attachment';button.textContent='DOWNLOAD PRIVATE ATTACHMENT';
+  var status=document.createElement('span');status.className='work-attachment-status';status.setAttribute('aria-live','polite');
+  button.addEventListener('click',async function(){
+    if(button.disabled)return;
+    var tab=window.open('about:blank','_blank');
+    if(!tab){status.textContent='Allow pop-ups to open the private download.';return;}
+    try{tab.opener=null;}catch(_error){}
+    button.disabled=true;status.textContent='Preparing a short-lived private link…';
+    try{
+      var url=await window.OmegaStorage.signedUrl('uploads',path,900);
+      if(!url)throw new Error('signed_url_unavailable');
+      tab.location.replace(url);
+      status.textContent='Private link expires in 15 minutes.';
+    }catch(_error){
+      try{tab.close();}catch(_closeError){}
+      status.textContent='Download unavailable. Reload the archive and try again.';
+    }finally{button.disabled=false;}
+  });
+  container.appendChild(button);container.appendChild(status);
+}
+
 async function loadArchive(){
   var box=document.getElementById('p-list');
   try{
-    var r=await sb.from('publications').select('kind,title,body,created_at,status').eq('user_id',userId).order('created_at',{ascending:false}).limit(40);
+    var r=await sb.from('publications').select('kind,title,body,file_path,created_at,status').eq('user_id',userId).order('created_at',{ascending:false}).limit(40);
     box.innerHTML='';
     if(!r.data||!r.data.length){box.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:20px">Your archive is empty — commit your first work above.</div>';return;}
     r.data.forEach(function(w){
@@ -136,6 +168,7 @@ async function loadArchive(){
       d.innerHTML='<button class="work-header"><span><div class="work-title"></div><div class="work-meta">'+(w.kind||'')+' &middot; '+dt+' &middot; <span style="color:'+stc+'">'+stl+'</span></div></span><span class="work-arrow">&#9662;</span></button><div class="work-body"><div class="work-content"></div></div>';
       d.querySelector('.work-title').textContent=w.title||'Untitled';
       d.querySelector('.work-content').textContent=w.body||'';
+      if(w.file_path)attachPrivateDownload(d.querySelector('.work-body'),w.file_path);
       d.querySelector('.work-header').addEventListener('click',function(){d.classList.toggle('open');});
       box.appendChild(d);
     });

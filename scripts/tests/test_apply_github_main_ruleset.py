@@ -8,9 +8,11 @@ import importlib.util
 import io
 import json
 import os
+import re
+import subprocess
 import pathlib
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "apply-github-main-ruleset.py"
@@ -87,37 +89,77 @@ class RulesetApplyTests(unittest.TestCase):
         self.assertIn("GITHUB_MAIN_RULESET=ACTIVE", output.getvalue())
         self.assertNotIn("test-token", output.getvalue())
 
-    def test_request_uses_fixed_https_host_and_path(self):
-        connection = MagicMock()
-        response = MagicMock(status=200)
-        response.read.return_value = b'{"ok":true}'
-        connection.getresponse.return_value = response
-        with patch.object(MODULE.http.client, "HTTPSConnection", return_value=connection) as connect:
+    def test_request_uses_curl_with_fixed_https_url_and_verified_tls(self):
+        completed = subprocess.CompletedProcess(
+            args=["curl"], returncode=0,
+            stdout=b'{"ok":true}\n__OMEGA_HTTP_STATUS__200', stderr=b"",
+        )
+        with patch.object(MODULE.subprocess, "run", return_value=completed) as run:
             result = MODULE.request("GET", "test-token")
-        connect.assert_called_once_with("api.github.com", timeout=20)
-        connection.request.assert_called_once()
-        args, kwargs = connection.request.call_args
-        self.assertEqual(args, ("GET", "/repos/syd-omega-91717/sydomega-live/rulesets/20176798"))
-        self.assertIsNone(kwargs["body"])
-        self.assertEqual(kwargs["headers"]["Authorization"], "Bearer test-token")
+        args = run.call_args.args[0]
+        self.assertEqual(args[0], "curl")
+        self.assertIn("--disable", args)
+        self.assertIn("--noproxy", args)
+        self.assertIn("*", args)
+        self.assertIn("--config", args)
+        self.assertIn("-", args)
+        self.assertIn("--proto", args)
+        self.assertIn("=https", args)
+        self.assertIn("--tlsv1.2", args)
+        self.assertIn("--fail-with-body", args)
+        self.assertNotIn("--insecure", args)
+        self.assertNotIn("-k", args)
+        self.assertNotIn("test-token", args)
+        config = run.call_args.kwargs["input"].decode("utf-8")
+        self.assertIn('url = "https://api.github.com/repos/syd-omega-91717/sydomega-live/rulesets/20176798"', config)
+        self.assertIn('request = "GET"', config)
+        self.assertIn("Authorization: Bearer test-token", config)
+        self.assertEqual(run.call_args.kwargs["timeout"], 25)
+        self.assertTrue(run.call_args.kwargs["capture_output"])
+        self.assertFalse(run.call_args.kwargs["check"])
         self.assertEqual(result, {"ok": True})
-        connection.close.assert_called_once()
 
-    def test_request_rejects_unsupported_method_before_connecting(self):
-        with patch.object(MODULE.http.client, "HTTPSConnection") as connect:
+    def test_put_payload_is_passed_as_a_private_temporary_file(self):
+        payload = {"enforcement": "active", "name": "sydomega_merged"}
+        completed = subprocess.CompletedProcess(
+            args=["curl"], returncode=0,
+            stdout=b'{"ok":true}\n__OMEGA_HTTP_STATUS__200', stderr=b"",
+        )
+
+        def inspect_call(args, **kwargs):
+            config = kwargs["input"].decode("utf-8")
+            match = re.search(r'data-binary = "(@[^"]+)"', config)
+            self.assertIsNotNone(match)
+            payload_path = pathlib.Path(match.group(1)[1:])
+            self.assertTrue(payload_path.is_file())
+            self.assertEqual(json.loads(payload_path.read_text(encoding="utf-8")), payload)
+            self.assertIn('request = "PUT"', config)
+            return completed
+
+        with patch.object(MODULE.subprocess, "run", side_effect=inspect_call):
+            self.assertEqual(MODULE.request("PUT", "test-token", payload), {"ok": True})
+
+    def test_request_rejects_token_line_breaks_before_process(self):
+        with patch.object(MODULE.subprocess, "run") as run:
+            with self.assertRaisesRegex(ValueError, "invalid line break"):
+                MODULE.request("GET", "test-token\nInjected: header")
+        run.assert_not_called()
+
+    def test_request_rejects_unsupported_method_before_process(self):
+        with patch.object(MODULE.subprocess, "run") as run:
             with self.assertRaisesRegex(ValueError, "unsupported GitHub API method"):
                 MODULE.request("POST", "test-token")
-        connect.assert_not_called()
+        run.assert_not_called()
 
-    def test_request_rejects_non_success_http_status_and_closes_connection(self):
-        connection = MagicMock()
-        response = MagicMock(status=403)
-        response.read.return_value = b'{"message":"forbidden"}'
-        connection.getresponse.return_value = response
-        with patch.object(MODULE.http.client, "HTTPSConnection", return_value=connection):
+    def test_request_rejects_non_success_http_status(self):
+        completed = subprocess.CompletedProcess(
+            args=["curl"], returncode=22,
+            stdout=b'{"message":"forbidden"}\n__OMEGA_HTTP_STATUS__403',
+            stderr=b"HTTP 403",
+        )
+        with patch.object(MODULE.subprocess, "run", return_value=completed):
             with self.assertRaisesRegex(RuntimeError, "HTTP 403"):
                 MODULE.request("GET", "test-token")
-        connection.close.assert_called_once()
 
     def test_manual_workflow_is_main_only_and_environment_protected(self):
         workflow = (ROOT / ".github/workflows/github-main-ruleset-activation.yml").read_text(encoding="utf-8")

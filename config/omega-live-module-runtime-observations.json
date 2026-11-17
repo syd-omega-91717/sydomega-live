@@ -1621,6 +1621,22 @@
       "definition_characters": 2558,
       "source_migration": "20261112130000_omega_consultancy_request_id_text_compat.sql",
       "verification": "LIVE_READ_ONLY_PG_GET_FUNCTIONDEF"
+    },
+    "ai_usage_telemetry": {
+      "status": "PASS_LEAST_PRIVILEGE_GRANT",
+      "migration_version": "20261117002651",
+      "service_role_insert": true,
+      "service_role_select": false,
+      "service_role_update": false,
+      "service_role_delete": false,
+      "anon_insert": false,
+      "authenticated_insert": false,
+      "verified_at": "2026-11-17"
+    },
+    "ai_provider": {
+      "status": "BLOCKED_NOT_CONFIGURED",
+      "observed_error": "ai_provider_not_configured",
+      "note": "Live Edge Function logs show the shared model router has no configured provider. The telemetry grant does not enable AI responses; provider credentials/endpoints must be configured and tested separately."
     }
   },
   "provider_advisor_observations": {
@@ -1775,9 +1791,9 @@
     "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
     "provider_migration_ledger": {
       "observed_date": "2026-11-17",
-      "applied_count": 433,
-      "latest_version": "20261116214842",
-      "latest_name": "authenticated_safe_column_read_grants",
+      "applied_count": 434,
+      "latest_version": "20261117002651",
+      "latest_name": "20261117010000_omega_ai_requests_service_role_insert_grant",
       "task_grant_migration": "20261113010000_APPLIED",
       "notification_migration": "20261113020000_APPLIED",
       "achievement_migration": "20261113062812_APPLIED",
@@ -1792,6 +1808,34 @@
     "family_access_probe": "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
     "content_pipeline_e2e": "PASS — authenticated local-only content pipeline on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
     "notification_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
-    "achievement_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED"
+    "achievement_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
+    "ai_usage_telemetry_grant": {
+      "status": "PASS",
+      "migration_version": "20261117002651",
+      "provider_migration_name": "20261117010000_omega_ai_requests_service_role_insert_grant",
+      "table": "public.omega_ai_requests",
+      "service_role": {
+        "insert": true,
+        "select": false,
+        "update": false,
+        "delete": false,
+        "bypass_rls": true
+      },
+      "anon": {
+        "insert": false,
+        "select": false,
+        "update": false,
+        "delete": false
+      },
+      "authenticated": {
+        "insert": false,
+        "select": false,
+        "update": false,
+        "delete": false
+      },
+      "verified_at": "2026-11-17",
+      "rows_written": 0,
+      "note": "Read-only privilege verification only; no synthetic production usage row was created."
+    }
   }
 }

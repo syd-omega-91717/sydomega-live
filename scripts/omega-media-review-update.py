@@ -21,10 +21,12 @@ ALLOWED_SECTIONS = {"visual_review", "rights_review"}
 
 def apply_review_patch(root: Path, manifest_path: Path, record_id: str, patch: dict) -> dict:
     root = root.resolve()
+    if manifest_path.is_symlink():
+        raise ValueError("review manifest must not be a symbolic link")
     manifest_path = manifest_path.resolve()
     if not manifest_path.is_relative_to(root):
         raise ValueError("review manifest must be inside the repository root")
-    if manifest_path.is_symlink() or not manifest_path.is_file():
+    if not manifest_path.is_file():
         raise ValueError("review manifest must be a regular, non-symlink file")
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))

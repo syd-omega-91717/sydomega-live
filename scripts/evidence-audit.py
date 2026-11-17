@@ -275,8 +275,8 @@ def server_edge_references():
     for path in Path("supabase/functions").glob("*/index.ts"):
         caller = path.parent.name
         source = _strip_code_comments(path.read_text(encoding="utf-8", errors="replace"))
-        for first, second in EDGE_RE.findall(source):
-            target = first or second
+        for direct_url, direct_invoke, helper_invoke in EDGE_RE.findall(source):
+            target = direct_url or direct_invoke or helper_invoke
             if target and target != caller:
                 refs.add(target)
     # Database webhooks/queues may call Edge Functions via pg_net. Only inspect

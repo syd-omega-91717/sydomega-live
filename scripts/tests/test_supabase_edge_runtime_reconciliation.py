@@ -1,4 +1,3 @@
-import hashlib
 import importlib.util
 import tempfile
 import unittest
@@ -37,9 +36,7 @@ class EdgeRuntimeDependencyReconciliationTests(unittest.TestCase):
         helper = self.shared / "content-validation.mjs"
         metadata = {
             "repository_files_blob_sha": {
-                "../_shared/content-validation.mjs": hashlib.sha1(
-                    f"blob {len(helper.read_bytes())}\0".encode("utf-8") + helper.read_bytes()
-                ).hexdigest(),
+                "../_shared/content-validation.mjs": MODULE.git_blob_sha(helper),
             }
         }
         helper.write_text("export const MAX = 100;\n", encoding="utf-8")

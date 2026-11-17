@@ -127,6 +127,53 @@ The manifest generator now validates the complete record schema before writing o
 
 The gallery is read-only and must not be deployed as a public asset catalogue. The scanner excludes symbolic links and verifies resolved paths remain within the repository root.
 
+#### Record a human review without hand-editing the manifest
+
+Use the validated editor to apply one JSON patch to one asset. Copy the asset's `record_id` from the manifest and prepare a local patch file:
+
+```json
+{
+  "visual_review": {
+    "status": "REVIEWED",
+    "reviewer": "reviewer identifier",
+    "reviewed_at": "2026-11-17T12:00:00Z",
+    "findings": ["identity, quality, intended use and references inspected"]
+  }
+}
+```
+
+Apply it:
+
+```bash
+python3 scripts/omega-media-review-update.py \
+  --manifest artifacts/media-visual-review/review-manifest.json \
+  --record-id <record_id> \
+  --patch /path/to/review-patch.json
+```
+
+The editor rejects unknown sections/fields, invalid statuses, missing reviewer/timestamp data, unsupported evidence references, and any publication approval that lacks VERIFIED rights, creator, source URL, licence, evidence and explicit territories. It rechecks the asset's current bytes and record ID before writing, then atomically replaces the manifest. If the file changed, regenerate the manifest and review the new record; do not reuse the prior decision. Run the editor tests and gallery tests before committing any review ledger.
+
+Example rights patch (only use when each fact is supported by evidence):
+
+```json
+{
+  "rights_review": {
+    "status": "VERIFIED",
+    "reviewer": "rights reviewer",
+    "reviewed_at": "2026-11-17T12:00:00Z",
+    "creator": "verified creator",
+    "source_url": "https://example.org/source",
+    "license": "exact licence or permission basis",
+    "evidence": ["https://example.org/licence-evidence"],
+    "attribution": "required attribution text",
+    "territories": ["worldwide"],
+    "publication_approved": false
+  }
+}
+```
+
+A verified rights record does not automatically approve publication. Set `publication_approved=true` only after a human reviewer has confirmed the permitted use, territories and licence conditions.
+
 ### Video frame and metadata sampling
 
 For a technical review of all repository videos, run:

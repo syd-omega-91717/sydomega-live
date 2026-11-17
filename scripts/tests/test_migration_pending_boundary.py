@@ -59,7 +59,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300", "20261112091400", "20261112091500",
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
-            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842", "20261117002651", "20261117003721",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -67,7 +67,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261116214842")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117003721")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-17")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
@@ -133,8 +133,29 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop column", sql)
         self.assertNotIn("drop table", sql)
         self.assertNotIn("grant ", sql)
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 433)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261116214842")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 435)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117003721")
+
+
+    def test_ai_usage_telemetry_schema_and_exact_privileges_are_provider_applied(self) -> None:
+        schema = (MIGRATIONS / "20261117002651_omega_ai_requests_service_role_insert_grant.sql").read_text(encoding="utf-8").lower()
+        privileges = (MIGRATIONS / "20261117003721_omega_ai_requests_privilege_tightening.sql").read_text(encoding="utf-8").lower()
+        self.assertIn("create table if not exists public.omega_ai_requests", schema)
+        self.assertIn("omega_ai_requests_request_id_key", schema)
+        self.assertIn("omega_ai_requests_risk_check", schema)
+        self.assertIn("omega_ai_requests_status_check", schema)
+        self.assertIn("omega_deny_by_default", schema)
+        self.assertIn("enable row level security", schema)
+        self.assertIn("revoke all privileges on table public.omega_ai_requests from anon, authenticated, service_role", schema)
+        self.assertIn("grant insert on table public.omega_ai_requests to service_role", schema)
+        self.assertIn("20261117002651", self.remote_versions)
+        self.assertIn("20261117003721", self.remote_versions)
+        for privilege in ("select", "update", "delete", "truncate", "references", "trigger", "maintain"):
+            self.assertIn(f"'{privilege.upper()}'", privileges)
+        self.assertIn("omega_ai_requests_service_role_privilege_too_broad", privileges)
+        self.assertIn("omega_ai_requests_client_privilege_must_remain_denied", privileges)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 435)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117003721")
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []
@@ -215,8 +236,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
         self.assertEqual(runtime.get("family_access_probe"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
         self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline on main commit d62168f2d8dd3504d5f2809128c64af1113984b1 (run #43985648591).")
-        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 433)
-        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261116214842")
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 435)
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261117003721")
         self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
         self.assertIn("241/241 registered pages", runtime.get("remediation", ""))
         self.assertIn("no pending migrations remain", runtime.get("remediation", ""))

@@ -169,7 +169,7 @@
       "provider_updated_at": "2026-11-12T21:50:40.966Z",
       "repository_files_blob_sha": {
         "index.ts": "9c1fa3b61d4a798711a21ee92bbd8eb6503c9ebd",
-        "../_shared/content-validation.mjs": "babef294c4325e47c9870638c53432b009ce02d4"
+        "../_shared/content-validation.mjs": "e5e157a8fe2931980d6f5e05563b5b5c0a4c7970"
       },
       "pending_deploy_reason": "Server-side object byte-size enforcement, signature detection and SHA-256 registration are implemented in source but not yet deployed to the live Edge Function. Existing provider version 10 remains active until post-merge deployment and smoke verification.",
       "pending_deploy_since": "2026-11-17"

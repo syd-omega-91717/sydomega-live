@@ -15,6 +15,10 @@ FUNCTIONS = ROOT / "supabase/functions"
 class EdgeFunctionProviderSnapshotTests(unittest.TestCase):
     def test_all_configured_functions_are_active_and_source_matched(self) -> None:
         snapshot = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
+        self.assertEqual(snapshot.get("provider_project_id"), "ydqhzvvoyufiiqvzcjns")
+        self.assertEqual(snapshot.get("provider_function_count"), 22)
+        self.assertEqual(snapshot.get("source_tree_commit"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
+        self.assertTrue(snapshot.get("captured_at"))
         rows = snapshot.get("functions", {})
         deployed = {slug: row for slug, row in rows.items() if row.get("state") == "DEPLOYED"}
         local_only = {slug: row for slug, row in rows.items() if row.get("state") == "LOCAL_ONLY"}

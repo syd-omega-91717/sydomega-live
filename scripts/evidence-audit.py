@@ -216,7 +216,13 @@ def _dropped_by_migrations(tbl_re):
 
 FROM_RE = re.compile(r"""\.from\(\s*['"]([a-zA-Z0-9_]+)['"]""")
 RPC_RE = re.compile(r"""\.rpc\(\s*['"]([a-zA-Z0-9_]+)['"]""")
-EDGE_RE = re.compile(r"""functions/v1/([a-zA-Z0-9_-]+)|\.invoke\(\s*['"]([a-zA-Z0-9_-]+)['"]""")
+# Also recognize a literal function name passed to the repository's small
+# invoke(sb, name, body) wrapper. The wrapper itself calls
+# sb.functions.invoke(name, ...) with a variable, so a direct .invoke() regex
+# misses literal call sites and incorrectly labels deployed functions UNWIRED.
+EDGE_RE = re.compile(
+    r"""functions/v1/([a-zA-Z0-9_-]+)|\.invoke\(\s*['"]([a-zA-Z0-9_-]+)['"]|\binvoke\(\s*sb\s*,\s*['"]([a-zA-Z0-9_-]+)['"]"""
+)
 LS_WRITE_RE = re.compile(r'localStorage\.setItem')
 # Supabase Auth contact. Counted separately from .from()/.rpc(): authenticating
 # a member is real backend contact, but it persists none of that member's data.
@@ -269,8 +275,8 @@ def server_edge_references():
     for path in Path("supabase/functions").glob("*/index.ts"):
         caller = path.parent.name
         source = _strip_code_comments(path.read_text(encoding="utf-8", errors="replace"))
-        for first, second in EDGE_RE.findall(source):
-            target = first or second
+        for direct_url, direct_invoke, helper_invoke in EDGE_RE.findall(source):
+            target = direct_url or direct_invoke or helper_invoke
             if target and target != caller:
                 refs.add(target)
     # Database webhooks/queues may call Edge Functions via pg_net. Only inspect
@@ -388,7 +394,7 @@ def scan_client(path):
     text = path.read_text(encoding='utf-8', errors='replace')
     tables = set(FROM_RE.findall(text))
     rpcs = set(RPC_RE.findall(text))
-    edges = {a or b for a, b in EDGE_RE.findall(text)}
+    edges = {a or b or c for a, b, c in EDGE_RE.findall(text)}
     return {
         'tables': tables,
         'rpcs': rpcs,
@@ -537,8 +543,8 @@ def main():
     client_edges = set()
     for path in list(Path('.').glob('*.html')) + list(Path('.').glob('*.js')):
         source = _strip_code_comments(path.read_text(encoding='utf-8', errors='replace'))
-        for first, second in EDGE_RE.findall(source):
-            client_edges.add(first or second)
+        for direct_url, direct_invoke, helper_invoke in EDGE_RE.findall(source):
+            client_edges.add(direct_url or direct_invoke or helper_invoke)
 
     runtime_states, edge_manifest_captured = edge_runtime_snapshot()
     server_edges = server_edge_references()

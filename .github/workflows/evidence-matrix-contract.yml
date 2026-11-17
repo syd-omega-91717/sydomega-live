@@ -1,0 +1,51 @@
+name: Evidence Matrix Snapshot
+
+on:
+  pull_request:
+    paths:
+      - "*.html"
+      - "*.js"
+      - "nav.js"
+      - "supabase/**/*.sql"
+      - "scripts/evidence-audit.py"
+      - "docs/runtime/supabase-edge-functions-live.json"
+      - "EVIDENCE_MATRIX.md"
+
+permissions:
+  contents: read
+
+jobs:
+  regenerate:
+    name: Generate and report evidence matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR tree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate evidence matrix
+        run: python3 scripts/evidence-audit.py
+
+      - name: Publish generated matrix for review
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: evidence-matrix-generated
+          path: EVIDENCE_MATRIX.md
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Report generated matrix drift
+        run: |
+          if git diff --quiet -- EVIDENCE_MATRIX.md; then
+            echo "EVIDENCE_MATRIX_FRESH=PASS"
+          else
+            echo "::warning title=Evidence matrix is stale::The generated EVIDENCE_MATRIX.md differs from the committed snapshot. Review the uploaded evidence-matrix-generated artifact and commit the regenerated file. This gate remains advisory until the existing snapshot is refreshed."
+          fi

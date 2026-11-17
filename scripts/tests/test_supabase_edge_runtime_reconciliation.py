@@ -27,8 +27,8 @@ class EdgeRuntimeDependencyReconciliationTests(unittest.TestCase):
     def test_all_declared_runtime_dependencies_match_sha256(self):
         helper = self.shared / "content-validation.mjs"
         metadata = {
-            "repository_files_sha256": {
-                "../_shared/content-validation.mjs": hashlib.sha256(helper.read_bytes()).hexdigest(),
+            "repository_files_blob_sha": {
+                "../_shared/content-validation.mjs": MODULE.git_blob_sha(helper),
             }
         }
         self.assertEqual(MODULE.repository_files_drift("content-ingest", metadata), [])
@@ -36,7 +36,7 @@ class EdgeRuntimeDependencyReconciliationTests(unittest.TestCase):
     def test_imported_helper_drift_is_detected(self):
         helper = self.shared / "content-validation.mjs"
         metadata = {
-            "repository_files_sha256": {
+            "repository_files_blob_sha": {
                 "../_shared/content-validation.mjs": hashlib.sha256(helper.read_bytes()).hexdigest(),
             }
         }
@@ -47,16 +47,16 @@ class EdgeRuntimeDependencyReconciliationTests(unittest.TestCase):
         )
 
     def test_path_traversal_outside_functions_root_is_rejected(self):
-        metadata = {"repository_files_sha256": {"../../../../etc/passwd": "0" * 64}}
+        metadata = {"repository_files_blob_sha": {"../../../../etc/passwd": "0" * 40}}
         drift = MODULE.repository_files_drift("content-ingest", metadata)
         self.assertEqual(len(drift), 1)
         self.assertIn("escapes supabase/functions", drift[0])
 
     def test_invalid_hash_format_is_rejected(self):
-        metadata = {"repository_files_sha256": {"../_shared/content-validation.mjs": "not-a-hash"}}
+        metadata = {"repository_files_blob_sha": {"../_shared/content-validation.mjs": "not-a-hash"}}
         drift = MODULE.repository_files_drift("content-ingest", metadata)
         self.assertEqual(len(drift), 1)
-        self.assertIn("invalid SHA-256", drift[0])
+        self.assertIn("invalid Git blob SHA", drift[0])
 
 
 if __name__ == "__main__":

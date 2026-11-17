@@ -28,6 +28,7 @@ test("detects supported signatures rather than trusting MIME metadata", () => {
   assert.equal(detectMime(ascii("ID3")), "audio/mpeg");
   assert.equal(detectMime(ascii("PK\x03\x04")), "application/zip");
   assert.equal(detectMime(ascii("<svg>")), "application/octet-stream");
+  assert.equal(detectMime(ascii("<svg>")), "text/plain");
   assert.equal(detectMime(ascii("plain text\n")), "text/plain");
   assert.equal(detectMime(bytes(0x00, 0xff, 0x81)), "application/octet-stream");
 });

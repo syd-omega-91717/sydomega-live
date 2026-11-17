@@ -47,18 +47,20 @@ SVG genuinely can't do (photos, PWA icons, an OG-style share PNG).
 
 ## Member-uploaded images
 
-Handled by `upload.js` → `window.OmegaStorage`:
+Low-level Storage access is handled by `upload.js` → `window.OmegaStorage`:
 
 ```
-OmegaStorage.upload(bucket, file)      // -> { path } or { error }, 5 GB cap, auth required
+OmegaStorage.upload(bucket, file)      // -> { path } or { error }, 50 MiB cap for uploads, auth required
 OmegaStorage.publicUrl(bucket, path)
 OmegaStorage.signedUrl(bucket, path, seconds)
 ```
 
-Files land in Supabase Storage under `<user-id>/<timestamp>_<safe-name>` and
+The private `uploads` bucket enforces a server-side 50 MiB limit. Files land in Supabase Storage under `<user-id>/<timestamp>_<safe-name>` and
 are served from `*.supabase.co` (which `vault.html`'s CSP allows). Storage
 bucket access is governed by Supabase Storage RLS — treat a new bucket like a
 new table (RLS required, `grill-me-codex` if it's member-writable).
+For new governed member content, use `OmegaContentTasks.upload(file, options)` so the server registers metadata, verifies byte signatures and SHA-256, and returns a pending-review state. Direct `OmegaStorage.upload` remains a low-level primitive used by legacy flows; do not use it as a substitute for content registration where that workflow requires the central content registry. Neither registration nor signature detection proves malware safety, rights, or publication permission.
+
 Member-supplied image URLs rendered back into the page must be escaped with
 `esc()` like any other member data (stored-XSS history, CLAUDE.md §8.1).
 

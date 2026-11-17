@@ -76,6 +76,22 @@ def call_sites():
 
 
 class UploadCallContract(unittest.TestCase):
+    def test_every_upload_page_loads_the_shared_storage_helper(self):
+        for name in sorted(os.listdir(ROOT)):
+            if not name.endswith(".html"):
+                continue
+            path = os.path.join(ROOT, name)
+            with open(path, encoding="utf-8") as fh:
+                source = fh.read()
+            if "OmegaStorage.upload(" not in source:
+                continue
+            with self.subTest(page=name):
+                self.assertIn(
+                    '<script src="/upload.js"></script>',
+                    source,
+                    f"{name} calls OmegaStorage.upload but does not load /upload.js",
+                )
+
     def test_there_are_call_sites_to_check(self):
         """A scanner that matches nothing passes vacuously (CLAUDE.md 8.4)."""
         self.assertGreaterEqual(len(call_sites()), 4)

@@ -38,7 +38,8 @@ class ContentTaskPipelineTests(unittest.TestCase):
 
     def test_ingest_uses_storage_metadata_and_compensates_failed_audit(self):
         js = (ROOT / "supabase/functions/content-ingest/index.ts").read_text()
-        self.assertIn("object.metadata?.size", js)
+        self.assertIn("assertUploadSize(objectBlob.size)", js)
+        self.assertIn("bytes.byteLength !== sizeBytes", js)
         self.assertIn("object.metadata?.mimetype", js)
         self.assertIn("storage.remove([path])", js)
         self.assertIn("CONTENT_INGEST_ROLLBACK", js)
@@ -47,11 +48,32 @@ class ContentTaskPipelineTests(unittest.TestCase):
     def test_delivery_is_owner_only_signed_and_does_not_leak_provider_errors(self):
         js = (ROOT / "supabase/functions/content-delivery/index.ts").read_text()
         self.assertIn('if (file.owner_id !== userId)', js)
-        self.assertIn('createSignedUrl(file.storage_path, 900)', js)
+        self.assertIn('createSignedUrl(file.storage_path, 900, { download: true })', js)
         self.assertIn('event_type: "capability_used"', js)
         self.assertIn('Cache-Control', js)
         self.assertIn('content_delivery_failed', js)
         self.assertNotIn('error: error.message', js)
+
+    def test_provider_deployment_evidence_matches_live_inventory(self):
+        pipeline = json.loads((ROOT / "config/omega-content-task-pipeline.json").read_text())
+        snapshot = json.loads((ROOT / "docs/runtime/supabase-edge-functions-live.json").read_text())
+        for name in ("content-ingest", "content-delivery"):
+            with self.subTest(function=name):
+                evidence = pipeline["provider_evidence"]["functions"][name]
+                live = snapshot["functions"][name]
+                self.assertEqual(evidence["status"], "DEPLOYED")
+                self.assertEqual(evidence["live_version"], live["version"])
+                self.assertEqual(evidence["verify_jwt"], live["verify_jwt"])
+                self.assertEqual(live["state"], "DEPLOYED")
+                self.assertEqual(live["provider_status"], "ACTIVE")
+                self.assertEqual(live["source_parity"], "EXACT_ENTRYPOINT_MATCH")
+
+        self.assertEqual(pipeline["upload"]["bucket_enforcement"]["file_size_limit_bytes"], 52428800)
+        self.assertEqual(pipeline["upload"]["bucket_enforcement"]["source_migration"],
+                         "20261117004605_uploads_bucket_size_limit_50mb")
+        self.assertEqual(pipeline["truth_states"]["rights"], "UNVERIFIED")
+        self.assertEqual(pipeline["truth_states"]["publication"], "UNVERIFIED")
+        self.assertEqual(pipeline["truth_states"]["scan"], "UNAVAILABLE_UNLESS_PROVIDER_EVIDENCE_EXISTS")
 
     def test_no_client_write_to_storage_files(self):
         js = (ROOT / "omega-content-tasks.js").read_text()

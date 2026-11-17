@@ -45,3 +45,55 @@ For each candidate index, capture and review:
 ## Current status
 
 **REVIEW IN PROGRESS — zero destructive index changes.** The focused high-risk shortlist returned no candidate under the filter above; the broader 327-finding queue still requires workload-aware review.
+
+
+---
+
+## Refreshed production observation — 2026-11-17
+
+This section supersedes the 2026-10-24 numeric snapshot above. The earlier snapshot is retained as history, not silently overwritten.
+
+### Provider Advisor
+
+- Supabase Performance Advisor: **326** `unused_index` INFO findings, observed at 2026-11-17 08:29:14 UTC.
+- These findings are a review queue. They are not an approved DDL plan and do not establish that any individual index is redundant.
+
+### Read-only PostgreSQL inventory
+
+A read-only query against `pg_index`, `pg_class`, `pg_namespace`, `pg_constraint`, `pg_stat_user_indexes`, and `pg_stat_user_tables` returned:
+
+| Measure | 2026-11-17 result |
+|---|---:|
+| User indexes across non-system schemas | 1,730 |
+| Indexes with `idx_scan = 0` | 1,308 |
+| Primary indexes | 1,056 |
+| Unique indexes | 1,245 |
+| Indexes backing declared constraints | 831 |
+| Zero-scan primary/unique/constraint-backed indexes (overlapping categories) | 910 |
+| Zero-scan indexes in `auth` | 114 |
+| Zero-scan `public` indexes that are non-primary, non-unique and not constraint-backed | 323 |
+| Zero-scan `public` non-constraint indexes, at least 64 KiB, on tables with estimated live rows | **0** |
+| Same filtered group on tables with recorded writes | **0** |
+
+The zero-scan categories overlap and must not be added together. The inventory deliberately includes non-system schemas, while the candidate filter is limited to `public`.
+
+### Important workload signal
+
+The largest zero-scan public non-constraint index in this sample was `public.idx_mem_user` on `ai_memory` at 40 KiB. Its table had 16 estimated live rows and **31,896 recorded insert/update/delete operations**. This is a concrete example of why a zero-scan index can still impose write cost while potentially serving a query path not represented in the retained statistics. It is not approved for removal; inspect its exact definition, application use, RLS predicates, and query plans first.
+
+Other zero-scan indexes in the top sample were 16–32 KiB. Some were on tables with recorded writes, including graph, activity, notification, module-runtime, and service data. No large, populated public non-constraint candidate met the initial 64 KiB screen.
+
+### Statistics-window limitation
+
+- PostgreSQL server start observed: `2026-09-08T16:43:35.593732Z`.
+- `pg_stat_database.stats_reset` returned `NULL`.
+- A server start timestamp is **not** proof of the statistics reset time. Therefore, `idx_scan = 0` means zero in the currently retained counters; it does not prove an index has never been used or that the observation covers a representative production workload.
+- No `pg_stat_statements` query-text export was performed in this observation.
+
+### Decision and next gate
+
+**No index is approved for removal. No DDL was executed.**
+
+The current screen does not justify destructive cleanup. Before a candidate can be considered, collect exact index DDL and OID, validity, constraint and FK dependencies, overlapping indexes, RLS-policy references, representative application query paths, table write volume, index size, and workload-window evidence. Test relevant plans in a non-production environment and prepare a reversible migration with before/after latency and error monitoring.
+
+The 326 Advisor findings remain INFO. Never convert an Advisor count or a zero-scan counter directly into a `DROP INDEX` migration.

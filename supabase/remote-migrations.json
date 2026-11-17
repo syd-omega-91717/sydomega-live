@@ -1,8 +1,8 @@
 {
   "_captured": "2026-11-17",
-  "source": "Authenticated Supabase provider migration ledger read on 2026-11-17 confirms 435 applied versions. The AI usage telemetry schema/grant migration 20261117002651 and exact privilege tightening 20261117003721 are provider-applied; live ACL checks confirm service_role INSERT only and all other table privileges denied for service_role, anon and authenticated.",
-  "remoteMigrationCount": 435,
-  "latestRemoteMigration": "20261117003721",
+  "source": "Authenticated Supabase provider migration ledger read on 2026-11-17 confirms 436 applied versions, latest 20261117004605 uploads_bucket_size_limit_50mb. The private uploads bucket is capped at 52428800 bytes; MIME allowlist remains unset by design for arbitrary binary attachments. Content signature and malware scanning remain separate controls.",
+  "remoteMigrationCount": 436,
+  "latestRemoteMigration": "20261117004605",
   "versions": [
     "0001",
     "0002",
@@ -438,7 +438,8 @@
     "20261116214700",
     "20261116214842",
     "20261117002651",
-    "20261117003721"
+    "20261117003721",
+    "20261117004605"
   ],
   "migrations": [
     {
@@ -2177,6 +2178,10 @@
     {
       "version": "20261117003721",
       "name": "omega_ai_requests_privilege_tightening"
+    },
+    {
+      "version": "20261117004605",
+      "name": "uploads_bucket_size_limit_50mb"
     }
   ]
 }

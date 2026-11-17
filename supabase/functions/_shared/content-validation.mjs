@@ -54,6 +54,12 @@ export function detectMime(input) {
     if (!/[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]/.test(text)) {
       return "text/plain";
     }
+    const hasControl = Array.from(text).some((character) => {
+      const code = character.codePointAt(0) ?? 0;
+      return (code >= 0 && code <= 8) || code === 11 || code === 12 ||
+        (code >= 14 && code <= 31) || code === 127;
+    });
+    if (!hasControl) return "text/plain";
   } catch {
     // Unknown or invalid UTF-8 binary remains application/octet-stream.
   }

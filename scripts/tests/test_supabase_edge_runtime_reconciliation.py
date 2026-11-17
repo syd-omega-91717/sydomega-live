@@ -25,6 +25,7 @@ class EdgeRuntimeDependencyReconciliationTests(unittest.TestCase):
         MODULE.FUNCTIONS = self.functions
 
     def test_all_declared_runtime_dependencies_match_sha256(self):
+    def test_all_declared_runtime_dependencies_match_git_blob_identity(self):
         helper = self.shared / "content-validation.mjs"
         metadata = {
             "repository_files_blob_sha": {
@@ -38,6 +39,7 @@ class EdgeRuntimeDependencyReconciliationTests(unittest.TestCase):
         metadata = {
             "repository_files_blob_sha": {
                 "../_shared/content-validation.mjs": hashlib.sha256(helper.read_bytes()).hexdigest(),
+                "../_shared/content-validation.mjs": MODULE.git_blob_sha(helper),
             }
         }
         helper.write_text("export const MAX = 100;\n", encoding="utf-8")

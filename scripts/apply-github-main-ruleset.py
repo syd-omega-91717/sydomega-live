@@ -56,21 +56,25 @@ def verify(state: dict, expected: dict) -> None:
         raise RuntimeError("ruleset does not target exactly refs/heads/main")
     if state.get("bypass_actors") != []:
         raise RuntimeError("unexpected ruleset bypass actor configured")
-    rules = {item.get("type"): item.get("parameters", {}) for item in state.get("rules", [])}
-    required_types = {"deletion", "non_fast_forward", "pull_request", "required_status_checks"}
-    if not required_types.issubset(rules):
-        raise RuntimeError("one or more required protection rules are missing")
-    pr = rules["pull_request"]
-    if pr.get("required_approving_review_count") != 0 or not pr.get("required_review_thread_resolution"):
-        raise RuntimeError("pull request protection parameters do not match reviewed policy")
-    checks = rules["required_status_checks"]
-    if checks.get("strict_required_status_checks_policy") is not True:
-        raise RuntimeError("strict required status checks are not enabled")
-    actual = {entry.get("context") for entry in checks.get("required_status_checks", [])}
-    expected_contexts = {entry["context"] for entry in expected["rules"][-1]["parameters"]["required_status_checks"]}
-    if not expected_contexts.issubset(actual):
-        missing = sorted(expected_contexts - actual)
-        raise RuntimeError("required checks missing after update: " + ", ".join(missing))
+    expected_rules = {item["type"]: item.get("parameters", {}) for item in expected["rules"]}
+    actual_rules = {item.get("type"): item.get("parameters", {}) for item in state.get("rules", [])}
+    if set(actual_rules) != set(expected_rules):
+        raise RuntimeError("provider rules do not exactly match the reviewed ruleset")
+    pr = actual_rules["pull_request"]
+    expected_pr = expected_rules["pull_request"]
+    for key, value in expected_pr.items():
+        if pr.get(key) != value:
+            raise RuntimeError(f"pull request rule parameter {key} does not match reviewed policy")
+    checks = actual_rules["required_status_checks"]
+    expected_checks = expected_rules["required_status_checks"]
+    for key in ("strict_required_status_checks_policy", "do_not_enforce_on_create"):
+        if checks.get(key) != expected_checks.get(key):
+            raise RuntimeError(f"required status check parameter {key} does not match reviewed policy")
+    actual_list = checks.get("required_status_checks", [])
+    actual = [entry.get("context") for entry in actual_list]
+    expected_contexts = [entry["context"] for entry in expected_checks["required_status_checks"]]
+    if actual != expected_contexts:
+        raise RuntimeError("provider required status check contexts do not exactly match reviewed policy")
 
 
 def main() -> int:

@@ -42,6 +42,9 @@ class RulesetConfigTests(unittest.TestCase):
 
 
 class RulesetApplyTests(unittest.TestCase):
+    def setUp(self):
+        self.config = json.loads(CONFIG.read_text(encoding="utf-8"))
+
     def test_missing_token_fails_without_network(self):
         with patch.dict(os.environ, {}, clear=True), patch.object(MODULE, "request") as request:
             self.assertEqual(MODULE.main(), 2)
@@ -51,6 +54,7 @@ class RulesetApplyTests(unittest.TestCase):
         import copy
         state = copy.deepcopy(self.config)
         state["id"] = MODULE.RULESET_ID
+        state["enforcement"] = "disabled"
         with self.assertRaisesRegex(RuntimeError, "not active"):
             MODULE.verify(state, self.config)
 
@@ -64,7 +68,7 @@ class RulesetApplyTests(unittest.TestCase):
         state = copy.deepcopy(self.config)
         state["id"] = MODULE.RULESET_ID
         state["rules"][-1]["parameters"]["required_status_checks"].pop()
-        with self.assertRaisesRegex(RuntimeError, "required checks missing"):
+        with self.assertRaisesRegex(RuntimeError, "required status check contexts"):
             MODULE.verify(state, self.config)
 
     def test_apply_reads_identity_then_puts_and_verifies(self):

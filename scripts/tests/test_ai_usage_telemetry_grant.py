@@ -2,7 +2,7 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-MIGRATION = ROOT / "supabase/migrations/20261117010000_omega_ai_requests_service_role_insert_grant.sql"
+MIGRATION = ROOT / "supabase/migrations/20261117002651_omega_ai_requests_service_role_insert_grant.sql"
 
 
 class AiUsageTelemetryGrantTests(unittest.TestCase):

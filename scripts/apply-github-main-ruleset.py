@@ -6,8 +6,8 @@ The token is read only from the environment and is never printed or stored.
 """
 from __future__ import annotations
 
-import http.client
-import ssl
+import subprocess
+import tempfile
 import json
 import os
 import sys
@@ -15,8 +15,7 @@ from pathlib import Path
 
 REPOSITORY = "syd-omega-91717/sydomega-live"
 RULESET_ID = 20176798
-API_HOST = "api.github.com"
-API_PATH = "/repos/syd-omega-91717/sydomega-live/rulesets/20176798"
+API_URL = "https://api.github.com/repos/syd-omega-91717/sydomega-live/rulesets/20176798"
 CONFIG = Path(__file__).resolve().parents[1] / "config/github-main-ruleset.json"
 
 
@@ -25,29 +24,66 @@ def request(method: str, token: str, payload: dict | None = None) -> dict:
         raise ValueError("unsupported GitHub API method")
     if not token:
         raise ValueError("GitHub API token is required")
-    data = None if payload is None else json.dumps(payload).encode("utf-8")
-    connection = http.client.HTTPSConnection(API_HOST, timeout=20, context=ssl.create_default_context())
-    try:
-        connection.request(
-            method,
-            API_PATH,
-            body=data,
-            headers={
-                "Authorization": f"Bearer {token}",
-                "Accept": "application/vnd.github+json",
-                "X-GitHub-Api-Version": "2022-11-28",
-                "Content-Type": "application/json",
-                "User-Agent": "sydomega-main-ruleset-guard",
-            },
+    if "\\r" in token or "\\n" in token:
+        raise ValueError("GitHub API token contains an invalid line break")
+
+    config = [
+        f"url = {json.dumps(API_URL)}",
+        f"request = {json.dumps(method)}",
+        f"header = {json.dumps('Authorization: Bearer ' + token)}",
+        f"header = {json.dumps('Accept: application/vnd.github+json')}",
+        f"header = {json.dumps('X-GitHub-Api-Version: 2022-11-28')}",
+        f"header = {json.dumps('Content-Type: application/json')}",
+        f"header = {json.dumps('User-Agent: sydomega-main-ruleset-guard')}",
+    ]
+
+    with tempfile.TemporaryDirectory(prefix="omega-github-api-") as temp_dir:
+        if payload is not None:
+            payload_path = Path(temp_dir) / "payload.json"
+            payload_path.write_text(
+                json.dumps(payload, separators=(",", ":"), ensure_ascii=True),
+                encoding="utf-8",
+            )
+            config.append(f"data-binary = {json.dumps('@' + str(payload_path))}")
+
+        command = [
+            "curl",
+            "--config", "-",
+            "--silent",
+            "--show-error",
+            "--fail-with-body",
+            "--proto", "=https",
+            "--tlsv1.2",
+            "--connect-timeout", "10",
+            "--max-time", "20",
+            "--write-out", "\\n__OMEGA_HTTP_STATUS__%{http_code}",
+        ]
+        completed = subprocess.run(
+            command,
+            input=("\\n".join(config) + "\\n").encode("utf-8"),
+            capture_output=True,
+            check=False,
+            timeout=25,
         )
-        response = connection.getresponse()
-        raw = response.read()
-        if not 200 <= response.status < 300:
-            detail = raw.decode("utf-8", errors="replace")[:500]
-            raise RuntimeError(f"GitHub API returned HTTP {response.status}: {detail}")
-        return json.loads(raw.decode("utf-8")) if raw else {}
-    finally:
-        connection.close()
+
+    output = completed.stdout.decode("utf-8", errors="replace")
+    marker = "\\n__OMEGA_HTTP_STATUS__"
+    if marker not in output:
+        detail = completed.stderr.decode("utf-8", errors="replace")[:500]
+        raise RuntimeError(f"GitHub API curl request failed (exit {completed.returncode}): {detail}")
+
+    raw, status_text = output.rsplit(marker, 1)
+    try:
+        status = int(status_text.strip())
+    except ValueError as error:
+        raise RuntimeError("GitHub API curl response had an invalid HTTP status") from error
+
+    if not 200 <= status < 300:
+        detail = raw[:500]
+        raise RuntimeError(f"GitHub API returned HTTP {status}: {detail}")
+    if completed.returncode != 0:
+        raise RuntimeError(f"GitHub API curl request failed with exit {completed.returncode}")
+    return json.loads(raw) if raw else {}
 
 
 def verify(state: dict, expected: dict) -> None:

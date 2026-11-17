@@ -12,8 +12,18 @@ import json
 import os
 import tempfile
 from pathlib import Path
+from importlib.util import module_from_spec, spec_from_file_location
+import sys
 
-from omega_media_review_gallery import collect_assets, validate_review_manifest
+_gallery_path = Path(__file__).with_name("omega-media-review-gallery.py")
+_gallery_spec = spec_from_file_location("omega_media_review_gallery", _gallery_path)
+if _gallery_spec is None or _gallery_spec.loader is None:
+    raise RuntimeError("cannot load the canonical media review manifest validator")
+_gallery_module = module_from_spec(_gallery_spec)
+sys.modules.setdefault("omega_media_review_gallery", _gallery_module)
+_gallery_spec.loader.exec_module(_gallery_module)
+collect_assets = _gallery_module.collect_assets
+validate_review_manifest = _gallery_module.validate_review_manifest
 
 
 ALLOWED_SECTIONS = {"visual_review", "rights_review"}

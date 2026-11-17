@@ -67,6 +67,31 @@ class RulesetApplyTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "required checks missing"):
             MODULE.verify(state, self.config)
 
+    def test_apply_reads_identity_then_puts_and_verifies(self):
+        import contextlib
+        import copy
+        import io
+        before = {"id": MODULE.RULESET_ID, "name": self.config["name"]}
+        after = copy.deepcopy(self.config)
+        after["id"] = MODULE.RULESET_ID
+        output = io.StringIO()
+        with patch.dict("os.environ", {"GH_REPO_ADMIN_TOKEN": "test-token"}), patch.object(
+            MODULE, "request", side_effect=[before, {}, after]
+        ) as request, contextlib.redirect_stdout(output):
+            self.assertEqual(MODULE.main(), 0)
+        self.assertEqual(request.call_count, 3)
+        self.assertEqual(request.call_args_list[0].args[:3], ("GET", MODULE.API, "test-token"))
+        self.assertEqual(request.call_args_list[1].args[:3], ("PUT", MODULE.API, "test-token"))
+        self.assertEqual(request.call_args_list[2].args[:3], ("GET", MODULE.API, "test-token"))
+        self.assertIn("GITHUB_MAIN_RULESET=ACTIVE", output.getvalue())
+        self.assertNotIn("test-token", output.getvalue())
+
+    def test_request_rejects_non_github_https_before_network(self):
+        with patch.object(MODULE.urllib.request, "urlopen") as urlopen:
+            with self.assertRaisesRegex(ValueError, "non-GitHub HTTPS"):
+                MODULE.request("GET", "http://example.invalid", "test-token")
+        urlopen.assert_not_called()
+
     def test_manual_workflow_is_main_only_and_environment_protected(self):
         workflow = (ROOT / ".github/workflows/github-main-ruleset-activation.yml").read_text(encoding="utf-8")
         self.assertIn("workflow_dispatch:", workflow)

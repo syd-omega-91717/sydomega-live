@@ -250,7 +250,7 @@ def run_e2e(env: dict[str, str]) -> None:
     )
     require(status == 200 and isinstance(delivery, dict) and delivery.get("ok") is True,
             "owner_signed_download_failed")
-    require(delivery.get("delivery_state") == "SIGNED", "signed_delivery_state_missing")
+    require(delivery.get("delivery_state") == "SIGNED_ATTACHMENT", "signed_delivery_state_missing")
     expires_at = delivery.get("expires_at")
     require(isinstance(expires_at, str), "signed_url_expiry_missing")
     try:
@@ -325,7 +325,7 @@ def run_e2e(env: dict[str, str]) -> None:
         None,
     )
     require(
-        signed_event is not None and (signed_event.get("metadata") or {}).get("expires_seconds") == 900,
+        signed_event is not None and (signed_event.get("metadata") or {}).get("expires_seconds") == 900\n        and (signed_event.get("metadata") or {}).get("delivery") == "signed_attachment",
         "signed_download_audit_expiry_mismatch",
     )
     print("CONTENT_PIPELINE_E2E=PASS local_only=true stages=auth,upload,registration,idempotency,path_guard,jwt,owner_download,expiry,audit")

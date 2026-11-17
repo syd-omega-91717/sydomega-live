@@ -38,7 +38,7 @@
 | Six unrestricted Phase-5 INSERT policies | Fixed in live database | Regression audit |
 | Leaked password protection | **DISABLED** in the live Supabase Auth configuration; Security Advisor warning remains | Keep the Free-tier HIBP compensating control; provider-level closure requires the Supabase feature to be enabled |
 | Migration history | Live migration history reconciled through the 2026-10-01 convergence evidence | Check schema drift before each release |
-| Storage | Live buckets/policies verified 2026-09-26; `avatars`/`uploads` owner-scoped DELETE policies exist; live object count currently 0 | Exercise a real isolated authenticated upload/read/delete and cross-user denial test before marking lifecycle production-verified |
+| Storage | Live buckets/policies verified 2026-11-17; `avatars` public and `uploads` private; `uploads.file_size_limit=52428800` (50 MiB) now enforced server-side; MIME allowlist remains unset for arbitrary binary attachments; latest live object count 0 | Add content-signature/checksum and malware-scanning gates; exercise a real isolated authenticated upload/read/delete and cross-user denial test before marking lifecycle production-verified |
 | Edge Functions | **Source/live mismatch remains under reconciliation**: the 2026-10-01 live snapshot confirms active functions including concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, stripe-webhook, secrets-health, agent-execute and evidence-graph, while repository source contains additional functions | Reconcile each source function to `DEPLOYED`, `LOCAL-ONLY`, or `RETIRED`; do not deploy unreviewed functions automatically |
 
 ## Authentication

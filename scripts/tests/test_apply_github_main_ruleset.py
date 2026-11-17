@@ -92,7 +92,7 @@ class RulesetApplyTests(unittest.TestCase):
     def test_request_uses_curl_with_fixed_https_url_and_verified_tls(self):
         completed = subprocess.CompletedProcess(
             args=["curl"], returncode=0,
-            stdout=b'{"ok":true}\\n__OMEGA_HTTP_STATUS__200', stderr=b"",
+            stdout=b'{"ok":true}\n__OMEGA_HTTP_STATUS__200', stderr=b"",
         )
         with patch.object(MODULE.subprocess, "run", return_value=completed) as run:
             result = MODULE.request("GET", "test-token")
@@ -120,7 +120,7 @@ class RulesetApplyTests(unittest.TestCase):
         payload = {"enforcement": "active", "name": "sydomega_merged"}
         completed = subprocess.CompletedProcess(
             args=["curl"], returncode=0,
-            stdout=b'{"ok":true}\\n__OMEGA_HTTP_STATUS__200', stderr=b"",
+            stdout=b'{"ok":true}\n__OMEGA_HTTP_STATUS__200', stderr=b"",
         )
 
         def inspect_call(args, **kwargs):
@@ -145,7 +145,7 @@ class RulesetApplyTests(unittest.TestCase):
     def test_request_rejects_non_success_http_status(self):
         completed = subprocess.CompletedProcess(
             args=["curl"], returncode=22,
-            stdout=b'{"message":"forbidden"}\\n__OMEGA_HTTP_STATUS__403',
+            stdout=b'{"message":"forbidden"}\n__OMEGA_HTTP_STATUS__403',
             stderr=b"HTTP 403",
         )
         with patch.object(MODULE.subprocess, "run", return_value=completed):

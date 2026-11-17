@@ -169,21 +169,28 @@
       "provider_updated_at": "2026-11-12T21:50:40.966Z",
       "repository_files_blob_sha": {
         "index.ts": "9c1fa3b61d4a798711a21ee92bbd8eb6503c9ebd",
-        "../_shared/content-validation.mjs": "e5e157a8fe2931980d6f5e05563b5b5c0a4c7970"
+        "../_shared/content-validation.mjs": "e5e157a8fe2931980d6f5e05563b5b5c0a4c7970",
+        "../_shared/keys.ts": "27c9e0547739cfa15ae27288e71bc6856595f8e6"
       },
       "pending_deploy_reason": "Server-side object byte-size enforcement, signature detection and SHA-256 registration are implemented in source but not yet deployed to the live Edge Function. Existing provider version 10 remains active until post-merge deployment and smoke verification.",
       "pending_deploy_since": "2026-11-17"
     },
     "content-delivery": {
-      "state": "DEPLOYED",
+      "state": "PENDING_DEPLOY",
       "version": 10,
       "verify_jwt": true,
       "live_sha256": "c8c9cbb42d29ed9f8c75b8cd13cad474e20dea72eec3ce07b7a3d7361fbfd7f3",
-      "repository_blob_sha": "410d77e9f8267406b40291830ac85f5191a63665",
+      "repository_blob_sha": "6be5b62467cdd96751e3eaa16156130853c41405",
       "provider_status": "ACTIVE",
-      "source_parity": "EXACT_ENTRYPOINT_MATCH",
+      "source_parity": "PENDING_DEPLOY_SOURCE_AND_IMPORT_BLOB_HASHES_RECORDED",
       "provider_observed_at": "2026-11-17T00:13:31.606Z",
-      "provider_updated_at": "2026-11-12T21:50:40.966Z"
+      "provider_updated_at": "2026-11-12T21:50:40.966Z",
+      "repository_files_blob_sha": {
+        "index.ts": "6be5b62467cdd96751e3eaa16156130853c41405",
+        "../_shared/keys.ts": "27c9e0547739cfa15ae27288e71bc6856595f8e6"
+      },
+      "pending_deploy_reason": "Private signed delivery now forces Content-Disposition attachment to prevent user-uploaded HTML/SVG/binary from rendering inline. Source is pending deployment; existing provider version remains active until post-merge deploy and owner-scoped download E2E.",
+      "pending_deploy_since": "2026-11-17"
     },
     "checkout": {
       "state": "LOCAL_ONLY",

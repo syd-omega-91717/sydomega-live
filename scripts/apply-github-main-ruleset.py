@@ -6,15 +6,16 @@ The token is read only from the environment and is never printed or stored.
 """
 from __future__ import annotations
 
+import http.client
 import json
 import os
 import sys
-import urllib.error
-import urllib.request
 from pathlib import Path
 
 REPOSITORY = "syd-omega-91717/sydomega-live"
 RULESET_ID = 20176798
+API_HOST = "api.github.com"
+API_PATH = "/repos/syd-omega-91717/sydomega-live/rulesets/20176798"
 CONFIG = Path(__file__).resolve().parents[1] / "config/github-main-ruleset.json"
 
 
@@ -24,25 +25,28 @@ def request(method: str, token: str, payload: dict | None = None) -> dict:
     if not token:
         raise ValueError("GitHub API token is required")
     data = None if payload is None else json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        "https://api.github.com/repos/syd-omega-91717/sydomega-live/rulesets/20176798",
-        data=data,
-        method=method,
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Accept": "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "Content-Type": "application/json",
-            "User-Agent": "sydomega-main-ruleset-guard",
-        },
-    )
+    connection = http.client.HTTPSConnection(API_HOST, timeout=20)
     try:
-        with urllib.request.urlopen(req, timeout=20) as response:
-            raw = response.read().decode("utf-8")
-            return json.loads(raw) if raw else {}
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")[:500]
-        raise RuntimeError(f"GitHub API returned HTTP {exc.code}: {detail}") from exc
+        connection.request(
+            method,
+            API_PATH,
+            body=data,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+                "Content-Type": "application/json",
+                "User-Agent": "sydomega-main-ruleset-guard",
+            },
+        )
+        response = connection.getresponse()
+        raw = response.read()
+        if not 200 <= response.status < 300:
+            detail = raw.decode("utf-8", errors="replace")[:500]
+            raise RuntimeError(f"GitHub API returned HTTP {response.status}: {detail}")
+        return json.loads(raw.decode("utf-8")) if raw else {}
+    finally:
+        connection.close()
 
 
 def verify(state: dict, expected: dict) -> None:
@@ -80,7 +84,7 @@ def verify(state: dict, expected: dict) -> None:
 
 def main() -> int:
     if any(argument in ("-h", "--help") for argument in sys.argv[1:]):
-        print(__doc__ or "Apply and verify the GitHub main branch ruleset.")
+        print(__doc__ or "Apply and verify the GitHub main-branch ruleset.")
         return 0
     token = os.environ.get("GH_REPO_ADMIN_TOKEN")
     if not token:

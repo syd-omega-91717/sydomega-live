@@ -202,13 +202,40 @@ async function submit(){
   var filePath=null,fEl=document.getElementById('m-file');
   if(fEl&&fEl.files&&fEl.files[0]){
     out.textContent='Uploading file...';
-    var up=await window.OmegaStorage.upload('uploads',fEl.files[0]);
-    if(up.error){btn.disabled=false;out.style.color='var(--crim)';out.textContent='Upload failed: '+up.error;return;}
-    filePath=up.path;
+    var up=null;
+    try{up=await window.OmegaStorage.upload('uploads',fEl.files[0]);}catch(e){up={error:e&&e.message?e.message:'upload_unconfirmed'};}
+    if(!up||up.error){btn.disabled=false;out.style.color='var(--crim)';out.textContent='Upload failed: '+((up&&up.error)||'no response from storage.');return;}
+    filePath=up.path||null;
+    if(!filePath){btn.disabled=false;out.style.color='var(--crim)';out.textContent='Upload failed: storage returned no path.';return;}
   }
-  var r=await sb.from('media_reservations').insert({user_id:_user.id,zone:z,duration:d,title:title,message:message,price_omega:p,status:'submitted',file_path:filePath});
+  var r=null;
+  try{
+    r=await sb.from('media_reservations').insert({user_id:_user.id,zone:z,duration:d,title:title,message:message,price_omega:p,status:'submitted',file_path:filePath});
+  }catch(_error){
+    btn.disabled=false;out.style.color='var(--crim)';
+    out.textContent=filePath
+      ?'SUBMISSION STATUS UNKNOWN — FILE PRESERVED. Refresh CAMPAIGNS before retrying to avoid a duplicate.'
+      :'SUBMISSION STATUS UNKNOWN — Refresh CAMPAIGNS before retrying to avoid a duplicate.';
+    return;
+  }
+  if(!r||r.error){
+    var code=r&&r.error&&typeof r.error.code==='string'?r.error.code:'';
+    if(filePath&&/^[0-9A-Z]{5}$/.test(code)){
+      var cleanup=null;
+      try{cleanup=await window.OmegaStorage.remove('uploads',filePath);}catch(_error){cleanup={error:'cleanup_unconfirmed'};}
+      btn.disabled=false;out.style.color='var(--crim)';
+      out.textContent=cleanup&&!cleanup.error
+        ?'CAMPAIGN REJECTED ('+code+'). UPLOAD ROLLED BACK.'
+        :'CAMPAIGN REJECTED ('+code+'). FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED.';
+      return;
+    }
+    btn.disabled=false;out.style.color='var(--crim)';
+    out.textContent=filePath
+      ?'SUBMISSION STATUS UNKNOWN — FILE PRESERVED. Refresh CAMPAIGNS before retrying.'
+      :'Could not submit ('+(code||'response unavailable')+'). Refresh CAMPAIGNS before retrying.';
+    return;
+  }
   btn.disabled=false;
-  if(r.error){out.style.color='var(--crim)';out.textContent='Could not submit ('+(r.error.code||r.error.message||'')+').';return;}
   out.style.color='var(--cyan)';out.textContent='Submitted for approval. The Order will review it.';
   document.getElementById('m-title').value='';document.getElementById('m-msg').value='';if(fEl)fEl.value='';
   loadList();loadQueue();

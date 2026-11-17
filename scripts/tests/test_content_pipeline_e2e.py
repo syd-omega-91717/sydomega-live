@@ -325,7 +325,8 @@ def run_e2e(env: dict[str, str]) -> None:
         None,
     )
     require(
-        signed_event is not None and (signed_event.get("metadata") or {}).get("expires_seconds") == 900\n        and (signed_event.get("metadata") or {}).get("delivery") == "signed_attachment",
+        signed_event is not None and (signed_event.get("metadata") or {}).get("expires_seconds") == 900
+        and (signed_event.get("metadata") or {}).get("delivery") == "signed_attachment",
         "signed_download_audit_expiry_mismatch",
     )
     print("CONTENT_PIPELINE_E2E=PASS local_only=true stages=auth,upload,registration,idempotency,path_guard,jwt,owner_download,expiry,audit")

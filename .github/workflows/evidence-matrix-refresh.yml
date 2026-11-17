@@ -8,10 +8,6 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: evidence-matrix-refresh-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
   refresh:
     if: github.actor != 'github-actions[bot]'

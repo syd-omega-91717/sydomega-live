@@ -1,40 +1,40 @@
 # Edge Functions: what is live, what is held, and what unlocks each
 
-Provider inventory refreshed 2026-11-17 after reading the live function list and comparing all 22 deployed entrypoints against main commit `d62168f2d8dd3504d5f2809128c64af1113984b1`, `supabase/config.toml`, and the auth registry. All 22 provider-listed entrypoints matched their repository files byte-for-byte. The additional shared/data files returned for `studio-canon` and `studio-library` were separately compared on 2026-11-10 and matched at that earlier capture time. Provider versions, `verify_jwt`, live SHA-256 and repository blob SHA are recorded in `docs/runtime/supabase-edge-functions-live.json`. This verifies source parity at capture time, not runtime invocation, secret presence, or end-to-end behavior. Evidence for the findings referenced here is in `LEGAL_GAP_AUDIT.md`.
+Provider inventory refreshed 2026-11-17 after reading the live function list and comparing all 22 deployed entrypoints against main commit `6fe67460024b9d9cd083398eca99f6c411a0be39`, `supabase/config.toml`, and the auth registry. All 22 provider-listed entrypoints matched their repository files byte-for-byte. The additional shared/data files returned for `studio-canon` and `studio-library` were separately compared on 2026-11-10 and matched at that earlier capture time. Provider versions, `verify_jwt`, live SHA-256 and repository blob SHA are recorded in `docs/runtime/supabase-edge-functions-live.json`. This verifies source parity at capture time, not runtime invocation, secret presence, or end-to-end behavior. Evidence for the findings referenced here is in `LEGAL_GAP_AUDIT.md`.
 
 A function absent from `supabase/config.toml` never deploys, and merging a change to that file
 deploys to production, so "go live" is always a reviewed PR that also updates
 `config/omega-edge-function-auth.json` and `docs/runtime/supabase-edge-functions-live.json`
 (`scripts/edge-function-auth-config-contract.py` fails if the three disagree).
 
-## Live now (22 ACTIVE, provider inventory read 2026-11-10)
+## Live now (22 ACTIVE, provider inventory read 2026-11-17)
 
 All 22 names below match both `supabase/config.toml` and `config/omega-edge-function-auth.json`. `verify_jwt` matches the provider. The live entrypoint source was compared byte-for-byte with main for every function; the two Studios functions also had their returned shared and generated data files compared. A deployed function is not automatically a proven working business flow: secret presence, invocation results and downstream delivery still require separate tests.
 
 | Function | Provider version | `verify_jwt` | Auth mode | Source parity | Security boundary / purpose |
 |---|---:|---:|---|---|---|
-| `agent-execute` | 5 | true | `SUPABASE_JWT` | Exact entrypoint match | Requires a valid Supabase JWT; handler performs its own authorization. |
-| `concierge` | 13 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated orchestration endpoint. |
-| `concierge-orchestrator` | 7 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated orchestration endpoint. |
-| `content-delivery` | 9 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated owner-only delivery endpoint. |
-| `content-ingest` | 9 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated owner-only ingestion endpoint. |
-| `evidence-graph` | 223 | false | `USER_SESSION` | Exact entrypoint match | Supabase server adapter enforces auth=user and handler requires userClaims.sub. |
-| `growth-orchestrator` | 9 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated orchestration endpoint. |
+| `agent-execute` | 9 | true | `SUPABASE_JWT` | Exact entrypoint match | Requires a valid Supabase JWT; handler performs its own authorization. |
+| `concierge` | 16 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated orchestration endpoint. |
+| `concierge-orchestrator` | 10 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated orchestration endpoint. |
+| `content-delivery` | 11 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated owner-only delivery endpoint. |
+| `content-ingest` | 11 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated owner-only ingestion endpoint. |
+| `evidence-graph` | 345 | false | `USER_SESSION` | Exact entrypoint match | Supabase server adapter enforces auth=user and handler requires userClaims.sub. |
+| `growth-orchestrator` | 12 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated orchestration endpoint. |
 | `intel-feed` | 3 | false | `PUBLIC_READONLY` | Exact entrypoint match | Public GET-only Hacker News industry feed; no privileged database writes. |
 | `market-price` | 4 | false | `PUBLIC_READONLY` | Exact entrypoint match | Public GET-only stock/ETF quote proxy; dormant (configured:false) until TWELVE_DATA_API_KEY is set; no privileged database access. |
 | `notify-access` | 2 | false | `SHARED_SECRET` | Exact entrypoint match | Called by the database through pg_net, never by a member. Requires x-omega-webhook-secret to match the Vault secret notify_access_webhook_secret, read through the server-only RPC public.omega_notify_access_secret(); rejects any other caller with 401 (migration 20261025100000). |
-| `omega-knowledge-embedding-worker` | 312 | false | `SHARED_SECRET` | Exact entrypoint match | Worker verifies OMEGA_PROVIDER_WORKER_SECRET in x-omega-worker-secret. |
-| `omega-media-worker` | 402 | false | `SHARED_SECRET` | Exact entrypoint match | Supabase server adapter enforces auth=secret. |
-| `omega-notification-worker` | 402 | false | `SHARED_SECRET` | Exact entrypoint match | Supabase server adapter enforces auth=secret. |
-| `omega-provider-worker` | 223 | false | `SHARED_SECRET` | Exact entrypoint match | Worker verifies OMEGA_PROVIDER_WORKER_SECRET in x-omega-worker-secret. |
-| `omega-runtime-gateway` | 406 | true | `SUPABASE_JWT` | Exact entrypoint match | User-authenticated governed runtime gateway. |
-| `product-orchestrator` | 10 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated orchestration endpoint. |
+| `omega-knowledge-embedding-worker` | 434 | false | `SHARED_SECRET` | Exact entrypoint match | Worker verifies OMEGA_PROVIDER_WORKER_SECRET in x-omega-worker-secret. |
+| `omega-media-worker` | 524 | false | `SHARED_SECRET` | Exact entrypoint match | Supabase server adapter enforces auth=secret. |
+| `omega-notification-worker` | 524 | false | `SHARED_SECRET` | Exact entrypoint match | Supabase server adapter enforces auth=secret. |
+| `omega-provider-worker` | 345 | false | `SHARED_SECRET` | Exact entrypoint match | Worker verifies OMEGA_PROVIDER_WORKER_SECRET in x-omega-worker-secret. |
+| `omega-runtime-gateway` | 529 | true | `SUPABASE_JWT` | Exact entrypoint match | User-authenticated governed runtime gateway. |
+| `product-orchestrator` | 13 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated orchestration endpoint. |
 | `rankings` | 2 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated member leaderboard; caller rank derives only from the verified JWT, body user_id is never trusted. |
-| `secrets-health` | 7 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated operational health endpoint. |
-| `snapshot-leaderboard` | 2 | true | `SUPABASE_JWT` | Exact entrypoint match | Owner-only on-demand snapshot; the function re-checks profiles.is_owner. The service-key bearer path was removed before deploy (not timing-safe). |
-| `stripe-webhook` | 9 | false | `STRIPE_SIGNATURE` | Exact entrypoint match | Webhook authenticates using Stripe's signed raw request body; Supabase JWT verification is not the webhook trust boundary. |
-| `studio-canon` | 4 | true | `SUPABASE_JWT` | Exact entrypoint match | Owner-only delivery of unreleased Studios canon; the owner flag is re-checked server-side. |
-| `studio-library` | 8 | true | `SUPABASE_JWT` | Exact entrypoint match | Owner-only delivery of the unreleased Studios library (scripts, design documents, catalog); the owner flag is re-checked server-side. |
+| `secrets-health` | 9 | true | `SUPABASE_JWT` | Exact entrypoint match | Authenticated operational health endpoint. |
+| `snapshot-leaderboard` | 4 | true | `SUPABASE_JWT` | Exact entrypoint match | Owner-only on-demand snapshot; the function re-checks profiles.is_owner. The service-key bearer path was removed before deploy (not timing-safe). |
+| `stripe-webhook` | 13 | false | `STRIPE_SIGNATURE` | Exact entrypoint match | Webhook authenticates using Stripe's signed raw request body; Supabase JWT verification is not the webhook trust boundary. |
+| `studio-canon` | 6 | true | `SUPABASE_JWT` | Exact entrypoint match | Owner-only delivery of unreleased Studios canon; the owner flag is re-checked server-side. |
+| `studio-library` | 13 | true | `SUPABASE_JWT` | Exact entrypoint match | Owner-only delivery of the unreleased Studios library (scripts, design documents, catalog); the owner flag is re-checked server-side. |
 
 **Before enabling member-facing stock quotes — licensing gate remains.** Twelve Data's terms were read on 2026-11-04
 (`https://twelvedata.com/terms`, "Last updated: January 1, 2026", fetched through a cached copy, so confirm

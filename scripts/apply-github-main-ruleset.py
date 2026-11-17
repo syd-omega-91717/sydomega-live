@@ -29,7 +29,6 @@ def request(method: str, token: str, payload: dict | None = None) -> dict:
 
     config = [
         f"url = {json.dumps(API_URL)}",
-        f"request = {json.dumps(method)}",
         f"header = {json.dumps('Authorization: Bearer ' + token)}",
         f"header = {json.dumps('Accept: application/vnd.github+json')}",
         f"header = {json.dumps('X-GitHub-Api-Version: 2022-11-28')}",
@@ -45,10 +44,13 @@ def request(method: str, token: str, payload: dict | None = None) -> dict:
                 encoding="utf-8",
             )
             config.append(f"data-binary = {json.dumps('@' + str(payload_path))}")
+        config.append(f"request = {json.dumps(method)}")
 
         command = [
             "curl",
+            "--disable",
             "--config", "-",
+            "--noproxy", "*",
             "--silent",
             "--show-error",
             "--fail-with-body",

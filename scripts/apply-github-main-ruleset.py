@@ -78,6 +78,9 @@ def verify(state: dict, expected: dict) -> None:
 
 
 def main() -> int:
+    if any(argument in ("-h", "--help") for argument in sys.argv[1:]):
+        print(__doc__ or "Apply and verify the GitHub main branch ruleset.")
+        return 0
     token = os.environ.get("GH_REPO_ADMIN_TOKEN")
     if not token:
         print("ERROR: GH_REPO_ADMIN_TOKEN is not set.", file=sys.stderr)

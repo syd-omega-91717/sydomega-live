@@ -25,13 +25,13 @@ def repository_files_drift(name: str, metadata: dict) -> list[str]:
     """Check every declared runtime dependency, not only index.ts.
 
     Older snapshot entries may remain entrypoint-only. New or changed functions
-    can opt into repository_files_sha256 to bind imported helpers as well.
+    can opt into repository_files_blob_sha to bind imported helpers as well.
     """
-    expected_files = metadata.get("repository_files_sha256")
+    expected_files = metadata.get("repository_files_blob_sha")
     if expected_files is None:
         return []
     if not isinstance(expected_files, dict) or not expected_files:
-        return [f"{name}: repository_files_sha256 must be a non-empty object"]
+        return [f"{name}: repository_files_blob_sha must be a non-empty object"]
     function_root = (FUNCTIONS / name).resolve()
     functions_root = FUNCTIONS.resolve()
     drift = []
@@ -48,10 +48,10 @@ def repository_files_drift(name: str, metadata: dict) -> list[str]:
         if not path.is_file():
             drift.append(f"{name}: runtime file missing: {relative}")
             continue
-        if not isinstance(expected_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha):
-            drift.append(f"{name}: invalid SHA-256 for {relative}")
+        if not isinstance(expected_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", expected_sha):
+            drift.append(f"{name}: invalid Git blob SHA for {relative}")
             continue
-        actual_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+        actual_sha = git_blob_sha(path)
         if actual_sha != expected_sha:
             drift.append(f"{name}:{relative}")
     return drift

@@ -47,24 +47,34 @@ class RulesetApplyTests(unittest.TestCase):
             self.assertEqual(MODULE.main(), 2)
         request.assert_not_called()
 
-    def test_verify_rejects_inactive_ruleset(self):
-        state = json.loads(CONFIG.read_text(encoding="utf-8"))
+    def test_verifier_rejects_inactive_ruleset(self):
+        import copy
+        state = copy.deepcopy(self.config)
         state["id"] = MODULE.RULESET_ID
         with self.assertRaisesRegex(RuntimeError, "not active"):
-            MODULE.verify(state, state | {"name": state["name"]})
-        state["enforcement"] = "active"
-        state["bypass_actors"] = []
-        state["rules"].append({"type":"deletion"})
-        state["rules"].append({"type":"non_fast_forward"})
-        state["rules"].append({"type":"pull_request","parameters":{
-            "required_approving_review_count":0,"required_review_thread_resolution":True
-        }})
-        state["rules"].append({"type":"required_status_checks","parameters":state["rules"][-1]["parameters"] if False else {
-            "strict_required_status_checks_policy":True,
-            "required_status_checks":state["rules"][-1]["parameters"].get("required_status_checks",[])
-        }})
-        # The actual API response must contain all reviewed contexts.
-        MODULE.verify(state, state)
+            MODULE.verify(state, self.config)
+
+    def test_verifier_accepts_the_complete_active_ruleset(self):
+        state = dict(self.config)
+        state["id"] = MODULE.RULESET_ID
+        MODULE.verify(state, self.config)
+
+    def test_verifier_rejects_a_missing_required_check(self):
+        import copy
+        state = copy.deepcopy(self.config)
+        state["id"] = MODULE.RULESET_ID
+        state["rules"][-1]["parameters"]["required_status_checks"].pop()
+        with self.assertRaisesRegex(RuntimeError, "required checks missing"):
+            MODULE.verify(state, self.config)
+
+    def test_manual_workflow_is_main_only_and_environment_protected(self):
+        workflow = (ROOT / ".github/workflows/github-main-ruleset-activation.yml").read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("if: github.ref == 'refs/heads/main'", workflow)
+        self.assertIn("environment: github-repository-admin", workflow)
+        self.assertNotRegex(workflow, r"(?m)^\\s*(?:push|pull_request|schedule):")
+        self.assertIn("python3 scripts/apply-github-main-ruleset.py", workflow)
+
 
 
 if __name__ == "__main__":

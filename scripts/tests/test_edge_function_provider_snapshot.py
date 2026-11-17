@@ -17,7 +17,7 @@ class EdgeFunctionProviderSnapshotTests(unittest.TestCase):
         snapshot = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
         self.assertEqual(snapshot.get("provider_project_id"), "ydqhzvvoyufiiqvzcjns")
         self.assertEqual(snapshot.get("provider_function_count"), 22)
-        self.assertEqual(snapshot.get("source_tree_commit"), "6fe67460024b9d9cd083398eca99f6c411a0be39")
+        self.assertEqual(snapshot.get("source_tree_commit"), "04f87ca71168986d200cab7fefdce5e229a74a85")
         self.assertTrue(snapshot.get("captured_at"))
         rows = snapshot.get("functions", {})
         deployed = {slug: row for slug, row in rows.items() if row.get("state") == "DEPLOYED"}

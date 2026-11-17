@@ -12,7 +12,7 @@ import re
 import subprocess
 import pathlib
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "apply-github-main-ruleset.py"
@@ -135,6 +135,12 @@ class RulesetApplyTests(unittest.TestCase):
 
         with patch.object(MODULE.subprocess, "run", side_effect=inspect_call):
             self.assertEqual(MODULE.request("PUT", "test-token", payload), {"ok": True})
+
+    def test_request_rejects_token_line_breaks_before_process(self):
+        with patch.object(MODULE.subprocess, "run") as run:
+            with self.assertRaisesRegex(ValueError, "invalid line break"):
+                MODULE.request("GET", "test-token\\nInjected: header")
+        run.assert_not_called()
 
     def test_request_rejects_unsupported_method_before_process(self):
         with patch.object(MODULE.subprocess, "run") as run:

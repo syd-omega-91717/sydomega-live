@@ -12,6 +12,7 @@ class EvidenceMatrixRefreshWorkflowTests(unittest.TestCase):
         self.assertIn("permissions:\n  contents: write", source)
         self.assertIn("if: github.actor != 'github-actions[bot]'", source)
         self.assertIn('git push origin "HEAD:${GITHUB_REF_NAME}"', source)
+        self.assertNotIn("concurrency:", source)
         self.assertNotIn("pull_request:", source)
         self.assertNotIn("branches: [main]", source)
         self.assertNotIn("git push origin main", source)

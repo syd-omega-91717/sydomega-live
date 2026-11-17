@@ -42,21 +42,24 @@ jobs:
         run: |
           set -euo pipefail
           base="https://sydomega.com"
+          www_base="https://www.sydomega.com"
           expected="${GITHUB_SHA}"
           served=""
+          www_served=""
 
           # Cloudflare Pages Git integration may finish after the GitHub push event.
-          # Allow up to five minutes for the exact main SHA to become publicly served.
-          # Cloudflare Pages Git integration can finish after the GitHub push event.
-          # Each bounded request follows canonical redirects; 30 attempts allow convergence.
+          # Allow up to five minutes for both public hostnames to serve the exact main SHA.
           for attempt in $(seq 1 30); do
             manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
+            www_manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${www_base}/.well-known/omega-release.json" 2>/dev/null || true)"
             served="$(printf '%s' "${manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
-            if [ "${served}" = "${expected}" ]; then break; fi
-            echo "release_attempt=${attempt} served=${served:-none} expected=${expected}"
+            www_served="$(printf '%s' "${www_manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
+            if [ "${served}" = "${expected}" ] && [ "${www_served}" = "${expected}" ]; then break; fi
+            echo "release_attempt=${attempt} root_served=${served:-none} www_served=${www_served:-none} expected=${expected}"
             sleep 10
           done
-          [ "${served}" = "${expected}" ] || { echo "::error title=Production SHA mismatch::Cloudflare Pages does not serve the exact main commit."; exit 1; }
+          [ "${served}" = "${expected}" ] || { echo "::error title=Production SHA mismatch::sydomega.com does not serve the exact main commit."; exit 1; }
+          [ "${www_served}" = "${expected}" ] || { echo "::error title=WWW production SHA mismatch::www.sydomega.com does not serve the exact main commit."; exit 1; }
 
           root_code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/")"
           [ "${root_code}" = "200" ] || { echo "production root final response returned ${root_code}"; exit 1; }
@@ -75,4 +78,4 @@ jobs:
           www_code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "https://www.sydomega.com/")"
           [ "${www_code}" = "200" ] || { echo "www alias final response returned ${www_code}"; exit 1; }
 
-          echo "CLOUDFLARE_PRODUCTION=PASS host=sydomega.com commit=${served} root=${root_code} www=${www_code}"
+          echo "CLOUDFLARE_PRODUCTION=PASS host=sydomega.com commit=${served} www_commit=${www_served} root=${root_code} www=${www_code}"

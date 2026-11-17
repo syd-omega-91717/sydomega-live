@@ -134,7 +134,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop table", sql)
         self.assertNotIn("grant ", sql)
         self.assertEqual(self.remote.get("remoteMigrationCount"), 434)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261116214842")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117002651")
 
     def test_ai_usage_telemetry_grant_is_provider_applied(self) -> None:
         version = "20261117002651"

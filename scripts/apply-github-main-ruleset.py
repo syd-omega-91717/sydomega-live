@@ -24,7 +24,7 @@ def request(method: str, token: str, payload: dict | None = None) -> dict:
         raise ValueError("unsupported GitHub API method")
     if not token:
         raise ValueError("GitHub API token is required")
-    if "\\r" in token or "\\n" in token:
+    if "\r" in token or "\n" in token:
         raise ValueError("GitHub API token contains an invalid line break")
 
     config = [
@@ -56,18 +56,18 @@ def request(method: str, token: str, payload: dict | None = None) -> dict:
             "--tlsv1.2",
             "--connect-timeout", "10",
             "--max-time", "20",
-            "--write-out", "\\n__OMEGA_HTTP_STATUS__%{http_code}",
+            "--write-out", "\n__OMEGA_HTTP_STATUS__%{http_code}",
         ]
         completed = subprocess.run(
             command,
-            input=("\\n".join(config) + "\\n").encode("utf-8"),
+            input=("\n".join(config) + "\n").encode("utf-8"),
             capture_output=True,
             check=False,
             timeout=25,
         )
 
     output = completed.stdout.decode("utf-8", errors="replace")
-    marker = "\\n__OMEGA_HTTP_STATUS__"
+    marker = "\n__OMEGA_HTTP_STATUS__"
     if marker not in output:
         detail = completed.stderr.decode("utf-8", errors="replace")[:500]
         raise RuntimeError(f"GitHub API curl request failed (exit {completed.returncode}): {detail}")

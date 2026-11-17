@@ -166,7 +166,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("omega_ai_requests_service_role_privilege_too_broad", privileges)
         self.assertIn("omega_ai_requests_client_privilege_must_remain_denied", privileges)
         self.assertEqual(self.remote.get("remoteMigrationCount"), 436)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117003721")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117004605")
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []

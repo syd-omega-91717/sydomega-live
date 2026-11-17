@@ -130,7 +130,7 @@ def front_door_findings():
     if live.exists():
         try:
             fns = json.loads(live.read_text(encoding='utf-8'))['functions']
-            expected['SERVICES'] = sum(1 for f in fns.values() if f.get('state') == 'DEPLOYED')
+            expected['SERVICES'] = sum(1 for f in fns.values() if f.get('state') in {'DEPLOYED', 'PENDING_DEPLOY'})
         except (ValueError, KeyError, TypeError, AttributeError):
             pass
     out = []

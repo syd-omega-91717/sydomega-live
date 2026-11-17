@@ -314,6 +314,7 @@ This scanner reads the repository. It has no database connection, so:
 
 Deployment state is cross-referenced to \`docs/runtime/supabase-edge-functions-live.json\`,
 captured **2026-11-17T00:13:31.606Z**. This is a dated provider snapshot, not a live invocation test.
+captured **2026-11-17T07:48:00.000Z**. This is a dated provider snapshot, not a live invocation test.
 \`MISSING_DEPLOYMENT\` means a source/client/server invocation exists but the runtime manifest marks the function local-only or omits it.
 \`UNWIRED\` means the manifest marks the function deployed but this scan found no client/server call path; \`LOCAL_ONLY\` means source-only with no call path.
 

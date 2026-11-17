@@ -1,0 +1,103 @@
+{
+  "name": "sydomega_merged",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": [
+        "refs/heads/main"
+      ],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "non_fast_forward"
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": false,
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "Trivy"
+          },
+          {
+            "context": "Semgrep OSS"
+          },
+          {
+            "context": "Cloudflare Pages"
+          },
+          {
+            "context": "CodeQL"
+          },
+          {
+            "context": "Supabase runtime health"
+          },
+          {
+            "context": "Source vs live Edge Function reconciliation"
+          },
+          {
+            "context": "Gitleaks full-history scan"
+          },
+          {
+            "context": "Runtime syntax and configuration contract"
+          },
+          {
+            "context": "Blocking supply-chain scan"
+          },
+          {
+            "context": "Static contract gates"
+          },
+          {
+            "context": "Fresh database replay (all migrations)"
+          },
+          {
+            "context": "Analyze (javascript-typescript)"
+          },
+          {
+            "context": "Analyze (actions)"
+          },
+          {
+            "context": "workflow-contract"
+          },
+          {
+            "context": "integrity"
+          },
+          {
+            "context": "readiness"
+          },
+          {
+            "context": "evidence"
+          },
+          {
+            "context": "verify"
+          },
+          {
+            "context": "intelligence-fabric"
+          }
+        ]
+      }
+    }
+  ],
+  "bypass_actors": []
+}

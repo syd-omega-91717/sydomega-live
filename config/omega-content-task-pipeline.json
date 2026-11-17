@@ -48,10 +48,11 @@
       "purpose": "Server-side size ceiling matching the existing upload.js client cap; MIME allowlist remains open for arbitrary binary attachments."
     },
     "validation": {
-      "content_signature": "UNIMPLEMENTED",
-      "sha256": "UNIMPLEMENTED",
+      "content_signature": "PROVIDER_DEPLOYED_ENTRYPOINT_VERIFIED",
+      "sha256": "PROVIDER_DEPLOYED_ENTRYPOINT_VERIFIED",
       "malware_scan": "UNAVAILABLE",
-      "rights_review": "REQUIRED_BEFORE_PUBLICATION"
+      "rights_review": "REQUIRED_BEFORE_PUBLICATION",
+      "note": "content-ingest downloads the private object, enforces the 50 MiB limit, identifies common byte signatures and records SHA-256. The provider is active at version 11 and its entrypoint matches repository source. Signature identification is not malware scanning or rights clearance; no production Storage object currently exists to exercise a member upload transaction."
     }
   },
   "download": {
@@ -59,10 +60,10 @@
       "REQUESTED",
       "AUTHENTICATED",
       "AUTHORIZED",
-      "SIGNED",
       "DELIVERED",
       "DENIED",
-      "FAILED"
+      "FAILED",
+      "SIGNED_ATTACHMENT"
     ],
     "required": {
       "authentication": true,
@@ -74,15 +75,19 @@
       "first_slice_is_owner_only",
       "shared_delivery_is_not_inferred_from_storage_shares_until_explicit_policy_is_verified",
       "public_download_is_never_inferred_from_storage_path",
-      "signed_url_is_time_limited"
-    ]
+      "signed_url_is_time_limited",
+      "private_user_upload_delivery_must_force_content_disposition_attachment"
+    ],
+    "delivery_mode": "SIGNED_ATTACHMENT",
+    "signed_url_ttl_seconds": 900
   },
   "truth_states": {
     "registered": "LIVE",
     "rights": "UNVERIFIED",
     "publication": "UNVERIFIED",
     "entitlement": "UNVERIFIED",
-    "scan": "UNAVAILABLE_UNLESS_PROVIDER_EVIDENCE_EXISTS"
+    "scan": "UNAVAILABLE_UNLESS_PROVIDER_EVIDENCE_EXISTS",
+    "signature": "IDENTIFIED_NOT_MALWARE_CLEARED"
   },
   "release_rule": "Provider deployment evidence is recorded, but authenticated end-to-end transaction evidence, rights/publication/entitlement and malware-scan evidence remain separate truth gates.",
   "provider_evidence": {
@@ -90,15 +95,25 @@
     "functions": {
       "content-ingest": {
         "status": "DEPLOYED",
-        "version": 5,
-        "verify_jwt": true
+        "live_version": 11,
+        "verify_jwt": true,
+        "source": "supabase/functions/content-ingest/index.ts",
+        "dependencies": [
+          "supabase/functions/_shared/content-validation.mjs"
+        ],
+        "source_parity": "EXACT_ENTRYPOINT_MATCH",
+        "provider_observed_at": "2026-11-17T07:48:00.000Z"
       },
       "content-delivery": {
         "status": "DEPLOYED",
-        "version": 5,
-        "verify_jwt": true
+        "live_version": 11,
+        "verify_jwt": true,
+        "source": "supabase/functions/content-delivery/index.ts",
+        "dependencies": [],
+        "source_parity": "EXACT_ENTRYPOINT_MATCH",
+        "provider_observed_at": "2026-11-17T07:48:00.000Z"
       }
     },
-    "limitation": "Deployment evidence proves live function availability/configuration; it does not prove an authenticated end-to-end upload/download transaction has been exercised."
+    "limitation": "Both content functions are ACTIVE at provider version 11 and their deployed entrypoints match repository source byte-for-byte. The isolated Supabase CI stack passes authenticated upload/download, owner isolation, path guard, idempotency, expiry and audit probes. Production currently has zero Storage objects and zero storage_files rows, so no production user upload/download transaction has yet been observed. Malware scanning, rights review, publication approval and entitlements remain separate fail-closed gates."
   }
 }

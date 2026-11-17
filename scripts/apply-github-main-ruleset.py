@@ -19,12 +19,14 @@ API = f"https://api.github.com/repos/{REPOSITORY}/rulesets/{RULESET_ID}"
 CONFIG = Path(__file__).resolve().parents[1] / "config/github-main-ruleset.json"
 
 
-def request(method: str, url: str, token: str, payload: dict | None = None) -> dict:
-    if not url.startswith("https://api.github.com/"):
-        raise ValueError("refusing non-GitHub HTTPS API URL")
+def request(method: str, token: str, payload: dict | None = None) -> dict:
+    if method not in {"GET", "PUT"}:
+        raise ValueError("unsupported GitHub API method")
+    if not token:
+        raise ValueError("GitHub API token is required")
     data = None if payload is None else json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
-        url,
+        API,
         data=data,
         method=method,
         headers={
@@ -86,11 +88,11 @@ def main() -> int:
         print("ERROR: GH_REPO_ADMIN_TOKEN is not set.", file=sys.stderr)
         return 2
     expected = json.loads(CONFIG.read_text(encoding="utf-8"))
-    before = request("GET", API, token)
+    before = request("GET", token)
     if before.get("id") != RULESET_ID or before.get("name") != expected["name"]:
         raise RuntimeError("refusing to overwrite an unexpected ruleset")
-    request("PUT", API, token, expected)
-    after = request("GET", API, token)
+    request("PUT", token, expected)
+    after = request("GET", token)
     verify(after, expected)
     print("GITHUB_MAIN_RULESET=ACTIVE")
     print("target=refs/heads/main")

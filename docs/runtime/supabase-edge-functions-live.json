@@ -164,7 +164,7 @@
       "live_sha256": "1af273cadf67083993734878367c80094e0cca8ab71bc62acd9ffb02ece3cea8",
       "repository_blob_sha": "9c1fa3b61d4a798711a21ee92bbd8eb6503c9ebd",
       "provider_status": "ACTIVE",
-      "source_parity": "EXACT_ENTRYPOINT_AND_IMPORT_MATCH",
+      "source_parity": "EXACT_ENTRYPOINT_MATCH",
       "provider_observed_at": "2026-11-17T07:48:00.000Z",
       "provider_updated_at": "2026-11-17T07:24:05.455Z",
       "repository_files_blob_sha": {

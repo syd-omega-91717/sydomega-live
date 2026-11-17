@@ -94,7 +94,12 @@ class RulesetApplyTests(unittest.TestCase):
         connection.getresponse.return_value = response
         with patch.object(MODULE.http.client, "HTTPSConnection", return_value=connection) as connect:
             result = MODULE.request("GET", "test-token")
-        connect.assert_called_once_with("api.github.com", timeout=20)
+        kwargs = connect.call_args.kwargs
+        self.assertEqual(connect.call_args.args, ("api.github.com",))
+        self.assertEqual(kwargs["timeout"], 20)
+        self.assertIsInstance(kwargs["context"], MODULE.ssl.SSLContext)
+        self.assertTrue(kwargs["context"].check_hostname)
+        self.assertEqual(kwargs["context"].verify_mode, MODULE.ssl.CERT_REQUIRED)
         connection.request.assert_called_once()
         args, kwargs = connection.request.call_args
         self.assertEqual(args, ("GET", "/repos/syd-omega-91717/sydomega-live/rulesets/20176798"))

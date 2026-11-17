@@ -126,8 +126,14 @@ class TestFrontDoorStats(Fixture):
     def _door(self, surfaces, services, states=None):
         import json
         (self.dir / 'docs' / 'runtime').mkdir(parents=True)
-        (self.dir / 'docs' / 'runtime' / 'supabase-edge-functions-live.json').write_text(json.dumps(
-            {'functions': {'a': {'state': 'DEPLOYED'}, 'b': {'state': 'LOCAL_ONLY'}}}))
+        function_states = states or ['DEPLOYED', 'LOCAL_ONLY']
+        functions = {
+            'function_%d' % index: {'state': state}
+            for index, state in enumerate(function_states)
+        }
+        (self.dir / 'docs' / 'runtime' / 'supabase-edge-functions-live.json').write_text(
+            json.dumps({'functions': functions})
+        )
         row = ('<dt class="ohz-stat-n" data-countup>%d</dt><dd class="ohz-stat-l">SURFACES</dd>'
                '<dt class="ohz-stat-n" data-countup>%d</dt><dd class="ohz-stat-l">SERVICES</dd>')
         self.write('index.html', row % (surfaces, services))

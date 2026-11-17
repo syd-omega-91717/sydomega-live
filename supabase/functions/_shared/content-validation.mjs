@@ -49,6 +49,14 @@ export function detectMime(input) {
   }
   if (bytes.length >= 4 && bytes[0] === 0x50 && bytes[1] === 0x4b &&
       bytes[2] === 0x03 && bytes[3] === 0x04) return "application/zip";
+  try {
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    if (!/[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]/.test(text)) {
+      return "text/plain";
+    }
+  } catch {
+    // Unknown or invalid UTF-8 binary remains application/octet-stream.
+  }
   return "application/octet-stream";
 }
 

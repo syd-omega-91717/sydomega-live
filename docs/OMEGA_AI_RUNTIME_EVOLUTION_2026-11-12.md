@@ -141,3 +141,10 @@ This AI layer is not declared production-ready until:
 - [OWASP AI Agent Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html)
 - [MCP 2026-07-28 authorization security considerations](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/security-considerations)
 - [OpenTelemetry GenAI agent span conventions](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md)
+
+
+## Live recheck — 2026-11-17
+
+A read-only review of Supabase Edge Function logs found real `ai_telemetry_write_failed` events from `concierge`. The function uses the service-role client to insert metadata-only records into `public.omega_ai_requests`, but live ACL inspection showed that service_role had no INSERT privilege. Migration `20261117002651_omega_ai_requests_service_role_insert_grant` is now applied. Post-apply ACL verification confirms INSERT only for service_role; SELECT, UPDATE and DELETE remain denied, and anon/authenticated remain fully denied. RLS remains enabled with its deny-by-default client policy. No synthetic usage row was inserted.
+
+The same live logs also show `ai_provider_not_configured`. The grant repairs telemetry authorization but does not activate model responses. A real provider endpoint and secret must be configured through the authorized secret-management path before AI runtime can be declared LIVE.

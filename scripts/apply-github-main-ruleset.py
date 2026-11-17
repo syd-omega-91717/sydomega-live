@@ -15,7 +15,6 @@ from pathlib import Path
 
 REPOSITORY = "syd-omega-91717/sydomega-live"
 RULESET_ID = 20176798
-API = f"https://api.github.com/repos/{REPOSITORY}/rulesets/{RULESET_ID}"
 CONFIG = Path(__file__).resolve().parents[1] / "config/github-main-ruleset.json"
 
 
@@ -26,7 +25,7 @@ def request(method: str, token: str, payload: dict | None = None) -> dict:
         raise ValueError("GitHub API token is required")
     data = None if payload is None else json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
-        API,
+        "https://api.github.com/repos/syd-omega-91717/sydomega-live/rulesets/20176798",
         data=data,
         method=method,
         headers={

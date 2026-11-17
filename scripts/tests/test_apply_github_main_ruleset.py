@@ -2,13 +2,15 @@
 """Tests for the controlled GitHub main-ruleset application helper."""
 from __future__ import annotations
 
+import contextlib
+import copy
 import importlib.util
 import io
 import json
 import os
 import pathlib
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "apply-github-main-ruleset.py"
@@ -51,7 +53,6 @@ class RulesetApplyTests(unittest.TestCase):
         request.assert_not_called()
 
     def test_verifier_rejects_inactive_ruleset(self):
-        import copy
         state = copy.deepcopy(self.config)
         state["id"] = MODULE.RULESET_ID
         state["enforcement"] = "disabled"
@@ -59,12 +60,11 @@ class RulesetApplyTests(unittest.TestCase):
             MODULE.verify(state, self.config)
 
     def test_verifier_accepts_the_complete_active_ruleset(self):
-        state = dict(self.config)
+        state = copy.deepcopy(self.config)
         state["id"] = MODULE.RULESET_ID
         MODULE.verify(state, self.config)
 
     def test_verifier_rejects_a_missing_required_check(self):
-        import copy
         state = copy.deepcopy(self.config)
         state["id"] = MODULE.RULESET_ID
         state["rules"][-1]["parameters"]["required_status_checks"].pop()
@@ -72,29 +72,52 @@ class RulesetApplyTests(unittest.TestCase):
             MODULE.verify(state, self.config)
 
     def test_apply_reads_identity_then_puts_and_verifies(self):
-        import contextlib
-        import copy
-        import io
+        output = io.StringIO()
         before = {"id": MODULE.RULESET_ID, "name": self.config["name"]}
         after = copy.deepcopy(self.config)
         after["id"] = MODULE.RULESET_ID
-        output = io.StringIO()
         with patch.dict("os.environ", {"GH_REPO_ADMIN_TOKEN": "test-token"}), patch.object(
             MODULE, "request", side_effect=[before, {}, after]
         ) as request, contextlib.redirect_stdout(output):
             self.assertEqual(MODULE.main(), 0)
         self.assertEqual(request.call_count, 3)
-        self.assertEqual(request.call_args_list[0].args[:3], ("GET", MODULE.API, "test-token"))
-        self.assertEqual(request.call_args_list[1].args[:3], ("PUT", MODULE.API, "test-token"))
-        self.assertEqual(request.call_args_list[2].args[:3], ("GET", MODULE.API, "test-token"))
+        self.assertEqual(request.call_args_list[0].args, ("GET", "test-token"))
+        self.assertEqual(request.call_args_list[1].args, ("PUT", "test-token", self.config))
+        self.assertEqual(request.call_args_list[2].args, ("GET", "test-token"))
         self.assertIn("GITHUB_MAIN_RULESET=ACTIVE", output.getvalue())
         self.assertNotIn("test-token", output.getvalue())
 
-    def test_request_rejects_non_github_https_before_network(self):
-        with patch.object(MODULE.urllib.request, "urlopen") as urlopen:
-            with self.assertRaisesRegex(ValueError, "non-GitHub HTTPS"):
-                MODULE.request("GET", "http://example.invalid", "test-token")
-        urlopen.assert_not_called()
+    def test_request_uses_fixed_https_host_and_path(self):
+        connection = MagicMock()
+        response = MagicMock(status=200)
+        response.read.return_value = b'{"ok":true}'
+        connection.getresponse.return_value = response
+        with patch.object(MODULE.http.client, "HTTPSConnection", return_value=connection) as connect:
+            result = MODULE.request("GET", "test-token")
+        connect.assert_called_once_with("api.github.com", timeout=20)
+        connection.request.assert_called_once()
+        args, kwargs = connection.request.call_args
+        self.assertEqual(args, ("GET", "/repos/syd-omega-91717/sydomega-live/rulesets/20176798"))
+        self.assertIsNone(kwargs["body"])
+        self.assertEqual(kwargs["headers"]["Authorization"], "Bearer test-token")
+        self.assertEqual(result, {"ok": True})
+        connection.close.assert_called_once()
+
+    def test_request_rejects_unsupported_method_before_connecting(self):
+        with patch.object(MODULE.http.client, "HTTPSConnection") as connect:
+            with self.assertRaisesRegex(ValueError, "unsupported GitHub API method"):
+                MODULE.request("POST", "test-token")
+        connect.assert_not_called()
+
+    def test_request_rejects_non_success_http_status_and_closes_connection(self):
+        connection = MagicMock()
+        response = MagicMock(status=403)
+        response.read.return_value = b'{"message":"forbidden"}'
+        connection.getresponse.return_value = response
+        with patch.object(MODULE.http.client, "HTTPSConnection", return_value=connection):
+            with self.assertRaisesRegex(RuntimeError, "HTTP 403"):
+                MODULE.request("GET", "test-token")
+        connection.close.assert_called_once()
 
     def test_manual_workflow_is_main_only_and_environment_protected(self):
         workflow = (ROOT / ".github/workflows/github-main-ruleset-activation.yml").read_text(encoding="utf-8")
@@ -105,6 +128,5 @@ class RulesetApplyTests(unittest.TestCase):
         self.assertIn("python3 scripts/apply-github-main-ruleset.py", workflow)
 
 
-
-if __name__ == "__main__":
+if ( __name__ == "__main__"):
     unittest.main()

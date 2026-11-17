@@ -394,7 +394,7 @@ def scan_client(path):
     text = path.read_text(encoding='utf-8', errors='replace')
     tables = set(FROM_RE.findall(text))
     rpcs = set(RPC_RE.findall(text))
-    edges = {a or b for a, b in EDGE_RE.findall(text)}
+    edges = {a or b or c for a, b, c in EDGE_RE.findall(text)}
     return {
         'tables': tables,
         'rpcs': rpcs,

@@ -21,6 +21,41 @@ def git_blob_sha(path: Path) -> str:
     # nosemgrep: python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
     return hashlib.sha1(header + data, usedforsecurity=False).hexdigest()
 
+def repository_files_drift(name: str, metadata: dict) -> list[str]:
+    """Check every declared runtime dependency, not only index.ts.
+
+    Older snapshot entries may remain entrypoint-only. New or changed functions
+    can opt into repository_files_sha256 to bind imported helpers as well.
+    """
+    expected_files = metadata.get("repository_files_sha256")
+    if expected_files is None:
+        return []
+    if not isinstance(expected_files, dict) or not expected_files:
+        return [f"{name}: repository_files_sha256 must be a non-empty object"]
+    function_root = (FUNCTIONS / name).resolve()
+    functions_root = FUNCTIONS.resolve()
+    drift = []
+    for relative, expected_sha in sorted(expected_files.items()):
+        if not isinstance(relative, str) or not relative or Path(relative).is_absolute():
+            drift.append(f"{name}: invalid runtime file path {relative!r}")
+            continue
+        path = (function_root / relative).resolve()
+        try:
+            path.relative_to(functions_root)
+        except ValueError:
+            drift.append(f"{name}: runtime file escapes supabase/functions: {relative}")
+            continue
+        if not path.is_file():
+            drift.append(f"{name}: runtime file missing: {relative}")
+            continue
+        if not isinstance(expected_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha):
+            drift.append(f"{name}: invalid SHA-256 for {relative}")
+            continue
+        actual_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual_sha != expected_sha:
+            drift.append(f"{name}:{relative}")
+    return drift
+
 def main()->int:
     if not FUNCTIONS.is_dir(): return fail("supabase/functions is missing")
     if not SNAPSHOT.is_file(): return fail("live snapshot is missing")
@@ -46,6 +81,7 @@ def main()->int:
             recorded=meta.get("repository_blob_sha")
             if not recorded: return fail(f"{name}: {state} requires repository_blob_sha")
             if actual[name]!=recorded: drift.append(name)
+        drift.extend(repository_files_drift(name, meta))
     if drift: return fail(f"deployed source changed without runtime reconciliation: {drift}")
     deployed=sum(1 for m in expected.values() if m.get("state")=="DEPLOYED")
     local_only=sum(1 for m in expected.values() if m.get("state")=="LOCAL_ONLY")

@@ -84,15 +84,17 @@ class MediaVideoSamplerTests(unittest.TestCase):
             asset = self._asset(root)
             review_dir = root / "artifacts"
             review_dir.mkdir()
-            record = {key: value for key, value in asset.items() if key != "_path"}
-            record.update(MODULE.GALLERY._review_defaults())
-            record["visual_review"].update({
+            review_manifest_path = review_dir / "review-manifest.json"
+            canonical = MODULE.GALLERY.build_review_manifest(
+                root, review_manifest_path, assets=[asset]
+            )
+            canonical["assets"][0]["visual_review"].update({
                 "status": "REVIEWED",
                 "reviewer": "reviewer",
                 "reviewed_at": "2026-11-17T00:00:00Z",
             })
-            (review_dir / "review-manifest.json").write_text(
-                json.dumps({"schema_version": 1, "assets": [record]}), encoding="utf-8"
+            review_manifest_path.write_text(
+                json.dumps(canonical), encoding="utf-8"
             )
 
             def fake_run(command, **kwargs):

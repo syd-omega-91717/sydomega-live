@@ -1779,8 +1779,8 @@
   },
   "runtime_probe_status": {
     "observed_date": "2026-11-17",
-    "migration_replay": "PASS — all 433 source migrations replayed from zero on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
-    "migration_security_audit": "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
+    "migration_replay": "PASS — all 433 source migrations replayed from zero on main commit d62168f2d8dd3504d5f2809128c64af1113984b1 (run #43985648591).",
+    "migration_security_audit": "PASS on main commit d62168f2d8dd3504d5f2809128c64af1113984b1 (run #43985648591).",
     "hardening_contract": "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
     "stripe_refund_lifecycle_probe": "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
     "runtime_adapter_probe": "PASS — 54/54 governed actions on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
@@ -1806,7 +1806,7 @@
     "task_grant_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
     "achievement_assignment_acl_evidence": "Live provider ACL inspection confirms service_role has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with owner-read-only authenticated policy.",
     "family_access_probe": "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
-    "content_pipeline_e2e": "PASS — authenticated local-only content pipeline on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
+    "content_pipeline_e2e": "PASS — authenticated local-only content pipeline on main commit d62168f2d8dd3504d5f2809128c64af1113984b1 (run #43985648591).",
     "notification_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
     "achievement_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
     "ai_usage_telemetry_grant": {

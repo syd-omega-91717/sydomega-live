@@ -84,6 +84,16 @@ class ContentTaskPipelineTests(unittest.TestCase):
 
 
 
+    def test_publishing_archive_uses_owner_scoped_short_lived_signed_attachment_delivery(self):
+        page = (ROOT / "publishing.html").read_text()
+        self.assertIn("select('kind,title,body,file_path,created_at,status')", page)
+        self.assertIn("function isOwnedUploadPath(path)", page)
+        self.assertIn("path.indexOf(userId+'/')!==0", page)
+        self.assertIn("attachPrivateDownload(d.querySelector('.work-body'),w.file_path)", page)
+        self.assertIn("signedUrl('uploads',path,900)", page)
+        self.assertIn("tab.location.replace(url)", page)
+        self.assertNotIn("getPublicUrl(", page)
+
     def test_legacy_publication_upload_compensates_only_definitive_database_rejections(self):
         page = (ROOT / "publishing.html").read_text()
         self.assertIn("COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED", page)

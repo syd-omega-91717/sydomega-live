@@ -1574,12 +1574,12 @@
       "reason": "The main-branch exact-SHA verifier contained duplicated retry and route-smoke blocks. PR #1244 repairs the verifier, but no successful exact-SHA production verification has yet been observed; production remains NOT_LIVE_VERIFIED."
     },
     "edge_functions": {
-      "observed_date": "2026-11-12",
+      "observed_date": "2026-11-17",
       "configured": 22,
       "active": 22,
       "inactive": 0,
       "exact_repository_entrypoint_matches": 22,
-      "verification": "All 22 live Edge Function entrypoints were retrieved from Supabase and compared byte-for-byte with the corresponding repository index.ts files. Provider version, verify_jwt, live SHA-256 and repository blob SHA are refreshed in docs/runtime/supabase-edge-functions-live.json."
+      "verification": "Fresh authenticated Supabase provider read-back on 2026-11-17 found 22/22 configured functions ACTIVE. All 22 deployed entrypoint SHA-256 values and repository blob SHA values are captured in docs/runtime/supabase-edge-functions-live.json; the main-branch Edge Runtime Reconciliation check passed on commit d62168f2d8dd3504d5f2809128c64af1113984b1."
     },
     "search_index": {
       "observed_date": "2026-11-12",

@@ -163,6 +163,7 @@ document.getElementById('p-go').addEventListener('click',async function(){
   var ins=null;
   try{
     ins=await sb.from('publications').insert({user_id:userId,kind:kind,title:title,body:body,file_path:filePath});
+    var insertError=ins&&ins.error;
   }catch(_error){
     btn.disabled=false;
     showMsg(false,filePath
@@ -170,8 +171,8 @@ document.getElementById('p-go').addEventListener('click',async function(){
       :'COMMIT STATUS UNKNOWN — Refresh your archive before retrying to avoid a duplicate.');
     return;
   }
-  if(!ins||ins.error){
-    var code=ins&&ins.error&&typeof ins.error.code==='string'?ins.error.code:'';
+  if(!ins||insertError){
+    var code=insertError&&typeof insertError.code==='string'?insertError.code:'';
     if(filePath&&/^[0-9A-Z]{5}$/.test(code)){
       var cleanup=null;
       try{cleanup=await window.OmegaStorage.remove('uploads',filePath);}catch(_error){cleanup={error:'cleanup_unconfirmed'};}

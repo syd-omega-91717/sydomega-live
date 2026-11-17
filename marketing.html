@@ -25,6 +25,7 @@
 .camp:last-child{border-bottom:none}
 .camp .top{display:flex;justify-content:space-between;gap:10px;color:var(--gold);margin-bottom:5px}
 .camp .bd{color:var(--ink);font-size:12px;margin-bottom:4px}
+.campaign-attachment{display:inline-flex;align-items:center;margin:10px 10px 0 0;padding:8px 10px;border:1px solid rgba(201,168,76,.45);background:transparent;color:var(--solar);font-family:var(--M);font-size:12px;cursor:pointer}.campaign-attachment:disabled{opacity:.55;cursor:wait}.campaign-attachment-status{display:inline-block;margin-top:10px;font-family:var(--M);font-size:12px;color:var(--muted)}
 .camp .dt{color:var(--muted);font-size:12px}
 .badge{font-size:12px;letter-spacing:1px;padding:2px 8px;border:1px solid;flex-shrink:0}
 .badge.submitted{color:var(--cyan);border-color:rgba(0,229,255,.5)}
@@ -144,10 +145,36 @@ var ZONES=[['Landing Feature',3],['Hall Banner',2],['Dashboard Spotlight',1.5],[
 function price(){var z=ZONES[+document.getElementById('m-zone').value],d=DURATIONS[+document.getElementById('m-dur').value];return Math.round(d[1]*z[1]);}
 var _user=null,_isOwner=false;
 
+function attachPrivateCampaignDownload(container,path){
+  if(!_user||typeof path!=='string'||path.indexOf(_user.id+'/')!==0)return;
+  var parts=path.split('/');
+  if(parts.length!==2||! /^[A-Za-z0-9._-]+$/.test(parts[1]))return;
+  if(!window.OmegaStorage||typeof window.OmegaStorage.signedUrl!=='function')return;
+  var button=document.createElement('button');button.type='button';button.className='campaign-attachment';button.textContent='DOWNLOAD PRIVATE ATTACHMENT';
+  var status=document.createElement('span');status.className='campaign-attachment-status';status.setAttribute('aria-live','polite');
+  button.addEventListener('click',async function(){
+    if(button.disabled)return;
+    var tab=window.open('about:blank','_blank');
+    if(!tab){status.textContent='Allow pop-ups to open the private download.';return;}
+    try{tab.opener=null;}catch(_error){}
+    button.disabled=true;status.textContent='Preparing a short-lived private link…';
+    try{
+      var url=await window.OmegaStorage.signedUrl('uploads',path,900);
+      if(!url)throw new Error('signed_url_unavailable');
+      tab.location.replace(url);
+      status.textContent='Private link expires in 15 minutes.';
+    }catch(_error){
+      try{tab.close();}catch(_closeError){}
+      status.textContent='Download unavailable. Reload campaigns and try again.';
+    }finally{button.disabled=false;}
+  });
+  container.appendChild(button);container.appendChild(status);
+}
+
 async function loadList(){
   var box=document.getElementById('m-list');
   try{
-    var r=await sb.from('media_reservations').select('zone,duration,title,message,price_omega,status,created_at').eq('user_id',_user.id).order('created_at',{ascending:false}).limit(30);
+    var r=await sb.from('media_reservations').select('zone,duration,title,message,price_omega,status,created_at,file_path').eq('user_id',_user.id).order('created_at',{ascending:false}).limit(30);
     function notice(target,text){target.replaceChildren();var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted)';n.textContent=text;target.appendChild(n);}
     if(!r.data||!r.data.length){notice(box,'No campaigns yet — submit your first above.');return;}
     box.replaceChildren();
@@ -158,7 +185,9 @@ async function loadList(){
       var top=document.createElement('div');top.className='top';var title=document.createElement('span');title.textContent=q.title||'Untitled';var badge=document.createElement('span');badge.className='badge '+stt;badge.textContent=stt.toUpperCase();top.appendChild(title);top.appendChild(badge);
       var body=document.createElement('div');body.className='bd';body.textContent=q.message||'';
       var meta=document.createElement('div');meta.className='dt';meta.textContent=String(q.zone||'')+' · '+String(q.duration||'')+' · '+fmt(q.price_omega||0)+' Ω · '+dt;
-      d.appendChild(top);d.appendChild(body);d.appendChild(meta);box.appendChild(d);
+      d.appendChild(top);d.appendChild(body);d.appendChild(meta);
+      if(q.file_path)attachPrivateCampaignDownload(d,q.file_path);
+      box.appendChild(d);
     });
   }catch(e){box.replaceChildren();var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted)';n.textContent='Campaigns unavailable right now.';box.appendChild(n);}
 }

@@ -38,7 +38,8 @@ class ContentTaskPipelineTests(unittest.TestCase):
 
     def test_ingest_uses_storage_metadata_and_compensates_failed_audit(self):
         js = (ROOT / "supabase/functions/content-ingest/index.ts").read_text()
-        self.assertIn("object.metadata?.size", js)
+        self.assertIn("assertUploadSize(objectBlob.size)", js)
+        self.assertIn("bytes.byteLength !== sizeBytes", js)
         self.assertIn("object.metadata?.mimetype", js)
         self.assertIn("storage.remove([path])", js)
         self.assertIn("CONTENT_INGEST_ROLLBACK", js)
@@ -47,7 +48,7 @@ class ContentTaskPipelineTests(unittest.TestCase):
     def test_delivery_is_owner_only_signed_and_does_not_leak_provider_errors(self):
         js = (ROOT / "supabase/functions/content-delivery/index.ts").read_text()
         self.assertIn('if (file.owner_id !== userId)', js)
-        self.assertIn('createSignedUrl(file.storage_path, 900)', js)
+        self.assertIn('createSignedUrl(file.storage_path, 900, { download: true })', js)
         self.assertIn('event_type: "capability_used"', js)
         self.assertIn('Cache-Control', js)
         self.assertIn('content_delivery_failed', js)

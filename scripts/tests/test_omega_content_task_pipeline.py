@@ -94,6 +94,14 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("tab.location.replace(url)", page)
         self.assertNotIn("getPublicUrl(", page)
 
+    def test_publishing_archive_renders_database_fields_without_html_interpolation(self):
+        page = (ROOT / "publishing.html").read_text()
+        self.assertNotIn("d.innerHTML=", page)
+        self.assertIn("titleNode.textContent=w.title||'Untitled'", page)
+        self.assertIn("document.createTextNode(String(w.kind||''))", page)
+        self.assertIn("workContent.textContent=w.body||''", page)
+        self.assertIn("status.textContent=stl", page)
+
     def test_legacy_publication_upload_compensates_only_definitive_database_rejections(self):
         page = (ROOT / "publishing.html").read_text()
         self.assertIn("COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED", page)

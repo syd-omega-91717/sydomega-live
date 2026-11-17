@@ -99,8 +99,7 @@
         "verify_jwt": true,
         "source": "supabase/functions/content-ingest/index.ts",
         "dependencies": [
-          "supabase/functions/_shared/content-validation.mjs",
-          "supabase/functions/_shared/keys.ts"
+          "supabase/functions/_shared/content-validation.mjs"
         ]
       },
       "content-delivery": {
@@ -108,9 +107,7 @@
         "live_version": 10,
         "verify_jwt": true,
         "source": "supabase/functions/content-delivery/index.ts",
-        "dependencies": [
-          "supabase/functions/_shared/keys.ts"
-        ]
+        "dependencies": []
       }
     },
     "limitation": "The live provider still serves the previous active versions until exact source deployment. The new source is not counted as live until post-deploy version/hash verification and authenticated upload/download E2E pass. Malware scanning and rights review remain separate gates."

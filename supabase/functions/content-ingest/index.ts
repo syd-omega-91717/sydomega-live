@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.8";
 import { secretKey, publishableKey } from "../_shared/keys.ts";
+import { assertUploadSize, detectMime, sha256Hex } from "../_shared/content-validation.mjs";
 
 const url = Deno.env.get("SUPABASE_URL")!;
 const adminKey = secretKey();
@@ -75,28 +76,55 @@ Deno.serve(async (req: Request) => {
     const object = (objects || []).find((entry) => entry.name === objectName && entry.id);
     if (!object) return json({ error: "object_not_found" }, 404);
 
-    // Client-supplied size and MIME are advisory and are deliberately ignored.
-    const actualSize = object.metadata?.size;
-    const sizeBytes = typeof actualSize === "number" && Number.isSafeInteger(actualSize) && actualSize >= 0
-      ? actualSize
+    // Never trust client-supplied size or MIME. Download the private object,
+    // enforce the same 50 MiB limit as the bucket, identify its byte signature,
+    // and calculate SHA-256 before registering metadata.
+    const { data: objectBlob, error: downloadError } = await storage.download(path);
+    if (downloadError || !objectBlob) throw downloadError || new Error("object_download_failed");
+
+    let sizeBytes: number;
+    try {
+      sizeBytes = assertUploadSize(objectBlob.size);
+    } catch (error) {
+      if (error instanceof RangeError && error.message === "upload_too_large") {
+        return json({ error: "upload_too_large" }, 413);
+      }
+      throw error;
+    }
+
+    const bytes = new Uint8Array(await objectBlob.arrayBuffer());
+    if (bytes.byteLength !== sizeBytes) throw new Error("object_size_mismatch");
+    const mimeType = detectMime(bytes);
+    const checksum = await sha256Hex(bytes);
+    const declaredMime = object.metadata?.mimetype;
+    const declaredMimeType = typeof declaredMime === "string" && declaredMime.length <= 255
+      ? declaredMime
       : null;
-    const actualMime = object.metadata?.mimetype;
-    const mimeType = typeof actualMime === "string" && actualMime.length <= 255 ? actualMime : null;
+    const signatureState = mimeType === "application/octet-stream"
+      ? "UNRECOGNIZED_BINARY"
+      : "SIGNATURE_IDENTIFIED";
 
     const { data: existing, error: existingError } = await admin
       .from("storage_files")
-      .select("id,storage_path,owner_id")
+      .select("id,storage_path,owner_id,checksum")
       .eq("storage_path", path)
       .eq("owner_id", userId)
       .limit(1)
       .maybeSingle();
     if (existingError) throw existingError;
     if (existing) {
+      if (existing.checksum && existing.checksum !== checksum) {
+        return json({ error: "path_content_conflict" }, 409);
+      }
       return json({
         ok: true,
         duplicate: true,
         content_id: "storage_files:" + existing.id,
         file: existing,
+        checksum,
+        detected_mime_type: mimeType,
+        signature_state: signatureState,
+        scan_state: "UNAVAILABLE",
         review_state: "PENDING_REVIEW",
       });
     }
@@ -111,7 +139,7 @@ Deno.serve(async (req: Request) => {
         mime_type: mimeType,
         extension: filename.includes(".") ? filename.split(".").pop() : null,
         size_bytes: sizeBytes,
-        checksum: null,
+        checksum,
         visibility: "private",
       })
       .select("id,owner_id,folder,filename,storage_path,mime_type,extension,size_bytes,checksum,visibility,created_at")
@@ -134,6 +162,11 @@ Deno.serve(async (req: Request) => {
         publication_state: "UNVERIFIED",
         entitlement_state: "UNVERIFIED",
         scan_state: "UNAVAILABLE",
+        size_bytes: sizeBytes,
+        detected_mime_type: mimeType,
+        declared_mime_type: declaredMimeType,
+        signature_state: signatureState,
+        sha256: checksum,
       },
     });
 
@@ -160,6 +193,10 @@ Deno.serve(async (req: Request) => {
       duplicate: false,
       content_id: "storage_files:" + file.id,
       file,
+      checksum,
+      detected_mime_type: mimeType,
+      signature_state: signatureState,
+      scan_state: "UNAVAILABLE",
       review_state: "PENDING_REVIEW",
     }, 201);
   } catch (error) {
@@ -177,10 +214,11 @@ Deno.serve(async (req: Request) => {
       "unsupported_bucket",
       "invalid_path",
       "path_not_owned",
+      "upload_too_large",
     ]);
     return json(
       { error: clientErrors.has(message) ? message : "content_ingest_failed" },
-      clientErrors.has(message) ? (message === "path_not_owned" ? 403 : 400) : 500,
+      clientErrors.has(message) ? (message === "path_not_owned" ? 403 : message === "upload_too_large" ? 413 : 400) : 500,
     );
   }
 });

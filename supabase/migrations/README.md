@@ -129,7 +129,7 @@ Three follow-up migrations are registered as `PENDING_REVIEW / NOT_APPLIED`: `20
 
 The following is the latest independently checked state. It supersedes the 2026-11-16 pending-migration and stale-production statements above.
 
-- The authenticated Supabase provider migration ledger contains **435 unique applied versions**, latest `20261117003721_omega_ai_requests_privilege_tightening`. The source directory contains **435 unique migration files**. `supabase/remote-migrations.json` records 435 versions; `supabase/pending-migrations.json` is empty.
+- The authenticated Supabase provider migration ledger contains **436 unique applied versions**, latest `20261117004605_uploads_bucket_size_limit_50mb`. The source directory contains **436 unique migration files**. `supabase/remote-migrations.json` records 436 versions; `supabase/pending-migrations.json` is empty.
 - Migration `20261116214700_api_keys_live_column_compatibility` is provider-applied. A read-only query of `information_schema.columns` confirms `public.api_keys.name text NOT NULL` and `public.api_keys.active boolean DEFAULT true`. No API-key or secret values were queried.
 - A fresh full migration replay and migration security audit passed on main commit `d62168f2d8dd3504d5f2809128c64af1113984b1` (run #43985648591). The migration source/provider snapshot is reconciled; strict `migration-drift.py` reports 433 matching versions and no pending versions. The prior 20f8 replay is historical evidence.
 - The sensitive-column grant boundary remains unchanged: authenticated can read only the required non-secret columns on `public.api_keys` and `public.consent_records`; no table-wide SELECT was added, and `api_key`, `api_secret`, `ip_hash`, and `user_agent` remain excluded.
@@ -148,3 +148,8 @@ The live provider already contained `public.omega_ai_requests`, but no source mi
 The original grant left PostgreSQL 17 `TRUNCATE`, `REFERENCES`, `TRIGGER` and `MAINTAIN` privileges in the role ACL even though SELECT/UPDATE/DELETE were denied. Follow-up migration `20261117003721_omega_ai_requests_privilege_tightening.sql` revokes all table privileges from `anon`, `authenticated` and `service_role`, then grants only INSERT to `service_role`. Live post-apply checks confirm the eight table privileges: service_role has INSERT only; anon and authenticated have none. RLS and the existing deny policy remain enabled. No synthetic usage row was created.
 
 The provider migration ledger contains 435 applied versions, latest `20261117003721`; `supabase/remote-migrations.json` and the source migration directory are reconciled. A fresh 435-migration replay and strict source/provider drift check remain required CI acceptance gates for the source baseline.
+
+
+## 2026-11-17 — private uploads bucket size enforcement
+
+Provider migration `20261117004605_uploads_bucket_size_limit_50mb.sql` sets `storage.buckets.file_size_limit=52428800` for the private `uploads` bucket and asserts that the bucket remains private. The limit matches the existing `upload.js` 50 MiB client ceiling and is enforced by Storage rather than trusting JavaScript. The migration does not change `allowed_mime_types`: publishing explicitly supports arbitrary binary attachments, and the current system has no signature scanner/malware provider. MIME/signature validation and malware scanning remain separate release gates.

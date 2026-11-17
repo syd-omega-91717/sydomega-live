@@ -1794,14 +1794,14 @@
     "runtime_adapter_probe": "PASS — 54/54 governed actions on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
     "failure": null,
     "production_privilege_evidence": "Live provider ACL verification confirms service_role SELECT on omega_notifications, omega_agent_tasks, omega_agent_task_events, omega_user_achievements, and omega_achievement_verifications; service_role INSERT on omega_user_achievements. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with the existing owner-read-only policy.",
-    "remediation": "2026-11-17 provider and release verification: the authenticated Supabase migration ledger contains 435 applied versions, latest 20261117003721_omega_ai_requests_privilege_tightening; no pending migrations remain. The omega_ai_requests relation is now represented by an idempotent source baseline in migration 20261117002651 for clean replay. Follow-up migration 20261117003721 revoked all table privileges from anon, authenticated and service_role, then granted INSERT only to service_role. Read-only PostgreSQL 17 privilege checks confirm service_role INSERT=true and SELECT/UPDATE/DELETE/TRUNCATE/REFERENCES/TRIGGER/MAINTAIN=false; all eight privileges are false for anon and authenticated. RLS and omega_deny_by_default remain enabled. No synthetic telemetry row was created. Fresh 435-migration replay and strict drift verification are pending PR CI; the prior 433-migration replay remains historical evidence only. The shared AI model router still reports ai_provider_not_configured, so real AI responses remain BLOCKED until an authorized provider endpoint and secret are configured and verified. Read-only information_schema inspection confirms public.api_keys.name text NOT NULL and active boolean DEFAULT true. Cloudflare Pages exact-SHA production verification passed for main commit d62168f2d8dd3504d5f2809128c64af1113984b1: both root and www release manifests matched, 241/241 registered pages and 368/368 references passed, root and www returned HTTP 200, and CSP/HSTS passed. GitHub Pages failover build, deployment, and six-route smoke passed on the same commit. Vercel production promotion remains intentionally postponed because of the Hobby team's Edge Request credit block; Vercel deploy steps were skipped; no Vercel deployment is claimed. Supabase Security Advisor still reports leaked-password protection disabled (one warning) and three informational RLS-enabled/no-policy findings on private/internal tables. A read-only auth.mfa_factors count returned 0 total factors and 0 verified factors; owner MFA remains unenrolled and requires owner-side enrollment plus AAL2/recovery verification (issue #692).",
+    "remediation": "2026-11-17 provider and release verification: the authenticated Supabase migration ledger contains 436 applied versions, latest 20261117004605_uploads_bucket_size_limit_50mb; no pending migrations remain. The omega_ai_requests relation is now represented by an idempotent source baseline in migration 20261117002651 for clean replay. Follow-up migration 20261117003721 revoked all table privileges from anon, authenticated and service_role, then granted INSERT only to service_role. Read-only PostgreSQL 17 privilege checks confirm service_role INSERT=true and SELECT/UPDATE/DELETE/TRUNCATE/REFERENCES/TRIGGER/MAINTAIN=false; all eight privileges are false for anon and authenticated. RLS and omega_deny_by_default remain enabled. No synthetic telemetry row was created. Fresh 435-migration replay and strict migration-drift verification passed in PR #1361 CI; fresh 436-migration replay is pending this bucket-limit PR's CI. The shared AI model router still reports ai_provider_not_configured, so real AI responses remain BLOCKED until an authorized provider endpoint and secret are configured and verified. Read-only information_schema inspection confirms public.api_keys.name text NOT NULL and active boolean DEFAULT true. Cloudflare Pages exact-SHA production verification passed for main commit d62168f2d8dd3504d5f2809128c64af1113984b1: both root and www release manifests matched, 241/241 registered pages and 368/368 references passed, root and www returned HTTP 200, and CSP/HSTS passed. GitHub Pages failover build, deployment, and six-route smoke passed on the same commit. Vercel production promotion remains intentionally postponed because of the Hobby team's Edge Request credit block; Vercel deploy steps were skipped; no Vercel deployment is claimed. Supabase Security Advisor still reports leaked-password protection disabled (one warning) and three informational RLS-enabled/no-policy findings on private/internal tables. A read-only auth.mfa_factors count returned 0 total factors and 0 verified factors; owner MFA remains unenrolled and requires owner-side enrollment plus AAL2/recovery verification (issue #692). The private Storage uploads bucket now enforces a 52,428,800-byte (50 MiB) server-side limit matching upload.js; the bucket remains private. MIME allowlisting is intentionally unchanged because the existing publishing flow accepts arbitrary binary files. Content-signature validation, checksum verification in content-ingest, malware scanning, and rights review remain separate pending controls.",
     "status": "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION",
     "prior_consultancy_idempotency_assertion": "Corrected and merged in PR #1262: same-user retries return the same request ID; cross-user isolation is checked separately.",
     "provider_migration_ledger": {
       "observed_date": "2026-11-17",
-      "applied_count": 435,
-      "latest_version": "20261117003721",
-      "latest_name": "omega_ai_requests_privilege_tightening",
+      "applied_count": 436,
+      "latest_version": "20261117004605",
+      "latest_name": "uploads_bucket_size_limit_50mb",
       "task_grant_migration": "20261113010000_APPLIED",
       "notification_migration": "20261113020000_APPLIED",
       "achievement_migration": "20261113062812_APPLIED",
@@ -1811,7 +1811,8 @@
       "pending_count": 0,
       "pending_versions": [],
       "ai_usage_telemetry_schema": "SOURCE_BASELINE_ADDED_TO_20261117002651",
-      "ai_usage_telemetry_privilege_tightening": "20261117003721_APPLIED_PROVIDER_LEDGER_CONFIRMED"
+      "ai_usage_telemetry_privilege_tightening": "20261117003721_APPLIED_PROVIDER_LEDGER_CONFIRMED",
+      "uploads_bucket_limit": "52428800_BYTES_PRIVATE"
     },
     "task_grant_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
     "achievement_assignment_acl_evidence": "Live provider ACL inspection confirms service_role has SELECT and INSERT on omega_user_achievements and SELECT on omega_achievement_verifications. Authenticated retains owner-scoped SELECT on omega_user_achievements but no INSERT; authenticated and anon have no SELECT on omega_achievement_verifications; anon has no SELECT/INSERT on omega_user_achievements. RLS remains enabled with owner-read-only authenticated policy.",
@@ -1886,6 +1887,16 @@
       "verified_at": "2026-11-17",
       "rows_written": 0,
       "note": "Read-only privilege verification after provider-applied revoke/grant migration; no synthetic telemetry row was created."
+    },
+    "uploads_bucket": {
+      "status": "PASS_SERVER_ENFORCED_SIZE_LIMIT",
+      "bucket": "uploads",
+      "public": false,
+      "file_size_limit_bytes": 52428800,
+      "file_size_limit_mib": 50,
+      "allowed_mime_types": null,
+      "verified_at": "2026-11-17",
+      "note": "Bucket-level limit matches the existing 50 MiB client upload ceiling. MIME allowlist intentionally remains null because publishing accepts arbitrary binary attachments; actual signature validation and malware scanning are not implemented and remain separate gates."
     }
   }
 }

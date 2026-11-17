@@ -36,7 +36,23 @@
       "registration_does_not_prove_publication",
       "registration_does_not_prove_entitlement",
       "registration_does_not_prove_malware_scan"
-    ]
+    ],
+    "bucket_enforcement": {
+      "bucket": "uploads",
+      "private": true,
+      "file_size_limit_bytes": 52428800,
+      "file_size_limit_mib": 50,
+      "allowed_mime_types": null,
+      "source_migration": "20261117004605_uploads_bucket_size_limit_50mb",
+      "verified_at": "2026-11-17",
+      "purpose": "Server-side size ceiling matching the existing upload.js client cap; MIME allowlist remains open for arbitrary binary attachments."
+    },
+    "validation": {
+      "content_signature": "UNIMPLEMENTED",
+      "sha256": "UNIMPLEMENTED",
+      "malware_scan": "UNAVAILABLE",
+      "rights_review": "REQUIRED_BEFORE_PUBLICATION"
+    }
   },
   "download": {
     "states": [

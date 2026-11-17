@@ -39,43 +39,25 @@
         "do_not_enforce_on_create": false,
         "required_status_checks": [
           {
-            "context": "CI"
+            "context": "Trivy"
           },
           {
-            "context": "Contracts"
-          },
-          {
-            "context": "CodeQL"
-          },
-          {
-            "context": "Secret Detection"
-          },
-          {
-            "context": "Workflow Contract"
-          },
-          {
-            "context": "Production Contract"
-          },
-          {
-            "context": "Repository Integrity"
-          },
-          {
-            "context": "Fresh database replay (all migrations)"
-          },
-          {
-            "context": "Supabase runtime health"
-          },
-          {
-            "context": "Supabase Runtime Contract"
-          },
-          {
-            "context": "Source vs live Edge Function reconciliation"
+            "context": "Semgrep OSS"
           },
           {
             "context": "Cloudflare Pages"
           },
           {
-            "context": "Static contract gates"
+            "context": "CodeQL"
+          },
+          {
+            "context": "Supabase runtime health"
+          },
+          {
+            "context": "Source vs live Edge Function reconciliation"
+          },
+          {
+            "context": "Gitleaks full-history scan"
           },
           {
             "context": "Runtime syntax and configuration contract"
@@ -84,13 +66,34 @@
             "context": "Blocking supply-chain scan"
           },
           {
-            "context": "Gitleaks full-history scan"
+            "context": "Static contract gates"
           },
           {
-            "context": "Trivy"
+            "context": "Fresh database replay (all migrations)"
           },
           {
-            "context": "Semgrep OSS"
+            "context": "Analyze (javascript-typescript)"
+          },
+          {
+            "context": "Analyze (actions)"
+          },
+          {
+            "context": "workflow-contract"
+          },
+          {
+            "context": "integrity"
+          },
+          {
+            "context": "readiness"
+          },
+          {
+            "context": "evidence"
+          },
+          {
+            "context": "verify"
+          },
+          {
+            "context": "intelligence-fabric"
           }
         ]
       }

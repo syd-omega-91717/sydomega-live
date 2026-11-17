@@ -123,11 +123,17 @@ class TestGate(Fixture):
 class TestFrontDoorStats(Fixture):
     """index.html's stat row says "N SURFACES"/"N SERVICES", not "N pages"."""
 
-    def _door(self, surfaces, services):
+    def _door(self, surfaces, services, states=None):
         import json
         (self.dir / 'docs' / 'runtime').mkdir(parents=True)
-        (self.dir / 'docs' / 'runtime' / 'supabase-edge-functions-live.json').write_text(json.dumps(
-            {'functions': {'a': {'state': 'DEPLOYED'}, 'b': {'state': 'LOCAL_ONLY'}}}))
+        function_states = states or ['DEPLOYED', 'LOCAL_ONLY']
+        functions = {
+            'function_%d' % index: {'state': state}
+            for index, state in enumerate(function_states)
+        }
+        (self.dir / 'docs' / 'runtime' / 'supabase-edge-functions-live.json').write_text(
+            json.dumps({'functions': functions})
+        )
         row = ('<dt class="ohz-stat-n" data-countup>%d</dt><dd class="ohz-stat-l">SURFACES</dd>'
                '<dt class="ohz-stat-n" data-countup>%d</dt><dd class="ohz-stat-l">SERVICES</dd>')
         self.write('index.html', row % (surfaces, services))
@@ -138,6 +144,11 @@ class TestFrontDoorStats(Fixture):
         self.assertEqual(r.returncode, 1, r.stdout)
         self.assertIn('claims 216 SURFACES; the source says 1', r.stdout)
         self.assertIn('claims 2 SERVICES; the source says 1', r.stdout)
+
+    def test_pending_deploy_counts_the_still_active_provider_version(self):
+        self._door(1, 2, ['DEPLOYED', 'PENDING_DEPLOY', 'LOCAL_ONLY'])
+        r = self.run_gate()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
     def test_derived_stats_pass(self):
         self._door(1, 1)

@@ -233,6 +233,7 @@ def run_e2e(env: dict[str, str]) -> None:
     require(status == 200 and isinstance(duplicate, dict) and duplicate.get("duplicate") is True,
             "duplicate_registration_not_idempotent")
     require((duplicate.get("file") or {}).get("id") == file_id, "duplicate_registration_changed_identity")
+    require(duplicate.get("checksum") == ingest.get("checksum"), "duplicate_registration_checksum_changed")
 
     status, bad_path, _ = invoke(
         api_url, anon_key, first_token, "content-ingest",
@@ -249,7 +250,7 @@ def run_e2e(env: dict[str, str]) -> None:
     )
     require(status == 200 and isinstance(delivery, dict) and delivery.get("ok") is True,
             "owner_signed_download_failed")
-    require(delivery.get("delivery_state") == "SIGNED", "signed_delivery_state_missing")
+    require(delivery.get("delivery_state") == "SIGNED_ATTACHMENT", "signed_delivery_state_missing")
     expires_at = delivery.get("expires_at")
     require(isinstance(expires_at, str), "signed_url_expiry_missing")
     try:
@@ -285,7 +286,7 @@ def run_e2e(env: dict[str, str]) -> None:
             "cross_user_download_not_forbidden")
 
     rows = rest_rows(api_url, service_key, "storage_files", {
-        "select": "id,owner_id,filename,storage_path,mime_type,size_bytes,visibility",
+        "select": "id,owner_id,filename,storage_path,mime_type,size_bytes,checksum,visibility",
         "id": "eq." + file_id,
         "limit": "2",
     })
@@ -294,7 +295,9 @@ def run_e2e(env: dict[str, str]) -> None:
     require(row.get("owner_id") == first_id, "metadata_owner_mismatch")
     require(row.get("storage_path") == storage_path, "metadata_path_mismatch")
     require(row.get("size_bytes") == len(contents), "client_supplied_size_was_trusted")
-    require(row.get("mime_type") == "text/plain", "client_supplied_mime_was_trusted")
+    require(row.get("mime_type") == "text/plain", "actual_text_signature_not_detected")
+    require(isinstance(row.get("checksum"), str) and re.fullmatch(r"[0-9a-f]{64}", row["checksum"]), "sha256_checksum_missing_or_invalid")
+    require(ingest.get("checksum") == row.get("checksum"), "response_checksum_mismatch")
     require(row.get("visibility") == "private", "content_not_private_by_default")
 
     events = db_events(env["DB_URL"], first_id)
@@ -314,12 +317,16 @@ def run_e2e(env: dict[str, str]) -> None:
     require(registration_metadata.get("publication_state") == "UNVERIFIED", "upload_must_not_imply_publication")
     require(registration_metadata.get("entitlement_state") == "UNVERIFIED", "upload_must_not_imply_entitlement")
     require(registration_metadata.get("scan_state") == "UNAVAILABLE", "upload_scan_state_must_be_explicit")
+    require(registration_metadata.get("sha256") == row.get("checksum"), "registration_event_checksum_mismatch")
+    require(registration_metadata.get("detected_mime_type") == "text/plain", "registration_event_detected_mime_missing")
+    require(registration_metadata.get("signature_state") == "SIGNATURE_IDENTIFIED", "registration_event_signature_state_missing")
     signed_event = next(
         (event for event in events if (event.get("metadata") or {}).get("event_name") == "content_asset_signed_download"),
         None,
     )
     require(
-        signed_event is not None and (signed_event.get("metadata") or {}).get("expires_seconds") == 900,
+        signed_event is not None and (signed_event.get("metadata") or {}).get("expires_seconds") == 900
+        and (signed_event.get("metadata") or {}).get("delivery") == "signed_attachment",
         "signed_download_audit_expiry_mismatch",
     )
     print("CONTENT_PIPELINE_E2E=PASS local_only=true stages=auth,upload,registration,idempotency,path_guard,jwt,owner_download,expiry,audit")

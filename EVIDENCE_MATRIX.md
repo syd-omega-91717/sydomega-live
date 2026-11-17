@@ -36,15 +36,15 @@ This scanner reads the repository. It has no database connection, so:
 
 | class | pages |
 |---|---:|
-| `BUILT` | 105 |
-| `PARTIAL` | 28 |
-| `LOCAL_ONLY` | 42 |
-| `STATIC` | 60 |
+| `BUILT` | 96 |
+| `PARTIAL` | 27 |
+| `LOCAL_ONLY` | 40 |
+| `STATIC` | 71 |
 | `BROKEN` | 0 |
-| `UNREACHABLE` | 1 |
-| **total** | **236** |
+| `UNREACHABLE` | 7 |
+| **total** | **241** |
 
-## BUILT (105)
+## BUILT (96)
 
 | page | evidence |
 |---|---|
@@ -53,7 +53,6 @@ This scanner reads the repository. It has no database connection, so:
 | `achievements.html` | reads/writes 5 tables; 1 auth call |
 | `advertising.html` | reads/writes 2 tables; 2 auth calls |
 | `agents.html` | reads/writes 1 table, 1 edge fn; 1 auth call |
-| `analytics-dashboard.html` | reads/writes 1 table, 2 rpc |
 | `analytics.html` | reads/writes 2 tables, 2 rpc; 1 auth call |
 | `automation.html` | reads/writes 3 tables; 1 auth call |
 | `autonomous-insights.html` | reads/writes 3 tables |
@@ -67,7 +66,7 @@ This scanner reads the repository. It has no database connection, so:
 | `cipher.html` | reads/writes 1 table; 1 auth call |
 | `city.html` | reads/writes 1 table; 1 auth call |
 | `compliance.html` | reads/writes 1 table; 1 auth call |
-| `consultancy.html` | reads/writes 2 tables; 1 auth call |
+| `consultancy.html` | reads/writes 2 tables; 2 auth calls |
 | `contracts.html` | reads/writes 2 tables; 1 auth call |
 | `cosmos.html` | reads/writes 1 table, 2 edge fn; 3 auth calls |
 | `courses.html` | reads/writes 8 tables, 1 rpc; 1 auth call |
@@ -87,13 +86,7 @@ This scanner reads the repository. It has no database connection, so:
 | `gaming.html` | reads/writes 2 tables; 2 auth calls |
 | `grades.html` | reads/writes 1 table; 1 auth call |
 | `graph-admin.html` | reads/writes 4 tables |
-| `graph-anomalies.html` | reads/writes 2 tables; 1 auth call |
-| `graph-centrality.html` | reads/writes 2 tables; 1 auth call |
-| `graph-evidence.html` | reads/writes 2 tables; 1 auth call |
-| `graph-explorer.html` | reads/writes 2 tables; 1 auth call |
-| `graph-timeline.html` | reads/writes 1 table; 1 auth call |
 | `graph.html` | reads/writes 1 table; 1 auth call |
-| `graphify.html` | reads/writes 3 tables, 2 edge fn; 1 auth call |
 | `grid.html` | reads/writes 1 table; 1 auth call |
 | `hall.html` | reads/writes 1 table, 2 rpc; 1 auth call |
 | `health.html` | reads/writes 2 tables; 1 auth call |
@@ -111,7 +104,6 @@ This scanner reads the repository. It has no database connection, so:
 | `marketplace.html` | reads/writes 3 tables; 1 auth call |
 | `matrix.html` | reads/writes 2 tables, 1 rpc; 4 auth calls |
 | `membership.html` | reads/writes 1 table; 1 auth call |
-| `monitoring-dashboard.html` | reads/writes 1 edge fn |
 | `movies.html` | reads/writes 1 table; 1 auth call |
 | `news.html` | reads/writes 2 tables, 1 rpc, 1 edge fn; 1 auth call |
 | `nexus.html` | reads/writes 1 table, 1 rpc; 1 auth call |
@@ -135,7 +127,6 @@ This scanner reads the repository. It has no database connection, so:
 | `roadmap.html` | reads/writes 1 table; 1 auth call |
 | `rune.html` | reads/writes 1 table; 1 auth call |
 | `seasonal-events.html` | reads/writes 1 table |
-| `segmentation-dashboard.html` | reads/writes 1 rpc |
 | `services.html` | reads/writes 1 table; 1 auth call |
 | `sigil.html` | reads/writes 1 table; 1 auth call |
 | `sigma.html` | reads/writes 1 table; 1 auth call |
@@ -154,7 +145,7 @@ This scanner reads the repository. It has no database connection, so:
 | `universe.html` | reads/writes 1 table; 1 auth call |
 | `vault.html` | reads/writes 3 tables, 1 rpc; 1 auth call |
 
-## PARTIAL (28)
+## PARTIAL (27)
 
 | page | evidence |
 |---|---|
@@ -181,39 +172,36 @@ This scanner reads the repository. It has no database connection, so:
 | `publications.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `search.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `series.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `settings.html` | reads/writes 1 table, 3 rpc; 5 auth calls; also 3 localStorage writes |
 | `targets.html` | reads/writes 2 tables; 1 auth call; also 6 localStorage writes |
 | `treasury.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
 | `trophies.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
 | `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes |
 
-## LOCAL_ONLY (42)
+## LOCAL_ONLY (40)
 
 | page | evidence |
 |---|---|
 | `affirmations.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `atlas.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `body.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
-| `breath.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `breath.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `budget.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `charter.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `clarity.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `command.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
 | `contacts.html` | 4 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 4 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `decisions.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `exam.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `expenses.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `expenses.html` | 3 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys built at runtime — mirror coverage unresolved by static scan |
 | `fasting.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `flashcard.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `gratitude.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `journal.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `lab.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `library.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `meditate.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `mentors.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `mindmap.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `mood.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `network.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `network.html` | 6 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 6 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `nutrition.html` | 4 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 4 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `offline.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `passport.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
@@ -234,7 +222,7 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (60)
+## STATIC (71)
 
 | page | evidence |
 |---|---|
@@ -250,6 +238,8 @@ This scanner reads the repository. It has no database connection, so:
 | `arena.html` | no backend call, no stored state |
 | `ascend.html` | no backend call, no stored state |
 | `characters.html` | no backend call, no stored state |
+| `command-center.html` | no backend call, no stored state |
+| `command.html` | no backend call, no stored state |
 | `control-center.html` | no backend call, no stored state |
 | `control-plane.html` | no backend call, no stored state |
 | `cosmetics.html` | no backend call, no stored state |
@@ -258,10 +248,15 @@ This scanner reads the repository. It has no database connection, so:
 | `creation-studio.html` | no backend call, no stored state |
 | `creator.html` | no backend call, no stored state |
 | `data-observatory.html` | no backend call, no stored state |
+| `design-lab.html` | no backend call, no stored state |
 | `design-showcase.html` | no backend call, no stored state |
 | `enter.html` | no backend call, no stored state |
 | `eternity.html` | no backend call, no stored state |
 | `evidence.html` | no backend call, no stored state |
+| `game-last-galactic-empire.html` | no backend call, no stored state |
+| `game-omega-civilization.html` | no backend call, no stored state |
+| `game-origins-bridge.html` | no backend call, no stored state |
+| `game-origins.html` | no backend call, no stored state |
 | `gateway.html` | no backend call, no stored state |
 | `govern.html` | no backend call, no stored state |
 | `guide.html` | no backend call, no stored state |
@@ -277,13 +272,14 @@ This scanner reads the repository. It has no database connection, so:
 | `life.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
 | `missions.html` | no backend call, no stored state |
+| `monitoring-dashboard.html` | no backend call, no stored state |
 | `my-quests.html` | no backend call, no stored state |
 | `omega-platform-navigator.html` | no backend call, no stored state |
 | `ops.html` | no backend call, no stored state |
 | `order.html` | no backend call, no stored state |
 | `orrery.html` | no backend call, no stored state |
+| `personal-intelligence.html` | no backend call, no stored state |
 | `platform-kernel.html` | no backend call, no stored state |
-| `predictions-dashboard.html` | no backend call, no stored state |
 | `project-studio.html` | no backend call, no stored state |
 | `realms.html` | no backend call, no stored state |
 | `recovery.html` | no backend call, no stored state |
@@ -291,57 +287,72 @@ This scanner reads the repository. It has no database connection, so:
 | `reset.html` | no persisted state; 3 auth calls only |
 | `sculpture.html` | no backend call, no stored state |
 | `security.html` | no backend call, no stored state |
+| `settings.html` | no backend call, no stored state |
 | `standing-dashboard.html` | no backend call, no stored state |
+| `studio-library.html` | no backend call, no stored state |
 | `verify-deployment.html` | no backend call, no stored state |
 | `verify-modules.html` | no backend call, no stored state |
 | `visual-atlas.html` | no backend call, no stored state |
 | `world-atlas.html` | no backend call, no stored state |
 | `world-shell.html` | no backend call, no stored state |
 | `world.html` | no backend call, no stored state |
+| `worlds.html` | no backend call, no stored state |
 
-## UNREACHABLE (1)
+## UNREACHABLE (7)
 
 | page | evidence |
 |---|---|
+| `graph-anomalies.html` | not referenced by nav.js or the owner deck, and not a public page |
+| `graph-centrality.html` | not referenced by nav.js or the owner deck, and not a public page |
+| `graph-evidence.html` | not referenced by nav.js or the owner deck, and not a public page |
+| `graph-explorer.html` | not referenced by nav.js or the owner deck, and not a public page |
+| `graph-timeline.html` | not referenced by nav.js or the owner deck, and not a public page |
+| `graphify.html` | not referenced by nav.js or the owner deck, and not a public page |
 | `honors.html` | not referenced by nav.js or the owner deck, and not a public page |
 
 ## Edge Functions
 
+Deployment state is cross-referenced to \`docs/runtime/supabase-edge-functions-live.json\`,
+captured **unknown**. This is a dated provider snapshot, not a live invocation test.
+\`MISSING_DEPLOYMENT\` means a source/client/server invocation exists but the runtime manifest marks the function local-only or omits it.
+\`UNWIRED\` means the manifest marks the function deployed but this scan found no client/server call path; \`LOCAL_ONLY\` means source-only with no call path.
+
 | function | state | evidence |
 |---|---|---|
-| `_shared` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `agent-execute` | `WIRED` | invoked from client code |
-| `checkout` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `concierge` | `WIRED` | invoked from client code |
-| `concierge-orchestrator` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `content-delivery` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `content-ingest` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `event-ingest` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `evidence-graph` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `graphify-ai-ingest` | `WIRED` | invoked from client code |
-| `graphify-ai-query` | `WIRED` | invoked from client code |
-| `growth-orchestrator` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `intel-feed` | `WIRED` | invoked from client code |
-| `market-price` | `WIRED` | invoked from client code |
-| `notify-access` | `SERVER_INVOKED` | no client call expected (webhook/scheduled) |
-| `omega-knowledge-embedding-worker` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `omega-media-worker` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `omega-notification-worker` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `omega-provider-worker` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `omega-runtime-gateway` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `product-orchestrator` | `UNWIRED` | deployed source, but nothing in this repo calls it |
-| `rankings` | `WIRED` | invoked from client code |
-| `secrets-health` | `WIRED` | invoked from client code |
-| `snapshot-leaderboard` | `SERVER_INVOKED` | no client call expected (webhook/scheduled) |
-| `stripe-webhook` | `SERVER_INVOKED` | no client call expected (webhook/scheduled) |
-| `weekly-digest` | `SERVER_INVOKED` | no client call expected (webhook/scheduled) |
+| `agent-execute` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `checkout` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `concierge` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `concierge-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `content-delivery` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `content-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `event-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `evidence-graph` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `graphify-ai-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `graphify-ai-query` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `growth-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `intel-feed` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `market-price` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `notify-access` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-knowledge-embedding-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-media-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-notification-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-provider-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `omega-runtime-gateway` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `product-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `rankings` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `secrets-health` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `snapshot-leaderboard` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `stripe-webhook` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `studio-canon` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `studio-library` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `weekly-digest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
 
 ## Declared backend surface
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 226 |
-| functions declared in `supabase/` | 199 |
+| tables + views declared in `supabase/` | 233 |
+| functions declared in `supabase/` | 202 |
 | tables defined in more than one root SQL file | 46 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a
@@ -410,13 +421,13 @@ it?** A relation the SQL bag declares but the database never received
 answers every query with `{data:null,error}` — an empty page, no
 exception, no console error (CLAUDE.md §8.1 class 2).
 
-Source: `supabase/live-schema.json`, captured **2026-10-06**. A dated
+Source: `supabase/live-schema.json`, captured **2026-11-16**. A dated
 snapshot, not a connection. Regenerate it whenever schema is applied
 live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 226 | 4 | 0 |
+| 233 | 2 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.
@@ -428,10 +439,8 @@ backends on purpose (CLAUDE.md §9). Recorded so that wiring a page
 to one of these is a decision rather than a surprise — the page
 would classify `BUILT` while returning nothing.
 
-- `omega_knowledge_embedding_jobs`
 - `omega_private`
-- `omega_provider_jobs`
-- `omega_provider_registry`
+- `private`
 
 
 ## UNVERIFIED — what no repository scan can settle

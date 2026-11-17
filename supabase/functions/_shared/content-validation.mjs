@@ -51,6 +51,9 @@ export function detectMime(input) {
       bytes[2] === 0x03 && bytes[3] === 0x04) return "application/zip";
   try {
     const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    if (!/[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f]/.test(text)) {
+      return "text/plain";
+    }
     const hasControl = Array.from(text).some((character) => {
       const code = character.codePointAt(0) ?? 0;
       return (code >= 0 && code <= 8) || code === 11 || code === 12 ||

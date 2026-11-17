@@ -1,0 +1,36 @@
+name: Activate GitHub Main Ruleset
+
+# Manual repository-administration operation. The environment must have a
+# required reviewer and GH_REPO_ADMIN_TOKEN with repository administration:write.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-main-ruleset-activation
+  cancel-in-progress: false
+
+jobs:
+  activate:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: github-repository-admin
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - name: Apply and verify main ruleset
+        env:
+          GH_REPO_ADMIN_TOKEN: ${{ secrets.GH_REPO_ADMIN_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "${GH_REPO_ADMIN_TOKEN}" || {
+            echo "::error::Missing GH_REPO_ADMIN_TOKEN in protected github-repository-admin environment."
+            exit 1
+          }
+          python3 scripts/apply-github-main-ruleset.py

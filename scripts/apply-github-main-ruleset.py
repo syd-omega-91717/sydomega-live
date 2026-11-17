@@ -7,6 +7,7 @@ The token is read only from the environment and is never printed or stored.
 from __future__ import annotations
 
 import http.client
+import ssl
 import json
 import os
 import sys
@@ -25,7 +26,7 @@ def request(method: str, token: str, payload: dict | None = None) -> dict:
     if not token:
         raise ValueError("GitHub API token is required")
     data = None if payload is None else json.dumps(payload).encode("utf-8")
-    connection = http.client.HTTPSConnection(API_HOST, timeout=20)
+    connection = http.client.HTTPSConnection(API_HOST, timeout=20, context=ssl.create_default_context())
     try:
         connection.request(
             method,

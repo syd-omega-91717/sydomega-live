@@ -157,6 +157,27 @@ class TestViewsCountAsRelations(EvidenceAuditFixture):
         self.assertIn('BROKEN         0', out)
 
 
+class TestLiteralEdgeHelperCalls(EvidenceAuditFixture):
+    def test_literal_function_names_passed_to_invoke_helper_are_wired(self):
+        self.write('nav.js', "var PS={'home':'X'};")
+        self.write('home.html', '<html></html>')
+        self.write('supabase/a.sql', 'CREATE TABLE public.t (id uuid);')
+        self.write('supabase/functions/content-ingest/index.ts', 'export default {};')
+        self.write('supabase/functions/content-delivery/index.ts', 'export default {};')
+        self.write_edge_manifest({
+            'content-ingest': 'DEPLOYED',
+            'content-delivery': 'DEPLOYED',
+        })
+        self.write('omega-content-tasks.js',
+                   "async function invoke(sb,name,body){return sb.functions.invoke(name,{body});}"
+                   "async function upload(){await invoke(sb,'content-ingest',{});"
+                   "await invoke(sb,'content-delivery',{});}")
+        self.run_audit()
+        body = self.report()
+        self.assertIn('| `content-ingest` | `WIRED` |', body)
+        self.assertIn('| `content-delivery` | `WIRED` |', body)
+
+
 class TestBrokenDetection(EvidenceAuditFixture):
     def test_undeclared_table_is_broken_and_strict_exits_nonzero(self):
         self.write('nav.js', "var PS={'vaultish':'X'};")

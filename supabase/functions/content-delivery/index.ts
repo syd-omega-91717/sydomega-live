@@ -45,7 +45,7 @@ Deno.serve(async (req: Request) => {
 
     const { data, error: signError } = await admin.storage
       .from("uploads")
-      .createSignedUrl(file.storage_path, 900);
+      .createSignedUrl(file.storage_path, 900, { download: true });
     if (signError || !data?.signedUrl) throw signError || new Error("signed_url_failed");
 
     const { error: eventError } = await admin.from("omega_platform_events").insert({
@@ -59,7 +59,7 @@ Deno.serve(async (req: Request) => {
         event_name: "content_asset_signed_download",
         content_id: "storage_files:" + file.id,
         filename: file.filename,
-        delivery: "signed_url",
+        delivery: "signed_attachment",
         expires_seconds: 900,
       },
     });
@@ -70,7 +70,7 @@ Deno.serve(async (req: Request) => {
       content_id: "storage_files:" + file.id,
       signed_url: data.signedUrl,
       expires_at: new Date(Date.now() + 900000).toISOString(),
-      delivery_state: "SIGNED",
+      delivery_state: "SIGNED_ATTACHMENT",
     });
   } catch (caught) {
     const detail = caught as { code?: unknown; message?: unknown } | null;

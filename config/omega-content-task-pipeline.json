@@ -60,10 +60,10 @@
       "REQUESTED",
       "AUTHENTICATED",
       "AUTHORIZED",
-      "SIGNED",
       "DELIVERED",
       "DENIED",
-      "FAILED"
+      "FAILED",
+      "SIGNED_ATTACHMENT"
     ],
     "required": {
       "authentication": true,
@@ -75,31 +75,44 @@
       "first_slice_is_owner_only",
       "shared_delivery_is_not_inferred_from_storage_shares_until_explicit_policy_is_verified",
       "public_download_is_never_inferred_from_storage_path",
-      "signed_url_is_time_limited"
-    ]
+      "signed_url_is_time_limited",
+      "private_user_upload_delivery_must_force_content_disposition_attachment"
+    ],
+    "delivery_mode": "SIGNED_ATTACHMENT",
+    "signed_url_ttl_seconds": 900
   },
   "truth_states": {
     "registered": "LIVE",
     "rights": "UNVERIFIED",
     "publication": "UNVERIFIED",
     "entitlement": "UNVERIFIED",
-    "scan": "UNAVAILABLE_UNLESS_PROVIDER_EVIDENCE_EXISTS"
+    "scan": "UNAVAILABLE_UNLESS_PROVIDER_EVIDENCE_EXISTS",
+    "signature": "IDENTIFIED_NOT_MALWARE_CLEARED"
   },
   "release_rule": "Provider deployment evidence is recorded, but authenticated end-to-end transaction evidence, rights/publication/entitlement and malware-scan evidence remain separate truth gates.",
   "provider_evidence": {
     "source": "docs/runtime/supabase-edge-functions-live.json",
     "functions": {
       "content-ingest": {
-        "status": "DEPLOYED",
-        "version": 5,
-        "verify_jwt": true
+        "status": "PENDING_DEPLOY",
+        "live_version": 10,
+        "verify_jwt": true,
+        "source": "supabase/functions/content-ingest/index.ts",
+        "dependencies": [
+          "supabase/functions/_shared/content-validation.mjs",
+          "supabase/functions/_shared/keys.ts"
+        ]
       },
       "content-delivery": {
-        "status": "DEPLOYED",
-        "version": 5,
-        "verify_jwt": true
+        "status": "PENDING_DEPLOY",
+        "live_version": 10,
+        "verify_jwt": true,
+        "source": "supabase/functions/content-delivery/index.ts",
+        "dependencies": [
+          "supabase/functions/_shared/keys.ts"
+        ]
       }
     },
-    "limitation": "Deployment evidence proves live function availability/configuration; it does not prove an authenticated end-to-end upload/download transaction has been exercised."
+    "limitation": "The live provider still serves the previous active versions until exact source deployment. The new source is not counted as live until post-deploy version/hash verification and authenticated upload/download E2E pass. Malware scanning and rights review remain separate gates."
   }
 }

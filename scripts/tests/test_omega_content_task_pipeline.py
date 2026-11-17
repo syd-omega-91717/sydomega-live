@@ -83,5 +83,20 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("upload(path,file,{upsert:false", uploader)
 
 
+
+    def test_legacy_publication_upload_compensates_only_definitive_database_rejections(self):
+        page = (ROOT / "publishing.html").read_text()
+        self.assertIn("COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED", page)
+        self.assertIn("/^[0-9A-Z]{5}$/.test(code)", page)
+        self.assertIn("OmegaStorage.remove('uploads',filePath)", page)
+        self.assertIn("FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED", page)
+
+    def test_legacy_marketing_upload_compensates_only_definitive_database_rejections(self):
+        page = (ROOT / "marketing.html").read_text()
+        self.assertIn("SUBMISSION STATUS UNKNOWN — FILE PRESERVED", page)
+        self.assertIn("/^[0-9A-Z]{5}$/.test(code)", page)
+        self.assertIn("OmegaStorage.remove('uploads',filePath)", page)
+        self.assertIn("FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED", page)
+
 if __name__ == "__main__":
     unittest.main()

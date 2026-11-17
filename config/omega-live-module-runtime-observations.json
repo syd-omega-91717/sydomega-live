@@ -1570,8 +1570,23 @@
       "interpretation": "The live function definition was inspected and matched all 53 canonical module_read action branches plus the dedicated consultancy intake write branch. This verifies SQL dispatcher branch coverage only; it does not establish that every HTTP route, user journey, external provider, or page is operational."
     },
     "production_release": {
-      "status": "NOT_LIVE_VERIFIED",
-      "reason": "The main-branch exact-SHA verifier contained duplicated retry and route-smoke blocks. PR #1244 repairs the verifier, but no successful exact-SHA production verification has yet been observed; production remains NOT_LIVE_VERIFIED."
+      "status": "LIVE_VERIFIED",
+      "commit_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "provider": "Cloudflare Pages",
+      "workflow_run_id": 43985648597,
+      "job_id": 133712987300,
+      "verified_at": "2026-11-17T00:13:16Z",
+      "root_manifest_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "www_manifest_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "root_http": 200,
+      "www_http": 200,
+      "pages_passed": 241,
+      "references_passed": 368,
+      "security_headers": [
+        "CSP",
+        "HSTS"
+      ],
+      "note": "Exact release SHA verified independently on both production hostnames."
     },
     "edge_functions": {
       "observed_date": "2026-11-17",
@@ -1705,18 +1720,24 @@
     "production_verification": {
       "provider": "Cloudflare Pages",
       "status": "PASS",
-      "commit_sha": "20f8dcfa9e20da66f129420f736c3470431c2c70",
-      "workflow_run_id": 43981760083,
-      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43981760083",
-      "job_id": 133699729279,
+      "commit_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "workflow_run_id": 43985648597,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43985648597",
+      "job_id": 133712987300,
       "verification_step": "Verify production manifest, headers and complete page estate",
       "conclusion": "success",
-      "verified_at": "2026-11-16T23:44:34Z",
+      "verified_at": "2026-11-17T00:13:16Z",
       "registered_pages": 241,
       "pages_passed": 241,
       "references_passed": 368,
       "root_http": 200,
-      "www_http": 200
+      "www_http": 200,
+      "root_manifest_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "www_manifest_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "security_headers": [
+        "CSP",
+        "HSTS"
+      ]
     },
     "vercel_promotion": {
       "status": "POSTPONED_NOT_DEPLOYED",
@@ -1736,29 +1757,32 @@
     "failover_verification": {
       "provider": "GitHub Pages",
       "status": "PASS",
-      "commit_sha": "20f8dcfa9e20da66f129420f736c3470431c2c70",
-      "workflow_run_id": 43981760114,
-      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43981760114",
-      "build_job_id": 133699729352,
-      "deploy_job_id": 133699871659,
+      "commit_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "workflow_run_id": 43985648579,
+      "workflow_url": "https://github.com/syd-omega-91717/sydomega-live/actions/runs/43985648579",
+      "build_job_id": 133712987454,
+      "deploy_job_id": 133713176244,
       "verification_step": "Smoke test deployed Pages site",
       "conclusion": "success",
-      "verified_at": "2026-11-16T23:44:19Z"
+      "verified_at": "2026-11-17T00:12:36Z",
+      "smoke_routes_passed": 6
     },
     "latest_production_probe": {
       "provider": "Cloudflare Pages",
       "status": "PASS",
-      "expected_commit_sha": "20f8dcfa9e20da66f129420f736c3470431c2c70",
-      "served_commit_sha": "20f8dcfa9e20da66f129420f736c3470431c2c70",
-      "workflow_run_id": 43981760083,
-      "job_id": 133699729279,
-      "verified_at": "2026-11-16T23:44:34Z",
+      "expected_commit_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "served_commit_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "workflow_run_id": 43985648597,
+      "job_id": 133712987300,
+      "verified_at": "2026-11-17T00:13:16Z",
       "registered_pages": 241,
       "pages_passed": 241,
       "references_passed": 368,
       "root_http": 200,
       "www_http": 200,
-      "evidence": "GitHub Actions production verification job; exact manifest SHA, CSP/HSTS, 241-page and 368-reference smoke checks passed."
+      "root_manifest_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "www_manifest_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "evidence": "GitHub Actions dual-domain production verifier; both release manifests exactly matched the main commit; CSP/HSTS and full 241-page / 368-reference smoke passed."
     }
   },
   "runtime_probe_status": {
@@ -1792,6 +1816,34 @@
     "family_access_probe": "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
     "content_pipeline_e2e": "PASS — authenticated local-only content pipeline on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).",
     "notification_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
-    "achievement_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED"
+    "achievement_migration_status": "APPLIED_PROVIDER_LEDGER_CONFIRMED",
+    "latest_production_release": {
+      "status": "PASS",
+      "commit_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "provider": "Cloudflare Pages",
+      "workflow_run_id": 43985648597,
+      "job_id": 133712987300,
+      "verified_at": "2026-11-17T00:13:16Z",
+      "root_manifest_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "www_manifest_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "pages_passed": 241,
+      "references_passed": 368,
+      "root_http": 200,
+      "www_http": 200,
+      "security_headers": [
+        "CSP",
+        "HSTS"
+      ]
+    },
+    "latest_failover_release": {
+      "status": "PASS",
+      "commit_sha": "d62168f2d8dd3504d5f2809128c64af1113984b1",
+      "provider": "GitHub Pages",
+      "workflow_run_id": 43985648579,
+      "build_job_id": 133712987454,
+      "deploy_job_id": 133713176244,
+      "verified_at": "2026-11-17T00:12:36Z",
+      "smoke_routes_passed": 6
+    }
   }
 }

@@ -102,6 +102,16 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("workContent.textContent=w.body||''", page)
         self.assertIn("status.textContent=stl", page)
 
+    def test_marketing_campaign_attachment_is_owner_scoped_and_short_lived(self):
+        page = (ROOT / "marketing.html").read_text()
+        self.assertIn("select('zone,duration,title,message,price_omega,status,created_at,file_path')", page)
+        self.assertIn("path.indexOf(_user.id+'/')!==0", page)
+        self.assertIn("parts.length!==2", page)
+        self.assertIn("signedUrl('uploads',path,900)", page)
+        self.assertIn("tab.location.replace(url)", page)
+        self.assertIn("attachPrivateCampaignDownload(d,q.file_path)", page)
+        self.assertNotIn("getPublicUrl(", page)
+
     def test_legacy_publication_upload_compensates_only_definitive_database_rejections(self):
         page = (ROOT / "publishing.html").read_text()
         self.assertIn("COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED", page)

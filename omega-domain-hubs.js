@@ -157,8 +157,7 @@
       if(!row) return;
       activePath=row.path;
       viewTitle.textContent=humanize(row.page_id);
-      openLink.href='/'+row.path;
-      frame.title=humanize(row.page_id)+' module';
+      var standaloneUrl=new URL('/'+row.path,window.location.origin);
       var frameUrl=new URL('/'+row.path,window.location.origin);
       frameUrl.searchParams.set('omega_embed','1');
       frameUrl.searchParams.set('omega_hub',hub.section);
@@ -170,6 +169,10 @@
         });
       }
       frameUrl.hash=moduleHash||'';
+      standaloneUrl.search=frameUrl.search;
+      standaloneUrl.hash=moduleHash||'';
+      openLink.href=standaloneUrl.pathname+standaloneUrl.search+standaloneUrl.hash;
+      frame.title=humanize(row.page_id)+' module';
       frame.src=frameUrl.pathname+frameUrl.search+frameUrl.hash;
       view.classList.add('is-open');
       overview.hidden=false;

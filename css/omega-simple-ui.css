@@ -1,7 +1,9 @@
 /* Ω SIMPLE UI — default product surface
-   Keeps the Omega identity while removing ornamental complexity.
-   Functional charts, data, controls and navigation remain untouched. */
-:root{--omega-simple-radius:8px;--omega-simple-shadow:none}
+   Keeps the Omega identity and clean information hierarchy while restoring
+   restrained layered depth, responsive hover elevation and native motion.
+   Ambient particle noise remains off by default; functional graphics, data,
+   controls, navigation and page-specific cinematic effects remain available. */
+:root{--omega-simple-radius:10px;--omega-simple-shadow:0 8px 24px rgba(0,0,0,.22);--omega-simple-shadow-hover:0 16px 36px rgba(0,0,0,.34)}
 body.omega-simple .omega-particles,body.omega-simple #omega-particles,body.omega-simple .ambient-background,body.omega-simple .starfield,body.omega-simple [data-omega-ambient-visual]{display:none!important}
 /* Simple means less clutter, not a still platform. This file used to stop
    EVERY animation on every page (body.omega-simple *{animation-duration:.01ms
@@ -12,8 +14,9 @@ body.omega-simple .omega-particles,body.omega-simple #omega-particles,body.omega
    explicit rule is that every emblem is alive. Ambient noise (particles,
    starfield) stays off; the marks move. Reduced motion is still honoured by
    bg.js's own prefers-reduced-motion block. */
-body.omega-simple .kpi,body.omega-simple .cmd-card,body.omega-simple .card,body.omega-simple .panel,body.omega-simple .glass,body.omega-simple .glass-card{border-radius:var(--omega-simple-radius)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transform:none!important}
-body.omega-simple .kpi:hover,body.omega-simple .cmd-card:hover,body.omega-simple .card:hover{transform:none!important;box-shadow:none!important}
+body.omega-simple .kpi,body.omega-simple .cmd-card,body.omega-simple .card,body.omega-simple .panel,body.omega-simple .glass,body.omega-simple .glass-card{border-radius:var(--omega-simple-radius);box-shadow:var(--omega-simple-shadow);transition:transform .24s cubic-bezier(.2,.8,.2,1),box-shadow .24s cubic-bezier(.2,.8,.2,1),border-color .24s ease;transform:translateZ(0)}
+@media(hover:hover) and (pointer:fine){body.omega-simple .kpi:hover,body.omega-simple .cmd-card:hover,body.omega-simple .card:hover,body.omega-simple .panel:hover,body.omega-simple .glass-card:hover{transform:translateY(-3px) translateZ(0);box-shadow:var(--omega-simple-shadow-hover);border-color:rgba(201,168,76,.42)}}
+@media(prefers-reduced-motion:reduce){body.omega-simple .kpi,body.omega-simple .cmd-card,body.omega-simple .card,body.omega-simple .panel,body.omega-simple .glass,body.omega-simple .glass-card{transition:none}body.omega-simple .kpi:hover,body.omega-simple .cmd-card:hover,body.omega-simple .card:hover,body.omega-simple .panel:hover,body.omega-simple .glass-card:hover{transform:none}}
 body.omega-simple .sechead{letter-spacing:2px!important;margin-bottom:12px!important}
 body.omega-simple .kpi-l,body.omega-simple .kpi-label,body.omega-simple .ss-label,body.omega-simple .cc-status,body.omega-simple .cc-desc{letter-spacing:1px!important}
 @media(max-width:700px){body.omega-simple .mission-bar{gap:8px!important}body.omega-simple .status-strip{display:none!important}body.omega-simple .layer-tabs{position:sticky;top:44px}body.omega-simple .layer-tabs .ltab{padding:10px 12px!important}}

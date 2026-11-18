@@ -18,11 +18,11 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
-POINT = re.compile(r"^\\s*\\*\\s*(\\d+)\\.\\s*(.*)$")
-SECTION = re.compile(r"^\\s*(SECTION\\b.*)$", re.IGNORECASE)
-SUBSECTION = re.compile(r"^\\s*Ω\\s+(.+?\\(Points?\\s+\\d+\\s*[-–]\\s*\\d+\\).*)$")
-REFERENCE = re.compile(r"\\bPoints?\\s+(\\d+)(?:\\s*[-–]\\s*(\\d+))?", re.IGNORECASE)
-RANGE = re.compile(r"\\((\\d+)\\s*[-–]\\s*(\\d+)\\)")
+POINT = re.compile(r"^\s*\*\s*(\d+)\.\s*(.*)$")
+SECTION = re.compile(r"^\s*(SECTION\b.*)$", re.IGNORECASE)
+SUBSECTION = re.compile(r"^\s*Ω\s+(.+?\(Points?\s+\d+\s*[-–]\s*\d+\).*)$")
+REFERENCE = re.compile(r"\bPoints?\s+(\d+)(?:\s*[-–]\s*(\d+))?", re.IGNORECASE)
+RANGE = re.compile(r"\((\d+)\s*[-–]\s*(\d+)\)")
 
 
 def inventory(path: Path) -> dict:
@@ -109,7 +109,7 @@ def inventory(path: Path) -> dict:
         "source_line_count": len(lines),
         "source_word_count": len(text.split()),
         "source_byte_count": len(raw),
-        "numbered_bullet_pattern": r"^\\s*\\*\\s*(\\d+)\\.\\s*(.*)$",
+        "numbered_bullet_pattern": r"^\s*\*\s*(\d+)\.\s*(.*)$",
         "explicit_bullet_count": len(rows),
         "unique_point_count": len(counts),
         "duplicate_point_numbers": duplicates,

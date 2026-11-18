@@ -78,7 +78,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
 
     def test_embedded_layout_preserves_existing_auth_visibility_gates(self):
         self.assertNotIn("body.omega-embedded .shell{display:", self.styles)
-        self.assertNotIn("body.omega-embedded .main,", self.styles.split("body.omega-embedded .main,")[0] if "body.omega-embedded .main," in self.styles else self.styles)
+        self.assertNotIn("body.omega-embedded .main,\nbody.omega-embedded main,\nbody.omega-embedded .page,\nbody.omega-embedded #main-content{display:", self.styles)
         self.assertNotIn("display:block!important", self.styles)
 
     def test_dynamic_labels_use_text_content_not_html_injection(self):

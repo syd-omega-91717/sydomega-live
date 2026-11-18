@@ -44,14 +44,14 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
             )
         self.assertIn("main.main,main,.main,.page-shell,.page", self.runtime)
 
-    def test_197_specialist_routes_are_embedded_without_deleting_legacy_paths(self):
+    def test_185_specialist_routes_are_embedded_without_deleting_legacy_paths(self):
         hubs = {hub["path"] for hub in self.matrix["hubs"]}
         children = [
             row for row in self.matrix["pages"]
             if row["classification"] == "CANDIDATE_MERGE_PANEL"
             and row["path"] != row["candidate_hub"]
         ]
-        self.assertEqual(len(children), 197)
+        self.assertEqual(len(children), 185)
         self.assertEqual({row["candidate_hub"] for row in children}, hubs)
         for row in children:
             self.assertTrue((ROOT / row["path"]).is_file(), row["path"])
@@ -60,9 +60,20 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         for row in self.matrix["pages"]:
             if row["classification"] in {"KEEP_SEPARATE", "AMBIGUOUS", "UNMAPPED", "UNMAPPED_SECTION"}:
                 self.assertIsNone(row["candidate_hub"], row["path"])
-        self.assertEqual(self.matrix["classification_counts"]["KEEP_SEPARATE"], 3)
-        self.assertEqual(self.matrix["classification_counts"]["AMBIGUOUS"], 11)
-        self.assertEqual(self.matrix["classification_counts"]["UNMAPPED"], 16)
+        self.assertEqual(self.matrix["classification_counts"]["KEEP_SEPARATE"], 18)
+        self.assertEqual(self.matrix["classification_counts"]["AMBIGUOUS"], 10)
+        self.assertEqual(self.matrix["classification_counts"]["UNMAPPED"], 14)
+
+    def test_sensitive_routes_remain_excluded_from_global_workspace_routing(self):
+        separate = {
+            Path(row["path"]).stem for row in self.matrix["pages"]
+            if row["classification"] == "KEEP_SEPARATE"
+        }
+        match = re.search(r"var HUB_SEPARATE_ROUTE_STEMS=\{(.*?)\};", self.nav, re.S)
+        self.assertIsNotNone(match)
+        routed_separate = set(re.findall(r"(?:'([^']+)'|([a-zA-Z0-9_-]+))\s*:\s*1", match.group(1)))
+        routed_separate = {a or b for a, b in routed_separate}
+        self.assertTrue(separate.issubset(routed_separate))
 
     def test_hub_registry_is_fetched_only_on_canonical_hub_pages(self):
         gate = "if(HUB_PATHS.indexOf(currentPath)===-1) return;"

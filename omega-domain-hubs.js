@@ -42,12 +42,12 @@
         }
       }catch(error){}
     }
-    document.addEventListener('click',function(event){
+    window.addEventListener('click',function(event){
       if(event.defaultPrevented) return;
       var link=event.target && event.target.closest ? event.target.closest('a[href]') : null;
       if(link && !link.hasAttribute('onclick')) preserveEmbeddedNavigation(link,'href');
     },false);
-    document.addEventListener('submit',function(event){
+    window.addEventListener('submit',function(event){
       if(event.defaultPrevented) return;
       var form=event.target;
       if(form && form.tagName==='FORM' && !form.hasAttribute('onsubmit')) preserveEmbeddedNavigation(form,'action');

@@ -29,7 +29,8 @@ class NotificationRuntimeTests(unittest.TestCase):
     def test_panel_supports_escape_and_focus_return(self):
         self.assertIn("if(ev.key==='Escape')", SOURCE)
         self.assertIn("function restorePanelFocus()", SOURCE)
-        self.assertIn("_notifTrigger.focus()", SOURCE)
+        self.assertIn("_notifTrigger.style.display!=='none'", SOURCE)
+        self.assertIn("document.querySelector('main')", SOURCE)
         self.assertIn("if(close)close.focus()", SOURCE)
 
 

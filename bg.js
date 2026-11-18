@@ -247,7 +247,7 @@ function __omegaAppend(el){
   if(!document.getElementById('omega-simple-ui-css')){
     var simple=document.createElement('link');
     simple.id='omega-simple-ui-css'; simple.rel='stylesheet';
-    simple.href='/css/omega-simple-ui.css'; simple.type='text/css';
+    simple.href='/css/omega-simple-ui.css?v=20261118-v4'; simple.type='text/css';
     (document.head||document.documentElement).appendChild(simple);
   }
   if(document.body) document.body.classList.add('omega-simple');
@@ -376,8 +376,20 @@ function __omegaAppend(el){
     link.href='/css/omega-cinematic-animations-phase3.css'; link.type='text/css';
     head.appendChild(link);
   }
+  /* Platform Experience v4: final site-wide visual layer. Loaded after the
+     shared visual stack so it is visible on every route without changing
+     markup, page state, data contracts, authorization or feature behavior.
+     Versioned URL prevents stale browser/CDN copies after deployment. */
+  if(!document.getElementById('omega-platform-experience-v4-css')){
+    var experience=document.createElement('link');
+    experience.id='omega-platform-experience-v4-css';
+    experience.rel='stylesheet';
+    experience.href='/omega-platform-experience-v4.css?v=20261118-v4';
+    experience.type='text/css';
+    head.appendChild(experience);
+  }
 })();
-
+ 
 /* Omega-GVP: ambient noise overlay + cursor-reactive glass light.
    Pure progressive enhancement -- no functional dependency, safe no-op
    if it runs twice. Cursor tracking is passive + rAF-throttled (one

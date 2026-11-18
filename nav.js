@@ -387,6 +387,7 @@
   };
   function workspaceHref(rawHref){
     try{
+      if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return rawHref;
       var url=new URL(rawHref,window.location.href);
       if(url.origin!==window.location.origin) return rawHref;
       var file=url.pathname.split('/').pop()||'';

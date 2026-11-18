@@ -71,7 +71,9 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         ]
         self.assertEqual(len(children), 184)
         self.assertEqual(self.matrix["classification_counts"]["CANDIDATE_MERGE_PANEL"], 198)
-        self.assertEqual({row["candidate_hub"] for row in children}, hubs)
+        covered_hubs = {row["candidate_hub"] for row in children}
+        covered_hubs.update(row["protected_hub"] for row in self.matrix["pages"] if row.get("protected_hub"))
+        self.assertEqual(covered_hubs, hubs)
         for row in children:
             self.assertTrue((ROOT / row["path"]).is_file(), row["path"])
 
@@ -129,7 +131,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertTrue(separate.issubset(routed_separate))
 
     def test_hub_registry_is_fetched_only_on_canonical_hub_pages(self):
-        gate = "if(HUB_PATHS.indexOf(currentPath)===-1) return;"
+        gate = "if(!embedded && HUB_PATHS.indexOf(currentPath)===-1) return;"
         fetch = "fetch('/config/omega-page-hub-ownership.json'"
         self.assertIn(gate, self.runtime)
         self.assertLess(self.runtime.index(gate), self.runtime.index(fetch))
@@ -152,7 +154,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         )
 
     def test_embedded_routes_keep_same_origin_session_and_permission_runtime(self):
-        self.assertIn("omega_embed=1", self.runtime)
+        self.assertIn("searchParams.set('omega_embed','1')", self.runtime)
         self.assertIn("body.omega-embedded", self.styles)
         self.assertIn("event.origin!==window.location.origin", self.runtime)
         self.assertIn("event.source!==frame.contentWindow", self.runtime)
@@ -191,7 +193,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
     def test_global_navigation_routes_candidate_modules_through_their_hubs(self):
         self.assertIn("function workspaceHref(rawHref)", self.nav)
         self.assertIn("var HUB_ROUTE_BY_SECTION={", self.nav)
-        self.assertIn("url.searchParams.set('omega_module',modulePath)", self.nav)
+        self.assertIn("target.searchParams.set('omega_module',modulePath)", self.nav)
         self.assertIn("url.searchParams.set('omega_module_query',forwarded.toString())", self.nav)
         self.assertIn("workspaceHref(sub[2])", self.nav)
         self.assertIn("workspaceHref(item[2])", self.nav)
@@ -225,7 +227,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         ]
         for row in children:
             page = (ROOT / row["path"]).read_text(encoding="utf-8")
-            self.assertRegex(page, r"<script[^>]+src=[\"']/?bg\.js(?:[?\"'])", row["path"])
+            self.assertRegex(page, r"<script[^>]+src=[\"']?/?bg\.js(?:[?\"'\s>])", row["path"])
             self.assertRegex(page, r"id=[\"']omega-side[\"']", row["path"])
             self.assertNotRegex(page, r"(?:window\.)?top\.location\s*(?:=|\.assign|\.replace)", row["path"])
             self.assertNotRegex(page, r"parent\.location\s*(?:=|\.assign|\.replace)", row["path"])

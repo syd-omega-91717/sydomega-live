@@ -22,6 +22,14 @@ API_PREFIXES = ("/api/", "/functions/v1/")
 CLOUDFLARE_EMAIL_PLACEHOLDER_PATH = "/cdn-cgi/l/email-protection"
 ALLOWED_HOST_SUFFIXES = (".sydomega.com", ".pages.dev", ".vercel.app")
 ALLOWED_ROOT_HOSTS = {"sydomega.com"}
+REQUIRED_GLOBAL_ASSETS = (
+    ("/bg.js", "javascript", "omega-platform-experience-v4.css?v=20261118-v4"),
+    (
+        "/omega-platform-experience-v4.css?v=20261118-v4",
+        "text/css",
+        "Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V4",
+    ),
+)
 
 
 class RefParser(HTMLParser):
@@ -222,6 +230,14 @@ def main() -> int:
                         continue
                     refs.add(absolute)
 
+        global_asset_failures: list[tuple[str, int, str]] = []
+        for path, expected_type, marker in REQUIRED_GLOBAL_ASSETS:
+            asset_url = urljoin(base, path.lstrip("/"))
+            status, content_type, body = request_url(asset_url, "GET", args.timeout)
+            valid_type = expected_type in content_type.lower()
+            if status != 200 or not valid_type or marker not in body:
+                global_asset_failures.append((asset_url, status, f"type={content_type}; marker_present={marker in body}"))
+
         ref_failures: list[tuple[str, int, str]] = []
         def check_ref(url: str):
             return url, request_url(url, "HEAD", args.timeout)
@@ -238,6 +254,8 @@ def main() -> int:
             "registered_pages": len(pages),
             "pages_passed": len(pages) - len(page_failures),
             "same_origin_references_checked": len(refs),
+            "required_global_assets_checked": len(REQUIRED_GLOBAL_ASSETS),
+            "required_global_asset_failures": global_asset_failures[:20],
             "references_passed": len(refs) - len(ref_failures),
             "external_references_not_checked": external_count,
             "same_origin_api_references_deferred_to_api_contracts": api_count,
@@ -246,7 +264,7 @@ def main() -> int:
             "reference_failures": ref_failures[:30],
         }
         print(json.dumps(summary, indent=2))
-        if page_failures or ref_failures:
+        if page_failures or ref_failures or global_asset_failures:
             print("CLOUDFLARE PRODUCTION SMOKE: FAIL")
             return 1
         print("CLOUDFLARE PRODUCTION SMOKE: PASS")

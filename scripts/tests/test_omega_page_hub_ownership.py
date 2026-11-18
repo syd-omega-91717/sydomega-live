@@ -44,7 +44,6 @@ class PageHubOwnershipContract(unittest.TestCase):
                 self.assertIsNone(row["candidate_hub"], row["path"])
             if row["classification"] == "CANDIDATE_MERGE_PANEL":
                 self.assertTrue(row["candidate_hub"], row["path"])
-                self.assertEqual(row["authorization_state"], "UNVERIFIED") if row["authorization_state"] == "UNVERIFIED" else None
 
     def test_every_candidate_hub_is_a_real_root_page(self):
         with open(MATRIX, encoding="utf-8") as handle:

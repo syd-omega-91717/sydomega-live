@@ -21,7 +21,7 @@ The current 241-page contract registry maps the platform into 14 persistent doma
 | Achieve | `achieve.html` |
 | Media | `media.html` |
 
-The ownership matrix identifies 199 candidate hub routes. Fourteen are the hub routes themselves; the remaining **184 specialist routes** are exposed inside their owning workspace.
+The ownership matrix identifies 198 candidate hub routes. Fourteen are the hub routes themselves; the remaining **184 specialist routes** are exposed inside their owning workspace.
 
 ## Route treatment
 

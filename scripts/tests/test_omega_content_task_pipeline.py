@@ -128,6 +128,22 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertNotIn("innerHTML", queue)
         self.assertIn("where public.is_platform_owner()", (ROOT / "supabase/migrations/0012_omega_marketing.sql").read_text())
 
+    def test_reservation_decisions_are_bigint_owner_aal2_and_audited(self):
+        page = (ROOT / "marketing.html").read_text()
+        self.assertNotIn("from('media_reservations').update(", page)
+        self.assertIn("sb.rpc('set_reservation_status',args)", page)
+        self.assertIn("mfa.stepUp()", page)
+        self.assertIn(".in('status',['submitted','pending','reviewing'])", page)
+        migration = (ROOT / "supabase/migrations/20261118090000_owner_aal2_media_reservation_decisions.sql").read_text()
+        self.assertIn("revoke update on table public.media_reservations from public, anon, authenticated", migration.lower())
+        self.assertIn("set_reservation_status(p_id bigint, p_status text)", migration)
+        self.assertIn("auth.jwt()->>'aal'", migration)
+        self.assertIn("'aal2_required'", migration)
+        self.assertIn("'invalid_status_transition'", migration)
+        self.assertIn("insert into public.omega_platform_events", migration.lower())
+        self.assertIn("revoke all on function public.set_reservation_status(uuid, text)", migration.lower())
+        self.assertIn("grant execute on function public.set_reservation_status(bigint, text) to authenticated", migration.lower())
+
     def test_legacy_publication_upload_compensates_only_definitive_database_rejections(self):
         page = (ROOT / "publishing.html").read_text()
         self.assertIn("COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED", page)

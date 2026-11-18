@@ -147,6 +147,11 @@ function __omegaAppend(el){
   if(!document.querySelector('script[data-omega-motion-v3]')){var mov3=document.createElement('script');mov3.src='/omega-motion-v3.js';mov3.setAttribute('data-omega-motion-v3','1');mov3.defer=true;__omegaIdleAppend(mov3);}
   if(!document.querySelector('script[data-omega-dataguard]')){var dg=document.createElement('script');dg.src='/omega-dataguard.js';dg.setAttribute('data-omega-dataguard','1');dg.defer=true;__omegaAppend(dg);}
   if(!document.querySelector('script[data-omega-os]')){var os_data_omega_os=document.createElement('script');os_data_omega_os.src='/omega-sovereign-os.js';os_data_omega_os.setAttribute('data-omega-os','1');os_data_omega_os.defer=true;__omegaAppend(os_data_omega_os);}
+  /* Ω Global Visual Finish — shared cinematic depth, readable hierarchy and accessible motion. */
+  if(!document.querySelector('link[data-omega-global-visual-finish]')){
+    var _ogvf=document.createElement('link');_ogvf.rel='stylesheet';_ogvf.href='/omega-global-visual-finish.css';
+    _ogvf.setAttribute('data-omega-global-visual-finish','1');(document.head||document.documentElement).appendChild(_ogvf);
+  }
   /* Universal trust-first orientation: every surface gets purpose, proof, next action and adjacent value. */
   if(!document.querySelector('link[data-omega-value-layer-css]')){var omega_value_css=document.createElement('link');omega_value_css.rel='stylesheet';omega_value_css.href='/omega-value-layer.css';omega_value_css.setAttribute('data-omega-value-layer-css','1');(document.head||document.documentElement).appendChild(omega_value_css);}
   if(!document.querySelector('script[data-omega-value-layer]')){var omega_value_layer=document.createElement('script');omega_value_layer.src='/omega-value-layer.js';omega_value_layer.setAttribute('data-omega-value-layer','1');omega_value_layer.defer=true;__omegaAppend(omega_value_layer);}

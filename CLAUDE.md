@@ -516,6 +516,12 @@ Only what changes what you do in the **first minutes** stays here:
   `migrations/` and redeploys every function in `supabase/config.toml` within ~1 min (measured
   2026-10-25 on #1080 and #1088). `pending-migrations.json` means *unmerged*, not *safe*:
   review a migration as live before merging. A function absent from `config.toml` never deploys.
+- **Cloudflare Pages Git integration is not gated by GitHub release-readiness checks.** The
+  production build path must run `scripts/production-migration-gate.py` whenever
+  `CF_PAGES_BRANCH=main`. It compares source migrations, the authenticated provider snapshot,
+  and the pending registry, and fails closed on any mismatch or unapplied migration. The manual
+  Cloudflare fallback sets the same production branch marker; Vercel production promotion runs
+  the same gate. PR branch previews remain buildable while a migration is under review.
 - **Vercel's integration once merged estate-wide PRs leaving `main` red** (#250, #252); remedy
   `python3 scripts/omega-registry.py`, never auto-committed in CI.
 - **Once a PR is open, its head is frozen — never amend or force-push it.** GitHub merges

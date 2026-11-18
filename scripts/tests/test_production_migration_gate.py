@@ -41,7 +41,7 @@ class ProductionMigrationGateTests(unittest.TestCase):
         return {
             "_captured": "2026-11-18",
             "remoteMigrationCount": len(versions),
-            "latestRemoteMigration": max(versions),
+            "latestRemoteMigration": max(versions, key=lambda value: (len(value), value)),
             "versions": versions,
             "migrations": [{"version": v, "name": f"migration_{v}"} for v in versions],
         }
@@ -67,6 +67,21 @@ class ProductionMigrationGateTests(unittest.TestCase):
         result = self.run_gate(root)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PRODUCTION_MIGRATION_GATE=PASS source=2 provider=2 pending=0", result.stdout)
+
+    def test_mixed_legacy_date_and_timestamp_versions_pass(self):
+        versions = ["0001", "20260902", "20261118090000"]
+        root = self.make_root(
+            source=[
+                "0001_initial.sql",
+                "20260902_reset_migration_state.sql",
+                "20261118090000_reservation.sql",
+            ],
+            remote=self.remote(versions),
+            pending={"pending": []},
+        )
+        result = self.run_gate(root)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PRODUCTION_MIGRATION_GATE=PASS source=3 provider=3 pending=0", result.stdout)
 
     def test_registered_unapplied_migration_blocks_production(self):
         root = self.make_root(

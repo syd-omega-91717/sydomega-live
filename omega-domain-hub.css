@@ -56,11 +56,11 @@ body.omega-embedded #omega-controls-dock,
 body.omega-embedded #omega-page-door,
 body.omega-embedded .omega-page-door,
 body.omega-embedded #omega-toasts{display:none!important}
-body.omega-embedded .shell{display:block!important;min-height:0!important;width:100%!important;max-width:none!important}
+body.omega-embedded .shell{min-height:0!important;width:100%!important;max-width:none!important}
 body.omega-embedded .main,
 body.omega-embedded main,
 body.omega-embedded .page,
-body.omega-embedded #main-content{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:14px!important}
+body.omega-embedded #main-content{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:14px!important}
 body.omega-embedded .main>*,
 body.omega-embedded main>*{max-width:100%}
 @media(max-width:760px){

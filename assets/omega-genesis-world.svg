@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 720" role="img" aria-labelledby="title desc">
+  <title id="title">Omega Genesis World</title>
+  <desc id="desc">A dark planetary core with a gold Omega sigil, orbital rings, cyan energy paths and a restrained star field. Decorative artwork only; it does not represent live telemetry.</desc>
+  <defs>
+    <radialGradient id="void" cx="50%" cy="48%" r="70%"><stop offset="0" stop-color="#10202b" stop-opacity=".82"/><stop offset=".42" stop-color="#070a12" stop-opacity=".72"/><stop offset="1" stop-color="#020206" stop-opacity=".96"/></radialGradient>
+    <radialGradient id="planet" cx="38%" cy="30%" r="72%"><stop offset="0" stop-color="#26313b"/><stop offset=".38" stop-color="#10151e"/><stop offset=".78" stop-color="#05070d"/><stop offset="1" stop-color="#010204"/></radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0b0"/><stop offset=".35" stop-color="#c9a84c"/><stop offset=".72" stop-color="#8d6426"/><stop offset="1" stop-color="#f3d98b"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#00e5ff" stop-opacity="0"/><stop offset=".5" stop-color="#00e5ff"/><stop offset="1" stop-color="#00e5ff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#00e5ff" stop-opacity=".18"/><stop offset=".62" stop-color="#c9a84c" stop-opacity=".1"/><stop offset="1" stop-color="#020206" stop-opacity="0"/></radialGradient>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="soft" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="24"/></filter>
+  </defs>
+  <rect width="1600" height="720" fill="url(#void)"/>
+  <ellipse cx="800" cy="360" rx="580" ry="330" fill="url(#halo)" filter="url(#soft)"/>
+  <g fill="#e8c97a" opacity=".72">
+    <circle cx="104" cy="112" r="1.8"/><circle cx="198" cy="514" r="1.3"/><circle cx="310" cy="192" r="1.1"/><circle cx="425" cy="84" r="1.5"/><circle cx="520" cy="622" r="1.2"/><circle cx="635" cy="124" r="1"/><circle cx="968" cy="92" r="1.5"/><circle cx="1110" cy="608" r="1.4"/><circle cx="1260" cy="152" r="1.4"/><circle cx="1380" cy="486" r="1.7"/><circle cx="1490" cy="226" r="1.2"/><circle cx="1450" cy="620" r="1"/>
+  </g>
+  <g fill="none" stroke="url(#gold)" opacity=".7">
+    <ellipse cx="800" cy="360" rx="690" ry="178" stroke-width="2"/>
+    <ellipse cx="800" cy="360" rx="610" ry="235" stroke-width="1" transform="rotate(-13 800 360)"/>
+    <ellipse cx="800" cy="360" rx="530" ry="290" stroke-width="1" opacity=".55" transform="rotate(18 800 360)"/>
+  </g>
+  <g class="orbit orbit-one" fill="none" stroke="#00e5ff" stroke-width="2" opacity=".62">
+    <ellipse cx="800" cy="360" rx="650" ry="150" stroke-dasharray="2 20"/>
+  </g>
+  <g class="orbit orbit-two" fill="none" stroke="#e8c97a" stroke-width="1.4" opacity=".72">
+    <ellipse cx="800" cy="360" rx="570" ry="260" stroke-dasharray="80 24 4 24"/>
+  </g>
+  <circle cx="800" cy="360" r="252" fill="url(#planet)" stroke="#c9a84c" stroke-opacity=".48" stroke-width="2"/>
+  <circle cx="800" cy="360" r="236" fill="none" stroke="#00e5ff" stroke-opacity=".28" stroke-width="2"/>
+  <path d="M590 270 Q690 205 800 220 T1010 278 M570 440 Q700 505 800 486 T1030 430" fill="none" stroke="url(#cyan)" stroke-width="3" opacity=".8"/>
+  <path d="M612 330 Q800 260 988 330 M612 394 Q800 462 988 394" fill="none" stroke="#c9a84c" stroke-opacity=".2" stroke-width="1"/>
+  <circle cx="800" cy="360" r="166" fill="none" stroke="url(#gold)" stroke-width="2" stroke-opacity=".58"/>
+  <circle cx="800" cy="360" r="146" fill="#020206" fill-opacity=".62" stroke="#c9a84c" stroke-opacity=".34"/>
+  <text x="800" y="404" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="156" font-weight="600" fill="url(#gold)" filter="url(#glow)">Ω</text>
+  <path d="M800 18 V115 M800 605 V702" stroke="url(#gold)" stroke-width="2" opacity=".55"/>
+  <circle cx="800" cy="360" r="4" fill="#fff0b0" filter="url(#glow)"/>
+  <g fill="#00e5ff" filter="url(#glow)"><circle cx="150" cy="360" r="3"/><circle cx="1450" cy="360" r="3"/></g>
+  <style>
+    .orbit-one{transform-origin:800px 360px;animation:omega-orbit-a 42s linear infinite}
+    .orbit-two{transform-origin:800px 360px;animation:omega-orbit-b 58s linear infinite}
+    @keyframes omega-orbit-a{to{transform:rotate(360deg)}}
+    @keyframes omega-orbit-b{to{transform:rotate(-360deg)}}
+    @media(prefers-reduced-motion:reduce){.orbit-one,.orbit-two{animation:none}}
+  </style>
+</svg>

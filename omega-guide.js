@@ -184,7 +184,13 @@
     st.id = 'gd-style';
     st.textContent = [
       '.gd{display:flex;flex-direction:column;gap:18px}',
-      '.gd-search{width:100%;box-sizing:border-box;background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:15px 18px;color:var(--ink,#E8E4D8);font-family:var(--R,sans-serif);font-size:var(--fs-3,16px);outline:none}',
+      '.gd-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}',
+      '.gd-search{width:100%;min-width:0;box-sizing:border-box;background:rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.18);border-radius:14px;padding:15px 18px;color:var(--ink,#E8E4D8);font-family:var(--R,sans-serif);font-size:var(--fs-3,16px);outline:none}',
+      '.gd-count{grid-column:1/-1;color:var(--muted,#8A8880);font:12px/1.5 var(--M,monospace);letter-spacing:1px}',
+      '.gd-actions{display:flex;gap:8px;flex-wrap:wrap}',
+      '.gd .gd-tool{min-height:44px;padding:8px 12px;border:1px solid rgba(201,168,76,.25);border-radius:10px;background:rgba(201,168,76,.04);color:var(--gold,#C9A84C);font:12px/1.3 var(--M,monospace);letter-spacing:.8px;cursor:pointer}',
+      '.gd .gd-tool:hover,.gd .gd-tool:focus-visible{border-color:var(--cyan,#00E5FF);color:var(--cyan,#00E5FF)}',
+      '.gd .gd-tool:disabled{opacity:.45;cursor:not-allowed}',
       '.gd-search:focus{border-color:rgba(201,168,76,.6);box-shadow:0 0 0 4px rgba(201,168,76,.12)}',
       '.gd-chips{display:flex;gap:8px;flex-wrap:wrap}',
       '.gd .gd-chip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);color:var(--muted,#8A8880);font-family:var(--M,monospace);font-size:12px;letter-spacing:1.5px;cursor:pointer}',
@@ -225,11 +231,31 @@
     var list = faqs(data);
     var state = { q: '', t: 'all' };
 
+    var tools = mk('div', 'gd-tools');
     var search = mk('input', 'gd-search');
     search.type = 'search';
-    search.placeholder = 'Search the guide';
-    search.setAttribute('aria-label', 'Search the guide');
-    root.appendChild(search);
+    search.placeholder = 'Search questions and answers';
+    search.setAttribute('aria-label', 'Search questions and answers');
+    search.setAttribute('autocomplete', 'off');
+    tools.appendChild(search);
+    var actions = mk('div', 'gd-actions');
+    var clear = mk('button', 'gd-tool', 'CLEAR');
+    clear.type = 'button';
+    clear.setAttribute('aria-label', 'Clear guide search');
+    var expand = mk('button', 'gd-tool', 'EXPAND ALL');
+    expand.type = 'button';
+    var collapse = mk('button', 'gd-tool', 'COLLAPSE ALL');
+    collapse.type = 'button';
+    actions.appendChild(clear);
+    actions.appendChild(expand);
+    actions.appendChild(collapse);
+    tools.appendChild(actions);
+    var count = mk('div', 'gd-count', 'Loading guide…');
+    count.setAttribute('role', 'status');
+    count.setAttribute('aria-live', 'polite');
+    count.setAttribute('aria-atomic', 'true');
+    tools.appendChild(count);
+    root.appendChild(tools);
 
     var chips = mk('div', 'gd-chips');
     chips.setAttribute('role', 'toolbar');
@@ -255,7 +281,9 @@
       var shown = 0;
       list.forEach(function (f) {
         if (state.t !== 'all' && f[0] !== state.t) return;
-        var ansText = typeof f[2] === 'string' ? f[2] : '';
+        var ansText = typeof f[2] === 'string' ? f[2] : (f[2]() || []).map(function (n) {
+          return n && n.textContent ? n.textContent : '';
+        }).join(' ');
         if (q && (f[1] + ' ' + ansText).toLowerCase().indexOf(q) < 0) return;
         var det = mk('details');
         det.style.setProperty('--c', topicColour(f[0]));
@@ -269,8 +297,12 @@
         box.appendChild(det);
         shown++;
       });
+      count.textContent = shown + (shown === 1 ? ' ANSWER' : ' ANSWERS') + (q ? ' MATCH YOUR SEARCH' : ' IN THIS TOPIC');
+      clear.disabled = !state.q;
+      expand.disabled = shown === 0;
+      collapse.disabled = shown === 0;
       if (!shown) {
-        var e = mk('div', 'gd-empty', 'NOT IN THE GUIDE YET. ');
+        var e = mk('div', 'gd-empty', 'NO MATCHES FOUND. TRY ANOTHER TERM OR CLEAR YOUR FILTER. ');
         var a = mk('a', null, 'ASK THE CONCIERGE');
         a.href = '/chatbot.html';
         e.appendChild(a);
@@ -278,6 +310,18 @@
       }
     }
     search.addEventListener('input', function () { state.q = search.value; render(); });
+    clear.addEventListener('click', function () {
+      search.value = '';
+      state.q = '';
+      render();
+      search.focus();
+    });
+    expand.addEventListener('click', function () {
+      box.querySelectorAll('details').forEach(function (item) { item.open = true; });
+    });
+    collapse.addEventListener('click', function () {
+      box.querySelectorAll('details').forEach(function (item) { item.open = false; });
+    });
     chips.addEventListener('click', function (ev) {
       var b = ev.target.closest && ev.target.closest('.gd-chip');
       if (!b) return;

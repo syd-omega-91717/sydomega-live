@@ -619,7 +619,7 @@ function __omegaAppend(el){
       window.__omgPxTrack = pxTrack;
       var pxApply = function(){
         pxRaf = 0;
-        if(document.body && document.body.classList.contains('omega-simple')) return;
+        if(window.matchMedia && (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(pointer: coarse)').matches)) return;
         var vh = window.innerHeight || 1, els = [], rects = [];
         pxOn.forEach(function(el){ if(el.isConnected){ els.push(el); rects.push(el.getBoundingClientRect()); } else pxOn.delete(el); });
         for(var i = 0; i < els.length; i++){

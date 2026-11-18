@@ -80,7 +80,11 @@ declare
   old_status text;
   submitter_id uuid;
 begin
-  if not public.is_platform_owner() then
+  -- Check membership separately so an owner with AAL1 receives the
+  -- step-up signal even when the global owner_mfa_required flag is enabled.
+  if not exists (
+    select 1 from public.platform_owners po where po.user_id = auth.uid()
+  ) then
     return jsonb_build_object('ok', false, 'error', 'owner_only');
   end if;
   if coalesce(auth.jwt()->>'aal', 'aal1') <> 'aal2' then

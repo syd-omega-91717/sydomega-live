@@ -42,6 +42,23 @@ begin
 end;
 $migration$;
 
+-- Replace the legacy permissive ALL policy with explicit read/submit policies.
+-- This preserves member-own and platform-owner reads plus member-owned inserts,
+-- while ensuring no UPDATE or DELETE policy exists even if a grant is later added.
+drop policy if exists media_reservations_own on public.media_reservations;
+drop policy if exists mr_insert on public.media_reservations;
+drop policy if exists mr_select on public.media_reservations;
+
+create policy media_reservations_select
+  on public.media_reservations
+  for select to authenticated
+  using ((select auth.uid()) = user_id or public.is_platform_owner());
+
+create policy media_reservations_insert
+  on public.media_reservations
+  for insert to authenticated
+  with check ((select auth.uid()) = user_id);
+
 -- No authenticated browser client may mutate reservation rows directly.
 -- Status changes must pass through the owner + AAL2 checked RPC below.
 revoke update on table public.media_reservations from public, anon, authenticated;

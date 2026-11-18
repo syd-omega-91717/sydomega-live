@@ -39,6 +39,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("@media(max-width:760px)", self.global_experience)
         self.assertIn("@media(prefers-reduced-motion:reduce)", self.global_experience)
         self.assertIn("omega-platform-experience-v5.css?v=20261118-v5", self.bootstrap)
+        self.assertIn("document.addEventListener('DOMContentLoaded',inject,{once:true})", self.bootstrap)
+        self.assertIn("(document.body||document.head||document.documentElement).appendChild(link)", self.bootstrap)
 
     def test_all_canonical_hubs_exist_and_match_the_runtime_allowlist(self):
         expected = {hub["path"] for hub in self.matrix["hubs"]}

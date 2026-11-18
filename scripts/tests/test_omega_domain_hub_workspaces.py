@@ -50,6 +50,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("@keyframes omega-v5-orbit-breathe", self.global_experience)
         self.assertIn("@keyframes omega-v5-hero-sweep", self.global_experience)
         self.assertIn("@media(max-width:760px)", self.global_experience)
+        self.assertIn('[style*="width:"]', self.global_experience)
         self.assertIn("@media(prefers-reduced-motion:reduce)", self.global_experience)
         self.assertIn("omega-platform-experience-v5.css?v=20261118-v5", self.bootstrap)
         self.assertIn("document.addEventListener('DOMContentLoaded',inject,{once:true})", self.bootstrap)

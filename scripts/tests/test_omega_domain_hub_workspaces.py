@@ -146,6 +146,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("function updateAddress(path,moduleQuery,moduleHash)", self.runtime)
         self.assertIn("frameUrl.searchParams.append(key,value)", self.runtime)
         self.assertIn("frameUrl.hash=moduleHash||''", self.runtime)
+        self.assertIn("standaloneUrl.searchParams.append(key,value)", self.runtime)
+        self.assertNotIn("standaloneUrl.search=frameUrl.search", self.runtime)
         self.assertIn("params.get('omega_module_query')||''", self.runtime)
         self.assertIn("preserveEmbeddedNavigation", self.runtime)
 

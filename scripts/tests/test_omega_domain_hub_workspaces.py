@@ -64,6 +64,14 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertEqual(self.matrix["classification_counts"]["AMBIGUOUS"], 10)
         self.assertEqual(self.matrix["classification_counts"]["UNMAPPED"], 14)
 
+    def test_protected_routes_are_discoverable_but_open_standalone(self):
+        self.assertIn("var protectedRows=", self.runtime)
+        self.assertIn("row.classification==='KEEP_SEPARATE'", self.runtime)
+        self.assertIn("PROTECTED WORKFLOWS · OPEN SEPARATELY", self.runtime)
+        self.assertIn("link.target='_blank'", self.runtime)
+        self.assertIn("omega-domain-hub-protected-grid", self.styles)
+        self.assertIn("(!rows.length && !protectedRows.length)", self.runtime)
+
     def test_sensitive_routes_remain_excluded_from_global_workspace_routing(self):
         separate = {
             Path(row["path"]).stem for row in self.matrix["pages"]

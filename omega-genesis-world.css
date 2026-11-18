@@ -1,0 +1,35 @@
+/* Ω GENESIS WORLD — cinematic atmosphere for the governed World surface.
+   Artwork is decorative; operational state remains owned by the World contracts. */
+.ow-spatial-world{
+  isolation:isolate;
+  background-color:#020206;
+  background-image:
+    linear-gradient(180deg,rgba(2,2,6,.18),rgba(2,2,6,.38)),
+    url('/assets/omega-genesis-world.svg');
+  background-size:cover,cover;
+  background-position:center,50% 48%;
+  background-repeat:no-repeat;
+}
+.ow-spatial-world::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 48%,rgba(0,229,255,.075),transparent 44%),
+    linear-gradient(90deg,rgba(2,2,6,.24),transparent 22%,transparent 78%,rgba(2,2,6,.24));
+  animation:omega-genesis-atmosphere 18s ease-in-out infinite alternate;
+}
+.ow-spatial-world > *{position:relative;z-index:1}
+@keyframes omega-genesis-atmosphere{
+  from{opacity:.48}
+  to{opacity:.9}
+}
+@media(max-width:760px){
+  .ow-spatial-world{background-position:center,50% 50%;background-size:auto 100%,auto 100%}
+  .ow-spatial-world::before{background:linear-gradient(180deg,rgba(2,2,6,.12),rgba(2,2,6,.5))}
+}
+@media(prefers-reduced-motion:reduce){
+  .ow-spatial-world::before{animation:none;opacity:.68}
+}

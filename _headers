@@ -7,7 +7,7 @@
 /nav.js
   Cache-Control: public, max-age=0, must-revalidate
 
-/omega-platform-experience-v4.css
+/omega-platform-experience-v5.css
   Cache-Control: public, max-age=31536000, immutable
 
 /omega-platform-experience-v5.css

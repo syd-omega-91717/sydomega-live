@@ -1,0 +1,192 @@
+/* Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V4
+   Global visual implementation for the existing static platform.
+   Loaded last by bg.js so the new visual language is visible on every route.
+   Preserves existing markup, data contracts, actions, permissions and page logic.
+*/
+:root{
+  --omega-v4-void:#020206;
+  --omega-v4-surface:rgba(11,13,21,.78);
+  --omega-v4-surface-raised:rgba(18,20,30,.88);
+  --omega-v4-gold:#C9A84C;
+  --omega-v4-gold-hot:#F0D58A;
+  --omega-v4-cyan:#00E5FF;
+  --omega-v4-line:rgba(201,168,76,.22);
+  --omega-v4-line-cool:rgba(0,229,255,.16);
+  --omega-v4-shadow:0 18px 46px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.055);
+  --omega-v4-shadow-hover:0 26px 64px rgba(0,0,0,.48),0 0 26px rgba(201,168,76,.11),inset 0 1px rgba(255,255,255,.08);
+  --omega-v4-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+/* Atmospheric depth stays behind content and never intercepts input. */
+body.omega-simple{
+  background-color:var(--omega-v4-void);
+  background-image:
+    radial-gradient(ellipse 68% 38% at 50% -12%,rgba(201,168,76,.105),transparent 72%),
+    radial-gradient(ellipse 44% 38% at 100% 34%,rgba(0,117,160,.085),transparent 74%),
+    radial-gradient(ellipse 38% 42% at 0% 78%,rgba(112,40,80,.07),transparent 76%);
+  background-attachment:fixed;
+}
+body.omega-simple .main,
+body.omega-simple main,
+body.omega-simple .page-shell,
+body.omega-simple #omega-main-content{
+  background-color:transparent;
+  background-image:
+    radial-gradient(ellipse 70% 36% at 50% 0%,rgba(201,168,76,.035),transparent 76%),
+    linear-gradient(180deg,rgba(255,255,255,.008),transparent 36%);
+}
+
+/* The primary navigation reads as one premium instrument panel. */
+body.omega-simple .topbar,
+body.omega-simple header.topbar,
+body.omega-simple #omega-topbar{
+  background:linear-gradient(180deg,rgba(5,7,13,.96),rgba(8,10,16,.82));
+  border-bottom:1px solid rgba(201,168,76,.2);
+  box-shadow:0 10px 34px rgba(0,0,0,.24),inset 0 -1px rgba(255,255,255,.025);
+  -webkit-backdrop-filter:blur(20px) saturate(135%);
+  backdrop-filter:blur(20px) saturate(135%);
+}
+body.omega-simple .side,
+body.omega-simple #omega-side{
+  background:linear-gradient(180deg,rgba(4,6,12,.98),rgba(8,9,16,.94) 58%,rgba(4,6,12,.98));
+  border-right:1px solid rgba(201,168,76,.18);
+  box-shadow:12px 0 42px rgba(0,0,0,.2),inset -1px 0 rgba(255,255,255,.025);
+}
+body.omega-simple .side a,
+body.omega-simple #omega-side a,
+body.omega-simple .topbar a{
+  transition:color .2s var(--omega-v4-ease),background-color .2s var(--omega-v4-ease),border-color .2s var(--omega-v4-ease),filter .2s var(--omega-v4-ease);
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple .side a:hover,
+  body.omega-simple #omega-side a:hover{
+    color:var(--omega-v4-gold-hot);
+    filter:drop-shadow(0 0 8px rgba(201,168,76,.22));
+  }
+}
+
+/* Glass architecture: visible at rest, with controlled lift on interaction. */
+body.omega-simple :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card){
+  border-color:var(--omega-v4-line);
+  border-radius:12px;
+  box-shadow:var(--omega-v4-shadow);
+  -webkit-backdrop-filter:blur(14px) saturate(118%);
+  backdrop-filter:blur(14px) saturate(118%);
+  transition:transform .26s var(--omega-v4-ease),box-shadow .26s var(--omega-v4-ease),border-color .26s var(--omega-v4-ease),filter .26s var(--omega-v4-ease);
+}
+body.omega-simple :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card){
+  background-image:
+    radial-gradient(280px circle at var(--mx,50%) var(--my,0%),rgba(201,168,76,.105),transparent 72%),
+    linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.006) 52%,rgba(0,229,255,.018));
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card):hover{
+    transform:translateY(-4px);
+    border-color:rgba(201,168,76,.48);
+    box-shadow:var(--omega-v4-shadow-hover);
+    filter:saturate(1.08);
+  }
+}
+
+/* Hierarchy: clearer page titles, section markers and readable body copy. */
+body.omega-simple :where(.main,main,.page-shell,#omega-main-content) h1{
+  color:var(--gold,#C9A84C);
+  font-family:var(--D,"Cinzel Decorative",serif);
+  font-weight:700;
+  letter-spacing:.025em;
+  line-height:1.12;
+  text-wrap:balance;
+  text-shadow:0 0 28px rgba(201,168,76,.13);
+}
+body.omega-simple :where(.main,main,.page-shell,#omega-main-content) h2{
+  text-wrap:balance;
+}
+body.omega-simple .sechead{
+  color:var(--cyan,#00E5FF);
+  text-shadow:0 0 18px rgba(0,229,255,.22);
+  letter-spacing:.16em;
+}
+body.omega-simple :where(.card-body,.lede,.description,.muted,.text-muted){
+  line-height:1.68;
+}
+body.omega-simple :where(.card-title,.kpi-label,.kpi-l,.tbl-hcell,.chip){
+  letter-spacing:.11em;
+}
+
+/* Actions have a clear primary/secondary hierarchy and tactile feedback. */
+body.omega-simple :where(.btn,.btn-gold,.btn-cyan,.btn-crim,.btn-fill,.btn-primary,.btn-secondary){
+  min-height:40px;
+  border-radius:8px;
+  transition:transform .18s var(--omega-v4-ease),box-shadow .18s var(--omega-v4-ease),background-color .18s ease,border-color .18s ease,color .18s ease;
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple :where(.btn,.btn-gold,.btn-cyan,.btn-crim,.btn-fill,.btn-primary,.btn-secondary):hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 26px rgba(0,0,0,.28),0 0 18px rgba(201,168,76,.1);
+  }
+}
+body.omega-simple :where(input,select,textarea,.inp,.field){
+  border-color:rgba(201,168,76,.2);
+  border-radius:8px;
+  background-color:rgba(3,5,10,.72);
+  transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease;
+}
+body.omega-simple :where(input,select,textarea,.inp,.field):focus{
+  border-color:rgba(0,229,255,.55);
+  box-shadow:0 0 0 3px rgba(0,229,255,.09),0 0 22px rgba(0,229,255,.08);
+}
+
+/* Data surfaces: keep dense information legible and distinct. */
+body.omega-simple :where(.tbl-wrap,.table-wrap,.data-table,.table-container){
+  border:1px solid rgba(201,168,76,.18);
+  border-radius:10px;
+  overflow-x:auto;
+  box-shadow:0 14px 38px rgba(0,0,0,.22);
+}
+body.omega-simple :where(.tbl-head,thead){
+  background:linear-gradient(90deg,rgba(201,168,76,.09),rgba(0,229,255,.035));
+}
+body.omega-simple :where(.tbl-row,tbody tr){
+  transition:background-color .16s ease,border-color .16s ease;
+}
+body.omega-simple :where(.tbl-row,tbody tr):hover{
+  background-color:rgba(201,168,76,.045);
+}
+body.omega-simple :where(.bar-track,.progress-track,.progress-bar-track){
+  background-color:rgba(255,255,255,.075);
+  border:1px solid rgba(255,255,255,.045);
+  border-radius:999px;
+  overflow:hidden;
+}
+body.omega-simple :where(.bar-fill,.progress-fill,.progress-bar-fill){
+  background-image:linear-gradient(90deg,var(--gold,#C9A84C),var(--cyan,#00E5FF));
+  box-shadow:0 0 14px rgba(0,229,255,.16);
+}
+
+/* Living insignia: restrained pulse, not constant page-wide motion. */
+body.omega-simple :where(.omega-emblem,.omega-orb,.omega-orbital-mark){
+  filter:drop-shadow(0 0 16px rgba(201,168,76,.18));
+  animation:omega-v4-insignia-breathe 6.8s ease-in-out infinite;
+}
+@keyframes omega-v4-insignia-breathe{
+  0%,100%{filter:drop-shadow(0 0 12px rgba(201,168,76,.13))}
+  50%{filter:drop-shadow(0 0 24px rgba(0,229,255,.17)) drop-shadow(0 0 12px rgba(201,168,76,.16))}
+}
+
+/* Mobile: preserve touch geometry, readable content and horizontal data access. */
+@media(max-width:760px){
+  body.omega-simple :where(.main,main,.page-shell,#omega-main-content){padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+  body.omega-simple :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card){border-radius:10px}
+  body.omega-simple :where(.tbl-wrap,.table-wrap,.data-table,.table-container){max-width:100%;overscroll-behavior-x:contain}
+  body.omega-simple :where(.btn,.btn-gold,.btn-cyan,.btn-crim,.btn-fill,.btn-primary,.btn-secondary){min-height:44px}
+}
+
+/* Motion and forced-colour safety. */
+@media(prefers-reduced-motion:reduce){
+  body.omega-simple :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.btn,.btn-gold,.btn-cyan,.btn-crim,.btn-fill,.btn-primary,.btn-secondary){transition:none}
+  body.omega-simple :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.btn,.btn-gold,.btn-cyan,.btn-crim,.btn-fill,.btn-primary,.btn-secondary):hover{transform:none}
+  body.omega-simple :where(.omega-emblem,.omega-orb,.omega-orbital-mark){animation:none}
+}
+@media(forced-colors:active){
+  body.omega-simple :where(.card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card){border:1px solid CanvasText;box-shadow:none}
+}

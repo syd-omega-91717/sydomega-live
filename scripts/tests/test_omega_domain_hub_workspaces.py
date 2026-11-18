@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Contracts for reducing 241 specialist routes into 14 persistent domain workspaces."""
+"""Contracts for the 242-page estate, 184 specialist routes and 14 persistent domain workspaces."""
 from __future__ import annotations
 
 import json
@@ -84,9 +84,13 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
             row for row in self.matrix["pages"]
             if row["classification"] == "CANDIDATE_MERGE_PANEL"
             and row["path"] != row["candidate_hub"]
+            and row["page_id"] != "sovereign-core"
         ]
         self.assertEqual(len(children), 184)
-        self.assertEqual(self.matrix["classification_counts"]["CANDIDATE_MERGE_PANEL"], 198)
+        self.assertEqual(self.matrix["classification_counts"]["CANDIDATE_MERGE_PANEL"], 199)
+        core = next(row for row in self.matrix["pages"] if row["page_id"] == "sovereign-core")
+        self.assertEqual(core["candidate_hub"], "dashboard.html")
+        self.assertEqual(core["classification"], "CANDIDATE_MERGE_PANEL")
         covered_hubs = {row["candidate_hub"] for row in children}
         covered_hubs.update(row["protected_hub"] for row in self.matrix["pages"] if row.get("protected_hub"))
         self.assertEqual(covered_hubs, hubs)

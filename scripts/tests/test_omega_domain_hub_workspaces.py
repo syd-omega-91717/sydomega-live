@@ -26,6 +26,19 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         cls.bootstrap = BOOTSTRAP.read_text(encoding="utf-8")
         cls.nav = NAV.read_text(encoding="utf-8")
 
+    def test_domain_workspace_entry_pages_have_semantic_h1(self):
+        expected = {
+            "dashboard.html": "COMMAND",
+            "profile.html": "IDENTITY",
+            "cosmos.html": "COSMOS",
+            "vault.html": "VAULT",
+            "services.html": "SERVICES",
+            "sovereign-ai.html": "SOVEREIGN AI",
+        }
+        for path, heading in expected.items():
+            page = (ROOT / path).read_text(encoding="utf-8")
+            self.assertRegex(page, r"<h1[^>]*>\\s*" + re.escape(heading) + r"\\s*</h1>", path)
+
     def test_global_visual_experience_v5_covers_platform_surfaces(self):
         for selector in (
             "body.omega-simple", ".topbar", ".side", ".hero-band",

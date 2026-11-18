@@ -74,7 +74,7 @@ def evaluate(root: Path) -> int:
 
     if remote_doc.get("remoteMigrationCount") != len(remote_versions):
         return fail("provider snapshot count does not match its versions array")
-    if remote_doc.get("latestRemoteMigration") != max(remote_versions, key=lambda value: (len(value), value)):
+    if remote_doc.get("latestRemoteMigration") != max(remote_versions, key=lambda value: value.ljust(14, "0")):
         return fail("provider snapshot latest version does not match its versions array")
 
     pending_versions: set[str] = set()

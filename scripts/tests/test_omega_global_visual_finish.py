@@ -22,7 +22,9 @@ class OmegaGlobalVisualFinishTests(unittest.TestCase):
         css = (ROOT / "omega-global-visual-finish.css").read_text(encoding="utf-8")
         self.assertNotIn("display:none", css)
         self.assertNotIn("visibility:hidden", css)
-        self.assertNotIn("pointer-events:none", css)
+        # Decorative pseudo-element light must never intercept links or controls.
+        self.assertEqual(css.count("pointer-events:none"), 1)
+        self.assertIn("::before{\n  content:\"\";position:absolute;inset:-1px;z-index:-1;pointer-events:none;", css)
 
 
 if __name__ == "__main__":

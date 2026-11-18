@@ -247,7 +247,7 @@ function __omegaAppend(el){
   if(!document.getElementById('omega-simple-ui-css')){
     var simple=document.createElement('link');
     simple.id='omega-simple-ui-css'; simple.rel='stylesheet';
-    simple.href='/css/omega-simple-ui.css'; simple.type='text/css';
+    simple.href='/css/omega-simple-ui.css?v=20261118-v4'; simple.type='text/css';
     (document.head||document.documentElement).appendChild(simple);
   }
   if(document.body) document.body.classList.add('omega-simple');
@@ -377,7 +377,7 @@ function __omegaAppend(el){
     head.appendChild(link);
   }
 })();
-
+ 
 /* Omega-GVP: ambient noise overlay + cursor-reactive glass light.
    Pure progressive enhancement -- no functional dependency, safe no-op
    if it runs twice. Cursor tracking is passive + rAF-throttled (one
@@ -607,7 +607,7 @@ function __omegaAppend(el){
       window.__omgPxTrack = pxTrack;
       var pxApply = function(){
         pxRaf = 0;
-        if(document.body && document.body.classList.contains('omega-simple')) return;
+        if(window.matchMedia && (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(pointer: coarse)').matches)) return;
         var vh = window.innerHeight || 1, els = [], rects = [];
         pxOn.forEach(function(el){ if(el.isConnected){ els.push(el); rects.push(el.getBoundingClientRect()); } else pxOn.delete(el); });
         for(var i = 0; i < els.length; i++){
@@ -3214,3 +3214,19 @@ setTimeout(function(){
 
   /* Ω DevTools — performance profiling, error reporting, debugging utilities */
   if(!document.querySelector('script[data-omega-devtools]')){var _odev=document.createElement('script');_odev.src='/omega-devtools.js';_odev.setAttribute('data-omega-devtools','1');_odev.defer=true;__omegaAppend(_odev);}
+
+
+/* Ω PLATFORM EXPERIENCE V4 — final cascade position.
+   Append after every synchronous global style injection in bg.js so page-wide
+   surface, hierarchy and interaction treatments cannot be silently shadowed
+   by older runtime style tags. */
+(function(){
+  var head=document.head||document.documentElement;
+  if(!head || document.getElementById('omega-platform-experience-v4-css')) return;
+  var experience=document.createElement('link');
+  experience.id='omega-platform-experience-v4-css';
+  experience.rel='stylesheet';
+  experience.href='/omega-platform-experience-v4.css?v=20261118-v4';
+  experience.type='text/css';
+  head.appendChild(experience);
+})();

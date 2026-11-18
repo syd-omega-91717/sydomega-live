@@ -10,6 +10,8 @@ supabase/
 *.ts
 *.tsx
 *.py
+# Build-time helper required by scripts/vercel-build.sh; keep it in the Vercel source bundle.
+!scripts/portable-host-config.py
 *.sol
 *.sql
 

@@ -27,7 +27,7 @@ The ownership matrix identifies 198 candidate hub routes. Fourteen are the hub r
 
 - **184 specialist routes:** opened inside the owning hub through a same-origin embedded view. The user remains in the domain workspace while the original page supplies its existing UI and functionality.
 - **14 hub routes:** remain the canonical workspace entry points.
-- **19 KEEP_SEPARATE routes:** system, authentication, identity, legal, financial and owner-control lifecycles remain independent; where a domain owner is known, the hub lists them as standalone protected workflows rather than embedding them. Fifteen have explicit protected-hub ownership and appear as standalone links in their owning workspace; embedded navigation opens them in a separate top-level page.
+- **19 KEEP_SEPARATE routes:** system, authentication, identity, legal, financial and owner-control lifecycles remain independent; where a domain owner is known, the hub lists them as standalone protected workflows rather than embedding them. Sixteen have explicit protected-hub ownership and appear as standalone links in their owning workspace; embedded navigation opens them in a separate top-level page.
 - **10 AMBIGUOUS routes:** remain independent until identity, ownership and access contracts are reviewed.
 - **14 UNMAPPED routes:** remain independent until a valid domain owner is evidenced.
 

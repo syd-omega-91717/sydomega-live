@@ -84,6 +84,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("link.target='_blank'", self.runtime)
         self.assertIn("var PROTECTED_ROUTE_STEMS=", self.runtime)
         self.assertIn("window.top.location.replace", self.runtime)
+        self.assertIn("standalone.searchParams.delete('omega_module')", self.runtime)
+        self.assertIn("standalone.searchParams.delete('omega_module_query')", self.runtime)
         self.assertIn("element.setAttribute('target','_blank')", self.runtime)
         self.assertIn("PROTECTED_ROUTE_STEMS[stem]", self.runtime)
         self.assertIn("omega-domain-hub-protected-grid", self.styles)

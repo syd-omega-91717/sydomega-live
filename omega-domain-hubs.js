@@ -14,6 +14,23 @@
   if(!embedded && window.parent!==window){
     try{embedded=window.parent.location.origin===window.location.origin;}catch(error){}
   }
+  var currentPath=decodeURIComponent(window.location.pathname.split('/').pop()||'index.html').toLowerCase();
+  var PROTECTED_ROUTE_STEMS={
+    '404':1,'500':1,offline:1,maintenance:1,login:1,signup:1,
+    account:1,approvals:1,contracts:1,'control-center':1,'control-plane':1,'graph-admin':1,
+    kyc:1,payments:1,portfolio:1,privacy:1,security:1,settings:1,
+    subscriptions:1,terms:1,treasury:1,wallet:1
+  };
+  if(embedded && PROTECTED_ROUTE_STEMS[currentPath.replace(/\.html$/i,'')]){
+    try{
+      var standalone=new URL(window.location.href);
+      standalone.searchParams.delete('omega_embed');
+      standalone.searchParams.delete('omega_hub');
+      if(window.top.location.origin===window.location.origin)
+        window.top.location.replace(standalone.toString());
+    }catch(error){}
+    return;
+  }
 
   function markEmbedded(){
     document.documentElement.classList.add('omega-embedded');
@@ -39,6 +56,12 @@
       try{
         var url=new URL(raw,window.location.href);
         if(url.origin!==window.location.origin) return;
+        var stem=(url.pathname.split('/').pop()||'').replace(/\.html$/i,'').toLowerCase();
+        if(PROTECTED_ROUTE_STEMS[stem]){
+          element.setAttribute('target','_blank');
+          element.setAttribute('rel','noopener noreferrer');
+          return;
+        }
         if(url.pathname==='/' || url.pathname.toLowerCase().endsWith('.html')){
           url.searchParams.set('omega_embed','1');
           element.setAttribute(attribute,url.pathname+url.search+url.hash);

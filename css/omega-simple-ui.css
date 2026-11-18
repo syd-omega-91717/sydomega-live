@@ -1,6 +1,8 @@
 /* Ω SIMPLE UI — default product surface
-   Keeps the Omega identity while removing ornamental complexity.
-   Functional charts, data, controls and navigation remain untouched. */
+   Keeps the Omega identity and clean information hierarchy while restoring
+   restrained layered depth, responsive hover elevation and native motion.
+   Ambient particle noise remains off by default; functional graphics, data,
+   controls, navigation and page-specific cinematic effects remain available. */
 :root{--omega-simple-radius:10px;--omega-simple-shadow:0 8px 24px rgba(0,0,0,.22);--omega-simple-shadow-hover:0 16px 36px rgba(0,0,0,.34)}
 body.omega-simple .omega-particles,body.omega-simple #omega-particles,body.omega-simple .ambient-background,body.omega-simple .starfield,body.omega-simple [data-omega-ambient-visual]{display:none!important}
 /* Simple means less clutter, not a still platform. This file used to stop

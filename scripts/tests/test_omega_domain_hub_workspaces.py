@@ -44,14 +44,14 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
             )
         self.assertIn("main.main,main,.main,.page-shell,.page", self.runtime)
 
-    def test_185_specialist_routes_are_embedded_without_deleting_legacy_paths(self):
+    def test_184_specialist_routes_are_embedded_without_deleting_legacy_paths(self):
         hubs = {hub["path"] for hub in self.matrix["hubs"]}
         children = [
             row for row in self.matrix["pages"]
             if row["classification"] == "CANDIDATE_MERGE_PANEL"
             and row["path"] != row["candidate_hub"]
         ]
-        self.assertEqual(len(children), 185)
+        self.assertEqual(len(children), 184)
         self.assertEqual({row["candidate_hub"] for row in children}, hubs)
         for row in children:
             self.assertTrue((ROOT / row["path"]).is_file(), row["path"])
@@ -60,7 +60,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         for row in self.matrix["pages"]:
             if row["classification"] in {"KEEP_SEPARATE", "AMBIGUOUS", "UNMAPPED", "UNMAPPED_SECTION"}:
                 self.assertIsNone(row["candidate_hub"], row["path"])
-        self.assertEqual(self.matrix["classification_counts"]["KEEP_SEPARATE"], 18)
+        self.assertEqual(self.matrix["classification_counts"]["KEEP_SEPARATE"], 19)
         self.assertEqual(self.matrix["classification_counts"]["AMBIGUOUS"], 10)
         self.assertEqual(self.matrix["classification_counts"]["UNMAPPED"], 14)
 

@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MATRIX = ROOT / "config" / "omega-page-hub-ownership.json"
 RUNTIME = ROOT / "omega-domain-hubs.js"
 STYLES = ROOT / "omega-domain-hub.css"
+GLOBAL_EXPERIENCE = ROOT / "omega-platform-experience-v5.css"
 BOOTSTRAP = ROOT / "bg.js"
 NAV = ROOT / "nav.js"
 
@@ -21,8 +22,23 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         cls.matrix = json.loads(MATRIX.read_text(encoding="utf-8"))
         cls.runtime = RUNTIME.read_text(encoding="utf-8")
         cls.styles = STYLES.read_text(encoding="utf-8")
+        cls.global_experience = GLOBAL_EXPERIENCE.read_text(encoding="utf-8")
         cls.bootstrap = BOOTSTRAP.read_text(encoding="utf-8")
         cls.nav = NAV.read_text(encoding="utf-8")
+
+    def test_global_visual_experience_v5_covers_platform_surfaces(self):
+        for selector in (
+            "body.omega-simple", ".topbar", ".side", ".hero-band",
+            ".profile-hero", ".oeh-hero", ".ow-hud", ".ohz-hero",
+            ".card", ".native-card", ".kpi", ".omega-depth-card",
+            ".franchise-card", ".emblem-orb", ".ohz-brand-mark",
+        ):
+            self.assertIn(selector, self.global_experience)
+        self.assertIn("@keyframes omega-v5-orbit-breathe", self.global_experience)
+        self.assertIn("@keyframes omega-v5-hero-sweep", self.global_experience)
+        self.assertIn("@media(max-width:760px)", self.global_experience)
+        self.assertIn("@media(prefers-reduced-motion:reduce)", self.global_experience)
+        self.assertIn("omega-platform-experience-v5.css?v=20261118-v5", self.bootstrap)
 
     def test_all_canonical_hubs_exist_and_match_the_runtime_allowlist(self):
         expected = {hub["path"] for hub in self.matrix["hubs"]}

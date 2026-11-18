@@ -134,6 +134,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("url.searchParams.set('omega_module_query',forwarded.toString())", self.nav)
         self.assertIn("workspaceHref(sub[2])", self.nav)
         self.assertIn("workspaceHref(item[2])", self.nav)
+        self.assertIn("workspaceHref(p.href)", self.nav)
+        self.assertIn("workspaceHref(href)", self.nav)
         self.assertIn("workspaceHref(x[2])", self.nav)
         self.assertIn("window.location.assign(routed)", self.nav)
         self.assertIn("link.hasAttribute('onclick')", self.nav)

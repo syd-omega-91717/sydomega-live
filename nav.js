@@ -414,7 +414,7 @@
   }
   (function installWorkspaceRouteHandler(){
     if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return;
-    document.addEventListener('click',function(event){
+    window.addEventListener('click',function(event){
       if(event.defaultPrevented || event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       var link=event.target && event.target.closest ? event.target.closest('a[href]') : null;
       if(!link || link.hasAttribute('download') || link.hasAttribute('onclick')) return;

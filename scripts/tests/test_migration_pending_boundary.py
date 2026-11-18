@@ -51,6 +51,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIsNotNone(match, path.name)
             local_versions.add(match.group(1))
         self.assertEqual(pending_versions, local_versions - self.remote_versions)
+        self.assertEqual(pending_versions, set(), "no source migrations may remain pending after provider confirmation")
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
@@ -183,23 +184,13 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_inventory_passes_and_strict_release_blocks_only_registered_pending_versions(self) -> None:
+    def test_source_and_strict_release_drift_pass_with_no_pending_migrations(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
-        if self.pending:
-            self.assertIn("MIGRATION DRIFT: SOURCE PASS", source.stdout)
-            self.assertIn("Release state: BLOCKED", source.stdout)
-            strict = run_script("scripts/migration-drift.py")
-            self.assertEqual(strict.returncode, 1, strict.stdout + strict.stderr)
-            self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
-            for entry in self.pending:
-                self.assertIn(str(entry["version"]), strict.stdout)
-                self.assertIn("PENDING_REVIEW / NOT_APPLIED", strict.stdout)
-        else:
-            strict = run_script("scripts/migration-drift.py")
-            self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-            self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
-        self.assertNotIn("20261116214700", source.stdout)
+        strict = run_script("scripts/migration-drift.py")
+        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
+        self.assertNotIn("20261116214700", strict.stdout)
 
     def test_release_readiness_records_current_cloudflare_and_remaining_vercel_blocker(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"

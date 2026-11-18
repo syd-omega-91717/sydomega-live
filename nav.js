@@ -398,7 +398,7 @@
       if(url.origin!==window.location.origin) return rawHref;
       var file=url.pathname.split('/').pop()||'';
       if(!file.toLowerCase().endsWith('.html')) return rawHref;
-      var modulePath=url.pathname.replace(/^\\/+/, '');
+      var modulePath=url.pathname.replace(/^\/+/, '');
       var stem=file.replace(/\.html$/i,'').toLowerCase();
       if(HUB_SEPARATE_ROUTE_STEMS[stem]) return rawHref;
       var section=PS[stem];

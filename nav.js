@@ -6,7 +6,7 @@
   var dp=el.getAttribute('data-page')||
     ((location.pathname.split('/').pop()||'').replace('.html',''))||'dashboard';
 
-  /* Map every page to a section */
+  /* Map every page to a section. Sovereign Command Core is a single COMMAND destination. */
   var PS={
     dashboard:'command',beacon:'command',notifications:'command',search:'command','data-observatory':'command',world:'command','world-atlas':'command',eternity:'command',replay:'command',evidence:'command',recovery:'command',
     command:'command','command-center':'command',gateway:'command',guide:'command',
@@ -72,7 +72,7 @@
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['world-atlas','CIVILIZATION ATLAS','/world-atlas.html','folded'],['eternity','CONTINUITY','/eternity.html','folded'],['replay','REPLAY','/replay.html','folded'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html','folded'],['command','COMMAND BRIEF','/command.html','folded'],
           ['contacts','CONTACTS','/contacts.html','folded'],['decisions','DECISIONS','/decisions.html','folded'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html','folded'],
           ['network','NETWORK','/network.html','folded'],['notes','NOTES','/notes.html','folded'],['projects','PROJECTS','/projects.html'],
-          ['quotes','WISDOM','/quotes.html','folded'],['time','TIME TRACKER','/time.html','folded'],['vision','VISION BOARD','/vision.html','folded']]},
+          ['quotes','WISDOM','/quotes.html','folded'],['time','TIME TRACKER','/time.html','folded'],['vision','VISION BOARD','/vision.html','folded'],['sovereign-core','SOVEREIGN COMMAND CORE','/sovereign-core.html']]},
     {key:'identity',icon:'\u25C8', label:'IDENTITY', href:'/profile.html', col:'#00E5FF',
      sub:[['identity-alias-1','IDENTITY HUB','/profile.html#identity','folded'],['profile','PROFILE','/profile.html'],['life','Ω LIFE','/life.html','folded'],['personal-context','PERSONAL CONTEXT','/life.html#personal-context','folded'],['passport-alias-1','PASSPORT','/profile.html#passport','folded'],
           ['kyc-alias-1','KYC VERIFY','/profile.html#kyc','folded'],['character-alias-1','CHARACTER','/profile.html#character','folded'],['portfolio-alias-1','PORTFOLIO','/profile.html#portfolio','folded'],['settings','SETTINGS','/profile.html#settings','folded'],['security','SECURITY','/security.html','folded']]},

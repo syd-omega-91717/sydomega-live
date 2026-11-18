@@ -105,8 +105,14 @@
       return row.classification==='CANDIDATE_MERGE_PANEL' &&
         row.candidate_hub===hub.path && row.path!==hub.path;
     }).sort(function(a,b){return String(a.page_id).localeCompare(String(b.page_id));});
+    var systemRouteStems={'404':1,'500':1,offline:1,maintenance:1,login:1,signup:1};
+    var protectedRows=(matrix.pages||[]).filter(function(row){
+      var stem=String(row.path||'').replace(/\\.html$/i,'');
+      return row.classification==='KEEP_SEPARATE' &&
+        row.navigation_section===hub.section && !systemRouteStems[stem];
+    }).sort(function(a,b){return String(a.page_id).localeCompare(String(b.page_id));});
     var root=document.querySelector('main.main,main,.main,.page-shell,.page');
-    if(!root || !rows.length || root.querySelector('.omega-domain-hub-console')) return;
+    if(!root || (!rows.length && !protectedRows.length) || root.querySelector('.omega-domain-hub-console')) return;
 
     root.classList.add('omega-domain-hub-root');
     var shell=make('section','omega-domain-hub-console');
@@ -129,15 +135,38 @@
     var showAll=make('button','omega-domain-hub-action','SHOW ALL');
     showAll.type='button';
     controls.appendChild(search);controls.appendChild(overview);controls.appendChild(showAll);
+    controls.hidden=!rows.length;
     shell.appendChild(controls);
 
     var results=make('div','omega-domain-hub-results');
     results.setAttribute('aria-live','polite');
+    results.hidden=!rows.length;
     shell.appendChild(results);
     var note=make('p','omega-domain-hub-results-note',rows.length+' mapped modules · use search to locate a specific capability');
+    note.hidden=!rows.length;
     shell.appendChild(note);
 
+    if(protectedRows.length){
+      var protectedSection=make('section','omega-domain-hub-protected');
+      protectedSection.appendChild(make('div','omega-domain-hub-protected-title','PROTECTED WORKFLOWS · OPEN SEPARATELY'));
+      var protectedGrid=make('div','omega-domain-hub-protected-grid');
+      protectedRows.forEach(function(row){
+        var link=make('a','omega-domain-hub-protected-link');
+        link.href='/'+row.path;link.target='_blank';link.rel='noopener noreferrer';
+        link.setAttribute('aria-label','Open '+humanize(row.page_id)+' separately');
+        var label=make('span','');
+        label.appendChild(make('span','omega-domain-hub-module-name',humanize(row.page_id)));
+        label.appendChild(make('span','omega-domain-hub-module-path','/'+row.path));
+        link.appendChild(label);
+        link.appendChild(make('span','omega-domain-hub-protected-tag','SEPARATE ↗'));
+        protectedGrid.appendChild(link);
+      });
+      protectedSection.appendChild(protectedGrid);
+      shell.appendChild(protectedSection);
+    }
+
     var view=make('div','omega-domain-hub-view');
+    view.hidden=!rows.length;
     var viewHead=make('div','omega-domain-hub-view-head');
     var viewTitle=make('div','omega-domain-hub-view-title','MODULE VIEW');
     var viewLinks=make('div','omega-domain-hub-view-links');

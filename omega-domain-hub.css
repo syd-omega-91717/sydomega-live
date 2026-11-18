@@ -44,8 +44,6 @@
 body.omega-hub-view-active .omega-domain-hub-console{margin-bottom:0}
 body.omega-embedded{display:block!important;min-height:0!important;overflow-x:hidden!important;background:#020206!important}
 body.omega-embedded #omega-side,
-body.omega-embedded .side,
-body.omega-embedded .topbar,
 body.omega-embedded #omega-topbar,
 body.omega-embedded #omega-ticker-strip,
 body.omega-embedded #omega-bottom-stack,

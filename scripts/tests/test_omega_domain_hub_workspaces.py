@@ -60,6 +60,14 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("cache:'no-cache'", self.runtime)
         self.assertIn("credentials:'same-origin'", self.runtime)
 
+    def test_hub_assets_are_not_loaded_on_unrelated_pages(self):
+        gate = "if(!embedded && hubPaths.indexOf(path)===-1) return;"
+        self.assertIn(gate, self.bootstrap)
+        self.assertLess(
+            self.bootstrap.index(gate),
+            self.bootstrap.index("omega-domain-hub.css?v=20261118-hubs-v1"),
+        )
+
     def test_embedded_routes_keep_same_origin_session_and_permission_runtime(self):
         self.assertIn("omega_embed=1", self.runtime)
         self.assertIn("body.omega-embedded", self.styles)

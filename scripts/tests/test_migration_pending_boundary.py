@@ -69,7 +69,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
         self.assertEqual(self.remote.get("latestRemoteMigration"), "20261118090000")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
-        self.assertEqual(self.remote.get("_captured"), "2026-11-17")
+        self.assertEqual(self.remote.get("_captured"), "2026-11-18")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
     def test_media_catalog_select_migration_is_authenticated_only_and_provider_applied(self) -> None:
@@ -202,21 +202,21 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         )
         latest_probe = readiness.get("latest_production_probe", {})
         self.assertEqual(latest_probe.get("status"), "PASS")
-        self.assertEqual(latest_probe.get("expected_commit_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
-        self.assertEqual(latest_probe.get("served_commit_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
-        self.assertEqual(latest_probe.get("workflow_run_id"), 43985648597)
+        self.assertEqual(latest_probe.get("expected_commit_sha"), "122d8d0741cb39b78233c0f6f3606bf73de48d1d")
+        self.assertEqual(latest_probe.get("served_commit_sha"), "122d8d0741cb39b78233c0f6f3606bf73de48d1d")
+        self.assertEqual(latest_probe.get("workflow_run_id"), 44259163200)
         self.assertEqual(latest_probe.get("pages_passed"), 241)
         self.assertEqual(latest_probe.get("references_passed"), 368)
-        self.assertEqual(latest_probe.get("root_manifest_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
-        self.assertEqual(latest_probe.get("www_manifest_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
+        self.assertEqual(latest_probe.get("root_manifest_sha"), "122d8d0741cb39b78233c0f6f3606bf73de48d1d")
+        self.assertEqual(latest_probe.get("www_manifest_sha"), "122d8d0741cb39b78233c0f6f3606bf73de48d1d")
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(
             readiness.get("production_verification", {}).get("commit_sha"),
-            "d62168f2d8dd3504d5f2809128c64af1113984b1",
+            "122d8d0741cb39b78233c0f6f3606bf73de48d1d",
         )
         self.assertEqual(
             readiness.get("production_verification", {}).get("workflow_run_id"),
-            43985648597,
+            44259163200,
         )
         vercel = readiness.get("vercel_promotion", {})
         self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")

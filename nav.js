@@ -385,6 +385,12 @@
     services:'/services.html',intel:'/intel.html',arena:'/sovereign-ai.html',
     govern:'/govern.html',invest:'/invest.html',achieve:'/achieve.html',media:'/media.html'
   };
+  var HUB_SEPARATE_ROUTE_STEMS={
+    '404':1,'500':1,offline:1,maintenance:1,login:1,signup:1,
+    account:1,approvals:1,'control-center':1,'control-plane':1,'graph-admin':1,
+    kyc:1,payments:1,portfolio:1,privacy:1,security:1,settings:1,
+    subscriptions:1,terms:1,treasury:1,wallet:1
+  };
   function workspaceHref(rawHref){
     try{
       if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return rawHref;
@@ -392,7 +398,9 @@
       if(url.origin!==window.location.origin) return rawHref;
       var file=url.pathname.split('/').pop()||'';
       if(!file.toLowerCase().endsWith('.html')) return rawHref;
-      var section=PS[file.replace(/\.html$/i,'').toLowerCase()];
+      var stem=file.replace(/\.html$/i,'').toLowerCase();
+      if(HUB_SEPARATE_ROUTE_STEMS[stem]) return rawHref;
+      var section=PS[stem];
       var hub=HUB_ROUTE_BY_SECTION[section];
       if(!hub || url.pathname===hub) return rawHref;
       var target=new URL(hub,window.location.origin);

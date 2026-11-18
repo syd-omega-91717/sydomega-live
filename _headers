@@ -1,0 +1,17 @@
+# Cloudflare Pages cache policy.
+# Bootstrap scripts must revalidate so newly deployed global navigation and
+# visual loaders are picked up on the next page load. Versioned assets are immutable.
+/bg.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/nav.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/omega-platform-experience-v4.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/omega-domain-hubs.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/omega-domain-hub.css
+  Cache-Control: public, max-age=31536000, immutable

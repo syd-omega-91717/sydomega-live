@@ -36,6 +36,8 @@
       var standalone=new URL(window.location.href);
       standalone.searchParams.delete('omega_embed');
       standalone.searchParams.delete('omega_hub');
+      standalone.searchParams.delete('omega_module');
+      standalone.searchParams.delete('omega_module_query');
       if(window.top.location.origin===window.location.origin)
         window.top.location.replace(standalone.toString());
     }catch(error){}

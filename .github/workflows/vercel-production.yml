@@ -45,6 +45,7 @@ on:
       - '.well-known/**'
       - 'vercel.json'
       - 'scripts/vercel-build.sh'
+      - 'scripts/production-migration-gate.py'
       - 'scripts/vercel-build-enhance.mjs'
       - 'scripts/release-surface-quality.py'
       - 'scripts/omega-enterprise-readiness-contract.py'
@@ -287,6 +288,11 @@ jobs:
       - name: Verify Vercel token and project authority
         if: needs.credentials.outputs.ready == 'true'
         run: bash scripts/vercel-deployment-auth-check.sh
+      - name: Block Vercel production promotion on migration drift
+        if: >-
+          needs.credentials.outputs.ready == 'true' &&
+          (github.event_name == 'push' || inputs.deploy == true)
+        run: python3 scripts/production-migration-gate.py
       - name: Pull Vercel production settings
         if: >-
           needs.credentials.outputs.ready == 'true' &&

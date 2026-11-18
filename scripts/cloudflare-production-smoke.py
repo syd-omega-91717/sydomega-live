@@ -29,6 +29,11 @@ REQUIRED_GLOBAL_ASSETS = (
         "text/css",
         "Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V4",
     ),
+    (
+        "/omega-platform-experience-v5.css?v=20261118-v5",
+        "text/css",
+        "Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V5",
+    ),
     ("/bg.js", "javascript", "omega-domain-hub.css?v=20261118-hubs-v1"),
     (
         "/omega-domain-hubs.js?v=20261118-hubs-v1",

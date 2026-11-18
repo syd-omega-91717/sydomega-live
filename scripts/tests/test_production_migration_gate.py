@@ -147,6 +147,11 @@ class ProductionMigrationGateTests(unittest.TestCase):
         self.assertIn("CF_PAGES_BRANCH: main", workflow)
         self.assertIn("run: bash scripts/vercel-build.sh", workflow)
 
+    def test_local_contract_suite_runs_the_production_migration_gate(self):
+        suite = (ROOT / "scripts" / "contract-suite.py").read_text(encoding="utf-8")
+        self.assertIn("production-migration-gate", suite)
+        self.assertIn("scripts/production-migration-gate.py", suite)
+
     def test_vercel_production_promotion_runs_gate_before_pull(self):
         workflow = (ROOT / ".github" / "workflows" / "vercel-production.yml").read_text(encoding="utf-8")
         marker = "      - name: Block Vercel production promotion on migration drift"

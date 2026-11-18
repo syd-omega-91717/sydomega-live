@@ -52,6 +52,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
             and row["path"] != row["candidate_hub"]
         ]
         self.assertEqual(len(children), 184)
+        self.assertEqual(self.matrix["classification_counts"]["CANDIDATE_MERGE_PANEL"], 198)
         self.assertEqual({row["candidate_hub"] for row in children}, hubs)
         for row in children:
             self.assertTrue((ROOT / row["path"]).is_file(), row["path"])

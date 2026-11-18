@@ -70,6 +70,13 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("cache:'no-cache'", self.runtime)
         self.assertIn("credentials:'same-origin'", self.runtime)
 
+    def test_bootstrap_hub_allowlist_matches_the_canonical_registry(self):
+        expected = {hub["path"] for hub in self.matrix["hubs"]}
+        match = re.search(r"var hubPaths=\[(.*?)\];", self.bootstrap, re.S)
+        self.assertIsNotNone(match)
+        actual = set(re.findall(r"'([^']+)'", match.group(1)))
+        self.assertEqual(actual, expected)
+
     def test_hub_assets_are_not_loaded_on_unrelated_pages(self):
         gate = "if(!embedded && hubPaths.indexOf(path)===-1) return;"
         self.assertIn(gate, self.bootstrap)

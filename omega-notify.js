@@ -9,6 +9,10 @@
 
   var _count=0;
   var _notifPanel=null;
+  var _pollTimer=null;
+  var _pollInFlight=false;
+  var _pollStarted=false;
+  var _notifTrigger=null;
 
   /* No direct INSERT grant exists on public.notifications today -- only the
      five owner-gated SECURITY DEFINER trigger functions in
@@ -25,14 +29,18 @@
   function updateBadge(n){
     var badge=document.getElementById('omega-notif-badge');
     if(!badge){
-      badge=document.createElement('div');
+      badge=document.createElement('button');
+      badge.type='button';
       badge.id='omega-notif-badge';
       badge.style.cssText='position:fixed;top:16px;right:16px;z-index:500;background:var(--crim,#C4453C);color:#fff;font-family:var(--M,\'Courier Prime\',monospace);font-size:12px;font-weight:bold;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(139,0,0,.5)';
-      badge.setAttribute('role','status');badge.setAttribute('aria-label','Notifications');
+      badge.setAttribute('aria-label','Open notifications');
+      badge.setAttribute('aria-haspopup','dialog');
+      badge.setAttribute('aria-controls','omega-notif-panel');
       badge.addEventListener('click',togglePanel);
       document.body.appendChild(badge);
     }
     badge.textContent=n>99?'99+':n;
+    badge.setAttribute('aria-label',n+' unread notifications. Open notification centre.');
     badge.style.display=n>0?'flex':'none';
   }
 
@@ -80,7 +88,16 @@
     /* Listeners and a :hover rule instead of inline on*= attributes, which a
        script-src without 'unsafe-inline' refuses. */
     var close=p.querySelector('.omega-notif-close');
-    if(close)close.addEventListener('click',function(){p.remove();});
+    if(close)close.addEventListener('click',function(){
+      p.remove();
+      restorePanelFocus();
+    });
+    p.addEventListener('keydown',function(ev){
+      if(ev.key==='Escape'){
+        p.remove();
+        restorePanelFocus();
+      }
+    });
     if(!document.getElementById('omega-notif-row-style')){
       var st=document.createElement('style');st.id='omega-notif-row-style';
       st.textContent='#omega-notif-panel .omega-notif-row:hover{background:rgba(201,168,76,.03)}';
@@ -89,10 +106,19 @@
     return p;
   }
 
+  function restorePanelFocus(){
+    if(_notifTrigger && _notifTrigger.isConnected && _notifTrigger.style.display!=='none'){
+      _notifTrigger.focus();return;
+    }
+    var main=document.getElementById('main-content')||document.querySelector('main');
+    if(main){if(!main.hasAttribute('tabindex'))main.setAttribute('tabindex','-1');main.focus();}
+  }
+
   function togglePanel(){
     var existing=document.getElementById('omega-notif-panel');
-    if(existing){existing.remove();return;}
+    if(existing){existing.remove();restorePanelFocus();return;}
     if(!window.__omegaSb){return;}
+    _notifTrigger=document.activeElement;
     window.__omegaSb.auth.getSession().then(function(r){
       var s=r.data&&r.data.session;if(!s)return;
       return window.__omegaSb.from('notifications').select('*').eq('user_id',s.user.id).order('created_at',{ascending:false}).limit(20);
@@ -101,6 +127,8 @@
       var notifs=r.data||[];
       var panel=buildPanel(notifs);
       document.body.appendChild(panel);
+      var close=panel.querySelector('.omega-notif-close');
+      if(close)close.focus();
       /* Mark as read */
       if(notifs.some(function(n){return!n.read_at;})){
         window.__omegaSb.auth.getSession().then(function(r2){
@@ -128,9 +156,10 @@
 
   /* ── POLL for unread count ──────────────────────────────────── */
   function poll(){
-    if(!window.__omegaSb)return;
-    window.__omegaSb.auth.getSession().then(function(r){
-      var s=r.data&&r.data.session;if(!s)return;
+    if(_pollInFlight || document.hidden || !window.__omegaSb) return Promise.resolve();
+    _pollInFlight=true;
+    return window.__omegaSb.auth.getSession().then(function(r){
+      var s=r.data&&r.data.session;if(!s)return null;
       return window.__omegaSb.from('notifications').select('id',{count:'exact'}).eq('user_id',s.user.id).is('read_at',null);
     }).then(function(r){
       if(!r)return;
@@ -140,11 +169,34 @@
         _count=n;updateBadge(n);
         if(n>prev){showToast('You have '+n+' new notification'+(n>1?'s':''),'info');}
       }
-    }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); });
+    }).catch(function(e){ console.warn('[Omega] non-critical async operation failed:', e); })
+      .then(function(){_pollInFlight=false;});
   }
 
-  /* Start polling after user loads */
-  document.addEventListener('omega:populated',function(){setTimeout(function(){poll();setInterval(poll,30000);},2000);});
+  /* One visibility-aware scheduler: repeated omega:populated events cannot
+     create duplicate intervals, slow requests cannot overlap, and hidden tabs
+     stop spending requests until the member returns. */
+  function schedulePoll(delay){
+    if(_pollTimer){clearTimeout(_pollTimer);_pollTimer=null;}
+    if(!_pollStarted || document.hidden)return;
+    _pollTimer=setTimeout(function(){
+      _pollTimer=null;
+      poll().then(function(){schedulePoll(30000);});
+    },delay);
+  }
+  function startPolling(){
+    if(_pollStarted)return;
+    _pollStarted=true;
+    schedulePoll(2000);
+  }
+  document.addEventListener('omega:populated',startPolling);
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden){
+      if(_pollTimer){clearTimeout(_pollTimer);_pollTimer=null;}
+      return;
+    }
+    if(_pollStarted)schedulePoll(0);
+  });
 
   window.OmegaNotify={poll:poll,showToast:showToast,togglePanel:togglePanel};
 })();

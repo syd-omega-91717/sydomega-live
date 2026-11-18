@@ -26,5 +26,14 @@
   }
 
   tick();
-  window.setInterval(tick, 1000);
+  var timer = window.setInterval(tick, 1000);
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      window.clearInterval(timer);
+      timer = null;
+      return;
+    }
+    tick();
+    if (timer === null) timer = window.setInterval(tick, 1000);
+  });
 })();

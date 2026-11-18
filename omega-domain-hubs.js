@@ -41,6 +41,12 @@
   var currentPath=decodeURIComponent(window.location.pathname.split('/').pop()||'index.html');
   if(!currentPath.endsWith('.html')) currentPath='index.html';
   currentPath=currentPath.toLowerCase();
+  var HUB_PATHS=[
+    'dashboard.html','profile.html','ascend.html','cosmos.html','vault.html',
+    'order.html','life.html','services.html','intel.html','sovereign-ai.html',
+    'govern.html','invest.html','achieve.html','media.html'
+  ];
+  if(HUB_PATHS.indexOf(currentPath)===-1) return;
 
   function humanize(value){
     return String(value||'').replace(/\.html$/i,'').replace(/[-_]+/g,' ')

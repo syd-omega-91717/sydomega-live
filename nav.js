@@ -479,7 +479,7 @@
      sections, so every page keeps its accent, hero and URL. A door keeps its head section's key, label and
      translation. Each merged door lists at most eight entries (GROUP_COMPACT) so merging does not lengthen the
      tooltips. To undo: render from SECTIONS instead of GROUPS. */
-  var GROUP_OF={identity:'identity',archive:'identity',life:'identity',
+  var GROUP_OF={identity:'identity',archive:'identity',life:'identity',sovereign:'command',
                 ascend:'ascend',achieve:'ascend',arena:'ascend',
                 cosmos:'cosmos',media:'cosmos',
                 vault:'vault',invest:'vault',services:'vault'};

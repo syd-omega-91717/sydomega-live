@@ -62,7 +62,7 @@
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
     affirmations:'life',body:'life',breath:'life',fasting:'life',gratitude:'life',habits:'life',journal:'life',mood:'life',nutrition:'life',oath:'life',physiology:'life',rituals:'life',sleep:'life',stoic:'life',targets:'life',water:'life',weekly:'life',workout:'life',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos','graph-admin':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend','standing-dashboard':'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
-    'sovereign-core':'sovereign'
+    'sovereign-core':'command'
   };
 
   var SECTIONS=[
@@ -72,7 +72,7 @@
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['world-atlas','CIVILIZATION ATLAS','/world-atlas.html','folded'],['eternity','CONTINUITY','/eternity.html','folded'],['replay','REPLAY','/replay.html','folded'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html','folded'],['command','COMMAND BRIEF','/command.html','folded'],
           ['contacts','CONTACTS','/contacts.html','folded'],['decisions','DECISIONS','/decisions.html','folded'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html','folded'],
           ['network','NETWORK','/network.html','folded'],['notes','NOTES','/notes.html','folded'],['projects','PROJECTS','/projects.html'],
-          ['quotes','WISDOM','/quotes.html','folded'],['time','TIME TRACKER','/time.html','folded'],['vision','VISION BOARD','/vision.html','folded']]},
+          ['quotes','WISDOM','/quotes.html','folded'],['time','TIME TRACKER','/time.html','folded'],['vision','VISION BOARD','/vision.html','folded'],['sovereign-core','SOVEREIGN COMMAND CORE','/sovereign-core.html']]},
     {key:'identity',icon:'\u25C8', label:'IDENTITY', href:'/profile.html', col:'#00E5FF',
      sub:[['identity-alias-1','IDENTITY HUB','/profile.html#identity','folded'],['profile','PROFILE','/profile.html'],['life','Ω LIFE','/life.html','folded'],['personal-context','PERSONAL CONTEXT','/life.html#personal-context','folded'],['passport-alias-1','PASSPORT','/profile.html#passport','folded'],
           ['kyc-alias-1','KYC VERIFY','/profile.html#kyc','folded'],['character-alias-1','CHARACTER','/profile.html#character','folded'],['portfolio-alias-1','PORTFOLIO','/profile.html#portfolio','folded'],['settings','SETTINGS','/profile.html#settings','folded'],['security','SECURITY','/security.html','folded']]},
@@ -152,7 +152,6 @@
      sub:[['media','CREATIVE UNIVERSE','/media.html'],['cinema','CINEMA','/cinema.html','folded'],['movies','WATCH','/movies.html'],['characters','CHARACTERS','/characters.html'],
           ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html','folded'],['universe','UNIVERSE','/universe.html','folded'],
           ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html'],['game-origins','ORIGINS SLICE 0','/game-origins.html'],['game-origins-bridge','TWO-HAND BRIDGE','/game-origins-bridge.html'],['game-omega-civilization','CIVILIZATION 91717','/game-omega-civilization.html'],['game-last-galactic-empire','LAST GALACTIC EMPIRE','/game-last-galactic-empire.html'],['worlds','WORLDS','/worlds.html'],['studio-library','STUDIO LIBRARY','/studio-library.html']]},
-    {key:'sovereign',icon:'\u03A9',label:'SOVEREIGN CORE',href:'/sovereign-core.html',col:'#C9A84C',sub:[['sovereign-core','SOVEREIGN COMMAND CORE','/sovereign-core.html']]},
   ];
 
   /* INJECT CSS */

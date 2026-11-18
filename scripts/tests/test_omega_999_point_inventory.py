@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import hashlib
 import json
 import subprocess
 import sys
@@ -10,26 +11,59 @@ SCRIPT = Path(__file__).resolve().parents[1] / "omega-999-point-inventory.py"
 
 
 class Omega999InventoryTests(unittest.TestCase):
-    def test_counts_duplicates_and_missing_numbers(self):
-        source = "* 1. First\n* 2. Second\n* 2. Duplicate\n* 999. Last\n"
-        with tempfile.NamedTemporaryFile("w", suffix=".txt", encoding="utf-8", delete=False) as handle:
-            handle.write(source)
-            path = handle.name
+    def run_inventory(self, source):
+        handle = tempfile.NamedTemporaryFile("wb", suffix=".txt", delete=False)
+        path = Path(handle.name)
         try:
+            handle.write(source.encode("utf-8"))
+            handle.close()
             result = subprocess.run(
-                [sys.executable, str(SCRIPT), path, "--json"],
+                [sys.executable, str(SCRIPT), str(path), "--json"],
                 check=True,
                 text=True,
                 capture_output=True,
             )
-            data = json.loads(result.stdout)
+            return json.loads(result.stdout), path
+        except Exception:
+            handle.close()
+            path.unlink(missing_ok=True)
+            raise
+
+    def test_counts_duplicates_and_missing_numbers(self):
+        source = "* 1. First\n* 2. Second\n* 2. Duplicate\n* 999. Last\n"
+        data, path = self.run_inventory(source)
+        try:
             self.assertEqual(data["explicit_bullet_count"], 4)
             self.assertEqual(data["unique_point_count"], 3)
             self.assertEqual(data["duplicate_point_numbers"], [2])
+            self.assertEqual(data["duplicate_point_occurrences"], {"2": [2, 3]})
             self.assertEqual(len(data["missing_numbers_1_to_999"]), 996)
             self.assertEqual([p["line"] for p in data["points"]], [1, 2, 3, 4])
+            self.assertEqual(data["source_sha256"], hashlib.sha256(source.encode()).hexdigest())
         finally:
-            Path(path).unlink(missing_ok=True)
+            path.unlink(missing_ok=True)
+
+    def test_preserves_section_context_and_inline_point_ranges(self):
+        source = (
+            "SECTION I: FOUNDATIONS (1-33)\n"
+            "Ω Ownership & Legal Sovereignty (Points 1-11)\n"
+            "* 1. First requirement\n"
+            "See Point 9 and Points 12-15 for related controls.\n"
+            "SECTION II: SECOND SECTION (20-40)\n"
+            "* 20. Second requirement\n"
+        )
+        data, path = self.run_inventory(source)
+        try:
+            self.assertEqual(data["points"][0]["section"], "SECTION I: FOUNDATIONS (1-33)")
+            self.assertEqual(data["points"][0]["subsection"], "Ownership & Legal Sovereignty (Points 1-11)")
+            self.assertEqual(data["points"][1]["section"], "SECTION II: SECOND SECTION (20-40)")
+            self.assertEqual(data["inline_point_reference_count"], 3)
+            self.assertEqual(data["inline_point_references"][1]["referenced_points"], list(range(12, 16)))
+            self.assertEqual(len(data["overlapping_section_ranges"]), 1)
+            self.assertEqual(data["overlapping_section_ranges"][0]["overlap_start"], 20)
+            self.assertEqual(data["overlapping_section_ranges"][0]["overlap_end"], 33)
+        finally:
+            path.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":

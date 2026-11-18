@@ -84,11 +84,14 @@
     if(textValue!==undefined) node.textContent=textValue;
     return node;
   }
-  function updateAddress(path){
+  function updateAddress(path,moduleQuery,moduleHash){
     try{
       var url=new URL(window.location.href);
       if(path) url.searchParams.set('omega_module',path);
       else url.searchParams.delete('omega_module');
+      if(moduleQuery) url.searchParams.set('omega_module_query',moduleQuery);
+      else url.searchParams.delete('omega_module_query');
+      url.hash=moduleHash||'';
       window.history.replaceState({omegaHub:true},'',url.pathname+url.search+url.hash);
     }catch(error){}
   }
@@ -148,18 +151,29 @@
     root.insertBefore(shell,root.firstChild);
 
     var showAllState=false,activePath='';
-    function openModule(row){
+    function openModule(row,moduleQuery,moduleHash){
       if(!row) return;
       activePath=row.path;
       viewTitle.textContent=humanize(row.page_id);
       openLink.href='/'+row.path;
       frame.title=humanize(row.page_id)+' module';
-      frame.src='/'+row.path+'?omega_embed=1&omega_hub='+encodeURIComponent(hub.section);
+      var frameUrl=new URL('/'+row.path,window.location.origin);
+      frameUrl.searchParams.set('omega_embed','1');
+      frameUrl.searchParams.set('omega_hub',hub.section);
+      if(moduleQuery){
+        var forwarded=new URLSearchParams(moduleQuery);
+        forwarded.forEach(function(value,key){
+          if(key!=='omega_embed' && key!=='omega_hub' && key!=='omega_module' && key!=='omega_module_query')
+            frameUrl.searchParams.append(key,value);
+        });
+      }
+      frameUrl.hash=moduleHash||'';
+      frame.src=frameUrl.pathname+frameUrl.search+frameUrl.hash;
       view.classList.add('is-open');
       overview.hidden=false;
       root.classList.add('omega-domain-hub-view-active');
       document.body.classList.add('omega-hub-view-active');
-      updateAddress(row.path);
+      updateAddress(row.path,moduleQuery,moduleHash);
       var buttons=results.querySelectorAll('button[data-module-path]');
       buttons.forEach(function(button){button.setAttribute('aria-pressed',button.getAttribute('data-module-path')===row.path?'true':'false');});
       view.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
@@ -171,7 +185,7 @@
       root.classList.remove('omega-domain-hub-view-active');
       document.body.classList.remove('omega-hub-view-active');
       frame.src='about:blank';
-      updateAddress('');
+      updateAddress('','','');
       search.focus();
     }
     function renderResults(){
@@ -213,7 +227,7 @@
     var requested=params.get('omega_module');
     if(requested){
       var initial=rows.filter(function(row){return row.path===requested;})[0];
-      if(initial) openModule(initial);
+      if(initial) openModule(initial,params.get('omega_module_query')||'',window.location.hash);
     }
   }
 

@@ -98,7 +98,7 @@ class UploadCallContract(unittest.TestCase):
 
     def test_there_are_call_sites_to_check(self):
         """The three remaining direct Storage callers must stay covered."""
-        self.assertGreaterEqual(len(call_sites()), 3)
+        self.assertGreaterEqual(len(call_sites()), 2)
 
     def test_publishing_attachment_uses_governed_registration_instead_of_legacy_direct_upload(self):
         with open(os.path.join(ROOT, "publishing.html"), encoding="utf-8") as fh:
@@ -108,6 +108,17 @@ class UploadCallContract(unittest.TestCase):
         self.assertIn("uploadTask.data.file.id", page)
         self.assertIn("omega-content://storage_files/", page)
         self.assertNotIn("OmegaStorage.upload('uploads',fEl.files[0])", page)
+
+    def test_marketing_attachment_uses_governed_registration_and_delivery(self):
+        with open(os.path.join(ROOT, "marketing.html"), encoding="utf-8") as fh:
+            page = fh.read()
+        self.assertIn("OmegaContentTasks.upload(fEl.files[0]", page)
+        self.assertIn("marketing_campaign_attachment", page)
+        self.assertIn("omega-content://storage_files/", page)
+        self.assertIn("OmegaContentTasks.signedDownload(contentId)", page)
+        self.assertIn("attachPrivateCampaignDownload(d,q.file_path)", page)
+        self.assertNotIn("OmegaStorage.upload('uploads',fEl.files[0])", page)
+        self.assertIn('<script src="/omega-content-tasks.js"></script>', page)
 
     def test_bucket_name_is_the_first_argument(self):
         """The swapped-argument bug, asserted at every call site."""

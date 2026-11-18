@@ -163,6 +163,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         for row in children:
             page = (ROOT / row["path"]).read_text(encoding="utf-8")
             self.assertRegex(page, r"<script[^>]+src=[\"']/?bg\.js(?:[?\"'])", row["path"])
+            self.assertRegex(page, r"id=[\"']omega-side[\"']", row["path"])
 
     def test_mobile_and_reduced_motion_contracts_remain_present(self):
         self.assertIn("@media(max-width:760px)", self.styles)

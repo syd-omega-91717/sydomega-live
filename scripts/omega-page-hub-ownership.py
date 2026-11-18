@@ -41,7 +41,7 @@ SPECIAL = {
     "404", "500", "offline", "maintenance", "login", "signup",
     # Keep security, identity, legal, financial and owner-control lifecycles
     # as independent top-level routes until their dedicated contracts are proven.
-    "account", "approvals", "control-center", "control-plane", "graph-admin",
+    "account", "approvals", "contracts", "control-center", "control-plane", "graph-admin",
     "kyc", "payments", "portfolio", "privacy", "security", "settings",
     "subscriptions", "terms", "treasury", "wallet",
 }

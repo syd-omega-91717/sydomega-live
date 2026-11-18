@@ -107,7 +107,7 @@
     }).sort(function(a,b){return String(a.page_id).localeCompare(String(b.page_id));});
     var systemRouteStems={'404':1,'500':1,offline:1,maintenance:1,login:1,signup:1};
     var protectedRows=(matrix.pages||[]).filter(function(row){
-      var stem=String(row.path||'').replace(/\\.html$/i,'');
+      var stem=String(row.path||'').replace(/\.html$/i,'');
       return row.classification==='KEEP_SEPARATE' &&
         row.navigation_section===hub.section && !systemRouteStems[stem];
     }).sort(function(a,b){return String(a.page_id).localeCompare(String(b.page_id));});

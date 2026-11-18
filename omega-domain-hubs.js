@@ -10,11 +10,21 @@
   window.__omegaDomainHubsLoaded=true;
 
   var params=new URLSearchParams(window.location.search);
+  var currentPath=decodeURIComponent(window.location.pathname.split('/').pop()||'index.html');
+  if(!currentPath.endsWith('.html')) currentPath='index.html';
+  currentPath=currentPath.toLowerCase();
+  var HUB_PATHS=[
+    'dashboard.html','profile.html','ascend.html','cosmos.html','vault.html',
+    'order.html','life.html','services.html','intel.html','sovereign-ai.html',
+    'govern.html','invest.html','achieve.html','media.html'
+  ];
   var embedded=params.get('omega_embed')==='1';
   if(!embedded && window.parent!==window){
-    try{embedded=window.parent.location.origin===window.location.origin;}catch(error){}
+    try{
+      var parentPath=(window.parent.location.pathname.split('/').pop()||'').toLowerCase();
+      embedded=window.parent.location.origin===window.location.origin && HUB_PATHS.indexOf(parentPath)!==-1;
+    }catch(error){}
   }
-  var currentPath=decodeURIComponent(window.location.pathname.split('/').pop()||'index.html').toLowerCase();
   var PROTECTED_ROUTE_STEMS={
     '404':1,'500':1,offline:1,maintenance:1,login:1,signup:1,
     account:1,approvals:1,contracts:1,'control-center':1,'control-plane':1,'graph-admin':1,
@@ -89,15 +99,7 @@
     return;
   }
 
-  var currentPath=decodeURIComponent(window.location.pathname.split('/').pop()||'index.html');
-  if(!currentPath.endsWith('.html')) currentPath='index.html';
-  currentPath=currentPath.toLowerCase();
-  var HUB_PATHS=[
-    'dashboard.html','profile.html','ascend.html','cosmos.html','vault.html',
-    'order.html','life.html','services.html','intel.html','sovereign-ai.html',
-    'govern.html','invest.html','achieve.html','media.html'
-  ];
-  if(HUB_PATHS.indexOf(currentPath)===-1) return;
+  if(!embedded && HUB_PATHS.indexOf(currentPath)===-1) return;
 
   function humanize(value){
     return String(value||'').replace(/\.html$/i,'').replace(/[-_]+/g,' ')

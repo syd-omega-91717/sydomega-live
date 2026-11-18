@@ -71,6 +71,10 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("row.classification==='KEEP_SEPARATE'", self.runtime)
         self.assertIn("PROTECTED WORKFLOWS · OPEN SEPARATELY", self.runtime)
         self.assertIn("link.target='_blank'", self.runtime)
+        self.assertIn("var PROTECTED_ROUTE_STEMS=", self.runtime)
+        self.assertIn("window.top.location.replace", self.runtime)
+        self.assertIn("element.setAttribute('target','_blank')", self.runtime)
+        self.assertIn("PROTECTED_ROUTE_STEMS[stem]", self.runtime)
         self.assertIn("omega-domain-hub-protected-grid", self.styles)
         self.assertIn("(!rows.length && !protectedRows.length)", self.runtime)
 

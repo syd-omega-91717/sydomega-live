@@ -118,6 +118,13 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertNotIn("body.omega-embedded .shell{display:", self.styles)
         self.assertNotIn("body.omega-embedded .main,\nbody.omega-embedded main,\nbody.omega-embedded .page,\nbody.omega-embedded #main-content{display:", self.styles)
 
+    def test_navigation_hub_routes_match_the_canonical_registry(self):
+        expected = {hub["section"]: "/" + hub["path"] for hub in self.matrix["hubs"]}
+        match = re.search(r"var HUB_ROUTE_BY_SECTION=\{(.*?)\};", self.nav, re.S)
+        self.assertIsNotNone(match)
+        actual = dict(re.findall(r"([a-zA-Z0-9_-]+):'([^']+)'", match.group(1)))
+        self.assertEqual(actual, expected)
+
     def test_global_navigation_routes_candidate_modules_through_their_hubs(self):
         self.assertIn("function workspaceHref(rawHref)", self.nav)
         self.assertIn("var HUB_ROUTE_BY_SECTION={", self.nav)

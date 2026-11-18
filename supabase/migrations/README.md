@@ -129,7 +129,7 @@ Three follow-up migrations are registered as `PENDING_REVIEW / NOT_APPLIED`: `20
 
 The following is the latest independently checked state. It supersedes the 2026-11-16 pending-migration and stale-production statements above.
 
-- The authenticated Supabase provider migration ledger contains **436 unique applied versions**, latest `20261117004605_uploads_bucket_size_limit_50mb`. The source directory contains **436 unique migration files**. `supabase/remote-migrations.json` records 436 versions; `supabase/pending-migrations.json` is empty.
+- The authenticated Supabase provider migration ledger contains **436 unique applied versions**, latest `20261117004605_uploads_bucket_size_limit_50mb`. The source directory contains **437 unique migration files**: 436 provider-applied versions plus one explicitly registered pending migration (`20261118090000`). `supabase/remote-migrations.json` remains the 436-version live snapshot; `supabase/pending-migrations.json` records the new migration as `PENDING_REVIEW / NOT_APPLIED` and blocks production.
 - Migration `20261116214700_api_keys_live_column_compatibility` is provider-applied. A read-only query of `information_schema.columns` confirms `public.api_keys.name text NOT NULL` and `public.api_keys.active boolean DEFAULT true`. No API-key or secret values were queried.
 - A fresh full migration replay and migration security audit passed on main commit `d62168f2d8dd3504d5f2809128c64af1113984b1` (run #43985648591). The migration source/provider snapshot is reconciled; strict `migration-drift.py` reports 433 matching versions and no pending versions. The prior 20f8 replay is historical evidence.
 - The sensitive-column grant boundary remains unchanged: authenticated can read only the required non-secret columns on `public.api_keys` and `public.consent_records`; no table-wide SELECT was added, and `api_key`, `api_secret`, `ip_hash`, and `user_agent` remain excluded.
@@ -147,9 +147,16 @@ The live provider already contained `public.omega_ai_requests`, but no source mi
 
 The original grant left PostgreSQL 17 `TRUNCATE`, `REFERENCES`, `TRIGGER` and `MAINTAIN` privileges in the role ACL even though SELECT/UPDATE/DELETE were denied. Follow-up migration `20261117003721_omega_ai_requests_privilege_tightening.sql` revokes all table privileges from `anon`, `authenticated` and `service_role`, then grants only INSERT to `service_role`. Live post-apply checks confirm the eight table privileges: service_role has INSERT only; anon and authenticated have none. RLS and the existing deny policy remain enabled. No synthetic usage row was created.
 
-The provider migration ledger contains 435 applied versions, latest `20261117003721`; `supabase/remote-migrations.json` and the source migration directory are reconciled. A fresh 435-migration replay and strict source/provider drift check remain required CI acceptance gates for the source baseline.
+The provider migration ledger contains 436 applied versions, latest `20261117004605`; `supabase/remote-migrations.json` records those live-applied versions. Source migration `20261118090000` is explicitly pending and is not counted as applied. A fresh full replay and strict source/provider/pending inventory check remain required CI acceptance gates.
 
 
 ## 2026-11-17 — private uploads bucket size enforcement
 
 Provider migration `20261117004605_uploads_bucket_size_limit_50mb.sql` sets `storage.buckets.file_size_limit=52428800` for the private `uploads` bucket and asserts that the bucket remains private. The limit matches the existing `upload.js` 50 MiB client ceiling and is enforced by Storage rather than trusting JavaScript. The migration does not change `allowed_mime_types`: publishing explicitly supports arbitrary binary attachments, and the current system has no signature scanner/malware provider. MIME/signature validation and malware scanning remain separate release gates.
+
+
+## 2026-11-18 — owner-only media reservation decisions (pending)
+
+Source migration `20261118090000_owner_aal2_media_reservation_decisions.sql` safely reconciles the historical fresh-replay UUID primary-key declaration to the live `bigint` key only when the table is empty and has no inbound foreign keys (otherwise it aborts), corrects the reservation decision RPC to use `bigint`, requires the platform-owner check and an AAL2 session, constrains valid state transitions, and writes a durable `omega_platform_events` record in the same transaction. Direct authenticated UPDATE privileges are revoked so the browser cannot bypass the owner step-up boundary. The marketing owner queue is updated to call the RPC and step up through the existing TOTP flow when required.
+
+**Truth boundary:** this migration is source-only and explicitly `PENDING_REVIEW / NOT_APPLIED`; it is not included in the 436-version provider ledger. Production remains blocked from this migration until the PR review, fresh replay, security audit, and provider application are completed and verified.

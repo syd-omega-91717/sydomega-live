@@ -195,27 +195,66 @@ async function loadList(){
 async function loadQueue(){
   if(!_isOwner)return;
   var box=document.getElementById('queue-box');
-  var r=await sb.from('media_reservations').select('id,user_id,zone,duration,title,message,price_omega,status,created_at').eq('status','submitted').order('created_at',{ascending:true}).limit(60);
+  var r=await sb.from('media_reservations').select('id,user_id,zone,duration,title,message,price_omega,status,created_at').in('status',['submitted','pending','reviewing']).order('created_at',{ascending:true}).limit(60);
   function notice(target,text){target.replaceChildren();var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted)';n.textContent=text;target.appendChild(n);}
-  if(!r.data||!r.data.length){notice(box,'No submissions awaiting approval.');return;}
+  if(r.error){notice(box,'Reservation queue unavailable. Refresh and try again.');console.error('[OMEGA] reservation queue failed.',r.error);return;}
+  if(!Array.isArray(r.data)||!r.data.length){notice(box,'No submissions awaiting approval.');return;}
   box.replaceChildren();
   r.data.forEach(function(q){
     var dt=q.created_at?new Date(q.created_at).toLocaleString():'';
+    var status=String(q.status||'submitted').toLowerCase();
     var d=document.createElement('div');d.className='qitem';
     var top=document.createElement('div');top.className='qt';var title=document.createElement('span');title.textContent=q.title||'Untitled';var amount=document.createElement('span');amount.textContent=fmt(q.price_omega||0)+' Ω';top.appendChild(title);top.appendChild(amount);
     var body=document.createElement('div');body.className='qm';body.textContent=q.message||'';
-    var meta=document.createElement('div');meta.className='qmeta';meta.textContent=String(q.zone||'')+' · '+String(q.duration||'')+' · MEMBER '+String(q.user_id||'').slice(0,8)+' · '+dt;
-    var actions=document.createElement('div');actions.className='qa';var approve=document.createElement('button');approve.className='ap';approve.type='button';approve.textContent='APPROVE';var reject=document.createElement('button');reject.className='rj';reject.type='button';reject.textContent='REJECT';actions.appendChild(approve);actions.appendChild(reject);
-    d.appendChild(top);d.appendChild(body);d.appendChild(meta);d.appendChild(actions);approve.addEventListener('click',function(){decide(q.id,'approved');});reject.addEventListener('click',function(){decide(q.id,'rejected');});
-    d.querySelector('.ap').addEventListener('click',function(){decide(q.id,'approved');});
-    d.querySelector('.rj').addEventListener('click',function(){decide(q.id,'rejected');});
-    box.appendChild(d);
+    var meta=document.createElement('div');meta.className='qmeta';meta.textContent=String(q.zone||'')+' · '+String(q.duration||'')+' · '+status.toUpperCase()+' · MEMBER '+String(q.user_id||'').slice(0,8)+' · '+dt;
+    var actions=document.createElement('div');actions.className='qa';
+    if(status==='submitted'||status==='pending'){
+      var reviewing=document.createElement('button');reviewing.className='ap';reviewing.type='button';reviewing.textContent='MARK REVIEWING';
+      reviewing.addEventListener('click',function(){decide(q.id,'reviewing',reviewing);});actions.appendChild(reviewing);
+    }
+    var approve=document.createElement('button');approve.className='ap';approve.type='button';approve.textContent='APPROVE';
+    var reject=document.createElement('button');reject.className='rj';reject.type='button';reject.textContent='REJECT';
+    approve.addEventListener('click',function(){decide(q.id,'approved',approve);});
+    reject.addEventListener('click',function(){decide(q.id,'rejected',reject);});
+    actions.appendChild(approve);actions.appendChild(reject);
+    d.appendChild(top);d.appendChild(body);d.appendChild(meta);d.appendChild(actions);box.appendChild(d);
   });
 }
-async function decide(id,status){
-  var r=await sb.from('media_reservations').update({status:status}).eq('id',id);
-  if(r.error){alert('Could not '+(status==='approved'?'approve':'reject')+' this campaign. Try again.');return;}
-  loadQueue();loadList();
+function loadMfa(){
+  if(window.OmegaMFA)return Promise.resolve(window.OmegaMFA);
+  return new Promise(function(resolve){
+    var script=document.querySelector('script[data-omega-mfa-mod]');
+    if(!script){script=document.createElement('script');script.src='/omega-mfa.js';script.setAttribute('data-omega-mfa-mod','1');document.head.appendChild(script);}
+    script.addEventListener('load',function(){resolve(window.OmegaMFA||null);},{once:true});
+    script.addEventListener('error',function(){resolve(null);},{once:true});
+    setTimeout(function(){resolve(window.OmegaMFA||null);},8000);
+  });
+}
+async function decide(id,status,button){
+  if(!['reviewing','approved','rejected'].includes(status))return;
+  if(status!=='reviewing'&&!confirm((status==='approved'?'Approve':'Reject')+' this campaign?'))return;
+  if(button)button.disabled=true;
+  var args={p_id:String(id),p_status:status};
+  try{
+    var result=await sb.rpc('set_reservation_status',args);
+    var payload=result&&result.data;
+    if(!result||result.error)throw new Error((result&&result.error&&result.error.message)||'reservation_status_request_failed');
+    if(payload&&payload.ok===false&&payload.error==='aal2_required'){
+      var mfa=await loadMfa();
+      var steppedUp=mfa&&typeof mfa.stepUp==='function'?await mfa.stepUp():false;
+      if(!steppedUp)throw new Error('aal2_no_factor');
+      result=await sb.rpc('set_reservation_status',args);
+      payload=result&&result.data;
+      if(!result||result.error)throw new Error((result&&result.error&&result.error.message)||'reservation_status_retry_failed');
+    }
+    if(!payload||payload.ok!==true)throw new Error((payload&&payload.error)||'reservation_status_denied');
+    loadQueue();loadList();
+  }catch(error){
+    var reason=error&&error.message?error.message:'unknown_error';
+    alert(reason==='aal2_no_factor'
+      ?'TWO-FACTOR REQUIRED — confirm with your authenticator. If no verified authenticator is enrolled, set one up in Settings → Two-factor sign-in.'
+      :'Could not '+(status==='approved'?'approve':status==='rejected'?'reject':'move')+' this campaign: '+reason);
+  }finally{if(button)button.disabled=false;}
 }
 
 async function submit(){

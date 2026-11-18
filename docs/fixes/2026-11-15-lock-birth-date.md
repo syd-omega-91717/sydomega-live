@@ -35,10 +35,9 @@ Gates run: `migration-drift --source-only` (source pass, release BLOCKED until t
 ## Trade-off for the owner
 A member who mistypes their date the first time cannot correct it themselves; the owner can. Members whose date is already set are locked from the moment this applies. The page gives no "this cannot be changed" warning before the first save; adding one is a copy and i18n change not made here.
 
-## Why it is not in `supabase/migrations/`
-I first registered it as `PENDING_REVIEW / NOT_APPLIED`, the documented route, and three existing tests failed: `test_main_merge_integrity` and `test_migration_pending_boundary` assert `pending == []` ("provider ledger and source migration inventory must be fully reconciled"), and the strict drift test expects a pass. Those pin the registry to empty after the 2026-11-13 reconciliation.
-Relaxing them to admit my own entry would be weakening a migration gate to ship my change, and that is the owner's decision. So the file stays a proposal and no existing gate was touched. To apply: review the trade-off, move the file to `supabase/migrations/`, register it as pending (this is when those two tests need the owner's attention), replay on a fresh database, probe by real impersonation on a non-production copy, then use the controlled push.
-`account.html` already carries the clearer refusal message; until the migration is applied that branch cannot fire, so it is harmless and not yet exercised in production.
+## Why it remains a proposal
+This migration remains outside `supabase/migrations/` and `supabase/pending-migrations.json` because the owner/product decision on locking member birth dates is still open. The repository's pending-migration workflow now supports explicitly registered `PENDING_REVIEW / NOT_APPLIED` migrations and blocks production until they are applied with provider evidence. The separate 2026-11-18 reservation-security migration uses that controlled path; it does not approve this unrelated identity-policy change.
 
+To apply this birth-date proposal, first obtain explicit owner approval for the trade-off, then register it as pending, replay it from zero, probe with real impersonation on a non-production copy, and use the controlled push. No birth-date lock is included in this PR.
 ## Not done
 Not applied. Not run on Supabase. The throwaway cluster was removed after the run.

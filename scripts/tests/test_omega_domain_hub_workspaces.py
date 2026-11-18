@@ -130,7 +130,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
     def test_global_navigation_routes_candidate_modules_through_their_hubs(self):
         self.assertIn("function workspaceHref(rawHref)", self.nav)
         self.assertIn("var HUB_ROUTE_BY_SECTION={", self.nav)
-        self.assertIn("url.searchParams.set('omega_module',file)", self.nav)
+        self.assertIn("url.searchParams.set('omega_module',modulePath)", self.nav)
         self.assertIn("url.searchParams.set('omega_module_query',forwarded.toString())", self.nav)
         self.assertIn("workspaceHref(sub[2])", self.nav)
         self.assertIn("workspaceHref(item[2])", self.nav)

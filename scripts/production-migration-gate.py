@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path
 
-VERSION_PATTERN = re.compile(r"^(?P<version>\d{14}|\d{4})_")
+VERSION_PATTERN = re.compile(r"^(?P<version>\d{14}|\d{8}|\d{4})_")
 
 
 def fail(message: str) -> int:
@@ -66,7 +66,7 @@ def evaluate(root: Path) -> int:
     remote_versions: set[str] = set()
     for raw_version in remote_versions_raw:
         version = str(raw_version)
-        if not re.fullmatch(r"(?:\d{14}|\d{4})", version):
+        if not re.fullmatch(r"(?:\d{14}|\d{8}|\d{4})", version):
             return fail(f"invalid provider migration version: {version!r}")
         if version in remote_versions:
             return fail(f"duplicate provider migration version: {version}")
@@ -83,7 +83,7 @@ def evaluate(root: Path) -> int:
             return fail("pending registry entries must be objects")
         version = str(entry.get("version", ""))
         filename = entry.get("file")
-        if not re.fullmatch(r"(?:\d{14}|\d{4})", version):
+        if not re.fullmatch(r"(?:\d{14}|\d{8}|\d{4})", version):
             return fail(f"invalid pending migration version: {version!r}")
         if version in pending_versions:
             return fail(f"duplicate pending migration version: {version}")

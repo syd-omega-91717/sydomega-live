@@ -58,7 +58,7 @@ class Omega999InventoryTests(unittest.TestCase):
             self.assertEqual(data["points"][0]["subsection"], "Ownership & Legal Sovereignty (Points 1-11)")
             self.assertEqual(data["points"][1]["section"], "SECTION II: SECOND SECTION (20-40)")
             self.assertEqual(data["inline_point_reference_count"], 3)
-            self.assertEqual(data["inline_point_references"][1]["referenced_points"], list(range(12, 16)))
+            self.assertEqual(data["inline_point_references"][2]["referenced_points"], list(range(12, 16)))
             self.assertEqual(len(data["overlapping_section_ranges"]), 1)
             self.assertEqual(data["overlapping_section_ranges"][0]["overlap_start"], 20)
             self.assertEqual(data["overlapping_section_ranges"][0]["overlap_end"], 33)

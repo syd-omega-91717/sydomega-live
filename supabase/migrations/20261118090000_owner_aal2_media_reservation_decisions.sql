@@ -1,0 +1,117 @@
+-- SYD OMEGA 91717 — owner-only, AAL2-protected media reservation decisions
+-- Corrects the legacy UUID RPC against media_reservations.id (bigint) and
+-- removes direct authenticated UPDATE as an MFA bypass.
+begin;
+
+-- No authenticated browser client may mutate reservation rows directly.
+-- Status changes must pass through the owner + AAL2 checked RPC below.
+revoke update on table public.media_reservations from public, anon, authenticated;
+revoke update (id, user_id, zone, duration, title, message, price_omega, status, created_at, file_path)
+  on table public.media_reservations from public, anon, authenticated;
+grant select, insert on table public.media_reservations to authenticated;
+
+-- Retire the unusable UUID overloads so clients cannot accidentally call them.
+revoke all on function public.set_reservation_status(uuid, text) from public, anon, authenticated;
+revoke all on function private.set_reservation_status(uuid, text) from public, anon, authenticated;
+
+create or replace function private.set_reservation_status(p_id bigint, p_status text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+declare
+  old_status text;
+  submitter_id uuid;
+begin
+  if not public.is_platform_owner() then
+    return jsonb_build_object('ok', false, 'error', 'owner_only');
+  end if;
+  if coalesce(auth.jwt()->>'aal', 'aal1') <> 'aal2' then
+    return jsonb_build_object('ok', false, 'error', 'aal2_required');
+  end if;
+  if p_id is null or p_id <= 0 then
+    return jsonb_build_object('ok', false, 'error', 'bad_id');
+  end if;
+  if p_status is null or p_status not in ('submitted', 'pending', 'reviewing', 'approved', 'rejected', 'live') then
+    return jsonb_build_object('ok', false, 'error', 'bad_status');
+  end if;
+
+  select r.status, r.user_id
+    into old_status, submitter_id
+    from public.media_reservations r
+   where r.id = p_id
+   for update;
+  if not found then
+    return jsonb_build_object('ok', false, 'error', 'not_found');
+  end if;
+
+  if old_status = p_status then
+    return jsonb_build_object('ok', true, 'id', p_id, 'status', p_status, 'unchanged', true);
+  end if;
+
+  if not (
+    (old_status in ('submitted', 'pending') and p_status in ('reviewing', 'approved', 'rejected'))
+    or (old_status = 'reviewing' and p_status in ('approved', 'rejected'))
+    or (old_status = 'approved' and p_status = 'live')
+  ) then
+    return jsonb_build_object('ok', false, 'error', 'invalid_status_transition');
+  end if;
+
+  update public.media_reservations
+     set status = p_status
+   where id = p_id;
+
+  -- Durable event evidence is committed atomically with the decision.
+  insert into public.omega_platform_events (
+    event_id, event_type, route, actor_user_id, metadata,
+    actor_type, schema_version, source, entity_type, entity_id, payload
+  ) values (
+    pg_catalog.gen_random_uuid(),
+    'capability_used',
+    '/marketing',
+    auth.uid(),
+    jsonb_build_object(
+      'schema_version', '1',
+      'event_name', 'media_reservation_status_changed',
+      'reservation_id', p_id,
+      'submitter_id', submitter_id,
+      'from_status', old_status,
+      'to_status', p_status
+    ),
+    'user',
+    '1',
+    'marketing',
+    'media_reservation',
+    p_id::text,
+    jsonb_build_object(
+      'reservation_id', p_id,
+      'submitter_id', submitter_id,
+      'from_status', old_status,
+      'to_status', p_status
+    )
+  );
+
+  return jsonb_build_object('ok', true, 'id', p_id, 'status', p_status);
+end;
+$function$;
+
+revoke all on function private.set_reservation_status(bigint, text) from public, anon, authenticated;
+grant execute on function private.set_reservation_status(bigint, text) to authenticated;
+
+create or replace function public.set_reservation_status(p_id bigint, p_status text)
+returns jsonb
+language sql
+security invoker
+set search_path = ''
+as $function$
+  select private.set_reservation_status($1, $2)
+$function$;
+
+revoke all on function public.set_reservation_status(bigint, text) from public, anon;
+grant execute on function public.set_reservation_status(bigint, text) to authenticated;
+
+comment on function public.set_reservation_status(bigint, text) is
+  'Owner-only, AAL2-protected media reservation state transition. Direct authenticated UPDATE is revoked; every successful transition writes an omega_platform_events record atomically.';
+
+commit;

@@ -178,8 +178,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
             page = (ROOT / row["path"]).read_text(encoding="utf-8")
             self.assertRegex(page, r"<script[^>]+src=[\"']/?bg\.js(?:[?\"'])", row["path"])
             self.assertRegex(page, r"id=[\"']omega-side[\"']", row["path"])
-            self.assertNotRegex(page, r"(?:window\\.)?top\\.location\\s*(?:=|\\.assign|\\.replace)", row["path"])
-            self.assertNotRegex(page, r"parent\\.location\\s*(?:=|\\.assign|\\.replace)", row["path"])
+            self.assertNotRegex(page, r"(?:window\.)?top\.location\s*(?:=|\.assign|\.replace)", row["path"])
+            self.assertNotRegex(page, r"parent\.location\s*(?:=|\.assign|\.replace)", row["path"])
             self.assertNotRegex(page, r"target=[\"']_top[\"']", row["path"])
 
     def test_mobile_and_reduced_motion_contracts_remain_present(self):

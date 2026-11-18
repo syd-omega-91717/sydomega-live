@@ -16,6 +16,13 @@ from pathlib import Path
 
 VERSION_PATTERN = re.compile(r"^(?P<version>\d{14}|\d{8}|\d{4})_")
 
+def version_order(version: str) -> tuple[int, str]:
+    """Order numeric legacy IDs before calendar-based IDs, then by date/time."""
+    if len(version) == 4:
+        return (0, version.zfill(4))
+    return (1, version.ljust(14, "0"))
+
+
 
 def fail(message: str) -> int:
     print(f"PRODUCTION_MIGRATION_GATE=BLOCKED {message}", file=sys.stderr)
@@ -74,7 +81,7 @@ def evaluate(root: Path) -> int:
 
     if remote_doc.get("remoteMigrationCount") != len(remote_versions):
         return fail("provider snapshot count does not match its versions array")
-    if remote_doc.get("latestRemoteMigration") != max(remote_versions, key=lambda value: value.ljust(14, "0")):
+    if remote_doc.get("latestRemoteMigration") != max(remote_versions, key=version_order):
         return fail("provider snapshot latest version does not match its versions array")
 
     pending_versions: set[str] = set()

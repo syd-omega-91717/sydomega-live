@@ -67,7 +67,7 @@
 
   var SECTIONS=[
     {key:'command', icon:'\u2316', label:'COMMAND', href:'/dashboard.html',  col:'#C9A84C',
-     sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','HOME','/dashboard.html'],['command-center','COMMAND CENTER','/command-center.html','folded'],['beacon','BEACON','/beacon.html','folded'],
+     sub:[['gateway','GATEWAY','/gateway.html'],['dashboard','HOME','/dashboard.html'],['sovereign-core','SOVEREIGN COMMAND CORE','/sovereign-core.html'],['command-center','COMMAND CENTER','/command-center.html','folded'],['beacon','BEACON','/beacon.html','folded'],
           ['search','SEARCH','/search.html','folded'],['data-observatory','DATA OBSERVATORY','/data-observatory.html','folded'],['notifications','NOTIFICATIONS','/notifications.html','folded'],['chatbot','CONCIERGE','/chatbot.html','folded'],
           ['guide','GUIDE','/guide.html'],['world','OMEGA WORLD','/world.html'],['world-atlas','CIVILIZATION ATLAS','/world-atlas.html','folded'],['eternity','CONTINUITY','/eternity.html','folded'],['replay','REPLAY','/replay.html','folded'],['evidence','EVIDENCE GRAPH','/evidence.html'],['points','SOVEREIGN POINTS','/points.html','folded'],['command','COMMAND BRIEF','/command.html','folded'],
           ['contacts','CONTACTS','/contacts.html','folded'],['decisions','DECISIONS','/decisions.html','folded'],['missions','MISSIONS','/missions.html'],['recovery','RECOVERY','/recovery.html','folded'],
@@ -152,6 +152,7 @@
      sub:[['media','CREATIVE UNIVERSE','/media.html'],['cinema','CINEMA','/cinema.html','folded'],['movies','WATCH','/movies.html'],['characters','CHARACTERS','/characters.html'],
           ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html','folded'],['universe','UNIVERSE','/universe.html','folded'],
           ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html'],['game-origins','ORIGINS SLICE 0','/game-origins.html'],['game-origins-bridge','TWO-HAND BRIDGE','/game-origins-bridge.html'],['game-omega-civilization','CIVILIZATION 91717','/game-omega-civilization.html'],['game-last-galactic-empire','LAST GALACTIC EMPIRE','/game-last-galactic-empire.html'],['worlds','WORLDS','/worlds.html'],['studio-library','STUDIO LIBRARY','/studio-library.html']]},
+    
   ];
 
   /* INJECT CSS */

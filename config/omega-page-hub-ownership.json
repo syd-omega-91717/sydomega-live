@@ -10,7 +10,7 @@
   "hub_count": 14,
   "classification_counts": {
     "AMBIGUOUS": 10,
-    "CANDIDATE_MERGE_PANEL": 198,
+    "CANDIDATE_MERGE_PANEL": 199,
     "KEEP_SEPARATE": 19,
     "UNMAPPED": 14
   },
@@ -623,8 +623,8 @@
       "protected_hub": null
     },
     {
-      "page_id": "command-center",
-      "path": "command-center.html",
+      "page_id": "command",
+      "path": "command.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
       "classification": "CANDIDATE_MERGE_PANEL",
@@ -637,8 +637,8 @@
       "protected_hub": null
     },
     {
-      "page_id": "command",
-      "path": "command.html",
+      "page_id": "command-center",
+      "path": "command-center.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
       "classification": "CANDIDATE_MERGE_PANEL",
@@ -1253,8 +1253,8 @@
       "protected_hub": null
     },
     {
-      "page_id": "game-origins-bridge",
-      "path": "game-origins-bridge.html",
+      "page_id": "game-origins",
+      "path": "game-origins.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
       "classification": "CANDIDATE_MERGE_PANEL",
@@ -1267,8 +1267,8 @@
       "protected_hub": null
     },
     {
-      "page_id": "game-origins",
-      "path": "game-origins.html",
+      "page_id": "game-origins-bridge",
+      "path": "game-origins-bridge.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
       "classification": "CANDIDATE_MERGE_PANEL",
@@ -1365,6 +1365,20 @@
       "protected_hub": null
     },
     {
+      "page_id": "graph",
+      "path": "graph.html",
+      "navigation_section": "cosmos",
+      "candidate_hub": "cosmos.html",
+      "classification": "CANDIDATE_MERGE_PANEL",
+      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "authorization_state": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "protected_hub": null
+    },
+    {
       "page_id": "graph-admin",
       "path": "graph-admin.html",
       "navigation_section": "intel",
@@ -1441,20 +1455,6 @@
       "candidate_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
-      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "authorization_state": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "protected_hub": null
-    },
-    {
-      "page_id": "graph",
-      "path": "graph.html",
-      "navigation_section": "cosmos",
-      "candidate_hub": "cosmos.html",
-      "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
@@ -1799,10 +1799,10 @@
       "protected_hub": null
     },
     {
-      "page_id": "knowledge-loom",
-      "path": "knowledge-loom.html",
-      "navigation_section": "govern",
-      "candidate_hub": "govern.html",
+      "page_id": "knowledge",
+      "path": "knowledge.html",
+      "navigation_section": "intel",
+      "candidate_hub": "intel.html",
       "classification": "CANDIDATE_MERGE_PANEL",
       "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
@@ -1813,10 +1813,10 @@
       "protected_hub": null
     },
     {
-      "page_id": "knowledge",
-      "path": "knowledge.html",
-      "navigation_section": "intel",
-      "candidate_hub": "intel.html",
+      "page_id": "knowledge-loom",
+      "path": "knowledge-loom.html",
+      "navigation_section": "govern",
+      "candidate_hub": "govern.html",
       "classification": "CANDIDATE_MERGE_PANEL",
       "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
@@ -3003,6 +3003,20 @@
       "protected_hub": null
     },
     {
+      "page_id": "sovereign-core",
+      "path": "sovereign-core.html",
+      "navigation_section": "command",
+      "candidate_hub": "dashboard.html",
+      "classification": "CANDIDATE_MERGE_PANEL",
+      "rationale": "Canonical Command section; primary Command Core entry point rather than a legacy specialist route. Functional, authorization and production parity remain unverified.",
+      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "authorization_state": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "protected_hub": null
+    },
+    {
       "page_id": "sovereign-covenant",
       "path": "sovereign-covenant.html",
       "navigation_section": "vault",
@@ -3059,10 +3073,10 @@
       "protected_hub": null
     },
     {
-      "page_id": "studio-library",
-      "path": "studio-library.html",
-      "navigation_section": "media",
-      "candidate_hub": "media.html",
+      "page_id": "studio",
+      "path": "studio.html",
+      "navigation_section": "services",
+      "candidate_hub": "services.html",
       "classification": "CANDIDATE_MERGE_PANEL",
       "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
@@ -3073,10 +3087,10 @@
       "protected_hub": null
     },
     {
-      "page_id": "studio",
-      "path": "studio.html",
-      "navigation_section": "services",
-      "candidate_hub": "services.html",
+      "page_id": "studio-library",
+      "path": "studio-library.html",
+      "navigation_section": "media",
+      "candidate_hub": "media.html",
       "classification": "CANDIDATE_MERGE_PANEL",
       "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
@@ -3395,6 +3409,20 @@
       "protected_hub": null
     },
     {
+      "page_id": "world",
+      "path": "world.html",
+      "navigation_section": "command",
+      "candidate_hub": "dashboard.html",
+      "classification": "CANDIDATE_MERGE_PANEL",
+      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "authorization_state": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "protected_hub": null
+    },
+    {
       "page_id": "world-atlas",
       "path": "world-atlas.html",
       "navigation_section": "command",
@@ -3413,20 +3441,6 @@
       "path": "world-shell.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
-      "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
-      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "authorization_state": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "protected_hub": null
-    },
-    {
-      "page_id": "world",
-      "path": "world.html",
-      "navigation_section": "command",
-      "candidate_hub": "dashboard.html",
       "classification": "CANDIDATE_MERGE_PANEL",
       "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",

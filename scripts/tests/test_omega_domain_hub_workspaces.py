@@ -66,6 +66,17 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertEqual(self.matrix["classification_counts"]["UNMAPPED"], 14)
         self.assertEqual(self.matrix["unresolved_count"], 24)
 
+    def test_embedded_runtime_protects_every_keep_separate_route(self):
+        separate = {
+            Path(row["path"]).stem for row in self.matrix["pages"]
+            if row["classification"] == "KEEP_SEPARATE"
+        }
+        match = re.search(r"var PROTECTED_ROUTE_STEMS=\{(.*?)\};", self.runtime, re.S)
+        self.assertIsNotNone(match)
+        protected = re.findall(r"(?:'([^']+)'|([a-zA-Z0-9_-]+))\s*:\s*1", match.group(1))
+        protected = {a or b for a, b in protected}
+        self.assertTrue(separate.issubset(protected))
+
     def test_protected_routes_are_discoverable_but_open_standalone(self):
         self.assertIn("var protectedRows=", self.runtime)
         self.assertIn("row.classification==='KEEP_SEPARATE'", self.runtime)

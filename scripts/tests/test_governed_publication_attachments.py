@@ -34,6 +34,15 @@ class GovernedPublicationAttachmentTests(unittest.TestCase):
         self.assertIn("root.__omegaSb||root.supabaseClient||null", helper)
         self.assertIn("REGISTRATION_UNCERTAIN", helper)
 
+    def test_production_migration_is_explicitly_pending_and_hash_pinned(self):
+        manifest = (ROOT / "supabase/pending-migrations.json").read_text()
+        workflow = (ROOT / ".github/workflows/supabase-controlled-migration-push.yml").read_text()
+        self.assertIn('"version": "20261118120000"', manifest)
+        self.assertIn('"blocksProduction": true', manifest)
+        self.assertIn('elif version == "20261118120000":', workflow)
+        self.assertIn("Publication attachment migration bytes differ", workflow)
+        self.assertIn("dbc051dc7a59d22a28732ec263f8a5e7f4d4848b8c29410188c667a74ea7226a", workflow)
+
     def test_failed_parent_insert_never_blindly_deletes_registered_content(self):
         page = (ROOT / "publishing.html").read_text()
         self.assertIn("REGISTERED PRIVATE FILE WAS PRESERVED", page)

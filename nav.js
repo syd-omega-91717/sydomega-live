@@ -417,7 +417,7 @@
     document.addEventListener('click',function(event){
       if(event.defaultPrevented || event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       var link=event.target && event.target.closest ? event.target.closest('a[href]') : null;
-      if(!link || link.hasAttribute('download')) return;
+      if(!link || link.hasAttribute('download') || link.hasAttribute('onclick')) return;
       if(link.target && link.target.toLowerCase()!=='_self') return;
       var raw=link.getAttribute('href')||'';
       if(!raw || /^(#|javascript:|mailto:|tel:|data:|blob:)/i.test(raw)) return;
@@ -425,7 +425,7 @@
       if(routed===raw) return;
       event.preventDefault();
       window.location.assign(routed);
-    },true);
+    },false);
   })();
 
   var COMPACT={

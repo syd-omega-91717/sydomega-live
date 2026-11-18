@@ -118,6 +118,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
 
     def test_embedded_layout_preserves_existing_auth_visibility_gates(self):
         self.assertNotIn("body.omega-embedded .shell{display:", self.styles)
+        self.assertNotIn("body.omega-embedded .side,", self.styles)
+        self.assertNotIn("body.omega-embedded .topbar,", self.styles)
         self.assertNotIn("body.omega-embedded .main,\nbody.omega-embedded main,\nbody.omega-embedded .page,\nbody.omega-embedded #main-content{display:", self.styles)
 
     def test_navigation_hub_routes_match_the_canonical_registry(self):

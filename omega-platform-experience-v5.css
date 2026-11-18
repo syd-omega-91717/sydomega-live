@@ -19,7 +19,7 @@
 }
 
 /* Global atmosphere: orbital light, fine instrument grid, deep black canvas. */
-html:has(body.omega-simple){background:var(--omega-v5-void)}
+html{background:var(--omega-v5-void)}
 body.omega-simple{
   color:#E9EAF0;
   background-color:var(--omega-v5-void);
@@ -33,6 +33,10 @@ body.omega-simple{
 }
 body.omega-simple :where(.shell,.ohz-shell,.page-shell,.main,main,.page,#omega-main-content){
   background-color:transparent;
+}
+/* Legacy inline widths remain bounded by the viewport on small screens. */
+body.omega-simple :where(.shell,.ohz-shell,.page-shell,.main,main,.page,#omega-main-content) [style*="width:"]{
+  max-width:100%;
 }
 
 /* Navigation: consistent dark instrument surfaces with gold/cyan state cues. */

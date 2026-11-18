@@ -958,7 +958,7 @@
       try{
         var r=JSON.parse(localStorage.getItem('omega:recent-pages')||'[]');
         if(Array.isArray(r))r.forEach(function(p){
-          var hit=all.filter(function(x){return x.href===p.href;})[0];
+          var recentHref=workspaceHref(p.href);\n          var hit=all.filter(function(x){return x.href===recentHref;})[0];
           if(hit && !recent.some(function(x){return x.href===hit.href;}))
             recent.push({key:hit.key,label:'RECENT · '+hit.label,href:hit.href,section:hit.section,icon:'↺',col:'#00E5FF'});
         });
@@ -968,7 +968,7 @@
           var k=localStorage.key(li)||'';
           if(k.indexOf('omega:pinned:')!==0||localStorage.getItem(k)!=='1')continue;
           var href=k.slice('omega:pinned:'.length);
-          var hit2=all.filter(function(x){return x.href===href;})[0];
+          var pinnedHref=workspaceHref(href);\n          var hit2=all.filter(function(x){return x.href===pinnedHref;})[0];
           if(hit2)pinned.push({key:hit2.key,label:'PINNED · '+hit2.label,href:hit2.href,section:hit2.section,icon:'★',col:'#C9A84C'});
         }
       }catch(e){}

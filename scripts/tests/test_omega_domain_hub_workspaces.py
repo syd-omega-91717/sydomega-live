@@ -64,6 +64,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertEqual(actual, expected)
         for path in expected:
             self.assertTrue((ROOT / path).is_file(), path)
+            page = (ROOT / path).read_text(encoding="utf-8")
+            self.assertRegex(page, r"<h1\b", path)
 
     def test_every_hub_page_has_a_supported_workspace_mount_root(self):
         for hub in self.matrix["hubs"]:

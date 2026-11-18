@@ -21,9 +21,9 @@ class ObservatoryEvidenceConsoleTests(unittest.TestCase):
         self.assertIn("Not a live Supabase, Cloudflare, Stripe or monitoring check", SCRIPT)
         self.assertIn("snapshot timestamp is not encoded", SCRIPT.lower())
 
-    def test_cloudflare_replaces_stale_vercel_gate_as_review_required(self):
+    def test_cloudflare_production_gate_preserves_blocked_truth_state(self):
         self.assertIn("id === 'cloudflare_production'", SCRIPT)
-        self.assertIn("status: 'REVIEW_REQUIRED'", SCRIPT)
+        self.assertIn("status: 'BLOCKED'", SCRIPT)
         self.assertIn("Cloudflare Pages is the declared production host", SCRIPT)
 
     def test_unknown_status_fails_closed(self):

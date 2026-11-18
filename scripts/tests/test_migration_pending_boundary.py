@@ -51,6 +51,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIsNotNone(match, path.name)
             local_versions.add(match.group(1))
         self.assertEqual(pending_versions, local_versions - self.remote_versions)
+        self.assertEqual(pending_versions, set(), "no source migrations may remain pending after provider confirmation")
 
     def test_provider_confirmed_november_migrations_are_live_only(self) -> None:
         applied_versions = {
@@ -58,7 +59,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300", "20261112091400", "20261112091500",
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
-            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842", "20261117002651", "20261117003721", "20261117004605",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842", "20261117002651", "20261117003721", "20261117004605", "20261118090000",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
         self.assertTrue(applied_versions.issubset(self.remote_versions))
@@ -66,9 +67,9 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117004605")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261118090000")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
-        self.assertEqual(self.remote.get("_captured"), "2026-11-17")
+        self.assertEqual(self.remote.get("_captured"), "2026-11-18")
         self.assertNotIn("ydqhzvvoyufiiqvzcjns", self.remote.get("source", ""))
 
     def test_media_catalog_select_migration_is_authenticated_only_and_provider_applied(self) -> None:
@@ -132,8 +133,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop column", sql)
         self.assertNotIn("drop table", sql)
         self.assertNotIn("grant ", sql)
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 436)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117004605")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 437)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261118090000")
 
 
 
@@ -144,8 +145,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("where id = 'uploads'", sql)
         self.assertIn("bucket_public is distinct from false", sql)
         self.assertIn("20261117004605", self.remote_versions)
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 436)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117004605")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 437)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261118090000")
 
     def test_ai_usage_telemetry_schema_and_exact_privileges_are_provider_applied(self) -> None:
         schema = (MIGRATIONS / "20261117002651_omega_ai_requests_service_role_insert_grant.sql").read_text(encoding="utf-8").lower()
@@ -164,8 +165,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIn(f"'{privilege.lower()}'", privileges)
         self.assertIn("omega_ai_requests_service_role_privilege_too_broad", privileges)
         self.assertIn("omega_ai_requests_client_privilege_must_remain_denied", privileges)
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 436)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261117004605")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 437)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261118090000")
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []
@@ -183,23 +184,13 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn(f"pending_count={len(self.pending)}", result.stdout)
         self.assertIn("pending versions are not asserted applied", result.stdout)
 
-    def test_source_inventory_passes_and_strict_release_blocks_only_registered_pending_versions(self) -> None:
+    def test_source_and_strict_release_drift_pass_with_no_pending_migrations(self) -> None:
         source = run_script("scripts/migration-drift.py", "--source-only")
         self.assertEqual(source.returncode, 0, source.stdout + source.stderr)
-        if self.pending:
-            self.assertIn("MIGRATION DRIFT: SOURCE PASS", source.stdout)
-            self.assertIn("Release state: BLOCKED", source.stdout)
-            strict = run_script("scripts/migration-drift.py")
-            self.assertEqual(strict.returncode, 1, strict.stdout + strict.stderr)
-            self.assertIn("MIGRATION DRIFT: BLOCKED", strict.stdout)
-            for entry in self.pending:
-                self.assertIn(str(entry["version"]), strict.stdout)
-                self.assertIn("PENDING_REVIEW / NOT_APPLIED", strict.stdout)
-        else:
-            strict = run_script("scripts/migration-drift.py")
-            self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
-            self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
-        self.assertNotIn("20261116214700", source.stdout)
+        strict = run_script("scripts/migration-drift.py")
+        self.assertEqual(strict.returncode, 0, strict.stdout + strict.stderr)
+        self.assertIn("MIGRATION DRIFT: PASS", strict.stdout)
+        self.assertNotIn("20261116214700", strict.stdout)
 
     def test_release_readiness_records_current_cloudflare_and_remaining_vercel_blocker(self) -> None:
         snapshot_path = ROOT / "config" / "omega-live-module-runtime-observations.json"
@@ -211,21 +202,21 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         )
         latest_probe = readiness.get("latest_production_probe", {})
         self.assertEqual(latest_probe.get("status"), "PASS")
-        self.assertEqual(latest_probe.get("expected_commit_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
-        self.assertEqual(latest_probe.get("served_commit_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
-        self.assertEqual(latest_probe.get("workflow_run_id"), 43985648597)
+        self.assertEqual(latest_probe.get("expected_commit_sha"), "122d8d0741cb39b78233c0f6f3606bf73de48d1d")
+        self.assertEqual(latest_probe.get("served_commit_sha"), "122d8d0741cb39b78233c0f6f3606bf73de48d1d")
+        self.assertEqual(latest_probe.get("workflow_run_id"), 44259163200)
         self.assertEqual(latest_probe.get("pages_passed"), 241)
         self.assertEqual(latest_probe.get("references_passed"), 368)
-        self.assertEqual(latest_probe.get("root_manifest_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
-        self.assertEqual(latest_probe.get("www_manifest_sha"), "d62168f2d8dd3504d5f2809128c64af1113984b1")
+        self.assertEqual(latest_probe.get("root_manifest_sha"), "122d8d0741cb39b78233c0f6f3606bf73de48d1d")
+        self.assertEqual(latest_probe.get("www_manifest_sha"), "122d8d0741cb39b78233c0f6f3606bf73de48d1d")
         self.assertEqual(readiness.get("production_verification", {}).get("status"), "PASS")
         self.assertEqual(
             readiness.get("production_verification", {}).get("commit_sha"),
-            "d62168f2d8dd3504d5f2809128c64af1113984b1",
+            "122d8d0741cb39b78233c0f6f3606bf73de48d1d",
         )
         self.assertEqual(
             readiness.get("production_verification", {}).get("workflow_run_id"),
-            43985648597,
+            44259163200,
         )
         vercel = readiness.get("vercel_promotion", {})
         self.assertEqual(vercel.get("status"), "POSTPONED_NOT_DEPLOYED")
@@ -249,15 +240,15 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("issue #1346", blockers)
         runtime = snapshot["runtime_probe_status"]
         self.assertEqual(runtime.get("status"), "PASS_DATABASE_AND_BEHAVIORAL_VERIFICATION")
-        self.assertEqual(runtime.get("migration_replay"), "PASS — all 433 source migrations replayed from zero on main commit d62168f2d8dd3504d5f2809128c64af1113984b1 (run #43985648591).")
-        self.assertEqual(runtime.get("migration_security_audit"), "PASS on main commit d62168f2d8dd3504d5f2809128c64af1113984b1 (run #43985648591).")
+        self.assertEqual(runtime.get("migration_replay"), "PASS — all 437 source migrations replayed from zero on PR #1386 head 5d013f12b0fb90536ff919a70fbbd7670477aa10 (run #44258659682). The guarded reservation UUID-to-bigint reconciliation, RLS/RPC migration, and complete replay all passed.")
+        self.assertEqual(runtime.get("migration_security_audit"), "PASS on PR #1386 head 5d013f12b0fb90536ff919a70fbbd7670477aa10 (run #44258659810). The owner reservation migration enforces least-privilege SELECT/INSERT RLS, revokes authenticated UPDATE, and gates status transitions on platform-owner membership plus AAL2.")
         self.assertEqual(runtime.get("hardening_contract"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
         self.assertEqual(runtime.get("stripe_refund_lifecycle_probe"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
-        self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
-        self.assertEqual(runtime.get("family_access_probe"), "PASS on main commit 20f8dcfa9e20da66f129420f736c3470431c2c70 (run #43981760062).")
-        self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline on main commit d62168f2d8dd3504d5f2809128c64af1113984b1 (run #43985648591).")
-        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 436)
-        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261117004605")
+        self.assertEqual(runtime.get("runtime_adapter_probe"), "PASS — 54/54 governed actions on PR #1386 head 5d013f12b0fb90536ff919a70fbbd7670477aa10 (full migration replay run #44258659682).")
+        self.assertEqual(runtime.get("family_access_probe"), "PASS in the fresh full migration replay on PR #1386 head 5d013f12b0fb90536ff919a70fbbd7670477aa10 (run #44258659682).")
+        self.assertEqual(runtime.get("content_pipeline_e2e"), "PASS — authenticated local-only content pipeline in the fresh full migration replay on PR #1386 head 5d013f12b0fb90536ff919a70fbbd7670477aa10 (run #44258659682).")
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("applied_count"), 437)
+        self.assertEqual(runtime.get("provider_migration_ledger", {}).get("latest_version"), "20261118090000")
         self.assertIn("Cloudflare Pages exact-SHA production verification passed", runtime.get("remediation", ""))
         self.assertIn("241/241 registered pages", runtime.get("remediation", ""))
         self.assertIn("no pending migrations remain", runtime.get("remediation", ""))

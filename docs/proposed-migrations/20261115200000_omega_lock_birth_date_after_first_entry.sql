@@ -11,14 +11,10 @@
 -- Trade-off the owner should know: a member who mistypes their date the first time cannot fix it
 -- themselves; the owner does it. Members whose date is already set are locked from the moment this applies.
 --
--- Status: PROPOSAL. This file remains deliberately outside supabase/migrations/ and
--- supabase/pending-migrations.json because the product/owner decision on locking member birth
--- dates is still open. The repository now supports explicitly registered PENDING_REVIEW /
--- NOT_APPLIED migrations with production-blocking release checks; the separate 2026-11-18
--- reservation-security migration uses that controlled path. Its existence does not authorize
--- this unrelated identity-policy change. To apply this proposal: obtain explicit owner approval
--- for the trade-off above, move it into supabase/migrations/, register it as pending, replay from
--- zero, probe by real impersonation on a non-production copy, then use the controlled push.
+-- Status: PROPOSAL. This file is deliberately NOT in supabase/migrations/ and NOT in supabase/pending-migrations.json: three existing tests
+-- (test_main_merge_integrity, test_migration_pending_boundary) pin the pending registry to empty after the 2026-11-13 reconciliation, and relaxing
+-- them is the owner's call. To apply: review the trade-off above, move this file to supabase/migrations/, register it in pending-migrations.json
+-- (PENDING_REVIEW / NOT_APPLIED), replay on a fresh database, probe by real impersonation on a non-production copy, then use the controlled push.
 
 create schema if not exists private;
 

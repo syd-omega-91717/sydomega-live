@@ -11,6 +11,9 @@
 
   var params=new URLSearchParams(window.location.search);
   var embedded=params.get('omega_embed')==='1';
+  if(!embedded && window.parent!==window){
+    try{embedded=window.parent.location.origin===window.location.origin;}catch(error){}
+  }
 
   function markEmbedded(){
     document.documentElement.classList.add('omega-embedded');

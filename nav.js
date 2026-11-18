@@ -367,7 +367,7 @@
     if(door.merged&&pathOf(sec.href)!==here){addSep();var up=document.createElement('a');up.className='ow-link';up.href=sec.href;up.textContent=sec.label;rail.appendChild(up);}
     if(pathOf(door.href)!==here){addSep();var cur=document.createElement('span');cur.className='ow-current';cur.textContent=(door.merged&&pathOf(sec.href)===here)?sec.label:currentLabel;rail.appendChild(cur);}
     compactSub(sec).filter(function(x){return x[0]!==dp;}).slice(0,5).forEach(function(x){
-      var a=document.createElement('a');a.className='ow-link';a.href=x[2];a.textContent=x[1];rail.appendChild(a);
+      var a=document.createElement('a');a.className='ow-link';a.href=workspaceHref(x[2]);a.textContent=x[1];rail.appendChild(a);
     });
     main.insertBefore(rail,main.firstChild);
   }
@@ -377,6 +377,48 @@
      Specialized pages remain addressable/deep-linkable, but only the highest-value
      jobs appear in the persistent dock. This turns hundreds of files into a small
      set of workspaces without deleting capabilities. */
+  /* Route specialist navigation through its owning domain workspace.
+     The original route remains available inside the workspace and by direct URL. */
+  var HUB_ROUTE_BY_SECTION={
+    command:'/dashboard.html',identity:'/profile.html',ascend:'/ascend.html',
+    cosmos:'/cosmos.html',vault:'/vault.html',order:'/order.html',life:'/life.html',
+    services:'/services.html',intel:'/intel.html',arena:'/sovereign-ai.html',
+    govern:'/govern.html',invest:'/invest.html',achieve:'/achieve.html',media:'/media.html'
+  };
+  function workspaceHref(rawHref){
+    try{
+      var url=new URL(rawHref,window.location.href);
+      if(url.origin!==window.location.origin) return rawHref;
+      var file=url.pathname.split('/').pop()||'';
+      if(!file.toLowerCase().endsWith('.html')) return rawHref;
+      var section=PS[file.replace(/\.html$/i,'').toLowerCase()];
+      var hub=HUB_ROUTE_BY_SECTION[section];
+      if(!hub || url.pathname===hub) return rawHref;
+      var target=new URL(hub,window.location.origin);
+      target.searchParams.set('omega_module',file);
+      var forwarded=new URLSearchParams(url.search);
+      ['omega_embed','omega_hub','omega_module','omega_module_query'].forEach(function(key){forwarded.delete(key);});
+      if(forwarded.toString()) target.searchParams.set('omega_module_query',forwarded.toString());
+      target.hash=url.hash;
+      return target.pathname+target.search+target.hash;
+    }catch(error){return rawHref;}
+  }
+  (function installWorkspaceRouteHandler(){
+    if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return;
+    document.addEventListener('click',function(event){
+      if(event.defaultPrevented || event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var link=event.target && event.target.closest ? event.target.closest('a[href]') : null;
+      if(!link || link.hasAttribute('download')) return;
+      if(link.target && link.target.toLowerCase()!=='_self') return;
+      var raw=link.getAttribute('href')||'';
+      if(!raw || /^(#|javascript:|mailto:|tel:|data:|blob:)/i.test(raw)) return;
+      var routed=workspaceHref(raw);
+      if(routed===raw) return;
+      event.preventDefault();
+      window.location.assign(routed);
+    },true);
+  })();
+
   var COMPACT={
     /* search, notifications, chatbot and points are folded: the dashboard's
        command dock (omega-command-dock.js) carries ASK / POINTS / INBOX, and
@@ -493,7 +535,7 @@
     compactSub(sec).forEach(function(sub){
       var on=sub[0]===dp;
       var own=sub[3]==='owner';
-      h+='<a class="tip-a'+(on?' tip-on':'')+(own?' tip-owner':'')+'" href="'+sub[2]+'"'+(own?' style="display:none"':'')+'>';
+      h+='<a class="tip-a'+(on?' tip-on':'')+(own?' tip-owner':'')+'" href="'+workspaceHref(sub[2])+'"'+(own?' style="display:none"':'')+'>';
       h+='<div class="tip-dot" style="background:'+(on?sec.col:'rgba(133,131,123,0.4)')+'"></div>';
       h+=sub[1]+'</a>';
     });
@@ -893,7 +935,7 @@
         for(var sj=0;sj<sec.sub.length;sj++){
           var item=sec.sub[sj];
           if(item[3]==='owner'&&!window.__omegaIsOwner) continue;
-          all.push({key:item[0],label:item[1],href:item[2],section:sec.label,icon:sec.icon,col:sec.col});
+          all.push({key:item[0],label:item[1],href:workspaceHref(item[2]),section:sec.label,icon:sec.icon,col:sec.col});
         }
       }
       var seen={};

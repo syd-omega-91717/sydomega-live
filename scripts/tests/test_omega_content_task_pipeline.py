@@ -174,12 +174,15 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("REGISTERED PRIVATE FILE WAS PRESERVED", page)
         self.assertNotIn("OmegaStorage.remove('uploads',filePath)", page)
 
-    def test_legacy_marketing_upload_compensates_only_definitive_database_rejections(self):
+    def test_marketing_uses_governed_private_content_and_preserves_uncertain_outcomes(self):
         page = (ROOT / "marketing.html").read_text()
-        self.assertIn("SUBMISSION STATUS UNKNOWN — FILE PRESERVED", page)
-        self.assertIn("/^[0-9A-Z]{5}$/.test(code)", page)
-        self.assertIn("OmegaStorage.remove('uploads',filePath)", page)
-        self.assertIn("FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED", page)
+        self.assertIn("OmegaContentTasks.upload(fEl.files[0]", page)
+        self.assertIn("contentRefPrefix+uploadTask.data.file.id", page)
+        self.assertIn("omega-content://storage_files/", page)
+        self.assertIn("SUBMISSION STATUS UNKNOWN — REGISTERED PRIVATE FILE PRESERVED", page)
+        self.assertIn("CAMPAIGN REJECTED OR UNCONFIRMED", page)
+        self.assertIn("SUPPORT RECONCILIATION MAY BE REQUIRED", page)
+        self.assertNotIn("OmegaStorage.remove('uploads',filePath)", page)
 
 if __name__ == "__main__":
     unittest.main()

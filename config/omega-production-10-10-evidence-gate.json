@@ -103,13 +103,14 @@
       ]
     },
     {
-      "id": "vercel_production",
+      "id": "cloudflare_production",
       "status": "BLOCKED",
       "evidence_required": [
-        "ready_production_deployment_for_current_main_commit",
-        "deployment_source_sha_matches_current_main_head",
-        "canonical_production_aliases_resolve_to_verified_deployment",
-        "post_deploy_browser_smoke_passes",
+        "cloudflare_pages_production_deployment_for_current_main_commit",
+        "release_manifest_commit_sha_matches_current_main_head",
+        "sydomega_and_www_aliases_resolve_to_verified_deployment",
+        "production_headers_csp_and_hsts_verified",
+        "core_route_and_full_page_estate_smoke_passes",
         "rollback_target_and_runbook_verified"
       ]
     },

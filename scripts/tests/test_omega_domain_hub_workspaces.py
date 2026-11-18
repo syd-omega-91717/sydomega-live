@@ -113,6 +113,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("target.toLowerCase()!=='_self'", self.runtime)
         self.assertIn("document.addEventListener('click'", self.runtime)
         self.assertIn("document.addEventListener('submit'", self.runtime)
+        self.assertIn("link.hasAttribute('onclick')", self.runtime)
+        self.assertIn("form.hasAttribute('onsubmit')", self.runtime)
 
     def test_embedded_layout_preserves_existing_auth_visibility_gates(self):
         self.assertNotIn("body.omega-embedded .shell{display:", self.styles)
@@ -134,6 +136,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("workspaceHref(item[2])", self.nav)
         self.assertIn("workspaceHref(x[2])", self.nav)
         self.assertIn("window.location.assign(routed)", self.nav)
+        self.assertIn("link.hasAttribute('onclick')", self.nav)
+        self.assertIn("event.defaultPrevented", self.nav)
 
     def test_embedded_module_deep_links_preserve_query_and_hash(self):
         self.assertIn("function updateAddress(path,moduleQuery,moduleHash)", self.runtime)

@@ -12,6 +12,7 @@ MATRIX = ROOT / "config" / "omega-page-hub-ownership.json"
 RUNTIME = ROOT / "omega-domain-hubs.js"
 STYLES = ROOT / "omega-domain-hub.css"
 BOOTSTRAP = ROOT / "bg.js"
+NAV = ROOT / "nav.js"
 
 
 class OmegaDomainHubWorkspaces(unittest.TestCase):
@@ -21,6 +22,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         cls.runtime = RUNTIME.read_text(encoding="utf-8")
         cls.styles = STYLES.read_text(encoding="utf-8")
         cls.bootstrap = BOOTSTRAP.read_text(encoding="utf-8")
+        cls.nav = NAV.read_text(encoding="utf-8")
 
     def test_all_canonical_hubs_exist_and_match_the_runtime_allowlist(self):
         expected = {hub["path"] for hub in self.matrix["hubs"]}
@@ -104,6 +106,23 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
     def test_embedded_layout_preserves_existing_auth_visibility_gates(self):
         self.assertNotIn("body.omega-embedded .shell{display:", self.styles)
         self.assertNotIn("body.omega-embedded .main,\nbody.omega-embedded main,\nbody.omega-embedded .page,\nbody.omega-embedded #main-content{display:", self.styles)
+
+    def test_global_navigation_routes_candidate_modules_through_their_hubs(self):
+        self.assertIn("function workspaceHref(rawHref)", self.nav)
+        self.assertIn("var HUB_ROUTE_BY_SECTION={", self.nav)
+        self.assertIn("url.searchParams.set('omega_module',file)", self.nav)
+        self.assertIn("url.searchParams.set('omega_module_query',forwarded.toString())", self.nav)
+        self.assertIn("workspaceHref(sub[2])", self.nav)
+        self.assertIn("workspaceHref(item[2])", self.nav)
+        self.assertIn("workspaceHref(x[2])", self.nav)
+        self.assertIn("window.location.assign(routed)", self.nav)
+
+    def test_embedded_module_deep_links_preserve_query_and_hash(self):
+        self.assertIn("function updateAddress(path,moduleQuery,moduleHash)", self.runtime)
+        self.assertIn("frameUrl.searchParams.append(key,value)", self.runtime)
+        self.assertIn("frameUrl.hash=moduleHash||''", self.runtime)
+        self.assertIn("params.get('omega_module_query')||''", self.runtime)
+        self.assertIn("preserveEmbeddedNavigation", self.runtime)
 
     def test_dynamic_labels_use_text_content_not_html_injection(self):
         self.assertIn("node.textContent=textValue", self.runtime)

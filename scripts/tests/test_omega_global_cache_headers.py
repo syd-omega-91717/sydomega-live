@@ -19,6 +19,7 @@ class OmegaGlobalCacheHeaders(unittest.TestCase):
         source = HEADERS.read_text(encoding="utf-8")
         for path in (
             "/omega-platform-experience-v4.css",
+            "/omega-platform-experience-v5.css",
             "/omega-domain-hubs.js",
             "/omega-domain-hub.css",
         ):

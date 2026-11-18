@@ -86,6 +86,14 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("classList.add('omega-embedded')", self.bootstrap)
         self.assertIn("omega-domain-hubs.js?v=20261118-hubs-v1", self.bootstrap)
 
+    def test_embedded_navigation_keeps_same_origin_routes_inside_the_frame(self):
+        self.assertIn("preserveEmbeddedNavigation", self.runtime)
+        self.assertIn("url.origin!==window.location.origin", self.runtime)
+        self.assertIn("url.searchParams.set('omega_embed','1')", self.runtime)
+        self.assertIn("target.toLowerCase()!=='_self'", self.runtime)
+        self.assertIn("document.addEventListener('click'", self.runtime)
+        self.assertIn("document.addEventListener('submit'", self.runtime)
+
     def test_embedded_layout_preserves_existing_auth_visibility_gates(self):
         self.assertNotIn("body.omega-embedded .shell{display:", self.styles)
         self.assertNotIn("body.omega-embedded .main,\nbody.omega-embedded main,\nbody.omega-embedded .page,\nbody.omega-embedded #main-content{display:", self.styles)

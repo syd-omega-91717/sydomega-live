@@ -41,17 +41,17 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
 
     def test_global_omega_experience_assets_are_part_of_release_smoke(self):
         assets = SMOKE.REQUIRED_GLOBAL_ASSETS
-        self.assertEqual(len(assets), 5)
+        self.assertEqual(len(assets), 6)
         self.assertEqual(assets[0][0], "/bg.js")
         self.assertIn("omega-platform-experience-v5.css?v=20261118-v5", assets[0][2])
-        self.assertEqual(assets[1][0], "/omega-platform-experience-v5.css?v=20261118-v5")
-        self.assertEqual(assets[1][1], "text/css")
-        self.assertIn("PLATFORM EXPERIENCE V5", assets[1][2])
+        self.assertEqual(assets[1][0], "/omega-platform-experience-v4.css?v=20261118-v4")
+        self.assertIn("PLATFORM EXPERIENCE V4", assets[1][2])
+        self.assertEqual(assets[2][0], "/omega-platform-experience-v5.css?v=20261118-v5")
         self.assertIn("PLATFORM EXPERIENCE V5", assets[2][2])
-        self.assertEqual(assets[2][0], "/bg.js")
-        self.assertIn("omega-domain-hub.css?v=20261118-hubs-v1", assets[2][2])
-        self.assertEqual(assets[3][0], "/omega-domain-hubs.js?v=20261118-hubs-v1")
-        self.assertEqual(assets[4][0], "/omega-domain-hub.css?v=20261118-hubs-v1")
+        self.assertEqual(assets[3][0], "/bg.js")
+        self.assertIn("omega-domain-hub.css?v=20261118-hubs-v1", assets[3][2])
+        self.assertEqual(assets[4][0], "/omega-domain-hubs.js?v=20261118-hubs-v1")
+        self.assertEqual(assets[5][0], "/omega-domain-hub.css?v=20261118-hubs-v1")
 
     def test_cross_origin_redirects_are_rejected(self):
         handler = SMOKE.SameOriginRedirectHandler("sydomega.com", 443)

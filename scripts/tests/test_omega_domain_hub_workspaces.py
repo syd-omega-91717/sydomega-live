@@ -32,6 +32,16 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         for path in expected:
             self.assertTrue((ROOT / path).is_file(), path)
 
+    def test_every_hub_page_has_a_supported_workspace_mount_root(self):
+        for hub in self.matrix["hubs"]:
+            page = (ROOT / hub["path"]).read_text(encoding="utf-8")
+            self.assertRegex(
+                page,
+                r"<main[^>]*>|class=[\"'][^\"']*(?:main|page-shell|page)[^\"']*[\"']",
+                hub["path"],
+            )
+        self.assertIn("main.main,main,.main,.page-shell,.page", self.runtime)
+
     def test_197_specialist_routes_are_embedded_without_deleting_legacy_paths(self):
         hubs = {hub["path"] for hub in self.matrix["hubs"]}
         children = [

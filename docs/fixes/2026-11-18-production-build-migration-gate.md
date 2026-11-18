@@ -1,0 +1,9 @@
+### Cloudflare production migration parity gate (2026-11-18)
+
+**Why.** Cloudflare Pages is Git-connected and builds every `main` push independently of GitHub release-readiness checks. The release-readiness workflow correctly blocked an unapplied migration, but the Cloudflare integration still deployed the main commit. Supabase then applied the migration through its GitHub integration. This exposed a deployment-order race: a frontend can reach production before the database migration it depends on is provider-applied.
+
+**Fix.** Added `scripts/production-migration-gate.py`, a standard-library-only fail-closed check that compares versioned source migration files, `remote-migrations.json`, and `pending-migrations.json`. It blocks production builds for pending, unregistered, duplicate, malformed, or source/provider-divergent migration states. `scripts/vercel-build.sh` runs it only when Cloudflare sets `CF_PAGES_BRANCH=main`, so PR branch previews remain available. The manual Cloudflare fallback explicitly sets the production branch marker. Vercel production promotion runs the same gate before pulling production settings. The repository deployment rules now document that the Cloudflare Git integration does not wait for GitHub checks.
+
+**Verification.** Unit tests cover exact parity, registered pending migrations, unregistered source migrations, provider-only versions, duplicate versions, malformed registries, and the Cloudflare/Vercel wiring. This PR must pass CI, static contracts, Cloudflare branch preview, and production artifact validation before merge. No production configuration or migration is changed by this PR.
+
+**Boundary.** This gate validates the checked-in provider snapshot; it does not query Supabase from the Cloudflare build environment. The strict authenticated provider-ledger check remains in the GitHub release-readiness workflow. PR previews intentionally bypass the production-only gate.

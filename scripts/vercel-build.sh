@@ -2,6 +2,13 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# Cloudflare Pages Git integration deploys main independently of GitHub checks.
+# Enforce source/provider/pending migration parity before any production build;
+# branch previews remain available while a migration is under review.
+if [[ "${CF_PAGES_BRANCH:-}" == "main" ]]; then
+  python3 scripts/production-migration-gate.py
+fi
+
 printf '\nΩ VERCEL STATIC BUILD — COMPLETE SURFACE\n'
 printf '%s\n' '────────────────────────────────────────────────────────'
 

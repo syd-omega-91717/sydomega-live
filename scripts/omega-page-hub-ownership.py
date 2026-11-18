@@ -37,6 +37,23 @@ HUBS = {
     "achieve": "achieve.html",
     "media": "media.html",
 }
+PROTECTED_HUB_BY_STEM = {
+    "account": "profile.html",
+    "kyc": "profile.html",
+    "payments": "vault.html",
+    "subscriptions": "vault.html",
+    "wallet": "invest.html",
+    "portfolio": "invest.html",
+    "treasury": "invest.html",
+    "privacy": "govern.html",
+    "security": "profile.html",
+    "settings": "profile.html",
+    "control-center": "govern.html",
+    "control-plane": "govern.html",
+    "graph-admin": "intel.html",
+    "approvals": "intel.html",
+    "contracts": "services.html",
+}
 SPECIAL = {
     "404", "500", "offline", "maintenance", "login", "signup",
     # Keep security, identity, legal, financial and owner-control lifecycles
@@ -89,6 +106,7 @@ def main() -> int:
             "path": path,
             "navigation_section": section,
             "candidate_hub": hub,
+            "protected_hub": PROTECTED_HUB_BY_STEM.get(stem),
             "classification": state,
             "rationale": reason,
             "contract_authority": page.get("authority", "UNVERIFIED"),

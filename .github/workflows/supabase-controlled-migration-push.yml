@@ -84,6 +84,28 @@ jobs:
               if "grant " in sql.lower():
                   sys.exit("Privilege changes are not allowed in the API-key compatibility migration.")
               print(f"Validated replay-safe API-key metadata compatibility migration: {file.name}")
+          elif version == "20261118120000":
+              import hashlib
+              expected_sha256 = "dbc051dc7a59d22a28732ec263f8a5e7f4d4848b8c29410188c667a74ea7226a"
+              actual_sha256 = hashlib.sha256(sql.encode("utf-8")).hexdigest()
+              if actual_sha256 != expected_sha256:
+                  sys.exit("Publication attachment migration bytes differ from the reviewed production migration.")
+              required = (
+                  "create unique index if not exists storage_files_id_owner_unique",
+                  "add column if not exists content_file_id uuid",
+                  "foreign key (content_file_id, user_id)",
+                  "references public.storage_files (id, owner_id)",
+                  "on delete set null (content_file_id)",
+                  "content_file_id is null or (user_id is not null and file_path is null)",
+              )
+              missing = [marker for marker in required if marker not in sql.lower()]
+              if missing:
+                  sys.exit(f"Publication attachment migration is missing owner-binding controls: {missing!r}")
+              forbidden = ("drop table", "drop column", "truncate", "delete from", "grant ")
+              present = [marker for marker in forbidden if marker in sql.lower()]
+              if present:
+                  sys.exit(f"Unexpected destructive or privilege-changing operation detected: {present!r}")
+              print(f"Validated owner-bound, backward-compatible publication attachment migration: {file.name}")
           elif version == "20261118090000":
               required = (
                   "revoke update on table public.media_reservations from public, anon, authenticated",

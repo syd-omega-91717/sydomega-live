@@ -41,8 +41,8 @@
       return {
         id: id,
         title: 'Cloudflare Pages production',
-        status: 'REVIEW_REQUIRED',
-        note: 'Cloudflare Pages is the declared production host. This repository status remains BLOCKED until the production release workflow supplies matching manifest, headers, route and rollback evidence.',
+        status: 'BLOCKED',
+        note: 'Cloudflare Pages is the declared production host. This domain remains BLOCKED until the production release workflow supplies matching manifest, headers, route and rollback evidence.',
         evidence: Array.isArray(domain.evidence_required) ? domain.evidence_required : []
       };
     }

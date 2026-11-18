@@ -3247,6 +3247,10 @@ setTimeout(function(){
 (function(){
   var head=document.head||document.documentElement;
   if(!head) return;
+  var path=(window.location.pathname.split('/').pop()||'index.html').toLowerCase();
+  var embedded=new URLSearchParams(window.location.search).get('omega_embed')==='1';
+  var hubPaths=['dashboard.html','profile.html','ascend.html','cosmos.html','vault.html','order.html','life.html','services.html','intel.html','sovereign-ai.html','govern.html','invest.html','achieve.html','media.html'];
+  if(!embedded && hubPaths.indexOf(path)===-1) return;
   function loadHubScript(){
     if(document.getElementById('omega-domain-hubs-js')) return;
     var script=document.createElement('script');

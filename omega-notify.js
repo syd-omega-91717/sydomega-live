@@ -107,9 +107,11 @@
   }
 
   function restorePanelFocus(){
-    if(_notifTrigger && _notifTrigger.isConnected){_notifTrigger.focus();return;}
-    var badge=document.getElementById('omega-notif-badge');
-    if(badge && badge.style.display!=='none')badge.focus();
+    if(_notifTrigger && _notifTrigger.isConnected && _notifTrigger.style.display!=='none'){
+      _notifTrigger.focus();return;
+    }
+    var main=document.getElementById('main-content')||document.querySelector('main');
+    if(main){if(!main.hasAttribute('tabindex'))main.setAttribute('tabindex','-1');main.focus();}
   }
 
   function togglePanel(){

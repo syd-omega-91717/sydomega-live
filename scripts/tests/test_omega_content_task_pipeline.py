@@ -148,6 +148,8 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("create policy media_reservations_insert", migration.lower())
         self.assertNotIn("for all to authenticated", migration.lower())
         self.assertIn("auth.jwt()->>'aal'", migration)
+        self.assertIn("from public.platform_owners po where po.user_id = auth.uid()", migration.lower())
+        self.assertLess(migration.lower().index("from public.platform_owners po where po.user_id = auth.uid()"), migration.lower().index("auth.jwt()->>'aal'"))
         self.assertIn("'aal2_required'", migration)
         self.assertIn("'invalid_status_transition'", migration)
         self.assertIn("insert into public.omega_platform_events", migration.lower())

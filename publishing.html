@@ -111,6 +111,7 @@
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};
 var userId=null;
 
 window.setTab=setTab;
@@ -295,7 +296,7 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/upload.js"></script>
+<script type="module" src="/upload.js"></script>
 <script src="/omega-content-tasks.js"></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

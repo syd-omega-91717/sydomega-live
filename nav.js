@@ -395,7 +395,7 @@
     try{
       if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return rawHref;
       var url=new URL(rawHref,window.location.href);
-      if(url.origin!==window.location.origin) return rawHref;
+      if(url.origin!==window.location.origin || url.pathname===window.location.pathname) return rawHref;
       var file=url.pathname.split('/').pop()||'';
       if(!file.toLowerCase().endsWith('.html')) return rawHref;
       var modulePath=url.pathname.replace(/^\/+/, '');

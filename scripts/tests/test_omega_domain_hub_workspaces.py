@@ -37,7 +37,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         }
         for path, heading in expected.items():
             page = (ROOT / path).read_text(encoding="utf-8")
-            self.assertRegex(page, r"<h1[^>]*>\\s*" + re.escape(heading) + r"\\s*</h1>", path)
+            self.assertRegex(page, r"<h1[^>]*>\s*" + re.escape(heading) + r"\s*</h1>", path)
 
     def test_global_visual_experience_v5_covers_platform_surfaces(self):
         for selector in (

@@ -5,7 +5,7 @@ var MAX=50*1024*1024;
 function task(state,data){return {task_type:'content_asset',state:state,truth_state:data&&data.truth_state||'UNAVAILABLE',data:data||null};}
 async function client(){
   if(root.OmegaSB&&typeof root.OmegaSB.get==='function')return await root.OmegaSB.get();
-  return root.supabaseClient||null;
+  return root.__omegaSb||root.supabaseClient||null;
 }
 async function session(sb){
   if(!sb||!sb.auth)return null;

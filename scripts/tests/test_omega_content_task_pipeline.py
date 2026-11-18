@@ -112,6 +112,22 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("attachPrivateCampaignDownload(d,q.file_path)", page)
         self.assertNotIn("getPublicUrl(", page)
 
+    def test_owner_reservation_review_download_is_private_owner_scoped_and_short_lived(self):
+        page = (ROOT / "approvals.js").read_text()
+        start = page.index("function attachReservationDownload")
+        end = page.index("async function loadAudit()", start)
+        queue = page[start:end]
+        self.assertIn("row.file_path", queue)
+        self.assertIn("path.startsWith(row.user_id+'/')", queue)
+        self.assertIn("parts.length!==2", queue)
+        self.assertIn("createSignedUrl(path,300,{download:true})", queue)
+        self.assertIn("window.open('about:blank','_blank')", queue)
+        self.assertIn("tab.location.replace(result.data.signedUrl)", queue)
+        self.assertIn("status.textContent='Private download link expires in 5 minutes.'", queue)
+        self.assertNotIn("getPublicUrl(", queue)
+        self.assertNotIn("innerHTML", queue)
+        self.assertIn("where public.is_platform_owner()", (ROOT / "supabase/migrations/0012_omega_marketing.sql").read_text())
+
     def test_legacy_publication_upload_compensates_only_definitive_database_rejections(self):
         page = (ROOT / "publishing.html").read_text()
         self.assertIn("COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED", page)

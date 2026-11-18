@@ -111,8 +111,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("url.origin!==window.location.origin", self.runtime)
         self.assertIn("url.searchParams.set('omega_embed','1')", self.runtime)
         self.assertIn("target.toLowerCase()!=='_self'", self.runtime)
-        self.assertIn("document.addEventListener('click'", self.runtime)
-        self.assertIn("document.addEventListener('submit'", self.runtime)
+        self.assertIn("window.addEventListener('click'", self.runtime)
+        self.assertIn("window.addEventListener('submit'", self.runtime)
         self.assertIn("link.hasAttribute('onclick')", self.runtime)
         self.assertIn("form.hasAttribute('onsubmit')", self.runtime)
 

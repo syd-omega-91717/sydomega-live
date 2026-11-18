@@ -1,4 +1,4 @@
-"""The dock, its tooltips and the phone drawer group 16 canonical sections into 10 visible doors.
+"""The dock, its tooltips and the phone drawer group 16 canonical sections into 9 visible doors.
 
 Only the grouping changed (nav.js GROUPS). PS, SECTIONS, OmegaAxis, the full launcher, search and the owner deck
 still use the 16 sections, so every page keeps its accent and URL. These tests keep the grouping honest:
@@ -9,7 +9,7 @@ import re
 import unittest
 
 SRC = (pathlib.Path(__file__).resolve().parents[2] / "nav.js").read_text(encoding="utf-8")
-DOORS = {"command", "identity", "ascend", "cosmos", "order", "vault", "life", "intel", "govern", "sovereign"}
+DOORS = {"command", "identity", "ascend", "cosmos", "order", "vault", "intel", "govern", "sovereign"}
 
 
 def section_keys():
@@ -22,7 +22,7 @@ def group_of():
 
 
 class NavEightDoors(unittest.TestCase):
-    def test_sixteen_sections_resolve_to_ten_visible_doors(self):
+    def test_sixteen_sections_resolve_to_nine_visible_doors(self):
         keys = section_keys()
         self.assertEqual(len(keys), 16)
         g = group_of()

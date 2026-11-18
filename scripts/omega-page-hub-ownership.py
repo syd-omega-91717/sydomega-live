@@ -114,7 +114,7 @@ def main() -> int:
         "classification_counts": dict(sorted(counts.items())),
         "navigation_duplicate_keys": duplicate_keys,
         "unresolved_count": sum(count for key, count in counts.items() if key in {"AMBIGUOUS", "UNMAPPED", "UNMAPPED_SECTION"}),
-        "merge_policy": "No page may be merged, redirected, or deleted from this matrix alone. Verify unique tasks, scripts, data sources, authorization, RLS, events, failure paths, accessibility, responsive behavior, and production parity first.",
+        "merge_policy": "Only CANDIDATE_MERGE_PANEL routes are eligible for the user-facing domain workspace layer. Sensitive identity, legal, financial, authentication and owner-control routes remain separate. No page may be deleted or redirected from this matrix alone; verify unique tasks, scripts, data sources, authorization, RLS, events, failure paths, accessibility, responsive behavior and production parity first.",
         "hubs": [{"section": section, "path": path} for section, path in HUBS.items()],
         "pages": rows,
     }

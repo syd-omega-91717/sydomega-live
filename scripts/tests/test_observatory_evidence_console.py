@@ -22,9 +22,9 @@ class ObservatoryEvidenceConsoleTests(unittest.TestCase):
         self.assertIn("snapshot timestamp is not encoded", SCRIPT.lower())
 
     def test_cloudflare_replaces_stale_vercel_gate_as_review_required(self):
-        self.assertIn("id === 'vercel_production'", SCRIPT)
+        self.assertIn("id === 'cloudflare_production'", SCRIPT)
         self.assertIn("status: 'REVIEW_REQUIRED'", SCRIPT)
-        self.assertIn("current repository declares Cloudflare Pages as production", SCRIPT)
+        self.assertIn("Cloudflare Pages is the declared production host", SCRIPT)
 
     def test_unknown_status_fails_closed(self):
         self.assertIn("if (!STATUS[status]) status = 'UNVERIFIED';", SCRIPT)

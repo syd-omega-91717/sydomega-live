@@ -3290,3 +3290,18 @@ setTimeout(function(){
     style.addEventListener('error',loadHubScript,{once:true});
   }
 })();
+
+
+/* Ω PLATFORM EXPERIENCE V5 — append after page styles for a visible, consistent final art direction. */
+(function(){
+  var id='omega-platform-experience-v5-css';
+  function inject(){
+    if(document.getElementById(id)) return;
+    var link=document.createElement('link');
+    link.id=id;link.rel='stylesheet';link.type='text/css';
+    link.href='/omega-platform-experience-v5.css?v=20261118-v5';
+    (document.body||document.head||document.documentElement).appendChild(link);
+  }
+  if(document.body) inject();
+  else document.addEventListener('DOMContentLoaded',inject,{once:true});
+})();

@@ -14296,7 +14296,9 @@
         "page_source": "sovereign-core.html",
         "source_content_audited": true,
         "script_evidence": [
-          "/bg.js"
+          "/bg.js",
+          "/omega-morph.js",
+          "/omega-sovereign-core.js"
         ],
         "data_evidence": "UNVERIFIED",
         "capability_registry_matches": [],

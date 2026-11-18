@@ -12,7 +12,7 @@ The console visualizes config/omega-production-10-10-evidence-gate.json as a rep
 - Source values are displayed as repository declarations.
 - PASS, PARTIAL, PENDING, and BLOCKED are preserved.
 - Unknown statuses fail closed to UNVERIFIED.
-- The existing vercel_production gate is not presented as a Cloudflare production verdict. It is relabelled Cloudflare production proof and shown as REVIEW REQUIRED because the current README identifies Cloudflare Pages as production while the gate is Vercel-specific.
+- The canonical gate is keyed to Cloudflare Pages production and remains BLOCKED until the Cloudflare production verification workflow proves the exact release SHA, both canonical aliases, CSP/HSTS, core routes and rollback readiness.
 - The source does not encode a snapshot timestamp; the interface says so.
 - The console never writes to Supabase and never changes the existing uptime or SLO fields.
 

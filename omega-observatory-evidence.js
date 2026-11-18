@@ -37,12 +37,12 @@
     var id = String(domain && domain.id || 'unknown');
     var status = String(domain && domain.status || 'UNVERIFIED').toUpperCase();
     var title = id.replace(/_/g, ' ');
-    if (id === 'vercel_production') {
+    if (id === 'cloudflare_production') {
       return {
         id: id,
-        title: 'Cloudflare production proof',
-        status: 'REVIEW_REQUIRED',
-        note: 'The source gate is Vercel-specific, while the current repository declares Cloudflare Pages as production. Reconcile the gate with the actual provider before treating this as a deployment verdict.',
+        title: 'Cloudflare Pages production',
+        status: 'BLOCKED',
+        note: 'Cloudflare Pages is the declared production host. This domain remains BLOCKED until the production release workflow supplies matching manifest, headers, route and rollback evidence.',
         evidence: Array.isArray(domain.evidence_required) ? domain.evidence_required : []
       };
     }

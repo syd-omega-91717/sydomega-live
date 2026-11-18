@@ -135,11 +135,8 @@
       return row.classification==='CANDIDATE_MERGE_PANEL' &&
         row.candidate_hub===hub.path && row.path!==hub.path;
     }).sort(function(a,b){return String(a.page_id).localeCompare(String(b.page_id));});
-    var systemRouteStems={'404':1,'500':1,offline:1,maintenance:1,login:1,signup:1};
     var protectedRows=(matrix.pages||[]).filter(function(row){
-      var stem=String(row.path||'').replace(/\.html$/i,'');
-      return row.classification==='KEEP_SEPARATE' &&
-        row.navigation_section===hub.section && !systemRouteStems[stem];
+      return row.classification==='KEEP_SEPARATE' && row.protected_hub===hub.path;
     }).sort(function(a,b){return String(a.page_id).localeCompare(String(b.page_id));});
     var root=document.querySelector('main.main,main,.main,.page-shell,.page');
     if(!root || (!rows.length && !protectedRows.length) || root.querySelector('.omega-domain-hub-console')) return;

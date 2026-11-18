@@ -36,6 +36,11 @@ class GovernedPublicationContentReferenceTests(unittest.TestCase):
                          r"^omega-content://storage_files/[0-9a-f-]{36}$")
         self.assertFalse((ROOT / "supabase/migrations/20261118120000_governed_publication_attachments.sql").exists())
 
+    def test_upload_helper_shares_the_page_supabase_client(self):
+        page = (ROOT / "publishing.html").read_text()
+        self.assertIn("window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}}", page)
+        self.assertIn('<script type="module" src="/upload.js"></script>', page)
+
     def test_content_helper_uses_existing_authenticated_page_client(self):
         helper = (ROOT / "omega-content-tasks.js").read_text()
         self.assertIn("root.__omegaSb||root.supabaseClient||null", helper)

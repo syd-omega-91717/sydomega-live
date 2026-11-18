@@ -86,7 +86,7 @@ class ContentTaskPipelineTests(unittest.TestCase):
 
     def test_publishing_archive_uses_owner_scoped_short_lived_signed_attachment_delivery(self):
         page = (ROOT / "publishing.html").read_text()
-        self.assertIn("select('kind,title,body,file_path,created_at,status')", page)
+        self.assertIn("select('kind,title,body,file_path,content_file_id,created_at,status')", page)
         self.assertIn("function isOwnedUploadPath(path)", page)
         self.assertIn("path.indexOf(userId+'/')!==0", page)
         self.assertIn("attachPrivateDownload(d.querySelector('.work-body'),w.file_path)", page)
@@ -166,12 +166,12 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("insert into public.omega_platform_events", workflow)
         self.assertIn("This controlled workflow is not authorized for the requested migration version.", workflow)
 
-    def test_legacy_publication_upload_compensates_only_definitive_database_rejections(self):
+    def test_governed_publication_upload_preserves_registered_content_after_parent_failure(self):
         page = (ROOT / "publishing.html").read_text()
-        self.assertIn("COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED", page)
-        self.assertIn("/^[0-9A-Z]{5}$/.test(code)", page)
-        self.assertIn("OmegaStorage.remove('uploads',filePath)", page)
-        self.assertIn("FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED", page)
+        self.assertIn("OmegaContentTasks.upload(fEl.files[0]", page)
+        self.assertIn("content_file_id:contentFileId", page)
+        self.assertIn("REGISTERED PRIVATE FILE WAS PRESERVED", page)
+        self.assertNotIn("OmegaStorage.remove('uploads',filePath)", page)
 
     def test_legacy_marketing_upload_compensates_only_definitive_database_rejections(self):
         page = (ROOT / "marketing.html").read_text()

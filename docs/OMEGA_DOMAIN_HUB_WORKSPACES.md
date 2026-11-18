@@ -36,6 +36,7 @@ This produces 14 consolidated workspaces with 43 routes intentionally left outsi
 ## Runtime behavior
 
 - `omega-domain-hubs.js` reads `config/omega-page-hub-ownership.json` only on the 14 canonical hub routes.
+- Cloudflare Pages revalidates `bg.js` and `nav.js`; versioned v4 and hub CSS/JS assets are immutable, preventing stale bootstrap code from masking a deployment.
 - Specialist content loads only after an explicit user action; the iframe is lazy and same-origin.
 - Embedded navigation preserves `omega_embed=1` for same-origin module links and form destinations.
 - The embedded view hides duplicate global navigation and floating chrome, but does not override the original page's authentication visibility gates.

@@ -367,7 +367,7 @@
     if(door.merged&&pathOf(sec.href)!==here){addSep();var up=document.createElement('a');up.className='ow-link';up.href=sec.href;up.textContent=sec.label;rail.appendChild(up);}
     if(pathOf(door.href)!==here){addSep();var cur=document.createElement('span');cur.className='ow-current';cur.textContent=(door.merged&&pathOf(sec.href)===here)?sec.label:currentLabel;rail.appendChild(cur);}
     compactSub(sec).filter(function(x){return x[0]!==dp;}).slice(0,5).forEach(function(x){
-      var a=document.createElement('a');a.className='ow-link';a.href=x[2];a.textContent=x[1];rail.appendChild(a);
+      var a=document.createElement('a');a.className='ow-link';a.href=workspaceHref(x[2]);a.textContent=x[1];rail.appendChild(a);
     });
     main.insertBefore(rail,main.firstChild);
   }
@@ -377,6 +377,67 @@
      Specialized pages remain addressable/deep-linkable, but only the highest-value
      jobs appear in the persistent dock. This turns hundreds of files into a small
      set of workspaces without deleting capabilities. */
+  /* Route specialist navigation through its owning domain workspace.
+     The original route remains available inside the workspace and by direct URL. */
+  var HUB_ROUTE_BY_SECTION={
+    command:'/dashboard.html',identity:'/profile.html',ascend:'/ascend.html',
+    cosmos:'/cosmos.html',vault:'/vault.html',order:'/order.html',life:'/life.html',
+    services:'/services.html',intel:'/intel.html',arena:'/sovereign-ai.html',
+    govern:'/govern.html',invest:'/invest.html',achieve:'/achieve.html',media:'/media.html'
+  };
+  var HUB_SEPARATE_ROUTE_STEMS={
+    '404':1,'500':1,offline:1,maintenance:1,login:1,signup:1,
+    account:1,approvals:1,'contracts':1,'control-center':1,'control-plane':1,'graph-admin':1,
+    kyc:1,payments:1,portfolio:1,privacy:1,security:1,settings:1,
+    subscriptions:1,terms:1,treasury:1,wallet:1
+  };
+  function isEmbeddedView(){
+    if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return true;
+    if(window.parent===window) return false;
+    try{
+      var hubParentPaths=Object.keys(HUB_ROUTE_BY_SECTION).map(function(key){return HUB_ROUTE_BY_SECTION[key];});
+      return window.parent.location.origin===window.location.origin &&
+        hubParentPaths.indexOf(window.parent.location.pathname)!==-1;
+    }catch(error){return false;}
+  }
+  function workspaceHref(rawHref){
+    try{
+      if(isEmbeddedView()) return rawHref;
+      var url=new URL(rawHref,window.location.href);
+      if(url.origin!==window.location.origin || url.pathname===window.location.pathname) return rawHref;
+      var file=url.pathname.split('/').pop()||'';
+      if(!file.toLowerCase().endsWith('.html')) return rawHref;
+      var modulePath=url.pathname.replace(/^\/+/, '');
+      var stem=file.replace(/\.html$/i,'').toLowerCase();
+      if(HUB_SEPARATE_ROUTE_STEMS[stem]) return rawHref;
+      var section=PS[stem];
+      var hub=HUB_ROUTE_BY_SECTION[section];
+      if(!hub || url.pathname===hub) return rawHref;
+      var target=new URL(hub,window.location.origin);
+      target.searchParams.set('omega_module',modulePath);
+      var forwarded=new URLSearchParams(url.search);
+      ['omega_embed','omega_hub','omega_module','omega_module_query'].forEach(function(key){forwarded.delete(key);});
+      if(forwarded.toString()) target.searchParams.set('omega_module_query',forwarded.toString());
+      target.hash=url.hash;
+      return target.pathname+target.search+target.hash;
+    }catch(error){return rawHref;}
+  }
+  (function installWorkspaceRouteHandler(){
+    if(isEmbeddedView()) return;
+    window.addEventListener('click',function(event){
+      if(event.defaultPrevented || event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var link=event.target && event.target.closest ? event.target.closest('a[href]') : null;
+      if(!link || link.hasAttribute('download') || link.hasAttribute('onclick')) return;
+      if(link.target && link.target.toLowerCase()!=='_self') return;
+      var raw=link.getAttribute('href')||'';
+      if(!raw || /^(#|javascript:|mailto:|tel:|data:|blob:)/i.test(raw)) return;
+      var routed=workspaceHref(raw);
+      if(routed===raw) return;
+      event.preventDefault();
+      window.location.assign(routed);
+    },false);
+  })();
+
   var COMPACT={
     /* search, notifications, chatbot and points are folded: the dashboard's
        command dock (omega-command-dock.js) carries ASK / POINTS / INBOX, and
@@ -493,7 +554,7 @@
     compactSub(sec).forEach(function(sub){
       var on=sub[0]===dp;
       var own=sub[3]==='owner';
-      h+='<a class="tip-a'+(on?' tip-on':'')+(own?' tip-owner':'')+'" href="'+sub[2]+'"'+(own?' style="display:none"':'')+'>';
+      h+='<a class="tip-a'+(on?' tip-on':'')+(own?' tip-owner':'')+'" href="'+workspaceHref(sub[2])+'"'+(own?' style="display:none"':'')+'>';
       h+='<div class="tip-dot" style="background:'+(on?sec.col:'rgba(133,131,123,0.4)')+'"></div>';
       h+=sub[1]+'</a>';
     });
@@ -893,7 +954,7 @@
         for(var sj=0;sj<sec.sub.length;sj++){
           var item=sec.sub[sj];
           if(item[3]==='owner'&&!window.__omegaIsOwner) continue;
-          all.push({key:item[0],label:item[1],href:item[2],section:sec.label,icon:sec.icon,col:sec.col});
+          all.push({key:item[0],label:item[1],href:workspaceHref(item[2]),section:sec.label,icon:sec.icon,col:sec.col});
         }
       }
       var seen={};
@@ -906,7 +967,8 @@
       try{
         var r=JSON.parse(localStorage.getItem('omega:recent-pages')||'[]');
         if(Array.isArray(r))r.forEach(function(p){
-          var hit=all.filter(function(x){return x.href===p.href;})[0];
+          var recentHref=workspaceHref(p.href);
+          var hit=all.filter(function(x){return x.href===recentHref;})[0];
           if(hit && !recent.some(function(x){return x.href===hit.href;}))
             recent.push({key:hit.key,label:'RECENT · '+hit.label,href:hit.href,section:hit.section,icon:'↺',col:'#00E5FF'});
         });
@@ -916,7 +978,8 @@
           var k=localStorage.key(li)||'';
           if(k.indexOf('omega:pinned:')!==0||localStorage.getItem(k)!=='1')continue;
           var href=k.slice('omega:pinned:'.length);
-          var hit2=all.filter(function(x){return x.href===href;})[0];
+          var pinnedHref=workspaceHref(href);
+          var hit2=all.filter(function(x){return x.href===pinnedHref;})[0];
           if(hit2)pinned.push({key:hit2.key,label:'PINNED · '+hit2.label,href:hit2.href,section:hit2.section,icon:'★',col:'#C9A84C'});
         }
       }catch(e){}

@@ -37,7 +37,32 @@ HUBS = {
     "achieve": "achieve.html",
     "media": "media.html",
 }
-SPECIAL = {"404", "500", "offline", "maintenance", "login", "signup"}
+PROTECTED_HUB_BY_STEM = {
+    "account": "profile.html",
+    "kyc": "profile.html",
+    "terms": "govern.html",
+    "payments": "vault.html",
+    "subscriptions": "vault.html",
+    "wallet": "invest.html",
+    "portfolio": "invest.html",
+    "treasury": "invest.html",
+    "privacy": "govern.html",
+    "security": "profile.html",
+    "settings": "profile.html",
+    "control-center": "govern.html",
+    "control-plane": "govern.html",
+    "graph-admin": "intel.html",
+    "approvals": "intel.html",
+    "contracts": "services.html",
+}
+SPECIAL = {
+    "404", "500", "offline", "maintenance", "login", "signup",
+    # Keep security, identity, legal, financial and owner-control lifecycles
+    # as independent top-level routes until their dedicated contracts are proven.
+    "account", "approvals", "contracts", "control-center", "control-plane", "graph-admin",
+    "kyc", "payments", "portfolio", "privacy", "security", "settings",
+    "subscriptions", "terms", "treasury", "wallet",
+}
 AMBIGUOUS_SECTIONS = {"archive"}
 SECTION_HUB = {**HUBS, "archive": None}
 
@@ -63,7 +88,7 @@ def main() -> int:
         section = values.get(stem)
         if stem in SPECIAL:
             state, hub = "KEEP_SEPARATE", None
-            reason = "System or authentication route; retain a dedicated route."
+            reason = "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified."
         elif section in AMBIGUOUS_SECTIONS:
             state, hub = "AMBIGUOUS", None
             reason = "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review."
@@ -82,6 +107,7 @@ def main() -> int:
             "path": path,
             "navigation_section": section,
             "candidate_hub": hub,
+            "protected_hub": PROTECTED_HUB_BY_STEM.get(stem),
             "classification": state,
             "rationale": reason,
             "contract_authority": page.get("authority", "UNVERIFIED"),
@@ -107,7 +133,7 @@ def main() -> int:
         "classification_counts": dict(sorted(counts.items())),
         "navigation_duplicate_keys": duplicate_keys,
         "unresolved_count": sum(count for key, count in counts.items() if key in {"AMBIGUOUS", "UNMAPPED", "UNMAPPED_SECTION"}),
-        "merge_policy": "No page may be merged, redirected, or deleted from this matrix alone. Verify unique tasks, scripts, data sources, authorization, RLS, events, failure paths, accessibility, responsive behavior, and production parity first.",
+        "merge_policy": "Only CANDIDATE_MERGE_PANEL routes are eligible for the user-facing domain workspace layer. Sensitive identity, legal, financial, authentication and owner-control routes remain separate. No page may be deleted or redirected from this matrix alone; verify unique tasks, scripts, data sources, authorization, RLS, events, failure paths, accessibility, responsive behavior and production parity first.",
         "hubs": [{"section": section, "path": path} for section, path in HUBS.items()],
         "pages": rows,
     }

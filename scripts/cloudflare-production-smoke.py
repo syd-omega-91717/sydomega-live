@@ -23,11 +23,27 @@ CLOUDFLARE_EMAIL_PLACEHOLDER_PATH = "/cdn-cgi/l/email-protection"
 ALLOWED_HOST_SUFFIXES = (".sydomega.com", ".pages.dev", ".vercel.app")
 ALLOWED_ROOT_HOSTS = {"sydomega.com"}
 REQUIRED_GLOBAL_ASSETS = (
-    ("/bg.js", "javascript", "omega-platform-experience-v4.css?v=20261118-v4"),
+    ("/bg.js", "javascript", "omega-platform-experience-v5.css?v=20261118-v5"),
     (
         "/omega-platform-experience-v4.css?v=20261118-v4",
         "text/css",
         "Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V4",
+    ),
+    (
+        "/omega-platform-experience-v5.css?v=20261118-v5",
+        "text/css",
+        "Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V5",
+    ),
+    ("/bg.js", "javascript", "omega-domain-hub.css?v=20261118-hubs-v1"),
+    (
+        "/omega-domain-hubs.js?v=20261118-hubs-v1",
+        "javascript",
+        "Ω SYD OMEGA 91717 — DOMAIN HUB WORKSPACES",
+    ),
+    (
+        "/omega-domain-hub.css?v=20261118-hubs-v1",
+        "text/css",
+        "Ω SYD OMEGA 91717 — DOMAIN HUB WORKSPACES",
     ),
 )
 

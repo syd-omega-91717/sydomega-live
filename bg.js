@@ -46,6 +46,25 @@
   };
 })();
 
+/* Embedded specialist modules render inside their domain hub without a second
+   global navigation shell. Set this before the visual/navigation modules run. */
+(function(){
+  try{
+    var embedded=new URLSearchParams(window.location.search).get('omega_embed')==='1';
+    var hubPaths=['dashboard.html','profile.html','ascend.html','cosmos.html','vault.html','order.html','life.html','services.html','intel.html','sovereign-ai.html','govern.html','invest.html','achieve.html','media.html'];
+    if(!embedded && window.parent!==window){
+      try{
+        var parentPath=(window.parent.location.pathname.split('/').pop()||'').toLowerCase();
+        embedded=window.parent.location.origin===window.location.origin && hubPaths.indexOf(parentPath)!==-1;
+      }catch(error){}
+    }
+    if(embedded){
+      document.documentElement.classList.add('omega-embedded');
+      if(document.body) document.body.classList.add('omega-embedded');
+    }
+  }catch(error){}
+})();
+
 /* -- SHARED HTML ESCAPER, BOOTSTRAP COPY (omega-esc.js is the canonical definition) ---------------------
    Modules call window.OmegaEsc at CALL time and fail closed to '' when it is missing, so it must exist before
    any of them. Scripts injected below run in no fixed order, and a page's own module tags can run before this
@@ -3229,4 +3248,60 @@ setTimeout(function(){
   experience.href='/omega-platform-experience-v4.css?v=20261118-v4';
   experience.type='text/css';
   head.appendChild(experience);
+})();
+
+/* Ω DOMAIN HUB WORKSPACES — load the embedded-route shell on canonical hubs.
+   CSS is loaded first; the script is appended only after the stylesheet resolves. */
+(function(){
+  var head=document.head||document.documentElement;
+  if(!head) return;
+  var path=(window.location.pathname.split('/').pop()||'index.html').toLowerCase();
+  var embedded=new URLSearchParams(window.location.search).get('omega_embed')==='1';
+  var hubPaths=['dashboard.html','profile.html','ascend.html','cosmos.html','vault.html','order.html','life.html','services.html','intel.html','sovereign-ai.html','govern.html','invest.html','achieve.html','media.html'];
+  if(!embedded && window.parent!==window){
+    try{
+      var parentPath=(window.parent.location.pathname.split('/').pop()||'').toLowerCase();
+      embedded=window.parent.location.origin===window.location.origin && hubPaths.indexOf(parentPath)!==-1;
+    }catch(error){}
+  }
+  if(!embedded && hubPaths.indexOf(path)===-1) return;
+  function loadHubScript(){
+    if(document.getElementById('omega-domain-hubs-js')) return;
+    var script=document.createElement('script');
+    script.id='omega-domain-hubs-js';
+    script.src='/omega-domain-hubs.js?v=20261118-hubs-v1';
+    script.async=false;
+    head.appendChild(script);
+  }
+  var style=document.getElementById('omega-domain-hub-css');
+  if(!style){
+    style=document.createElement('link');
+    style.id='omega-domain-hub-css';
+    style.rel='stylesheet';
+    style.href='/omega-domain-hub.css?v=20261118-hubs-v1';
+    style.type='text/css';
+    style.onload=loadHubScript;
+    style.onerror=loadHubScript;
+    head.appendChild(style);
+  }else if(style.sheet){
+    loadHubScript();
+  }else{
+    style.addEventListener('load',loadHubScript,{once:true});
+    style.addEventListener('error',loadHubScript,{once:true});
+  }
+})();
+
+
+/* Ω PLATFORM EXPERIENCE V5 — append after page styles for a visible, consistent final art direction. */
+(function(){
+  var id='omega-platform-experience-v5-css';
+  function inject(){
+    if(document.getElementById(id)) return;
+    var link=document.createElement('link');
+    link.id=id;link.rel='stylesheet';link.type='text/css';
+    link.href='/omega-platform-experience-v5.css?v=20261118-v5';
+    (document.body||document.head||document.documentElement).appendChild(link);
+  }
+  if(document.body) inject();
+  else document.addEventListener('DOMContentLoaded',inject,{once:true});
 })();

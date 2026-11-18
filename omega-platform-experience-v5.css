@@ -1,0 +1,211 @@
+/* Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V5
+   Final global art-direction layer for the existing static platform.
+   Applies to every route through bg.js; additive presentation only.
+   No route, data, action, authorization, or application-state ownership. */
+
+:root{
+  --omega-v5-void:#020206;
+  --omega-v5-panel:rgba(8,11,19,.84);
+  --omega-v5-panel-raised:rgba(15,18,29,.94);
+  --omega-v5-gold:#C9A84C;
+  --omega-v5-gold-light:#E8C97A;
+  --omega-v5-cyan:#00E5FF;
+  --omega-v5-crimson:#8B0000;
+  --omega-v5-line:rgba(201,168,76,.28);
+  --omega-v5-line-cyan:rgba(0,229,255,.2);
+  --omega-v5-depth:0 22px 60px rgba(0,0,0,.46);
+  --omega-v5-glow:0 0 26px rgba(201,168,76,.13),0 0 44px rgba(0,229,255,.045);
+  --omega-v5-ease:cubic-bezier(.2,.75,.25,1);
+}
+
+/* Global atmosphere: orbital light, fine instrument grid, deep black canvas. */
+html{background:var(--omega-v5-void)}
+body.omega-simple{
+  color:#E9EAF0;
+  background-color:var(--omega-v5-void);
+  background-image:
+    radial-gradient(ellipse 62% 34% at 50% -10%,rgba(201,168,76,.16),transparent 72%),
+    radial-gradient(ellipse 42% 40% at 100% 38%,rgba(0,229,255,.085),transparent 76%),
+    radial-gradient(ellipse 34% 44% at 0% 82%,rgba(139,0,0,.075),transparent 78%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 48px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.009) 0,rgba(255,255,255,.009) 1px,transparent 1px,transparent 48px);
+  background-attachment:fixed;
+}
+body.omega-simple :where(.shell,.ohz-shell,.page-shell,.main,main,.page,#omega-main-content){
+  background-color:transparent;
+}
+/* Legacy inline widths remain bounded by the viewport on small screens. */
+body.omega-simple :where(.shell,.ohz-shell,.page-shell,.main,main,.page,#omega-main-content) [style*="width:"]{
+  max-width:100%;
+}
+
+/* Navigation: consistent dark instrument surfaces with gold/cyan state cues. */
+body.omega-simple :where(.topbar,header.topbar,#omega-topbar,.ohz-topbar){
+  background:linear-gradient(180deg,rgba(3,5,11,.98),rgba(8,10,17,.88));
+  border-bottom:1px solid var(--omega-v5-line);
+  box-shadow:0 12px 38px rgba(0,0,0,.36),inset 0 -1px rgba(255,255,255,.035);
+  -webkit-backdrop-filter:blur(22px) saturate(145%);
+  backdrop-filter:blur(22px) saturate(145%);
+}
+body.omega-simple :where(.side,#omega-side){
+  background:linear-gradient(180deg,rgba(3,5,11,.99),rgba(7,9,16,.96) 55%,rgba(3,5,11,.99));
+  border-right:1px solid rgba(201,168,76,.24);
+  box-shadow:14px 0 42px rgba(0,0,0,.28),inset -1px 0 rgba(255,255,255,.025);
+}
+body.omega-simple :where(.side a,#omega-side a,.topbar a,.ohz-navlink){
+  transition:color .2s var(--omega-v5-ease),background .2s var(--omega-v5-ease),border-color .2s var(--omega-v5-ease),filter .2s var(--omega-v5-ease);
+}
+body.omega-simple :where(.side a.active,#omega-side a.active,.side a[aria-current="page"],#omega-side a[aria-current="page"],.ohz-navlink.active){
+  color:var(--omega-v5-gold-light);
+  border-color:rgba(201,168,76,.4);
+  background:linear-gradient(90deg,rgba(201,168,76,.13),rgba(0,229,255,.035));
+  box-shadow:inset 2px 0 var(--omega-v5-gold),0 0 22px rgba(201,168,76,.07);
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple :where(.side a,#omega-side a,.topbar a,.ohz-navlink):hover{
+    color:var(--omega-v5-gold-light);
+    filter:drop-shadow(0 0 9px rgba(201,168,76,.24));
+  }
+}
+
+/* Hero compositions: one cinematic visual language across all workspaces. */
+body.omega-simple :where(.hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,.omega-figure,.omega-domain-hub-console){
+  position:relative;
+  isolation:isolate;
+  border:1px solid var(--omega-v5-line);
+  border-radius:16px;
+  background:
+    radial-gradient(ellipse 65% 115% at 0% 0%,rgba(201,168,76,.14),transparent 72%),
+    radial-gradient(ellipse 54% 105% at 100% 100%,rgba(0,229,255,.085),transparent 72%),
+    linear-gradient(145deg,rgba(15,18,28,.94),rgba(4,6,12,.94));
+  box-shadow:var(--omega-v5-depth),var(--omega-v5-glow),inset 0 1px rgba(255,255,255,.065);
+  overflow:hidden;
+}
+body.omega-simple :where(.hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,.omega-figure,.omega-domain-hub-console)::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.5;
+  background:linear-gradient(112deg,transparent 0 42%,rgba(232,201,122,.055) 49%,transparent 56% 100%);
+  transform:translateX(-18%);
+  animation:omega-v5-hero-sweep 12s ease-in-out infinite;
+}
+
+/* Content cards: visible glass depth at rest, controlled lift on interaction. */
+body.omega-simple :where(
+  .card,.native-card,.native-grid>.native-card,.kpi,.kpi-card,.panel,.module,.module-card,
+  .tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,
+  .franchise-card,.game-card,.sg-item,.ustat,.stat-card,.credential-card,.social-card,
+  .omega-domain-hub-module,.omega-domain-hub-protected-link
+){
+  border-color:var(--omega-v5-line);
+  border-radius:13px;
+  background-color:var(--omega-v5-panel);
+  box-shadow:0 16px 42px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.045);
+  transition:transform .24s var(--omega-v5-ease),border-color .24s var(--omega-v5-ease),box-shadow .24s var(--omega-v5-ease),background-color .24s ease;
+}
+body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.sg-item,.ustat,.stat-card,.credential-card,.social-card){
+  background-image:
+    radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(201,168,76,.09),transparent 72%),
+    linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.006) 60%,rgba(0,229,255,.025));
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card):hover{
+    transform:translateY(-4px);
+    border-color:rgba(232,201,122,.58);
+    box-shadow:0 24px 58px rgba(0,0,0,.44),0 0 28px rgba(201,168,76,.12),inset 0 1px rgba(255,255,255,.075);
+  }
+}
+
+/* Typography and data hierarchy. */
+body.omega-simple :where(main,.main,.page,.page-shell,#omega-main-content) h1,
+body.omega-simple :where(.hero-title,.title,.oeh-title,.ow-title,.ohz-display,.omega-domain-page-title){
+  color:var(--omega-v5-gold-light);
+  font-family:var(--D,"Cinzel Decorative","Cinzel",serif);
+  font-weight:700;
+  letter-spacing:.035em;
+  line-height:1.13;
+  text-wrap:balance;
+  text-shadow:0 0 28px rgba(201,168,76,.18);
+}
+body.omega-simple .omega-domain-page-title{margin:0 0 14px;font-size:clamp(1.3rem,2.5vw,2.15rem)}
+body.omega-simple :where(.sechead,.section-title,.hero-eyebrow,.kicker,.ohz-kicker,.ow-kicker){
+  color:var(--omega-v5-cyan);
+  text-shadow:0 0 18px rgba(0,229,255,.2);
+  letter-spacing:.15em;
+}
+body.omega-simple :where(.lede,.hero-sub,.hero-title,.card-desc,.description,.muted,.text-muted){
+  line-height:1.68;
+}
+body.omega-simple :where(.kpi-n,.kpi-value,.ustat-val,.sgi-val,.ss-val,.metric-value){
+  color:var(--omega-v5-gold-light);
+  text-shadow:0 0 16px rgba(201,168,76,.13);
+  font-variant-numeric:tabular-nums;
+}
+
+/* Buttons, tabs and filters. */
+body.omega-simple :where(.btn,.btn-fill,.btn-gold,.btn-cyan,.btn-crim,.btn-primary,.btn-secondary,.ohz-btn,.ohz-dock-btn,.ltab,.tab-btn,.mtab-btn,.filter-btn){
+  border-radius:9px;
+  transition:transform .18s var(--omega-v5-ease),box-shadow .18s var(--omega-v5-ease),border-color .18s ease,background-color .18s ease,color .18s ease;
+}
+body.omega-simple :where(.btn-fill,.btn-gold,.btn-primary,.ohz-btn:not(.ohz-btn-sm)){
+  box-shadow:0 8px 24px rgba(201,168,76,.12),inset 0 1px rgba(255,255,255,.12);
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple :where(.btn,.btn-fill,.btn-gold,.btn-cyan,.btn-crim,.btn-primary,.btn-secondary,.ohz-btn,.ohz-dock-btn,.ltab,.tab-btn,.mtab-btn,.filter-btn):hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(0,0,0,.3),0 0 18px rgba(201,168,76,.12);
+  }
+}
+body.omega-simple :where(input,select,textarea,.inp,.field){
+  border-color:rgba(201,168,76,.25);
+  border-radius:8px;
+  background-color:rgba(3,5,10,.82);
+}
+body.omega-simple :where(input,select,textarea,.inp,.field):focus-visible{
+  outline:2px solid rgba(0,229,255,.7);
+  outline-offset:2px;
+  border-color:var(--omega-v5-cyan);
+  box-shadow:0 0 0 4px rgba(0,229,255,.09);
+}
+body.omega-simple :where(a,button,[role="button"],input,select,textarea):focus-visible{
+  outline:2px solid var(--omega-v5-cyan);
+  outline-offset:3px;
+}
+
+/* Signature graphics: controlled orbital breathing, not distracting motion. */
+body.omega-simple :where(.emblem-orb,.omega-emblem,.omega-orb,.omega-orbital-mark,.omega-figure-seal,.ohz-brand-mark){
+  filter:drop-shadow(0 0 16px rgba(201,168,76,.2));
+  animation:omega-v5-orbit-breathe 7.2s ease-in-out infinite;
+}
+body.omega-simple :where(.osc-stage,.omega-world-portal,.ow-world){
+  border-color:rgba(201,168,76,.22);
+  box-shadow:inset 0 0 54px rgba(0,229,255,.035),0 18px 48px rgba(0,0,0,.28);
+}
+@keyframes omega-v5-orbit-breathe{
+  0%,100%{filter:drop-shadow(0 0 12px rgba(201,168,76,.16))}
+  50%{filter:drop-shadow(0 0 22px rgba(0,229,255,.2)) drop-shadow(0 0 12px rgba(201,168,76,.15))}
+}
+@keyframes omega-v5-hero-sweep{
+  0%,18%{transform:translateX(-22%);opacity:.18}
+  55%{opacity:.52}
+  82%,100%{transform:translateX(22%);opacity:.12}
+}
+
+/* Small screens retain readable type, touch targets and horizontal data access. */
+@media(max-width:760px){
+  body.omega-simple :where(.hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,.omega-figure,.omega-domain-hub-console){border-radius:12px}
+  body.omega-simple :where(.btn,.btn-fill,.btn-gold,.btn-cyan,.btn-crim,.btn-primary,.btn-secondary,.ohz-btn,.ohz-dock-btn){min-height:44px}
+  body.omega-simple :where(.tbl-wrap,.table-wrap,.data-table,.table-container){max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+}
+@media(prefers-reduced-motion:reduce){
+  body.omega-simple :where(.emblem-orb,.omega-emblem,.omega-orb,.omega-orbital-mark,.omega-figure-seal,.ohz-brand-mark){animation:none}
+  body.omega-simple :where(.hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,.omega-figure,.omega-domain-hub-console)::after{animation:none}
+  body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card,.btn,.btn-fill,.btn-gold,.btn-cyan,.btn-crim,.btn-primary,.btn-secondary,.ohz-btn,.ohz-dock-btn,.ltab,.tab-btn,.mtab-btn,.filter-btn){transition:none}
+  body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card,.btn,.btn-fill,.btn-gold,.btn-cyan,.btn-crim,.btn-primary,.btn-secondary,.ohz-btn,.ohz-dock-btn,.ltab,.tab-btn,.mtab-btn,.filter-btn):hover{transform:none}
+}
+@media(forced-colors:active){
+  body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card){border:1px solid CanvasText;box-shadow:none}
+}

@@ -1,0 +1,82 @@
+/* Ω SYD OMEGA 91717 — DOMAIN HUB WORKSPACES
+   One persistent domain page with embedded legacy module views.
+   The original routes remain valid for bookmarks, permissions and integrations.
+*/
+.omega-domain-hub-console{
+  position:relative;z-index:2;margin:0 0 24px;padding:clamp(16px,2.4vw,28px);
+  border:1px solid rgba(201,168,76,.28);border-radius:16px;
+  background:
+    radial-gradient(ellipse 70% 90% at 0% 0%,rgba(201,168,76,.11),transparent 70%),
+    radial-gradient(ellipse 55% 80% at 100% 100%,rgba(0,229,255,.075),transparent 72%),
+    linear-gradient(145deg,rgba(12,14,22,.96),rgba(5,7,13,.92));
+  box-shadow:0 22px 58px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(18px) saturate(130%);backdrop-filter:blur(18px) saturate(130%);
+}
+.omega-domain-hub-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.omega-domain-hub-kicker{font:600 11px/1.4 "Courier Prime",monospace;letter-spacing:.24em;color:#00E5FF;text-transform:uppercase}
+.omega-domain-hub-title{margin:5px 0 6px;color:#E8C97A;font:700 clamp(20px,2.6vw,30px)/1.15 "Cinzel",serif;letter-spacing:.035em}
+.omega-domain-hub-copy{max-width:760px;margin:0;color:rgba(232,236,245,.72);font:500 14px/1.65 "Rajdhani",sans-serif}
+.omega-domain-hub-count{flex:0 0 auto;min-width:112px;padding:10px 14px;border:1px solid rgba(0,229,255,.2);border-radius:10px;background:rgba(0,229,255,.045);text-align:center}
+.omega-domain-hub-count strong{display:block;color:#E8C97A;font:700 25px/1 "Rajdhani",sans-serif}
+.omega-domain-hub-count span{display:block;margin-top:5px;color:rgba(232,236,245,.6);font:10px/1.3 "Courier Prime",monospace;letter-spacing:.14em}
+.omega-domain-hub-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 12px}
+.omega-domain-hub-search{flex:1 1 260px;min-width:180px;min-height:44px;padding:10px 14px;border:1px solid rgba(201,168,76,.26);border-radius:9px;background:rgba(1,3,8,.72);color:#F3F0E8;font:500 15px "Rajdhani",sans-serif}
+.omega-domain-hub-search:focus{outline:2px solid rgba(0,229,255,.7);outline-offset:2px;border-color:#00E5FF}
+.omega-domain-hub-action{min-height:42px;padding:9px 14px;border:1px solid rgba(201,168,76,.34);border-radius:8px;background:linear-gradient(145deg,rgba(201,168,76,.13),rgba(201,168,76,.035));color:#E8C97A;font:600 11px "Courier Prime",monospace;letter-spacing:.12em;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.omega-domain-hub-action:hover{transform:translateY(-2px);border-color:rgba(232,201,122,.72);box-shadow:0 8px 22px rgba(201,168,76,.12)}
+.omega-domain-hub-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:9px}
+.omega-domain-hub-module{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px;padding:10px 12px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(0,229,255,.018));color:#E8EAF0;text-align:left;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.omega-domain-hub-module:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.46);background:linear-gradient(135deg,rgba(201,168,76,.09),rgba(0,229,255,.035))}
+.omega-domain-hub-module[aria-pressed=true]{border-color:rgba(0,229,255,.58);background:linear-gradient(135deg,rgba(0,229,255,.09),rgba(201,168,76,.06))}
+.omega-domain-hub-module-name{font:600 14px/1.3 "Rajdhani",sans-serif;letter-spacing:.035em}
+.omega-domain-hub-module-path{display:block;margin-top:3px;color:rgba(232,236,245,.43);font:10px/1.3 "Courier Prime",monospace}
+.omega-domain-hub-module-arrow{flex:0 0 auto;color:#C9A84C;font:16px/1 "Courier Prime",monospace}
+.omega-domain-hub-results-note{margin:10px 0 0;color:rgba(232,236,245,.48);font:11px/1.5 "Courier Prime",monospace}
+.omega-domain-hub-view{display:none;margin-top:18px;padding-top:16px;border-top:1px solid rgba(201,168,76,.18)}
+.omega-domain-hub-view.is-open{display:block}
+.omega-domain-hub-view-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.omega-domain-hub-view-title{color:#E8C97A;font:600 14px/1.3 "Rajdhani",sans-serif;letter-spacing:.08em}
+.omega-domain-hub-view-links{display:flex;align-items:center;gap:12px}
+.omega-domain-hub-open-link{color:#00E5FF;font:11px "Courier Prime",monospace;text-decoration:none}
+.omega-domain-hub-open-link:hover{text-decoration:underline}
+.omega-domain-hub-frame{display:block;width:100%;height:680px;min-height:520px;border:1px solid rgba(0,229,255,.2);border-radius:12px;background:#020206;box-shadow:0 16px 42px rgba(0,0,0,.32)}
+.omega-domain-hub-root.omega-domain-hub-view-active>:not(.omega-domain-hub-console){display:none!important}
+body.omega-hub-view-active .omega-domain-hub-console{margin-bottom:0}
+body.omega-embedded{display:block!important;min-height:0!important;overflow-x:hidden!important;background:#020206!important}
+body.omega-embedded #omega-side,
+body.omega-embedded #omega-topbar,
+body.omega-embedded #omega-ticker-strip,
+body.omega-embedded #omega-bottom-stack,
+body.omega-embedded #ofb-btn,
+body.omega-embedded #osh-btn,
+body.omega-embedded #omega-voice-btn,
+body.omega-embedded #omega-controls-dock,
+body.omega-embedded #omega-page-door,
+body.omega-embedded .omega-page-door,
+body.omega-embedded #omega-toasts,
+body.omega-embedded #omega-command-palette{display:none!important}
+body.omega-embedded .shell{min-height:0!important;width:100%!important;max-width:none!important}
+body.omega-embedded .main,
+body.omega-embedded main,
+body.omega-embedded .page,
+body.omega-embedded #main-content{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:14px!important}
+body.omega-embedded .main>*,
+body.omega-embedded main>*{max-width:100%}
+.omega-domain-hub-protected{margin-top:16px;padding-top:14px;border-top:1px solid rgba(139,0,0,.32)}
+.omega-domain-hub-protected-title{margin-bottom:10px;color:rgba(232,201,122,.82);font:600 10px/1.4 "Courier Prime",monospace;letter-spacing:.18em}
+.omega-domain-hub-protected-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:9px}
+.omega-domain-hub-protected-link{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px;padding:10px 12px;border:1px solid rgba(139,0,0,.28);border-radius:9px;background:linear-gradient(135deg,rgba(139,0,0,.09),rgba(255,255,255,.018));color:#E8EAF0;text-decoration:none;transition:border-color .18s ease,transform .18s ease}
+.omega-domain-hub-protected-link:hover{transform:translateY(-2px);border-color:rgba(232,201,122,.58)}
+ .omega-domain-hub-protected-tag{flex:0 0 auto;color:#E8C97A;font:9px "Courier Prime",monospace;letter-spacing:.1em}
+.omega-domain-hub-module:focus-visible,.omega-domain-hub-action:focus-visible,.omega-domain-hub-protected-link:focus-visible,.omega-domain-hub-open-link:focus-visible{outline:2px solid #00E5FF;outline-offset:3px}
+@media(max-width:760px){
+  .omega-domain-hub-console{padding:14px;border-radius:12px}
+  .omega-domain-hub-count{min-width:84px;padding:8px 10px}
+  .omega-domain-hub-results{grid-template-columns:1fr}
+  .omega-domain-hub-frame{height:70vh;min-height:440px}
+  body.omega-embedded .main,body.omega-embedded main,body.omega-embedded .page{padding:10px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .omega-domain-hub-action,.omega-domain-hub-module,.omega-domain-hub-protected-link{transition:none}
+  .omega-domain-hub-action:hover,.omega-domain-hub-module:hover,.omega-domain-hub-protected-link:hover{transform:none}
+}

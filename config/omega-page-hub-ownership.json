@@ -10,8 +10,8 @@
   "hub_count": 14,
   "classification_counts": {
     "AMBIGUOUS": 10,
-    "CANDIDATE_MERGE_PANEL": 199,
-    "KEEP_SEPARATE": 18,
+    "CANDIDATE_MERGE_PANEL": 198,
+    "KEEP_SEPARATE": 19,
     "UNMAPPED": 14
   },
   "navigation_duplicate_keys": {},
@@ -652,9 +652,9 @@
       "page_id": "contracts",
       "path": "contracts.html",
       "navigation_section": "services",
-      "candidate_hub": "services.html",
-      "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "candidate_hub": null,
+      "classification": "KEEP_SEPARATE",
+      "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [

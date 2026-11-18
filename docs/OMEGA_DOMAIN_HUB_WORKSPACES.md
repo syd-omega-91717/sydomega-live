@@ -21,7 +21,7 @@ The current 241-page contract registry maps the platform into 14 persistent doma
 | Achieve | `achieve.html` |
 | Media | `media.html` |
 
-The ownership matrix identifies 199 candidate hub routes. Fourteen are the hub routes themselves; the remaining **185 specialist routes** are exposed inside their owning workspace.
+The ownership matrix identifies 199 candidate hub routes. Fourteen are the hub routes themselves; the remaining **184 specialist routes** are exposed inside their owning workspace.
 
 ## Route treatment
 
@@ -31,7 +31,7 @@ The ownership matrix identifies 199 candidate hub routes. Fourteen are the hub r
 - **10 AMBIGUOUS routes:** remain independent until identity, ownership and access contracts are reviewed.
 - **14 UNMAPPED routes:** remain independent until a valid domain owner is evidenced.
 
-This produces 14 consolidated workspaces with 42 routes intentionally left outside the current consolidation scope. The original 241 HTML routes are retained for bookmarks, deep links, integrations and rollback; this phase reduces the user-facing workspace count, not the physical file count.
+This produces 14 consolidated workspaces with 43 routes intentionally left outside the current consolidation scope. The original 241 HTML routes are retained for bookmarks, deep links, integrations and rollback; this phase reduces the user-facing workspace count, not the physical file count.
 
 ## Runtime behavior
 

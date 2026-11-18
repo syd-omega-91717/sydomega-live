@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 241,
+  "page_count": 242,
   "contracts": [
     {
       "page_id": "404",
@@ -2650,64 +2650,6 @@
       }
     },
     {
-      "page_id": "command-center",
-      "path": "command-center.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Command Center",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::command-center::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "command-center.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-morph.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 1
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
       "page_id": "command",
       "path": "command.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -2737,6 +2679,64 @@
       "responsive": "UNVERIFIED",
       "traceability": {
         "page_source": "command.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-morph.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "command-center",
+      "path": "command-center.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; Command Center",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::command-center::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "command-center.html",
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
@@ -5710,66 +5710,6 @@
       }
     },
     {
-      "page_id": "game-origins-bridge",
-      "path": "game-origins-bridge.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; TWO-HAND BRIDGE",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::game-origins-bridge::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "game-origins-bridge.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-bridge-game.js",
-          "/omega-bridge-logic.js",
-          "/omega-morph.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 8,
-          "forms": 0,
-          "inputs": 0,
-          "links": 1
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
       "page_id": "game-origins",
       "path": "game-origins.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -5823,6 +5763,66 @@
           "forms": 0,
           "inputs": 0,
           "links": 0
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "game-origins-bridge",
+      "path": "game-origins-bridge.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; TWO-HAND BRIDGE",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::game-origins-bridge::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "game-origins-bridge.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-bridge-game.js",
+          "/omega-bridge-logic.js",
+          "/omega-morph.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 8,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -6257,6 +6257,76 @@
       }
     },
     {
+      "page_id": "graph",
+      "path": "graph.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; CONSTELLATION GRAPH",
+      "data_sources": {
+        "supabase_tables": [
+          "profiles"
+        ],
+        "supabase_rpcs": []
+      },
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::graph::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "graph.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-analytics-init.js",
+          "/omega-morph.js",
+          "/omega-speed-insights-init.js"
+        ],
+        "data_evidence": {
+          "supabase_tables": [
+            "profiles"
+          ],
+          "supabase_rpcs": []
+        },
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 9,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
       "page_id": "graph-admin",
       "path": "graph-admin.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -6634,76 +6704,6 @@
           "forms": 0,
           "inputs": 0,
           "links": 1
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
-      "page_id": "graph",
-      "path": "graph.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; CONSTELLATION GRAPH",
-      "data_sources": {
-        "supabase_tables": [
-          "profiles"
-        ],
-        "supabase_rpcs": []
-      },
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::graph::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "graph.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
-        ],
-        "data_evidence": {
-          "supabase_tables": [
-            "profiles"
-          ],
-          "supabase_rpcs": []
-        },
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 9,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
         },
         "media_evidence": {
           "images": 0,
@@ -8382,71 +8382,6 @@
       }
     },
     {
-      "page_id": "knowledge-loom",
-      "path": "knowledge-loom.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "Knowledge",
-      "primary_role": "Evidence graph",
-      "purpose": "Ω SYD OMEGA 91717 — Knowledge Loom",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::knowledge-loom::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "knowledge-loom.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/nav.js",
-          "/omega-knowledge-loom.js",
-          "/omega-morph.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": [
-          {
-            "domain": "Knowledge",
-            "primary_role": "Evidence graph"
-          }
-        ]
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 2,
-          "links": 0
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
       "page_id": "knowledge",
       "path": "knowledge.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -8511,6 +8446,71 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 0,
+          "links": 0
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "knowledge-loom",
+      "path": "knowledge-loom.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "Knowledge",
+      "primary_role": "Evidence graph",
+      "purpose": "Ω SYD OMEGA 91717 — Knowledge Loom",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::knowledge-loom::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "knowledge-loom.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/nav.js",
+          "/omega-knowledge-loom.js",
+          "/omega-morph.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": [
+          {
+            "domain": "Knowledge",
+            "primary_role": "Evidence graph"
+          }
+        ]
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 2,
           "links": 0
         },
         "media_evidence": {
@@ -14261,6 +14261,67 @@
       }
     },
     {
+      "page_id": "sovereign-core",
+      "path": "sovereign-core.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "Sovereign Command Core: a governed entry point to the platform's domains, Omega World, agent roster and operating principles.",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::sovereign-core::REVIEW",
+          "PAGE::sovereign-core::AUTHORIZATION",
+          "PAGE::sovereign-core::INTERACTION",
+          "PAGE::sovereign-core::RESPONSIVE"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED",
+        "UNAVAILABLE"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "sovereign-core.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 22
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
       "page_id": "sovereign-covenant",
       "path": "sovereign-covenant.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -14520,66 +14581,6 @@
       }
     },
     {
-      "page_id": "studio-library",
-      "path": "studio-library.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; STUDIO LIBRARY",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::studio-library::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "studio-library.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-animatic.js",
-          "/omega-morph.js",
-          "/omega-studio-library.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 1
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
       "page_id": "studio",
       "path": "studio.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -14642,6 +14643,66 @@
           "forms": 0,
           "inputs": 0,
           "links": 7
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
+      "page_id": "studio-library",
+      "path": "studio-library.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "&#937; SYD OMEGA 91717 &mdash; STUDIO LIBRARY",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::studio-library::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "studio-library.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-animatic.js",
+          "/omega-morph.js",
+          "/omega-studio-library.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
         },
         "media_evidence": {
           "images": 0,
@@ -16139,6 +16200,70 @@
       }
     },
     {
+      "page_id": "world",
+      "path": "world.html",
+      "contract_state": "EVIDENCE_CONTRACT",
+      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "workspace": "UNVERIFIED",
+      "domain": "UNVERIFIED",
+      "primary_role": "UNVERIFIED",
+      "purpose": "Ω SYD OMEGA 91717 — World",
+      "data_sources": "UNVERIFIED",
+      "capabilities": [
+        "UNVERIFIED"
+      ],
+      "tasks": {
+        "state": "OPEN_TASK",
+        "ids": [
+          "PAGE::world::REVIEW"
+        ]
+      },
+      "authorization": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ],
+      "asset_requirements": "UNVERIFIED",
+      "events": "UNVERIFIED",
+      "failure_paths": "UNVERIFIED",
+      "accessibility": "UNVERIFIED",
+      "responsive": "UNVERIFIED",
+      "traceability": {
+        "page_source": "world.html",
+        "source_content_audited": true,
+        "script_evidence": [
+          "/bg.js",
+          "/omega-achievement-evidence-chain.js",
+          "/omega-capability-provenance.js",
+          "/omega-legacy-constellation.js",
+          "/omega-morph.js",
+          "/omega-world-engine.js",
+          "/omega-world-progression.js",
+          "/omega-world-realtime.js"
+        ],
+        "data_evidence": "UNVERIFIED",
+        "capability_registry_matches": [],
+        "domain_candidates": []
+      },
+      "evidence": {
+        "filesystem_present": true,
+        "source_content_audited": true,
+        "source_audited_at": "CI_RUNTIME",
+        "method": "direct HTML source inspection",
+        "interactive_evidence": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 6
+        },
+        "media_evidence": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      }
+    },
+    {
       "page_id": "world-atlas",
       "path": "world-atlas.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -16247,70 +16372,6 @@
           "forms": 0,
           "inputs": 0,
           "links": 1
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
-      "page_id": "world",
-      "path": "world.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "Ω SYD OMEGA 91717 — World",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::world::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "world.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-achievement-evidence-chain.js",
-          "/omega-capability-provenance.js",
-          "/omega-legacy-constellation.js",
-          "/omega-morph.js",
-          "/omega-world-engine.js",
-          "/omega-world-progression.js",
-          "/omega-world-realtime.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 0,
-          "forms": 0,
-          "inputs": 0,
-          "links": 6
         },
         "media_evidence": {
           "images": 0,

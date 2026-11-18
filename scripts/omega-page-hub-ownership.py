@@ -37,7 +37,14 @@ HUBS = {
     "achieve": "achieve.html",
     "media": "media.html",
 }
-SPECIAL = {"404", "500", "offline", "maintenance", "login", "signup"}
+SPECIAL = {
+    "404", "500", "offline", "maintenance", "login", "signup",
+    # Keep security, identity, legal, financial and owner-control lifecycles
+    # as independent top-level routes until their dedicated contracts are proven.
+    "account", "approvals", "control-center", "control-plane", "graph-admin",
+    "kyc", "payments", "portfolio", "privacy", "security", "settings",
+    "subscriptions", "terms", "treasury", "wallet",
+}
 AMBIGUOUS_SECTIONS = {"archive"}
 SECTION_HUB = {**HUBS, "archive": None}
 
@@ -63,7 +70,7 @@ def main() -> int:
         section = values.get(stem)
         if stem in SPECIAL:
             state, hub = "KEEP_SEPARATE", None
-            reason = "System or authentication route; retain a dedicated route."
+            reason = "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified."
         elif section in AMBIGUOUS_SECTIONS:
             state, hub = "AMBIGUOUS", None
             reason = "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review."

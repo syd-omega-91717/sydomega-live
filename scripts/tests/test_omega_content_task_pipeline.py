@@ -144,6 +144,16 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("revoke all on function public.set_reservation_status(uuid, text)", migration.lower())
         self.assertIn("grant execute on function public.set_reservation_status(bigint, text) to authenticated", migration.lower())
 
+    def test_controlled_production_migration_workflow_allows_only_reviewed_reservation_security_migration(self):
+        workflow = (ROOT / ".github/workflows/supabase-controlled-migration-push.yml").read_text()
+        self.assertIn('elif version == "20261118090000":', workflow)
+        self.assertIn("confirm_production_apply", workflow)
+        self.assertIn("environment: supabase-production", workflow)
+        self.assertIn("revoke update on table public.media_reservations", workflow)
+        self.assertIn("private.set_reservation_status(p_id bigint, p_status text)", workflow)
+        self.assertIn("insert into public.omega_platform_events", workflow)
+        self.assertIn("This controlled workflow is not authorized for the requested migration version.", workflow)
+
     def test_legacy_publication_upload_compensates_only_definitive_database_rejections(self):
         page = (ROOT / "publishing.html").read_text()
         self.assertIn("COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED", page)

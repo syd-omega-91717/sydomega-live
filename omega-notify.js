@@ -12,6 +12,7 @@
   var _pollTimer=null;
   var _pollInFlight=false;
   var _pollStarted=false;
+  var _notifTrigger=null;
 
   /* No direct INSERT grant exists on public.notifications today -- only the
      five owner-gated SECURITY DEFINER trigger functions in
@@ -89,14 +90,12 @@
     var close=p.querySelector('.omega-notif-close');
     if(close)close.addEventListener('click',function(){
       p.remove();
-      var badge=document.getElementById('omega-notif-badge');
-      if(badge)badge.focus();
+      restorePanelFocus();
     });
     p.addEventListener('keydown',function(ev){
       if(ev.key==='Escape'){
         p.remove();
-        var badge=document.getElementById('omega-notif-badge');
-        if(badge)badge.focus();
+        restorePanelFocus();
       }
     });
     if(!document.getElementById('omega-notif-row-style')){
@@ -107,10 +106,17 @@
     return p;
   }
 
+  function restorePanelFocus(){
+    if(_notifTrigger && _notifTrigger.isConnected){_notifTrigger.focus();return;}
+    var badge=document.getElementById('omega-notif-badge');
+    if(badge && badge.style.display!=='none')badge.focus();
+  }
+
   function togglePanel(){
     var existing=document.getElementById('omega-notif-panel');
-    if(existing){existing.remove();return;}
+    if(existing){existing.remove();restorePanelFocus();return;}
     if(!window.__omegaSb){return;}
+    _notifTrigger=document.activeElement;
     window.__omegaSb.auth.getSession().then(function(r){
       var s=r.data&&r.data.session;if(!s)return;
       return window.__omegaSb.from('notifications').select('*').eq('user_id',s.user.id).order('created_at',{ascending:false}).limit(20);

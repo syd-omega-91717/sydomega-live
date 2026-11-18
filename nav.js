@@ -398,13 +398,14 @@
       if(url.origin!==window.location.origin) return rawHref;
       var file=url.pathname.split('/').pop()||'';
       if(!file.toLowerCase().endsWith('.html')) return rawHref;
+      var modulePath=url.pathname.replace(/^\\/+/, '');
       var stem=file.replace(/\.html$/i,'').toLowerCase();
       if(HUB_SEPARATE_ROUTE_STEMS[stem]) return rawHref;
       var section=PS[stem];
       var hub=HUB_ROUTE_BY_SECTION[section];
       if(!hub || url.pathname===hub) return rawHref;
       var target=new URL(hub,window.location.origin);
-      target.searchParams.set('omega_module',file);
+      target.searchParams.set('omega_module',modulePath);
       var forwarded=new URLSearchParams(url.search);
       ['omega_embed','omega_hub','omega_module','omega_module_query'].forEach(function(key){forwarded.delete(key);});
       if(forwarded.toString()) target.searchParams.set('omega_module_query',forwarded.toString());

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#020206">
+<title>Ω SYD OMEGA 91717 — Sovereign Command Core</title>
+<meta name="description" content="A spatial command environment for the SYD OMEGA sovereign platform.">
+<script src="/bg.js" defer></script>
+<style>
+/* Sovereign Command Core — page-local visual composition. Shared tokens and auth remain owned by the platform. */
+.sc{--sc-gold:#C9A84C;--sc-hot:#F0D98F;--sc-cyan:#00E5FF;--sc-muted:#A9A7A0;--sc-line:rgba(201,168,76,.24);--sc-glass:rgba(9,11,18,.82);color:#F1EFE8;max-width:1600px;margin:0 auto;padding:clamp(12px,2vw,28px);overflow:hidden}
+.sc *{box-sizing:border-box}
+.sc a{color:inherit;text-decoration:none}
+.sc button,.sc a{ -webkit-tap-highlight-color:transparent}
+.sc .sc-eyebrow{font:12px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.2em;text-transform:uppercase;color:var(--sc-cyan)}
+.sc .sc-heading{font:clamp(25px,4vw,46px)/1.08 var(--D,"Cinzel Decorative",serif);letter-spacing:.035em;color:var(--sc-hot);margin:0;text-shadow:0 0 28px rgba(201,168,76,.2)}
+.sc .sc-lede{font:clamp(15px,1.45vw,18px)/1.65 var(--R,Rajdhani,sans-serif);color:#D3D0C7;max-width:64ch;margin:12px 0 0}
+.sc .sc-topline{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:5px 2px 18px;border-bottom:1px solid rgba(201,168,76,.18)}
+.sc .sc-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.sc .sc-brandmark{width:44px;height:44px;display:grid;place-items:center;border:1px solid rgba(201,168,76,.6);border-radius:50%;font:30px/1 var(--D,"Cinzel Decorative",serif);color:var(--sc-hot);background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.18),rgba(201,168,76,.08) 38%,rgba(2,2,6,.96) 72%);box-shadow:0 0 30px rgba(201,168,76,.16),inset 0 0 18px rgba(201,168,76,.13);flex:0 0 auto}
+.sc .sc-brandname{font:14px/1.3 var(--M,"Courier Prime",monospace);letter-spacing:.16em;color:var(--sc-hot)}
+.sc .sc-brandsub{font:12px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.1em;color:var(--sc-muted);margin-top:3px}
+.sc .sc-clock{font:13px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.1em;color:#E9E3D2;text-align:right}
+.sc .sc-clock small{display:block;color:var(--sc-muted);font-size:12px}
+.sc .sc-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.03fr) minmax(300px,.97fr);gap:clamp(16px,3vw,42px);align-items:center;min-height:480px;margin:18px 0 22px;padding:clamp(20px,3vw,42px);border:1px solid rgba(201,168,76,.32);border-radius:20px;overflow:hidden;background:radial-gradient(ellipse 62% 80% at 85% 48%,rgba(0,229,255,.09),transparent 72%),radial-gradient(ellipse 70% 95% at 12% 0%,rgba(201,168,76,.16),transparent 68%),linear-gradient(135deg,rgba(29,25,18,.96),rgba(7,9,16,.97) 58%,rgba(4,7,13,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 24px 70px rgba(0,0,0,.42)}
+.sc .sc-hero:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.34;background-image:linear-gradient(rgba(201,168,76,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.09) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(90deg,black,transparent 90%)}
+.sc .sc-hero-copy{position:relative;z-index:2;max-width:660px}
+.sc .sc-kicker{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(0,229,255,.3);border-radius:99px;padding:7px 12px;background:rgba(0,229,255,.055);font:12px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:.14em;color:#A7F5FC;text-transform:uppercase;margin-bottom:22px}
+.sc .sc-kicker:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--sc-cyan);box-shadow:0 0 12px var(--sc-cyan)}
+.sc .sc-title{font:clamp(36px,6.5vw,76px)/.98 var(--D,"Cinzel Decorative",serif);letter-spacing:-.025em;color:var(--sc-hot);margin:0;text-shadow:0 0 42px rgba(201,168,76,.23)}
+.sc .sc-title span{display:block;color:#F6E7B5}
+.sc .sc-copy{font:clamp(16px,1.7vw,20px)/1.6 var(--R,Rajdhani,sans-serif);color:#D7D4CB;max-width:58ch;margin:22px 0 0}
+.sc .sc-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.sc .sc-action{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 18px;border:1px solid rgba(201,168,76,.45);border-radius:9px;background:linear-gradient(135deg,#D8B85C,#A98332);color:#100D06!important;font:12px/1.3 var(--M,"Courier Prime",monospace);letter-spacing:.12em;text-transform:uppercase;box-shadow:0 8px 28px rgba(201,168,76,.16);transition:transform .2s,box-shadow .2s}
+.sc .sc-action.sc-ghost{background:rgba(4,7,13,.52);color:var(--sc-hot)!important;border-color:rgba(201,168,76,.32);box-shadow:none}
+.sc .sc-action:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,.22)}
+.sc .sc-orbit-stage{position:relative;z-index:1;min-height:380px;display:grid;place-items:center;isolation:isolate}
+.sc .sc-orbit-stage:before{content:"";position:absolute;width:88%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.13),rgba(0,229,255,.045) 38%,transparent 68%);filter:blur(10px);z-index:-1}
+.sc .sc-orbit{position:absolute;width:min(92%,390px);aspect-ratio:1;border:1px solid rgba(201,168,76,.3);border-radius:50%;transform:rotate(-24deg);box-shadow:0 0 24px rgba(201,168,76,.06),inset 0 0 24px rgba(0,229,255,.035)}
+.sc .sc-orbit:before,.sc .sc-orbit:after{content:"";position:absolute;inset:12%;border:1px dashed rgba(0,229,255,.27);border-radius:50%;transform:rotate(58deg)}
+.sc .sc-orbit:after{inset:25%;border-style:solid;border-color:rgba(201,168,76,.18);transform:rotate(-52deg)}
+.sc .sc-orbit.sc-o2{width:min(72%,310px);transform:rotate(62deg);border-color:rgba(0,229,255,.23)}
+.sc .sc-orbit.sc-o3{width:min(54%,230px);transform:rotate(-8deg);border-style:dotted;border-color:rgba(201,168,76,.42)}
+.sc .sc-core{position:relative;width:clamp(138px,20vw,190px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 25%,rgba(255,255,255,.27),rgba(240,213,138,.18) 13%,rgba(201,168,76,.12) 28%,rgba(5,7,13,.97) 66%);border:1px solid rgba(240,213,138,.8);box-shadow:0 0 0 9px rgba(201,168,76,.045),0 0 42px rgba(201,168,76,.24),0 0 100px rgba(0,229,255,.1),inset 0 0 32px rgba(201,168,76,.18);font:clamp(74px,10vw,112px)/1 var(--D,"Cinzel Decorative",serif);color:var(--sc-hot);text-shadow:0 0 28px rgba(240,213,138,.55)}
+.sc .sc-node{position:absolute;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:1px solid rgba(201,168,76,.58);background:linear-gradient(145deg,rgba(38,33,23,.96),rgba(5,8,14,.98));color:var(--sc-hot);font:12px var(--M,"Courier Prime",monospace);box-shadow:0 0 24px rgba(201,168,76,.14)}
+.sc .sc-node.n1{top:8%;left:48%}.sc .sc-node.n2{right:4%;top:44%;border-color:rgba(0,229,255,.52);color:#A7F5FC}.sc .sc-node.n3{bottom:8%;left:47%}.sc .sc-node.n4{left:4%;top:44%}
+.sc .sc-orbit-caption{position:absolute;bottom:0;left:0;right:0;text-align:center;font:12px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.16em;color:#BDB6A2;text-transform:uppercase}
+.sc .sc-section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:34px 2px 14px;flex-wrap:wrap}
+.sc .sc-section-title{font:clamp(20px,2.8vw,28px)/1.2 var(--D,"Cinzel Decorative",serif);color:var(--sc-hot);margin:0}
+.sc .sc-section-note{font:12px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.12em;color:var(--sc-muted);text-transform:uppercase}
+.sc .sc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.sc .sc-module{position:relative;display:flex;flex-direction:column;min-height:150px;padding:18px;border:1px solid rgba(201,168,76,.22);border-radius:13px;background:radial-gradient(130% 120% at 0 0,rgba(201,168,76,.105),transparent 62%),linear-gradient(145deg,rgba(22,22,25,.96),rgba(7,10,17,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 12px 30px rgba(0,0,0,.22);transition:transform .22s,border-color .22s,box-shadow .22s}
+.sc .sc-module:hover,.sc .sc-module:focus-visible{transform:translateY(-4px);border-color:rgba(240,213,138,.62);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 18px 38px rgba(0,0,0,.34),0 0 24px rgba(201,168,76,.09);outline:none}
+.sc .sc-module:after{content:"↗";position:absolute;right:16px;top:14px;color:rgba(240,213,138,.68);font:18px var(--M,monospace)}
+.sc .sc-glyph{width:36px;height:36px;display:grid;place-items:center;border:1px solid rgba(201,168,76,.34);border-radius:10px;background:rgba(201,168,76,.07);color:var(--sc-hot);font:18px var(--D,serif);margin-bottom:16px}
+.sc .sc-module strong{font:16px/1.3 var(--D,"Cinzel Decorative",serif);letter-spacing:.025em;color:#F0DFAF}
+.sc .sc-module span:last-child{font:13px/1.55 var(--R,Rajdhani,sans-serif);color:#BDBAB1;margin-top:6px}
+.sc .sc-lower{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:14px;margin-top:14px}
+.sc .sc-panel{border:1px solid rgba(201,168,76,.23);border-radius:15px;padding:clamp(17px,2vw,24px);background:radial-gradient(100% 100% at 0 0,rgba(201,168,76,.09),transparent 65%),linear-gradient(145deg,rgba(17,18,23,.96),rgba(5,8,14,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 16px 38px rgba(0,0,0,.25)}
+.sc .sc-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.sc .sc-panel-head h3{font:19px/1.25 var(--D,"Cinzel Decorative",serif);color:var(--sc-hot);margin:0}
+.sc .sc-panel-head a{font:12px var(--M,monospace);letter-spacing:.1em;color:var(--sc-cyan);text-transform:uppercase}
+.sc .sc-agent-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sc .sc-agent{min-height:58px;display:flex;align-items:center;gap:9px;padding:9px;border:1px solid rgba(201,168,76,.16);border-radius:9px;background:rgba(255,255,255,.018);font:13px/1.35 var(--M,"Courier Prime",monospace);color:#E0D9C8}
+.sc .sc-agent i{font-style:normal;color:var(--sc-hot);font-size:17px}
+.sc .sc-principles{display:grid;gap:11px}
+.sc .sc-principle{display:flex;gap:12px;align-items:flex-start;color:#D2CEC3;font:14px/1.55 var(--R,Rajdhani,sans-serif)}
+.sc .sc-principle b{display:block;color:var(--sc-hot);font:12px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.12em;text-transform:uppercase}
+.sc .sc-principle em{font-style:normal;color:var(--sc-cyan);font:16px var(--D,serif);width:18px;flex:0 0 18px}
+.sc .sc-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:26px 2px 6px;padding:16px 0;border-top:1px solid rgba(201,168,76,.17);color:#A9A49A;font:12px/1.6 var(--M,"Courier Prime",monospace);letter-spacing:.08em}
+.sc .sc-footer strong{color:var(--sc-hot);font-weight:400}
+@media(max-width:900px){.sc .sc-hero{grid-template-columns:1fr;min-height:0}.sc .sc-hero-copy{max-width:760px}.sc .sc-orbit-stage{min-height:350px}.sc .sc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.sc{padding:10px}.sc .sc-topline{align-items:flex-start}.sc .sc-brandmark{width:40px;height:40px}.sc .sc-clock{font-size:12px}.sc .sc-hero{padding:20px 16px;border-radius:15px;gap:10px;margin-top:12px}.sc .sc-title{font-size:clamp(34px,11vw,54px)}.sc .sc-orbit-stage{min-height:290px}.sc .sc-orbit{width:min(92%,300px)}.sc .sc-orbit.sc-o2{width:min(72%,240px)}.sc .sc-orbit.sc-o3{width:min(54%,180px)}.sc .sc-node{width:40px;height:40px}.sc .sc-grid{grid-template-columns:1fr 1fr;gap:9px}.sc .sc-module{min-height:142px;padding:13px}.sc .sc-module strong{font-size:14px}.sc .sc-lower{grid-template-columns:1fr}.sc .sc-agent-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sc .sc-action{flex:1 1 145px;padding:0 12px}}
+@media(max-width:380px){.sc .sc-grid{grid-template-columns:1fr}.sc .sc-orbit-stage{min-height:260px}.sc .sc-agent-grid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.sc *, .sc *:before,.sc *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body data-page="sovereign-core">
+<div class="shell">
+  <aside id="omega-side" data-page="sovereign-core" aria-label="Platform navigation"></aside>
+  <main class="main" id="app">
+    <div class="sc">
+      <header class="sc-topline">
+        <div class="sc-brand">
+          <div class="sc-brandmark" aria-hidden="true">Ω</div>
+          <div><div class="sc-brandname">SYD OMEGA 91717</div><div class="sc-brandsub">THE CODE · THE FREQUENCY · THE LEGACY</div></div>
+        </div>
+        <div class="sc-clock"><time id="sc-time">--:--:--</time><small id="sc-date">LOCAL SYSTEM TIME</small></div>
+      </header>
+
+      <section class="sc-hero" aria-labelledby="sc-title">
+        <div class="sc-hero-copy">
+          <div class="sc-kicker">Sovereign command environment</div>
+          <h1 class="sc-title" id="sc-title">Beyond the <span>ordinary interface.</span></h1>
+          <p class="sc-copy">A unified gateway into the SYD OMEGA ecosystem—where intelligence, creation, progression and governance meet through one coherent operating experience.</p>
+          <div class="sc-actions">
+            <a class="sc-action" href="/world.html">Enter Omega World <span aria-hidden="true">↗</span></a>
+            <a class="sc-action sc-ghost" href="/agent-operations.html">Explore Intelligence</a>
+          </div>
+        </div>
+        <div class="sc-orbit-stage" role="img" aria-label="A layered orbital visualization surrounding the Omega core, representing connected platform domains">
+          <div class="sc-orbit"></div><div class="sc-orbit sc-o2"></div><div class="sc-orbit sc-o3"></div>
+          <div class="sc-core" aria-hidden="true">Ω</div>
+          <span class="sc-node n1" aria-hidden="true">CORE</span><span class="sc-node n2" aria-hidden="true">AI</span><span class="sc-node n3" aria-hidden="true">WORLD</span><span class="sc-node n4" aria-hidden="true">DATA</span>
+          <div class="sc-orbit-caption">One system · connected capabilities · governed access</div>
+        </div>
+      </section>
+
+      <div class="sc-section-head"><div><div class="sc-eyebrow">Navigate the ecosystem</div><h2 class="sc-section-title">Sovereign domains</h2></div><div class="sc-section-note">Choose a destination</div></div>
+      <section class="sc-grid" aria-label="Platform destinations">
+        <a class="sc-module" href="/dashboard.html"><span class="sc-glyph">⌘</span><strong>Command</strong><span>Personal command surface and platform overview</span></a>
+        <a class="sc-module" href="/consultancy.html"><span class="sc-glyph">◇</span><strong>Consultancy</strong><span>Services, advisory and structured engagements</span></a>
+        <a class="sc-module" href="/gaming.html"><span class="sc-glyph">△</span><strong>Gaming</strong><span>Interactive worlds, challenges and game systems</span></a>
+        <a class="sc-module" href="/honors.html"><span class="sc-glyph">✧</span><strong>Achievements</strong><span>Progression, honours and earned records</span></a>
+        <a class="sc-module" href="/family.html"><span class="sc-glyph">⌂</span><strong>Family</strong><span>Family, heritage and relationship spaces</span></a>
+        <a class="sc-module" href="/media.html"><span class="sc-glyph">◉</span><strong>Media</strong><span>Creative universe, publishing and production</span></a>
+        <a class="sc-module" href="/blockchain.html"><span class="sc-glyph">⟁</span><strong>Blockchain</strong><span>Digital assets and blockchain capabilities</span></a>
+        <a class="sc-module" href="/social.html"><span class="sc-glyph">⌁</span><strong>Communication</strong><span>Community and communication experiences</span></a>
+        <a class="sc-module" href="/horoscope.html"><span class="sc-glyph">✶</span><strong>Horoscope</strong><span>Celestial systems and zodiac experiences</span></a>
+        <a class="sc-module" href="/news.html"><span class="sc-glyph">▤</span><strong>News</strong><span>News and curated information destinations</span></a>
+        <a class="sc-module" href="/heritage.html"><span class="sc-glyph">⌬</span><strong>Heritage</strong><span>History, lineage and preserved knowledge</span></a>
+        <a class="sc-module" href="/ascend.html"><span class="sc-glyph">▲</span><strong>Progress</strong><span>Learning, mastery and personal development</span></a>
+        <a class="sc-module" href="/credentials.html"><span class="sc-glyph">▣</span><strong>Credentials</strong><span>Identity records and credentials</span></a>
+        <a class="sc-module" href="/compliance.html"><span class="sc-glyph">⚖</span><strong>Legal &amp; Compliance</strong><span>Governance, policy and compliance tools</span></a>
+        <a class="sc-module" href="/elements.html"><span class="sc-glyph">✥</span><strong>Elemental</strong><span>Elements, gates and symbolic systems</span></a>
+        <a class="sc-module" href="/invest.html"><span class="sc-glyph">◈</span><strong>Investment</strong><span>Investment and financial intelligence</span></a>
+        <a class="sc-module" href="/intelligence.html"><span class="sc-glyph">⌘</span><strong>Intelligence</strong><span>Research, insight and decision support</span></a>
+        <a class="sc-module" href="/order.html"><span class="sc-glyph">♜</span><strong>Hierarchy</strong><span>People, roles and the Order structure</span></a>
+      </section>
+
+      <section class="sc-lower">
+        <div class="sc-panel">
+          <div class="sc-panel-head"><h3>Agent constellation</h3><a href="/agents.html">View agents ↗</a></div>
+          <div class="sc-agent-grid" aria-label="Sovereign agent roster">
+            <div class="sc-agent"><i>◈</i> Sentinel</div><div class="sc-agent"><i>⌁</i> Analyst</div><div class="sc-agent"><i>✧</i> Historian</div>
+            <div class="sc-agent"><i>△</i> Tutor</div><div class="sc-agent"><i>◇</i> Merchant</div><div class="sc-agent"><i>⌘</i> Proxy</div>
+            <div class="sc-agent"><i>✶</i> Oracle</div><div class="sc-agent"><i>➤</i> Scout</div><div class="sc-agent"><i>⬡</i> Warden</div>
+            <div class="sc-agent"><i>▣</i> Auditor</div><div class="sc-agent"><i>◎</i> Beacon</div><div class="sc-agent"><i>Ω</i> Sovereign</div>
+          </div>
+        </div>
+        <div class="sc-panel">
+          <div class="sc-panel-head"><h3>Operating principles</h3><a href="/governance.html">Governance ↗</a></div>
+          <div class="sc-principles">
+            <div class="sc-principle"><em>01</em><div><b>Evidence before assertion</b>Operational states must come from verified sources.</div></div>
+            <div class="sc-principle"><em>02</em><div><b>Authority stays governed</b>Existing authentication and database policies remain authoritative.</div></div>
+            <div class="sc-principle"><em>03</em><div><b>Every action has a purpose</b>Navigation, motion and controls must lead to a real capability.</div></div>
+            <div class="sc-principle"><em>04</em><div><b>One coherent experience</b>Every domain follows the same visual and interaction language.</div></div>
+          </div>
+        </div>
+      </section>
+      <footer class="sc-footer"><span><strong>Ω SYD OMEGA 91717</strong> · SOVEREIGN DIGITAL ECOSYSTEM</span><span>THE CODE · THE FREQUENCY · THE LEGACY</span></footer>
+    </div>
+  </main>
+</div>
+<script>
+(function(){
+  var time=document.getElementById('sc-time'),date=document.getElementById('sc-date');
+  if(!time||!date)return;
+  function tick(){var now=new Date();time.textContent=new Intl.DateTimeFormat(undefined,{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);date.textContent=new Intl.DateTimeFormat(undefined,{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(now).toUpperCase();}
+  tick();window.setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>

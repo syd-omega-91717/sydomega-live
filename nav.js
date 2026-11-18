@@ -62,6 +62,7 @@
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
     affirmations:'life',body:'life',breath:'life',fasting:'life',gratitude:'life',habits:'life',journal:'life',mood:'life',nutrition:'life',oath:'life',physiology:'life',rituals:'life',sleep:'life',stoic:'life',targets:'life',water:'life',weekly:'life',workout:'life',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos','graph-admin':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend','standing-dashboard':'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
+    'sovereign-core':'sovereign'
   };
 
   var SECTIONS=[
@@ -151,6 +152,7 @@
      sub:[['media','CREATIVE UNIVERSE','/media.html'],['cinema','CINEMA','/cinema.html','folded'],['movies','WATCH','/movies.html'],['characters','CHARACTERS','/characters.html'],
           ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html','folded'],['universe','UNIVERSE','/universe.html','folded'],
           ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html'],['game-origins','ORIGINS SLICE 0','/game-origins.html'],['game-origins-bridge','TWO-HAND BRIDGE','/game-origins-bridge.html'],['game-omega-civilization','CIVILIZATION 91717','/game-omega-civilization.html'],['game-last-galactic-empire','LAST GALACTIC EMPIRE','/game-last-galactic-empire.html'],['worlds','WORLDS','/worlds.html'],['studio-library','STUDIO LIBRARY','/studio-library.html']]},
+    {key:'sovereign',icon:'\u03A9',label:'SOVEREIGN CORE',href:'/sovereign-core.html',col:'#C9A84C',sub:[['sovereign-core','SOVEREIGN COMMAND CORE','/sovereign-core.html']]},
   ];
 
   /* INJECT CSS */

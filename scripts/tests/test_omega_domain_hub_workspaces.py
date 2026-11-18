@@ -114,6 +114,9 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("event.origin!==window.location.origin", self.runtime)
         self.assertIn("event.source!==frame.contentWindow", self.runtime)
         self.assertIn("classList.add('omega-embedded')", self.bootstrap)
+        self.assertIn("window.parent.location.origin===window.location.origin", self.bootstrap)
+        self.assertIn("function isEmbeddedView()", self.nav)
+        self.assertIn("window.parent.location.origin===window.location.origin", self.runtime)
         self.assertIn("omega-domain-hubs.js?v=20261118-hubs-v1", self.bootstrap)
 
     def test_embedded_navigation_keeps_same_origin_routes_inside_the_frame(self):

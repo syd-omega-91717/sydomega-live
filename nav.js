@@ -6,7 +6,7 @@
   var dp=el.getAttribute('data-page')||
     ((location.pathname.split('/').pop()||'').replace('.html',''))||'dashboard';
 
-  /* Map every page to a section */
+  /* Map every page to a section. Sovereign Command Core is a single COMMAND destination. */
   var PS={
     dashboard:'command',beacon:'command',notifications:'command',search:'command','data-observatory':'command',world:'command','world-atlas':'command',eternity:'command',replay:'command',evidence:'command',recovery:'command',
     command:'command','command-center':'command',gateway:'command',guide:'command',

@@ -43,10 +43,10 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
         assets = SMOKE.REQUIRED_GLOBAL_ASSETS
         self.assertEqual(len(assets), 5)
         self.assertEqual(assets[0][0], "/bg.js")
-        self.assertIn("omega-platform-experience-v4.css?v=20261118-v4", assets[0][2])
-        self.assertEqual(assets[1][0], "/omega-platform-experience-v4.css?v=20261118-v4")
+        self.assertIn("omega-platform-experience-v5.css?v=20261118-v5", assets[0][2])
+        self.assertEqual(assets[1][0], "/omega-platform-experience-v5.css?v=20261118-v5")
         self.assertEqual(assets[1][1], "text/css")
-        self.assertIn("PLATFORM EXPERIENCE V4", assets[1][2])
+        self.assertIn("PLATFORM EXPERIENCE V5", assets[1][2])
         self.assertIn("PLATFORM EXPERIENCE V5", assets[2][2])
         self.assertEqual(assets[2][0], "/bg.js")
         self.assertIn("omega-domain-hub.css?v=20261118-hubs-v1", assets[2][2])

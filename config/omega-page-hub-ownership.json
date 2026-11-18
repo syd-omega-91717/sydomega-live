@@ -6,10 +6,6 @@
     "config/omega-page-contracts.json",
     "nav.js"
   ],
-  "source_shas": {
-    "contracts": "d27b523613dcc3790af8354f9ab5d8af11a30f6c",
-    "nav": "d0f290b749d2b9d6f7510d21c726c78c0b4875dd"
-  },
   "page_count": 241,
   "hub_count": 14,
   "classification_counts": {

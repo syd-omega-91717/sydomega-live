@@ -39,6 +39,15 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
             with self.assertRaises(ValueError, msg=unsafe):
                 SMOKE.validate_request_url(unsafe)
 
+    def test_global_omega_experience_assets_are_part_of_release_smoke(self):
+        assets = SMOKE.REQUIRED_GLOBAL_ASSETS
+        self.assertEqual(len(assets), 2)
+        self.assertEqual(assets[0][0], "/bg.js")
+        self.assertIn("omega-platform-experience-v4.css?v=20261118-v4", assets[0][2])
+        self.assertEqual(assets[1][0], "/omega-platform-experience-v4.css?v=20261118-v4")
+        self.assertEqual(assets[1][1], "text/css")
+        self.assertIn("PLATFORM EXPERIENCE V4", assets[1][2])
+
     def test_cross_origin_redirects_are_rejected(self):
         handler = SMOKE.SameOriginRedirectHandler("sydomega.com", 443)
         self.assertIsNone(

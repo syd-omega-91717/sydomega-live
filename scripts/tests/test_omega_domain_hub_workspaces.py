@@ -64,6 +64,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertEqual(self.matrix["classification_counts"]["KEEP_SEPARATE"], 19)
         self.assertEqual(self.matrix["classification_counts"]["AMBIGUOUS"], 10)
         self.assertEqual(self.matrix["classification_counts"]["UNMAPPED"], 14)
+        self.assertEqual(self.matrix["unresolved_count"], 24)
 
     def test_protected_routes_are_discoverable_but_open_standalone(self):
         self.assertIn("var protectedRows=", self.runtime)

@@ -18,10 +18,11 @@ class OmegaPlatformExperienceV4Contract(unittest.TestCase):
     def test_versioned_stylesheet_is_loaded_by_the_global_runtime(self):
         self.assertIn("omega-platform-experience-v4-css", self.bg)
         self.assertIn("/omega-platform-experience-v4.css?v=20261118-v4", self.bg)
-        self.assertLess(
+        self.assertGreater(
             self.bg.index("omega-platform-experience-v4.css?v=20261118-v4"),
-            self.bg.index("/* Omega-GVP: ambient noise overlay"),
+            self.bg.index("omega-devtools.js"),
         )
+        self.assertTrue(self.bg.rstrip().endswith("})();"))
 
     def test_shared_platform_primitives_receive_visual_treatment(self):
         for selector in (

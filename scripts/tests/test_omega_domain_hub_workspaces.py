@@ -137,6 +137,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("workspaceHref(x[2])", self.nav)
         self.assertIn("window.location.assign(routed)", self.nav)
         self.assertIn("link.hasAttribute('onclick')", self.nav)
+        self.assertIn("url.pathname===window.location.pathname", self.nav)
         self.assertIn("event.defaultPrevented", self.nav)
 
     def test_embedded_module_deep_links_preserve_query_and_hash(self):

@@ -68,7 +68,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
 
     def test_protected_workflow_ownership_is_explicit_and_domain_scoped(self):
         protected = [row for row in self.matrix["pages"] if row.get("protected_hub")]
-        self.assertEqual(len(protected), 15)
+        self.assertEqual(len(protected), 16)
         for row in protected:
             self.assertEqual(row["classification"], "KEEP_SEPARATE", row["path"])
             self.assertIn(row["protected_hub"], {hub["path"] for hub in self.matrix["hubs"]})

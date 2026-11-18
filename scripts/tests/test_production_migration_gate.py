@@ -41,7 +41,7 @@ class ProductionMigrationGateTests(unittest.TestCase):
         return {
             "_captured": "2026-11-18",
             "remoteMigrationCount": len(versions),
-            "latestRemoteMigration": max(versions),
+            "latestRemoteMigration": max(versions, key=lambda value: (0, value.zfill(4)) if len(value) == 4 else (1, value.ljust(14, "0"))),
             "versions": versions,
             "migrations": [{"version": v, "name": f"migration_{v}"} for v in versions],
         }
@@ -61,6 +61,47 @@ class ProductionMigrationGateTests(unittest.TestCase):
         versions = ["0001", "20261118090000"]
         root = self.make_root(
             source=["0001_initial.sql", "20261118090000_reservation.sql"],
+            remote=self.remote(versions),
+            pending={"pending": []},
+        )
+        result = self.run_gate(root)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PRODUCTION_MIGRATION_GATE=PASS source=2 provider=2 pending=0", result.stdout)
+
+    def test_mixed_legacy_date_and_timestamp_versions_pass(self):
+        versions = ["0001", "20260902", "20261118090000"]
+        root = self.make_root(
+            source=[
+                "0001_initial.sql",
+                "20260902_reset_migration_state.sql",
+                "20261118090000_reservation.sql",
+            ],
+            remote=self.remote(versions),
+            pending={"pending": []},
+        )
+        result = self.run_gate(root)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PRODUCTION_MIGRATION_GATE=PASS source=3 provider=3 pending=0", result.stdout)
+
+    def test_date_only_version_orders_after_older_timestamp(self):
+        versions = ["0001", "20260902", "20260901120000"]
+        root = self.make_root(
+            source=[
+                "0001_initial.sql",
+                "20260902_reset_migration_state.sql",
+                "20260901120000_older_timestamp.sql",
+            ],
+            remote=self.remote(versions),
+            pending={"pending": []},
+        )
+        result = self.run_gate(root)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PRODUCTION_MIGRATION_GATE=PASS source=3 provider=3 pending=0", result.stdout)
+
+    def test_legacy_numeric_ids_remain_before_calendar_versions(self):
+        versions = ["9999", "20260902"]
+        root = self.make_root(
+            source=["9999_legacy.sql", "20260902_reset_migration_state.sql"],
             remote=self.remote(versions),
             pending={"pending": []},
         )

@@ -27,6 +27,29 @@
 
   if(embedded){
     markEmbedded();
+    function preserveEmbeddedNavigation(element,attribute){
+      if(!element) return;
+      var target=element.getAttribute('target')||'_self';
+      if(target.toLowerCase()!=='_self') return;
+      var raw=element.getAttribute(attribute);
+      if(!raw || raw.charAt(0)==='#' || /^(mailto:|tel:|javascript:|data:|blob:)/i.test(raw)) return;
+      try{
+        var url=new URL(raw,window.location.href);
+        if(url.origin!==window.location.origin) return;
+        if(url.pathname==='/' || url.pathname.toLowerCase().endsWith('.html')){
+          url.searchParams.set('omega_embed','1');
+          element.setAttribute(attribute,url.pathname+url.search+url.hash);
+        }
+      }catch(error){}
+    }
+    document.addEventListener('click',function(event){
+      var link=event.target && event.target.closest ? event.target.closest('a[href]') : null;
+      if(link) preserveEmbeddedNavigation(link,'href');
+    },true);
+    document.addEventListener('submit',function(event){
+      var form=event.target;
+      if(form && form.tagName==='FORM') preserveEmbeddedNavigation(form,'action');
+    },true);
     window.addEventListener('load',reportFrameHeight,{once:true});
     window.addEventListener('resize',reportFrameHeight,{passive:true});
     if(window.ResizeObserver){

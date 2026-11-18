@@ -46,6 +46,17 @@
   };
 })();
 
+/* Embedded specialist modules render inside their domain hub without a second
+   global navigation shell. Set this before the visual/navigation modules run. */
+(function(){
+  try{
+    if(new URLSearchParams(window.location.search).get('omega_embed')==='1'){
+      document.documentElement.classList.add('omega-embedded');
+      if(document.body) document.body.classList.add('omega-embedded');
+    }
+  }catch(error){}
+})();
+
 /* -- SHARED HTML ESCAPER, BOOTSTRAP COPY (omega-esc.js is the canonical definition) ---------------------
    Modules call window.OmegaEsc at CALL time and fail closed to '' when it is missing, so it must exist before
    any of them. Scripts injected below run in no fixed order, and a page's own module tags can run before this
@@ -3229,4 +3240,35 @@ setTimeout(function(){
   experience.href='/omega-platform-experience-v4.css?v=20261118-v4';
   experience.type='text/css';
   head.appendChild(experience);
+})();
+
+/* Ω DOMAIN HUB WORKSPACES — load the embedded-route shell on canonical hubs.
+   CSS is loaded first; the script is appended only after the stylesheet resolves. */
+(function(){
+  var head=document.head||document.documentElement;
+  if(!head) return;
+  function loadHubScript(){
+    if(document.getElementById('omega-domain-hubs-js')) return;
+    var script=document.createElement('script');
+    script.id='omega-domain-hubs-js';
+    script.src='/omega-domain-hubs.js?v=20261118-hubs-v1';
+    script.async=false;
+    head.appendChild(script);
+  }
+  var style=document.getElementById('omega-domain-hub-css');
+  if(!style){
+    style=document.createElement('link');
+    style.id='omega-domain-hub-css';
+    style.rel='stylesheet';
+    style.href='/omega-domain-hub.css?v=20261118-hubs-v1';
+    style.type='text/css';
+    style.onload=loadHubScript;
+    style.onerror=loadHubScript;
+    head.appendChild(style);
+  }else if(style.sheet){
+    loadHubScript();
+  }else{
+    style.addEventListener('load',loadHubScript,{once:true});
+    style.addEventListener('error',loadHubScript,{once:true});
+  }
 })();

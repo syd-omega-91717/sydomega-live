@@ -394,7 +394,11 @@
   function isEmbeddedView(){
     if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return true;
     if(window.parent===window) return false;
-    try{return window.parent.location.origin===window.location.origin;}catch(error){return false;}
+    try{
+      var hubParentPaths=Object.keys(HUB_ROUTE_BY_SECTION).map(function(key){return HUB_ROUTE_BY_SECTION[key];});
+      return window.parent.location.origin===window.location.origin &&
+        hubParentPaths.indexOf(window.parent.location.pathname)!==-1;
+    }catch(error){return false;}
   }
   function workspaceHref(rawHref){
     try{

@@ -13,9 +13,9 @@ if "--help" in sys.argv:
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = ROOT / "config" / "omega-page-contracts.json"
 FIELDS = (
-    "workspace", "domain", "primary_role", "purpose", "data_sources",
-    "capabilities", "authorization", "truth_states", "asset_requirements",
-    "events", "failure_paths", "accessibility", "responsive",
+    "workspace", "domain", "primary_role", "data_sources", "capabilities",
+    "tasks", "authorization", "truth_states", "asset_requirements", "events",
+    "failure_paths", "accessibility", "responsive", "traceability",
 )
 
 

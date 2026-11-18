@@ -22,9 +22,9 @@ CONTRACTS = ROOT / "config" / "omega-page-contracts.json"
 OUTPUT = ROOT / "config" / "omega-page-contract-remediation.json"
 
 FIELDS = (
-    "workspace", "domain", "primary_role", "purpose", "data_sources",
-    "capabilities", "authorization", "truth_states", "asset_requirements",
-    "events", "failure_paths", "accessibility", "responsive",
+    "workspace", "domain", "primary_role", "data_sources", "capabilities",
+    "tasks", "authorization", "truth_states", "asset_requirements", "events",
+    "failure_paths", "accessibility", "responsive", "traceability",
 )
 
 TASK_KIND = {
@@ -34,6 +34,7 @@ TASK_KIND = {
     "purpose": "PAGE_PURPOSE_REVIEW",
     "data_sources": "PAGE_DATA_SOURCE_REVIEW",
     "capabilities": "PAGE_CAPABILITY_REVIEW",
+    "tasks": "PAGE_TASK_DEFINITION_REVIEW",
     "authorization": "PAGE_AUTHORIZATION_REVIEW",
     "truth_states": "PAGE_TRUTH_STATE_REVIEW",
     "asset_requirements": "PAGE_ASSET_REVIEW",
@@ -41,6 +42,7 @@ TASK_KIND = {
     "failure_paths": "PAGE_FAILURE_PATH_REVIEW",
     "accessibility": "PAGE_ACCESSIBILITY_REVIEW",
     "responsive": "PAGE_RESPONSIVE_REVIEW",
+    "traceability": "PAGE_TRACEABILITY_REVIEW",
 }
 
 

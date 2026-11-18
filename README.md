@@ -449,7 +449,7 @@ Production status is evidence-driven. Public documentation intentionally avoids 
 
 **Operating model:** One governed core, many domain projections
 
-**Web estate:** 241 pages under page-contract governance
+**Web estate:** 242 pages under page-contract governance
 
 **Backend model:** Supabase PostgreSQL + RLS + Edge Functions + Storage
 

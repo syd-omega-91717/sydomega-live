@@ -272,6 +272,38 @@ async function loadContracts(){
     el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.type||'CONTRACT').toUpperCase())+'</div><div class="q-btn">REVIEW</div></div>';}).join('');
   }catch(e){showQueueError(el,'error_rpc_contract',e,loadContracts);}
 }
+function attachReservationDownload(container,row){
+  if(!row||typeof row.file_path!=='string'||typeof row.user_id!=='string'||!ownerUid)return;
+  var path=row.file_path.trim();
+  if(!path.startsWith(row.user_id+'/'))return;
+  var parts=path.split('/');
+  if(parts.length!==2||! /^[A-Za-z0-9._-]+$/.test(parts[1]))return;
+  var button=document.createElement('button');
+  button.type='button';button.className='q-btn';button.textContent='DOWNLOAD ATTACHMENT';
+  button.setAttribute('aria-label','Download private reservation attachment');
+  var status=document.createElement('span');
+  status.className='q-lbl';status.setAttribute('aria-live','polite');
+  button.addEventListener('click',async function(){
+    if(button.disabled)return;
+    var tab=window.open('about:blank','_blank');
+    if(!tab){status.textContent='Allow pop-ups to open the private attachment.';return;}
+    try{tab.opener=null;}catch(_error){}
+    button.disabled=true;status.textContent='Preparing private download…';
+    try{
+      var result=await sb.storage.from('uploads').createSignedUrl(path,300,{download:true});
+      if(result.error||!result.data||!result.data.signedUrl)throw new Error((result.error&&result.error.message)||'signed_url_unavailable');
+      tab.location.replace(result.data.signedUrl);
+      status.textContent='Private download link expires in 5 minutes.';
+    }catch(error){
+      try{tab.close();}catch(_closeError){}
+      status.textContent='Attachment unavailable. Refresh the queue and retry.';
+      console.error('[OMEGA] reservation attachment delivery failed.',error);
+    }finally{button.disabled=false;}
+  });
+  container.appendChild(button);
+  container.appendChild(status);
+}
+
 async function loadReservations(){
   var el=document.getElementById('reservations-queue');if(!el)return;
   try{
@@ -279,8 +311,17 @@ async function loadReservations(){
     if(r&&r.error)throw new Error(r.error.message||'review_reservations_failed');
     if(!r||!Array.isArray(r.data))throw new Error('review_reservations_invalid_response');
     var rows=r.data;
-    if(!rows.length){el.innerHTML='<div class="empty">'+t('empty_no_reservations')+'</div>';return;}
-    el.innerHTML=rows.map(function(row){return '<div class="q-row"><div class="q-id">'+esc((row.id||'').slice(0,12))+'</div><div class="q-lbl">'+esc(String(row.title||row.service||'RESERVATION').toUpperCase())+'</div><div class="q-btn">REVIEW</div></div>';}).join('');
+    el.replaceChildren();
+    if(!rows.length){var empty=document.createElement('div');empty.className='empty';empty.textContent=t('empty_no_reservations');el.appendChild(empty);return;}
+    rows.forEach(function(row){
+      var item=document.createElement('div');item.className='q-row';
+      var id=document.createElement('div');id.className='q-id';id.textContent=String(row.id||'').slice(0,12);
+      var label=document.createElement('div');label.className='q-lbl';label.textContent=String(row.title||row.service||'RESERVATION').toUpperCase();
+      var state=document.createElement('div');state.className='q-lbl';state.textContent=String(row.status||'').toUpperCase();
+      item.appendChild(id);item.appendChild(label);item.appendChild(state);
+      attachReservationDownload(item,row);
+      el.appendChild(item);
+    });
   }catch(e){showQueueError(el,'error_rpc_reservations',e,loadReservations);}
 }
 async function loadAudit(){

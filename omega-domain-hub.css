@@ -55,7 +55,8 @@ body.omega-embedded #omega-voice-btn,
 body.omega-embedded #omega-controls-dock,
 body.omega-embedded #omega-page-door,
 body.omega-embedded .omega-page-door,
-body.omega-embedded #omega-toasts{display:none!important}
+body.omega-embedded #omega-toasts,
+body.omega-embedded #omega-command-palette{display:none!important}
 body.omega-embedded .shell{min-height:0!important;width:100%!important;max-width:none!important}
 body.omega-embedded .main,
 body.omega-embedded main,

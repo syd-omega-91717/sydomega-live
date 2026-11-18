@@ -1,7 +1,7 @@
-"""The dock, its tooltips and the phone drawer group the 15 nav sections into 8 doors.
+"""The dock, its tooltips and the phone drawer group the 16 nav sections into 8 doors.
 
 Only the grouping changed (nav.js GROUPS). PS, SECTIONS, OmegaAxis, the full launcher, search and the owner deck
-still use the 15 sections, so every page keeps its accent and URL. These tests keep the grouping honest:
+still use the 16 sections, so every page keeps its accent and URL. These tests keep the grouping honest:
 every section lands in exactly one door, merged tooltips stay short, and the dock renders from GROUPS.
 """
 import pathlib
@@ -22,10 +22,11 @@ def group_of():
 
 
 class NavEightDoors(unittest.TestCase):
-    def test_fifteen_sections_become_eight_doors(self):
+    def test_sixteen_sections_become_eight_doors(self):
         keys = section_keys()
-        self.assertEqual(len(keys), 15)
+        self.assertEqual(len(keys), 16)
         g = group_of()
+        self.assertEqual(g.get("sovereign"), "command")
         doors = {g.get(k, k) for k in keys}
         self.assertEqual(doors, DOORS)
 

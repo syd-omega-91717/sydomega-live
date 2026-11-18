@@ -180,6 +180,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
     def test_mobile_and_reduced_motion_contracts_remain_present(self):
         self.assertIn("@media(max-width:760px)", self.styles)
         self.assertIn("@media(prefers-reduced-motion:reduce)", self.styles)
+        self.assertIn(".omega-domain-hub-protected-link{transition:none}", self.styles)
+        self.assertIn(":focus-visible", self.styles)
         self.assertIn("loading='lazy'", self.runtime)
         self.assertIn("aria-live", self.runtime)
 

@@ -117,7 +117,7 @@ body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.modul
 
 /* Typography and data hierarchy. */
 body.omega-simple :where(main,.main,.page,.page-shell,#omega-main-content) h1,
-body.omega-simple :where(.hero-title,.title,.oeh-title,.ow-title,.ohz-display){
+body.omega-simple :where(.hero-title,.title,.oeh-title,.ow-title,.ohz-display,.omega-domain-page-title){
   color:var(--omega-v5-gold-light);
   font-family:var(--D,"Cinzel Decorative","Cinzel",serif);
   font-weight:700;
@@ -126,6 +126,7 @@ body.omega-simple :where(.hero-title,.title,.oeh-title,.ow-title,.ohz-display){
   text-wrap:balance;
   text-shadow:0 0 28px rgba(201,168,76,.18);
 }
+body.omega-simple .omega-domain-page-title{margin:0 0 14px;font-size:clamp(1.3rem,2.5vw,2.15rem)}
 body.omega-simple :where(.sechead,.section-title,.hero-eyebrow,.kicker,.ohz-kicker,.ow-kicker){
   color:var(--omega-v5-cyan);
   text-shadow:0 0 18px rgba(0,229,255,.2);

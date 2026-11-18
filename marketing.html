@@ -145,11 +145,20 @@ var ZONES=[['Landing Feature',3],['Hall Banner',2],['Dashboard Spotlight',1.5],[
 function price(){var z=ZONES[+document.getElementById('m-zone').value],d=DURATIONS[+document.getElementById('m-dur').value];return Math.round(d[1]*z[1]);}
 var _user=null,_isOwner=false;
 
+var contentRefPrefix='omega-content://storage_files/';
 function attachPrivateCampaignDownload(container,path){
-  if(!_user||typeof path!=='string'||path.indexOf(_user.id+'/')!==0)return;
-  var parts=path.split('/');
-  if(parts.length!==2||! /^[A-Za-z0-9._-]+$/.test(parts[1]))return;
-  if(!window.OmegaStorage||typeof window.OmegaStorage.signedUrl!=='function')return;
+  if(!_user||typeof path!=='string'||!path)return;
+  var contentId=null,isGoverned=path.indexOf(contentRefPrefix)===0;
+  if(isGoverned){
+    contentId=path.slice(contentRefPrefix.length);
+    if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(contentId))return;
+    if(!window.OmegaContentTasks||typeof window.OmegaContentTasks.signedDownload!=='function')return;
+  }else{
+    if(path.indexOf(_user.id+'/')!==0)return;
+    var parts=path.split('/');
+    if(parts.length!==2||! /^[A-Za-z0-9._-]+$/.test(parts[1]))return;
+    if(!window.OmegaStorage||typeof window.OmegaStorage.signedUrl!=='function')return;
+  }
   var button=document.createElement('button');button.type='button';button.className='campaign-attachment';button.textContent='DOWNLOAD PRIVATE ATTACHMENT';
   var status=document.createElement('span');status.className='campaign-attachment-status';status.setAttribute('aria-live','polite');
   button.addEventListener('click',async function(){
@@ -159,7 +168,14 @@ function attachPrivateCampaignDownload(container,path){
     try{tab.opener=null;}catch(_error){}
     button.disabled=true;status.textContent='Preparing a short-lived private link…';
     try{
-      var url=await window.OmegaStorage.signedUrl('uploads',path,900);
+      var url=null;
+      if(isGoverned){
+        var delivery=await window.OmegaContentTasks.signedDownload(contentId);
+        if(!delivery||delivery.state!=='SIGNED'||!delivery.data||typeof delivery.data.signed_url!=='string')throw new Error('governed_delivery_unavailable');
+        url=delivery.data.signed_url;
+      }else{
+        url=await window.OmegaStorage.signedUrl('uploads',path,900);
+      }
       if(!url)throw new Error('signed_url_unavailable');
       tab.location.replace(url);
       status.textContent='Private link expires in 15 minutes.';
@@ -269,12 +285,19 @@ async function submit(){
   btn.disabled=true;out.style.color='var(--cyan)';out.textContent='Submitting...';
   var filePath=null,fEl=document.getElementById('m-file');
   if(fEl&&fEl.files&&fEl.files[0]){
-    out.textContent='Uploading file...';
-    var up=null;
-    try{up=await window.OmegaStorage.upload('uploads',fEl.files[0]);}catch(e){up={error:e&&e.message?e.message:'upload_unconfirmed'};}
-    if(!up||up.error){btn.disabled=false;out.style.color='var(--crim)';out.textContent='Upload failed: '+((up&&up.error)||'no response from storage.');return;}
-    filePath=up.path||null;
-    if(!filePath){btn.disabled=false;out.style.color='var(--crim)';out.textContent='Upload failed: storage returned no path.';return;}
+    out.textContent='Registering private attachment…';
+    if(!window.OmegaContentTasks||typeof window.OmegaContentTasks.upload!=='function'){
+      btn.disabled=false;out.style.color='var(--crim)';out.textContent='GOVERNED UPLOAD UNAVAILABLE — campaign not submitted. Reload and retry.';return;
+    }
+    var uploadTask=null;
+    try{uploadTask=await window.OmegaContentTasks.upload(fEl.files[0],{content_type:'marketing_campaign_attachment'});}catch(_error){uploadTask=null;}
+    if(!uploadTask||uploadTask.state!=='PENDING_REVIEW'||!uploadTask.data||!uploadTask.data.file||typeof uploadTask.data.file.id!=='string'){
+      btn.disabled=false;out.style.color='var(--crim)';
+      out.textContent='ATTACHMENT NOT REGISTERED — '+(uploadTask&&uploadTask.state?uploadTask.state:'UNCONFIRMED')+'. Campaign not submitted. If the outcome is uncertain, request support reconciliation before retrying.';
+      return;
+    }
+    filePath=contentRefPrefix+uploadTask.data.file.id;
+    out.textContent='Attachment registered privately · pending review · malware scan unavailable. Submitting campaign…';
   }
   var r=null;
   try{
@@ -283,24 +306,15 @@ async function submit(){
   }catch(_error){
     btn.disabled=false;out.style.color='var(--crim)';
     out.textContent=filePath
-      ?'SUBMISSION STATUS UNKNOWN — FILE PRESERVED. Refresh CAMPAIGNS before retrying to avoid a duplicate.'
+      ?'SUBMISSION STATUS UNKNOWN — REGISTERED PRIVATE FILE PRESERVED. Refresh CAMPAIGNS before retrying to avoid a duplicate.'
       :'SUBMISSION STATUS UNKNOWN — Refresh CAMPAIGNS before retrying to avoid a duplicate.';
     return;
   }
   if(!r||insertError){
     var code=insertError&&typeof insertError.code==='string'?insertError.code:'';
-    if(filePath&&/^[0-9A-Z]{5}$/.test(code)){
-      var cleanup=null;
-      try{cleanup=await window.OmegaStorage.remove('uploads',filePath);}catch(_error){cleanup={error:'cleanup_unconfirmed'};}
-      btn.disabled=false;out.style.color='var(--crim)';
-      out.textContent=cleanup&&!cleanup.error
-        ?'CAMPAIGN REJECTED ('+code+'). UPLOAD ROLLED BACK.'
-        :'CAMPAIGN REJECTED ('+code+'). FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED.';
-      return;
-    }
     btn.disabled=false;out.style.color='var(--crim)';
     out.textContent=filePath
-      ?'SUBMISSION STATUS UNKNOWN — FILE PRESERVED. Refresh CAMPAIGNS before retrying.'
+      ?'CAMPAIGN REJECTED OR UNCONFIRMED ('+(code||'DATABASE_ERROR')+'). REGISTERED PRIVATE FILE PRESERVED; SUPPORT RECONCILIATION MAY BE REQUIRED.'
       :'Could not submit ('+(code||'response unavailable')+'). Refresh CAMPAIGNS before retrying.';
     return;
   }
@@ -326,6 +340,7 @@ async function boot(){
 boot();
 </script>
 <script src="/upload.js"></script>
+<script src="/omega-content-tasks.js"></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

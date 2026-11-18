@@ -126,7 +126,7 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("status.textContent='Private download link expires in 5 minutes.'", queue)
         self.assertNotIn("getPublicUrl(", queue)
         self.assertNotIn("innerHTML", queue)
-        self.assertIn("where public.is_platform_owner()", (ROOT / "supabase/migrations/0012_omega_marketing.sql").read_text())
+        self.assertIn("where public.is_platform_owner()", (ROOT / "supabase/migrations/0012_omega_marketing.sql").read_text().lower())
 
     def test_reservation_decisions_are_bigint_owner_aal2_and_audited(self):
         page = (ROOT / "marketing.html").read_text()

@@ -84,6 +84,24 @@ jobs:
               if "grant " in sql.lower():
                   sys.exit("Privilege changes are not allowed in the API-key compatibility migration.")
               print(f"Validated replay-safe API-key metadata compatibility migration: {file.name}")
+          elif version == "20261118090000":
+              required = (
+                  "revoke update on table public.media_reservations from public, anon, authenticated",
+                  "revoke update (id, user_id, zone, duration, title, message, price_omega, status, created_at, file_path)",
+                  "create or replace function private.set_reservation_status(p_id bigint, p_status text)",
+                  "auth.jwt()->>'aal'",
+                  "insert into public.omega_platform_events",
+                  "revoke all on function public.set_reservation_status(uuid, text)",
+                  "grant execute on function public.set_reservation_status(bigint, text) to authenticated",
+              )
+              missing = [marker for marker in required if marker not in sql.lower()]
+              if missing:
+                  sys.exit(f"Owner reservation migration is missing required authorization or audit controls: {missing!r}")
+              forbidden = ("drop table", "drop column", "truncate", "delete from")
+              present = [marker for marker in forbidden if marker in sql.lower()]
+              if present:
+                  sys.exit(f"Destructive owner reservation migration operation detected: {present!r}")
+              print(f"Validated owner-only, AAL2-protected, audited reservation decision migration: {file.name}")
           else:
               sys.exit("This controlled workflow is not authorized for the requested migration version.")
           PY

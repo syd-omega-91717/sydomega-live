@@ -1,0 +1,116 @@
+/* Ω SYD OMEGA 91717 — GLOBAL VISUAL FINISH
+   Additive presentation layer. No layout ownership, data, routes or permissions changed.
+   Honors reduced-motion, preserves hidden states and avoids global pointer tracking. */
+:root{
+  --omega-void:#05060a;--omega-panel:rgba(13,16,25,.78);--omega-panel-strong:rgba(17,20,30,.94);
+  --omega-gold:#C9A84C;--omega-gold-hi:#E8C97A;--omega-cyan:#00E5FF;--omega-crimson:#8B0000;
+  --omega-line:rgba(201,168,76,.22);--omega-line-cyan:rgba(0,229,255,.18);
+  --omega-glow-gold:0 0 28px rgba(201,168,76,.12);--omega-glow-cyan:0 0 30px rgba(0,229,255,.10);
+  --omega-depth:0 22px 64px rgba(0,0,0,.42);
+}
+html{scroll-behavior:smooth;scroll-padding-top:5rem;background:var(--omega-void)}
+body{
+  background-color:var(--omega-void);
+  background-image:radial-gradient(ellipse at 12% -10%,rgba(201,168,76,.105),transparent 38%),
+    radial-gradient(ellipse at 92% 18%,rgba(0,229,255,.065),transparent 34%),
+    linear-gradient(180deg,#080910 0%,#05060a 46%,#07080d 100%);
+  background-attachment:fixed;
+  color:#f1eee6;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(201,168,76,.34);color:#fff}
+:where(p,li,label,.description,.subtitle,.card p,.panel p){line-height:1.68}
+:where(main,.main,.page-shell,.shell){isolation:isolate}
+:where(.card,.panel,.module,.tile,.glass,.glass-cyan,.kpi,.stat-card,.feature-card,.omega-card){
+  border-color:var(--omega-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),var(--omega-depth);
+  backdrop-filter:blur(14px) saturate(125%);
+  -webkit-backdrop-filter:blur(14px) saturate(125%);
+  transition:border-color .24s ease,box-shadow .24s ease,background-color .24s ease,transform .24s ease;
+}
+:where(.card,.panel,.module,.tile,.glass,.glass-cyan,.feature-card,.omega-card){
+  background-image:linear-gradient(145deg,rgba(255,255,255,.035),transparent 42%,rgba(0,229,255,.018));
+}
+:where(.card,.panel,.module,.tile,.feature-card,.omega-card):hover{
+  border-color:rgba(232,201,122,.42);
+  box-shadow:inset 0 1px 0 rgba(232,201,122,.12),0 26px 72px rgba(0,0,0,.48),var(--omega-glow-gold);
+  transform:translateY(-2px);
+}
+:where(button,.btn,[role=button],input,select,textarea){font:inherit}
+:where(button,.btn,[role=button]){
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background-color .18s ease;
+}
+:where(button,.btn,[role=button]):active{transform:translateY(1px) scale(.99)}
+:where(button,.btn-primary,.btn-gold,.primary-action){
+  box-shadow:0 8px 28px rgba(201,168,76,.12),inset 0 1px 0 rgba(255,255,255,.12);
+}
+:where(input,select,textarea){
+  color:#f5f0e5;background:rgba(4,6,11,.82);border-color:rgba(201,168,76,.28);
+  border-radius:10px;min-height:42px;
+}
+:where(input,select,textarea):focus{
+  outline:2px solid rgba(0,229,255,.78);outline-offset:2px;
+  border-color:var(--omega-cyan);box-shadow:0 0 0 4px rgba(0,229,255,.09);
+}
+:where(a,button,[tabindex]):focus-visible{
+  outline:2px solid var(--omega-cyan);outline-offset:3px;border-radius:4px;
+}
+:where(h1,h2,h3,.page-title,.hero-title){text-wrap:balance}
+:where(h1,.page-title,.hero-title){letter-spacing:.025em}
+:where(.page-header,.section-header,.topbar){
+  border-bottom:1px solid rgba(201,168,76,.15);
+}
+:where(.page-header,.section-header)::after{
+  content:"";display:block;width:clamp(84px,12vw,160px);height:2px;margin-top:12px;
+  background:linear-gradient(90deg,var(--omega-gold),var(--omega-cyan),transparent);
+  box-shadow:0 0 18px rgba(0,229,255,.18);
+}
+:where(.side,.sidebar,.omega-sidebar,#omega-side){
+  border-right:1px solid rgba(201,168,76,.16);
+  background:linear-gradient(180deg,rgba(9,11,18,.97),rgba(5,6,10,.94));
+  box-shadow:12px 0 42px rgba(0,0,0,.22);
+}
+:where(.side a,.sidebar a,#omega-side a){transition:color .18s ease,background .18s ease,border-color .18s ease}
+:where(.side a:hover,.sidebar a:hover,#omega-side a:hover){
+  color:var(--omega-gold-hi);background:linear-gradient(90deg,rgba(201,168,76,.11),rgba(0,229,255,.035));
+}
+:where(.tab-bar,[role=tablist]){border-bottom:1px solid rgba(201,168,76,.2);gap:6px}
+:where(.tab-btn,[role=tab]){min-height:42px}
+:where(.tab-btn.active,[role=tab][aria-selected=true]){
+  color:var(--omega-gold-hi);border-color:var(--omega-gold);
+  box-shadow:inset 0 -2px 0 var(--omega-gold),0 8px 22px rgba(201,168,76,.08);
+}
+:where(table,.data-table){border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid rgba(201,168,76,.18);border-radius:12px}
+:where(th){color:var(--omega-gold-hi);background:rgba(201,168,76,.075)}
+:where(td,th){padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.055)}
+:where(tr:last-child td){border-bottom:0}
+:where(.badge,.chip,.status,.pill){letter-spacing:.055em}
+:where(.loading,.skeleton,[aria-busy=true]){background-color:rgba(255,255,255,.035)}
+img,video,canvas{max-width:100%}
+:where(img,video){border-radius:inherit}
+:where(.hero,.hero-section,.omega-hero){
+  position:relative;isolation:isolate;
+}
+:where(.hero,.hero-section,.omega-hero)::before{
+  content:"";position:absolute;inset:-1px;z-index:-1;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.12),transparent 58%),
+    radial-gradient(ellipse at 100% 70%,rgba(0,229,255,.055),transparent 46%);
+}
+:where(.omega-orb,.omega-emblem,.omega-seal,[data-omega-ring]){
+  filter:drop-shadow(0 0 14px rgba(201,168,76,.20));
+}
+:where(.skip-link):focus{z-index:10000}
+@media(min-width:1100px){
+  :where(main,.main,.page-shell){scrollbar-gutter:stable}
+}
+@media(max-width:760px){
+  body{background-attachment:scroll}
+  :where(.card,.panel,.module,.tile,.glass,.glass-cyan,.feature-card,.omega-card){backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+  :where(.card,.panel,.module,.tile,.feature-card,.omega-card):hover{transform:none}
+  :where(td,th){padding:9px 10px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}

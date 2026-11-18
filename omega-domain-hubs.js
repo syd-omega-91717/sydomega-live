@@ -164,12 +164,13 @@
       if(moduleQuery){
         var forwarded=new URLSearchParams(moduleQuery);
         forwarded.forEach(function(value,key){
-          if(key!=='omega_embed' && key!=='omega_hub' && key!=='omega_module' && key!=='omega_module_query')
+          if(key!=='omega_embed' && key!=='omega_hub' && key!=='omega_module' && key!=='omega_module_query'){
             frameUrl.searchParams.append(key,value);
+            standaloneUrl.searchParams.append(key,value);
+          }
         });
       }
       frameUrl.hash=moduleHash||'';
-      standaloneUrl.search=frameUrl.search;
       standaloneUrl.hash=moduleHash||'';
       openLink.href=standaloneUrl.pathname+standaloneUrl.search+standaloneUrl.hash;
       frame.title=humanize(row.page_id)+' module';

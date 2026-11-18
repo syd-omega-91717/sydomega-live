@@ -14,4 +14,6 @@
   }
   tick();
   window.setInterval(tick,1000);
+  function tick(){var now=new Date();time.textContent=timeFormat.format(now);date.textContent=dateFormat.format(now).toUpperCase();}
+  tick();window.setInterval(tick,1000);
 })();

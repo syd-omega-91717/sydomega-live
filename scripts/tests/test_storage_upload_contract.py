@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Regression tests for the OmegaStorage.upload contract (#175, import-export).
+Regression tests for legacy OmegaStorage.upload calls and the governed Publishing attachment path.
 
 WHY THIS EXISTS
 
-`upload.js` declares `upload(bucket, file)`. Two of the four call sites shipped
+`upload.js` declares `upload(bucket, file)`. Two of the original four direct call sites shipped
 with the arguments the other way round:
 
     profile.html:2147   OmegaStorage.upload(fileEl.files[0], 'uploads')
@@ -23,8 +23,12 @@ That is CLAUDE.md 8.1 bug class 1 (a write that silently does nothing while the
 UI reports success), reached through class 4's shape (a shared accessor used on
 trust). Both halves are asserted here:
 
-  1. every call passes the bucket name first, and
-  2. every call inspects the result's `.error` before continuing.
+  1. every remaining direct call passes the bucket name first, and
+  2. every direct call inspects the result's `.error` before continuing.
+
+Publishing's former direct call is now a governed `OmegaContentTasks.upload()`
+call. Its separate contract requires server registration and PENDING_REVIEW
+before the publication row can be written.
 
 Supabase's storage client resolves to `{data, error}` and upload.js converts
 that to `{error: message}` — it does not throw — so a try/catch around the call
@@ -93,8 +97,17 @@ class UploadCallContract(unittest.TestCase):
                 )
 
     def test_there_are_call_sites_to_check(self):
-        """A scanner that matches nothing passes vacuously (CLAUDE.md 8.4)."""
-        self.assertGreaterEqual(len(call_sites()), 4)
+        """The three remaining direct Storage callers must stay covered."""
+        self.assertGreaterEqual(len(call_sites()), 3)
+
+    def test_publishing_attachment_uses_governed_registration_instead_of_legacy_direct_upload(self):
+        with open(os.path.join(ROOT, "publishing.html"), encoding="utf-8") as fh:
+            page = fh.read()
+        self.assertIn("OmegaContentTasks.upload(fEl.files[0]", page)
+        self.assertIn("uploadTask.state!=='PENDING_REVIEW'", page)
+        self.assertIn("uploadTask.data.file.id", page)
+        self.assertIn("omega-content://storage_files/", page)
+        self.assertNotIn("OmegaStorage.upload('uploads',fEl.files[0])", page)
 
     def test_bucket_name_is_the_first_argument(self):
         """The swapped-argument bug, asserted at every call site."""

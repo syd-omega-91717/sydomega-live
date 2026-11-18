@@ -115,5 +115,19 @@
       }
     },
     "limitation": "Both content functions are ACTIVE at provider version 11 and their deployed entrypoints match repository source byte-for-byte. The isolated Supabase CI stack passes authenticated upload/download, owner isolation, path guard, idempotency, expiry and audit probes. Production currently has zero Storage objects and zero storage_files rows, so no production user upload/download transaction has yet been observed. Malware scanning, rights review, publication approval and entitlements remain separate fail-closed gates."
+  },
+  "publication_attachment_reference": {
+    "format": "omega-content://storage_files/<uuid>",
+    "storage_column": "publications.file_path",
+    "legacy_behavior": "Raw user-id-prefixed Storage paths remain readable through the legacy owner-scoped signed URL path.",
+    "new_upload_behavior": "New uploads must complete content-ingest before the typed reference is committed.",
+    "delivery": "content-delivery",
+    "access": "owner_only",
+    "truth_states": {
+      "review": "PENDING_REVIEW",
+      "malware_scan": "UNAVAILABLE",
+      "rights": "UNVERIFIED",
+      "publication": "UNVERIFIED"
+    }
   }
 }

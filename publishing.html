@@ -90,7 +90,7 @@
   <div class="sechead">PUBLISHING PROCESS</div>
   <div class="glass">
     <div class="howit-step"><div class="howit-num">01</div><div class="howit-body"><div class="ht">PREPARE YOUR WORK</div><p>A work can be a manuscript, treatise, report, article, or codex entry. The title and body are the primary archival record — make them precise. The minimum body length is 40 characters.</p></div></div>
-    <div class="howit-step"><div class="howit-num">02</div><div class="howit-body"><div class="ht">ATTACH A FILE (OPTIONAL)</div><p>Attach any file up to 50 MB — a PDF, audio, image, or binary. OmegaStorage uploads it to private storage. The file path is recorded in the publication record but not exposed publicly.</p></div></div>
+    <div class="howit-step"><div class="howit-num">02</div><div class="howit-body"><div class="ht">ATTACH A FILE (OPTIONAL)</div><p>New attachments pass through authenticated content-ingest: private upload, server-verified size and file signature, SHA-256 registration, and an audit event. A versioned omega-content://storage_files reference is stored in the existing attachment field, so no schema migration is needed. Existing Storage paths remain readable through the legacy owner-scoped fallback. Registration does not imply malware clearance, rights clearance, or publication approval.</p></div></div>
     <div class="howit-step"><div class="howit-num">03</div><div class="howit-body"><div class="ht">COMMIT TO ARCHIVE</div><p>Your first publication can advance the Contribution axis by up to +0.12 via the complete_task RPC, subject to the per-member progression cap. The interface reports only the amount confirmed by the server. The task key is idempotent and the award is bounded, but this does not independently prove publication ownership; server-side source verification remains required. Further publications still count toward milestones and the archive but do not re-trigger the first-publication award.</p></div></div>
     <div class="howit-step"><div class="howit-num">04</div><div class="howit-body"><div class="ht">APPROVAL FOR PUBLIC SHOWCASE</div><p>The platform owner reviews submitted works and may approve them for the public showcase (Phase II). Approved works earn additional visibility and are included in the sovereign codex. Approval is recorded as a status change in the publications table.</p></div></div>
   </div>
@@ -101,7 +101,7 @@
   <div class="card-grid" data-stagger data-stagger-gap="60">
     <div class="card" data-reveal="fade-up"><div class="card-title">THE SOVEREIGN ARCHIVE</div><div class="card-body">Publications are stored in the Supabase `publications` table with fields: user_id, kind, title, body, file_path, status, created_at. Status starts as 'private'. The archive is personal-only — Row Level Security ensures a member can only read their own publications. No cross-member data leaks are possible at the database layer.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">AXIS C CONTRIBUTION</div><div class="card-body">The first publication triggers the complete_task RPC with kind='contribution', axis='c'. The task ID 'first-publication' is idempotent and can apply once per member; server-side source verification remains required. Subsequent publications do not re-trigger the axis advance but still count in the archive and milestone counters.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">Files are stored via OmegaStorage in the 'uploads' bucket. The storage path is recorded in the publication's file_path column. Files are not publicly accessible — only the authenticated author can retrieve a signed URL. The 50 MB limit covers manuscripts, research data, or multimedia attachments.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">New attachments are registered in storage_files and referenced by a versioned omega-content://storage_files URI in the existing file_path field. The private content-delivery Edge Function checks the authenticated owner and issues a 15-minute signed attachment URL with an audit event. Existing raw Storage paths retain their legacy owner-scoped signed-download fallback. Registration does not establish malware clearance, rights, or publication approval.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">PHASE II GATEWAY</div><div class="card-body">The public showcase, creator marketplace, and licensing layer are Phase II features gated on legal review and MiCA compliance clearance. Until Phase II activates, all published works remain private. The archive is already building the canon; publication date and authorship are immutably recorded for priority purposes.</div></div>
   </div>
 </div>
@@ -111,6 +111,7 @@
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+window.OmegaSB=window.OmegaSB||{get:function(){return Promise.resolve(sb);}};
 var userId=null;
 
 window.setTab=setTab;
@@ -153,6 +154,30 @@ function attachPrivateDownload(container,path){
   container.appendChild(button);container.appendChild(status);
 }
 
+function attachGovernedPrivateDownload(container,fileId){
+  if(typeof fileId!=='string'||!fileId||!window.OmegaContentTasks||typeof window.OmegaContentTasks.signedDownload!=='function')return;
+  var button=document.createElement('button');button.type='button';button.className='work-attachment';button.textContent='DOWNLOAD PRIVATE ATTACHMENT';
+  var status=document.createElement('span');status.className='work-attachment-status';status.setAttribute('aria-live','polite');
+  status.textContent='REGISTERED · PENDING REVIEW · MALWARE SCAN UNAVAILABLE';
+  button.addEventListener('click',async function(){
+    if(button.disabled)return;
+    var tab=window.open('about:blank','_blank');
+    if(!tab){status.textContent='Allow pop-ups to open the private attachment.';return;}
+    try{tab.opener=null;}catch(_error){}
+    button.disabled=true;status.textContent='Requesting owner-authorized private delivery…';
+    try{
+      var result=await window.OmegaContentTasks.signedDownload(fileId);
+      if(!result||result.state!=='SIGNED'||!result.data||typeof result.data.signed_url!=='string')throw new Error('signed_delivery_unavailable');
+      tab.location.replace(result.data.signed_url);
+      status.textContent='Private attachment link expires in 15 minutes.';
+    }catch(_error){
+      try{tab.close();}catch(_closeError){}
+      status.textContent='Private attachment unavailable. Refresh the archive and retry.';
+    }finally{button.disabled=false;}
+  });
+  container.appendChild(button);container.appendChild(status);
+}
+
 async function loadArchive(){
   var box=document.getElementById('p-list');
   try{
@@ -178,7 +203,15 @@ async function loadArchive(){
       var workBody=document.createElement('div');workBody.className='work-body';
       var workContent=document.createElement('div');workContent.className='work-content';workContent.textContent=w.body||'';
       workBody.appendChild(workContent);d.appendChild(header);d.appendChild(workBody);
-      if(w.file_path)attachPrivateDownload(d.querySelector('.work-body'),w.file_path);
+      var contentRefPrefix='omega-content://storage_files/';
+      if(typeof w.file_path==='string'&&w.file_path.indexOf(contentRefPrefix)===0){
+        var contentId=w.file_path.slice(contentRefPrefix.length);
+        if(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(contentId))
+          attachGovernedPrivateDownload(d.querySelector('.work-body'),contentId);
+        else{
+          var invalidRef=document.createElement('span');invalidRef.className='work-attachment-status';invalidRef.textContent='GOVERNED ATTACHMENT REFERENCE INVALID — SUPPORT REVIEW REQUIRED';d.querySelector('.work-body').appendChild(invalidRef);
+        }
+      }else if(w.file_path)attachPrivateDownload(d.querySelector('.work-body'),w.file_path);
       d.querySelector('.work-header').addEventListener('click',function(){d.classList.toggle('open');});
       box.appendChild(d);
     });
@@ -193,41 +226,43 @@ document.getElementById('p-go').addEventListener('click',async function(){
   if(title.length<2){showMsg(false,'Give your work a title.');return;}
   if(body.length<40){showMsg(false,'The work is too short — at least 40 characters.');return;}
   btn.disabled=true;showMsg(true,'Committing…');
-  var filePath=null;
+  var contentFileRef=null;
   var fEl=document.getElementById('p-file');
   if(fEl&&fEl.files&&fEl.files[0]){
-    showMsg(true,'Uploading file… (large files take time)');
-    var up=null;
-    try{up=await window.OmegaStorage.upload('uploads',fEl.files[0]);}catch(e){up={error:e.message||String(e)};}
-    if(!up||up.error){btn.disabled=false;showMsg(false,'Upload failed: '+((up&&up.error)||'no response from storage.')+' Nothing was committed.');return;}
-    filePath=up.path||null;
-    if(!filePath){btn.disabled=false;showMsg(false,'Upload failed: storage returned no path. Nothing was committed.');return;}
+    showMsg(true,'Registering private attachment…');
+    if(!window.OmegaContentTasks||typeof window.OmegaContentTasks.upload!=='function'){btn.disabled=false;showMsg(false,'GOVERNED UPLOAD UNAVAILABLE — no publication was committed. Retry after the content service loads.');return;}
+    var uploadTask=null;
+    try{uploadTask=await window.OmegaContentTasks.upload(fEl.files[0],{content_type:'publication_attachment'});}catch(_error){uploadTask=null;}
+    if(!uploadTask||uploadTask.state!=='PENDING_REVIEW'||!uploadTask.data||!uploadTask.data.file||typeof uploadTask.data.file.id!=='string'){
+      btn.disabled=false;
+      var uploadState=uploadTask&&uploadTask.state?uploadTask.state:'UNCONFIRMED';
+      showMsg(false,'ATTACHMENT NOT REGISTERED — '+uploadState+'. No publication was committed. If the upload outcome is uncertain, refresh the archive and request support reconciliation before retrying.');
+      return;
+    }
+    contentFileRef='omega-content://storage_files/'+uploadTask.data.file.id;
+    showMsg(true,'Attachment registered privately · pending review · malware scan unavailable. Saving archive record…');
   }
   var ins=null;
   try{
-    ins=await sb.from('publications').insert({user_id:userId,kind:kind,title:title,body:body,file_path:filePath});
+    ins=await sb.from('publications').insert({user_id:userId,kind:kind,title:title,body:body,file_path:contentFileRef});
     var insertError=ins&&ins.error;
   }catch(_error){
     btn.disabled=false;
-    showMsg(false,filePath
-      ?'COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED. Refresh your archive before retrying to avoid a duplicate.'
+    showMsg(false,contentFileRef
+      ?'COMMIT STATUS UNKNOWN — THE REGISTERED PRIVATE FILE WAS PRESERVED. Refresh your archive before retrying to avoid a duplicate.'
       :'COMMIT STATUS UNKNOWN — Refresh your archive before retrying to avoid a duplicate.');
     return;
   }
   if(!ins||insertError){
     var code=insertError&&typeof insertError.code==='string'?insertError.code:'';
-    if(filePath&&/^[0-9A-Z]{5}$/.test(code)){
-      var cleanup=null;
-      try{cleanup=await window.OmegaStorage.remove('uploads',filePath);}catch(_error){cleanup={error:'cleanup_unconfirmed'};}
+    if(contentFileRef){
       btn.disabled=false;
-      showMsg(false,cleanup&&!cleanup.error
-        ?'PUBLICATION REJECTED ('+code+'). UPLOAD ROLLED BACK.'
-        :'PUBLICATION REJECTED ('+code+'). FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED.');
+      showMsg(false,'PUBLICATION REJECTED ('+(code||'DATABASE_ERROR')+'). THE REGISTERED PRIVATE FILE WAS PRESERVED; NO UNSAFE CLIENT-SIDE DELETE WAS ATTEMPTED. Support reconciliation may be required.');
       return;
     }
     btn.disabled=false;
-    showMsg(false,filePath
-      ?'COMMIT STATUS UNKNOWN — THE UPLOADED FILE WAS PRESERVED. Refresh your archive before retrying.'
+    showMsg(false,contentFileRef
+      ?'COMMIT STATUS UNKNOWN — THE REGISTERED PRIVATE FILE WAS PRESERVED. Refresh your archive before retrying.'
       :'Could not commit ('+(code||'response unavailable')+'). Refresh your archive before retrying.');
     return;
   }
@@ -243,7 +278,7 @@ document.getElementById('p-go').addEventListener('click',async function(){
   }catch(e){
     axisMsg=' Progression award could not be confirmed; publication is still saved.';
   }
-  if(window.OmegaCelebrate){var pr=(await sb.from('profiles').select('membership_tier').eq('id',userId).maybeSingle()).data||{};var tier=pr.membership_tier||1;document.dispatchEvent(new CustomEvent('omega:social-milestone',{detail:{type:'publish',tier:tier,metadata:{kind:kind,title_length:title.length,file_attached:!!filePath}}}));}
+  if(window.OmegaCelebrate){var pr=(await sb.from('profiles').select('membership_tier').eq('id',userId).maybeSingle()).data||{};var tier=pr.membership_tier||1;document.dispatchEvent(new CustomEvent('omega:social-milestone',{detail:{type:'publish',tier:tier,metadata:{kind:kind,title_length:title.length,file_attached:!!contentFileRef}}}));}
   btn.disabled=false;showMsg(true,'Committed to your archive.'+axisMsg);
   document.getElementById('p-title').value='';document.getElementById('p-body').value='';if(fEl)fEl.value='';
   await loadArchive();setTab('archive');
@@ -261,7 +296,8 @@ async function boot(){
 }
 boot();
 </script>
-<script src="/upload.js"></script>
+<script type="module" src="/upload.js"></script>
+<script src="/omega-content-tasks.js"></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

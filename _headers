@@ -10,6 +10,9 @@
 /omega-platform-experience-v4.css
   Cache-Control: public, max-age=31536000, immutable
 
+/omega-platform-experience-v5.css
+  Cache-Control: public, max-age=31536000, immutable
+
 /omega-domain-hubs.js
   Cache-Control: public, max-age=31536000, immutable
 

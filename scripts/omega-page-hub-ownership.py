@@ -40,6 +40,7 @@ HUBS = {
 PROTECTED_HUB_BY_STEM = {
     "account": "profile.html",
     "kyc": "profile.html",
+    "terms": "govern.html",
     "payments": "vault.html",
     "subscriptions": "vault.html",
     "wallet": "invest.html",

@@ -376,18 +376,6 @@ function __omegaAppend(el){
     link.href='/css/omega-cinematic-animations-phase3.css'; link.type='text/css';
     head.appendChild(link);
   }
-  /* Platform Experience v4: final site-wide visual layer. Loaded after the
-     shared visual stack so it is visible on every route without changing
-     markup, page state, data contracts, authorization or feature behavior.
-     Versioned URL prevents stale browser/CDN copies after deployment. */
-  if(!document.getElementById('omega-platform-experience-v4-css')){
-    var experience=document.createElement('link');
-    experience.id='omega-platform-experience-v4-css';
-    experience.rel='stylesheet';
-    experience.href='/omega-platform-experience-v4.css?v=20261118-v4';
-    experience.type='text/css';
-    head.appendChild(experience);
-  }
 })();
  
 /* Omega-GVP: ambient noise overlay + cursor-reactive glass light.
@@ -3226,3 +3214,19 @@ setTimeout(function(){
 
   /* Ω DevTools — performance profiling, error reporting, debugging utilities */
   if(!document.querySelector('script[data-omega-devtools]')){var _odev=document.createElement('script');_odev.src='/omega-devtools.js';_odev.setAttribute('data-omega-devtools','1');_odev.defer=true;__omegaAppend(_odev);}
+
+
+/* Ω PLATFORM EXPERIENCE V4 — final cascade position.
+   Append after every synchronous global style injection in bg.js so page-wide
+   surface, hierarchy and interaction treatments cannot be silently shadowed
+   by older runtime style tags. */
+(function(){
+  var head=document.head||document.documentElement;
+  if(!head || document.getElementById('omega-platform-experience-v4-css')) return;
+  var experience=document.createElement('link');
+  experience.id='omega-platform-experience-v4-css';
+  experience.rel='stylesheet';
+  experience.href='/omega-platform-experience-v4.css?v=20261118-v4';
+  experience.type='text/css';
+  head.appendChild(experience);
+})();

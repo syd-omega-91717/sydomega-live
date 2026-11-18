@@ -391,9 +391,14 @@
     kyc:1,payments:1,portfolio:1,privacy:1,security:1,settings:1,
     subscriptions:1,terms:1,treasury:1,wallet:1
   };
+  function isEmbeddedView(){
+    if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return true;
+    if(window.parent===window) return false;
+    try{return window.parent.location.origin===window.location.origin;}catch(error){return false;}
+  }
   function workspaceHref(rawHref){
     try{
-      if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return rawHref;
+      if(isEmbeddedView()) return rawHref;
       var url=new URL(rawHref,window.location.href);
       if(url.origin!==window.location.origin || url.pathname===window.location.pathname) return rawHref;
       var file=url.pathname.split('/').pop()||'';
@@ -414,7 +419,7 @@
     }catch(error){return rawHref;}
   }
   (function installWorkspaceRouteHandler(){
-    if(new URLSearchParams(window.location.search).get('omega_embed')==='1') return;
+    if(isEmbeddedView()) return;
     window.addEventListener('click',function(event){
       if(event.defaultPrevented || event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       var link=event.target && event.target.closest ? event.target.closest('a[href]') : null;

@@ -40,7 +40,7 @@ class ReadabilityContractTests(unittest.TestCase):
         for page in (PROFILE, DASHBOARD, MEDIA, VAULT):
             self.assertIn('/omega-readable-layout-v2.css', page)
             self.assertNotIn('/omega-readable-layout.css?v=', page)
-        self.assertIn('/omega-readable-layout-v2.css\\n  Cache-Control: public, max-age=31536000, immutable', HEADERS)
+        self.assertIn('/omega-readable-layout-v2.css\n  Cache-Control: public, max-age=31536000, immutable', HEADERS)
 
     def test_dark_brand_palette_is_preserved(self):
         self.assertIn('var(--cyan, #00E5FF)', CSS)

@@ -36,17 +36,25 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             slug = page.stem
             district = district_by_slug.get(slug)
             action = action_by_slug.get(slug)
-            rule = next(
+            exact = next(
                 (
                     row for row in MANIFEST.get("rules", [])
-                    if any(slug == token or token in slug for token in row.get("match", "").split("|"))
+                    if any(token.startswith("=") and slug == token[1:] for token in row.get("match", "").split("|"))
+                ),
+                None,
+            )
+            broad = next(
+                (
+                    row for row in MANIFEST.get("rules", [])
+                    if any(not token.startswith("=") and (slug == token or token in slug) for token in row.get("match", "").split("|"))
                 ),
                 None,
             )
             archetype = (
-                district if district in MANIFEST["archetypes"] else
+                exact.get("archetype") if exact and exact.get("archetype") in MANIFEST["archetypes"] else
                 action if action != "command" and action in MANIFEST["archetypes"] else
-                rule.get("archetype") if rule and rule.get("archetype") in MANIFEST["archetypes"] else
+                broad.get("archetype") if broad and broad.get("archetype") in MANIFEST["archetypes"] else
+                district if district in MANIFEST["archetypes"] else
                 action if action in MANIFEST["archetypes"] else
                 "command"
             )

@@ -2,6 +2,9 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
+HOME = (ROOT / "index.html").read_text(encoding="utf-8")
+LANDING_CSS = (ROOT / "omega-landing-system.css").read_text(encoding="utf-8")
+SCULPTURE = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
 PROFILE = (ROOT / "profile.html").read_text(encoding="utf-8")
 DASHBOARD = (ROOT / "dashboard.html").read_text(encoding="utf-8")
 MEDIA = (ROOT / "media.html").read_text(encoding="utf-8")
@@ -57,6 +60,19 @@ class ReadabilityContractTests(unittest.TestCase):
         self.assertIn('height: auto;', CSS)
         self.assertIn('flex-wrap: wrap;', CSS)
 
+
+
+    def test_homepage_exposes_six_primary_mobile_destinations(self):
+        self.assertIn('aria-label="Primary mobile navigation"', HOME)
+        for href in ("/", "/enter.html", "/search.html", "/creator.html", "/notifications.html", "/profile.html"):
+            self.assertIn(f'href="{href}"', HOME)
+        self.assertIn("grid-template-columns: repeat(6, minmax(0, 1fr));", LANDING_CSS)
+        self.assertIn("@media (max-width: 760px)", LANDING_CSS)
+
+    def test_homepage_signet_uses_dimensional_sway_not_a_spinning_orbit(self):
+        self.assertIn("mark.rotation.y = Math.sin(t * 0.33)", SCULPTURE)
+        self.assertNotIn("orbit.rotation.z = t * 0.30", SCULPTURE)
+        self.assertIn("IDLE (sway & glow)", SCULPTURE)
 
 if __name__ == "__main__":
     unittest.main()

@@ -83,9 +83,11 @@ class GuardTrustContract(unittest.TestCase):
         self.assertNotIn("DATA WILL BE DELETED WITHIN 30 DAYS", PRIVACY)
         self.assertNotIn("queues a 30-day deletion job", PRIVACY)
         self.assertIn("not a certification claim by SYD OMEGA", PRIVACY)
+        self.assertIn("Withdrawal initiates deletion", PRIVACY)
+        self.assertIn("LEGAL REVIEW REQUIRED", TERMS)
         self.assertIn("The current browser export packages profile fields", PRIVACY)
         self.assertNotIn("journey logs, consent records, and all sovereign metadata", PRIVACY)
-        self.assertIn("a design objective, not a certification", PRIVACY)
+        self.assertIn("A design objective, not a certification", PRIVACY)
         self.assertNotIn("Every table in the Supabase database has RLS", PRIVACY)
 
 

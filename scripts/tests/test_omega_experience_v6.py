@@ -57,6 +57,13 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         self.assertIn("if(pageWorld&&pageWorld.pages)", WORLD)
         self.assertIn("archetype=findArchetype()", WORLD)
 
+    def test_intelligence_match_does_not_capture_unrelated_words(self):
+        intelligence_rule = next(r for r in MANIFEST["rules"] if r["archetype"] == "intelligence" and "prediction" in r["match"])
+        self.assertIn("ai-", intelligence_rule["match"].split("|"))
+        self.assertNotIn("ai", intelligence_rule["match"].split("|"))
+        for slug in ("trailers", "maintenance"):
+            self.assertFalse(any(slug == token or token in slug for token in intelligence_rule["match"].split("|")))
+
     def test_manifest_explicitly_classifies_previously_unmapped_pages(self):
         rules = MANIFEST["rules"]
         mapping = {}

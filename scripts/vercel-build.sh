@@ -60,13 +60,6 @@ if command -v node >/dev/null 2>&1 && [ -f scripts/vercel-build-enhance.mjs ]; t
   node scripts/vercel-build-enhance.mjs
 fi
 
-# Fingerprint local CSS/JS references with this exact release commit. Cloudflare
-# and browser caches may retain an unversioned asset URL across a Pages deploy;
-# changing the query key makes every deployed asset URL release-specific.
-python3 scripts/version-static-assets.py || {
-  echo 'VERCEL_BUILD=FAIL asset_versioning'; exit 1;
-}
-
 # config/ is internal (security policies, migration provenance, live-runtime
 # evidence: 68 files) except the handful a shipped module fetches at runtime.
 # Ship exactly those -- derived from the references in the emitted tree, so a
@@ -112,6 +105,14 @@ done
 
 # The emitted tree must be self-contained. This catches dropped directories,
 # renamed assets, and broken absolute local references before Vercel publishes.
+
+# Fingerprint local CSS/JS references with this exact release commit. Cloudflare
+# and browser caches may retain an unversioned asset URL across a Pages deploy;
+# changing the query key makes every deployed asset URL release-specific.
+python3 scripts/version-static-assets.py || {
+  echo 'VERCEL_BUILD=FAIL asset_versioning'; exit 1;
+}
+
 missing_refs=0
 ref_list="$(grep -rhoE "[\"'(]/[A-Za-z0-9_][A-Za-z0-9._/-]*\\.(js|css|json|html|svg|png|jpg|jpeg|webp|gif|avif|ico|woff|woff2|ttf|otf|mp3|wav|mp4|webm|webmanifest|xml)" \
   --include='*.html' --include='*.js' --include='*.css' --include='*.json' --include='*.webmanifest' \

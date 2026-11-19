@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+"""Contract tests for the archetype-aware Omega Platform Experience v6 layer."""
+from pathlib import Path
+import json
+import re
+import unittest
+
+ROOT = Path(__file__).resolve().parents[2]
+BG = ROOT / "bg.js"
+CSS = ROOT / "omega-platform-experience-v6.css"
+PAGE_WORLD = ROOT / "omega-page-world.js"
+MANIFEST = ROOT / "config" / "page-character-manifest.json"
+CONTRACTS = ROOT / "config" / "omega-page-contracts.json"
+SCHEMA = ROOT / "config" / "page-character-manifest.schema.json"
+
+class OmegaPlatformExperienceV6Contract(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.bg = BG.read_text(encoding="utf-8")
+        cls.css = CSS.read_text(encoding="utf-8")
+        cls.page_world = PAGE_WORLD.read_text(encoding="utf-8")
+        cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        cls.contracts = json.loads(CONTRACTS.read_text(encoding="utf-8"))
+        cls.schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+
+    def test_v6_loads_after_v5_in_the_global_runtime(self):
+        v5 = self.bg.index("omega-platform-experience-v5.css?v=20261118-v5")
+        v6 = self.bg.index("omega-platform-experience-v6.css?v=20261119-v6")
+        self.assertGreater(v6, v5)
+        self.assertIn("omega-platform-experience-v6-css", self.bg)
+
+    def test_every_canonical_page_has_one_known_visual_archetype(self):
+        mapping = self.manifest["pageArchetypes"]
+        known = set(self.manifest["archetypes"])
+        paths = {
+            Path(item["path"]).stem
+            for item in self.contracts["contracts"]
+        }
+        self.assertEqual(len(paths), self.contracts["page_count"])
+        self.assertEqual(set(mapping), paths)
+        self.assertTrue(set(mapping.values()).issubset(known))
+        self.assertEqual(self.manifest["pageArchetypeFallback"], "system")
+        self.assertIn("pageArchetypes", self.schema["properties"])
+        self.assertIn("pageArchetypeFallback", self.schema["properties"])
+
+    def test_legacy_substring_collisions_are_resolved_by_exact_page_map(self):
+        mapping = self.manifest["pageArchetypes"]
+        self.assertEqual(mapping["blockchain"], "finance")
+        self.assertEqual(mapping["maintenance"], "governance")
+        self.assertEqual(mapping["graphify"], "intelligence")
+        self.assertEqual(mapping["game-origins"], "gaming")
+        self.assertIn("manifest.pageArchetypes&&manifest.pageArchetypes[slug]", self.page_world)
+        self.assertIn("slug.indexOf(token+'-')===0", self.page_world)
+        self.assertNotIn("slug.indexOf(token)>-1", self.page_world)
+
+    def test_page_world_publishes_manifest_visual_contract(self):
+        for attribute in (
+            "data-omega-archetype",
+            "data-omega-visual",
+            "data-omega-motion-profile",
+            "data-omega-depth",
+            "data-omega-density",
+            "data-omega-district",
+        ):
+            self.assertIn(attribute, self.page_world)
+        self.assertIn("omega:page-world-ready", self.page_world)
+        self.assertIn("visual:a.visual||archetype", self.page_world)
+
+    def test_all_twelve_archetypes_have_distinct_visual_tokens(self):
+        for archetype in self.manifest["archetypes"]:
+            self.assertIn(f'html[data-omega-archetype="{archetype}"]', self.css)
+        for token in (
+            "--omega-v6-accent:",
+            "--omega-v6-accent-soft:",
+            "--omega-v6-accent-line:",
+            "--omega-v6-accent-glow:",
+            "--omega-v6-secondary:",
+        ):
+            self.assertIn(token, self.css)
+
+    def test_visual_layer_supports_media_rings_and_density_contracts(self):
+        for selector in (
+            ".omega-ring-surface",
+            ".omega-world-portal",
+            ".omega-atlas-card",
+            ".omega-media-frame",
+            ".omega-cinema-frame",
+            ".omega-scene-frame",
+            'data-omega-density="readable"',
+            'data-omega-density="data"',
+            'data-omega-density="transactional"',
+            'data-omega-density="workspace"',
+            'data-omega-density="social"',
+        ):
+            self.assertIn(selector, self.css)
+
+    def test_accessibility_and_mobile_rules_are_explicit(self):
+        self.assertIn("@media(max-width:760px)", self.css)
+        self.assertIn("@media(prefers-reduced-motion:reduce)", self.css)
+        self.assertIn("@media(forced-colors:active)", self.css)
+        self.assertIn("min-height:44px", self.css)
+
+    def test_layer_does_not_hide_content_or_disable_interaction(self):
+        self.assertNotIn("!important", self.css)
+        self.assertNotRegex(self.css, r"display\s*:\s*none")
+        self.assertNotRegex(self.css, r"visibility\s*:\s*hidden")
+        self.assertNotRegex(self.css, r"pointer-events\s*:\s*none")
+
+if __name__ == "__main__":
+    unittest.main()

@@ -68,6 +68,7 @@ class ReadabilityContractTests(unittest.TestCase):
             self.assertIn(f'href="{href}"', HOME)
         self.assertIn("grid-template-columns: repeat(6, minmax(0, 1fr));", LANDING_CSS)
         self.assertIn("@media (max-width: 760px)", LANDING_CSS)
+        self.assertIn("font: clamp(11px, 3.1vw, 12px)/1.15", LANDING_CSS)
 
     def test_homepage_signet_uses_dimensional_sway_not_a_spinning_orbit(self):
         self.assertIn("mark.rotation.y = Math.sin(t * 0.33)", SCULPTURE)

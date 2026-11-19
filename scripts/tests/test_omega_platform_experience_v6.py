@@ -120,7 +120,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
 
     def test_all_eighteen_modules_have_an_explicit_visual_mapping(self):
         design_doc = (ROOT / "docs" / "OMEGA_PLATFORM_EXPERIENCE_V6.md").read_text(encoding="utf-8")
-        rows = re.findall(r"^\\|\\s*\\d+\\s*\\|", design_doc, flags=re.MULTILINE)
+        rows = re.findall(r"^\|\s*\d+\s*\|", design_doc, flags=re.MULTILINE)
         self.assertEqual(len(rows), 18)
         self.assertIn("Communication & Security", design_doc)
         self.assertIn("Asset Ownership & Investment Engine", design_doc)

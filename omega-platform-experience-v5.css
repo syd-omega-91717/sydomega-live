@@ -281,6 +281,7 @@ html[data-omega-density-profile="data"] body.omega-simple :where(
 ){
   font-variant-numeric:tabular-nums lining-nums;
 }
+/* Density and motion remain data-driven; no page-specific duplicate token map. */
 html[data-omega-density-profile="clear"] body.omega-simple :where(
   main,.main,.page-shell,#omega-main-content
 ){

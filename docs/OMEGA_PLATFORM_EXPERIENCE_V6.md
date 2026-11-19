@@ -50,6 +50,34 @@ The reference ecosystem named in the project master prompt is translated into pr
 - **Microsoft, AWS, Cloudflare, Vercel, GitHub, GitLab, Docker, Kubernetes, HashiCorp, Oracle and IBM:** operational observability, release state, governance and recoverable workflows.
 - **NVIDIA, NASA, ESA and SpaceX:** data-rich telemetry, mission-control hierarchy, spatial context and scale cues.
 
+## Complete source benchmark inventory
+
+The project source prompt names the following organizations and applications. They are all included in the research inventory; the principles are adapted to SYD OMEGA rather than copied.
+
+| Source grouping | Named references | Transferable design / product lesson |
+|---|---|---|
+| Technology | Google, Alphabet, Microsoft, Apple, Amazon, AWS, Meta, OpenAI, Anthropic, NVIDIA, Oracle, IBM, Cloudflare, GitHub, GitLab | Consistent product systems, discoverability, enterprise controls, reliability and clear system status |
+| AI | DeepMind, OpenAI, Anthropic, xAI, Hugging Face | Agent identity, model transparency, source provenance, controllable tools and explainable results |
+| Space & engineering | SpaceX, NASA, ESA | Mission-control hierarchy, telemetry, spatial orientation and high-signal status displays |
+| Social | TikTok, YouTube, X, Reddit, Discord, LinkedIn | Discovery, feeds, creator identity, communities, professional identity and content context |
+| Knowledge | Wikipedia, Stack Overflow, GitHub, Internet Archive | Searchable knowledge, citations, version history, contribution context and archival navigation |
+| Entertainment | Disney, Netflix, Warner Bros., Pixar, Epic Games, Riot Games, Steam | Cinematic worlds, franchise continuity, strong visual identity, content discovery and collections |
+| Gaming | Unity, Unreal Engine, PlayStation, Xbox, Nintendo | Responsive game surfaces, progression, controller-friendly interaction and coherent world systems |
+| Finance | Stripe, PayPal, Visa, Mastercard | Transparent payments, transaction states, trust, receipts and error recovery |
+| Commerce | Amazon, Shopify | Catalog hierarchy, product comparison, merchant context and checkout clarity |
+| Communication | Slack, Zoom, Notion | Contextual messaging, presence, shared work and durable knowledge |
+| Productivity | Atlassian, Linear, Figma, Canva | Focused workspaces, clear task states, collaboration, editing and publishing |
+| Infrastructure | Docker, Kubernetes, HashiCorp, Vercel, Cloudflare | Operational visibility, deployment state, configuration clarity and recoverability |
+
+The module specifications also name the following integration surfaces. These are product references, not claims that each provider is currently connected or that its API is active:
+
+- **Social and identity:** Instagram, WhatsApp, X/Twitter, TikTok, LinkedIn, Telegram, Facebook, Snapchat, YouTube; Google, Facebook and Instagram OAuth.
+- **Wallet and exchange references:** Binance, Coinbase, Trust Wallet, KuCoin, Gate and Bybit.
+- **Hosting and delivery:** AWS, Render, Vercel, Netlify, Cloudflare and Namecheap.
+- **AI and media services:** Anthropic/Claude, Gemini, Perplexity and YouTube.
+
+The visual implementation keeps provider identity and external account state truthful: a logo, link or connector reference is not evidence of a live authorization, active API, verified account or successful transaction.
+
 ## Visual source governance
 
 The governed Visual Atlas records the source families and visual translation rules. Commercial/stock references remain mood references only; they are not copied, embedded, traced or served. Production art remains original or owner-supplied and appropriately licensed.

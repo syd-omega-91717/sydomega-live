@@ -64,6 +64,14 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
     def test_bootstrap_asset_markers_follow_the_live_release_fingerprint(self):
         version = "0123456789ab"
         self.assertEqual(
+            SMOKE.expected_global_asset_url("/bg.js", version),
+            "/bg.js?v=0123456789ab",
+        )
+        self.assertEqual(
+            SMOKE.expected_global_asset_url("/omega-platform-experience-v5.css", version),
+            "/omega-platform-experience-v5.css",
+        )
+        self.assertEqual(
             SMOKE.expected_global_asset_marker(
                 "/bg.js", "omega-platform-experience-v5.css", version
             ),

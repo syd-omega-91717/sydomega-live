@@ -945,3 +945,65 @@
 /* The footer's link cluster is inline; give its members breathing room. */
 .ohz-footer .ohz-navlink { margin-left: 18px; }
 .ohz-footer .ohz-navlink:first-child { margin-left: 0; }
+
+
+/* Homepage mobile navigation — the desktop header deliberately collapses
+   below 900px; this six-destination dock keeps the primary journeys visible. */
+.ohz-mobile-nav { display: none; }
+
+@media (max-width: 760px) {
+  .ohz-mobile-nav {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 9998;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0;
+    padding: 6px max(5px, env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(201, 168, 76, .24);
+    background: rgba(5, 6, 10, .96);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+  .ohz-mobile-nav-item {
+    min-width: 0;
+    min-height: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--ohz-dim);
+    text-decoration: none;
+    border-radius: 7px;
+  }
+  .ohz-mobile-nav-glyph {
+    color: var(--ohz-gold-bright);
+    font: 20px/1 var(--D, "Cinzel Decorative", Georgia, serif);
+  }
+  .ohz-mobile-nav-label {
+    color: inherit;
+    font: 11px/1.15 var(--M, "Courier Prime", monospace);
+    letter-spacing: .06em;
+    white-space: nowrap;
+  }
+  .ohz-mobile-nav-item[aria-current="page"],
+  .ohz-mobile-nav-item:hover {
+    color: var(--ohz-gold-bright);
+    background: rgba(201, 168, 76, .08);
+  }
+  .ohz-mobile-nav-item:focus-visible {
+    outline: 2px solid var(--ohz-cyan, #00E5FF);
+    outline-offset: -2px;
+  }
+  body { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 760px) and (pointer: fine) {
+  .ohz-mobile-nav { display: none; }
+  body { padding-bottom: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ohz-mobile-nav-item { transition: none; }
+}

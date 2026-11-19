@@ -209,3 +209,131 @@ body.omega-simple :where(.osc-stage,.omega-world-portal,.ow-world){
 @media(forced-colors:active){
   body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card){border:1px solid CanvasText;box-shadow:none}
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Ω EXPERIENCE EVOLUTION V6 — MANIFEST-DRIVEN VISUAL WORLDS
+   Route ownership remains in page-character/page-world manifests. The
+   manifest publishes the palette; this layer consumes it without replacing
+   page-owned artwork, layouts, routes, data or application behavior.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+html[data-omega-archetype]{
+  --omega-v6-ease:cubic-bezier(.2,.75,.25,1);
+  --omega-v6-focus:var(--omega-v6-secondary,#00E5FF);
+}
+html[data-omega-archetype] body.omega-simple :where(
+  .hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,
+  .omega-figure,.omega-domain-hub-console,.page-header,.section-header
+){
+  border-color:var(--omega-v6-line,var(--omega-v5-line));
+  background-color:rgba(10,10,15,.18);
+}
+html[data-omega-archetype] body.omega-simple :where(
+  .card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,
+  .glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,
+  .franchise-card,.game-card,.credential-card,.social-card
+){
+  border-color:var(--omega-v6-line,var(--omega-v5-line));
+}
+html[data-omega-archetype] body.omega-simple :where(
+  h1,.hero-title,.title,.oeh-title,.ow-title,.ohz-display,.omega-domain-page-title
+){
+  text-shadow:0 0 28px var(--omega-v6-glow,rgba(201,168,76,.12));
+}
+html[data-omega-archetype] body.omega-simple :where(
+  .sechead,.section-title,.hero-eyebrow,.kicker,.ohz-kicker,.ow-kicker,
+  .page-header .eyebrow,.section-header .eyebrow
+){
+  color:var(--omega-v6-accent,var(--omega-v5-gold-light));
+}
+html[data-omega-archetype] body.omega-simple :where(
+  .btn-primary,.btn-gold,.ohz-btn,.omega-domain-hub-action
+){
+  border-color:var(--omega-v6-line,var(--omega-v5-line));
+}
+html[data-omega-archetype] body.omega-simple :where(
+  a,button,[role="button"],input,select,textarea
+):focus-visible{
+  outline-color:var(--omega-v6-focus,#00E5FF);
+}
+
+/* Twelve visual signatures: one brand, distinct product-world personalities. */
+html[data-omega-visual="command"] body.omega-simple :where(.cmd-hero,.command-center,.mission-panel){border-color:var(--omega-v6-line)}
+html[data-omega-visual="identity"] body.omega-simple :where(.profile-hero,.credential-card,.passport-artifact){border-color:var(--omega-v6-line)}
+html[data-omega-visual="intelligence"] body.omega-simple :where(.chart,.graph,.telemetry,.intelligence-panel){border-color:var(--omega-v6-line)}
+html[data-omega-visual="knowledge"] body.omega-simple :where(article,.article-body,.reader-content,.prose,.knowledge-content){max-width:min(100%,82ch);line-height:1.76}
+html[data-omega-visual="arena"] body.omega-simple :where(.game-card,.arena-card,.leaderboard-row,.achievement-card){border-color:var(--omega-v6-line)}
+html[data-omega-visual="cinema"] body.omega-simple :where(video,.video-frame,.media-player,.film-poster,.poster-art,.omega-film-poster){border-color:var(--omega-v6-line)}
+html[data-omega-visual="exchange"] body.omega-simple :where(.product-card,.market-card,.checkout-panel,.purchase-panel){border-color:var(--omega-v6-line)}
+html[data-omega-visual="forge"] body.omega-simple :where(.workspace,.editor,.tool-panel,.creation-canvas,.workspace-panel){border-color:var(--omega-v6-line)}
+html[data-omega-visual="constellation"] body.omega-simple :where(.feed-item,.post,.comment,.message-thread,.conversation){border-color:var(--omega-v6-line)}
+html[data-omega-visual="council"] body.omega-simple :where(table,.data-table,.audit-table,.decision-log){border-color:var(--omega-v6-line)}
+html[data-omega-visual="treasury"] body.omega-simple :where(.kpi-value,.kpi-n,.metric-value,.amount,.balance,.currency-value){font-variant-numeric:tabular-nums lining-nums}
+html[data-omega-visual="control"] body.omega-simple :where(pre,code,.log-viewer,.telemetry,.system-console){font-family:var(--M,"Courier Prime",monospace)}
+
+/* Depth is semantic: orbital atmosphere, glass, holographic and 3D surfaces. */
+html[data-omega-depth="holographic"] body.omega-simple :where(
+  .hero,.panel,.card,.module,.glass,.glass-card,.omega-domain-hub-console
+){
+  -webkit-backdrop-filter:blur(18px) saturate(138%);
+  backdrop-filter:blur(18px) saturate(138%);
+}
+html[data-omega-depth="3d"] body.omega-simple :where(
+  .hero,.hero-band,.game-card,.omega-figure,.omega-domain-hub-console
+){transform-style:preserve-3d}
+html[data-omega-depth="orbital"] body.omega-simple :where(.cmd-hero,.ow-hud,.omega-figure){border-color:var(--omega-v6-line)}
+html[data-omega-depth="glass"] body.omega-simple :where(.panel,.card,.module,.widget){border-color:var(--omega-v6-line)}
+
+/* Density profiles control information rhythm, not truth or visibility. */
+html[data-omega-density="clear"] body.omega-simple :where(main,.main,.page-shell,#omega-main-content){
+  font-size:clamp(15px,1rem + .06vw,17px);line-height:1.68;
+}
+html[data-omega-density="readable"] body.omega-simple :where(main,.main,.page-shell,#omega-main-content){
+  font-size:clamp(15px,1rem + .08vw,17px);line-height:1.72;
+}
+html[data-omega-density="data"] body.omega-simple :where(.kpi-value,.kpi-n,.metric-value,.ustat-val,.sgi-val,.ss-val,td){
+  font-variant-numeric:tabular-nums lining-nums;
+}
+html[data-omega-density="visual"] body.omega-simple :where(.media-grid,.gallery-grid,.game-grid,.arena-grid,.achievement-grid){
+  gap:clamp(12px,1.6vw,22px);
+}
+html[data-omega-density="transactional"] body.omega-simple :where(form,.checkout-panel,.purchase-panel,.transaction-panel){line-height:1.58}
+html[data-omega-density="transactional"] body.omega-simple :where(button,.btn,.btn-primary,.btn-gold,input,select){min-height:44px}
+html[data-omega-density="workspace"] body.omega-simple :where(.workspace,.editor,.tool-panel,.creation-canvas,.workspace-panel){min-width:0;max-width:100%}
+html[data-omega-density="social"] body.omega-simple :where(.feed-item,.post,.comment,.message-thread,.conversation){margin-block:10px;line-height:1.62}
+html[data-omega-density="structured"] body.omega-simple :where(table,.data-table,.audit-table,.decision-log){line-height:1.52;font-variant-numeric:tabular-nums}
+html[data-omega-density="technical"] body.omega-simple :where(pre,code,.log-viewer,.telemetry,.system-console){font-family:var(--M,"Courier Prime",monospace);font-variant-numeric:tabular-nums}
+
+/* Motion profiles use transitions only; no extra perpetual animation. */
+html[data-omega-motion-profile="calm"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.14s}
+html[data-omega-motion-profile="precise"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.12s}
+html[data-omega-motion-profile="reactive"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.16s}
+html[data-omega-motion-profile="dynamic"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.22s}
+html[data-omega-motion-profile="organic"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.28s}
+html[data-omega-motion-profile="ceremonial"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.30s}
+html[data-omega-motion-profile="cinematic"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.34s}
+
+@media(max-width:760px){
+  html[data-omega-archetype] body.omega-simple :where(
+    .hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,
+    .omega-figure,.omega-domain-hub-console
+  ){background-attachment:scroll}
+  html[data-omega-archetype] body.omega-simple :where(
+    a,button,[role="button"],input,select,textarea
+  ){scroll-margin-top:5rem}
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-omega-archetype] body.omega-simple :where(
+    .card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,
+    .glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,
+    .franchise-card,.game-card,.credential-card,.social-card,
+    .btn,.btn-fill,.btn-gold,.btn-cyan,.btn-crim,.btn-primary,.btn-secondary,
+    .ohz-btn,.ohz-dock-btn,.ltab,.tab-btn,.mtab-btn,.filter-btn
+  ){animation:none!important;transition:none!important;transform:none!important}
+}
+@media(forced-colors:active){
+  html[data-omega-archetype] body.omega-simple :where(
+    .hero,.hero-band,.profile-hero,.ohz-hero,.card,.panel,.module,.tile,.widget
+  ){border:1px solid CanvasText;box-shadow:none;backdrop-filter:none}
+}

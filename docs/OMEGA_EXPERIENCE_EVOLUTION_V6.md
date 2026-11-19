@@ -40,13 +40,13 @@ The intended Ω emotional signatures remain distinctive: the chatbot should feel
 
 - Command: gold instrument surfaces and clear action hierarchy.
 - Identity: ceremonial gold and artifact framing.
-- Intelligence: cyan/purple analytical and holographic surfaces.
+- Intelligence: cyan/gold analytical and holographic surfaces.
 - Knowledge: calm readable surfaces and controlled reading width.
 - Gaming: cyan arena contrast with restrained crimson.
-- Media: cinematic gold framing with purple depth.
+- Media: cinematic gold framing with controlled crimson.
 - Commerce: gold transaction hierarchy with green success semantics.
 - Creation: cyan/gold workspace treatment.
-- Community: purple/cyan social constellation cues.
+- Community: cyan/gold social constellation cues.
 - Governance: deliberate gold/cyan decision surfaces.
 - Finance: tabular numeric alignment and trusted transaction cues.
 - System: crimson/cyan operational and telemetry surfaces.

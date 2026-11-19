@@ -40,23 +40,23 @@ The resolver uses existing canonical data in this order:
 5. The page action's `command` archetype when no more specific rule applies.
 6. The valid `command` archetype as the final fallback.
 
-The visual audit enumerated all **242 root HTML pages**. With the new explicit rules and collision fix, every route resolves to one of the 12 supported archetypes; no route is left unassigned. Current resolution counts:
+The visual audit enumerated all **252 HTML documents**: 242 root pages and 10 nested surfaces. With exact route overrides, curated action archetypes and collision-safe fallback rules, every document resolves to one of the 12 supported archetypes; no route is left unassigned. Current resolution counts across all 252 HTML documents:
 
 | Archetype | Root pages |
 |---|---:|
 | Intelligence | 55 |
 | Knowledge | 39 |
-| Command | 35 |
-| Gaming | 22 |
+| Command | 42 |
+| Gaming | 23 |
 | Media | 16 |
 | Community | 16 |
 | Finance | 12 |
-| System | 11 |
+| System | 13 |
 | Commerce | 10 |
 | Identity | 9 |
 | Creation | 9 |
 | Governance | 8 |
-| **Total** | **242** |
+| **Total** | **252** |
 
 The broad `ai` substring was removed from the intelligence rule because it incorrectly matched words such as `trailers` and `maintenance`. The narrower `ai-` token and explicit route rules avoid those collisions.
 

@@ -25,16 +25,26 @@
   };
 
   function findArchetype(){
-    if(district&&district.archetype&&manifest&&manifest.archetypes[district.archetype])return district.archetype;
+    if(manifest&&manifest.rules){
+      var exactHit=manifest.rules.find(function(r){
+        return String(r.match||'').split('|').some(function(token){
+          token=String(token).trim();
+          return token.charAt(0)==='=' && slug===token.slice(1);
+        });
+      });
+      if(exactHit&&manifest.archetypes[exactHit.archetype])return exactHit.archetype;
+    }
     if(pageWorld&&pageWorld.archetype&&pageWorld.archetype!=='command'&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
     if(manifest&&manifest.rules){
       var hit=manifest.rules.find(function(r){
         return String(r.match||'').split('|').some(function(token){
-          return slug===token || slug.indexOf(token)>-1;
+          token=String(token).trim();
+          return token.charAt(0)!=='=' && (slug===token || slug.indexOf(token)>-1);
         });
       });
       if(hit&&manifest.archetypes[hit.archetype])return hit.archetype;
     }
+    if(district&&district.archetype&&manifest&&manifest.archetypes[district.archetype])return district.archetype;
     if(pageWorld&&pageWorld.archetype&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
     return 'command';
   }

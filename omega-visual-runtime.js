@@ -37,12 +37,9 @@
   addSheet('omega-entertainment-3d-css','omega-entertainment-3d.css');
   addSheet('omega-world-atmosphere-css','omega-world-atmosphere.css');
   addSheet('omega-world-atlas-css','omega-world-atlas.css');
-  /* The hero emblem is the turning 3-D signet that omega-sculpture.js draws
-     into .ohz-hero-art. From 2026-09-15 this module laid a static "gateway"
-     composition over it and two sheets dimmed its canvas to 4.5% and 20%, so
-     the platform's own emblem stopped reading as the front door. The owner
-     asked for the rotating emblem back (2026-10-19): nothing here covers or
-     dims that mount any more. */
+  /* The hero emblem is the dimensional 3-D signet with restrained sway
+     that omega-sculpture.js draws into .ohz-hero-art. Keep this mount clear:
+     no overlay or stylesheet should cover or dim the platform's own emblem. */
   function installWorldAtlas(){
     if(document.querySelector('[data-omega-world-atlas]')) return true;
     var anchor=document.querySelector('.ohz-hero-art[data-omega-sculpture]');

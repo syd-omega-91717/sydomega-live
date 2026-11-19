@@ -60,6 +60,13 @@ if command -v node >/dev/null 2>&1 && [ -f scripts/vercel-build-enhance.mjs ]; t
   node scripts/vercel-build-enhance.mjs
 fi
 
+# Fingerprint local CSS/JS references with this exact release commit. Cloudflare
+# and browser caches may retain an unversioned asset URL across a Pages deploy;
+# changing the query key makes every deployed asset URL release-specific.
+python3 scripts/version-static-assets.py || {
+  echo 'VERCEL_BUILD=FAIL asset_versioning'; exit 1;
+}
+
 # config/ is internal (security policies, migration provenance, live-runtime
 # evidence: 68 files) except the handful a shipped module fetches at runtime.
 # Ship exactly those -- derived from the references in the emitted tree, so a

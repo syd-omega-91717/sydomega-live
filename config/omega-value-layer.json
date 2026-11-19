@@ -235,9 +235,9 @@
     },
     "privacy": {
       "realm": "intel",
-      "purpose": "Control consent, export and deletion of your platform data.",
-      "value": "Sovereignty includes the ability to inspect, export and erase your data.",
-      "proof": "LIVE — privacy controls and versioned documents.",
+      "purpose": "Review consent, export the currently supported data scope, and submit an account-erasure request.",
+      "value": "Inspect your available data, export the current supported scope, and understand the actual status and limits of erasure requests.",
+      "proof": "PARTIAL — versioned legal documents and consent records exist; profile-level acceptance is not linked to a document hash; export is scoped; complete erasure automation remains dormant.",
       "next": {
         "label": "Review privacy controls",
         "href": "/privacy.html"

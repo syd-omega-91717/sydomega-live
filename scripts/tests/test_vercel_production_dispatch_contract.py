@@ -140,6 +140,16 @@ class VercelProductionDispatchContract(unittest.TestCase):
         self.assertIn('verify_served_release "$served"', block)
         self.assertIn("exit 1", block)
 
+
+    def test_postponed_promotion_waits_for_apex_and_www_to_converge(self):
+        live = WORKFLOW.index("Live site serves this commit and every built route (Cloudflare Pages)")
+        block = WORKFLOW[live:WORKFLOW.index("Controlled state when token is unavailable")]
+        self.assertIn("read_release() {", block)
+        self.assertIn('served_apex="$(read_release "$OMEGA_PRODUCTION_BASE_URL" || true)"', block)
+        self.assertIn('served_www="$(read_release "https://www.sydomega.com" || true)"', block)
+        self.assertIn('if [[ -n "$served_apex" && "$served_apex" == "$served_www" ]]; then', block)
+        self.assertIn('apex=${served_apex:-none} www=${served_www:-none}', block)
+
     def test_build_stamps_each_deploy_into_the_service_worker(self):
         """A fixed sw.js CACHE_VERSION kept returning members on the previous
         deploy; the build must make every deploy a byte-different sw.js."""

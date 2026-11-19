@@ -2,6 +2,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# The release gate verifies both sydomega.com aliases before declaring a deploy live.
+# Keep this build entrypoint in the Pages build path when release-gate contracts change.
+
 # Cloudflare Pages Git integration deploys main independently of GitHub checks.
 # Enforce source/provider/pending migration parity before any production build;
 # branch previews remain available while a migration is under review.
@@ -105,6 +108,17 @@ done
 
 # The emitted tree must be self-contained. This catches dropped directories,
 # renamed assets, and broken absolute local references before Vercel publishes.
+
+# Fingerprint local CSS/JS references with this exact release commit. Cloudflare
+# and browser caches may retain an unversioned asset URL across a Pages deploy;
+# changing the query key makes every deployed asset URL release-specific.
+if [[ "${CF_PAGES_BRANCH:-}" == "main" || "${VERCEL_ENV:-}" == "production" ]]; then
+  export OMEGA_ASSET_VERSION_ABSOLUTE=1
+fi
+python3 scripts/version-static-assets.py || {
+  echo 'VERCEL_BUILD=FAIL asset_versioning'; exit 1;
+}
+
 missing_refs=0
 ref_list="$(grep -rhoE "[\"'(]/[A-Za-z0-9_][A-Za-z0-9._/-]*\\.(js|css|json|html|svg|png|jpg|jpeg|webp|gif|avif|ico|woff|woff2|ttf|otf|mp3|wav|mp4|webm|webmanifest|xml)" \
   --include='*.html' --include='*.js' --include='*.css' --include='*.json' --include='*.webmanifest' \

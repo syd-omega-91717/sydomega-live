@@ -12,6 +12,7 @@ supabase/
 *.py
 # Required by scripts/vercel-build.sh; keep this build-time utility in the Vercel source upload.
 !scripts/portable-host-config.py
+!scripts/version-static-assets.py
 *.sol
 *.sql
 

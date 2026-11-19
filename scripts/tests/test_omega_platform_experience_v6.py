@@ -91,6 +91,19 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertIn("slug.indexOf(token+'-')===0", self.page_world)
         self.assertNotIn("slug.indexOf(token)>-1", self.page_world)
 
+    def test_every_canonical_html_page_loads_the_shared_visual_runtime(self):
+        pages = sorted(ROOT.glob("*.html"))
+        self.assertEqual(len(pages), self.contracts["page_count"])
+        runtime = re.compile(
+            r"<script\\b[^>]*\\bsrc\\s*=\\s*[\"']?/?bg\\.js(?:[?#][^\"'\\s>]*)?[\"']?",
+            re.IGNORECASE,
+        )
+        missing = [
+            page.name for page in pages
+            if not runtime.search(page.read_text(encoding="utf-8"))
+        ]
+        self.assertEqual(missing, [])
+
     def test_page_world_publishes_manifest_visual_contract(self):
         for attribute in (
             "data-omega-archetype",

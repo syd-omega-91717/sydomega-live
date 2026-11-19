@@ -39,6 +39,13 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
             with self.assertRaises(ValueError, msg=unsafe):
                 SMOKE.validate_request_url(unsafe)
 
+    def test_smoke_requests_use_browser_compatible_headers(self):
+        headers = SMOKE.REQUEST_HEADERS
+        self.assertTrue(headers["User-Agent"].startswith("Mozilla/5.0"))
+        self.assertIn("Chrome/", headers["User-Agent"])
+        self.assertEqual(headers["Cache-Control"], "no-cache")
+        self.assertEqual(headers["Accept-Language"], "en-US,en;q=0.9")
+
     def test_global_omega_experience_assets_are_part_of_release_smoke(self):
         assets = SMOKE.REQUIRED_GLOBAL_ASSETS
         self.assertEqual(len(assets), 6)

@@ -235,6 +235,42 @@ body.omega-simple :where(.ova-card,.film-card,.olym-card,.franchise-card,.game-c
   outline-offset:3px;
 }
 
+/* The 18-module visual atlas keeps its own module accent while sharing the
+   same orbital card geometry and keyboard behavior. */
+body.omega-simple .omega-atlas-card{
+  border:1px solid var(--atlas-accent,var(--omega-v6-accent-line));
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse 72% 90% at 100% 0%,var(--omega-v6-accent-soft),transparent 76%),
+    linear-gradient(145deg,rgba(14,17,27,.96),rgba(3,5,11,.98));
+  box-shadow:0 18px 44px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.05);
+  transition:transform .22s var(--omega-v6-ease),border-color .22s var(--omega-v6-ease),box-shadow .22s var(--omega-v6-ease);
+}
+body.omega-simple .omega-atlas-orbit{
+  border:1px solid var(--atlas-accent,var(--omega-v6-accent));
+  border-radius:50%;
+  box-shadow:inset 0 0 20px var(--omega-v6-accent-soft),0 0 22px var(--omega-v6-accent-soft);
+}
+body.omega-simple .omega-atlas-index{
+  color:var(--atlas-accent,var(--omega-v6-accent));
+  font-variant-numeric:tabular-nums;
+}
+body.omega-simple .omega-atlas-name{
+  color:var(--omega-v6-accent);
+  letter-spacing:.08em;
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple .omega-atlas-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--atlas-accent,var(--omega-v6-accent));
+    box-shadow:0 24px 56px rgba(0,0,0,.42),var(--omega-v6-accent-glow),inset 0 1px rgba(255,255,255,.08);
+  }
+}
+body.omega-simple .omega-atlas-card:focus-visible{
+  outline:2px solid var(--omega-v6-secondary);
+  outline-offset:3px;
+}
+
 /* The visual atlas is a gallery of source references, never an entitlement view. */
 body.omega-simple :where(.ova-card){
   border:1px solid var(--omega-v6-accent-line);

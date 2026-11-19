@@ -51,15 +51,38 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
         assets = SMOKE.REQUIRED_GLOBAL_ASSETS
         self.assertEqual(len(assets), 6)
         self.assertEqual(assets[0][0], "/bg.js")
-        self.assertIn("omega-platform-experience-v5.css?v=20261118-v5", assets[0][2])
-        self.assertEqual(assets[1][0], "/omega-platform-experience-v4.css?v=20261118-v4")
+        self.assertEqual(assets[0][2], "omega-platform-experience-v5.css")
+        self.assertEqual(assets[1][0], "/omega-platform-experience-v4.css")
         self.assertIn("PLATFORM EXPERIENCE V4", assets[1][2])
-        self.assertEqual(assets[2][0], "/omega-platform-experience-v5.css?v=20261118-v5")
+        self.assertEqual(assets[2][0], "/omega-platform-experience-v5.css")
         self.assertIn("PLATFORM EXPERIENCE V5", assets[2][2])
         self.assertEqual(assets[3][0], "/bg.js")
-        self.assertIn("omega-domain-hub.css?v=20261118-hubs-v1", assets[3][2])
-        self.assertEqual(assets[4][0], "/omega-domain-hubs.js?v=20261118-hubs-v1")
-        self.assertEqual(assets[5][0], "/omega-domain-hub.css?v=20261118-hubs-v1")
+        self.assertEqual(assets[3][2], "omega-domain-hub.css")
+        self.assertEqual(assets[4][0], "/omega-domain-hubs.js")
+        self.assertEqual(assets[5][0], "/omega-domain-hub.css")
+
+    def test_bootstrap_asset_markers_follow_the_live_release_fingerprint(self):
+        version = "0123456789ab"
+        self.assertEqual(
+            SMOKE.expected_global_asset_marker(
+                "/bg.js", "omega-platform-experience-v5.css", version
+            ),
+            "omega-platform-experience-v5.css?v=0123456789ab",
+        )
+        self.assertEqual(
+            SMOKE.expected_global_asset_marker(
+                "/omega-platform-experience-v5.css", "PLATFORM EXPERIENCE V5", version
+            ),
+            "PLATFORM EXPERIENCE V5",
+        )
+
+    def test_release_manifest_must_supply_a_full_commit_sha(self):
+        self.assertEqual(
+            SMOKE.release_asset_version_from_manifest('{"commit_sha":"' + "a" * 40 + '"}'),
+            "aaaaaaaaaaaa",
+        )
+        with self.assertRaises(ValueError):
+            SMOKE.release_asset_version_from_manifest('{"commit_sha":"short"}')
 
     def test_cross_origin_redirects_are_rejected(self):
         handler = SMOKE.SameOriginRedirectHandler("sydomega.com", 443)

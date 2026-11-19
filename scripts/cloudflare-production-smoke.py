@@ -38,25 +38,27 @@ REQUEST_HEADERS = {
 }
 
 REQUIRED_GLOBAL_ASSETS = (
-    ("/bg.js", "javascript", "omega-platform-experience-v5.css?v=20261118-v5"),
+    # These are content markers, not cache keys. The production build rewrites
+    # every local CSS/JS query fingerprint to the current commit SHA.
+    ("/bg.js", "javascript", "omega-platform-experience-v5.css"),
     (
-        "/omega-platform-experience-v4.css?v=20261118-v4",
+        "/omega-platform-experience-v4.css",
         "text/css",
         "Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V4",
     ),
     (
-        "/omega-platform-experience-v5.css?v=20261118-v5",
+        "/omega-platform-experience-v5.css",
         "text/css",
         "Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V5",
     ),
-    ("/bg.js", "javascript", "omega-domain-hub.css?v=20261118-hubs-v1"),
+    ("/bg.js", "javascript", "omega-domain-hub.css"),
     (
-        "/omega-domain-hubs.js?v=20261118-hubs-v1",
+        "/omega-domain-hubs.js",
         "javascript",
         "Ω SYD OMEGA 91717 — DOMAIN HUB WORKSPACES",
     ),
     (
-        "/omega-domain-hub.css?v=20261118-hubs-v1",
+        "/omega-domain-hub.css",
         "text/css",
         "Ω SYD OMEGA 91717 — DOMAIN HUB WORKSPACES",
     ),
@@ -203,6 +205,26 @@ def request_url(
         session.close()
 
 
+def release_asset_version_from_manifest(body: str) -> str:
+    """Return the 12-character asset fingerprint declared by the live release."""
+    manifest = json.loads(body)
+    commit_sha = manifest.get("commit_sha", "")
+    if (
+        not isinstance(commit_sha, str)
+        or len(commit_sha) != 40
+        or any(char not in "0123456789abcdef" for char in commit_sha)
+    ):
+        raise ValueError("release manifest contains an invalid commit SHA")
+    return commit_sha[:12]
+
+
+def expected_global_asset_marker(path: str, marker: str, asset_version: str) -> str:
+    """Check bootstrap references against the live release's fingerprint."""
+    if path == "/bg.js":
+        return f"{marker}?v={asset_version}"
+    return marker
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url", default="https://sydomega.com")
@@ -215,6 +237,12 @@ def main() -> int:
         if base_parts.query or base_parts.fragment:
             raise ValueError("base URL must not include a query or fragment")
         base = safe_base.rstrip("/") + "/"
+        manifest_status, _, manifest_body = request_url(
+            urljoin(base, ".well-known/omega-release.json"), "GET", args.timeout
+        )
+        if manifest_status != 200:
+            raise ValueError(f"release manifest returned HTTP {manifest_status}")
+        asset_version = release_asset_version_from_manifest(manifest_body)
         base_host = base_parts.netloc.lower()
         registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
         contracts = registry.get("contracts", [])
@@ -261,9 +289,11 @@ def main() -> int:
         global_asset_failures: list[tuple[str, int, str]] = []
         for path, expected_type, marker in REQUIRED_GLOBAL_ASSETS:
             asset_url = urljoin(base, path.lstrip("/"))
+            expected_marker = expected_global_asset_marker(path, marker, asset_version)
             status, content_type, body = request_url(asset_url, "GET", args.timeout)
             valid_type = expected_type in content_type.lower()
-            if status != 200 or not valid_type or marker not in body:
+            marker_present = expected_marker in body
+            if status != 200 or not valid_type or not marker_present:
                 body_bytes = body.encode("utf-8", errors="replace")
                 body_prefix = repr(body[:180])
                 body_sha256 = hashlib.sha256(body_bytes).hexdigest()
@@ -271,8 +301,8 @@ def main() -> int:
                     asset_url,
                     status,
                     f"type={content_type}; body_bytes={len(body_bytes)}; "
-                    f"marker_present={marker in body}; sha256={body_sha256}; "
-                    f"body_prefix={body_prefix}",
+                    f"expected_marker={expected_marker}; marker_present={marker_present}; "
+                    f"sha256={body_sha256}; body_prefix={body_prefix}",
                 ))
 
         ref_failures: list[tuple[str, int, str]] = []

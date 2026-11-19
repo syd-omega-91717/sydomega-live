@@ -118,7 +118,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
             html = (ROOT / relative).read_text(encoding="utf-8")
             self.assertIn("/bg.js", html, relative)
             self.assertIn("dashboard.html", html, relative)
-            self.assertRegex(html, r"location\\.(?:replace|href)|setTimeout")
+            self.assertRegex(html, r"location\.(?:replace|href)|setTimeout")
         for relative in render_sources:
             html = (ROOT / relative).read_text(encoding="utf-8")
             self.assertNotIn("/bg.js", html, relative)

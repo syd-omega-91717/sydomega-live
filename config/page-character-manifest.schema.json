@@ -161,6 +161,18 @@
         },
         "successOutcome": {
           "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        },
+        "secondary": {
+          "type": "string"
+        },
+        "glow": {
+          "type": "string"
+        },
+        "line": {
+          "type": "string"
         }
       },
       "additionalProperties": false

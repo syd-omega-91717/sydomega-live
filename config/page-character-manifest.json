@@ -259,7 +259,7 @@
       "archetype": "identity"
     },
     {
-      "match": "intelligence|research|prediction|analytics|graph|search|oracle|agents|ai",
+      "match": "intelligence|research|prediction|analytics|graph|search|oracle|agents|ai-",
       "archetype": "intelligence"
     },
     {

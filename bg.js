@@ -2299,7 +2299,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* TOPBAR HOME+BACK + MOBILE BOTTOM NAV */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'guide':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'guide':1,'privacy':1};
   if(EX[pg])return;
   /* CSS injection */
   if(!document.getElementById('omega-ui-css')){
@@ -2464,7 +2464,7 @@ setTimeout(function(){
       } else if(!pr.access_approved && !pr.is_trial){
         /* Not approved and not on trial -- send to pending */
         var path=window.location.pathname;
-        var pub=['/account.html','/enter.html','/reset.html','/terms.html','/charter.html','/pending.html','/guide.html','/'];
+        var pub=['/account.html','/enter.html','/reset.html','/terms.html','/charter.html','/pending.html','/guide.html','/privacy.html','/'];
         if(!pub.some(function(p){return path.endsWith(p)||path===p;})){
           window.location.href='/pending.html';
         }

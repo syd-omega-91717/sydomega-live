@@ -4,12 +4,55 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = json.loads((ROOT / "config/page-character-manifest.json").read_text(encoding="utf-8"))
+WORLD_MANIFEST = json.loads((ROOT / "config/omega-world-manifest.json").read_text(encoding="utf-8"))
+PAGE_ACTIONS = json.loads((ROOT / "config/page-world-actions.json").read_text(encoding="utf-8"))
+PAGE_OVERRIDES = json.loads((ROOT / "config/page-world-overrides.json").read_text(encoding="utf-8"))
 WORLD = (ROOT / "omega-page-world.js").read_text(encoding="utf-8")
 SURFACES = (ROOT / "omega-archetype-surfaces.js").read_text(encoding="utf-8")
 CSS = (ROOT / "omega-platform-experience-v5.css").read_text(encoding="utf-8")
 
 
 class OmegaExperienceV6Tests(unittest.TestCase):
+    def test_every_root_html_page_resolves_to_a_valid_archetype(self):
+        action_by_slug = {
+            row.get("slug") or Path(row.get("page", "")).stem: row.get("archetype")
+            for row in PAGE_ACTIONS.get("pages", [])
+        }
+        district_by_slug = {}
+        for district in WORLD_MANIFEST.get("districts", []):
+            for page in district.get("pages", []):
+                district_by_slug[Path(str(page)).stem] = district.get("archetype")
+        for slug, district_id in PAGE_OVERRIDES.get("entries", {}).items():
+            if slug not in district_by_slug:
+                district = next(
+                    (d for d in WORLD_MANIFEST.get("districts", []) if d.get("id") == district_id),
+                    None,
+                )
+                if district:
+                    district_by_slug[slug] = district.get("archetype")
+        root_pages = sorted(p for p in ROOT.glob("*.html") if p.is_file())
+        self.assertGreaterEqual(len(root_pages), 240)
+        for page in root_pages:
+            slug = page.stem
+            district = district_by_slug.get(slug)
+            action = action_by_slug.get(slug)
+            rule = next(
+                (
+                    row for row in MANIFEST.get("rules", [])
+                    if any(slug == token or token in slug for token in row.get("match", "").split("|"))
+                ),
+                None,
+            )
+            archetype = (
+                district if district in MANIFEST["archetypes"] else
+                action if action != "command" and action in MANIFEST["archetypes"] else
+                rule.get("archetype") if rule and rule.get("archetype") in MANIFEST["archetypes"] else
+                action if action in MANIFEST["archetypes"] else
+                "command"
+            )
+            with self.subTest(page=page.name):
+                self.assertIn(archetype, MANIFEST["archetypes"])
+
     def test_all_twelve_manifest_profiles_are_complete(self):
         expected = {
             "command", "identity", "intelligence", "knowledge", "gaming", "media",

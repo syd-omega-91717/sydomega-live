@@ -118,6 +118,13 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertIn("visual:a.visual||archetype", self.page_world)
         self.assertIn("if(suppressMembrane)", self.page_world)
 
+    def test_all_eighteen_modules_have_an_explicit_visual_mapping(self):
+        design_doc = (ROOT / "docs" / "OMEGA_PLATFORM_EXPERIENCE_V6.md").read_text(encoding="utf-8")
+        rows = re.findall(r"^\\|\\s*\\d+\\s*\\|", design_doc, flags=re.MULTILINE)
+        self.assertEqual(len(rows), 18)
+        self.assertIn("Communication & Security", design_doc)
+        self.assertIn("Asset Ownership & Investment Engine", design_doc)
+
     def test_all_twelve_archetypes_have_distinct_visual_tokens(self):
         for archetype in self.manifest["archetypes"]:
             self.assertIn(f'html[data-omega-archetype="{archetype}"]', self.css)

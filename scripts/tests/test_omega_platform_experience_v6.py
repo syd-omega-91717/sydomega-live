@@ -84,7 +84,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
     def test_legacy_substring_collisions_are_resolved_by_exact_page_map(self):
         mapping = self.manifest["pageArchetypes"]
         self.assertEqual(mapping["blockchain"], "finance")
-        self.assertEqual(mapping["maintenance"], "governance")
+        self.assertEqual(mapping["maintenance"], "system")
         self.assertEqual(mapping["graphify"], "intelligence")
         self.assertEqual(mapping["game-origins"], "gaming")
         self.assertIn("manifest.pageArchetypes&&manifest.pageArchetypes[slug]", self.page_world)

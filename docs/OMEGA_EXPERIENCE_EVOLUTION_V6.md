@@ -4,7 +4,7 @@
 
 ## Design intent
 
-Make the existing platform feel like one coherent sovereign digital environment while giving each product domain its own visual character. The source of truth is `config/page-character-manifest.json`; the UI must not maintain a second page-to-archetype map.
+Make the existing platform feel like one coherent sovereign digital environment while giving each product domain its own visual character. The visual profile source is `config/page-character-manifest.json`. Existing page assignments come from `config/page-world-actions.json` and `config/omega-world-manifest.json` plus its overrides. One resolver combines these canonical sources; the UI must not maintain a second page-to-archetype map.
 
 ## Inspiration translated into original product principles
 
@@ -29,10 +29,41 @@ The brief asks these organizations to be examined across **engineering, scalabil
 
 The intended Ω emotional signatures remain distinctive: the chatbot should feel like an oracle, the leaderboard like an ascent, the passport like a crafted artifact, and the 9×9×9 structure should be perceptible through navigation and interaction—not through decorative clutter.
 
+## Complete page-to-world resolution
+
+The resolver uses existing canonical data in this order:
+
+1. An exact route override (a `=`-prefixed token) in `page-character-manifest.json`.
+2. A non-default archetype already assigned to the page in `page-world-actions.json`.
+3. The first matching broad visual rule in `page-character-manifest.json`.
+4. A valid district archetype from the world manifest.
+5. The page action's `command` archetype when no more specific rule applies.
+6. The valid `command` archetype as the final fallback.
+
+The visual audit enumerated all **252 HTML documents**: 242 root pages and 10 nested surfaces. With exact route overrides, curated action archetypes and collision-safe fallback rules, every document resolves to one of the 12 supported archetypes; no route is left unassigned. Current resolution counts across all 252 HTML documents:
+
+| Archetype | Root pages |
+|---|---:|
+| Intelligence | 55 |
+| Knowledge | 39 |
+| Command | 42 |
+| Gaming | 23 |
+| Media | 16 |
+| Community | 16 |
+| Finance | 12 |
+| System | 13 |
+| Commerce | 10 |
+| Identity | 9 |
+| Creation | 9 |
+| Governance | 8 |
+| **Total** | **252** |
+
+The broad `ai` substring was removed from the intelligence rule because it incorrectly matched words such as `trailers` and `maintenance`. The narrower `ai-` token and explicit route rules avoid those collisions.
+
 ## Implemented in this branch
 
 1. `omega-page-world.js` now publishes the canonical manifest's archetype, visual, motion, depth, density, interaction and emblem profiles as `data-omega-*` attributes on the document root. It does not create a parallel registry.
-2. `omega-platform-experience-v5.css` adds a manifest-driven visual layer: 12 distinct accent profiles, world-specific surface treatment, cinematic media framing, data typography, reading-width support and responsive/focus/reduced-motion/forced-colors rules.
+2. `omega-platform-experience-v5.css` consumes those manifest tokens and adds 12 distinct visual profiles, world-specific surface treatment, cinematic media framing, all density and motion profiles, data typography, reading-width support and responsive/focus/reduced-motion/forced-colors rules.
 3. `omega-archetype-surfaces.js` no longer hides generic `.card-content` on hover or by default. Visual archetypes may tune surface density, but pages own disclosure through semantic controls such as `details/summary` or explicit `aria-expanded` interactions. Essential content remains available to touch, keyboard and assistive-technology users.
 4. No new framework, renderer, dependency, database migration, route, API or fabricated metric is introduced.
 
@@ -40,13 +71,13 @@ The intended Ω emotional signatures remain distinctive: the chatbot should feel
 
 - Command: gold instrument surfaces and clear action hierarchy.
 - Identity: ceremonial gold and artifact framing.
-- Intelligence: cyan/purple analytical and holographic surfaces.
+- Intelligence: cyan/gold analytical and holographic surfaces.
 - Knowledge: calm readable surfaces and controlled reading width.
 - Gaming: cyan arena contrast with restrained crimson.
-- Media: cinematic gold framing with purple depth.
+- Media: cinematic gold framing with controlled crimson.
 - Commerce: gold transaction hierarchy with green success semantics.
 - Creation: cyan/gold workspace treatment.
-- Community: purple/cyan social constellation cues.
+- Community: cyan/gold social constellation cues.
 - Governance: deliberate gold/cyan decision surfaces.
 - Finance: tabular numeric alignment and trusted transaction cues.
 - System: crimson/cyan operational and telemetry surfaces.

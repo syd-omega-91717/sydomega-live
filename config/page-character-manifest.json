@@ -24,7 +24,11 @@
         "accept mission",
         "review standing"
       ],
-      "successOutcome": "mission accepted"
+      "successOutcome": "mission accepted",
+      "accent": "#C9A84C",
+      "secondary": "#00E5FF",
+      "glow": "rgba(201,168,76,.13)",
+      "line": "rgba(201,168,76,.34)"
     },
     "identity": {
       "visual": "identity",
@@ -40,7 +44,11 @@
         "equip",
         "present"
       ],
-      "successOutcome": "identity advanced"
+      "successOutcome": "identity advanced",
+      "accent": "#E8C97A",
+      "secondary": "#C9A84C",
+      "glow": "rgba(232,201,122,.14)",
+      "line": "rgba(232,201,122,.36)"
     },
     "intelligence": {
       "visual": "intelligence",
@@ -57,7 +65,11 @@
         "compare",
         "trace"
       ],
-      "successOutcome": "insight recorded"
+      "successOutcome": "insight recorded",
+      "accent": "#00E5FF",
+      "secondary": "#C9A84C",
+      "glow": "rgba(0,229,255,.13)",
+      "line": "rgba(0,229,255,.32)"
     },
     "knowledge": {
       "visual": "knowledge",
@@ -74,7 +86,11 @@
         "verify",
         "certify"
       ],
-      "successOutcome": "knowledge verified"
+      "successOutcome": "knowledge verified",
+      "accent": "#00E5FF",
+      "secondary": "#C9A84C",
+      "glow": "rgba(0,229,255,.10)",
+      "line": "rgba(0,229,255,.28)"
     },
     "gaming": {
       "visual": "arena",
@@ -91,7 +107,11 @@
         "rank",
         "claim reward"
       ],
-      "successOutcome": "mastery recorded"
+      "successOutcome": "mastery recorded",
+      "accent": "#00E5FF",
+      "secondary": "#8B0000",
+      "glow": "rgba(0,229,255,.15)",
+      "line": "rgba(0,229,255,.34)"
     },
     "media": {
       "visual": "cinema",
@@ -108,7 +128,11 @@
         "publish",
         "collect"
       ],
-      "successOutcome": "culture expanded"
+      "successOutcome": "culture expanded",
+      "accent": "#E8C97A",
+      "secondary": "#8B0000",
+      "glow": "rgba(232,201,122,.14)",
+      "line": "rgba(232,201,122,.34)"
     },
     "commerce": {
       "visual": "exchange",
@@ -125,7 +149,11 @@
         "sell",
         "commission"
       ],
-      "successOutcome": "transaction completed"
+      "successOutcome": "transaction completed",
+      "accent": "#E8C97A",
+      "secondary": "#00FF88",
+      "glow": "rgba(201,168,76,.12)",
+      "line": "rgba(201,168,76,.32)"
     },
     "creation": {
       "visual": "forge",
@@ -142,7 +170,11 @@
         "publish",
         "deploy"
       ],
-      "successOutcome": "artifact produced"
+      "successOutcome": "artifact produced",
+      "accent": "#00E5FF",
+      "secondary": "#E8C97A",
+      "glow": "rgba(0,229,255,.12)",
+      "line": "rgba(0,229,255,.32)"
     },
     "community": {
       "visual": "constellation",
@@ -159,7 +191,11 @@
         "record",
         "join"
       ],
-      "successOutcome": "relationship advanced"
+      "successOutcome": "relationship advanced",
+      "accent": "#00E5FF",
+      "secondary": "#C9A84C",
+      "glow": "rgba(0,229,255,.13)",
+      "line": "rgba(0,229,255,.30)"
     },
     "governance": {
       "visual": "council",
@@ -176,7 +212,11 @@
         "audit",
         "decide"
       ],
-      "successOutcome": "governance action recorded"
+      "successOutcome": "governance action recorded",
+      "accent": "#C9A84C",
+      "secondary": "#00E5FF",
+      "glow": "rgba(201,168,76,.10)",
+      "line": "rgba(201,168,76,.30)"
     },
     "finance": {
       "visual": "treasury",
@@ -193,7 +233,11 @@
         "pay",
         "invest"
       ],
-      "successOutcome": "financial state updated"
+      "successOutcome": "financial state updated",
+      "accent": "#E8C97A",
+      "secondary": "#00FF88",
+      "glow": "rgba(201,168,76,.11)",
+      "line": "rgba(201,168,76,.32)"
     },
     "system": {
       "visual": "control",
@@ -210,10 +254,50 @@
         "recover",
         "operate"
       ],
-      "successOutcome": "system state verified"
+      "successOutcome": "system state verified",
+      "accent": "#8B0000",
+      "secondary": "#00E5FF",
+      "glow": "rgba(139,0,0,.12)",
+      "line": "rgba(139,0,0,.32)"
     }
   },
   "rules": [
+    {
+      "match": "=achieve|=achievements|=my-quests|=quest-progress|=seasonal-events|=ladder",
+      "archetype": "gaming"
+    },
+    {
+      "match": "=archive|=ascend",
+      "archetype": "knowledge"
+    },
+    {
+      "match": "=control-center|=control-plane|=platform-kernel|=graph-admin|=maintenance",
+      "archetype": "system"
+    },
+    {
+      "match": "=cosmetics|=life",
+      "archetype": "identity"
+    },
+    {
+      "match": "=data-observatory|=insight|=intel|=orrery|=world-atlas",
+      "archetype": "intelligence"
+    },
+    {
+      "match": "=invest",
+      "archetype": "finance"
+    },
+    {
+      "match": "=omega-platform-navigator|=sovereign-core",
+      "archetype": "command"
+    },
+    {
+      "match": "=order",
+      "archetype": "community"
+    },
+    {
+      "match": "=worlds|=trailers",
+      "archetype": "media"
+    },
     {
       "match": "command|dashboard|home",
       "archetype": "command"
@@ -223,7 +307,7 @@
       "archetype": "identity"
     },
     {
-      "match": "intelligence|research|prediction|analytics|graph|search|oracle|agents|ai",
+      "match": "intelligence|research|prediction|analytics|graph|search|oracle|agents|ai-",
       "archetype": "intelligence"
     },
     {

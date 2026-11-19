@@ -178,3 +178,132 @@ body[data-omega-page="profile"] .omega-skip-link:focus-visible {
     transition: none;
   }
 }
+
+
+/* MEDIA — preserve the cinematic poster system while making catalogue copy readable. */
+body[data-omega-page="media"],
+body[data-omega-page="vault"] {
+  --fs-1: var(--omega-readable-label);
+  --fs-2: var(--omega-readable-body);
+  --fs-3: clamp(17px, 1rem + .1vw, 18px);
+  --fs-4: clamp(22px, 1.25rem + .1vw, 24px);
+  --fs-5: clamp(30px, 1.7rem + .2vw, 34px);
+}
+
+body[data-omega-page="media"] .page,
+body[data-omega-page="vault"] .main {
+  font-size: var(--omega-readable-body);
+  line-height: 1.52;
+  text-rendering: optimizeLegibility;
+}
+
+body[data-omega-page="media"] .page :is(
+  .hero-eyebrow, .ustat-label, .filter-btn, .section-count,
+  .card-label, .card-tags, .card-tag, .card-status,
+  .poster-phase, .poster-number, .render-label, .ct-l,
+  .film-year, .film-status, .g-genre, .g-status,
+  .fi-type, .year, .mtab-btn, .tab-btn, .card-meta, .card-footer
+) {
+  font-size: var(--omega-readable-label) !important;
+  line-height: 1.45;
+  letter-spacing: .08em;
+}
+
+body[data-omega-page="media"] .page :is(
+  .hero-sub, .card-desc, .render-desc, .ct-d, .fc-desc,
+  .s-desc, .g-desc, .film-desc, .film-sub, .sg-desc,
+  .arc-desc, .fi-desc
+) {
+  font-size: var(--omega-readable-body) !important;
+  line-height: 1.55;
+}
+
+body[data-omega-page="media"] .page :is(
+  .section-title, .card-title, .game-title, .render-name,
+  .sechead, .ct-n, .fc-title, .sg-title, .film-title,
+  .s-title, .g-title
+) {
+  font-size: var(--omega-readable-card-title, clamp(16px, .95rem + .08vw, 18px)) !important;
+  line-height: 1.3;
+}
+
+body[data-omega-page="media"] .page [style*="font-size:12px"],
+body[data-omega-page="media"] .page [style*="font-size: 12px"] {
+  font-size: var(--omega-readable-label) !important;
+  line-height: 1.45;
+}
+
+body[data-omega-page="media"] .page :is(p, li, dd, dt, td, th, label) {
+  line-height: 1.5;
+}
+
+/* VAULT — improve ledger readability without changing balances or financial state. */
+body[data-omega-page="vault"] .main :is(
+  .kpi-l, .rh-label, .status-pill, .sechead,
+  .tk-sym, .tk-name, .nft-meta, .tbl-head, .tbl-hcell,
+  .ledger-head, .ledger-hcell, .sci-label, .sci-sub,
+  .lf, .ledger-ts, .ledger-pts, .tab-btn, .tab-icon
+) {
+  font-size: var(--omega-readable-label) !important;
+  line-height: 1.45;
+}
+
+body[data-omega-page="vault"] .main :is(
+  .rh-sub, .tbl-row, .ledger-row, .audit-table td,
+  .nft-name, .ledger-description
+) {
+  font-size: var(--omega-readable-body) !important;
+  line-height: 1.5;
+}
+
+body[data-omega-page="vault"] .main [style*="font-size:12px"],
+body[data-omega-page="vault"] .main [style*="font-size: 12px"] {
+  font-size: var(--omega-readable-label) !important;
+  line-height: 1.45;
+}
+
+body[data-omega-page="vault"] .tbl-wrap {
+  overflow-x: auto !important;
+  overscroll-behavior-x: contain;
+}
+
+body[data-omega-page="vault"] .main :is(p, li, dd, dt, td, th, label) {
+  line-height: 1.5;
+}
+
+body[data-omega-page="media"] .page :is(a, button, input, select, textarea, [role="button"]):focus-visible,
+body[data-omega-page="vault"] .main :is(a, button, input, select, textarea, [role="button"]):focus-visible,
+body[data-omega-page="media"] .omega-skip-link:focus-visible,
+body[data-omega-page="vault"] .omega-skip-link:focus-visible {
+  outline: 2px solid var(--cyan, #00E5FF);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, .12);
+}
+
+@media (max-width: 760px) {
+  body[data-omega-page="media"] .hero-band {
+    padding: 2rem 1rem 1.25rem;
+  }
+
+  body[data-omega-page="media"] .filter-row {
+    padding-inline: 1rem;
+  }
+
+  body[data-omega-page="media"] .game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body[data-omega-page="vault"] .kpi-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body[data-omega-page="vault"] .reserve-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  body[data-omega-page="media"] .franchise-grid {
+    grid-template-columns: 1fr;
+  }
+}

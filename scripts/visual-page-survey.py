@@ -181,7 +181,8 @@ def scan(path: Path) -> dict:
     long_nowrap = len(re.findall(r"[A-Za-z]{24,}", clean(body)))
 
     issues = []
-    if not re.search(r'<meta[^>]+name=["\']viewport["\']', text, re.I):
+    viewport_meta = re.compile(r"""<meta\b[^>]*\bname\s*=\s*(?:"viewport"|'viewport'|viewport)(?=\s|/?>)[^>]*>""", re.I)
+    if not viewport_meta.search(text):
         issues.append("CONTRACT: missing viewport")
     if not title:
         issues.append("CONTRACT: missing title")

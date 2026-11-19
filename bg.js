@@ -3305,3 +3305,19 @@ setTimeout(function(){
   if(document.body) inject();
   else document.addEventListener('DOMContentLoaded',inject,{once:true});
 })();
+
+/* Ω PLATFORM EXPERIENCE V6 — resolve each page's governed archetype into its
+   visual accent layer. Loaded after v5 so the page-world contract is the final
+   art-direction pass; no routes, page data, or interaction ownership changes. */
+(function(){
+  var id='omega-platform-experience-v6-css';
+  function inject(){
+    if(document.getElementById(id)) return;
+    var link=document.createElement('link');
+    link.id=id;link.rel='stylesheet';link.type='text/css';
+    link.href='/omega-platform-experience-v6.css?v=20261119-v6';
+    (document.body||document.head||document.documentElement).appendChild(link);
+  }
+  if(document.body) inject();
+  else document.addEventListener('DOMContentLoaded',inject,{once:true});
+})();

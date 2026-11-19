@@ -25,24 +25,85 @@
   };
 
   function findArchetype(){
+    if(manifest&&manifest.rules){
+      var exactHit=manifest.rules.find(function(r){
+        return String(r.match||'').split('|').some(function(token){
+          token=String(token).trim();
+          return token.charAt(0)==='=' && slug===token.slice(1);
+        });
+      });
+      if(exactHit&&manifest.archetypes[exactHit.archetype])return exactHit.archetype;
+    }
+    if(pageWorld&&pageWorld.archetype&&pageWorld.archetype!=='command'&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
+    if(manifest&&manifest.rules){
+      var hit=manifest.rules.find(function(r){
+        return String(r.match||'').split('|').some(function(token){
+          token=String(token).trim();
+          return token.charAt(0)!=='=' && (slug===token || slug.indexOf(token)>-1);
+        });
+      });
+      if(hit&&manifest.archetypes[hit.archetype])return hit.archetype;
+    }
+    if(district&&district.archetype&&manifest&&manifest.archetypes[district.archetype])return district.archetype;
+    if(pageWorld&&pageWorld.archetype&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
+    return 'command';
+    /* Exact page ownership wins. The 242-entry map is generated from the
+       canonical page contracts, the navigation section registry and the
+       explicit archetype rules. This prevents substring collisions such as
+       "ai" matching "blockchain" or "maintenance". */
+    if(manifest&&manifest.pageArchetypes&&manifest.pageArchetypes[slug])return manifest.pageArchetypes[slug];
     if(district&&district.archetype)return district.archetype;
-    if(!manifest||!manifest.rules)return 'command';
+    if(!manifest||!manifest.rules)return (manifest&&manifest.pageArchetypeFallback)||'system';
     var hit=manifest.rules.find(function(r){
       return String(r.match||'').split('|').some(function(token){
-        return slug===token || slug.indexOf(token)>-1;
+        token=String(token||'').toLowerCase();
+        return slug===token || slug.indexOf(token+'-')===0 ||
+          slug.slice(-(token.length+1))==='-'+token || slug.indexOf('-'+token+'-')>-1;
       });
     });
-    return hit?hit.archetype:'command';
+    return hit?hit.archetype:(manifest.pageArchetypeFallback||'system');
   }
 
+  var suppressMembrane=false;
   function inject(){
-    if(document.getElementById('omega-page-world'))return;
     if(!manifest||!manifest.archetypes)return;
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
     if(!district&&overrides&&overrides.entries&&world&&world.districts){ var oid=overrides.entries[slug]; district=world.districts.find(function(d){return d.id===oid;})||null; }
-    archetype=findArchetype();
     if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.page===pagePath;})||pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
+    archetype=findArchetype();
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
+
+    /* Publish the manifest's visual contract as stable root attributes.
+       CSS can now compose a coherent world skin without guessing from URLs,
+       duplicating archetype registries, or changing page-owned layout. */
+    var visualRoot=document.documentElement;
+    function visualToken(value,fallback){
+      var token=String(value||fallback||'').toLowerCase();
+      return /^[a-z0-9_-]{1,40}$/.test(token)?token:String(fallback||'command');
+    }
+    visualRoot.setAttribute('data-omega-archetype',visualToken(archetype,'command'));
+    visualRoot.setAttribute('data-omega-visual',visualToken(a.visual,archetype));
+    visualRoot.setAttribute('data-omega-motion-profile',visualToken(a.motion,'ambient'));
+    visualRoot.setAttribute('data-omega-depth',visualToken(a.depth,'layered'));
+    visualRoot.setAttribute('data-omega-density',visualToken(a.density,'balanced'));
+    visualRoot.setAttribute('data-omega-interaction',visualToken(a.interaction,'direct'));
+    visualRoot.setAttribute('data-omega-emblem',visualToken(a.emblem,'omega'));
+    visualRoot.style.setProperty('--omega-v6-accent',a.accent||'#C9A84C');
+    visualRoot.style.setProperty('--omega-v6-secondary',a.secondary||'#00E5FF');
+    visualRoot.style.setProperty('--omega-v6-glow',a.glow||'rgba(201,168,76,.13)');
+    visualRoot.style.setProperty('--omega-v6-line',a.line||'rgba(201,168,76,.34)');
+    if(district&&district.id) visualRoot.setAttribute('data-omega-district',visualToken(district.id,'genesis'));
+    else visualRoot.removeAttribute('data-omega-district');
+
+    /* Some utility/legal surfaces deliberately suppress the role ribbon.
+       They still receive the same page archetype so the visual system covers
+       every canonical route without changing that page's information design. */
+    if(suppressMembrane){
+      document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,visual:a.visual||archetype,motion:a.motion||'ambient',depth:a.depth||'layered',density:a.density||'balanced',role:a.worldRole,district:district&&district.id||null}}));
+      return;
+    }
+    if(document.getElementById('omega-page-world'))return;
+
     var l=labels[archetype]||labels.command;
 
     /* The manifest is the canonical visual personality source. Publish its
@@ -56,6 +117,10 @@
     root.dataset.omegaDensityProfile=a.density||'clear';
     root.dataset.omegaInteractionProfile=a.interaction||'direct';
     root.dataset.omegaEmblemProfile=a.emblem||'omega';
+    root.style.setProperty('--omega-v6-accent',a.accent||'#C9A84C');
+    root.style.setProperty('--omega-v6-secondary',a.secondary||'#00E5FF');
+    root.style.setProperty('--omega-v6-glow',a.glow||'rgba(201,168,76,.13)');
+    root.style.setProperty('--omega-v6-line',a.line||'rgba(201,168,76,.34)');
     root.classList.add('omega-experience-'+archetype);
     if(document.body){
       document.body.dataset.omegaArchetype=archetype;
@@ -73,22 +138,23 @@
     }
     var host=document.createElement('section');
     host.id='omega-page-world';
+    host.dataset.omegaArchetype=archetype;
     host.setAttribute('aria-label','Omega world role and next actions');
     host.innerHTML='<style>'+
-      '#omega-page-world{margin:0 auto 14px;max-width:1600px;padding:0 14px}'+
-      '.opw-inner{border:1px solid rgba(201,168,76,.18);background:linear-gradient(90deg,rgba(10,10,15,.92),rgba(2,2,6,.78));padding:8px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}'+
-      '.opw-mark{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);min-width:26px;text-align:center}'+
+      '#omega-page-world{margin:0 auto 18px;max-width:1600px;padding:0 16px}'+
+      '.opw-inner{position:relative;border:1px solid var(--omega-v6-line,rgba(201,168,76,.24));border-inline-start:3px solid var(--omega-v6-accent,var(--gold));background:linear-gradient(105deg,rgba(10,10,15,.96),rgba(2,2,6,.84));padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-radius:12px}'+
+      '.opw-mark{font-family:var(--D);font-size:24px;color:var(--omega-v6-accent,var(--gold));text-shadow:0 0 20px var(--omega-v6-glow,rgba(201,168,76,.12));min-width:28px;text-align:center}'+
       '.opw-copy{min-width:190px;flex:1}'+
-      '.opw-kicker{font-family:var(--M);font-size:12px;letter-spacing:1.8px;color:var(--cyan)}'+
-      '.opw-role{font-family:var(--D);font-size:var(--fs-2,14px);color:var(--ink);margin-top:1px}'+
-      '.opw-verb{font-family:var(--M);font-size:12px;letter-spacing:1.1px;color:var(--muted);margin-top:1px}'+
-      '.opw-actions{display:flex;gap:6px;flex-wrap:wrap}'+
-      '.opw-actions a{font-family:var(--M);font-size:12px;letter-spacing:1.2px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,168,76,.25);padding:6px 9px}'+
-      '.opw-actions a:hover,.opw-actions a:focus-visible{border-color:var(--gold);background:rgba(201,168,76,.06)}'+
-      '.opw-actions a.opw-mission{color:var(--cyan);border-color:rgba(0,229,255,.22)}'+
+      '.opw-kicker{font-family:var(--M);font-size:12px;letter-spacing:.1em;color:var(--omega-v6-accent,var(--cyan))}'+
+      '.opw-role{font-family:var(--D);font-size:15px;font-weight:600;color:var(--ink);margin-top:2px}'+
+      '.opw-verb{font-family:var(--M);font-size:13px;letter-spacing:.04em;color:var(--muted);margin-top:2px}'+
+      '.opw-actions{display:flex;gap:8px;flex-wrap:wrap}'+
+      '.opw-actions a{font-family:var(--M);font-size:13px;letter-spacing:.06em;color:var(--omega-v6-accent,var(--gold));text-decoration:none;border:1px solid var(--omega-v6-line,rgba(201,168,76,.25));background:rgba(10,10,15,.35);padding:8px 12px;min-height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px}'+
+      '.opw-actions a:hover,.opw-actions a:focus-visible{border-color:var(--omega-v6-accent,var(--gold));background:var(--omega-v6-glow,rgba(201,168,76,.08))}'+
+      '.opw-actions a.opw-mission{color:var(--omega-v6-secondary,var(--cyan));border-color:var(--omega-v6-line,rgba(0,229,255,.22))}'+
       '#omega-page-world.opw-compact .opw-kicker,#omega-page-world.opw-compact .opw-verb{display:none}'+
-      '#omega-page-world.opw-compact .opw-role{font-family:var(--M);font-size:12px;letter-spacing:1.6px;color:var(--ink);text-transform:uppercase}'+
-      '@media(max-width:620px){#omega-page-world{padding:0 8px}.opw-copy{min-width:140px}.opw-actions{width:100%}.opw-actions a{flex:1;text-align:center}}'+
+      '#omega-page-world.opw-compact .opw-role{font-family:var(--M);font-size:13px;letter-spacing:.08em;color:var(--ink);text-transform:uppercase}'+
+      '@media(max-width:620px){#omega-page-world{padding:0 8px}.opw-copy{min-width:140px}.opw-actions{width:100%}.opw-actions a{flex:1;text-align:center;min-height:44px}}'+
       '</style>'+
       '<div class="opw-inner">'+
       '<div class="opw-mark" aria-hidden="true">&#937;</div>'+
@@ -110,7 +176,7 @@
     }
     reconcileDensity();
     setTimeout(reconcileDensity,900);
-    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
+    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,visual:a.visual||archetype,motion:a.motion||'ambient',depth:a.depth||'layered',density:a.density||'balanced',role:a.worldRole,district:district&&district.id||null}}));
     host.querySelectorAll('a[data-world-action]').forEach(function(link){
       link.addEventListener('click',function(ev){
         var d=link.getAttribute('data-world-district'),act=link.getAttribute('data-world-action');
@@ -129,7 +195,7 @@
   function escapeAttr(v){return String(v).replace(/[^a-zA-Z0-9_\-./#?=&]/g,'');}
 
   async function boot(){
-    if(document.body&&document.body.dataset&&document.body.dataset.noWorldMembrane==='true')return;
+    suppressMembrane=!!(document.body&&document.body.dataset&&document.body.dataset.noWorldMembrane==='true');
     try{
       var r=await fetch('/config/page-character-manifest.json',{cache:'no-store'});
       if(!r.ok)throw new Error('page manifest '+r.status);

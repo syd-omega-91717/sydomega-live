@@ -5,7 +5,9 @@
     "version",
     "default",
     "archetypes",
-    "rules"
+    "rules",
+    "pageArchetypes",
+    "pageArchetypeFallback"
   ],
   "properties": {
     "version": {
@@ -75,6 +77,44 @@
         }
       },
       "additionalProperties": false
+    },
+    "pageArchetypes": {
+      "type": "object",
+      "description": "Exact per-page visual archetype registry. Page-specific entries take precedence over district and token rules.",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "command",
+          "identity",
+          "intelligence",
+          "knowledge",
+          "gaming",
+          "media",
+          "commerce",
+          "creation",
+          "community",
+          "governance",
+          "finance",
+          "system"
+        ]
+      }
+    },
+    "pageArchetypeFallback": {
+      "type": "string",
+      "enum": [
+        "command",
+        "identity",
+        "intelligence",
+        "knowledge",
+        "gaming",
+        "media",
+        "commerce",
+        "creation",
+        "community",
+        "governance",
+        "finance",
+        "system"
+      ]
     }
   },
   "$defs": {
@@ -120,6 +160,18 @@
           }
         },
         "successOutcome": {
+          "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        },
+        "secondary": {
+          "type": "string"
+        },
+        "glow": {
+          "type": "string"
+        },
+        "line": {
           "type": "string"
         }
       },

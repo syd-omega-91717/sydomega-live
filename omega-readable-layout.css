@@ -64,7 +64,7 @@ body[data-omega-page="profile"] .main :is(p, li, dd, dt, td, th, label) {
 }
 
 body[data-omega-page="dashboard"] .main :is(
-  .mb-item, .ss-label, .ss-val, .ltab,
+  .mb-title, .mb-item, .ss-label, .ss-val, .ltab,
   .kpi-l, .kpi-sub, .cc-status, .alert-meta,
   .tl-time, .pb-date, .pb-snippet, .pf-chip
 ) {
@@ -83,7 +83,7 @@ body[data-omega-page="dashboard"] .main :is(
 }
 
 body[data-omega-page="dashboard"] .main :is(
-  .mb-title, .sec-title, .panel-title, .cc-name,
+  .sec-title, .panel-title, .cc-name,
   .ocw-title, .oeh-title, .cmd-hero-title
 ) {
   font-size: var(--omega-readable-section) !important;

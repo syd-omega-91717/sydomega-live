@@ -70,6 +70,10 @@
     root.dataset.omegaDensityProfile=a.density||'clear';
     root.dataset.omegaInteractionProfile=a.interaction||'direct';
     root.dataset.omegaEmblemProfile=a.emblem||'omega';
+    root.style.setProperty('--omega-v6-accent',a.accent||'#C9A84C');
+    root.style.setProperty('--omega-v6-secondary',a.secondary||'#00E5FF');
+    root.style.setProperty('--omega-v6-glow',a.glow||'rgba(201,168,76,.13)');
+    root.style.setProperty('--omega-v6-line',a.line||'rgba(201,168,76,.34)');
     root.classList.add('omega-experience-'+archetype);
     if(document.body){
       document.body.dataset.omegaArchetype=archetype;

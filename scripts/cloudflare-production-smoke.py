@@ -218,6 +218,13 @@ def release_asset_version_from_manifest(body: str) -> str:
     return commit_sha[:12]
 
 
+def expected_global_asset_url(path: str, asset_version: str) -> str:
+    """Use the versioned bootstrap URL, not a potentially stale unversioned cache key."""
+    if path == "/bg.js":
+        return f"{path}?v={asset_version}"
+    return path
+
+
 def expected_global_asset_marker(path: str, marker: str, asset_version: str) -> str:
     """Check bootstrap references against the live release's fingerprint."""
     if path == "/bg.js":
@@ -288,7 +295,8 @@ def main() -> int:
 
         global_asset_failures: list[tuple[str, int, str]] = []
         for path, expected_type, marker in REQUIRED_GLOBAL_ASSETS:
-            asset_url = urljoin(base, path.lstrip("/"))
+            versioned_path = expected_global_asset_url(path, asset_version)
+            asset_url = urljoin(base, versioned_path.lstrip("/"))
             expected_marker = expected_global_asset_marker(path, marker, asset_version)
             status, content_type, body = request_url(asset_url, "GET", args.timeout)
             valid_type = expected_type in content_type.lower()

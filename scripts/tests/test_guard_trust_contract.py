@@ -85,6 +85,7 @@ class GuardTrustContract(unittest.TestCase):
         self.assertIn("not a certification claim by SYD OMEGA", PRIVACY)
         self.assertIn("Withdrawal initiates deletion", PRIVACY)
         self.assertIn("LEGAL REVIEW REQUIRED", TERMS)
+        self.assertIn("not a versioned document or hash", TERMS)
         self.assertIn("The current browser export packages profile fields", PRIVACY)
         self.assertNotIn("journey logs, consent records, and all sovereign metadata", PRIVACY)
         self.assertIn("A design objective, not a certification", PRIVACY)

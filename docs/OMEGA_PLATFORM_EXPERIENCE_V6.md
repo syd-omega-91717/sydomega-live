@@ -144,6 +144,28 @@ The recurring visual grammar is:
 - Original cinematic compositions: environment scale, scene framing, lighting and atmosphere.
 - Material and artifact styling is cosmetic only. Artwork never proves credentials, KYC, token ownership, balances, payment, achievements or rank.
 
+## 252-document inventory and explicit exceptions
+
+The repository-wide survey sees 252 HTML documents. The production estate is 242 canonical root routes plus 10 nested documents:
+
+- **8 nested redirect stubs** — `frontend/platform/platform.html`, `root/audit-report.html`, `root/dashboard/dashboard.html`, `root/portal.html`, and four `web/templates/*.html` stubs. Each loads `/bg.js` and redirects to `/dashboard.html`; the dashboard receives the canonical Command archetype.
+- **2 movie render-source templates** — `scripts/movies/episode.html` and `scripts/movies/scene.html`. They are deterministic frame-render sources, not production pages; the static build excludes `scripts/`. Their finished media pages use the Media archetype.
+
+The V6 contract tests account for all 252 documents, verify the 242 canonical route map, verify the eight redirect stubs, and verify the two source-only templates remain outside the public artifact. No independent page skin or duplicate archetype registry is created for redirect aliases or render templates.
+
+### Remaining source-survey remediation backlog
+
+The 19 November source survey also records 183 documents without a source-level `h1`, 151 with fixed-width declarations, 120 with dense letter-spacing declarations and 20 with dense-text declarations. These are **not declared fixed by V6**. Some are intentional component dimensions or dynamically rendered titles; the counts are source-level flags, not proof that every page is visually broken.
+
+The next remediation wave must inspect the actual page and viewport before changing it:
+
+1. Promote or add one correct, visible page-level heading without duplicating an existing visual title.
+2. Replace only genuinely viewport-breaking fixed widths with responsive constraints; preserve intentional artwork/card dimensions.
+3. Normalize dense tracking and small labels against readable typography tokens.
+4. Review the highest-impact 404, profile, dashboard, media, vault, family and gaming surfaces first, then close the remaining flagged pages with page-level evidence.
+
+V6 does not use blanket CSS overrides or fabricate content to make the survey counts appear green.
+
 ## Runtime implementation
 
 - `omega-page-world.js` publishes the page's exact archetype, visual intent, motion profile, depth, density and district as root data attributes.

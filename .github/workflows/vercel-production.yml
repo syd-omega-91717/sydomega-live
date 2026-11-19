@@ -114,6 +114,8 @@ jobs:
       - name: Release surface quality
         run: python scripts/release-surface-quality.py
       - name: Build artifact
+        env:
+          OMEGA_ASSET_VERSION_ABSOLUTE: "1"
         run: bash scripts/vercel-build.sh
       - name: Production surface contract
         run: python scripts/omega-production-surface-contract.py

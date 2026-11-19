@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = Path(os.environ.get("OMEGA_PUBLIC_DIR", ROOT / "public")).resolve()
 ASSET_EXTENSIONS = {".js", ".css"}
 TEXT_EXTENSIONS = {".html", ".js", ".css", ".json"}
+SAME_ORIGIN_HOSTS = {"sydomega.com", "www.sydomega.com"}
 
 ATTRIBUTE_RE = re.compile(
     r"""(?P<prefix>\b(?:src|href|data-src|data-script|data-module)\s*=\s*)"""
@@ -22,11 +23,18 @@ ATTRIBUTE_RE = re.compile(
 )
 STRING_RE = re.compile(
     r"""(?P<quote>["'\x60])"""
-    r"""(?P<url>(?:/|\.{1,2}/)[^"'\x60\s<>]*\.(?:js|css)"""
+    r"""(?P<url>(?:https?://(?:www\.)?sydomega\.com|/|\.{1,2}/)[^"'\x60\s<>]*\.(?:js|css)"""
     r"""(?:\?[^"'\x60\s<>]*)?(?:#[^"'\x60\s<>]*)?)"""
     r"""(?P=quote)""",
     re.IGNORECASE,
 )
+BARE_STRING_RE = re.compile(
+    r"""(?P<quote>["'\x60])"""
+    r"""(?P<url>[A-Za-z0-9_.-]+\.(?:js|css)(?:\?[^"'\x60\s<>]*)?(?:#[^"'\x60\s<>]*)?)"""
+    r"""(?P=quote)""",
+    re.IGNORECASE,
+)
+
 
 
 def release_version() -> str:
@@ -67,16 +75,23 @@ def is_deployed_local_asset(url: str, source_file: Path) -> bool:
     if not url or chr(36) + "{" in url:
         return False
     parts = urlsplit(url)
-    if parts.scheme or parts.netloc or not parts.path:
-        return False
-    if Path(parts.path).suffix.lower() not in ASSET_EXTENSIONS:
+    if not parts.path or Path(parts.path).suffix.lower() not in ASSET_EXTENSIONS:
         return False
 
-    raw_path = unquote(parts.path)
-    if raw_path.startswith("/"):
-        candidate = (PUBLIC / raw_path.lstrip("/")).resolve()
+    if parts.scheme or parts.netloc:
+        if os.environ.get("OMEGA_ASSET_VERSION_ABSOLUTE") != "1":
+            return False
+        if parts.scheme and parts.scheme.lower() not in {"http", "https"}:
+            return False
+        if parts.netloc.lower() not in SAME_ORIGIN_HOSTS:
+            return False
+        candidate = (PUBLIC / unquote(parts.path).lstrip("/")).resolve()
     else:
-        candidate = (source_file.parent / raw_path).resolve()
+        raw_path = unquote(parts.path)
+        if raw_path.startswith("/"):
+            candidate = (PUBLIC / raw_path.lstrip("/")).resolve()
+        else:
+            candidate = (source_file.parent / raw_path).resolve()
 
     try:
         candidate.relative_to(PUBLIC)
@@ -95,7 +110,7 @@ def version_url(url: str, source_file: Path, version: str) -> str:
         if key.lower() != "v"
     ]
     query.append(("v", version))
-    return urlunsplit(("", "", parts.path, urlencode(query), parts.fragment))
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
 
 
 def rewrite_file(path: Path, version: str) -> int:
@@ -116,6 +131,7 @@ def rewrite_file(path: Path, version: str) -> int:
 
     # Dynamic script.src/import() strings and static CSS/JS references.
     content = STRING_RE.sub(replace_match, content)
+    content = BARE_STRING_RE.sub(replace_match, content)
     # Explicit HTML asset attributes; reprocessing an already versioned URL is
     # idempotent because the existing v= parameter is replaced, not duplicated.
     content = ATTRIBUTE_RE.sub(replace_match, content)
@@ -139,10 +155,32 @@ def main() -> int:
                 files += 1
                 references += changed
 
+    unversioned = []
+    for path in sorted(PUBLIC.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in TEXT_EXTENSIONS:
+            continue
+        try:
+            content = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        found = set()
+        for pattern in (STRING_RE, BARE_STRING_RE, ATTRIBUTE_RE):
+            for match in pattern.finditer(content):
+                url = match.group("url")
+                if not is_deployed_local_asset(url, path):
+                    continue
+                query = parse_qsl(urlsplit(url).query, keep_blank_values=True)
+                if not any(key.lower() == "v" and value == version for key, value in query):
+                    found.add(url)
+        unversioned.extend((path.relative_to(PUBLIC).as_posix(), url) for url in sorted(found))
+
     print(f"ASSET_VERSION={version}")
     print(f"ASSET_VERSIONED_FILES={files}")
     print(f"ASSET_REFERENCES_VERSIONED={references}")
-    return 0
+    print(f"ASSET_REFERENCES_UNVERSIONED={len(unversioned)}")
+    for path, url in unversioned[:10]:
+        print(f"ASSET_VERSION=FAIL unversioned_reference={path}:{url}")
+    return 1 if unversioned else 0
 
 
 if __name__ == "__main__":

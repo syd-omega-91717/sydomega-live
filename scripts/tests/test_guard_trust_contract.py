@@ -4,6 +4,8 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
+PRIVACY = (ROOT / "privacy.html").read_text(encoding="utf-8")
+TERMS = (ROOT / "terms.html").read_text(encoding="utf-8")
 BG = (ROOT / "bg.js").read_text(encoding="utf-8")
 GUARD = BG[BG.index("s.id='omega-approval-guard';"):BG.index("/* ===== SHARED SUPABASE CLIENT")]
 CHECK = BG[BG.index("/* ACCESS GUARD + TRIAL ENGINE */"):BG.index("function startTimeSovereignPing")]
@@ -57,8 +59,47 @@ class GuardTrustContract(unittest.TestCase):
                 self.assertIn("contains('omega-approval-confirmed')", src)
                 self.assertNotIn("contains('omega-approved')", src)
 
-    def test_public_pages_unchanged(self):
-        self.assertIn("var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/guide'];", BG)
+    def test_public_pages_are_exempt_from_both_guards(self):
+        self.assertIn("var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/guide','/privacy'];", BG)
+        self.assertIn("var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'guide':1,'privacy':1};", CHECK)
+
+    def test_privacy_page_receives_the_public_consent_banner(self):
+        legal = (ROOT / "omega-legal.js").read_text(encoding="utf-8")
+        self.assertIn("var publicPages = ['/account','/enter','/reset','/terms','/pending','/index','/','/privacy',''];", legal)
+
+    def test_privacy_centre_is_readable_without_an_account(self):
+        self.assertIn('<div class="page-shell" id="app" style="display:flex">', PRIVACY)
+        self.assertNotIn("if(!s){location.replace('/account.html');return;}", PRIVACY)
+        self.assertIn("if(!_uid){", PRIVACY)
+        self.assertIn("setPrivacyControls(true);", PRIVACY)
+
+    def test_terms_are_readable_without_an_account_and_acceptance_stays_authenticated(self):
+        self.assertNotIn("if(!sess){ window.location.href='/account.html'; return; }", TERMS)
+        self.assertIn("Sign in or create an account to accept these terms.", TERMS)
+
+    def test_privacy_surface_is_marked_partial_until_erasure_is_real(self):
+        import json
+        value_layer = json.loads((ROOT / "config" / "omega-value-layer.json").read_text(encoding="utf-8"))
+        privacy_surface = value_layer["pages"]["privacy"]
+        self.assertTrue(privacy_surface["proof"].startswith("PARTIAL —"))
+        self.assertIn("complete erasure automation remains dormant", privacy_surface["proof"])
+        self.assertNotIn("erase your data", privacy_surface["purpose"] + " " + privacy_surface["value"])
+
+    def test_privacy_notice_does_not_promise_unimplemented_erasure_or_retention(self):
+        self.assertIn("does not currently run a complete automated purge", PRIVACY)
+        self.assertIn("retention schedule is not yet fully enforced", PRIVACY)
+        self.assertNotIn("DATA WILL BE DELETED WITHIN 30 DAYS", PRIVACY)
+        self.assertNotIn("queues a 30-day deletion job", PRIVACY)
+        self.assertIn("not a certification claim by SYD OMEGA", PRIVACY)
+        self.assertIn("Withdrawal initiates deletion", PRIVACY)
+        self.assertIn("LEGAL REVIEW REQUIRED", TERMS)
+        self.assertIn("not a versioned document or hash", TERMS)
+        self.assertIn('class="article-description"', TERMS)
+        self.assertNotIn('class="ad"', TERMS)
+        self.assertIn("The current browser export packages profile fields", PRIVACY)
+        self.assertNotIn("journey logs, consent records, and all sovereign metadata", PRIVACY)
+        self.assertIn("A design objective, not a certification", PRIVACY)
+        self.assertNotIn("Every table in the Supabase database has RLS", PRIVACY)
 
 
 if __name__ == "__main__":

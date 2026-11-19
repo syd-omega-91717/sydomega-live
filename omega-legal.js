@@ -179,7 +179,7 @@
   function boot(){
     /* Only public/pre-login pages get the consent banner */
     var path = (location.pathname||'/').replace(/\.html$/,'');
-    var publicPages = ['/account','/enter','/reset','/terms','/pending','/index','/',''];
+    var publicPages = ['/account','/enter','/reset','/terms','/pending','/index','/','/privacy',''];
     var isPublic = publicPages.indexOf(path) > -1;
     if(!getConsent() || isPublic){
       /* Delay banner 2s to not compete with page boot */

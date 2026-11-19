@@ -33,28 +33,29 @@ The intended Ω emotional signatures remain distinctive: the chatbot should feel
 
 The resolver uses existing canonical data in this order:
 
-1. A valid district archetype from the world manifest.
+1. An exact route override (a `=`-prefixed token) in `page-character-manifest.json`.
 2. A non-default archetype already assigned to the page in `page-world-actions.json`.
-3. The first matching explicit visual rule in `page-character-manifest.json`.
-4. The page action's `command` archetype when no more specific rule applies.
-5. The valid `command` archetype as the final fallback.
+3. The first matching broad visual rule in `page-character-manifest.json`.
+4. A valid district archetype from the world manifest.
+5. The page action's `command` archetype when no more specific rule applies.
+6. The valid `command` archetype as the final fallback.
 
 The visual audit enumerated all **242 root HTML pages**. With the new explicit rules and collision fix, every route resolves to one of the 12 supported archetypes; no route is left unassigned. Current resolution counts:
 
 | Archetype | Root pages |
 |---|---:|
-| Command | 101 |
-| Intelligence | 34 |
-| Knowledge | 21 |
-| Gaming | 16 |
+| Intelligence | 55 |
+| Knowledge | 39 |
+| Command | 35 |
+| Gaming | 22 |
+| Media | 16 |
+| Community | 16 |
+| Finance | 12 |
+| System | 11 |
+| Commerce | 10 |
+| Identity | 9 |
 | Creation | 9 |
-| System | 9 |
-| Finance | 9 |
 | Governance | 8 |
-| Community | 11 |
-| Identity | 8 |
-| Media | 8 |
-| Commerce | 8 |
 | **Total** | **242** |
 
 The broad `ai` substring was removed from the intelligence rule because it incorrectly matched words such as `trailers` and `maintenance`. The narrower `ai-` token and explicit route rules avoid those collisions.

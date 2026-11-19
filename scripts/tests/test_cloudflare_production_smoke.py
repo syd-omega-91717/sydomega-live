@@ -45,6 +45,7 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
         self.assertIn("Chrome/", headers["User-Agent"])
         self.assertEqual(headers["Cache-Control"], "no-cache")
         self.assertEqual(headers["Accept-Language"], "en-US,en;q=0.9")
+        self.assertEqual(headers["Accept-Encoding"], "gzip, deflate")
 
     def test_global_omega_experience_assets_are_part_of_release_smoke(self):
         assets = SMOKE.REQUIRED_GLOBAL_ASSETS

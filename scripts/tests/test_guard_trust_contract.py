@@ -57,8 +57,13 @@ class GuardTrustContract(unittest.TestCase):
                 self.assertIn("contains('omega-approval-confirmed')", src)
                 self.assertNotIn("contains('omega-approved')", src)
 
-    def test_public_pages_unchanged(self):
-        self.assertIn("var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/guide'];", BG)
+    def test_public_pages_are_exempt_from_both_guards(self):
+        self.assertIn("var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/guide','/privacy'];", BG)
+        self.assertIn("var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'guide':1,'privacy':1};", CHECK)
+
+    def test_privacy_page_receives_the_public_consent_banner(self):
+        legal = (ROOT / "omega-legal.js").read_text(encoding="utf-8")
+        self.assertIn("var publicPages = ['/account','/enter','/reset','/terms','/pending','/index','/','/privacy',''];", legal)
 
 
 if __name__ == "__main__":

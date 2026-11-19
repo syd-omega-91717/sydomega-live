@@ -5,7 +5,9 @@
     "version",
     "default",
     "archetypes",
-    "rules"
+    "rules",
+    "pageArchetypes",
+    "pageArchetypeFallback"
   ],
   "properties": {
     "version": {

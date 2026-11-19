@@ -48,7 +48,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         start = nav.index("var PS={")
         end = nav.index("};", start)
         ps = {}
-        for match in re.finditer(r"(?:'([^']+)'|([A-Za-z0-9_-]+))\\s*:\\s*'([^']+)'", nav[start:end]):
+        for match in re.finditer(r"(?:'([^']+)'|([A-Za-z0-9_-]+))\s*:\s*'([^']+)'", nav[start:end]):
             ps[match.group(1) or match.group(2)] = match.group(3)
         nav_archetypes = {
             "command": "command", "identity": "identity", "ascend": "knowledge",
@@ -103,6 +103,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
             self.assertIn(attribute, self.page_world)
         self.assertIn("omega:page-world-ready", self.page_world)
         self.assertIn("visual:a.visual||archetype", self.page_world)
+        self.assertIn("if(suppressMembrane)", self.page_world)
 
     def test_all_twelve_archetypes_have_distinct_visual_tokens(self):
         for archetype in self.manifest["archetypes"]:

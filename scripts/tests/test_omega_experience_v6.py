@@ -67,7 +67,7 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             "commerce", "creation", "community", "governance", "finance", "system",
         }
         self.assertEqual(set(MANIFEST["archetypes"]), expected)
-        required = {"visual", "motion", "depth", "density", "interaction", "emblem"}
+        required = {"visual", "motion", "depth", "density", "interaction", "emblem", "accent", "secondary", "glow", "line"}
         for name, profile in MANIFEST["archetypes"].items():
             with self.subTest(archetype=name):
                 self.assertTrue(required.issubset(profile))
@@ -87,6 +87,10 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             "root.dataset.omegaDensityProfile=a.density||'clear'",
             "root.dataset.omegaInteractionProfile=a.interaction||'direct'",
             "root.dataset.omegaEmblemProfile=a.emblem||'omega'",
+            "root.style.setProperty('--omega-v6-accent',a.accent||'#C9A84C')",
+            "root.style.setProperty('--omega-v6-secondary',a.secondary||'#00E5FF')",
+            "root.style.setProperty('--omega-v6-glow',a.glow||'rgba(201,168,76,.13)')",
+            "root.style.setProperty('--omega-v6-line',a.line||'rgba(201,168,76,.34)')",
         ):
             self.assertIn(marker, WORLD)
 
@@ -156,11 +160,13 @@ class OmegaExperienceV6Tests(unittest.TestCase):
 
 
     def test_v6_profiles_stay_inside_the_canonical_omega_palette(self):
-        v6 = CSS[CSS.index("Ω EXPERIENCE EVOLUTION V6"):]
-        for forbidden in ("#AB82F2", "#8FDCE8", "#CF6760", "#3FB27F", "rgba(171,130,242", "rgba(143,220,232", "rgba(207,103,96"):
-            self.assertNotIn(forbidden, v6)
-        for canonical in ("#C9A84C", "#E8C97A", "#00E5FF", "#8B0000", "#00FF88"):
-            self.assertIn(canonical, v6)
+        allowed = {"#C9A84C", "#E8C97A", "#00E5FF", "#8B0000", "#00FF88"}
+        for name, profile in MANIFEST["archetypes"].items():
+            with self.subTest(archetype=name):
+                self.assertIn(profile["accent"], allowed)
+                self.assertIn(profile["secondary"], allowed)
+                self.assertTrue(profile["glow"].startswith("rgba("))
+                self.assertTrue(profile["line"].startswith("rgba("))
 
     def test_specialized_profiles_use_existing_semantic_surfaces(self):
         for marker in (

@@ -72,6 +72,12 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             with self.subTest(archetype=name):
                 self.assertTrue(required.issubset(profile))
 
+    def test_shared_world_membrane_uses_archetype_accents_and_readable_actions(self):
+        self.assertIn("host.dataset.omegaArchetype=archetype", WORLD)
+        self.assertIn("var(--omega-v6-accent,var(--gold))", WORLD)
+        self.assertIn("font-size:13px", WORLD)
+        self.assertIn("min-height:44px", WORLD)
+
     def test_page_world_publishes_the_canonical_manifest_profiles(self):
         for marker in (
             "root.dataset.omegaArchetype=archetype",

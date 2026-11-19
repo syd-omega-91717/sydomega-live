@@ -277,9 +277,7 @@ html[data-omega-archetype] body.omega-simple :where(
   .omega-figure,.omega-domain-hub-console,.page-header,.section-header
 ){
   border-color:var(--omega-v6-line,var(--omega-v5-line));
-  background-image:
-    radial-gradient(ellipse 72% 118% at 0% 0%,var(--omega-v6-glow,rgba(201,168,76,.1)),transparent 72%),
-    linear-gradient(145deg,rgba(15,18,28,.94),rgba(4,6,12,.94));
+  background-color:rgba(10,10,15,.18);
 }
 html[data-omega-archetype] body.omega-simple :where(
   .card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,
@@ -303,7 +301,6 @@ html[data-omega-archetype] body.omega-simple :where(
   .btn-primary,.btn-gold,.ohz-btn,.omega-domain-hub-action
 ){
   border-color:var(--omega-v6-line,var(--omega-v5-line));
-  box-shadow:0 8px 24px var(--omega-v6-glow,rgba(201,168,76,.1)),inset 0 1px rgba(255,255,255,.12);
 }
 html[data-omega-archetype] body.omega-simple :where(
   a,button,[role="button"],input,select,textarea
@@ -346,8 +343,7 @@ html[data-omega-archetype="gaming"] body.omega-simple :where(
 html[data-omega-archetype="media"] body.omega-simple :where(
   video,.video-frame,.media-player,.film-poster,.poster-art,.omega-film-poster
 ){
-  border:1px solid var(--omega-v6-line,rgba(201,168,76,.3));
-  box-shadow:0 18px 48px rgba(0,0,0,.42),0 0 28px var(--omega-v6-glow,rgba(201,168,76,.1));
+  border-color:var(--omega-v6-line,rgba(201,168,76,.3));
 }
 html[data-omega-archetype="community"] body.omega-simple :where(
   .feed-item,.post,.comment,.message-thread,.conversation

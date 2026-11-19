@@ -13,7 +13,7 @@ CSS = (ROOT / "omega-platform-experience-v5.css").read_text(encoding="utf-8")
 
 
 class OmegaExperienceV6Tests(unittest.TestCase):
-    def test_every_root_html_page_resolves_to_a_valid_archetype(self):
+    def test_every_html_surface_resolves_to_a_valid_archetype(self):
         action_by_slug = {
             row.get("slug") or Path(row.get("page", "")).stem: row.get("archetype")
             for row in PAGE_ACTIONS.get("pages", [])
@@ -30,8 +30,8 @@ class OmegaExperienceV6Tests(unittest.TestCase):
                 )
                 if district:
                     district_by_slug[slug] = district.get("archetype")
-        root_pages = sorted(p for p in ROOT.glob("*.html") if p.is_file())
-        self.assertGreaterEqual(len(root_pages), 240)
+        root_pages = sorted(p for p in ROOT.rglob("*.html") if p.is_file())
+        self.assertGreaterEqual(len(root_pages), 250)
         for page in root_pages:
             slug = page.stem
             district = district_by_slug.get(slug)

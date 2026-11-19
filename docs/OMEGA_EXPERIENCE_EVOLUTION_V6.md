@@ -10,20 +10,24 @@ Make the existing platform feel like one coherent sovereign digital environment 
 
 The supplied master brief names technology, AI, aerospace, social, knowledge, entertainment, gaming, finance, commerce, communication, productivity and infrastructure platforms. The implementation borrows transferable principles, not protected layouts, code, artwork or brand marks.
 
-| Reference family named in the brief | Principle adapted for Ω |
-|---|---|
-| Apple, Google, Microsoft | legibility, adaptive layouts, predictable interaction, clear focus and restrained material depth |
-| Amazon, Shopify | searchable discovery, useful filters, product comparison, transparent purchase and transaction states |
-| Meta, TikTok, YouTube, X, Reddit, Discord, LinkedIn | content hierarchy, identity, community context, feed controls, safety and clear engagement states |
-| Wikipedia, Stack Overflow, GitHub, Internet Archive | provenance, structured knowledge, source visibility, durable navigation and dense information without visual clutter |
-| Disney, Netflix, Warner Bros., Pixar, Epic Games | cinematic framing, visual storytelling, content discovery, strong art direction and coherent worlds |
-| Unity, Unreal Engine, PlayStation, Xbox, Nintendo | readable spatial feedback, responsive input, meaningful progression and performance-aware effects |
-| Stripe, PayPal, Visa, Mastercard | trust cues, clear amounts, explicit confirmation, understandable errors and staged payment flows |
-| Slack, Zoom, Notion | persistent workspaces, collaboration context, focused communication and predictable navigation |
-| Atlassian, Linear, Figma, Canva | workflow clarity, reusable components, creation tools, keyboard access and consistent design primitives |
-| Docker, Kubernetes, HashiCorp, Vercel, Cloudflare | operational status, telemetry, deployment clarity, secure control surfaces and visible system state |
-| OpenAI, Anthropic, DeepMind, xAI, Hugging Face, NVIDIA | transparent AI capability, model/provenance context, evaluation status and clear human control |
-| SpaceX, NASA, ESA | mission-control hierarchy, telemetry readability, timeline context and disciplined instrument design |
+| Reference family named in the brief | Exact references from the brief | Principle adapted for Ω |
+|---|---|---|
+| Technology | Google, Alphabet, Microsoft, Apple, Amazon, AWS, Meta, OpenAI, Anthropic, NVIDIA, Oracle, IBM, Cloudflare, GitHub, GitLab | coherent platform foundations, reliability, accessible interaction, security, scale and disciplined product engineering |
+| AI | DeepMind, OpenAI, Anthropic, xAI, Hugging Face | transparent capability, model/provenance context, human control, evaluation state and trustworthy assistant surfaces |
+| Space & engineering | SpaceX, NASA, ESA | mission-control hierarchy, telemetry readability, instrument discipline, mission timelines and clear operational state |
+| Social platforms | TikTok, YouTube, X, Reddit, Discord, LinkedIn | content hierarchy, identity, community context, feed controls, safety and meaningful engagement states |
+| Knowledge platforms | Wikipedia, Stack Overflow, GitHub, Internet Archive | provenance, structured knowledge, source visibility, durable navigation and dense information without visual clutter |
+| Entertainment | Disney, Netflix, Warner Bros., Pixar, Epic Games, Riot Games, Steam | cinematic framing, visual storytelling, content discovery, franchise worlds and consistent art direction |
+| Gaming | Unity, Unreal Engine, PlayStation, Xbox, Nintendo | spatial feedback, responsive input, readable HUDs, meaningful progression and performance-aware effects |
+| Finance | Stripe, PayPal, Visa, Mastercard | trust cues, clear amounts, explicit confirmation, understandable errors and staged payment flows |
+| Commerce | Amazon, Shopify | searchable discovery, useful filters, product comparison, transparent purchase and transaction states |
+| Communication | Slack, Zoom, Notion | persistent workspaces, collaboration context, focused communication and predictable navigation |
+| Productivity | Atlassian, Linear, Figma, Canva | workflow clarity, keyboard accessibility, reusable components, creation tools and consistent design primitives |
+| Infrastructure | Docker, Kubernetes, HashiCorp, Vercel, Cloudflare | operational status, telemetry, deployment clarity, secure control surfaces and visible system state |
+
+The brief asks these organizations to be examined across **engineering, scalability, maintainability, innovation, governance, security, automation, deployment, product thinking, user experience, system architecture, reliability, resilience, observability, documentation, quality assurance, AI integration and operational excellence**. The table above translates those lenses into a visual/product system; it does not claim that each company has been exhaustively audited or that its proprietary implementation is reproduced.
+
+The intended Ω emotional signatures remain distinctive: the chatbot should feel like an oracle, the leaderboard like an ascent, the passport like a crafted artifact, and the 9×9×9 structure should be perceptible through navigation and interaction—not through decorative clutter.
 
 ## Implemented in this branch
 

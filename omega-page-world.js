@@ -42,8 +42,8 @@
     return hit?hit.archetype:(manifest.pageArchetypeFallback||'system');
   }
 
+  var suppressMembrane=false;
   function inject(){
-    if(document.getElementById('omega-page-world'))return;
     if(!manifest||!manifest.archetypes)return;
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
     if(!district&&overrides&&overrides.entries&&world&&world.districts){ var oid=overrides.entries[slug]; district=world.districts.find(function(d){return d.id===oid;})||null; }
@@ -66,6 +66,15 @@
     visualRoot.setAttribute('data-omega-density',visualToken(a.density,'balanced'));
     if(district&&district.id) visualRoot.setAttribute('data-omega-district',visualToken(district.id,'genesis'));
     else visualRoot.removeAttribute('data-omega-district');
+
+    /* Some utility/legal surfaces deliberately suppress the role ribbon.
+       They still receive the same page archetype so the visual system covers
+       every canonical route without changing that page's information design. */
+    if(suppressMembrane){
+      document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,visual:a.visual||archetype,motion:a.motion||'ambient',depth:a.depth||'layered',density:a.density||'balanced',role:a.worldRole,district:district&&district.id||null}}));
+      return;
+    }
+    if(document.getElementById('omega-page-world'))return;
 
     var l=labels[archetype]||labels.command;
     if(district){
@@ -136,7 +145,7 @@
   function escapeAttr(v){return String(v).replace(/[^a-zA-Z0-9_\-./#?=&]/g,'');}
 
   async function boot(){
-    if(document.body&&document.body.dataset&&document.body.dataset.noWorldMembrane==='true')return;
+    suppressMembrane=!!(document.body&&document.body.dataset&&document.body.dataset.noWorldMembrane==='true');
     try{
       var r=await fetch('/config/page-character-manifest.json',{cache:'no-store'});
       if(!r.ok)throw new Error('page manifest '+r.status);

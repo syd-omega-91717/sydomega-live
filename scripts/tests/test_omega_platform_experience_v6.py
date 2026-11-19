@@ -169,6 +169,12 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         ):
             self.assertIn(selector, self.css)
 
+    def test_3d_depth_is_hover_only_and_respects_reduced_motion(self):
+        self.assertIn("transform-style:preserve-3d", self.css)
+        self.assertIn("rotateX(1deg) rotateY(-1deg)", self.css)
+        self.assertIn("body.omega-simple .omega-atlas-card:hover{transform:none}", self.css)
+        self.assertIn("@media(prefers-reduced-motion:reduce)", self.css)
+
     def test_accessibility_and_mobile_rules_are_explicit(self):
         self.assertIn("@media(max-width:760px)", self.css)
         self.assertIn("@media(prefers-reduced-motion:reduce)", self.css)

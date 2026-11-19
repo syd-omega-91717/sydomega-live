@@ -1,0 +1,180 @@
+/* Ω SYD OMEGA — scoped readability layer.
+   Purpose: improve legibility on the two densest core surfaces without changing
+   the dark-only visual system, gold/cyan palette, data contracts or interactions. */
+
+:root {
+  --omega-readable-label: clamp(13px, .82rem + .08vw, 14px);
+  --omega-readable-body: clamp(14px, .88rem + .12vw, 15px);
+  --omega-readable-section: clamp(18px, 1rem + .18vw, 20px);
+}
+
+body[data-omega-page="profile"],
+body[data-omega-page="dashboard"] {
+  --fs-1: var(--omega-readable-label);
+  --fs-2: var(--omega-readable-body);
+  --fs-3: clamp(17px, 1rem + .1vw, 18px);
+  --fs-4: clamp(22px, 1.25rem + .1vw, 24px);
+  --fs-5: clamp(30px, 1.7rem + .2vw, 34px);
+}
+
+body[data-omega-page="profile"] .main,
+body[data-omega-page="dashboard"] .main {
+  font-size: var(--omega-readable-body);
+  line-height: 1.52;
+  text-rendering: optimizeLegibility;
+}
+
+body[data-omega-page="profile"] .main :is(
+  .ph-rank, .phm-id, .phm-title, .phm-badge,
+  .sgi-label, .tab-btn, .cc-sub, .ccf-label,
+  .ar-id, .idf-label, .ac-alert, .aca-label, .aca-sub,
+  .acf-btn, .tbl-head, .asset-ticker, .token-status,
+  .axis-header, .axis-label, .matrix-coord-label,
+  .tx-type, .tx-date, .cm-trait, .save-msg
+) {
+  font-size: var(--omega-readable-label) !important;
+  line-height: 1.45;
+}
+
+body[data-omega-page="profile"] .main :is(
+  .sgi-sub, .ar-name, .ar-val, .idf-val, .ccf-val,
+  .scb-desc, .tbl-row, .asset-name, .token-name, .token-bal,
+  .axis-val, .matrix-coord-val, .tx-desc, .tx-amount,
+  .pp-name, .pp-field, .ksh-meta
+) {
+  font-size: var(--omega-readable-body) !important;
+  line-height: 1.5;
+}
+
+body[data-omega-page="profile"] .main :is(
+  .phm-id, .phm-title, .phm-badge, .sgi-label,
+  .tab-btn, .cc-sub, .ccf-label, .acf-btn
+) {
+  letter-spacing: .09em !important;
+}
+
+body[data-omega-page="profile"] .main [style*="font-size:12px"],
+body[data-omega-page="profile"] .main [style*="font-size: 12px"] {
+  font-size: var(--omega-readable-label) !important;
+  line-height: 1.45;
+}
+
+body[data-omega-page="profile"] .main :is(p, li, dd, dt, td, th, label) {
+  line-height: 1.5;
+}
+
+body[data-omega-page="dashboard"] .main :is(
+  .mb-title, .mb-item, .ss-label, .ss-val, .ltab,
+  .kpi-l, .kpi-sub, .cc-status, .alert-meta,
+  .tl-time, .pb-date, .pb-snippet, .pf-chip
+) {
+  font-size: var(--omega-readable-label) !important;
+  line-height: 1.45;
+  letter-spacing: .08em;
+}
+
+body[data-omega-page="dashboard"] .main :is(
+  .cc-desc, .oeh-note, .oeh-sub, .ocw-sub, .ocw-note,
+  .alert-text, .priority-item, .review-q, .tl-content,
+  .wx-desc, .wx-detail, .inp
+) {
+  font-size: var(--omega-readable-body) !important;
+  line-height: 1.55;
+}
+
+body[data-omega-page="dashboard"] .main :is(
+  .sec-title, .panel-title, .cc-name,
+  .ocw-title, .oeh-title, .cmd-hero-title
+) {
+  font-size: var(--omega-readable-section) !important;
+  line-height: 1.28;
+}
+
+body[data-omega-page="dashboard"] .main [style*="font-size:12px"],
+body[data-omega-page="dashboard"] .main [style*="font-size: 12px"] {
+  font-size: var(--omega-readable-label) !important;
+  line-height: 1.45;
+}
+
+body[data-omega-page="dashboard"] .mission-bar {
+  height: auto;
+  min-height: 44px;
+  padding-block: 7px;
+  flex-wrap: wrap;
+}
+
+body[data-omega-page="dashboard"] .mb-meta {
+  gap: 8px 12px;
+}
+
+body[data-omega-page="dashboard"] .main :is(p, li, dd, dt, td, th, label) {
+  line-height: 1.5;
+}
+
+body[data-omega-page="profile"] .main :is(a, button, input, select, textarea, [role="button"]),
+body[data-omega-page="dashboard"] .main :is(a, button, input, select, textarea, [role="button"]) {
+  scroll-margin-top: 5rem;
+}
+
+body[data-omega-page="profile"] .main :is(a, button, input, select, textarea, [role="button"]):focus-visible,
+body[data-omega-page="dashboard"] .main :is(a, button, input, select, textarea, [role="button"]):focus-visible,
+body[data-omega-page="profile"] .omega-skip-link:focus-visible {
+  outline: 2px solid var(--cyan, #00E5FF);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, .12);
+}
+
+.omega-skip-link {
+  position: fixed;
+  top: -52px;
+  left: 12px;
+  z-index: 10000;
+  padding: 10px 14px;
+  border: 1px solid var(--gold, #C9A84C);
+  background: var(--void, #020206);
+  color: var(--gold, #C9A84C);
+  font: 700 13px/1.3 var(--M, monospace);
+  letter-spacing: .08em;
+  text-decoration: none;
+  transition: top .18s ease;
+}
+
+.omega-skip-link:focus {
+  top: 12px;
+}
+
+@media (max-width: 760px) {
+  body[data-omega-page="profile"] .ph-inner {
+    align-items: center;
+    gap: 16px;
+  }
+
+  body[data-omega-page="profile"] .credential-card {
+    padding: 18px;
+  }
+
+  body[data-omega-page="profile"] .cc-fields {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  }
+
+  body[data-omega-page="profile"] .tab-btn {
+    min-width: 116px;
+    padding-inline: 12px;
+  }
+
+  body[data-omega-page="dashboard"] .mission-bar {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  body[data-omega-page="dashboard"] .mb-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .omega-skip-link {
+    transition: none;
+  }
+}

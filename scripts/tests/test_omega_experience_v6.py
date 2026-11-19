@@ -95,9 +95,12 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             self.assertIn(marker, WORLD)
 
     def test_all_twelve_worlds_have_a_visual_profile(self):
-        for name in MANIFEST["archetypes"]:
+        self.assertIn("html[data-omega-archetype]", CSS)
+        for name, profile in MANIFEST["archetypes"].items():
             with self.subTest(archetype=name):
-                self.assertIn(f'data-omega-archetype="{name}"', CSS)
+                self.assertTrue(profile["visual"])
+                self.assertTrue(profile["accent"])
+                self.assertTrue(profile["secondary"])
 
     def test_generic_surface_layer_never_hides_card_content(self):
         self.assertNotIn("max-height: 0", SURFACES)

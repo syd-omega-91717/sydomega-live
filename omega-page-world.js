@@ -44,6 +44,23 @@
     if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.page===pagePath;})||pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
     var l=labels[archetype]||labels.command;
+
+    /* The manifest is the canonical visual personality source. Publish its
+       profile on the document root so the shared art-direction layer can
+       render the correct world without duplicating page-to-archetype maps. */
+    var root=document.documentElement;
+    root.dataset.omegaArchetype=archetype;
+    root.dataset.omegaVisualProfile=a.visual||'sovereign';
+    root.dataset.omegaMotionProfile=a.motion||'subtle';
+    root.dataset.omegaDepthProfile=a.depth||'glass';
+    root.dataset.omegaDensityProfile=a.density||'clear';
+    root.dataset.omegaInteractionProfile=a.interaction||'direct';
+    root.dataset.omegaEmblemProfile=a.emblem||'omega';
+    root.classList.add('omega-experience-'+archetype);
+    if(document.body){
+      document.body.dataset.omegaArchetype=archetype;
+      document.body.dataset.omegaVisualProfile=a.visual||'sovereign';
+    }
     if(district){
       var pages=district.pages||[];
       l={

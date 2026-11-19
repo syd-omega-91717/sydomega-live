@@ -143,7 +143,7 @@ function switchTab(id,btn){
 
   async function boot(){
     var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ window.location.href='/account.html'; return; }
+    if(!sess){ document.getElementById('t-msg').textContent='Sign in or create an account to accept these terms. The terms remain available to read without signing in.'; return; }
     var pr=await supabase.from('profiles').select('terms_accepted').eq('id',sess.user.id).maybeSingle();
     if(pr.data && pr.data.terms_accepted){ window.location.href='/dashboard.html'; return; }
   }
@@ -151,7 +151,7 @@ function switchTab(id,btn){
   document.getElementById('enter').addEventListener('click',async function(){
     var msg=document.getElementById('t-msg'), btn=this;
     var sess=(await supabase.auth.getSession()).data.session;
-    if(!sess){ window.location.href='/account.html'; return; }
+    if(!sess){ msg.textContent='Sign in or create an account to accept these terms.'; return; }
     btn.disabled=true; msg.textContent='Recording your acceptance...';
     var r=await supabase.from('profiles').update({terms_accepted:true,terms_accepted_at:new Date().toISOString()}).eq('id',sess.user.id);
     if(r.error){ btn.disabled=false; msg.style.color='var(--crimson)'; msg.textContent='Could not record ('+(r.error.code||r.error.message||'')+').'; return; }

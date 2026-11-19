@@ -251,27 +251,27 @@
       "archetype": "media"
     },
     {
-      "match": "=command|=dashboard|=home",
+      "match": "command|dashboard|home",
       "archetype": "command"
     },
     {
-      "match": "=identity|=profile|=passport|=character|=account|=membership",
+      "match": "identity|profile|passport|character|account|membership",
       "archetype": "identity"
     },
     {
-      "match": "=intelligence|=research|=prediction|=analytics|=graph|=search|=oracle|=agents|=ai-",
+      "match": "intelligence|research|prediction|analytics|graph|search|oracle|agents|ai-",
       "archetype": "intelligence"
     },
     {
-      "match": "=academy|=knowledge|=library|=codex|=exam|=flashcard|=grades|=heritage|=tutor",
+      "match": "academy|knowledge|library|codex|exam|flashcard|grades|heritage|tutor",
       "archetype": "knowledge"
     },
     {
-      "match": "=gaming|=game|=arena|=trophy|=leaderboard",
+      "match": "gaming|game|arena|trophy|leaderboard",
       "archetype": "gaming"
     },
     {
-      "match": "=media|=cinema|=film|=series|=trailers|=music|=video",
+      "match": "media|cinema|film|series|trailers|music|video",
       "archetype": "media"
     },
     {
@@ -283,7 +283,7 @@
       "archetype": "creation"
     },
     {
-      "match": "=social|=family|=contacts|=feed|=community|=factions",
+      "match": "social|family|contacts|feed|community|factions",
       "archetype": "community"
     },
     {
@@ -291,11 +291,11 @@
       "archetype": "governance"
     },
     {
-      "match": "=vault|=treasury|=wallet|=income|=payments|=payment|=investment|=portfolio|=ledger|=budget|=expenses",
+      "match": "vault|treasury|wallet|income|payments|payment|investment|portfolio|ledger|budget|expenses",
       "archetype": "finance"
     },
     {
-      "match": "=settings|=maintenance|=system|=admin|=operator|=enterprise|=security|=kyc",
+      "match": "settings|maintenance|system|admin|operator|enterprise|security|kyc",
       "archetype": "system"
     }
   ],

@@ -239,23 +239,35 @@ jobs:
               OMEGA_PUBLIC_DIR=public OMEGA_SMOKE_WORKERS=12 OMEGA_SMOKE_RETRIES=2 \
               python scripts/vercel-production-surface-smoke.py
           }
+          read_release() {
+            local base_url="${1%/}"
+            curl --silent --fail --proto '=https' --max-time 20 "${base_url}/.well-known/omega-release.json" \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})'
+          }
+          # Cloudflare can publish the apex and www aliases at slightly
+          # different times. Do not start the release smoke until both aliases
+          # report the same commit; otherwise the second smoke can fail while
+          # its edge is still propagating the already-built deployment.
           for attempt in $(seq 1 45); do
-            served="$(curl --silent --fail --proto '=https' --max-time 20 "$OMEGA_PRODUCTION_BASE_URL/.well-known/omega-release.json" \
-              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})' || true)"
-            if [[ "$served" == "$GITHUB_SHA" ]]; then
-              verify_served_release "$served"
-              exit 0
+            served_apex="$(read_release "$OMEGA_PRODUCTION_BASE_URL" || true)"
+            served_www="$(read_release "https://www.sydomega.com" || true)"
+            if [[ -n "$served_apex" && "$served_apex" == "$served_www" ]]; then
+              served="$served_apex"
+              if [[ "$served" == "$GITHUB_SHA" ]]; then
+                verify_served_release "$served"
+                exit 0
+              fi
+              if [[ "$served" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "$served^{commit}" 2>/dev/null \
+                 && git merge-base --is-ancestor "$GITHUB_SHA" "$served"; then
+                echo "LIVE_SITE=PASS served=$served contains=$GITHUB_SHA"
+                verify_served_release "$served"
+                exit 0
+              fi
             fi
-            if [[ "$served" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "$served^{commit}" 2>/dev/null \
-               && git merge-base --is-ancestor "$GITHUB_SHA" "$served"; then
-              echo "LIVE_SITE=PASS served=$served contains=$GITHUB_SHA"
-              verify_served_release "$served"
-              exit 0
-            fi
-            echo "attempt=$attempt served=${served:-none} waiting_for=$GITHUB_SHA"
+            echo "attempt=$attempt apex=${served_apex:-none} www=${served_www:-none} waiting_for=$GITHUB_SHA"
             sleep 20
           done
-          echo "::error title=Live site did not update::sydomega.com still serves ${served:-nothing} 15 minutes after $GITHUB_SHA reached main. Check the Cloudflare Pages build."
+          echo "::error title=Live site did not converge::apex=${served_apex:-nothing} www=${served_www:-nothing} after 15 minutes for $GITHUB_SHA. Check Cloudflare Pages and domain propagation."
           exit 1
       - name: Controlled state when token is unavailable
         if: needs.credentials.outputs.ready != 'true' && env.VERCEL_PROMOTION_POSTPONED != 'true'

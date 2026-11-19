@@ -2,6 +2,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# The release gate verifies both sydomega.com aliases before declaring a deploy live.
+# Keep this build entrypoint in the Pages build path when release-gate contracts change.
+
 # Cloudflare Pages Git integration deploys main independently of GitHub checks.
 # Enforce source/provider/pending migration parity before any production build;
 # branch previews remain available while a migration is under review.

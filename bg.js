@@ -255,7 +255,7 @@ function __omegaAppend(el){
    the body carries `omega-approved`. That class is added only after approval
    is confirmed, so failure of any kind leaves content hidden.
 
-   Public pages (account, enter, reset, terms, pending, index) are exempt --
+   Public pages (account, enter, reset, terms, pending, index, privacy) are exempt --
    they must render to signed-out visitors. */
 (function(){
 
@@ -752,7 +752,7 @@ function __omegaAppend(el){
        governance text sitting beside terms in that same EX list, so the two are
        reconciled in this direction. Changing either list means changing both.
        CLAUDE.md 8.1 class 8 (two divergent copies of one canonical list). */
-    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/guide'];
+    var PUBLIC = ['/account','/enter','/reset','/terms','/pending','/index','/','/charter','/guide','/privacy'];
     var path = (location.pathname || '/').replace(/\.html$/,'');
     for (var i=0;i<PUBLIC.length;i++){ if (path === PUBLIC[i]) return; }
 
@@ -2184,7 +2184,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* ACCESS GUARD + TRIAL ENGINE */
 (function(){
   var pg=(location.pathname.split('/').pop()||'').replace('.html','');
-  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'guide':1};
+  var EX={'':1,'index':1,'account':1,'terms':1,'charter':1,'reset':1,'enter':1,'pending':1,'guide':1,'privacy':1};
   if(EX[pg])return;
   /* pending.html independently redirects back here whenever it reads
      is_trial+trial_expires_at as still active, racing this file's own

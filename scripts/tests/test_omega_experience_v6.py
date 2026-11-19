@@ -96,7 +96,8 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         find_start = WORLD.index("function findArchetype()")
         find_end = WORLD.index("\n  }", find_start)
         find_body = WORLD[find_start:find_end]
-        self.assertLess(find_body.index("pageWorld.archetype!=='command'"), find_body.index("return 'command'"))
+        self.assertLess(find_body.index("token.charAt(0)==='='"), find_body.index("pageWorld.archetype!=='command'"))
+        self.assertLess(find_body.index("pageWorld.archetype!=='command'"), find_body.index("district&&district.archetype"))
         self.assertIn("if(pageWorld&&pageWorld.pages)", WORLD)
         self.assertIn("archetype=findArchetype()", WORLD)
 
@@ -112,7 +113,7 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         mapping = {}
         for rule in rules:
             for token in rule["match"].split("|"):
-                mapping[token] = rule["archetype"]
+                mapping[token.lstrip("=")] = rule["archetype"]
         expected = {
             "achieve": "gaming", "archive": "knowledge", "ascend": "knowledge",
             "control-center": "system", "cosmetics": "identity",

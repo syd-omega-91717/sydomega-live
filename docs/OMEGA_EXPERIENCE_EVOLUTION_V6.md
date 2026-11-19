@@ -4,7 +4,7 @@
 
 ## Design intent
 
-Make the existing platform feel like one coherent sovereign digital environment while giving each product domain its own visual character. The source of truth is `config/page-character-manifest.json`; the UI must not maintain a second page-to-archetype map.
+Make the existing platform feel like one coherent sovereign digital environment while giving each product domain its own visual character. The visual profile source is `config/page-character-manifest.json`. Existing page assignments come from `config/page-world-actions.json` and `config/omega-world-manifest.json` plus its overrides. One resolver combines these canonical sources; the UI must not maintain a second page-to-archetype map.
 
 ## Inspiration translated into original product principles
 
@@ -28,6 +28,36 @@ The supplied master brief names technology, AI, aerospace, social, knowledge, en
 The brief asks these organizations to be examined across **engineering, scalability, maintainability, innovation, governance, security, automation, deployment, product thinking, user experience, system architecture, reliability, resilience, observability, documentation, quality assurance, AI integration and operational excellence**. The table above translates those lenses into a visual/product system; it does not claim that each company has been exhaustively audited or that its proprietary implementation is reproduced.
 
 The intended Ω emotional signatures remain distinctive: the chatbot should feel like an oracle, the leaderboard like an ascent, the passport like a crafted artifact, and the 9×9×9 structure should be perceptible through navigation and interaction—not through decorative clutter.
+
+## Complete page-to-world resolution
+
+The resolver uses existing canonical data in this order:
+
+1. A valid district archetype from the world manifest.
+2. A non-default archetype already assigned to the page in `page-world-actions.json`.
+3. The first matching explicit visual rule in `page-character-manifest.json`.
+4. The page action's `command` archetype when no more specific rule applies.
+5. The valid `command` archetype as the final fallback.
+
+The visual audit enumerated all **242 root HTML pages**. With the new explicit rules and collision fix, every route resolves to one of the 12 supported archetypes; no route is left unassigned. Current resolution counts:
+
+| Archetype | Root pages |
+|---|---:|
+| Command | 101 |
+| Intelligence | 34 |
+| Knowledge | 21 |
+| Gaming | 16 |
+| Creation | 9 |
+| System | 9 |
+| Finance | 9 |
+| Governance | 8 |
+| Community | 11 |
+| Identity | 8 |
+| Media | 8 |
+| Commerce | 8 |
+| **Total** | **242** |
+
+The broad `ai` substring was removed from the intelligence rule because it incorrectly matched words such as `trailers` and `maintenance`. The narrower `ai-` token and explicit route rules avoid those collisions.
 
 ## Implemented in this branch
 

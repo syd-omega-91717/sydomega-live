@@ -77,6 +77,14 @@ class GuardTrustContract(unittest.TestCase):
         self.assertNotIn("if(!sess){ window.location.href='/account.html'; return; }", TERMS)
         self.assertIn("Sign in or create an account to accept these terms.", TERMS)
 
+    def test_privacy_surface_is_marked_partial_until_erasure_is_real(self):
+        import json
+        value_layer = json.loads((ROOT / "config" / "omega-value-layer.json").read_text(encoding="utf-8"))
+        privacy_surface = value_layer["pages"]["privacy"]
+        self.assertTrue(privacy_surface["proof"].startswith("PARTIAL —"))
+        self.assertIn("complete erasure automation remains dormant", privacy_surface["proof"])
+        self.assertNotIn("erase your data", privacy_surface["purpose"] + " " + privacy_surface["value"])
+
     def test_privacy_notice_does_not_promise_unimplemented_erasure_or_retention(self):
         self.assertIn("does not currently run a complete automated purge", PRIVACY)
         self.assertIn("retention schedule is not yet fully enforced", PRIVACY)

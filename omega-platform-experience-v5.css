@@ -229,23 +229,23 @@ html[data-omega-archetype="identity"]{
   --omega-v6-glow:rgba(232,201,122,.14);--omega-v6-line:rgba(232,201,122,.36);
 }
 html[data-omega-archetype="intelligence"]{
-  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#AB82F2;
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#C9A84C;
   --omega-v6-glow:rgba(0,229,255,.13);--omega-v6-line:rgba(0,229,255,.32);
 }
 html[data-omega-archetype="knowledge"]{
-  --omega-v6-accent:#8FDCE8;--omega-v6-secondary:#C9A84C;
-  --omega-v6-glow:rgba(143,220,232,.10);--omega-v6-line:rgba(143,220,232,.28);
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#C9A84C;
+  --omega-v6-glow:rgba(0,229,255,.10);--omega-v6-line:rgba(0,229,255,.28);
 }
 html[data-omega-archetype="gaming"]{
-  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#CF6760;
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#8B0000;
   --omega-v6-glow:rgba(0,229,255,.15);--omega-v6-line:rgba(0,229,255,.34);
 }
 html[data-omega-archetype="media"]{
-  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#AB82F2;
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#C9A84C;
   --omega-v6-glow:rgba(232,201,122,.14);--omega-v6-line:rgba(232,201,122,.34);
 }
 html[data-omega-archetype="commerce"]{
-  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#3FB27F;
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#00FF88;
   --omega-v6-glow:rgba(201,168,76,.12);--omega-v6-line:rgba(201,168,76,.32);
 }
 html[data-omega-archetype="creation"]{
@@ -253,20 +253,20 @@ html[data-omega-archetype="creation"]{
   --omega-v6-glow:rgba(0,229,255,.12);--omega-v6-line:rgba(0,229,255,.32);
 }
 html[data-omega-archetype="community"]{
-  --omega-v6-accent:#AB82F2;--omega-v6-secondary:#00E5FF;
-  --omega-v6-glow:rgba(171,130,242,.13);--omega-v6-line:rgba(171,130,242,.30);
+  --omega-v6-accent:#C9A84C;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(0,229,255,.13);--omega-v6-line:rgba(0,229,255,.30);
 }
 html[data-omega-archetype="governance"]{
   --omega-v6-accent:#C9A84C;--omega-v6-secondary:#00E5FF;
   --omega-v6-glow:rgba(201,168,76,.10);--omega-v6-line:rgba(201,168,76,.30);
 }
 html[data-omega-archetype="finance"]{
-  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#3FB27F;
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#00FF88;
   --omega-v6-glow:rgba(201,168,76,.11);--omega-v6-line:rgba(201,168,76,.32);
 }
 html[data-omega-archetype="system"]{
-  --omega-v6-accent:#CF6760;--omega-v6-secondary:#00E5FF;
-  --omega-v6-glow:rgba(207,103,96,.12);--omega-v6-line:rgba(207,103,96,.32);
+  --omega-v6-accent:#8B0000;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(139,0,0,.12);--omega-v6-line:rgba(139,0,0,.32);
 }
 html[data-omega-archetype]{
   --omega-v6-ease:cubic-bezier(.2,.75,.25,1);

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from html.parser import HTMLParser
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -22,6 +23,20 @@ API_PREFIXES = ("/api/", "/functions/v1/")
 CLOUDFLARE_EMAIL_PLACEHOLDER_PATH = "/cdn-cgi/l/email-protection"
 ALLOWED_HOST_SUFFIXES = (".sydomega.com", ".pages.dev", ".vercel.app")
 ALLOWED_ROOT_HOSTS = {"sydomega.com"}
+REQUEST_HEADERS = {
+    # Cloudflare bot management treated the bespoke CI-only user agent differently
+    # from a real browser. Keep the same strict URL/redirect checks while presenting
+    # a normal browser request profile for public static assets.
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "Accept": "*/*",
+    "Accept-Language": "en-US,en;q=0.9",
+    # requests reliably decodes gzip/deflate; do not negotiate Brotli without
+    # a guaranteed decoder in the pinned smoke-client environment.
+    "Accept-Encoding": "gzip, deflate",
+    "Cache-Control": "no-cache",
+    "Pragma": "no-cache",
+}
+
 REQUIRED_GLOBAL_ASSETS = (
     ("/bg.js", "javascript", "omega-platform-experience-v5.css?v=20261118-v5"),
     (
@@ -152,10 +167,7 @@ def request_url(
         response = session.request(
             method,
             safe_url,
-            headers={
-                "User-Agent": "SYD-OMEGA-Production-Smoke/1.0",
-                "Accept": "*/*",
-            },
+            headers=REQUEST_HEADERS,
             timeout=timeout,
             allow_redirects=False,
             verify=True,
@@ -252,7 +264,16 @@ def main() -> int:
             status, content_type, body = request_url(asset_url, "GET", args.timeout)
             valid_type = expected_type in content_type.lower()
             if status != 200 or not valid_type or marker not in body:
-                global_asset_failures.append((asset_url, status, f"type={content_type}; marker_present={marker in body}"))
+                body_bytes = body.encode("utf-8", errors="replace")
+                body_prefix = repr(body[:180])
+                body_sha256 = hashlib.sha256(body_bytes).hexdigest()
+                global_asset_failures.append((
+                    asset_url,
+                    status,
+                    f"type={content_type}; body_bytes={len(body_bytes)}; "
+                    f"marker_present={marker in body}; sha256={body_sha256}; "
+                    f"body_prefix={body_prefix}",
+                ))
 
         ref_failures: list[tuple[str, int, str]] = []
         def check_ref(url: str):

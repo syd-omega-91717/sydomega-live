@@ -52,6 +52,23 @@ class VisualPageSurveyTests(unittest.TestCase):
                 survey.ROOT = original_root
         self.assertEqual(result["h1"], "Visible heading")
 
+    def test_unquoted_viewport_meta_is_recognized(self) -> None:
+        html = """
+        <html><head><meta name=viewport content=width=device-width,initial-scale=1>
+        <title>Mobile page</title></head><body><h1>Mobile page</h1></body></html>
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            page = root / "mobile.html"
+            page.write_text(html, encoding="utf-8")
+            original_root = survey.ROOT
+            try:
+                survey.ROOT = root
+                result = survey.scan(page)
+            finally:
+                survey.ROOT = original_root
+        self.assertNotIn("CONTRACT: missing viewport", result["findings"])
+
     def test_same_basename_pages_have_distinct_relative_paths(self) -> None:
         html = """
         <html><head><meta name="viewport" content="width=device-width, initial-scale=1">

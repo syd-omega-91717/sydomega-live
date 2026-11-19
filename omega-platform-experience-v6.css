@@ -271,6 +271,23 @@ body.omega-simple .omega-atlas-card:focus-visible{
   outline-offset:3px;
 }
 
+/* Restrained 3D card depth: hover-only, no continuous GPU animation. */
+body.omega-simple :where(.omega-figure-card,.omega-discovery-card,.omega-atlas-card,.film-card,.game-card){
+  transform-style:preserve-3d;
+  transition:transform .24s var(--omega-v6-ease),border-color .24s var(--omega-v6-ease),box-shadow .24s var(--omega-v6-ease);
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple :where(.omega-figure-card,.omega-discovery-card,.omega-atlas-card,.film-card,.game-card):hover{
+    transform:perspective(1100px) rotateX(1deg) rotateY(-1deg) translateY(-3px);
+  }
+}
+@media(max-width:760px),(prefers-reduced-motion:reduce){
+  body.omega-simple :where(.omega-figure-card,.omega-discovery-card,.omega-atlas-card,.film-card,.game-card){
+    transform:none;
+    transition:none;
+  }
+}
+
 /* The visual atlas is a gallery of source references, never an entitlement view. */
 body.omega-simple :where(.ova-card){
   border:1px solid var(--omega-v6-accent-line);

@@ -49,6 +49,13 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         self.assertNotIn("prefers-color-scheme: light", CSS)
         self.assertIn(":focus-visible", CSS)
 
+    def test_v6_profiles_stay_inside_the_canonical_omega_palette(self):
+        v6 = CSS[CSS.index("Ω EXPERIENCE EVOLUTION V6"):]
+        for forbidden in ("#AB82F2", "#8FDCE8", "#CF6760", "#3FB27F", "rgba(171,130,242", "rgba(143,220,232", "rgba(207,103,96"):
+            self.assertNotIn(forbidden, v6)
+        for canonical in ("#C9A84C", "#E8C97A", "#00E5FF", "#8B0000", "#00FF88"):
+            self.assertIn(canonical, v6)
+
     def test_specialized_profiles_use_existing_semantic_surfaces(self):
         for marker in (
             'data-omega-depth-profile="holographic"',

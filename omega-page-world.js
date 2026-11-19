@@ -43,6 +43,23 @@
     archetype=findArchetype();
     if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.page===pagePath;})||pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
+
+    /* Publish the manifest's visual contract as stable root attributes.
+       CSS can now compose a coherent world skin without guessing from URLs,
+       duplicating archetype registries, or changing page-owned layout. */
+    var visualRoot=document.documentElement;
+    function visualToken(value,fallback){
+      var token=String(value||fallback||'').toLowerCase();
+      return /^[a-z0-9_-]{1,40}$/.test(token)?token:String(fallback||'command');
+    }
+    visualRoot.setAttribute('data-omega-archetype',visualToken(archetype,'command'));
+    visualRoot.setAttribute('data-omega-visual',visualToken(a.visual,archetype));
+    visualRoot.setAttribute('data-omega-motion-profile',visualToken(a.motion,'ambient'));
+    visualRoot.setAttribute('data-omega-depth',visualToken(a.depth,'layered'));
+    visualRoot.setAttribute('data-omega-density',visualToken(a.density,'balanced'));
+    if(district&&district.id) visualRoot.setAttribute('data-omega-district',visualToken(district.id,'genesis'));
+    else visualRoot.removeAttribute('data-omega-district');
+
     var l=labels[archetype]||labels.command;
     if(district){
       var pages=district.pages||[];
@@ -93,7 +110,7 @@
     }
     reconcileDensity();
     setTimeout(reconcileDensity,900);
-    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
+    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,visual:a.visual||archetype,motion:a.motion||'ambient',depth:a.depth||'layered',density:a.density||'balanced',role:a.worldRole,district:district&&district.id||null}}));
     host.querySelectorAll('a[data-world-action]').forEach(function(link){
       link.addEventListener('click',function(ev){
         var d=link.getAttribute('data-world-district'),act=link.getAttribute('data-world-action');

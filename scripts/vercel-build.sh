@@ -109,6 +109,9 @@ done
 # Fingerprint local CSS/JS references with this exact release commit. Cloudflare
 # and browser caches may retain an unversioned asset URL across a Pages deploy;
 # changing the query key makes every deployed asset URL release-specific.
+if [[ "${CF_PAGES_BRANCH:-}" == "main" || "${VERCEL_ENV:-}" == "production" ]]; then
+  export OMEGA_ASSET_VERSION_ABSOLUTE=1
+fi
 python3 scripts/version-static-assets.py || {
   echo 'VERCEL_BUILD=FAIL asset_versioning'; exit 1;
 }

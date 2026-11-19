@@ -1,0 +1,235 @@
+/* Ω SYD OMEGA 91717 — PLATFORM EXPERIENCE V6
+   Archetype-aware visual unification for the full static page estate.
+   The page-world manifest supplies the archetype; this layer supplies its
+   visual accent and composition grammar. Existing routes, data, actions,
+   permissions, and page-specific layout remain authoritative.
+   Inspiration is translated as principles, never copied as proprietary UI/art.
+*/
+
+:root{
+  --omega-v6-void:#020206;
+  --omega-v6-panel:rgba(8,11,19,.86);
+  --omega-v6-panel-raised:rgba(15,18,29,.94);
+  --omega-v6-gold:#C9A84C;
+  --omega-v6-gold-light:#E8C97A;
+  --omega-v6-cyan:#00E5FF;
+  --omega-v6-violet:#9B6BF0;
+  --omega-v6-green:#44DD88;
+  --omega-v6-crimson:#8B0000;
+  --omega-v6-accent:var(--omega-v6-gold);
+  --omega-v6-accent-soft:rgba(201,168,76,.12);
+  --omega-v6-accent-line:rgba(201,168,76,.32);
+  --omega-v6-accent-glow:0 0 28px rgba(201,168,76,.12);
+  --omega-v6-secondary:var(--omega-v6-cyan);
+  --omega-v6-ease:cubic-bezier(.2,.75,.25,1);
+}
+
+/* Each page inherits a distinct world accent from its canonical archetype. */
+html[data-omega-archetype="command"]{
+  --omega-v6-accent:#C9A84C;--omega-v6-accent-soft:rgba(201,168,76,.13);
+  --omega-v6-accent-line:rgba(201,168,76,.34);--omega-v6-accent-glow:0 0 30px rgba(201,168,76,.14);--omega-v6-secondary:#00E5FF;
+}
+html[data-omega-archetype="identity"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.12);
+  --omega-v6-accent-line:rgba(232,201,122,.34);--omega-v6-accent-glow:0 0 28px rgba(232,201,122,.12);--omega-v6-secondary:#C9A84C;
+}
+html[data-omega-archetype="intelligence"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.12);
+  --omega-v6-accent-line:rgba(0,229,255,.34);--omega-v6-accent-glow:0 0 30px rgba(0,229,255,.13);--omega-v6-secondary:#9B6BF0;
+}
+html[data-omega-archetype="knowledge"]{
+  --omega-v6-accent:#73DCEB;--omega-v6-accent-soft:rgba(115,220,235,.11);
+  --omega-v6-accent-line:rgba(115,220,235,.3);--omega-v6-accent-glow:0 0 26px rgba(115,220,235,.1);--omega-v6-secondary:#C9A84C;
+}
+html[data-omega-archetype="gaming"]{
+  --omega-v6-accent:#9B6BF0;--omega-v6-accent-soft:rgba(155,107,240,.14);
+  --omega-v6-accent-line:rgba(155,107,240,.38);--omega-v6-accent-glow:0 0 32px rgba(155,107,240,.15);--omega-v6-secondary:#00E5FF;
+}
+html[data-omega-archetype="media"]{
+  --omega-v6-accent:#B69BFF;--omega-v6-accent-soft:rgba(182,155,255,.12);
+  --omega-v6-accent-line:rgba(182,155,255,.34);--omega-v6-accent-glow:0 0 30px rgba(182,155,255,.13);--omega-v6-secondary:#E8C97A;
+}
+html[data-omega-archetype="commerce"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.12);
+  --omega-v6-accent-line:rgba(232,201,122,.34);--omega-v6-accent-glow:0 0 28px rgba(232,201,122,.12);--omega-v6-secondary:#00E5FF;
+}
+html[data-omega-archetype="creation"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.1);
+  --omega-v6-accent-line:rgba(0,229,255,.3);--omega-v6-accent-glow:0 0 28px rgba(0,229,255,.12);--omega-v6-secondary:#C9A84C;
+}
+html[data-omega-archetype="community"]{
+  --omega-v6-accent:#44DD88;--omega-v6-accent-soft:rgba(68,221,136,.11);
+  --omega-v6-accent-line:rgba(68,221,136,.3);--omega-v6-accent-glow:0 0 26px rgba(68,221,136,.11);--omega-v6-secondary:#00E5FF;
+}
+html[data-omega-archetype="governance"]{
+  --omega-v6-accent:#C9A84C;--omega-v6-accent-soft:rgba(201,168,76,.11);
+  --omega-v6-accent-line:rgba(201,168,76,.3);--omega-v6-accent-glow:0 0 26px rgba(201,168,76,.1);--omega-v6-secondary:#00E5FF;
+}
+html[data-omega-archetype="finance"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.11);
+  --omega-v6-accent-line:rgba(232,201,122,.3);--omega-v6-accent-glow:0 0 28px rgba(232,201,122,.11);--omega-v6-secondary:#44DD88;
+}
+html[data-omega-archetype="system"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.1);
+  --omega-v6-accent-line:rgba(0,229,255,.3);--omega-v6-accent-glow:0 0 28px rgba(0,229,255,.11);--omega-v6-secondary:#8B0000;
+}
+
+/* The background now belongs to the page's world, not one generic tint. */
+body.omega-simple{
+  background-color:var(--omega-v6-void);
+  background-image:
+    radial-gradient(ellipse 58% 32% at 50% -9%,var(--omega-v6-accent-soft),transparent 74%),
+    radial-gradient(ellipse 36% 40% at 100% 42%,rgba(0,229,255,.045),transparent 76%),
+    radial-gradient(ellipse 30% 38% at 0% 86%,rgba(155,107,240,.035),transparent 78%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.009) 0,rgba(255,255,255,.009) 1px,transparent 1px,transparent 54px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.007) 0,rgba(255,255,255,.007) 1px,transparent 1px,transparent 54px);
+  background-attachment:fixed;
+}
+
+/* Shared page identity: clear title, secondary label and current-world accent. */
+body.omega-simple :where(main,.main,.page,.page-shell,#omega-main-content) h1,
+body.omega-simple :where(.page-title,.hero-title,.omega-domain-page-title){
+  color:var(--omega-v6-accent);
+  text-shadow:0 0 24px var(--omega-v6-accent-soft);
+  text-wrap:balance;
+}
+body.omega-simple :where(.sechead,.section-title,.hero-eyebrow,.kicker,.opw-kicker){
+  color:var(--omega-v6-secondary);
+}
+body.omega-simple :where(.page-header,.section-header,.omega-section-heading){
+  border-bottom-color:var(--omega-v6-accent-line);
+}
+body.omega-simple :where(.page-header,.section-header,.omega-section-heading)::after{
+  background:linear-gradient(90deg,var(--omega-v6-accent),var(--omega-v6-secondary),transparent);
+}
+
+/* Navigation and page-world membrane share the same archetype identity. */
+body.omega-simple :where(.side a.active,#omega-side a.active,.side a[aria-current="page"],#omega-side a[aria-current="page"]){
+  color:var(--omega-v6-accent);
+  border-color:var(--omega-v6-accent-line);
+  background:linear-gradient(90deg,var(--omega-v6-accent-soft),rgba(0,229,255,.025));
+  box-shadow:inset 2px 0 var(--omega-v6-accent),0 0 22px var(--omega-v6-accent-soft);
+}
+body.omega-simple #omega-page-world .opw-inner{
+  border-color:var(--omega-v6-accent-line);
+  background:
+    radial-gradient(ellipse 42% 150% at 0% 50%,var(--omega-v6-accent-soft),transparent 80%),
+    linear-gradient(90deg,rgba(10,10,15,.95),rgba(2,2,6,.88));
+  box-shadow:inset 0 1px rgba(255,255,255,.045),0 12px 34px rgba(0,0,0,.24);
+}
+body.omega-simple #omega-page-world .opw-mark{
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border:1px solid var(--omega-v6-accent-line);
+  border-radius:50%;
+  color:var(--omega-v6-accent);
+  background:
+    radial-gradient(circle,rgba(255,255,255,.09) 0 2%,transparent 3% 38%,var(--omega-v6-accent-soft) 39% 41%,transparent 42% 58%,var(--omega-v6-accent-soft) 59% 60%,transparent 61%),
+    rgba(2,2,6,.78);
+  box-shadow:var(--omega-v6-accent-glow),inset 0 0 14px var(--omega-v6-accent-soft);
+}
+body.omega-simple #omega-page-world .opw-actions a{
+  border-color:var(--omega-v6-accent-line);
+  color:var(--omega-v6-accent);
+}
+body.omega-simple #omega-page-world .opw-actions a.opw-mission{
+  color:var(--omega-v6-secondary);
+  border-color:rgba(0,229,255,.28);
+}
+
+/* Cards and controls inherit the world accent without changing their geometry. */
+body.omega-simple :where(
+  .card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,
+  .glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,
+  .game-card,.sg-item,.ustat,.stat-card,.credential-card,.social-card,
+  .omega-domain-hub-module,.omega-domain-hub-protected-link
+){
+  border-color:var(--omega-v6-accent-line);
+}
+@media(hover:hover) and (pointer:fine){
+  body.omega-simple :where(
+    .card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,
+    .glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,
+    .game-card,.credential-card,.social-card,.omega-domain-hub-module
+  ):hover{
+    border-color:var(--omega-v6-accent);
+    box-shadow:0 24px 58px rgba(0,0,0,.42),var(--omega-v6-accent-glow),inset 0 1px rgba(255,255,255,.07);
+  }
+}
+body.omega-simple :where(.chip,.badge,.status,.pill,[data-state]){
+  border-color:var(--omega-v6-accent-line);
+}
+
+/* The ring is the shared brand grammar: identity, progression and portal framing. */
+body.omega-simple :where(.omega-ring-surface,.omega-orbital-mark,.omega-world-portal,.omega-atlas-card,.omega-portal){
+  border-color:var(--omega-v6-accent-line);
+  box-shadow:inset 0 0 28px var(--omega-v6-accent-soft),0 16px 42px rgba(0,0,0,.3);
+}
+body.omega-simple :where(.omega-emblem,.omega-orb,.omega-orbital-mark,.omega-figure-seal,[data-omega-ring]){
+  filter:drop-shadow(0 0 16px var(--omega-v6-accent-soft));
+}
+
+/* Cinematic media and game surfaces use original composition, not copied art. */
+body.omega-simple :where(.omega-media-frame,.omega-cinema-frame,.omega-scene-frame,[data-omega-scene]){
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--omega-v6-accent-line);
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse 60% 70% at 80% 10%,var(--omega-v6-accent-soft),transparent 76%),
+    linear-gradient(145deg,rgba(16,18,29,.94),rgba(3,5,11,.98));
+  box-shadow:0 22px 56px rgba(0,0,0,.4),var(--omega-v6-accent-glow);
+}
+body.omega-simple :where(.omega-media-frame,.omega-cinema-frame,.omega-scene-frame) :where(img,video,iframe){
+  display:block;
+  width:100%;
+  max-width:100%;
+  border:0;
+  border-radius:inherit;
+}
+body.omega-simple :where(.omega-media-caption,.omega-scene-caption,.omega-artifact-caption){
+  color:var(--omega-v6-accent);
+  font-family:var(--M,"Courier Prime",monospace);
+  font-size:12px;
+  letter-spacing:.08em;
+  line-height:1.5;
+}
+
+/* Content density follows the page's declared purpose, not one universal grid. */
+html[data-omega-density="readable"] body.omega-simple :where(.main,main,.page-shell,#omega-main-content) :where(p,li,.description,.lede){
+  line-height:1.72;
+}
+html[data-omega-density="data"] body.omega-simple :where(.tbl-wrap,.table-wrap,.data-table,.table-container){
+  border-color:var(--omega-v6-accent-line);
+  box-shadow:0 16px 42px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.035);
+}
+html[data-omega-density="transactional"] body.omega-simple :where(input,select,textarea,.inp,.field){
+  min-height:44px;
+  border-color:var(--omega-v6-accent-line);
+}
+html[data-omega-density="workspace"] body.omega-simple :where(.workspace-toolbar,.editor-toolbar,.studio-toolbar){
+  border-bottom:1px solid var(--omega-v6-accent-line);
+  background:linear-gradient(90deg,var(--omega-v6-accent-soft),rgba(2,2,6,.12));
+}
+html[data-omega-density="social"] body.omega-simple :where(.feed-item,.social-post,.community-item){
+  border-color:var(--omega-v6-accent-line);
+}
+
+/* Accessible responsive behavior: no hover dependency and no motion requirement. */
+@media(max-width:760px){
+  body.omega-simple{background-attachment:scroll}
+  body.omega-simple #omega-page-world{padding-left:8px;padding-right:8px}
+  body.omega-simple :where(.omega-media-frame,.omega-cinema-frame,.omega-scene-frame){border-radius:10px}
+  body.omega-simple :where(.omega-media-caption,.omega-scene-caption,.omega-artifact-caption){font-size:12px}
+  body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card):hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card){transition:none}
+  body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card):hover{transform:none}
+}
+@media(forced-colors:active){
+  body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card,.omega-media-frame,.omega-cinema-frame,.omega-scene-frame){border:1px solid CanvasText;box-shadow:none}
+}

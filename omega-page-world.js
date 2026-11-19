@@ -25,14 +25,21 @@
   };
 
   function findArchetype(){
+    /* Exact page ownership wins. The 242-entry map is generated from the
+       canonical page contracts, the navigation section registry and the
+       explicit archetype rules. This prevents substring collisions such as
+       "ai" matching "blockchain" or "maintenance". */
+    if(manifest&&manifest.pageArchetypes&&manifest.pageArchetypes[slug])return manifest.pageArchetypes[slug];
     if(district&&district.archetype)return district.archetype;
-    if(!manifest||!manifest.rules)return 'command';
+    if(!manifest||!manifest.rules)return (manifest&&manifest.pageArchetypeFallback)||'system';
     var hit=manifest.rules.find(function(r){
       return String(r.match||'').split('|').some(function(token){
-        return slug===token || slug.indexOf(token)>-1;
+        token=String(token||'').toLowerCase();
+        return slug===token || slug.indexOf(token+'-')===0 ||
+          slug.slice(-(token.length+1))==='-'+token || slug.indexOf('-'+token+'-')>-1;
       });
     });
-    return hit?hit.archetype:'command';
+    return hit?hit.archetype:(manifest.pageArchetypeFallback||'system');
   }
 
   function inject(){

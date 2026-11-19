@@ -91,6 +91,40 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertIn("slug.indexOf(token+'-')===0", self.page_world)
         self.assertNotIn("slug.indexOf(token)>-1", self.page_world)
 
+    def test_all_252_html_documents_are_accounted_for(self):
+        redirect_stubs = {
+            "frontend/platform/platform.html",
+            "root/audit-report.html",
+            "root/dashboard/dashboard.html",
+            "root/portal.html",
+            "web/templates/admin_console.html",
+            "web/templates/leaderboard.html",
+            "web/templates/sovereign_health.html",
+            "web/templates/system_health.html",
+        }
+        render_sources = {
+            "scripts/movies/episode.html",
+            "scripts/movies/scene.html",
+        }
+        nested = {
+            path.relative_to(ROOT).as_posix()
+            for path in ROOT.rglob("*.html")
+            if path.parent != ROOT
+        }
+        self.assertEqual(len(list(ROOT.glob("*.html"))), self.contracts["page_count"])
+        self.assertEqual(len(nested), 10)
+        self.assertEqual(nested, redirect_stubs | render_sources)
+        for relative in redirect_stubs:
+            html = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn("/bg.js", html, relative)
+            self.assertIn("dashboard.html", html, relative)
+            self.assertRegex(html, r"location\\.(?:replace|href)|setTimeout")
+        for relative in render_sources:
+            html = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertNotIn("/bg.js", html, relative)
+        build = (ROOT / "scripts" / "vercel-build.sh").read_text(encoding="utf-8")
+        self.assertIn("! -path './scripts/*'", build)
+
     def test_every_canonical_html_page_loads_the_shared_visual_runtime(self):
         pages = sorted(ROOT.glob("*.html"))
         self.assertEqual(len(pages), self.contracts["page_count"])

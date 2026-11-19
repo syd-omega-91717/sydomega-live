@@ -63,7 +63,7 @@ The broad `ai` substring was removed from the intelligence rule because it incor
 ## Implemented in this branch
 
 1. `omega-page-world.js` now publishes the canonical manifest's archetype, visual, motion, depth, density, interaction and emblem profiles as `data-omega-*` attributes on the document root. It does not create a parallel registry.
-2. `omega-platform-experience-v5.css` adds a manifest-driven visual layer: 12 distinct accent profiles, world-specific surface treatment, cinematic media framing, data typography, reading-width support and responsive/focus/reduced-motion/forced-colors rules.
+2. `omega-platform-experience-v5.css` consumes those manifest tokens and adds 12 distinct visual profiles, world-specific surface treatment, cinematic media framing, all density and motion profiles, data typography, reading-width support and responsive/focus/reduced-motion/forced-colors rules.
 3. `omega-archetype-surfaces.js` no longer hides generic `.card-content` on hover or by default. Visual archetypes may tune surface density, but pages own disclosure through semantic controls such as `details/summary` or explicit `aria-expanded` interactions. Essential content remains available to touch, keyboard and assistive-technology users.
 4. No new framework, renderer, dependency, database migration, route, API or fabricated metric is introduced.
 

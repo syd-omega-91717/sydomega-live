@@ -209,3 +209,186 @@ body.omega-simple :where(.osc-stage,.omega-world-portal,.ow-world){
 @media(forced-colors:active){
   body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card){border:1px solid CanvasText;box-shadow:none}
 }
+ 
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Ω EXPERIENCE EVOLUTION V6 — MANIFEST-DRIVEN VISUAL WORLDS
+   The page-character manifest is the only page-to-world mapping. Its visual,
+   motion, depth and density profiles are published by omega-page-world.js.
+   This layer gives each experience a distinct personality while retaining
+   the same Ω identity, canonical token owners, page layouts and data actions.
+   No new renderer, dependency, route, API or backend state is introduced.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+html[data-omega-archetype="command"]{
+  --omega-v6-accent:#C9A84C;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(201,168,76,.13);--omega-v6-line:rgba(201,168,76,.34);
+}
+html[data-omega-archetype="identity"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#C9A84C;
+  --omega-v6-glow:rgba(232,201,122,.14);--omega-v6-line:rgba(232,201,122,.36);
+}
+html[data-omega-archetype="intelligence"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#AB82F2;
+  --omega-v6-glow:rgba(0,229,255,.13);--omega-v6-line:rgba(0,229,255,.32);
+}
+html[data-omega-archetype="knowledge"]{
+  --omega-v6-accent:#8FDCE8;--omega-v6-secondary:#C9A84C;
+  --omega-v6-glow:rgba(143,220,232,.10);--omega-v6-line:rgba(143,220,232,.28);
+}
+html[data-omega-archetype="gaming"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#CF6760;
+  --omega-v6-glow:rgba(0,229,255,.15);--omega-v6-line:rgba(0,229,255,.34);
+}
+html[data-omega-archetype="media"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#AB82F2;
+  --omega-v6-glow:rgba(232,201,122,.14);--omega-v6-line:rgba(232,201,122,.34);
+}
+html[data-omega-archetype="commerce"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#3FB27F;
+  --omega-v6-glow:rgba(201,168,76,.12);--omega-v6-line:rgba(201,168,76,.32);
+}
+html[data-omega-archetype="creation"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#E8C97A;
+  --omega-v6-glow:rgba(0,229,255,.12);--omega-v6-line:rgba(0,229,255,.32);
+}
+html[data-omega-archetype="community"]{
+  --omega-v6-accent:#AB82F2;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(171,130,242,.13);--omega-v6-line:rgba(171,130,242,.30);
+}
+html[data-omega-archetype="governance"]{
+  --omega-v6-accent:#C9A84C;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(201,168,76,.10);--omega-v6-line:rgba(201,168,76,.30);
+}
+html[data-omega-archetype="finance"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#3FB27F;
+  --omega-v6-glow:rgba(201,168,76,.11);--omega-v6-line:rgba(201,168,76,.32);
+}
+html[data-omega-archetype="system"]{
+  --omega-v6-accent:#CF6760;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(207,103,96,.12);--omega-v6-line:rgba(207,103,96,.32);
+}
+html[data-omega-archetype]{
+  --omega-v6-ease:cubic-bezier(.2,.75,.25,1);
+  --omega-v6-focus:var(--omega-v6-secondary,#00E5FF);
+}
+html[data-omega-archetype] body.omega-simple :where(
+  .hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,
+  .omega-figure,.omega-domain-hub-console,.page-header,.section-header
+){
+  border-color:var(--omega-v6-line,var(--omega-v5-line));
+  background-image:
+    radial-gradient(ellipse 72% 118% at 0% 0%,var(--omega-v6-glow,rgba(201,168,76,.1)),transparent 72%),
+    linear-gradient(145deg,rgba(15,18,28,.94),rgba(4,6,12,.94));
+}
+html[data-omega-archetype] body.omega-simple :where(
+  .card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,
+  .glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,
+  .franchise-card,.game-card,.credential-card,.social-card
+){
+  border-color:var(--omega-v6-line,var(--omega-v5-line));
+}
+html[data-omega-archetype] body.omega-simple :where(
+  h1,.hero-title,.title,.oeh-title,.ow-title,.ohz-display,.omega-domain-page-title
+){
+  text-shadow:0 0 28px var(--omega-v6-glow,rgba(201,168,76,.12));
+}
+html[data-omega-archetype] body.omega-simple :where(
+  .sechead,.section-title,.hero-eyebrow,.kicker,.ohz-kicker,.ow-kicker,
+  .page-header .eyebrow,.section-header .eyebrow
+){
+  color:var(--omega-v6-accent,var(--omega-v5-gold-light));
+}
+html[data-omega-archetype] body.omega-simple :where(
+  .btn-primary,.btn-gold,.ohz-btn,.omega-domain-hub-action
+){
+  border-color:var(--omega-v6-line,var(--omega-v5-line));
+  box-shadow:0 8px 24px var(--omega-v6-glow,rgba(201,168,76,.1)),inset 0 1px rgba(255,255,255,.12);
+}
+html[data-omega-archetype] body.omega-simple :where(
+  a,button,[role="button"],input,select,textarea
+):focus-visible{
+  outline-color:var(--omega-v6-focus,#00E5FF);
+}
+html[data-omega-depth-profile="holographic"] body.omega-simple :where(
+  .hero,.panel,.card,.module,.glass,.glass-card,.omega-domain-hub-console
+){
+  -webkit-backdrop-filter:blur(18px) saturate(138%);
+  backdrop-filter:blur(18px) saturate(138%);
+}
+html[data-omega-depth-profile="3d"] body.omega-simple :where(
+  .hero,.hero-band,.game-card,.omega-figure,.omega-domain-hub-console
+){
+  transform-style:preserve-3d;
+}
+html[data-omega-density-profile="readable"] body.omega-simple :where(
+  main,.main,.page-shell,#omega-main-content
+){
+  font-size:clamp(15px,1rem + .08vw,17px);
+  line-height:1.72;
+}
+html[data-omega-density-profile="data"] body.omega-simple :where(
+  .kpi-value,.kpi-n,.metric-value,.ustat-val,.sgi-val,.ss-val,td
+){
+  font-variant-numeric:tabular-nums lining-nums;
+}
+html[data-omega-archetype="knowledge"] body.omega-simple :where(
+  article,.article-body,.reader-content,.prose,.knowledge-content
+){
+  max-width:min(100%,82ch);
+  line-height:1.76;
+}
+html[data-omega-archetype="gaming"] body.omega-simple :where(
+  .game-card,.arena-card,.leaderboard-row,.achievement-card
+){
+  border-color:rgba(0,229,255,.28);
+}
+html[data-omega-archetype="media"] body.omega-simple :where(
+  video,.video-frame,.media-player,.film-poster,.poster-art,.omega-film-poster
+){
+  border:1px solid var(--omega-v6-line,rgba(201,168,76,.3));
+  box-shadow:0 18px 48px rgba(0,0,0,.42),0 0 28px var(--omega-v6-glow,rgba(201,168,76,.1));
+}
+html[data-omega-archetype="community"] body.omega-simple :where(
+  .feed-item,.post,.comment,.message-thread,.conversation
+){
+  border-color:var(--omega-v6-line,rgba(171,130,242,.28));
+}
+html[data-omega-archetype="finance"] body.omega-simple :where(
+  .kpi-value,.kpi-n,.metric-value,.amount,.balance,.currency-value
+){
+  font-variant-numeric:tabular-nums lining-nums;
+}
+html[data-omega-archetype="governance"] body.omega-simple :where(
+  table,.data-table,.audit-table,.decision-log
+){
+  border-color:var(--omega-v6-line,rgba(201,168,76,.28));
+}
+html[data-omega-archetype="system"] body.omega-simple :where(
+  pre,code,.log-viewer,.telemetry,.system-console
+){
+  font-family:var(--M,"Courier Prime",monospace);
+}
+@media(max-width:760px){
+  html[data-omega-archetype] body.omega-simple :where(
+    .hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,
+    .omega-figure,.omega-domain-hub-console
+  ){background-attachment:scroll}
+  html[data-omega-archetype] body.omega-simple :where(
+    a,button,[role="button"],input,select,textarea
+  ){scroll-margin-top:5rem}
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-omega-archetype] body.omega-simple :where(
+    .card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,
+    .glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,
+    .franchise-card,.game-card,.credential-card,.social-card,
+    .btn,.btn-fill,.btn-gold,.btn-cyan,.btn-crim,.btn-primary,.btn-secondary,
+    .ohz-btn,.ohz-dock-btn,.ltab,.tab-btn,.mtab-btn,.filter-btn
+  ){animation:none!important;transition:none!important;transform:none!important}
+}
+@media(forced-colors:active){
+  html[data-omega-archetype] body.omega-simple :where(
+    .hero,.hero-band,.profile-hero,.ohz-hero,.card,.panel,.module,.tile,.widget
+  ){border:1px solid CanvasText;box-shadow:none;backdrop-filter:none}
+}

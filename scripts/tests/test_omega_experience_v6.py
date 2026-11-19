@@ -94,6 +94,12 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         self.assertNotIn("display: none", SURFACES)
         self.assertIn("Surface styling never hides data.", SURFACES)
 
+    def test_visual_layer_preserves_page_specific_image_art(self):
+        v6 = CSS[CSS.index("Ω EXPERIENCE EVOLUTION V6"):]
+        self.assertNotIn("background-image:", v6)
+        self.assertNotIn("background:", v6)
+        self.assertIn("background-color:rgba(10,10,15,.18)", v6)
+
     def test_visual_layer_keeps_accessibility_and_dark_only_contracts(self):
         self.assertIn("@media(prefers-reduced-motion:reduce)", CSS)
         self.assertIn("@media(forced-colors:active)", CSS)

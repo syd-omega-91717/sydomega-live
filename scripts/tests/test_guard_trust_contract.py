@@ -4,6 +4,8 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
+PRIVACY = (ROOT / "privacy.html").read_text(encoding="utf-8")
+TERMS = (ROOT / "terms.html").read_text(encoding="utf-8")
 BG = (ROOT / "bg.js").read_text(encoding="utf-8")
 GUARD = BG[BG.index("s.id='omega-approval-guard';"):BG.index("/* ===== SHARED SUPABASE CLIENT")]
 CHECK = BG[BG.index("/* ACCESS GUARD + TRIAL ENGINE */"):BG.index("function startTimeSovereignPing")]
@@ -64,6 +66,16 @@ class GuardTrustContract(unittest.TestCase):
     def test_privacy_page_receives_the_public_consent_banner(self):
         legal = (ROOT / "omega-legal.js").read_text(encoding="utf-8")
         self.assertIn("var publicPages = ['/account','/enter','/reset','/terms','/pending','/index','/','/privacy',''];", legal)
+
+    def test_privacy_centre_is_readable_without_an_account(self):
+        self.assertIn('<div class="page-shell" id="app" style="display:flex">', PRIVACY)
+        self.assertNotIn("if(!s){location.replace('/account.html');return;}", PRIVACY)
+        self.assertIn("if(!_uid){", PRIVACY)
+        self.assertIn("setPrivacyControls(true);", PRIVACY)
+
+    def test_terms_are_readable_without_an_account_and_acceptance_stays_authenticated(self):
+        self.assertNotIn("if(!sess){ window.location.href='/account.html'; return; }", TERMS)
+        self.assertIn("Sign in or create an account to accept these terms.", TERMS)
 
 
 if __name__ == "__main__":

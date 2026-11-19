@@ -95,7 +95,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         pages = sorted(ROOT.glob("*.html"))
         self.assertEqual(len(pages), self.contracts["page_count"])
         runtime = re.compile(
-            r"<script\\b[^>]*\\bsrc\\s*=\\s*[\"']?/?bg\\.js(?:[?#][^\"'\\s>]*)?[\"']?",
+            r"<script\b[^>]*\bsrc\s*=\s*[\"']?/?bg\.js(?:[?#][^\"'\s>]*)?[\"']?",
             re.IGNORECASE,
         )
         missing = [

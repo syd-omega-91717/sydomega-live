@@ -86,6 +86,12 @@
     visualRoot.setAttribute('data-omega-motion-profile',visualToken(a.motion,'ambient'));
     visualRoot.setAttribute('data-omega-depth',visualToken(a.depth,'layered'));
     visualRoot.setAttribute('data-omega-density',visualToken(a.density,'balanced'));
+    visualRoot.setAttribute('data-omega-interaction',visualToken(a.interaction,'direct'));
+    visualRoot.setAttribute('data-omega-emblem',visualToken(a.emblem,'omega'));
+    visualRoot.style.setProperty('--omega-v6-accent',a.accent||'#C9A84C');
+    visualRoot.style.setProperty('--omega-v6-secondary',a.secondary||'#00E5FF');
+    visualRoot.style.setProperty('--omega-v6-glow',a.glow||'rgba(201,168,76,.13)');
+    visualRoot.style.setProperty('--omega-v6-line',a.line||'rgba(201,168,76,.34)');
     if(district&&district.id) visualRoot.setAttribute('data-omega-district',visualToken(district.id,'genesis'));
     else visualRoot.removeAttribute('data-omega-district');
 

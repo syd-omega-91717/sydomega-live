@@ -8,6 +8,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "version-static-assets.py"
 BUILD = (ROOT / "scripts" / "vercel-build.sh").read_text(encoding="utf-8")
+WORKFLOW = (ROOT / ".github" / "workflows" / "vercel-production.yml").read_text(encoding="utf-8")
 VERCELIGNORE = (ROOT / ".vercelignore").read_text(encoding="utf-8")
 VERSION = "89aed3dbce68"
 

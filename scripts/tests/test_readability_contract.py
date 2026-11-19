@@ -6,21 +6,22 @@ PROFILE = (ROOT / "profile.html").read_text(encoding="utf-8")
 DASHBOARD = (ROOT / "dashboard.html").read_text(encoding="utf-8")
 MEDIA = (ROOT / "media.html").read_text(encoding="utf-8")
 VAULT = (ROOT / "vault.html").read_text(encoding="utf-8")
-CSS = (ROOT / "omega-readable-layout.css").read_text(encoding="utf-8")
+CSS = (ROOT / "omega-readable-layout-v2.css").read_text(encoding="utf-8")
+HEADERS = (ROOT / "_headers").read_text(encoding="utf-8")
 
 
 class ReadabilityContractTests(unittest.TestCase):
     def test_profile_and_dashboard_opt_into_scoped_readability_layer(self):
         self.assertIn('data-omega-page="profile"', PROFILE)
         self.assertIn('data-omega-page="dashboard"', DASHBOARD)
-        self.assertIn('/omega-readable-layout.css?v=20261119-r1', PROFILE)
-        self.assertIn('/omega-readable-layout.css?v=20261119-r1', DASHBOARD)
+        self.assertIn('/omega-readable-layout-v2.css', PROFILE)
+        self.assertIn('/omega-readable-layout-v2.css', DASHBOARD)
 
     def test_media_and_vault_opt_into_scoped_readability_layer(self):
         self.assertIn('data-omega-page="media"', MEDIA)
         self.assertIn('data-omega-page="vault"', VAULT)
-        self.assertIn('/omega-readable-layout.css?v=20261119-r2', MEDIA)
-        self.assertIn('/omega-readable-layout.css?v=20261119-r2', VAULT)
+        self.assertIn('/omega-readable-layout-v2.css', MEDIA)
+        self.assertIn('/omega-readable-layout-v2.css', VAULT)
         self.assertIn('id="media-main" role="main"', MEDIA)
         self.assertIn('id="vault-main" tabindex="-1"', VAULT)
 
@@ -34,6 +35,12 @@ class ReadabilityContractTests(unittest.TestCase):
         self.assertIn('--omega-readable-label: clamp(13px', CSS)
         self.assertIn('--omega-readable-body: clamp(14px', CSS)
         self.assertIn('--omega-readable-section: clamp(18px', CSS)
+
+    def test_stylesheet_uses_a_versioned_path_and_immutable_cache_policy(self):
+        for page in (PROFILE, DASHBOARD, MEDIA, VAULT):
+            self.assertIn('/omega-readable-layout-v2.css', page)
+            self.assertNotIn('/omega-readable-layout.css?v=', page)
+        self.assertIn('/omega-readable-layout-v2.css\\n  Cache-Control: public, max-age=31536000, immutable', HEADERS)
 
     def test_dark_brand_palette_is_preserved(self):
         self.assertIn('var(--cyan, #00E5FF)', CSS)

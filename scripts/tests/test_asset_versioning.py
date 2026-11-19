@@ -82,6 +82,21 @@ class StaticAssetVersioningTests(unittest.TestCase):
 
 
 
+
+    def test_versions_bare_local_css_filenames_used_by_runtime_loaders(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            public = Path(tmp) / "public"
+            public.mkdir()
+            (public / "omega-visual-universe.css").write_text("body {}", encoding="utf-8")
+            (public / "omega-visual-runtime.js").write_text(
+                "addSheet('omega-visual-runtime-css', 'omega-visual-universe.css');",
+                encoding="utf-8",
+            )
+            result = self.run_versioner(public)
+            runtime = (public / "omega-visual-runtime.js").read_text(encoding="utf-8")
+            self.assertIn(f"omega-visual-universe.css?v={VERSION}", runtime)
+            self.assertIn("ASSET_REFERENCES_UNVERSIONED=0", result.stdout)
+
     def test_versions_same_origin_absolute_assets_in_production_mode(self):
         with tempfile.TemporaryDirectory() as tmp:
             public = Path(tmp) / "public"

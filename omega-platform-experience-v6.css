@@ -317,6 +317,75 @@ body.omega-simple :where(.holding-card,.account-card,.sign-card,.book-card,.exam
   outline-offset:2px;
 }
 
+/* Nine-column composition and nine-stage progression utilities. The grid is
+   available to page owners without forcing every existing page into one layout. */
+.omega-grid-9{
+  display:grid;
+  grid-template-columns:repeat(9,minmax(0,1fr));
+  gap:clamp(10px,1.5vw,22px);
+}
+.omega-grid-9 > .omega-span-3{grid-column:span 3}
+.omega-grid-9 > .omega-span-6{grid-column:span 6}
+.omega-grid-9 > .omega-span-9{grid-column:span 9}
+.omega-stage-9{
+  display:grid;
+  grid-template-columns:repeat(9,minmax(0,1fr));
+  gap:6px;
+  align-items:center;
+}
+.omega-stage-9 > *{
+  min-width:0;
+  min-height:8px;
+  border:1px solid var(--omega-v6-accent-line);
+  border-radius:999px;
+  background:rgba(255,255,255,.055);
+}
+.omega-stage-9 > :where([aria-current="step"],[data-state="current"],.is-current){
+  border-color:var(--omega-v6-accent);
+  background:linear-gradient(90deg,var(--omega-v6-accent),var(--omega-v6-secondary));
+  box-shadow:0 0 16px var(--omega-v6-accent-soft);
+}
+
+/* Existing 9-stage/game progress bars receive stronger contrast and state. */
+body.omega-simple :where(.bar-track,.qp-progress-bar,.health-bar-wrap){
+  border:1px solid var(--omega-v6-accent-line);
+  border-radius:999px;
+  background:rgba(255,255,255,.075);
+  overflow:hidden;
+}
+body.omega-simple :where(.bar-fill,.qp-progress-fill,.health-bar-fill){
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--omega-v6-accent),var(--omega-v6-secondary));
+  box-shadow:0 0 16px var(--omega-v6-accent-soft);
+}
+body.omega-simple :where(.mission-bar,.status-strip,.tab-bar){
+  border-color:var(--omega-v6-accent-line);
+  background:linear-gradient(90deg,var(--omega-v6-accent-soft),rgba(2,2,6,.82));
+}
+body.omega-simple :where(.mb-title,.omega-figure-index,.omega-discovery-kicker){
+  color:var(--omega-v6-accent);
+}
+body.omega-simple :where(.omega-figure-card,.omega-discovery-card,.stamp-card,.card-edge){
+  border-color:var(--omega-v6-accent-line);
+  background-image:linear-gradient(145deg,var(--omega-v6-accent-soft),rgba(255,255,255,.012) 56%,transparent);
+}
+body.omega-simple :where(.omega-figure-card,.omega-discovery-card):focus-visible{
+  outline:2px solid var(--omega-v6-secondary);
+  outline-offset:3px;
+}
+@media(max-width:1200px){
+  .omega-grid-9{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .omega-grid-9 > .omega-span-9{grid-column:span 6}
+}
+@media(max-width:760px){
+  .omega-grid-9{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .omega-grid-9 > .omega-span-6,.omega-grid-9 > .omega-span-9{grid-column:span 3}
+  .omega-stage-9{gap:4px}
+}
+@media(max-width:420px){
+  .omega-grid-9{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .omega-grid-9 > .omega-span-3,.omega-grid-9 > .omega-span-6,.omega-grid-9 > .omega-span-9{grid-column:span 2}
+}
 /* Content density follows the page's declared purpose, not one universal grid. */
 html[data-omega-density="readable"] body.omega-simple :where(.main,main,.page-shell,#omega-main-content) :where(p,li,.description,.lede){
   line-height:1.72;

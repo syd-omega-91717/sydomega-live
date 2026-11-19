@@ -98,6 +98,9 @@ The recurring visual grammar is:
 - `bg.js` loads V6 after V5 as the final shared art-direction layer.
 - Existing `omega-sculpture.js` remains the sole WebGL signet renderer. V6 adds no new renderer, external font, external library, polling loop or network dependency.
 - Existing page-local layouts and business logic remain owners of their geometry and behavior.
+- The responsive `.omega-grid-9` and `.omega-stage-9` utilities preserve the 9-column / 9-stage design language without forcing every existing page into a single grid.
+- Existing command, identity, knowledge, gaming, media, commerce, creation, community, governance, finance and intelligence components receive archetype-aware borders, progress bars, scene frames and card depth.
+- Card tilt is hover-only and subtle; touch layouts and reduced-motion preferences suppress the 3D transform.
 
 ## Release acceptance
 

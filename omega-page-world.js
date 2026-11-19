@@ -47,16 +47,57 @@
     if(district&&district.archetype&&manifest&&manifest.archetypes[district.archetype])return district.archetype;
     if(pageWorld&&pageWorld.archetype&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
     return 'command';
+    /* Exact page ownership wins. The 242-entry map is generated from the
+       canonical page contracts, the navigation section registry and the
+       explicit archetype rules. This prevents substring collisions such as
+       "ai" matching "blockchain" or "maintenance". */
+    if(manifest&&manifest.pageArchetypes&&manifest.pageArchetypes[slug])return manifest.pageArchetypes[slug];
+    if(district&&district.archetype)return district.archetype;
+    if(!manifest||!manifest.rules)return (manifest&&manifest.pageArchetypeFallback)||'system';
+    var hit=manifest.rules.find(function(r){
+      return String(r.match||'').split('|').some(function(token){
+        token=String(token||'').toLowerCase();
+        return slug===token || slug.indexOf(token+'-')===0 ||
+          slug.slice(-(token.length+1))==='-'+token || slug.indexOf('-'+token+'-')>-1;
+      });
+    });
+    return hit?hit.archetype:(manifest.pageArchetypeFallback||'system');
   }
 
+  var suppressMembrane=false;
   function inject(){
-    if(document.getElementById('omega-page-world'))return;
     if(!manifest||!manifest.archetypes)return;
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
     if(!district&&overrides&&overrides.entries&&world&&world.districts){ var oid=overrides.entries[slug]; district=world.districts.find(function(d){return d.id===oid;})||null; }
     if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.page===pagePath;})||pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
     archetype=findArchetype();
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
+
+    /* Publish the manifest's visual contract as stable root attributes.
+       CSS can now compose a coherent world skin without guessing from URLs,
+       duplicating archetype registries, or changing page-owned layout. */
+    var visualRoot=document.documentElement;
+    function visualToken(value,fallback){
+      var token=String(value||fallback||'').toLowerCase();
+      return /^[a-z0-9_-]{1,40}$/.test(token)?token:String(fallback||'command');
+    }
+    visualRoot.setAttribute('data-omega-archetype',visualToken(archetype,'command'));
+    visualRoot.setAttribute('data-omega-visual',visualToken(a.visual,archetype));
+    visualRoot.setAttribute('data-omega-motion-profile',visualToken(a.motion,'ambient'));
+    visualRoot.setAttribute('data-omega-depth',visualToken(a.depth,'layered'));
+    visualRoot.setAttribute('data-omega-density',visualToken(a.density,'balanced'));
+    if(district&&district.id) visualRoot.setAttribute('data-omega-district',visualToken(district.id,'genesis'));
+    else visualRoot.removeAttribute('data-omega-district');
+
+    /* Some utility/legal surfaces deliberately suppress the role ribbon.
+       They still receive the same page archetype so the visual system covers
+       every canonical route without changing that page's information design. */
+    if(suppressMembrane){
+      document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,visual:a.visual||archetype,motion:a.motion||'ambient',depth:a.depth||'layered',density:a.density||'balanced',role:a.worldRole,district:district&&district.id||null}}));
+      return;
+    }
+    if(document.getElementById('omega-page-world'))return;
+
     var l=labels[archetype]||labels.command;
 
     /* The manifest is the canonical visual personality source. Publish its
@@ -129,7 +170,7 @@
     }
     reconcileDensity();
     setTimeout(reconcileDensity,900);
-    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,role:a.worldRole,district:district&&district.id||null}}));
+    document.dispatchEvent(new CustomEvent('omega:page-world-ready',{detail:{page:pagePath,slug:slug,archetype:archetype,visual:a.visual||archetype,motion:a.motion||'ambient',depth:a.depth||'layered',density:a.density||'balanced',role:a.worldRole,district:district&&district.id||null}}));
     host.querySelectorAll('a[data-world-action]').forEach(function(link){
       link.addEventListener('click',function(ev){
         var d=link.getAttribute('data-world-district'),act=link.getAttribute('data-world-action');
@@ -148,7 +189,7 @@
   function escapeAttr(v){return String(v).replace(/[^a-zA-Z0-9_\-./#?=&]/g,'');}
 
   async function boot(){
-    if(document.body&&document.body.dataset&&document.body.dataset.noWorldMembrane==='true')return;
+    suppressMembrane=!!(document.body&&document.body.dataset&&document.body.dataset.noWorldMembrane==='true');
     try{
       var r=await fetch('/config/page-character-manifest.json',{cache:'no-store'});
       if(!r.ok)throw new Error('page manifest '+r.status);

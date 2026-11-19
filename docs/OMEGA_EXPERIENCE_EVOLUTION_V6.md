@@ -5,6 +5,7 @@
 ## Objective
 
 Make the existing 252-page static platform feel like one coherent sovereign digital environment while giving each product domain a distinct visual personality. Preserve the current static HTML/CSS/JavaScript, Supabase and Vercel/Cloudflare architecture. Do not replace the platform or create a competing page registry.
+Make the existing platform feel like one coherent sovereign digital environment while giving each product domain its own visual character. The visual profile source is `config/page-character-manifest.json`. Existing page assignments come from `config/page-world-actions.json` and `config/omega-world-manifest.json` plus its overrides. One resolver combines these canonical sources; the UI must not maintain a second page-to-archetype map.
 
 ## Reference research translated into original principles
 
@@ -36,6 +37,43 @@ The source asks these organizations to be examined across engineering, scalabili
 - The Visual Page Survey scans 252 HTML documents: 242 root pages plus 10 nested surfaces. Unmapped nested surfaces use the canonical district/rule/system fallback rather than being left unstyled.
 
 ## Twelve visual signatures
+## Complete page-to-world resolution
+
+The resolver uses existing canonical data in this order:
+
+1. An exact route override (a `=`-prefixed token) in `page-character-manifest.json`.
+2. A non-default archetype already assigned to the page in `page-world-actions.json`.
+3. The first matching broad visual rule in `page-character-manifest.json`.
+4. A valid district archetype from the world manifest.
+5. The page action's `command` archetype when no more specific rule applies.
+6. The valid `command` archetype as the final fallback.
+
+The visual audit enumerated all **252 HTML documents**: 242 root pages and 10 nested surfaces. With exact route overrides, curated action archetypes and collision-safe fallback rules, every document resolves to one of the 12 supported archetypes; no route is left unassigned. Current resolution counts across all 252 HTML documents:
+
+| Archetype | Root pages |
+|---|---:|
+| Intelligence | 55 |
+| Knowledge | 39 |
+| Command | 42 |
+| Gaming | 23 |
+| Media | 16 |
+| Community | 16 |
+| Finance | 12 |
+| System | 13 |
+| Commerce | 10 |
+| Identity | 9 |
+| Creation | 9 |
+| Governance | 8 |
+| **Total** | **252** |
+
+The broad `ai` substring was removed from the intelligence rule because it incorrectly matched words such as `trailers` and `maintenance`. The narrower `ai-` token and explicit route rules avoid those collisions.
+
+## Implemented in this branch
+
+1. `omega-page-world.js` now publishes the canonical manifest's archetype, visual, motion, depth, density, interaction and emblem profiles as `data-omega-*` attributes on the document root. It does not create a parallel registry.
+2. `omega-platform-experience-v5.css` consumes those manifest tokens and adds 12 distinct visual profiles, world-specific surface treatment, cinematic media framing, all density and motion profiles, data typography, reading-width support and responsive/focus/reduced-motion/forced-colors rules.
+3. `omega-archetype-surfaces.js` no longer hides generic `.card-content` on hover or by default. Visual archetypes may tune surface density, but pages own disclosure through semantic controls such as `details/summary` or explicit `aria-expanded` interactions. Essential content remains available to touch, keyboard and assistive-technology users.
+4. No new framework, renderer, dependency, database migration, route, API or fabricated metric is introduced.
 
 | Archetype | Visual treatment | Primary product inspiration |
 |---|---|---|
@@ -55,6 +93,18 @@ The source asks these organizations to be examined across engineering, scalabili
 The palette is restricted to the Ω dark base and canonical accents: `#020206`, `#0A0A0F`, `#C9A84C`, `#E8C97A`, `#00E5FF`, `#8B0000`, and `#00FF88`. Accent colors are semantic, not decoration: success, warning, error and neutral states must still represent real system state.
 
 ## Implemented in this branch
+- Command: gold instrument surfaces and clear action hierarchy.
+- Identity: ceremonial gold and artifact framing.
+- Intelligence: cyan/gold analytical and holographic surfaces.
+- Knowledge: calm readable surfaces and controlled reading width.
+- Gaming: cyan arena contrast with restrained crimson.
+- Media: cinematic gold framing with controlled crimson.
+- Commerce: gold transaction hierarchy with green success semantics.
+- Creation: cyan/gold workspace treatment.
+- Community: cyan/gold social constellation cues.
+- Governance: deliberate gold/cyan decision surfaces.
+- Finance: tabular numeric alignment and trusted transaction cues.
+- System: crimson/cyan operational and telemetry surfaces.
 
 1. The manifest now contains per-archetype `accent`, `secondary`, `glow` and `line` tokens; the JSON schema validates them.
 2. The page-world membrane publishes all canonical `data-omega-*` attributes and the four CSS variables from the manifest. The membrane's role text is larger and its mobile actions have a 44px minimum touch target.

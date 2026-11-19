@@ -259,6 +259,11 @@
        to touch, keyboard and assistive-technology users. Pages that need
        progressive disclosure own it with <details>/<summary> or explicit
        aria-expanded controls. Surface styling never hides data. */
+    /* Content disclosure is a semantic interaction contract, not a visual
+       surface rule. Hiding .card-content on hover made essential information
+       unavailable to touch, keyboard and assistive-technology users. Pages
+       that need progressive disclosure must own it with <details>/<summary>
+       or an explicit aria-expanded control. Surface styling never hides data. */
 
     return rules;
   }

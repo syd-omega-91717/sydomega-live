@@ -263,6 +263,42 @@
   },
   "rules": [
     {
+      "match": "=achieve|=achievements|=my-quests|=quest-progress|=seasonal-events|=ladder",
+      "archetype": "gaming"
+    },
+    {
+      "match": "=archive|=ascend",
+      "archetype": "knowledge"
+    },
+    {
+      "match": "=control-center|=control-plane|=platform-kernel|=graph-admin|=maintenance",
+      "archetype": "system"
+    },
+    {
+      "match": "=cosmetics|=life",
+      "archetype": "identity"
+    },
+    {
+      "match": "=data-observatory|=insight|=intel|=orrery|=world-atlas",
+      "archetype": "intelligence"
+    },
+    {
+      "match": "=invest",
+      "archetype": "finance"
+    },
+    {
+      "match": "=omega-platform-navigator|=sovereign-core",
+      "archetype": "command"
+    },
+    {
+      "match": "=order",
+      "archetype": "community"
+    },
+    {
+      "match": "=worlds|=trailers",
+      "archetype": "media"
+    },
+    {
       "match": "command|dashboard|home",
       "archetype": "command"
     },
@@ -271,7 +307,7 @@
       "archetype": "identity"
     },
     {
-      "match": "intelligence|research|prediction|analytics|graph|search|oracle|agents|ai",
+      "match": "intelligence|research|prediction|analytics|graph|search|oracle|agents|ai-",
       "archetype": "intelligence"
     },
     {

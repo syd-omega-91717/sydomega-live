@@ -216,6 +216,15 @@ body.omega-simple :where(.osc-stage,.omega-world-portal,.ow-world){
    Route ownership remains in page-character/page-world manifests. The
    manifest publishes the palette; this layer consumes it without replacing
    page-owned artwork, layouts, routes, data or application behavior.
+ 
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Ω EXPERIENCE EVOLUTION V6 — MANIFEST-DRIVEN VISUAL WORLDS
+   Route assignments remain in the page-world and district manifests. The
+   page-character manifest owns visual tokens and archetype presentation.
+   This layer gives each experience a distinct personality while retaining
+   the same Ω identity, canonical token owners, page layouts and data actions.
+   No new renderer, dependency, route, API or backend state is introduced.
    ═══════════════════════════════════════════════════════════════════════ */
 
 html[data-omega-archetype]{
@@ -274,6 +283,7 @@ html[data-omega-visual="control"] body.omega-simple :where(pre,code,.log-viewer,
 
 /* Depth is semantic: orbital atmosphere, glass, holographic and 3D surfaces. */
 html[data-omega-depth="holographic"] body.omega-simple :where(
+html[data-omega-depth-profile="holographic"] body.omega-simple :where(
   .hero,.panel,.card,.module,.glass,.glass-card,.omega-domain-hub-console
 ){
   -webkit-backdrop-filter:blur(18px) saturate(138%);
@@ -314,6 +324,125 @@ html[data-omega-motion-profile="organic"] body.omega-simple :where(.card,.panel,
 html[data-omega-motion-profile="ceremonial"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.30s}
 html[data-omega-motion-profile="cinematic"] body.omega-simple :where(.card,.panel,.module,.btn,.ohz-btn,.filter-btn){transition-duration:.34s}
 
+html[data-omega-depth-profile="3d"] body.omega-simple :where(
+  .hero,.hero-band,.game-card,.omega-figure,.omega-domain-hub-console
+){
+  transform-style:preserve-3d;
+}
+html[data-omega-density-profile="readable"] body.omega-simple :where(
+  main,.main,.page-shell,#omega-main-content
+){
+  font-size:clamp(15px,1rem + .08vw,17px);
+  line-height:1.72;
+}
+html[data-omega-density-profile="data"] body.omega-simple :where(
+  .kpi-value,.kpi-n,.metric-value,.ustat-val,.sgi-val,.ss-val,td
+){
+  font-variant-numeric:tabular-nums lining-nums;
+}
+/* Density and motion remain data-driven; no page-specific duplicate token map. */
+html[data-omega-density-profile="clear"] body.omega-simple :where(
+  main,.main,.page-shell,#omega-main-content
+){
+  font-size:clamp(15px,1rem + .06vw,17px);
+  line-height:1.68;
+}
+html[data-omega-density-profile="visual"] body.omega-simple :where(
+  .media-grid,.gallery-grid,.game-grid,.arena-grid,.achievement-grid
+){
+  gap:clamp(12px,1.6vw,22px);
+}
+html[data-omega-density-profile="transactional"] body.omega-simple :where(
+  form,.checkout-panel,.purchase-panel,.transaction-panel
+){
+  line-height:1.58;
+}
+html[data-omega-density-profile="transactional"] body.omega-simple :where(
+  button,.btn,.btn-primary,.btn-gold,input,select
+){
+  min-height:44px;
+}
+html[data-omega-density-profile="workspace"] body.omega-simple :where(
+  .workspace,.editor,.tool-panel,.creation-canvas,.workspace-panel
+){
+  min-width:0;
+  max-width:100%;
+}
+html[data-omega-density-profile="social"] body.omega-simple :where(
+  .feed-item,.post,.comment,.message-thread,.conversation
+){
+  margin-block:10px;
+  line-height:1.62;
+}
+html[data-omega-density-profile="structured"] body.omega-simple :where(
+  table,.data-table,.audit-table,.decision-log
+){
+  line-height:1.52;
+  font-variant-numeric:tabular-nums;
+}
+html[data-omega-density-profile="technical"] body.omega-simple :where(
+  pre,code,.log-viewer,.telemetry,.system-console
+){
+  font-family:var(--M,"Courier Prime",monospace);
+  font-variant-numeric:tabular-nums;
+}
+html[data-omega-motion-profile="calm"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.14s}
+html[data-omega-motion-profile="precise"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.12s}
+html[data-omega-motion-profile="reactive"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.16s}
+html[data-omega-motion-profile="dynamic"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.22s}
+html[data-omega-motion-profile="organic"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.28s}
+html[data-omega-motion-profile="ceremonial"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.30s}
+html[data-omega-motion-profile="cinematic"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.34s}
+html[data-omega-archetype="knowledge"] body.omega-simple :where(
+  article,.article-body,.reader-content,.prose,.knowledge-content
+){
+  max-width:min(100%,82ch);
+  line-height:1.76;
+}
+html[data-omega-archetype="gaming"] body.omega-simple :where(
+  .game-card,.arena-card,.leaderboard-row,.achievement-card
+){
+  border-color:rgba(0,229,255,.28);
+}
+html[data-omega-archetype="media"] body.omega-simple :where(
+  video,.video-frame,.media-player,.film-poster,.poster-art,.omega-film-poster
+){
+  border-color:var(--omega-v6-line,rgba(201,168,76,.3));
+}
+html[data-omega-archetype="community"] body.omega-simple :where(
+  .feed-item,.post,.comment,.message-thread,.conversation
+){
+  border-color:var(--omega-v6-line,rgba(171,130,242,.28));
+}
+html[data-omega-archetype="finance"] body.omega-simple :where(
+  .kpi-value,.kpi-n,.metric-value,.amount,.balance,.currency-value
+){
+  font-variant-numeric:tabular-nums lining-nums;
+}
+html[data-omega-archetype="governance"] body.omega-simple :where(
+  table,.data-table,.audit-table,.decision-log
+){
+  border-color:var(--omega-v6-line,rgba(201,168,76,.28));
+}
+html[data-omega-archetype="system"] body.omega-simple :where(
+  pre,code,.log-viewer,.telemetry,.system-console
+){
+  font-family:var(--M,"Courier Prime",monospace);
+}
 @media(max-width:760px){
   html[data-omega-archetype] body.omega-simple :where(
     .hero,.hero-band,.profile-hero,.oeh-hero,.cmd-hero,.ow-hud,.ohz-hero,

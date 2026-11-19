@@ -25,6 +25,28 @@
   };
 
   function findArchetype(){
+    if(manifest&&manifest.rules){
+      var exactHit=manifest.rules.find(function(r){
+        return String(r.match||'').split('|').some(function(token){
+          token=String(token).trim();
+          return token.charAt(0)==='=' && slug===token.slice(1);
+        });
+      });
+      if(exactHit&&manifest.archetypes[exactHit.archetype])return exactHit.archetype;
+    }
+    if(pageWorld&&pageWorld.archetype&&pageWorld.archetype!=='command'&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
+    if(manifest&&manifest.rules){
+      var hit=manifest.rules.find(function(r){
+        return String(r.match||'').split('|').some(function(token){
+          token=String(token).trim();
+          return token.charAt(0)!=='=' && (slug===token || slug.indexOf(token)>-1);
+        });
+      });
+      if(hit&&manifest.archetypes[hit.archetype])return hit.archetype;
+    }
+    if(district&&district.archetype&&manifest&&manifest.archetypes[district.archetype])return district.archetype;
+    if(pageWorld&&pageWorld.archetype&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
+    return 'command';
     /* Exact page ownership wins. The 242-entry map is generated from the
        canonical page contracts, the navigation section registry and the
        explicit archetype rules. This prevents substring collisions such as
@@ -47,8 +69,8 @@
     if(!manifest||!manifest.archetypes)return;
     if(world&&world.districts){ district=world.districts.find(function(d){return (d.pages||[]).some(function(p){return String(p).replace(/\.html$/,'')===slug;});})||null; }
     if(!district&&overrides&&overrides.entries&&world&&world.districts){ var oid=overrides.entries[slug]; district=world.districts.find(function(d){return d.id===oid;})||null; }
-    archetype=findArchetype();
     if(pageWorld&&pageWorld.pages){ pageWorld=pageWorld.pages.find(function(p){return p.page===pagePath;})||pageWorld.pages.find(function(p){return p.slug===slug;})||null; }
+    archetype=findArchetype();
     var a=manifest.archetypes[archetype]||manifest.archetypes.command;
 
     /* Publish the manifest's visual contract as stable root attributes.
@@ -83,6 +105,27 @@
     if(document.getElementById('omega-page-world'))return;
 
     var l=labels[archetype]||labels.command;
+
+    /* The manifest is the canonical visual personality source. Publish its
+       profile on the document root so the shared art-direction layer can
+       render the correct world without duplicating page-to-archetype maps. */
+    var root=document.documentElement;
+    root.dataset.omegaArchetype=archetype;
+    root.dataset.omegaVisualProfile=a.visual||'sovereign';
+    root.dataset.omegaMotionProfile=a.motion||'subtle';
+    root.dataset.omegaDepthProfile=a.depth||'glass';
+    root.dataset.omegaDensityProfile=a.density||'clear';
+    root.dataset.omegaInteractionProfile=a.interaction||'direct';
+    root.dataset.omegaEmblemProfile=a.emblem||'omega';
+    root.style.setProperty('--omega-v6-accent',a.accent||'#C9A84C');
+    root.style.setProperty('--omega-v6-secondary',a.secondary||'#00E5FF');
+    root.style.setProperty('--omega-v6-glow',a.glow||'rgba(201,168,76,.13)');
+    root.style.setProperty('--omega-v6-line',a.line||'rgba(201,168,76,.34)');
+    root.classList.add('omega-experience-'+archetype);
+    if(document.body){
+      document.body.dataset.omegaArchetype=archetype;
+      document.body.dataset.omegaVisualProfile=a.visual||'sovereign';
+    }
     if(district){
       var pages=district.pages||[];
       l={

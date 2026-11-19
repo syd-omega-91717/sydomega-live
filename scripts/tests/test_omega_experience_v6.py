@@ -151,6 +151,29 @@ class OmegaExperienceV6Tests(unittest.TestCase):
                 self.assertTrue(profile["glow"].startswith("rgba("))
                 self.assertTrue(profile["line"].startswith("rgba("))
 
+    def test_all_density_and_motion_profiles_have_rendering_rules(self):
+        for value in {p["density"] for p in MANIFEST["archetypes"].values()}:
+            with self.subTest(density=value):
+                self.assertIn(f'data-omega-density-profile="{value}"', CSS)
+        for value in {p["motion"] for p in MANIFEST["archetypes"].values()}:
+            with self.subTest(motion=value):
+                self.assertIn(f'data-omega-motion-profile="{value}"', CSS)
+
+    def test_specialized_profiles_use_existing_semantic_surfaces(self):
+        for marker in (
+            'data-omega-depth-profile="holographic"',
+            'data-omega-depth-profile="3d"',
+            'data-omega-density-profile="readable"',
+            'data-omega-density-profile="data"',
+            'data-omega-archetype="gaming"',
+            'data-omega-archetype="media"',
+            'data-omega-archetype="community"',
+            'data-omega-archetype="finance"',
+            'data-omega-archetype="governance"',
+            'data-omega-archetype="system"',
+        ):
+            self.assertIn(marker, CSS)
+
 
 if __name__ == "__main__":
     unittest.main()

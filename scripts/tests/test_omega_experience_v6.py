@@ -117,11 +117,6 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             self.assertFalse(any(slug == token or token in slug for token in intelligence_rule["match"].split("|")))
 
     def test_manifest_explicitly_classifies_previously_unmapped_pages(self):
-        rules = MANIFEST["rules"]
-        mapping = {}
-        for rule in rules:
-            for token in rule["match"].split("|"):
-                mapping[token.lstrip("=")] = rule["archetype"]
         expected = {
             "achieve": "gaming", "archive": "knowledge", "ascend": "knowledge",
             "control-center": "system", "cosmetics": "identity",
@@ -136,8 +131,17 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             "trailers": "media",
         }
         for slug, archetype in expected.items():
+            exact = next(
+                (
+                    row for row in MANIFEST["rules"]
+                    if any(token == "=" + slug for token in row["match"].split("|"))
+                ),
+                None,
+            )
             with self.subTest(page=slug):
-                self.assertEqual(mapping.get(slug), archetype)
+                self.assertIsNotNone(exact)
+                self.assertEqual(exact["archetype"], archetype)
+
 
     def test_v6_profiles_stay_inside_the_canonical_omega_palette(self):
         v6 = CSS[CSS.index("Ω EXPERIENCE EVOLUTION V6"):]

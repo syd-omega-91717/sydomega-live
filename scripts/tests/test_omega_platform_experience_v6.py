@@ -137,6 +137,12 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         ):
             self.assertIn(token, self.css)
 
+    def test_all_manifest_motion_depth_and_density_profiles_are_consumed(self):
+        for archetype in self.manifest["archetypes"].values():
+            self.assertIn(f'data-omega-motion-profile="{archetype["motion"]}"', self.css)
+            self.assertIn(f'data-omega-depth="{archetype["depth"]}"', self.css)
+            self.assertIn(f'data-omega-density="{archetype["density"]}"', self.css)
+
     def test_visual_layer_supports_media_rings_and_density_contracts(self):
         for selector in (
             ".omega-ring-surface",

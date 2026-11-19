@@ -49,6 +49,21 @@ The supplied master brief names technology, AI, aerospace, social, knowledge, en
 
 All profiles retain the Ω identity and dark-only base palette. Accent colors are semantic, not decoration: status colors must continue to represent actual state.
 
+## Estate-wide survey baseline (2026-11-19)
+
+The successful Visual Page Survey workflow scanned **252 HTML documents**: 242 root pages plus 10 nested surfaces. Its static source scan reported:
+
+- 183 pages with a missing visible/semantic level-one heading contract.
+- 151 pages with one or more fixed-width declarations at or above 320px.
+- 120 pages with one or more readability findings (dense letter spacing).
+- 20 pages with a density finding.
+- 0 duplicate document titles.
+- Focus score average 98.39/100; minimum 78/100.
+
+These are source-survey findings, not proof that every flagged page is visually broken at runtime. They are also **not fixed by V6**. They become the next remediation wave: semantic page titles, responsive width constraints, typography/letter-spacing cleanup, then density reduction on the highest-count pages. The 404, profile, dashboard, media, vault, family and gaming surfaces are high-priority review candidates from the survey. The report is retained as the `omega-visual-page-survey` workflow artifact.
+
+The uploaded project briefs are text files rather than embedded image/video assets. This implementation therefore follows their written cinematic/3D direction and the existing repository's sculpture and media runtimes; it does not claim pixel-matching against reference images that were not available to inspect in this session.
+
 ## Acceptance criteria
 
 - All 12 archetypes are represented by the canonical manifest and receive root data attributes.

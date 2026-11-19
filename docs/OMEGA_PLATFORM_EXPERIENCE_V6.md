@@ -15,6 +15,31 @@ The system uses three existing sources of truth:
 
 An exact `pageArchetypes` map now covers all 242 canonical pages. The explicit page map wins over district defaults; token rules are only a fallback. This avoids substring collisions such as treating `blockchain` or `maintenance` as AI pages merely because their names contain the letters `ai`.
 
+## Eighteen-module visual coverage
+
+Each module keeps its own page and workflow ownership while inheriting a primary visual archetype. Cross-cutting pages may expose secondary accents, but their permissions and business state never change because of the visual classification.
+
+| # | Canonical module | Primary archetype | Visual treatment |
+|---:|---|---|---|
+| 1 | Platform Core | Command | Omega command surfaces, navigation, status and mission entry |
+| 2 | Consultancy Hub | Commerce | Service catalog, expert profiles, booking and report surfaces |
+| 3 | Gaming & Characters | Gaming | Arena, game cards, character art and world progression |
+| 4 | Achievements | Gaming | Merit display cases, stage badges and verified reward states |
+| 5 | Family & Tree Links | Community | Relationship graph, privacy-aware member cards and lineage |
+| 6 | Media (Movies / Series / Demos) | Media | Poster-led discovery, cinematic scenes and viewing continuity |
+| 7 | Blockchain / Crypto / NFT | Finance | Ledger, wallet, asset and chain-state visualization |
+| 8 | Communication & Security | Community | Messaging, presence and collaboration; security controls retain system styling |
+| 9 | Horoscope & Elements | Identity | Personal profile context, illustrated elements and chart surfaces |
+| 10 | Media & News | Media | Editorial discovery, multimedia gallery and source context |
+| 11 | Heredity & Heritage | Knowledge | Archive, artifacts, lineage records and provenance |
+| 12 | Evaluation & Progress | Gaming | Nine-stage progression, learning milestones and verified progress |
+| 13 | System Passport & Crypto Card | Identity | Credential framing, identity seal and private member details |
+| 14 | Legal & Rights | Governance | Terms, contracts, rights and approval state |
+| 15 | Gods, Planets & Elements | Identity | Illustrated profile-linked celestial and elemental collections |
+| 16 | Asset Ownership & Investment Engine | Finance | Portfolio, allocation, holdings and transaction state |
+| 17 | AI & System Intelligence | Intelligence | Agents, evidence, analytics and explainable intelligence |
+| 18 | Level & Ownership Hierarchy | Governance | Role boundaries, owner controls and access hierarchy |
+
 ## Twelve visual archetypes
 
 | Archetype | Visual direction | Primary experience |

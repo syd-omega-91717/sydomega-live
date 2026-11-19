@@ -84,9 +84,11 @@ class StaticAssetVersioningTests(unittest.TestCase):
 
     def test_build_runs_asset_versioning_after_html_enhancement(self):
         enhancer = BUILD.index("node scripts/vercel-build-enhance.mjs")
+        vendor_copy = BUILD.index("for dir in vendor i18n; do")
         versioner = BUILD.index("python3 scripts/version-static-assets.py")
         reference_scan = BUILD.index("missing_refs=0")
-        self.assertLess(enhancer, versioner)
+        self.assertLess(enhancer, vendor_copy)
+        self.assertLess(vendor_copy, versioner)
         self.assertLess(versioner, reference_scan)
 
 

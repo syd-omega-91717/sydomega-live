@@ -90,7 +90,7 @@ PUBLIC_PAGES = {
     # reporting the homepage as orphaned.
     'charter', 'omega-visual-home',
     # The platform guide: an applicant waiting on approval needs it most.
-    'guide',
+    'guide', 'privacy',
 }
 
 # Verified external invocation that cannot be inferred from an in-repository caller.

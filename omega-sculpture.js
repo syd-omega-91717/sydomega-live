@@ -364,7 +364,7 @@
 
     /* ── THE FIVE STATES ──────────────────────────────────────────────
        The project's logo sheet specifies the mark's animation states:
-       IDLE (rotate & glow) / PULSE (energy pulse) / REACTOR (core energy) /
+       IDLE (sway & glow) / PULSE (energy pulse) / REACTOR (core energy) /
        CUBE (9x9x9 reveal) / SEAL (ultimate state). They are built here as
        exactly that -- one mark, five behaviours -- rather than five marks.
 
@@ -497,7 +497,8 @@
         mark.rotation.x = Math.sin(t * 0.31) * 0.14 - py * 0.34;
         halo.rotation.z = -t * 0.16;
         halo.material.opacity = 0.085 + Math.sin(t * 0.9) * 0.030;
-        orbit.rotation.z = t * 0.30;
+        /* The homepage signet keeps its orbital frame still: depth comes from
+           the restrained Omega sway and lighting, not a generic spinning ring. */
       }
       if (radiant) {
         var tt = reduceMotion ? 0 : t;                       /* reduced motion: one still frame, glow and all */
@@ -2486,7 +2487,7 @@
   }
 
   var SCULPT_LABEL = {
-    signet: 'The Omega signet, rendered in three dimensions and slowly rotating',
+    signet: 'The Omega signet, rendered in three dimensions with restrained dimensional sway',
     agents: 'The twelve agent executors in orbit around the Omega core',
     matrix: 'The nine by nine by nine matrix of 729 nodes, with the Crystal-Omega at its centre',
     gates:  'The twelve gates receding into depth toward the Crystal-Omega',

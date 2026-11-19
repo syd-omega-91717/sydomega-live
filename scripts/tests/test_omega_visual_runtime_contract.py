@@ -17,10 +17,9 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
         self.assertIn(".ohz-hero-art[data-omega-sculpture]", self.runtime)
         self.assertIn('data-omega-sculpture=\"signet\"', self.index)
 
-    def test_hero_emblem_is_the_turning_signet_not_covered_or_dimmed(self):
-        """Owner decision 2026-10-19: the front door's emblem is the turning
-        3-D signet again. From 2026-09-15 a static gateway composition sat on
-        top of it and two sheets dimmed its canvas to 4.5% and 20%."""
+    def test_hero_emblem_is_dimensional_without_generic_orbit_spin(self):
+        """Owner direction reaffirmed 2026-11-19: preserve the live 3-D signet,
+        but keep the Omega readable with restrained sway, not a spinning ring."""
         self.assertNotIn("installOpeningStage", self.runtime)
         self.assertNotIn("omega-gateway-vault", self.runtime)
         self.assertNotIn("omega-home-depth-correction", self.runtime)
@@ -28,7 +27,8 @@ class OmegaVisualRuntimeContractTests(unittest.TestCase):
         self.assertNotIn(".ohz-hero-art canvas{opacity", self.opening)
         sculpture = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
         self.assertIn("mark.rotation.y = Math.sin(t * 0.33) * swayAmp", sculpture)
-        self.assertIn("orbit.rotation.z = t * 0.30;", sculpture)
+        self.assertNotIn("orbit.rotation.z = t * 0.30;", sculpture)
+        self.assertIn("IDLE (sway & glow)", sculpture)
 
     def test_runtime_is_dom_timing_safe(self):
         self.assertIn("if(document.body) mount();", self.runtime)

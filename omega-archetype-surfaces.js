@@ -254,42 +254,11 @@
     rules += 'padding: calc(var(--spacing) * ' + (spacing.padding * 0.8) + '); ';
     rules += '} ';
 
-    // Information disclosure pattern styling
-    switch(config.disclosurePattern){
-      case 'immediate':
-        rules += '[data-archetype="' + archetype + '"] .card-content { ';
-        rules += 'opacity: 1; ';
-        rules += 'max-height: none; ';
-        rules += '} ';
-        break;
-
-      case 'exploration':
-        rules += '[data-archetype="' + archetype + '"] .card-content { ';
-        rules += 'max-height: 0; ';
-        rules += 'overflow: hidden; ';
-        rules += 'opacity: 0; ';
-        rules += 'transition: all 300ms cubic-bezier(0.4, 0, 0.6, 1); ';
-        rules += '} ';
-        rules += '[data-archetype="' + archetype + '"] .card:hover .card-content { ';
-        rules += 'max-height: 500px; ';
-        rules += 'opacity: 1; ';
-        rules += '} ';
-        break;
-
-      case 'deep':
-        rules += '[data-archetype="' + archetype + '"] .card-content { ';
-        rules += 'display: none; ';
-        rules += '} ';
-        rules += '[data-archetype="' + archetype + '"] .card.expanded .card-content { ';
-        rules += 'display: block; ';
-        rules += 'animation: slideDown 400ms cubic-bezier(0.34, 1.56, 0.64, 1); ';
-        rules += '} ';
-        rules += '@keyframes slideDown { ';
-        rules += 'from { max-height: 0; opacity: 0; } ';
-        rules += 'to { max-height: 1000px; opacity: 1; } ';
-        rules += '} ';
-        break;
-    }
+    /* Disclosure is a semantic interaction contract, not a visual surface rule.
+       Generic hover-only/max-height hiding made essential content unavailable
+       to touch, keyboard and assistive-technology users. Pages that need
+       progressive disclosure own it with <details>/<summary> or explicit
+       aria-expanded controls. Surface styling never hides data. */
 
     return rules;
   }

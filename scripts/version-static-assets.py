@@ -28,6 +28,13 @@ STRING_RE = re.compile(
     r"""(?P=quote)""",
     re.IGNORECASE,
 )
+BARE_STRING_RE = re.compile(
+    r"""(?P<quote>["'\x60])"""
+    r"""(?P<url>[A-Za-z0-9_.-]+\.(?:js|css)(?:\?[^"'\x60\s<>]*)?(?:#[^"'\x60\s<>]*)?)"""
+    r"""(?P=quote)""",
+    re.IGNORECASE,
+)
+
 
 
 def release_version() -> str:
@@ -124,6 +131,7 @@ def rewrite_file(path: Path, version: str) -> int:
 
     # Dynamic script.src/import() strings and static CSS/JS references.
     content = STRING_RE.sub(replace_match, content)
+    content = BARE_STRING_RE.sub(replace_match, content)
     # Explicit HTML asset attributes; reprocessing an already versioned URL is
     # idempotent because the existing v= parameter is replaced, not duplicated.
     content = ATTRIBUTE_RE.sub(replace_match, content)
@@ -156,7 +164,7 @@ def main() -> int:
         except (OSError, UnicodeDecodeError):
             continue
         found = set()
-        for pattern in (STRING_RE, ATTRIBUTE_RE):
+        for pattern in (STRING_RE, BARE_STRING_RE, ATTRIBUTE_RE):
             for match in pattern.finditer(content):
                 url = match.group("url")
                 if not is_deployed_local_asset(url, path):

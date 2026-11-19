@@ -198,6 +198,64 @@ body.omega-simple :where(.omega-media-caption,.omega-scene-caption,.omega-artifa
   line-height:1.5;
 }
 
+/* Existing production media, game, identity and research components receive
+   the same art direction. These are the classes already used by the 242-page
+   estate; the selectors do not require a new framework or markup migration. */
+body.omega-simple :where(
+  .film-card,.olym-card,.franchise-card,.game-card,.g-card,.ova-card,
+  .credential-card,.sci-card,.intel-card,.social-card,.holding-card,
+  .reserve-card,.char-hero,.portfolio-banner
+){
+  border-color:var(--omega-v6-accent-line);
+  box-shadow:0 18px 48px rgba(0,0,0,.36),inset 0 1px rgba(255,255,255,.05);
+}
+body.omega-simple :where(.film-card,.olym-card,.franchise-card,.game-card,.g-card,.ova-card){
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 68% 90% at 100% 0%,var(--omega-v6-accent-soft),transparent 74%),
+    linear-gradient(145deg,rgba(15,18,29,.96),rgba(3,5,11,.98));
+}
+body.omega-simple :where(.card-poster,.poster-bg,.ova-art,.game-icon,.intel-card-icon,.pp-art){
+  border-radius:inherit;
+}
+body.omega-simple :where(.poster-ring,.poster-ring2,.poster-glyph,.poster-number,.game-num,.char-emblem){
+  color:var(--omega-v6-accent);
+  border-color:var(--omega-v6-accent-line);
+  text-shadow:0 0 16px var(--omega-v6-accent-soft);
+}
+body.omega-simple :where(.split-hero,.hero-half,.portfolio-banner,.profile-hero,.hero-band){
+  border-color:var(--omega-v6-accent-line);
+}
+body.omega-simple :where(.ow-spatial-world,.omega-world-portal,.osc-stage){
+  border-color:var(--omega-v6-accent-line);
+  box-shadow:inset 0 0 60px var(--omega-v6-accent-soft),0 24px 60px rgba(0,0,0,.4);
+}
+body.omega-simple :where(.ova-card,.film-card,.olym-card,.franchise-card,.game-card,.g-card):focus-within{
+  outline:2px solid var(--omega-v6-secondary);
+  outline-offset:3px;
+}
+
+/* The visual atlas is a gallery of source references, never an entitlement view. */
+body.omega-simple :where(.ova-card){
+  border:1px solid var(--omega-v6-accent-line);
+  border-radius:13px;
+  background:var(--omega-v6-panel);
+}
+body.omega-simple :where(.ova-art){
+  display:block;
+  width:100%;
+  max-width:100%;
+  object-fit:cover;
+}
+
+/* Creator and enterprise workspaces keep tool chrome quiet and the work surface clear. */
+body.omega-simple :where(.workspace-toolbar,.editor-toolbar,.studio-toolbar,.tab-bar,[role="tablist"]){
+  border-color:var(--omega-v6-accent-line);
+}
+body.omega-simple :where(.intel-card,.sci-card,.holding-card,.reserve-card,.credential-card,.social-card){
+  background-image:linear-gradient(145deg,var(--omega-v6-accent-soft),rgba(255,255,255,.012) 46%,rgba(0,0,0,.1));
+}
+
 /* Content density follows the page's declared purpose, not one universal grid. */
 html[data-omega-density="readable"] body.omega-simple :where(.main,main,.page-shell,#omega-main-content) :where(p,li,.description,.lede){
   line-height:1.72;

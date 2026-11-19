@@ -4,6 +4,8 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 PROFILE = (ROOT / "profile.html").read_text(encoding="utf-8")
 DASHBOARD = (ROOT / "dashboard.html").read_text(encoding="utf-8")
+MEDIA = (ROOT / "media.html").read_text(encoding="utf-8")
+VAULT = (ROOT / "vault.html").read_text(encoding="utf-8")
 CSS = (ROOT / "omega-readable-layout.css").read_text(encoding="utf-8")
 
 
@@ -13,6 +15,20 @@ class ReadabilityContractTests(unittest.TestCase):
         self.assertIn('data-omega-page="dashboard"', DASHBOARD)
         self.assertIn('/omega-readable-layout.css?v=20261119-r1', PROFILE)
         self.assertIn('/omega-readable-layout.css?v=20261119-r1', DASHBOARD)
+
+    def test_media_and_vault_opt_into_scoped_readability_layer(self):
+        self.assertIn('data-omega-page="media"', MEDIA)
+        self.assertIn('data-omega-page="vault"', VAULT)
+        self.assertIn('/omega-readable-layout.css?v=20261119-r2', MEDIA)
+        self.assertIn('/omega-readable-layout.css?v=20261119-r2', VAULT)
+        self.assertIn('id="media-main" role="main"', MEDIA)
+        self.assertIn('id="vault-main" tabindex="-1"', VAULT)
+
+    def test_media_and_vault_keep_mobile_catalogue_and_ledger_accessible(self):
+        self.assertIn('grid-template-columns: repeat(2, minmax(0, 1fr));', CSS)
+        self.assertIn('overflow-x: auto !important;', CSS)
+        self.assertIn('body[data-omega-page="media"]', CSS)
+        self.assertIn('body[data-omega-page="vault"]', CSS)
 
     def test_readability_floor_is_not_below_thirteen_pixels(self):
         self.assertIn('--omega-readable-label: clamp(13px', CSS)

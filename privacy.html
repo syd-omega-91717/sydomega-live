@@ -45,7 +45,7 @@
 </head>
 <body>
 <aside id="omega-side" data-page="privacy" aria-label="Navigation"></aside>
-<div class="page-shell" id="app" style="display:none">
+<div class="page-shell" id="app" style="display:flex">
 <header class="topbar">
   <div class="topbar-title">PRIVACY CENTRE<span class="topbar-sub">GDPR ART. 5/7/17/20 &middot; CCPA/CPRA &middot; PRIVACY BY DESIGN (ART. 25) &middot; ALL RIGHTS PROTECTED</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
@@ -56,6 +56,7 @@
   <button class="tab-btn" onclick="setTab('framework')">FRAMEWORK</button>
   <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
+<div id="privacy-access-note" class="info-block" role="status" aria-live="polite">Sign in to manage account-specific privacy controls. This privacy information remains available without an account.</div>
 
 <div class="tab-panel active" id="tab-consent">
   <div class="sechead">CONSENT MANAGEMENT &middot; GDPR ARTICLE 6 &amp; 7 &middot; GRANULAR CONTROL</div>
@@ -63,22 +64,22 @@
     <div class="consent-card card">
       <div class="cc-title">ANALYTICS &amp; PERFORMANCE</div>
       <div class="cc-desc">Anonymous usage analytics to improve platform performance and identify technical issues. No personal identification.</div>
-      <div class="toggle-row"><span class="toggle-label" id="lbl-analytics">LOADING&hellip;</span><label class="toggle" aria-label="Analytics consent"><input type="checkbox" id="toggle-analytics" onchange="updateConsent('analytics',this.checked)"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><span class="toggle-label" id="lbl-analytics">SIGN IN TO MANAGE</span><label class="toggle" aria-label="Analytics consent"><input type="checkbox" id="toggle-analytics" disabled onchange="updateConsent('analytics',this.checked)"><span class="toggle-slider"></span></label></div>
     </div>
     <div class="consent-card card">
       <div class="cc-title">PERSONALISATION &amp; RECOMMENDATIONS</div>
       <div class="cc-desc">Interest-graph signals to surface relevant tracks, exams, and games based on your demonstrated engagement patterns.</div>
-      <div class="toggle-row"><span class="toggle-label" id="lbl-recommendations">LOADING&hellip;</span><label class="toggle" aria-label="Recommendations consent"><input type="checkbox" id="toggle-recommendations" onchange="updateConsent('recommendations',this.checked)"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><span class="toggle-label" id="lbl-recommendations">SIGN IN TO MANAGE</span><label class="toggle" aria-label="Recommendations consent"><input type="checkbox" id="toggle-recommendations" disabled onchange="updateConsent('recommendations',this.checked)"><span class="toggle-slider"></span></label></div>
     </div>
     <div class="consent-card card">
       <div class="cc-title">MARKETING COMMUNICATIONS</div>
       <div class="cc-desc">Platform announcements, new features, and sovereign events sent to your registered email address.</div>
-      <div class="toggle-row"><span class="toggle-label" id="lbl-marketing">LOADING&hellip;</span><label class="toggle" aria-label="Marketing consent"><input type="checkbox" id="toggle-marketing" onchange="updateConsent('marketing',this.checked)"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><span class="toggle-label" id="lbl-marketing">SIGN IN TO MANAGE</span><label class="toggle" aria-label="Marketing consent"><input type="checkbox" id="toggle-marketing" disabled onchange="updateConsent('marketing',this.checked)"><span class="toggle-slider"></span></label></div>
     </div>
     <div class="consent-card card">
       <div class="cc-title">PRESENCE &amp; ACTIVITY SHARING</div>
       <div class="cc-desc">Your online presence visible to other members in the live member count. No personal details shared.</div>
-      <div class="toggle-row"><span class="toggle-label" id="lbl-personalisation">LOADING&hellip;</span><label class="toggle" aria-label="Presence consent"><input type="checkbox" id="toggle-personalisation" onchange="updateConsent('personalisation',this.checked)"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><span class="toggle-label" id="lbl-personalisation">SIGN IN TO MANAGE</span><label class="toggle" aria-label="Presence consent"><input type="checkbox" id="toggle-personalisation" disabled onchange="updateConsent('personalisation',this.checked)"><span class="toggle-slider"></span></label></div>
     </div>
   </div>
   <div id="consent-msg" class="msg"></div>
@@ -105,9 +106,9 @@
     </dl>
   </section>
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-    <button class="action-btn btn-cyan" onclick="exportMyData()">&#9660; EXPORT MY DATA (ART. 20)</button>
-    <button class="action-btn btn-gold" onclick="viewMyData()">&#9670; VIEW STORED DATA (ART. 15)</button>
-    <button class="action-btn btn-crim" onclick="requestErasure()">&#9632; REQUEST ERASURE (ART. 17)</button>
+    <button id="privacy-export" class="action-btn btn-cyan" disabled onclick="exportMyData()">&#9660; EXPORT MY DATA (ART. 20)</button>
+    <button id="privacy-view" class="action-btn btn-gold" disabled onclick="viewMyData()">&#9670; VIEW STORED DATA (ART. 15)</button>
+    <button id="privacy-erasure" class="action-btn btn-crim" disabled onclick="requestErasure()">&#9632; REQUEST ERASURE (ART. 17)</button>
   </div>
   <div id="data-output" class="data-out"></div>
   <div id="erasure-confirm" class="erasure-confirm">
@@ -164,14 +165,36 @@ function showMsg(id,ok,text){
   setTimeout(function(){el.style.display='none';},5000);
 }
 
+function setPrivacyControls(available){
+  ['export','view','erasure'].forEach(function(name){
+    var el=document.getElementById('privacy-'+name);if(el)el.disabled=!available;
+  });
+}
+function setConsentControls(available){
+  ['analytics','recommendations','marketing','personalisation'].forEach(function(type){
+    var tog=document.getElementById('toggle-'+type);if(tog)tog.disabled=!available;
+  });
+}
+function setPrivacyAccessNote(message){
+  var note=document.getElementById('privacy-access-note');
+  if(note){note.textContent=message;note.style.display='block';}
+}
 (async function init(){
   try{
     var s=(await sb.auth.getSession()).data.session;
-    if(!s){location.replace('/account.html');return;}
+    if(!s){
+      setPrivacyAccessNote('Sign in to manage account-specific privacy controls. This privacy information remains available without an account.');
+      return;
+    }
     _uid=s.user.id;
-    var pr=(await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle()).data||{};
-    if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
-    document.getElementById('app').style.display='flex';
+    var profileResult=await sb.from('profiles').select('*').eq('id',s.user.id).maybeSingle();
+    if(profileResult.error||!profileResult.data){
+      setPrivacyAccessNote('Your session is present, but account details could not be verified. Account controls remain disabled; contact info@sydomega.com for assistance.');
+      return;
+    }
+    var pr=profileResult.data;
+    var note=document.getElementById('privacy-access-note');if(note)note.style.display='none';
+    setPrivacyControls(true);
     if(window.__omegaPopulate)window.__omegaPopulate(pr,s.user);
     try{
       var cr=await sb.from('consent_records').select('consent_type,granted,granted_at').eq('user_id',s.user.id).is('revoked_at',null).order('granted_at',{ascending:false});
@@ -185,7 +208,9 @@ function showMsg(id,ok,text){
         if(tog)tog.checked=granted;
         if(lbl)lbl.textContent=granted?'GRANTED':'NOT GRANTED';
       });
+      setConsentControls(true);
     }catch(e){
+      setConsentControls(false);
       ['analytics','recommendations','marketing','personalisation'].forEach(function(type){
         var tog=document.getElementById('toggle-'+type);
         var lbl=document.getElementById('lbl-'+type);
@@ -194,10 +219,13 @@ function showMsg(id,ok,text){
       });
       showMsg('consent-msg',false,'CONSENT STATUS COULD NOT BE VERIFIED. OPTIONAL CONSENT REMAINS DISABLED.');
     }
-  }catch(e){document.getElementById('app').style.display='flex';}
+  }catch(e){
+    setPrivacyAccessNote('Account controls are unavailable until your session can be verified. The privacy information remains available; contact info@sydomega.com for assistance.');
+  }
 })();
 
 window.updateConsent=async function(type,granted){
+  if(!_uid){var locked=document.getElementById('toggle-'+type);if(locked)locked.checked=!granted;showMsg('consent-msg',false,'SIGN IN TO MANAGE ACCOUNT-SPECIFIC CONSENT.');return;}
   var lbl=document.getElementById('lbl-'+type);
   var tog=document.getElementById('toggle-'+type);
   if(lbl)lbl.textContent='SAVING…';
@@ -220,12 +248,14 @@ window.updateConsent=async function(type,granted){
 };
 
 window.exportMyData=async function(){
+  if(!_uid){showMsg('action-msg',false,'SIGN IN TO EXPORT YOUR ACCOUNT DATA.');return;}
   showMsg('action-msg',true,'PREPARING DATA EXPORT…');
   if(window.OmegaExport){await window.OmegaExport.request();}
   else{var s=document.createElement('script');s.src='/omega-export.js';s.onload=function(){if(window.OmegaExport)window.OmegaExport.request();};document.head.appendChild(s);}
 };
 
 window.viewMyData=async function(){
+  if(!_uid){showMsg('action-msg',false,'SIGN IN TO VIEW YOUR ACCOUNT DATA.');return;}
   try{
     var r=await sb.from('profiles').select('*').eq('id',_uid).maybeSingle();
     var out=document.getElementById('data-output');
@@ -238,11 +268,13 @@ window.viewMyData=async function(){
 };
 
 window.requestErasure=function(){
+  if(!_uid){showMsg('action-msg',false,'SIGN IN TO REQUEST ACCOUNT ERASURE.');return;}
   var conf=document.getElementById('erasure-confirm');
   if(conf)conf.style.display=conf.style.display==='none'?'block':'none';
 };
 
 window.confirmErasure=async function(){
+  if(!_uid){showMsg('action-msg',false,'SIGN IN TO REQUEST ACCOUNT ERASURE.');return;}
   var inp=document.getElementById('erasure-input');
   if(!inp||inp.value.trim().toUpperCase()!=='CONFIRM'){showMsg('action-msg',false,'YOU MUST TYPE CONFIRM (UPPERCASE) TO PROCEED.');return;}
   try{

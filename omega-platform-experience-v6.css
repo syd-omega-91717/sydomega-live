@@ -261,7 +261,7 @@ body.omega-simple .omega-atlas-name{
 }
 @media(hover:hover) and (pointer:fine){
   body.omega-simple .omega-atlas-card:hover{
-    transform:translateY(-4px);
+    transform:perspective(1100px) rotateX(1deg) rotateY(-1deg) translateY(-3px);
     border-color:var(--atlas-accent,var(--omega-v6-accent));
     box-shadow:0 24px 56px rgba(0,0,0,.42),var(--omega-v6-accent-glow),inset 0 1px rgba(255,255,255,.08);
   }
@@ -437,4 +437,8 @@ html[data-omega-density="social"] body.omega-simple :where(.feed-item,.social-po
 }
 @media(forced-colors:active){
   body.omega-simple :where(.card,.native-card,.kpi,.kpi-card,.panel,.module,.module-card,.tile,.widget,.glass,.glass-card,.omega-depth-card,.ohz-tile,.omega-figure-card,.franchise-card,.game-card,.credential-card,.social-card,.omega-media-frame,.omega-cinema-frame,.omega-scene-frame){border:1px solid CanvasText;box-shadow:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body.omega-simple :where(.omega-figure-card,.omega-discovery-card,.omega-atlas-card,.film-card,.game-card):hover{transform:none}
+  body.omega-simple .omega-atlas-card:hover{transform:none}
 }

@@ -213,8 +213,8 @@ body.omega-simple :where(.osc-stage,.omega-world-portal,.ow-world){
 
 /* ═══════════════════════════════════════════════════════════════════════
    Ω EXPERIENCE EVOLUTION V6 — MANIFEST-DRIVEN VISUAL WORLDS
-   The page-character manifest is the only page-to-world mapping. Its visual,
-   motion, depth and density profiles are published by omega-page-world.js.
+   Route assignments remain in the page-world and district manifests. The
+   page-character manifest owns visual tokens and archetype presentation.
    This layer gives each experience a distinct personality while retaining
    the same Ω identity, canonical token owners, page layouts and data actions.
    No new renderer, dependency, route, API or backend state is introduced.
@@ -281,6 +281,72 @@ html[data-omega-density-profile="data"] body.omega-simple :where(
 ){
   font-variant-numeric:tabular-nums lining-nums;
 }
+html[data-omega-density-profile="clear"] body.omega-simple :where(
+  main,.main,.page-shell,#omega-main-content
+){
+  font-size:clamp(15px,1rem + .06vw,17px);
+  line-height:1.68;
+}
+html[data-omega-density-profile="visual"] body.omega-simple :where(
+  .media-grid,.gallery-grid,.game-grid,.arena-grid,.achievement-grid
+){
+  gap:clamp(12px,1.6vw,22px);
+}
+html[data-omega-density-profile="transactional"] body.omega-simple :where(
+  form,.checkout-panel,.purchase-panel,.transaction-panel
+){
+  line-height:1.58;
+}
+html[data-omega-density-profile="transactional"] body.omega-simple :where(
+  button,.btn,.btn-primary,.btn-gold,input,select
+){
+  min-height:44px;
+}
+html[data-omega-density-profile="workspace"] body.omega-simple :where(
+  .workspace,.editor,.tool-panel,.creation-canvas,.workspace-panel
+){
+  min-width:0;
+  max-width:100%;
+}
+html[data-omega-density-profile="social"] body.omega-simple :where(
+  .feed-item,.post,.comment,.message-thread,.conversation
+){
+  margin-block:10px;
+  line-height:1.62;
+}
+html[data-omega-density-profile="structured"] body.omega-simple :where(
+  table,.data-table,.audit-table,.decision-log
+){
+  line-height:1.52;
+  font-variant-numeric:tabular-nums;
+}
+html[data-omega-density-profile="technical"] body.omega-simple :where(
+  pre,code,.log-viewer,.telemetry,.system-console
+){
+  font-family:var(--M,"Courier Prime",monospace);
+  font-variant-numeric:tabular-nums;
+}
+html[data-omega-motion-profile="calm"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.14s}
+html[data-omega-motion-profile="precise"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.12s}
+html[data-omega-motion-profile="reactive"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.16s}
+html[data-omega-motion-profile="dynamic"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.22s}
+html[data-omega-motion-profile="organic"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.28s}
+html[data-omega-motion-profile="ceremonial"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.30s}
+html[data-omega-motion-profile="cinematic"] body.omega-simple :where(
+  .card,.panel,.module,.btn,.ohz-btn,.filter-btn
+){transition-duration:.34s}
 html[data-omega-archetype="knowledge"] body.omega-simple :where(
   article,.article-body,.reader-content,.prose,.knowledge-content
 ){

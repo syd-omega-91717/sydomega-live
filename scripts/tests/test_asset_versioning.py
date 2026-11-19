@@ -8,6 +8,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "version-static-assets.py"
 BUILD = (ROOT / "scripts" / "vercel-build.sh").read_text(encoding="utf-8")
+VERCELIGNORE = (ROOT / ".vercelignore").read_text(encoding="utf-8")
 VERSION = "89aed3dbce68"
 
 
@@ -75,6 +76,11 @@ class StaticAssetVersioningTests(unittest.TestCase):
             html = (public / "index.html").read_text(encoding="utf-8")
             self.assertEqual(html.count(f"v={VERSION}"), 1)
             self.assertNotIn("v=previous", html)
+
+
+    def test_vercel_upload_includes_the_build_time_versioner(self):
+        self.assertIn("!scripts/version-static-assets.py", VERCELIGNORE)
+        self.assertIn("!scripts/portable-host-config.py", VERCELIGNORE)
 
     def test_build_runs_asset_versioning_after_html_enhancement(self):
         enhancer = BUILD.index("node scripts/vercel-build-enhance.mjs")

@@ -26,7 +26,8 @@ class ReadabilityContractTests(unittest.TestCase):
 
     def test_focus_visibility_and_profile_skip_link_exist(self):
         self.assertIn('class="omega-skip-link" href="#profile-main"', PROFILE)
-        self.assertIn('id="profile-main" role="main"', PROFILE)
+        self.assertIn('<main class="main">', PROFILE)
+        self.assertIn('id="profile-main" tabindex="-1"', PROFILE)
         self.assertIn(':focus-visible', CSS)
 
     def test_dashboard_mission_bar_can_grow_when_metadata_wraps(self):

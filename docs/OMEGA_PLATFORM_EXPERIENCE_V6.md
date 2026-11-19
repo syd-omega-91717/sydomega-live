@@ -78,6 +78,34 @@ The module specifications also name the following integration surfaces. These ar
 
 The visual implementation keeps provider identity and external account state truthful: a logo, link or connector reference is not evidence of a live authorization, active API, verified account or successful transaction.
 
+## External design-system research
+
+Official guidance was reviewed to turn the named benchmark inventory into concrete, testable rules:
+
+- **Apple Human Interface Guidelines:** purpose, user agency, privacy, familiarity, adaptability, clear hierarchy and the rule that delight must not obstruct the task. Layout guidance emphasizes adapting to text size, orientation, screen width and safe areas.
+  - https://developer.apple.com/design/human-interface-guidelines/design-principles
+  - https://developer.apple.com/design/human-interface-guidelines/layout
+- **Google Material / Material 3 Expressive:** motion should communicate state and guide attention; expressive color, shape, size and containment must support the task rather than compete with it. Responsive navigation should adapt to available space instead of merely shrinking.
+  - https://design.google/library/expressive-material-design-google-research
+  - https://design.google/library/introducing-resizer
+- **Microsoft Fluent 2:** shared tokens, standardized corners, platform-aware adaptation, clear information hierarchy and accessibility as a foundation.
+  - https://fluent2.microsoft.design/accessibility
+  - https://fluent2.microsoft.design/get-started/whatisnew
+- **Atlassian Design System and GitHub Primer:** foundations, reusable components, workflow patterns, content rules and design tokens should be shared across product surfaces.
+  - https://atlassian.design/resources/
+  - https://primer.github.io/design/
+- **Shopify Polaris:** use familiar page templates and reusable compositions for home, index, detail, settings, media cards, metrics, resource lists and setup guides; do not invent a different interaction for each module.
+  - https://shopify.dev/docs/apps/design
+  - https://shopify.dev/docs/api/app-home/latest/patterns
+- **Stripe Payment Element:** keep payment fields localized and provider-managed while applying a controlled appearance layer for typography, color, borders and shadows.
+  - https://docs.stripe.com/payments/mobile/embedded
+- **Xbox Accessibility Guidelines:** cover text display, contrast, captions, input, UI navigation and focus, context, destructive actions, motion settings and photosensitivity in game-like surfaces.
+  - https://learn.microsoft.com/en-us/xbox/accessibility/guidelines
+- **Unreal Engine UMG:** use anchors, responsive scaling and safe zones for game-world UI rather than assuming a single fixed viewport.
+  - https://dev.epicgames.com/documentation/unreal-engine/visual-design-and-layout-tools-for-umg-in-unreal-engine
+
+The V6 implementation applies these principles to the project's own visual language: one token system, archetype-based variation, page-owned workflows, meaningful motion, responsive grid utilities, clear focus states and reduced-motion support. This is a principles-based benchmark, not a pixel-for-pixel reproduction of any third-party product.
+
 ## Visual source governance
 
 The governed Visual Atlas records the source families and visual translation rules. Commercial/stock references remain mood references only; they are not copied, embedded, traced or served. Production art remains original or owner-supplied and appropriately licensed.

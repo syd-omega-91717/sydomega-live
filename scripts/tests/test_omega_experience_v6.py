@@ -49,6 +49,37 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         self.assertNotIn("prefers-color-scheme: light", CSS)
         self.assertIn(":focus-visible", CSS)
 
+    def test_page_world_prefers_curated_profiles_before_generic_command_fallback(self):
+        find_start = WORLD.index("function findArchetype()")
+        find_end = WORLD.index("\n  }", find_start)
+        find_body = WORLD[find_start:find_end]
+        self.assertLess(find_body.index("pageWorld.archetype!=='command'"), find_body.index("return 'command'"))
+        self.assertIn("if(pageWorld&&pageWorld.pages)", WORLD)
+        self.assertIn("archetype=findArchetype()", WORLD)
+
+    def test_manifest_explicitly_classifies_previously_unmapped_pages(self):
+        rules = MANIFEST["rules"]
+        mapping = {}
+        for rule in rules:
+            for token in rule["match"].split("|"):
+                mapping[token] = rule["archetype"]
+        expected = {
+            "achieve": "gaming", "archive": "knowledge", "ascend": "knowledge",
+            "control-center": "system", "cosmetics": "identity",
+            "data-observatory": "intelligence", "insight": "intelligence",
+            "intel": "intelligence", "invest": "finance", "ladder": "gaming",
+            "life": "identity", "my-quests": "gaming",
+            "omega-platform-navigator": "command", "order": "community",
+            "orrery": "intelligence", "platform-kernel": "system",
+            "quest-progress": "gaming", "seasonal-events": "gaming",
+            "sovereign-core": "command", "world-atlas": "intelligence",
+            "worlds": "media", "graph-admin": "system", "maintenance": "system",
+            "trailers": "media",
+        }
+        for slug, archetype in expected.items():
+            with self.subTest(page=slug):
+                self.assertEqual(mapping.get(slug), archetype)
+
     def test_v6_profiles_stay_inside_the_canonical_omega_palette(self):
         v6 = CSS[CSS.index("Ω EXPERIENCE EVOLUTION V6"):]
         for forbidden in ("#AB82F2", "#8FDCE8", "#CF6760", "#3FB27F", "rgba(171,130,242", "rgba(143,220,232", "rgba(207,103,96"):

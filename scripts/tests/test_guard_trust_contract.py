@@ -77,6 +77,13 @@ class GuardTrustContract(unittest.TestCase):
         self.assertNotIn("if(!sess){ window.location.href='/account.html'; return; }", TERMS)
         self.assertIn("Sign in or create an account to accept these terms.", TERMS)
 
+    def test_privacy_notice_does_not_promise_unimplemented_erasure_or_retention(self):
+        self.assertIn("does not currently run a complete automated purge", PRIVACY)
+        self.assertIn("retention schedule is not yet fully enforced", PRIVACY)
+        self.assertNotIn("DATA WILL BE DELETED WITHIN 30 DAYS", PRIVACY)
+        self.assertNotIn("queues a 30-day deletion job", PRIVACY)
+        self.assertIn("not a certification claim by SYD OMEGA", PRIVACY)
+
 
 if __name__ == "__main__":
     unittest.main()

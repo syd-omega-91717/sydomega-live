@@ -220,6 +220,8 @@ body.omega-simple :where(.osc-stage,.omega-world-portal,.ow-world){
 
 /* ═══════════════════════════════════════════════════════════════════════
    Ω EXPERIENCE EVOLUTION V6 — MANIFEST-DRIVEN VISUAL WORLDS
+   The page-character manifest is the only page-to-world mapping. Its visual,
+   motion, depth and density profiles are published by omega-page-world.js.
    Route assignments remain in the page-world and district manifests. The
    page-character manifest owns visual tokens and archetype presentation.
    This layer gives each experience a distinct personality while retaining
@@ -227,6 +229,54 @@ body.omega-simple :where(.osc-stage,.omega-world-portal,.ow-world){
    No new renderer, dependency, route, API or backend state is introduced.
    ═══════════════════════════════════════════════════════════════════════ */
 
+html[data-omega-archetype="command"]{
+  --omega-v6-accent:#C9A84C;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(201,168,76,.13);--omega-v6-line:rgba(201,168,76,.34);
+}
+html[data-omega-archetype="identity"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#C9A84C;
+  --omega-v6-glow:rgba(232,201,122,.14);--omega-v6-line:rgba(232,201,122,.36);
+}
+html[data-omega-archetype="intelligence"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#AB82F2;
+  --omega-v6-glow:rgba(0,229,255,.13);--omega-v6-line:rgba(0,229,255,.32);
+}
+html[data-omega-archetype="knowledge"]{
+  --omega-v6-accent:#8FDCE8;--omega-v6-secondary:#C9A84C;
+  --omega-v6-glow:rgba(143,220,232,.10);--omega-v6-line:rgba(143,220,232,.28);
+}
+html[data-omega-archetype="gaming"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#CF6760;
+  --omega-v6-glow:rgba(0,229,255,.15);--omega-v6-line:rgba(0,229,255,.34);
+}
+html[data-omega-archetype="media"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#AB82F2;
+  --omega-v6-glow:rgba(232,201,122,.14);--omega-v6-line:rgba(232,201,122,.34);
+}
+html[data-omega-archetype="commerce"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#3FB27F;
+  --omega-v6-glow:rgba(201,168,76,.12);--omega-v6-line:rgba(201,168,76,.32);
+}
+html[data-omega-archetype="creation"]{
+  --omega-v6-accent:#00E5FF;--omega-v6-secondary:#E8C97A;
+  --omega-v6-glow:rgba(0,229,255,.12);--omega-v6-line:rgba(0,229,255,.32);
+}
+html[data-omega-archetype="community"]{
+  --omega-v6-accent:#AB82F2;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(171,130,242,.13);--omega-v6-line:rgba(171,130,242,.30);
+}
+html[data-omega-archetype="governance"]{
+  --omega-v6-accent:#C9A84C;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(201,168,76,.10);--omega-v6-line:rgba(201,168,76,.30);
+}
+html[data-omega-archetype="finance"]{
+  --omega-v6-accent:#E8C97A;--omega-v6-secondary:#3FB27F;
+  --omega-v6-glow:rgba(201,168,76,.11);--omega-v6-line:rgba(201,168,76,.32);
+}
+html[data-omega-archetype="system"]{
+  --omega-v6-accent:#CF6760;--omega-v6-secondary:#00E5FF;
+  --omega-v6-glow:rgba(207,103,96,.12);--omega-v6-line:rgba(207,103,96,.32);
+}
 html[data-omega-archetype]{
   --omega-v6-ease:cubic-bezier(.2,.75,.25,1);
   --omega-v6-focus:var(--omega-v6-secondary,#00E5FF);
@@ -260,6 +310,7 @@ html[data-omega-archetype] body.omega-simple :where(
   .btn-primary,.btn-gold,.ohz-btn,.omega-domain-hub-action
 ){
   border-color:var(--omega-v6-line,var(--omega-v5-line));
+  box-shadow:0 8px 24px var(--omega-v6-glow,rgba(201,168,76,.1)),inset 0 1px rgba(255,255,255,.12);
 }
 html[data-omega-archetype] body.omega-simple :where(
   a,button,[role="button"],input,select,textarea
@@ -421,6 +472,8 @@ html[data-omega-archetype="gaming"] body.omega-simple :where(
 html[data-omega-archetype="media"] body.omega-simple :where(
   video,.video-frame,.media-player,.film-poster,.poster-art,.omega-film-poster
 ){
+  border:1px solid var(--omega-v6-line,rgba(201,168,76,.3));
+  box-shadow:0 18px 48px rgba(0,0,0,.42),0 0 28px var(--omega-v6-glow,rgba(201,168,76,.1));
   border-color:var(--omega-v6-line,rgba(201,168,76,.3));
 }
 html[data-omega-archetype="community"] body.omega-simple :where(

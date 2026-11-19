@@ -11,6 +11,7 @@ SURFACES = (ROOT / "omega-archetype-surfaces.js").read_text(encoding="utf-8")
 CSS = (ROOT / "omega-platform-experience-v5.css").read_text(encoding="utf-8")
 
 
+class OmegaExperienceV6Tests(unittest.TestCase):
 def resolve_archetype(slug):
     mapped = MANIFEST.get("pageArchetypes", {}).get(slug)
     if mapped in MANIFEST["archetypes"]:
@@ -65,6 +66,7 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             "commerce", "creation", "community", "governance", "finance", "system",
         }
         self.assertEqual(set(MANIFEST["archetypes"]), expected)
+        required = {"visual", "motion", "depth", "density", "interaction", "emblem"}
         required = {
             "visual", "motion", "depth", "density", "interaction", "emblem",
             "worldRole", "worldVerb", "primaryActions", "successOutcome",
@@ -74,6 +76,22 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             with self.subTest(archetype=name):
                 self.assertTrue(required.issubset(profile))
 
+    def test_page_world_publishes_the_canonical_manifest_profiles(self):
+        for marker in (
+            "root.dataset.omegaArchetype=archetype",
+            "root.dataset.omegaVisualProfile=a.visual||'sovereign'",
+            "root.dataset.omegaMotionProfile=a.motion||'subtle'",
+            "root.dataset.omegaDepthProfile=a.depth||'glass'",
+            "root.dataset.omegaDensityProfile=a.density||'clear'",
+            "root.dataset.omegaInteractionProfile=a.interaction||'direct'",
+            "root.dataset.omegaEmblemProfile=a.emblem||'omega'",
+        ):
+            self.assertIn(marker, WORLD)
+
+    def test_all_twelve_worlds_have_a_visual_profile(self):
+        for name in MANIFEST["archetypes"]:
+            with self.subTest(archetype=name):
+                self.assertIn(f'data-omega-archetype="{name}"', CSS)
     def test_page_world_publishes_every_visual_contract_attribute_and_token(self):
         for marker in (
             "visualRoot.setAttribute('data-omega-archetype'",

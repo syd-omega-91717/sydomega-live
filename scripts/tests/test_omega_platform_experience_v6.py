@@ -48,7 +48,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         start = nav.index("var PS={")
         end = nav.index("};", start)
         ps = {}
-        for match in re.finditer(r"(?:'([^']+)'|([A-Za-z0-9_-]+))\\s*:\\s*'([^']+)'", nav[start:end]):
+        for match in re.finditer(r"(?:'([^']+)'|([A-Za-z0-9_-]+))\s*:\s*'([^']+)'", nav[start:end]):
             ps[match.group(1) or match.group(2)] = match.group(3)
 
         page_map = self.manifest["pageArchetypes"]

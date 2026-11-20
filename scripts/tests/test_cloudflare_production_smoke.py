@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "scripts" / "cloudflare-production-smoke.py"
@@ -51,7 +52,7 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
                 return None
 
         trace = ["https://sydomega.com/missions.html"]
-        with unittest.mock.patch.object(SMOKE.requests, "Session", return_value=Session()):
+        with patch.object(SMOKE.requests, "Session", return_value=Session()):
             status, content_type, body = SMOKE.request_url(
                 trace[0], "GET", 5, redirect_trace=trace
             )

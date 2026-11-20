@@ -197,6 +197,8 @@ class OmegaExperienceV6Tests(unittest.TestCase):
                         "kpiStreak", "streakLabel", "kpiPri", "kpiDay", "kpiSess"):
             self.assertIn(f"say('{node_id}'", brief)
         self.assertNotIn("document.getElementById('clockTime').textContent", brief)
+        self.assertIn("function say(id,text)", brief)
+        self.assertLess(brief.index("function say(id,text)"), brief.index("/* CLOCK */"))
 
     def test_ops_status_indicator_is_optional_at_runtime(self):
         ops = (ROOT / "ops.html").read_text(encoding="utf-8")
@@ -204,6 +206,9 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         self.assertIn("if(dot)dot.className='status-dot'", ops)
         self.assertIn("if(dot)dot.className='status-dot red'", ops)
         self.assertIn("if(dot)dot.className='status-dot amber'", ops)
+        dot_lines = [line for line in ops.splitlines() if "dot.className" in line]
+        self.assertTrue(dot_lines)
+        self.assertTrue(all("if(dot)" in line for line in dot_lines))
 
     def test_svg_emblem_uses_accessible_accent_fill(self):
         emblem = (ROOT / "omega-emblems.js").read_text(encoding="utf-8")

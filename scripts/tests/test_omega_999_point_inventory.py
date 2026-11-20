@@ -52,6 +52,17 @@ class Omega999InventoryTests(unittest.TestCase):
             )
             repeated_data = json.loads(repeated.stdout)
             self.assertEqual(ids, [point["source_record_id"] for point in repeated_data["points"]])
+            self.assertRegex(ids[0], r"^BP-001-[0-9a-f]{64}$")
+            path.write_text("Unrelated leading note\\n" + source, encoding="utf-8")
+            after_unrelated_insert = subprocess.run(
+                [sys.executable, str(SCRIPT), str(path), "--json"],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            after_insert_data = json.loads(after_unrelated_insert.stdout)
+            self.assertEqual(ids, [point["source_record_id"] for point in after_insert_data["points"]])
+            self.assertNotEqual(data["source_sha256"], after_insert_data["source_sha256"])
             self.assertEqual(data["source_sha256"], hashlib.sha256(source.encode()).hexdigest())
         finally:
             path.unlink(missing_ok=True)

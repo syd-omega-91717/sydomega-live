@@ -88,8 +88,13 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertEqual(mapping["graphify"], "intelligence")
         self.assertEqual(mapping["game-origins"], "gaming")
         self.assertIn("manifest.pageArchetypes&&manifest.pageArchetypes[slug]", self.page_world)
+        self.assertLess(
+            self.page_world.index("var exactPage=manifest.pageArchetypes[slug]"),
+            self.page_world.index("var exactHit=manifest.rules.find"),
+        )
         self.assertIn("slug.indexOf(token+'-')===0", self.page_world)
         self.assertNotIn("slug.indexOf(token)>-1", self.page_world)
+        self.assertIn("replace(/^-+|-+$/g,'')", self.page_world)
 
     def test_all_252_html_documents_are_accounted_for(self):
         redirect_stubs = {

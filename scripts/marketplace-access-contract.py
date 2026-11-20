@@ -59,7 +59,7 @@ def main() -> int:
         ("favorite relation uses an explicit field allowlist", "marketplace_listings(id,seller_id,title,kind,price_omega,description,status,created_at,user_id)" in page),
         ("no wildcard listing selects remain", not re.search(r"from\(['\"]marketplace_listings['\"]\)\.select\(['\"]\*['\"]\)", page) and "marketplace_listings(*)" not in page),
         ("copy does not claim purchases or delivery are live", "purchase-gated signed delivery is not implemented" in page_lower and "sale-related xp is planned, not available" in page_lower),
-        ("marketplace attachments use governed content registration", "omegacontenttasks.upload(fileel.files[0]" in page_lower and "content_type:'marketplace_listing_attachment'" in page_lower),
+        ("marketplace attachments use governed content registration", "omegacontenttasks.upload(fileel.files[0]" in page_lower and "content_type:'marketplace_listing_attachment'" in page_lower and '<script src="/omega-content-tasks.js"></script>' in page_lower),
         ("registered marketplace path is seller validated", "function isowneduploadpath(path)" in page_lower and "uploadtask.data.file.storage_path" in page_lower),
         ("marketplace page does not upload outside content task fabric", "omegastorage.upload('uploads',fileel.files[0])" not in page_lower),
         ("registered content is preserved after listing write ambiguity", "registered private file preserved" in page_lower and "support reconciliation required" in page_lower),

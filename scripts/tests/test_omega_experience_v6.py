@@ -209,7 +209,7 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         emblem = (ROOT / "omega-emblems.js").read_text(encoding="utf-8")
         self.assertIn("style=\"--oe:' + s.c + ';color:' + s.c + '\"", emblem)
         self.assertIn("style=\"--oe:' + c + ';color:' + c + ';opacity:' + dim + '\"", emblem)
-        self.assertIn('fill="' + s.c + '"', emblem)
+        self.assertIn("fill=\"' + s.c + '\"", emblem)
         self.assertIn("style=\"color:' + s.c + ';fill:' + s.c + ';filter:", emblem)
 
         colors = set(re.findall(r"c:\s*'(#[0-9A-Fa-f]{6})'", emblem))

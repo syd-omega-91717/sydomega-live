@@ -44,8 +44,8 @@
 .sc .sc-orbit:after{inset:25%;border-style:solid;border-color:rgba(201,168,76,.18);transform:rotate(-52deg)}
 .sc .sc-orbit.sc-o2{width:min(72%,310px);transform:rotate(62deg);border-color:rgba(0,229,255,.23)}
 .sc .sc-orbit.sc-o3{width:min(54%,230px);transform:rotate(-8deg);border-style:dotted;border-color:rgba(201,168,76,.42)}
-.sc .sc-core{position:relative;width:clamp(138px,20vw,190px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 25%,rgba(255,255,255,.27),rgba(240,213,138,.18) 13%,rgba(201,168,76,.12) 28%,rgba(5,7,13,.97) 66%);border:1px solid rgba(240,213,138,.8);box-shadow:0 0 0 9px rgba(201,168,76,.045),0 0 42px rgba(201,168,76,.24),0 0 100px rgba(0,229,255,.1),inset 0 0 32px rgba(201,168,76,.18);font:clamp(74px,10vw,112px)/1 var(--D,"Cinzel Decorative",serif);color:var(--sc-hot);text-shadow:0 0 28px rgba(240,213,138,.55)}
-.sc .sc-node{position:absolute;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:1px solid rgba(201,168,76,.58);background:linear-gradient(145deg,rgba(38,33,23,.96),rgba(5,8,14,.98));color:var(--sc-hot);font:12px var(--M,"Courier Prime",monospace);box-shadow:0 0 24px rgba(201,168,76,.14)}
+.sc .sc-core{position:relative;width:clamp(200px,26vw,260px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 25%,rgba(255,255,255,.27),rgba(240,213,138,.18) 13%,rgba(201,168,76,.12) 28%,rgba(5,7,13,.97) 66%);border:1px solid rgba(240,213,138,.8);box-shadow:0 0 0 9px rgba(201,168,76,.045),0 0 42px rgba(201,168,76,.24),0 0 100px rgba(0,229,255,.1),inset 0 0 32px rgba(201,168,76,.18);font:clamp(74px,10vw,112px)/1 var(--D,"Cinzel Decorative",serif);color:var(--sc-hot);text-shadow:0 0 28px rgba(240,213,138,.55)}
+.sc .sc-node{transition:transform .2s,box-shadow .2s,border-color .2s;text-decoration:none;position:absolute;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:1px solid rgba(201,168,76,.58);background:linear-gradient(145deg,rgba(38,33,23,.96),rgba(5,8,14,.98));color:var(--sc-hot);font:12px var(--M,"Courier Prime",monospace);box-shadow:0 0 24px rgba(201,168,76,.14)}
 .sc .sc-node.n1{top:8%;left:48%}.sc .sc-node.n2{right:4%;top:44%;border-color:rgba(0,229,255,.52);color:#A7F5FC}.sc .sc-node.n3{bottom:8%;left:47%}.sc .sc-node.n4{left:4%;top:44%}
 .sc .sc-orbit-caption{position:absolute;bottom:0;left:0;right:0;text-align:center;font:12px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.16em;color:#BDB6A2;text-transform:uppercase}
 .sc .sc-section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:34px 2px 14px;flex-wrap:wrap}
@@ -72,6 +72,13 @@
 .sc .sc-principle em{font-style:normal;color:var(--sc-cyan);font:16px var(--D,serif);width:18px;flex:0 0 18px}
 .sc .sc-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:26px 2px 6px;padding:16px 0;border-top:1px solid rgba(201,168,76,.17);color:#A9A49A;font:12px/1.6 var(--M,"Courier Prime",monospace);letter-spacing:.08em}
 .sc .sc-footer strong{color:var(--sc-hot);font-weight:400}
+/* Cinematic layer: orbital turn on the individual `rotate` property (composes with each ring's own tilt `transform`, compositor-only). Nodes get a hover/focus lift; the whole layer is disabled under prefers-reduced-motion below. */
+@keyframes sc-turn{to{rotate:360deg}}
+.sc .sc-orbit{animation:sc-turn 120s linear infinite}
+.sc .sc-orbit.sc-o2{animation-duration:84s;animation-direction:reverse}
+.sc .sc-orbit.sc-o3{animation-duration:56s}
+.sc .sc-node:hover,.sc .sc-node:focus-visible{transform:translateY(-3px) scale(1.08);border-color:rgba(240,213,138,.9);box-shadow:0 0 28px rgba(201,168,76,.4);outline:none}
+.sc{padding-bottom:max(clamp(12px,2vw,28px),var(--omega-chrome-bottom,0px))}
 @media(max-width:900px){.sc .sc-hero{grid-template-columns:1fr;min-height:0}.sc .sc-hero-copy{max-width:760px}.sc .sc-orbit-stage{min-height:350px}.sc .sc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.sc{padding:10px}.sc .sc-topline{align-items:flex-start}.sc .sc-brandmark{width:40px;height:40px}.sc .sc-clock{font-size:12px}.sc .sc-hero{padding:20px 16px;border-radius:15px;gap:10px;margin-top:12px}.sc .sc-title{font-size:clamp(34px,11vw,54px)}.sc .sc-orbit-stage{min-height:290px}.sc .sc-orbit{width:min(92%,300px)}.sc .sc-orbit.sc-o2{width:min(72%,240px)}.sc .sc-orbit.sc-o3{width:min(54%,180px)}.sc .sc-node{width:40px;height:40px}.sc .sc-grid{grid-template-columns:1fr 1fr;gap:9px}.sc .sc-module{min-height:142px;padding:13px}.sc .sc-module strong{font-size:14px}.sc .sc-lower{grid-template-columns:1fr}.sc .sc-agent-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sc .sc-action{flex:1 1 145px;padding:0 12px}}
 @media(max-width:380px){.sc .sc-grid{grid-template-columns:1fr}.sc .sc-orbit-stage{min-height:260px}.sc .sc-agent-grid{grid-template-columns:1fr 1fr}}
@@ -103,8 +110,8 @@
         </div>
         <div class="sc-orbit-stage" role="img" aria-label="A layered orbital visualization surrounding the Omega core, representing connected platform domains">
           <div class="sc-orbit"></div><div class="sc-orbit sc-o2"></div><div class="sc-orbit sc-o3"></div>
-          <div class="sc-core" aria-hidden="true">Ω</div>
-          <span class="sc-node n1" aria-hidden="true">CORE</span><span class="sc-node n2" aria-hidden="true">AI</span><span class="sc-node n3" aria-hidden="true">WORLD</span><span class="sc-node n4" aria-hidden="true">DATA</span>
+          <div class="sc-core" data-omega-sculpture="signet" data-sculpt-state="idle" data-sculpt-height="clamp(200px,26vw,260px)" data-sculpt-label="The Omega signet, rendered in three dimensions"></div>
+          <a class="sc-node n1" href="/dashboard.html" aria-label="Core: open your command dashboard">CORE</a><a class="sc-node n2" href="/agents.html" aria-label="AI: meet the twelve agents">AI</a><a class="sc-node n3" href="/world.html" aria-label="World: enter Omega World">WORLD</a><a class="sc-node n4" href="/analytics.html" aria-label="Data: open analytics">DATA</a>
           <div class="sc-orbit-caption">One system · connected capabilities · governed access</div>
         </div>
       </section>

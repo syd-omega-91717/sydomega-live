@@ -175,6 +175,10 @@ def hidden_app_shell(s: str) -> bool:
     )
 
 
+def loads_bg_js(s: str) -> bool:
+    return bool(re.search(r"""<script\b[^>]*\bsrc\s*=\s*["'][^"']*bg\.js(?:[?#][^"']*)?["']""", s, re.I))
+
+
 def count_words(s: str) -> int:
     return len(TEXT_RE.findall(clean(s)))
 
@@ -207,6 +211,7 @@ def scan(path: Path) -> dict:
     h1_auth_gated = all_h1(text) if not h1 and hidden_app_shell(text) else ""
     topm = TOPBAR_TITLE_RE.search(text)
     topbar = clean(topm.group(1)) if topm else ""
+    runtime_heading = bool(not h1 and topbar and loads_bg_js(text))
     duplicate_title = bool(h1 and topbar and h1.lower() == topbar.lower())
 
     body_words = count_words(body)
@@ -224,6 +229,8 @@ def scan(path: Path) -> dict:
     if not h1 and not re.search(r"""role=["']heading[^>]*aria-level=["']1["']""", text, re.I):
         if h1_auth_gated:
             issues.append("AUTH-GATED: level-1 heading exists behind hidden app shell")
+        elif runtime_heading:
+            issues.append("RUNTIME-HEADING: shared omega-a11y engine promotes the visible topbar title")
         else:
             issues.append("CONTRACT: no visible/semantic level-1 heading")
     if small:
@@ -270,6 +277,7 @@ def scan(path: Path) -> dict:
         "title": title,
         "h1": h1,
         "h1_auth_gated": h1_auth_gated,
+        "runtime_heading": runtime_heading,
         "body_words": body_words,
         "cards": cards,
         "sections": sections,

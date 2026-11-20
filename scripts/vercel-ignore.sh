@@ -21,7 +21,7 @@
 #
 # WHAT "SHIPS" MEANS -- mirrors scripts/vercel-build.sh, keep the two in step:
 #   * build inputs: vercel.json, .vercelignore, package.json,
-#     scripts/vercel-build.sh, scripts/vercel-build-enhance.mjs, this file
+#     scripts/vercel-build.sh, scripts/vercel-build-enhance.mjs,\n#     scripts/portable-host-config.py, scripts/version-static-assets.py, this file
 #   * vendor/** and i18n/** (copied whole)
 #   * any file with a web extension the build copies, outside the excluded
 #     trees (scripts/ supabase/ core/ docs/ tests/ .claude/ .github/ public/)
@@ -44,7 +44,8 @@ ships() {
   local p="$1"
   case "$p" in
     vercel.json|.vercelignore|package.json) return 0 ;;
-    scripts/vercel-build.sh|scripts/vercel-build-enhance.mjs|scripts/vercel-ignore.sh) return 0 ;;
+    scripts/vercel-build.sh|scripts/vercel-build-enhance.mjs|scripts/vercel-ignore.sh|\
+    scripts/portable-host-config.py|scripts/version-static-assets.py) return 0 ;;
     vendor/*|i18n/*) return 0 ;;
     scripts/*|supabase/*|core/*|docs/*|tests/*|.claude/*|.github/*|public/*|node_modules/*) return 1 ;;
     config/omega-implementation-ledger.json) return 1 ;;

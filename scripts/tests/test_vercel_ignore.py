@@ -34,6 +34,7 @@ class Classify(unittest.TestCase):
     def test_build_inputs_and_whole_copied_trees_ship(self):
         for path in ("vercel.json", ".vercelignore", "scripts/vercel-build.sh",
                      "scripts/vercel-build-enhance.mjs", "scripts/vercel-ignore.sh",
+                     "scripts/portable-host-config.py", "scripts/version-static-assets.py",
                      "vendor/three.module.js", "i18n/fr.json", "vendor/LICENSE"):
             self.assertEqual(classify([path])[1][path], "SHIP", path)
 

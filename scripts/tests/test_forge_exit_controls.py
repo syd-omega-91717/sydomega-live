@@ -14,7 +14,7 @@ SOURCE = ROOT / "forge.html"
 
 
 def button_tags(source):
-    return re.findall(r"<button\\b[^>]*>", source, flags=re.IGNORECASE | re.DOTALL)
+    return re.findall(r"<button\b[^>]*>", source, flags=re.IGNORECASE | re.DOTALL)
 
 
 class ForgeExitControlContract(unittest.TestCase):
@@ -26,7 +26,7 @@ class ForgeExitControlContract(unittest.TestCase):
     def test_each_button_has_at_most_one_class_attribute(self):
         duplicates = [
             tag for tag in self.buttons
-            if len(re.findall(r"\\bclass\\s*=", tag, flags=re.IGNORECASE)) > 1
+            if len(re.findall(r"\bclass\s*=", tag, flags=re.IGNORECASE)) > 1
         ]
         self.assertEqual(
             duplicates, [],
@@ -37,13 +37,13 @@ class ForgeExitControlContract(unittest.TestCase):
         exit_buttons = [
             tag for tag in self.buttons
             if re.search(
-                r"""\\bclass\\s*=\\s*["'][^"']*\\bexitBtn\\b[^"']*["']""",
+                r"""\bclass\s*=\s*["'][^"']*\bexitBtn\b[^"']*["']""",
                 tag,
                 flags=re.IGNORECASE,
             )
         ]
         exit_bindings = len(re.findall(
-            r"""querySelector\\(\\s*['"]\\.exitBtn['"]\\s*\\)\\s*\\.addEventListener""",
+            r"""querySelector\(\s*['"]\.exitBtn['"]\s*\)\s*\.addEventListener""",
             self.source,
         ))
         self.assertGreater(exit_bindings, 0, "expected at least one exit binding")

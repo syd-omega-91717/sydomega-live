@@ -163,6 +163,12 @@ const FIXTURE = `<!doctype html><html><head><meta charset="utf-8"><style>
   <div id="t-pass-2"  class="glass" style="color:#C9A84C">gold on composited glass, must PASS</div>
   <div id="t-pass-3"  class="side"  style="color:#C9A84C">gold on the opaque gradient, must PASS</div>
   <div class="sheen"><span id="t-pass-4" style="color:#C9A84C">gold in a clip-to-text parent, must PASS</span></div>
+  <svg width="160" height="34" role="img" aria-label="SVG contrast fixtures">
+    <text id="t-svg-pass" x="2" y="24" font-size="20" fill="#C9A84C">♈︎</text>
+  </svg>
+  <svg width="160" height="34" role="img" aria-label="SVG low contrast fixture">
+    <text id="t-svg-block" x="2" y="24" font-size="20" fill="#08080F">VOID</text>
+  </svg>
 </body></html>`;
 
 function startServer() {
@@ -348,8 +354,13 @@ const CHECK_JS = `(() => {
     if (r.width < 6 || r.height < 6) return;
     if (cs.visibility === 'hidden' || parseFloat(cs.opacity) < .35) return;
     if (String(cs.webkitTextFillColor).indexOf('rgba(0, 0, 0, 0)') >= 0) return;
-    const fg = px(cs.color);
-    if (!fg || alpha(fg) < .35) return;
+    /* SVG text paints with fill, not necessarily the CSS color property.
+       Measuring color instead of fill misreported live zodiac glyphs. */
+    const isSvgText = el.namespaceURI === 'http://www.w3.org/2000/svg' &&
+      /^(text|tspan)$/i.test(el.localName || el.tagName);
+    const fgCss = isSvgText ? cs.fill : cs.color;
+    const fg = px(fgCss);
+    if (!fg || fgCss === 'none' || alpha(fg) < .35) return;
     /* Resolve the surface the way a browser composites it. This platform's
        glass is rgba(10,10,15,.68) and its sidebar is an OPAQUE near-uniform
        gradient under a low-alpha tint, so "opaque colour or give up" measures
@@ -419,14 +430,18 @@ const CHECK_JS = `(() => {
     const size = parseFloat(cs.fontSize) || 12;
     const large = size >= 24 || (size >= 18.66 && (parseInt(cs.fontWeight,10)||400) >= 700);
     if (worst + 0.005 < 3) {
-      cLow.push({ id: el.id, sel: el.tagName + (el.className ? '.' + String(el.className).split(' ')[0] : ''),
-                 ratio: +worst.toFixed(2), color: cs.color, bg: 'rgb(' + worstBg.join(', ') + ')',
+      const className = typeof el.className === 'string' ? el.className
+        : (el.className && typeof el.className.baseVal === 'string' ? el.className.baseVal : '');
+      cLow.push({ id: el.id, sel: el.tagName.toLowerCase() + (className ? '.' + className.split(' ')[0] : ''),
+                 ratio: +worst.toFixed(2), color: fgCss, bg: 'rgb(' + worstBg.join(', ') + ')',
                  px: Math.round(size), text: txt.slice(0,26) });
     } else if (worst + 0.005 < (large ? 3 : 4.5)) {
       cMid++; if (el.id) cMidIds.push(el.id);
       /* Kept for --contrast-detail: a count alone names nothing to fix. */
-      cMidList.push({ sel: el.tagName + (el.className ? '.' + String(el.className).split(' ')[0] : ''),
-                      ratio: +worst.toFixed(2), color: cs.color, bg: 'rgb(' + worstBg.join(', ') + ')',
+      const className = typeof el.className === 'string' ? el.className
+        : (el.className && typeof el.className.baseVal === 'string' ? el.className.baseVal : '');
+      cMidList.push({ sel: el.tagName.toLowerCase() + (className ? '.' + className.split(' ')[0] : ''),
+                      ratio: +worst.toFixed(2), color: fgCss, bg: 'rgb(' + worstBg.join(', ') + ')',
                       px: Math.round(size), text: txt.slice(0,26) });
     }
     else { cOk++; if (el.id) cOkIds.push(el.id); }
@@ -447,9 +462,9 @@ const CHECK_JS = `(() => {
    the rule has no way to repeat. */
 async function selfTest(pw, channel) {
   const EXPECT = {
-    block: ['t-block-1', 't-block-2'],
+    block: ['t-block-1', 't-block-2', 't-svg-block'],
     mid:   ['t-mid-1'],
-    ok:    ['t-pass-1', 't-pass-2', 't-pass-3', 't-pass-4']
+    ok:    ['t-pass-1', 't-pass-2', 't-pass-3', 't-pass-4', 't-svg-pass']
   };
   const { srv, port } = await startServer();
   const browser = await (channel ? pw.chromium.launch({ channel }) : pw.chromium.launch());
@@ -470,7 +485,7 @@ async function selfTest(pw, channel) {
     console.log((same ? '  ok   ' : '  FAIL ') + k.padEnd(6) +
       ' expected [' + want.join(', ') + ']  got [' + got[k].join(', ') + ']');
   }
-  console.log(bad ? 'CONTRAST SELF-TEST: FAILED' : 'CONTRAST SELF-TEST: PASS (7 known ratios binned correctly)');
+  console.log(bad ? 'CONTRAST SELF-TEST: FAILED' : 'CONTRAST SELF-TEST: PASS (9 known ratios binned correctly)');
   return bad ? 1 : 0;
 }
 
@@ -568,8 +583,11 @@ async function main() {
       if (info.smallTapTargets && info.smallTapTargets.length) advisories.push('tap targets < 24px: ' + info.smallTapTargets.join('; '));
       if (info.unlabelledInputs && info.unlabelledInputs.length) advisories.push('unlabelled inputs: ' + info.unlabelledInputs.join(', '));
       if (info.occluded && info.occluded.length) advisories.push('occluded by fixed chrome: ' + info.occluded.join(', '));
-      if (info.lowContrastCount) problems.push(info.lowContrastCount + ' text element(s) under the 3:1 contrast floor: ' +
-        info.lowContrast.map(c => c.ratio + ':1 ' + c.sel + ' ' + JSON.stringify(c.text)).join(' | '));
+      if (info.lowContrastCount) {
+        problems.push(info.lowContrastCount + ' text element(s) under the 3:1 contrast floor: ' +
+          info.lowContrast.map(c => c.ratio + ':1 ' + c.sel + ' fg=' + c.color + ' bg=' + c.bg +
+            ' ' + c.px + 'px ' + JSON.stringify(c.text)).join(' | '));
+      }
       if (info.midContrast) advisories.push('contrast 3-4.5:1: ' + info.midContrast);
       if (CONTRAST_DETAIL && info.midContrastList) info.midContrastList.forEach(c =>
         console.log('CONTRAST\t' + pg + '\t' + c.ratio + '\t' + c.color + '\t' + c.bg + '\t' + c.px + 'px\t' + c.sel + '\t' + JSON.stringify(c.text)));

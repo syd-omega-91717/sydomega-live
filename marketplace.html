@@ -82,14 +82,14 @@
   <div class="card-grid" data-stagger data-stagger-gap="60">
     <div class="card" data-reveal="fade-up"><div class="card-title">THE OMEGA ECONOMY</div><div class="card-body">The marketplace is part of the internal &#937; economy. Transactions use Omega tokens — not fiat currencies. All listings are denominated in &#937;. The platform takes a 17% commission on each sale (consistent with 91717). The commission is intended to feed the sovereign treasury. The &#937; token economy is dormant &mdash; it stays off behind <code>platform_settings.tokens_enabled</code> (currently false), so no commission is charged, collected or owed today.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">SELLER TIERS</div><div class="card-body">Marketplace access currently requires an approved account. The intended Sovereign-tier restriction is not enforced server-side yet, so client-side tier labels are not an authorization control. Buying and checkout are not built.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">File uploads go to the private uploads bucket. A database trigger moves each valid object path into server-only metadata and clears it from the public listing row. Purchase-gated signed delivery is not implemented; files are not purchasable or downloadable through the marketplace yet.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">FILE DELIVERY</div><div class="card-body">Attachments pass through authenticated content-ingest, which verifies size, identifies common byte signatures, calculates SHA-256 and records an audit event. The marketplace trigger moves the seller-owned object path into server-only metadata and clears it from the public listing row. Files remain private and pending review; purchase-gated signed delivery is not implemented.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">CONTRIBUTION CREDIT</div><div class="card-body">Listing an item in the marketplace earns Contribution XP (axis C). Sale-related XP is planned, not available: no sale can complete because the purchase and payment flow is not implemented.</div></div>
   </div>
   <div class="sechead" style="margin-top:24px">LISTING PROCESS</div>
   <div class="glass">
     <div class="howit-step"><div class="howit-num">01</div><div class="howit-body"><div class="ht">PREPARE YOUR WORK</div><p>A listing can be a document, report, service, code, or any sovereign creation. Title and description are the primary discovery mechanism — make them precise.</p></div></div>
     <div class="howit-step"><div class="howit-num">02</div><div class="howit-body"><div class="ht">SET YOUR PRICE</div><p>Price in Omega tokens. Set to 0 for a free listing. Free listings still contribute to your Contribution axis. All prices are visible to all members.</p></div></div>
-    <div class="howit-step"><div class="howit-num">03</div><div class="howit-body"><div class="ht">UPLOAD (OPTIONAL)</div><p>Attach a file. OmegaStorage uploads it to the private bucket; the database keeps the object path in server-only metadata, not in the listing row. Purchase-gated signed delivery is not implemented yet.</p></div></div>
+    <div class="howit-step"><div class="howit-num">03</div><div class="howit-body"><div class="ht">UPLOAD (OPTIONAL)</div><p>Attach a file through governed content-ingest. It is registered with a checksum and detected signature, then moved to server-only listing metadata. It remains private and pending review; no buyer download is available.</p></div></div>
     <div class="howit-step"><div class="howit-num">04</div><div class="howit-body"><div class="ht">EARN ON SALE &mdash; PLANNED</div><p>An 83%/17% seller/platform split is designed but not yet built — there is no buy step, no payment processing, and no revenue split anywhere in the platform today. Listings are visible and priced, not yet purchasable.</p></div></div>
   </div>
 </div>
@@ -171,10 +171,16 @@ async function loadFavorites(){
   grid.replaceChildren();if(r.error){var e=document.createElement('div');e.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';e.textContent='COULD NOT LOAD FAVORITES ('+String(r.error.message||'unknown error')+')';grid.appendChild(e);return;}var rows=(r.data||[]).map(function(f){return f.marketplace_listings;}).filter(Boolean);if(!rows.length){var n=document.createElement('div');n.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:20px;grid-column:1/-1';n.textContent='NO FAVORITES YET. STAR A LISTING FROM THE LISTINGS TAB.';grid.appendChild(n);return;}rows.forEach(function(it){grid.appendChild(cardHtml(it,it.seller_id===uid));});
 }
 
+function isOwnedUploadPath(path){
+  if(typeof path!=='string'||path.length>1024)return false;
+  var parts=path.split('/');
+  return parts.length===2&&parts[0]===uid&&/^[A-Za-z0-9._-]+$/.test(parts[1]);
+}
+
 function showListingStatusUnknown(msg,file_path){
   msg.style.display='block';msg.style.color='var(--crim)';
   msg.textContent=file_path
-    ?'LISTING STATUS UNKNOWN — FILE PRESERVED TO AVOID DATA LOSS. Refresh MY LISTINGS before retrying.'
+    ?'LISTING STATUS UNKNOWN — REGISTERED PRIVATE FILE PRESERVED. Refresh MY LISTINGS and request support reconciliation before retrying.'
     :'LISTING STATUS UNKNOWN. Refresh MY LISTINGS before retrying to avoid a duplicate.';
 }
 
@@ -188,11 +194,10 @@ async function reconcileListingInsertFailure(ins,file_path,msg){
   }
   msg.style.display='block';msg.style.color='var(--crim)';
   if(!file_path){msg.textContent='LISTING REJECTED ('+code+'). No file was uploaded.';return;}
-  var cleanup;
-  try{cleanup=await window.OmegaStorage.remove('uploads',file_path);}catch(_){cleanup={error:'cleanup_exception'};}
-  msg.textContent=cleanup&&!cleanup.error
-    ?'LISTING REJECTED ('+code+'). UPLOAD ROLLED BACK.'
-    :'LISTING REJECTED ('+code+'). FILE CLEANUP UNCONFIRMED — SUPPORT REVIEW REQUIRED.';
+  // content-ingest has already registered and audited this object. The client
+  // cannot prove deletion of its storage_files row and private object together,
+  // so preserve it for support reconciliation instead of issuing Storage DELETE.
+  msg.textContent='LISTING REJECTED ('+code+'). REGISTERED PRIVATE FILE PRESERVED; SUPPORT RECONCILIATION REQUIRED.';
 }
 
 document.getElementById('btn-pub').addEventListener('click',async function(){
@@ -205,11 +210,23 @@ document.getElementById('btn-pub').addEventListener('click',async function(){
   var file_path=null;
   var fileEl=document.getElementById('f-file');
   if(fileEl&&fileEl.files&&fileEl.files[0]){
-    var up=null;
-    try{up=await window.OmegaStorage.upload('uploads',fileEl.files[0]);}catch(e){up={error:e.message||String(e)};}
-    if(!up||up.error){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='UPLOAD FAILED: '+((up&&up.error)||'no response from storage.')+' -- nothing was listed.';return;}
-    file_path=up.path||up.fullPath||up.key||null;
-    if(!file_path){msg.style.display='block';msg.style.color='var(--crim)';msg.textContent='UPLOAD FAILED: storage returned no path -- nothing was listed.';return;}
+    var uploadTask=null;
+    try{
+      if(!window.OmegaContentTasks||typeof window.OmegaContentTasks.upload!=='function')throw new Error('content_task_unavailable');
+      uploadTask=await window.OmegaContentTasks.upload(fileEl.files[0],{content_type:'marketplace_listing_attachment'});
+    }catch(_error){uploadTask=null;}
+    var uploadState=uploadTask&&uploadTask.state?uploadTask.state:'UNCONFIRMED';
+    var registeredPath=uploadTask&&uploadTask.data&&uploadTask.data.file&&uploadTask.data.file.storage_path;
+    if(!uploadTask||uploadTask.state!=='PENDING_REVIEW'||!isOwnedUploadPath(registeredPath)){
+      msg.style.display='block';msg.style.color='var(--crim)';
+      msg.textContent=['REGISTRATION_UNCERTAIN','ROLLBACK_REQUIRED'].indexOf(uploadState)!==-1
+        ?'ATTACHMENT STATE UNCONFIRMED — LISTING NOT SUBMITTED. Do not retry; request support reconciliation.'
+        :'ATTACHMENT NOT REGISTERED — '+uploadState+'. LISTING NOT SUBMITTED.';
+      return;
+    }
+    // The BEFORE INSERT trigger validates this seller-prefixed path, stores it
+    // in omega_private.marketplace_listing_assets, and clears public file_path.
+    file_path=registeredPath;
   }
   try{
     var ins=await sb.from('marketplace_listings').insert({seller_id:uid,title:title,kind:kind,price_omega:price,description:desc,file_path:file_path,status:'active'});
@@ -222,8 +239,11 @@ document.getElementById('btn-pub').addEventListener('click',async function(){
     return;
   }
   window.OmegaProgress&&OmegaProgress.record({kind:'marketplace',task:'listed:'+title,axis:'c',title:'Marketplace Listing'});
-  msg.style.display='block';msg.style.color='var(--green)';msg.textContent='&#x2713; LISTED — Your work is now visible in the marketplace.';
+  msg.style.display='block';msg.style.color='var(--green)';msg.textContent=file_path
+    ?'LISTED — The text listing is visible. Its attachment remains private and pending review; marketplace delivery is not available.'
+    :'LISTED — Your work is now visible in the marketplace.';
   document.getElementById('f-title').value='';document.getElementById('f-desc').value='';
+  if(fileEl)fileEl.value='';
   await load();setTab('listings');
 });
 
@@ -241,6 +261,7 @@ async function boot(){
 boot();
 </script>
 <script src="/upload.js"></script>
+<script src="/omega-content-tasks.js"></script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

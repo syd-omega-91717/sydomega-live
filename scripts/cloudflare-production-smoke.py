@@ -6,8 +6,10 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from html.parser import HTMLParser
 import hashlib
+import html
 import json
 from pathlib import Path
+import re
 import sys
 from urllib.parse import urldefrag, urljoin, urlsplit
 
@@ -88,6 +90,32 @@ class RefParser(HTMLParser):
                 if url:
                     self.refs.add(url)
 
+def page_identity(body: bytes | str) -> tuple[str, str]:
+    """Return the normalized HTML title and stable Omega realm marker."""
+    text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
+    title_match = re.search(r"<title\b[^>]*>(.*?)</title\s*>", text, re.IGNORECASE | re.DOTALL)
+    title = ""
+    if title_match:
+        raw_title = re.sub(r"<[^>]+>", " ", title_match.group(1))
+        title = " ".join(html.unescape(raw_title).split()).casefold()
+    realm_match = re.search(r"\bdata-omega-realm\s*=\s*['\"]([^'\"]+)['\"]", text, re.IGNORECASE)
+    realm = realm_match.group(1).strip().casefold() if realm_match else ""
+    return title, realm
+
+
+def identity_mismatch(expected_body: bytes, actual_body: bytes, route: str) -> str | None:
+    """Reject a successful response that serves a different canonical page."""
+    expected_title, expected_realm = page_identity(expected_body)
+    actual_title, actual_realm = page_identity(actual_body)
+    if expected_realm and actual_realm != expected_realm:
+        return f"{route} page_realm_mismatch expected={expected_realm!r} actual={actual_realm or 'missing'!r}"
+    if expected_title and actual_title != expected_title:
+        return f"{route} page_title_mismatch expected={expected_title!r} actual={actual_title or 'missing'!r}"
+    if not expected_title and not expected_realm:
+        return f"{route} expected_page_identity_missing"
+    return None
+
+
 def is_safe_http_url(
     url: str, allowed_host: str | None = None, allowed_port: int | None = None
 ) -> bool:
@@ -149,6 +177,7 @@ def validate_request_url(url: str) -> str:
 def request_url(
     url: str, method: str, timeout: int, redirects: int = 0,
     _origin: tuple[str, int] | None = None,
+    redirect_trace: list[str] | None = None,
 ) -> tuple[int, str, str]:
     """Request a URL without proxy-env inheritance or cross-origin redirects."""
     try:
@@ -192,10 +221,12 @@ def request_url(
                 "GET" if status == 303 or (status in {301, 302} and method not in {"GET", "HEAD"})
                 else method
             )
-            return request_url(next_url, next_method, timeout, redirects + 1, origin)
+            if redirect_trace is not None:
+                redirect_trace.append(next_url)
+            return request_url(next_url, next_method, timeout, redirects + 1, origin, redirect_trace)
         if method == "HEAD" and status in {405, 501}:
             response.close()
-            return request_url(safe_url, "GET", timeout, redirects, origin)
+            return request_url(safe_url, "GET", timeout, redirects, origin, redirect_trace)
         body = response.text if method == "GET" else ""
         response.close()
         return status, content_type, body
@@ -255,25 +286,51 @@ def main() -> int:
         contracts = registry.get("contracts", [])
         if registry.get("page_count") != len(contracts) or not contracts:
             raise ValueError("page contract registry count does not match its records")
-        pages = sorted({urljoin(base, str(item["path"]).lstrip("/")) for item in contracts})
+        page_expectations: dict[str, tuple[str, bytes]] = {}
+        for item in contracts:
+            relative = Path(str(item["path"]))
+            if relative.is_absolute() or ".." in relative.parts:
+                raise ValueError(f"unsafe page source path in canonical registry: {relative}")
+            source_path = ROOT / relative
+            if not source_path.is_file():
+                raise ValueError(f"page source missing for identity check: {relative}")
+            expected_body = source_path.read_bytes()
+            expected_title, expected_realm = page_identity(expected_body)
+            if not expected_title and not expected_realm:
+                raise ValueError(f"canonical page has no stable identity markers: {relative}")
+            page_url = urljoin(base, relative.as_posix().lstrip("/"))
+            page_expectations[page_url] = (relative.as_posix(), expected_body)
+
+        pages = sorted(page_expectations)
         page_failures: list[tuple[str, int, str]] = []
+        redirected_pages: list[dict[str, str]] = []
         refs: set[str] = set()
         external_count = 0
         api_count = 0
         placeholders_skipped = 0
 
         def fetch_page(url: str):
-            return url, request_url(url, "GET", args.timeout)
+            trace = [url]
+            result = request_url(url, "GET", args.timeout, redirect_trace=trace)
+            return url, result, trace
 
         with ThreadPoolExecutor(max_workers=args.workers) as pool:
             futures = [pool.submit(fetch_page, url) for url in pages]
             for future in as_completed(futures):
-                url, (status, content_type, body) = future.result()
+                url, (status, content_type, body), trace = future.result()
+                final_url = trace[-1]
+                if final_url != url:
+                    redirected_pages.append({"requested_url": url, "final_url": final_url})
                 if status != 200:
-                    page_failures.append((url, status, body[:240]))
+                    page_failures.append((url, status, f"final_url={final_url}; {body[:180]}"))
                     continue
                 if "html" not in content_type.lower():
-                    page_failures.append((url, status, f"unexpected content type: {content_type}"))
+                    page_failures.append((url, status, f"final_url={final_url}; unexpected content type: {content_type}"))
+                    continue
+                source_path, expected_body = page_expectations[url]
+                mismatch = identity_mismatch(expected_body, body.encode("utf-8", errors="replace"), url)
+                if mismatch:
+                    page_failures.append((url, status, f"{mismatch}; final_url={final_url}; source={source_path}"))
                     continue
                 ref_parser = RefParser()
                 ref_parser.feed(body)
@@ -328,6 +385,8 @@ def main() -> int:
             "base_url": base.rstrip("/"),
             "registered_pages": len(pages),
             "pages_passed": len(pages) - len(page_failures),
+            "page_identity_checks": len(pages),
+            "redirected_pages": redirected_pages[:30],
             "same_origin_references_checked": len(refs),
             "required_global_assets_checked": len(REQUIRED_GLOBAL_ASSETS),
             "required_global_asset_failures": global_asset_failures[:20],

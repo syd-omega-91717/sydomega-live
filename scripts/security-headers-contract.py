@@ -63,7 +63,7 @@ def header_rule_errors(data: dict) -> list[str]:
     ]
     asset_indexes = [
         i for i, rule in enumerate(rules)
-        if "\\\\." in rule.get("source", "")
+        if rule.get("source", "").startswith("/(.*)")
         and any(
             h.get("key", "").lower() == "cache-control"
             and h.get("value", "").startswith("public, max-age=3600")

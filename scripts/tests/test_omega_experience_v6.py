@@ -99,7 +99,7 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             "visualRoot.setAttribute('data-omega-depth'",
             "visualRoot.setAttribute('data-omega-density'",
             "visualRoot.setAttribute('data-omega-interaction'",
-            "visualRoot.setAttribute('data-omega-emblem'",
+            "visualRoot.setAttribute('data-omega-world-emblem'",
             "visualRoot.style.setProperty('--omega-v6-accent'",
             "visualRoot.style.setProperty('--omega-v6-secondary'",
             "visualRoot.style.setProperty('--omega-v6-glow'",

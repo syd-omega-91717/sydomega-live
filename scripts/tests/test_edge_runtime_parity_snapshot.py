@@ -30,7 +30,9 @@ class EdgeRuntimeParitySnapshotTests(unittest.TestCase):
                 self.assertTrue(item["verify_jwt_registry_match"])
                 registry_entry = self.registry[item["slug"]]
                 self.assertEqual(item["verify_jwt"], registry_entry["verify_jwt"])
-                self.assertEqual(item["canonical_auth_mode"], registry_entry["mode"])
+                expected_mode = registry_entry.get("mode", registry_entry.get("auth_mode"))
+                self.assertIsNotNone(expected_mode)
+                self.assertEqual(item["canonical_auth_mode"], expected_mode)
                 self.assertRegex(item["repository_git_blob_sha1"], re.compile(r"^[0-9a-f]{40}$"))
                 self.assertEqual(item["repository_entrypoint"], f"supabase/functions/{item['slug']}/index.ts")
 

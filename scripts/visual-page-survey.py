@@ -221,7 +221,7 @@ def scan(path: Path) -> dict:
         issues.append("CONTRACT: missing viewport")
     if not title:
         issues.append("CONTRACT: missing title")
-    if not h1 and not re.search(r'role=["\\']heading["\\'][^>]*aria-level=["\\']1["\\']', text, re.I):
+    if not h1 and not re.search(r"""role=["']heading[^>]*aria-level=["']1["']""", text, re.I):
         if h1_auth_gated:
             issues.append("AUTH-GATED: level-1 heading exists behind hidden app shell")
         else:

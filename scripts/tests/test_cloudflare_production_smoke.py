@@ -51,11 +51,13 @@ class ProductionSmokeUrlSafety(unittest.TestCase):
             def close(self):
                 return None
 
+        fake_session = Session()
+
         class FakeRequests:
             RequestException = Exception
             @staticmethod
             def Session():
-                return Session()
+                return fake_session
 
         trace = ["https://sydomega.com/missions.html"]
         with patch.object(SMOKE, "requests", FakeRequests):

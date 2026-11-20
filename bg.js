@@ -1792,6 +1792,11 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 
   function resize(){
     W=window.innerWidth; H=window.innerHeight; small=W<760;
+    /* On narrow screens the orrery's centre (CY below) lands on the first lines of
+       page text; planets and the gold Ω crossed words on ~1 in 5 sampled pages
+       (FIXES: docs/fixes/2026-11-20-orrery-mobile-opacity.md). Dim the layer rather
+       than move it: the brand stays present, text stays readable. */
+    cv.style.opacity=small?'0.25':'1';
     CX=W*0.5; CY=H*(small?0.34:0.42);
     cv.width=Math.floor(W*DPR); cv.height=Math.floor(H*DPR);
     ctx.setTransform(DPR,0,0,DPR,0,0);

@@ -61,7 +61,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
             "404": "system", "healthz": "system", "offline": "system",
             "pending": "system", "reset": "system", "verify-deployment": "system",
             "verify-modules": "system", "index": "command", "enter": "command",
-            "graphify": "intelligence",
+            "graphify": "intelligence", "sovereign-ai": "intelligence",
         }
         expected = {}
         for item in self.contracts["contracts"]:

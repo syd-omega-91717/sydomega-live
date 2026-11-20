@@ -2735,13 +2735,7 @@ window.bootKYCExtra = bootKYCExtra;
 <script src="/nav.js" defer></script><script src="/bg.js" defer></script>
 <script src="/omega-identity-core.js" defer></script><script src="/omega-demo-video.js" defer></script><script src="/upload.js"></script>
 <style>@keyframes np{0%,100%{box-shadow:0 0 8px currentColor}50%{box-shadow:0 0 18px currentColor}}</style>
-<script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('/sw.js').catch(function(){});
-  });
-}
-</script>
+
 <script>
 /* omega-user: populate after module loads */
 (function tryPop(){

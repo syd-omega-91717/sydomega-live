@@ -15,10 +15,9 @@ CANONICAL_REGISTER = re.compile(
     re.IGNORECASE,
 )
 
-# dashboard.html is deliberately the only temporary exception: it belongs to
-# the in-flight design/readability-profile-dashboard-20261119 branch. Remove
-# this exception when that branch removes its inline registration.
-LEGACY_ALLOWLIST = {"dashboard.html": 1}
+# No page may register /sw.js itself; omega-sw-register.js is the only owner.
+# (dashboard.html was the last exception; its design branch no longer exists.)
+LEGACY_ALLOWLIST = {}
 
 
 def html_pages():
@@ -30,7 +29,7 @@ def html_pages():
 
 
 class ServiceWorkerRegistrationContractTests(unittest.TestCase):
-    def test_only_the_known_inflight_dashboard_exception_remains(self):
+    def test_no_page_registers_the_service_worker_itself(self):
         found = {}
         for path in html_pages():
             content = path.read_text(encoding="utf-8", errors="ignore")

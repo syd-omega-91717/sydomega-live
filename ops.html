@@ -456,7 +456,7 @@ function refresh(){
   } else if(totalDlq>0||parseFloat(errRate)>1){
     if(dot)dot.className='status-dot amber';if(stat){stat.style.color='var(--amber)';stat.textContent='WARNING';}
   } else {
-    dot.className='status-dot';if(stat){stat.style.color='var(--green)';stat.textContent='NOMINAL';}
+    if(dot)dot.className='status-dot';if(stat){stat.style.color='var(--green)';stat.textContent='NOMINAL';}
   }
 
   /* Worker list */

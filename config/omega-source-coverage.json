@@ -1,6 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "purpose": "Authoritative source-coverage inventory for the five uploaded SYD OMEGA 91717 source documents.",
+  "lineCountBasis": "LOGICAL_LINES_SPLITLINES",
   "sourceCorpus": [
     {
       "id": "BLUEPRINT_999",

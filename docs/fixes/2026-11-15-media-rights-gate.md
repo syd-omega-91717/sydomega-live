@@ -18,3 +18,10 @@
 - The 519 existing files are not reviewed. Several are plainly the owner's own generated artwork, but I cannot tell from here which tool made which file or under what terms.
 - A file added through an upload at run time (Supabase Storage) is outside git and outside this gate. The upload path's own controls are listed in `docs/OMEGA_ASSET_PROVENANCE_INVENTORY.md` ("Promotion requirements") and are not implemented here.
 - Fonts, 3D models and other asset kinds are not covered; only audio, video and images.
+
+
+## Subsequent register corrections — 2026-11-20
+
+The first-pass inventory counted 519 files. The later correction added 13 legacy SVGs that had been omitted, bringing the frozen unreviewed baseline and its test ceiling to 532. The 2026-11-16 provenance inventory is a dated snapshot, not a live count.
+
+On 2026-11-18, `assets/omega-genesis-world.svg` was added as a separate `owner-generated` rights record. The current register therefore contains 532 unreviewed baseline paths plus one individually recorded path. The baseline remains unreviewed; registration must never be described as blanket rights clearance.

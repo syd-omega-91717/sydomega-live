@@ -44,6 +44,32 @@ class CspHostRule(unittest.TestCase):
         self.assertIn("https://esm.sh", found[0])
         self.assertTrue(contract.csp_host_errors(found[0], "page.html"))
 
+    def test_release_manifest_cache_rule_overrides_generic_json_asset_rule(self):
+        data = {
+            "headers": [
+                {"source": "/(.*)\\\\.(js|css|json)", "headers": [
+                    {"key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400"}
+                ]},
+                {"source": "/.well-known/omega-release.json", "headers": [
+                    {"key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0"}
+                ]},
+            ]
+        }
+        self.assertEqual(contract.header_rule_errors(data), [])
+
+    def test_release_manifest_rule_before_generic_asset_rule_is_rejected(self):
+        data = {
+            "headers": [
+                {"source": "/.well-known/omega-release.json", "headers": [
+                    {"key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0"}
+                ]},
+                {"source": "/(.*)\\\\.(js|css|json)", "headers": [
+                    {"key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400"}
+                ]},
+            ]
+        }
+        self.assertTrue(any("must follow generic asset cache rules" in e for e in contract.header_rule_errors(data)))
+
     def test_repository_passes(self):
         self.assertEqual(contract.main(), 0)
 

@@ -54,6 +54,38 @@ def csp_host_errors(csp: str, where: str) -> list[str]:
             if any(host in t for t in tokens[1:]):
                 errors.append(f"{where}: {tokens[0]} allows third-party CDN {host}")
     return errors
+def header_rule_errors(data: dict) -> list[str]:
+    """Ensure the release identity manifest cannot inherit generic JSON caching."""
+    rules = data.get("headers", [])
+    release_indexes = [
+        i for i, rule in enumerate(rules)
+        if rule.get("source") == "/.well-known/omega-release.json"
+    ]
+    asset_indexes = [
+        i for i, rule in enumerate(rules)
+        if rule.get("source", "").startswith("/(.*)")
+        and any(
+            h.get("key", "").lower() == "cache-control"
+            and h.get("value", "").startswith("public, max-age=3600")
+            for h in rule.get("headers", [])
+        )
+    ]
+    errors = []
+    if len(release_indexes) != 1:
+        errors.append("release manifest must have exactly one explicit cache rule")
+    else:
+        release_rule = rules[release_indexes[0]]
+        values = [
+            h.get("value", "") for h in release_rule.get("headers", [])
+            if h.get("key", "").lower() == "cache-control"
+        ]
+        if values != ["no-store, no-cache, must-revalidate, max-age=0"]:
+            errors.append("release manifest Cache-Control must be no-store")
+        if asset_indexes and release_indexes[0] < max(asset_indexes):
+            errors.append("release manifest cache rule must follow generic asset cache rules")
+    return errors
+
+
 def main() -> int:
     if not CONFIG.exists():
         print("SECURITY HEADERS CONTRACT FAILED: vercel.json missing")
@@ -63,7 +95,7 @@ def main() -> int:
     for group in data.get("headers", []):
         for item in group.get("headers", []):
             headers[item.get("key")] = item.get("value", "")
-    errors = []
+    errors = header_rule_errors(data)
     for key, expected in REQUIRED.items():
         value = headers.get(key)
         if value is None:

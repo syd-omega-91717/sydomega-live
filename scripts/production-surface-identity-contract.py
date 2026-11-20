@@ -19,14 +19,15 @@ CLOUDFLARE_SMOKE = ROOT / "scripts/cloudflare-production-smoke.py"
 def main() -> int:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     failover = FAILOVER.read_text(encoding="utf-8")
+    cloudflare_smoke = CLOUDFLARE_SMOKE.read_text(encoding="utf-8")
     checks = {
         "production smoke checks expected Omega title": bool(re.search(r"<title\[\^>\]\*\>\[\^<\]\*SYD OMEGA 91717", workflow)),
         "production smoke checks canonical CSS asset": "omega-visual-universe.css" in workflow,
         "production smoke reports identity state": "identity_ok" in workflow and "asset_http_code" in workflow,
         "failover smoke checks HTML for every route": 'elif "<html" not in body.lower()' in failover,
         "failover root verifies brand title and canonical CSS": "syd omega 91717" in failover.lower() and "omega-visual-universe.css" in failover,
-        "Cloudflare smoke verifies every canonical page identity": "identity_mismatch(expected_body" in CLOUDFLARE_SMOKE and "page_identity_checks" in CLOUDFLARE_SMOKE,
-        "Cloudflare smoke records final same-origin redirect URL": "redirect_trace=trace" in CLOUDFLARE_SMOKE and "final_url" in CLOUDFLARE_SMOKE,
+        "Cloudflare smoke verifies every canonical page identity": "identity_mismatch(expected_body" in cloudflare_smoke and "page_identity_checks" in cloudflare_smoke,
+        "Cloudflare smoke records final same-origin redirect URL": "redirect_trace=trace" in cloudflare_smoke and "final_url" in cloudflare_smoke,
         "generic HTML alone cannot mark production reachable": "Expected page title and CSS reference found" in workflow,
     }
     failed = [name for name, ok in checks.items() if not ok]

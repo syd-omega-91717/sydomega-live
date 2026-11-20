@@ -25,8 +25,12 @@ class EdgeRuntimeParitySnapshotTests(unittest.TestCase):
         self.assertEqual({item["slug"] for item in inventory}, active)
         for item in inventory:
             with self.subTest(function=item["slug"]):
+                self.assertEqual(item["provider_status"], "ACTIVE")
                 self.assertTrue(item["entrypoint_content_exact_match"])
                 self.assertTrue(item["verify_jwt_registry_match"])
+                registry_entry = self.registry[item["slug"]]
+                self.assertEqual(item["verify_jwt"], registry_entry["verify_jwt"])
+                self.assertEqual(item["canonical_auth_mode"], registry_entry["mode"])
                 self.assertRegex(item["repository_git_blob_sha1"], re.compile(r"^[0-9a-f]{40}$"))
                 self.assertEqual(item["repository_entrypoint"], f"supabase/functions/{item['slug']}/index.ts")
 

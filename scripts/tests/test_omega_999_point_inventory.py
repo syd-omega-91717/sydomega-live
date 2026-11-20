@@ -39,6 +39,19 @@ class Omega999InventoryTests(unittest.TestCase):
             self.assertEqual(data["duplicate_point_occurrences"], {"2": [2, 3]})
             self.assertEqual(len(data["missing_numbers_1_to_999"]), 996)
             self.assertEqual([p["line"] for p in data["points"]], [1, 2, 3, 4])
+            ids = [point["source_record_id"] for point in data["points"]]
+            self.assertEqual(len(ids), len(set(ids)))
+            self.assertEqual(data["points"][1]["source_occurrence_index"], 1)
+            self.assertEqual(data["points"][2]["source_occurrence_index"], 2)
+            self.assertNotEqual(data["points"][1]["source_record_id"], data["points"][2]["source_record_id"])
+            repeated = subprocess.run(
+                [sys.executable, str(SCRIPT), str(path), "--json"],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            repeated_data = json.loads(repeated.stdout)
+            self.assertEqual(ids, [point["source_record_id"] for point in repeated_data["points"]])
             self.assertEqual(data["source_sha256"], hashlib.sha256(source.encode()).hexdigest())
         finally:
             path.unlink(missing_ok=True)

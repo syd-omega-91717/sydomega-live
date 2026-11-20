@@ -88,7 +88,10 @@
     visualRoot.setAttribute('data-omega-depth',visualToken(a.depth,'layered'));
     visualRoot.setAttribute('data-omega-density',visualToken(a.density,'balanced'));
     visualRoot.setAttribute('data-omega-interaction',visualToken(a.interaction,'direct'));
-    visualRoot.setAttribute('data-omega-emblem',visualToken(a.emblem,'omega'));
+    /* NOT `data-omega-emblem`: omega-emblems.js treats that attribute as "fill
+       this element with an SVG", so publishing it on <html> made it overwrite
+       document.documentElement.innerHTML and blank every page. */
+    visualRoot.setAttribute('data-omega-world-emblem',visualToken(a.emblem,'omega'));
     var accent=a.accent||'#C9A84C';
     var secondary=a.secondary||'#00E5FF';
     var glow=a.glow||'rgba(201,168,76,.13)';

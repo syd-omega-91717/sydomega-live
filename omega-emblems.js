@@ -103,6 +103,9 @@
 
   function fill(el, sign) {
     if (el.__oe) return;
+    // Never replace the document itself: a root-level data-omega-* attribute
+    // must not be able to blank the page (innerHTML on <html>/<body>).
+    if (el === document.documentElement || el === document.body) return;
     el.__oe = 1;
     el.innerHTML = svg(sign);
   }

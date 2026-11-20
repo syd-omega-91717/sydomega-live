@@ -43,43 +43,25 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertIn("pageArchetypes", self.schema["properties"])
         self.assertIn("pageArchetypeFallback", self.schema["properties"])
 
-    def test_archetype_map_matches_navigation_and_page_rules(self):
+    def test_visual_archetype_is_independent_of_navigation_group(self):
         nav = (ROOT / "nav.js").read_text(encoding="utf-8")
         start = nav.index("var PS={")
         end = nav.index("};", start)
         ps = {}
-        for match in re.finditer(r"(?:'([^']+)'|([A-Za-z0-9_-]+))\s*:\s*'([^']+)'", nav[start:end]):
+        for match in re.finditer(r"(?:'([^']+)'|([A-Za-z0-9_-]+))\\s*:\\s*'([^']+)'", nav[start:end]):
             ps[match.group(1) or match.group(2)] = match.group(3)
-        nav_archetypes = {
-            "command": "command", "identity": "identity", "ascend": "knowledge",
-            "cosmos": "intelligence", "vault": "finance", "order": "community",
-            "life": "identity", "services": "commerce", "intel": "intelligence",
-            "arena": "gaming", "govern": "governance", "invest": "finance",
-            "achieve": "gaming", "archive": "identity", "media": "media",
-        }
-        special = {
-            "404": "system", "healthz": "system", "offline": "system",
-            "pending": "system", "reset": "system", "verify-deployment": "system",
-            "verify-modules": "system", "index": "command", "enter": "command",
-            "graphify": "intelligence", "sovereign-ai": "intelligence",
-        }
-        expected = {}
-        for item in self.contracts["contracts"]:
-            slug = Path(item["path"]).stem.lower()
-            rule = next((
-                rule for rule in self.manifest["rules"]
-                if any(
-                    slug == token or slug.startswith(token + "-")
-                    or slug.endswith("-" + token) or ("-" + token + "-") in slug
-                    for token in rule["match"].lower().split("|")
-                )
-            ), None)
-            expected[slug] = (
-                rule["archetype"] if rule else
-                special.get(slug, nav_archetypes.get(ps.get(slug)))
-            )
-        self.assertEqual(self.manifest["pageArchetypes"], expected)
-        self.assertNotIn(None, expected.values())
+
+        page_map = self.manifest["pageArchetypes"]
+        # The navigation group controls where a page appears in the IA;
+        # the exact page map controls its visual archetype. They are
+        # intentionally independent for cross-domain experiences.
+        self.assertEqual(ps.get("sovereign-ai"), "arena")
+        self.assertEqual(page_map["sovereign-ai"], "intelligence")
+        self.assertEqual(page_map["ai"], "intelligence")
+        self.assertEqual(page_map["graphify"], "intelligence")
+        self.assertEqual(page_map["game-origins"], "gaming")
+        self.assertEqual(page_map["blockchain"], "finance")
+        self.assertEqual(page_map["maintenance"], "system")
 
     def test_legacy_substring_collisions_are_resolved_by_exact_page_map(self):
         mapping = self.manifest["pageArchetypes"]

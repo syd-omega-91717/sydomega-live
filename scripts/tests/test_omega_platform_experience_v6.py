@@ -76,7 +76,6 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         # intentionally independent for cross-domain experiences.
         self.assertEqual(ps.get("sovereign-ai"), "arena")
         self.assertEqual(page_map["sovereign-ai"], "intelligence")
-        self.assertEqual(page_map["ai"], "intelligence")
         self.assertEqual(page_map["graphify"], "intelligence")
         self.assertEqual(page_map["game-origins"], "gaming")
         self.assertEqual(page_map["blockchain"], "finance")

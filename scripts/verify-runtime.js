@@ -579,7 +579,7 @@ async function main() {
         if (OWNER_GATED.test(pg) && !realErrs.length) advisories.push('owner-gated: #app hidden for the member stub (gate working)');
         else problems.push('approval guard never lifted (#app still display:none)');
       }
-      if (info.hasMain === false && !landedPublic) advisories.push('no <main> landmark');
+      if (info.hasMain === false && info.appVisible !== false && !landedPublic) advisories.push('no <main> landmark');
       if (info.smallTapTargets && info.smallTapTargets.length) advisories.push('tap targets < 24px: ' + info.smallTapTargets.join('; '));
       if (info.unlabelledInputs && info.unlabelledInputs.length) advisories.push('unlabelled inputs: ' + info.unlabelledInputs.join(', '));
       if (info.occluded && info.occluded.length) advisories.push('occluded by fixed chrome: ' + info.occluded.join(', '));

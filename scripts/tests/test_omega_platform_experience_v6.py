@@ -46,9 +46,9 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
     def test_css_fallback_palette_matches_the_canonical_manifest(self):
         for archetype, spec in self.manifest["archetypes"].items():
             pattern = (
-                r'html\\[data-omega-archetype="'
+                r'html\[data-omega-archetype="'
                 + re.escape(archetype)
-                + r'"\\]\\s*\\{([^}]+)\\}'
+                + r'"\]\\s*\{([^}]+)\}'
             )
             match = re.search(pattern, self.css)
             self.assertIsNotNone(match, archetype)

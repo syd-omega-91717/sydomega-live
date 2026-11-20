@@ -73,6 +73,27 @@ class VisualPageSurveyTests(unittest.TestCase):
         self.assertIn("AUTH-GATED: level-1 heading exists behind hidden app shell", result["findings"])
         self.assertNotIn("CONTRACT: no visible/semantic level-1 heading", result["findings"])
 
+    def test_shared_a11y_runtime_heading_is_not_reported_as_missing(self) -> None:
+        html = """
+        <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Analytics</title><script src="/bg.js"></script></head><body>
+        <div class="topbar"><div class="t">ANALYTICS</div></div>
+        <div class="main"><section>Metrics</section></div>
+        </body></html>
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            page = Path(tmp) / "analytics.html"
+            page.write_text(html, encoding="utf-8")
+            original_root = survey.ROOT
+            try:
+                survey.ROOT = Path(tmp)
+                result = survey.scan(page)
+            finally:
+                survey.ROOT = original_root
+        self.assertTrue(result["runtime_heading"])
+        self.assertIn("RUNTIME-HEADING: shared omega-a11y engine promotes the visible topbar title", result["findings"])
+        self.assertNotIn("CONTRACT: no visible/semantic level-1 heading", result["findings"])
+
     def test_page_without_any_heading_remains_a_contract_finding(self) -> None:
         html = """
         <html><head><meta name="viewport" content="width=device-width, initial-scale=1">

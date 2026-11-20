@@ -11,7 +11,6 @@ SURFACES = (ROOT / "omega-archetype-surfaces.js").read_text(encoding="utf-8")
 CSS = (ROOT / "omega-platform-experience-v5.css").read_text(encoding="utf-8")
 
 
-class OmegaExperienceV6Tests(unittest.TestCase):
 def resolve_archetype(slug):
     mapped = MANIFEST.get("pageArchetypes", {}).get(slug)
     if mapped in MANIFEST["archetypes"]:
@@ -66,7 +65,6 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             "commerce", "creation", "community", "governance", "finance", "system",
         }
         self.assertEqual(set(MANIFEST["archetypes"]), expected)
-        required = {"visual", "motion", "depth", "density", "interaction", "emblem"}
         required = {
             "visual", "motion", "depth", "density", "interaction", "emblem",
             "worldRole", "worldVerb", "primaryActions", "successOutcome",

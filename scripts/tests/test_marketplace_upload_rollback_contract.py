@@ -14,14 +14,14 @@ PAGE = (ROOT / "marketplace.html").read_text(encoding="utf-8")
 
 
 class MarketplaceUploadRollbackContract(unittest.TestCase):
-    def test_insert_exception_preserves_file_and_avoids_duplicate_retry(self):
+    def test_insert_exception_preserves_registered_file_and_requests_reconciliation(self):
         block = PAGE.split("var ins=await sb.from('marketplace_listings').insert", 1)[1].split("if(!ins || ins.error)", 1)[0]
         self.assertIn("catch(_)", block)
         self.assertIn("showListingStatusUnknown(msg,file_path)", block)
         helper = PAGE.split("function showListingStatusUnknown", 1)[1].split("async function reconcileListingInsertFailure", 1)[0]
         self.assertIn("REGISTERED PRIVATE FILE PRESERVED", helper)
+        self.assertIn("Refresh MY LISTINGS", helper)
         self.assertIn("request support reconciliation before retrying", helper)
-        self.assertIn("avoid a duplicate", helper)
 
     def test_definite_postgres_rejection_preserves_registered_content(self):
         block = PAGE.split("async function reconcileListingInsertFailure", 1)[1].split("document.getElementById('btn-pub')", 1)[0]

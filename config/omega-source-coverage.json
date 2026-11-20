@@ -1,6 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "purpose": "Authoritative source-coverage inventory for the five uploaded SYD OMEGA 91717 source documents.",
+  "lineCountBasis": "LOGICAL_LINES_SPLITLINES",
   "sourceCorpus": [
     {
       "id": "BLUEPRINT_999",
@@ -18,14 +19,14 @@
       "id": "MASTER_PROMPT",
       "name": "SYD OMEGA 91717 - Master Prompt.txt",
       "role": "HISTORICAL_TARGET_ARCHITECTURE_AND_FEATURE_SPECIFICATION",
-      "lineCount": 1846,
+      "lineCount": 1847,
       "implementationAuthority": "REFERENCE_ONLY"
     },
     {
       "id": "PRODUCT_DOCUMENT",
       "name": "Ω SYD OMEGA 91717_Document.txt",
       "role": "EARLIER_FULL_STACK_PRODUCT_SPECIFICATION",
-      "lineCount": 362,
+      "lineCount": 363,
       "implementationAuthority": "REFERENCE_ONLY"
     },
     {
@@ -39,7 +40,7 @@
       "id": "RESEARCH_MASTER",
       "name": "SYD OMEGA 91717.txt",
       "role": "RESEARCH_BENCHMARKING_AND_CONTINUOUS_IMPROVEMENT_DIRECTIVE",
-      "lineCount": 552,
+      "lineCount": 553,
       "implementationAuthority": "GOVERNANCE_RESEARCH_GUIDANCE"
     }
   ],
@@ -125,5 +126,6 @@
     "Never create a second persistence authority when an existing canonical system covers the domain.",
     "Never treat route reachability as business correctness.",
     "Never claim physical-world execution without identity, capability, authorization, safety state, timeout, fail-safe behavior, telemetry, result, and evidence."
-  ]
+  ],
+  "lineCountBasis": "LOGICAL_LINES_SPLITLINES"
 }

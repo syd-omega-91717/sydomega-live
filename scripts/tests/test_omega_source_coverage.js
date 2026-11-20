@@ -14,6 +14,10 @@ const doc = fs.readFileSync(docPath, 'utf8');
 
 assert.equal(config.schemaVersion, '1.0.0');
 assert.equal(config.sourceCorpus.length, 5);
+assert.equal(config.lineCountBasis, 'LOGICAL_LINES_SPLITLINES');
+assert.equal(config.sourceCorpus.find(x => x.id === 'MASTER_PROMPT').lineCount, 1847);
+assert.equal(config.sourceCorpus.find(x => x.id === 'PRODUCT_DOCUMENT').lineCount, 363);
+assert.equal(config.sourceCorpus.find(x => x.id === 'RESEARCH_MASTER').lineCount, 553);
 assert.deepEqual(config.authorityOrder.slice(0, 3), [
   'LIVE_PRODUCTION_EVIDENCE',
   'REPOSITORY_CONTRACTS',

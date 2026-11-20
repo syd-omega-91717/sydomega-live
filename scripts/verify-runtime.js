@@ -526,7 +526,10 @@ async function main() {
       const page = await ctx.newPage();
       const errs = [];
       page.on('console', m => { if (m.type() === 'error') errs.push('CONSOLE ' + m.text().slice(0, 240)); });
-      page.on('pageerror', e => errs.push('EXC ' + String(e.message || e).slice(0, 240)));
+      page.on('pageerror', e => {
+        const detail = String(e.stack || e.message || e).replace(/\\s+/g, ' ').slice(0, 600);
+        errs.push('EXC ' + detail);
+      });
       let info = {};
       try {
         await page.goto('http://127.0.0.1:' + port + '/' + pg, { waitUntil: 'load', timeout: 30000 });

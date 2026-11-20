@@ -18,6 +18,10 @@ function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
 var todayKey=new Date().toISOString().slice(0,10);
 var briefs=loadArr(CMD_KEY);
 var todayBrief=briefs.find(function(b){return b.date===todayKey;});
+/* Shared by the clock, weather, priorities and review panels. Keep these
+   helpers in the outer module scope so every panel can safely use them. */
+function el(id){return document.getElementById(id);}
+function say(id,text){var n=el(id);if(n)n.textContent=text;}
 if(!todayBrief){
   todayBrief={date:todayKey,priorities:[{text:'',done:false},{text:'',done:false},{text:'',done:false}],intent:'',schedule:[],review:{},dayScore:null};
   briefs.push(todayBrief);save(CMD_KEY,briefs);
@@ -41,8 +45,6 @@ if(!todayBrief){
    until asked, at about 11 km precision. */
 (function(){
   /* The code table, icons, coordinate labels and request live in /omega-weather.js; this block only drives the panel. */
-  function el(id){return document.getElementById(id);}
-  function say(id,text){var n=el(id);if(n)n.textContent=text;}
   function start(){
     var btn=el('wxOn');if(btn)btn.disabled=true;
     var W=window.OmegaWeather;

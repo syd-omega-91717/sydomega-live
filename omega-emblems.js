@@ -74,7 +74,7 @@
 
   function svg(sign) {
     var s = SIGN[sign] || SIGN.Aries;
-    return '<span class="oe-wrap" style="--oe:' + s.c + '" title="' + esc(sign) + '">'
+    return '<span class="oe-wrap" style="--oe:' + s.c + ';color:' + s.c + '" title="' + esc(sign) + '">'
       + '<svg viewBox="0 0 120 120" class="oe-svg" style="filter:drop-shadow(0 0 6px ' + s.c + '55)">'
       + '<g class="oe-spin"><circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 7" opacity="0.55"/></g>'
       + '<g class="oe-spinr"><circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.3"/>' + ticks(44) + '</g>'
@@ -92,7 +92,7 @@
     var c = esc(color || '#C9A84C');
     var dim = opts.locked ? '.28' : '1';
     var fontSize = String(glyph).length > 2 ? 26 : 40;
-    return '<span class="oe-wrap" style="--oe:' + c + ';opacity:' + dim + '">'
+    return '<span class="oe-wrap" style="--oe:' + c + ';color:' + c + ';opacity:' + dim + '">'
       + '<svg viewBox="0 0 120 120" class="oe-svg" style="filter:drop-shadow(0 0 6px ' + c + '55)">'
       + '<g class="oe-spin"><circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 7" opacity="0.55"/></g>'
       + '<g class="oe-spinr"><circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.3"/>' + ticks(44) + '</g>'

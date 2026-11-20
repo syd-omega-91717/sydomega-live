@@ -43,43 +43,46 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertIn("pageArchetypes", self.schema["properties"])
         self.assertIn("pageArchetypeFallback", self.schema["properties"])
 
-    def test_archetype_map_matches_navigation_and_page_rules(self):
+    def test_css_fallback_palette_matches_the_canonical_manifest(self):
+        for archetype, spec in self.manifest["archetypes"].items():
+            selector = f'html[data-omega-archetype="{archetype}"]'
+            start = self.css.find(selector)
+            self.assertGreaterEqual(start, 0, archetype)
+            end = self.css.find("}", start)
+            self.assertGreater(end, start, archetype)
+            block = self.css[start:end]
+            self.assertIn(f"--omega-v6-accent:{spec['accent']};", block, archetype)
+            self.assertIn(f"--omega-v6-accent-soft:{spec['glow']};", block, archetype)
+            self.assertIn(f"--omega-v6-accent-line:{spec['line']};", block, archetype)
+            self.assertIn(f"--omega-v6-secondary:{spec['secondary']};", block, archetype)
+
+        self.assertIn("setProperty('--omega-v6-accent-soft',glow)", self.page_world)
+        self.assertIn("setProperty('--omega-v6-accent-line',line)", self.page_world)
+        self.assertIn("setProperty('--omega-v6-accent-glow','0 0 30px '+glow)", self.page_world)
+
+    def test_guided_tour_dismiss_target_meets_wcag_minimum(self):
+        self.assertIn(".shepherd-cancel-icon", self.css)
+        self.assertIn("min-width:24px", self.css)
+        self.assertIn("min-height:24px", self.css)
+
+    def test_visual_archetype_is_independent_of_navigation_group(self):
         nav = (ROOT / "nav.js").read_text(encoding="utf-8")
         start = nav.index("var PS={")
         end = nav.index("};", start)
         ps = {}
         for match in re.finditer(r"(?:'([^']+)'|([A-Za-z0-9_-]+))\s*:\s*'([^']+)'", nav[start:end]):
             ps[match.group(1) or match.group(2)] = match.group(3)
-        nav_archetypes = {
-            "command": "command", "identity": "identity", "ascend": "knowledge",
-            "cosmos": "intelligence", "vault": "finance", "order": "community",
-            "life": "identity", "services": "commerce", "intel": "intelligence",
-            "arena": "gaming", "govern": "governance", "invest": "finance",
-            "achieve": "gaming", "archive": "identity", "media": "media",
-        }
-        special = {
-            "404": "system", "healthz": "system", "offline": "system",
-            "pending": "system", "reset": "system", "verify-deployment": "system",
-            "verify-modules": "system", "index": "command", "enter": "command",
-            "graphify": "intelligence",
-        }
-        expected = {}
-        for item in self.contracts["contracts"]:
-            slug = Path(item["path"]).stem.lower()
-            rule = next((
-                rule for rule in self.manifest["rules"]
-                if any(
-                    slug == token or slug.startswith(token + "-")
-                    or slug.endswith("-" + token) or ("-" + token + "-") in slug
-                    for token in rule["match"].lower().split("|")
-                )
-            ), None)
-            expected[slug] = (
-                rule["archetype"] if rule else
-                nav_archetypes.get(ps.get(slug), special.get(slug))
-            )
-        self.assertEqual(self.manifest["pageArchetypes"], expected)
-        self.assertNotIn(None, expected.values())
+
+        page_map = self.manifest["pageArchetypes"]
+        # The navigation group controls where a page appears in the IA;
+        # the exact page map controls its visual archetype. They are
+        # intentionally independent for cross-domain experiences.
+        self.assertEqual(ps.get("sovereign-ai"), "arena")
+        self.assertEqual(page_map["sovereign-ai"], "intelligence")
+        self.assertEqual(page_map["graphify"], "intelligence")
+        self.assertEqual(page_map["game-origins"], "gaming")
+        self.assertEqual(page_map["blockchain"], "finance")
+        self.assertEqual(page_map["maintenance"], "system")
 
     def test_legacy_substring_collisions_are_resolved_by_exact_page_map(self):
         mapping = self.manifest["pageArchetypes"]
@@ -87,9 +90,14 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertEqual(mapping["maintenance"], "system")
         self.assertEqual(mapping["graphify"], "intelligence")
         self.assertEqual(mapping["game-origins"], "gaming")
-        self.assertIn("manifest.pageArchetypes&&manifest.pageArchetypes[slug]", self.page_world)
+        self.assertIn("var exactPage=manifest.pageArchetypes[slug]", self.page_world)
+        self.assertLess(
+            self.page_world.index("var exactPage=manifest.pageArchetypes[slug]"),
+            self.page_world.index("var exactHit=manifest.rules.find"),
+        )
         self.assertIn("slug.indexOf(token+'-')===0", self.page_world)
         self.assertNotIn("slug.indexOf(token)>-1", self.page_world)
+        self.assertIn("replace(/^-+|-+$/g,'')", self.page_world)
 
     def test_all_252_html_documents_are_accounted_for(self):
         redirect_stubs = {

@@ -43,6 +43,25 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertIn("pageArchetypes", self.schema["properties"])
         self.assertIn("pageArchetypeFallback", self.schema["properties"])
 
+    def test_css_fallback_palette_matches_the_canonical_manifest(self):
+        for archetype, spec in self.manifest["archetypes"].items():
+            pattern = (
+                r'html\\[data-omega-archetype="'
+                + re.escape(archetype)
+                + r'"\\]\\s*\\{([^}]+)\\}'
+            )
+            match = re.search(pattern, self.css)
+            self.assertIsNotNone(match, archetype)
+            block = match.group(1)
+            self.assertIn(f"--omega-v6-accent:{spec['accent']};", block, archetype)
+            self.assertIn(f"--omega-v6-accent-soft:{spec['glow']};", block, archetype)
+            self.assertIn(f"--omega-v6-accent-line:{spec['line']};", block, archetype)
+            self.assertIn(f"--omega-v6-secondary:{spec['secondary']};", block, archetype)
+
+        self.assertIn("setProperty('--omega-v6-accent-soft',glow)", self.page_world)
+        self.assertIn("setProperty('--omega-v6-accent-line',line)", self.page_world)
+        self.assertIn("setProperty('--omega-v6-accent-glow','0 0 30px '+glow)", self.page_world)
+
     def test_visual_archetype_is_independent_of_navigation_group(self):
         nav = (ROOT / "nav.js").read_text(encoding="utf-8")
         start = nav.index("var PS={")

@@ -527,3 +527,9 @@ html[data-omega-density="technical"] body.omega-simple :where(pre,code,.log-card
   body.omega-simple :where(.omega-figure-card,.omega-discovery-card,.omega-atlas-card,.film-card,.game-card):hover{transform:none}
   body.omega-simple .omega-atlas-card:hover{transform:none}
 }
+
+/* WCAG 2.2 SC 2.5.8: keep the guided-tour dismiss control comfortably targetable. */
+.shepherd-cancel-icon{
+  min-width:24px!important;min-height:24px!important;box-sizing:border-box;
+  display:inline-flex!important;align-items:center;justify-content:center;
+}

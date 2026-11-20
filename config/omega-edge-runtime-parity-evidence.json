@@ -48,7 +48,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "concierge",
@@ -65,7 +66,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "concierge-orchestrator",
@@ -82,7 +84,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "content-delivery",
@@ -99,7 +102,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "content-ingest",
@@ -116,7 +120,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "evidence-graph",
@@ -133,7 +138,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "growth-orchestrator",
@@ -150,7 +156,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "intel-feed",
@@ -167,7 +174,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "market-price",
@@ -184,7 +192,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "notify-access",
@@ -201,7 +210,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "omega-knowledge-embedding-worker",
@@ -218,7 +228,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "omega-media-worker",
@@ -235,7 +246,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "omega-notification-worker",
@@ -252,7 +264,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "omega-provider-worker",
@@ -269,7 +282,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "omega-runtime-gateway",
@@ -286,7 +300,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "product-orchestrator",
@@ -303,7 +318,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "rankings",
@@ -320,7 +336,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "secrets-health",
@@ -337,7 +354,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "snapshot-leaderboard",
@@ -354,7 +372,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "stripe-webhook",
@@ -371,7 +390,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "studio-canon",
@@ -388,7 +408,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     },
     {
       "slug": "studio-library",
@@ -405,7 +426,8 @@
       "authorized_request_test": "NOT_RUN",
       "unauthorized_request_test": "NOT_RUN",
       "malformed_request_test": "NOT_RUN",
-      "replay_idempotency_test": "NOT_RUN"
+      "replay_idempotency_test": "NOT_RUN",
+      "provider_status": "ACTIVE"
     }
   ],
   "required_verification": [

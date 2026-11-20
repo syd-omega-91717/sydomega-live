@@ -15,10 +15,12 @@ A historical statement is not production truth merely because it is detailed, re
 | Source | Lines | Role | Authority |
 |---|---:|---|---|
 | 999-Point Sovereign Blueprint | 1,231 | Conceptual / archival / speculative | None by itself |
-| Master Prompt | 1,846 | Historical target architecture + feature specification | Reference only |
-| Ω Document | 362 | Earlier full-stack product specification | Reference only |
+| Master Prompt | 1,847 | Historical target architecture + feature specification | Reference only |
+| Ω Document | 363 | Earlier full-stack product specification | Reference only |
 | Absolute | 74 | Prompting / critique / humanization guidance | Process guidance |
-| SYD OMEGA 91717 | 552 | Research / benchmarking / continuous improvement | Governance + research guidance |
+| SYD OMEGA 91717 | 553 | Research / benchmarking / continuous improvement | Governance + research guidance |
+
+Line counts use logical text lines (`splitlines()` semantics). Three source files do not end with a newline character, so a raw `wc -l` count is one lower for each of those files.
 
 ### Blueprint numerical audit
 

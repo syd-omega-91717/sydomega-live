@@ -67,7 +67,7 @@ The current five uploaded source files total **4,068 lines**:
 | Absolute response-method guide | 74 |
 | **Total** | **4,068** |
 
-The older `docs/OMEGA_SOURCE_COVERAGE_AUDIT.md` reports 1,846, 362 and 552 lines for the Master Prompt, 18-module document and enterprise research prompt respectively. Those three counts are each one line below the current uploaded files. The newer `docs/OMEGA_SOURCE_CORPUS_AUDIT_INDEX.md` already carries the corrected 1,847, 363 and 553 counts. The November 20 reconciliation audit is the current source inventory authority.
+The older `docs/OMEGA_SOURCE_COVERAGE_AUDIT.md` and `config/omega-source-coverage.json` reported 1,846, 362 and 552 lines for the Master Prompt, 18-module document and enterprise research prompt respectively. Those values counted newline characters rather than logical text lines. The correct logical counts are 1,847, 363 and 553. The source coverage contract test now asserts these values and the counting convention.
 
 ## 6. Canonical repair path
 

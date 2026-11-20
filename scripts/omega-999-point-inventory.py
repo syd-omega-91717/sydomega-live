@@ -6,6 +6,9 @@ Usage:
   python3 scripts/omega-999-point-inventory.py /path/to/blueprint.txt --json
 
 The inventory distinguishes explicit numbered bullets from inline point references.
+Each numbered source occurrence receives a deterministic, content-derived source_record_id;
+the point number remains a non-unique source locator. IDs change when that occurrence's
+source identity changes, and do not imply implementation or approval.
 It does not infer missing requirements or claim that a concept is implemented,
 safe, legal, or production-ready.
 """
@@ -35,6 +38,8 @@ def inventory(path: Path) -> dict:
     current_section = None
     current_subsection = None
 
+    occurrence_counts = Counter()
+
     for line_no, line in enumerate(lines, 1):
         section_match = SECTION.match(line)
         if section_match:
@@ -57,12 +62,28 @@ def inventory(path: Path) -> dict:
 
         point_match = POINT.match(line)
         if point_match:
+            point = int(point_match.group(1))
+            source_text = point_match.group(2).strip()
+            occurrence_counts[point] += 1
+            identity = {
+                "source_file": path.name,
+                "point": point,
+                "section": current_section,
+                "subsection": current_subsection,
+                "text": source_text,
+                "occurrence_index": occurrence_counts[point],
+            }
+            identity_hash = hashlib.sha256(
+                json.dumps(identity, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+            ).hexdigest()
             rows.append({
-                "point": int(point_match.group(1)),
+                "source_record_id": f"BP-{point:03d}-{identity_hash}",
+                "source_occurrence_index": occurrence_counts[point],
+                "point": point,
                 "line": line_no,
                 "section": current_section,
                 "subsection": current_subsection,
-                "text": point_match.group(2).strip(),
+                "text": source_text,
             })
 
         # Preserve every explicit prose cross-reference and its source line.

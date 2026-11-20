@@ -52,6 +52,64 @@ class VisualPageSurveyTests(unittest.TestCase):
                 survey.ROOT = original_root
         self.assertEqual(result["h1"], "Visible heading")
 
+    def test_hidden_authenticated_app_heading_is_classified_separately(self) -> None:
+        html = """
+        <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Dashboard</title></head><body>
+        <div id="app" style="display:none"><main><h1>Dashboard</h1></main></div>
+        </body></html>
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            page = Path(tmp) / "dashboard.html"
+            page.write_text(html, encoding="utf-8")
+            original_root = survey.ROOT
+            try:
+                survey.ROOT = Path(tmp)
+                result = survey.scan(page)
+            finally:
+                survey.ROOT = original_root
+        self.assertEqual(result["h1"], "")
+        self.assertEqual(result["h1_auth_gated"], "Dashboard")
+        self.assertIn("AUTH-GATED: level-1 heading exists behind hidden app shell", result["findings"])
+        self.assertNotIn("CONTRACT: no visible/semantic level-1 heading", result["findings"])
+
+    def test_shared_a11y_runtime_heading_is_not_reported_as_missing(self) -> None:
+        html = """
+        <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Analytics</title><script src="/bg.js"></script></head><body>
+        <div class="topbar"><div class="t">ANALYTICS</div></div>
+        <div class="main"><section>Metrics</section></div>
+        </body></html>
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            page = Path(tmp) / "analytics.html"
+            page.write_text(html, encoding="utf-8")
+            original_root = survey.ROOT
+            try:
+                survey.ROOT = Path(tmp)
+                result = survey.scan(page)
+            finally:
+                survey.ROOT = original_root
+        self.assertTrue(result["runtime_heading"])
+        self.assertIn("RUNTIME-HEADING: shared omega-a11y engine promotes the visible topbar title", result["findings"])
+        self.assertNotIn("CONTRACT: no visible/semantic level-1 heading", result["findings"])
+
+    def test_page_without_any_heading_remains_a_contract_finding(self) -> None:
+        html = """
+        <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>No heading</title></head><body><p>Content only</p></body></html>
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            page = Path(tmp) / "no-heading.html"
+            page.write_text(html, encoding="utf-8")
+            original_root = survey.ROOT
+            try:
+                survey.ROOT = Path(tmp)
+                result = survey.scan(page)
+            finally:
+                survey.ROOT = original_root
+        self.assertIn("CONTRACT: no visible/semantic level-1 heading", result["findings"])
+
     def test_unquoted_viewport_meta_is_recognized(self) -> None:
         html = """
         <html><head><meta name=viewport content=width=device-width,initial-scale=1>

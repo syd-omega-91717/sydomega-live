@@ -28,51 +28,51 @@
 /* Each page inherits a distinct world accent from its canonical archetype. */
 html[data-omega-archetype="command"]{
   --omega-v6-accent:#C9A84C;--omega-v6-accent-soft:rgba(201,168,76,.13);
-  --omega-v6-accent-line:rgba(201,168,76,.34);--omega-v6-accent-glow:0 0 30px rgba(201,168,76,.14);--omega-v6-secondary:#00E5FF;
+  --omega-v6-accent-line:rgba(201,168,76,.34);--omega-v6-accent-glow:0 0 30px rgba(201,168,76,.13);--omega-v6-secondary:#00E5FF;
 }
 html[data-omega-archetype="identity"]{
-  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.12);
-  --omega-v6-accent-line:rgba(232,201,122,.34);--omega-v6-accent-glow:0 0 28px rgba(232,201,122,.12);--omega-v6-secondary:#C9A84C;
+  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.14);
+  --omega-v6-accent-line:rgba(232,201,122,.36);--omega-v6-accent-glow:0 0 28px rgba(232,201,122,.14);--omega-v6-secondary:#C9A84C;
 }
 html[data-omega-archetype="intelligence"]{
-  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.12);
-  --omega-v6-accent-line:rgba(0,229,255,.34);--omega-v6-accent-glow:0 0 30px rgba(0,229,255,.13);--omega-v6-secondary:#9B6BF0;
+  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.13);
+  --omega-v6-accent-line:rgba(0,229,255,.32);--omega-v6-accent-glow:0 0 30px rgba(0,229,255,.13);--omega-v6-secondary:#C9A84C;
 }
 html[data-omega-archetype="knowledge"]{
-  --omega-v6-accent:#73DCEB;--omega-v6-accent-soft:rgba(115,220,235,.11);
-  --omega-v6-accent-line:rgba(115,220,235,.3);--omega-v6-accent-glow:0 0 26px rgba(115,220,235,.1);--omega-v6-secondary:#C9A84C;
+  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.10);
+  --omega-v6-accent-line:rgba(0,229,255,.28);--omega-v6-accent-glow:0 0 26px rgba(0,229,255,.10);--omega-v6-secondary:#C9A84C;
 }
 html[data-omega-archetype="gaming"]{
-  --omega-v6-accent:#9B6BF0;--omega-v6-accent-soft:rgba(155,107,240,.14);
-  --omega-v6-accent-line:rgba(155,107,240,.38);--omega-v6-accent-glow:0 0 32px rgba(155,107,240,.15);--omega-v6-secondary:#00E5FF;
+  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.15);
+  --omega-v6-accent-line:rgba(0,229,255,.34);--omega-v6-accent-glow:0 0 32px rgba(0,229,255,.15);--omega-v6-secondary:#8B0000;
 }
 html[data-omega-archetype="media"]{
-  --omega-v6-accent:#B69BFF;--omega-v6-accent-soft:rgba(182,155,255,.12);
-  --omega-v6-accent-line:rgba(182,155,255,.34);--omega-v6-accent-glow:0 0 30px rgba(182,155,255,.13);--omega-v6-secondary:#E8C97A;
+  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.14);
+  --omega-v6-accent-line:rgba(232,201,122,.34);--omega-v6-accent-glow:0 0 30px rgba(232,201,122,.14);--omega-v6-secondary:#8B0000;
 }
 html[data-omega-archetype="commerce"]{
-  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.12);
-  --omega-v6-accent-line:rgba(232,201,122,.34);--omega-v6-accent-glow:0 0 28px rgba(232,201,122,.12);--omega-v6-secondary:#00E5FF;
+  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(201,168,76,.12);
+  --omega-v6-accent-line:rgba(201,168,76,.32);--omega-v6-accent-glow:0 0 28px rgba(201,168,76,.12);--omega-v6-secondary:#00FF88;
 }
 html[data-omega-archetype="creation"]{
-  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.1);
-  --omega-v6-accent-line:rgba(0,229,255,.3);--omega-v6-accent-glow:0 0 28px rgba(0,229,255,.12);--omega-v6-secondary:#C9A84C;
+  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.12);
+  --omega-v6-accent-line:rgba(0,229,255,.32);--omega-v6-accent-glow:0 0 28px rgba(0,229,255,.12);--omega-v6-secondary:#E8C97A;
 }
 html[data-omega-archetype="community"]{
-  --omega-v6-accent:#44DD88;--omega-v6-accent-soft:rgba(68,221,136,.11);
-  --omega-v6-accent-line:rgba(68,221,136,.3);--omega-v6-accent-glow:0 0 26px rgba(68,221,136,.11);--omega-v6-secondary:#00E5FF;
+  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.13);
+  --omega-v6-accent-line:rgba(0,229,255,.30);--omega-v6-accent-glow:0 0 26px rgba(0,229,255,.13);--omega-v6-secondary:#C9A84C;
 }
 html[data-omega-archetype="governance"]{
-  --omega-v6-accent:#C9A84C;--omega-v6-accent-soft:rgba(201,168,76,.11);
-  --omega-v6-accent-line:rgba(201,168,76,.3);--omega-v6-accent-glow:0 0 26px rgba(201,168,76,.1);--omega-v6-secondary:#00E5FF;
+  --omega-v6-accent:#C9A84C;--omega-v6-accent-soft:rgba(201,168,76,.10);
+  --omega-v6-accent-line:rgba(201,168,76,.30);--omega-v6-accent-glow:0 0 26px rgba(201,168,76,.10);--omega-v6-secondary:#00E5FF;
 }
 html[data-omega-archetype="finance"]{
-  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.11);
-  --omega-v6-accent-line:rgba(232,201,122,.3);--omega-v6-accent-glow:0 0 28px rgba(232,201,122,.11);--omega-v6-secondary:#44DD88;
+  --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(201,168,76,.11);
+  --omega-v6-accent-line:rgba(201,168,76,.32);--omega-v6-accent-glow:0 0 28px rgba(201,168,76,.11);--omega-v6-secondary:#00FF88;
 }
 html[data-omega-archetype="system"]{
-  --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.1);
-  --omega-v6-accent-line:rgba(0,229,255,.3);--omega-v6-accent-glow:0 0 28px rgba(0,229,255,.11);--omega-v6-secondary:#8B0000;
+  --omega-v6-accent:#8B0000;--omega-v6-accent-soft:rgba(139,0,0,.12);
+  --omega-v6-accent-line:rgba(139,0,0,.32);--omega-v6-accent-glow:0 0 28px rgba(139,0,0,.12);--omega-v6-secondary:#00E5FF;
 }
 
 /* Motion and depth profiles are declared by the page-character manifest. */
@@ -526,4 +526,10 @@ html[data-omega-density="technical"] body.omega-simple :where(pre,code,.log-card
 @media(prefers-reduced-motion:reduce){
   body.omega-simple :where(.omega-figure-card,.omega-discovery-card,.omega-atlas-card,.film-card,.game-card):hover{transform:none}
   body.omega-simple .omega-atlas-card:hover{transform:none}
+}
+
+/* WCAG 2.2 SC 2.5.8: keep the guided-tour dismiss control comfortably targetable. */
+.shepherd-cancel-icon{
+  min-width:24px;min-height:24px;box-sizing:border-box;
+  display:inline-flex;align-items:center;justify-content:center;
 }

@@ -93,12 +93,12 @@ class RefParser(HTMLParser):
 def page_identity(body: bytes | str) -> tuple[str, str]:
     """Return the normalized HTML title and stable Omega realm marker."""
     text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
-    title_match = re.search(r"<title\\b[^>]*>(.*?)</title\\s*>", text, re.IGNORECASE | re.DOTALL)
+    title_match = re.search(r"<title\b[^>]*>(.*?)</title\s*>", text, re.IGNORECASE | re.DOTALL)
     title = ""
     if title_match:
         raw_title = re.sub(r"<[^>]+>", " ", title_match.group(1))
         title = " ".join(html.unescape(raw_title).split()).casefold()
-    realm_match = re.search(r"\\bdata-omega-realm\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"]", text, re.IGNORECASE)
+    realm_match = re.search(r"\bdata-omega-realm\s*=\s*['\"]([^'\"]+)['\"]", text, re.IGNORECASE)
     realm = realm_match.group(1).strip().casefold() if realm_match else ""
     return title, realm
 
@@ -114,6 +114,7 @@ def identity_mismatch(expected_body: bytes, actual_body: bytes, route: str) -> s
     if not expected_title and not expected_realm:
         return f"{route} expected_page_identity_missing"
     return None
+
 
 def is_safe_http_url(
     url: str, allowed_host: str | None = None, allowed_port: int | None = None

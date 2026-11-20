@@ -191,5 +191,38 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             self.assertIn(marker, CSS)
 
 
+    def test_dashboard_brief_updates_tolerate_unmounted_panels(self):
+        brief = (ROOT / "omega-daily-brief.js").read_text(encoding="utf-8")
+        for node_id in ("clockTime", "clockDate", "clockDay", "quoteText", "quoteAttr",
+                        "kpiStreak", "streakLabel", "kpiPri", "kpiDay", "kpiSess"):
+            self.assertIn(f"say('{node_id}'", brief)
+        self.assertNotIn("document.getElementById('clockTime').textContent", brief)
+
+    def test_ops_status_indicator_is_optional_at_runtime(self):
+        ops = (ROOT / "ops.html").read_text(encoding="utf-8")
+        self.assertIn("var dot=document.getElementById('sys-dot')", ops)
+        self.assertIn("if(dot)dot.className='status-dot'", ops)
+        self.assertIn("if(dot)dot.className='status-dot red'", ops)
+        self.assertIn("if(dot)dot.className='status-dot amber'", ops)
+
+    def test_svg_emblem_uses_accent_as_current_color(self):
+        emblem = (ROOT / "omega-emblems.js").read_text(encoding="utf-8")
+        self.assertIn("style=\"--oe:' + s.c + ';color:' + s.c + '\"", emblem)
+        self.assertIn("style=\"--oe:' + c + ';color:' + c + ';opacity:' + dim + '\"", emblem)
+        self.assertIn('fill="currentColor"', emblem)
+
+        colors = set(re.findall(r"c:\\s*'(#[0-9A-Fa-f]{6})'", emblem))
+        self.assertTrue(colors)
+        background = "#0A0A0F"
+        def luminance(hex_color):
+            channels = [int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+            linear = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in channels]
+            return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+        bg = luminance(background)
+        for color in colors:
+            fg = luminance(color)
+            ratio = (max(fg, bg) + 0.05) / (min(fg, bg) + 0.05)
+            self.assertGreaterEqual(ratio, 3.0, color)
+
 if __name__ == "__main__":
     unittest.main()

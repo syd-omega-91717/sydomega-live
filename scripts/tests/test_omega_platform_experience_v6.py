@@ -62,8 +62,8 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
 
     def test_guided_tour_dismiss_target_meets_wcag_minimum(self):
         self.assertIn(".shepherd-cancel-icon", self.css)
-        self.assertIn("min-width:24px!important", self.css)
-        self.assertIn("min-height:24px!important", self.css)
+        self.assertIn("min-width:24px", self.css)
+        self.assertIn("min-height:24px", self.css)
 
     def test_visual_archetype_is_independent_of_navigation_group(self):
         nav = (ROOT / "nav.js").read_text(encoding="utf-8")

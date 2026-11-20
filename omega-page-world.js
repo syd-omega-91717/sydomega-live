@@ -25,43 +25,44 @@
   };
 
   function findArchetype(){
+    /* Exact page ownership is authoritative. The manifest is generated from
+       canonical page contracts and prevents legacy substring collisions. */
+    if(manifest&&manifest.pageArchetypes){
+      var exactPage=manifest.pageArchetypes[slug];
+      if(exactPage&&manifest.archetypes[exactPage])return exactPage;
+    }
+
+    /* Exact legacy rules remain useful for non-canonical utility routes. */
     if(manifest&&manifest.rules){
       var exactHit=manifest.rules.find(function(r){
         return String(r.match||'').split('|').some(function(token){
-          token=String(token).trim();
+          token=String(token||'').trim().toLowerCase();
           return token.charAt(0)==='=' && slug===token.slice(1);
         });
       });
       if(exactHit&&manifest.archetypes[exactHit.archetype])return exactHit.archetype;
     }
-    if(pageWorld&&pageWorld.archetype&&pageWorld.archetype!=='command'&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
+
+    if(district&&district.archetype&&manifest&&manifest.archetypes[district.archetype])return district.archetype;
+    if(pageWorld&&pageWorld.archetype&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
+
+    /* Fallback matching is token-boundary aware: "ai" must never match
+       "blockchain", "maintenance", or another unrelated slug. */
     if(manifest&&manifest.rules){
       var hit=manifest.rules.find(function(r){
-        return String(r.match||'').split('|').some(function(token){
-          token=String(token).trim();
-          return token.charAt(0)!=='=' && (slug===token || slug.indexOf(token)>-1);
+        return String(r.match||'').split('|').some(function(rawToken){
+          var token=String(rawToken||'').trim().toLowerCase().replace(/^-+|-+$/g,'');
+          if(!token)return false;
+          return slug===token || slug.indexOf(token+'-')===0 ||
+            slug.slice(-(token.length+1))==='-'+token ||
+            slug.indexOf('-'+token+'-')>-1;
         });
       });
       if(hit&&manifest.archetypes[hit.archetype])return hit.archetype;
     }
-    if(district&&district.archetype&&manifest&&manifest.archetypes[district.archetype])return district.archetype;
-    if(pageWorld&&pageWorld.archetype&&manifest&&manifest.archetypes[pageWorld.archetype])return pageWorld.archetype;
-    return 'command';
-    /* Exact page ownership wins. The 242-entry map is generated from the
-       canonical page contracts, the navigation section registry and the
-       explicit archetype rules. This prevents substring collisions such as
-       "ai" matching "blockchain" or "maintenance". */
-    if(manifest&&manifest.pageArchetypes&&manifest.pageArchetypes[slug])return manifest.pageArchetypes[slug];
-    if(district&&district.archetype)return district.archetype;
-    if(!manifest||!manifest.rules)return (manifest&&manifest.pageArchetypeFallback)||'system';
-    var hit=manifest.rules.find(function(r){
-      return String(r.match||'').split('|').some(function(token){
-        token=String(token||'').toLowerCase();
-        return slug===token || slug.indexOf(token+'-')===0 ||
-          slug.slice(-(token.length+1))==='-'+token || slug.indexOf('-'+token+'-')>-1;
-      });
-    });
-    return hit?hit.archetype:(manifest.pageArchetypeFallback||'system');
+
+    return (manifest&&manifest.pageArchetypeFallback&&manifest.archetypes[manifest.pageArchetypeFallback])
+      ? manifest.pageArchetypeFallback : 'system';
   }
 
   var suppressMembrane=false;

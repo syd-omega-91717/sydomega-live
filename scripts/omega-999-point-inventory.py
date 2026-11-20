@@ -75,7 +75,7 @@ def inventory(path: Path) -> dict:
             }
             identity_hash = hashlib.sha256(
                 json.dumps(identity, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
-            ).hexdigest()[:12]
+            ).hexdigest()
             rows.append({
                 "source_record_id": f"BP-{point:03d}-{identity_hash}",
                 "source_occurrence_index": occurrence_counts[point],

@@ -45,14 +45,12 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
 
     def test_css_fallback_palette_matches_the_canonical_manifest(self):
         for archetype, spec in self.manifest["archetypes"].items():
-            pattern = (
-                r'html\[data-omega-archetype="'
-                + re.escape(archetype)
-                + r'"\]\\s*\{([^}]+)\}'
-            )
-            match = re.search(pattern, self.css)
-            self.assertIsNotNone(match, archetype)
-            block = match.group(1)
+            selector = f'html[data-omega-archetype="{archetype}"]'
+            start = self.css.find(selector)
+            self.assertGreaterEqual(start, 0, archetype)
+            end = self.css.find("}", start)
+            self.assertGreater(end, start, archetype)
+            block = self.css[start:end]
             self.assertIn(f"--omega-v6-accent:{spec['accent']};", block, archetype)
             self.assertIn(f"--omega-v6-accent-soft:{spec['glow']};", block, archetype)
             self.assertIn(f"--omega-v6-accent-line:{spec['line']};", block, archetype)

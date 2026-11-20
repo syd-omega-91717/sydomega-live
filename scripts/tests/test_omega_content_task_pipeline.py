@@ -189,6 +189,7 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("OmegaContentTasks.upload(fileEl.files[0]", page)
         self.assertIn("content_type:'marketplace_listing_attachment'", page)
         self.assertIn("uploadTask.data.file.storage_path", page)
+        self.assertIn('<script src="/omega-content-tasks.js"></script>', page)
         self.assertIn("function isOwnedUploadPath(path)", page)
         self.assertIn("REGISTERED PRIVATE FILE PRESERVED", page)
         self.assertIn("omega_private.marketplace_listing_assets", page)

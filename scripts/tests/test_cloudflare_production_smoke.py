@@ -15,6 +15,52 @@ SPEC.loader.exec_module(SMOKE)
 
 
 class ProductionSmokeUrlSafety(unittest.TestCase):
+    def test_page_identity_extracts_title_and_omega_realm(self):
+        body = b'<html><head><title> Omega Missions </title></head><body data-omega-realm="missions"></body></html>'
+        self.assertEqual(SMOKE.page_identity(body), ("omega missions", "missions"))
+
+    def test_successful_account_html_is_rejected_for_missions_route(self):
+        expected = b'<html><head><title>Omega Missions</title></head><body data-omega-realm="missions"></body></html>'
+        actual = b'<html><head><title>Member Access</title></head><body data-omega-realm="account"></body></html>'
+        mismatch = SMOKE.identity_mismatch(expected, actual, "/missions.html")
+        self.assertIn("page_realm_mismatch", mismatch or "")
+
+    def test_identity_requires_markers_in_the_canonical_source(self):
+        body = b'<html><body>generic HTML</body></html>'
+        self.assertIn("expected_page_identity_missing", SMOKE.identity_mismatch(body, body, "/unknown") or "")
+
+    def test_request_url_records_same_origin_redirect_destination(self):
+        class Response:
+            def __init__(self, status, body="", headers=None):
+                self.status_code = status
+                self.text = body
+                self.headers = headers or {}
+            def close(self):
+                return None
+
+        class Session:
+            def __init__(self):
+                self.trust_env = True
+                self.responses = [
+                    Response(302, headers={"Location": "/account"}),
+                    Response(200, '<html><head><title>Member Access</title></head><body></body></html>', {"Content-Type": "text/html"}),
+                ]
+            def request(self, *args, **kwargs):
+                return self.responses.pop(0)
+            def close(self):
+                return None
+
+        trace = ["https://sydomega.com/missions.html"]
+        with unittest.mock.patch.object(SMOKE.requests, "Session", return_value=Session()):
+            status, content_type, body = SMOKE.request_url(
+                trace[0], "GET", 5, redirect_trace=trace
+            )
+        self.assertEqual(status, 200)
+        self.assertIn("text/html", content_type)
+        self.assertEqual(trace[-1], "https://sydomega.com/account")
+        self.assertIn("Member Access", body)
+
+
     def test_non_http_schemes_and_credentials_are_rejected(self):
         self.assertFalse(SMOKE.is_safe_http_url("file:///etc/passwd"))
         self.assertFalse(SMOKE.is_safe_http_url("https://user:secret@sydomega.com/"))

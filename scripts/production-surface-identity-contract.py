@@ -13,6 +13,7 @@ if __name__ == "__main__" and any(arg in {"--help", "-h"} for arg in sys.argv[1:
 
 WORKFLOW = ROOT / ".github/workflows/production-surface-smoke.yml"
 FAILOVER = ROOT / "scripts/omega-pages-failover-smoke.py"
+CLOUDFLARE_SMOKE = ROOT / "scripts/cloudflare-production-smoke.py"
 
 
 def main() -> int:
@@ -24,6 +25,8 @@ def main() -> int:
         "production smoke reports identity state": "identity_ok" in workflow and "asset_http_code" in workflow,
         "failover smoke checks HTML for every route": 'elif "<html" not in body.lower()' in failover,
         "failover root verifies brand title and canonical CSS": "syd omega 91717" in failover.lower() and "omega-visual-universe.css" in failover,
+        "Cloudflare smoke verifies every canonical page identity": "identity_mismatch(expected_body" in CLOUDFLARE_SMOKE and "page_identity_checks" in CLOUDFLARE_SMOKE,
+        "Cloudflare smoke records final same-origin redirect URL": "redirect_trace=trace" in CLOUDFLARE_SMOKE and "final_url" in CLOUDFLARE_SMOKE,
         "generic HTML alone cannot mark production reachable": "Expected page title and CSS reference found" in workflow,
     }
     failed = [name for name, ok in checks.items() if not ok]

@@ -230,5 +230,12 @@ class OmegaExperienceV6Tests(unittest.TestCase):
             ratio = (max(fg, bg) + 0.05) / (min(fg, bg) + 0.05)
             self.assertGreaterEqual(ratio, 3.0, color)
 
+    def test_landmark_audit_does_not_flag_auth_hidden_app_content(self):
+        verifier = (ROOT / "scripts/verify-runtime.js").read_text(encoding="utf-8")
+        self.assertIn(
+            "info.hasMain === false && info.appVisible !== false && !landedPublic",
+            verifier,
+        )
+
 if __name__ == "__main__":
     unittest.main()

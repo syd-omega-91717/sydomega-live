@@ -4,9 +4,9 @@
   "status": "EVIDENCE_SNAPSHOT_NOT_LIVE_AUTHORITY",
   "project_id": "ydqhzvvoyufiiqvzcjns",
   "captured_at": "2026-11-20",
-  "source_main_sha": "3a034cb68cab22281e42f179b776c970dcba4fc0",
+  "source_main_sha": "7339481273c244bb99530ac00b3e5f7a697660f2",
   "auth_registry_git_blob_sha1": "4c04294b9b2a8a82be29ffadd74b3c7e493b9665",
-  "verification_method": "Authenticated Supabase Edge Function inventory plus per-function get_edge_function source retrieval; deployed index.ts content compared byte-for-byte with the matching GitHub main entrypoint.",
+  "verification_method": "Authenticated Supabase Edge Function inventory plus per-function get_edge_function source retrieval; deployed index.ts content compared byte-for-byte with the matching GitHub main entrypoint. Live inventory refreshed on 2026-11-20 for provider versions, update timestamps, ACTIVE state and verify_jwt. Six provider entrypoints whose versions advanced since the prior snapshot were fetched again and their deployed content matched the corresponding main Git blob SHA; the remaining entrypoints were unchanged from the prior byte-for-byte comparison and none of the intervening merges changed Supabase function source.",
   "live_active_function_count": 22,
   "active_provider_functions": [
     "agent-execute",
@@ -125,8 +125,8 @@
     },
     {
       "slug": "evidence-graph",
-      "provider_version": 426,
-      "provider_updated_at_utc": "2026-11-20T06:32:53.031Z",
+      "provider_version": 429,
+      "provider_updated_at_utc": "2026-11-20T12:32:02.548Z",
       "verify_jwt": false,
       "canonical_auth_mode": "USER_SESSION",
       "repository_entrypoint": "supabase/functions/evidence-graph/index.ts",
@@ -215,8 +215,8 @@
     },
     {
       "slug": "omega-knowledge-embedding-worker",
-      "provider_version": 515,
-      "provider_updated_at_utc": "2026-11-20T06:32:53.031Z",
+      "provider_version": 518,
+      "provider_updated_at_utc": "2026-11-20T12:32:02.548Z",
       "verify_jwt": false,
       "canonical_auth_mode": "SHARED_SECRET",
       "repository_entrypoint": "supabase/functions/omega-knowledge-embedding-worker/index.ts",
@@ -233,8 +233,8 @@
     },
     {
       "slug": "omega-media-worker",
-      "provider_version": 606,
-      "provider_updated_at_utc": "2026-11-20T06:32:53.031Z",
+      "provider_version": 609,
+      "provider_updated_at_utc": "2026-11-20T12:32:02.548Z",
       "verify_jwt": false,
       "canonical_auth_mode": "SHARED_SECRET",
       "repository_entrypoint": "supabase/functions/omega-media-worker/index.ts",
@@ -251,8 +251,8 @@
     },
     {
       "slug": "omega-notification-worker",
-      "provider_version": 605,
-      "provider_updated_at_utc": "2026-11-20T06:32:53.031Z",
+      "provider_version": 608,
+      "provider_updated_at_utc": "2026-11-20T12:32:02.548Z",
       "verify_jwt": false,
       "canonical_auth_mode": "SHARED_SECRET",
       "repository_entrypoint": "supabase/functions/omega-notification-worker/index.ts",
@@ -269,8 +269,8 @@
     },
     {
       "slug": "omega-provider-worker",
-      "provider_version": 426,
-      "provider_updated_at_utc": "2026-11-20T06:32:53.031Z",
+      "provider_version": 429,
+      "provider_updated_at_utc": "2026-11-20T12:32:02.548Z",
       "verify_jwt": false,
       "canonical_auth_mode": "SHARED_SECRET",
       "repository_entrypoint": "supabase/functions/omega-provider-worker/index.ts",
@@ -287,8 +287,8 @@
     },
     {
       "slug": "omega-runtime-gateway",
-      "provider_version": 610,
-      "provider_updated_at_utc": "2026-11-20T06:32:53.031Z",
+      "provider_version": 613,
+      "provider_updated_at_utc": "2026-11-20T12:32:02.548Z",
       "verify_jwt": true,
       "canonical_auth_mode": "SUPABASE_JWT",
       "repository_entrypoint": "supabase/functions/omega-runtime-gateway/index.ts",
@@ -440,8 +440,9 @@
   ],
   "verified_in_this_snapshot": [
     "22 of 22 provider functions are ACTIVE.",
-    "22 of 22 deployed index.ts entrypoints match the corresponding GitHub main file byte-for-byte.",
-    "22 of 22 live verify_jwt values match config/omega-edge-function-auth.json."
+    "22 of 22 deployed index.ts entrypoints match the corresponding GitHub main file byte-for-byte; six functions with advanced provider versions were re-fetched and re-compared in this refresh.",
+    "22 of 22 live verify_jwt values match config/omega-edge-function-auth.json.",
+    "Provider version, provider update timestamp, ACTIVE status, and verify_jwt values refreshed from the live Supabase function inventory."
   ],
   "not_verified_in_this_snapshot": [
     "Provider secret presence/fingerprints for every function.",
@@ -449,5 +450,6 @@
     "Malformed payload handling and replay/idempotency behavior.",
     "Transitive imports and complete deployed bundle fingerprint."
   ],
-  "truth_boundary": "This is a dated provider evidence snapshot, not a substitute for a fresh provider query. Exact entrypoint equality does not prove complete bundle parity, secret availability, endpoint behavior, authorization correctness beyond verify_jwt registry parity, or business-flow success. Do not mark the function go-live issue complete until all required verification is evidenced."
+  "truth_boundary": "This is a dated provider evidence snapshot, not a substitute for a fresh provider query. Exact entrypoint equality does not prove complete bundle parity, secret availability, endpoint behavior, authorization correctness beyond verify_jwt registry parity, or business-flow success. The inventory metadata is live as of captured_at_utc; per-function secret fingerprints and runtime behavior remain unverified. Do not mark the function go-live issue complete until all required verification is evidenced.",
+  "captured_at_utc": "2026-11-20T17:51:27.798Z"
 }

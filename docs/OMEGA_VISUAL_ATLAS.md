@@ -11,6 +11,12 @@ Current census:
 - 16 deeper source collections are now represented.
 - The original 62-asset Legacy Constellation remains a separate source layer.
 
+## Rights status — 2026-11-20
+
+All 46 curated references now resolve to unique repository files and are present in `docs/media-rights.json`. This is **registration, not clearance**: all 46 remain in the frozen unreviewed baseline and must be treated as `RIGHTS UNVERIFIED` until a human records the actual creator, source, licence and evidence.
+
+The runtime atlas labels every card `RIGHTS UNVERIFIED` and displays a page-level rights notice. The atlas contract checks normalized path uniqueness, repository file presence, path containment and rights-register membership. It does not claim that a rights assertion is true or that the source may be commercially republished.
+
 ## Newly represented source families
 
 - Brand Identity / material language

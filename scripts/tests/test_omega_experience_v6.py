@@ -211,7 +211,7 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         self.assertIn("style=\"--oe:' + c + ';color:' + c + ';opacity:' + dim + '\"", emblem)
         self.assertIn('fill="currentColor"', emblem)
 
-        colors = set(re.findall(r"c:\\s*'(#[0-9A-Fa-f]{6})'", emblem))
+        colors = set(re.findall(r"c:\s*'(#[0-9A-Fa-f]{6})'", emblem))
         self.assertTrue(colors)
         background = "#0A0A0F"
         def luminance(hex_color):

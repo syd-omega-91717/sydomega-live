@@ -205,7 +205,7 @@ class OmegaExperienceV6Tests(unittest.TestCase):
         self.assertIn("if(dot)dot.className='status-dot red'", ops)
         self.assertIn("if(dot)dot.className='status-dot amber'", ops)
 
-    def test_svg_emblem_uses_accent_as_current_color(self):
+    def test_svg_emblem_uses_accessible_accent_fill(self):
         emblem = (ROOT / "omega-emblems.js").read_text(encoding="utf-8")
         self.assertIn("style=\"--oe:' + s.c + ';color:' + s.c + '\"", emblem)
         self.assertIn("style=\"--oe:' + c + ';color:' + c + ';opacity:' + dim + '\"", emblem)

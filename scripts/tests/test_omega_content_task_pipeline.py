@@ -184,5 +184,18 @@ class ContentTaskPipelineTests(unittest.TestCase):
         self.assertIn("SUPPORT RECONCILIATION MAY BE REQUIRED", page)
         self.assertNotIn("OmegaStorage.remove('uploads',filePath)", page)
 
+    def test_marketplace_attachment_uses_governed_registration_and_preserves_uncertain_outcomes(self):
+        page = (ROOT / "marketplace.html").read_text()
+        self.assertIn("OmegaContentTasks.upload(fileEl.files[0]", page)
+        self.assertIn("content_type:'marketplace_listing_attachment'", page)
+        self.assertIn("uploadTask.data.file.storage_path", page)
+        self.assertIn('<script src="/omega-content-tasks.js"></script>', page)
+        self.assertIn("function isOwnedUploadPath(path)", page)
+        self.assertIn("REGISTERED PRIVATE FILE PRESERVED", page)
+        self.assertIn("omega_private.marketplace_listing_assets", page)
+        self.assertNotIn("OmegaStorage.upload('uploads',fileEl.files[0])", page)
+        self.assertNotIn("OmegaStorage.remove('uploads',file_path)", page)
+        self.assertIn("attachment remains private and pending review", page)
+
 if __name__ == "__main__":
     unittest.main()

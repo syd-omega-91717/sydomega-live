@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Regression tests for legacy OmegaStorage.upload calls and the governed Publishing attachment path.
+Regression tests for the remaining legacy KYC upload call and governed Marketplace, Marketing and Publishing attachment paths.
 
 WHY THIS EXISTS
 
@@ -26,9 +26,11 @@ trust). Both halves are asserted here:
   1. every remaining direct call passes the bucket name first, and
   2. every direct call inspects the result's `.error` before continuing.
 
-Publishing's former direct call is now a governed `OmegaContentTasks.upload()`
-call. Its separate contract requires server registration and PENDING_REVIEW
-before the publication row can be written.
+Marketing, Publishing and Marketplace attachments now use the governed
+`OmegaContentTasks.upload()` path. Their page contracts require server registration
+and PENDING_REVIEW before parent records can be written. Profile KYC remains a
+dedicated direct upload path until server-side document signature validation
+and its retention/deletion lifecycle are verified.
 
 Supabase's storage client resolves to `{data, error}` and upload.js converts
 that to `{error: message}` — it does not throw — so a try/catch around the call
@@ -56,8 +58,8 @@ UPLOAD_JS = os.path.join(ROOT, "upload.js")
 # matched. Requiring the assignment is itself part of the contract — a
 # fire-and-forget upload cannot check anything.
 CALL = re.compile(r"(?:var\s+)?(\w+)\s*=\s*await\s+window\.OmegaStorage\.upload\(\s*(?=[^)\s])")
-# How far after the call the `.error` check may sit. The four real call sites
-# check on the same line or the next two.
+# How far after the call the `.error` check may sit. The remaining KYC call
+# checks on the same line or the next two.
 ERROR_WINDOW = 6
 
 
@@ -97,8 +99,8 @@ class UploadCallContract(unittest.TestCase):
                 )
 
     def test_there_are_call_sites_to_check(self):
-        """The three remaining direct Storage callers must stay covered."""
-        self.assertGreaterEqual(len(call_sites()), 2)
+        """The remaining direct KYC Storage caller must stay covered until its dedicated byte-signature and retention path is hardened."""
+        self.assertGreaterEqual(len(call_sites()), 1)
 
     def test_publishing_attachment_uses_governed_registration_instead_of_legacy_direct_upload(self):
         with open(os.path.join(ROOT, "publishing.html"), encoding="utf-8") as fh:

@@ -87,7 +87,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
         self.assertEqual(mapping["maintenance"], "system")
         self.assertEqual(mapping["graphify"], "intelligence")
         self.assertEqual(mapping["game-origins"], "gaming")
-        self.assertIn("manifest.pageArchetypes&&manifest.pageArchetypes[slug]", self.page_world)
+        self.assertIn("var exactPage=manifest.pageArchetypes[slug]", self.page_world)
         self.assertLess(
             self.page_world.index("var exactPage=manifest.pageArchetypes[slug]"),
             self.page_world.index("var exactHit=manifest.rules.find"),

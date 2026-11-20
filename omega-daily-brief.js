@@ -27,11 +27,11 @@ if(!todayBrief){
 (function(){
   function tick(){
     var now=new Date(),h=now.getHours(),m=now.getMinutes(),s=now.getSeconds();
-    document.getElementById('clockTime').textContent=(h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    say('clockTime',(h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s);
     var days=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
     var months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-    document.getElementById('clockDate').textContent=months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
-    document.getElementById('clockDay').textContent=days[now.getDay()];
+    say('clockDate',months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear());
+    say('clockDay',days[now.getDay()]);
   }
   tick();setInterval(tick,1000);
 })();
@@ -82,8 +82,8 @@ var QUOTES=[
   {t:'Do not wait to strike till the iron is hot; but make it hot by striking.',a:'W.B. SPRAGUE'},
 ];
 var qi=Math.floor(Math.random()*QUOTES.length);
-document.getElementById('quoteText').textContent=QUOTES[qi].t;
-document.getElementById('quoteAttr').textContent='— '+QUOTES[qi].a;
+say('quoteText',QUOTES[qi].t);
+say('quoteAttr','— '+QUOTES[qi].a);
 
 /* PRIORITIES */
 function loadPriorities(){
@@ -169,7 +169,7 @@ function loadReview(){
   updateDayScoreDisplay();
 }
 document.getElementById('dayScore').addEventListener('input',updateDayScoreDisplay);
-function updateDayScoreDisplay(){document.getElementById('dayScoreDisplay').textContent=document.getElementById('dayScore').value+'/10';}
+function updateDayScoreDisplay(){var score=el('dayScore');if(score)say('dayScoreDisplay',score.value+'/10');}
 function saveReview(){
   todayBrief.review={};
   for(var i=1;i<=5;i++) todayBrief.review[i]=document.getElementById('rq'+i).value;
@@ -189,8 +189,8 @@ function calcStreak(){
 }
 function renderStreak(){
   var streak=calcStreak();
-  document.getElementById('kpiStreak').textContent=streak+'d';
-  document.getElementById('streakLabel').textContent='Current planning streak: '+streak+' days';
+  say('kpiStreak',streak+'d');
+  say('streakLabel','Current planning streak: '+streak+' days');
   var dots=document.getElementById('streakDots'),html='';
   for(var i=29;i>=0;i--){
     var d=new Date();d.setDate(d.getDate()-i);
@@ -205,12 +205,12 @@ function renderStreak(){
 function renderKPIs(){
   var done=todayBrief.priorities?todayBrief.priorities.filter(function(p){return p.done;}).length:0;
   var total=todayBrief.priorities?todayBrief.priorities.filter(function(p){return p.text;}).length:0;
-  document.getElementById('kpiPri').textContent=done+'/'+total;
-  document.getElementById('kpiDay').textContent=todayBrief.dayScore?todayBrief.dayScore+'/10':'—';
+  say('kpiPri',done+'/'+total);
+  say('kpiDay',todayBrief.dayScore?todayBrief.dayScore+'/10':'—');
   try{
     var fs=JSON.parse(localStorage.getItem('omega_focus_sessions'))||[];
-    document.getElementById('kpiSess').textContent=fs.filter(function(s){return s.date===todayKey;}).length;
-  }catch{document.getElementById('kpiSess').textContent='—';}
+    say('kpiSess',fs.filter(function(s){return s.date===todayKey;}).length);
+  }catch{say('kpiSess','—');}
 }
 
 /* ARCHIVE */

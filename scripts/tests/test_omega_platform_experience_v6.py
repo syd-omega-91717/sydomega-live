@@ -76,7 +76,7 @@ class OmegaPlatformExperienceV6Contract(unittest.TestCase):
             ), None)
             expected[slug] = (
                 rule["archetype"] if rule else
-                nav_archetypes.get(ps.get(slug), special.get(slug))
+                special.get(slug, nav_archetypes.get(ps.get(slug)))
             )
         self.assertEqual(self.manifest["pageArchetypes"], expected)
         self.assertNotIn(None, expected.values())

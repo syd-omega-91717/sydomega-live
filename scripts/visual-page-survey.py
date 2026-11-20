@@ -67,6 +67,9 @@ class _VisibleParser(HTMLParser):
         self.h1_texts: list[str] = []
         self._h1_depth = 0
         self._h1_parts: list[str] = []
+        self.all_h1_texts: list[str] = []
+        self._all_h1_depth = 0
+        self._all_h1_parts: list[str] = []
 
     @staticmethod
     def _hidden(attrs: list[tuple[str, str | None]], parent_hidden: bool) -> bool:
@@ -88,10 +91,14 @@ class _VisibleParser(HTMLParser):
         self._hidden_stack.append(is_hidden)
         if is_hidden:
             self.hidden_depth += 1
-        if tag == "h1" and self.hidden_depth == 0:
-            self._h1_depth += 1
-            if self._h1_depth == 1:
-                self._h1_parts = []
+        if tag == "h1":
+            self._all_h1_depth += 1
+            if self._all_h1_depth == 1:
+                self._all_h1_parts = []
+            if self.hidden_depth == 0:
+                self._h1_depth += 1
+                if self._h1_depth == 1:
+                    self._h1_parts = []
 
     def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -100,6 +107,13 @@ class _VisibleParser(HTMLParser):
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
+        if tag == "h1" and self._all_h1_depth:
+            self._all_h1_depth -= 1
+            if self._all_h1_depth == 0:
+                heading = re.sub(r"\s+", " ", " ".join(self._all_h1_parts)).strip()
+                if heading:
+                    self.all_h1_texts.append(heading)
+                self._all_h1_parts = []
         if tag == "h1" and self._h1_depth:
             self._h1_depth -= 1
             if self._h1_depth == 0:
@@ -114,6 +128,8 @@ class _VisibleParser(HTMLParser):
             self.hidden_depth = max(0, self.hidden_depth - 1)
 
     def handle_data(self, data: str) -> None:
+        if self._all_h1_depth:
+            self._all_h1_parts.append(data)
         if self.hidden_depth == 0:
             self.parts.append(data)
             if self._h1_depth:
@@ -139,6 +155,24 @@ def visible_h1(s: str) -> str:
     parser.feed(s)
     parser.close()
     return parser.h1_texts[0] if parser.h1_texts else ""
+
+
+def all_h1(s: str) -> str:
+    parser = _VisibleParser()
+    parser.feed(s)
+    parser.close()
+    return parser.all_h1_texts[0] if parser.all_h1_texts else ""
+
+
+def hidden_app_shell(s: str) -> bool:
+    match = re.search(r"""<(?:div|main|section)\b[^>]*\bid=["']app["'][^>]*>""", s, re.I)
+    if not match:
+        return False
+    attrs = match.group(0)
+    return bool(
+        re.search(r"""\bhidden\b|aria-hidden\s*=\s*["']true["']""", attrs, re.I)
+        or re.search(r"""display\s*:\s*none""", attrs, re.I)
+    )
 
 
 def count_words(s: str) -> int:
@@ -170,6 +204,7 @@ def scan(path: Path) -> dict:
 
     title = clean(TITLE_RE.search(text).group(1)) if TITLE_RE.search(text) else ""
     h1 = visible_h1(text)
+    h1_auth_gated = all_h1(text) if not h1 and hidden_app_shell(text) else ""
     topm = TOPBAR_TITLE_RE.search(text)
     topbar = clean(topm.group(1)) if topm else ""
     duplicate_title = bool(h1 and topbar and h1.lower() == topbar.lower())
@@ -186,8 +221,11 @@ def scan(path: Path) -> dict:
         issues.append("CONTRACT: missing viewport")
     if not title:
         issues.append("CONTRACT: missing title")
-    if not h1 and not re.search(r'role=["\']heading["\'][^>]*aria-level=["\']1["\']', text, re.I):
-        issues.append("CONTRACT: no visible/semantic level-1 heading")
+    if not h1 and not re.search(r'role=["\\']heading["\\'][^>]*aria-level=["\\']1["\\']', text, re.I):
+        if h1_auth_gated:
+            issues.append("AUTH-GATED: level-1 heading exists behind hidden app shell")
+        else:
+            issues.append("CONTRACT: no visible/semantic level-1 heading")
     if small:
         issues.append(f"READABILITY: {small} declarations below 12px")
     if dense_tracking:
@@ -231,6 +269,7 @@ def scan(path: Path) -> dict:
         "path": path.relative_to(ROOT).as_posix(),
         "title": title,
         "h1": h1,
+        "h1_auth_gated": h1_auth_gated,
         "body_words": body_words,
         "cards": cards,
         "sections": sections,

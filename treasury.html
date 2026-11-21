@@ -315,6 +315,7 @@ function renderFlows(){
   document.getElementById('f-net').textContent=(net>=0?'+':'−')+fmt(Math.abs(net));
   document.getElementById('f-net').style.color=net>=0?'var(--green)':'#FF4444';
 
+}
 window.addAsset=function(){
   var n=document.getElementById('a-name').value.trim();if(!n)return;
   assets.push({id:Date.now(),name:n,type:document.getElementById('a-type').value,value:document.getElementById('a-value').value,cost:document.getElementById('a-cost').value,notes:document.getElementById('a-notes').value.trim(),date:new Date().toISOString().slice(0,10)});

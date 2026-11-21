@@ -90,7 +90,7 @@
     }
   };
 
-  OmegaMetrics.init();
+  OmegaMonitor.init();
 
   // Intercept API calls for tracking
   const originalFetch = window.fetch;
@@ -98,20 +98,20 @@
     const start = performance.now();
     try {
       const response = await originalFetch.apply(this, args);
-      OmegaMetrics.trackApi(args[0], performance.now() - start, response.status);
+      OmegaMonitor.trackApi(args[0], performance.now() - start, response.status);
       return response;
     } catch(e) {
-      OmegaMetrics.trackApi(args[0], performance.now() - start, 0);
+      OmegaMonitor.trackApi(args[0], performance.now() - start, 0);
       throw e;
     }
   };
 
   // Track errors
   window.addEventListener('error', (e) => {
-    OmegaMetrics.trackError(e.error, {file: e.filename, line: e.lineno});
+    OmegaMonitor.trackError(e.error, {file: e.filename, line: e.lineno});
   });
 
   window.addEventListener('unhandledrejection', (e) => {
-    OmegaMetrics.trackError(e.reason, {type: 'unhandledPromise'});
+    OmegaMonitor.trackError(e.reason, {type: 'unhandledPromise'});
   });
 })();

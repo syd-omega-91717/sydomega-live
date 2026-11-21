@@ -1901,7 +1901,7 @@
     },
     "content_ingest_validation": {
       "status": "DEPLOYED_ENTRYPOINT_VERIFIED",
-      "live_function_version": 11,
+      "live_function_version": 13,
       "source_state": "SIGNATURE_DETECTION_AND_SHA256_IMPLEMENTED",
       "source_features": [
         "server-side 50 MiB validation",
@@ -1914,7 +1914,8 @@
       "scan_state": "UNAVAILABLE",
       "rights_state": "UNVERIFIED",
       "deployment_required": false,
-      "note": "Provider version 11 is ACTIVE and the deployed entrypoint matches repository source byte-for-byte. The isolated Supabase CI stack passes authenticated upload, server-side size/signature/hash validation, owner-path enforcement, registration idempotency and audit probes. Production has zero Storage objects and zero storage_files rows, so a real member upload transaction has not yet been observed. Malware scanning and rights/publication clearance remain separate gates."
+      "verified_at": "2026-11-20",
+      "note": "Read-only production verification on 2026-11-20 observed live provider version 13 verifying byte-signature MIME and SHA-256. It reports scan_state=UNAVAILABLE and review_state=PENDING_REVIEW. This confirms signature/hash validation only; it is not malware scanning or rights/publication clearance. Production had zero Storage objects and zero storage_files rows, so a real member upload transaction had not yet been observed."
     },
     "content_delivery_validation": {
       "status": "DEPLOYED_ENTRYPOINT_VERIFIED",

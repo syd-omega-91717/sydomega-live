@@ -16,6 +16,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         cls.roster = json.loads(read('omega-agents.json'))['agents']
         cls.tools = json.loads(read('supabase/functions/agent-execute/agent-tools.json'))
         cls.config = json.loads(read('config/omega-sovereign-hubs.json'))
+        cls.hierarchy = json.loads(read('omega-agent-hierarchy.json'))
         cls.council = read('agents.html')
         cls.network = read('agent-network.html')
         cls.operations = read('omega-agent-operations.js')
@@ -41,6 +42,15 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertEqual(hierarchy['primary_agent_count'], 12)
         self.assertEqual(hierarchy['subordinate_positions_per_primary'], 12)
         self.assertEqual(hierarchy['subordinate_position_capacity'], 144)
+        registry = self.hierarchy
+        self.assertEqual(registry['status'], 'CAPACITY_REGISTRY_ONLY')
+        self.assertEqual(len(registry['positions']), 144)
+        self.assertEqual(len({p['position_id'] for p in registry['positions']}), 144)
+        for agent in self.roster:
+            seats = sorted((p for p in registry['positions'] if p['parent_agent_name'] == agent['name']), key=lambda p: p['slot_number'])
+            self.assertEqual([p['slot_number'] for p in seats], list(range(1, 13)))
+            self.assertTrue(all(p['name'] is None and p['classification'] is None and p['status'] == 'UNASSIGNED' and p['operational'] is False and not p['capabilities'] and not p['permissions'] and p['authority_inheritance'] is False for p in seats))
+        self.assertIn("fetch('/omega-agent-hierarchy.json'", self.council)
 
     def test_source_conflict_is_recorded_as_an_owner_override(self):
         decision = self.config['agent_hierarchy']['source_reconciliation']

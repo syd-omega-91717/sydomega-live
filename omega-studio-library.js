@@ -74,7 +74,7 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('sl-reader').hidden) closeDoc(); });
 
   /* ---- lists */
-  function readBtn(id, label) { var b = h('button', { type: 'button', 'class': 'sl-btn', text: label }); b.addEventListener('click', function () { openDoc(id); }); return b; }
+  function readBtn(id, label, extraClass) { var b = h('button', { type: 'button', 'class': 'sl-btn' + (extraClass ? ' ' + extraClass : ''), text: label }); b.addEventListener('click', function () { openDoc(id); }); return b; }
   function franchiseBlock(f, cards) { return h('div', {}, [h('h2', { 'class': 'sl-fr', text: f.title }), h('div', { 'class': 'sl-grid' }, cards)]); }
 
   function viewFilms() {

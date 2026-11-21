@@ -234,7 +234,7 @@ function drawCanvas(){
     ctx.fillText('NO ASSETS OR RESERVES RECORDED',W/2,H/2);return;
   }
   var bars=[{l:'LIQUID',v:t.liquid,c:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},{l:'ILLIQUID',v:t.illiquid,c:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},{l:'RESERVES',v:Number(reserves.emerg||0)+Number(reserves.opp||0)+Number(reserves.legacy||0),c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')}];
-  var maxV=Math.max.apply(null,bars.map(function(b){return b.v;}));
+  var maxV=Math.max(1,Math.max.apply(null,bars.map(function(b){return b.v;})));
   var bw=80,gap=40,x0=60,yB=H-30;
   bars.forEach(function(b,i){
     var x=x0+i*(bw+gap);

@@ -1,4 +1,4 @@
-"""Tab behavior contract: Genesis is the canonical landing; Today remains the member's daily surface (2026-11-22).
+"""Tab behavior contract: Today remains the default daily surface; Genesis is the command directory tab (2026-11-22).
 
 Two separate failures sat under every `data-tab-action` button:
 
@@ -9,9 +9,7 @@ Two separate failures sat under every `data-tab-action` button:
   2. achievements.html wraps its whole script in an IIFE, so its `switchTab` was private and the handler
      (which calls window.switchTab) could not reach it even once the listener existed.
 
-The dashboard now opens on GENESIS / COMMAND. TODAY remains a separate, explicit tab and its ecosystem surface, daily loop,
-and concierge remain intact. Existing tab hashes continue to select their original panels. These are source contracts; the
-tab interaction contract is additionally exercised by the dashboard keyboard-navigation implementation.
+The dashboard retains its established TODAY-first member loop. GENESIS / COMMAND is a first-class workspace tab immediately after TODAY. Existing tab hashes continue to select their original panels. These are source contracts; the tab interaction contract is additionally exercised by the dashboard keyboard-navigation implementation.
 """
 import json
 import pathlib
@@ -62,17 +60,17 @@ class EveryTabPageReachesItsHandler(unittest.TestCase):
         self.assertLess(s.index("function switchTab(id,btn)"), s.index("window.switchTab=switchTab;"))
 
 
-class DashboardOpensOnGenesis(unittest.TestCase):
+class DashboardOpensOnToday(unittest.TestCase):
     HTML = read("dashboard.html")
 
     def test_genesis_is_the_first_tab_and_the_active_one(self):
         tabs = re.findall(r'<button\b[^>]*class="ltab( active)?"[^>]*data-tab-action="([a-z]+)"', self.HTML)
-        self.assertEqual([t[1] for t in tabs][:2], ["genesis", "today"])
-        self.assertEqual([t[1] for t in tabs if t[0]], ["genesis"], "exactly one tab starts active, and it is GENESIS")
+        self.assertEqual([t[1] for t in tabs][:2], ["today", "genesis"])
+        self.assertEqual([t[1] for t in tabs if t[0]], ["today"], "exactly one tab starts active, and it is TODAY")
 
     def test_the_panels_start_in_the_same_state(self):
-        self.assertIn('<div id="l-genesis" class="layer-panel active"', self.HTML)
-        self.assertIn('<div id="l-today" class="layer-panel">', self.HTML)
+        self.assertIn('<div id="l-today" class="layer-panel active"', self.HTML)
+        self.assertIn('<div id="l-genesis" class="layer-panel"', self.HTML)
         self.assertIn('<div id="l-overview" class="layer-panel">', self.HTML)
 
     def test_genesis_tab_has_an_accessible_tabpanel_relationship(self):
@@ -87,9 +85,9 @@ class DashboardOpensOnGenesis(unittest.TestCase):
         m = re.search(r"var tabs=\[([^\]]*)\];", self.HTML)
         self.assertEqual(re.findall(r"'([a-z]+)'", m.group(1)), order, "setTab() indexes .ltab by position")
 
-    def test_legacy_tab_deep_links_still_win_and_default_is_genesis(self):
+    def test_legacy_tab_deep_links_still_win_and_default_is_today(self):
         self.assertIn("var m={genesis:'genesis',overview:'overview',today:'today',personal:'personal',platform:'platform',science:'science'}", self.HTML)
-        self.assertIn("setTab(m[h]||'genesis')", self.HTML)
+        self.assertIn("setTab(m[h]||'today')", self.HTML)
 
     def test_the_health_bar_placeholder_asserts_no_number(self):
         # omega-realtime.js replaces it with the real success ratio or an empty track; the markup must not flash 87%

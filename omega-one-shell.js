@@ -161,7 +161,7 @@
       '.ons a:focus-visible{outline:2px solid #F0D98F;outline-offset:3px}',
       /* narrow: the ring becomes a grid, the lines go (a ring of 15 buttons does not fit a phone) */
       '@media (max-width:700px){.ons-map{aspect-ratio:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}',
-      '.ons-read{min-height:44px}.ons-signet{display:none}.ons-3d .ons-glyph{opacity:1}.ons-lines{display:none}.ons-core{position:static;translate:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
+      '.ons-read{min-height:44px}.ons-signet{display:none !important}.ons-3d .ons-glyph{opacity:1}   /* !important: the module writes an inline display:block */.ons-lines{display:none}.ons-core{position:static;translate:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
       '.ons-node{position:static;translate:none;min-width:0;min-height:64px}}',
       '@media (prefers-reduced-motion:reduce){.ons-eline,.ons-rays,.ons-halo{animation:none}.ons-edge{transition:none}.ons-node,.ons-page{transition:none}.ons-page:hover{transform:none}}'
     ].join('');

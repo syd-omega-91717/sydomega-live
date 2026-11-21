@@ -3887,8 +3887,9 @@
       "tasks": {
         "state": "OPEN_TASK",
         "ids": [
-          "PAGE::dashboard::REVIEW",
-          "PAGE::dashboard::GENESIS_COMMAND_BROWSER_REGRESSION"
+          "PAGE::dashboard::GENESIS_COMMAND_BROWSER_REGRESSION",
+          "PAGE::dashboard::GENESIS_I18N_REVIEW",
+          "PAGE::dashboard::REVIEW"
         ]
       },
       "authorization": "AUTHENTICATED_DASHBOARD_SESSION; MEMBER_DATA_READS_REMAIN_SUBJECT_TO_SUPABASE_RLS; EXISTING_OWNER_ONLY_RPC_BOUNDARIES_PRESERVED; ROUTE_NAVIGATION_GRANTS_NO_PRIVILEGES",
@@ -3901,8 +3902,8 @@
       "asset_requirements": "Same-origin Genesis command JavaScript and CSS; same-origin .well-known/omega-release.json read; existing dashboard assets and provider integrations remain page-owned.",
       "events": "Existing dashboard telemetry and action instrumentation remain unchanged; Genesis route directory and release identity read are read-only and emit no domain mutation.",
       "failure_paths": "Release manifest read failure displays DEPLOYED BUILD UNAVAILABLE; route directory is rendered from a fixed same-origin allowlist; no metric or provider state is fabricated; specialist pages retain their own failure and authorization handling.",
-      "accessibility": "Semantic section headings; keyboard-operable route anchors; labelled tablist and tabpanel; ArrowLeft/ArrowRight/Home/End tab navigation; visible focus indicators; reduced-motion support.",
-      "responsive": "Responsive route cards use three columns, two columns, then one column at mobile breakpoints; mobile cards retain large readable text and touch targets; reduced-motion preference is respected.",
+      "accessibility": "Semantic section headings; keyboard-operable route anchors; labelled tablist and tabpanel; ArrowLeft/ArrowRight/Home/End tab navigation; visible focus indicators; reduced-motion support. Manual screen-reader and device verification remains pending.",
+      "responsive": "Responsive route cards use three columns, two columns, then one column at mobile breakpoints; mobile cards retain large readable text and touch targets; reduced-motion preference is respected. Manual browser/device verification remains pending.",
       "traceability": {
         "page_source": "dashboard.html",
         "source_content_audited": true,

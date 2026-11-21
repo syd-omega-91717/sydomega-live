@@ -105,5 +105,9 @@
     window.addEventListener('load',function(){setTimeout(report,3000);});
   }
 
-  window.OmegaMetrics={getMetrics:function(){return window.__omegaMetrics||null;},report:report};
+  var omegaVitalsApi={getMetrics:function(){return window.__omegaMetrics||null;},report:report};
+  window.OmegaVitals=omegaVitalsApi;
+  /* Backward-compatible alias. The runtime fetch/error monitor now uses
+     OmegaMonitor, so it cannot overwrite this Web Vitals API. */
+  window.OmegaMetrics=omegaVitalsApi;
 })();

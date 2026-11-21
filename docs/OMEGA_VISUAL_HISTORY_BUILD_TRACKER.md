@@ -53,3 +53,17 @@ A target is marked implemented only after source evidence plus runtime/contract 
 - CONCEPT_REEL / PROCEDURAL_PREVIEW is not SCREENPLAY_DRAFT, IN_PRODUCTION or PUBLISHED.
 - No visual reward, trophy, character unlock or member achievement is granted by the presence of artwork.
 - Every visual change must pass page contracts, accessibility checks, responsive browser review, reduced-motion checks and the repository's existing security/runtime gates.
+
+## Production verification — main commit 72372a3 — 2026-11-21
+
+- PR #1482 restored the shared `FILMS` navigation contract on both Movies and Series pages while preserving the concept-reel and short-form-series disclosures. All PR checks passed; the merge is on `main` at `72372a389382eafae946e38d1668ac9df461d3ae`.
+- Push-triggered production verification then confirmed that both `https://sydomega.com` and `https://www.sydomega.com` served the exact merge SHA in `.well-known/omega-release.json`.
+- The production release smoke reported 242/242 registered pages passed and 380 references passed; root and www returned HTTP 200. The verifier also required CSP and HSTS response headers.
+- Supabase Auth and REST health endpoints responded with HTTP 401 without credentials. This proves the endpoints are reachable and rejecting unauthenticated requests; it does not prove authenticated application operations or end-to-end data workflows.
+- The Vercel PR artifact-validation workflow passed, but its PR-triggered production-promotion steps were skipped. The verified public release above is the Cloudflare Pages path; do not record this as a Vercel deployment.
+
+## Remaining media acceptance gates — unchanged
+
+- Issue #1341 remains open: the 532-file baseline still requires human visual disposition and evidence-backed rights/provenance review. Inventory, hashes and representative video frames are not legal clearance.
+- Issue #1340 remains open: the production media catalog and Storage delivery workflow still require MIME/signature validation, malware quarantine, approved catalog records and real production upload/download/delete evidence.
+- No new media is approved for publication by the production route smoke. Keep the 532 baseline assets UNREVIEWED/UNVERIFIED until individual evidence-backed decisions are recorded.

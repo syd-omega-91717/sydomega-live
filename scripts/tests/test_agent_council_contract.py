@@ -62,6 +62,10 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertEqual(prior['subordinate_positions_per_primary'], 9)
         self.assertEqual(current['subordinate_positions_per_primary'], 12)
         self.assertEqual(current['subordinate_position_capacity'], 144)
+        order = decision['agent_ordinal_order']
+        self.assertNotEqual(order['blueprint_points_47_58'], order['canonical_omega_agents_json'])
+        self.assertEqual(order['canonical_omega_agents_json'], [a['name'] for a in self.roster])
+        self.assertIn('Use canonical agent names', order['identity_rule'])
 
     def test_unassigned_positions_do_not_claim_live_subagents(self):
         self.assertNotIn('FALLBACK_AGENTS', self.council)

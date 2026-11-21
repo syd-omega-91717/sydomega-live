@@ -20,6 +20,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         cls.council = read('agents.html')
         cls.network = read('agent-network.html')
         cls.operations = read('omega-agent-operations.js')
+        cls.operations_page = read('agent-operations.html')
         cls.pantheons = read('pantheons.html')
 
     def test_primary_roster_is_exactly_twelve_unique_agents(self):
@@ -103,9 +104,10 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertIn('role="tabpanel"', self.council)
 
     def test_embedded_views_preserve_standalone_routes_and_auth_boundaries(self):
-        for page in (self.network, self.pantheons, self.operations):
+        for page in (self.network, self.pantheons, self.operations_page):
             self.assertIn('omega-agent-embed-style', page)
-            self.assertIn('get("embed")==="1"', page)
+            self.assertIn('<script src="/omega-agent-embed.js" defer></script>', page)
+        self.assertIn('get("embed")==="1"', read('omega-agent-embed.js'))
         self.assertIn("location.replace('/account.html')", self.pantheons)
         self.assertIn("pr.is_owner", self.pantheons)
         self.assertIn("pr.access_approved", self.pantheons)

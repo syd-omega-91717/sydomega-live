@@ -225,6 +225,7 @@ The canonical Genesis route remains `/dashboard.html`. A new dedicated Genesis w
 - It separates the canonical dashboard from the two retained legacy command entry routes and groups the remaining specialist routes into World, Global State, Evidence, Replay & Recovery, and Module Access.
 - Release identity is read from the same-origin release manifest. An invalid or missing manifest renders `UNAVAILABLE`.
 - Navigation is read-only. No provider credentials, database schema, RLS policies, service permissions, payment state, or agent execution authority are changed.
+- **Localization remains open:** the new Genesis route descriptions are English-only and have not yet been added to the six non-English packs. This must be completed and checked by `scripts/i18n-contract.py` before the hub is considered globally localized.
 - Existing dashboard tabs and hash routes are preserved; Genesis is a first-class tab while Today remains the default to preserve the established member loop; `#genesis` opens the command directory.
 - Keyboard tab navigation, focus visibility, responsive card layouts, and reduced-motion behavior are covered by source-level contract tests.
 

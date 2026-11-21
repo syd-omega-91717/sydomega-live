@@ -322,6 +322,8 @@ window.addAsset=function(){
   save();document.getElementById('add-asset-form').style.display='none';renderAssets();renderOverview();
 };
 window.saveReserves=function(){
+  reservesRecorded=true;
+  localStorage.setItem('omega_treasury_reserves_recorded','1');
   reserves.emerg=Number(document.getElementById('ru-emerg').value||0);
   reserves.opp=Number(document.getElementById('ru-opp').value||0);
   reserves.legacy=Number(document.getElementById('ru-legacy').value||0);

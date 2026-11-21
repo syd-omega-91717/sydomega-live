@@ -218,8 +218,8 @@
 
     <!-- 6-TAB COMMAND WORKSPACE -->
     <div class="layer-tabs" role="tablist" aria-label="Command workspaces">
-      <button id="tab-genesis" class="ltab active" role="tab" aria-selected="true" aria-controls="l-genesis" data-tab-action="genesis" tabindex="0">Ω GENESIS</button>
-      <button class="ltab" role="tab" aria-selected="false" data-tab-action="today" data-i18n="tab_today" tabindex="-1">&#9670; TODAY</button>
+      <button id="tab-today" class="ltab active" role="tab" aria-selected="true" aria-controls="l-today" data-tab-action="today" data-i18n="tab_today" tabindex="0">&#9670; TODAY</button>
+      <button id="tab-genesis" class="ltab" role="tab" aria-selected="false" aria-controls="l-genesis" data-tab-action="genesis" tabindex="-1">Ω GENESIS</button>
       <button class="ltab" role="tab" aria-selected="false" data-tab-action="overview" data-i18n="tab_overview" tabindex="-1">&#9650; OVERVIEW</button>
       <button class="ltab" role="tab" aria-selected="false" data-tab-action="personal" data-i18n="tab_personal" tabindex="-1">&#9670; PERSONAL</button>
       <button class="ltab" role="tab" aria-selected="false" data-tab-action="platform" data-i18n="tab_platform" tabindex="-1">&#9654; PLATFORM</button>
@@ -227,7 +227,7 @@
     </div>
 
     <!-- LAYER: GENESIS / COMMAND -->
-    <div id="l-genesis" class="layer-panel active" role="tabpanel" aria-labelledby="tab-genesis">
+    <div id="l-genesis" class="layer-panel" role="tabpanel" aria-labelledby="tab-genesis">
       <div class="pad">
         <section class="ogc" data-omega-genesis-command aria-labelledby="ogc-title">
           <header class="ogc-hero">
@@ -257,7 +257,7 @@
     <div id="l-overview" class="layer-panel">
       <div class="pad" data-reveal="fade-up">
         <!-- REALM BACKDROP — tinted to this realm's own accent (nav.js SECTIONS "COMMAND").
-             Lives on OVERVIEW, not above the Daily Three: it is 220px of decoration. GENESIS is the canonical landing; TODAY remains the member's daily loop. -->
+             Lives on OVERVIEW, not above the Daily Three: it is 220px of decoration. TODAY remains the default member loop; GENESIS is the command directory tab. -->
         <div class="osc-stage" data-omega-sculpture="signet" data-sculpt-height="min(26vh,220px)"
              data-sculpt-accent="#C9A84C" data-sculpt-bloom="off"
              data-sculpt-label="The Omega signet, tinted to the Command realm"></div>
@@ -317,7 +317,7 @@
 
     <!-- LAYER: PERSONAL -->
     <!-- LAYER: TODAY (the former command.html: daily brief) -->
-    <div id="l-today" class="layer-panel">
+    <div id="l-today" class="layer-panel active" role="tabpanel" aria-labelledby="tab-today">
       <div class="pad">
 <section class="oeh" data-omega-ecosystem-home aria-label="The Omega ecosystem">
   <aside class="oeh-col oeh-left">
@@ -743,7 +743,7 @@ document.addEventListener('omega:fetch-settled',renderFeedHealth);
 
 /* ── TAB SWITCHER ────────────────────────────────────────────── */
 function setTab(name){
-  var tabs=['genesis','today','overview','personal','platform','science'];   /* DOM order of .ltab; Genesis is the canonical entry, explicit hashes preserve legacy views. */
+  var tabs=['today','genesis','overview','personal','platform','science'];   /* DOM order of .ltab; Genesis is the canonical entry, explicit hashes preserve legacy views. */
   document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');b.tabIndex=tabs[i]===name?0:-1;});
   document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.toggle('active',p.id==='l-'+name);});
   if(name==='today'&&!window.__briefLoading){window.__briefLoading=true;var bs=document.createElement('script');bs.src='/omega-daily-brief.js';document.head.appendChild(bs);}
@@ -1292,7 +1292,7 @@ window.setTab=setTab;
   }
   var m={genesis:'genesis',overview:'overview',today:'today',personal:'personal',platform:'platform',science:'science'};
   var h=(location.hash||'').replace('#','');
-  setTab(m[h]||'genesis');
+  setTab(m[h]||'today');
 })();
 window.askAI=askAI;
 </script>

@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_NOT_YET_WIRED",
+  "generated_on": "2026-11-21",
+  "source_of_truth": {
+    "primary_agents": "/omega-agents.json",
+    "navigation": "/nav.js",
+    "page_contracts": "canonical page contract registry"
+  },
+  "migration_policy": {
+    "preserve_existing_urls": true,
+    "preserve_existing_anchors": true,
+    "redirects_allowed_only_after_route_and_auth_parity_tests": true,
+    "delete_legacy_pages": false,
+    "framework_migration": false
+  },
+  "agent_hierarchy": {
+    "primary_agent_count": 12,
+    "subordinate_positions_per_primary": 12,
+    "subordinate_position_capacity": 144,
+    "classification_families": [
+      "HERO",
+      "KING",
+      "PANTHEON"
+    ],
+    "distribution_policy": "UNSPECIFIED_BY_OWNER; do not assume equal distribution",
+    "unassigned_slot_status": "UNASSIGNED",
+    "unassigned_slots_are_operational": false,
+    "primary_roster_path": "/omega-agents.json",
+    "subordinate_identity_policy": "Do not fabricate names, powers, capabilities, or execution status.",
+    "authority_policy": "Parent-child relationship and classification never grant permissions."
+  },
+  "hubs": [
+    {
+      "id": "genesis-command",
+      "title": "Ω Genesis / Command",
+      "canonical_path": "/command.html",
+      "destination_paths": [
+        "/dashboard.html",
+        "/command.html",
+        "/command-center.html",
+        "/world.html",
+        "/world-atlas.html",
+        "/gateway.html",
+        "/guide.html",
+        "/data-observatory.html",
+        "/evidence.html",
+        "/replay.html",
+        "/recovery.html",
+        "/notifications.html"
+      ],
+      "sections": [
+        "Overview",
+        "World",
+        "Global State",
+        "Evidence",
+        "Replay & Recovery",
+        "Module Access"
+      ]
+    },
+    {
+      "id": "intelligence-agent-council",
+      "title": "Ω Intelligence & Agent Council",
+      "canonical_path": "/agents.html",
+      "destination_paths": [
+        "/agents.html",
+        "/agent-network.html",
+        "/agent-operations.html",
+        "/pantheons.html",
+        "/sovereign-ai.html",
+        "/intelligence.html",
+        "/personal-intelligence.html",
+        "/insight.html",
+        "/research.html",
+        "/prediction.html",
+        "/automation.html",
+        "/analytics.html",
+        "/search.html",
+        "/knowledge.html",
+        "/knowledge-loom.html",
+        "/graph-admin.html",
+        "/queue.html"
+      ],
+      "sections": [
+        "My Agent",
+        "Primary Council",
+        "Subordinate Hierarchy",
+        "Network",
+        "Pantheons & Archetypes",
+        "Operations",
+        "Insights & Evidence",
+        "Research & Knowledge"
+      ]
+    },
+    {
+      "id": "finance-exchange",
+      "title": "Ω Finance & Exchange",
+      "canonical_path": "/vault.html",
+      "destination_paths": [
+        "/vault.html",
+        "/invest.html",
+        "/investment.html",
+        "/portfolio.html",
+        "/treasury.html",
+        "/wallet.html",
+        "/blockchain.html",
+        "/marketplace.html",
+        "/income.html",
+        "/revenue.html",
+        "/ledger.html",
+        "/payments.html",
+        "/subscriptions.html",
+        "/billing.html",
+        "/budget.html",
+        "/expenses.html",
+        "/wealth.html",
+        "/advertising.html",
+        "/ad-network.html"
+      ],
+      "sections": [
+        "Vault",
+        "Portfolio",
+        "Investment",
+        "Blockchain",
+        "Marketplace",
+        "Income & Ledger",
+        "Payments & Subscriptions",
+        "Advertising"
+      ]
+    },
+    {
+      "id": "academy-ascension",
+      "title": "Ω Academy & Ascension",
+      "canonical_path": "/academy.html",
+      "destination_paths": [
+        "/academy.html",
+        "/courses.html",
+        "/ascend.html",
+        "/ascension.html",
+        "/matrix.html",
+        "/exam.html",
+        "/gaming.html",
+        "/honors.html",
+        "/trophies.html",
+        "/achievements.html",
+        "/leaderboard.html",
+        "/contributions.html",
+        "/evolution.html",
+        "/points.html",
+        "/ladder.html"
+      ],
+      "sections": [
+        "Academy",
+        "Learning Paths",
+        "9-Stage Ascension",
+        "729-Node Matrix",
+        "Examinations",
+        "Gaming Progress",
+        "Achievements & Credentials",
+        "Leaderboard"
+      ]
+    },
+    {
+      "id": "universe-media",
+      "title": "Ω Universe & Media",
+      "canonical_path": "/media.html",
+      "destination_paths": [
+        "/media.html",
+        "/visual-atlas.html",
+        "/worlds.html",
+        "/game-origins.html",
+        "/game-origins-bridge.html",
+        "/game-omega-civilization.html",
+        "/game-last-galactic-empire.html",
+        "/studio-library.html",
+        "/studio.html",
+        "/creator.html",
+        "/creation-studio.html",
+        "/project-studio.html"
+      ],
+      "sections": [
+        "Movies",
+        "Series",
+        "Games",
+        "Characters",
+        "Worlds",
+        "Demos",
+        "Production Studio",
+        "Visual Atlas"
+      ]
+    },
+    {
+      "id": "identity-heritage",
+      "title": "Ω Identity & Heritage",
+      "canonical_path": "/profile.html",
+      "destination_paths": [
+        "/profile.html",
+        "/family.html",
+        "/hall.html",
+        "/sovereigns.html",
+        "/factions.html",
+        "/bloodline.html",
+        "/character.html",
+        "/archive.html",
+        "/horoscope.html",
+        "/elements.html",
+        "/houses.html",
+        "/life.html",
+        "/passport.html"
+      ],
+      "sections": [
+        "Profile",
+        "Passport",
+        "Family & Bloodline",
+        "Heritage & Archive",
+        "Zodiac & Elements",
+        "Personal Archetype",
+        "Life & Wellbeing"
+      ]
+    },
+    {
+      "id": "governance-security",
+      "title": "Ω Governance & Security",
+      "canonical_path": "/govern.html",
+      "destination_paths": [
+        "/govern.html",
+        "/governance.html",
+        "/compliance.html",
+        "/privacy.html",
+        "/security.html",
+        "/approvals.html",
+        "/control-plane.html",
+        "/control-center.html",
+        "/architecture.html",
+        "/maintenance.html",
+        "/ops.html",
+        "/platform-kernel.html",
+        "/world-shell.html"
+      ],
+      "sections": [
+        "Governance",
+        "Legal & Rights",
+        "Privacy",
+        "Security",
+        "Compliance",
+        "Approvals",
+        "Audit",
+        "Owner Control"
+      ]
+    },
+    {
+      "id": "communication-community",
+      "title": "Ω Communication & Community",
+      "canonical_path": "/social.html",
+      "destination_paths": [
+        "/social.html",
+        "/chatbot.html",
+        "/news.html",
+        "/events.html",
+        "/notifications.html",
+        "/hall.html"
+      ],
+      "sections": [
+        "Messaging",
+        "Community",
+        "Social",
+        "News",
+        "Events",
+        "Notifications"
+      ]
+    },
+    {
+      "id": "consultancy-services",
+      "title": "Ω Consultancy & Services",
+      "canonical_path": "/services.html",
+      "destination_paths": [
+        "/services.html",
+        "/consultancy.html",
+        "/contracts.html",
+        "/publishing.html",
+        "/marketing.html",
+        "/health.html",
+        "/travel.html",
+        "/events.html"
+      ],
+      "sections": [
+        "Consultancy",
+        "Business & Economy",
+        "Legal Services",
+        "Engineering",
+        "Health Service Directory",
+        "Publishing",
+        "Marketing",
+        "Travel"
+      ]
+    }
+  ],
+  "notes": [
+    "This is a route-family proposal, not an exhaustive 238-page route audit.",
+    "Some routes are intentionally cross-listed because they serve more than one workflow; the page-contract audit must select one canonical owner and use contextual links elsewhere.",
+    "Sensitive health and family records must retain their existing authorization, consent, retention, and data-minimization boundaries.",
+    "The Agent Council hub consolidates navigation and presentation; privileged operations remain a separately gated workflow."
+  ]
+}

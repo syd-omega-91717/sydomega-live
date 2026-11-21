@@ -69,8 +69,9 @@ Do not invent 144 names, powers, or operational claims. Until a subordinate is s
 
 Every primary or subordinate agent record should support:
 
-- stable `agent_id` and `parent_agent_id`;
-- `tier` (`PRIMARY` or `SUBORDINATE`);
+- for every **actual provisioned agent**, stable `agent_id` and `parent_agent_id`;
+- for every **unassigned capacity slot**, stable `position_id`, `parent_agent_name`, `slot_number`, `status: UNASSIGNED`, null name/classification, empty capabilities/permissions, and `operational: false`; a slot is not an agent identity;
+- `tier` (`PRIMARY` or `SUBORDINATE`) only after an actual agent is provisioned;
 - `classification` (`HERO`, `KING`, `PANTHEON`, or null for unassigned);
 - canonical name, title, purpose, domains, and declared capabilities;
 - explicit authority scope and denied actions;
@@ -155,7 +156,7 @@ Likewise, financial allocation, token issuance, custody, investment execution, m
 
 ### Phase 1 implementation record — 2026-11-21
 
-- `agents.html` now renders a 12-primary / 144-seat hierarchy panel using the existing canonical `omega-agents.json` roster.
+- `agents.html` now renders a 12-primary / 144-seat hierarchy panel using the existing canonical `omega-agents.json` roster and the validated `/omega-agent-hierarchy.json` capacity registry.
 - Every subordinate position is displayed as `UNASSIGNED`; no names, capabilities, permissions, or live status are fabricated.
 - Network, Pantheons, and Operations remain reachable from the Agent Council navigation; existing URLs are preserved.
 - `agent-network.html` no longer labels every agent active or fabricates authority/last-activity values; it identifies the visualization as illustrative.

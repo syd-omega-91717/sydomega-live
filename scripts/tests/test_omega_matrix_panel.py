@@ -36,6 +36,12 @@ class MatrixPanelTests(unittest.TestCase):
         self.assertEqual(CANON["axes"], 3, "the scene loops three axes (x, y, z)")
         self.assertEqual(len(re.findall(r"for \(var [xyz] = 0; [xyz] < S; [xyz]\+\+\)", scene)), 3)
 
+    def test_matrix_sparkle_pattern_is_deterministic(self):
+        scene = matrix_scene()
+        self.assertIn("Math.imul(i, 1664525)", scene)
+        self.assertIn("sparkle < 0.06", scene)
+        self.assertNotIn("Math.random()", scene, "matrix nodes must render identically for the same scene")
+
     def test_the_shell_contains_none_of_the_figures(self):
         for fig in (str(CANON["nodes_per_track_per_phase"]), str(CANON["total_nodes"]),
                     "{:,}".format(CANON["total_nodes"]), "Knowledge", "Contribution"):

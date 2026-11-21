@@ -329,6 +329,12 @@ GATES = [
     ('blueprint-truth-map',
      'every 999-blueprint point is classified once, with a reason',
      ['scripts/blueprint-truth-map.py', '--check']),
+    ('dashboard-tabs',
+     'Genesis is the default command tab while Today and every legacy tab hash remain intact',
+     ['scripts/tests/test_dashboard_tabs.py']),
+    ('domain-hub-workspaces',
+     'the existing 14 workspaces and the canonical Genesis 12-route directory remain aligned',
+     ['scripts/tests/test_omega_domain_hub_workspaces.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

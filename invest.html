@@ -15,7 +15,8 @@ body{margin:0;background:#020206;color:#e8e5da;font-family:Arial,sans-serif}
 .shell{min-height:100vh}.main{max-width:1320px;margin:0 auto;padding:24px}
 .top{border:1px solid var(--line);background:linear-gradient(135deg,rgba(10,10,15,.92),rgba(20,18,10,.55));padding:28px;margin-bottom:16px}
 .kicker{font:12px monospace;letter-spacing:3px;color:var(--cyan)}h1{font-size:clamp(28px,5vw,52px);margin:8px 0;color:var(--gold)}.lead{max-width:850px;line-height:1.7;color:#aaa}
-.truth{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.truth span{font:var(--fs-1,12px) monospace;letter-spacing:1px;padding:6px 9px;border:1px solid var(--line)}.live{color:var(--green)}.local{color:var(--gold)}.planned{color:var(--muted)}
+.truth{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.truth span{font:var(--fs-1,12px) monospace;letter-spacing:1px;padding:6px 9px;border:1px solid var(--line)}.live{color:var(--green)}
+.disabled{color:var(--muted);border-color:var(--line)}.local{color:var(--gold)}.planned{color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--surface);padding:18px;min-height:150px;transition:.18s}.card:hover{border-color:var(--gold);transform:translateY(-2px)}
 .card h2{font:14px monospace;letter-spacing:2px;color:var(--gold);margin:0 0 9px}.card p{font-size:var(--fs-2,14px);line-height:1.6;color:#999;margin:0 0 12px}.meta{font:var(--fs-1,12px) monospace;letter-spacing:1px;color:var(--muted)}
@@ -32,7 +33,7 @@ body{margin:0;background:#020206;color:#e8e5da;font-family:Arial,sans-serif}
 <div class="kicker">Ω FINANCIAL WORKSPACE · SINGLE ENTRY POINT</div>
 <h1>INVEST</h1>
 <p class="lead">One coherent destination for financial tracking, investment analysis, treasury planning, wallet/account views, revenue architecture, budgeting and expenses. Existing specialist routes remain available as deep links; this page is the navigation and decision layer.</p>
-<div class="truth"><span class="local">USER-LOCAL: INVESTMENT / TREASURY / WALLET / BUDGET / EXPENSES</span><span class="live">PLATFORM STATE: MEMBERSHIP READ-ONLY · BILLING DISABLED</span><span class="planned">PLANNED: SOVEREIGN ECONOMY / RESERVE CLAIMS</span></div>
+<div class="truth"><span class="local">USER-LOCAL: INVESTMENT / TREASURY / WALLET / BUDGET / EXPENSES</span><span class="disabled">PLATFORM STATE: MEMBERSHIP READ-ONLY · BILLING DISABLED</span><span class="planned">PLANNED: SOVEREIGN ECONOMY / RESERVE CLAIMS</span></div>
 <div class="actions"><a class="action" href="/investment.html">OPEN INVESTMENT ENGINE</a><a class="action secondary" href="/vault.html">OPEN SOVEREIGN VAULT</a></div>
 </header>
 <section data-omega-vault-core aria-label="User-local net worth and cash flow from member-entered data"></section>

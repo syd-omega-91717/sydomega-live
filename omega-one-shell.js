@@ -125,6 +125,13 @@
       '.ons-nname{font:13px/1.25 var(--M,"Courier Prime",monospace);letter-spacing:.08em;color:#F0D98F;text-transform:uppercase}',
       '.ons-ncount{font:11px/1.3 var(--M,"Courier Prime",monospace);color:#A9A7A0;margin-top:3px}',
       '@media (max-width:1099px){.ons-map{order:-1}.ons-read{min-height:calc(13px * 1.55 * 4 + 16px)}}',
+      '.ons-col{display:grid;gap:16px;min-width:0}',
+      '.ons-cube{position:relative;width:100%;aspect-ratio:1;min-height:0 !important;pointer-events:none}',
+      '.ons-cube .omega-sculpture-canvas{position:absolute;inset:0;width:100% !important;height:100% !important}',
+      '.ons-facts{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;font:13px/1.45 var(--R,Rajdhani,sans-serif);color:#D3D0C7}',
+      '.ons-facts b{font-weight:400;color:#F0D98F}',
+      '.ons-fnote{margin:8px 0 0;font:12px/1.45 var(--R,Rajdhani,sans-serif);color:#A9A7A0}',
+      '.ons-cubelink{display:inline-flex;align-items:center;min-height:44px;margin-top:4px;font:12px/1 var(--M,"Courier Prime",monospace);letter-spacing:.1em;color:#00E5FF}',
       '.ons-read{margin:0 2px 10px;padding:8px 14px;min-height:calc(13px * 1.55 * 3 + 16px);border:1px solid rgba(201,168,76,.22);border-radius:10px;background:rgba(5,8,14,.7);font:13px/1.55 var(--R,Rajdhani,sans-serif);color:#D3D0C7}',
       '.ons-read b{color:#F0D98F;font-weight:600}',
       /* panels: every figure is computed from loaded data; every panel names its source */
@@ -161,7 +168,7 @@
       '.ons a:focus-visible{outline:2px solid #F0D98F;outline-offset:3px}',
       /* narrow: the ring becomes a grid, the lines go (a ring of 15 buttons does not fit a phone) */
       '@media (max-width:700px){.ons-map{aspect-ratio:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}',
-      '.ons-read{min-height:44px}.ons-signet{display:none !important}.ons-3d .ons-glyph{opacity:1}   /* !important: the module writes an inline display:block */.ons-lines{display:none}.ons-core{position:static;translate:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
+      '.ons-read{min-height:44px}.ons-signet,.ons-cube{display:none !important}.ons-3d .ons-glyph{opacity:1}   /* !important: the module writes an inline display:block */.ons-lines{display:none}.ons-core{position:static;translate:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
       '.ons-node{position:static;translate:none;min-width:0;min-height:64px}}',
       '@media (prefers-reduced-motion:reduce){.ons-eline,.ons-rays,.ons-halo{animation:none}.ons-edge{transition:none}.ons-node,.ons-page{transition:none}.ons-page:hover{transform:none}}'
     ].join('');
@@ -276,6 +283,13 @@
       else if (++tries > 40) clearInterval(iv);                // 10 s
     }, 250);
   }
+  /* If the module never puts a canvas in the cube mount, hide the empty square (the facts and the link stay). */
+  function watchCube(cube) {
+    var tries = 0, iv = setInterval(function () {
+      if (cube.querySelector('canvas.omega-sculpture-canvas')) clearInterval(iv);
+      else if (++tries > 40) { clearInterval(iv); cube.hidden = true; }
+    }, 250);
+  }
   function ensureSculpture() {
     /* bg.js loads the module only where a mount existed at load, under this exact guard attribute: use the same one (class 5: the guard
        attribute is the module's identity), so it can never load twice. */
@@ -285,6 +299,35 @@
     s.setAttribute('data-omega-sculpture-js', '1');
     s.defer = true;
     document.head.appendChild(s);
+  }
+
+  /* The matrix panel's figures come from the canon (window.OmegaCanon.structure, loaded from omega-canon.json by bg.js), never typed here.
+     If the canon is missing or contradicts itself, no figure is shown: a number the data cannot back is not drawn (CLAUDE.md 8.1 class 9). */
+  function fillFacts(list, note) {
+    var t0 = Date.now(), iv = setInterval(function () {
+      var st = window.OmegaCanon && window.OmegaCanon.structure;
+      if (st) { clearInterval(iv); write(st); }
+      else if (Date.now() - t0 > 10000) { clearInterval(iv); none(); }
+    }, 200);
+    function fact(label, value) {
+      var li = el('li');
+      li.appendChild(document.createTextNode(label + ' '));
+      li.appendChild(el('b', null, value));
+      list.appendChild(li);
+    }
+    function none() { list.textContent = ''; list.appendChild(el('li', null, 'The canon could not be read, so no figures are shown.')); }
+    function write(st) {
+      var depth = Number(st.axis_depth), axes = Number(st.axes), per = Number(st.nodes_per_track_per_phase);
+      var tracks = Number(st.tracks), phases = Number(st.phases), total = Number(st.total_nodes);
+      var ok = depth > 0 && axes > 0 && Math.pow(depth, axes) === per && tracks * phases * per === total;
+      list.textContent = '';
+      if (!ok) { none(); return; }
+      var dims = []; for (var i = 0; i < axes; i++) dims.push(depth);
+      fact('Each phase', dims.join(' \u00D7 ') + ' = ' + per.toLocaleString('en-US') + ' nodes');
+      fact('Tracks \u00D7 phases', tracks + ' \u00D7 ' + phases + ' = ' + total.toLocaleString('en-US') + ' nodes');
+      if (Array.isArray(st.axes_names) && st.axes_names.length) fact('Axes', st.axes_names.join(' \u00B7 '));
+    }
+    note.textContent = 'The lit nodes are decorative. This shows the structure, not your progress.';
   }
 
   function buildMap() {
@@ -441,9 +484,28 @@
     stats.appendChild(stat(reg ? openN : '—', 'Open in place', 'eligibility registry'));
     stats.appendChild(stat(rel ? strong + ' / ' + edges.length : '—', 'Relations drawn / found', 'omega-relations.json'));
 
+    /* matrix panel: the platform's own 9x9x9 lattice, drawn by omega-sculpture.js (it owns WebGL), figures from the canon */
+    var mx = panel('The matrix', 'omega-canon.json');
+    var cube = el('div', 'ons-cube');
+    cube.setAttribute('data-omega-sculpture', 'matrix');
+    cube.setAttribute('data-sculpt-bloom', 'off');             // the lattice needs no glow pass, and each bloom is a full-resolution composite per frame
+    cube.setAttribute('data-sculpt-height', '1px');            // sized by CSS; the module wants a length
+    cube.setAttribute('data-sculpt-label', 'The nine by nine by nine matrix lattice, in three dimensions');
+    mx.appendChild(cube);
+    var facts = el('ul', 'ons-facts'), fnote = el('p', 'ons-fnote');
+    mx.appendChild(facts); mx.appendChild(fnote);
+    fillFacts(facts, fnote);
+    var cl = el('a', 'ons-cubelink', 'OPEN THE MATRIX \u2197');
+    cl.href = hostable('matrix') ? '#/p/matrix' : '/matrix.html';
+    mx.appendChild(cl);
+    watchCube(cube, mx);
+    var col = el('div', 'ons-col');
+    col.appendChild(right);
+    col.appendChild(mx);
+
     board.appendChild(left);
     board.appendChild(map);
-    board.appendChild(right);
+    board.appendChild(col);
     board.appendChild(stats);
     viewMap.appendChild(read);      // above the board, so it is on screen while a workspace is pointed at
     viewMap.appendChild(board);

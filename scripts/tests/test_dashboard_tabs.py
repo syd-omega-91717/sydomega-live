@@ -66,7 +66,7 @@ class DashboardOpensOnGenesis(unittest.TestCase):
     HTML = read("dashboard.html")
 
     def test_genesis_is_the_first_tab_and_the_active_one(self):
-        tabs = re.findall(r'<button\\b[^>]*class="ltab( active)?"[^>]*data-tab-action="([a-z]+)"', self.HTML)
+        tabs = re.findall(r'<button\b[^>]*class="ltab( active)?"[^>]*data-tab-action="([a-z]+)"', self.HTML)
         self.assertEqual([t[1] for t in tabs][:2], ["genesis", "today"])
         self.assertEqual([t[1] for t in tabs if t[0]], ["genesis"], "exactly one tab starts active, and it is GENESIS")
 
@@ -83,8 +83,8 @@ class DashboardOpensOnGenesis(unittest.TestCase):
             self.assertIn(key, self.HTML)
 
     def test_setTab_maps_tabs_in_dom_order(self):
-        order = re.findall(r'<button\\b[^>]*class="ltab[^"]*"[^>]*data-tab-action="([a-z]+)"', self.HTML)
-        m = re.search(r"var tabs=\\[([^\\]]*)\\];", self.HTML)
+        order = re.findall(r'<button\b[^>]*class="ltab[^"]*"[^>]*data-tab-action="([a-z]+)"', self.HTML)
+        m = re.search(r"var tabs=\[([^\]]*)\];", self.HTML)
         self.assertEqual(re.findall(r"'([a-z]+)'", m.group(1)), order, "setTab() indexes .ltab by position")
 
     def test_legacy_tab_deep_links_still_win_and_default_is_genesis(self):

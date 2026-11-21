@@ -21,7 +21,10 @@ class OmegaMetricsNamespaceContract(unittest.TestCase):
 
     def test_runtime_monitor_uses_a_different_namespace(self):
         self.assertIn("window.OmegaMonitor = {", self.monitor)
-        self.assertNotIn("window.OmegaMetrics =", self.monitor)
+        self.assertNotIn("OmegaMetrics", self.monitor)
+        self.assertIn("OmegaMonitor.init()", self.monitor)
+        self.assertIn("OmegaMonitor.trackApi(", self.monitor)
+        self.assertIn("OmegaMonitor.trackError(", self.monitor)
 
     def test_monitoring_dashboard_reads_web_vitals_namespace(self):
         self.assertIn("window.OmegaVitals&&window.OmegaVitals.getMetrics", self.dashboard)

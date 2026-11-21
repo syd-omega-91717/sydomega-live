@@ -167,21 +167,6 @@
 <script>
 var EC_COLOR={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand:'#E2C86D',soul:'#9B6BF0',space:'#00E5FF',void:'#3fb27f'};
 var SIGN_GLYPHS={Aries:'♈︎',Taurus:'♉︎',Gemini:'♊︎',Cancer:'♋︎',Leo:'♌︎',Virgo:'♍︎',Libra:'♎︎',Scorpio:'♏︎',Sagittarius:'♐︎',Capricorn:'♑︎',Aquarius:'♒︎',Pisces:'♓︎'};
-var FALLBACK_AGENTS=[
-  {name:'Sentinel',sign:'Aries',element:'Fire',god:'Ares',role:'Security Guardian',token:'ARENITE',greeting:'I am Sentinel, guardian of the sovereign platform. Security, access, and integrity are my domain. How may I serve?',voice:'authoritative'},
-  {name:'Merchant',sign:'Taurus',element:'Metal',god:'Aphrodite',role:'Commerce Steward',token:'AURUM',greeting:'I am Merchant, steward of commerce and value. The token economy, marketplace, and treasury are my domain.',voice:'measured'},
-  {name:'Scout',sign:'Gemini',element:'Wind',god:'Hermes',role:'Discovery Agent',token:'ZEPHYR',greeting:'I am Scout, your intelligence operative. I find what you need before you know you need it.',voice:'quick'},
-  {name:'Warden',sign:'Cancer',element:'Water',god:'Artemis',role:'Heritage Guardian',token:'NEREID',greeting:'I am Warden, protector of bloodline and legacy. Your family archive and heritage are safe in my care.',voice:'protective'},
-  {name:'Sovereign',sign:'Leo',element:'Fire',god:'Apollo',role:'Supreme Coordinator',token:'SOLARI',greeting:'I am Sovereign, coordinator of all agents. I maintain your standing within the Order and route all directives.',voice:'commanding'},
-  {name:'Auditor',sign:'Virgo',element:'Sand',god:'Athena',role:'Integrity Verifier',token:'SANDITE',greeting:'I am Auditor, keeper of integrity. Every claim on your record is verified before it is counted.',voice:'precise'},
-  {name:'Proxy',sign:'Libra',element:'Wind',god:'Hera',role:'Executive Executor',token:'FORGEON',greeting:'I am Proxy, your executive arm. I carry out directives and mediate your position within the Order.',voice:'diplomatic'},
-  {name:'Oracle',sign:'Scorpio',element:'Water',god:'Demeter',role:'Prediction Engine',token:'STYX',greeting:'I am Oracle. I read the patterns in your matrix trajectory that others cannot see.',voice:'enigmatic'},
-  {name:'Beacon',sign:'Sagittarius',element:'Fire',god:'Zeus',role:'Broadcast Agent',token:'EMBER',greeting:'I am Beacon. Your achievements and dispatches reach the wider Order through me.',voice:'expansive'},
-  {name:'Analyst',sign:'Capricorn',element:'Metal',god:'Hestia',role:'Financial Intelligence',token:'FERRUM',greeting:'I am Analyst, your financial intelligence agent. Portfolio, treasury, and economic trajectory are my domain.',voice:'analytical'},
-  {name:'Tutor',sign:'Aquarius',element:'Wind',god:'Hephaestus',role:'Education Guide',token:'AETHER',greeting:'I am Tutor. I raise your Knowledge axis through the Academy and guide your ascension.',voice:'instructive'},
-  {name:'Historian',sign:'Pisces',element:'Water',god:'Poseidon',role:'Memory Keeper',token:'ABYSS',greeting:'I am Historian, keeper of all that has been. Your evolution log and record are in my care.',voice:'reflective'},
-];
-
 var _profile=null,_myAgent=null,_history=[],_agents=[],_sb=null;
 var PHI=1.6180339887,EU=2.7182818285;
 
@@ -219,6 +204,7 @@ function renderHero(ag){
 function renderCouncil(agents,mySign){
   var grid=document.getElementById('council-grid');
   grid.innerHTML='';
+  if(!agents||!agents.length){var empty=document.createElement('div');empty.className='hierarchy-note';empty.textContent='UNAVAILABLE · THE CANONICAL PRIMARY-AGENT ROSTER COULD NOT BE VERIFIED.';grid.appendChild(empty);return;}
   agents.forEach(function(ag){
     var col=getCol(ag.element);
     var glyph=SIGN_GLYPHS[ag.sign]||'✦';
@@ -290,6 +276,7 @@ async function renderHierarchy(agents){
   }
 }
 window.sendMsg=async function(){
+  if(!_myAgent){addMsg('system','UNAVAILABLE · THE CANONICAL AGENT ROSTER IS NOT VERIFIED. NO AGENT REQUEST WAS SENT.');return;}
   var inp=document.getElementById('chat-inp');
   if(!inp||!inp.value.trim())return;
   var q=inp.value.trim();inp.value='';
@@ -361,10 +348,21 @@ _sb=sb;
   sid('k-mysign',(pr.sign||'—').toUpperCase().slice(0,4));
   sid('k-element',(pr.element||'—').toUpperCase().slice(0,4));
   try{
-    var ar=await fetch('/omega-agents.json');
+    var ar=await fetch('/omega-agents.json',{cache:'no-cache'});
+    if(!ar.ok)throw new Error('canonical roster unavailable');
     var data=await ar.json();
-    _agents=data.agents||FALLBACK_AGENTS;
-  }catch(e){_agents=FALLBACK_AGENTS;}
+    var roster=data&&data.agents;
+    var names=Array.isArray(roster)?roster.map(function(ag){return ag&&ag.name;}):[];
+    if(!Array.isArray(roster)||roster.length!==12||names.some(function(n){return typeof n!=='string'||!n.trim();})||new Set(names).size!==12)throw new Error('canonical roster failed validation');
+    _agents=roster;
+  }catch(e){
+    _agents=[];
+    sid('k-myagent','UNAVAILABLE');sid('k-god','—');
+    var unavailable='UNAVAILABLE · CANONICAL AGENT ROSTER COULD NOT BE VERIFIED. NO FALLBACK IDENTITY IS DISPLAYED.';
+    var desc=document.getElementById('my-desc');if(desc)desc.textContent=unavailable;
+    var greeting=document.getElementById('agent-greeting');if(greeting)greeting.textContent=unavailable;
+    var send=document.getElementById('chat-send');if(send)send.disabled=true;
+  }
   var sign=pr.sign||'';
   _myAgent=_agents.find(function(ag){return ag.sign&&ag.sign.toLowerCase()===sign.toLowerCase();})||_agents[0]||null;
   if(_myAgent){

@@ -425,8 +425,9 @@
       fetchDoc(tab[2]).then(function (doc) {
         if (my !== token) return;
         /* The page's own wrapper is what its scripts look up (getElementById('app')), so it is kept, with
-           its id and class, around the copied children. Without one, <main> is the content. */
-        var root = doc.querySelector('#app') || doc.querySelector('.page-shell') || doc.querySelector('main');
+           its id and class, around the copied children. Without one, <main> is the content. A page with none of
+           those marks its own content wrapper with data-omega-panel-root (honors, matrix, media). */
+        var root = doc.querySelector('[data-omega-panel-root]') || doc.querySelector('#app') || doc.querySelector('.page-shell') || doc.querySelector('main');
         if (!root) throw new Error('no content');
         stage.textContent = '';
         var top = el('div', 'op-bar');

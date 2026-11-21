@@ -63,6 +63,8 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertEqual(current['subordinate_position_capacity'], 144)
 
     def test_unassigned_positions_do_not_claim_live_subagents(self):
+        self.assertNotIn('FALLBACK_AGENTS', self.council)
+        self.assertIn("fetch('/omega-agents.json',{cache:'no-cache'})", self.council)
         self.assertIn('UNASSIGNED', self.council)
         self.assertIn('NOT YET ASSIGNED', self.council)
         self.assertIn('classification and parentage do not grant permissions', self.council.lower())
@@ -78,6 +80,9 @@ class AgentCouncilContractTests(unittest.TestCase):
 
     def test_network_view_disclaims_illustrative_relationships(self):
         self.assertIn('Illustrative visual arrangement', self.network)
+        self.assertNotIn('FALLBACK_AGENTS', self.network)
+        self.assertIn('NO FALLBACK IDENTITIES RENDERED', self.network)
+        self.assertNotRegex(self.network, r'onclick\\s*=')
         self.assertIn('NOT EXPOSED BY THIS VISUALIZATION', self.network)
         self.assertNotIn('Level 7 · Active Executor', self.network)
         self.assertNotIn('Real-time · Live monitoring', self.network)

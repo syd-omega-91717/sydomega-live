@@ -61,7 +61,7 @@
           <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:5px">NOTES ON YOUR ARCHETYPE</div>
           <textarea id="arch-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="How does this archetype manifest in your life?"></textarea>
         </div>
-        <button class="btn" onclick="saveArchetype()">SAVE ARCHETYPE</button>
+        <button class="btn" onclick="saveArchetype()">SAVE ON THIS DEVICE</button><p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">This selection is stored in this browser only. It is not currently saved to your SYD OMEGA member profile.</p>
       </div>
     </div>
 
@@ -80,14 +80,14 @@
 
     <!-- SCIENCE TAB -->
     <div class="tab-panel pad" id="tab-science" style="display:none">
-      <div class="sechead">PANTHEON SCIENCE</div>
+      <div class="sechead">PANTHEON THEORY &amp; INTERPRETATION</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px" data-omega-orbital="science">
-        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">01</div><div class="sci-title">ARCHETYPAL PSYCHOLOGY</div><div class="sci-body">James Hillman extended Jung's work into "archetypal psychology" — the gods are not metaphors but autonomous psychic forces. Each deity represents a distinct mode of consciousness operating within the psyche, not just a projection onto the heavens.</div></div>
-        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">02</div><div class="sci-title">THE HERO'S JOURNEY</div><div class="sci-body">Joseph Campbell's comparative mythology identified the monomyth across 3,000+ years of story: departure, initiation, return. Every major pantheon encodes this journey differently, revealing a universal structure of human psychological transformation.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">01</div><div class="sci-title">ARCHETYPAL PSYCHOLOGY</div><div class="sci-body">Hillman's school of archetypal psychology interprets the gods as autonomous psychic forces. This is a theoretical framework for understanding recurring patterns of consciousness, not an empirically settled account.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">02</div><div class="sci-title">THE HERO'S JOURNEY</div><div class="sci-body">Joseph Campbell's comparative mythology identified the monomyth across 3,000+ years of story: departure, initiation, return. Many mythic traditions contain motifs that can be compared with this journey; the extent to which they share one universal structure remains debated.</div></div>
         <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">03</div><div class="sci-title">GODS AS COGNITIVE MODELS</div><div class="sci-body">Julian Jaynes' "Bicameral Mind" thesis: the Olympian gods may represent the inner voice of the right brain speaking to the left. Pantheons externalise and crystallize inner psychological functions into recognizable, teachable archetypes.</div></div>
-        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">04</div><div class="sci-title">SYNCHRONICITY &amp; ARCHETYPE</div><div class="sci-body">Jung's synchronicity: meaningful coincidences cluster around archetypal themes. When the Zeus archetype is active (power, expansion, fathering), related events synchronize. The sovereign learns to read these patterns as navigation signals.</div></div>
-        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">05</div><div class="sci-title">POLYTHEISM AS DIVERSITY</div><div class="sci-body">Monotheism unifies; polytheism diversifies. Jungian analyst David Miller argued that psychological polytheism — holding multiple divine perspectives simultaneously — is more adaptive than single-archetype identification. The sovereign is multi-archetypal.</div></div>
-        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">06</div><div class="sci-title">MYTHIC LEADERSHIP</div><div class="sci-body">Corporate anthropologist Anne Freedman found that the most effective leaders archetypal self-identify clearly and consistently. Teams with archetypal-coherent leadership (King, Warrior, Magician, Lover — Moore &amp; Gillette) show 23% higher cohesion.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">04</div><div class="sci-title">SYNCHRONICITY &amp; ARCHETYPE</div><div class="sci-body">Jung's concept of synchronicity interprets some coincidences as meaningfully connected. Using archetypes as personal reflection prompts is an interpretive practice, not a verified predictive signal.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">05</div><div class="sci-title">POLYTHEISM AS DIVERSITY</div><div class="sci-body">Monotheism unifies; polytheism diversifies. Some depth-psychology writers argue that holding multiple archetypal perspectives can broaden self-reflection. This is a conceptual position, not a universal clinical finding.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">06</div><div class="sci-title">MYTHIC LEADERSHIP</div><div class="sci-body">Corporate anthropologist Anne Freedman found that the most effective leaders archetypal self-identify clearly and consistently. The King, Warrior, Magician, Lover framework (Moore &amp; Gillette) can be used as a leadership reflection model. The previously stated 23% cohesion figure is not supported here by a traceable study and is removed.</div></div>
       </div>
     </div>
 
@@ -121,7 +121,8 @@ var GODS=[
 ];
 
 var KEY='omega_archetype';
-var stored=JSON.parse(localStorage.getItem(KEY)||'{}');
+var stored={};
+try{stored=JSON.parse(localStorage.getItem(KEY)||'{}');if(!stored||typeof stored!=='object'||Array.isArray(stored))stored={};}catch(e){stored={};}
 
 /* The ring reads the same GODS array the cards below do. domain carries an
    HTML entity (&amp;), so it is decoded through a textarea before being handed
@@ -187,7 +188,7 @@ window.saveArchetype=function(){
   var sel=document.getElementById('arch-select');
   stored.godId=parseInt(sel.value)||null;
   stored.notes=document.getElementById('arch-notes').value.trim();
-  localStorage.setItem(KEY,JSON.stringify(stored));
+  try{localStorage.setItem(KEY,JSON.stringify(stored));}catch(e){console.warn('[Omega Pantheons] local preference could not be saved:',e);}
 };
 
 (async function(){

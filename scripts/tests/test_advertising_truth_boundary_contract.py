@@ -21,7 +21,7 @@ class AdvertisingTruthBoundaryContract(unittest.TestCase):
         self.assertIn("status:'pending'", SOURCE)
         self.assertIn("SUBMISSION SAVED AS PENDING", SOURCE)
         self.assertIn("NO PAYMENT TAKEN", SOURCE)
-        self.assertIn("SUBMISSION FAILED · NOT SAVED", SOURCE)
+        self.assertIn("SUBMISSION NOT CONFIRMED", SOURCE)
         self.assertNotIn("SUBMISSION RECEIVED. THE ARCHITECT WILL REVIEW WITHIN 48 HOURS.", SOURCE)
 
     def test_only_https_ad_destinations_are_opened(self):

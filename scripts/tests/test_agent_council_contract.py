@@ -20,6 +20,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         cls.council = read('agents.html')
         cls.network = read('agent-network.html')
         cls.operations = read('omega-agent-operations.js')
+        cls.operations_page = read('agent-operations.html')
         cls.pantheons = read('pantheons.html')
 
     def test_primary_roster_is_exactly_twelve_unique_agents(self):
@@ -92,6 +93,37 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertNotIn('Level 7 · Active Executor', self.network)
         self.assertNotIn('Real-time · Live monitoring', self.network)
 
+    def test_agent_hub_integrates_related_pages_as_lazy_tabs(self):
+        for name in ('network', 'pantheons', 'operations'):
+            self.assertIn(f'data-tab="{name}"', self.council)
+            self.assertIn(f'id="tab-{name}"', self.council)
+        self.assertIn("agent-network.html?embed=1", self.council)
+        self.assertIn("pantheons.html?embed=1", self.council)
+        self.assertIn("agent-operations.html?embed=1", self.council)
+        self.assertIn('AGENT_WORKSPACE_FRAME_PATHS', self.council)
+        self.assertIn('if(frame&&framePath&&!frame.hasAttribute(\'src\'))frame.src=framePath', self.council)
+        self.assertNotIn('getAttribute(\'data-src\')', self.council)
+        self.assertIn('role="tabpanel"', self.council)
+        self.assertIn('role="tablist" aria-label="Agent Council sections"', self.council)
+        self.assertNotRegex(self.council, r'role="tabpanel"[^>]*role="tabpanel"')
+        for name in ('agent', 'council', 'hierarchy', 'chat', 'science', 'network', 'pantheons', 'operations'):
+            self.assertIn(f'id="tab-btn-{name}"', self.council)
+            self.assertIn(f'aria-labelledby="tab-btn-{name}"', self.council)
+
+    def test_embedded_views_preserve_standalone_routes_and_auth_boundaries(self):
+        for page in (self.network, self.pantheons, self.operations_page):
+            self.assertIn('omega-agent-embed-style', page)
+            self.assertIn('<script src="/omega-agent-embed.js" defer></script>', page)
+        self.assertIn("get('embed') === '1'", read('omega-agent-embed.js'))
+        self.assertIn("location.replace('/account.html')", self.pantheons)
+        self.assertIn("pr.is_owner", self.pantheons)
+        self.assertIn("pr.access_approved", self.pantheons)
+        self.assertIn("functions.invoke('agent-execute'", self.operations)
+        self.assertIn('read-only gateway consumer', self.operations)
+
+    def test_agent_architecture_copy_matches_fail_closed_roster(self):
+        self.assertIn('fail closed if the canonical 12-agent roster cannot be verified', self.council)
+        self.assertNotIn('hardcoded 12-agent fallback', self.council)
     def test_pantheon_storage_and_theory_claims_are_truthful(self):
         self.assertIn('SAVE ON THIS DEVICE', self.pantheons)
         self.assertIn('not currently saved to your SYD OMEGA member profile', self.pantheons)

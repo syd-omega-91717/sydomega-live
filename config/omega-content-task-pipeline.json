@@ -91,18 +91,19 @@
   },
   "release_rule": "Provider deployment evidence is recorded, but authenticated end-to-end transaction evidence, rights/publication/entitlement and malware-scan evidence remain separate truth gates.",
   "provider_evidence": {
-    "source": "docs/runtime/supabase-edge-functions-live.json",
+    "source": "config/omega-live-module-runtime-observations.json",
     "functions": {
       "content-ingest": {
         "status": "DEPLOYED",
-        "live_version": 11,
+        "live_version": 13,
         "verify_jwt": true,
         "source": "supabase/functions/content-ingest/index.ts",
         "dependencies": [
           "supabase/functions/_shared/content-validation.mjs"
         ],
-        "source_parity": "EXACT_ENTRYPOINT_MATCH",
-        "provider_observed_at": "2026-11-17T07:48:00.000Z"
+        "source_parity": "NOT_RECONCILED_AFTER_VERSION_13",
+        "provider_observed_at": "2026-11-20",
+        "note": "Read-only production verification on 2026-11-20 observed ACTIVE provider version 13 with byte-signature MIME detection and SHA-256 validation. The older 2026-11-17 live inventory captured version 11; exact version-13 source parity has not yet been independently re-captured. Malware scan remains UNAVAILABLE; rights and publication remain UNVERIFIED."
       },
       "content-delivery": {
         "status": "DEPLOYED",
@@ -114,7 +115,7 @@
         "provider_observed_at": "2026-11-17T07:48:00.000Z"
       }
     },
-    "limitation": "Both content functions are ACTIVE at provider version 11 and their deployed entrypoints match repository source byte-for-byte. The isolated Supabase CI stack passes authenticated upload/download, owner isolation, path guard, idempotency, expiry and audit probes. Production currently has zero Storage objects and zero storage_files rows, so no production user upload/download transaction has yet been observed. Malware scanning, rights review, publication approval and entitlements remain separate fail-closed gates."
+    "limitation": "content-ingest was observed at provider version 13 on 2026-11-20; the earlier byte-for-byte inventory still records version 11, so exact version-13 source parity must be re-captured. content-delivery remains provider version 11 with entrypoint parity recorded in the 2026-11-17 inventory. Production currently has zero Storage objects and zero storage_files rows, so no production member upload/download transaction has been observed. Malware scanning, rights review, publication approval and entitlements remain separate fail-closed gates."
   },
   "publication_attachment_reference": {
     "format": "omega-content://storage_files/<uuid>",

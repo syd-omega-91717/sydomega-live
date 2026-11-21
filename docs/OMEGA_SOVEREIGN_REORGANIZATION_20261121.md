@@ -175,3 +175,4 @@ Likewise, financial allocation, token issuance, custody, investment execution, m
 - The new route directory is read-only and creates no new domain writes, payment actions, agent execution paths, or privilege grants.
 - The command tabs now support ArrowLeft / ArrowRight / Home / End keyboard navigation, and the new destination cards include visible focus states, responsive layouts, and reduced-motion handling.
 - Contract coverage asserts exact equality between the page route manifest and the canonical 12-path Genesis configuration. CI and production verification for this implementation remain pending until this PR is merged and deployed.
+- The new Genesis route descriptions are currently English-only. Localization into the six existing language packs (Arabic, French, Spanish, Hindi, Dutch, and Chinese) remains an explicit open task; no partial or invented translations are presented as complete.

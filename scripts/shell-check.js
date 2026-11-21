@@ -112,6 +112,8 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   r = await page.evaluate(() => { const ns = [...document.querySelectorAll('.ons-node')].map(n => n.getBoundingClientRect()); const m = document.querySelector('.ons-map').getBoundingClientRect(); return { overflow: document.documentElement.scrollWidth > innerWidth, nodes: ns.length, minH: Math.round(Math.min.apply(null, ns.map(b => b.height))), allInside: ns.every(b => b.left >= m.left - 1 && b.right <= m.right + 1), cols: new Set(ns.map(b => Math.round(b.left))).size, linesShown: getComputedStyle(document.querySelector('.ons-lines')).display }; });
   ok(!r.overflow && r.nodes === 15 && r.minH >= 44 && r.allInside && r.cols === 2, 'phone: 2-column grid of 15 nodes, all inside, tap targets >= 44px, no overflow', r);
   ok(r.linesShown === 'none', 'phone: decorative lines hidden', r);
+  r = await page.evaluate(() => { const c = document.querySelector('.ons-core'); return { sig: getComputedStyle(document.querySelector('.ons-signet')).display, glyph: getComputedStyle(c.querySelector('.ons-glyph')).opacity }; });
+  ok(r.sig === 'none' && r.glyph === '1', 'phone: no 3-D mount, the CSS Omega is shown', r);
   await page.evaluate(() => { location.hash = '#/hub/cosmos'; }); await wait(500);
   r = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth, minH: Math.round(Math.min.apply(null, [...document.querySelectorAll('.ons-page')].map(n => n.getBoundingClientRect().height))) }));
   ok(!r.overflow && r.minH >= 44, 'phone: hub view has no overflow, pages are tappable', r);
@@ -141,6 +143,56 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   r = await page.evaluate(() => ({ focus: document.querySelector('.ons-map').getAttribute('data-focus'), hot: document.querySelectorAll('.ons-edge.hot').length }));
   ok(r.focus === null && r.hot === 0, 'moving away clears the focus', r);
   await browser.close();
+  console.log('3-D SIGNET CORE');
+  const goldPixels = () => page.evaluate(() => {
+    const cv = document.querySelector('.ons-signet canvas.omega-sculpture-canvas');
+    if (!cv || !cv.width) return { canvas: false };
+    const t = document.createElement('canvas'); t.width = cv.width; t.height = cv.height;
+    const x = t.getContext('2d'); x.drawImage(cv, 0, 0);
+    const d = x.getImageData(0, 0, t.width, t.height).data; let gold = 0, clear = 0, n = d.length / 4;
+    for (let i = 0; i < d.length; i += 4) { if (d[i + 3] > 200 && d[i] > 150 && d[i + 1] > 100 && d[i + 2] < 140) gold++; if (d[i + 3] < 8) clear++; }
+    const corners = [0, (t.width - 1) * 4, (t.height - 1) * t.width * 4, d.length - 4].map(o => d[o + 3]);
+    return { canvas: true, w: t.width, h: t.height, goldShare: +(gold / n).toFixed(4), clearShare: +(clear / n).toFixed(3), corners };
+  });
+  ({ browser, ctx } = await launch({ width: 1440, height: 900 }));
+  page = await ctx.newPage();
+  await page.goto('http://localhost:8765/sovereign-core.html', { waitUntil: 'load' }); await wait(6000);
+  await page.evaluate(() => document.querySelector('[data-omega-one-shell]').scrollIntoView({ block: 'start', behavior: 'instant' })); await wait(1500);
+  r = await page.evaluate(() => { const c = document.querySelector('.ons-core'); const st = window.OmegaSculpture ? window.OmegaSculpture.status() : []; return { three: c.classList.contains('ons-3d'), glyph: getComputedStyle(c.querySelector('.ons-glyph')).opacity, live: st.filter(m => m.kind === 'signet' && m.live && !m.fallback).length, dead: st.filter(m => m.fallback).length, fps: st[0] && st[0].fpsCap, frameMs: st[0] && st[0].frameMs, scripts: document.querySelectorAll('script[src="/omega-sculpture.js"]').length, canvases: document.querySelectorAll('.ons-signet canvas').length }; });
+  ok(r.three && r.glyph === '0' && r.live >= 2 && r.dead === 0 && r.scripts === 1 && r.canvases === 1, '3-D signet is live in the core (and the hero\'s), the CSS glyph stepped aside, the module is loaded once', r);
+  const gp = await goldPixels();
+  ok(gp.canvas && gp.goldShare > 0.02 && gp.clearShare > 0.5 && gp.corners.every(a => a === 0), 'the signet canvas paints real gold geometry on a transparent ground (not blank, not a box)', gp);
+  await browser.close();
+
+  console.log('3-D SIGNET: NO WEBGL');
+  ({ browser, ctx } = await launch({ width: 1440, height: 900 }));
+  page = await ctx.newPage();
+  await page.addInitScript(() => { const g = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function (t, ...a) { return /webgl/i.test(t) ? null : g.call(this, t, ...a); }; });
+  await page.goto('http://localhost:8765/sovereign-core.html', { waitUntil: 'load' }); await wait(6000);
+  await page.evaluate(() => document.querySelector('[data-omega-one-shell]').scrollIntoView({ block: 'start', behavior: 'instant' })); await wait(1200);
+  r = await page.evaluate(() => { const c = document.querySelector('.ons-core'); const cv = c.querySelector('canvas'); let ink = 0; if (cv && cv.width) { const t = document.createElement('canvas'); t.width = cv.width; t.height = cv.height; const x = t.getContext('2d'); x.drawImage(cv, 0, 0); const d = x.getImageData(0, 0, t.width, t.height).data; for (let i = 3; i < d.length; i += 4) if (d[i] > 40) ink++; } return { three: c.classList.contains('ons-3d'), canvas: !!cv, ink }; });
+  ok(r.canvas && r.ink > 200, 'no WebGL: the module draws its flat mark in the core, so the Omega is never missing', r);
+  await browser.close();
+
+  console.log('3-D SIGNET: MODULE BLOCKED');
+  ({ browser, ctx } = await launch({ width: 1440, height: 900 }));
+  page = await ctx.newPage();
+  await page.route('**/omega-sculpture.js', rt => rt.abort());
+  await page.goto('http://localhost:8765/sovereign-core.html', { waitUntil: 'load' }); await wait(12500);
+  r = await page.evaluate(() => { const c = document.querySelector('.ons-core'); return { three: c.classList.contains('ons-3d'), glyph: getComputedStyle(c.querySelector('.ons-glyph')).opacity, nodes: document.querySelectorAll('a.ons-node').length }; });
+  ok(!r.three && r.glyph === '1' && r.nodes === 15, 'module blocked: the CSS Omega stays and all 15 workspaces still link', r);
+  await browser.close();
+
+  console.log('3-D SIGNET: REDUCED MOTION');
+  ({ browser, ctx } = await launch({ width: 1440, height: 900 }));
+  page = await ctx.newPage(); await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('http://localhost:8765/sovereign-core.html', { waitUntil: 'load' }); await wait(6000);
+  await page.evaluate(() => document.querySelector('[data-omega-one-shell]').scrollIntoView({ block: 'start', behavior: 'instant' })); await wait(1500);
+  const snap = () => page.evaluate(() => { const cv = document.querySelector('.ons-signet canvas'); const t = document.createElement('canvas'); t.width = 96; t.height = 96; const x = t.getContext('2d'); x.drawImage(cv, 0, 0, 96, 96); const d = x.getImageData(0, 0, 96, 96).data; let h = 0; for (let i = 0; i < d.length; i++) h = (h * 31 + d[i]) | 0; return h; });
+  const h1 = await snap(); await wait(1500); const h2 = await snap();
+  ok(h1 === h2, 'reduced motion: the signet is one still frame', { h1, h2 });
+  await browser.close();
+
   console.log('RELATIONS FILE UNAVAILABLE');
   ({ browser, ctx } = await launch({ width: 1440, height: 900 }));
   page = await ctx.newPage();

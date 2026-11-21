@@ -107,6 +107,11 @@
       'font:clamp(34px,8vw,72px)/1 var(--D,"Cinzel Decorative",serif);color:#FFF3C4;text-shadow:0 0 18px rgba(255,236,170,.95),0 0 46px rgba(240,213,138,.75);',
       'background:radial-gradient(circle at 38% 30%,rgba(255,250,225,.55),rgba(240,213,138,.3) 30%,rgba(4,7,13,.94) 74%);border:1px solid rgba(255,236,170,.9);',
       'box-shadow:0 0 0 7px rgba(240,213,138,.07),0 0 38px rgba(255,220,120,.55),0 0 120px rgba(240,213,138,.32),0 0 220px rgba(0,229,255,.12),inset 0 0 26px rgba(255,236,170,.3)}',
+      '.ons-glyph{transition:opacity .4s}',
+      '.ons-signet{position:absolute;left:50%;top:50%;width:215%;aspect-ratio:1;translate:-50% -50%;min-height:0 !important;pointer-events:none;z-index:1}',
+      '.ons-signet .omega-sculpture-canvas{position:absolute;inset:0;width:100% !important;height:100% !important}',
+      '.ons-3d .ons-glyph{opacity:0}',
+      '.ons-3d{background:radial-gradient(circle,rgba(4,7,13,.55),rgba(4,7,13,.2) 70%,transparent);border-color:rgba(255,236,170,.35)}',
       '.ons-rays,.ons-halo{position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;translate:-50% -50%}',
       '.ons-rays{width:300%;aspect-ratio:1;z-index:-1;background:repeating-conic-gradient(from 0deg,rgba(255,236,170,.55) 0 .7deg,transparent .7deg 7.5deg);',
       '-webkit-mask-image:radial-gradient(circle,#000 18%,transparent 62%);mask-image:radial-gradient(circle,#000 18%,transparent 62%);animation:ons-turn 90s linear infinite}',
@@ -156,7 +161,7 @@
       '.ons a:focus-visible{outline:2px solid #F0D98F;outline-offset:3px}',
       /* narrow: the ring becomes a grid, the lines go (a ring of 15 buttons does not fit a phone) */
       '@media (max-width:700px){.ons-map{aspect-ratio:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}',
-      '.ons-read{min-height:44px}.ons-lines{display:none}.ons-core{position:static;translate:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
+      '.ons-read{min-height:44px}.ons-signet{display:none !important}.ons-3d .ons-glyph{opacity:1}   /* !important: the module writes an inline display:block */.ons-lines{display:none}.ons-core{position:static;translate:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
       '.ons-node{position:static;translate:none;min-width:0;min-height:64px}}',
       '@media (prefers-reduced-motion:reduce){.ons-eline,.ons-rays,.ons-halo{animation:none}.ons-edge{transition:none}.ons-node,.ons-page{transition:none}.ons-page:hover{transform:none}}'
     ].join('');
@@ -263,6 +268,25 @@
     return d;
   }
 
+  /* The CSS glyph steps aside only when the module has put its canvas in the mount (3-D, or its own flat fallback mark when WebGL is
+     absent). If the module never arrives (blocked, offline), nothing changes: the CSS mark stays. */
+  function watchSignet(sig, core) {
+    var tries = 0, iv = setInterval(function () {
+      if (sig.querySelector('canvas.omega-sculpture-canvas')) { core.classList.add('ons-3d'); clearInterval(iv); }
+      else if (++tries > 40) clearInterval(iv);                // 10 s
+    }, 250);
+  }
+  function ensureSculpture() {
+    /* bg.js loads the module only where a mount existed at load, under this exact guard attribute: use the same one (class 5: the guard
+       attribute is the module's identity), so it can never load twice. */
+    if (window.OmegaSculpture || document.querySelector('script[data-omega-sculpture-js]')) return;
+    var s = document.createElement('script');
+    s.src = '/omega-sculpture.js';
+    s.setAttribute('data-omega-sculpture-js', '1');
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
   function buildMap() {
     viewMap.textContent = '';
     var NS = 'http://www.w3.org/2000/svg';
@@ -275,7 +299,18 @@
     var map = el('div', 'ons-map');
     var svg = svgEl('svg', { 'class': 'ons-lines', viewBox: '0 0 100 100', 'aria-hidden': 'true' });
     map.appendChild(svg);
-    var core = el('div', 'ons-core', 'Ω');
+    var core = el('div', 'ons-core');
+    core.appendChild(el('span', 'ons-glyph', 'Ω'));          // the CSS mark: shown until (and unless) the 3-D signet is live
+    /* The 3-D signet is omega-sculpture.js's, not ours: one attribute mounts it, and that module owns WebGL (audit-webgl-ownership). */
+    var sig = el('div', 'ons-signet');
+    sig.style.position = 'absolute';                          // the module writes an inline position:relative when none is set, which would beat the class and drop the mount out of the centre
+    sig.setAttribute('data-omega-sculpture', 'signet');
+    sig.setAttribute('data-sculpt-glow', 'radiant');
+    sig.setAttribute('data-sculpt-state', 'idle');
+    sig.setAttribute('data-sculpt-height', '1px');            // sized by CSS above; the module wants a length, not a percentage of a box it is sizing
+    sig.setAttribute('data-sculpt-label', 'The Omega signet, rendered in three dimensions');
+    core.appendChild(sig);
+    watchSignet(sig, core);
     core.appendChild(el('span', 'ons-halo'));
     core.appendChild(el('span', 'ons-rays'));
     map.appendChild(core);
@@ -573,6 +608,7 @@
   injectCSS();
   ensureScript('/omega-single-page-workspaces.js', 'omega-single-page-loader');   // the id nav.js checks, so it is not added twice
   ensureScript('/omega-panels.js');
+  ensureSculpture();
   var regP = fetch(REGISTRY_URL, { credentials: 'same-origin' }).then(function (r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();

@@ -61,7 +61,7 @@ Date: 2026-11-20. Status: **plan, nothing built yet.** Owner decisions recorded 
 | stage | deliverable | acceptance (measured) |
 |---|---|---|
 | **0** (this PR) | this plan + `scripts/panel-census.js` | census reproducible; numbers above |
-| **1** | fix the 4 real failures; extract `OmegaPanels.open(url, host)` so any host can use the engine; eligibility registry + CI check | the 4 pages load clean; registry matches a fresh census; no existing hub changes behaviour |
+| **1** | fix the 4 real failures; extract `OmegaPanels.open(url, host)` so any host can use the engine; eligibility registry + CI check | the 4 pages load clean; registry matches a fresh census; no existing hub changes behaviour. **Status 2026-11-21: 4 failures fixed (#1470); registry + CI check built (`config/omega-panel-eligibility.json`, `scripts/panel-eligibility.py`): 218 hostable, 0 needs-fix, 10 navigate away, 7 public standalone, 6 held for review. NOT done: extracting `OmegaPanels.open(url, host)`, which stage 2 needs.** |
 | **2** | `shell` page: hash router, persistent chrome, hosts eligible pages in place, teardown leak test (open/close 20 pages, listeners and timers return to baseline), history/back and focus management | route round-trip test; no page error across the 222; memory/listener baseline held |
 | **3** | blueprint **map** home: radiant Ω signet centre, the 15 hubs as nodes, edges only from §5 sources, click → view with view-transition | every edge cites its source in `config/omega-relations.json`; map renders at 375/768/1440 with no overflow; reduced-motion static state |
 | **4** | visual pass to the reference art: luminous line flow along edges, panel chrome, depth | reference checklist (§9) scored in a render; before/after noise-floored diff |

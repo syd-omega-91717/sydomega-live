@@ -136,7 +136,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   });
   ok(r.drawn === r.edgesInFile && r.unknown === 0, 'every drawn edge is in the evidence file and carries evidence (' + r.drawn + ' of ' + r.edgesInFile + ')', r);
   ok(r.rest === r.strong, 'at rest only the strongest edges show (' + r.rest + ' = weight >= 3)', r);
-  ok(r.panels === 2 && r.core && r.stats.length === 4, 'luminous core, two panels and four counters are present', r);
+  ok(r.panels === 3 && r.core && r.stats.length === 4, 'luminous core, three panels (sizes, relations, matrix) and four counters are present', r);
   await page.evaluate(() => document.querySelector('[data-omega-one-shell]').scrollIntoView({ block: 'start', behavior: 'instant' })); await wait(1200);
   await page.hover('a.ons-node[href="#/hub/achieve"]'); await wait(700);
   r = await page.evaluate(() => ({ hot: document.querySelectorAll('.ons-edge.hot').length, read: document.querySelector('.ons-read').textContent, focus: document.querySelector('.ons-map').getAttribute('data-focus') }));

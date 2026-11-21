@@ -11,7 +11,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 MIRROR = (ROOT / "omega-member-state.js").read_text(encoding="utf-8")
-FINANCE_PAGES = ["wealth", "wallet", "treasury", "revenue", "investment", "expenses", "budget"]
+FINANCE_PAGES = ["wealth", "wallet", "treasury", "revenue", "investment", "expenses", "budget", "portfolio"]
 # A storage key is an underscore name. Hyphenated names (omega-side, omega-vt) are element ids and
 # file names, and `omega:populated` is an event.
 KEY = re.compile(r"""['"](omega_[a-z0-9_]+)['"]""")

@@ -103,7 +103,7 @@
       '.ons-eline{fill:none;stroke:#F6E3A6;stroke-linecap:round;stroke-dasharray:1.1 2.6;animation:ons-flow 5s linear infinite}',
       '.ons-edge.cy .ons-eline{stroke:#7FF0FF}.ons-edge.cy .ons-eglow{stroke:rgba(0,229,255,.45)}',
       '@keyframes ons-flow{to{stroke-dashoffset:-7.4}}',
-      '.ons-core{position:absolute;left:50%;top:50%;width:21%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;z-index:2;',
+      '.ons-core{position:absolute;left:50%;top:50%;width:21%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;display:grid;place-items:center;z-index:2;',
       'font:clamp(34px,8vw,72px)/1 var(--D,"Cinzel Decorative",serif);color:#FFF3C4;text-shadow:0 0 18px rgba(255,236,170,.95),0 0 46px rgba(240,213,138,.75);',
       'background:radial-gradient(circle at 38% 30%,rgba(255,250,225,.55),rgba(240,213,138,.3) 30%,rgba(4,7,13,.94) 74%);border:1px solid rgba(255,236,170,.9);',
       'box-shadow:0 0 0 7px rgba(240,213,138,.07),0 0 38px rgba(255,220,120,.55),0 0 120px rgba(240,213,138,.32),0 0 220px rgba(0,229,255,.12),inset 0 0 26px rgba(255,236,170,.3)}',
@@ -113,14 +113,14 @@
       '.ons-halo{width:230%;aspect-ratio:1;z-index:-2;background:radial-gradient(circle,rgba(255,226,140,.38),rgba(240,213,138,.1) 38%,transparent 66%);animation:ons-breathe 6s ease-in-out infinite}',
       '@keyframes ons-turn{to{rotate:360deg}}',
       '@keyframes ons-breathe{0%,100%{opacity:.75}50%{opacity:1}}',
-      '.ons-node{position:absolute;transform:translate(-50%,-50%);min-width:88px;min-height:56px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:3;',
+      '.ons-node{position:absolute;translate:-50% -50%;min-width:88px;min-height:56px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:3;',
       'border:1px solid rgba(201,168,76,.4);border-radius:12px;background:linear-gradient(145deg,rgba(30,27,20,.94),rgba(5,8,14,.96));box-shadow:0 0 22px rgba(201,168,76,.1);',
       'transition:border-color .2s,box-shadow .2s}',
       '.ons-node:hover,.ons-node:focus-visible,.ons-node.on{border-color:rgba(255,236,170,.95);box-shadow:0 0 34px rgba(240,213,138,.5);outline:none}',
       '.ons-nname{font:13px/1.25 var(--M,"Courier Prime",monospace);letter-spacing:.08em;color:#F0D98F;text-transform:uppercase}',
       '.ons-ncount{font:11px/1.3 var(--M,"Courier Prime",monospace);color:#A9A7A0;margin-top:3px}',
-      '@media (max-width:1099px){.ons-map{order:-1}}',
-      '.ons-read{margin:0 2px 10px;padding:8px 14px;min-height:44px;border:1px solid rgba(201,168,76,.22);border-radius:10px;background:rgba(5,8,14,.7);font:13px/1.55 var(--R,Rajdhani,sans-serif);color:#D3D0C7}',
+      '@media (max-width:1099px){.ons-map{order:-1}.ons-read{min-height:calc(13px * 1.55 * 4 + 16px)}}',
+      '.ons-read{margin:0 2px 10px;padding:8px 14px;min-height:calc(13px * 1.55 * 3 + 16px);border:1px solid rgba(201,168,76,.22);border-radius:10px;background:rgba(5,8,14,.7);font:13px/1.55 var(--R,Rajdhani,sans-serif);color:#D3D0C7}',
       '.ons-read b{color:#F0D98F;font-weight:600}',
       /* panels: every figure is computed from loaded data; every panel names its source */
       '.ons-panel{border:1px solid rgba(201,168,76,.3);border-radius:10px;background:linear-gradient(160deg,rgba(24,21,15,.9),rgba(5,8,14,.94));padding:12px 14px;min-width:0}',
@@ -156,8 +156,8 @@
       '.ons a:focus-visible{outline:2px solid #F0D98F;outline-offset:3px}',
       /* narrow: the ring becomes a grid, the lines go (a ring of 15 buttons does not fit a phone) */
       '@media (max-width:700px){.ons-map{aspect-ratio:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}',
-      '.ons-lines{display:none}.ons-core{position:static;transform:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
-      '.ons-node{position:static;transform:none;min-width:0;min-height:64px}}',
+      '.ons-read{min-height:44px}.ons-lines{display:none}.ons-core{position:static;translate:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
+      '.ons-node{position:static;translate:none;min-width:0;min-height:64px}}',
       '@media (prefers-reduced-motion:reduce){.ons-eline,.ons-rays,.ons-halo{animation:none}.ons-edge{transition:none}.ons-node,.ons-page{transition:none}.ons-page:hover{transform:none}}'
     ].join('');
     document.head.appendChild(s);
@@ -321,7 +321,7 @@
 
     var nodes = {};
     function focusHub(key) {
-      if (!rel) return;
+      if (!rel || (window.matchMedia && window.matchMedia('(max-width:700px)').matches)) return;   // phone: no hover, the lines are hidden, and a changing readout would shift the grid
       if (!key) {
         map.removeAttribute('data-focus');
         edgeEls.forEach(function (x) { x.g.classList.remove('hot'); });

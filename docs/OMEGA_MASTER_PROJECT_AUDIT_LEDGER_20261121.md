@@ -127,18 +127,51 @@ The leaked-password warning has a dedicated protected workflow in `.github/workf
 
 Unused-index findings require query-workload and execution-plan review before any index is removed.
 
-## 7. Sovereign hub implementation status
+## 7. Page contracts and hub reconciliation
 
-The current canonical configuration is `config/omega-sovereign-hubs.json`.
+The page inventory contains **242 root-page contracts**. The registry currently records:
 
-- The overall nine-hub reorganization remains `PARTIALLY_IMPLEMENTED`.
-- **Intelligence & Agent Council** has been integrated into the existing Agent Council workspace.
-- The other eight hubs remain proposed/not yet wired.
+- Workspace: **240/242 UNVERIFIED**.
+- Domain: **206/242 UNVERIFIED**.
+- Primary role: **206/242 UNVERIFIED**.
+- Authorization: **242/242 UNVERIFIED**.
+- Accessibility: **242/242 UNVERIFIED**.
+- Responsive behavior: **242/242 UNVERIFIED**.
+
+These are registry states, not proof that every page is broken. They mean the page-by-page evidence has not yet been materialized into the canonical contract registry. A passing visual survey or static contract does not automatically certify every page's authorization, keyboard, screen-reader, or responsive behavior.
+
+### Two different hub models currently coexist
+
+The runtime still uses the 14-workspace legacy matrix in `config/omega-page-hub-ownership.json`:
+
+| Legacy inventory measure | Current value |
+|---|---:|
+| Page routes | 242 |
+| Legacy workspaces | 14 |
+| Candidate merge panels (including the 14 workspace roots) | 199 |
+| Keep separate | 19 |
+| Ambiguous | 10 |
+| Unmapped | 14 |
+| Unresolved (ambiguous + unmapped) | 24 |
+
+The nine-hub target in `config/omega-sovereign-hubs.json` is **not yet the runtime source of truth**. Its destination lists currently contain **112 unique paths** and **115 total path assignments**. Three paths have multiple proposed owners: /notifications.html (genesis-command|communication-community), /hall.html (identity-heritage|communication-community), /events.html (communication-community|consultancy-services). The target list also references `/billing.html`, which is not present in the 242-page registry or the inspected repository tree. **130 current page routes are absent from the nine-hub destination lists.**
+
+The complete 242-page initial crosswalk is recorded in [OMEGA_242_PAGE_NINE_HUB_CROSSWALK_20261121.csv](OMEGA_242_PAGE_NINE_HUB_CROSSWALK_20261121.csv). It preserves current classifications and source ownership, records proposed target hubs, and marks conflicts/ambiguities for review. It is a planning register, not a runtime permission or routing change.
+
+### Canonical-route correction
+
+The new Genesis / Command configuration previously named `/command.html` as canonical. That page immediately redirects to `/dashboard.html#today`; `nav.js` also maps the command section to `/dashboard.html`. The canonical target is therefore corrected to `/dashboard.html`. `/command.html` and `/command-center.html` remain preserved legacy entry routes.
+
+### Implementation boundary
+
+- The existing 14-workspace runtime and all original routes remain in place until a complete nine-hub crosswalk is reviewed and tested.
+- The Agent Council is an integrated eight-tab page workspace, but its route ownership must still be reconciled with the legacy `cosmos.html` mapping and the nine-hub navigation model.
+- Genesis / Command functionality already exists in `dashboard.html`; the new nine-hub model must reuse it rather than create a duplicate dashboard.
 - The 12 primary agents and 144 subordinate positions are not permission grants. Unassigned positions remain unassigned and non-operational.
 - The network visualization is illustrative, not a live activity or authority feed.
 - The operations panel retains the existing server-authorized read-only execution gateway.
 
-The next hub to implement is **Genesis / Command**, following route, capability, authorization, data, and evidence contracts. Do not consolidate or redirect legacy routes until parity is proven.
+No legacy route is deleted or redirected as part of this reconciliation. Each route must prove purpose, capability, data, authorization, events, failure behavior, accessibility, responsive behavior, and production parity before it is consolidated.
 
 ## 8. High-priority gaps and controls
 
@@ -147,7 +180,9 @@ The next hub to implement is **Genesis / Command**, following route, capability,
 | P1 | Historical uploaded prompts contain credential-shaped literals for Gemini, YouTube, and Stripe variables. Values are deliberately not reproduced here. | Do not commit the source prompts or their values to the public repository. Verify whether any values are live; revoke/rotate active credentials and move replacements to provider-managed secret storage. |
 | P1 | Leaked-password protection is disabled in live Supabase Auth. | Execute the existing protected production workflow with owner/environment approval; verify the live advisor clears. |
 | P1 | Agent Council interactive browser/device inspection is not evidenced. | Run Chromium/Playwright and manual responsive/keyboard/auth checks against the deployed release. |
-| P1 | Eight of nine proposed hubs remain unwired. | Build one hub at a time, starting with Genesis / Command, using existing static architecture and page contracts. |
+| P1 | The 14-workspace runtime and nine-hub target are not reconciled; the target lists 112 unique routes, leaves 130 current pages out, has three overlapping owners, and references a missing `/billing.html`. | Complete and review the 242-page crosswalk before changing runtime routing; keep every legacy route and permission boundary intact. |
+| P1 | The canonical Genesis route in the nine-hub config was `/command.html`, which redirects to `/dashboard.html`; the active navigation also uses `/dashboard.html`. | Use `/dashboard.html` as canonical and retain command routes as aliases. |
+| P1 | The 242-page registry marks authorization, accessibility, and responsive behavior UNVERIFIED for every page. | Materialize per-page auth, keyboard/screen-reader, and responsive evidence before marking any page verified. |
 | P1 | `wrangler.toml` contains placeholder Worker configuration values (including a placeholder zone ID and KV namespace identifier). | Determine whether the rate-limiter Worker is intended to be deployed; if yes, configure real provider resources and add a protected deployment/verification path. If not, clearly mark it non-operational and remove misleading deployment assumptions. |
 | P1 | Financial and payment concepts require end-to-end provider evidence, not only schema/RPC presence. | Verify Stripe signature handling, idempotency, settlement, ledger posting, reconciliation, entitlements, refunds/reversals, test/live separation, and legal/compliance obligations before enabling real money movement. |
 | P2 | 999-point source contains 608 IDs without individual numbered entries and eight duplicate IDs. | Resolve the source specification before assigning implementation status to those points. |

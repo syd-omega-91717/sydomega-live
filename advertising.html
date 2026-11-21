@@ -211,7 +211,7 @@ async function submitAd(){
     if(ins.error)throw ins.error;
     fb.style.color='var(--green)';fb.textContent='SUBMISSION SAVED AS PENDING · NO PAYMENT TAKEN · REVIEW TIMING NOT GUARANTEED.';
     ['adv-company','adv-email','adv-headline','adv-body','adv-url'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  }catch(e){fb.style.color='var(--solar)';fb.textContent='SUBMISSION FAILED · NOT SAVED. PLEASE RETRY OR CONTACT SUPPORT.';}
+  }catch(e){fb.style.color='var(--solar)';fb.textContent='SUBMISSION NOT CONFIRMED · CHECK STATUS BEFORE RETRY.';}
   btn.disabled=false;
 }
 

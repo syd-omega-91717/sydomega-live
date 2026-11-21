@@ -47,7 +47,8 @@
       "classification_source": "Latest owner instruction dated 2026-11-21",
       "classification_distribution": "UNSPECIFIED",
       "subordinate_identities_and_capabilities": "NOT_DEFINED_IN_SOURCE; remain UNASSIGNED until specified and approved"
-    }
+    },
+    "position_registry_path": "/omega-agent-hierarchy.json"
   },
   "hubs": [
     {
@@ -321,7 +322,7 @@
     "The Agent Council hub consolidates navigation and presentation; privileged operations remain a separately gated workflow."
   ],
   "implementation_status": {
-    "agent_council_hierarchy": "PARTIALLY_IMPLEMENTED_IN_AGENTS_HTML",
+    "agent_council_hierarchy": "PARTIALLY_IMPLEMENTED_WITH_VALIDATED_144_SLOT_REGISTRY",
     "network_visualization": "LEGACY_ROUTE_PRESERVED_AND_TRUTH_LABELS_CORRECTED",
     "pantheons": "LEGACY_ROUTE_PRESERVED_NOT_YET_CONSOLIDATED",
     "operations": "LEGACY_ROUTE_PRESERVED; canonical UI roster; server allowlist unchanged",

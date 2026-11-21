@@ -51,6 +51,17 @@ class StudioLibrary(unittest.TestCase):
         self.assertEqual(new, {"the-omega-chronicles": "101 The Calibration", "the-lost-civilizations": "101 The Same Sentence",
                                "the-last-galactic-empire": "101 The Unregistered Fleet", "the-human-frontier": "101 Ration Day"})
 
+    def test_series_episode_buttons_show_full_titles_not_ambiguous_numbers(self):
+        """The series list must expose the script title, not only its first three digits."""
+        js = (ROOT / "omega-studio-library.js").read_text(encoding="utf-8")
+        page = (ROOT / "studio-library.html").read_text(encoding="utf-8")
+        self.assertIn("readBtn(id, L.documents[id].title, 'sl-episode-btn')", js)
+        self.assertIn("'class': 'sl-btn' + (extraClass ? ' ' + extraClass : '')", js)
+        self.assertNotIn("L.documents[id].title.slice(0, 3)", js)
+        self.assertIn(".sl-episode-btn{", page)
+        self.assertIn("white-space:normal", page)
+        self.assertIn("overflow-wrap:anywhere", page)
+
     def test_every_document_reference_resolves_and_has_text(self):
         p = lib.build()
         refs = []

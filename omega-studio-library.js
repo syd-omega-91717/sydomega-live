@@ -74,7 +74,7 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('sl-reader').hidden) closeDoc(); });
 
   /* ---- lists */
-  function readBtn(id, label) { var b = h('button', { type: 'button', 'class': 'sl-btn', text: label }); b.addEventListener('click', function () { openDoc(id); }); return b; }
+  function readBtn(id, label, extraClass) { var b = h('button', { type: 'button', 'class': 'sl-btn' + (extraClass ? ' ' + extraClass : ''), text: label }); b.addEventListener('click', function () { openDoc(id); }); return b; }
   function franchiseBlock(f, cards) { return h('div', {}, [h('h2', { 'class': 'sl-fr', text: f.title }), h('div', { 'class': 'sl-grid' }, cards)]); }
 
   function viewFilms() {
@@ -92,7 +92,7 @@
     frs().forEach(function (f) {
       var s = f.series, size = s.seasons ? s.seasons + ' × ' + s.episodesPerSeason : 'NOT SIZED';
       var kids = [badge(s.status), h('div', { 'class': 'sl-name', text: s.title }), h('p', { 'class': 'sl-meta', text: size })];
-      kids.push(h('div', { 'class': 'sl-row' }, s.docs.map(function (id) { return readBtn(id, L.documents[id].title.slice(0, 3)); })));
+      kids.push(h('div', { 'class': 'sl-row' }, s.docs.map(function (id) { return readBtn(id, L.documents[id].title, 'sl-episode-btn'); })));
       box.appendChild(franchiseBlock(f, [h('div', { 'class': 'sl-card' }, kids)]));
     });
     return box;

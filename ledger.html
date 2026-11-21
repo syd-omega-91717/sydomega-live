@@ -34,6 +34,7 @@
 </head>
 <body>
 <aside id="omega-side" data-page="ledger"></aside>
+<section id="ledger-load-error" hidden role="alert" aria-live="assertive" style="max-width:620px;margin:10vh auto;padding:24px;border:1px solid var(--crim);color:var(--ink);background:var(--void2);font-family:var(--M);line-height:1.7">LEDGER UNAVAILABLE · AUTHORIZED PROFILE COULD NOT BE VERIFIED. <a href="/ledger.html" style="color:var(--gold)">RETRY</a></section>
 <div class="page-shell" id="app" style="display:none">
 <header class="topbar">
   <div class="topbar-title">ASSET LEDGER<span class="topbar-sub">SOVEREIGN RECORD &middot; 12&times;12&times;9&times;9&times;9 &middot; 104,976 NODES</span></div>
@@ -49,29 +50,30 @@
 <div class="tab-panel active" id="tab-overview">
   <div class="sechead">PORTFOLIO SUMMARY</div>
   <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-assets">12</div><div class="kpi-label">ASSETS</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-auth">—</div><div class="kpi-label">AUTHORITY</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-node">—</div><div class="kpi-label">LATTICE NODE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-assets">—</div><div class="kpi-label">USER-RECORDED ASSETS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-auth">—</div><div class="kpi-label">CALCULATED AUTH SCORE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="ov-node">—</div><div class="kpi-label">CALCULATED NODE INDEX</div></div>
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">104,976</div><div class="kpi-label">TOTAL NODES</div></div>
   </div>
   <div class="sechead" style="margin-top:8px">LATTICE CONSTANTS</div>
   <div class="lf-bar"><div class="lf-key">AUTH FORMULA</div><div class="lf-val">&radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div></div>
   <div class="lf-bar"><div class="lf-key">LATTICE STRUCTURE</div><div class="lf-val">12 &times; 12 &times; 9 &times; 9 &times; 9 = 104,976</div></div>
-  <div class="lf-bar"><div class="lf-key">APEX AUTHORITY</div><div class="lf-val">27.8367</div></div>
+  <div class="lf-bar"><div class="lf-key">MAX CALCULATED AUTH SCORE</div><div class="lf-val">27.8367 (MAXIMUM)</div></div>
   <div class="lf-bar"><div class="lf-key">PHI / EULER</div><div class="lf-val">1.6180339887 / 2.7182818285</div></div>
 </div>
 
 <div class="tab-panel" id="tab-registry">
-  <div class="sechead">ASSET REGISTRY &mdash; <span id="entry-count" style="color:var(--muted)">12 ENTRIES</span></div>
+  <div class="sechead">USER-RECORDED ASSET REGISTER &mdash; <span id="entry-count" style="color:var(--muted)">—</span></div>
   <div class="search-wrap">
     <input type="text" class="ledger-search" id="ledger-search" placeholder="Search assets&hellip;" autocomplete="off"/>
   </div>
   <div style="overflow-x:auto;border:1px solid var(--line);background:var(--surface)">
     <div class="tbl-wrap" id="ledger-table">
-      <div class="tbl-head" style="grid-template-columns:1fr 1.4fr 1.2fr 150px"><span>ASSET ID</span><span>NODE CATEGORY</span><span>ALLOCATION WEIGHT</span><span style="text-align:right">STATUS</span></div>
+      <div class="tbl-head" style="grid-template-columns:110px 1.5fr 1fr 100px 180px"><span>RECORD</span><span>ASSET NAME</span><span>TYPE / TRACK</span><span>QUANTITY</span><span>EVIDENCE STATE</span></div>
       <div id="ledger-body"></div>
     </div>
   </div>
+  <p role="note" style="font:12px monospace;line-height:1.7;color:var(--muted);margin-top:12px">USER-RECORDED METADATA ONLY · NOT INDEPENDENT PROOF OF OWNERSHIP, CUSTODY, LEGAL TITLE OR MARKET VALUE.</p>
 </div>
 
 <div class="tab-panel" id="tab-matrix">
@@ -79,97 +81,29 @@
   <div class="matrix-grid">
     <div class="mx-cell"><div class="mx-val" id="mx-track">—</div><div class="mx-lbl">MATRIX TRACK</div></div>
     <div class="mx-cell"><div class="mx-val" id="mx-phase">—</div><div class="mx-lbl">MATRIX PHASE</div></div>
-    <div class="mx-cell"><div class="mx-val" id="mx-node">—</div><div class="mx-lbl">NODE INDEX</div></div>
+    <div class="mx-cell"><div class="mx-val" id="mx-node">—</div><div class="mx-lbl">CALCULATED NODE INDEX</div></div>
     <div class="mx-cell"><div class="mx-val">104,976</div><div class="mx-lbl">TOTAL NODES</div></div>
   </div>
   <div class="glass">
     <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">NODE CALCULATION</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.8">NODE = ((TRACK−1) × 12 + (PHASE−1)) × 729 + (ceil(A)−1) × 81 + (ceil(B)−1) × 9 + ceil(C)<br/>where A, B, C ∈ [1,9] and TRACK, PHASE ∈ [1,12]</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8">NODE = ((TRACK−1) × 12 + (PHASE−1)) × 729 + (ceil(A)−1) × 81 + (ceil(B)−1) × 9 + ceil(C)<br/>where raw profile axes are finite in [0,9], mapped to lattice coordinates 1..9 by ceil/clamp, and TRACK, PHASE ∈ [1,12]. This is a calculated profile coordinate, not an earned or unlocked asset.</div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">LEDGER ARCHITECTURE</div>
   <div class="card-grid">
-    <div class="card"><div class="card-title">SOVEREIGN ASSET REGISTER</div><div class="card-body">The Asset Ledger is a record of all sovereign asset classes within the SYD OMEGA 91717 platform. Assets span three categories: Sovereign (core platform infrastructure), Digital (data and blockchain), and Physical (tangible reserve assets).</div></div>
+    <div class="card"><div class="card-title">MEMBER-RECORDED ASSET REGISTER</div><div class="card-body">This register reads authenticated records from <code>public.user_assets</code>. Names, types and quantities are member-recorded metadata only; this page does not independently verify ownership, custody, legal title or market value.</div></div>
     <div class="card"><div class="card-title">THE 104,976-NODE LATTICE</div><div class="card-body">The full lattice is 12 × 12 × 9 × 9 × 9 = 104,976 coordinate nodes. Each node encodes a unique combination of matrix track, phase, and axis values (A, B, C). Your lattice position is your sovereign coordinate.</div></div>
-    <div class="card"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = √(A³+B³+C³) × φ/e where φ = 1.6180339887 (golden ratio) and e = 2.7182818285 (Euler's number). Maximum authority of 27.8367 is achieved at axis values (9,9,9). All ledger valuations are anchored to AUTH.</div></div>
-    <div class="card"><div class="card-title">ASSET STATUS CLASSES</div><div class="card-body">Assets carry four status types: VERIFIED (cryptographically confirmed active assets), ACTIVE (operationally live), RESONANCE LOCK (gate-locked pending authority threshold), PENDING (staged for future activation on compliance sign-off).</div></div>
+    <div class="card"><div class="card-title">CALCULATED PROFILE SCORE</div><div class="card-body">AUTH = √(A³+B³+C³) × φ/e, calculated from the authenticated profile axes. The maximum mathematical score is 27.8367 at (9,9,9). This score is not a financial valuation, ownership proof, legal title, custody record or authorization grant.</div></div>
+    <div class="card"><div class="card-title">RECORD EVIDENCE BOUNDARY</div><div class="card-body">A row is USER-RECORDED metadata only. No cryptographic title, custody proof, independent valuation, reserve ownership or external verification is connected to this register. Do not treat a record as proof of an asset.</div></div>
   </div>
 </div>
 <div data-page-emblem="ledger" style="margin:20px auto 0"></div>
 </div>
 
-<script>
-var ASSETS=[
-  {id:'&#937;-CORE-001',cat:'sovereign',node:'Core Portal Interface Layer',weight:'51% Absolute Master Stake',status:'pending'},
-  {id:'&#937;-EVOL-002',cat:'digital',node:'Dynamic Regulatory Logic Node',weight:'Contribution Class Alpha',status:'locked'},
-  {id:'&#937;-NETW-003',cat:'digital',node:'Omni-Fulfillment Mesh Pipeline',weight:'Execution Vector Global',status:'active'},
-  {id:'&#937;-PHYS-004',cat:'physical',node:'Swiss Vault Gold Bars',weight:'Reserve Collateral',status:'pending'},
-  {id:'&#937;-PHYS-005',cat:'physical',node:'Singapore High-Rise Property',weight:'Heritage Allocation',status:'pending'},
-  {id:'&#937;-BLKC-006',cat:'sovereign',node:'Blockchain Identity Node',weight:'Immutable Record Layer',status:'verified'},
-  {id:'&#937;-ACAD-007',cat:'digital',node:'Academy Knowledge Matrix',weight:'Knowledge Axis A',status:'active'},
-  {id:'&#937;-NFT-008',cat:'digital',node:'NFT Sovereign Lines',weight:'Digital Lineage',status:'locked'},
-  {id:'&#937;-FAM-009',cat:'sovereign',node:'Family Nest Protocol',weight:'Bloodline Reserve',status:'verified'},
-  {id:'&#937;-INV-010',cat:'digital',node:'Investment Engine Alpha',weight:'Portfolio Allocation',status:'active'},
-  {id:'&#937;-INTEL-011',cat:'sovereign',node:'Intelligence Lab Node',weight:'Data Sovereignty Layer',status:'verified'},
-  {id:'&#937;-HER-012',cat:'physical',node:'Heritage Archive System',weight:'Cultural Preservation',status:'locked'}
-];
-var STATUS_LABELS={verified:'VERIFIED',locked:'RESONANCE LOCK',active:'ACTIVE',pending:'PENDING'};
-function renderAssets(list){
-  var tb=document.getElementById('ledger-body');if(!tb)return;
-  var ec=document.getElementById('entry-count');if(ec)ec.textContent=list.length+' ENTRIES';
-  var cols='grid-template-columns:1fr 1.4fr 1.2fr 150px';
-  if(!list.length){
-    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted);font-family:var(--M);font-size:12px">No assets match your search.</div>';
-    return;
-  }
-  tb.innerHTML=list.map(function(a){
-    return'<div class="tbl-row" style="'+cols+'">'
-      +'<span><div class="asset-id">'+a.id+'</div><div style="margin-top:4px"><span class="asset-cat '+a.cat+'">'+a.cat.toUpperCase()+'</span></div></span>'
-      +'<span style="font-size:12px;color:var(--ink)">'+a.node+'</span>'
-      +'<span style="font-family:var(--M);font-size:12px;color:var(--muted)">'+a.weight+'</span>'
-      +'<span style="text-align:right"><span class="status-pill '+a.status+'">'+STATUS_LABELS[a.status]+'</span></span>'
-      +'</div>';
-  }).join('');
-}
-function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['overview','registry','matrix','science'][i]===name);});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
-}
-document.addEventListener('DOMContentLoaded',function(){
-  renderAssets(ASSETS);
-  var s=document.getElementById('ledger-search');
-  if(s)s.addEventListener('input',function(){
-    var q=this.value.trim().toLowerCase();
-    renderAssets(q?ASSETS.filter(function(a){return(a.id+a.node+a.weight+a.cat).toLowerCase().includes(q);}):ASSETS);
-  });
-});
-</script>
-<script type="module">
-import{createClient}from'/vendor/supabase-js.js';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-var PHI=1.6180339887,EU=2.7182818285;
-async function boot(){
-  var sess=(await sb.auth.getSession()).data.session;
-  if(!sess){window.location.href='/account.html';return;}
-  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
-  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
-  document.getElementById('app').style.display='flex';
-  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
-  var a=Number(pr.axis_a||0.001),b=Number(pr.axis_b||0.001),c=Number(pr.axis_c||0.001);
-  var auth=Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-  var tr=Number(pr.matrix_track||1),ph=Number(pr.matrix_phase||1);
-  var aI=Math.max(1,Math.min(9,Math.ceil(a))),bI=Math.max(1,Math.min(9,Math.ceil(b))),cI=Math.max(1,Math.min(9,Math.ceil(c)));
-  var node=((tr-1)*12+(ph-1))*729+(aI-1)*81+(bI-1)*9+cI;
-  document.getElementById('ov-auth').textContent=auth.toFixed(3);
-  document.getElementById('ov-node').textContent=node.toLocaleString();
-  document.getElementById('mx-track').textContent=tr;
-  document.getElementById('mx-phase').textContent=ph;
-  document.getElementById('mx-node').textContent=node.toLocaleString()+' / 104,976';
-}
-boot();
-</script>
+<script type="module" src="/omega-ledger-native.js"></script>
+
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

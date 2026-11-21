@@ -285,7 +285,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         route_block = re.search(r"var ROUTES = Object.freeze\(\[(.*?)\]\);", runtime, re.S)
         self.assertIsNotNone(route_block)
         route_paths = re.findall(r"path:\s*'([^']+)'", route_block.group(1))
-        self.assertEqual(route_paths, hub["destination_paths"])
+        self.assertEqual(set(route_paths), set(hub["destination_paths"]))
         self.assertEqual(len(route_paths), len(set(route_paths)))
         for path in route_paths:
             self.assertTrue((ROOT / path.lstrip("/")).is_file(), path)

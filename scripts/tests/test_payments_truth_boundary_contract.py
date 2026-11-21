@@ -32,8 +32,10 @@ class PaymentsTruthBoundaryContract(unittest.TestCase):
 
     def test_empty_history_explains_missing_authoritative_ledger(self):
         self.assertIn("TRANSACTION LEDGER UNAVAILABLE", SOURCE)
-        self.assertIn("authoritative payment records are not connected", SOURCE)
-        self.assertIn("This page will not infer payments from task activity.", SOURCE)
+        self.assertIn("tb.replaceChildren();", SOURCE)
+        self.assertNotIn("tb.innerHTML=filtered.map", SOURCE)
+        self.assertIn("AUTHORITATIVE PAYMENT RECORDS ARE NOT CONNECTED", SOURCE)
+        self.assertIn("NO PAYMENT HAS BEEN INFERRED FROM TASK ACTIVITY.", SOURCE)
 
     def test_boot_keeps_ledger_unavailable_without_synthetic_calculation(self):
         self.assertIn("window.__txRows=[];", SOURCE)

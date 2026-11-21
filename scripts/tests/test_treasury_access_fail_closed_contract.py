@@ -30,6 +30,15 @@ class TreasuryAccessFailClosedContract(unittest.TestCase):
         self.assertIn('id="treasury-load-error" hidden role="alert"', SOURCE)
         self.assertIn('id="treasury-load-retry" href="/treasury.html"', SOURCE)
 
+    def test_unrecorded_financial_values_are_not_rendered_as_zero_balances(self):
+        self.assertIn("var reservesRecorded=localStorage.getItem('omega_treasury_reserves_recorded')", SOURCE)
+        self.assertIn("hasAssets?fmt(t.total):'—'", SOURCE)
+        self.assertIn("reservesRecorded?fmt(e):'—'", SOURCE)
+        self.assertIn("if(!flows.length)", SOURCE)
+        self.assertIn("f-total-in').textContent='—'", SOURCE)
+        self.assertIn("NO ASSETS OR RESERVES RECORDED", SOURCE)
+
+
 
 if __name__ == "__main__":
     unittest.main()

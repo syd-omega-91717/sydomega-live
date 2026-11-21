@@ -208,7 +208,7 @@ var assets=JSON.parse(localStorage.getItem(AK)||'[]');
    visit, killing every handler defined below (see contributions.html). */
 var reserves=JSON.parse(localStorage.getItem(RK)||'{"emerg":0,"opp":0,"legacy":0,"emergTarget":0}');
 var flows=JSON.parse(localStorage.getItem(FK)||'[]');
-var reservesRecorded=localStorage.getItem(RK+'_recorded')==='1' || [reserves.emerg,reserves.opp,reserves.legacy].some(function(value){return Number(value||0)!==0;});
+var reservesRecorded=localStorage.getItem('omega_treasury_reserves_recorded')==='1' || [reserves.emerg,reserves.opp,reserves.legacy].some(function(value){return Number(value||0)!==0;});
 
 function save(){localStorage.setItem(AK,JSON.stringify(assets));localStorage.setItem(RK,JSON.stringify(reserves));localStorage.setItem(FK,JSON.stringify(flows));}
 
@@ -323,7 +323,7 @@ window.addAsset=function(){
 };
 window.saveReserves=function(){
   reservesRecorded=true;
-  localStorage.setItem(RK+'_recorded','1');
+  localStorage.setItem('omega_treasury_reserves_recorded','1');
   reserves.emerg=Number(document.getElementById('ru-emerg').value||0);
   reserves.opp=Number(document.getElementById('ru-opp').value||0);
   reserves.legacy=Number(document.getElementById('ru-legacy').value||0);

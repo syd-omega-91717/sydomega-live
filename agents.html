@@ -1,7 +1,25 @@
 <!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end --><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}/* 12x12 hierarchy — canonical Omega surface, gold and cyan tokens. */
+.hierarchy-summary{display:flex;gap:.65rem;flex-wrap:wrap;padding:1rem}
+.hierarchy-stat{flex:1 1 150px;min-width:0;padding:.85rem 1rem;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.hierarchy-stat strong{display:block;color:var(--gold);font:1.35rem var(--D);margin-bottom:.25rem}
+.hierarchy-stat span{font:var(--fs-1,12px) var(--M);letter-spacing:.1em;color:var(--muted)}
+.hierarchy-note{margin:0 1rem 1rem;padding:.9rem 1rem;border-left:2px solid var(--cyan);background:rgba(0,229,255,.035);font-size:var(--fs-2,14px);line-height:1.65;color:var(--ink)}
+.hierarchy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:.85rem;padding:1rem}
+.hierarchy-parent{min-width:0;background:var(--surface);border:1px solid rgba(201,168,76,.22);border-radius:10px;padding:1rem}
+.hierarchy-parent-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem}
+.hierarchy-parent-glyph{font-size:1.45rem;line-height:1}
+.hierarchy-parent-name{font:1rem var(--D);color:var(--gold)}
+.hierarchy-parent-role{font:var(--fs-1,12px) var(--M);color:var(--muted);letter-spacing:.08em;margin-top:.2rem}
+.hierarchy-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem}
+.hierarchy-slot{min-width:0;padding:.55rem .45rem;border:1px solid var(--line);border-radius:5px;background:rgba(2,2,6,.45)}
+.hierarchy-slot b{display:block;font:var(--fs-1,12px) var(--M);color:var(--ink);margin-bottom:.2rem}
+.hierarchy-slot span{display:block;font:10px var(--M);letter-spacing:.04em;color:var(--muted);overflow-wrap:anywhere}
+.hierarchy-family{margin-top:.8rem;color:var(--cyan);font:10px var(--M);letter-spacing:.08em}
+@media(max-width:520px){.hierarchy-grid{padding:.65rem}.hierarchy-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.hierarchy-parent{padding:.75rem}}
+</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end --><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN AGENTS</title>
 <style>
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -59,10 +77,14 @@
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
 </div>
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('agent')">MY AGENT</button><a class="tab-btn" href="/agent-operations.html" style="text-decoration:none">OPERATIONS</a>
-  <button class="tab-btn" onclick="setTab('council')">COUNCIL</button>
-  <button class="tab-btn" onclick="setTab('chat')">CHAT</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" data-tab="agent" onclick="setTab('agent')">MY AGENT</button>
+  <button class="tab-btn" data-tab="council" onclick="setTab('council')">COUNCIL</button>
+  <button class="tab-btn" data-tab="hierarchy" onclick="setTab('hierarchy')">12×12 HIERARCHY</button>
+  <button class="tab-btn" data-tab="chat" onclick="setTab('chat')">CHAT</button>
+  <button class="tab-btn" data-tab="science" onclick="setTab('science')">SCIENCE</button>
+  <a class="tab-btn" href="/agent-network.html" style="text-decoration:none">NETWORK</a>
+  <a class="tab-btn" href="/pantheons.html" style="text-decoration:none">PANTHEONS</a>
+  <a class="tab-btn" href="/agent-operations.html" style="text-decoration:none">OPERATIONS</a>
 </div>
 
 <!-- MY AGENT TAB -->
@@ -116,6 +138,17 @@
   </div>
 </div>
 
+<!-- SUBORDINATE HIERARCHY TAB -->
+<div class="tab-panel" id="tab-hierarchy">
+  <p class="sechead">THE 12 × 12 SOVEREIGN HIERARCHY · 144 SUBORDINATE POSITIONS</p>
+  <div class="hierarchy-summary" aria-live="polite">
+    <div class="hierarchy-stat"><strong id="hierarchy-primary-count">12</strong><span>PRIMARY AGENTS</span></div>
+    <div class="hierarchy-stat"><strong id="hierarchy-seat-count">144</strong><span>SUBORDINATE POSITIONS</span></div>
+    <div class="hierarchy-stat"><strong id="hierarchy-assigned-count">0</strong><span>CONFIGURED SUBAGENTS</span></div>
+  </div>
+  <div class="hierarchy-note"><b>CLASSIFICATION:</b> HERO · KING · PANTHEON. The distribution and individual assignments have not been specified in the authoritative roster. Every seat below is therefore marked <b>UNASSIGNED</b>; no name, capability, authority, or operational status is invented. Classification and parentage do not grant permissions.</div>
+  <div class="hierarchy-grid" id="hierarchy-grid" aria-label="Twelve primary agents, each with twelve subordinate positions"></div>
+</div>
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
@@ -153,8 +186,7 @@ var _profile=null,_myAgent=null,_history=[],_agents=[],_sb=null;
 var PHI=1.6180339887,EU=2.7182818285;
 
 function setTab(name){
-  var tabs=['agent','council','chat','science'];
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
 
@@ -210,6 +242,37 @@ function renderCouncil(agents,mySign){
   });
 }
 
+function renderHierarchy(agents){
+  var grid=document.getElementById('hierarchy-grid');
+  if(!grid)return;
+  grid.textContent='';
+  var seats=0;
+  (agents||[]).forEach(function(ag){
+    var parent=document.createElement('section');
+    parent.className='hierarchy-parent';
+    parent.setAttribute('aria-label',ag.name+' subordinate positions');
+    var head=document.createElement('div');head.className='hierarchy-parent-head';
+    var glyph=document.createElement('span');glyph.className='hierarchy-parent-glyph';glyph.style.color=getCol(ag.element);glyph.textContent=SIGN_GLYPHS[ag.sign]||'Ω';
+    var identity=document.createElement('div');
+    var name=document.createElement('div');name.className='hierarchy-parent-name';name.textContent=String(ag.name||'PRIMARY AGENT').toUpperCase();
+    var role=document.createElement('div');role.className='hierarchy-parent-role';role.textContent=String(ag.role||'').toUpperCase();
+    identity.appendChild(name);identity.appendChild(role);head.appendChild(glyph);head.appendChild(identity);parent.appendChild(head);
+    var slots=document.createElement('div');slots.className='hierarchy-slots';
+    for(var i=1;i<=12;i++){
+      seats++;
+      var slot=document.createElement('div');slot.className='hierarchy-slot';
+      var label=document.createElement('b');label.textContent='SEAT '+String(i).padStart(2,'0');
+      var status=document.createElement('span');status.textContent='UNASSIGNED';
+      slot.appendChild(label);slot.appendChild(status);slots.appendChild(slot);
+    }
+    parent.appendChild(slots);
+    var family=document.createElement('div');family.className='hierarchy-family';family.textContent='FAMILIES: HERO · KING · PANTHEON — NOT YET ASSIGNED';parent.appendChild(family);
+    grid.appendChild(parent);
+  });
+  sid('hierarchy-primary-count',(agents||[]).length);
+  sid('hierarchy-seat-count',seats);
+  sid('hierarchy-assigned-count',0);
+}
 window.sendMsg=async function(){
   var inp=document.getElementById('chat-inp');
   if(!inp||!inp.value.trim())return;
@@ -291,6 +354,7 @@ _sb=sb;
   }
   renderHero(_myAgent);
   renderCouncil(_agents,sign);
+  renderHierarchy(_agents);
 })();
 </script>
 <script src="/bg.js" defer></script>

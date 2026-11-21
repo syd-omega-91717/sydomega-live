@@ -266,7 +266,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         registry = (ROOT / "OMEGA_SKILL_REGISTRY.md").read_text(encoding="utf-8")
         modules = sorted(ROOT.glob("omega-*.js"))
         root_js = sorted(ROOT.glob("*.js"))
-        module_kb = sum(len(path.read_bytes().replace(b"\\r\\n", b"\\n")) for path in modules) // 1024
+        module_kb = sum(len(path.read_bytes().replace(b"\r\n", b"\n")) for path in modules) // 1024
 
         self.assertIn(f"| `omega-*.js` modules | {len(modules)} ({module_kb} KB) |", registry)
         self.assertIn(f"| root `.js` files | {len(root_js)} |", registry)

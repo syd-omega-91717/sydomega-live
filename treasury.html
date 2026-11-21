@@ -322,13 +322,14 @@ window.addAsset=function(){
   save();document.getElementById('add-asset-form').style.display='none';renderAssets();renderOverview();
 };
 window.saveReserves=function(){
-  reservesRecorded=true;
-  localStorage.setItem('omega_treasury_reserves_recorded','1');
   reserves.emerg=Number(document.getElementById('ru-emerg').value||0);
   reserves.opp=Number(document.getElementById('ru-opp').value||0);
   reserves.legacy=Number(document.getElementById('ru-legacy').value||0);
   reserves.emergTarget=Number(document.getElementById('r-emerg-target').value||reserves.emergTarget||0);
-  save();renderReserves();renderOverview();
+  save();
+  reservesRecorded=true;
+  try{localStorage.setItem('omega_treasury_reserves_recorded','1');}catch(e){/* saved nonzero values remain detectable */}
+  renderReserves();renderOverview();
 };
 window.addFlow=function(){
   var d=document.getElementById('f-desc').value.trim();if(!d)return;

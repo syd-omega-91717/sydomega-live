@@ -63,7 +63,7 @@ class EveryTabPageReachesItsHandler(unittest.TestCase):
 class DashboardOpensOnToday(unittest.TestCase):
     HTML = read("dashboard.html")
 
-    def test_genesis_is_the_first_tab_and_the_active_one(self):
+    def test_today_is_the_first_tab_and_the_active_one(self):
         tabs = re.findall(r'<button\b[^>]*class="ltab( active)?"[^>]*data-tab-action="([a-z]+)"', self.HTML)
         self.assertEqual([t[1] for t in tabs][:2], ["today", "genesis"])
         self.assertEqual([t[1] for t in tabs if t[0]], ["today"], "exactly one tab starts active, and it is TODAY")

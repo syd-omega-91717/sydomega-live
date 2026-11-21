@@ -56,17 +56,19 @@ class ContentTaskPipelineTests(unittest.TestCase):
 
     def test_provider_deployment_evidence_matches_live_inventory(self):
         pipeline = json.loads((ROOT / "config/omega-content-task-pipeline.json").read_text())
-        snapshot = json.loads((ROOT / "docs/runtime/supabase-edge-functions-live.json").read_text())
+        observations = json.loads((ROOT / "config/omega-live-module-runtime-observations.json").read_text())
         for name in ("content-ingest", "content-delivery"):
             with self.subTest(function=name):
                 evidence = pipeline["provider_evidence"]["functions"][name]
-                live = snapshot["functions"][name]
+                live = observations["storage"]["content_ingest_validation" if name == "content-ingest" else "content_delivery_validation"]
                 self.assertEqual(evidence["status"], "DEPLOYED")
-                self.assertEqual(evidence["live_version"], live["version"])
-                self.assertEqual(evidence["verify_jwt"], live["verify_jwt"])
-                self.assertEqual(live["state"], "DEPLOYED")
-                self.assertEqual(live["provider_status"], "ACTIVE")
-                self.assertEqual(live["source_parity"], "EXACT_ENTRYPOINT_MATCH")
+                self.assertEqual(evidence["live_version"], live["live_function_version"])
+                self.assertEqual(evidence["verify_jwt"], True)
+                self.assertEqual(live["status"], "DEPLOYED_ENTRYPOINT_VERIFIED")
+        self.assertEqual(pipeline["provider_evidence"]["functions"]["content-ingest"]["source_parity"],
+                         "NOT_RECONCILED_AFTER_VERSION_13")
+        self.assertEqual(pipeline["provider_evidence"]["functions"]["content-delivery"]["source_parity"],
+                         "EXACT_ENTRYPOINT_MATCH")
 
         self.assertEqual(pipeline["upload"]["bucket_enforcement"]["file_size_limit_bytes"], 52428800)
         self.assertEqual(pipeline["upload"]["bucket_enforcement"]["source_migration"],

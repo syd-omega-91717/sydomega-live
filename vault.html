@@ -234,15 +234,16 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
     <!-- ── TAB 3: LEDGER (earning + audit) ────────────────────── -->
     <div class="tab-panel" id="tab-ledger">
       <div class="kpi-row" data-reveal="fade-up">
-        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="earn-total">--</div><div class="kpi-l" data-i18n="vault_ledger_total_label">TOTAL POINTS EARNED</div></div>
-        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="earn-count">--</div><div class="kpi-l" data-i18n="vault_ledger_actions_label">ACTIONS COMPLETED</div></div>
+        <div class="kpi" style="--kc:var(--solar)"><div class="kpi-n" id="earn-total">--</div><div class="kpi-l" data-i18n="vault_ledger_total_label">RECENT PROGRESSION POINTS</div></div>
+        <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="earn-count">--</div><div class="kpi-l" data-i18n="vault_ledger_actions_label">RECENT TASK RECORDS</div></div>
         <div class="kpi" style="--kc:var(--gold)"><div class="kpi-n" id="earn-a">--</div><div class="kpi-l" data-i18n="vault_ledger_axisa_label">AXIS A &mdash; KNOWLEDGE</div></div>
         <div class="kpi" style="--kc:var(--purple)"><div class="kpi-n" id="earn-b">--</div><div class="kpi-l" data-i18n="vault_ledger_axisb_label">AXIS B &mdash; MASTERY</div></div>
         <div class="kpi" style="--kc:var(--green)"><div class="kpi-n" id="earn-c">--</div><div class="kpi-l" data-i18n="vault_ledger_axisc_label">AXIS C &mdash; CONTRIBUTION</div></div>
         <div class="kpi" style="--kc:var(--cyan)"><div class="kpi-n" id="audit-count">--</div><div class="kpi-l" data-i18n="vault_ledger_audit_label">AUDIT EVENTS</div></div>
       </div>
 
-      <div class="sechead sechead-gold" data-i18n="vault_ledger_earning_title">SOVEREIGN EARNING LEDGER &middot; SOURCE-RECORDED EVENTS</div>
+      <div class="sechead sechead-gold" data-i18n="vault_ledger_earning_title">PROGRESSION LEDGER &middot; RECENT SOURCE-RECORDED TASK EVENTS &middot; MAX 40</div>
+      <p class="vault-ledger-window-note" data-i18n="vault_ledger_window_note" role="note">Showing up to 40 recent task records. Progression points are not money or earnings.</p>
       <div class="tbl-wrap ledger-table" style="margin-bottom:22px">
         <div class="tbl-head ledger-head">
           <div class="tbl-hcell ledger-hcell" data-i18n="vault_ledger_col_timestamp">TIMESTAMP</div>

@@ -6,12 +6,14 @@
 <meta name="description" content="SYD OMEGA 91717 — Command Bridge · Mission Control · Living Operating System">
 <title>&#937; SYD OMEGA 91717 &mdash; Command Bridge</title>
 <link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/omega-genesis-command.css">
 <script src="/bg.js" defer></script>
 <script src="/omega-character-card.js" defer></script>
 <script src="/omega-ecosystem-home.js" defer></script>
 <script src="/omega-command-wall.js" defer></script>
 <script src="/omega-daily.js" defer></script>
 <script src="/omega-weather.js" defer></script>
+<script src="/omega-genesis-command.js" defer></script>
 <style>
 :root{--pad:clamp(14px,3vw,36px)}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100vh}
@@ -31,7 +33,7 @@
 .ss-item{flex-shrink:0;display:flex;align-items:center;gap:7px}
 .ss-label{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:2px;color:rgba(138,134,118,.45)}
 .ss-val{font-family:var(--D);font-size:var(--fs-1,12px);color:var(--vc,var(--gold))}
-/* 5-LAYER TAB SYSTEM */
+/* 6-LAYER TAB SYSTEM */
 .layer-tabs{display:flex;border-bottom:1px solid var(--line);background:rgba(2,2,6,.8);overflow-x:auto;scrollbar-width:none;position:sticky;top:44px;z-index:50}
 .layer-tabs::-webkit-scrollbar{display:none}
 .ltab{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:2px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}
@@ -214,13 +216,41 @@
     <!-- PLATFORM HEALTH BAR -->
     <div class="health-bar-wrap"><div class="health-bar-fill" id="omega-health-bar" style="width:100%;background:var(--line,rgba(201,168,76,.15))"></div></div>
 
-    <!-- 4-TAB SYSTEM -->
-    <div class="layer-tabs" role="tablist">
-      <button class="ltab active" role="tab" aria-selected="true"  data-tab-action="today" data-i18n="tab_today">&#9670; TODAY</button>
-      <button class="ltab"        role="tab" aria-selected="false" data-tab-action="overview" data-i18n="tab_overview">&#9650; OVERVIEW</button>
-      <button class="ltab"        role="tab" aria-selected="false" data-tab-action="personal" data-i18n="tab_personal">&#9670; PERSONAL</button>
-      <button class="ltab"        role="tab" aria-selected="false" data-tab-action="platform" data-i18n="tab_platform">&#9654; PLATFORM</button>
-      <button class="ltab"        role="tab" aria-selected="false" data-tab-action="science" data-i18n="tab_science">&#8982; SCIENCE</button>
+    <!-- 6-TAB COMMAND WORKSPACE -->
+    <div class="layer-tabs" role="tablist" aria-label="Command workspaces">
+      <button id="tab-genesis" class="ltab active" role="tab" aria-selected="true" aria-controls="l-genesis" data-tab-action="genesis" tabindex="0">Ω GENESIS</button>
+      <button class="ltab" role="tab" aria-selected="false" data-tab-action="today" data-i18n="tab_today" tabindex="-1">&#9670; TODAY</button>
+      <button class="ltab" role="tab" aria-selected="false" data-tab-action="overview" data-i18n="tab_overview" tabindex="-1">&#9650; OVERVIEW</button>
+      <button class="ltab" role="tab" aria-selected="false" data-tab-action="personal" data-i18n="tab_personal" tabindex="-1">&#9670; PERSONAL</button>
+      <button class="ltab" role="tab" aria-selected="false" data-tab-action="platform" data-i18n="tab_platform" tabindex="-1">&#9654; PLATFORM</button>
+      <button class="ltab" role="tab" aria-selected="false" data-tab-action="science" data-i18n="tab_science" tabindex="-1">&#8982; SCIENCE</button>
+    </div>
+
+    <!-- LAYER: GENESIS / COMMAND -->
+    <div id="l-genesis" class="layer-panel active" role="tabpanel" aria-labelledby="tab-genesis">
+      <div class="pad">
+        <section class="ogc" data-omega-genesis-command aria-labelledby="ogc-title">
+          <header class="ogc-hero">
+            <div class="ogc-hero-copy">
+              <p class="ogc-kicker">Ω SYD OMEGA 91717 / GENESIS</p>
+              <h2 class="ogc-title" id="ogc-title">GENESIS / COMMAND</h2>
+              <p class="ogc-lede">One governed entry point for the world, observed platform state, evidence, replay, recovery, and module access. Each destination retains its own data source, session, and authorization boundary.</p>
+              <div class="ogc-meta">
+                <span class="ogc-chip" data-genesis-route-status role="status" aria-live="polite">ROUTE REGISTER · CHECKING</span>
+                <span class="ogc-chip" data-genesis-release role="status" aria-live="polite">DEPLOYED BUILD · CHECKING</span>
+              </div>
+            </div>
+            <div class="ogc-seal" aria-hidden="true">Ω</div>
+          </header>
+          <div class="ogc-groups" data-genesis-route-grid aria-label="Genesis command destinations"></div>
+          <section class="ogc-legacy-wrap" aria-labelledby="ogc-legacy-title">
+            <h3 class="ogc-legacy-title" id="ogc-legacy-title">LEGACY ENTRY ROUTES</h3>
+            <p class="ogc-legacy-intro">These compatibility routes remain available for existing bookmarks and inbound links. New navigation should use this canonical command workspace.</p>
+            <div class="ogc-legacy-links" data-genesis-legacy></div>
+          </section>
+          <noscript><p class="ogc-legacy-intro">JavaScript is required to render the route directory. Existing direct routes remain available: <a href="/world.html">World</a>, <a href="/data-observatory.html">Data Observatory</a>, <a href="/evidence.html">Evidence</a>, and <a href="/gateway.html">Gateway</a>.</p></noscript>
+        </section>
+      </div>
     </div>
 
     <!-- LAYER: OVERVIEW -->
@@ -287,7 +317,7 @@
 
     <!-- LAYER: PERSONAL -->
     <!-- LAYER: TODAY (the former command.html: daily brief) -->
-    <div id="l-today" class="layer-panel active">
+    <div id="l-today" class="layer-panel">
       <div class="pad">
 <section class="oeh" data-omega-ecosystem-home aria-label="The Omega ecosystem">
   <aside class="oeh-col oeh-left">
@@ -713,8 +743,8 @@ document.addEventListener('omega:fetch-settled',renderFeedHealth);
 
 /* ── TAB SWITCHER ────────────────────────────────────────────── */
 function setTab(name){
-  var tabs=['today','overview','personal','platform','science'];   /* DOM order of .ltab; the member opens on TODAY */
-  document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');});
+  var tabs=['genesis','today','overview','personal','platform','science'];   /* DOM order of .ltab; Genesis is the canonical entry, explicit hashes preserve legacy views. */
+  document.querySelectorAll('.ltab').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);b.setAttribute('aria-selected',tabs[i]===name?'true':'false');b.tabIndex=tabs[i]===name?0:-1;});
   document.querySelectorAll('.layer-panel').forEach(function(p){p.classList.toggle('active',p.id==='l-'+name);});
   if(name==='today'&&!window.__briefLoading){window.__briefLoading=true;var bs=document.createElement('script');bs.src='/omega-daily-brief.js';document.head.appendChild(bs);}
   if(name==='personal'){renderPersonalOS();mountDashRealm();}
@@ -1240,7 +1270,30 @@ function renderPlatformSections(){
 }
 
 window.setTab=setTab;
-(function(){var m={overview:'overview',today:'today',personal:'personal',platform:'platform',science:'science'};var h=(location.hash||'').replace('#','');setTab(m[h]||'today');})();
+(function(){
+  var tablist=document.querySelector('.layer-tabs');
+  if(tablist&&!tablist.dataset.omegaKeyboard){
+    tablist.dataset.omegaKeyboard='1';
+    tablist.addEventListener('keydown',function(event){
+      var keys=['ArrowLeft','ArrowRight','Home','End'];
+      if(keys.indexOf(event.key)===-1)return;
+      var buttons=Array.prototype.slice.call(tablist.querySelectorAll('.ltab'));
+      var index=buttons.indexOf(document.activeElement);
+      if(index<0)return;
+      var next=index;
+      if(event.key==='ArrowRight')next=(index+1)%buttons.length;
+      else if(event.key==='ArrowLeft')next=(index-1+buttons.length)%buttons.length;
+      else if(event.key==='Home')next=0;
+      else if(event.key==='End')next=buttons.length-1;
+      event.preventDefault();
+      buttons[next].focus();
+      setTab(buttons[next].getAttribute('data-tab-action'));
+    });
+  }
+  var m={genesis:'genesis',overview:'overview',today:'today',personal:'personal',platform:'platform',science:'science'};
+  var h=(location.hash||'').replace('#','');
+  setTab(m[h]||'genesis');
+})();
 window.askAI=askAI;
 </script>
 <script src="/omega-sparkline.js" defer></script>

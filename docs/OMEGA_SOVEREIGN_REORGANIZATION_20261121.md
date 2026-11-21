@@ -168,7 +168,7 @@ Likewise, financial allocation, token issuance, custody, investment execution, m
 ### Phase 2 implementation record — Genesis / Command — 2026-11-22
 
 - The canonical Genesis / Command route is `/dashboard.html`, matching the active navigation and the nine-hub configuration. `/command.html` and `/command-center.html` remain intact as compatibility entries; no route is deleted or redirected by this change.
-- The dashboard now includes a dedicated **Ω GENESIS** workspace tab and defaults to it when no legacy tab hash is supplied. Existing `#today`, `#overview`, `#personal`, `#platform`, and `#science` deep links remain supported.
+- The dashboard now includes a dedicated **Ω GENESIS** workspace tab immediately after **TODAY**. The established Today-first member loop remains the default; `#genesis` opens the command directory. Existing `#today`, `#overview`, `#personal`, `#platform`, and `#science` deep links remain supported.
 - The Genesis directory exposes the 12 destination paths in the canonical configuration. It groups the current hub, World, Global State, Evidence, Replay & Recovery, and Module Access; the two legacy command entries are clearly labelled as compatibility routes.
 - The directory uses same-origin anchors and does not iframe specialist pages, rewrite their data access, or change their Supabase RLS / server authorization. Specialist surfaces continue to own their own session and failure behavior.
 - The release label reads the same-origin `/.well-known/omega-release.json` manifest. If the manifest is absent or invalid, the UI says `UNAVAILABLE`; it does not invent a deployment status.

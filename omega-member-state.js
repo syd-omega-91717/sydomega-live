@@ -133,7 +133,8 @@
      upload. A new finance key must be added here (member-state-finance.test covers the 14). */
   var NO_MIRROR = {
     omega_wealth_assets: 1, omega_wealth_snapshots: 1, omega_wallet: 1, omega_wallet_targets: 1,
-    omega_treasury_assets: 1, omega_treasury_reserves: 1, omega_treasury_flows: 1,
+    omega_treasury_assets: 1, omega_treasury_reserves: 1, omega_treasury_flows: 1, omega_treasury_reserves_recorded: 1,
+    omega_portfolio_public: 1,
     omega_investments: 1, omega_revenue: 1, omega_rev_goal: 1,
     omega_expenses: 1, omega_budgets: 1, omega_budget_months: 1, omega_budget_targets: 1
   };

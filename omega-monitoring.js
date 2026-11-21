@@ -5,7 +5,7 @@
   if(window.__omegaMonitoring) return;
   window.__omegaMonitoring = true;
 
-  window.OmegaMetrics = {
+  window.OmegaMonitor = {
     data: {
       pageLoadTime: 0,
       ttfb: 0,

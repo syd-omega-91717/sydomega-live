@@ -243,36 +243,51 @@ function renderCouncil(agents,mySign){
   });
 }
 
-function renderHierarchy(agents){
+async function renderHierarchy(agents){
   var grid=document.getElementById('hierarchy-grid');
   if(!grid)return;
-  grid.textContent='';
-  var seats=0;
-  (agents||[]).forEach(function(ag){
-    var parent=document.createElement('section');
-    parent.className='hierarchy-parent';
-    parent.setAttribute('aria-label',ag.name+' subordinate positions');
-    var head=document.createElement('div');head.className='hierarchy-parent-head';
-    var glyph=document.createElement('span');glyph.className='hierarchy-parent-glyph';glyph.style.color=getCol(ag.element);glyph.textContent=SIGN_GLYPHS[ag.sign]||'Ω';
-    var identity=document.createElement('div');
-    var name=document.createElement('div');name.className='hierarchy-parent-name';name.textContent=String(ag.name||'PRIMARY AGENT').toUpperCase();
-    var role=document.createElement('div');role.className='hierarchy-parent-role';role.textContent=String(ag.role||'').toUpperCase();
-    identity.appendChild(name);identity.appendChild(role);head.appendChild(glyph);head.appendChild(identity);parent.appendChild(head);
-    var slots=document.createElement('div');slots.className='hierarchy-slots';
-    for(var i=1;i<=12;i++){
-      seats++;
-      var slot=document.createElement('div');slot.className='hierarchy-slot';
-      var label=document.createElement('b');label.textContent='SEAT '+String(i).padStart(2,'0');
-      var status=document.createElement('span');status.textContent='UNASSIGNED';
-      slot.appendChild(label);slot.appendChild(status);slots.appendChild(slot);
-    }
-    parent.appendChild(slots);
-    var family=document.createElement('div');family.className='hierarchy-family';family.textContent='FAMILIES: HERO · KING · PANTHEON — NOT YET ASSIGNED';parent.appendChild(family);
-    grid.appendChild(parent);
-  });
-  sid('hierarchy-primary-count',(agents||[]).length);
-  sid('hierarchy-seat-count',seats);
-  sid('hierarchy-assigned-count',0);
+  grid.textContent='LOADING CANONICAL HIERARCHY…';
+  try{
+    var response=await fetch('/omega-agent-hierarchy.json',{cache:'no-cache'});
+    if(!response.ok)throw new Error('registry unavailable');
+    var registry=await response.json();
+    var positions=registry&&registry.positions;
+    var names=(agents||[]).map(function(a){return a.name;});
+    if(!Array.isArray(agents)||agents.length!==12||!Array.isArray(positions)||positions.length!==144)throw new Error('registry shape invalid');
+    if(registry.primary_agent_count!==12||registry.subordinate_positions_per_primary!==12||registry.subordinate_position_capacity!==144)throw new Error('registry capacity invalid');
+    if(new Set(names).size!==12||new Set(positions.map(function(p){return p.position_id;})).size!==144)throw new Error('duplicate identity');
+    if(!positions.every(function(p){return names.indexOf(p.parent_agent_name)!==-1&&p.status==='UNASSIGNED'&&p.operational===false&&p.name===null&&p.classification===null&&Array.isArray(p.capabilities)&&p.capabilities.length===0&&Array.isArray(p.permissions)&&p.permissions.length===0&&p.authority_inheritance===false;}))throw new Error('unassigned seat invariant failed');
+    grid.textContent='';
+    agents.forEach(function(ag){
+      var children=positions.filter(function(p){return p.parent_agent_name===ag.name;}).sort(function(a,b){return a.slot_number-b.slot_number;});
+      if(children.length!==12)throw new Error('parent capacity invalid');
+      var parent=document.createElement('section');
+      parent.className='hierarchy-parent';
+      parent.setAttribute('aria-label',ag.name+' subordinate positions');
+      var head=document.createElement('div');head.className='hierarchy-parent-head';
+      var glyph=document.createElement('span');glyph.className='hierarchy-parent-glyph';glyph.style.color=getCol(ag.element);glyph.textContent=SIGN_GLYPHS[ag.sign]||'Ω';
+      var identity=document.createElement('div');
+      var name=document.createElement('div');name.className='hierarchy-parent-name';name.textContent=String(ag.name||'PRIMARY AGENT').toUpperCase();
+      var role=document.createElement('div');role.className='hierarchy-parent-role';role.textContent=String(ag.role||'').toUpperCase();
+      identity.appendChild(name);identity.appendChild(role);head.appendChild(glyph);head.appendChild(identity);parent.appendChild(head);
+      var slots=document.createElement('div');slots.className='hierarchy-slots';
+      children.forEach(function(position){
+        var slot=document.createElement('div');slot.className='hierarchy-slot';
+        var label=document.createElement('b');label.textContent='SEAT '+String(position.slot_number).padStart(2,'0');
+        var status=document.createElement('span');status.textContent='UNASSIGNED · '+position.position_id;
+        slot.appendChild(label);slot.appendChild(status);slots.appendChild(slot);
+      });
+      parent.appendChild(slots);
+      var family=document.createElement('div');family.className='hierarchy-family';family.textContent='CLASSIFICATION: UNASSIGNED · OPTIONS: HERO / KING / PANTHEON';parent.appendChild(family);
+      grid.appendChild(parent);
+    });
+    sid('hierarchy-primary-count',agents.length);
+    sid('hierarchy-seat-count',positions.length);
+    sid('hierarchy-assigned-count',0);
+  }catch(error){
+    grid.textContent='HIERARCHY REGISTRY UNAVAILABLE · NO SUBAGENT POSITIONS HAVE BEEN ASSERTED.';
+    sid('hierarchy-primary-count',0);sid('hierarchy-seat-count',0);sid('hierarchy-assigned-count',0);
+  }
 }
 window.sendMsg=async function(){
   var inp=document.getElementById('chat-inp');

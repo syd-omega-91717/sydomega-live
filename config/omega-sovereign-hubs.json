@@ -323,7 +323,7 @@
   ],
   "implementation_status": {
     "agent_council_hierarchy": "PARTIALLY_IMPLEMENTED_WITH_VALIDATED_144_SLOT_REGISTRY",
-    "network_visualization": "LEGACY_ROUTE_PRESERVED_AND_TRUTH_LABELS_CORRECTED",
+    "network_visualization": "LEGACY_ROUTE_PRESERVED; CANONICAL_ROSTER_ONLY; ILLUSTRATIVE_GRAPH; TRUTH_LABELS_CORRECTED",
     "pantheons": "LEGACY_ROUTE_PRESERVED_NOT_YET_CONSOLIDATED",
     "operations": "LEGACY_ROUTE_PRESERVED; canonical UI roster; server allowlist unchanged",
     "remaining_hubs": "PROPOSED_NOT_YET_WIRED",

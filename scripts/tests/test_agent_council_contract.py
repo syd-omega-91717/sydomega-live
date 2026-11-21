@@ -103,6 +103,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertIn("frame.setAttribute('src',frame.getAttribute('data-src'))", self.council)
         self.assertIn('role="tabpanel"', self.council)
         self.assertIn('role="tablist" aria-label="Agent Council sections"', self.council)
+        self.assertNotRegex(self.council, r'role="tabpanel"[^>]*role="tabpanel"')
         for name in ('agent', 'council', 'hierarchy', 'chat', 'science', 'network', 'pantheons', 'operations'):
             self.assertIn(f'id="tab-btn-{name}"', self.council)
             self.assertIn(f'aria-labelledby="tab-btn-{name}"', self.council)

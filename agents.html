@@ -256,11 +256,11 @@ async function renderHierarchy(agents){
     if(!Array.isArray(agents)||agents.length!==12||!Array.isArray(positions)||positions.length!==144)throw new Error('registry shape invalid');
     if(registry.primary_agent_count!==12||registry.subordinate_positions_per_primary!==12||registry.subordinate_position_capacity!==144)throw new Error('registry capacity invalid');
     if(new Set(names).size!==12||new Set(positions.map(function(p){return p.position_id;})).size!==144)throw new Error('duplicate identity');
-    if(!positions.every(function(p){return names.indexOf(p.parent_agent_name)!==-1&&p.status==='UNASSIGNED'&&p.operational===false&&p.name===null&&p.classification===null&&Array.isArray(p.capabilities)&&p.capabilities.length===0&&Array.isArray(p.permissions)&&p.permissions.length===0&&p.authority_inheritance===false;}))throw new Error('unassigned seat invariant failed');
+    if(registry.status!=='CAPACITY_REGISTRY_ONLY'||!positions.every(function(p){return names.indexOf(p.parent_agent_name)!==-1&&Number.isInteger(p.slot_number)&&p.slot_number>=1&&p.slot_number<=12&&p.status==='UNASSIGNED'&&p.operational===false&&p.name===null&&p.classification===null&&Array.isArray(p.capabilities)&&p.capabilities.length===0&&Array.isArray(p.permissions)&&p.permissions.length===0&&p.authority_inheritance===false;}))throw new Error('unassigned seat invariant failed');
     grid.textContent='';
     agents.forEach(function(ag){
       var children=positions.filter(function(p){return p.parent_agent_name===ag.name;}).sort(function(a,b){return a.slot_number-b.slot_number;});
-      if(children.length!==12)throw new Error('parent capacity invalid');
+      if(children.length!==12||children.some(function(p,index){return p.slot_number!==index+1;}))throw new Error('parent capacity invalid');
       var parent=document.createElement('section');
       parent.className='hierarchy-parent';
       parent.setAttribute('aria-label',ag.name+' subordinate positions');

@@ -262,6 +262,15 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("aria-live", self.runtime)
 
 
+    def test_skill_registry_census_matches_root_javascript_files(self):
+        registry = (ROOT / "OMEGA_SKILL_REGISTRY.md").read_text(encoding="utf-8")
+        modules = sorted(ROOT.glob("omega-*.js"))
+        root_js = sorted(ROOT.glob("*.js"))
+        module_kb = sum(len(path.read_bytes().replace(b"\\r\\n", b"\\n")) for path in modules) // 1024
+
+        self.assertIn(f"| `omega-*.js` modules | {len(modules)} ({module_kb} KB) |", registry)
+        self.assertIn(f"| root `.js` files | {len(root_js)} |", registry)
+
     def test_genesis_command_hub_uses_the_canonical_route_register(self):
         page = (ROOT / "dashboard.html").read_text(encoding="utf-8")
         runtime = (ROOT / "omega-genesis-command.js").read_text(encoding="utf-8")

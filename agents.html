@@ -150,17 +150,17 @@
 </div>
 <div class="tab-panel agent-workspace-panel" id="tab-network" role="tabpanel" aria-labelledby="tab-btn-network" aria-label="Agent Network">
   <div class="hierarchy-note">PRIMARY AGENT NETWORK · CANONICAL ROSTER · ILLUSTRATIVE RELATIONSHIPS ONLY. Select a node to inspect its registered profile.</div>
-  <iframe class="agent-workspace-frame" title="Agent Network visualization" loading="lazy" data-src="/agent-network.html?embed=1" referrerpolicy="same-origin"></iframe>
+  <iframe class="agent-workspace-frame" title="Agent Network visualization" loading="lazy" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/agent-network.html">Open Agent Network as a standalone page</a></p>
 </div>
 <div class="tab-panel agent-workspace-panel" id="tab-pantheons" role="tabpanel" aria-labelledby="tab-btn-pantheons" aria-label="Pantheons and archetypes">
   <div class="hierarchy-note">PANTHEONS & ARCHETYPES · ARCHETYPE PREFERENCES ARE STORED LOCALLY IN THIS BROWSER, NOT AS ACCOUNT PROFILE DATA.</div>
-  <iframe class="agent-workspace-frame" title="Pantheons and archetypes" loading="lazy" data-src="/pantheons.html?embed=1" referrerpolicy="same-origin"></iframe>
+  <iframe class="agent-workspace-frame" title="Pantheons and archetypes" loading="lazy" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/pantheons.html">Open Pantheons as a standalone page</a></p>
 </div>
 <div class="tab-panel agent-workspace-panel" id="tab-operations" role="tabpanel" aria-labelledby="tab-btn-operations" aria-label="Governed agent operations">
   <div class="hierarchy-note">GOVERNED OPERATIONS · READ-ONLY TOOLS ONLY. Server-side authentication, authorization, RLS and tool allowlists remain authoritative.</div>
-  <iframe class="agent-workspace-frame" title="Governed agent operations console" loading="lazy" data-src="/agent-operations.html?embed=1" referrerpolicy="same-origin"></iframe>
+  <iframe class="agent-workspace-frame" title="Governed agent operations console" loading="lazy" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/agent-operations.html">Open Agent Operations as a standalone page</a></p>
 </div>
 <div data-page-emblem="agents" style="margin:20px auto 0"></div>
@@ -171,6 +171,7 @@ var EC_COLOR={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand
 var SIGN_GLYPHS={Aries:'♈︎',Taurus:'♉︎',Gemini:'♊︎',Cancer:'♋︎',Leo:'♌︎',Virgo:'♍︎',Libra:'♎︎',Scorpio:'♏︎',Sagittarius:'♐︎',Capricorn:'♑︎',Aquarius:'♒︎',Pisces:'♓︎'};
 var _profile=null,_myAgent=null,_history=[],_agents=[],_sb=null;
 var PHI=1.6180339887,EU=2.7182818285;
+var AGENT_WORKSPACE_FRAME_PATHS=Object.freeze({network:'/agent-network.html?embed=1',pantheons:'/pantheons.html?embed=1',operations:'/agent-operations.html?embed=1'});
 
 function setTab(name){
   document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){
@@ -180,8 +181,9 @@ function setTab(name){
   });
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
   var panel=document.getElementById('tab-'+name);
-  var frame=panel&&panel.querySelector('iframe[data-src]');
-  if(frame&&!frame.getAttribute('src'))frame.setAttribute('src',frame.getAttribute('data-src'));
+  var frame=panel&&panel.querySelector('iframe.agent-workspace-frame');
+  var framePath=AGENT_WORKSPACE_FRAME_PATHS[name];
+  if(frame&&framePath&&!frame.hasAttribute('src'))frame.src=framePath;
 }
 document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.getAttribute('data-tab'));});});
 

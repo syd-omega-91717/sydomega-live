@@ -46,7 +46,38 @@
       "decision": "The latest explicit owner instruction supersedes Point 116 for the current hierarchy capacity. This is a versioned amendment; the original blueprint remains historically unchanged.",
       "classification_source": "Latest owner instruction dated 2026-11-21",
       "classification_distribution": "UNSPECIFIED",
-      "subordinate_identities_and_capabilities": "NOT_DEFINED_IN_SOURCE; remain UNASSIGNED until specified and approved"
+      "subordinate_identities_and_capabilities": "NOT_DEFINED_IN_SOURCE; remain UNASSIGNED until specified and approved",
+      "agent_ordinal_order": {
+        "blueprint_points_47_58": [
+          "Sentinel",
+          "Analyst",
+          "Historian",
+          "Tutor",
+          "Merchant",
+          "Proxy",
+          "Oracle",
+          "Scout",
+          "Warden",
+          "Auditor",
+          "Beacon",
+          "Sovereign"
+        ],
+        "canonical_omega_agents_json": [
+          "Sentinel",
+          "Merchant",
+          "Scout",
+          "Warden",
+          "Sovereign",
+          "Auditor",
+          "Proxy",
+          "Oracle",
+          "Beacon",
+          "Analyst",
+          "Tutor",
+          "Historian"
+        ],
+        "identity_rule": "Use canonical agent names, not array positions or historical ordinal numbers, for parentage and authorization."
+      }
     },
     "position_registry_path": "/omega-agent-hierarchy.json"
   },

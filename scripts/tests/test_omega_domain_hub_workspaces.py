@@ -282,9 +282,9 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("Home", page)
         self.assertIn("End", page)
 
-        route_block = re.search(r"var ROUTES = Object.freeze\\(\\[(.*?)\\]\\);", runtime, re.S)
+        route_block = re.search(r"var ROUTES = Object.freeze\(\[(.*?)\]\);", runtime, re.S)
         self.assertIsNotNone(route_block)
-        route_paths = re.findall(r"path:\\s*'([^']+)'", route_block.group(1))
+        route_paths = re.findall(r"path:\s*'([^']+)'", route_block.group(1))
         self.assertEqual(route_paths, hub["destination_paths"])
         self.assertEqual(len(route_paths), len(set(route_paths)))
         for path in route_paths:

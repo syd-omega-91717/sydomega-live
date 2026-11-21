@@ -52,7 +52,7 @@
       "sha256": "PROVIDER_DEPLOYED_ENTRYPOINT_VERIFIED",
       "malware_scan": "UNAVAILABLE",
       "rights_review": "REQUIRED_BEFORE_PUBLICATION",
-      "note": "content-ingest downloads the private object, enforces the 50 MiB limit, identifies common byte signatures and records SHA-256. The provider is active at version 11 and its entrypoint matches repository source. Signature identification is not malware scanning or rights clearance; no production Storage object currently exists to exercise a member upload transaction."
+      "note": "content-ingest downloads the private object, enforces the 50 MiB limit, identifies common byte signatures and records SHA-256. The provider was observed active at version 13 on 2026-11-20. Exact version-13 source parity has not yet been independently re-captured. Signature identification is not malware scanning or rights clearance; no production Storage object currently exists to exercise a member upload transaction."
     }
   },
   "download": {

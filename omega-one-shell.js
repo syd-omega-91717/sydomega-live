@@ -125,7 +125,7 @@
       /* panels: every figure is computed from loaded data; every panel names its source */
       '.ons-panel{border:1px solid rgba(201,168,76,.3);border-radius:10px;background:linear-gradient(160deg,rgba(24,21,15,.9),rgba(5,8,14,.94));padding:12px 14px;min-width:0}',
       '.ons-ph{display:flex;justify-content:space-between;gap:8px;margin:0 0 10px;font:11px/1.3 var(--M,"Courier Prime",monospace);letter-spacing:.14em;text-transform:uppercase;color:#C9A84C}',
-      '.ons-src{font-size:9px;letter-spacing:.06em;color:#9A988F;text-transform:none;text-align:right}',
+      '.ons-src{font-size:12px;letter-spacing:.06em;color:#9A988F;text-transform:none;text-align:right}',
       '.ons-rows{list-style:none;margin:0;padding:0;display:grid;gap:0}',
       '.ons-panel a.ons-row{display:grid;grid-template-columns:minmax(64px,88px) 1fr 28px;gap:8px;align-items:center;min-height:44px;padding:0 2px;border-top:1px solid rgba(201,168,76,.1);font:11px/1.2 var(--M,"Courier Prime",monospace);letter-spacing:.06em;color:#CFCBBE;text-transform:uppercase}',
       '.ons-rows li:first-child a.ons-row{border-top:0}',

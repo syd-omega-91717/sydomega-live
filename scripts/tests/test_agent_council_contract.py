@@ -92,6 +92,29 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertNotIn('Level 7 · Active Executor', self.network)
         self.assertNotIn('Real-time · Live monitoring', self.network)
 
+    def test_agent_hub_integrates_related_pages_as_lazy_tabs(self):
+        for name in ('network', 'pantheons', 'operations'):
+            self.assertIn(f'data-tab="{name}"', self.council)
+            self.assertIn(f'id="tab-{name}"', self.council)
+        self.assertIn('data-src="/agent-network.html?embed=1"', self.council)
+        self.assertIn('data-src="/pantheons.html?embed=1"', self.council)
+        self.assertIn('data-src="/agent-operations.html?embed=1"', self.council)
+        self.assertIn("frame.setAttribute('src',frame.getAttribute('data-src'))", self.council)
+        self.assertIn('role="tabpanel"', self.council)
+
+    def test_embedded_views_preserve_standalone_routes_and_auth_boundaries(self):
+        for page in (self.network, self.pantheons, self.operations):
+            self.assertIn('omega-agent-embed-style', page)
+            self.assertIn('get("embed")==="1"', page)
+        self.assertIn("location.replace('/account.html')", self.pantheons)
+        self.assertIn("pr.is_owner", self.pantheons)
+        self.assertIn("pr.access_approved", self.pantheons)
+        self.assertIn("functions.invoke('agent-execute'", self.operations)
+        self.assertIn('READ-ONLY', self.operations)
+
+    def test_agent_architecture_copy_matches_fail_closed_roster(self):
+        self.assertIn('fail closed if the canonical 12-agent roster cannot be verified', self.council)
+        self.assertNotIn('hardcoded 12-agent fallback', self.council)
     def test_pantheon_storage_and_theory_claims_are_truthful(self):
         self.assertIn('SAVE ON THIS DEVICE', self.pantheons)
         self.assertIn('not currently saved to your SYD OMEGA member profile', self.pantheons)

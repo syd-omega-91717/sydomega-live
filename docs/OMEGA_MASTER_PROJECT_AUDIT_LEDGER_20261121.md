@@ -49,7 +49,7 @@ The five uploaded source files were inspected from their supplied contents. Thei
 
 ## 3. 999-point source integrity audit
 
-The source file has 28 section headings and claims a 1–999 point scope. A line-level parse of the supplied source found:
+The source file has 30 section headings (including an overlapping combined “Section IV & V” heading) and claims a 1–999 point scope. A line-level parse of the supplied source found:
 
 - **399** explicitly numbered bullet entries.
 - **391** distinct point identifiers.

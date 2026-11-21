@@ -69,9 +69,9 @@
   <button class="tab-btn" type="button" data-tab="hierarchy" role="tab" aria-controls="tab-hierarchy" aria-selected="false" id="tab-btn-hierarchy">12×12 HIERARCHY</button>
   <button class="tab-btn" type="button" data-tab="chat" role="tab" aria-controls="tab-chat" aria-selected="false" id="tab-btn-chat">CHAT</button>
   <button class="tab-btn" type="button" data-tab="science" role="tab" aria-controls="tab-science" aria-selected="false" id="tab-btn-science">SCIENCE</button>
-  <button class="tab-btn" type="button" data-tab="network" role="tab" aria-controls="tab-network" id="tab-btn-network">NETWORK</button>
-  <button class="tab-btn" type="button" data-tab="pantheons" role="tab" aria-controls="tab-pantheons" id="tab-btn-pantheons">PANTHEONS</button>
-  <button class="tab-btn" type="button" data-tab="operations" role="tab" aria-controls="tab-operations" id="tab-btn-operations">OPERATIONS</button>
+  <button class="tab-btn" type="button" data-tab="network" role="tab" aria-controls="tab-network" id="tab-btn-network" aria-selected="false">NETWORK</button>
+  <button class="tab-btn" type="button" data-tab="pantheons" role="tab" aria-controls="tab-pantheons" id="tab-btn-pantheons" aria-selected="false">PANTHEONS</button>
+  <button class="tab-btn" type="button" data-tab="operations" role="tab" aria-controls="tab-operations" id="tab-btn-operations" aria-selected="false">OPERATIONS</button>
 </div>
 
 <!-- MY AGENT TAB -->
@@ -148,17 +148,17 @@
     </div>
   </div>
 </div>
-<div class="tab-panel agent-workspace-panel" id="tab-network" role="tabpanel" aria-label="Agent Network" role="tabpanel" aria-labelledby="tab-btn-network">
+<div class="tab-panel agent-workspace-panel" id="tab-network" role="tabpanel" aria-labelledby="tab-btn-network" aria-label="Agent Network">
   <div class="hierarchy-note">PRIMARY AGENT NETWORK · CANONICAL ROSTER · ILLUSTRATIVE RELATIONSHIPS ONLY. Select a node to inspect its registered profile.</div>
   <iframe class="agent-workspace-frame" title="Agent Network visualization" loading="lazy" data-src="/agent-network.html?embed=1" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/agent-network.html">Open Agent Network as a standalone page</a></p>
 </div>
-<div class="tab-panel agent-workspace-panel" id="tab-pantheons" role="tabpanel" aria-label="Pantheons and archetypes" role="tabpanel" aria-labelledby="tab-btn-pantheons">
+<div class="tab-panel agent-workspace-panel" id="tab-pantheons" role="tabpanel" aria-labelledby="tab-btn-pantheons" aria-label="Pantheons and archetypes">
   <div class="hierarchy-note">PANTHEONS & ARCHETYPES · ARCHETYPE PREFERENCES ARE STORED LOCALLY IN THIS BROWSER, NOT AS ACCOUNT PROFILE DATA.</div>
   <iframe class="agent-workspace-frame" title="Pantheons and archetypes" loading="lazy" data-src="/pantheons.html?embed=1" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/pantheons.html">Open Pantheons as a standalone page</a></p>
 </div>
-<div class="tab-panel agent-workspace-panel" id="tab-operations" role="tabpanel" aria-label="Governed agent operations" role="tabpanel" aria-labelledby="tab-btn-operations">
+<div class="tab-panel agent-workspace-panel" id="tab-operations" role="tabpanel" aria-labelledby="tab-btn-operations" aria-label="Governed agent operations">
   <div class="hierarchy-note">GOVERNED OPERATIONS · READ-ONLY TOOLS ONLY. Server-side authentication, authorization, RLS and tool allowlists remain authoritative.</div>
   <iframe class="agent-workspace-frame" title="Governed agent operations console" loading="lazy" data-src="/agent-operations.html?embed=1" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/agent-operations.html">Open Agent Operations as a standalone page</a></p>

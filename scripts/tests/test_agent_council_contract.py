@@ -112,7 +112,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertIn("pr.is_owner", self.pantheons)
         self.assertIn("pr.access_approved", self.pantheons)
         self.assertIn("functions.invoke('agent-execute'", self.operations)
-        self.assertIn('READ-ONLY', self.operations)
+        self.assertIn('read-only gateway consumer', self.operations)
 
     def test_agent_architecture_copy_matches_fail_closed_roster(self):
         self.assertIn('fail closed if the canonical 12-agent roster cannot be verified', self.council)

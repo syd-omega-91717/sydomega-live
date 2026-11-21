@@ -54,34 +54,19 @@
       }
     },
     "alerts": {
-      "enabled": true,
-      "channels": [
-        {
-          "type": "console",
-          "level": "warning"
-        },
-        {
-          "type": "localStorage",
-          "key": "omega_alerts",
-          "maxSize": 100
-        },
-        {
-          "type": "webhook",
-          "url": "/.supabase/functions/v1/notify-performance",
-          "method": "POST",
-          "retries": 3,
-          "backoff": "exponential"
-        }
-      ]
+      "enabled": false,
+      "channels": [],
+      "status": "NOT_WIRED"
     },
     "sampling": {
-      "enabled": true,
+      "enabled": false,
       "rates": {
-        "slow_page_load": 1.0,
-        "error": 1.0,
+        "slow_page_load": 1,
+        "error": 1,
         "normal_page_load": 0.1,
         "api_call": 0.05
-      }
+      },
+      "status": "NOT_RUNTIME_WIRED"
     },
     "retention": {
       "localStorage": {
@@ -91,29 +76,28 @@
       "server": {
         "maxRecords": 100000,
         "ttlDays": 30
-      }
+      },
+      "status": "NOT_RUNTIME_WIRED"
     },
     "dashboards": {
       "enabled": true,
       "paths": [
         "/monitoring-dashboard.html"
       ],
-      "refreshInterval": 5000
+      "refreshInterval": 5000,
+      "status": "CURRENT_PAGE_ONLY; NOT_A_HISTORICAL_SRE_DASHBOARD"
     },
     "reports": {
-      "enabled": true,
-      "schedule": {
-        "daily": "02:00Z",
-        "weekly": "Monday 02:00Z"
-      },
-      "recipients": [
-        "s.y.dagher@gmail.com"
-      ]
-    }
+      "enabled": false,
+      "status": "NOT_CONFIGURED; NO_RECIPIENTS_STORED_IN_PUBLIC_CONFIGURATION"
+    },
+    "operationalStatus": "PARTIAL_WEB_VITALS_TELEMETRY_ONLY; THIS_CONFIGURATION_IS_NOT_LOADED_BY_THE_BROWSER_RUNTIME"
   },
   "rateLimit": {
-    "enabled": true,
-    "policies": [
+    "enabled": false,
+    "status": "NOT_DEPLOYED",
+    "policies": [],
+    "proposedPolicies": [
       {
         "name": "ip_based",
         "type": "sliding_window",

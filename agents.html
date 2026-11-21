@@ -77,11 +77,11 @@
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
 </div>
 <div class="tab-bar">
-  <button class="tab-btn active" data-tab="agent" onclick="setTab('agent')">MY AGENT</button>
-  <button class="tab-btn" data-tab="council" onclick="setTab('council')">COUNCIL</button>
-  <button class="tab-btn" data-tab="hierarchy" onclick="setTab('hierarchy')">12×12 HIERARCHY</button>
-  <button class="tab-btn" data-tab="chat" onclick="setTab('chat')">CHAT</button>
-  <button class="tab-btn" data-tab="science" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" data-tab="agent" >MY AGENT</button>
+  <button class="tab-btn" data-tab="council" >COUNCIL</button>
+  <button class="tab-btn" data-tab="hierarchy" >12×12 HIERARCHY</button>
+  <button class="tab-btn" data-tab="chat" >CHAT</button>
+  <button class="tab-btn" data-tab="science" >SCIENCE</button>
   <a class="tab-btn" href="/agent-network.html" style="text-decoration:none">NETWORK</a>
   <a class="tab-btn" href="/pantheons.html" style="text-decoration:none">PANTHEONS</a>
   <a class="tab-btn" href="/agent-operations.html" style="text-decoration:none">OPERATIONS</a>
@@ -133,7 +133,7 @@
     </div>
     <div class="chat-input-row">
       <input class="chat-inp" id="chat-inp" type="text" placeholder="Message your agent…" autocomplete="off" aria-label="Message your agent"/>
-      <button class="chat-send" onclick="sendMsg()">SEND &#8594;</button>
+      <button class="chat-send" id="chat-send" type="button">SEND &#8594;</button>
     </div>
   </div>
 </div>
@@ -189,6 +189,7 @@ function setTab(name){
   document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
+document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.getAttribute('data-tab'));});});
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'—':v);}
 
@@ -307,6 +308,9 @@ window.sendMsg=async function(){
   _history.push({role:'assistant',content:reply});
   addMsg('ai',reply);
 };
+
+var sendButton=document.getElementById('chat-send');
+if(sendButton)sendButton.addEventListener('click',window.sendMsg);
 
 function addMsg(role,text){
   var msgs=document.getElementById('chat-msgs');

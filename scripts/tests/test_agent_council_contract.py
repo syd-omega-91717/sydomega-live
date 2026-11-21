@@ -37,7 +37,8 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertIn('id="tab-hierarchy"', self.council)
         self.assertIn('function renderHierarchy(agents)', self.council)
         self.assertIn('renderHierarchy(_agents);', self.council)
-        self.assertRegex(self.council, r'for\s*\(var\s+i\s*=\s*1\s*;\s*i\s*<=\s*12\s*;')
+        self.assertIn('positions.length!==144', self.council)
+        self.assertIn('children.length!==12', self.council)
         hierarchy = self.config['agent_hierarchy']
         self.assertEqual(hierarchy['primary_agent_count'], 12)
         self.assertEqual(hierarchy['subordinate_positions_per_primary'], 12)
@@ -66,7 +67,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertNotIn('FALLBACK_AGENTS', self.council)
         self.assertIn("fetch('/omega-agents.json',{cache:'no-cache'})", self.council)
         self.assertIn('UNASSIGNED', self.council)
-        self.assertIn('NOT YET ASSIGNED', self.council)
+        self.assertIn('Every seat below is therefore marked', self.council)
         self.assertIn('classification and parentage do not grant permissions', self.council.lower())
 
     def test_agent_council_page_adds_no_inline_event_handlers(self):

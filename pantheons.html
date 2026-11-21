@@ -61,7 +61,7 @@
           <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:5px">NOTES ON YOUR ARCHETYPE</div>
           <textarea id="arch-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="How does this archetype manifest in your life?"></textarea>
         </div>
-        <button class="btn" onclick="saveArchetype()">SAVE ON THIS DEVICE</button><p style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">This selection is stored in this browser only. It is not currently saved to your SYD OMEGA member profile.</p>
+        <button class="btn" id="save-archetype" type="button">SAVE ON THIS DEVICE</button><p id="archetype-save-status" role="status" aria-live="polite" style="font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px">This selection is stored in this browser only. It is not currently saved to your SYD OMEGA member profile.</p>
       </div>
     </div>
 
@@ -188,8 +188,12 @@ window.saveArchetype=function(){
   var sel=document.getElementById('arch-select');
   stored.godId=parseInt(sel.value)||null;
   stored.notes=document.getElementById('arch-notes').value.trim();
-  try{localStorage.setItem(KEY,JSON.stringify(stored));}catch(e){console.warn('[Omega Pantheons] local preference could not be saved:',e);}
+  var status=document.getElementById('archetype-save-status');
+  try{localStorage.setItem(KEY,JSON.stringify(stored));if(status)status.textContent='Saved in this browser only. It is not synced to your account.';}
+  catch(e){if(status)status.textContent='Could not save in this browser. Your selection has not been stored.';console.warn('[Omega Pantheons] local preference could not be saved:',e);}
 };
+var saveButton=document.getElementById('save-archetype');
+if(saveButton)saveButton.addEventListener('click',window.saveArchetype);
 
 (async function(){
   try{

@@ -1,6 +1,6 @@
 # Ω SYD OMEGA 91717 — Quick Wins Deployment Guide
 
-This document outlines the 4 quick-win improvements implemented in this session, their deployment requirements, and expected impact.
+This document tracks four quick-win workstreams, their verified implementation state, deployment requirements, and target impact. A proposal or passing configuration validator is not proof of production operation.
 
 ## 1. GitHub Audit Automation (DEPLOYED)
 
@@ -155,11 +155,14 @@ Do not deploy the current Worker unchanged.
 - [ ] Worker deployed
 - [ ] Rate limiting headers appear in responses
 
-### Phase 3: Monitoring Configuration ✅
-- [x] monitoring-config.json deployed with validated thresholds
-- [x] Validation script in CI pipeline
-- [x] omega-monitoring.js loads configuration on page load
-- [x] Alerts visible in monitoring-dashboard.html
+### Phase 3: Monitoring and Performance Metrics — PARTIAL
+- [x] Web Vitals capture runs through omega-metrics.js
+- [x] Web Vitals are sent through OmegaTelemetry to telemetry_events
+- [x] monitoring-config.json schema/thresholds are checked by CI
+- [ ] Runtime loads monitoring-config.json
+- [ ] A secured notify-performance endpoint is deployed
+- [ ] Alert delivery and retention are verified end to end
+- [ ] Owner-authorized SRE dashboard reads historical aggregate telemetry
 
 ### Phase 4: Linear Schema Tracking ⏳
 - [ ] Linear workspace created
@@ -176,7 +179,7 @@ Do not deploy the current Worker unchanged.
 |-----------|--------|-------|--------|
 | Incident detection latency | Not measured | <5 min target | Not yet verified |
 | General API rate limiting | Not verified | Atomic, authenticated, route-scoped enforcement | Target only; current Worker is not deployed |
-| Schema change visibility | Manual | Automatic tracking | 100% audit coverage |
+| Schema change visibility | Workflow present; Linear credentials not verified | Automated issue traceability | Target only; integration not evidenced |
 | Performance visibility | Browser Web Vitals + persisted telemetry | Owner SRE dashboard + verified alerts | Partial; alert configuration is not runtime-wired |
 | MTTR (mean time to recovery) | Not measured | <15 min target | Not yet verified |
 

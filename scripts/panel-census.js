@@ -41,7 +41,7 @@ async function one(t) {
   const out = [];
   for (const t of mine) {
     const rec = await one(t); out.push(rec);
-    console.log(out.length + '/' + mine.length, rec.page, rec.failed ? 'FAILED' : '', rec.text ?? '', rec.errors ?? '', rec.error || '');
+    console.log('%d/%d %s %s %s %s %s', out.length, mine.length, rec.page, rec.failed ? 'FAILED' : '', rec.text ?? '', rec.errors ?? '', rec.error || '');
     fs.writeFileSync(`${process.env.OMEGA_SCRATCHPAD}/census-${shard}.json`, JSON.stringify(out));
   }
   fs.writeFileSync(`${process.env.OMEGA_SCRATCHPAD}/census-${shard}.done`, 'done');

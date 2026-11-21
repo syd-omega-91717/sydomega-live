@@ -247,17 +247,18 @@ body {
     </div>
     
     <div class="network-container">
-      <canvas id="network-canvas" role="img" aria-label="12-agent constellation network visualization"></canvas>
+      <p id="network-status" role="status" aria-live="polite" style="font-size:var(--fs-1,12px);color:var(--muted);padding:0 1rem">LOADING CANONICAL AGENT ROSTER…</p>
+      <canvas id="network-canvas" role="img" aria-label="Primary agent constellation visualization; requires the canonical roster"></canvas>
       <div class="legend">
         <div class="legend-title">COUNCIL CONSTELLATION</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div><span>Omega core</span></div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div><span>Primary-agent roster</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,var(--gold),var(--cyan),#8B0000)"></div><span>Primary-agent nodes · sign-coded</span></div>
         <p style="font-size:var(--fs-1,12px);line-height:1.6;color:var(--muted);margin-top:.5rem">Illustrative visual arrangement. Lines do not represent live dependencies, execution paths, or agent-to-agent permissions.</p>
       </div>
     </div>
     
     <div id="agent-panel" class="agent-panel">
-      <button class="close-panel" onclick="closePanel()" aria-label="Close agent panel">✕</button>
+      <button class="close-panel" id="close-agent-panel" type="button" aria-label="Close agent panel">✕</button>
       <div id="agent-content" data-stagger data-stagger-gap="60"></div>
     </div>
     <div data-page-emblem="agent-network" style="margin:20px auto 0"></div>
@@ -266,46 +267,18 @@ body {
 
 <script src="/bg.js" defer></script>
 <script>
-/* The roster is DERIVED, never restated. This page previously carried its own
-   twelve-agent list and every single sign in it was wrong -- offset by four
-   positions, so Sentinel read Sagittarius where the canon says Aries, and
-   12 of 12 disagreed with omega-agents.json. That is CLAUDE.md 8.1 class 8,
-   the failure that once had the live onboarding flow assigning the wrong god
-   to nine of twelve signs.
-
-   Colour is not restated either: omega-emblems.js owns the per-sign palette
-   and exposes color(sign). The old literals were a third problem again --
-   #ffd700 where the brand is #C9A84C.
-
-   Same fetch-with-fallback posture as omega-constellation.js and agents.html
-   use for the same file: names and signs only, nothing derived, so an offline
-   render shows the real roster or the same twelve names, never an invention. */
+/* The canonical roster is the only identity source. If it cannot be loaded or validated, this view fails closed rather than rendering a second, potentially stale list. */
 const SIGN_GLYPH = {
   Aries:'\u2648\uFE0E', Taurus:'\u2649\uFE0E', Gemini:'\u264A\uFE0E',
   Cancer:'\u264B\uFE0E', Leo:'\u264C\uFE0E', Virgo:'\u264D\uFE0E',
   Libra:'\u264E\uFE0E', Scorpio:'\u264F\uFE0E', Sagittarius:'\u2650\uFE0E',
   Capricorn:'\u2651\uFE0E', Aquarius:'\u2652\uFE0E', Pisces:'\u2653\uFE0E'
 };
-const FALLBACK_AGENTS = [
-  { name:'Sentinel', sign:'Aries',       role:'Security Guardian' },
-  { name:'Merchant', sign:'Taurus',      role:'Commerce Steward' },
-  { name:'Scout',    sign:'Gemini',      role:'Discovery Scout' },
-  { name:'Warden',   sign:'Cancer',      role:'Family Warden' },
-  { name:'Sovereign',sign:'Leo',         role:'Governance Sovereign' },
-  { name:'Auditor',  sign:'Virgo',       role:'Validation Auditor' },
-  { name:'Proxy',    sign:'Libra',       role:'Execution Proxy' },
-  { name:'Oracle',   sign:'Scorpio',     role:'Prediction Oracle' },
-  { name:'Beacon',   sign:'Sagittarius', role:'Onboarding Beacon' },
-  { name:'Analyst',  sign:'Capricorn',   role:'Finance Analyst' },
-  { name:'Tutor',    sign:'Aquarius',    role:'Education Tutor' },
-  { name:'Historian',sign:'Pisces',      role:'Archive Historian' }
-];
-
 let agents = [];
 
 function shapeAgent(a) {
   const sign = a.sign || 'Aries';
-  let colour = 'var(--gold)';
+  let colour = (getComputedStyle(document.documentElement).getPropertyValue('--gold') || '#C9A84C').trim();
   try {
     if (window.OmegaEmblem && typeof window.OmegaEmblem.color === 'function') {
       colour = window.OmegaEmblem.color(sign);
@@ -323,14 +296,23 @@ function shapeAgent(a) {
 }
 
 function loadAgents() {
-  return fetch('/omega-agents.json')
-    .then(function (r) { return r.ok ? r.json() : null; })
+  return fetch('/omega-agents.json',{cache:'no-cache'})
+    .then(function (r) { if(!r.ok)throw new Error('canonical roster unavailable');return r.json(); })
     .then(function (j) {
-      const list = j && (j.agents || j);
-      return (Array.isArray(list) && list.length) ? list : FALLBACK_AGENTS;
+      const list = j && j.agents;
+      const names = Array.isArray(list) ? list.map(function(a){return a&&a.name;}) : [];
+      if(!Array.isArray(list)||list.length!==12||names.some(function(n){return typeof n!=='string'||!n.trim();})||new Set(names).size!==12)throw new Error('canonical roster failed validation');
+      agents = list.map(shapeAgent);
+      const status=document.getElementById('network-status');
+      if(status)status.textContent='12 PRIMARY AGENTS · CANONICAL ROSTER VERIFIED · VISUAL MODEL ONLY';
+      return agents;
     })
-    .catch(function () { return FALLBACK_AGENTS; })
-    .then(function (list) { agents = list.map(shapeAgent); return agents; });
+    .catch(function () {
+      agents=[];
+      const status=document.getElementById('network-status');
+      if(status)status.textContent='UNAVAILABLE · CANONICAL ROSTER COULD NOT BE VERIFIED · NO FALLBACK IDENTITIES RENDERED';
+      return agents;
+    });
 }
 
 function drawNetwork() {
@@ -343,6 +325,7 @@ function drawNetwork() {
   
   const centerX = canvas.width / 2;
   const centerY = canvas.height / 2;
+  if (!agents.length) { ctx.clearRect(0,0,canvas.width,canvas.height); return; }
   const radius = Math.min(canvas.width, canvas.height) / 3;
   
   // Draw connections
@@ -450,6 +433,8 @@ function openPanel(agentId) {
 function closePanel() {
   document.getElementById('agent-panel').classList.remove('active');
 }
+var closePanelButton=document.getElementById('close-agent-panel');
+if(closePanelButton)closePanelButton.addEventListener('click',closePanel);
 
 function setupCanvasClickListener() {
   const canvas = document.getElementById('network-canvas');

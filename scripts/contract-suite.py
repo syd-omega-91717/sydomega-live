@@ -330,7 +330,7 @@ GATES = [
      'every 999-blueprint point is classified once, with a reason',
      ['scripts/blueprint-truth-map.py', '--check']),
     ('dashboard-tabs',
-     'Genesis is the default command tab while Today and every legacy tab hash remain intact',
+     'Genesis is a first-class command tab while Today remains the default and every legacy tab hash remains intact',
      ['scripts/tests/test_dashboard_tabs.py']),
     ('domain-hub-workspaces',
      'the existing 14 workspaces and the canonical Genesis 12-route directory remain aligned',

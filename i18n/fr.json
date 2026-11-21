@@ -505,13 +505,13 @@
   "vault_holdings_economy_label": "ACTIVATION ÉCONOMIQUE",
   "vault_holdings_tokens_title": "12 SOLDES DE TOKENS SOUVERAINS · AUTH=sqrt(A³+B³+C³)×φ/e",
   "vault_holdings_nft_vault_title": "COFFRE NFT · 12 LIGNES SOUVERAINES · 9 NIVEAUX CHACUN = 108 TYPES",
-  "vault_ledger_total_label": "TOTAL DES POINTS GAGNÉS",
-  "vault_ledger_actions_label": "ACTIONS TERMINÉES",
+  "vault_ledger_total_label": "POINTS DE PROGRESSION RÉCENTS",
+  "vault_ledger_actions_label": "ENREGISTREMENTS DE TÂCHES RÉCENTS",
   "vault_ledger_axisa_label": "AXE A — CONNAISSANCE",
   "vault_ledger_axisb_label": "AXE B — MAÎTRISE",
   "vault_ledger_axisc_label": "AXE C — CONTRIBUTION",
   "vault_ledger_audit_label": "ÉVÉNEMENTS D'AUDIT",
-  "vault_ledger_earning_title": "GRAND LIVRE DES GAINS SOUVERAINS · AUTH=sqrt(A³+B³+C³)×φ/e · APEX=27.8367",
+  "vault_ledger_earning_title": "REGISTRE DE PROGRESSION · ÉVÉNEMENTS DE TÂCHES RÉCENTS ENREGISTRÉS À LA SOURCE · 40 MAX.",
   "vault_ledger_col_timestamp": "HORODATAGE",
   "vault_ledger_col_task": "TÂCHE",
   "vault_ledger_col_axis": "AXE",
@@ -1203,5 +1203,6 @@
   "tip_element": "Votre élément vient de votre signe de naissance. Il teinte la plateforme à votre image.",
   "profile_placeholder_character_name": "Votre nom souverain...",
   "profile_placeholder_legacy_statement": "Ce que vous transmettez...",
-  "prof_label_public_identity": "Identité publique"
+  "prof_label_public_identity": "Identité publique",
+  "vault_ledger_window_note": "Jusqu’à 40 enregistrements récents de tâches. Les points de progression ne sont ni de l’argent ni des revenus."
 }

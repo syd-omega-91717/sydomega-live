@@ -1,7 +1,12 @@
 <!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end --><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}.agent-workspace-panel{padding:.75rem}
+.agent-workspace-frame{display:block;width:100%;height:min(78vh,980px);min-height:620px;border:1px solid var(--line);border-radius:10px;background:#020206}
+.agent-workspace-fallback{margin:.7rem .25rem;font:var(--fs-1,12px) var(--M)}
+.agent-workspace-fallback a{color:var(--cyan);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){.agent-workspace-panel{padding:.4rem}.agent-workspace-frame{height:76vh;min-height:520px}}
+</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end --><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN AGENTS</title>
 <style>
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -59,14 +64,14 @@
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
 </div>
 <div class="tab-bar">
-  <button class="tab-btn active" data-tab="agent" >MY AGENT</button>
-  <button class="tab-btn" data-tab="council" >COUNCIL</button>
-  <button class="tab-btn" data-tab="hierarchy" >12×12 HIERARCHY</button>
-  <button class="tab-btn" data-tab="chat" >CHAT</button>
-  <button class="tab-btn" data-tab="science" >SCIENCE</button>
-  <a class="tab-btn" href="/agent-network.html" style="text-decoration:none">NETWORK</a>
-  <a class="tab-btn" href="/pantheons.html" style="text-decoration:none">PANTHEONS</a>
-  <a class="tab-btn" href="/agent-operations.html" style="text-decoration:none">OPERATIONS</a>
+  <button class="tab-btn active" type="button" data-tab="agent" role="tab" aria-controls="tab-agent" aria-selected="true">MY AGENT</button>
+  <button class="tab-btn" type="button" data-tab="council" role="tab" aria-controls="tab-council" aria-selected="false">COUNCIL</button>
+  <button class="tab-btn" type="button" data-tab="hierarchy" role="tab" aria-controls="tab-hierarchy" aria-selected="false">12×12 HIERARCHY</button>
+  <button class="tab-btn" type="button" data-tab="chat" role="tab" aria-controls="tab-chat" aria-selected="false">CHAT</button>
+  <button class="tab-btn" type="button" data-tab="science" role="tab" aria-controls="tab-science" aria-selected="false">SCIENCE</button>
+  <button class="tab-btn" type="button" data-tab="network" role="tab" aria-controls="tab-network">NETWORK</button>
+  <button class="tab-btn" type="button" data-tab="pantheons" role="tab" aria-controls="tab-pantheons">PANTHEONS</button>
+  <button class="tab-btn" type="button" data-tab="operations" role="tab" aria-controls="tab-operations">OPERATIONS</button>
 </div>
 
 <!-- MY AGENT TAB -->
@@ -137,11 +142,26 @@
     <p class="sechead">AGENT COUNCIL ARCHITECTURE</p>
     <div class="card-grid">
       <div class="card"><div class="card-title">ZODIAC BINDING</div><div class="card-body">Each of the 12 sovereign agents is bound to one zodiac sign, one element, one Olympian patron, and one domain of expertise. Agent assignment is automatic — your sign determines your agent at platform entry, immutably.</div></div>
-      <div class="card"><div class="card-title">AGENT DATA</div><div class="card-body">Agent definitions are loaded from <code>/omega-agents.json</code> at runtime, with a hardcoded 12-agent fallback if the file is unavailable. Each agent has: name, sign, element, god, role, greeting, voice profile, and domain token.</div></div>
+      <div class="card"><div class="card-title">AGENT DATA</div><div class="card-body">Agent definitions are loaded from <code>/omega-agents.json</code> at runtime. The Council and Network views fail closed if the canonical 12-agent roster cannot be verified; no duplicate fallback identities are rendered. Each primary record supplies its registered sign, element, patron, role, greeting, voice profile, and domain token.</div></div>
       <div class="card"><div class="card-title">CHAT ENGINE</div><div class="card-body">Chat routes through the <code>concierge</code> Supabase edge function with an agent-specific system prompt. The system prompt injects the agent's name, role, and voice, plus the member's authority score, sign, and axis values. Responses are capped at 100 words, in character.</div></div>
       <div class="card"><div class="card-title">COUNCIL VIEW</div><div class="card-body">The Council tab shows all 12 agents. Clicking any agent card switches the active agent in both the hero panel and the chat channel — allowing members to consult any agent, not just their bound one. The bound agent is highlighted with a gold border.</div></div>
     </div>
   </div>
+</div>
+<div class="tab-panel agent-workspace-panel" id="tab-network" role="tabpanel" aria-label="Agent Network">
+  <div class="hierarchy-note">PRIMARY AGENT NETWORK · CANONICAL ROSTER · ILLUSTRATIVE RELATIONSHIPS ONLY. Select a node to inspect its registered profile.</div>
+  <iframe class="agent-workspace-frame" title="Agent Network visualization" loading="lazy" data-src="/agent-network.html?embed=1" referrerpolicy="same-origin"></iframe>
+  <p class="agent-workspace-fallback"><a href="/agent-network.html">Open Agent Network as a standalone page</a></p>
+</div>
+<div class="tab-panel agent-workspace-panel" id="tab-pantheons" role="tabpanel" aria-label="Pantheons and archetypes">
+  <div class="hierarchy-note">PANTHEONS & ARCHETYPES · ARCHETYPE PREFERENCES ARE STORED LOCALLY IN THIS BROWSER, NOT AS ACCOUNT PROFILE DATA.</div>
+  <iframe class="agent-workspace-frame" title="Pantheons and archetypes" loading="lazy" data-src="/pantheons.html?embed=1" referrerpolicy="same-origin"></iframe>
+  <p class="agent-workspace-fallback"><a href="/pantheons.html">Open Pantheons as a standalone page</a></p>
+</div>
+<div class="tab-panel agent-workspace-panel" id="tab-operations" role="tabpanel" aria-label="Governed agent operations">
+  <div class="hierarchy-note">GOVERNED OPERATIONS · READ-ONLY TOOLS ONLY. Server-side authentication, authorization, RLS and tool allowlists remain authoritative.</div>
+  <iframe class="agent-workspace-frame" title="Governed agent operations console" loading="lazy" data-src="/agent-operations.html?embed=1" referrerpolicy="same-origin"></iframe>
+  <p class="agent-workspace-fallback"><a href="/agent-operations.html">Open Agent Operations as a standalone page</a></p>
 </div>
 <div data-page-emblem="agents" style="margin:20px auto 0"></div>
 </div>
@@ -153,8 +173,15 @@ var _profile=null,_myAgent=null,_history=[],_agents=[],_sb=null;
 var PHI=1.6180339887,EU=2.7182818285;
 
 function setTab(name){
-  document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===name);});
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){
+    var active=b.getAttribute('data-tab')===name;
+    b.classList.toggle('active',active);
+    b.setAttribute('aria-selected',active?'true':'false');
+  });
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+  var panel=document.getElementById('tab-'+name);
+  var frame=panel&&panel.querySelector('iframe[data-src]');
+  if(frame&&!frame.getAttribute('src'))frame.setAttribute('src',frame.getAttribute('data-src'));
 }
 document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.getAttribute('data-tab'));});});
 

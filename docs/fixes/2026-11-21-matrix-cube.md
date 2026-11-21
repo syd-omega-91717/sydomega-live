@@ -10,4 +10,4 @@
 
 **Not done / not verified.** Real-GPU cost. Whether a 278 px cube is dense enough against board-02 (no pixel comparison). The lattice is not wired to member data: that would need a real per-node data model, which does not exist. Edge shell/gold interior/6% bright nodes use `Math.random()` (unseeded, in the module), so two renders differ slightly.
 
-**Browser suite result.** Not yet recorded: the full `scripts/shell-check.js` run with the cube checks was still in progress at commit time.
+**Browser suite result.** `scripts/shell-check.js`, full run on the final code: **51 passed, 0 failed**, no page error. An earlier full run was 50 passed / 1 failed; the one failure was my own stale assertion ("two panels" when the map now has three) and was fixed in the assertion, not in the product. Cube checks that passed: live with gold and cyan nodes; panel figures equal the canon fetched at run time; "decorative, not your progress" note present; cube idle when the map is hidden; no-WebGL (flat lattice, three canon facts remain); module blocked (empty square hidden, facts and link remain); phone (cube off, facts remain, no overflow).

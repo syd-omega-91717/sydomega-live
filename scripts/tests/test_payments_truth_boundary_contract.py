@@ -21,6 +21,9 @@ class PaymentsTruthBoundaryContract(unittest.TestCase):
         self.assertNotIn("Monthly subscription — current tier", SOURCE)
         self.assertNotIn("Platform access — trial period", SOURCE)
         self.assertNotIn("READY TO ACTIVATE',dir:'pending'", SOURCE)
+        self.assertNotIn("READY TO ACTIVATE", SOURCE)
+        self.assertNotIn("fully wired and tested", SOURCE)
+        self.assertNotIn("generate Omega Token", SOURCE)
         self.assertNotIn("status:'completed',amount:'0.00'", SOURCE)
 
     def test_unknown_financial_metrics_are_not_presented_as_zero_or_one(self):

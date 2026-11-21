@@ -1423,7 +1423,8 @@
          and denser it gets, so the eye is pulled to the core rather than the
          surface. A scatter of bright nodes keeps it from looking regular. */
       var edge = Math.max(Math.abs(x - half), Math.abs(y - half), Math.abs(z - half)) / half;
-      var c = edge > 0.82 ? cCyan : (Math.random() < 0.06 ? cBright : cGold);
+      var sparkle = ((Math.imul(i, 1664525) + 1013904223) >>> 0) / 4294967296;
+      var c = edge > 0.82 ? cCyan : (sparkle < 0.06 ? cBright : cGold);
       mesh.instanceColor.setXYZ(i, c.r, c.g, c.b);
       i++;
     }

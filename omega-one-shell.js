@@ -41,12 +41,15 @@
 
   var KEY = /^[a-z0-9][a-z0-9-]{0,60}$/;
   var REGISTRY_URL = '/config/omega-panel-eligibility.json';
+  var STRONG = 3;   // an edge of at least this weight is drawn at rest; weaker ones appear when their workspace is pointed at
+  var RELATIONS_URL = '/config/omega-relations.json';   // the evidence for every line the map draws (scripts/relations-build.py)
   var WAIT_MS = 8000;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var baseTitle = document.title;
   var selfKey = String(location.pathname).replace(/^\//, '').replace(/\.html$/, '');   // this page: never hosted inside itself
 
   var ws = null;        // window.OmegaWorkspaces
+  var rel = null;       // relations file ({edges:[{a,b,weight,shared_pages,shared_relations}]}), or null: then only the spokes are drawn
   var reg = null;       // registry pages, or null when it could not be read (then nothing is hosted)
   var hubs = [];        // [{key, path, pages:[keys]}]
   var token = 0, current = null, firstRoute = true;
@@ -86,21 +89,58 @@
       '.ons-sub{font:14px/1.6 var(--R,Rajdhani,sans-serif);color:#BDBAB1;margin:0 2px 16px;max-width:70ch}',
       '.ons-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}',
       '.ons-full{font:12px/1 var(--M,"Courier Prime",monospace);letter-spacing:.1em;color:#00E5FF;display:inline-flex;align-items:center;min-height:44px}',
-      /* map */
-      '.ons-map{position:relative;width:min(100%,680px);aspect-ratio:1;margin:0 auto}',
-      '.ons-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}',
-      '.ons-line{stroke:rgba(201,168,76,.42);stroke-width:.25;stroke-dasharray:1.2 1.6;animation:ons-flow 7s linear infinite}',
-      '@keyframes ons-flow{to{stroke-dashoffset:-11.2}}',
-      '.ons-core{position:absolute;left:50%;top:50%;width:25%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;',
-      'font:clamp(34px,8vw,72px)/1 var(--D,"Cinzel Decorative",serif);color:#F0D98F;text-shadow:0 0 26px rgba(240,213,138,.6);',
-      'background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.2),rgba(201,168,76,.16) 34%,rgba(4,7,13,.96) 72%);border:1px solid rgba(240,213,138,.7);',
-      'box-shadow:0 0 0 8px rgba(201,168,76,.05),0 0 44px rgba(201,168,76,.28),0 0 110px rgba(0,229,255,.1),inset 0 0 28px rgba(201,168,76,.18)}',
-      '.ons-node{position:absolute;transform:translate(-50%,-50%);min-width:88px;min-height:56px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;',
+      /* map: blueprint = side panel | map | side panel */
+      '.ons-blueprint{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}',
+      '@media (min-width:1100px){.ons-blueprint{grid-template-columns:minmax(210px,1fr) minmax(0,640px) minmax(210px,1fr);align-items:center}}',
+      '.ons-map{position:relative;width:min(100%,640px);aspect-ratio:1;margin:0 auto}',
+      '.ons-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}',
+      '.ons-spoke{stroke:rgba(201,168,76,.16);stroke-width:.18}',
+      '.ons-edge{opacity:.62;transition:opacity .25s}',
+      '.ons-edge.faint{opacity:0}',
+      '.ons-map[data-focus] .ons-edge{opacity:.07}',
+      '.ons-map[data-focus] .ons-edge.hot{opacity:1}',
+      '.ons-eglow{fill:none;stroke:rgba(240,213,138,.5);stroke-linecap:round;filter:blur(.55px)}',
+      '.ons-eline{fill:none;stroke:#F6E3A6;stroke-linecap:round;stroke-dasharray:1.1 2.6;animation:ons-flow 5s linear infinite}',
+      '.ons-edge.cy .ons-eline{stroke:#7FF0FF}.ons-edge.cy .ons-eglow{stroke:rgba(0,229,255,.45)}',
+      '@keyframes ons-flow{to{stroke-dashoffset:-7.4}}',
+      '.ons-core{position:absolute;left:50%;top:50%;width:21%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;display:grid;place-items:center;z-index:2;',
+      'font:clamp(34px,8vw,72px)/1 var(--D,"Cinzel Decorative",serif);color:#FFF3C4;text-shadow:0 0 18px rgba(255,236,170,.95),0 0 46px rgba(240,213,138,.75);',
+      'background:radial-gradient(circle at 38% 30%,rgba(255,250,225,.55),rgba(240,213,138,.3) 30%,rgba(4,7,13,.94) 74%);border:1px solid rgba(255,236,170,.9);',
+      'box-shadow:0 0 0 7px rgba(240,213,138,.07),0 0 38px rgba(255,220,120,.55),0 0 120px rgba(240,213,138,.32),0 0 220px rgba(0,229,255,.12),inset 0 0 26px rgba(255,236,170,.3)}',
+      '.ons-rays,.ons-halo{position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;translate:-50% -50%}',
+      '.ons-rays{width:300%;aspect-ratio:1;z-index:-1;background:repeating-conic-gradient(from 0deg,rgba(255,236,170,.55) 0 .7deg,transparent .7deg 7.5deg);',
+      '-webkit-mask-image:radial-gradient(circle,#000 18%,transparent 62%);mask-image:radial-gradient(circle,#000 18%,transparent 62%);animation:ons-turn 90s linear infinite}',
+      '.ons-halo{width:230%;aspect-ratio:1;z-index:-2;background:radial-gradient(circle,rgba(255,226,140,.38),rgba(240,213,138,.1) 38%,transparent 66%);animation:ons-breathe 6s ease-in-out infinite}',
+      '@keyframes ons-turn{to{rotate:360deg}}',
+      '@keyframes ons-breathe{0%,100%{opacity:.75}50%{opacity:1}}',
+      '.ons-node{position:absolute;translate:-50% -50%;min-width:88px;min-height:56px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:3;',
       'border:1px solid rgba(201,168,76,.4);border-radius:12px;background:linear-gradient(145deg,rgba(30,27,20,.94),rgba(5,8,14,.96));box-shadow:0 0 22px rgba(201,168,76,.1);',
       'transition:border-color .2s,box-shadow .2s}',
-      '.ons-node:hover,.ons-node:focus-visible{border-color:rgba(240,213,138,.9);box-shadow:0 0 30px rgba(201,168,76,.34);outline:none}',
+      '.ons-node:hover,.ons-node:focus-visible,.ons-node.on{border-color:rgba(255,236,170,.95);box-shadow:0 0 34px rgba(240,213,138,.5);outline:none}',
       '.ons-nname{font:13px/1.25 var(--M,"Courier Prime",monospace);letter-spacing:.08em;color:#F0D98F;text-transform:uppercase}',
       '.ons-ncount{font:11px/1.3 var(--M,"Courier Prime",monospace);color:#A9A7A0;margin-top:3px}',
+      '@media (max-width:1099px){.ons-map{order:-1}.ons-read{min-height:calc(13px * 1.55 * 4 + 16px)}}',
+      '.ons-read{margin:0 2px 10px;padding:8px 14px;min-height:calc(13px * 1.55 * 3 + 16px);border:1px solid rgba(201,168,76,.22);border-radius:10px;background:rgba(5,8,14,.7);font:13px/1.55 var(--R,Rajdhani,sans-serif);color:#D3D0C7}',
+      '.ons-read b{color:#F0D98F;font-weight:600}',
+      /* panels: every figure is computed from loaded data; every panel names its source */
+      '.ons-panel{border:1px solid rgba(201,168,76,.3);border-radius:10px;background:linear-gradient(160deg,rgba(24,21,15,.9),rgba(5,8,14,.94));padding:12px 14px;min-width:0}',
+      '.ons-ph{display:flex;justify-content:space-between;gap:8px;margin:0 0 10px;font:11px/1.3 var(--M,"Courier Prime",monospace);letter-spacing:.14em;text-transform:uppercase;color:#C9A84C}',
+      '.ons-src{font-size:9px;letter-spacing:.06em;color:#9A988F;text-transform:none;text-align:right}',
+      '.ons-rows{list-style:none;margin:0;padding:0;display:grid;gap:0}',
+      '.ons-panel a.ons-row{display:grid;grid-template-columns:minmax(64px,88px) 1fr 28px;gap:8px;align-items:center;min-height:44px;padding:0 2px;border-top:1px solid rgba(201,168,76,.1);font:11px/1.2 var(--M,"Courier Prime",monospace);letter-spacing:.06em;color:#CFCBBE;text-transform:uppercase}',
+      '.ons-rows li:first-child a.ons-row{border-top:0}',
+      '.ons-panel a.ons-row:hover,.ons-panel a.ons-row:focus-visible{color:#F0D98F;outline:none}',
+      '.ons-track{height:6px;border-radius:3px;background:rgba(201,168,76,.12);overflow:hidden}',
+      '.ons-track i{display:block;height:100%;background:linear-gradient(90deg,#8A6B24,#F0D98F);border-radius:3px}',
+      '.ons-row b{font-weight:400;color:#F0D98F;text-align:right}',
+      '.ons-rel{display:grid;gap:2px;padding:6px 0;border-top:1px solid rgba(201,168,76,.14);font:13px/1.35 var(--R,Rajdhani,sans-serif);color:#D3D0C7}',
+      '.ons-rel:first-child{border-top:0;padding-top:0}',
+      '.ons-rel strong{font:11px/1.3 var(--M,"Courier Prime",monospace);letter-spacing:.1em;color:#F0D98F;text-transform:uppercase;font-weight:400}',
+      '.ons-stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}',
+      '.ons-stat{padding:10px 14px;border:1px solid rgba(201,168,76,.28);border-radius:10px;background:rgba(5,8,14,.72)}',
+      '.ons-stat b{display:block;font:clamp(22px,3vw,30px)/1.1 var(--D,"Cinzel Decorative",serif);color:#F0D98F;font-weight:400}',
+      '.ons-stat span{display:block;margin-top:2px;font:10px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:.1em;text-transform:uppercase;color:#B8B6AE}',
+      '.ons-stat em{display:block;font:9px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:.04em;color:#8F8D86;font-style:normal;margin-top:2px}',
       /* hub */
       '.ons-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}',
       '.ons-page{display:flex;flex-direction:column;justify-content:center;min-height:64px;padding:11px 13px;border:1px solid rgba(201,168,76,.24);border-radius:11px;',
@@ -116,9 +156,9 @@
       '.ons a:focus-visible{outline:2px solid #F0D98F;outline-offset:3px}',
       /* narrow: the ring becomes a grid, the lines go (a ring of 15 buttons does not fit a phone) */
       '@media (max-width:700px){.ons-map{aspect-ratio:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}',
-      '.ons-lines{display:none}.ons-core{position:static;transform:none;grid-column:1/-1;width:96px;margin:0 auto 6px}',
-      '.ons-node{position:static;transform:none;min-width:0;min-height:64px}}',
-      '@media (prefers-reduced-motion:reduce){.ons-line{animation:none}.ons-node,.ons-page{transition:none}.ons-page:hover{transform:none}}'
+      '.ons-read{min-height:44px}.ons-lines{display:none}.ons-core{position:static;translate:none;grid-column:1/-1;width:96px;margin:0 auto 6px}.ons-rays,.ons-halo{display:none}',
+      '.ons-node{position:static;translate:none;min-width:0;min-height:64px}}',
+      '@media (prefers-reduced-motion:reduce){.ons-eline,.ons-rays,.ons-halo{animation:none}.ons-edge{transition:none}.ons-node,.ons-page{transition:none}.ons-page:hover{transform:none}}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -198,40 +238,180 @@
   }
 
   /* ---- views ------------------------------------------------------------- */
+  function relsOf(key) {
+    return ((rel && rel.edges) || []).filter(function (e) { return e.a === key || e.b === key; })
+      .sort(function (x, y) { return y.weight - x.weight; });
+  }
+  function relText(e) {
+    var bits = [];
+    if (e.shared_pages.length) bits.push(e.shared_pages.length + (e.shared_pages.length === 1 ? ' shared page' : ' shared pages'));
+    if (e.shared_relations.length) bits.push(e.shared_relations.length + ' shared data ' + (e.shared_relations.length === 1 ? 'set' : 'sets'));
+    return bits.join(' · ');
+  }
+  function panel(title, source) {
+    var p = el('section', 'ons-panel');
+    var h = el('h3', 'ons-ph', title);
+    if (source) h.appendChild(el('span', 'ons-src', source));
+    p.appendChild(h);
+    return p;
+  }
+  function stat(value, name, source) {
+    var d = el('div', 'ons-stat');
+    d.appendChild(el('b', null, String(value)));
+    d.appendChild(el('span', null, name));
+    d.appendChild(el('em', null, source));
+    return d;
+  }
+
   function buildMap() {
     viewMap.textContent = '';
-    var map = el('div', 'ons-map');
     var NS = 'http://www.w3.org/2000/svg';
-    var svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('class', 'ons-lines');
-    svg.setAttribute('viewBox', '0 0 100 100');
-    svg.setAttribute('aria-hidden', 'true');
+    function svgEl(tag, attrs) {
+      var n = document.createElementNS(NS, tag);
+      Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+      return n;
+    }
+    var board = el('div', 'ons-blueprint');
+    var map = el('div', 'ons-map');
+    var svg = svgEl('svg', { 'class': 'ons-lines', viewBox: '0 0 100 100', 'aria-hidden': 'true' });
     map.appendChild(svg);
-    map.appendChild(el('div', 'ons-core', 'Ω'));
+    var core = el('div', 'ons-core', 'Ω');
+    core.appendChild(el('span', 'ons-halo'));
+    core.appendChild(el('span', 'ons-rays'));
+    map.appendChild(core);
+
+    var n = hubs.length, pos = {};
+    hubs.forEach(function (h, i) {
+      var ang = -Math.PI / 2 + (2 * Math.PI * i) / n;
+      pos[h.key] = { x: 50 + 39 * Math.cos(ang), y: 50 + 39 * Math.sin(ang) };
+    });
+
+    /* spokes: every workspace belongs to the platform, so each is tied to the centre */
+    hubs.forEach(function (h) {
+      svg.appendChild(svgEl('line', { 'class': 'ons-spoke', x1: 50, y1: 50, x2: pos[h.key].x.toFixed(2), y2: pos[h.key].y.toFixed(2) }));
+    });
+
+    /* edges: only what config/omega-relations.json lists, each with its evidence. Weight >= STRONG shows at rest; the rest
+       appear when their hub is pointed at. A file that did not load draws no edge at all. */
+    var edgeEls = [];
+    ((rel && rel.edges) || []).forEach(function (e) {
+      var A = pos[e.a], B = pos[e.b];
+      if (!A || !B) return;
+      /* control point: pulled toward the centre, then pushed sideways in proportion to the chord length so that two
+         opposite workspaces curve AROUND the Omega instead of drawing a line through it */
+      var mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2, dx = B.x - A.x, dy = B.y - A.y, len = Math.sqrt(dx * dx + dy * dy) || 1;
+      var bend = 4 + 46 * Math.pow(len / 78, 2);
+      var cx = mx + (50 - mx) * 0.55 + (-dy / len) * bend, cy = my + (50 - my) * 0.55 + (dx / len) * bend;
+      var d = 'M' + A.x.toFixed(2) + ' ' + A.y.toFixed(2) + ' Q' + cx.toFixed(2) + ' ' + cy.toFixed(2) + ' ' + B.x.toFixed(2) + ' ' + B.y.toFixed(2);
+      var g = svgEl('g', { 'class': 'ons-edge' + (e.weight < STRONG ? ' faint' : '') + (e.shared_pages.length ? '' : ' cy') });
+      var w = Math.min(0.7, 0.16 + e.weight * 0.035);
+      g.appendChild(svgEl('path', { 'class': 'ons-eglow', d: d, 'stroke-width': (w * 3).toFixed(2) }));
+      g.appendChild(svgEl('path', { 'class': 'ons-eline', d: d, 'stroke-width': w.toFixed(2) }));
+      svg.appendChild(g);
+      edgeEls.push({ e: e, g: g });
+    });
+
+    var read = el('p', 'ons-read');
+    read.setAttribute('aria-live', 'polite');
+    read.setAttribute('data-no-clamp', '');   // omega-readmore.js would clamp this to 2 lines on a phone and add its own MORE chip
+    var readDefault = rel
+      ? 'Choose a workspace to open its pages; most open right here. Point at one to see what it shares with the others: gold lines are pages listed in two workspaces, cyan lines are data tables used by both.'
+      : 'The relations file could not be read, so no connections are drawn.';
+    read.textContent = readDefault;
+
+    var nodes = {};
+    function focusHub(key) {
+      if (!rel || (window.matchMedia && window.matchMedia('(max-width:700px)').matches)) return;   // phone: no hover, the lines are hidden, and a changing readout would shift the grid
+      if (!key) {
+        map.removeAttribute('data-focus');
+        edgeEls.forEach(function (x) { x.g.classList.remove('hot'); });
+        Object.keys(nodes).forEach(function (k) { nodes[k].classList.remove('on'); });
+        read.textContent = readDefault;
+        return;
+      }
+      map.setAttribute('data-focus', key);
+      var mine = relsOf(key), peers = {};
+      mine.forEach(function (e) { peers[e.a === key ? e.b : e.a] = true; });
+      edgeEls.forEach(function (x) { x.g.classList.toggle('hot', x.e.a === key || x.e.b === key); });
+      Object.keys(nodes).forEach(function (k) { nodes[k].classList.toggle('on', k === key || !!peers[k]); });
+      read.textContent = '';
+      read.appendChild(el('b', null, label(key).toUpperCase()));
+      if (!mine.length) { read.appendChild(document.createTextNode(' shares no pages or data with another workspace in the evidence file.')); return; }
+      read.appendChild(document.createTextNode(' connects to: '));
+      mine.slice(0, 4).forEach(function (e, i) {
+        var other = e.a === key ? e.b : e.a;
+        if (i) read.appendChild(document.createTextNode('; '));
+        read.appendChild(el('b', null, label(other)));
+        read.appendChild(document.createTextNode(' (' + relText(e) + ')'));
+      });
+      if (mine.length > 4) read.appendChild(document.createTextNode('; and ' + (mine.length - 4) + ' more.'));
+    }
+
     var nav = el('nav');
     nav.setAttribute('aria-label', 'Workspaces');
     nav.style.display = 'contents';
-    var n = hubs.length;
-    hubs.forEach(function (h, i) {
-      var ang = -Math.PI / 2 + (2 * Math.PI * i) / n;
-      var x = 50 + 39 * Math.cos(ang), y = 50 + 39 * Math.sin(ang);
-      var line = document.createElementNS(NS, 'line');
-      line.setAttribute('class', 'ons-line');
-      line.setAttribute('x1', '50'); line.setAttribute('y1', '50');
-      line.setAttribute('x2', x.toFixed(2)); line.setAttribute('y2', y.toFixed(2));
-      svg.appendChild(line);
+    hubs.forEach(function (h) {
       var a = el('a', 'ons-node');
       a.href = '#/hub/' + h.key;
-      a.style.left = x.toFixed(2) + '%';
-      a.style.top = y.toFixed(2) + '%';
+      a.style.left = pos[h.key].x.toFixed(2) + '%';
+      a.style.top = pos[h.key].y.toFixed(2) + '%';
       var inPlace = h.pages.filter(hostable).length;
       a.title = label(h.key) + ': ' + h.pages.length + ' pages, ' + inPlace + ' open in place';
       a.appendChild(el('span', 'ons-nname', label(h.key)));
       a.appendChild(el('span', 'ons-ncount', h.pages.length + ' pages'));
+      a.addEventListener('mouseenter', function () { focusHub(h.key); });
+      a.addEventListener('focus', function () { focusHub(h.key); });
+      a.addEventListener('mouseleave', function () { focusHub(null); });
+      a.addEventListener('blur', function () { focusHub(null); });
+      nodes[h.key] = a;
       nav.appendChild(a);
     });
     map.appendChild(nav);
-    viewMap.appendChild(map);
+
+    /* left panel: workspace sizes (the loaded hub map) */
+    var left = panel('Workspace size', 'workspace map');
+    var rows = el('ul', 'ons-rows');
+    var maxPages = hubs.reduce(function (m, h) { return Math.max(m, h.pages.length); }, 1);
+    hubs.slice().sort(function (x, y) { return y.pages.length - x.pages.length; }).forEach(function (h) {
+      var li = el('li');
+      var r = el('a', 'ons-row'); r.href = '#/hub/' + h.key;
+      r.appendChild(el('span', null, label(h.key)));
+      var track = el('span', 'ons-track'), fill = el('i');
+      fill.style.width = Math.round(h.pages.length / maxPages * 100) + '%';
+      track.appendChild(fill); r.appendChild(track);
+      r.appendChild(el('b', null, String(h.pages.length)));
+      li.appendChild(r); rows.appendChild(li);
+    });
+    left.appendChild(rows);
+
+    /* right panel: the strongest relations, with their evidence */
+    var right = panel('Strongest relations', 'omega-relations.json');
+    var top = ((rel && rel.edges) || []).slice(0, 6);
+    if (!top.length) right.appendChild(el('p', 'ons-sub', 'No relation evidence loaded.'));
+    top.forEach(function (e) {
+      var d = el('div', 'ons-rel');
+      d.appendChild(el('strong', null, label(e.a) + ' ↔ ' + label(e.b)));
+      d.appendChild(el('span', null, relText(e)));
+      if (e.shared_pages.length) d.appendChild(el('span', 'ons-src', 'pages: ' + e.shared_pages.join(', ')));
+      right.appendChild(d);
+    });
+
+    /* counters, each computed here from what was loaded */
+    var all = {}; hubs.forEach(function (h) { h.pages.forEach(function (k) { all[k] = true; }); });
+    var uniq = Object.keys(all), openN = uniq.filter(hostable).length;
+    var edges = (rel && rel.edges) || [], strong = edges.filter(function (e) { return e.weight >= STRONG; }).length;
+    var stats = el('div', 'ons-stats');
+    stats.appendChild(stat(hubs.length, 'Workspaces', 'workspace map'));
+    stats.appendChild(stat(uniq.length, 'Pages in them', 'workspace map'));
+    stats.appendChild(stat(reg ? openN : '—', 'Open in place', 'eligibility registry'));
+    stats.appendChild(stat(rel ? strong + ' / ' + edges.length : '—', 'Relations drawn / found', 'omega-relations.json'));
+
+    board.appendChild(left);
+    board.appendChild(map);
+    board.appendChild(right);
+    board.appendChild(stats);
+    viewMap.appendChild(read);      // above the board, so it is on screen while a workspace is pointed at
+    viewMap.appendChild(board);
   }
 
   function pageTag(key) {
@@ -282,7 +462,7 @@
   function routeMap() {
     leavePage();
     setCrumbs([{ text: 'Map' }]);
-    setHead('Platform map', 'The workspaces of the platform around the Omega. Choose one to see its pages; most open right here.');
+    setHead('Platform map', '');   // the readout under the title carries the explanation, so the blueprint starts higher on screen
     setFull(null);
     showOnly(viewMap);
     arrive('Platform map');
@@ -398,12 +578,19 @@
     return r.json();
   }).then(function (j) { return (j && j.schema === 1 && j.pages) || null; }).catch(function () { return null; });
 
+  var relP = fetch(RELATIONS_URL, { credentials: 'same-origin' }).then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function (j) { return (j && j.schema === 1 && Array.isArray(j.edges) && j) || null; }).catch(function () { return null; });
+
   Promise.all([
     waitFor(function () { return !!window.OmegaWorkspaces; }, 'the workspace map'),
     waitFor(function () { return !!(window.OmegaPanels && window.OmegaPanels.open); }, 'the page engine'),
-    regP
+    regP,
+    relP
   ]).then(function (r) {
     ws = window.OmegaWorkspaces;
+    rel = r[3];                                              // null => no connection lines, the map says so
     reg = r[2];                                              // null => nothing is hosted, every page is a link
     hubs = Object.keys(ws.hubs).map(function (p) { return { key: hubKeyOf(p), path: p, pages: ws.hubs[p].filter(function (k) { return KEY.test(k); }) }; });
     buildMap();

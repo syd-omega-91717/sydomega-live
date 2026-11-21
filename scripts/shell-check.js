@@ -25,9 +25,10 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   let { browser, ctx } = await launch({ width: 1280, height: 900 });
   let page = await open(ctx, 'sovereign-core.html', { settle: 5000 });
   const errs = page.__errors;
+  page.on('pageerror', e => console.log('  [pageerror @' + new Date().toISOString().slice(11, 19) + '] ' + (e.stack || e.message).split('\n').slice(0, 3).join(' | ')));   // the collector keeps messages only; this says where
   const q = (f, a) => page.evaluate(f, a);
   console.log('MAP');
-  let r = await q(() => ({ nodes: document.querySelectorAll('.ons-node').length, lines: document.querySelectorAll('.ons-line').length, core: !!document.querySelector('.ons-core'), title: document.querySelector('.ons-title').textContent, mapVisible: !document.querySelector('.ons-map').closest('[hidden]'), overflow: document.documentElement.scrollWidth > innerWidth, docTitleKept: document.title.indexOf('Command') >= 0 }));
+  let r = await q(() => ({ nodes: document.querySelectorAll('.ons-node').length, lines: document.querySelectorAll('.ons-spoke').length, core: !!document.querySelector('.ons-core'), title: document.querySelector('.ons-title').textContent, mapVisible: !document.querySelector('.ons-map').closest('[hidden]'), overflow: document.documentElement.scrollWidth > innerWidth, docTitleKept: document.title.indexOf('Command') >= 0 }));
   ok(r.nodes === 15 && r.lines === 15 && r.core, '15 workspace nodes, 15 membership lines, the core', r);
   ok(r.title === 'Platform map' && r.mapVisible && !r.overflow, 'map view shown, no horizontal overflow', r);
 
@@ -115,12 +116,50 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   r = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth, minH: Math.round(Math.min.apply(null, [...document.querySelectorAll('.ons-page')].map(n => n.getBoundingClientRect().height))) }));
   ok(!r.overflow && r.minH >= 44, 'phone: hub view has no overflow, pages are tappable', r);
   await browser.close();
+  console.log('BLUEPRINT (relations)');
+  ({ browser, ctx } = await launch({ width: 1440, height: 900 }));
+  page = await ctx.newPage();
+  await page.goto('http://localhost:8765/sovereign-core.html', { waitUntil: 'load' }); await wait(5000);
+  r = await page.evaluate(async () => {
+    const rel = await (await fetch('/config/omega-relations.json')).json();
+    const drawn = document.querySelectorAll('.ons-edge').length;
+    const rest = [...document.querySelectorAll('.ons-edge')].filter(g => getComputedStyle(g).opacity > 0.3).length;
+    const strong = rel.edges.filter(e => e.weight >= 3).length;
+    const stats = [...document.querySelectorAll('.ons-stat b')].map(b => b.textContent);
+    const hubsRel = new Set(rel.hubs);
+    const unknown = rel.edges.filter(e => !hubsRel.has(e.a) || !hubsRel.has(e.b) || !(e.shared_pages.length || e.shared_relations.length)).length;
+    return { edgesInFile: rel.edges.length, drawn, rest, strong, stats, unknown, panels: document.querySelectorAll('.ons-panel').length, core: !!document.querySelector('.ons-core .ons-rays') };
+  });
+  ok(r.drawn === r.edgesInFile && r.unknown === 0, 'every drawn edge is in the evidence file and carries evidence (' + r.drawn + ' of ' + r.edgesInFile + ')', r);
+  ok(r.rest === r.strong, 'at rest only the strongest edges show (' + r.rest + ' = weight >= 3)', r);
+  ok(r.panels === 2 && r.core && r.stats.length === 4, 'luminous core, two panels and four counters are present', r);
+  await page.evaluate(() => document.querySelector('[data-omega-one-shell]').scrollIntoView({ block: 'start', behavior: 'instant' })); await wait(1200);
+  await page.hover('a.ons-node[href="#/hub/achieve"]'); await wait(700);
+  r = await page.evaluate(() => ({ hot: document.querySelectorAll('.ons-edge.hot').length, read: document.querySelector('.ons-read').textContent, focus: document.querySelector('.ons-map').getAttribute('data-focus') }));
+  ok(r.focus === 'achieve' && r.hot > 0 && /ACHIEVE connects to: Ascend \(4 shared pages/.test(r.read), 'pointing at a workspace lights its edges and reads out the evidence', r);
+  await page.mouse.move(5, 5); await wait(500);
+  r = await page.evaluate(() => ({ focus: document.querySelector('.ons-map').getAttribute('data-focus'), hot: document.querySelectorAll('.ons-edge.hot').length }));
+  ok(r.focus === null && r.hot === 0, 'moving away clears the focus', r);
+  await browser.close();
+  console.log('RELATIONS FILE UNAVAILABLE');
+  ({ browser, ctx } = await launch({ width: 1440, height: 900 }));
+  page = await ctx.newPage();
+  await page.route('**/config/omega-relations.json', rt => rt.fulfill({ status: 404, body: 'no' }));
+  await page.goto('http://localhost:8765/sovereign-core.html', { waitUntil: 'load' }); await wait(5000);
+  r = await page.evaluate(() => ({ edges: document.querySelectorAll('.ons-edge').length, nodes: document.querySelectorAll('a.ons-node').length, read: document.querySelector('.ons-read').textContent }));
+  ok(r.edges === 0 && r.nodes === 15 && /could not be read/.test(r.read), 'no evidence file: no connection is drawn, the map says so, all 15 workspaces still link', r);
+  await browser.close();
   console.log('REDUCED MOTION');
   ({ browser, ctx } = await launch({ width: 1280, height: 900 }));
   page = await ctx.newPage(); await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('http://localhost:8765/sovereign-core.html', { waitUntil: 'load' }); await wait(5000);
-  r = await page.evaluate(() => ({ anim: getComputedStyle(document.querySelector('.ons-line')).animationName }));
-  ok(r.anim === 'none', 'reduced motion: the flowing lines are static', r);
+  r = await page.evaluate(() => ({
+    edges: document.querySelectorAll('.ons-eline').length,
+    flow: getComputedStyle(document.querySelector('.ons-eline')).animationName,
+    rays: getComputedStyle(document.querySelector('.ons-rays')).animationName,
+    halo: getComputedStyle(document.querySelector('.ons-halo')).animationName
+  }));
+  ok(r.edges > 0 && r.flow === 'none' && r.rays === 'none' && r.halo === 'none', 'reduced motion: the flowing lines, the rotating rays and the halo are all still', r);
   await browser.close();
   console.log('\nRESULT: ' + pass + ' passed, ' + fail + ' failed');
   process.exit(fail ? 1 : 0);

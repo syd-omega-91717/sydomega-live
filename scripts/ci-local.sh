@@ -226,6 +226,7 @@ step "2m.  Commerce contract"                  python3 scripts/commerce-contract
 step "2n.  Reachability contract"              python3 scripts/reachability-contract.py
 step "2o.  Module contracts"                   python3 scripts/module-contract.py
 step "2o2. Panel eligibility registry"         python3 scripts/panel-eligibility.py --check
+step "2o3. Workspace relations evidence"       python3 scripts/relations-build.py --check
 step "2p.  All-roles control"                  python3 scripts/omega-all-roles-control.py
 step "2q.  Edge service-role authorization"     python3 scripts/edge-service-role-auth-audit.py
 step "2r.  Edge Function census"               python3 scripts/edge-function-census.py

@@ -60,7 +60,7 @@ class ContentTaskPipelineTests(unittest.TestCase):
         for name in ("content-ingest", "content-delivery"):
             with self.subTest(function=name):
                 evidence = pipeline["provider_evidence"]["functions"][name]
-                live = observations["storage"]["content_ingest_validation" if name == "content-ingest" else "content_delivery_validation"]
+                live = observations["runtime_probe_status"]["content_ingest_validation" if name == "content-ingest" else "content_delivery_validation"]
                 self.assertEqual(evidence["status"], "DEPLOYED")
                 self.assertEqual(evidence["live_version"], live["live_function_version"])
                 self.assertEqual(evidence["verify_jwt"], True)

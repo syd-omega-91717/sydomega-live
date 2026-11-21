@@ -3895,7 +3895,8 @@
       "truth_states": [
         "LIVE",
         "CALCULATED",
-        "UNAVAILABLE"
+        "UNAVAILABLE",
+        "UNVERIFIED"
       ],
       "asset_requirements": "Same-origin Genesis command JavaScript and CSS; same-origin .well-known/omega-release.json read; existing dashboard assets and provider integrations remain page-owned.",
       "events": "Existing dashboard telemetry and action instrumentation remain unchanged; Genesis route directory and release identity read are read-only and emit no domain mutation.",

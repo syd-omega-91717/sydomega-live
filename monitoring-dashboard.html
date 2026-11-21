@@ -477,7 +477,7 @@
       if(s){s.textContent=state;s.className=good?'status-good':'status-warning';}
     }
     function updateMetrics(){
-      var m=window.OmegaMetrics&&window.OmegaMetrics.getMetrics?window.OmegaMetrics.getMetrics():null;
+      var m=window.OmegaVitals&&window.OmegaVitals.getMetrics?window.OmegaVitals.getMetrics():null;
       var nav=performance.getEntriesByType('navigation')[0];
       if(m){
         setMetric('lcp-value',m.lcp_ms?((m.lcp_ms/1000).toFixed(2)+'s'):'—','lcp-state',m.lcp_ms?(m.lcp_pass?'PASS':'NEEDS ATTENTION'):'Not measured',!!m.lcp_ms&&m.lcp_pass);

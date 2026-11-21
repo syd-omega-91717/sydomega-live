@@ -21,6 +21,9 @@ class PaymentsTruthBoundaryContract(unittest.TestCase):
         self.assertNotIn("Monthly subscription — current tier", SOURCE)
         self.assertNotIn("Platform access — trial period", SOURCE)
         self.assertNotIn("READY TO ACTIVATE',dir:'pending'", SOURCE)
+        self.assertNotIn("READY TO ACTIVATE", SOURCE)
+        self.assertNotIn("fully wired and tested", SOURCE)
+        self.assertNotIn("generate Omega Token", SOURCE)
         self.assertNotIn("status:'completed',amount:'0.00'", SOURCE)
 
     def test_unknown_financial_metrics_are_not_presented_as_zero_or_one(self):
@@ -32,8 +35,10 @@ class PaymentsTruthBoundaryContract(unittest.TestCase):
 
     def test_empty_history_explains_missing_authoritative_ledger(self):
         self.assertIn("TRANSACTION LEDGER UNAVAILABLE", SOURCE)
-        self.assertIn("authoritative payment records are not connected", SOURCE)
-        self.assertIn("This page will not infer payments from task activity.", SOURCE)
+        self.assertIn("tb.replaceChildren();", SOURCE)
+        self.assertNotIn("tb.innerHTML=filtered.map", SOURCE)
+        self.assertIn("AUTHORITATIVE PAYMENT RECORDS ARE NOT CONNECTED", SOURCE)
+        self.assertIn("NO PAYMENT HAS BEEN INFERRED FROM TASK ACTIVITY.", SOURCE)
 
     def test_boot_keeps_ledger_unavailable_without_synthetic_calculation(self):
         self.assertIn("window.__txRows=[];", SOURCE)

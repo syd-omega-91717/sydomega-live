@@ -16,6 +16,7 @@
 .mc-badge{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid var(--line);display:inline-block}
 .mc-badge.ready{color:var(--cyan);border-color:rgba(0,229,255,.3)}
 .mc-badge.wired{color:var(--muted)}
+.mc-badge.disabled{color:var(--muted);border-color:var(--line);background:rgba(138,134,118,.06)}
 .tx-filter{display:flex;gap:0;border:1px solid var(--line);width:fit-content;margin-bottom:12px}
 .tx-filter button{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;cursor:pointer;color:var(--muted);background:none;border:none;border-right:1px solid var(--line)}
 .tx-filter button:last-child{border-right:none}
@@ -36,6 +37,7 @@
 </head>
 <body>
 <aside id="omega-side" data-page="payments"></aside>
+<section id="payment-load-error" hidden role="alert" aria-live="assertive" style="max-width:620px;margin:10vh auto;padding:24px;border:1px solid var(--crim);color:var(--ink);background:var(--void2);font-family:var(--M);line-height:1.7">PAYMENT STATUS UNAVAILABLE · AUTHORIZED PROFILE COULD NOT BE VERIFIED. <a href="/account.html" style="color:var(--gold)">SIGN IN</a></section>
 <div class="page-shell" id="app" style="display:none">
 <header class="topbar">
   <div class="topbar-title">PAYMENTS<span class="topbar-sub">TRANSACTION LOG &middot; SUBSCRIPTION HISTORY &middot; TRANSFER RECORDS</span></div>
@@ -49,7 +51,7 @@
 </div>
 
 <div class="tab-panel active" id="tab-overview">
-  <div class="notice-bar" role="status">PAYMENT PROCESSING &mdash; UNVERIFIED &mdash; Provider settlement, signed webhook idempotency, and ledger reconciliation have not yet been verified. This page will not infer payments from task activity.</div>
+  <div class="notice-bar" role="status">PAYMENT PROCESSING — DISABLED — Provider settlement, signed-webhook idempotency, ledger reconciliation and the end-to-end test-mode lifecycle are not yet verified. This page will not infer payments from task activity.</div>
   <div class="sechead">ACCOUNT SUMMARY</div>
   <div class="kpi-row" data-stagger data-stagger-gap="70" id="kpi-row">
     <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-inflow">—</div><div class="kpi-label">TOTAL INFLOW</div></div>
@@ -88,20 +90,20 @@
 <div class="tab-panel" id="tab-methods">
   <div class="sechead">PAYMENT METHODS</div>
   <div class="method-grid">
-    <div class="method-card card" style="--mc:#9B6BF0"><div class="mc-icon" style="color:#9B6BF0">&#9672;</div><div class="mc-name" style="color:#9B6BF0">STRIPE &mdash; CARD</div><div class="mc-desc">Credit / debit card payments for subscriptions and consultancy bookings. All major cards accepted.</div><span class="mc-badge ready">READY TO ACTIVATE</span></div>
-    <div class="method-card card" style="--mc:var(--gold)"><div class="mc-icon" style="color:var(--gold)">&#8383;</div><div class="mc-name" style="color:var(--gold)">CRYPTO WALLET</div><div class="mc-desc">Pay with Omega Token, Bitcoin, or Ethereum for marketplace and advanced tier subscriptions.</div><span class="mc-badge wired">WIRED &mdash; PENDING LEGAL</span></div>
-    <div class="method-card card" style="--mc:var(--cyan)"><div class="mc-icon" style="color:var(--cyan)">&#937;</div><div class="mc-name" style="color:var(--cyan)">BANK TRANSFER</div><div class="mc-desc">Direct bank transfers for consultancy retainers and enterprise contracts above $917.</div><span class="mc-badge wired">WIRED &mdash; PENDING LEGAL</span></div>
-    <div class="method-card card" style="--mc:var(--green)"><div class="mc-icon" style="color:var(--green)">&#10030;</div><div class="mc-name" style="color:var(--green)">SUBSCRIPTION AUTO-PAY</div><div class="mc-desc">Recurring monthly billing. Your tier renews automatically each month on the billing cycle date.</div><span class="mc-badge ready">READY TO ACTIVATE</span></div>
+    <div class="method-card card" style="--mc:#9B6BF0"><div class="mc-icon" style="color:#9B6BF0">&#9672;</div><div class="mc-name" style="color:#9B6BF0">STRIPE &mdash; CARD</div><div class="mc-desc">Stripe checkout and signed-webhook code paths exist, but payment processing is disabled. Test-mode settlement, reconciliation, refund and entitlement lifecycles have not yet been verified end to end.</div><span class="mc-badge disabled">DISABLED · TEST-MODE VERIFICATION PENDING</span></div>
+    <div class="method-card card" style="--mc:var(--gold)"><div class="mc-icon" style="color:var(--gold)">&#8383;</div><div class="mc-name" style="color:var(--gold)">CRYPTO WALLET</div><div class="mc-desc">Omega-token, Bitcoin and Ethereum payments are not implemented. The token economy is disabled; no crypto payment can be accepted.</div><span class="mc-badge disabled">NOT IMPLEMENTED</span></div>
+    <div class="method-card card" style="--mc:var(--cyan)"><div class="mc-icon" style="color:var(--cyan)">&#937;</div><div class="mc-name" style="color:var(--cyan)">BANK TRANSFER</div><div class="mc-desc">No bank-transfer provider, settlement feed or reconciliation workflow is connected.</div><span class="mc-badge disabled">NOT INTEGRATED</span></div>
+    <div class="method-card card" style="--mc:var(--green)"><div class="mc-icon" style="color:var(--green)">&#10030;</div><div class="mc-name" style="color:var(--green)">SUBSCRIPTION AUTO-PAY</div><div class="mc-desc">Recurring billing is disabled. A membership tier or access record does not imply a paid renewal.</div><span class="mc-badge disabled">BILLING DISABLED</span></div>
   </div>
 </div>
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">PAYMENT ARCHITECTURE</div>
   <div class="card-grid">
-    <div class="card"><div class="card-title">STRIPE INTEGRATION</div><div class="card-body">All card and subscription payments route through Stripe. The integration is fully wired and tested. Live processing activates after licensed payment counsel sign-off — a legal requirement for sovereign financial infrastructure.</div></div>
-    <div class="card"><div class="card-title">PLATFORM REWARDS</div><div class="card-body">Task completions, gaming events, and contribution milestones generate Omega Token (Ω) rewards. These are internal platform credits denominated in Ω and separate from fiat payment processing.</div></div>
-    <div class="card"><div class="card-title">SUBSCRIPTION TIERS</div><div class="card-body">Subscription tiers are managed in the subscriptions system. Each tier unlocks specific sovereign capabilities and gate access. Tier upgrades and renewals generate entries in this transaction log.</div></div>
-    <div class="card"><div class="card-title">FINANCIAL COMPLIANCE</div><div class="card-body">Revenue participation and token economy are subject to applicable financial regulations. KYC Steps 3–4 are prerequisites for full economic participation in the lattice.</div></div>
+    <div class="card"><div class="card-title">STRIPE INTEGRATION</div><div class="card-body">Checkout and signed-webhook source code exists with regression contracts. Live processing is disabled, and a complete Stripe test-mode lifecycle has not yet been verified. No payment, settlement or entitlement is claimed from this code alone.</div></div>
+    <div class="card"><div class="card-title">PLATFORM REWARDS</div><div class="card-body">Progression points are non-cash, non-transferable platform records. Omega-token issuance and token balances are disabled; task, gaming or contribution events do not create money or token claims.</div></div>
+    <div class="card"><div class="card-title">SUBSCRIPTION TIERS</div><div class="card-body">Tier definitions and member access are managed separately from billing. Paid upgrades and renewals are disabled; no transaction-log entry is generated until an authoritative provider event and ledger settlement are verified.</div></div>
+    <div class="card"><div class="card-title">FINANCIAL COMPLIANCE</div><div class="card-body">Payment and token features remain disabled. KYC intake is not active; any future regulated payment or economic feature requires counsel-approved licensing, KYC/AML, sanctions, consumer-protection and privacy controls before activation.</div></div>
   </div>
 </div>
 <div data-page-emblem="payments" style="margin:20px auto 0"></div>
@@ -126,18 +128,36 @@ function renderTx(rows,filter){
     if(filter==='marketplace')return r.type==='MARKETPLACE';
     return true;
   });
-  var cols='grid-template-columns:110px 1.5fr 150px 130px 130px';
+  tb.replaceChildren();
   if(!filtered.length){
-    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted)">TRANSACTION LEDGER UNAVAILABLE — authoritative payment records are not connected. No payment has been inferred from task activity.</div>';
+    var empty=document.createElement('div');
+    empty.className='tbl-row';
+    empty.style.cssText='display:block;text-align:center;padding:20px;color:var(--muted)';
+    empty.textContent='TRANSACTION LEDGER UNAVAILABLE — AUTHORITATIVE PAYMENT RECORDS ARE NOT CONNECTED. NO PAYMENT HAS BEEN INFERRED FROM TASK ACTIVITY.';
+    empty.setAttribute('role','status');
+    tb.appendChild(empty);
+    tb.dataset.truth='UNAVAILABLE';
     return;
   }
-  tb.innerHTML=filtered.map(function(tx){
-    var dir=tx.dir==='in'?'tx-in':tx.dir==='out'?'tx-out':'tx-pending';
-    var stcl=tx.status==='completed'?'st-completed':tx.status==='pending'?'st-pending':'st-failed';
-    return'<div class="tbl-row" style="'+cols+'"><span>'+tx.date+'</span><span>'+tx.desc+'</span><span><span class="tx-type">'+tx.type+'</span></span>'
-      +'<span><span class="tx-status '+stcl+'">'+tx.status.toUpperCase()+'</span></span>'
-      +'<span><span class="tx-amount '+dir+'">'+tx.amount+'</span></span></div>';
-  }).join('');
+  tb.dataset.truth='LIVE';
+  filtered.forEach(function(tx){
+    var row=document.createElement('div');
+    row.className='tbl-row';
+    row.style.gridTemplateColumns='110px 1.5fr 150px 130px 130px';
+    var date=document.createElement('span');date.textContent=String(tx.date||'—');
+    var desc=document.createElement('span');desc.textContent=String(tx.desc||'UNSPECIFIED RECORD');
+    var typeCell=document.createElement('span'),type=document.createElement('span');
+    type.className='tx-type';type.textContent=String(tx.type||'UNCLASSIFIED');typeCell.appendChild(type);
+    var statusCell=document.createElement('span'),status=document.createElement('span');
+    var statusValue=String(tx.status||'unverified').toLowerCase();
+    status.className='tx-status '+(statusValue==='completed'?'st-completed':statusValue==='pending'?'st-pending':'st-failed');
+    status.textContent=statusValue.toUpperCase();statusCell.appendChild(status);
+    var amountCell=document.createElement('span'),amount=document.createElement('span');
+    var direction=tx.dir==='in'?'tx-in':tx.dir==='out'?'tx-out':'tx-pending';
+    amount.className='tx-amount '+direction;amount.textContent=String(tx.amount||'—');amountCell.appendChild(amount);
+    row.append(date,desc,typeCell,statusCell,amountCell);
+    tb.appendChild(row);
+  });
 }
 </script>
 <script type="module">
@@ -149,9 +169,14 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
    financial transactions, and UI-generated rows must never imply settlement. */
 
 async function boot(){
-  var sess=(await sb.auth.getSession()).data.session;
+  var authResult=await sb.auth.getSession();
+  if(authResult.error)throw authResult.error;
+  var sess=authResult.data&&authResult.data.session;
   if(!sess){window.location.href='/account.html';return;}
-  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  var profileResult=await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle();
+  if(profileResult.error)throw profileResult.error;
+  var pr=profileResult.data;
+  if(!pr)throw new Error('PROFILE_RECORD_UNAVAILABLE');
   if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
@@ -159,7 +184,12 @@ async function boot(){
   var inflow=document.getElementById('kpi-inflow');if(inflow)inflow.textContent='—';
   renderTx([],'all');
 }
-boot();
+boot().catch(function(e){
+  console.warn('Payment status unavailable:',e);
+  var app=document.getElementById('app'),panel=document.getElementById('payment-load-error');
+  if(app)app.style.display='none';
+  if(panel)panel.hidden=false;
+});
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

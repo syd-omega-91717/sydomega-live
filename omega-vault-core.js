@@ -54,7 +54,7 @@
     wal.forEach(function (a) { curs[String(a.currency || 'USD').toUpperCase()] = true; });
     out.push({ id: 'wallet', kind: 'asset', label: 'WALLET', href: '/wallet.html',
       value: wal.length ? wal.reduce(function (s, a) { return s + n(a.balance); }, 0) : null,
-      note: wal.length ? wal.length + ' account' + (wal.length === 1 ? '' : 's') + (Object.keys(curs).length > 1 || !curs.USD ? ' · ' + Object.keys(curs).join('/') + ' as entered' : '') : null });
+      note: wal.length ? wal.length + ' account' + (wal.length === 1 ? '' : 's') + ' · account currencies: ' + Object.keys(curs).join('/') + ' · balances entered as USD equivalent' : null });
 
     var inv = arr('omega_investments');
     out.push({ id: 'investment', kind: 'asset', label: 'INVESTMENTS', href: '/investment.html',

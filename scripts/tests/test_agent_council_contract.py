@@ -91,6 +91,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertIn('SAVE ON THIS DEVICE', self.pantheons)
         self.assertIn('not currently saved to your SYD OMEGA member profile', self.pantheons)
         self.assertIn('PANTHEON THEORY &amp; INTERPRETATION', self.pantheons)
+        self.assertIn('data-tab="science" role="tab">THEORY</button>', self.pantheons)
         self.assertNotIn('23% higher cohesion', self.pantheons)
 
 if __name__ == '__main__':

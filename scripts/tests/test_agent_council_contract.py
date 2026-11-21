@@ -82,7 +82,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertIn('Illustrative visual arrangement', self.network)
         self.assertNotIn('FALLBACK_AGENTS', self.network)
         self.assertIn('NO FALLBACK IDENTITIES RENDERED', self.network)
-        self.assertNotRegex(self.network, r'onclick\\s*=')
+        self.assertNotRegex(self.network, r'onclick\s*=')
         self.assertIn('NOT EXPOSED BY THIS VISUALIZATION', self.network)
         self.assertNotIn('Level 7 · Active Executor', self.network)
         self.assertNotIn('Real-time · Live monitoring', self.network)

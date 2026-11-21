@@ -339,25 +339,18 @@
     return chain;
   }
 
-  /* ---- one mount --------------------------------------------------------- */
-  function mount(host) {
-    var tabs;
-    try { tabs = JSON.parse(host.getAttribute('data-omega-panels')); } catch (e) { return; }
-    if (!Array.isArray(tabs) || !tabs.length) return;
-    injectCSS();
-    patchOnce();
-
-    host.classList.add('op');
-    var bar = el('div', 'op-tabs');
-    bar.setAttribute('role', 'tablist');
-    bar.setAttribute('aria-label', host.getAttribute('data-omega-panels-label') || 'Tools');
-    var stage = el('div', 'op-stage');
-    stage.setAttribute('role', 'tabpanel');
-    stage.setAttribute('aria-live', 'polite');
-    host.appendChild(bar);
-    host.appendChild(stage);
-
-    var buttons = {}, active = null, token = 0;
+  /* ---- one view: a stage that shows ONE page at a time ------------------- */
+  /* The part of a panel that does not depend on tabs: load a page into `stage`, tear the previous one down, keep
+     a handler written as an inline event attribute attached to the open panel. mount() (tabs) and
+     OmegaPanels.open(url, host) (any element) are both clients of it. hooks, all optional:
+       opening(key)  just before the previous panel is torn down and the stage cleared
+       loaded(key)   once the page's scripts have run
+       closed()      after close()
+     open(o) takes {key, label, src, scroll, host} and returns a promise that resolves when the page is in, or
+     when the "could not load here" message has replaced it. It never rejects: a failure is shown, not thrown. */
+  function view(stage, hooks) {
+    hooks = hooks || {};
+    var active = null, token = 0;
 
     /* A handler written as an inline event attribute runs outside everything recorded so far, so a timer or listener it
        starts would outlive the tab and later write into elements that are gone. While an event is being
@@ -380,49 +373,26 @@
         cur = panel;
       }, true);
     });
-    tabs.forEach(function (t) {
-      var b = el('button', 'op-tab', t[1]);
-      b.type = 'button';
-      b.setAttribute('role', 'tab');
-      b.setAttribute('aria-selected', 'false');
-      b.addEventListener('click', function () {
-        if (active && active.key === t[0]) { close(); history.replaceState(null, '', location.pathname + location.search); }
-        else { open(t[0]); history.replaceState(null, '', '#' + t[0]); }
-      });
-      buttons[t[0]] = b;
-      bar.appendChild(b);
-    });
-
-    /* keep the chosen tab in view in the one-row phone strip: scrollLeft only, never the page. Called again
-       once the panel is in, because the approval guard can leave the strip unmeasured at first. */
-    function centerTab(key) {
-      var bt = buttons[key];
-      if (bt && bar.clientWidth) bar.scrollLeft = Math.max(0, bt.offsetLeft - (bar.clientWidth - bt.offsetWidth) / 2);
-    }
-
     function close() {
       token++;
       if (active) teardown(active.panel);
       active = null;
       stage.textContent = '';
-      Object.keys(buttons).forEach(function (k) { buttons[k].setAttribute('aria-selected', 'false'); });
+      if (hooks.closed) hooks.closed();
     }
 
-    function open(key, scroll) {
-      var tab = tabs.filter(function (t) { return t[0] === key; })[0];
-      if (!tab) return;
+    function open(o) {
       var my = ++token;
       if (active) teardown(active.panel);
       active = null;
       stage.textContent = '';
-      Object.keys(buttons).forEach(function (k) { buttons[k].setAttribute('aria-selected', k === key ? 'true' : 'false'); });
-      centerTab(key);
+      if (hooks.opening) hooks.opening(o.key);
       var panel = { intervals: [], timers: [], raf: [], listeners: [], styles: [], exports: [], saved: {}, ready: [], dead: false };
-      active = { key: key, panel: panel };
+      active = { key: o.key, panel: panel };
       stage.setAttribute('aria-busy', 'true');
-      stage.appendChild(el('div', 'op-msg', 'Loading ' + tab[1] + '…'));
+      stage.appendChild(el('div', 'op-msg', 'Loading ' + o.label + '\u2026'));
 
-      fetchDoc(tab[2]).then(function (doc) {
+      return fetchDoc(o.src).then(function (doc) {
         if (my !== token) return;
         /* The page's own wrapper is what its scripts look up (getElementById('app')), so it is kept, with
            its id and class, around the copied children. Without one, <main> is the content. A page with none of
@@ -432,7 +402,7 @@
         stage.textContent = '';
         var top = el('div', 'op-bar');
         var full = el('a', 'op-open', 'OPEN FULL PAGE \u2197');
-        full.href = tab[2];
+        full.href = o.src;
         top.appendChild(full);
         stage.appendChild(top);
         var ser = new XMLSerializer();
@@ -464,12 +434,12 @@
         Array.prototype.forEach.call(doc.querySelectorAll('style'), function (s) {
           if (SKIP_STYLE_ID.test(s.id || '')) return;
           var c = document.createElement('style');
-          c.setAttribute('data-op-style', key);
+          c.setAttribute('data-op-style', o.key);
           c.textContent = s.textContent;
           document.head.appendChild(c);
           panel.styles.push(c);
         });
-        return runScripts(doc, tab[2], markup, panel).then(function () {
+        return runScripts(doc, o.src, markup, panel).then(function () {
           if (my !== token) return;
           var ready = panel.ready.slice();
           panel.ready.length = 0;
@@ -477,23 +447,85 @@
           try { ready.forEach(function (fn) { try { fn.call(document, new Event('DOMContentLoaded')); } catch (e) { console.error(e); } }); }
           finally { cur = null; }
           stage.removeAttribute('aria-busy');
-          centerTab(key);
+          if (hooks.loaded) hooks.loaded(o.key);
           /* Scroll only now: before the panel is in, the page above it is still settling (the approval
              guard keeps the shell at zero height until it lifts), so an earlier scroll lands at the top. */
-          if (scroll) host.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+          if (o.scroll && o.host) o.host.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
         });
       }).catch(function (err) {
         if (my !== token) return;
         stage.textContent = '';
         stage.removeAttribute('aria-busy');
         var m = el('div', 'op-msg', 'This tool could not load here. ');
-        var a = el('a', 'op-open', 'OPEN ' + tab[1] + ' ON ITS OWN PAGE \u2197');
-        a.href = tab[2];
+        var a = el('a', 'op-open', 'OPEN ' + o.label + ' ON ITS OWN PAGE \u2197');
+        a.href = o.src;
         m.appendChild(a);
         stage.appendChild(m);
-        console.warn('[omega-panels]', key, err);
+        console.warn('[omega-panels]', o.key, err);
       });
     }
+
+    return { open: open, close: close, current: function () { return active && active.key; } };
+  }
+
+  /* ---- one mount --------------------------------------------------------- */
+  function mount(host) {
+    var tabs;
+    try { tabs = JSON.parse(host.getAttribute('data-omega-panels')); } catch (e) { return; }
+    if (!Array.isArray(tabs) || !tabs.length) return;
+    injectCSS();
+    patchOnce();
+
+    host.classList.add('op');
+    var bar = el('div', 'op-tabs');
+    bar.setAttribute('role', 'tablist');
+    bar.setAttribute('aria-label', host.getAttribute('data-omega-panels-label') || 'Tools');
+    var stage = el('div', 'op-stage');
+    stage.setAttribute('role', 'tabpanel');
+    stage.setAttribute('aria-live', 'polite');
+    host.appendChild(bar);
+    host.appendChild(stage);
+
+    var buttons = {};
+
+    /* keep the chosen tab in view in the one-row phone strip: scrollLeft only, never the page. Called again
+       once the panel is in, because the approval guard can leave the strip unmeasured at first. */
+    function centerTab(key) {
+      var bt = buttons[key];
+      if (bt && bar.clientWidth) bar.scrollLeft = Math.max(0, bt.offsetLeft - (bar.clientWidth - bt.offsetWidth) / 2);
+    }
+
+    var v = view(stage, {
+      opening: function (key) {
+        Object.keys(buttons).forEach(function (k) { buttons[k].setAttribute('aria-selected', k === key ? 'true' : 'false'); });
+        centerTab(key);
+      },
+      loaded: function (key) { centerTab(key); },
+      closed: function () {
+        Object.keys(buttons).forEach(function (k) { buttons[k].setAttribute('aria-selected', 'false'); });
+      }
+    });
+
+    function close() { v.close(); }
+
+    function open(key, scroll) {
+      var tab = tabs.filter(function (t) { return t[0] === key; })[0];
+      if (!tab) return;
+      v.open({ key: key, label: tab[1], src: tab[2], scroll: scroll, host: host });
+    }
+
+    tabs.forEach(function (t) {
+      var b = el('button', 'op-tab', t[1]);
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', 'false');
+      b.addEventListener('click', function () {
+        if (v.current() === t[0]) { close(); history.replaceState(null, '', location.pathname + location.search); }
+        else { open(t[0]); history.replaceState(null, '', '#' + t[0]); }
+      });
+      buttons[t[0]] = b;
+      bar.appendChild(b);
+    });
 
     function fromHash() {
       var k = decodeURIComponent((location.hash || '').replace(/^#/, ''));
@@ -501,15 +533,42 @@
     }
     window.addEventListener('hashchange', fromHash);
     fromHash();
-    host.__omegaPanels = { open: open, close: close, has: function (k) { return !!buttons[k]; }, current: function () { return active && active.key; } };
+    host.__omegaPanels = { open: open, close: close, has: function (k) { return !!buttons[k]; }, current: function () { return v.current(); } };
   }
+
+
+  /* ---- OmegaPanels.open(url, host): show one page in any element -------------- */
+  /* For a caller that is not a tab strip (the one-shell router). host gets one stage; calling open again on the same
+     host tears the previous page down first. Returns a promise that resolves when the page is in, or when the
+     "could not load here" message is showing; it does not reject. Refuses a host that is a tab mount. */
+  function viewFor(host) {
+    if (host.__omegaView) return host.__omegaView;
+    injectCSS();
+    patchOnce();
+    host.classList.add('op');
+    var stage = el('div', 'op-stage');
+    stage.setAttribute('aria-live', 'polite');
+    host.appendChild(stage);
+    host.__omegaView = view(stage, {});
+    return host.__omegaView;
+  }
+  function keyOf(src) { return String(src).replace(/[?#].*$/, '').replace(/^.*\//, '').replace(/\.html$/, '') || 'page'; }
+  function openIn(src, host, opts) {
+    opts = opts || {};
+    if (!host || host.nodeType !== 1) return Promise.reject(new TypeError('OmegaPanels.open(url, host): host must be an element'));
+    if (host.__omegaPanels) return Promise.reject(new Error('OmegaPanels.open: host is a tab mount; use its own open(key)'));
+    var key = opts.key || keyOf(src);
+    return viewFor(host).open({ key: key, label: opts.label || key.toUpperCase(), src: src, scroll: !!opts.scroll, host: host });
+  }
+  function closeIn(host) { if (host && host.__omegaView) host.__omegaView.close(); }
+  function currentIn(host) { return (host && host.__omegaView) ? host.__omegaView.current() : null; }
 
   function boot() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-omega-panels]'), function (h) {
       if (!h.__omegaPanels) mount(h);
     });
   }
-  window.OmegaPanels = { mount: mount, boot: boot };
+  window.OmegaPanels = { mount: mount, boot: boot, open: openIn, close: closeIn, current: currentIn };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();

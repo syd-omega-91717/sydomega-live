@@ -102,6 +102,10 @@ class AgentCouncilContractTests(unittest.TestCase):
         self.assertIn('data-src="/agent-operations.html?embed=1"', self.council)
         self.assertIn("frame.setAttribute('src',frame.getAttribute('data-src'))", self.council)
         self.assertIn('role="tabpanel"', self.council)
+        self.assertIn('role="tablist" aria-label="Agent Council sections"', self.council)
+        for name in ('agent', 'council', 'hierarchy', 'chat', 'science', 'network', 'pantheons', 'operations'):
+            self.assertIn(f'id="tab-btn-{name}"', self.council)
+            self.assertIn(f'aria-labelledby="tab-btn-{name}"', self.council)
 
     def test_embedded_views_preserve_standalone_routes_and_auth_boundaries(self):
         for page in (self.network, self.pantheons, self.operations_page):

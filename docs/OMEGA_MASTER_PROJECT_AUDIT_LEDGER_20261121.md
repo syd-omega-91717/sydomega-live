@@ -166,7 +166,7 @@ The new Genesis / Command configuration previously named `/command.html` as cano
 
 - The existing 14-workspace runtime and all original routes remain in place until a complete nine-hub crosswalk is reviewed and tested.
 - The Agent Council is an integrated eight-tab page workspace, but its route ownership must still be reconciled with the legacy `cosmos.html` mapping and the nine-hub navigation model.
-- Genesis / Command functionality already exists in `dashboard.html`; the new nine-hub model must reuse it rather than create a duplicate dashboard.
+- Genesis / Command is now implemented directly in `dashboard.html` as a first-class tab and reuses the existing command bridge; do not create a duplicate dashboard or remove the legacy command routes.
 - The 12 primary agents and 144 subordinate positions are not permission grants. Unassigned positions remain unassigned and non-operational.
 - The network visualization is illustrative, not a live activity or authority feed.
 - The operations panel retains the existing server-authorized read-only execution gateway.
@@ -229,6 +229,78 @@ The canonical Genesis route remains `/dashboard.html`. A new dedicated Genesis w
 - Existing dashboard tabs and hash routes are preserved; Genesis is a first-class tab while Today remains the default to preserve the established member loop; `#genesis` opens the command directory.
 - Keyboard tab navigation, focus visibility, responsive card layouts, and reduced-motion behavior are covered by source-level contract tests.
 
-**Release boundary:** the current main commit `c0be0e1f9344a8eea9a8924e74daf62fee0abb3e` is verified by the Cloudflare production release workflow on both `sydomega.com` and `www.sydomega.com`. The Genesis implementation branch is not yet merged or deployed. Interactive browser/device inspection remains outstanding.
+**Release boundary:** main commit `b717cbda8413c06549650ddac5785e750150da45` is verified by the Cloudflare production release workflow on both `sydomega.com` and `www.sydomega.com`. The workflow confirmed the same release identity on apex and www, HTTP 200 on both domains, the root/World/Evidence smoke routes, and a complete 242-page estate check with 405 same-origin references and no page/reference failures. Genesis / Command is included in the deployed main release. Interactive browser/device inspection remains outstanding; Vercel promotion remains postponed because Cloudflare Pages is the production host.
 
-**Next action:** run all required CI and migration/security contracts on the Genesis PR head; merge only if green; then verify the exact production commit and test the Genesis tab, all 12 destinations, preserved legacy hashes, keyboard navigation, mobile layout, and release-manifest failure state.
+**Next action:** complete interactive browser/device verification of the deployed Genesis tab, all 12 destinations, preserved legacy hashes, keyboard navigation, mobile layout, and release-manifest failure state; then begin the Finance & Exchange hub without changing existing ledger or payment authority.
+
+
+## 12. Live security and Finance & Exchange findings — 2026-11-22
+
+### Production release and CI
+
+- Current GitHub main SHA at audit time: `b717cbda8413c06549650ddac5785e750150da45`.
+- Cloudflare Pages deployment and exact-release checks passed on the apex and www domains.
+- Production smoke: root, World, and Evidence returned HTTP 200 on both domains and the same release SHA.
+- Full static production estate smoke: 242 pages and 405 same-origin references passed; zero page failures and zero reference failures.
+- The current main check suite was still running at the time of this ledger update; do not convert an in-progress check into a pass.
+- Vercel production promotion remains postponed; Cloudflare Pages is the production host.
+
+### Supabase security
+
+The live Security Advisor still reports:
+
+1. **WARN — `auth_leaked_password_protection`:** leaked-password protection is disabled. The repository contains a protected manual workflow, `.github/workflows/supabase-auth-security-config.yml`, which requires the `supabase-production` environment approval and a scoped `SUPABASE_ACCESS_TOKEN`. This production mutation has not been executed or verified as enabled.
+2. **CRITICAL — RLS disabled:** `omega_private.stripe_refund_state` has RLS disabled and no policies. The advisor's generic exposure warning must be assessed against the actual grants and schema boundary before any change.
+
+A read-only production privilege check for `omega_private.stripe_refund_state` returned:
+
+- `anon`: no schema USAGE and no SELECT/INSERT/UPDATE/DELETE table privileges.
+- `authenticated`: schema USAGE is present, but no SELECT/INSERT/UPDATE/DELETE table privileges.
+- `service_role`: schema USAGE is present, but no SELECT/INSERT/UPDATE/DELETE table privileges.
+- Table grants were present only for `postgres`.
+- No RLS policies exist.
+- `omega_private.record_stripe_refund` is owned by `postgres`, is `SECURITY DEFINER`, and has an empty search path.
+
+This indicates that direct client-role table access is currently denied by schema/table privileges, despite the missing RLS layer. It does **not** remove the advisor finding or justify leaving the table without defense in depth. Do not add client policies. Review the function owner/bypass behavior and test the refund RPC after enabling RLS.
+
+The advisor's suggested DDL is:
+
+```sql
+ALTER TABLE "omega_private"."stripe_refund_state" ENABLE ROW LEVEL SECURITY;
+```
+
+This DDL has **not** been applied. It must be reviewed and explicitly approved before execution; enabling RLS with no policies intentionally denies direct table access, while the trusted owner-owned security-definer function must be regression-tested.
+
+The advisor also reports three INFO findings for RLS-enabled tables without policies: `omega_private.marketplace_listing_assets`, `private.erasure_log`, and `private.erasure_policy`. Their intended fail-closed/service-only access must be reviewed; do not add broad client policies.
+
+### Payment and ledger runtime evidence
+
+- Live row counts at audit time: `omega_payment_events=0`, `omega_payment_reconciliation=0`, `omega_ledger_transactions=0`, and `omega_private.stripe_refund_state=0`.
+- No matching `payments_enabled`, `marketplace_enabled`, or `stripe_enabled` rows were found in `public.feature_flags`.
+- The Stripe checkout Edge Function is deliberately double-gated and fails closed when the payments flag is absent/false or required provider configuration is missing.
+- The signed webhook, idempotency, settlement-to-ledger, and cumulative refund-reversal code paths exist and have repository regression contracts. These source contracts are not a substitute for a signed Stripe test-mode lifecycle using real test credentials.
+- Do not enable real payments until test-mode webhook delivery, subscription state, ledger posting, reconciliation, cumulative partial/full refunds, reversals, idempotency, and entitlement behavior are exercised end to end, and legal/compliance requirements are approved.
+
+### Newly identified Vault display defect
+
+The deployed Vault source used `points_earned || 0.001` when rendering a task-completion row. That fallback fabricated a value when the stored record did not contain one. The core correction merged in [PR #1497](https://github.com/syd-omega-91717/sydomega-live/pull/1497) as commit `84b4d48f84564afaef81f9d5740c8bbdbfaa7977`. The Cloudflare exact-release verification confirmed that both production domains serve that commit, and the 242-page / 387-reference smoke passed with no failures. The fix removes the synthetic fallback, narrows the query, handles query errors as `UNAVAILABLE`, and renders database values through DOM text nodes. A follow-up in [PR #1499](https://github.com/syd-omega-91717/sydomega-live/pull/1499) corrects the 40-row window labels and all seven supported locales; that follow-up is not yet merged or live.
+
+### Page and hub completeness remains open
+
+- The 242-page contract registry remains evidence-only for many semantic fields: 239 workspace fields, 205 domain fields, 205 primary-role fields, 241 authorization fields, 241 accessibility fields, and 241 responsive fields remain marked `UNVERIFIED`.
+- The 242-page ownership matrix remains `SOURCE_INVENTORY_ONLY`: 199 candidate merge-panel routes, 19 keep-separate routes, 10 ambiguous routes, 14 unmapped routes, and 24 unresolved classifications.
+- The nine-hub proposal has two implemented workspaces (Genesis / Command and Intelligence & Agent Council); seven remain unwired.
+- The proposed destination lists have route overlaps and omissions; no broad route redirect or permission consolidation is authorized until the full page crosswalk is resolved.
+- Browser/device inspection remains outstanding. Automated route smoke and static source surveys do not prove keyboard, screen-reader, responsive, or real-user journey behavior.
+
+### Immediate sequence
+
+1. Core Vault truth-boundary correction merged and production-verified as `84b4d48`; finish the follow-up labels/translations in PR #1499 and verify after deployment.
+2. Review and explicitly approve the RLS remediation for `omega_private.stripe_refund_state`; test the trusted refund RPC after any change.
+3. Run the protected leaked-password workflow with the required environment approval and verify the live Auth setting.
+4. Finish the 242-page semantic ownership, authorization, accessibility, responsive, and failure-state reviews; do not bulk-promote bootstrap evidence to authoritative contracts.
+5. Build Finance & Exchange as an integration of existing finance pages and governed data—not a second financial ledger or client-side balance authority.
+6. Execute a complete Stripe test-mode lifecycle before considering production payment activation.
+7. Continue the remaining six unwired hubs after Finance & Exchange, with route and capability contracts for each.
+
+**Completion status:** production site is live and release-verified; the platform as a whole remains partially implemented. This audit does not claim 10/10 completion.

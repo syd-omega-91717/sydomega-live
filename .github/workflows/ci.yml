@@ -254,6 +254,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/module-contract.py']).returncode)
+      - name: Panel eligibility registry
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/panel-eligibility.py', '--check']).returncode)
       - name: Runtime frontier contract
         shell: python
         run: |

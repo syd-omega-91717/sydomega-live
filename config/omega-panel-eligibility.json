@@ -1,0 +1,1975 @@
+{
+ "counts": {
+  "excluded-pending-review": 6,
+  "hostable": 218,
+  "navigates-away": 10,
+  "needs-fix": 0,
+  "standalone-by-policy": 7,
+  "unmeasured": 1
+ },
+ "generated_from": {
+  "census_date": "2026-11-21",
+  "host": "/life.html",
+  "method": "scripts/panel-census.js: each page mounted as an omega-panels.js panel inside life.html, 2.5 s, headless Chromium, Supabase stubbed. Proves \"loads with content and no page error\", not parity with the standalone page.",
+  "min_text_chars": 40,
+  "repo_head": "7fc65227c"
+ },
+ "pages": {
+  "404": {
+   "measured": {
+    "errors": 0,
+    "text": 57
+   },
+   "reason": "error page; must render on its own",
+   "sha": "b84ae33ab420",
+   "status": "standalone-by-policy"
+  },
+  "academy": {
+   "measured": {
+    "errors": 0,
+    "text": 680
+   },
+   "sha": "12ce530112e7",
+   "status": "hostable"
+  },
+  "account": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "public / signed-out page; must render on its own",
+   "sha": "3854ee77f081",
+   "status": "standalone-by-policy"
+  },
+  "achieve": {
+   "measured": {
+    "errors": 0,
+    "text": 2931
+   },
+   "sha": "64153cd54ed2",
+   "status": "hostable"
+  },
+  "achievements": {
+   "measured": {
+    "errors": 0,
+    "text": 573
+   },
+   "sha": "ecc2aea76dbf",
+   "status": "hostable"
+  },
+  "ad-network": {
+   "measured": {
+    "errors": 0,
+    "text": 1192
+   },
+   "sha": "c96722758618",
+   "status": "hostable"
+  },
+  "advertising": {
+   "measured": {
+    "errors": 0,
+    "text": 959
+   },
+   "sha": "4e42ab1535a3",
+   "status": "hostable"
+  },
+  "affirmations": {
+   "measured": {
+    "errors": 0,
+    "text": 425
+   },
+   "sha": "8273aa85b40e",
+   "status": "hostable"
+  },
+  "agent-network": {
+   "measured": {
+    "errors": 0,
+    "text": 197
+   },
+   "sha": "b3fae6eeffab",
+   "status": "hostable"
+  },
+  "agent-operations": {
+   "measured": {
+    "errors": 0,
+    "text": 1353
+   },
+   "sha": "6818d19fb1f2",
+   "status": "hostable"
+  },
+  "agents": {
+   "measured": {
+    "errors": 0,
+    "text": 415
+   },
+   "sha": "945ef97dfcd7",
+   "status": "hostable"
+  },
+  "analytics": {
+   "measured": {
+    "errors": 0,
+    "text": 451
+   },
+   "sha": "d6592abd14ad",
+   "status": "hostable"
+  },
+  "approvals": {
+   "measured": {
+    "errors": 0,
+    "text": 417
+   },
+   "sha": "9b71e075b11a",
+   "status": "hostable"
+  },
+  "architect": {
+   "measured": {
+    "errors": 0,
+    "text": 352
+   },
+   "sha": "fd44a04fbaa4",
+   "status": "hostable"
+  },
+  "architecture": {
+   "measured": {
+    "errors": 0,
+    "text": 1718
+   },
+   "sha": "e2b7512f9122",
+   "status": "hostable"
+  },
+  "archive": {
+   "measured": {
+    "errors": 0,
+    "text": 1218
+   },
+   "sha": "eb5eb9670b23",
+   "status": "hostable"
+  },
+  "arena": {
+   "measured": {
+    "errors": 0,
+    "text": 1323
+   },
+   "sha": "bfa497d8b212",
+   "status": "hostable"
+  },
+  "ascend": {
+   "measured": {
+    "errors": 0,
+    "text": 2237
+   },
+   "sha": "c239c47e9e5c",
+   "status": "hostable"
+  },
+  "ascension": {
+   "measured": {
+    "errors": 0,
+    "text": 1623
+   },
+   "sha": "5eb7110a3818",
+   "status": "hostable"
+  },
+  "atlas": {
+   "measured": {
+    "errors": 0,
+    "text": 201
+   },
+   "sha": "8aa66c348924",
+   "status": "hostable"
+  },
+  "automation": {
+   "measured": {
+    "errors": 0,
+    "text": 4461
+   },
+   "sha": "d9f112e6b890",
+   "status": "hostable"
+  },
+  "autonomous-insights": {
+   "measured": {
+    "errors": 0,
+    "text": 229
+   },
+   "sha": "054a2baef1ce",
+   "status": "hostable"
+  },
+  "awards": {
+   "measured": {
+    "errors": 0,
+    "text": 1799
+   },
+   "sha": "03d295df5e6b",
+   "status": "hostable"
+  },
+  "beacon": {
+   "measured": {
+    "errors": 0,
+    "text": 1002
+   },
+   "sha": "38142bc972cc",
+   "status": "hostable"
+  },
+  "blockchain": {
+   "measured": {
+    "errors": 0,
+    "text": 1207
+   },
+   "sha": "bc1c507c7a28",
+   "status": "hostable"
+  },
+  "bloodline": {
+   "measured": {
+    "errors": 0,
+    "text": 502
+   },
+   "sha": "0a33c8cdffdc",
+   "status": "hostable"
+  },
+  "body": {
+   "measured": {
+    "errors": 0,
+    "text": 524
+   },
+   "sha": "0d73584b9ded",
+   "status": "hostable"
+  },
+  "breath": {
+   "measured": {
+    "errors": 0,
+    "text": 903
+   },
+   "sha": "9d0c177e37e7",
+   "status": "hostable"
+  },
+  "budget": {
+   "measured": {
+    "errors": 0,
+    "text": 756
+   },
+   "sha": "881dc32e628b",
+   "status": "hostable"
+  },
+  "character": {
+   "measured": {
+    "errors": 0,
+    "text": 982
+   },
+   "sha": "07983e1925ad",
+   "status": "hostable"
+  },
+  "characters": {
+   "measured": {
+    "errors": 0,
+    "text": 926
+   },
+   "sha": "34ebe918fc8e",
+   "status": "hostable"
+  },
+  "charter": {
+   "measured": {
+    "errors": 0,
+    "text": 1380
+   },
+   "sha": "07ef83b9c3d9",
+   "status": "hostable"
+  },
+  "chatbot": {
+   "measured": {
+    "errors": 0,
+    "text": 372
+   },
+   "sha": "882a3055df8d",
+   "status": "hostable"
+  },
+  "chronicle": {
+   "measured": {
+    "errors": 0,
+    "text": 8756
+   },
+   "sha": "f1f8b4c35476",
+   "status": "hostable"
+  },
+  "cinema": {
+   "measured": {
+    "errors": 0,
+    "text": 2137
+   },
+   "sha": "2249fd5dddf2",
+   "status": "hostable"
+  },
+  "cipher": {
+   "measured": {
+    "errors": 0,
+    "text": 452
+   },
+   "sha": "47baa1b32c9c",
+   "status": "hostable"
+  },
+  "city": {
+   "measured": {
+    "errors": 0,
+    "text": 940
+   },
+   "sha": "8d70321c62f0",
+   "status": "hostable"
+  },
+  "clarity": {
+   "measured": {
+    "errors": 0,
+    "text": 1262
+   },
+   "sha": "75426d43b486",
+   "status": "hostable"
+  },
+  "codex": {
+   "measured": {
+    "errors": 0,
+    "text": 456
+   },
+   "sha": "4c0c9b8397fd",
+   "status": "hostable"
+  },
+  "command": {
+   "measured": {
+    "errors": 0,
+    "text": 88
+   },
+   "sha": "eabe83030bf9",
+   "status": "hostable"
+  },
+  "command-center": {
+   "measured": {
+    "errors": 0,
+    "text": 91
+   },
+   "sha": "7483a2bf4902",
+   "status": "hostable"
+  },
+  "compliance": {
+   "measured": {
+    "errors": 0,
+    "text": 2991
+   },
+   "sha": "5e161202ba5b",
+   "status": "hostable"
+  },
+  "consultancy": {
+   "measured": {
+    "errors": 0,
+    "text": 1487
+   },
+   "sha": "8e0f1cd675f2",
+   "status": "hostable"
+  },
+  "contacts": {
+   "measured": {
+    "errors": 0,
+    "text": 252
+   },
+   "sha": "cdf72c6898b5",
+   "status": "hostable"
+  },
+  "contracts": {
+   "measured": {
+    "errors": 0,
+    "text": 324
+   },
+   "sha": "b596eba6bbf3",
+   "status": "hostable"
+  },
+  "contributions": {
+   "measured": {
+    "errors": 0,
+    "text": 465
+   },
+   "sha": "cd1044f626a8",
+   "status": "hostable"
+  },
+  "control-center": {
+   "measured": {
+    "errors": 0,
+    "text": 1698
+   },
+   "sha": "e6006641da79",
+   "status": "hostable"
+  },
+  "control-plane": {
+   "measured": {
+    "errors": 0,
+    "text": 69
+   },
+   "sha": "9dea768a863a",
+   "status": "hostable"
+  },
+  "cosmetics": {
+   "measured": {
+    "errors": 0,
+    "text": 93
+   },
+   "sha": "d8397f4c00cf",
+   "status": "hostable"
+  },
+  "cosmic-ledger": {
+   "measured": {
+    "errors": 0,
+    "text": 2646
+   },
+   "sha": "6f10ef949c59",
+   "status": "hostable"
+  },
+  "cosmos": {
+   "measured": {
+    "errors": 0,
+    "text": 971
+   },
+   "sha": "790a9c4c204f",
+   "status": "hostable"
+  },
+  "council": {
+   "measured": {
+    "errors": 0,
+    "text": 206
+   },
+   "sha": "5f3cff8a5d0d",
+   "status": "hostable"
+  },
+  "courses": {
+   "measured": {
+    "errors": 0,
+    "text": 108
+   },
+   "sha": "cf819988f189",
+   "status": "hostable"
+  },
+  "covenant": {
+   "measured": {
+    "errors": 0,
+    "text": 133
+   },
+   "sha": "a4180f9c1a88",
+   "status": "hostable"
+  },
+  "creation-studio": {
+   "measured": {
+    "errors": 0,
+    "text": 982
+   },
+   "sha": "d1a343d1d553",
+   "status": "hostable"
+  },
+  "creator": {
+   "measured": {
+    "errors": 0,
+    "text": 718
+   },
+   "sha": "4087d704ae91",
+   "status": "hostable"
+  },
+  "credentials": {
+   "measured": {
+    "errors": 0,
+    "text": 480
+   },
+   "sha": "d5f257ba490f",
+   "status": "hostable"
+  },
+  "dashboard": {
+   "measured": {
+    "errors": 0,
+    "text": 2938
+   },
+   "sha": "25858ab93af5",
+   "status": "hostable"
+  },
+  "data-observatory": {
+   "measured": {
+    "errors": 0,
+    "text": 2310
+   },
+   "sha": "59c9cbea201c",
+   "status": "hostable"
+  },
+  "decisions": {
+   "measured": {
+    "errors": 0,
+    "text": 1829
+   },
+   "sha": "0a0a708901fd",
+   "status": "hostable"
+  },
+  "design-lab": {
+   "measured": {
+    "errors": 0,
+    "text": 3617
+   },
+   "sha": "8edb257a3b78",
+   "status": "hostable"
+  },
+  "design-showcase": {
+   "measured": {
+    "errors": 0,
+    "text": 1299
+   },
+   "sha": "0d6f45058afb",
+   "status": "hostable"
+  },
+  "design-system": {
+   "measured": {
+    "errors": 0,
+    "text": 800
+   },
+   "sha": "e1825b7dd341",
+   "status": "hostable"
+  },
+  "dna": {
+   "measured": {
+    "errors": 0,
+    "text": 388
+   },
+   "sha": "416505f4b7c5",
+   "status": "hostable"
+  },
+  "domain-mastery": {
+   "measured": {
+    "errors": 0,
+    "text": 543
+   },
+   "sha": "34224ed1e2e0",
+   "status": "hostable"
+  },
+  "ecosystem": {
+   "measured": {
+    "errors": 0,
+    "text": 196
+   },
+   "sha": "53effb54226c",
+   "status": "hostable"
+  },
+  "elements": {
+   "measured": {
+    "errors": 0,
+    "text": 3635
+   },
+   "sha": "80d68aaca5c9",
+   "status": "hostable"
+  },
+  "enter": {
+   "measured": {
+    "errors": 0,
+    "text": 490
+   },
+   "reason": "public / signed-out page; must render on its own",
+   "sha": "e862d5806e4e",
+   "status": "standalone-by-policy"
+  },
+  "enterprise": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "7e683e0836d4",
+   "status": "navigates-away"
+  },
+  "eternity": {
+   "measured": {
+    "errors": 0,
+    "text": 642
+   },
+   "sha": "0d7151dc167e",
+   "status": "hostable"
+  },
+  "events": {
+   "measured": {
+    "errors": 0,
+    "text": 2065
+   },
+   "sha": "7ccb06af73d8",
+   "status": "hostable"
+  },
+  "evidence": {
+   "measured": {
+    "errors": 0,
+    "text": 518
+   },
+   "sha": "4bed0f7f45d2",
+   "status": "hostable"
+  },
+  "evolution": {
+   "measured": {
+    "errors": 0,
+    "text": 500
+   },
+   "sha": "ac58ca96a6ad",
+   "status": "hostable"
+  },
+  "exam": {
+   "measured": {
+    "errors": 0,
+    "text": 342
+   },
+   "sha": "5c83f319a8fa",
+   "status": "hostable"
+  },
+  "expenses": {
+   "measured": {
+    "errors": 0,
+    "text": 687
+   },
+   "sha": "2211a859a41e",
+   "status": "hostable"
+  },
+  "factions": {
+   "measured": {
+    "errors": 0,
+    "text": 411
+   },
+   "sha": "5564a0079d03",
+   "status": "hostable"
+  },
+  "family": {
+   "measured": {
+    "errors": 0,
+    "text": 902
+   },
+   "sha": "b61128f30830",
+   "status": "hostable"
+  },
+  "fasting": {
+   "measured": {
+    "errors": 0,
+    "text": 498
+   },
+   "sha": "68953c7f0420",
+   "status": "hostable"
+  },
+  "feed": {
+   "measured": {
+    "errors": 0,
+    "text": 422
+   },
+   "sha": "101e2983d94b",
+   "status": "hostable"
+  },
+  "flashcard": {
+   "measured": {
+    "errors": 0,
+    "text": 367
+   },
+   "sha": "2db29a62d83a",
+   "status": "hostable"
+  },
+  "focus": {
+   "measured": {
+    "errors": 0,
+    "text": 481
+   },
+   "sha": "dadb211aee09",
+   "status": "hostable"
+  },
+  "forge": {
+   "measured": {
+    "errors": 0,
+    "text": 901
+   },
+   "sha": "b06762d2c200",
+   "status": "hostable"
+  },
+  "game-last-galactic-empire": {
+   "measured": {
+    "errors": 0,
+    "text": 2442
+   },
+   "sha": "f978019d50f4",
+   "status": "hostable"
+  },
+  "game-omega-civilization": {
+   "measured": {
+    "errors": 0,
+    "text": 990
+   },
+   "sha": "2d794831f4b5",
+   "status": "hostable"
+  },
+  "game-origins": {
+   "measured": {
+    "errors": 0,
+    "text": 759
+   },
+   "sha": "8e515211313d",
+   "status": "hostable"
+  },
+  "game-origins-bridge": {
+   "measured": {
+    "errors": 0,
+    "text": 350
+   },
+   "sha": "c45f46983f77",
+   "status": "hostable"
+  },
+  "gaming": {
+   "measured": {
+    "errors": 0,
+    "text": 1564
+   },
+   "sha": "9bdd13f0bfb2",
+   "status": "hostable"
+  },
+  "gates": {
+   "measured": {
+    "errors": 0,
+    "text": 2142
+   },
+   "sha": "c3ac9e2d253c",
+   "status": "hostable"
+  },
+  "gateway": {
+   "measured": {
+    "errors": 0,
+    "text": 1709
+   },
+   "sha": "1848e3bb7d84",
+   "status": "hostable"
+  },
+  "govern": {
+   "measured": {
+    "errors": 0,
+    "text": 3185
+   },
+   "sha": "dcf690b3cf63",
+   "status": "hostable"
+  },
+  "governance": {
+   "measured": {
+    "errors": 0,
+    "text": 967
+   },
+   "sha": "030063850230",
+   "status": "hostable"
+  },
+  "grades": {
+   "measured": {
+    "errors": 0,
+    "text": 729
+   },
+   "sha": "c3832b85b625",
+   "status": "hostable"
+  },
+  "graph": {
+   "measured": {
+    "errors": 0,
+    "text": 463
+   },
+   "sha": "873f6c13c533",
+   "status": "hostable"
+  },
+  "graph-admin": {
+   "measured": {
+    "errors": 0,
+    "text": 150
+   },
+   "sha": "2701a7751209",
+   "status": "hostable"
+  },
+  "graph-anomalies": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "c4a275a5b86d",
+   "status": "navigates-away"
+  },
+  "graph-centrality": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "81095e47abc8",
+   "status": "navigates-away"
+  },
+  "graph-evidence": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "926384af14dd",
+   "status": "navigates-away"
+  },
+  "graph-explorer": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "214a5ddbc1b9",
+   "status": "navigates-away"
+  },
+  "graph-timeline": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "8b08b48742e9",
+   "status": "navigates-away"
+  },
+  "graphify": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "5e98af5f049c",
+   "status": "navigates-away"
+  },
+  "gratitude": {
+   "measured": {
+    "errors": 0,
+    "text": 419
+   },
+   "sha": "de78e959d821",
+   "status": "hostable"
+  },
+  "grid": {
+   "measured": {
+    "errors": 0,
+    "text": 1032
+   },
+   "sha": "7f9d48a276ae",
+   "status": "hostable"
+  },
+  "guide": {
+   "measured": {
+    "errors": 0,
+    "text": 2134
+   },
+   "sha": "01c9f3c2b307",
+   "status": "hostable"
+  },
+  "habits": {
+   "measured": {
+    "errors": 0,
+    "text": 1024
+   },
+   "sha": "f12f5b71481f",
+   "status": "hostable"
+  },
+  "hall": {
+   "measured": {
+    "errors": 0,
+    "text": 367
+   },
+   "sha": "8ef65b57422b",
+   "status": "hostable"
+  },
+  "health": {
+   "measured": {
+    "errors": 0,
+    "text": 1037
+   },
+   "sha": "f3bbffecf182",
+   "status": "hostable"
+  },
+  "healthz": {
+   "measured": {
+    "errors": 0,
+    "text": 64
+   },
+   "sha": "62a7e2f50833",
+   "status": "hostable"
+  },
+  "hercules": {
+   "measured": {
+    "errors": 0,
+    "text": 280
+   },
+   "sha": "3294675495a2",
+   "status": "hostable"
+  },
+  "heritage": {
+   "measured": {
+    "errors": 0,
+    "text": 460
+   },
+   "sha": "4be23e83e616",
+   "status": "hostable"
+  },
+  "honors": {
+   "measured": {
+    "errors": 0,
+    "text": 3085
+   },
+   "sha": "6b6e24ca3d5c",
+   "status": "hostable"
+  },
+  "horoscope": {
+   "measured": {
+    "errors": 0,
+    "text": 849
+   },
+   "sha": "2bfdd3dac2e5",
+   "status": "hostable"
+  },
+  "houses": {
+   "measured": {
+    "errors": 0,
+    "text": 3382
+   },
+   "sha": "11ffc4eddd63",
+   "status": "hostable"
+  },
+  "identity": {
+   "measured": {
+    "errors": 0,
+    "text": 596
+   },
+   "sha": "d300727d339c",
+   "status": "hostable"
+  },
+  "income": {
+   "measured": {
+    "errors": 0,
+    "text": 520
+   },
+   "sha": "41664402ae42",
+   "status": "hostable"
+  },
+  "index": {
+   "measured": {
+    "errors": 0,
+    "text": 1950
+   },
+   "reason": "public front door; must render on its own",
+   "sha": "6c2cf301e36a",
+   "status": "standalone-by-policy"
+  },
+  "insight": {
+   "measured": {
+    "errors": 0,
+    "text": 335
+   },
+   "sha": "15b282a59b88",
+   "status": "hostable"
+  },
+  "intel": {
+   "measured": {
+    "errors": 0,
+    "text": 3578
+   },
+   "sha": "3a728827c3e1",
+   "status": "hostable"
+  },
+  "intelligence": {
+   "measured": {
+    "errors": 0,
+    "text": 1346
+   },
+   "sha": "68d7304b9e2d",
+   "status": "hostable"
+  },
+  "interface-omni": {
+   "measured": {
+    "errors": 0,
+    "text": 565
+   },
+   "sha": "6bf1986619a9",
+   "status": "hostable"
+  },
+  "invest": {
+   "measured": {
+    "errors": 0,
+    "text": 3488
+   },
+   "sha": "0dfddf63a339",
+   "status": "hostable"
+  },
+  "investment": {
+   "measured": {
+    "errors": 0,
+    "text": 590
+   },
+   "sha": "0f3151617821",
+   "status": "hostable"
+  },
+  "journal": {
+   "measured": {
+    "errors": 0,
+    "text": 420
+   },
+   "sha": "2d718696023e",
+   "status": "hostable"
+  },
+  "kings": {
+   "measured": {
+    "errors": 0,
+    "text": 4375
+   },
+   "sha": "2dd360846425",
+   "status": "hostable"
+  },
+  "knowledge": {
+   "measured": {
+    "errors": 0,
+    "text": 159
+   },
+   "sha": "19085dbbf138",
+   "status": "hostable"
+  },
+  "knowledge-loom": {
+   "measured": {
+    "errors": 0,
+    "text": 839
+   },
+   "sha": "7810183b61c3",
+   "status": "hostable"
+  },
+  "kyc": {
+   "measured": {
+    "errors": 0,
+    "text": 290
+   },
+   "reason": "KYC / identity documents: owner review required before hosting in a shell",
+   "sha": "3ec4d1d9ef5b",
+   "status": "excluded-pending-review"
+  },
+  "lab": {
+   "measured": {
+    "errors": 0,
+    "text": 366
+   },
+   "sha": "945fb0079683",
+   "status": "hostable"
+  },
+  "ladder": {
+   "measured": {
+    "errors": 0,
+    "text": 461
+   },
+   "sha": "8f964913cbeb",
+   "status": "hostable"
+  },
+  "leaderboard": {
+   "measured": {
+    "errors": 0,
+    "text": 631
+   },
+   "sha": "544530a18adf",
+   "status": "hostable"
+  },
+  "ledger": {
+   "measured": {
+    "errors": 0,
+    "text": 354
+   },
+   "sha": "eb7ff1e074b2",
+   "status": "hostable"
+  },
+  "levels": {
+   "measured": {
+    "errors": 0,
+    "text": 721
+   },
+   "sha": "f66086fe91a3",
+   "status": "hostable"
+  },
+  "library": {
+   "measured": {
+    "errors": 0,
+    "text": 2393
+   },
+   "sha": "f9b907691783",
+   "status": "hostable"
+  },
+  "life": {
+   "reason": "the census host; it hosts the others, so it is not measured",
+   "status": "unmeasured"
+  },
+  "maintenance": {
+   "measured": {
+    "errors": 0,
+    "text": 502
+   },
+   "sha": "ac0908c8e6f9",
+   "status": "hostable"
+  },
+  "map": {
+   "measured": {
+    "errors": 0,
+    "text": 88
+   },
+   "sha": "614050929d8a",
+   "status": "hostable"
+  },
+  "marketing": {
+   "measured": {
+    "errors": 0,
+    "text": 567
+   },
+   "sha": "cc2c87fb5a62",
+   "status": "hostable"
+  },
+  "marketplace": {
+   "measured": {
+    "errors": 0,
+    "text": 204
+   },
+   "reason": "handles money: owner review required before hosting in a shell",
+   "sha": "0088dd4b8ec3",
+   "status": "excluded-pending-review"
+  },
+  "matrix": {
+   "measured": {
+    "errors": 0,
+    "text": 2709
+   },
+   "sha": "dc3512422479",
+   "status": "hostable"
+  },
+  "media": {
+   "measured": {
+    "errors": 0,
+    "text": 5610
+   },
+   "sha": "492252cc1da4",
+   "status": "hostable"
+  },
+  "membership": {
+   "measured": {
+    "errors": 0,
+    "text": 385
+   },
+   "sha": "ce40896570d5",
+   "status": "hostable"
+  },
+  "mentors": {
+   "measured": {
+    "errors": 0,
+    "text": 220
+   },
+   "sha": "b201a688be3d",
+   "status": "hostable"
+  },
+  "mindmap": {
+   "measured": {
+    "errors": 0,
+    "text": 312
+   },
+   "sha": "ab63eb455373",
+   "status": "hostable"
+  },
+  "mirror": {
+   "measured": {
+    "errors": 0,
+    "text": 481
+   },
+   "sha": "58f8ee362df8",
+   "status": "hostable"
+  },
+  "missions": {
+   "measured": {
+    "errors": 0,
+    "text": 449
+   },
+   "sha": "60227c53fb24",
+   "status": "hostable"
+  },
+  "monitoring-dashboard": {
+   "measured": {
+    "errors": 0,
+    "text": 1006
+   },
+   "sha": "ced9b2e8151c",
+   "status": "hostable"
+  },
+  "mood": {
+   "measured": {
+    "errors": 0,
+    "text": 752
+   },
+   "sha": "1387f6575df2",
+   "status": "hostable"
+  },
+  "movies": {
+   "measured": {
+    "errors": 0,
+    "text": 2062
+   },
+   "sha": "cc8269327296",
+   "status": "hostable"
+  },
+  "my-quests": {
+   "measured": {
+    "errors": 0,
+    "text": 62
+   },
+   "sha": "55be96182071",
+   "status": "hostable"
+  },
+  "network": {
+   "measured": {
+    "errors": 0,
+    "text": 572
+   },
+   "sha": "087d2213f442",
+   "status": "hostable"
+  },
+  "news": {
+   "measured": {
+    "errors": 0,
+    "text": 1168
+   },
+   "sha": "94c5956c43d7",
+   "status": "hostable"
+  },
+  "nexus": {
+   "measured": {
+    "errors": 0,
+    "text": 425
+   },
+   "sha": "30ad77d28936",
+   "status": "hostable"
+  },
+  "notes": {
+   "measured": {
+    "errors": 0,
+    "text": 246
+   },
+   "sha": "6233a05cd137",
+   "status": "hostable"
+  },
+  "notifications": {
+   "measured": {
+    "errors": 0,
+    "text": 611
+   },
+   "sha": "dc6bb7fec947",
+   "status": "hostable"
+  },
+  "nutrition": {
+   "measured": {
+    "errors": 0,
+    "text": 764
+   },
+   "sha": "01e23599c21a",
+   "status": "hostable"
+  },
+  "oath": {
+   "measured": {
+    "errors": 0,
+    "text": 275
+   },
+   "sha": "70adfeea6694",
+   "status": "hostable"
+  },
+  "observatory": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "a0fe7b870a52",
+   "status": "navigates-away"
+  },
+  "offline": {
+   "measured": {
+    "errors": 0,
+    "text": 355
+   },
+   "sha": "d3c42497438a",
+   "status": "hostable"
+  },
+  "omega-platform-navigator": {
+   "measured": {
+    "errors": 0,
+    "text": 9813
+   },
+   "sha": "355cf2d3f11d",
+   "status": "hostable"
+  },
+  "ops": {
+   "measured": {
+    "errors": 0,
+    "text": 571
+   },
+   "sha": "6f62db219366",
+   "status": "hostable"
+  },
+  "oracle": {
+   "measured": {
+    "errors": 0,
+    "text": 1216
+   },
+   "sha": "9ef4d5d15fb5",
+   "status": "hostable"
+  },
+  "order": {
+   "measured": {
+    "errors": 0,
+    "text": 1588
+   },
+   "sha": "92e7c5ff63ec",
+   "status": "hostable"
+  },
+  "orrery": {
+   "measured": {
+    "errors": 0,
+    "text": 635
+   },
+   "sha": "f59be4a7299d",
+   "status": "hostable"
+  },
+  "pantheons": {
+   "measured": {
+    "errors": 0,
+    "text": 3791
+   },
+   "sha": "bf06f139418e",
+   "status": "hostable"
+  },
+  "passport": {
+   "measured": {
+    "errors": 0,
+    "text": 418
+   },
+   "sha": "a392fdb93ba4",
+   "status": "hostable"
+  },
+  "payments": {
+   "measured": {
+    "errors": 0,
+    "text": 752
+   },
+   "reason": "payments: owner review required before hosting in a shell",
+   "sha": "9e22a7d77293",
+   "status": "excluded-pending-review"
+  },
+  "pending": {
+   "measured": {
+    "errors": 0,
+    "text": 61
+   },
+   "reason": "public / signed-out page; must render on its own",
+   "sha": "cb31932ffe28",
+   "status": "standalone-by-policy"
+  },
+  "personal-intelligence": {
+   "measured": {
+    "errors": 0,
+    "text": 3858
+   },
+   "sha": "569af23d4bc7",
+   "status": "hostable"
+  },
+  "phases": {
+   "measured": {
+    "errors": 0,
+    "text": 2057
+   },
+   "sha": "c70dbaa337d3",
+   "status": "hostable"
+  },
+  "physiology": {
+   "measured": {
+    "errors": 0,
+    "text": 571
+   },
+   "sha": "8cb2fd2a112d",
+   "status": "hostable"
+  },
+  "platform-kernel": {
+   "measured": {
+    "errors": 0,
+    "text": 536
+   },
+   "sha": "5f5178a199b4",
+   "status": "hostable"
+  },
+  "points": {
+   "measured": {
+    "errors": 0,
+    "text": 378
+   },
+   "sha": "1a10f07a544e",
+   "status": "hostable"
+  },
+  "portfolio": {
+   "measured": {
+    "errors": 0,
+    "text": 361
+   },
+   "sha": "bdc2c3cd04af",
+   "status": "hostable"
+  },
+  "prediction": {
+   "measured": {
+    "errors": 0,
+    "text": 1831
+   },
+   "sha": "44f25051d125",
+   "status": "hostable"
+  },
+  "principles": {
+   "measured": {
+    "errors": 0,
+    "text": 612
+   },
+   "sha": "a9fd6b2eb456",
+   "status": "hostable"
+  },
+  "privacy": {
+   "measured": {
+    "errors": 0,
+    "text": 1434
+   },
+   "reason": "privacy controls: owner review required before hosting in a shell",
+   "sha": "a3b90d168187",
+   "status": "excluded-pending-review"
+  },
+  "profile": {
+   "measured": {
+    "errors": 0,
+    "text": 1413
+   },
+   "sha": "4c53da807afa",
+   "status": "hostable"
+  },
+  "project-studio": {
+   "measured": {
+    "errors": 0,
+    "text": 437
+   },
+   "sha": "22090961092a",
+   "status": "hostable"
+  },
+  "projects": {
+   "measured": {
+    "errors": 0,
+    "text": 284
+   },
+   "sha": "5c3e4c981a32",
+   "status": "hostable"
+  },
+  "publications": {
+   "measured": {
+    "errors": 0,
+    "text": 453
+   },
+   "sha": "b96ad9a1f381",
+   "status": "hostable"
+  },
+  "publishing": {
+   "measured": {
+    "errors": 0,
+    "text": 630
+   },
+   "sha": "a554a1115786",
+   "status": "hostable"
+  },
+  "pulse": {
+   "measured": {
+    "errors": 0,
+    "text": 604
+   },
+   "sha": "b29e0f64ad35",
+   "status": "hostable"
+  },
+  "quest-progress": {
+   "measured": {
+    "errors": 0,
+    "text": 137
+   },
+   "sha": "00b46ab112fe",
+   "status": "hostable"
+  },
+  "queue": {
+   "measured": {
+    "errors": 0,
+    "text": 926
+   },
+   "sha": "ce2443736d62",
+   "status": "hostable"
+  },
+  "quotes": {
+   "measured": {
+    "errors": 0,
+    "text": 423
+   },
+   "sha": "0fb2af230a56",
+   "status": "hostable"
+  },
+  "reading": {
+   "measured": {
+    "errors": 0,
+    "text": 237
+   },
+   "sha": "463312d0f8a5",
+   "status": "hostable"
+  },
+  "realm": {
+   "measured": {
+    "errors": 0,
+    "text": 624
+   },
+   "sha": "def25a95d63b",
+   "status": "hostable"
+  },
+  "realms": {
+   "measured": {
+    "errors": 0,
+    "text": 659
+   },
+   "sha": "8c7d7e33ae51",
+   "status": "hostable"
+  },
+  "recovery": {
+   "measured": {
+    "errors": 0,
+    "text": 1478
+   },
+   "sha": "4232902204b2",
+   "status": "hostable"
+  },
+  "replay": {
+   "measured": {
+    "errors": 0,
+    "text": 237
+   },
+   "sha": "46e070a39708",
+   "status": "hostable"
+  },
+  "research": {
+   "measured": {
+    "errors": 0,
+    "text": 2562
+   },
+   "sha": "1a1cd471544c",
+   "status": "hostable"
+  },
+  "reset": {
+   "measured": {
+    "errors": 0,
+    "text": 59
+   },
+   "reason": "public / signed-out page; must render on its own",
+   "sha": "4b6293c924fd",
+   "status": "standalone-by-policy"
+  },
+  "revenue": {
+   "measured": {
+    "errors": 0,
+    "text": 542
+   },
+   "sha": "06d8fc6c87d4",
+   "status": "hostable"
+  },
+  "rituals": {
+   "measured": {
+    "errors": 0,
+    "text": 1076
+   },
+   "sha": "2b57484ed02a",
+   "status": "hostable"
+  },
+  "roadmap": {
+   "measured": {
+    "errors": 0,
+    "text": 2071
+   },
+   "sha": "526c45bde142",
+   "status": "hostable"
+  },
+  "rune": {
+   "measured": {
+    "errors": 0,
+    "text": 129
+   },
+   "sha": "29eb3da8633f",
+   "status": "hostable"
+  },
+  "sculpture": {
+   "measured": {
+    "errors": 0,
+    "text": 1426
+   },
+   "sha": "53db68709989",
+   "status": "hostable"
+  },
+  "search": {
+   "measured": {
+    "errors": 0,
+    "text": 989
+   },
+   "sha": "a7b87aa1fd9f",
+   "status": "hostable"
+  },
+  "seasonal-events": {
+   "measured": {
+    "errors": 0,
+    "text": 142
+   },
+   "sha": "ea75e24fe877",
+   "status": "hostable"
+  },
+  "security": {
+   "measured": {
+    "errors": 0,
+    "text": 79
+   },
+   "sha": "1d9befad30b1",
+   "status": "hostable"
+  },
+  "series": {
+   "measured": {
+    "errors": 0,
+    "text": 1177
+   },
+   "sha": "3015e5cc5c97",
+   "status": "hostable"
+  },
+  "services": {
+   "measured": {
+    "errors": 0,
+    "text": 3033
+   },
+   "sha": "579d22733dd1",
+   "status": "hostable"
+  },
+  "settings": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "466ec31d2571",
+   "status": "navigates-away"
+  },
+  "sigil": {
+   "measured": {
+    "errors": 0,
+    "text": 450
+   },
+   "sha": "0908d6a54a91",
+   "status": "hostable"
+  },
+  "sigma": {
+   "measured": {
+    "errors": 0,
+    "text": 343
+   },
+   "sha": "5661817587d4",
+   "status": "hostable"
+  },
+  "signal": {
+   "measured": {
+    "errors": 0,
+    "text": 1525
+   },
+   "sha": "6e0bd2b509d3",
+   "status": "hostable"
+  },
+  "skills": {
+   "measured": {
+    "errors": 0,
+    "text": 992
+   },
+   "sha": "5c4702975595",
+   "status": "hostable"
+  },
+  "sleep": {
+   "measured": {
+    "errors": 0,
+    "text": 807
+   },
+   "sha": "4f9b948771dd",
+   "status": "hostable"
+  },
+  "social": {
+   "measured": {
+    "errors": 0,
+    "text": 980
+   },
+   "sha": "744dad247318",
+   "status": "hostable"
+  },
+  "sovereign-ai": {
+   "measured": {
+    "errors": 0,
+    "text": 2710
+   },
+   "sha": "54b597585f99",
+   "status": "hostable"
+  },
+  "sovereign-core": {
+   "measured": {
+    "errors": 0,
+    "text": 2097
+   },
+   "sha": "43a57c953187",
+   "status": "hostable"
+  },
+  "sovereign-covenant": {
+   "measured": {
+    "errors": null,
+    "text": null
+   },
+   "reason": "moves the host page elsewhere on load (redirect stub or auth redirect)",
+   "sha": "51c2c3004cc1",
+   "status": "navigates-away"
+  },
+  "sovereigns": {
+   "measured": {
+    "errors": 0,
+    "text": 428
+   },
+   "sha": "c37da53ce6d0",
+   "status": "hostable"
+  },
+  "standing-dashboard": {
+   "measured": {
+    "errors": 0,
+    "text": 95
+   },
+   "sha": "98d313cf60f3",
+   "status": "hostable"
+  },
+  "stoic": {
+   "measured": {
+    "errors": 0,
+    "text": 619
+   },
+   "sha": "943f8553a817",
+   "status": "hostable"
+  },
+  "studio": {
+   "measured": {
+    "errors": 0,
+    "text": 784
+   },
+   "sha": "09d3fbcb34bb",
+   "status": "hostable"
+  },
+  "studio-library": {
+   "measured": {
+    "errors": 0,
+    "text": 88
+   },
+   "sha": "bf592a2b189a",
+   "status": "hostable"
+  },
+  "subscriptions": {
+   "measured": {
+    "errors": 0,
+    "text": 602
+   },
+   "reason": "handles money: owner review required before hosting in a shell",
+   "sha": "357f89d99cf9",
+   "status": "excluded-pending-review"
+  },
+  "targets": {
+   "measured": {
+    "errors": 0,
+    "text": 314
+   },
+   "sha": "86847f425339",
+   "status": "hostable"
+  },
+  "terms": {
+   "measured": {
+    "errors": 0,
+    "text": 59
+   },
+   "reason": "public / signed-out page; must render on its own",
+   "sha": "06b9ed1d3f5f",
+   "status": "standalone-by-policy"
+  },
+  "time": {
+   "measured": {
+    "errors": 0,
+    "text": 424
+   },
+   "sha": "eedd6bcf7ba6",
+   "status": "hostable"
+  },
+  "trailers": {
+   "measured": {
+    "errors": 0,
+    "text": 983
+   },
+   "sha": "8475ac227483",
+   "status": "hostable"
+  },
+  "travel": {
+   "measured": {
+    "errors": 0,
+    "text": 2374
+   },
+   "sha": "078a06ec5c7b",
+   "status": "hostable"
+  },
+  "treasury": {
+   "measured": {
+    "errors": 0,
+    "text": 607
+   },
+   "sha": "3dd2c28514ba",
+   "status": "hostable"
+  },
+  "triads": {
+   "measured": {
+    "errors": 0,
+    "text": 909
+   },
+   "sha": "475dd3be6d02",
+   "status": "hostable"
+  },
+  "tribe": {
+   "measured": {
+    "errors": 0,
+    "text": 643
+   },
+   "sha": "ba02f35c9d5b",
+   "status": "hostable"
+  },
+  "trophies": {
+   "measured": {
+    "errors": 0,
+    "text": 1189
+   },
+   "sha": "8ed230b07b2d",
+   "status": "hostable"
+  },
+  "universe": {
+   "measured": {
+    "errors": 0,
+    "text": 891
+   },
+   "sha": "00841952dc1f",
+   "status": "hostable"
+  },
+  "vault": {
+   "measured": {
+    "errors": 0,
+    "text": 2083
+   },
+   "sha": "b6ae3ad2c01d",
+   "status": "hostable"
+  },
+  "verify-deployment": {
+   "measured": {
+    "errors": 0,
+    "text": 302
+   },
+   "sha": "13adb9c4cd07",
+   "status": "hostable"
+  },
+  "verify-modules": {
+   "measured": {
+    "errors": 0,
+    "text": 321
+   },
+   "sha": "004d530bc2e1",
+   "status": "hostable"
+  },
+  "vision": {
+   "measured": {
+    "errors": 0,
+    "text": 485
+   },
+   "sha": "0cbfb2817083",
+   "status": "hostable"
+  },
+  "visual-atlas": {
+   "measured": {
+    "errors": 0,
+    "text": 8680
+   },
+   "sha": "9c2bbbfda77c",
+   "status": "hostable"
+  },
+  "vocabulary": {
+   "measured": {
+    "errors": 0,
+    "text": 643
+   },
+   "sha": "5ffecdf972fe",
+   "status": "hostable"
+  },
+  "wallet": {
+   "measured": {
+    "errors": 0,
+    "text": 569
+   },
+   "reason": "handles money: owner review required before hosting in a shell",
+   "sha": "8c0a69419769",
+   "status": "excluded-pending-review"
+  },
+  "water": {
+   "measured": {
+    "errors": 0,
+    "text": 402
+   },
+   "sha": "3fda4969a91a",
+   "status": "hostable"
+  },
+  "wealth": {
+   "measured": {
+    "errors": 0,
+    "text": 742
+   },
+   "sha": "36aecea5f14d",
+   "status": "hostable"
+  },
+  "weekly": {
+   "measured": {
+    "errors": 0,
+    "text": 965
+   },
+   "sha": "34234c8ce3e5",
+   "status": "hostable"
+  },
+  "workout": {
+   "measured": {
+    "errors": 0,
+    "text": 482
+   },
+   "sha": "1fea87f459ff",
+   "status": "hostable"
+  },
+  "world": {
+   "measured": {
+    "errors": 0,
+    "text": 2793
+   },
+   "sha": "2135474af60b",
+   "status": "hostable"
+  },
+  "world-atlas": {
+   "measured": {
+    "errors": 0,
+    "text": 5443
+   },
+   "sha": "4304892c0c1a",
+   "status": "hostable"
+  },
+  "world-shell": {
+   "measured": {
+    "errors": 0,
+    "text": 1286
+   },
+   "sha": "2acc2f31a026",
+   "status": "hostable"
+  },
+  "worlds": {
+   "measured": {
+    "errors": 0,
+    "text": 84
+   },
+   "sha": "909f7bc098d3",
+   "status": "hostable"
+  }
+ },
+ "schema": 1
+}

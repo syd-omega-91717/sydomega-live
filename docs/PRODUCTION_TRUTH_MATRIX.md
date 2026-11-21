@@ -23,7 +23,7 @@
 | Page identity system | `omega-identity.js` | RUNTIME-VERIFIED in prior audit | Regression test representative pages |
 | Cinematic 3-D layer | `omega-sculpture.js` | RUNTIME-VERIFIED for current scenes | Realm scenes, navigation and performance work remain |
 | Reduced-motion handling | Shared motion/sculpture paths | IMPLEMENTED / PARTIAL | Full accessibility pass |
-| Production domain | `sydomega.com`, `www.sydomega.com` | PRODUCTION-VERIFIED on 2026-09-15 | Keep production smoke on every release |
+| Production domain | `sydomega.com` and `www.sydomega.com` both served main SHA `4cd09c4e95b7e39c0d0a45a95f3e2d7275d956db` on 2026-11-21; both returned HTTP 200; production verifier passed 242/242 registered pages and 380 same-origin references; CSP and HSTS were present | PRODUCTION-VERIFIED for this exact release | Re-run exact-SHA release verification on every main deployment |
 
 ## Supabase
 
@@ -38,7 +38,7 @@
 | Six unrestricted Phase-5 INSERT policies | Fixed in live database | Regression audit |
 | Leaked password protection | **DISABLED** in the live Supabase Auth configuration; Security Advisor warning remains | Keep the Free-tier HIBP compensating control; provider-level closure requires the Supabase feature to be enabled |
 | Migration history | Live migration history reconciled through the 2026-10-01 convergence evidence | Check schema drift before each release |
-| Storage | Live buckets/policies verified 2026-11-17; `uploads` is private with server-enforced 50 MiB limit; content-ingest signature detection/SHA-256 and content-delivery forced-attachment behavior are implemented in source but both pending deployment; MIME allowlist remains unset for arbitrary binary attachments; latest live object count 0 | Deploy the pending content-ingest source and pass isolated authenticated upload/read/delete + cross-user denial E2E; malware scanning remains unavailable and publication still requires rights review |
+| Storage | Read-only production evidence 2026-11-20: `uploads` is private with server-enforced 50 MiB limit and `allowed_mime_types=NULL`; live `content-ingest` v13 verifies byte-signature MIME and SHA-256, with `scan_state=UNAVAILABLE` and `review_state=PENDING_REVIEW`; latest counts: `storage_files=0`, `omega_creative_assets=0`, `omega_media_jobs=0`, `media_reservations=0`, `media_items=36`. Marketing, Publishing and Marketplace now use governed registration (Marketplace via merged PR #1454); KYC remains a separate direct-upload lifecycle. | PARTIAL / PRODUCTION-OBSERVED: no production member upload transaction or catalog population; MIME allowlist intentionally unset pending KYC validation and platform-wide format policy; malware scan/quarantine, rights clearance and authorized delivery remain OPEN | Complete KYC byte-signature/document validation, malware quarantine provider, approved MIME/signature policy, rights review and controlled production owner upload/download/expiry/delete/audit E2E before public delivery or AI ingestion |
 | Edge Functions | **Source/live mismatch remains under reconciliation**: the 2026-10-01 live snapshot confirms active functions including concierge, concierge-orchestrator, growth-orchestrator, product-orchestrator, stripe-webhook, secrets-health, agent-execute and evidence-graph, while repository source contains additional functions | Reconcile each source function to `DEPLOYED`, `LOCAL-ONLY`, or `RETIRED`; do not deploy unreviewed functions automatically |
 
 ## Authentication
@@ -61,9 +61,9 @@
 |---|---|---|
 | Vercel build configuration | Implemented | Keep successful current deployment evidence |
 | Main deployment policy | Implemented | Verify current production alias on each release |
-| Vercel production deployment | **INTEGRATION STATUS PASS** for release commit `52a32f14d7fbbfa61f442fac0e1e2d3c36b8d9e9`; GitHub combined status reports Vercel `success`. Direct connected-Vercel inspection remains blocked by a 403 scope authorization response. | Restore connected Vercel scope authorization and independently inspect deployment ID, production alias, logs and browser smoke |
+| Vercel production deployment | **NOT VERIFIED / PROMOTION POSTPONED** on 2026-11-21: the Vercel workflow explicitly reported that Vercel credits were not renewed and skipped production promotion. Its fallback smoke validated the Cloudflare-served release; this is not evidence of a Vercel deployment. | Restore Vercel billing/credits and connected scope authorization, then perform an explicit production promotion and independently verify deployment ID, alias, logs and browser smoke |
 | GitHub workflows | **PR #470 corrected-commit verification is green on 2026-09-26**: CI, CodeQL, Contracts, Supabase Runtime Contract, Supabase Migration Security Audit, Production Contract, Runtime Contract, Repository Integrity, Release Readiness, Capability Evidence, Intelligence Fabric and Workflow Contract all passed | Preserve concurrency policy and investigate any new failure at root cause |
-| Production smoke checks | Implemented and successful for the prior release evidence set; current Vercel production deployment is not independently established in the 2026-10-01 snapshot | Require successful execution as release evidence |
+| Production smoke checks | **PRODUCTION-VERIFIED 2026-11-21** for main SHA `4cd09c4e95b7e39c0d0a45a95f3e2d7275d956db`; apex and www both served the exact SHA, root/world/evidence returned HTTP 200, and production surface verifier checked 249 routes | Preserve exact-SHA verification; distinguish Cloudflare Pages delivery from Vercel promotion |
 | Branch protection | Not independently verified | Read current rules/rulesets before relying on them |
 
 ## Payments / financial integrity
@@ -125,9 +125,9 @@ For each module, the next audit must record: page(s), data source, write path, a
 
 A production release should not be declared complete until all P0/P1 items below are green:
 
-- [x] Current Vercel deployment succeeds for the current release evidence set.
-- [x] `sydomega.com` and `www.sydomega.com` serve the intended build.
-- [x] Production smoke tests pass for current release SHA `4d4919d0a004dcb25ece8a1fe4f241911ff61567`.
+- [ ] Vercel production promotion is independently verified. **Current production delivery is Cloudflare Pages; the 2026-11-21 Vercel promotion was postponed because credits were unavailable.**
+- [x] `sydomega.com` and `www.sydomega.com` serve the exact main SHA `4cd09c4e95b7e39c0d0a45a95f3e2d7275d956db` (2026-11-21 Cloudflare Pages verification).
+- [x] Production release smoke passes for exact main SHA `4cd09c4e95b7e39c0d0a45a95f3e2d7275d956db` (242/242 registered pages; 380 references; 249 production surface routes).
 - [x] GitHub verification workflows execute successfully for current main verification set.
 - [ ] Supabase Security Advisor has zero unresolved findings. **Open provider-level item: leaked-password protection is disabled on the current Free plan.**
 - [ ] RLS regression audit passes at policy-semantic level; current structural invariant is 220/220 RLS-enabled and 0 tables without policies (live inventory verified 2026-09-23).

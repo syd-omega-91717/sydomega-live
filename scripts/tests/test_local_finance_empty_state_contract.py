@@ -27,6 +27,8 @@ class LocalFinanceEmptyStateContract(unittest.TestCase):
         source = (ROOT / "omega-vault-core.js").read_text(encoding="utf-8")
         self.assertIn("account currencies:", source)
         self.assertIn("balances entered as USD equivalent", source)
+        self.assertIn("on.length ? money(sum) : '—'", source)
+        self.assertIn("No trackers selected. Select at least one to calculate.", source)
 
 
 if __name__ == "__main__":

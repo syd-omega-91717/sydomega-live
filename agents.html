@@ -63,19 +63,19 @@
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-god" style="color:var(--gold)">—</div><div class="kpi-label">OLYMPIAN</div></div>
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
 </div>
-<div class="tab-bar">
-  <button class="tab-btn active" type="button" data-tab="agent" role="tab" aria-controls="tab-agent" aria-selected="true">MY AGENT</button>
-  <button class="tab-btn" type="button" data-tab="council" role="tab" aria-controls="tab-council" aria-selected="false">COUNCIL</button>
-  <button class="tab-btn" type="button" data-tab="hierarchy" role="tab" aria-controls="tab-hierarchy" aria-selected="false">12×12 HIERARCHY</button>
-  <button class="tab-btn" type="button" data-tab="chat" role="tab" aria-controls="tab-chat" aria-selected="false">CHAT</button>
-  <button class="tab-btn" type="button" data-tab="science" role="tab" aria-controls="tab-science" aria-selected="false">SCIENCE</button>
-  <button class="tab-btn" type="button" data-tab="network" role="tab" aria-controls="tab-network">NETWORK</button>
-  <button class="tab-btn" type="button" data-tab="pantheons" role="tab" aria-controls="tab-pantheons">PANTHEONS</button>
-  <button class="tab-btn" type="button" data-tab="operations" role="tab" aria-controls="tab-operations">OPERATIONS</button>
+<div class="tab-bar" role="tablist" aria-label="Agent Council sections">
+  <button class="tab-btn active" type="button" data-tab="agent" role="tab" aria-controls="tab-agent" aria-selected="true" id="tab-btn-agent">MY AGENT</button>
+  <button class="tab-btn" type="button" data-tab="council" role="tab" aria-controls="tab-council" aria-selected="false" id="tab-btn-council">COUNCIL</button>
+  <button class="tab-btn" type="button" data-tab="hierarchy" role="tab" aria-controls="tab-hierarchy" aria-selected="false" id="tab-btn-hierarchy">12×12 HIERARCHY</button>
+  <button class="tab-btn" type="button" data-tab="chat" role="tab" aria-controls="tab-chat" aria-selected="false" id="tab-btn-chat">CHAT</button>
+  <button class="tab-btn" type="button" data-tab="science" role="tab" aria-controls="tab-science" aria-selected="false" id="tab-btn-science">SCIENCE</button>
+  <button class="tab-btn" type="button" data-tab="network" role="tab" aria-controls="tab-network" id="tab-btn-network">NETWORK</button>
+  <button class="tab-btn" type="button" data-tab="pantheons" role="tab" aria-controls="tab-pantheons" id="tab-btn-pantheons">PANTHEONS</button>
+  <button class="tab-btn" type="button" data-tab="operations" role="tab" aria-controls="tab-operations" id="tab-btn-operations">OPERATIONS</button>
 </div>
 
 <!-- MY AGENT TAB -->
-<div class="tab-panel active" id="tab-agent">
+<div class="tab-panel active" id="tab-agent" role="tabpanel" aria-labelledby="tab-btn-agent">
   <div class="my-agent-hero" id="my-agent-panel">
     <div class="my-agent-glyph" id="my-glyph" style="color:var(--gold)">&#9670;</div>
     <div class="my-agent-info">
@@ -94,7 +94,7 @@
 </div>
 
 <!-- COUNCIL TAB -->
-<div class="tab-panel" id="tab-council">
+<div class="tab-panel" id="tab-council" role="tabpanel" aria-labelledby="tab-btn-council">
   <p class="sechead">THE COUNCIL &middot; TWELVE BOUND AGENTS</p>
   <div class="osc-stage" data-omega-sculpture="agents" data-sculpt-height="min(38vh,320px)"
        data-sculpt-label="The twelve agent executors orbiting the Omega core"></div>
@@ -106,7 +106,7 @@
 </div>
 
 <!-- CHAT TAB -->
-<div class="tab-panel" id="tab-chat">
+<div class="tab-panel" id="tab-chat" role="tabpanel" aria-labelledby="tab-btn-chat">
   <div class="chat-box">
     <div class="chat-head">
       <div class="chat-head-title">&#9670; <span id="chat-agent-name">AGENT</span> &mdash; SECURE CHANNEL</div>
@@ -126,7 +126,7 @@
 </div>
 
 <!-- SUBORDINATE HIERARCHY TAB -->
-<div class="tab-panel" id="tab-hierarchy">
+<div class="tab-panel" id="tab-hierarchy" role="tabpanel" aria-labelledby="tab-btn-hierarchy">
   <p class="sechead">THE 12 × 12 SOVEREIGN HIERARCHY · 144 SUBORDINATE POSITIONS</p>
   <div class="hierarchy-summary" aria-live="polite">
     <div class="hierarchy-stat"><strong id="hierarchy-primary-count">12</strong><span>PRIMARY AGENTS</span></div>
@@ -137,7 +137,7 @@
   <div class="hierarchy-grid" id="hierarchy-grid" aria-label="Twelve primary agents, each with twelve subordinate positions"></div>
 </div>
 <!-- SCIENCE TAB -->
-<div class="tab-panel" id="tab-science">
+<div class="tab-panel" id="tab-science" role="tabpanel" aria-labelledby="tab-btn-science">
   <div style="padding:1.5rem;max-width:720px">
     <p class="sechead">AGENT COUNCIL ARCHITECTURE</p>
     <div class="card-grid">
@@ -148,17 +148,17 @@
     </div>
   </div>
 </div>
-<div class="tab-panel agent-workspace-panel" id="tab-network" role="tabpanel" aria-label="Agent Network">
+<div class="tab-panel agent-workspace-panel" id="tab-network" role="tabpanel" aria-label="Agent Network" role="tabpanel" aria-labelledby="tab-btn-network">
   <div class="hierarchy-note">PRIMARY AGENT NETWORK · CANONICAL ROSTER · ILLUSTRATIVE RELATIONSHIPS ONLY. Select a node to inspect its registered profile.</div>
   <iframe class="agent-workspace-frame" title="Agent Network visualization" loading="lazy" data-src="/agent-network.html?embed=1" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/agent-network.html">Open Agent Network as a standalone page</a></p>
 </div>
-<div class="tab-panel agent-workspace-panel" id="tab-pantheons" role="tabpanel" aria-label="Pantheons and archetypes">
+<div class="tab-panel agent-workspace-panel" id="tab-pantheons" role="tabpanel" aria-label="Pantheons and archetypes" role="tabpanel" aria-labelledby="tab-btn-pantheons">
   <div class="hierarchy-note">PANTHEONS & ARCHETYPES · ARCHETYPE PREFERENCES ARE STORED LOCALLY IN THIS BROWSER, NOT AS ACCOUNT PROFILE DATA.</div>
   <iframe class="agent-workspace-frame" title="Pantheons and archetypes" loading="lazy" data-src="/pantheons.html?embed=1" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/pantheons.html">Open Pantheons as a standalone page</a></p>
 </div>
-<div class="tab-panel agent-workspace-panel" id="tab-operations" role="tabpanel" aria-label="Governed agent operations">
+<div class="tab-panel agent-workspace-panel" id="tab-operations" role="tabpanel" aria-label="Governed agent operations" role="tabpanel" aria-labelledby="tab-btn-operations">
   <div class="hierarchy-note">GOVERNED OPERATIONS · READ-ONLY TOOLS ONLY. Server-side authentication, authorization, RLS and tool allowlists remain authoritative.</div>
   <iframe class="agent-workspace-frame" title="Governed agent operations console" loading="lazy" data-src="/agent-operations.html?embed=1" referrerpolicy="same-origin"></iframe>
   <p class="agent-workspace-fallback"><a href="/agent-operations.html">Open Agent Operations as a standalone page</a></p>

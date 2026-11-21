@@ -1,0 +1,201 @@
+/* Ω GENESIS / COMMAND — focused, responsive route workspace */
+.ogc{
+  --ogc-gold:#C9A84D;
+  --ogc-gold-soft:#E8C97A;
+  --ogc-cyan:#00E5FF;
+  margin:0 auto;
+  max-width:1540px;
+  color:var(--ink,#E9E6DC);
+}
+.ogc-hero{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  overflow:hidden;
+  padding:clamp(20px,3vw,38px);
+  min-height:210px;
+  border:1px solid rgba(201,168,77,.34);
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 82% 45%,rgba(0,229,255,.09),transparent 35%),
+    radial-gradient(ellipse at 70% 50%,rgba(201,168,77,.16),transparent 52%),
+    linear-gradient(145deg,rgba(18,17,16,.96),rgba(4,5,10,.98));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 18px 48px rgba(0,0,0,.28);
+}
+.ogc-hero-copy{position:relative;z-index:1;max-width:780px;min-width:0}
+.ogc-kicker,.ogc-card-kicker,.ogc-card-open,.ogc-chip,.ogc-legacy-title{
+  font-family:var(--M,"Courier Prime",monospace);
+  font-size:12px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.ogc-kicker{color:var(--ogc-cyan);margin:0 0 10px}
+.ogc-title{
+  margin:0;
+  color:var(--ogc-gold-soft);
+  font-family:var(--D,"Cinzel Decorative",serif);
+  font-size:clamp(25px,4vw,42px);
+  font-weight:500;
+  letter-spacing:.08em;
+  line-height:1.16;
+}
+.ogc-lede{
+  max-width:70ch;
+  margin:12px 0 18px;
+  color:var(--ink-dim,#CBD5DC);
+  font-family:var(--R,Rajdhani,sans-serif);
+  font-size:clamp(16px,1.5vw,19px);
+  line-height:1.55;
+}
+.ogc-meta{display:flex;flex-wrap:wrap;gap:8px}
+.ogc-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:34px;
+  padding:7px 11px;
+  border:1px solid rgba(201,168,77,.28);
+  border-radius:5px;
+  color:var(--ogc-gold-soft);
+  background:rgba(201,168,77,.055);
+  letter-spacing:.08em;
+}
+.ogc-chip[data-state="UNAVAILABLE"]{border-color:rgba(139,0,0,.6);color:#e6a3a3}
+.ogc-chip[data-state="AVAILABLE"]{border-color:rgba(0,229,255,.35);color:var(--ogc-cyan)}
+.ogc-seal{
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  width:clamp(90px,13vw,160px);
+  aspect-ratio:1;
+  border:1px solid rgba(201,168,77,.45);
+  border-radius:50%;
+  color:rgba(232,201,122,.85);
+  font-family:var(--D,"Cinzel Decorative",serif);
+  font-size:clamp(42px,7vw,82px);
+  text-shadow:0 0 28px rgba(201,168,77,.35);
+  box-shadow:0 0 0 9px rgba(201,168,77,.035),0 0 0 18px rgba(0,229,255,.025),inset 0 0 28px rgba(201,168,77,.08);
+}
+.ogc-groups{display:grid;gap:18px;margin-top:22px}
+.ogc-group{min-width:0}
+.ogc-group-heading{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin:0 0 10px}
+.ogc-group-title{
+  margin:0;
+  color:var(--ogc-gold-soft);
+  font-family:var(--D,"Cinzel Decorative",serif);
+  font-size:15px;
+  font-weight:500;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+.ogc-group-description{
+  margin:0;
+  color:var(--muted,#8796A1);
+  font-family:var(--R,Rajdhani,sans-serif);
+  font-size:14px;
+  line-height:1.4;
+  text-align:right;
+}
+.ogc-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ogc-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  min-width:0;
+  min-height:164px;
+  padding:17px 18px 15px;
+  overflow:hidden;
+  border:1px solid rgba(201,168,77,.22);
+  border-radius:10px;
+  color:var(--ink,#E9E6DC);
+  background:linear-gradient(155deg,rgba(17,16,14,.94),rgba(5,6,10,.96));
+  text-decoration:none;
+  transition:border-color .16s ease,transform .16s ease,background .16s ease;
+}
+.ogc-card::after{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:72px;
+  height:72px;
+  pointer-events:none;
+  background:radial-gradient(circle at top right,rgba(0,229,255,.10),transparent 70%);
+}
+.ogc-card:hover{border-color:rgba(0,229,255,.55);background:linear-gradient(155deg,rgba(20,19,16,.98),rgba(5,8,12,.98));transform:translateY(-2px)}
+.ogc-card:focus-visible,.ogc-legacy-link:focus-visible{outline:2px solid var(--ogc-cyan);outline-offset:3px}
+.ogc-card-kicker{position:relative;z-index:1;color:var(--ogc-cyan);font-size:11px}
+.ogc-card-title{
+  position:relative;
+  z-index:1;
+  margin:11px 0 6px;
+  color:var(--ogc-gold-soft);
+  font-family:var(--D,"Cinzel Decorative",serif);
+  font-size:clamp(15px,1.5vw,18px);
+  letter-spacing:.04em;
+  line-height:1.3;
+}
+.ogc-card-description{
+  position:relative;
+  z-index:1;
+  color:var(--ink-dim,#CBD5DC);
+  font-family:var(--R,Rajdhani,sans-serif);
+  font-size:15px;
+  line-height:1.45;
+}
+.ogc-card-open{
+  position:relative;
+  z-index:1;
+  margin-top:auto;
+  padding-top:13px;
+  color:var(--muted,#8796A1);
+  font-size:11px;
+}
+.ogc-legacy-wrap{
+  margin-top:22px;
+  padding:15px 17px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:9px;
+  background:rgba(255,255,255,.018);
+}
+.ogc-legacy-title{margin:0 0 6px;color:var(--muted,#8796A1)}
+.ogc-legacy-intro{margin:0 0 10px;color:var(--muted,#8796A1);font:14px/1.45 var(--R,Rajdhani,sans-serif)}
+.ogc-legacy-links{display:flex;flex-wrap:wrap;gap:8px}
+.ogc-legacy-link{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  max-width:100%;
+  min-height:48px;
+  padding:8px 11px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:6px;
+  color:var(--ink,#E9E6DC);
+  text-decoration:none;
+  background:rgba(0,0,0,.18);
+}
+.ogc-legacy-name{font:13px var(--D,"Cinzel Decorative",serif);color:var(--ogc-gold-soft)}
+.ogc-legacy-note{font:13px/1.4 var(--R,Rajdhani,sans-serif);color:var(--muted,#8796A1)}
+@media(max-width:1000px){
+  .ogc-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .ogc-hero{align-items:flex-start;min-height:0}
+  .ogc-seal{width:76px;font-size:40px}
+  .ogc-group-heading{display:block}
+  .ogc-group-description{margin-top:3px;text-align:left}
+  .ogc-cards{grid-template-columns:1fr}
+  .ogc-card{min-height:132px}
+}
+@media(max-width:420px){
+  .ogc-hero{padding:18px 15px}
+  .ogc-seal{width:52px;font-size:30px}
+  .ogc-chip{font-size:10px;letter-spacing:.04em}
+  .ogc-card{padding:15px}
+}
+@media(prefers-reduced-motion:reduce){
+  .ogc-card{transition:none}
+  .ogc-card:hover{transform:none}
+}

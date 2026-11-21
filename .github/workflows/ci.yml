@@ -259,6 +259,11 @@ jobs:
         run: |
           import subprocess, sys
           sys.exit(subprocess.run(['python', 'scripts/panel-eligibility.py', '--check']).returncode)
+      - name: Workspace relations evidence
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.run(['python', 'scripts/relations-build.py', '--check']).returncode)
       - name: Runtime frontier contract
         shell: python
         run: |

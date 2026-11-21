@@ -1,0 +1,667 @@
+{
+ "schema": 1,
+ "about": "Evidence for every line the one-shell map draws. See scripts/relations-build.py for what counts as an edge and what is excluded.",
+ "hubs": [
+  "achieve",
+  "archive",
+  "arena",
+  "ascend",
+  "cosmos",
+  "dashboard",
+  "govern",
+  "intel",
+  "invest",
+  "life",
+  "media",
+  "order",
+  "profile",
+  "services",
+  "vault"
+ ],
+ "excluded": {
+  "plumbing_relations": [
+   "rpc:expire_trial",
+   "rpc:ping_session",
+   "rpc:report_client_error",
+   "table:profiles"
+  ],
+  "rule": "profiles, plus any relation touched by >25% of pages that use the database"
+ },
+ "edges": [
+  {
+   "a": "achieve",
+   "b": "ascend",
+   "weight": 15,
+   "shared_pages": [
+    "ascension",
+    "domain-mastery",
+    "levels",
+    "phases"
+   ],
+   "shared_relations": [
+    "table:domain_mastery",
+    "table:evolution_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "dashboard",
+   "weight": 6,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:certificates",
+    "table:evolution_events",
+    "table:medals",
+    "table:omega_platform_evidence",
+    "table:task_completions",
+    "table:trophies"
+   ]
+  },
+  {
+   "a": "dashboard",
+   "b": "govern",
+   "weight": 5,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:activity_feed",
+    "table:enterprise_accounts",
+    "table:platform_events",
+    "table:task_completions",
+    "table:threat_events"
+   ]
+  },
+  {
+   "a": "dashboard",
+   "b": "profile",
+   "weight": 5,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:get_platform_flag",
+    "table:certificates",
+    "table:evolution_events",
+    "table:omega_platform_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "intel",
+   "b": "life",
+   "weight": 5,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:omega_personal_context_items",
+    "table:omega_personal_context_links",
+    "table:omega_personal_context_preferences",
+    "table:omega_platform_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "life",
+   "b": "profile",
+   "weight": 5,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:get_platform_flag",
+    "table:evolution_events",
+    "table:omega_member_mission_state",
+    "table:omega_platform_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "dashboard",
+   "b": "intel",
+   "weight": 4,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:graph_evidence",
+    "table:omega_platform_events",
+    "table:omega_platform_evidence",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "dashboard",
+   "b": "life",
+   "weight": 4,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:get_platform_flag",
+    "table:evolution_events",
+    "table:omega_platform_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "profile",
+   "weight": 3,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:certificates",
+    "table:evolution_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "cosmos",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:certificates",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "govern",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:leaderboard_snapshots",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "intel",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:omega_platform_evidence",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "life",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:evolution_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "intel",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:dispatches",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "ascend",
+   "b": "dashboard",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:evolution_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "ascend",
+   "b": "life",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:evolution_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "ascend",
+   "b": "profile",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:evolution_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "cosmos",
+   "b": "dashboard",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:certificates",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "cosmos",
+   "b": "profile",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:certificates",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "govern",
+   "b": "intel",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:omega_member_knowledge_loom",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "intel",
+   "b": "media",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:published_dispatches",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "intel",
+   "b": "profile",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:omega_platform_events",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "order",
+   "b": "profile",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:get_all_members",
+    "rpc:get_platform_flag"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "arena",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "media",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "order",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:public_leaderboard"
+   ]
+  },
+  {
+   "a": "achieve",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "ascend",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "cosmos",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "dashboard",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "govern",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "life",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "media",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "profile",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "arena",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "ascend",
+   "b": "cosmos",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "ascend",
+   "b": "govern",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "ascend",
+   "b": "intel",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "ascend",
+   "b": "media",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "ascend",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "cosmos",
+   "b": "govern",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "cosmos",
+   "b": "intel",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "cosmos",
+   "b": "life",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "cosmos",
+   "b": "media",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "cosmos",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "dashboard",
+   "b": "media",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "dashboard",
+   "b": "order",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:get_platform_flag"
+   ]
+  },
+  {
+   "a": "dashboard",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "govern",
+   "b": "life",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "govern",
+   "b": "media",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "govern",
+   "b": "profile",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "govern",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "intel",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "invest",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:user_assets"
+   ]
+  },
+  {
+   "a": "life",
+   "b": "media",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "life",
+   "b": "order",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:get_platform_flag"
+   ]
+  },
+  {
+   "a": "life",
+   "b": "services",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:capability_registry"
+   ]
+  },
+  {
+   "a": "life",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "media",
+   "b": "order",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:member_posts"
+   ]
+  },
+  {
+   "a": "media",
+   "b": "profile",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "media",
+   "b": "services",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:publications"
+   ]
+  },
+  {
+   "a": "media",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "order",
+   "b": "services",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:member_events"
+   ]
+  },
+  {
+   "a": "order",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:access_audit_log"
+   ]
+  },
+  {
+   "a": "profile",
+   "b": "vault",
+   "weight": 1,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:task_completions"
+   ]
+  }
+ ]
+}

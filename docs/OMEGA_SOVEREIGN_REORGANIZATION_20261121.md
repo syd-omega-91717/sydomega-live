@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-21  
 **Target repository:** `syd-omega-91717/sydomega-live`  
-**Baseline:** `main` at `18304c167b440e25789bc6a3c5bf98339e81b339`  
+**Baseline:** `main` at `d8f37f346a0e82271d875cf1e12b653e7cb31415`  
 **Status:** Architecture foundation; implementation must proceed in gated, verifiable phases.
 
 ## 1. Objective
@@ -53,6 +53,8 @@ Preserve the 12 canonical primary agents and their current roster order and defi
 
 The requested structure is interpreted as **12 subordinate agent positions under each primary agent**, for **144 subordinate positions** across the 12 primary agents.
 
+**Source reconciliation / version decision:** The 999-point blueprint's Point 116 specifies 108 “Micro-Executors” and gives Sentinel deploying 9 sub-agents as its example. That is a genuine conflict with the later explicit owner instruction of 12 subordinate positions under each of the 12 primary agents. The current implementation follows the later owner instruction: **12 × 12 = 144**. This is a deliberate versioned amendment to Point 116, not a claim that the original blueprint specified 144. The blueprint text does not define the Hero / King / Pantheon families, their distribution, or subordinate identities; those families are introduced by the later owner instruction, and their allocation remains unspecified. The blueprint's Agent 1–12 numbering order in Points 47–58 also differs from the current `omega-agents.json` array order. Agent names, not array positions or historical ordinal numbers, are the identity keys; the UI and server authorization map must bind by name.
+
 Each subordinate belongs to one of three classification families:
 
 - **Hero** — specialist executor / champion archetype.
@@ -67,8 +69,9 @@ Do not invent 144 names, powers, or operational claims. Until a subordinate is s
 
 Every primary or subordinate agent record should support:
 
-- stable `agent_id` and `parent_agent_id`;
-- `tier` (`PRIMARY` or `SUBORDINATE`);
+- for every **actual provisioned agent**, stable `agent_id` and `parent_agent_id`;
+- for every **unassigned capacity slot**, stable `position_id`, `parent_agent_name`, `slot_number`, `status: UNASSIGNED`, null name/classification, empty capabilities/permissions, and `operational: false`; a slot is not an agent identity;
+- `tier` (`PRIMARY` or `SUBORDINATE`) only after an actual agent is provisioned;
 - `classification` (`HERO`, `KING`, `PANTHEON`, or null for unassigned);
 - canonical name, title, purpose, domains, and declared capabilities;
 - explicit authority scope and denied actions;
@@ -150,3 +153,13 @@ The Agent Council hub should have one visual overview with selectable layers: **
 The 999-point blueprint contains aspirational or speculative concepts (for example orbital infrastructure, Mars backups, biological/DNA locks, guaranteed market stabilization, autonomous legal immunity, and superhuman prediction). These may be represented as clearly labelled lore or simulation, but must not be implemented or advertised as real capabilities without independently validated engineering, legal authority, evidence, and safety review.
 
 Likewise, financial allocation, token issuance, custody, investment execution, medical/biometric processing, and legal decision-making require separate regulatory, security, operational, and owner approval gates. This page reorganization does not activate any of them.
+
+### Phase 1 implementation record — 2026-11-21
+
+- `agents.html` now renders a 12-primary / 144-seat hierarchy panel using the existing canonical `omega-agents.json` roster and the validated `/omega-agent-hierarchy.json` capacity registry.
+- Both Agent Council and Network views now fail closed when the canonical roster is unavailable; stale duplicate fallback identities are no longer rendered.
+- Every subordinate position is displayed as `UNASSIGNED`; no names, capabilities, permissions, or live status are fabricated.
+- Network, Pantheons, and Operations remain reachable from the Agent Council navigation; existing URLs are preserved.
+- `agent-network.html` no longer labels every agent active or fabricates authority/last-activity values; it identifies the visualization as illustrative.
+- `omega-agent-operations.js` now loads its selectable primary roster from `omega-agents.json`; the Edge Function's server-side tool allowlist remains authoritative.
+- CI and browser/device regression results are pending for the implementation branch; this record does not claim a pass or production deployment.

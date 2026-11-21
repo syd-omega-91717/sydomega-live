@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "PROPOSED_NOT_YET_WIRED",
+  "status": "PARTIALLY_IMPLEMENTED",
   "generated_on": "2026-11-21",
   "source_of_truth": {
     "primary_agents": "/omega-agents.json",
@@ -28,7 +28,58 @@
     "unassigned_slots_are_operational": false,
     "primary_roster_path": "/omega-agents.json",
     "subordinate_identity_policy": "Do not fabricate names, powers, capabilities, or execution status.",
-    "authority_policy": "Parent-child relationship and classification never grant permissions."
+    "authority_policy": "Parent-child relationship and classification never grant permissions.",
+    "source_reconciliation": {
+      "prior_blueprint_reference": {
+        "document": "999-point sovereign blueprint",
+        "point": 116,
+        "subordinate_total": 108,
+        "subordinate_positions_per_primary": 9,
+        "status": "SUPERSEDED_FOR_CURRENT_CAPACITY"
+      },
+      "latest_owner_instruction": {
+        "date": "2026-11-21",
+        "subordinate_positions_per_primary": 12,
+        "subordinate_position_capacity": 144,
+        "status": "ACTIVE"
+      },
+      "decision": "The latest explicit owner instruction supersedes Point 116 for the current hierarchy capacity. This is a versioned amendment; the original blueprint remains historically unchanged.",
+      "classification_source": "Latest owner instruction dated 2026-11-21",
+      "classification_distribution": "UNSPECIFIED",
+      "subordinate_identities_and_capabilities": "NOT_DEFINED_IN_SOURCE; remain UNASSIGNED until specified and approved",
+      "agent_ordinal_order": {
+        "blueprint_points_47_58": [
+          "Sentinel",
+          "Analyst",
+          "Historian",
+          "Tutor",
+          "Merchant",
+          "Proxy",
+          "Oracle",
+          "Scout",
+          "Warden",
+          "Auditor",
+          "Beacon",
+          "Sovereign"
+        ],
+        "canonical_omega_agents_json": [
+          "Sentinel",
+          "Merchant",
+          "Scout",
+          "Warden",
+          "Sovereign",
+          "Auditor",
+          "Proxy",
+          "Oracle",
+          "Beacon",
+          "Analyst",
+          "Tutor",
+          "Historian"
+        ],
+        "identity_rule": "Use canonical agent names, not array positions or historical ordinal numbers, for parentage and authorization."
+      }
+    },
+    "position_registry_path": "/omega-agent-hierarchy.json"
   },
   "hubs": [
     {
@@ -300,5 +351,13 @@
     "Some routes are intentionally cross-listed because they serve more than one workflow; the page-contract audit must select one canonical owner and use contextual links elsewhere.",
     "Sensitive health and family records must retain their existing authorization, consent, retention, and data-minimization boundaries.",
     "The Agent Council hub consolidates navigation and presentation; privileged operations remain a separately gated workflow."
-  ]
+  ],
+  "implementation_status": {
+    "agent_council_hierarchy": "PARTIALLY_IMPLEMENTED_WITH_VALIDATED_144_SLOT_REGISTRY",
+    "network_visualization": "LEGACY_ROUTE_PRESERVED; CANONICAL_ROSTER_ONLY; ILLUSTRATIVE_GRAPH; TRUTH_LABELS_CORRECTED",
+    "pantheons": "LEGACY_ROUTE_PRESERVED_NOT_YET_CONSOLIDATED",
+    "operations": "LEGACY_ROUTE_PRESERVED; canonical UI roster; server allowlist unchanged",
+    "remaining_hubs": "PROPOSED_NOT_YET_WIRED",
+    "verification": "CI_AND_BROWSER_REGRESSION_PENDING"
+  }
 }

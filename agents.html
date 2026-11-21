@@ -1,7 +1,25 @@
 <!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end --><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}/* 12x12 hierarchy — canonical Omega surface, gold and cyan tokens. */
+.hierarchy-summary{display:flex;gap:.65rem;flex-wrap:wrap;padding:1rem}
+.hierarchy-stat{flex:1 1 150px;min-width:0;padding:.85rem 1rem;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.hierarchy-stat strong{display:block;color:var(--gold);font:1.35rem var(--D);margin-bottom:.25rem}
+.hierarchy-stat span{font:var(--fs-1,12px) var(--M);letter-spacing:.1em;color:var(--muted)}
+.hierarchy-note{margin:0 1rem 1rem;padding:.9rem 1rem;border-left:2px solid var(--cyan);background:rgba(0,229,255,.035);font-size:var(--fs-2,14px);line-height:1.65;color:var(--ink)}
+.hierarchy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:.85rem;padding:1rem}
+.hierarchy-parent{min-width:0;background:var(--surface);border:1px solid rgba(201,168,76,.22);border-radius:10px;padding:1rem}
+.hierarchy-parent-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem}
+.hierarchy-parent-glyph{font-size:1.45rem;line-height:1}
+.hierarchy-parent-name{font:1rem var(--D);color:var(--gold)}
+.hierarchy-parent-role{font:var(--fs-1,12px) var(--M);color:var(--muted);letter-spacing:.08em;margin-top:.2rem}
+.hierarchy-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem}
+.hierarchy-slot{min-width:0;padding:.55rem .45rem;border:1px solid var(--line);border-radius:5px;background:rgba(2,2,6,.45)}
+.hierarchy-slot b{display:block;font:var(--fs-1,12px) var(--M);color:var(--ink);margin-bottom:.2rem}
+.hierarchy-slot span{display:block;font:10px var(--M);letter-spacing:.04em;color:var(--muted);overflow-wrap:anywhere}
+.hierarchy-family{margin-top:.8rem;color:var(--cyan);font:10px var(--M);letter-spacing:.08em}
+@media(max-width:520px){.hierarchy-grid{padding:.65rem}.hierarchy-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.hierarchy-parent{padding:.75rem}}
+</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end --><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN AGENTS</title>
 <style>
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -59,10 +77,14 @@
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
 </div>
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('agent')">MY AGENT</button><a class="tab-btn" href="/agent-operations.html" style="text-decoration:none">OPERATIONS</a>
-  <button class="tab-btn" onclick="setTab('council')">COUNCIL</button>
-  <button class="tab-btn" onclick="setTab('chat')">CHAT</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
+  <button class="tab-btn active" data-tab="agent" >MY AGENT</button>
+  <button class="tab-btn" data-tab="council" >COUNCIL</button>
+  <button class="tab-btn" data-tab="hierarchy" >12×12 HIERARCHY</button>
+  <button class="tab-btn" data-tab="chat" >CHAT</button>
+  <button class="tab-btn" data-tab="science" >SCIENCE</button>
+  <a class="tab-btn" href="/agent-network.html" style="text-decoration:none">NETWORK</a>
+  <a class="tab-btn" href="/pantheons.html" style="text-decoration:none">PANTHEONS</a>
+  <a class="tab-btn" href="/agent-operations.html" style="text-decoration:none">OPERATIONS</a>
 </div>
 
 <!-- MY AGENT TAB -->
@@ -101,7 +123,7 @@
   <div class="chat-box">
     <div class="chat-head">
       <div class="chat-head-title">&#9670; <span id="chat-agent-name">AGENT</span> &mdash; SECURE CHANNEL</div>
-      <div class="chat-status">&#9670; ONLINE</div>
+      <div class="chat-status">&#9670; CONNECTIVITY CHECKED ON SEND</div>
     </div>
     <div class="chat-msgs" id="chat-msgs">
       <div class="msg msg-ai" id="agent-greeting">Awaiting your assignment&hellip;</div>
@@ -111,11 +133,22 @@
     </div>
     <div class="chat-input-row">
       <input class="chat-inp" id="chat-inp" type="text" placeholder="Message your agent…" autocomplete="off" aria-label="Message your agent"/>
-      <button class="chat-send" onclick="sendMsg()">SEND &#8594;</button>
+      <button class="chat-send" id="chat-send" type="button">SEND &#8594;</button>
     </div>
   </div>
 </div>
 
+<!-- SUBORDINATE HIERARCHY TAB -->
+<div class="tab-panel" id="tab-hierarchy">
+  <p class="sechead">THE 12 × 12 SOVEREIGN HIERARCHY · 144 SUBORDINATE POSITIONS</p>
+  <div class="hierarchy-summary" aria-live="polite">
+    <div class="hierarchy-stat"><strong id="hierarchy-primary-count">12</strong><span>PRIMARY AGENTS</span></div>
+    <div class="hierarchy-stat"><strong id="hierarchy-seat-count">144</strong><span>SUBORDINATE POSITIONS</span></div>
+    <div class="hierarchy-stat"><strong id="hierarchy-assigned-count">0</strong><span>CONFIGURED SUBAGENTS</span></div>
+  </div>
+  <div class="hierarchy-note"><b>CLASSIFICATION:</b> HERO · KING · PANTHEON. The distribution and individual assignments have not been specified in the authoritative roster. Every seat below is therefore marked <b>UNASSIGNED</b>; no name, capability, authority, or operational status is invented. Classification and parentage do not grant permissions.</div>
+  <div class="hierarchy-grid" id="hierarchy-grid" aria-label="Twelve primary agents, each with twelve subordinate positions"></div>
+</div>
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
   <div style="padding:1.5rem;max-width:720px">
@@ -134,29 +167,14 @@
 <script>
 var EC_COLOR={fire:'#E25800',water:'#0088FF',wind:'#00E5FF',metal:'#8a8676',sand:'#E2C86D',soul:'#9B6BF0',space:'#00E5FF',void:'#3fb27f'};
 var SIGN_GLYPHS={Aries:'♈︎',Taurus:'♉︎',Gemini:'♊︎',Cancer:'♋︎',Leo:'♌︎',Virgo:'♍︎',Libra:'♎︎',Scorpio:'♏︎',Sagittarius:'♐︎',Capricorn:'♑︎',Aquarius:'♒︎',Pisces:'♓︎'};
-var FALLBACK_AGENTS=[
-  {name:'Sentinel',sign:'Aries',element:'Fire',god:'Ares',role:'Security Guardian',token:'ARENITE',greeting:'I am Sentinel, guardian of the sovereign platform. Security, access, and integrity are my domain. How may I serve?',voice:'authoritative'},
-  {name:'Merchant',sign:'Taurus',element:'Metal',god:'Aphrodite',role:'Commerce Steward',token:'AURUM',greeting:'I am Merchant, steward of commerce and value. The token economy, marketplace, and treasury are my domain.',voice:'measured'},
-  {name:'Scout',sign:'Gemini',element:'Wind',god:'Hermes',role:'Discovery Agent',token:'ZEPHYR',greeting:'I am Scout, your intelligence operative. I find what you need before you know you need it.',voice:'quick'},
-  {name:'Warden',sign:'Cancer',element:'Water',god:'Artemis',role:'Heritage Guardian',token:'NEREID',greeting:'I am Warden, protector of bloodline and legacy. Your family archive and heritage are safe in my care.',voice:'protective'},
-  {name:'Sovereign',sign:'Leo',element:'Fire',god:'Apollo',role:'Supreme Coordinator',token:'SOLARI',greeting:'I am Sovereign, coordinator of all agents. I maintain your standing within the Order and route all directives.',voice:'commanding'},
-  {name:'Auditor',sign:'Virgo',element:'Sand',god:'Athena',role:'Integrity Verifier',token:'SANDITE',greeting:'I am Auditor, keeper of integrity. Every claim on your record is verified before it is counted.',voice:'precise'},
-  {name:'Proxy',sign:'Libra',element:'Wind',god:'Hera',role:'Executive Executor',token:'FORGEON',greeting:'I am Proxy, your executive arm. I carry out directives and mediate your position within the Order.',voice:'diplomatic'},
-  {name:'Oracle',sign:'Scorpio',element:'Water',god:'Demeter',role:'Prediction Engine',token:'STYX',greeting:'I am Oracle. I read the patterns in your matrix trajectory that others cannot see.',voice:'enigmatic'},
-  {name:'Beacon',sign:'Sagittarius',element:'Fire',god:'Zeus',role:'Broadcast Agent',token:'EMBER',greeting:'I am Beacon. Your achievements and dispatches reach the wider Order through me.',voice:'expansive'},
-  {name:'Analyst',sign:'Capricorn',element:'Metal',god:'Hestia',role:'Financial Intelligence',token:'FERRUM',greeting:'I am Analyst, your financial intelligence agent. Portfolio, treasury, and economic trajectory are my domain.',voice:'analytical'},
-  {name:'Tutor',sign:'Aquarius',element:'Wind',god:'Hephaestus',role:'Education Guide',token:'AETHER',greeting:'I am Tutor. I raise your Knowledge axis through the Academy and guide your ascension.',voice:'instructive'},
-  {name:'Historian',sign:'Pisces',element:'Water',god:'Poseidon',role:'Memory Keeper',token:'ABYSS',greeting:'I am Historian, keeper of all that has been. Your evolution log and record are in my care.',voice:'reflective'},
-];
-
 var _profile=null,_myAgent=null,_history=[],_agents=[],_sb=null;
 var PHI=1.6180339887,EU=2.7182818285;
 
 function setTab(name){
-  var tabs=['agent','council','chat','science'];
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',tabs[i]===name);});
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
+document.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.getAttribute('data-tab'));});});
 
 function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v==null?'—':v);}
 
@@ -186,6 +204,7 @@ function renderHero(ag){
 function renderCouncil(agents,mySign){
   var grid=document.getElementById('council-grid');
   grid.innerHTML='';
+  if(!agents||!agents.length){var empty=document.createElement('div');empty.className='hierarchy-note';empty.textContent='UNAVAILABLE · THE CANONICAL PRIMARY-AGENT ROSTER COULD NOT BE VERIFIED.';grid.appendChild(empty);return;}
   agents.forEach(function(ag){
     var col=getCol(ag.element);
     var glyph=SIGN_GLYPHS[ag.sign]||'✦';
@@ -210,7 +229,54 @@ function renderCouncil(agents,mySign){
   });
 }
 
+async function renderHierarchy(agents){
+  var grid=document.getElementById('hierarchy-grid');
+  if(!grid)return;
+  grid.textContent='LOADING CANONICAL HIERARCHY…';
+  try{
+    var response=await fetch('/omega-agent-hierarchy.json',{cache:'no-cache'});
+    if(!response.ok)throw new Error('registry unavailable');
+    var registry=await response.json();
+    var positions=registry&&registry.positions;
+    var names=(agents||[]).map(function(a){return a.name;});
+    if(!Array.isArray(agents)||agents.length!==12||!Array.isArray(positions)||positions.length!==144)throw new Error('registry shape invalid');
+    if(registry.primary_agent_count!==12||registry.subordinate_positions_per_primary!==12||registry.subordinate_position_capacity!==144)throw new Error('registry capacity invalid');
+    if(new Set(names).size!==12||new Set(positions.map(function(p){return p.position_id;})).size!==144)throw new Error('duplicate identity');
+    if(registry.status!=='CAPACITY_REGISTRY_ONLY'||!positions.every(function(p){return names.indexOf(p.parent_agent_name)!==-1&&Number.isInteger(p.slot_number)&&p.slot_number>=1&&p.slot_number<=12&&p.status==='UNASSIGNED'&&p.operational===false&&p.name===null&&p.classification===null&&Array.isArray(p.capabilities)&&p.capabilities.length===0&&Array.isArray(p.permissions)&&p.permissions.length===0&&p.authority_inheritance===false;}))throw new Error('unassigned seat invariant failed');
+    grid.textContent='';
+    agents.forEach(function(ag){
+      var children=positions.filter(function(p){return p.parent_agent_name===ag.name;}).sort(function(a,b){return a.slot_number-b.slot_number;});
+      if(children.length!==12||children.some(function(p,index){return p.slot_number!==index+1;}))throw new Error('parent capacity invalid');
+      var parent=document.createElement('section');
+      parent.className='hierarchy-parent';
+      parent.setAttribute('aria-label',ag.name+' subordinate positions');
+      var head=document.createElement('div');head.className='hierarchy-parent-head';
+      var glyph=document.createElement('span');glyph.className='hierarchy-parent-glyph';glyph.style.color=getCol(ag.element);glyph.textContent=SIGN_GLYPHS[ag.sign]||'Ω';
+      var identity=document.createElement('div');
+      var name=document.createElement('div');name.className='hierarchy-parent-name';name.textContent=String(ag.name||'PRIMARY AGENT').toUpperCase();
+      var role=document.createElement('div');role.className='hierarchy-parent-role';role.textContent=String(ag.role||'').toUpperCase();
+      identity.appendChild(name);identity.appendChild(role);head.appendChild(glyph);head.appendChild(identity);parent.appendChild(head);
+      var slots=document.createElement('div');slots.className='hierarchy-slots';
+      children.forEach(function(position){
+        var slot=document.createElement('div');slot.className='hierarchy-slot';
+        var label=document.createElement('b');label.textContent='SEAT '+String(position.slot_number).padStart(2,'0');
+        var status=document.createElement('span');status.textContent='UNASSIGNED · '+position.position_id;
+        slot.appendChild(label);slot.appendChild(status);slots.appendChild(slot);
+      });
+      parent.appendChild(slots);
+      var family=document.createElement('div');family.className='hierarchy-family';family.textContent='CLASSIFICATION: UNASSIGNED · OPTIONS: HERO / KING / PANTHEON';parent.appendChild(family);
+      grid.appendChild(parent);
+    });
+    sid('hierarchy-primary-count',agents.length);
+    sid('hierarchy-seat-count',positions.length);
+    sid('hierarchy-assigned-count',0);
+  }catch(error){
+    grid.textContent='HIERARCHY REGISTRY UNAVAILABLE · NO SUBAGENT POSITIONS HAVE BEEN ASSERTED.';
+    sid('hierarchy-primary-count',0);sid('hierarchy-seat-count',0);sid('hierarchy-assigned-count',0);
+  }
+}
 window.sendMsg=async function(){
+  if(!_myAgent){addMsg('system','UNAVAILABLE · THE CANONICAL AGENT ROSTER IS NOT VERIFIED. NO AGENT REQUEST WAS SENT.');return;}
   var inp=document.getElementById('chat-inp');
   if(!inp||!inp.value.trim())return;
   var q=inp.value.trim();inp.value='';
@@ -244,6 +310,9 @@ window.sendMsg=async function(){
   _history.push({role:'assistant',content:reply});
   addMsg('ai',reply);
 };
+
+var sendButton=document.getElementById('chat-send');
+if(sendButton)sendButton.addEventListener('click',window.sendMsg);
 
 function addMsg(role,text){
   var msgs=document.getElementById('chat-msgs');
@@ -279,10 +348,21 @@ _sb=sb;
   sid('k-mysign',(pr.sign||'—').toUpperCase().slice(0,4));
   sid('k-element',(pr.element||'—').toUpperCase().slice(0,4));
   try{
-    var ar=await fetch('/omega-agents.json');
+    var ar=await fetch('/omega-agents.json',{cache:'no-cache'});
+    if(!ar.ok)throw new Error('canonical roster unavailable');
     var data=await ar.json();
-    _agents=data.agents||FALLBACK_AGENTS;
-  }catch(e){_agents=FALLBACK_AGENTS;}
+    var roster=data&&data.agents;
+    var names=Array.isArray(roster)?roster.map(function(ag){return ag&&ag.name;}):[];
+    if(!Array.isArray(roster)||roster.length!==12||names.some(function(n){return typeof n!=='string'||!n.trim();})||new Set(names).size!==12)throw new Error('canonical roster failed validation');
+    _agents=roster;
+  }catch(e){
+    _agents=[];
+    sid('k-myagent','UNAVAILABLE');sid('k-god','—');
+    var unavailable='UNAVAILABLE · CANONICAL AGENT ROSTER COULD NOT BE VERIFIED. NO FALLBACK IDENTITY IS DISPLAYED.';
+    var desc=document.getElementById('my-desc');if(desc)desc.textContent=unavailable;
+    var greeting=document.getElementById('agent-greeting');if(greeting)greeting.textContent=unavailable;
+    var send=document.getElementById('chat-send');if(send)send.disabled=true;
+  }
   var sign=pr.sign||'';
   _myAgent=_agents.find(function(ag){return ag.sign&&ag.sign.toLowerCase()===sign.toLowerCase();})||_agents[0]||null;
   if(_myAgent){
@@ -291,6 +371,7 @@ _sb=sb;
   }
   renderHero(_myAgent);
   renderCouncil(_agents,sign);
+  renderHierarchy(_agents);
 })();
 </script>
 <script src="/bg.js" defer></script>

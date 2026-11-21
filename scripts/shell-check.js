@@ -114,6 +114,8 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   ok(r.linesShown === 'none', 'phone: decorative lines hidden', r);
   r = await page.evaluate(() => { const c = document.querySelector('.ons-core'); return { sig: getComputedStyle(document.querySelector('.ons-signet')).display, glyph: getComputedStyle(c.querySelector('.ons-glyph')).opacity }; });
   ok(r.sig === 'none' && r.glyph === '1', 'phone: no 3-D mount, the CSS Omega is shown', r);
+  r = await page.evaluate(() => ({ cube: getComputedStyle(document.querySelector('.ons-cube')).display, facts: document.querySelectorAll('.ons-facts li').length, over: document.documentElement.scrollWidth > innerWidth }));
+  ok(r.cube === 'none' && r.facts === 3 && !r.over, 'phone: the 3-D cube is off, the canon facts remain, no overflow', r);
   await page.evaluate(() => { location.hash = '#/hub/cosmos'; }); await wait(500);
   r = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth, minH: Math.round(Math.min.apply(null, [...document.querySelectorAll('.ons-page')].map(n => n.getBoundingClientRect().height))) }));
   ok(!r.overflow && r.minH >= 44, 'phone: hub view has no overflow, pages are tappable', r);
@@ -162,6 +164,25 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   ok(r.three && r.glyph === '0' && r.live >= 2 && r.dead === 0 && r.scripts === 1 && r.canvases === 1, '3-D signet is live in the core (and the hero\'s), the CSS glyph stepped aside, the module is loaded once', r);
   const gp = await goldPixels();
   ok(gp.canvas && gp.goldShare > 0.02 && gp.clearShare > 0.5 && gp.corners.every(a => a === 0), 'the signet canvas paints real gold geometry on a transparent ground (not blank, not a box)', gp);
+  /* the matrix cube: live, painting, figures equal the canon fetched here, decorative note present, and idle when the map is not on screen */
+  r = await page.evaluate(async () => {
+    const canon = (await (await fetch('/omega-canon.json')).json()).structure;
+    const cv = document.querySelector('.ons-cube canvas.omega-sculpture-canvas');
+    let ink = 0, gold = 0, cyan = 0;
+    if (cv && cv.width) { const t = document.createElement('canvas'); t.width = cv.width; t.height = cv.height; const x = t.getContext('2d'); x.drawImage(cv, 0, 0); const d = x.getImageData(0, 0, t.width, t.height).data; for (let i = 0; i < d.length; i += 4) { if (d[i + 3] > 100) ink++; if (d[i + 3] > 100 && d[i] > 150 && d[i + 1] > 100 && d[i + 2] < 140) gold++; if (d[i + 3] > 100 && d[i] < 120 && d[i + 1] > 150 && d[i + 2] > 150) cyan++; } }
+    const facts = [...document.querySelectorAll('.ons-facts li')].map(l => l.textContent);
+    const want = ['Each phase ' + canon.axis_depth + ' × ' + canon.axis_depth + ' × ' + canon.axis_depth + ' = ' + canon.nodes_per_track_per_phase.toLocaleString('en-US') + ' nodes',
+                  'Tracks × phases ' + canon.tracks + ' × ' + canon.phases + ' = ' + canon.total_nodes.toLocaleString('en-US') + ' nodes',
+                  'Axes ' + canon.axes_names.join(' · ')];
+    const st = window.OmegaSculpture.status();
+    return { ink, gold, cyan, facts, want, matrixLive: st.some(m => m.kind === 'matrix' && m.live && !m.fallback), note: document.querySelector('.ons-fnote').textContent, box: document.querySelector('.ons-cube').getBoundingClientRect().width };
+  });
+  ok(r.matrixLive && r.ink > 2000 && r.gold > 100 && r.cyan > 100, 'matrix cube is live and paints gold nodes with a cyan shell', { ink: r.ink, gold: r.gold, cyan: r.cyan, matrixLive: r.matrixLive });
+  ok(JSON.stringify(r.facts) === JSON.stringify(r.want), 'the figures on the panel equal the canon fetched at run time', { got: r.facts, want: r.want });
+  ok(/decorative.*not your progress/.test(r.note), 'the panel says the lit nodes are decorative and shows no progress', r.note);
+  await page.evaluate(() => { location.hash = '#/hub/ascend'; }); await wait(1500);
+  r = await page.evaluate(() => window.OmegaSculpture.status().filter(m => m.kind === 'matrix').map(m => m.visible));
+  ok(r.length === 1 && r[0] === false, 'the cube stops rendering when the map is not on screen', r);
   await browser.close();
 
   console.log('3-D SIGNET: NO WEBGL');
@@ -172,6 +193,8 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   await page.evaluate(() => document.querySelector('[data-omega-one-shell]').scrollIntoView({ block: 'start', behavior: 'instant' })); await wait(1200);
   r = await page.evaluate(() => { const c = document.querySelector('.ons-core'); const cv = c.querySelector('canvas'); let ink = 0; if (cv && cv.width) { const t = document.createElement('canvas'); t.width = cv.width; t.height = cv.height; const x = t.getContext('2d'); x.drawImage(cv, 0, 0); const d = x.getImageData(0, 0, t.width, t.height).data; for (let i = 3; i < d.length; i += 4) if (d[i] > 40) ink++; } return { three: c.classList.contains('ons-3d'), canvas: !!cv, ink }; });
   ok(r.canvas && r.ink > 200, 'no WebGL: the module draws its flat mark in the core, so the Omega is never missing', r);
+  r = await page.evaluate(() => { const cv = document.querySelector('.ons-cube canvas'); let ink = 0; if (cv && cv.width) { const t = document.createElement('canvas'); t.width = cv.width; t.height = cv.height; const x = t.getContext('2d'); x.drawImage(cv, 0, 0); const d = x.getImageData(0, 0, t.width, t.height).data; for (let i = 3; i < d.length; i += 4) if (d[i] > 40) ink++; } return { canvas: !!cv, ink, facts: document.querySelectorAll('.ons-facts li').length }; });
+  ok(r.canvas && r.ink > 200 && r.facts === 3, 'no WebGL: the cube shows the module\'s flat lattice and the three canon facts remain', r);
   await browser.close();
 
   console.log('3-D SIGNET: MODULE BLOCKED');
@@ -181,6 +204,8 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   await page.goto('http://localhost:8765/sovereign-core.html', { waitUntil: 'load' }); await wait(12500);
   r = await page.evaluate(() => { const c = document.querySelector('.ons-core'); return { three: c.classList.contains('ons-3d'), glyph: getComputedStyle(c.querySelector('.ons-glyph')).opacity, nodes: document.querySelectorAll('a.ons-node').length }; });
   ok(!r.three && r.glyph === '1' && r.nodes === 15, 'module blocked: the CSS Omega stays and all 15 workspaces still link', r);
+  r = await page.evaluate(() => ({ cubeHidden: document.querySelector('.ons-cube').hidden, facts: document.querySelectorAll('.ons-facts li').length, link: !!document.querySelector('a.ons-cubelink') }));
+  ok(r.cubeHidden && r.facts === 3 && r.link, 'module blocked: the empty cube square is hidden; the canon facts and the link remain', r);
   await browser.close();
 
   console.log('3-D SIGNET: REDUCED MOTION');

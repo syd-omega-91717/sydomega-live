@@ -37,6 +37,7 @@
 </head>
 <body>
 <aside id="omega-side" data-page="payments"></aside>
+<section id="payment-load-error" hidden role="alert" aria-live="assertive" style="max-width:620px;margin:10vh auto;padding:24px;border:1px solid var(--crim);color:var(--ink);background:var(--void2);font-family:var(--M);line-height:1.7">PAYMENT STATUS UNAVAILABLE · AUTHORIZED PROFILE COULD NOT BE VERIFIED. <a href="/account.html" style="color:var(--gold)">SIGN IN</a></section>
 <div class="page-shell" id="app" style="display:none">
 <header class="topbar">
   <div class="topbar-title">PAYMENTS<span class="topbar-sub">TRANSACTION LOG &middot; SUBSCRIPTION HISTORY &middot; TRANSFER RECORDS</span></div>
@@ -127,18 +128,36 @@ function renderTx(rows,filter){
     if(filter==='marketplace')return r.type==='MARKETPLACE';
     return true;
   });
-  var cols='grid-template-columns:110px 1.5fr 150px 130px 130px';
+  tb.replaceChildren();
   if(!filtered.length){
-    tb.innerHTML='<div class="tbl-row" style="display:block;text-align:center;padding:20px;color:var(--muted)">TRANSACTION LEDGER UNAVAILABLE — authoritative payment records are not connected. No payment has been inferred from task activity.</div>';
+    var empty=document.createElement('div');
+    empty.className='tbl-row';
+    empty.style.cssText='display:block;text-align:center;padding:20px;color:var(--muted)';
+    empty.textContent='TRANSACTION LEDGER UNAVAILABLE — AUTHORITATIVE PAYMENT RECORDS ARE NOT CONNECTED. NO PAYMENT HAS BEEN INFERRED FROM TASK ACTIVITY.';
+    empty.setAttribute('role','status');
+    tb.appendChild(empty);
+    tb.dataset.truth='UNAVAILABLE';
     return;
   }
-  tb.innerHTML=filtered.map(function(tx){
-    var dir=tx.dir==='in'?'tx-in':tx.dir==='out'?'tx-out':'tx-pending';
-    var stcl=tx.status==='completed'?'st-completed':tx.status==='pending'?'st-pending':'st-failed';
-    return'<div class="tbl-row" style="'+cols+'"><span>'+tx.date+'</span><span>'+tx.desc+'</span><span><span class="tx-type">'+tx.type+'</span></span>'
-      +'<span><span class="tx-status '+stcl+'">'+tx.status.toUpperCase()+'</span></span>'
-      +'<span><span class="tx-amount '+dir+'">'+tx.amount+'</span></span></div>';
-  }).join('');
+  tb.dataset.truth='LIVE';
+  filtered.forEach(function(tx){
+    var row=document.createElement('div');
+    row.className='tbl-row';
+    row.style.gridTemplateColumns='110px 1.5fr 150px 130px 130px';
+    var date=document.createElement('span');date.textContent=String(tx.date||'—');
+    var desc=document.createElement('span');desc.textContent=String(tx.desc||'UNSPECIFIED RECORD');
+    var typeCell=document.createElement('span'),type=document.createElement('span');
+    type.className='tx-type';type.textContent=String(tx.type||'UNCLASSIFIED');typeCell.appendChild(type);
+    var statusCell=document.createElement('span'),status=document.createElement('span');
+    var statusValue=String(tx.status||'unverified').toLowerCase();
+    status.className='tx-status '+(statusValue==='completed'?'st-completed':statusValue==='pending'?'st-pending':'st-failed');
+    status.textContent=statusValue.toUpperCase();statusCell.appendChild(status);
+    var amountCell=document.createElement('span'),amount=document.createElement('span');
+    var direction=tx.dir==='in'?'tx-in':tx.dir==='out'?'tx-out':'tx-pending';
+    amount.className='tx-amount '+direction;amount.textContent=String(tx.amount||'—');amountCell.appendChild(amount);
+    row.append(date,desc,typeCell,statusCell,amountCell);
+    tb.appendChild(row);
+  });
 }
 </script>
 <script type="module">
@@ -150,9 +169,14 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
    financial transactions, and UI-generated rows must never imply settlement. */
 
 async function boot(){
-  var sess=(await sb.auth.getSession()).data.session;
+  var authResult=await sb.auth.getSession();
+  if(authResult.error)throw authResult.error;
+  var sess=authResult.data&&authResult.data.session;
   if(!sess){window.location.href='/account.html';return;}
-  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  var profileResult=await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle();
+  if(profileResult.error)throw profileResult.error;
+  var pr=profileResult.data;
+  if(!pr)throw new Error('PROFILE_RECORD_UNAVAILABLE');
   if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
@@ -160,7 +184,12 @@ async function boot(){
   var inflow=document.getElementById('kpi-inflow');if(inflow)inflow.textContent='—';
   renderTx([],'all');
 }
-boot();
+boot().catch(function(e){
+  console.warn('Payment status unavailable:',e);
+  var app=document.getElementById('app'),panel=document.getElementById('payment-load-error');
+  if(app)app.style.display='none';
+  if(panel)panel.hidden=false;
+});
 </script>
 <script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>

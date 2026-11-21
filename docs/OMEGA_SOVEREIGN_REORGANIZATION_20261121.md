@@ -157,6 +157,7 @@ Likewise, financial allocation, token issuance, custody, investment execution, m
 ### Phase 1 implementation record — 2026-11-21
 
 - `agents.html` now renders a 12-primary / 144-seat hierarchy panel using the existing canonical `omega-agents.json` roster and the validated `/omega-agent-hierarchy.json` capacity registry.
+- Both Agent Council and Network views now fail closed when the canonical roster is unavailable; stale duplicate fallback identities are no longer rendered.
 - Every subordinate position is displayed as `UNASSIGNED`; no names, capabilities, permissions, or live status are fabricated.
 - Network, Pantheons, and Operations remain reachable from the Agent Council navigation; existing URLs are preserved.
 - `agent-network.html` no longer labels every agent active or fabricates authority/last-activity values; it identifies the visualization as illustrative.

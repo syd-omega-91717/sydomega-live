@@ -293,9 +293,9 @@ function renderReserves(){
     document.getElementById('r-emerg-bar').style.width='0%';
     document.getElementById('r-emerg-pct').textContent=reservesRecorded?'TARGET NOT SET':'UNRECORDED';
   }
-  document.getElementById('ru-emerg').value=e||'';
-  document.getElementById('ru-opp').value=o||'';
-  document.getElementById('ru-legacy').value=l||'';
+  document.getElementById('ru-emerg').value=reservesRecorded?String(e):'';
+  document.getElementById('ru-opp').value=reservesRecorded?String(o):'';
+  document.getElementById('ru-legacy').value=reservesRecorded?String(l):'';
 }
 function renderFlows(){
   var el=document.getElementById('flow-list');if(!el)return;

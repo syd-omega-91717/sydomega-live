@@ -505,13 +505,13 @@
   "vault_holdings_economy_label": "تفعيل الاقتصاد",
   "vault_holdings_tokens_title": "12 أرصدة رموز السيادة · AUTH=sqrt(A³+B³+C³)×φ/e",
   "vault_holdings_nft_vault_title": "خزينة NFT · 12 خطاً سيادياً · 9 مستويات لكل = 108 أنواع",
-  "vault_ledger_total_label": "إجمالي النقاط المكتسبة",
-  "vault_ledger_actions_label": "الإجراءات المكتملة",
+  "vault_ledger_total_label": "نقاط التقدّم الأخيرة",
+  "vault_ledger_actions_label": "سجلات المهام الأخيرة",
   "vault_ledger_axisa_label": "المحور A — المعرفة",
   "vault_ledger_axisb_label": "المحور B — الإتقان",
   "vault_ledger_axisc_label": "المحور C — المساهمة",
   "vault_ledger_audit_label": "أحداث التدقيق",
-  "vault_ledger_earning_title": "دفتر الأرباح السيادي · AUTH=sqrt(A³+B³+C³)×φ/e · APEX=27.8367",
+  "vault_ledger_earning_title": "سجل التقدّم · أحدث أحداث المهام المسجّلة بالمصدر · بحد أقصى 40",
   "vault_ledger_col_timestamp": "الطابع الزمني",
   "vault_ledger_col_task": "المهمة",
   "vault_ledger_col_axis": "المحور",
@@ -1203,5 +1203,6 @@
   "tip_element": "عنصرك يأتي من برج ميلادك. وهو يلوّن المنصة بما يناسبك.",
   "profile_placeholder_character_name": "اسمك السيادي...",
   "profile_placeholder_legacy_statement": "ما ستورّثه للأجيال القادمة...",
-  "prof_label_public_identity": "الهوية العامة"
+  "prof_label_public_identity": "الهوية العامة",
+  "vault_ledger_window_note": "يعرض حتى 40 سجلاً حديثاً للمهام. نقاط التقدّم ليست أموالاً أو أرباحاً."
 }

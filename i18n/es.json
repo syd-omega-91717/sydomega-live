@@ -505,13 +505,13 @@
   "vault_holdings_economy_label": "ACTIVACIÓN ECONÓMICA",
   "vault_holdings_tokens_title": "12 SALDOS DE TOKENS SOBERANOS · AUTH=sqrt(A³+B³+C³)×φ/e",
   "vault_holdings_nft_vault_title": "BÓVEDA NFT · 12 LÍNEAS SOBERANAS · 9 NIVELES CADA UNA = 108 TIPOS",
-  "vault_ledger_total_label": "TOTAL DE PUNTOS GANADOS",
-  "vault_ledger_actions_label": "ACCIONES COMPLETADAS",
+  "vault_ledger_total_label": "PUNTOS DE PROGRESO RECIENTES",
+  "vault_ledger_actions_label": "REGISTROS DE TAREAS RECIENTES",
   "vault_ledger_axisa_label": "EJE A — CONOCIMIENTO",
   "vault_ledger_axisb_label": "EJE B — DOMINIO",
   "vault_ledger_axisc_label": "EJE C — CONTRIBUCIÓN",
   "vault_ledger_audit_label": "EVENTOS DE AUDITORÍA",
-  "vault_ledger_earning_title": "LIBRO MAYOR DE GANANCIAS SOBERANAS · AUTH=sqrt(A³+B³+C³)×φ/e · APEX=27.8367",
+  "vault_ledger_earning_title": "LIBRO DE PROGRESO · EVENTOS DE TAREAS RECIENTES REGISTRADOS POR LA FUENTE · MÁX. 40",
   "vault_ledger_col_timestamp": "MARCA DE TIEMPO",
   "vault_ledger_col_task": "TAREA",
   "vault_ledger_col_axis": "EJE",
@@ -1203,5 +1203,6 @@
   "tip_element": "Tu elemento proviene de tu signo de nacimiento. Da color a la plataforma para ti.",
   "profile_placeholder_character_name": "Tu nombre soberano...",
   "profile_placeholder_legacy_statement": "Lo que transmites al futuro...",
-  "prof_label_public_identity": "Identidad pública"
+  "prof_label_public_identity": "Identidad pública",
+  "vault_ledger_window_note": "Se muestran hasta 40 registros recientes de tareas. Los puntos de progreso no son dinero ni ingresos."
 }

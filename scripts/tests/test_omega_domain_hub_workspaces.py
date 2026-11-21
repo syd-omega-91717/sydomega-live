@@ -262,5 +262,42 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         self.assertIn("aria-live", self.runtime)
 
 
+    def test_genesis_command_hub_uses_the_canonical_route_register(self):
+        page = (ROOT / "dashboard.html").read_text(encoding="utf-8")
+        runtime = (ROOT / "omega-genesis-command.js").read_text(encoding="utf-8")
+        styles = (ROOT / "omega-genesis-command.css").read_text(encoding="utf-8")
+        config = json.loads((ROOT / "config" / "omega-sovereign-hubs.json").read_text(encoding="utf-8"))
+        hub = next(item for item in config["hubs"] if item["id"] == "genesis-command")
+
+        self.assertEqual(hub["canonical_path"], "/dashboard.html")
+        self.assertIn('data-tab-action="genesis"', page)
+        self.assertIn('id="l-genesis"', page)
+        self.assertIn('data-omega-genesis-command', page)
+        self.assertIn('omega-genesis-command.js', page)
+        self.assertIn('omega-genesis-command.css', page)
+        self.assertIn("var tabs=['genesis','today','overview','personal','platform','science']", page)
+        self.assertIn("setTab(m[h]||'genesis')", page)
+        self.assertIn("ArrowRight", page)
+        self.assertIn("ArrowLeft", page)
+        self.assertIn("Home", page)
+        self.assertIn("End", page)
+
+        route_block = re.search(r"var ROUTES = Object.freeze\\(\\[(.*?)\\]\\);", runtime, re.S)
+        self.assertIsNotNone(route_block)
+        route_paths = re.findall(r"path:\\s*'([^']+)'", route_block.group(1))
+        self.assertEqual(route_paths, hub["destination_paths"])
+        self.assertEqual(len(route_paths), len(set(route_paths)))
+        for path in route_paths:
+            self.assertTrue((ROOT / path.lstrip("/")).is_file(), path)
+
+        self.assertIn("textContent", runtime)
+        self.assertNotIn("innerHTML", runtime)
+        self.assertIn("fetch('/.well-known/omega-release.json'", runtime)
+        self.assertIn("DEPLOYED BUILD · UNAVAILABLE", runtime)
+        self.assertIn(":focus-visible", styles)
+        self.assertIn("@media(max-width:760px)", styles)
+        self.assertIn("@media(prefers-reduced-motion:reduce)", styles)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -56,6 +56,7 @@ class StudioLibrary(unittest.TestCase):
         js = (ROOT / "omega-studio-library.js").read_text(encoding="utf-8")
         page = (ROOT / "studio-library.html").read_text(encoding="utf-8")
         self.assertIn("readBtn(id, L.documents[id].title, 'sl-episode-btn')", js)
+        self.assertIn("'class': 'sl-btn' + (extraClass ? ' ' + extraClass : '')", js)
         self.assertNotIn("L.documents[id].title.slice(0, 3)", js)
         self.assertIn(".sl-episode-btn{", page)
         self.assertIn("white-space:normal", page)

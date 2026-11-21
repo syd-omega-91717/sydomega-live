@@ -1,0 +1,8 @@
+# Example only — the rate-limiter Worker is not production-ready or deployed.
+# This file intentionally defines no production route, KV binding, or Durable Object.
+# Do not rename this to wrangler.toml or deploy until the design and release gates in
+# QUICK_WINS_DEPLOYMENT.md are completed and independently verified.
+name = "sydomega-rate-limiter-draft"
+main = "workers/rate-limiter.js"
+compatibility_date = "2024-09-11"
+workers_dev = false

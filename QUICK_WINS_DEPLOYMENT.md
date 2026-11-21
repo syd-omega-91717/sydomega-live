@@ -40,9 +40,9 @@ This document tracks four quick-win workstreams, their verified implementation s
 **Status as of 2026-11-21:** NOT ACTIVE. Do not represent this Worker as deployed DDoS protection or as a general API rate limiter.
 
 **Repository evidence:**
-- `workers/rate-limiter.js` exists, but no dedicated Worker deployment workflow is present in the 48-workflow inventory. The Cloudflare Pages workflow deploys the static Pages artifact; it does not deploy this Worker.
-- `wrangler.toml` still contains a placeholder zone ID and a non-provider KV namespace identifier.
-- The Durable Object binding names a `RateLimiter` class, but the Worker source does not export that class.
+- `workers/rate-limiter.js` is an unreleased draft; no dedicated Worker deployment workflow exists. The Cloudflare Pages workflow deploys only the static Pages artifact.
+- The root `wrangler.toml` was removed so a default `wrangler deploy` cannot accidentally apply the incomplete production route/bindings. `wrangler.example.toml` is deliberately route-free and binding-free.
+- The draft Worker still has no exported `RateLimiter` Durable Object class, non-atomic KV counters, and an unverified JWT-sub identity. These are implementation blockers, not deployment configuration tasks.
 - The KV read/modify/write counter is not atomic under concurrent requests; the burst counter is also a KV read/modify/write operation.
 - The member limiter derives a JWT `sub` by decoding the token payload without verifying its signature. That value must not be treated as an authenticated member identity.
 - The route is configured for `sydomega.com/*`, while the Worker only checks `/api/*` and `/.supabase/*`. Browser requests sent directly to the Supabase project hostname are outside this Worker route.
@@ -148,12 +148,13 @@ Do not deploy the current Worker unchanged.
 - [x] CI pipeline includes all three checks
 
 ### Phase 2: Cloudflare Rate Limiting ⏳
-- [ ] Wrangler CLI installed
-- [ ] Cloudflare account authenticated
-- [ ] Zone ID configured in wrangler.toml
-- [ ] KV namespace created
-- [ ] Worker deployed
-- [ ] Rate limiting headers appear in responses
+- [ ] Select the actual protected API routes and whether Supabase-host traffic requires provider-side controls
+- [ ] Replace the draft KV counters with an atomic, concurrency-safe design
+- [ ] Verify member identity cryptographically through Supabase Auth or another trusted verifier
+- [ ] Implement or remove the unused Durable Object binding
+- [ ] Provision real Cloudflare resources and protected deployment secrets
+- [ ] Add a dedicated, approval-gated Worker deployment and rollback workflow
+- [ ] Verify the exact deployed version, route coverage, 429 responses, Retry-After, and concurrency behavior
 
 ### Phase 3: Monitoring and Performance Metrics — PARTIAL
 - [x] Web Vitals capture runs through omega-metrics.js
@@ -218,10 +219,7 @@ python scripts/validate-monitoring.py
 ```
 
 ### Cloudflare Rate Limiting
-If rate limiting isn't working:
-- Verify worker is deployed: `wrangler tail`
-- Check KV namespace exists: `wrangler kv:namespace list`
-- Test with curl: `curl -I https://sydomega.com/api/health -H "X-Forwarded-For: 1.2.3.4"`
+Rate limiting is **not deployed**. Do not run `wrangler tail`, provision resources, or interpret a test endpoint as evidence of protection. First complete the seven required design/implementation steps in Section 2, then deploy only through an approved Worker release workflow.
 
 ### Monitoring Configuration
 If alerts aren't firing:
@@ -241,7 +239,7 @@ If issues aren't being created:
 
 - **CI Pipeline:** `.github/workflows/ci.yml`, `.github/workflows/schema-tracking.yml`
 - **Monitoring:** `monitoring-config.json`, `scripts/validate-monitoring.py`
-- **Rate Limiting:** `workers/rate-limiter.js`, `wrangler.toml`
+- **Rate Limiting (unreleased draft):** `workers/rate-limiter.js`, `wrangler.example.toml`
 - **Production deployment:** `vercel.json`, `scripts/vercel-build.sh`
 
 For questions or issues, refer to `CLAUDE.md` §8–§9 for architectural context and known debt.

@@ -1,0 +1,9 @@
+### The map's core is the real 3-D radiant signet (stage 3/4: checklist item a) (2026-11-21)
+
+**Why.** The plan's §9 checklist item (a) asks for one luminous gold Ω at the centre. #1476's core was a CSS stand-in (a disc with rays and a halo). `omega-sculpture.js` already has the real mark, extruded geometry on the vendored three.js with a `radiant` mode (emissive gold, halo, rays, seeded embers), and it mounts any `[data-omega-sculpture]` node added after load through its own `MutationObserver`.
+
+**Fix.** `omega-one-shell.js` builds a `data-omega-sculpture="signet" data-sculpt-glow="radiant"` mount inside the core. The shell does not touch WebGL (`audit-webgl-ownership` still passes). The CSS Ω steps aside only once the module's canvas exists; if the module never arrives, the CSS mark stays. The shell loads the module only if the page has not, under `bg.js`'s own guard attribute `data-omega-sculpture-js` (one module, one guard identity, CLAUDE.md 8.1 class 5). The 3-D mount is hidden at ≤700 px, where the CSS Ω is kept. A defect found by rendering: the module writes an inline `position:relative` when none is set, which beat the class and drew the mark off-centre, so the shell sets `position:absolute` inline first.
+
+**Verified.** Rendered in headless Chromium at 1440×900: the extruded gold Ω is centred on the core with the module's rays and embers. The browser checks added to `scripts/shell-check.js` (live signet, painted gold pixels on a transparent ground, no WebGL, module blocked, reduced motion, phone) are written but **not yet seen passing**: results to be recorded here.
+
+**Not done / not verified.** Frame cost on a real GPU is unmeasured (the module reports its own `frameMs` from a software rasteriser). The 3-D matrix cube (checklist e) is not built. No pixel comparison to the reference boards.

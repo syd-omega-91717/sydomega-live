@@ -1,4 +1,4 @@
-"""Tab buttons that did nothing, and a front door that opened on a wall of platform metrics (2026-11-02).
+"""Tab behavior contract: Genesis is the canonical landing; Today remains the member's daily surface (2026-11-22).
 
 Two separate failures sat under every `data-tab-action` button:
 
@@ -9,8 +9,9 @@ Two separate failures sat under every `data-tab-action` button:
   2. achievements.html wraps its whole script in an IIFE, so its `switchTab` was private and the handler
      (which calls window.switchTab) could not reach it even once the listener existed.
 
-The dashboard also now opens on TODAY (the member's loop) and not on OVERVIEW (platform metrics). These are source
-contracts; the behaviour was verified by clicking every tab on all four pages in a real browser.
+The dashboard now opens on GENESIS / COMMAND. TODAY remains a separate, explicit tab and its ecosystem surface, daily loop,
+and concierge remain intact. Existing tab hashes continue to select their original panels. These are source contracts; the
+tab interaction contract is additionally exercised by the dashboard keyboard-navigation implementation.
 """
 import json
 import pathlib
@@ -61,31 +62,39 @@ class EveryTabPageReachesItsHandler(unittest.TestCase):
         self.assertLess(s.index("function switchTab(id,btn)"), s.index("window.switchTab=switchTab;"))
 
 
-class DashboardOpensOnToday(unittest.TestCase):
+class DashboardOpensOnGenesis(unittest.TestCase):
     HTML = read("dashboard.html")
 
-    def test_today_is_the_first_tab_and_the_active_one(self):
-        tabs = re.findall(r'<button class="ltab( active)?"[^>]*data-tab-action="([a-z]+)"', self.HTML)
-        self.assertEqual([t[1] for t in tabs][:2], ["today", "overview"])
-        self.assertEqual([t[1] for t in tabs if t[0]], ["today"], "exactly one tab starts active, and it is TODAY")
+    def test_genesis_is_the_first_tab_and_the_active_one(self):
+        tabs = re.findall(r'<button\\b[^>]*class="ltab( active)?"[^>]*data-tab-action="([a-z]+)"', self.HTML)
+        self.assertEqual([t[1] for t in tabs][:2], ["genesis", "today"])
+        self.assertEqual([t[1] for t in tabs if t[0]], ["genesis"], "exactly one tab starts active, and it is GENESIS")
 
     def test_the_panels_start_in_the_same_state(self):
-        self.assertIn('<div id="l-today" class="layer-panel active">', self.HTML)
+        self.assertIn('<div id="l-genesis" class="layer-panel active"', self.HTML)
+        self.assertIn('<div id="l-today" class="layer-panel">', self.HTML)
         self.assertIn('<div id="l-overview" class="layer-panel">', self.HTML)
 
+    def test_genesis_tab_has_an_accessible_tabpanel_relationship(self):
+        self.assertIn('id="tab-genesis"', self.HTML)
+        self.assertIn('aria-controls="l-genesis"', self.HTML)
+        self.assertIn('aria-labelledby="tab-genesis"', self.HTML)
+        for key in ("ArrowLeft", "ArrowRight", "Home", "End"):
+            self.assertIn(key, self.HTML)
+
     def test_setTab_maps_tabs_in_dom_order(self):
-        order = re.findall(r'<button class="ltab[^"]*"[^>]*data-tab-action="([a-z]+)"', self.HTML)
-        m = re.search(r"var tabs=\[([^\]]*)\];", self.HTML)
+        order = re.findall(r'<button\\b[^>]*class="ltab[^"]*"[^>]*data-tab-action="([a-z]+)"', self.HTML)
+        m = re.search(r"var tabs=\\[([^\\]]*)\\];", self.HTML)
         self.assertEqual(re.findall(r"'([a-z]+)'", m.group(1)), order, "setTab() indexes .ltab by position")
 
-    def test_a_deep_link_still_wins_and_the_default_is_today(self):
-        self.assertIn("setTab(m[h]||'today')", self.HTML)
+    def test_legacy_tab_deep_links_still_win_and_default_is_genesis(self):
+        self.assertIn("var m={genesis:'genesis',overview:'overview',today:'today',personal:'personal',platform:'platform',science:'science'}", self.HTML)
+        self.assertIn("setTab(m[h]||'genesis')", self.HTML)
 
     def test_the_health_bar_placeholder_asserts_no_number(self):
         # omega-realtime.js replaces it with the real success ratio or an empty track; the markup must not flash 87%
         self.assertNotIn('id="omega-health-bar" style="width:87%', self.HTML)
         self.assertIn('id="omega-health-bar" style="width:100%;background:var(--line', self.HTML)
-
 
 class NoCountsInHeadings(unittest.TestCase):
     """AGENTS.md 4.7: never assert a number in copy. 'PLATFORM COMMAND INDEX . 14 SECTIONS' was already wrong (15)."""
@@ -109,14 +118,13 @@ class NoCountsInHeadings(unittest.TestCase):
             self.assertTrue(json.loads(pack.read_text(encoding="utf-8")).get("tab_today"), pack.name)
 
 
-class TodayOpensOnTheEcosystemSurface(unittest.TestCase):
-    """History, so the next reader does not undo either decision. Until 2026-11-16 the Daily Three sat ABOVE the tabs and this class pinned that nothing tall
-    preceded it: a 220px signet hero had pushed the member's own loop to y=509 (measured), so the hero was moved to OVERVIEW. The owner's reference design
-    (assets/concept/reel-01.jpg: agents on the left, a cinematic hero, the twelve franchises, an overview, the member's standing, a right rail with profile,
-    wallet, news and ascension) opens on ONE composed surface, and the owner directed that it be built as the home. So TODAY now opens on that surface, and the
-    Daily Three and the concierge sit directly under it inside TODAY, with a link to them in the hero. The trade-off is real and chosen: the member's loop now
-    starts below the surface instead of at the top. What stays pinned: the OVERVIEW backdrop is still the only plain signet, the surface is where the glowing one is,
-    and the loop is still on the page, still on TODAY, and still one click from the hero."""
+class TodayTabRetainsTheEcosystemSurface(unittest.TestCase):
+    """The composed ecosystem surface remains in TODAY even though GENESIS is now the canonical landing tab.
+    Until 2026-11-16 the Daily Three sat ABOVE the tabs and a 220px signet hero pushed the member's loop to y=509;
+    the hero was moved to OVERVIEW. The owner's reference design (agents, cinematic hero, franchises, member standing,
+    profile, wallet, news and ascension) remains one composed TODAY surface. The daily loop and concierge remain directly
+    beneath it, with the existing one-click link. GENESIS adds a governed command directory without deleting that daily
+    workflow. The OVERVIEW backdrop remains the only plain signet and the TODAY surface retains the glowing signet."""
     HTML = read("dashboard.html")
 
     def today(self):

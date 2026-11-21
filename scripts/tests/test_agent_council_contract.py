@@ -107,7 +107,7 @@ class AgentCouncilContractTests(unittest.TestCase):
         for page in (self.network, self.pantheons, self.operations_page):
             self.assertIn('omega-agent-embed-style', page)
             self.assertIn('<script src="/omega-agent-embed.js" defer></script>', page)
-        self.assertIn('get("embed")==="1"', read('omega-agent-embed.js'))
+        self.assertIn("get('embed') === '1'", read('omega-agent-embed.js'))
         self.assertIn("location.replace('/account.html')", self.pantheons)
         self.assertIn("pr.is_owner", self.pantheons)
         self.assertIn("pr.access_approved", self.pantheons)

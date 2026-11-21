@@ -79,17 +79,17 @@
     <div id="tab-portfolio" class="tab-panel act">
       <div class="portfolio-banner">
         <div class="pb-row">
-          <div><div class="pb-label">PORTFOLIO VALUE</div><div class="pb-val" id="port-val">$0</div></div>
-          <div><div class="pb-label">TOTAL COST BASIS</div><div class="pb-val" style="font-size:20px;color:#888" id="port-cost">$0</div></div>
-          <div><div class="pb-label">TOTAL GAIN/LOSS</div><div class="pb-change" id="port-pnl">$0</div></div>
-          <div><div class="pb-label">RETURN</div><div class="pb-change" id="port-ret">0%</div></div>
+          <div><div class="pb-label">PORTFOLIO VALUE</div><div class="pb-val" id="port-val">—</div></div>
+          <div><div class="pb-label">TOTAL COST BASIS</div><div class="pb-val" style="font-size:20px;color:#888" id="port-cost">—</div></div>
+          <div><div class="pb-label">TOTAL GAIN/LOSS</div><div class="pb-change" id="port-pnl">—</div></div>
+          <div><div class="pb-label">RETURN</div><div class="pb-change" id="port-ret">—</div></div>
         </div>
       </div>
       <div class="stats-row" data-omega-empty-guide="No holdings recorded yet." data-omega-empty-cta="Add your first holding" data-omega-empty-go=".tab-btn[data-tab='add']" data-omega-empty-focus="#tab-add">
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-holdings">0</div><div class="stat-lbl">HOLDINGS</div></div>
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-winners">0</div><div class="stat-lbl">WINNERS</div></div>
         <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-losers">0</div><div class="stat-lbl">LOSERS</div></div>
-        <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-cash">$0</div><div class="stat-lbl">CASH</div></div>
+        <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-cash">—</div><div class="stat-lbl">CASH</div></div>
       </div>
       <div class="filter-row">
         <div class="filter-tag active" data-t="all" onclick="setTypeFilter('all',this)">ALL</div>
@@ -213,6 +213,19 @@ function calcPortfolio(){
 
 function renderPortfolio(){
   var p=calcPortfolio();
+  document.getElementById('stat-holdings').textContent=holdings.length;
+  document.getElementById('stat-winners').textContent=holdings.filter(function(h){return h.price>=h.cost;}).length;
+  document.getElementById('stat-losers').textContent=holdings.filter(function(h){return h.price<h.cost;}).length;
+  var cash=holdings.filter(function(h){return h.type==='other'&&String(h.ticker||'').toLowerCase().includes('cash');});
+  if(!holdings.length){
+    document.getElementById('port-val').textContent='—';
+    document.getElementById('port-cost').textContent='—';
+    document.getElementById('port-pnl').textContent='—';
+    document.getElementById('port-ret').textContent='—';
+    document.getElementById('stat-cash').textContent='—';
+    renderHoldings();
+    return;
+  }
   document.getElementById('port-val').textContent=fmt(p.val);
   document.getElementById('port-cost').textContent=fmt(p.cost);
   var pnlEl=document.getElementById('port-pnl');
@@ -221,14 +234,9 @@ function renderPortfolio(){
   var retEl=document.getElementById('port-ret');
   retEl.textContent=fmtPct(p.ret);
   retEl.style.color=p.ret>=0?'#4CAF50':'#FF4444';
-  document.getElementById('stat-holdings').textContent=holdings.length;
-  document.getElementById('stat-winners').textContent=holdings.filter(function(h){return h.price>=h.cost;}).length;
-  document.getElementById('stat-losers').textContent=holdings.filter(function(h){return h.price<h.cost;}).length;
-  var cash=holdings.filter(function(h){return h.type==='other'&&h.ticker.toLowerCase().includes('cash');});
-  document.getElementById('stat-cash').textContent=fmt(cash.reduce(function(s,h){return s+h.qty*h.price;},0));
+  document.getElementById('stat-cash').textContent=cash.length?fmt(cash.reduce(function(s,h){return s+h.qty*h.price;},0)):'—';
   renderHoldings();
 }
-
 function renderHoldings(){
   var list=document.getElementById('holdings-list');
   var filtered=typeFilter==='all'?holdings:holdings.filter(function(h){return h.type===typeFilter;});

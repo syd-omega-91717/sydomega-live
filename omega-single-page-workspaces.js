@@ -39,6 +39,15 @@
     '/govern.html':'governance roadmap ecosystem knowledge knowledge-loom maintenance control-center platform-kernel agent-operations ops architecture autonomous-insights lab design-system design-showcase design-lab',
     '/achieve.html':'achievements leaderboard domain-mastery gates grades levels phases ascension kings triads grid hercules trophies'
   };
+  /* Published for the one-shell router (omega-one-shell.js): the hub -> pages map and the pages already enabled as tabs, read
+     from here so the shell never keeps a second copy of them. Copies, so a caller cannot edit the tables this file uses. */
+  (function(){
+    var hubs={},panels={};
+    Object.keys(WORKSPACES).forEach(function(h){hubs[h]=WORKSPACES[h].slice();});
+    Object.keys(PANELS).forEach(function(h){panels[h]=PANELS[h];});
+    window.OmegaWorkspaces={hubs:hubs,panels:panels,label:label};
+    try{document.dispatchEvent(new CustomEvent('omega:workspaces-ready'));}catch(e){}
+  })();
   var modules=WORKSPACES[location.pathname]||[];
   if(!modules.length)return;
 

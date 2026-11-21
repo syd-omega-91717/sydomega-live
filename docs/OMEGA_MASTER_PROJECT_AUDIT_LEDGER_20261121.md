@@ -283,7 +283,7 @@ The advisor also reports three INFO findings for RLS-enabled tables without poli
 
 ### Newly identified Vault display defect
 
-The deployed Vault source used `points_earned || 0.001` when rendering a task-completion row. That fallback fabricated a value when the stored record did not contain one. A correction is open in [PR #1497](https://github.com/syd-omega-91717/sydomega-live/pull/1497); it removes the fallback, narrows the query, handles query errors as `UNAVAILABLE`, and renders database values through DOM text nodes. PR #1497 must pass all checks, merge, and deploy before the fix is considered live.
+The deployed Vault source used `points_earned || 0.001` when rendering a task-completion row. That fallback fabricated a value when the stored record did not contain one. The core correction merged in [PR #1497](https://github.com/syd-omega-91717/sydomega-live/pull/1497) as commit `84b4d48f84564afaef81f9d5740c8bbdbfaa7977`. The Cloudflare exact-release verification confirmed that both production domains serve that commit, and the 242-page / 387-reference smoke passed with no failures. The fix removes the synthetic fallback, narrows the query, handles query errors as `UNAVAILABLE`, and renders database values through DOM text nodes. A follow-up in [PR #1499](https://github.com/syd-omega-91717/sydomega-live/pull/1499) corrects the 40-row window labels and all seven supported locales; that follow-up is not yet merged or live.
 
 ### Page and hub completeness remains open
 
@@ -295,7 +295,7 @@ The deployed Vault source used `points_earned || 0.001` when rendering a task-co
 
 ### Immediate sequence
 
-1. Complete PR #1497 safely and verify the Vault correction on Cloudflare production.
+1. Core Vault truth-boundary correction merged and production-verified as `84b4d48`; finish the follow-up labels/translations in PR #1499 and verify after deployment.
 2. Review and explicitly approve the RLS remediation for `omega_private.stripe_refund_state`; test the trusted refund RPC after any change.
 3. Run the protected leaked-password workflow with the required environment approval and verify the live Auth setting.
 4. Finish the 242-page semantic ownership, authorization, accessibility, responsive, and failure-state reviews; do not bulk-promote bootstrap evidence to authoritative contracts.

@@ -69,6 +69,17 @@
   }
 
   /* ---- fetch + parse ---------------------------------------------------- */
+  /* The only URLs the engine will load or link to: same-origin http(s) paths. OmegaPanels.open(url, host) is public,
+     so the URL is a caller's, and it ends up in an href (a javascript: or data: URL there would run on click).
+     Returns the path+query to use, or null to refuse. */
+  function localPath(src) {
+    try {
+      var u = new URL(String(src), location.href);
+      if ((u.protocol !== 'http:' && u.protocol !== 'https:') || u.origin !== location.origin) return null;
+      return u.pathname + u.search;
+    } catch (e) { return null; }
+  }
+
   function fetchDoc(src) {
     if (docCache[src]) return Promise.resolve(docCache[src]);
     return fetch(src, { credentials: 'same-origin' }).then(function (r) {
@@ -386,13 +397,19 @@
       if (active) teardown(active.panel);
       active = null;
       stage.textContent = '';
+      var src = localPath(o.src);
+      if (!src) {
+        console.warn('[omega-panels] refused a source that is not a same-origin path:', o.key);
+        stage.appendChild(el('div', 'op-msg', 'This tool could not load here.'));
+        return Promise.resolve();
+      }
       if (hooks.opening) hooks.opening(o.key);
       var panel = { intervals: [], timers: [], raf: [], listeners: [], styles: [], exports: [], saved: {}, ready: [], dead: false };
       active = { key: o.key, panel: panel };
       stage.setAttribute('aria-busy', 'true');
       stage.appendChild(el('div', 'op-msg', 'Loading ' + o.label + '\u2026'));
 
-      return fetchDoc(o.src).then(function (doc) {
+      return fetchDoc(src).then(function (doc) {
         if (my !== token) return;
         /* The page's own wrapper is what its scripts look up (getElementById('app')), so it is kept, with
            its id and class, around the copied children. Without one, <main> is the content. A page with none of
@@ -402,7 +419,7 @@
         stage.textContent = '';
         var top = el('div', 'op-bar');
         var full = el('a', 'op-open', 'OPEN FULL PAGE \u2197');
-        full.href = o.src;
+        full.href = src;
         top.appendChild(full);
         stage.appendChild(top);
         var ser = new XMLSerializer();
@@ -439,7 +456,7 @@
           document.head.appendChild(c);
           panel.styles.push(c);
         });
-        return runScripts(doc, o.src, markup, panel).then(function () {
+        return runScripts(doc, src, markup, panel).then(function () {
           if (my !== token) return;
           var ready = panel.ready.slice();
           panel.ready.length = 0;
@@ -458,7 +475,7 @@
         stage.removeAttribute('aria-busy');
         var m = el('div', 'op-msg', 'This tool could not load here. ');
         var a = el('a', 'op-open', 'OPEN ' + o.label + ' ON ITS OWN PAGE \u2197');
-        a.href = o.src;
+        a.href = src;
         m.appendChild(a);
         stage.appendChild(m);
         console.warn('[omega-panels]', o.key, err);

@@ -67,6 +67,15 @@ class PanelOpenApiTests(unittest.TestCase):
         body = function_body("view")
         self.assertGreaterEqual(body.count("teardown(active.panel)"), 2)
 
+    def test_the_source_url_is_validated_before_any_use(self):
+        """OmegaPanels.open(url, host) is public, so the URL reaches an href: only same-origin http(s) paths pass."""
+        body = function_body("view")
+        self.assertIn("localPath(o.src)", body)
+        self.assertNotIn("o.src", body.replace("localPath(o.src)", ""), "after the guard only the validated `src` may be used")
+        helper = function_body("localPath")
+        self.assertIn("u.origin !== location.origin", helper)
+        self.assertIn("'http:'", helper)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -85,7 +85,7 @@
     {
       "id": "genesis-command",
       "title": "Ω Genesis / Command",
-      "canonical_path": "/command.html",
+      "canonical_path": "/dashboard.html",
       "destination_paths": [
         "/dashboard.html",
         "/command.html",

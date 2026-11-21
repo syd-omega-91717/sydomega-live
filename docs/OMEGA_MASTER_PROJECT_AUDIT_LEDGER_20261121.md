@@ -210,9 +210,25 @@ No legacy route is deleted or redirected as part of this reconciliation. Each ro
 4. Complete Agent Council browser/device regression against the deployed commit.
 5. Audit the Worker configuration and all 48 workflows for actual production responsibility.
 6. Reconcile the 141 loose SQL files and audit the 437 migration history/source parity.
-7. Complete the Genesis / Command hub with real capabilities, data, permissions, and evidence.
+7. Verify and deploy the Genesis / Command hub implementation; then continue the seven remaining proposed hubs with real capabilities, data, permissions, and evidence.
 8. Continue through the remaining eight hubs and the complete 18-module matrix.
 9. Complete payment, privacy, recovery, performance, accessibility, observability, and legal readiness evidence.
 10. Deploy only after all applicable checks pass; verify the exact production commit and critical user journeys.
 
 **Completion standard:** a coherent, secure, usable, evidence-backed production platform. This ledger records a verified production release, not a claim that the entire platform is finished or 10/10.
+
+## 11. Genesis / Command hub implementation update — 2026-11-22
+
+The canonical Genesis route remains `/dashboard.html`. A new dedicated Genesis workspace tab and route directory are now proposed in the implementation branch `feat/genesis-command-hub-20261122`.
+
+- The directory mirrors all 12 destination paths from `config/omega-sovereign-hubs.json`; an automated contract test enforces exact route-set equality.
+- It separates the canonical dashboard from the two retained legacy command entry routes and groups the remaining specialist routes into World, Global State, Evidence, Replay & Recovery, and Module Access.
+- Release identity is read from the same-origin release manifest. An invalid or missing manifest renders `UNAVAILABLE`.
+- Navigation is read-only. No provider credentials, database schema, RLS policies, service permissions, payment state, or agent execution authority are changed.
+- **Localization remains open:** the new Genesis route descriptions are English-only and have not yet been added to the six non-English packs. This must be completed and checked by `scripts/i18n-contract.py` before the hub is considered globally localized.
+- Existing dashboard tabs and hash routes are preserved; Genesis is a first-class tab while Today remains the default to preserve the established member loop; `#genesis` opens the command directory.
+- Keyboard tab navigation, focus visibility, responsive card layouts, and reduced-motion behavior are covered by source-level contract tests.
+
+**Release boundary:** the current main commit `c0be0e1f9344a8eea9a8924e74daf62fee0abb3e` is verified by the Cloudflare production release workflow on both `sydomega.com` and `www.sydomega.com`. The Genesis implementation branch is not yet merged or deployed. Interactive browser/device inspection remains outstanding.
+
+**Next action:** run all required CI and migration/security contracts on the Genesis PR head; merge only if green; then verify the exact production commit and test the Genesis tab, all 12 destinations, preserved legacy hashes, keyboard navigation, mobile layout, and release-manifest failure state.

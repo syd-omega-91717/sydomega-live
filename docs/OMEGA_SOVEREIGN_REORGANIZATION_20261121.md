@@ -160,6 +160,7 @@ Likewise, financial allocation, token issuance, custody, investment execution, m
 - Both Agent Council and Network views now fail closed when the canonical roster is unavailable; stale duplicate fallback identities are no longer rendered.
 - Every subordinate position is displayed as `UNASSIGNED`; no names, capabilities, permissions, or live status are fabricated.
 - Network, Pantheons, and Operations remain reachable from the Agent Council navigation; existing URLs are preserved.
+- Network, Pantheons, and Operations are now first-class lazy-loaded panels in the Agent Council workspace. Each existing page supports an embedded presentation mode, while its standalone route and original feature implementation remain intact.
 - `agent-network.html` no longer labels every agent active or fabricates authority/last-activity values; it identifies the visualization as illustrative.
 - `omega-agent-operations.js` now loads its selectable primary roster from `omega-agents.json`; the Edge Function's server-side tool allowlist remains authoritative.
 - CI and browser/device regression results are pending for the implementation branch; this record does not claim a pass or production deployment.

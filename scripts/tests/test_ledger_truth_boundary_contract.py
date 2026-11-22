@@ -35,7 +35,8 @@ class LedgerTruthBoundaryContract(unittest.TestCase):
         self.assertIn("const axes = raw.map(Number);", RUNTIME)
         self.assertNotIn("profile.axis_a || 0.001", RUNTIME)
         self.assertNotIn("profile.matrix_track || 1", RUNTIME)
-        self.assertIn("data.truth = 'CALCULATED'", RUNTIME)
+        self.assertIn("authValue.dataset.truth = 'CALCULATED'", RUNTIME)
+        self.assertIn("nodeValue.dataset.truth = 'CALCULATED'", RUNTIME)
 
 
 if __name__ == "__main__":

@@ -14,10 +14,10 @@
     "are applied live: it is dated evidence, not a target. The query that",
     "produced it is in supabase/live-schema.README.md."
   ],
-  "_captured": "2026-11-16",
+  "_captured": "2026-11-22",
   "_project": "ydqhzvvoyufiiqvzcjns",
   "_relkinds": "r,v,m,p (tables, views, materialized views, partitioned tables)",
-  "_table_count": 295,
+  "_table_count": 297,
   "tables": {
     "public.news": [
       "id",
@@ -3384,6 +3384,43 @@
       "verification_status",
       "provider_block_number",
       "proof",
+      "created_at"
+    ],
+    "public.omega_financial_scenarios": [
+      "id",
+      "user_id",
+      "name",
+      "currency_code",
+      "starting_members",
+      "new_members_per_month",
+      "churn_pct",
+      "monthly_price",
+      "refund_pct",
+      "tax_pct",
+      "processing_fee_pct",
+      "processing_fixed_fee",
+      "operating_cost_monthly",
+      "horizon_months",
+      "version",
+      "created_at",
+      "updated_at"
+    ],
+    "public.omega_financial_simulation_runs": [
+      "id",
+      "scenario_id",
+      "user_id",
+      "scenario_name",
+      "scenario_version",
+      "formula_version",
+      "currency_code",
+      "assumptions",
+      "results",
+      "total_gross_billings",
+      "total_refunds",
+      "total_tax_estimate",
+      "total_processing_fee_estimate",
+      "total_operating_costs",
+      "total_net_operating_cash_estimate",
       "created_at"
     ]
   }

@@ -5,7 +5,7 @@
 <!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>&#937; SYD OMEGA 91717 &mdash; Blockchain</title>
-<meta name="description" content="The sovereign blockchain economy — 12 element tokens, NFT lines, and the Omega Token lattice."/>
+<meta name="description" content="Planned design of the Omega Token economy: 12 element tokens and 12 NFT lines. Not live; no token or NFT exists today."/>
 <meta name="theme-color" content="#C9A84C"/>
 <style>
 .token-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
@@ -39,7 +39,7 @@
 <aside id="omega-side" data-page="blockchain"></aside>
 <div class="page-shell" id="app" style="display:none">
 <header class="topbar">
-  <div class="topbar-title">BLOCKCHAIN<span class="topbar-sub">OMEGA TOKEN ECONOMY &middot; NFT LINES &middot; SOVEREIGN LEDGER</span></div>
+  <div class="topbar-title">BLOCKCHAIN<span class="topbar-sub">PLANNED OMEGA TOKEN DESIGN &middot; NOT LIVE &middot; NO TOKEN OR NFT EXISTS</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
 </header>
 <div class="tab-bar">
@@ -51,11 +51,12 @@
 
 <div class="tab-panel active" id="tab-tokens">
   <div id="sign-notice"></div>
-  <div class="sechead">12 ELEMENT TOKENS &mdash; SOVEREIGN ECONOMY</div>
+  <div class="glass" id="token-status" role="note" style="padding:10px 14px;margin:12px 0;color:var(--muted);font-family:var(--M);font-size:12px;letter-spacing:1px;line-height:1.6">DESIGN PREVIEW &middot; NOT LIVE. No Omega Token (&Omega;) or NFT exists, is issued, earned, held or traded today. Everything on this page describes the planned design. The token economy stays off behind <code>platform_settings.tokens_enabled</code> (currently false); no commission is charged, collected or owed.</div>
+  <div class="sechead">12 ELEMENT TOKENS &mdash; PLANNED DESIGN</div>
   <div class="stat-pills">
     <div class="stat-pill"><div class="sp-val">12</div><div class="sp-lbl">TOKENS</div></div>
-    <div class="stat-pill"><div class="sp-val">917.385B Ω</div><div class="sp-lbl">MAX SUPPLY</div></div>
-    <div class="stat-pill"><div class="sp-val">9.17%</div><div class="sp-lbl">COMMISSION</div></div>
+    <div class="stat-pill"><div class="sp-val">917.385B Ω</div><div class="sp-lbl">PLANNED MAX SUPPLY</div></div>
+    <div class="stat-pill"><div class="sp-val">9.17%</div><div class="sp-lbl">PLANNED COMMISSION</div></div>
     <div class="stat-pill"><div class="sp-val" id="pts-val">—</div><div class="sp-lbl">YOUR POINTS</div></div>
   </div>
   <div class="token-grid" id="token-grid"></div>
@@ -72,21 +73,21 @@
 </div>
 
 <div class="tab-panel" id="tab-workflow">
-  <div class="sechead">TOKEN WORKFLOW &mdash; EARN TO TRADE</div>
-  <div class="wf-step"><div class="wf-num">I</div><div><div class="wf-title">EARN</div><div class="wf-body">Complete tasks, modules, and milestones to earn Omega Token (Ω) rewards. Platform activity is the primary source of sovereign tokens.</div></div></div>
-  <div class="wf-step"><div class="wf-num">II</div><div><div class="wf-title">RESOLVE</div><div class="wf-body">Authority events resolve the weight of your token resonance. Higher authority across all three axes amplifies your token allocation weight.</div></div></div>
-  <div class="wf-step"><div class="wf-num">III</div><div><div class="wf-title">MINT</div><div class="wf-body">Sovereign NFTs are minted at gate thresholds and milestone events. Your sign element determines which NFT line you are eligible for.</div></div></div>
-  <div class="wf-step"><div class="wf-num">IV</div><div><div class="wf-title">HOLD</div><div class="wf-body">Tokens and NFTs held in your sovereign wallet contribute to your lattice standing. Long-term holding grants resonance weight bonuses.</div></div></div>
-  <div class="wf-step"><div class="wf-num">V</div><div><div class="wf-title">TRADE</div><div class="wf-body">The sovereign marketplace enables peer-to-peer exchange of tokens and NFTs. Trades are intended to carry a 9.17% sovereign commission rate. The &#937; token economy is dormant &mdash; it stays off behind <code>platform_settings.tokens_enabled</code> (currently false), so no commission is charged, collected or owed today.</div></div></div>
+  <div class="sechead">PLANNED TOKEN WORKFLOW &mdash; NOT ACTIVE</div>
+  <div class="wf-step"><div class="wf-num">I</div><div><div class="wf-title">EARN</div><div class="wf-body">Planned: completing tasks, modules and milestones would earn Omega Token (Ω) rewards. Nothing is earned today.</div></div></div>
+  <div class="wf-step"><div class="wf-num">II</div><div><div class="wf-title">RESOLVE</div><div class="wf-body">Planned: authority events would resolve the weight of your token resonance, with higher authority across all three axes raising your allocation weight. No weight is calculated today.</div></div></div>
+  <div class="wf-step"><div class="wf-num">III</div><div><div class="wf-title">MINT</div><div class="wf-body">Planned: sovereign NFTs would be minted at gate thresholds and milestone events, with your sign element determining the line you are eligible for. No NFT has been minted.</div></div></div>
+  <div class="wf-step"><div class="wf-num">IV</div><div><div class="wf-title">HOLD</div><div class="wf-body">Planned: tokens and NFTs held in your sovereign wallet would contribute to your lattice standing, with long-term holding earning resonance weight bonuses. No token or NFT is held today.</div></div></div>
+  <div class="wf-step"><div class="wf-num">V</div><div><div class="wf-title">TRADE</div><div class="wf-body">Planned: the sovereign marketplace would enable peer-to-peer exchange of tokens and NFTs. Trades are intended to carry a 9.17% sovereign commission rate. The &#937; token economy is dormant &mdash; it stays off behind <code>platform_settings.tokens_enabled</code> (currently false), so no commission is charged, collected or owed today.</div></div></div>
 </div>
 
 <div class="tab-panel" id="tab-science">
   <div class="sechead">BLOCKCHAIN ARCHITECTURE</div>
   <div class="card-grid" data-stagger data-stagger-gap="60">
-    <div class="card" data-reveal="fade-up"><div class="card-title">OMEGA TOKEN (Ω)</div><div class="card-body">The Omega Token is the native utility currency of the SYD OMEGA 91717 platform. Max supply: 917.385B Ω. Tokens are earned through platform participation and denominate all internal platform rewards and commissions.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">12 ELEMENT TOKENS</div><div class="card-body">Each zodiac sign maps to one of the 12 element tokens. Resonance weight (1–9) determines token allocation per sign. The 9.17% sovereign commission applies to all marketplace transactions.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">NFT SOVEREIGN LINES</div><div class="card-body">12 NFT lines with 729 editions each (total 8,748). Lines map to the 12 gate phases: Sigils, Gate Seals, Certificates, Trophies, Medals, King Crowns, Faction Banners, Triad Glyphs, Reliquaries, Passports, Pantheon Icons, Omega Marks.</div></div>
-    <div class="card" data-reveal="fade-up"><div class="card-title">LATTICE ECONOMY</div><div class="card-body">The full token economy maps across the 12×12×9×9×9 lattice (104,976 nodes). Each node is a potential anchor point for sovereign assets. Token and NFT values are anchored to authority score and lattice position.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">OMEGA TOKEN (Ω)</div><div class="card-body">Planned: the Omega Token would be the native utility currency of the SYD OMEGA 91717 platform, with a planned max supply of 917.385B Ω, earned through platform participation and denominating internal rewards and commissions. It does not exist yet.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">12 ELEMENT TOKENS</div><div class="card-body">Each zodiac sign is mapped to one of the 12 planned element tokens, with a resonance weight (1–9) that would set token allocation per sign. The planned 9.17% sovereign commission would apply to marketplace transactions once the economy is enabled; none is charged today.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">NFT SOVEREIGN LINES</div><div class="card-body">The design has 12 NFT lines of 729 editions each (planned total 8,748; none minted). Lines map to the 12 gate phases: Sigils, Gate Seals, Certificates, Trophies, Medals, King Crowns, Faction Banners, Triad Glyphs, Reliquaries, Passports, Pantheon Icons, Omega Marks.</div></div>
+    <div class="card" data-reveal="fade-up"><div class="card-title">LATTICE ECONOMY</div><div class="card-body">The planned token economy is designed around the 12×12×9×9×9 lattice (104,976 nodes), each node a potential anchor point for future sovereign assets. No token or NFT has a value today; any value would be tied to authority score and lattice position only after launch.</div></div>
   </div>
 </div>
 <div data-page-emblem="blockchain" style="margin:20px auto 0"></div>

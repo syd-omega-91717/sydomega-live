@@ -143,6 +143,8 @@ def build_inventory(root):
             publishers[name].update(regex.findall(source))
 
     hard_edges, advisory_edges, rows = [], [], []
+    identifier = re.compile(r"\b(?:Omega|omega)[A-Za-z0-9_$]+\b")
+    tokens_by_file = {name: set(identifier.findall(source)) for name, source in scripts.items()}
     for name, source in scripts.items():
         dependencies, globals_read = set(), set()
         for regex in IMPORT_PATTERNS:
@@ -154,10 +156,9 @@ def build_inventory(root):
         for owner, symbols in publishers.items():
             if owner == name:
                 continue
-            for symbol in symbols:
-                if re.search(r"\b" + re.escape(symbol) + r"\b", source):
-                    globals_read.add(symbol)
-                    advisory_edges.append({"from": owner, "to": name, "type": "global-symbol-reference", "symbol": symbol})
+            for symbol in symbols.intersection(tokens_by_file[name]):
+                globals_read.add(symbol)
+                advisory_edges.append({"from": owner, "to": name, "type": "global-symbol-reference", "symbol": symbol})
         effects = [label for label, regex in SIDE_EFFECTS if regex.search(source)]
         load_state = "entrypoint" if name == "bg.js" else bg_loads.get(name, "not-observed-in-bg")
         if dependencies:

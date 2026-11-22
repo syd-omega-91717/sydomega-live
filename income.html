@@ -116,7 +116,7 @@
       <article class="finance-card"><div class="k">Failed Stripe events</div><div class="v" id="failed-events">—</div><div class="hint">Provider events marked failed</div></article>
       <article class="finance-card"><div class="k">Tokens</div><div class="v" id="tokens-state">—</div><div class="hint">Issuance/transfer feature flag</div></article>
     </div>
-    <div class="finance-note warning">Gross settled receipts are not recognized accounting revenue. The current ledger does not separately net tax, processor fees, disputes, foreign exchange, reserves, payout timing or accrual adjustments. Other income channels and manual bank activity are outside this Stripe-only report.</div>
+    <div class="finance-note warning">Gross settled receipts are not recognized accounting revenue. This Stripe-only view does not separately net tax, processor fees, disputes, foreign exchange, reserves, recipient transfer timing or accrual adjustments. Other income channels and manual bank activity are outside this report. Creator payouts remain disabled while platform_settings.creator_earnings_enabled=false; this page does not initiate any funds transfer.</div>
     <div id="actuals-limitations" class="finance-foot"></div>
     <div class="finance-actions"><button type="button" data-omega-capability-id="finance-command" class="finance-button" id="refresh-actuals">REFRESH LIVE ACTUALS</button><span class="finance-foot">Owner authorization and AAL2 are enforced by the database function.</span></div>
   </section>
@@ -201,7 +201,7 @@
       <p class="finance-foot"><strong>Refund estimate:</strong> gross billings × assumed refund percentage.</p>
       <p class="finance-foot"><strong>Tax estimate:</strong> post-refund billings × user-entered tax assumption. This is not a jurisdictional tax calculation.</p>
       <p class="finance-foot"><strong>Processing estimate:</strong> gross billings × assumed percentage plus assumed fixed fee × paying members.</p>
-      <p class="finance-foot"><strong>Net operating cash estimate:</strong> gross billings − refund estimate − tax estimate − processing estimate − operating cost. It excludes chargebacks, discounts, failed collections, FX, reserves, payout delays, capex, payroll, financing and corporate tax.</p>
+      <p class="finance-foot"><strong>Net operating cash estimate:</strong> gross billings − refund estimate − tax estimate − processing estimate − operating cost. It excludes chargebacks, discounts, failed collections, FX, reserves, recipient transfer delays, capex, payroll, financing and corporate tax. It is not a recognized-revenue or disbursement forecast.</p>
     </div>
     <div class="finance-surface">
       <div class="finance-section-title">Recorded simulation runs</div>

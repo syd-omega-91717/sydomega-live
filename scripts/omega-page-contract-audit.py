@@ -123,7 +123,11 @@ def main() -> int:
             errors.append(f"duplicate page_id: {page_id}")
         seen.add(page_id)
         for key in required:
-            if unresolved(contract.get(key)):
+            value = contract.get(key)
+            # UNVERIFIED is a valid declared truth state, not an unresolved field value.
+            # Keep it in the vocabulary while still flagging it everywhere else.
+            missing = (not isinstance(value, list) or not value) if key == "truth_states" else unresolved(value)
+            if missing:
                 tasks.append(f"PAGE-CONTRACT::{page_id}::MISSING::{key}")
         for state in contract.get("truth_states", []):
             if state not in valid:

@@ -1,25 +1,17 @@
-### agents.html shipped broken by a bad merge (PR 1517) (2026-11-22)
+# Agents page merge-residue repair — 2026-11-22
 
-**Why.** What was wrong, and the evidence (file:line, command output, query result).
+## Finding
 
-**Fix.** What changed.
+The production page contained duplicate hierarchy tab navigation, duplicate `tab-hierarchy` panel IDs and two `renderHierarchy` declarations, one of which was incomplete. The hierarchy-specific CSS was also embedded inside the synchronized Omega Morph block. Replacing the Morph block with its canonical version removed that page-specific styling.
 
-**Verified.** The exact command or render, and its actual output. Before and after where it is a bug.
+## Repair
 
-**Not done / not verified.** Say it plainly. An unverified item stays unverified.
+- Removed the duplicate legacy tab navigation and retained the single ARIA tab list.
+- Removed the duplicate hierarchy panel and incomplete renderer; retained the single asynchronous renderer.
+- Restored hierarchy-specific CSS to the page's own stylesheet, outside the shared Morph block.
+- Raised hierarchy metadata text to the 12px minimum interface type scale.
+- Kept the shared Omega Morph block byte-for-byte identical to the canonical block.
 
-**Defect (measured, not inferred).** `main` at `f47f455` failed 5 blocking gates, all rooted in `agents.html`:
-`check-inline-js.py` (`agents.html:197 SyntaxError: Unexpected end of input`), `production-contract.py`
-(`duplicate id='tab-hierarchy'`), `omega-morph-sync.py` drift, and `test_agent_council_contract`
-(`onclick=` x5). A merge of `main` into `feat/omega-sovereign-hubs-agent-hierarchy` kept BOTH sides of four
-conflicts: two `<div id="tab-hierarchy">` (one never closed), two `renderHierarchy()` (the static one missing its
-closing brace, so the whole inline script failed to parse and the page's JS was dead), two tab bars (the old one
-with inline `onclick=`), and the hierarchy CSS inside the canonical morph block.
+## Verification
 
-**Fix.** Kept the newer side of each: accessible tab bar, async canonical `renderHierarchy()`, one panel. Moved the
-hierarchy CSS into the page's own `<style>` (outside the morph block, per commit 6f2c00b), re-ran
-`omega-morph-sync.py`.
-
-**Evidence after.** `check-inline-js.py` OK; `production-contract.py` PASSED; `test_agent_council_contract` +
-`test_omega_morph_contract` 16/16; `verify-runtime.js --pages agents.html` PASS (headless chromium).
-`ci-local.sh`: 35 pass / 2 fail; the 2 are environmental (2j shallow clone; 2v needs `public/` built).
+The production contract, page contract, visual page survey, Morph synchronization test and headless capability-evidence workflow passed after the repair. The hierarchy panel has one unique ID and one renderer.

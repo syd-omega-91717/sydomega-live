@@ -1,34 +1,34 @@
-# Advance Matrix live privilege verification — 2026-11-22
+# Advance Matrix live privilege verification and remediation — 2026-11-22
 
-## Finding
+## Finding before remediation
 
-The live Supabase database exposes two callable paths that can increment a member's matrix axes without an event-backed progression check:
+The live database contained two callable entry points:
 
-- `public.advance_matrix(integer,text)` is a SECURITY INVOKER wrapper.
-- `private.advance_matrix(integer,text)` is SECURITY DEFINER and owned by `postgres`.
+- `public.advance_matrix(integer,text)`: SECURITY INVOKER wrapper.
+- `private.advance_matrix(integer,text)`: SECURITY DEFINER implementation owned by `postgres`.
 
-Live privilege checks returned:
+Before remediation, `authenticated` could execute both functions and `service_role` could execute the public wrapper. The trigger on `public.matrix_progress` calls `public.award_points(NEW.user_id, 2, 'matrix_advance', ...)` when an axis increases. This allowed axis changes and point awards without a verified task, exam or other platform event.
 
-| Principal | Private schema USAGE | Public function EXECUTE | Private function EXECUTE |
-|---|---:|---:|---:|
-| anon | yes | no | no |
-| authenticated | yes | yes | yes |
-| service_role | no | yes | no |
-| postgres/function owner | owner | yes | yes |
+Before the fix, `matrix_progress` contained 0 rows and `automation_rules` contained 3 stored rows. No client RPC call, Edge Function caller or other SQL function caller was found. No live database function consumed `automation_rules`.
 
-The live `public.matrix_progress` table currently contains **0 rows**. This is evidence of no current progression data, not proof that the callable path is safe.
+## Applied remediation
 
-## Corrected remediation proposal
+Migration version `20261122105012`, provider name `20261122110000_close_advance_matrix_member_execution`, was applied to the live Supabase project. It revokes EXECUTE from `PUBLIC`, `anon`, `authenticated` and `service_role` on both entry points. The migration asserts the postcondition and preserves the `postgres` owner privilege. It changes privileges only and does not modify matrix rows or award points.
 
-The proposal at `docs/proposed-migrations/20261115230000_omega_close_advance_matrix.sql` now revokes EXECUTE from `PUBLIC`, `anon`, `authenticated`, and `service_role` on both the public wrapper and private SECURITY DEFINER function. The postgres migration owner retains control. A future server-side SECURITY DEFINER wrapper owned by postgres can call the private function if a verified event-based progression workflow is later designed.
+## Live post-apply verification
 
-The proposal remains deliberately outside `supabase/migrations/` and `supabase/pending-migrations.json`. **No live migration was applied.** The user/owner must approve moving this security change into the controlled migration path. Applying it will intentionally disable manual matrix progression until a genuine event-verified progression workflow exists.
+| Function | anon | authenticated | service_role | postgres |
+|---|---:|---:|---:|---:|
+| `public.advance_matrix(integer,text)` | denied | denied | denied | allowed |
+| `private.advance_matrix(integer,text)` | denied | denied | denied | allowed |
 
-## Required follow-up
+- Provider migration ledger: 441 applied versions; latest `20261122105012`.
+- `public.matrix_progress`: 0 rows.
+- `automation_rules`: 3 stored rows; no database function consumes this table.
+- Authenticated-callable public function snapshot: 145; `advance_matrix` is absent.
+- `config/omega-rpc-security-policy.json` no longer classifies `advance_matrix` as member-self.
+- No client, Edge Function or other SQL function caller was found.
 
-1. Owner approval for the two-function EXECUTE revocation.
-2. Add the approved SQL to the canonical migration path and migration history.
-3. Replay all migrations from zero.
-4. Apply through the protected production migration workflow.
-5. Verify live grants: authenticated/anon/service_role denied; postgres owner retained.
-6. Build and test an event-verified progression workflow before re-enabling any member-facing progression API.
+## Remaining feature work
+
+The security exposure is closed; the matrix progression feature is not live. A future implementation must require an authenticated actor, verified event/evidence ID, allowlisted track/axis mapping, idempotency, authorization, and a separately audited points award. Do not regrant direct API execution.

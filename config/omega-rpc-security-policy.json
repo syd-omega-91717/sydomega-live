@@ -42,7 +42,6 @@
     ],
     "member_self": [
       "academy_subscribe",
-      "advance_matrix",
       "check_trial_status",
       "claim_daily_points",
       "complete_task",

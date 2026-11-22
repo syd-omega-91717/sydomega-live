@@ -26,6 +26,8 @@ class FinancialTruthContract(unittest.TestCase):
         self.assertIn("LIVE_LEDGER", MIGRATION)
         self.assertIn("SIMULATED", MIGRATION)
         self.assertIn("omega_run_financial_scenario", PAGE)
+        self.assertEqual(PAGE.count('data-omega-capability-id="finance-command"'), 9)
+        self.assertIn("UNAVAILABLE", PAGE)
         self.assertIn("omega_financial_simulation_runs", PAGE)
         self.assertNotIn("localStorage", PAGE)
         self.assertIn("gross_settled", PAGE)
@@ -48,6 +50,12 @@ class FinancialTruthContract(unittest.TestCase):
         )
         self.assertIn("scenario_version", MIGRATION)
         self.assertIn("formula_version", MIGRATION)
+        self.assertIn("v_churned := least(", MIGRATION)
+        self.assertIn("v_gross := v_members::numeric * v_s.monthly_price", MIGRATION)
+        self.assertIn("v_refunds := v_gross * v_s.refund_pct / 100", MIGRATION)
+        self.assertIn("v_tax := greatest(0, v_gross - v_refunds)", MIGRATION)
+        self.assertIn("v_processing := v_gross * v_s.processing_fee_pct / 100", MIGRATION)
+        self.assertIn("v_net := v_gross - v_refunds - v_tax - v_processing - v_costs", MIGRATION)
 
     def test_privileged_functions_are_search_path_hardened_and_granted_narrowly(self):
         self.assertGreaterEqual(MIGRATION.lower().count("set search_path to ''"), 2)

@@ -413,18 +413,15 @@ async function saveScenario() {
   const payload = readScenarioForm();
   let result;
   if (state.scenarioId) {
-    result = await sb.from('omega_financial_scenarios')
-      .update(payload)
-      .eq('id', state.scenarioId)
-      .select('id,name,currency_code,starting_members,new_members_per_month,churn_pct,monthly_price,refund_pct,tax_pct,processing_fee_pct,processing_fixed_fee,operating_cost_monthly,horizon_months,version,updated_at')
-      .single();
+    result = await sb.from('omega_financial_scenarios').update(payload).eq('id', state.scenarioId).select('id,name,currency_code,starting_members,new_members_per_month,churn_pct,monthly_price,refund_pct,tax_pct,processing_fee_pct,processing_fixed_fee,operating_cost_monthly,horizon_months,version,updated_at').single();
+    if (result.error) throw result.error;
   } else {
     result = await sb.from('omega_financial_scenarios')
       .insert(payload)
       .select('id,name,currency_code,starting_members,new_members_per_month,churn_pct,monthly_price,refund_pct,tax_pct,processing_fee_pct,processing_fixed_fee,operating_cost_monthly,horizon_months,version,updated_at')
       .single();
+    if (result.error) throw result.error;
   }
-  if (result.error) throw result.error;
   fillScenario(result.data);
   await loadScenarios();
   $('scenario-select').value = result.data.id;

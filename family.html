@@ -508,7 +508,7 @@ function drawConstellation(mems){
 /* Module-local: the page's other esc() lives in a different module script. Names are free text. */
 function buildMemberCards(rows){
   const g=document.getElementById('member-grid');g.innerHTML='';
-  if(!rows.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-family:var(--M);font-size:12px;color:var(--muted)">No family nodes registered yet. Add your first bloodline node below.</div>';return;}
+  if(!rows.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;font-family:var(--M);font-size:12px;color:var(--muted)">No family records saved yet. Add a member-reported record below.</div>';return;}
   rows.forEach(m=>{
     const c=document.createElement('div');c.className='mc card'+(m.is_heir?' card-edge heir':'');if(m.is_heir)c.style.setProperty('--card-accent','var(--gold)');c.id='node-'+m.id;
     c.innerHTML='<div class="mc-rel">'+esc((m.relation||'FAMILY').toUpperCase())+'</div><div class="mc-name">'+esc(m.name)+'</div><div class="mc-sign">'+esc(m.sign||'SIGN NOT SET')+'</div><div class="mc-actions"><button class="mc-btn mc-heir-btn">'+((m.is_heir?'REMOVE SUCCESSOR LABEL':'MARK SUCCESSOR LABEL'))+'</button><button class="mc-btn mc-del">REMOVE</button></div>';
@@ -719,7 +719,7 @@ async function buildTimeline(){
   tl.innerHTML='';
   var stored=[];
   try{
-    var r = await sb.from('heritage_records').select('title,body,era,category,created_at').order('created_at',{ascending:true}); if(r.error)throw r.error;
+    var r = await sb.from('heritage_records').select('title,body,era,category,created_at').eq('user_id',uid).order('created_at',{ascending:true}); if(r.error)throw r.error;
     stored = (r.data||[]).map(function(x){return {title:x.title,body:x.body,era:x.era,category:x.category,ts:x.created_at};});
   }catch(e){console.warn('[Omega Family] heritage records unavailable:',e);}
 
@@ -735,7 +735,7 @@ async function buildTimeline(){
     node.innerHTML=
       '<div class="tl-card card">'+
       '<div class="tl-era" style="color:'+era.color+'">'+era.glyph+' &nbsp;'+era.label+'</div>'+
-      '<div class="tl-title">'+(records.length?records[records.length-1].title:'No records yet for this era')+'</div>'+
+      '<div class="tl-title">'+(records.length?esc(records[records.length-1].title):'No records yet for this era')+'</div>'+
       '<div class="tl-body">'+(records.length?esc(records[records.length-1].body):'Add your first record for this period below.')+'</div>'+
       '<div class="tl-tags">'+records.map(function(r,i){return '<span class="tl-tag'+(i===records.length-1?' gold':'')+'">'+esc(r.category)+'</span>';}).join('')+'</div>'+
       '</div>';
@@ -768,7 +768,7 @@ function buildArchives(){
       '<div class="arch-icon">'+a.icon+'</div>'+
       '<div class="arch-title">'+a.title+'</div>'+
       '<div class="arch-meta">'+a.meta+'</div>'+
-      '<div class="arch-status status-'+a.status+'">'+(a.status==='active'?'ACTIVE VAULT':'LOCKED &middot; PENDING')+'</div>';
+      '<div class="arch-status status-'+a.status+'">'+(a.status==='active'?'AVAILABLE CATEGORY':'LOCKED &middot; NOT AVAILABLE')+'</div>';
     grid.appendChild(card);
   });
 }

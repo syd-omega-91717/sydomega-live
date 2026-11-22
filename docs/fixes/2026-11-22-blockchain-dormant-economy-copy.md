@@ -34,3 +34,10 @@ My own earlier report that the page "still sells" that claim was wrong: I had re
 main-merge integrity, provider column privileges, progression/personal-context guardrails, `test_advance_matrix_closed`). Reproduced on `origin/main` (`c618336`) with
 `git show origin/main:supabase/remote-migrations.json | python3 -c "import json,sys;json.load(sys.stdin)"`.
 The 441 parent is a strict superset of the 440 parent (it adds only `20261122105012`) and is internally consistent (count 441, 441 versions, 441 names), so it is restored verbatim.
+
+### CI follow-up: `OMEGA_SKILL_REGISTRY.md` carried a stale migration-count row
+
+CI `verify` failed `omega-registry.py --check`: the committed registry listed both `supabase/migrations/*.sql | 440 (...333 timestamped)` and the correct `441 (...334 timestamped)`, the same
+merge-residue shape as the ledger. Regenerated with `python3 scripts/omega-registry.py` (needs a non-shallow clone, so I ran `git fetch --unshallow` first); the only change is deleting the stale 440 row.
+My earlier local runs had reported this step (`ci-local.sh` 2j, "Skill/agent registry") as failing and I dismissed it as the shallow-clone artefact: that was a real failure hidden behind an environmental one,
+and the lesson is to unshallow before trusting 2j. `omega-registry.py --check` now passes.

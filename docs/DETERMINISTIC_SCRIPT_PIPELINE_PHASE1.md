@@ -7,6 +7,8 @@
 
 The live tree contains 391 JavaScript-family files across the repository, 304 root-level JS-family files, and 286 root-level omega-prefixed JS files. These are different populations. The historical performance study measured 170–182 script requests on individual pages and 165 scripts on every measured page. None of those figures establishes a canonical 176-file module set.
 
+A direct static scan of current bg.js (blob 77dc12d5afc308b596082982cd2c81e29a24943a) finds 150 unique root-level script paths associated with its append helpers: 139 marked immediate and 11 marked idle by the existing helper-call pattern. This is a source-level loader inventory, not proof that every candidate is fetched on every page or that the helper's runtime conditions always execute. The inventory tool and browser measurements must reconcile those differences before scheduling changes.
+
 The inventory tool enumerates root-level browser scripts, page consumers, bg.js loader references, local static import edges, global publication/reference signals, and observable side-effect patterns. It emits a stable topological order only for statically resolved local import/require edges. It does not rewrite script tags or change runtime behavior.
 
 ## Runtime implementation contract

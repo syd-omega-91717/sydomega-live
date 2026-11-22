@@ -45,10 +45,10 @@ def resolve_archetype(slug):
 
 
 class OmegaExperienceV6Tests(unittest.TestCase):
-    def test_all_242_root_pages_have_explicit_valid_archetypes(self):
+    def test_every_root_page_has_an_explicit_valid_archetype(self):
         root_pages = sorted(p for p in ROOT.glob("*.html") if p.is_file())
         self.assertGreaterEqual(len(root_pages), 240)
-        self.assertEqual(len(MANIFEST.get("pageArchetypes", {})), 242)
+        self.assertEqual(len(MANIFEST.get("pageArchetypes", {})), len(root_pages))   # was a typed 242: derived, so adding a page no longer breaks it for the wrong reason
         for page in root_pages:
             with self.subTest(page=page.name):
                 self.assertIn(MANIFEST["pageArchetypes"].get(page.stem), MANIFEST["archetypes"])

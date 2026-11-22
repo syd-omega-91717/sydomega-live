@@ -2,7 +2,8 @@
    from public.family_nodes (name, relation, sign, is_heir) and the member's own display name.
    The table stores NO parent-child links, so this groups people into generations from the
    relation they chose and joins generations, never individuals: it does not claim lineage the
-   data lacks. Text is written with textContent only (names are free text). */
+   data lacks. is_heir is a personal display label, not a legal heir designation. Text is written
+   with textContent only (names are free text). */
 (function () {
   'use strict';
   var GEN = { Grandfather: -2, Grandmother: -2, Father: -1, Mother: -1,
@@ -29,7 +30,7 @@
     host.textContent = '';
     rows = Array.isArray(rows) ? rows : [];
     if (!rows.length) {
-      host.appendChild(el('p', 'ft-empty', 'No family nodes registered yet. Add your first node below and the tree will form here.'));
+      host.appendChild(el('p', 'ft-empty', 'No member-reported family records yet. Add a record below to populate this tree.'));
       return;
     }
     var by = {}, other = [], heirs = 0;

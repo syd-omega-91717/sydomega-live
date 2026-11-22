@@ -90,6 +90,6 @@
     "public_read_candidate": "must be SECURITY INVOKER or moved to a private schema before anonymous/public execution is considered."
   },
   "coverage": {
-    "expectedSecurityDefinerPublicFunctions": 72
+    "expectedSecurityDefinerPublicFunctions": 71
   }
 }

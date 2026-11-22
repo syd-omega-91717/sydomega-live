@@ -54,6 +54,15 @@ class FamilyTruthAndXssContract(unittest.TestCase):
         self.assertIn("bloodlineUserId=sess.user.id", FAMILY)
         self.assertIn("insert({...node,user_id:bloodlineUserId})", FAMILY)
 
+    def test_heritage_records_are_user_scoped_and_titles_are_escaped(self):
+        start = FAMILY.index("async function buildTimeline()")
+        end = FAMILY.index("function buildRoots()", start)
+        timeline = FAMILY[start:end]
+        self.assertIn(".eq('user_id',uid)", timeline)
+        self.assertIn("esc(records[records.length-1].title)", timeline)
+        self.assertIn("esc(records[records.length-1].body)", timeline)
+        self.assertIn("esc(r.category)", timeline)
+
     def test_successor_designations_are_personal_labels_not_legal_heir_status(self):
         self.assertIn("PERSONAL / NON-LEGAL", FAMILY)
         self.assertIn("MARK SUCCESSOR LABEL", FAMILY)

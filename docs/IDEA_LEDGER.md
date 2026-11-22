@@ -13,11 +13,11 @@ production serves it.
 | NEEDS_DECISION | 16 |
 | PROPOSED | 18 |
 | PARTIAL | 57 |
-| OPEN_GAP | 32 |
+| OPEN_GAP | 31 |
 | DORMANT | 1 |
 | SHIPPED | 45 |
 | DECIDED | 42 |
-| CLOSED | 19 |
+| CLOSED | 20 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
 | REJECTED | 118 |
@@ -133,7 +133,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 | I17 | IDEA_INTAKE.md | Let text areas grow with what the member writes (field-sizing: content) | opt-in shipped, not global. The global form in the original plan was built and measured on 2026-11-16 and rejected: across the 37 pages wit… |
 
-### OPEN_GAP (32)
+### OPEN_GAP (31)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -141,7 +141,6 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | G03 | GAP_ANALYSIS.md S | `OmegaSculptureDataViz.getTierProgress()` reads a column that does not exist, so it returns 0 for every membe… | GAP_ANALYSIS.md section S |
 | G04 | GAP_ANALYSIS.md S | the generative music had no way to be started. `omega-music.js` is loaded on every page (`bg.js:3131`) but no… | GAP_ANALYSIS.md section S |
 | G05 | GAP_ANALYSIS.md S | a member's public face does not exist yet, and the avatar bucket is public-read. Profiles are private by RLS… | GAP_ANALYSIS.md section S |
-| G06 | GAP_ANALYSIS.md S | `advertising.html` sells placements against "104,976-NODE REACH", which is the canon's lattice size, not an a… | GAP_ANALYSIS.md section S |
 | G07 | GAP_ANALYSIS.md S | eight personal identity values of the owner stayed in the git history of a public repository after the page w… | GAP_ANALYSIS.md section S |
 | G08 | GAP_ANALYSIS.md S | two pages give opposite answers about whether identity documents are stored; the intake is off only because a… | GAP_ANALYSIS.md section S |
 | G09 | GAP_ANALYSIS.md S | the canon holds two 12-rung ladders whose names collide: earned gates and priced tiers. | GAP_ANALYSIS.md section S |
@@ -273,11 +272,12 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
-### CLOSED (19)
+### CLOSED (20)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | G02 | GAP_ANALYSIS.md S | `life.html`'s mana did not measure the member: two of its five components read a platform-wide table, through… | GAP_ANALYSIS.md section S |
+| G06 | GAP_ANALYSIS.md S | `advertising.html` no longer sells "104,976-NODE REACH". Checked on `main` at `c618336`: the KPI reads `AUDIE… | GAP_ANALYSIS.md section S |
 | G14 | GAP_ANALYSIS.md S | provider migration ledger and D1 financial retention schema reconciled; erasure remains dormant. | GAP_ANALYSIS.md section S |
 | G24 | GAP_ANALYSIS.md S | was: `omega_platform_events.event_id` is NOT NULL with no default live. 7 rows, | GAP_ANALYSIS.md section S |
 | G25 | GAP_ANALYSIS.md S | was: `omega_record_world_action` cannot write its event (42501). It is | GAP_ANALYSIS.md section S |

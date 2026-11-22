@@ -58,10 +58,12 @@ class FamilyTruthAndXssContract(unittest.TestCase):
         start = FAMILY.index("async function buildTimeline()")
         end = FAMILY.index("function buildRoots()", start)
         timeline = FAMILY[start:end]
-        self.assertIn(".eq('user_id',uid)", timeline)
+        self.assertIn(".eq('user_id',heritageUserId)", timeline)
         self.assertIn("esc(records[records.length-1].title)", timeline)
         self.assertIn("esc(records[records.length-1].body)", timeline)
         self.assertIn("esc(r.category)", timeline)
+        self.assertIn("heritageUserId=sess.user.id", FAMILY)
+        self.assertIn("insert({user_id:heritageUserId", FAMILY)
 
     def test_successor_designations_are_personal_labels_not_legal_heir_status(self):
         self.assertIn("PERSONAL / NON-LEGAL", FAMILY)

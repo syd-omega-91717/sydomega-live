@@ -18,6 +18,8 @@ class AdvertisingTruthBoundaryContract(unittest.TestCase):
         self.assertIn("el.dataset.truth='UNAVAILABLE'", SOURCE)
 
     def test_ad_submission_is_explicitly_pending_and_never_claims_success_on_error(self):
+        self.assertEqual(SOURCE.count(".from('advertisements').insert("), 1)
+        self.assertIn("catch(insertError)", SOURCE)
         self.assertIn("status:'pending'", SOURCE)
         self.assertIn("SUBMISSION SAVED AS PENDING", SOURCE)
         self.assertIn("NO PAYMENT TAKEN", SOURCE)

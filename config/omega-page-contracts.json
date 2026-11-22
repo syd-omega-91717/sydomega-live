@@ -7742,14 +7742,14 @@
         "immutable-simulation-evidence"
       ],
       "tasks": {
-        "state": "OPEN_TASK",
+        "state": "VERIFYING",
         "ids": [
-          "PAGE::income::REVIEW"
+          "PAGE::income::BROWSER_RUNTIME_VERIFICATION"
         ]
       },
       "authorization": "Platform owner only. Actual settlement aggregate additionally checks public.is_platform_owner() and JWT AAL2. Scenario rows are scoped by RLS to auth.uid(); run RPC verifies scenario ownership and writes immutable evidence.",
       "truth_states": [
-        "LIVE_LEDGER",
+        "LIVE",
         "SIMULATED",
         "UNAVAILABLE"
       ],

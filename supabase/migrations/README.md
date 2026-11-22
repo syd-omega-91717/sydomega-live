@@ -6,9 +6,9 @@ This directory is the canonical, ordered, automatically-appliable schema history
 
 ## Current provider-verified state — 2026-11-22
 
-- The authenticated live Supabase migration ledger contains **439 applied versions**; latest is `20261122100946_financial_scenario_numeric_bounds`. The source snapshot in `supabase/remote-migrations.json` records the same 439 versions. `supabase/pending-migrations.json` is empty.
+- The authenticated live Supabase migration ledger contains **440 applied versions**; latest is `20261122101614_finance_rpc_private_wrappers_and_index`. The source snapshot in `supabase/remote-migrations.json` records the same 439 versions. `supabase/pending-migrations.json` is empty.
 - `20261122100837_financial_truth_and_scenario_lab` adds per-user RLS-protected financial scenarios, immutable formula-versioned simulation runs, and an owner-only AAL2 aggregate of Stripe settlement ledger records.
-- `20261122100946_financial_scenario_numeric_bounds` bounds scenario inputs to prevent projection totals exceeding the stored numeric precision.
+- `20261122100946_financial_scenario_numeric_bounds` bounds scenario inputs to prevent projection totals exceeding the stored numeric precision. `20261122101614_finance_rpc_private_wrappers_and_index` moves privileged implementations into the non-exposed `private` schema, leaves only `SECURITY INVOKER` public wrappers, and adds the simulation-run foreign-key index.
 - Live catalog checks confirmed both new tables have RLS enabled, scenario CRUD is scoped to `auth.uid()`, simulation runs are read-only to authenticated clients, and the two RPCs have an empty search path and authenticated-only execute grants.
 - A read-only owner/AAL2 invocation returned zero settlement transactions, zero refund transactions, zero processed/failed payment events, zero unmatched reconciliations, and no currency amounts. Payments, Stripe integration, tokens and KYC intake remain disabled.
 - The scenario lab creates no payments, tokens, member balances or actual revenue. Its immutable run snapshots are explicitly classified `SIMULATED`. The actuals surface reports only gross Stripe provider settlements and refunds by currency; it does not label them recognized accounting revenue.

@@ -305,7 +305,8 @@
       "entrypoints": [
         "income.html",
         "supabase/migrations/20261122100837_financial_truth_and_scenario_lab.sql",
-        "supabase/migrations/20261122100946_financial_scenario_numeric_bounds.sql"
+        "supabase/migrations/20261122100946_financial_scenario_numeric_bounds.sql",
+        "supabase/migrations/20261122101614_finance_rpc_private_wrappers_and_index.sql"
       ],
       "verified": false,
       "contract": {
@@ -313,8 +314,8 @@
         "data_contract": "Actuals: omega_ledger_accounts, omega_ledger_transactions, omega_ledger_entries, omega_payment_events and omega_payment_reconciliation through public.omega_owner_finance_summary(). Scenarios: omega_financial_scenarios. Immutable runs: omega_financial_simulation_runs via public.omega_run_financial_scenario(uuid).",
         "authorization": "Actuals require public.is_platform_owner() and JWT AAL2. Scenario CRUD is RLS-scoped to auth.uid(). The simulation RPC verifies the caller owns the selected scenario; clients have SELECT only on immutable run rows.",
         "failure_path": "AAL2, owner or RPC failures display an unavailable/step-up state; the UI does not infer balances. Scenario failures do not claim a run was recorded. Runs are immutable to client roles.",
-        "static_evidence": "scripts/tests/test_financial_truth_contract.py; scripts/contract-suite.py finance-truth-scenario-lab gate; supabase/migrations/20261122100837_financial_truth_and_scenario_lab.sql; supabase/migrations/20261122100946_financial_scenario_numeric_bounds.sql.",
-        "live_verification": "LIVE-VERIFIED 2026-11-22: both tables exist with RLS; scenario policies are per-user; simulation runs expose authenticated SELECT only; both RPCs have empty search_path and authenticated-only EXECUTE. Owner/AAL2 read-only RPC returned zero settlement/refund transactions, zero payment events, zero unmatched reconciliation and all payment/Stripe/token/KYC flags false. No live scenario run or Stripe test-mode payment lifecycle has been claimed."
+        "static_evidence": "scripts/tests/test_financial_truth_contract.py; scripts/contract-suite.py finance-truth-scenario-lab gate; supabase/migrations/20261122100837_financial_truth_and_scenario_lab.sql; supabase/migrations/20261122100946_financial_scenario_numeric_bounds.sql.; supabase/migrations/20261122101614_finance_rpc_private_wrappers_and_index.sql",
+        "live_verification": "LIVE-VERIFIED 2026-11-22: both tables have RLS; scenario policies are per-user; simulation runs expose authenticated SELECT only; public RPCs are SECURITY INVOKER wrappers and their private implementations have empty search_path with authenticated-only EXECUTE. Owner/AAL2 read-only RPC returns zero settlement/refund transactions, zero payment events, zero unmatched reconciliation and all payment/Stripe/token/KYC flags false. Security Advisor now reports only the pre-existing leaked-password protection warning; the two public SECURITY DEFINER warnings introduced during the first implementation were eliminated. Performance Advisor no longer reports an unindexed financial simulation foreign key. No live scenario run or Stripe test-mode payment lifecycle has been claimed."
       }
     }
   ]

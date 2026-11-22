@@ -7,7 +7,7 @@
 - `supabase/live-grants.json` (a generated snapshot of what `authenticated` may do, 2026-10-12) lists `advance_matrix` among 142 functions members may execute. Dated, not today's.
 - `trg_award_matrix_points` (`0005_omega_sovereign_points.sql:208-222`) fires on every rise and awards **2 sovereign points**. So the function is a way to mint points and to fill the matrix by hand.
 
-**Proof (throwaway Postgres 16, own cluster, stubbed `auth.uid()`; the real text of both functions extracted from the migration files).** A signed-in member looping over 12 tracks x 3 axes x 9 calls: **324 calls accepted, 576 sovereign points, 8,748 of 8,748 matrix nodes**. With the proposed revoke: **324 refusals (`permission denied for function advance_matrix`), 0 points, 0 nodes**; `anon` refused; the migration owner (the SQL editor) and `service_role` still allowed; a `SECURITY DEFINER` wrapper called by a member still works, so a future server-side feature that needs the function can have it. The stub was made pessimistic on purpose (`anon` and `service_role` also granted, as Supabase's default privileges typically do); the migration is re-runnable.
+**Proof (throwaway Postgres 16, own cluster, stubbed `auth.uid()`; the real text of both functions extracted from the migration files).** A signed-in member looping over 12 tracks x 3 axes x 9 calls: **324 calls accepted, 576 sovereign points, 8,748 of 8,748 matrix nodes**. With the proposed revoke: **324 refusals (`permission denied for function advance_matrix`), 0 points, 0 nodes**; `anon` refused; the migration owner (the SQL editor) and `service_role` still allowed; a `SECURITY DEFINER` wrapper called by a member still works, so a future server-side feature that needs the function can have it. The original throwaway proof tested the public wrapper revoke only. It did not test the private function as a direct authenticated entry point; the corrected dual-revoke must be re-proven before application.
 
 **Why closing it breaks nothing (each checked, and pinned by a test).**
 - No client or Edge Function calls it: no `rpc('advance_matrix'` in any `.html`, `.js`, `.mjs` or `supabase/functions/**/*.ts`.
@@ -22,7 +22,7 @@
 **Not done / not verified.**
 - **Not run on Supabase** (the connector refused every call this session): today's live grants and the live function body are unread. The owner's read-only check is in the gap item.
 - The proof uses my stub tables. Real `matrix_progress` has later columns and triggers the stub lacks; `phase` was added for the trigger text to run, and if real rows exist for several phases of one track, one call could advance more rows and mint more than 576.
-- Whether this should be applied first and how is the owner's step (controlled path). I cannot apply it.
+- Whether and when to move this into the production migration path remains an explicit owner approval through the controlled path. I cannot apply it.
 
 
 ### Live read-only verification (2026-11-22)

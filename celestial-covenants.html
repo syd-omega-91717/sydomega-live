@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#020206">
+<title>Ω SYD OMEGA 91717 — The Celestial Covenants</title>
+<meta name="description" content="Concept key art for The Celestial Covenants, a fictional transmedia franchise. Concept only: nothing is released, sold or licensed.">
+<script src="/bg.js" defer></script>
+<style>
+/* The Celestial Covenants — page-local visual composition. Tokens, auth and the dock stay owned by the platform.
+   Every selector is scoped under .cc so nothing here can restyle another page. Colours named in the franchise brief
+   (#0B1D3A, #00F3FF, #00A2FF, #FF3C00, #000000) are used as given; tones the brief names without a value are render choices. */
+.cc{--cc-indigo:#0B1D3A;--cc-teal:#00F3FF;--cc-blue:#00A2FF;--cc-amber:#FF3C00;--cc-gold:#E9B949;--cc-bronze:#B07A3C;--cc-ti:#E6EDF2;--cc-mx:0;--cc-my:0;
+  color:#EDEBE4;max-width:1500px;margin:0 auto;padding:clamp(12px,2vw,28px) clamp(14px,2.4vw,32px) 48px;padding-left:max(clamp(14px,2.4vw,32px),62px)}
+.cc *{box-sizing:border-box}
+.cc a{color:inherit}
+.cc .cc-eyebrow{font:12px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.22em;text-transform:uppercase;color:var(--cc-teal)}
+.cc .cc-ribbon{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:14px 0 18px;padding:10px 14px;border:1px solid rgba(233,185,73,.3);border-left:3px solid var(--cc-gold);background:rgba(233,185,73,.05);font:12px/1.6 var(--M,"Courier Prime",monospace);letter-spacing:.08em;color:#E9DDB8}
+.cc .cc-ribbon b{color:var(--cc-gold);font-weight:400;letter-spacing:.18em}
+.cc h2{font:clamp(20px,2.6vw,30px)/1.15 var(--D,"Cinzel Decorative",serif);letter-spacing:.04em;color:#F3E3AE;margin:34px 0 6px}
+.cc .cc-sub{font:15px/1.65 var(--R,Rajdhani,sans-serif);color:#C9C6BC;max-width:70ch;margin:0 0 16px}
+/* ---------- 16:9 stage: THE DUAL COVENANTS ---------- */
+.cc .cc-stage{position:relative;isolation:isolate;aspect-ratio:16/9;min-height:360px;overflow:hidden;border:1px solid rgba(233,185,73,.4);border-radius:14px;background:#050a16;
+  box-shadow:0 0 0 1px rgba(0,243,255,.08),0 30px 80px rgba(0,0,0,.55),inset 0 0 120px rgba(0,0,0,.6)}
+.cc .cc-side{position:absolute;inset:0;overflow:hidden}
+.cc .cc-order{clip-path:polygon(0 0,56% 0,44% 100%,0 100%);background:radial-gradient(120% 90% at 22% 40%,#223a63 0%,#0e2347 45%,#0B1D3A 100%)}
+.cc .cc-abyss{clip-path:polygon(56% 0,100% 0,100% 100%,44% 100%);background:radial-gradient(110% 100% at 82% 60%,#07555f 0%,#06314a 40%,#030f22 100%)}
+.cc .cc-order:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(230,237,242,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(230,237,242,.07) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(70% 80% at 30% 45%,#000,transparent);-webkit-mask-image:radial-gradient(70% 80% at 30% 45%,#000,transparent)}
+.cc .cc-abyss:before{content:"";position:absolute;inset:-20%;background:repeating-linear-gradient(100deg,rgba(0,243,255,.0) 0 38px,rgba(0,243,255,.07) 40px,rgba(0,243,255,0) 44px);animation:cc-caustic 14s linear infinite}
+.cc .cc-seam{position:absolute;inset:0;pointer-events:none;z-index:3;background:linear-gradient(to bottom right,transparent calc(50% - 1px),transparent 0);
+  clip-path:polygon(55.7% 0,56.3% 0,44.3% 100%,43.7% 100%);background:linear-gradient(180deg,var(--cc-gold),var(--cc-teal));filter:drop-shadow(0 0 8px rgba(0,243,255,.8))}
+.cc .cc-fig{overflow:visible;position:absolute;bottom:0;height:76%;width:auto;z-index:2;transition:transform .25s ease-out;will-change:transform}
+.cc .cc-metatron{left:12%;transform:translate3d(calc(var(--cc-mx)*-10px),calc(var(--cc-my)*-6px),0);filter:drop-shadow(0 0 26px rgba(255,255,255,.35))}
+.cc .cc-naila{right:11%;transform:translate3d(calc(var(--cc-mx)*14px),calc(var(--cc-my)*-8px),0);filter:drop-shadow(0 0 22px rgba(0,243,255,.35))}
+.cc .cc-fx{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.cc .cc-orbit{transform-origin:120px 125px;animation:cc-spin 9s linear infinite}
+.cc .cc-sway{transform-origin:50% 0;animation:cc-sway 5.5s ease-in-out infinite}
+.cc .cc-sway:nth-child(2n){animation-duration:7.2s;animation-delay:-2s}
+.cc .cc-sway:nth-child(3n){animation-duration:6.4s;animation-delay:-4s}
+.cc .cc-wingline{animation:cc-glow 3.4s ease-in-out infinite}
+.cc .cc-titlebox{position:absolute;left:50%;top:5%;transform:translateX(-50%);z-index:4;text-align:center;width:min(70%,780px);pointer-events:none}
+.cc .cc-title{margin:0;font:700 clamp(22px,4.6vw,64px)/1.02 "Cinzel",var(--D,"Cinzel Decorative",serif);letter-spacing:.09em;color:var(--cc-ti);
+  text-shadow:-2px 0 rgba(255,60,0,.55),2px 0 rgba(0,243,255,.6),0 0 40px rgba(0,0,0,.7);animation:cc-chroma 5s ease-in-out infinite;
+  -webkit-mask:linear-gradient(90deg,#000 0 100%);}
+.cc .cc-title span{display:block;font-size:.62em;letter-spacing:.3em;color:var(--cc-gold)}
+.cc .cc-tag{margin:10px 0 0;font:clamp(11px,1.4vw,18px)/1.4 var(--R,Rajdhani,sans-serif);letter-spacing:.34em;text-transform:uppercase;color:#CFE8EE}
+.cc .cc-legend{position:absolute;z-index:4;bottom:12px;font:11px/1.4 var(--M,"Courier Prime",monospace);letter-spacing:.2em;text-transform:uppercase}
+.cc .cc-legend.l{left:16px;color:var(--cc-ti)}.cc .cc-legend.r{right:16px;color:var(--cc-teal)}
+.cc .cc-bar{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;justify-content:space-between;margin-top:12px;padding:12px 16px;border:1px solid rgba(233,185,73,.28);border-radius:10px;background:rgba(5,10,22,.7)}
+.cc .cc-note{font:13px/1.6 var(--R,Rajdhani,sans-serif);color:#BDB9AD;max-width:62ch;margin:0}
+/* brass lock toggle */
+.cc .cc-lock{display:inline-flex;align-items:center;gap:12px;background:none;border:0;color:#F0E2B4;cursor:pointer;font:12px/1.2 var(--M,"Courier Prime",monospace);letter-spacing:.16em;text-transform:uppercase;padding:6px 4px;min-height:44px}
+.cc .cc-lockdial{width:42px;height:42px;border-radius:50%;border:2px solid #8f6a2e;background:conic-gradient(from 20deg,#6b4a1c,#e0b45e,#7c5622,#f0cf86,#6b4a1c);display:grid;place-items:center;box-shadow:inset 0 0 6px rgba(0,0,0,.6),0 0 0 3px rgba(0,0,0,.4);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.cc .cc-lockdial:after{content:"";width:4px;height:15px;border-radius:2px;background:#1b1306;transform:translateY(-5px)}
+.cc .cc-lock[aria-pressed=true] .cc-lockdial{transform:rotate(0)}
+.cc .cc-lock[aria-pressed=false] .cc-lockdial{transform:rotate(130deg)}
+.cc button:focus-visible,.cc a:focus-visible{outline:2px solid var(--cc-teal);outline-offset:3px}
+/* ---------- 9:16 phone: BARHUTIYYAH RING (concept) ---------- */
+.cc .cc-ring{display:grid;grid-template-columns:minmax(280px,380px) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center;margin-top:8px}
+.cc .cc-phone{position:relative;isolation:isolate;aspect-ratio:9/16;width:100%;max-width:380px;margin:0 auto;background:#000;border-radius:32px;border:2px solid #7a5a26;overflow:hidden;
+  box-shadow:0 0 0 6px #14110b,0 0 0 8px rgba(176,122,60,.5),0 40px 90px rgba(0,0,0,.65),0 0 60px rgba(0,162,255,.18)}
+.cc .cc-phone:before{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,162,255,.045) 0 1px,transparent 1px 4px);mix-blend-mode:screen}
+.cc .cc-phone:after{content:"";position:absolute;left:0;right:0;height:22%;top:-22%;z-index:5;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(0,162,255,.14),transparent);animation:cc-scan 6.5s linear infinite}
+.cc .cc-art{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.cc .cc-hud{position:absolute;z-index:6;left:0;right:0;padding:12px 14px;font:10px/1.5 var(--M,"Courier Prime",monospace);letter-spacing:.1em;color:#7fd3ff}
+.cc .cc-hud.top{top:0;background:linear-gradient(#000,rgba(0,0,0,0))}
+.cc .cc-hud.top div{display:flex;justify-content:space-between;gap:8px}
+.cc .cc-hud .cc-warn{color:#ffb089;margin-top:6px;letter-spacing:.06em}
+.cc .cc-hud.stack{top:12.5%;text-align:center;padding-top:0;pointer-events:none}
+.cc .cc-hud.stack b{display:block;font:700 clamp(13px,3.3vw,19px)/1.15 "Cinzel",var(--D,serif);letter-spacing:.14em;color:#fff;text-shadow:0 0 14px rgba(0,162,255,.8)}
+.cc .cc-hud.stack i{display:block;margin-top:8px;font:normal 700 clamp(11px,2.8vw,15px)/1 "Cinzel",var(--D,serif);letter-spacing:.34em;background:linear-gradient(100deg,#8a6420,#ffe9a8,#8a6420);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:cc-shimmer 6s linear infinite}
+.cc .cc-hud.deck{bottom:0;display:flex;gap:6px;background:linear-gradient(rgba(0,0,0,0),#000 60%);padding-top:34px}
+.cc .cc-hud.deck button{flex:1;min-height:44px;border:1px solid rgba(176,122,60,.7);background:rgba(10,8,4,.85);color:#e9c98b;font:9px/1.25 var(--M,"Courier Prime",monospace);letter-spacing:.06em;border-radius:6px;padding:4px;cursor:pointer;text-transform:uppercase}
+.cc .cc-hud.deck button[disabled]{opacity:.55;cursor:not-allowed}
+.cc .cc-hud.deck button.cc-purge:not([disabled]){border-color:rgba(255,60,0,.8);color:#ffb089}
+.cc .cc-eye{transition:transform .08s linear}
+.cc .cc-maw{transform-origin:180px 548px;animation:cc-breathe 4.2s ease-in-out infinite}
+.cc .cc-bolt{fill:none;stroke:var(--cc-blue);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px #00A2FF);animation:cc-flicker 1.7s steps(1,end) infinite}
+.cc .cc-bolt:nth-child(3n){animation-delay:-.6s}.cc .cc-bolt:nth-child(3n+1){animation-delay:-1.1s}
+/* ---------- panels ---------- */
+.cc .cc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.cc .cc-card{position:relative;padding:16px 18px;border:1px solid rgba(233,185,73,.26);border-radius:12px;background:linear-gradient(160deg,rgba(14,22,40,.85),rgba(5,8,16,.85))}
+.cc .cc-card h3{margin:0 0 8px;font:13px/1.3 var(--M,"Courier Prime",monospace);letter-spacing:.18em;text-transform:uppercase;color:var(--cc-gold);font-weight:400}
+.cc .cc-card p{margin:0;font:15px/1.6 var(--R,Rajdhani,sans-serif);color:#D3D0C6}
+.cc .cc-sw{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+@media (max-width:700px){.cc .cc-sw{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cc .cc-chip{border:1px solid rgba(255,255,255,.14);border-radius:10px;overflow:hidden;background:rgba(0,0,0,.35)}
+.cc .cc-chip i{display:block;height:54px}
+.cc .cc-chip span{display:block;padding:8px 10px;font:11px/1.45 var(--M,"Courier Prime",monospace);letter-spacing:.08em;color:#CFCBBF}
+.cc .cc-chip em{display:block;font-style:normal;color:#8d8a80}
+.cc [data-lore="neutral"]{display:none}
+.cc[data-lore-safe="on"] [data-lore="religious"]{display:none}
+.cc[data-lore-safe="on"] [data-lore="neutral"]{display:block}
+.cc .cc-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.cc .cc-foot{margin-top:34px;padding-top:16px;border-top:1px solid rgba(233,185,73,.2);font:12px/1.7 var(--M,"Courier Prime",monospace);letter-spacing:.08em;color:#9d9a8f}
+@keyframes cc-spin{to{transform:rotate(360deg)}}
+@keyframes cc-sway{0%,100%{transform:skewX(-3deg) scaleY(1)}50%{transform:skewX(4deg) scaleY(1.025)}}
+@keyframes cc-glow{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes cc-caustic{to{transform:translate3d(-80px,0,0)}}
+@keyframes cc-chroma{0%,86%,100%{text-shadow:-2px 0 rgba(255,60,0,.5),2px 0 rgba(0,243,255,.55),0 0 40px rgba(0,0,0,.7)}92%{text-shadow:-6px 0 rgba(255,60,0,.75),6px 0 rgba(0,243,255,.8),0 0 40px rgba(0,0,0,.7)}}
+@keyframes cc-scan{to{transform:translateY(560%)}}
+@keyframes cc-shimmer{to{background-position:-220% 0}}
+@keyframes cc-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes cc-flicker{0%{opacity:1}12%{opacity:.25}20%{opacity:1}55%{opacity:.6}62%{opacity:1}}
+@media (max-width:900px){.cc{padding-left:max(14px,62px)}.cc .cc-ring{grid-template-columns:1fr}.cc .cc-stage{aspect-ratio:4/5}.cc .cc-metatron{left:2%;height:62%}.cc .cc-naila{right:2%;height:62%}.cc .cc-titlebox{width:92%}}
+@media (prefers-reduced-motion:reduce){.cc *,.cc *:before,.cc *:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body data-page="celestial-covenants">
+<div class="shell">
+  <aside id="omega-side" data-page="celestial-covenants" aria-label="Platform navigation"></aside>
+  <main class="main" id="app">
+    <div class="cc" id="cc" data-lore-safe="on" data-no-clamp>
+      <div class="cc-eyebrow">MEDIA · TRANSMEDIA CONCEPT</div>
+      <div class="cc-ribbon" role="note"><b>CONCEPT KEY ART</b> <span>A fictional franchise concept. Nothing here is released, on sale, licensed or live. No product, ticketing, game or AR app exists.</span></div>
+
+      <h2 style="margin-top:6px">The Dual Covenants &mdash; Order vs. Extraction</h2>
+      <p class="cc-sub">A frame split between divine order and the maritime abyss. The two sides share one seam: move the pointer across the stage and the layers answer.</p>
+
+      <div class="cc-stage" id="cc-stage" aria-label="Key art: Metatron on the left, Queen Na'ila on the right, divided by a luminous seam">
+        <div class="cc-side cc-order" aria-hidden="true"></div>
+        <div class="cc-side cc-abyss" aria-hidden="true"></div>
+        <canvas class="cc-fx" id="cc-fx" aria-hidden="true"></canvas>
+
+        <svg class="cc-fig cc-metatron" viewBox="0 0 240 440" role="img" aria-labelledby="cc-m-t" preserveAspectRatio="xMidYMax meet">
+          <title id="cc-m-t">Metatron: a towering bronze figure with four geometric gold wings, a flat blade and an orbiting sapphire sphere</title>
+          <defs>
+            <radialGradient id="cc-veil" cx="50%" cy="34%" r="55%"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".45" stop-color="#dfeaff" stop-opacity=".35"/><stop offset="1" stop-color="#9fb8ff" stop-opacity="0"/></radialGradient>
+            <linearGradient id="cc-bronze" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b06a"/><stop offset=".5" stop-color="#9a6630"/><stop offset="1" stop-color="#5b3818"/></linearGradient>
+            <linearGradient id="cc-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe49a"/><stop offset="1" stop-color="#b8862b"/></linearGradient>
+            <radialGradient id="cc-sap" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#9fc4ff"/><stop offset=".5" stop-color="#2554d6"/><stop offset="1" stop-color="#0a1a5c"/></radialGradient>
+          </defs>
+          <circle cx="120" cy="150" r="132" fill="url(#cc-veil)"/>
+          <g fill="url(#cc-gold)" stroke="#fff3c4" stroke-width=".8" stroke-linejoin="miter">
+            <polygon points="108,152 4,26 38,142"/><polygon points="132,152 236,26 202,142"/>
+            <polygon points="110,176 10,222 52,158"/><polygon points="130,176 230,222 188,158"/>
+          </g>
+          <g stroke="#7a521a" stroke-width=".7" opacity=".7"><line x1="108" y1="152" x2="20" y2="60"/><line x1="132" y1="152" x2="220" y2="60"/><line x1="110" y1="176" x2="30" y2="206"/><line x1="130" y1="176" x2="210" y2="206"/></g>
+          <g fill="url(#cc-bronze)" stroke="#f1c98a" stroke-width=".7" stroke-linejoin="miter">
+            <polygon points="120,66 138,74 146,92 138,110 120,118 102,110 94,92 102,74"/>
+            <polygon points="92,126 148,126 160,262 80,262"/>
+            <polygon points="84,262 156,262 152,304 88,304"/>
+            <polygon points="90,304 118,304 114,430 88,430"/><polygon points="122,304 150,304 152,430 126,430"/>
+          </g>
+          <g fill="none" stroke="#ffe9b8" stroke-width=".9" opacity=".85"><polygon points="120,140 144,196 96,196"/><polygon points="120,214 144,170 96,170"/></g>
+          <polygon points="120,126 160,262 120,262" fill="#000" opacity=".28"/>
+          <g transform="rotate(8 184 236)"><rect x="181" y="36" width="6" height="388" fill="#EAF6FF"/><rect x="164" y="248" width="40" height="6" fill="#EAF6FF"/></g>
+          <g class="cc-orbit"><polygon points="206,132 232,140 206,150" fill="#000" opacity=".35"/><circle cx="206" cy="125" r="12" fill="url(#cc-sap)" stroke="#bcd4ff" stroke-width=".8"/></g>
+        </svg>
+
+        <svg class="cc-fig cc-naila" viewBox="0 0 240 440" role="img" aria-labelledby="cc-n-t" preserveAspectRatio="xMidYMax meet">
+          <title id="cc-n-t">Queen Na'ila: a sapphire-tinted obsidian figure in a flowing deep-sea gown, a translucent white dove with a glowing blue wing line behind her</title>
+          <defs>
+            <linearGradient id="cc-obs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1230"/><stop offset=".6" stop-color="#1a3c8c"/><stop offset="1" stop-color="#0a1a44"/></linearGradient>
+            <linearGradient id="cc-kelp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b3a6b"/><stop offset=".55" stop-color="#056a73"/><stop offset="1" stop-color="#00cfd6" stop-opacity=".85"/></linearGradient>
+          </defs>
+          <path d="M120 64 C 66 14, 10 34, 0 92 C 40 72, 82 84, 120 116 C 158 84, 200 72, 240 92 C 230 34, 174 14, 120 64 Z" fill="#fff" opacity=".22"/>
+          <path class="cc-wingline" d="M0 92 C 40 72, 82 84, 120 116" fill="none" stroke="#00F3FF" stroke-width="2.4" stroke-linecap="round" style="filter:drop-shadow(0 0 6px #00F3FF)"/>
+          <path d="M104 150 C 74 230, 30 340, 6 418 q14 14 28 0 t28 0 t28 0 t28 0 t28 0 t28 0 t28 0 t28 0 L234 418 C 210 340, 166 230, 136 150 Z" fill="url(#cc-kelp)"/>
+          <g fill="none" stroke="#3cf0d4" stroke-width="2" stroke-linecap="round" opacity=".8">
+            <path class="cc-sway" d="M40 330 C 30 360, 50 390, 36 430"/><path class="cc-sway" d="M80 300 C 66 350, 90 390, 74 432"/><path class="cc-sway" d="M120 290 C 108 350, 132 392, 118 434"/>
+            <path class="cc-sway" d="M160 300 C 150 350, 172 390, 158 432"/><path class="cc-sway" d="M200 330 C 190 362, 212 392, 198 430"/>
+          </g>
+          <g fill="#7ffcf0" opacity=".9"><circle cx="92" cy="250" r="1.6"/><circle cx="148" cy="270" r="1.4"/><circle cx="118" cy="330" r="1.8"/><circle cx="70" cy="370" r="1.3"/><circle cx="170" cy="380" r="1.6"/></g>
+          <path d="M98 136 C 106 122, 134 122, 142 136 L 150 164 C 134 152, 106 152, 90 164 Z" fill="url(#cc-obs)"/>
+          <ellipse cx="120" cy="104" rx="22" ry="29" fill="url(#cc-obs)" stroke="#6fa0ff" stroke-width=".7"/>
+          <g fill="#6a78ff" style="filter:drop-shadow(0 0 4px #7a8cff)"><ellipse cx="111" cy="102" rx="4.2" ry="2.3"/><ellipse cx="129" cy="102" rx="4.2" ry="2.3"/></g>
+        </svg>
+
+        <div class="cc-seam" aria-hidden="true"></div>
+        <div class="cc-titlebox"><h1 class="cc-title" style="margin:0">THE CELESTIAL<span>COVENANTS</span></h1><p class="cc-tag">The unseen has terms.</p></div>
+        <div class="cc-legend l" aria-hidden="true">Divine Order</div><div class="cc-legend r" aria-hidden="true">Extraction · The Abyss</div>
+      </div>
+
+      <div class="cc-bar">
+        <p class="cc-note"><strong>Fiction.</strong> Every being, ritual and symbol here is invented. This page teaches and instructs nothing real. <span data-lore="religious">Inspired by ancient texts, not theological instruction.</span><span data-lore="neutral">Source references are hidden while Lore-Safe Mode is on.</span></p>
+        <button class="cc-lock" id="cc-lore" type="button" aria-pressed="true" aria-describedby="cc-lore-d"><span class="cc-lockdial" aria-hidden="true"></span><span>Lore-Safe Mode&nbsp;<b id="cc-lore-s">ON</b></span></button>
+        <span id="cc-lore-d" class="cc-live">Lore-Safe Mode hides every mention of the folklore and textual traditions that inspire the concept. It is on by default and is remembered in this browser only.</span>
+      </div>
+
+      <h2>Barhutiyyah Ring &mdash; AR interface concept</h2>
+      <p class="cc-sub">A vertical, camera-style overlay: the screen as a lens that lays folklore onto the real world. This is a design mock-up only. There is no AR runtime, no camera, microphone or location access on this page.</p>
+      <div class="cc-ring">
+        <div class="cc-phone" id="cc-phone" aria-label="Concept mock-up of the Barhutiyyah Ring mobile interface">
+          <svg class="cc-art" id="cc-art" viewBox="0 0 360 640" role="img" aria-labelledby="cc-p-t" preserveAspectRatio="xMidYMid slice">
+            <title id="cc-p-t">King Burqan, a blue figure with lightning hair and golden slit-pupil eyes, above Al-Asad, a living shadow with a mane of bone fingers and a ringed maw</title>
+            <defs>
+              <radialGradient id="cc-blue" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#7fd6ff"/><stop offset=".55" stop-color="#0a8cff"/><stop offset="1" stop-color="#03275e"/></radialGradient>
+              <linearGradient id="cc-bodyfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2aa3ff"/><stop offset=".55" stop-color="#0a64d4" stop-opacity=".9"/><stop offset="1" stop-color="#03275e" stop-opacity="0"/></linearGradient>
+              <radialGradient id="cc-halo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#00A2FF" stop-opacity=".45"/><stop offset="1" stop-color="#00A2FF" stop-opacity="0"/></radialGradient>
+              <radialGradient id="cc-fire" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FF3C00" stop-opacity=".55"/><stop offset="1" stop-color="#FF3C00" stop-opacity="0"/></radialGradient>
+            </defs>
+            <rect width="360" height="640" fill="#000"/>
+            <g stroke="#00A2FF" stroke-opacity=".12" stroke-width="1"><path d="M0 120H360M0 240H360M0 360H360M0 480H360M90 0V640M180 0V640M270 0V640"/></g>
+            <g transform="translate(40 150) scale(.78)">
+              <circle cx="180" cy="190" r="150" fill="url(#cc-halo)"/>
+              <g id="cc-bolts"></g>
+              <path d="M92 330 C 100 260, 140 232, 180 232 C 220 232, 260 260, 268 330 L 268 372 L 92 372 Z" fill="url(#cc-bodyfade)"/>
+              <ellipse cx="180" cy="168" rx="52" ry="62" fill="url(#cc-blue)" stroke="#9be0ff" stroke-width="1"/>
+              <g class="cc-eyes">
+                <g><ellipse cx="160" cy="158" rx="13" ry="9" fill="#F2B632"/><rect class="cc-eye" data-eye x="152" y="155.6" width="16" height="4.8" rx="1.6" fill="#000"/></g>
+                <g><ellipse cx="200" cy="158" rx="13" ry="9" fill="#F2B632"/><rect class="cc-eye" data-eye x="192" y="155.6" width="16" height="4.8" rx="1.6" fill="#000"/></g>
+              </g>
+              <path d="M162 196 Q180 206 198 196" fill="none" stroke="#04204f" stroke-width="2.4" stroke-linecap="round"/>
+            </g>
+            <circle cx="180" cy="548" r="170" fill="url(#cc-fire)"/>
+            <g id="cc-mane" stroke="#d6ccb2" stroke-linecap="round" fill="none"></g>
+            <path d="M0 640 L0 548 C 56 498, 118 478, 180 476 C 242 478, 304 498, 360 548 L360 640 Z" fill="#040404" stroke="#FF3C00" stroke-opacity=".35"/>
+            <g class="cc-maw" id="cc-maw"></g>
+          </svg>
+          <div class="cc-hud top">
+            <div><span>COORDS [ANONYMOUS]</span><span id="cc-ruler">DAY RULER ···</span></div>
+            <div class="cc-warn">GEOFENCE (SPEC): 100&nbsp;M NO-SPAWN ZONES &middot; NOT ACTIVE, NO AR RUNTIME</div>
+          </div>
+          <div class="cc-hud stack" aria-hidden="true"><b>THE CELESTIAL COVENANTS</b><i>BARHUTIYYAH RING</i></div>
+          <div class="cc-hud deck">
+            <button type="button" disabled aria-disabled="true" title="Concept only: no camera is used">[AR CAMERA: CONCEPT]</button>
+            <button type="button" disabled aria-disabled="true" title="Concept only">[INCENSE MIXER: CONCEPT]</button>
+            <button type="button" class="cc-purge" id="cc-purge" title="Clears the one preference this page stores in your browser">[DATA PURGE: WIPE THIS PAGE]</button>
+          </div>
+        </div>
+        <div>
+          <div class="cc-grid" style="margin-top:0">
+            <div class="cc-card"><h3>Upper entity &middot; King Burqan</h3><p>Blue humanoid, crackling lightning hair, golden slit pupils. Here the pupils follow your pointer or touch on this page; device eye-tracking is not used.</p></div>
+            <div class="cc-card"><h3>Lower entity &middot; Al-Asad</h3><p>A living shadow rising from the bottom edge, a mane of bone fingers and a maw of concentric rings. The brief specifies audio reactivity; it is not built, and this page never asks for a microphone.</p></div>
+            <div class="cc-card"><h3>Status line</h3><p>The day ruler reads from your clock. A true planetary hour needs your location, which this page does not request.</p></div>
+            <div class="cc-card"><h3>Data purge</h3><p>Really clears this page's single stored setting (Lore-Safe Mode) and resets it to on. Nothing else is stored.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Palette</h2>
+      <p class="cc-sub">Hex values are shown only where the franchise brief gives one; other tones are named in the brief without a value and are render choices here.</p>
+      <div class="cc-sw" id="cc-sw">
+        <div class="cc-chip"><i style="background:#E6EDF2"></i><span>Cold Titanium White<em>no hex in brief</em></span></div>
+        <div class="cc-chip"><i style="background:linear-gradient(135deg,#E2B06A,#7a4d22)"></i><span>High-Polish Bronze<em>no hex in brief</em></span></div>
+        <div class="cc-chip"><i style="background:#0B1D3A"></i><span>Deep Ocean Indigo<em>#0B1D3A</em></span></div>
+        <div class="cc-chip"><i style="background:#00F3FF"></i><span>Bioluminescent Teal<em>#00F3FF</em></span></div>
+        <div class="cc-chip"><i style="background:#E9B949"></i><span>Metallic Saffron Gold<em>no hex in brief</em></span></div>
+        <div class="cc-chip"><i style="background:#00A2FF"></i><span>Electric Neon Blue<em>#00A2FF</em></span></div>
+        <div class="cc-chip"><i style="background:#FF3C00"></i><span>Volcanic Red-Amber<em>#FF3C00</em></span></div>
+        <div class="cc-chip"><i style="background:#000"></i><span>Absolute Matte Black<em>#000000</em></span></div>
+      </div>
+
+      <div class="cc-grid">
+        <div class="cc-card"><h3>What this is</h3><p>Two key-art concepts: a 16:9 cinematic frame and a 9:16 mobile/AR frame, drawn entirely in SVG, CSS and a small canvas. No image files, no third-party code.</p></div>
+        <div class="cc-card"><h3>What it is not</h3><p>Not a release, a product page, a store or a game. No payment, merchandise, licensing, audience or schedule claim is made or implied.</p></div>
+        <div class="cc-card"><h3>Reduced motion</h3><p>If your device asks for reduced motion, the animation stops and the key art is shown as a still frame.</p></div>
+      </div>
+
+      <div class="cc-live" id="cc-announce" role="status" aria-live="polite"></div>
+      <footer class="cc-foot"><strong>Ω SYD OMEGA 91717</strong> &middot; THE CELESTIAL COVENANTS &middot; CONCEPT KEY ART &middot; FICTION</footer>
+    </div>
+  </main>
+</div>
+<script src="/omega-celestial-covenants.js" defer></script>
+</body>
+</html>

@@ -6,11 +6,11 @@
     "config/omega-page-contracts.json",
     "nav.js"
   ],
-  "page_count": 242,
+  "page_count": 243,
   "hub_count": 14,
   "classification_counts": {
     "AMBIGUOUS": 10,
-    "CANDIDATE_MERGE_PANEL": 199,
+    "CANDIDATE_MERGE_PANEL": 200,
     "KEEP_SEPARATE": 19,
     "UNMAPPED": 14
   },
@@ -481,6 +481,20 @@
         "UNVERIFIED"
       ],
       "protected_hub": null
+    },
+    {
+      "page_id": "celestial-covenants",
+      "path": "celestial-covenants.html",
+      "navigation_section": "media",
+      "candidate_hub": "media.html",
+      "protected_hub": null,
+      "classification": "CANDIDATE_MERGE_PANEL",
+      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "authorization_state": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ]
     },
     {
       "page_id": "character",

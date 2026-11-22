@@ -78,7 +78,7 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
             )
         self.assertIn("main.main,main,.main,.page-shell,.page", self.runtime)
 
-    def test_184_specialist_routes_are_embedded_without_deleting_legacy_paths(self):
+    def test_specialist_routes_are_embedded_without_deleting_legacy_paths(self):   # was test_184_...: the count moves with every page added to a hub
         hubs = {hub["path"] for hub in self.matrix["hubs"]}
         children = [
             row for row in self.matrix["pages"]
@@ -86,8 +86,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
             and row["path"] != row["candidate_hub"]
             and row["page_id"] != "sovereign-core"
         ]
-        self.assertEqual(len(children), 184)
-        self.assertEqual(self.matrix["classification_counts"]["CANDIDATE_MERGE_PANEL"], 199)
+        self.assertEqual(len(children), 185)   # +1: celestial-covenants (media hub)
+        self.assertEqual(self.matrix["classification_counts"]["CANDIDATE_MERGE_PANEL"], 200)
         core = next(row for row in self.matrix["pages"] if row["page_id"] == "sovereign-core")
         self.assertEqual(core["candidate_hub"], "dashboard.html")
         self.assertEqual(core["classification"], "CANDIDATE_MERGE_PANEL")

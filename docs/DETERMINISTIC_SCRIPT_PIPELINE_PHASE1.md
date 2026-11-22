@@ -1,6 +1,6 @@
 # Deterministic browser-script pipeline — Phase 1 audit gate
 
-**Status:** read-only inventory and loader-contract audit are merged; runtime execution-order changes are not yet integrated.
+**Status:** read-only inventory and loader-contract audit are merged. The runtime pipeline is now implemented in bg.js behind an opt-in flag that defaults OFF (see "Implementation status" below). Rollout is NOT enabled and no production claim is made.
 **Repository baseline for this follow-up:** 6db14d38505d7352f64e1cb257d965a62bc43dac.
 
 ## Scope correction
@@ -83,3 +83,23 @@ The eventual browser pipeline must preserve the current static HTML + bg.js + se
 ## Ownership / integration boundary
 
 AGENTS.md assigns ChatGPT Python tooling under scripts and documentation, but reserves bg.js, nav.js, omega-prefixed runtime modules, workflow definitions, and deploy configuration to the Claude Code lane. Therefore this branch adds the read-only dependency graph and its tests plus this integration contract. The actual runtime scheduler must be integrated by the lane owner after reviewing the graph and browser test plan. No claim is made that asynchronous runtime loading has shipped.
+
+
+## Implementation status (flag OFF; acceptance criteria)
+
+Implemented in bg.js between the `Ω-SCRIPT-PIPELINE:begin/end` markers; enabled only by `localStorage['omega_script_pipeline']==='1'`.
+Evidence and caveats: `docs/fixes/2026-11-22-deterministic-script-pipeline-phase1-runtime.md`.
+
+| Acceptance criterion | State |
+|---|---|
+| Existing HTML/bg.js/Supabase/Vercel architecture, legacy globals, duplicate guards preserved | Done; `__omegaAppend` dedup untouched, `test_load_cost.py` unmodified and passing |
+| Eleven-module idle batch preserved | Done; `__omegaIdleAppend` untouched, `test_bg_idle_modules.py` passing |
+| Deterministic execution order for dynamic classic scripts | Done behind flag (`async=false`), browser-verified on fixtures and 3 real pages |
+| Explicit dependency registration, shared load promises | Mechanism done and tested; **no real module has declared dependencies yet** |
+| Failure / timeout / explicit retry | Done and tested; retry only after `load-error`, never after `timeout` |
+| Critical bootstrap/auth protected | Done by path pattern; retry/timeout/reorder all skipped for them |
+| Regression tests + browser validation | `scripts/tests/test_bg_script_pipeline.py`, `scripts/verify-script-pipeline.js` (22 checks), 24-render page matrix |
+| Rollout disabled until all criteria pass | Flag defaults OFF and is never set by repo code (tested) |
+| **Same-profile performance comparison (request count, bytes, long tasks, FCP)** | **NOT done: gates enablement** |
+| **Head-of-line blocking under a slow network** | **NOT measured: gates enablement** |
+| Production readiness | **No deployment evidence; not claimed** |

@@ -97,6 +97,16 @@ CLAIM_PATTERNS = [
     (re.compile(r'(?<![a-z])get\s+paid(?![a-z])', re.I),             'get paid'),
 ]
 
+# Explicit non-availability statements are disclosures, not earnings
+# entitlements. Strip only the narrowly defined negative payout phrase; any
+# positive claim elsewhere in the same file is still evaluated normally.
+NEGATED_PAYOUT = re.compile(
+    r'\\b(?:(?:creator|seller|sale|member)\\s+)?payouts?\\s+'
+    r'(?:are|remain|is|was|were|have\\s+been)\\s+'
+    r'(?:not\\s+)?(?:implemented|available|enabled|active|operational|supported|built|disabled|dormant)\\b',
+    re.I,
+)
+
 # Naming any of these means the file acknowledges the gating mechanism.
 GATE_REF = re.compile(r'platform_settings|data-omega-flag|OmegaFlags', re.I)
 
@@ -150,6 +160,9 @@ def strip_noise(src, rel):
         src = LABEL_TEXT.sub(blank, src)
         # An inline <script> inside a page can carry the same doc comments.
         src = BLOCK_COMMENT.sub(blank, src)
+    # A specific, explicit statement that payouts are unavailable is not an
+    # entitlement claim. Keep line offsets stable for any remaining findings.
+    src = NEGATED_PAYOUT.sub(blank, src)
     return src
 
 

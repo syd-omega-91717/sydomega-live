@@ -20,7 +20,7 @@
     var n = el('div', 'ft-n' + (heir ? ' ft-heir' : '') + (isYou ? ' ft-you' : ''));
     n.appendChild(el('b', null, name || 'UNNAMED'));
     n.appendChild(el('span', null, (rel || 'FAMILY').toUpperCase() + (sign ? ' · ' + sign : '')));
-    if (heir) n.appendChild(el('em', null, 'HEIR'));
+    if (heir) n.appendChild(el('em', null, 'PERSONAL LABEL'));
     return n;
   }
   function render(rows, myName) {
@@ -38,7 +38,7 @@
       var g = Object.prototype.hasOwnProperty.call(GEN, m.relation) ? GEN[m.relation] : null;
       if (g == null) other.push(m); else (by[g] = by[g] || []).push(m);
     });
-    host.appendChild(el('p', 'ft-sum', rows.length + (rows.length === 1 ? ' NODE' : ' NODES') + ' · ' + heirs + (heirs === 1 ? ' HEIR' : ' HEIRS')));
+    host.appendChild(el('p', 'ft-sum', rows.length + (rows.length === 1 ? ' NODE' : ' NODES') + ' · ' + heirs + (heirs === 1 ? ' SUCCESSOR LABEL' : ' SUCCESSOR LABELS')));
     ROWS.forEach(function (r) {
       var list = by[r[0]] || [];
       if (r[0] === 0) list = [{ __you: true }].concat(list);

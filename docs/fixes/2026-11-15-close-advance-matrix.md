@@ -23,3 +23,15 @@
 - **Not run on Supabase** (the connector refused every call this session): today's live grants and the live function body are unread. The owner's read-only check is in the gap item.
 - The proof uses my stub tables. Real `matrix_progress` has later columns and triggers the stub lacks; `phase` was added for the trigger text to run, and if real rows exist for several phases of one track, one call could advance more rows and mint more than 576.
 - Whether this should be applied first and how is the owner's step (controlled path). I cannot apply it.
+
+
+### Live read-only verification (2026-11-22)
+
+The Supabase connector is now available for read-only inspection. The live database confirms:
+
+- `public.advance_matrix(integer,text)`: SECURITY INVOKER, owned by `postgres`; EXECUTE is granted to `authenticated` and `service_role`, not `anon`.
+- `private.advance_matrix(integer,text)`: SECURITY DEFINER, owned by `postgres`, `search_path=public`; EXECUTE is granted to `authenticated`, not `anon` or `service_role`.
+- The `private` schema grants USAGE to `anon` and `authenticated`; `service_role` has no USAGE.
+- `public.matrix_progress` currently contains zero rows.
+
+This means the original proposal's public-wrapper revoke alone is incomplete: the private function is also directly executable by authenticated SQL callers where the schema is exposed. The corrected proposal revokes both entry points and does not claim that service_role retains access. No production migration was applied; the proposal remains outside `supabase/migrations/` and requires owner approval through the controlled migration path.

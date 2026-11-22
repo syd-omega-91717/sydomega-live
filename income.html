@@ -91,10 +91,10 @@
   </header>
 
   <nav class="finance-tabs" aria-label="Finance sections">
-    <button type="button" data-tab="actuals" aria-selected="true">ACTUALS</button>
-    <button type="button" data-tab="scenarios" aria-selected="false">SCENARIO LAB</button>
-    <button type="button" data-tab="governance" aria-selected="false">BILLING &amp; RULES</button>
-    <button type="button" data-tab="audit" aria-selected="false">AUDIT TRAIL</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="actuals" aria-selected="true">ACTUALS</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="scenarios" aria-selected="false">SCENARIO LAB</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="governance" aria-selected="false">BILLING &amp; RULES</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="audit" aria-selected="false">AUDIT TRAIL</button>
   </nav>
 
   <section class="finance-panel active" id="panel-actuals" aria-labelledby="actuals-title">
@@ -121,7 +121,7 @@
     </div>
     <div class="finance-note warning">Gross settled receipts are not recognized accounting revenue. The current ledger does not separately net tax, processor fees, disputes, foreign exchange, reserves, payout timing or accrual adjustments. Other income channels and manual bank activity are outside this Stripe-only report.</div>
     <div id="actuals-limitations" class="finance-foot"></div>
-    <div class="finance-actions"><button type="button" class="finance-button" id="refresh-actuals">REFRESH LIVE ACTUALS</button><span class="finance-foot">Owner authorization and AAL2 are enforced by the database function.</span></div>
+    <div class="finance-actions"><button type="button" data-omega-capability-id="finance-command" class="finance-button" id="refresh-actuals">REFRESH LIVE ACTUALS</button><span class="finance-foot">Owner authorization and AAL2 are enforced by the database function.</span></div>
   </section>
 
   <section class="finance-panel" id="panel-scenarios" aria-labelledby="scenario-title">
@@ -143,9 +143,9 @@
         <div class="finance-field"><label for="operating-cost">MONTHLY OPERATING COST</label><input id="operating-cost" type="number" min="0" max="1000000000000" step="0.01" value="0"/></div>
       </div>
       <div class="finance-actions" style="margin-top:16px">
-        <button type="button" class="finance-button" id="save-scenario">SAVE SCENARIO</button>
-        <button type="button" class="finance-button primary" id="run-scenario">RUN &amp; RECORD SIMULATION</button>
-        <button type="button" class="finance-button danger" id="delete-scenario" disabled>DELETE SCENARIO</button>
+        <button type="button" data-omega-capability-id="finance-command" class="finance-button" id="save-scenario">SAVE SCENARIO</button>
+        <button type="button" data-omega-capability-id="finance-command" class="finance-button primary" id="run-scenario">RUN &amp; RECORD SIMULATION</button>
+        <button type="button" data-omega-capability-id="finance-command" class="finance-button danger" id="delete-scenario" disabled>DELETE SCENARIO</button>
       </div>
       <div id="scenario-status" class="finance-status" role="status" aria-live="polite">Scenario inputs are not actual financial data.</div>
     </div>
@@ -153,7 +153,7 @@
       <div class="finance-section-title">Saved scenarios</div>
       <div class="finance-actions">
         <div class="finance-field" style="flex:1;min-width:220px"><label for="scenario-select">LOAD A SAVED SCENARIO</label><select id="scenario-select"><option value="">No saved scenario selected</option></select></div>
-        <button type="button" class="finance-button" id="load-scenario">LOAD SELECTED</button>
+        <button type="button" data-omega-capability-id="finance-command" class="finance-button" id="load-scenario">LOAD SELECTED</button>
       </div>
       <div id="scenario-history" class="finance-list"><div class="finance-empty">Loading saved scenarios…</div></div>
     </div>
@@ -381,7 +381,7 @@ async function loadScenarios() {
     .order('updated_at', { ascending: false })
     .limit(50);
   if (result.error) {
-    $('scenario-history').textContent = 'Saved scenarios unavailable: ' + result.error.message;
+    $('scenario-history').textContent = 'Saved scenarios are currently unavailable. No local-only fallback is presented as synchronized data.';
     return;
   }
   state.scenarios = Array.isArray(result.data) ? result.data : [];
@@ -452,7 +452,6 @@ function renderSimulation(result) {
     card.appendChild(make('div', 'v', formatMoney(value, result.currency_code)));
     grid.appendChild(card);
   });
-  host.appendChild(make('div', 'finance-actions'));
   host.appendChild(make('div', 'finance-note', 'SIMULATED · ' + result.scenario_name + ' · scenario v' + result.scenario_version + ' · formula ' + result.formula_version + ' · run ' + result.run_id));
   host.appendChild(grid);
 
@@ -524,7 +523,13 @@ async function loadActuals() {
     } else {
       setStatus('actuals-state', 'LIVE LEDGER UNAVAILABLE · no financial figure is being inferred.', 'error');
     }
-    $('currency-breakdown').replaceChildren(make('div', 'finance-empty', 'The authorized live ledger summary could not be retrieved.'));
+    ['payments-state','stripe-state','tokens-state','settlement-count','refund-count','processed-events','failed-events','unmatched-count'].forEach((id) => {
+      $(id).textContent = 'UNAVAILABLE';
+      $(id).style.color = 'var(--muted)';
+    });
+    $('actuals-updated').textContent = '';
+    $('actuals-limitations').textContent = '';
+    $('currency-breakdown').replaceChildren(make('div', 'finance-empty', 'The authorized live ledger summary could not be retrieved. No prior figure is retained as current.'));
     return;
   }
   renderActuals(result.data || {});
@@ -549,6 +554,7 @@ async function boot() {
     return;
   }
   $('app').hidden = false;
+  $('app').style.display = 'flex';
   if (window.__omegaPopulate) window.__omegaPopulate(profile, session.user);
   await Promise.allSettled([loadActuals(), loadScenarios(), loadRunHistory()]);
 }
@@ -613,7 +619,7 @@ $('delete-scenario').addEventListener('click', async () => {
 boot().catch((error) => {
   console.error('Finance command failed to initialize:', error);
   const app = $('app');
-  if (app) app.hidden = false;
+  if (app) { app.hidden = false; app.style.display = 'flex'; }
   setStatus('actuals-state', 'FINANCE COMMAND INITIALIZATION FAILED · verify authentication and page runtime.', 'error');
 });
 </script>

@@ -207,7 +207,6 @@ async function submitAd(){
     if(sessionResult.error)throw sessionResult.error;
     var session=sessionResult.data&&sessionResult.data.session;
     if(!session||!session.user)throw new Error('SIGN_IN_REQUIRED');
-    var ins=await sb.from('advertisements').insert({company:company,contact_email:email,title:headline,description:body,rate_tier:tier,category:cat,url:url||null,status:'pending',submitted_by:session.user.id});
     try{
       var ins=await sb.from('advertisements').insert({company:company,contact_email:email,title:headline,description:body,rate_tier:tier,category:cat,url:url||null,status:'pending',submitted_by:session.user.id});
       if(ins.error)throw ins.error;

@@ -90,14 +90,14 @@
     <div class="truth-chip"><span class="truth-dot"></span><span>TRUTH-BOUND FINANCE</span></div>
   </header>
 
-  <nav class="finance-tabs" aria-label="Finance sections">
-    <button type="button" data-omega-capability-id="finance-command" data-tab="actuals" aria-selected="true">ACTUALS</button>
-    <button type="button" data-omega-capability-id="finance-command" data-tab="scenarios" aria-selected="false">SCENARIO LAB</button>
-    <button type="button" data-omega-capability-id="finance-command" data-tab="governance" aria-selected="false">BILLING &amp; RULES</button>
-    <button type="button" data-omega-capability-id="finance-command" data-tab="audit" aria-selected="false">AUDIT TRAIL</button>
+  <nav class="finance-tabs" role="tablist" aria-label="Finance sections">
+    <button type="button" data-omega-capability-id="finance-command" data-tab="actuals" id="tab-actuals" role="tab" aria-controls="panel-actuals" aria-selected="true" tabindex="0">ACTUALS</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="scenarios" id="tab-scenarios" role="tab" aria-controls="panel-scenarios" aria-selected="false" tabindex="-1">SCENARIO LAB</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="governance" id="tab-governance" role="tab" aria-controls="panel-governance" aria-selected="false" tabindex="-1">BILLING &amp; RULES</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="audit" id="tab-audit" role="tab" aria-controls="panel-audit" aria-selected="false" tabindex="-1">AUDIT TRAIL</button>
   </nav>
 
-  <section class="finance-panel active" id="panel-actuals" aria-labelledby="actuals-title">
+  <section class="finance-panel active" id="panel-actuals" role="tabpanel" aria-labelledby="tab-actuals" tabindex="0">
     <div class="finance-note good"><strong>LIVE LEDGER · READ ONLY.</strong> Actuals come from the Stripe settlement ledger only. The dashboard does not infer income from member counts, proposed prices, planned commissions or allocation percentages.</div>
     <div class="finance-grid">
       <article class="finance-card"><div class="k">Payment processing</div><div class="v" id="payments-state">—</div><div class="hint">Live platform setting</div></article>
@@ -124,7 +124,7 @@
     <div class="finance-actions"><button type="button" data-omega-capability-id="finance-command" class="finance-button" id="refresh-actuals">REFRESH LIVE ACTUALS</button><span class="finance-foot">Owner authorization and AAL2 are enforced by the database function.</span></div>
   </section>
 
-  <section class="finance-panel" id="panel-scenarios" aria-labelledby="scenario-title">
+  <section class="finance-panel" id="panel-scenarios" role="tabpanel" aria-labelledby="tab-scenarios" tabindex="0">
     <div class="finance-note"><strong>SIMULATED ONLY.</strong> Every input below is an assumption you enter. It does not create revenue, charge a customer, alter a balance, issue a token or promise a return. Each run is stored with its input snapshot and formula version.</div>
     <div class="finance-surface">
       <div class="finance-section-title" id="scenario-title">Scenario definition</div>
@@ -163,7 +163,7 @@
     </div>
   </section>
 
-  <section class="finance-panel" id="panel-governance" aria-labelledby="governance-title">
+  <section class="finance-panel" id="panel-governance" role="tabpanel" aria-labelledby="tab-governance" tabindex="0">
     <div class="finance-section-title" id="governance-title">Billing and economic controls</div>
     <div class="finance-grid" id="billing-flags">
       <article class="finance-card"><div class="k">Payments</div><div class="v">—</div></article>
@@ -187,7 +187,7 @@
     </div>
   </section>
 
-  <section class="finance-panel" id="panel-audit" aria-labelledby="audit-title">
+  <section class="finance-panel" id="panel-audit" role="tabpanel" aria-labelledby="tab-audit" tabindex="0">
     <div class="finance-section-title" id="audit-title">Evidence and calculation lineage</div>
     <div class="finance-surface">
       <div class="finance-row"><span>Actuals source</span><strong>STRIPE SETTLEMENT LEDGER</strong></div>
@@ -210,7 +210,7 @@
       <div class="finance-section-title">Recorded simulation runs</div>
       <div id="run-history" class="finance-list"><div class="finance-empty">Loading immutable simulation history…</div></div>
     </div>
-    <div class="finance-note">Market quotes are not displayed here. The current Twelve Data quote proxy remains dormant until a suitable API key and redistribution rights for member-facing display are confirmed. This dashboard is an operational record, not investment, tax or legal advice.</div>
+    <div class="finance-note">Market quotes are not displayed here. Before exposing member-facing quotes, verify the deployed market-price function's provider key, subscription, rate limits and redistribution rights. This dashboard is an operational record, not investment, tax or legal advice.</div>
   </section>
   <div data-page-emblem="income" style="margin:12px auto 0"></div>
 </main>
@@ -262,6 +262,7 @@ function setTab(name) {
   document.querySelectorAll('[data-tab]').forEach((button) => {
     const active = button.dataset.tab === name;
     button.setAttribute('aria-selected', active ? 'true' : 'false');
+    button.tabIndex = active ? 0 : -1;
   });
   document.querySelectorAll('.finance-panel').forEach((panel) => {
     panel.classList.toggle('active', panel.id === 'panel-' + name);
@@ -560,8 +561,23 @@ async function boot() {
   await Promise.allSettled([loadActuals(), loadScenarios(), loadRunHistory()]);
 }
 
-document.querySelectorAll('[data-tab]').forEach((button) => {
+const financeTablist = document.querySelector('.finance-tabs');
+financeTablist.querySelectorAll('[data-tab]').forEach((button) => {
   button.addEventListener('click', () => setTab(button.dataset.tab));
+});
+financeTablist.addEventListener('keydown', (event) => {
+  const tabs = Array.from(financeTablist.querySelectorAll('[role="tab"]'));
+  const current = tabs.indexOf(document.activeElement);
+  if (current < 0) return;
+  let next = current;
+  if (event.key === 'ArrowRight') next = (current + 1) % tabs.length;
+  else if (event.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+  else if (event.key === 'Home') next = 0;
+  else if (event.key === 'End') next = tabs.length - 1;
+  else return;
+  event.preventDefault();
+  tabs[next].focus();
+  tabs[next].click();
 });
 $('refresh-actuals').addEventListener('click', loadActuals);
 $('save-scenario').addEventListener('click', async () => {

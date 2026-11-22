@@ -161,6 +161,7 @@ GATES = [
     ('finance-truth-scenario-lab',
      'actual finance is owner/AAL2-gated Stripe ledger data and hypothetical simulations are persisted as immutable, versioned snapshots',
      ['scripts/tests/test_financial_truth_contract.py']),
+     ['scripts/tests/test_advance_matrix_closed.py']),
     ('supabase-hibp-config',
      'Supabase Auth leaked-password protection helper changes only the HIBP flag and verifies provider confirmation',
      ['scripts/tests/test_enable_supabase_hibp.py']),

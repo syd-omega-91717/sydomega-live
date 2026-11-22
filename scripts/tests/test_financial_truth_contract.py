@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PAGE = (ROOT / "income.html").read_text(encoding="utf-8")
 MIGRATION = (ROOT / "supabase/migrations/20261122100837_financial_truth_and_scenario_lab.sql").read_text(encoding="utf-8")
 BOUNDS = (ROOT / "supabase/migrations/20261122100946_financial_scenario_numeric_bounds.sql").read_text(encoding="utf-8")
+WRAPPERS = (ROOT / "supabase/migrations/20261122101614_finance_rpc_private_wrappers_and_index.sql").read_text(encoding="utf-8")
 
 
 class FinancialTruthContract(unittest.TestCase):
@@ -79,6 +80,20 @@ class FinancialTruthContract(unittest.TestCase):
         self.assertNotIn("9.17%", PAGE)
         self.assertNotIn("25%", PAGE)
         self.assertNotIn("$9.17", PAGE)
+
+    def test_public_finance_rpcs_are_invoker_wrappers_and_private_impls_are_hardened(self):
+        source = WRAPPERS.lower()
+        self.assertIn("create or replace function private.omega_owner_finance_summary()", source)
+        self.assertIn("create or replace function private.omega_run_financial_scenario(p_scenario_id uuid)", source)
+        self.assertIn("security definer", source)
+        self.assertGreaterEqual(source.count("set search_path to ''"), 2)
+        owner_public = source.split("create or replace function public.omega_owner_finance_summary()", 1)[1].split("create or replace function public.omega_run_financial_scenario", 1)[0]
+        run_public = source.split("create or replace function public.omega_run_financial_scenario", 1)[1].split("revoke all on function public.omega_owner_finance_summary", 1)[0]
+        self.assertIn("security invoker", owner_public)
+        self.assertNotIn("security definer", owner_public)
+        self.assertIn("security invoker", run_public)
+        self.assertNotIn("security definer", run_public)
+        self.assertIn("omega_financial_simulation_runs_scenario_id_idx", source)
 
 
 if __name__ == "__main__":

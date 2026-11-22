@@ -20,9 +20,10 @@
 - `scripts/tests/test_advance_matrix_closed.py` (7): the proposal's shape, that it stays out of the migration path, no page/script/function calls the function, `automation.html` only stores the name, no SQL function calls it, and **nothing else writes `matrix_progress`**. Five plants each fail it: a page that calls it, a new writer migration, a SQL function that calls it, the revoke weakened to `PUBLIC` only, and the proposal moved into `supabase/migrations/`. Clean tree passes with `-W error::ResourceWarning`.
 
 **Not done / not verified.**
-- **Not run on Supabase** (the connector refused every call this session): today's live grants and the live function body are unread. The owner's read-only check is in the gap item.
-- The proof uses my stub tables. Real `matrix_progress` has later columns and triggers the stub lacks; `phase` was added for the trigger text to run, and if real rows exist for several phases of one track, one call could advance more rows and mint more than 576.
-- Whether and when to move this into the production migration path remains an explicit owner approval through the controlled path. I cannot apply it.
+- The corrected dual-revoke has not yet been re-proven in a fresh throwaway replay and has not been applied to Supabase.
+- Live read-only grants and function bodies were verified on 2026-11-22 (details below). Whether the private schema is exposed through PostgREST was not established; the public wrapper is definitely callable by authenticated.
+- The earlier throwaway proof used stub tables and tested only the public-wrapper revoke. Real `matrix_progress` has later columns and triggers; the corrected proposal needs a fresh replay against the actual function definitions before approval.
+- Whether and when to move this into the production migration path remains an explicit owner approval through the controlled path. No live change was made.
 
 
 ### Live read-only verification (2026-11-22)
@@ -34,4 +35,4 @@ The Supabase connector is now available for read-only inspection. The live datab
 - The `private` schema grants USAGE to `anon` and `authenticated`; `service_role` has no USAGE.
 - `public.matrix_progress` currently contains zero rows.
 
-This means the original proposal's public-wrapper revoke alone is incomplete: the private function is also directly executable by authenticated SQL callers where the schema is exposed. The corrected proposal revokes both entry points and does not claim that service_role retains access. No production migration was applied; the proposal remains outside `supabase/migrations/` and requires owner approval through the controlled migration path.
+This means the original proposal's public-wrapper revoke alone is incomplete: the private function also has EXECUTE granted to authenticated, and the private schema grants USAGE. Whether PostgREST exposes that schema was not established here. The corrected proposal revokes both entry points and does not claim that service_role retains access. No production migration was applied; the proposal remains outside `supabase/migrations/` and requires owner approval through the controlled migration path.

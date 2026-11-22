@@ -88,6 +88,81 @@ def scan_bg_injection(bg, known):
             result.setdefault(name, "referenced-in-bg-unclassified")
     return result
 
+def scan_bg_loader_sequence(bg, known):
+    """Capture root script assignments followed by the matching append helper."""
+    assignment = re.compile(
+        r"(?P<variable>[A-Za-z_$][A-Za-z0-9_$]*)\.src\s*=\s*['\"]/(?P<path>[A-Za-z0-9_.-]+\.js)['\"]"
+    )
+    matches = list(assignment.finditer(bg))
+    sequence = []
+    for index, match in enumerate(matches):
+        name = match.group("path")
+        if name not in known or name == "bg.js":
+            continue
+        end = matches[index + 1].start() if index + 1 < len(matches) else min(len(bg), match.end() + 1600)
+        window = bg[match.end():end]
+        variable = re.escape(match.group("variable"))
+        append = re.search(r"__omega(Idle)?Append\s*\(\s*" + variable + r"\s*\)", window)
+        if not append:
+            continue
+        helper = "idle" if append.group(1) else "immediate"
+        append_offset = match.end() + append.start()
+        sequence.append({
+            "order": len(sequence) + 1,
+            "path": name,
+            "helper": helper,
+            "source_line": bg.count("\n", 0, match.start()) + 1,
+            "append_line": bg.count("\n", 0, append_offset) + 1,
+        })
+    return sequence
+
+
+def inspect_bg_loader_contract(bg):
+    """Report concrete loader guarantees present in the current bg.js source."""
+    append_start = bg.find("function __omegaAppend(el){")
+    idle_start = bg.find("function __omegaIdleAppend(el){")
+    platform_start = bg.find("/* Platform nervous system */")
+    append_end = platform_start if platform_start > append_start >= 0 else len(bg)
+    append_block = bg[append_start:append_end] if append_start >= 0 else ""
+    idle_end = append_start if append_start > idle_start >= 0 else len(bg)
+    idle_block = bg[idle_start:idle_end] if idle_start >= 0 else ""
+
+    ordered = bool(re.search(r"\bel\.async\s*=\s*false\b", append_block))
+    promise = bool(re.search(r"\bnew\s+Promise\s*\(", append_block))
+    onload = bool(re.search(r"\.onload\s*=|addEventListener\(\s*['\"]load['\"]", append_block))
+    onerror = bool(re.search(r"\.onerror\s*=|addEventListener\(\s*['\"]error['\"]", append_block))
+    timeout = bool(re.search(r"\bsetTimeout\s*\(", append_block))
+    retry = bool(re.search(r"\.delete\s*\(|delete\s+[A-Za-z_$][\w$]*\s*\[", append_block))
+    dedupe = "WeakSet" in append_block and "isConnected" in append_block
+    idle_cap = re.search(r"requestIdleCallback\s*\(\s*run\s*,\s*\{\s*timeout\s*:\s*(\d+)", idle_block)
+    idle_waits_for_load = (
+        "document.readyState==='complete'" in idle_block
+        and re.search(r"addEventListener\(\s*['\"]load['\"].*?once\s*:\s*true", idle_block, re.S) is not None
+    )
+    return {
+        "append_helper_present": append_start >= 0,
+        "idle_helper_present": idle_start >= 0,
+        "sets_async_false_before_append": ordered,
+        "ordered_dynamic_execution": ordered,
+        "returns_shared_load_promise": promise,
+        "handles_load_event": onload,
+        "handles_network_or_csp_error": onerror,
+        "has_load_timeout": timeout,
+        "has_explicit_retry_state": retry,
+        "deduplicates_existing_scripts": dedupe,
+        "idle_waits_for_window_load": idle_waits_for_load,
+        "idle_request_timeout_ms": int(idle_cap.group(1)) if idle_cap else None,
+        "status": "ORDERED_WITH_ERROR_CONTRACT" if ordered and promise and onerror and timeout and retry
+                  else "DEDUPE_AND_IDLE_ONLY" if dedupe and idle_waits_for_load
+                  else "PARTIAL_OR_UNRECOGNIZED",
+        "interpretation": (
+            "Dynamically inserted classic scripts are not explicitly ordered by this helper."
+            if not ordered else
+            "The helper explicitly disables async for inserted scripts; verify source order in a browser."
+        ),
+    }
+
+
 def resolve_local_import(specifier, importer, known):
     if not specifier.startswith((".", "/")):
         return None
@@ -137,6 +212,8 @@ def build_inventory(root):
         page_orders[page.name] = ordered
 
     bg_loads = scan_bg_injection(scripts.get("bg.js", ""), known)
+    bg_sequence = scan_bg_loader_sequence(scripts.get("bg.js", ""), known)
+    bg_loader_contract = inspect_bg_loader_contract(scripts.get("bg.js", ""))
     publishers = defaultdict(set)
     for name, source in scripts.items():
         for regex in GLOBAL_PUBLISHERS:
@@ -180,9 +257,11 @@ def build_inventory(root):
 
     order, cycles = topological_order(sorted(scripts), hard_edges)
     return {
-        "schema_version": 1, "analysis_mode": "static-evidence-only",
+        "schema_version": 2, "analysis_mode": "static-evidence-only",
         "root_script_count": len(scripts), "html_page_count": len(pages),
         "bg_injected_script_count": len(bg_loads),
+        "bg_loader_sequence": bg_sequence,
+        "bg_loader_contract": bg_loader_contract,
         "bg_load_states": {state: sorted(name for name, value in bg_loads.items() if value == state)
                            for state in sorted(set(bg_loads.values()))},
         "summary": {category: sum(row["classification"] == category for row in rows)
@@ -196,6 +275,8 @@ def build_inventory(root):
             "Static analysis cannot prove runtime independence or discover dynamically constructed property names.",
             "Global-symbol references and side-effect classes are review signals, not proof of execution order.",
             "The topological order includes only statically resolved local import/require edges.",
+            "The bg.js loader sequence is source-order evidence, not a runtime trace or dependency proof.",
+            "An async=false check is scoped to the append helper; browser execution order still requires a render test.",
             "No script tags, runtime loaders, globals, feature flags, or production behavior are changed by this tool."
         ],
     }

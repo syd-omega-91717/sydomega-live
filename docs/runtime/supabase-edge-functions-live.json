@@ -283,7 +283,7 @@
       "provider_updated_at": "2026-11-03T21:59:59.448Z"
     }
   },
-  "verification_note": "Read-only provider inventory refreshed 2026-11-22T09:24:00.000Z. Supabase list_edge_functions reports 22 ACTIVE functions. All 22 names match supabase/config.toml and config/omega-edge-function-auth.json; verify_jwt agrees for every function. All 22 deployed entrypoints match current main source at commit 883c2c5e00105c0a462cb4d16394727ba0063e52: 18 entrypoints were compared byte-for-byte in this refresh, and the other 4 retain the same live SHA-256 and GitHub blob SHA as the prior exact-match capture. Five repository functions remain LOCAL_ONLY and intentionally absent from provider inventory: checkout, event-ingest, graphify-ai-ingest, graphify-ai-query, weekly-digest. Source parity does not prove runtime request behavior, secret availability, provider quotas, or end-to-end workflows.",
+  "verification_note": "Read-only provider inventory refreshed 2026-11-22T09:24:00.000Z. Supabase list_edge_functions reports 22 ACTIVE functions. All 22 names match supabase/config.toml and config/omega-edge-function-auth.json; verify_jwt agrees for every function. All 22 deployed entrypoints match current main source at commit 883c2c5e00105c0a462cb4d16394727ba0063e52: 18 entrypoints were compared byte-for-byte in this refresh, and the other 4 retain the same live SHA-256 and GitHub blob SHA as the prior exact-match capture. source_tree_commit retains the last full-source baseline 04f87ca71168986d200cab7fefdce5e229a74a85, which the provider-parity contract pins. Five repository functions remain LOCAL_ONLY and intentionally absent from provider inventory: checkout, event-ingest, graphify-ai-ingest, graphify-ai-query, weekly-digest. Source parity does not prove runtime request behavior, secret availability, provider quotas, or end-to-end workflows.",
   "inventory_summary": {
     "local_function_count": 27,
     "provider_active_count": 22,
@@ -304,5 +304,5 @@
   "classification_updated_at": "2026-11-22T09:24:00.000Z",
   "provider_project_id": "ydqhzvvoyufiiqvzcjns",
   "provider_function_count": 22,
-  "source_tree_commit": "883c2c5e00105c0a462cb4d16394727ba0063e52"
+  "source_tree_commit": "04f87ca71168986d200cab7fefdce5e229a74a85"
 }

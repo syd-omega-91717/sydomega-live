@@ -46,6 +46,68 @@ class ScriptDependencyGraphTests(unittest.TestCase):
             result = MODULE.build_inventory(root)
             self.assertEqual(result["hard_dependency_cycles_or_blocked_nodes"], ["a.js", "b.js"])
 
+
+    def test_bg_loader_contract_reports_missing_order_and_failure_guarantees(self):
+        bg = """
+function __omegaIdleAppend(el){
+  var go=function(){var run=function(){__omegaAppend(el);};
+    if(window.requestIdleCallback){requestIdleCallback(run,{timeout:2500});}
+    else{setTimeout(run,300);}
+  };
+  if(document.readyState==='complete'){go();}
+  else{window.addEventListener('load',go,{once:true});}
+}
+function __omegaAppend(el){
+  var seen=__omegaAppend.seen||(__omegaAppend.seen={el:new WeakSet(),path:Object.create(null)});
+  if(document.body){if(!dup())document.body.appendChild(el);return;}
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.body;if(b&&!dup())b.appendChild(el);
+  });
+}
+"""
+        contract = MODULE.inspect_bg_loader_contract(bg)
+        self.assertTrue(contract["deduplicates_existing_scripts"])
+        self.assertTrue(contract["idle_waits_for_window_load"])
+        self.assertEqual(contract["idle_request_timeout_ms"], 2500)
+        self.assertFalse(contract["ordered_dynamic_execution"])
+        self.assertFalse(contract["returns_shared_load_promise"])
+        self.assertFalse(contract["handles_network_or_csp_error"])
+        self.assertFalse(contract["has_load_timeout"])
+        self.assertEqual(contract["status"], "DEDUPE_AND_IDLE_ONLY")
+
+    def test_bg_loader_contract_recognizes_explicit_order_and_error_api(self):
+        bg = """
+function __omegaIdleAppend(el){requestIdleCallback(function(){__omegaAppend(el);},{timeout:2500});}
+function __omegaAppend(el){
+  el.async=false;
+  return new Promise(function(resolve,reject){
+    el.onload=resolve;
+    el.onerror=function(error){reject(error);};
+    var timer=setTimeout(function(){reject(new Error('timeout'));},8000);
+    document.body.appendChild(el);
+    registry.delete(el.src);
+  });
+}
+"""
+        contract = MODULE.inspect_bg_loader_contract(bg)
+        self.assertTrue(contract["ordered_dynamic_execution"])
+        self.assertTrue(contract["returns_shared_load_promise"])
+        self.assertTrue(contract["handles_load_event"])
+        self.assertTrue(contract["handles_network_or_csp_error"])
+        self.assertTrue(contract["has_load_timeout"])
+        self.assertTrue(contract["has_explicit_retry_state"])
+        self.assertEqual(contract["status"], "ORDERED_WITH_ERROR_CONTRACT")
+
+    def test_bg_loader_sequence_preserves_source_order_and_idle_classification(self):
+        bg = """
+var alpha=document.createElement('script');alpha.src='/alpha.js';alpha.defer=true;__omegaAppend(alpha);
+var beta=document.createElement('script');beta.src='/beta.js';beta.defer=true;__omegaIdleAppend(beta);
+"""
+        sequence = MODULE.scan_bg_loader_sequence(bg, {"alpha.js", "beta.js"})
+        self.assertEqual([item["path"] for item in sequence], ["alpha.js", "beta.js"])
+        self.assertEqual([item["helper"] for item in sequence], ["immediate", "idle"])
+        self.assertEqual([item["order"] for item in sequence], [1, 2])
+
     def test_excludes_external_and_vendor_script_references(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

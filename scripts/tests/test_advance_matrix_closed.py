@@ -1,7 +1,6 @@
 """advance_matrix(int, text) lets any signed-in member raise any track's axes and mint points; the proposal closes it.
 
-Proved on a throwaway Postgres 16 with the real function text from 0004 and 0005 (324 accepted calls, 576 points and 8,748 of 8,748 nodes before; 324 refusals, 0 points and
-0 nodes after; anon refused; owner and service_role allowed; a SECURITY DEFINER wrapper still works) - see docs/fixes/2026-11-15-close-advance-matrix.md. NOT run on Supabase.
+The original throwaway Postgres 16 proof tested the public-wrapper revoke only (324 calls accepted before, refused after). It did not test the private function's direct authenticated permission. The corrected dual-revoke still needs a fresh throwaway replay and has not been applied on Supabase; see docs/fixes/2026-11-15-close-advance-matrix.md.
 This file keeps what CI can: both entry-point revokes, that the proposal stays out of the migration path, and the two repository facts its safety rests on - NOTHING calls the function,
 and NOTHING else writes matrix_progress. Live grant facts are recorded separately; the corrected dual-revoke still needs a fresh throwaway replay before owner approval.
 """

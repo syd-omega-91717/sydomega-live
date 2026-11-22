@@ -1,6 +1,6 @@
 ### Any member could mint sovereign points by calling advance_matrix in a loop; a revoke is proposed (2026-11-15)
 
-**Status: PROPOSAL. The SQL is in `docs/proposed-migrations/`, deliberately not in `supabase/migrations/` and not in `pending-migrations.json`. Merging this applies nothing.**
+**Status (2026-11-22): PROPOSAL, RE-PROVEN, NOT APPLIED. The SQL is `docs/proposed-migrations/20261122110000_close_advance_matrix.sql` (guarded dual revoke, supersedes the 2026-11-15 file) with its reproducible proof beside it. It is deliberately not in `supabase/migrations/` or `pending-migrations.json`: main's pinned tests require an empty pending registry, so it moves into the migration path in the same change that records it in `remote-migrations.json`, after the owner applies it. Merging this applies nothing.**
 
 **Found.** An open item in `GAP_ANALYSIS.md` said `advance_matrix` "appears to" let any member raise any sign's axes, "not verified live". Reading source and proving it:
 - `0004_omega_nested_matrix.sql:73-92`: `advance_matrix(p_track int, p_axis text)` is `SECURITY DEFINER`, `GRANT EXECUTE ... TO authenticated`. It adds 1 to the named axis (capped at 9) of the caller's own `matrix_progress` row, checking no event. `20260818000551_...sql:118` revokes only `PUBLIC`. No later migration touches it (all three files that mention it are 0003's comment, 0004, and that revoke).
@@ -36,3 +36,22 @@ The Supabase connector is now available for read-only inspection. The live datab
 - `public.matrix_progress` currently contains zero rows.
 
 This means the original proposal's public-wrapper revoke alone is incomplete: the private function also has EXECUTE granted to authenticated, and the private schema grants USAGE. Whether PostgREST exposes that schema was not established here. The corrected proposal revokes both entry points and does not claim that service_role retains access. No production migration was applied; the proposal remains outside `supabase/migrations/` and requires owner approval through the controlled migration path.
+
+
+### Promotion to the migration path and re-proof (2026-11-22)
+
+**Re-proof of the dual revoke (`docs/proposed-migrations/20261122110000_close_advance_matrix.proof.sql` reproduces it), throwaway Postgres 16.15 (own cluster, stubbed `auth.uid()`, `anon`/`authenticated`/`service_role` roles, `private` schema with USAGE for anon+authenticated, SECURITY INVOKER public wrapper over the SECURITY DEFINER private function, points trigger).** A member looping 12 tracks x 3 axes x 9 calls, on both entry points, impersonating with `SET ROLE authenticated` + `request.jwt.claims`:
+
+| | public wrapper | private direct | points minted |
+|---|---|---|---|
+| before | 324 accepted / 0 refused | 324 / 0 | 576 |
+| after the real migration file | 0 / 324 refused | 0 / 324 | 0 |
+
+The `postgres` owner can still call it afterwards. **Replay shape**: a database holding only `public.advance_matrix` (what `supabase/migrations/0004` alone defines, no private copy) runs the migration without error and the function is then refused to `authenticated`. This is why the migration is guarded with `to_regprocedure`: the first draft's unconditional `REVOKE ... private.advance_matrix` would have aborted a fresh replay.
+
+**Still not done / not verified.**
+- Not applied to Supabase. This session's Supabase connector refused every call, reads included (`get_advisors`, `list_migrations`: `You do not have permission`), so live grants were NOT re-read today and nothing could be applied.
+- **Owner step:** apply `docs/proposed-migrations/20261122110000_close_advance_matrix.sql` (a guarded DO block; safe to run on live and on a fresh replay), then `git mv` it to `supabase/migrations/` and add `20261122110000` to `supabase/remote-migrations.json` in one commit. Reversible: `GRANT EXECUTE ... TO authenticated`. The 2026-11-22 live reading above is the earlier session's.
+- The throwaway used stub tables, not the real `matrix_progress` (which has later columns/triggers). The CI "Fresh database replay (all migrations)" job is the check for that.
+- `supabase/live-grants.json` and `types/database.types.ts` still list the function: regenerate after the migration is applied live. `remote-migrations.json` gets the version only once the provider ledger shows it.
+- Still a design decision for the owner: which real event advances which axis of which track (the matrix is now unmovable by members, which is the honest state).

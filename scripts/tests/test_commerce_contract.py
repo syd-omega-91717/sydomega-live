@@ -131,6 +131,13 @@ class CommerceContractTest(unittest.TestCase):
         r = self.fx.run()
         self.assertEqual(r.returncode, 0, r.stdout)
 
+    def test_enabled_payout_language_is_still_blocked(self):
+        write(self.fx.path("enabled.html"),
+              "<html><body>Creator payouts remain enabled for members.</body></html>")
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("UNGATED EARNINGS CLAIM", r.stdout)
+
     def test_disabled_disclosure_does_not_hide_a_separate_positive_claim(self):
         write(self.fx.path("mixed.html"),
               "<html><body>Creator payouts remain disabled. "

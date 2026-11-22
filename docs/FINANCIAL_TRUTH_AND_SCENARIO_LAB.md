@@ -59,9 +59,9 @@ This is a deliberately explicit planning model, not a tax engine, statutory acco
 
 ## Security boundaries
 
-- Actuals RPC: SECURITY DEFINER, empty search path, owner check, AAL2 check, authenticated-only execute.
+- Public actuals and simulation RPCs: SECURITY INVOKER wrappers. Their privileged implementations live in the non-exposed `private` schema, use an empty search path, and enforce owner/AAL2 or per-user ownership.
 - Scenario records: RLS enabled; select/insert/update/delete scoped to `auth.uid()`.
-- Simulation runs: RLS enabled; authenticated users can read only their own rows. Direct client writes are revoked; the owner-checked RPC creates each run.
+- Simulation runs: RLS enabled; authenticated users can read only their own rows. Direct client writes are revoked; the owner-checked private implementation creates each run. The `scenario_id` foreign key is indexed.
 - Payment, Stripe, token and KYC feature flags are not changed by these migrations.
 - No live payment or synthetic payment record is created.
 

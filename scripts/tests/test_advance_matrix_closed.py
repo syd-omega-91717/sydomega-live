@@ -28,8 +28,9 @@ WRITERS = {("0004_omega_nested_matrix.sql", "insert"), ("0004_omega_nested_matri
 
 
 class AdvanceMatrixClosed(unittest.TestCase):
-    def test_the_proposal_revokes_from_everyone_but_the_server(self):
-        self.assertRegex(CODE, r"revoke execute on function public\.advance_matrix\(integer, text\) from public, anon, authenticated;")
+    def test_the_proposal_revokes_both_public_and_private_entry_points(self):
+        self.assertRegex(CODE, r"revoke execute on function public\.advance_matrix\(integer, text\) from public, anon, authenticated, service_role;")
+        self.assertRegex(CODE, r"revoke execute on function private\.advance_matrix\(integer, text\) from public, anon, authenticated, service_role;")
         self.assertNotIn("grant execute", CODE, "the proposal must not grant anything")
 
     def test_the_proposal_is_not_in_the_migration_path(self):

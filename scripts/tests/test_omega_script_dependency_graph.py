@@ -95,12 +95,14 @@ function __omegaAppend(el){
 function retryOmegaScript(src){ pending.delete(src); }
 """
         contract = MODULE.inspect_bg_loader_contract(bg)
-        self.assertTrue(contract["ordered_dynamic_execution"])
-        self.assertTrue(contract["returns_shared_load_promise"])
+        self.assertTrue(contract["ordered_dynamic_execution_signal"])
+        self.assertTrue(contract["creates_load_promise_signal"])
+        self.assertTrue(contract["shared_inflight_promise_registry_signal"])
         self.assertTrue(contract["has_load_callback_signal"])
-        self.assertTrue(contract["handles_network_or_csp_error"])
-        self.assertTrue(contract["has_load_timeout"])
+        self.assertTrue(contract["has_error_callback_signal"])
+        self.assertTrue(contract["has_timeout_signal"])
         self.assertTrue(contract["has_registry_cleanup_signal"])
+        self.assertTrue(contract["has_retry_api_signal"])
         self.assertEqual(contract["status"], "ORDERED_WITH_SHARED_PROMISE_AND_RETRY_SIGNALS")
 
     def test_bg_loader_sequence_preserves_source_order_and_idle_classification(self):

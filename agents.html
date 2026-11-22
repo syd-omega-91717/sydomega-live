@@ -1,7 +1,9 @@
 <!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}/* 12x12 hierarchy — canonical Omega surface, gold and cyan tokens. */
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end --><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN AGENTS</title>
+<style>
 .hierarchy-summary{display:flex;gap:.65rem;flex-wrap:wrap;padding:1rem}
 .hierarchy-stat{flex:1 1 150px;min-width:0;padding:.85rem 1rem;background:var(--surface);border:1px solid var(--line);border-radius:8px}
 .hierarchy-stat strong{display:block;color:var(--gold);font:1.35rem var(--D);margin-bottom:.25rem}
@@ -19,9 +21,6 @@
 .hierarchy-slot span{display:block;font:10px var(--M);letter-spacing:.04em;color:var(--muted);overflow-wrap:anywhere}
 .hierarchy-family{margin-top:.8rem;color:var(--cyan);font:10px var(--M);letter-spacing:.08em}
 @media(max-width:520px){.hierarchy-grid{padding:.65rem}.hierarchy-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.hierarchy-parent{padding:.75rem}}
-</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end --><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 &mdash; SOVEREIGN AGENTS</title>
-<style>
 @keyframes spin{to{transform:rotate(360deg)}}
 .my-agent-hero{background:var(--surface);border:1px solid rgba(201,168,76,.3);border-radius:10px;padding:1.5rem;display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;margin:1rem}
 .my-agent-glyph{font-size:clamp(2.5rem,8vw,4.5rem);line-height:1;flex-shrink:0;text-shadow:0 0 40px rgba(201,168,76,.3)}
@@ -81,15 +80,6 @@
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-god" style="color:var(--gold)">—</div><div class="kpi-label">OLYMPIAN</div></div>
   <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="k-auth" style="color:var(--gold)">—</div><div class="kpi-label">AUTHORITY</div></div>
 </div>
-<div class="tab-bar">
-  <button class="tab-btn active" data-tab="agent" onclick="setTab('agent')">MY AGENT</button>
-  <button class="tab-btn" data-tab="council" onclick="setTab('council')">COUNCIL</button>
-  <button class="tab-btn" data-tab="hierarchy" onclick="setTab('hierarchy')">12×12 HIERARCHY</button>
-  <button class="tab-btn" data-tab="chat" onclick="setTab('chat')">CHAT</button>
-  <button class="tab-btn" data-tab="science" onclick="setTab('science')">SCIENCE</button>
-  <a class="tab-btn" href="/agent-network.html" style="text-decoration:none">NETWORK</a>
-  <a class="tab-btn" href="/pantheons.html" style="text-decoration:none">PANTHEONS</a>
-  <a class="tab-btn" href="/agent-operations.html" style="text-decoration:none">OPERATIONS</a>
 <div class="tab-bar" role="tablist" aria-label="Agent Council sections">
   <button class="tab-btn active" type="button" data-tab="agent" role="tab" aria-controls="tab-agent" aria-selected="true" id="tab-btn-agent">MY AGENT</button>
   <button class="tab-btn" type="button" data-tab="council" role="tab" aria-controls="tab-council" aria-selected="false" id="tab-btn-council">COUNCIL</button>
@@ -153,7 +143,6 @@
 </div>
 
 <!-- SUBORDINATE HIERARCHY TAB -->
-<div class="tab-panel" id="tab-hierarchy">
 <div class="tab-panel" id="tab-hierarchy" role="tabpanel" aria-labelledby="tab-btn-hierarchy">
   <p class="sechead">THE 12 × 12 SOVEREIGN HIERARCHY · 144 SUBORDINATE POSITIONS</p>
   <div class="hierarchy-summary" aria-live="polite">
@@ -269,36 +258,6 @@ function renderCouncil(agents,mySign){
   });
 }
 
-function renderHierarchy(agents){
-  var grid=document.getElementById('hierarchy-grid');
-  if(!grid)return;
-  grid.textContent='';
-  var seats=0;
-  (agents||[]).forEach(function(ag){
-    var parent=document.createElement('section');
-    parent.className='hierarchy-parent';
-    parent.setAttribute('aria-label',ag.name+' subordinate positions');
-    var head=document.createElement('div');head.className='hierarchy-parent-head';
-    var glyph=document.createElement('span');glyph.className='hierarchy-parent-glyph';glyph.style.color=getCol(ag.element);glyph.textContent=SIGN_GLYPHS[ag.sign]||'Ω';
-    var identity=document.createElement('div');
-    var name=document.createElement('div');name.className='hierarchy-parent-name';name.textContent=String(ag.name||'PRIMARY AGENT').toUpperCase();
-    var role=document.createElement('div');role.className='hierarchy-parent-role';role.textContent=String(ag.role||'').toUpperCase();
-    identity.appendChild(name);identity.appendChild(role);head.appendChild(glyph);head.appendChild(identity);parent.appendChild(head);
-    var slots=document.createElement('div');slots.className='hierarchy-slots';
-    for(var i=1;i<=12;i++){
-      seats++;
-      var slot=document.createElement('div');slot.className='hierarchy-slot';
-      var label=document.createElement('b');label.textContent='SEAT '+String(i).padStart(2,'0');
-      var status=document.createElement('span');status.textContent='UNASSIGNED';
-      slot.appendChild(label);slot.appendChild(status);slots.appendChild(slot);
-    }
-    parent.appendChild(slots);
-    var family=document.createElement('div');family.className='hierarchy-family';family.textContent='FAMILIES: HERO · KING · PANTHEON — NOT YET ASSIGNED';parent.appendChild(family);
-    grid.appendChild(parent);
-  });
-  sid('hierarchy-primary-count',(agents||[]).length);
-  sid('hierarchy-seat-count',seats);
-  sid('hierarchy-assigned-count',0);
 async function renderHierarchy(agents){
   var grid=document.getElementById('hierarchy-grid');
   if(!grid)return;

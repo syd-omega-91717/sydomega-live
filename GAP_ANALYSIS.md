@@ -2619,3 +2619,10 @@ The earlier family succession copy was not a legal designation and the interface
 The same pass closed two member-content XSS paths: bloodline names/relationships/birth values/notes now render through DOM `textContent`; heritage titles are escaped before HTML rendering. Bloodline and heritage reads/writes are explicitly scoped to the authenticated user, in addition to existing RLS. Family-node reads are narrowed to the columns used by the view. See `docs/fixes/2026-11-22-family-truth-xss.md` and the regression suite `scripts/tests/test_family_truth_and_xss.py`.
 
 No production data, RLS policy, migration, payment setting, or legal designation was changed. The family-history and heritage features remain member-submitted records, not independently verified genealogy or legal instruments.
+
+
+## 2026-11-22 verified security closure — advance_matrix
+
+The live API-role privilege exposure for `advance_matrix(integer,text)` is closed. Before remediation, `authenticated` could execute both `public.advance_matrix` (SECURITY INVOKER wrapper) and `private.advance_matrix` (SECURITY DEFINER implementation); `service_role` could execute the public wrapper. The `matrix_progress` update trigger awards 2 sovereign points for an axis increase. No client RPC call, Edge Function caller or other SQL function caller was found. The live `matrix_progress` table had 0 rows; `automation_rules` had 3 stored rows and no live database consumer.
+
+Migration version `20261122105012` (provider name `20261122110000_close_advance_matrix_member_execution`) was applied to Supabase. Post-apply catalog checks confirm both public and private functions deny EXECUTE to `anon`, `authenticated` and `service_role`; the `postgres` owner retains EXECUTE. The RPC security policy no longer classifies the function as member-self. The automation page now labels rule definitions as stored-only, removes the matrix action option and removes fabricated execution events. The security hole is closed; **event-verified matrix progression remains an unimplemented feature** and must not be re-enabled through a direct member RPC.

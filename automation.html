@@ -71,9 +71,13 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
 <div class="page-shell" id="app" style="display:none">
 
 <header class="topbar">
-  <div class="topbar-title">AUTOMATION ENGINE<span class="topbar-sub">SOVEREIGN INTELLIGENCE &middot; IF &middot; THEN &middot; EXECUTE</span></div>
+  <div class="topbar-title">AUTOMATION RULE CATALOG<span class="topbar-sub">CONFIGURATION ONLY &middot; IF &middot; THEN &middot; REVIEW</span></div>
   <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
 </header>
+<div class="card" role="status" style="margin:1rem 0;padding:1rem 1.2rem;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.05)">
+  <div class="card-title" style="color:var(--gold)">CONFIGURATION ONLY &middot; NO EXECUTOR DEPLOYED</div>
+  <p style="margin-top:.5rem;color:var(--muted);font-size:var(--fs-2,14px);line-height:1.7">Rules are saved as configuration only. No worker currently consumes <code>automation_rules</code>, and no action is executed. Matrix progression, money movement, token operations, creator earnings, KYC and outbound broadcasts remain unavailable until each action has an allowlisted, event-verified, idempotent and role-gated handler.</p>
+</div>
 
 
 
@@ -89,32 +93,32 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
   <div class="ohb">
     <div class="ohb-l">
       <div class="ohb-val" id="ohb-active">--</div>
-      <div class="ohb-sub">PROTOCOLS ACTIVE</div>
+      <div class="ohb-sub">RULE DEFINITIONS STORED</div>
     </div>
     <div class="ohb-c">
       <canvas id="ohb-cv" width="120" height="120" style="width:60px;height:60px;display:block"></canvas>
     </div>
     <div class="ohb-r">
-      <div class="ohb-val" id="ohb-status">CHECKING</div>
+      <div class="ohb-val" id="ohb-status">NO EXECUTOR</div>
       <div class="ohb-sub">SYSTEM STATUS</div>
     </div>
   </div>
 
   <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-active">--</div><div class="kpi-label">ACTIVE RULES</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-fired">--</div><div class="kpi-label">EVENTS FIRED</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-sys">--</div><div class="kpi-label">SYSTEM RULES</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-user">--</div><div class="kpi-label">MEMBER RULES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-active">--</div><div class="kpi-label">CONFIGURED RULES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-fired">NOT DEPLOYED</div><div class="kpi-label">EXECUTOR STATUS</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-sys">--</div><div class="kpi-label">SYSTEM TEMPLATES</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="stat-user">--</div><div class="kpi-label">MEMBER CONFIGURATIONS</div></div>
   </div>
 
-  <div class="sechead">SOVEREIGN AUTOMATION RULES</div>
+  <div class="sechead">SAVED RULE DEFINITIONS &middot; NOT EXECUTED</div>
   <div id="rules-grid"></div>
 </div>
 
 <!-- BUILDER TAB -->
 <div class="tab-panel" id="tab-builder">
-  <div class="sechead">BUILD A SOVEREIGN RULE</div>
-  <p style="color:var(--muted);font-size:var(--fs-2,14px);line-height:1.7;margin-bottom:20px;max-width:68ch">Compose an IF&#x2192;THEN protocol. Define the trigger condition and the action it executes. Rules are saved to your automation chain and evaluated continuously by the engine.</p>
+  <div class="sechead">SAVE A RULE DEFINITION</div>
+  <p style="color:var(--muted);font-size:var(--fs-2,14px);line-height:1.7;margin-bottom:20px;max-width:68ch">Compose an IF&#x2192;THEN rule definition. It is stored as configuration only. No live worker consumes <code>automation_rules</code>; saving or configuring a rule does not execute its action.</p>
   <div class="card" style="padding:22px">
     <div class="builder-grid">
       <div class="if-block">
@@ -144,21 +148,21 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
           <option value="unlock_content">Unlock next content tier</option>
           <option value="award_badge">Award sovereignty badge</option>
           <option value="log_event">Log event to Intelligence deck</option>
-          <option value="advance_matrix">Advance matrix +0.25</option>
+          <option value="" disabled>Matrix progression &mdash; unavailable until an event-verified executor is deployed</option>
           <option value="send_agent">Dispatch an AI agent</option>
         </select>
         <input type="text" id="action-note" placeholder="Optional note or payload"/>
       </div>
     </div>
     <button class="btn-gold" id="btn-create">&#x2295; CREATE RULE</button>
-    <div class="success-msg" id="success-msg">&#x2713; RULE CREATED &mdash; Now active in your automation chain.</div>
+    <div class="success-msg" id="success-msg">&#x2713; RULE SAVED &mdash; Configuration only; no action executed.</div>
   </div>
 </div>
 
 <!-- LOG TAB -->
 <div class="tab-panel" id="tab-log">
-  <div class="sechead">LIVE EVENT LOG</div>
-  <p style="color:var(--muted);font-size:var(--fs-2,14px);line-height:1.7;margin-bottom:16px">Real-time feed of automation events drawn from task completions and system activities. Each entry reflects a fired rule trigger.</p>
+  <div class="sechead">RECENT TASK COMPLETION RECORDS</div>
+  <p style="color:var(--muted);font-size:var(--fs-2,14px);line-height:1.7;margin-bottom:16px">This feed displays recorded task completions only. It is not an automation execution log; no live rule executor is deployed.</p>
   <div style="border:1px solid var(--line);background:var(--surface)">
     <div id="log-feed"></div>
   </div>
@@ -166,53 +170,54 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
 
 <!-- SCIENCE TAB -->
 <div class="tab-panel" id="tab-science">
-  <div class="sechead">AUTOMATION ENGINE &mdash; ARCHITECTURE</div>
+  <div class="sechead">PLANNED AUTOMATION EXECUTOR &mdash; ARCHITECTURE</div>
   <div class="card-grid" style="--cols:1">
     <div class="card">
-      <div class="card-title">HOW THE ENGINE WORKS</div>
+      <div class="card-title">CURRENT EXECUTION STATUS</div>
       <div class="card-body" style="color:var(--muted);line-height:1.8;font-size:var(--fs-2,14px)">
         <div data-omega-more>
-          <p class="omi-lead">A rule interpreter that watches platform events and fires actions silently — no manual step needed.</p>
+          <p class="omi-lead">Rule definitions are stored only. No event consumer is deployed; actions are not executed.</p>
           <div class="omi-full" hidden>
-            <p>The Automation Engine is a sovereign rule interpreter that evaluates trigger conditions against platform events in real time. When a condition is satisfied, the corresponding action chain executes silently — no manual intervention required.</p>
-            <p style="margin-top:12px">Rules are evaluated in priority order: SYSTEM rules (enforced globally) fire before MEMBER rules (user-defined). The engine uses a dedicated <code style="font-family:var(--M);color:var(--cyan);font-size:12px">automation_rules</code> table to persist user overrides and custom rule definitions.</p>
+            <p>This page stores rule definitions in <code>automation_rules</code>. The live database currently has no event consumer for that table, so saving or configuring a rule does not execute an action. A future executor must use an allowlisted action registry, idempotent event processing, role checks, signed evidence and explicit approval for sensitive actions.</p>
+            <p style="margin-top:12px">SYSTEM and MEMBER identify catalog templates and saved configurations, not active workers. Matrix progression, payment allocation, creator earnings, token operations, KYC actions and outbound broadcasts are not executed from this page.</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="sechead">TRIGGER → ACTION MAPPINGS</div>
+  <div class="sechead">PROPOSED TRIGGER &rarr; ACTION CATALOG &middot; NOT EXECUTED</div>
   <div class="card" style="overflow-x:auto">
     <div class="tbl-wrap">
       <div class="tbl-head" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>TRIGGER</span><span>CONDITION</span><span>ACTION</span><span>KIND</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>MATRIX ADVANCE</span><span>Any task completed</span><span>Axis +0.25, intelligence stamp</span><span style="color:var(--cyan)">SYSTEM</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>GATE UNLOCK</span><span>Auth score crosses threshold</span><span>Broadcast + intelligence event</span><span style="color:var(--cyan)">SYSTEM</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>CERT MILESTONE</span><span>Node (3,3,3) / (6,6,6) / (9,9,9)</span><span>Issue certificate, notify owner</span><span style="color:var(--cyan)">SYSTEM</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>TRIAL SENTINEL</span><span>trial_expires_at &lt; now()</span><span>expire_trial RPC, axis reset</span><span style="color:var(--cyan)">SYSTEM</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>AGENT DEPLOY</span><span>Tier rank changes</span><span>Activate agent + orientation</span><span style="color:var(--cyan)">SYSTEM</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>MARKETPLACE</span><span>Offer received on listing</span><span>Instant notification dispatch</span><span style="color:var(--cyan)">SYSTEM</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>CONTRIBUTION RELAY</span><span>Contribution task + social linked</span><span>Queue sovereign broadcast</span><span style="color:var(--solar)">MEMBER</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>DAILY HOROSCOPE</span><span>New day begins 00:00</span><span>Dispatch celestial reading</span><span style="color:var(--solar)">MEMBER</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>FAMILY SYNC</span><span>Family node earns certificate</span><span>Milestone alert to feed</span><span style="color:var(--solar)">MEMBER</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>INTELLIGENCE SNAP</span><span>Any axis coordinate changes</span><span>Stamp timeline evolution event</span><span style="color:var(--cyan)">SYSTEM</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>INCOME ALLOCATION</span><span>Revenue event fires</span><span>Route 51%/40%/9.17% split</span><span style="color:var(--muted)">PLANNED</span></div>
-      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>VOID ASCENSION</span><span>Any axis approaches 9.0</span><span>Sovereign agent + Omega sequence</span><span style="color:var(--cyan)">SYSTEM</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>MATRIX PROGRESSION</span><span>Verified task/exam evidence required</span><span>Unavailable — event executor not deployed</span><span style="color:var(--muted)">DISABLED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>GATE UNLOCK</span><span>Verified authority event</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>CERT MILESTONE</span><span>Verified node completion</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>TRIAL SENTINEL</span><span>Verified expiry and owner policy</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>AGENT DEPLOY</span><span>Approved role change</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>MARKETPLACE</span><span>Verified offer event</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>CONTRIBUTION RELAY</span><span>Verified contribution event</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>DAILY HOROSCOPE</span><span>Scheduled local-day trigger</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>FAMILY SYNC</span><span>Consented family milestone</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>INTELLIGENCE SNAP</span><span>Verified state transition</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>INCOME ALLOCATION</span><span>Provider-settled revenue and approved rules</span><span>Disabled — payments, tokens and creator-earnings flags are false</span><span style="color:var(--muted)">DISABLED</span></div>
+      <div class="tbl-row" style="grid-template-columns:1.1fr 1.4fr 1.4fr 100px"><span>VOID ASCENSION</span><span>Verified apex event</span><span>Planned — no executor</span><span style="color:var(--muted)">PLANNED</span></div>
     </div>
   </div>
 
-  <div class="sechead">ALLOCATION ENGINE</div>
+  <div class="sechead">LEGACY ALLOCATION DRAFT &middot; DISABLED</div>
   <div class="card-grid">
     <div class="card">
-      <div class="card-title">INCOME SPLIT (PLANNED)</div>
+      <div class="card-title">LEGACY INCOME SPLIT &middot; NOT APPROVED</div>
       <div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">
         <div><span style="color:var(--gold)">51.00%</span> &rarr; Master Vault</div>
         <div><span style="color:var(--cyan)">40.00%</span> &rarr; Operations</div>
         <div><span style="color:var(--green)">9.17%</span> &rarr; Commission Pool</div>
+        <div style="margin-top:12px;color:var(--muted);font:var(--fs-1,12px) var(--M);line-height:1.7">51.00% + 40.00% + 9.17% = <strong style="color:var(--red)">100.17%</strong>. The legacy proposal does not reconcile to 100% and is not approved. As of 2026-11-22, <code>platform_settings.payments_enabled=false</code>, <code>tokens_enabled=false</code> and <code>creator_earnings_enabled=false</code>; no allocation or transfer is executed.</div>
       </div>
     </div>
     <div class="card">
-      <div class="card-title">AUTHORITY FORMULA</div>
+      <div class="card-title">CALCULATED PROGRESSION METRIC &middot; NOT A CASH VALUE</div>
       <div class="card-body" style="font-family:var(--M);font-size:12px;line-height:2;color:var(--muted)">
         <div style="color:var(--gold)">AUTH = &radic;(A&sup3;+B&sup3;+C&sup3;) &times; &phi;/e</div>
         <div>&phi; = 1.6180339887 (Golden Ratio)</div>
@@ -278,32 +283,32 @@ var SYSTEM_RULES=[
    trigger:'IF any task is completed (academy / gaming / contribution)',
    action:'THEN advance matrix axes by +0.25 and emit evolution event',
    desc:'Every verified action across the three axis engines feeds back into the 9x9x9 lattice, pushing coordinates forward and triggering milestone checks at every gate threshold.',
-   default_on:true},
+   default_on:false},
   {name:'GATE UNLOCK BROADCAST',icon:'&#x2302;',kind:'sys',
    trigger:'IF authority score crosses a gate threshold (1.73 ... 27.8367)',
    action:'THEN dispatch unlock dispatch to notification system + log intelligence event',
    desc:'As your authority formula √(A³+B³+C³) crosses each of the twelve gate thresholds, the system fires a sovereign broadcast and stamps the event to your Intelligence deck.',
-   default_on:true},
+   default_on:false},
   {name:'CERTIFICATE MILESTONE SEAL',icon:'&#x272A;',kind:'sys',
    trigger:'IF matrix node (3,3,3) or (6,6,6) or (9,9,9) is reached',
    action:'THEN issue cryptographic certificate seal and notify owner',
    desc:'The three sacred certificate coordinates trigger automatic credential generation. At (9,9,9) the Omega Master certificate is issued and the Architect is notified.',
-   default_on:true},
+   default_on:false},
   {name:'TRIAL SESSION SENTINEL',icon:'&#x26A0;',kind:'sys',
    trigger:'IF trial_expires_at < now() AND is_trial = true',
    action:'THEN call expire_trial RPC, reset axes to genesis, redirect to pending',
    desc:'The Sentinel watches every trial session. The moment the 9-minute-17-second trial closes, progress resets and access revokes without any manual action required.',
-   default_on:true},
+   default_on:false},
   {name:'AGENT DEPLOYMENT ON LEVEL',icon:'&#x25C9;',kind:'sys',
    trigger:'IF tier rank changes (floor of min axis)',
    action:'THEN activate assigned AI agent for new tier and send orientation dispatch',
    desc:'Each rank change (Initiate → Seeker → Adept ...) activates the corresponding agent persona and dispatches a tier orientation message.',
-   default_on:true},
+   default_on:false},
   {name:'MARKETPLACE OFFER ALERT',icon:'&#x21C4;',kind:'sys',
    trigger:'IF a marketplace offer is received on your listing',
    action:'THEN dispatch immediate notification + log to Intelligence',
    desc:'The Merchant agent monitors all marketplace activity. Any incoming offer on your listings triggers an instant dispatch so you never miss a sovereign transaction.',
-   default_on:true},
+   default_on:false},
   {name:'CONTRIBUTION SOCIAL RELAY',icon:'&#x2743;',kind:'user',
    trigger:'IF contribution task completed AND social accounts connected',
    action:'THEN auto-compose and queue sovereign broadcast to your platforms',
@@ -313,7 +318,7 @@ var SYSTEM_RULES=[
    trigger:'IF new day begins (00:00 system time)',
    action:"THEN dispatch your sign's daily reading to notifications",
    desc:'Each new day, your celestial reading is computed and delivered to your notification feed before you open the platform — so the cosmos greets you first.',
-   default_on:true},
+   default_on:false},
   {name:'FAMILY NODE SYNC',icon:'&#x22D4;',kind:'user',
    trigger:'IF a family node you are connected to earns a certificate',
    action:'THEN dispatch family milestone alert to your feed',
@@ -323,17 +328,17 @@ var SYSTEM_RULES=[
    trigger:'IF axis coordinates change by any amount',
    action:'THEN stamp a timeline event to Intelligence deck for evolution tracking',
    desc:'Every axis movement is timestamped and stored for the Intelligence evolution charts. This is how your growth trajectory becomes visible over days and months.',
-   default_on:true},
+   default_on:false},
   {name:'INCOME ALLOCATION TRIGGER',icon:'&#x03A9;',kind:'sys',
    trigger:'IF platform revenue event fires (subscription / consultancy / marketplace)',
    action:'THEN route to allocation engine: 51% vault / 40% operations / 9.17% commission pool (planned split; dormant behind platform_settings.tokens_enabled)',
    desc:'Every income event routes automatically through the sovereign allocation engine, distributing to the Master Vault, operational reserves, and the commission pool in real time.',
-   default_on:true},
+   default_on:false},
   {name:'VOID ASCENSION GUARD',icon:'&#x25A1;',kind:'sys',
    trigger:'IF any axis approaches 9.0 (the apex node)',
    action:'THEN notify Sovereign agent + prepare Omega Master sequence',
    desc:'The rarest rule. When any single axis approaches its apex node, the Sovereign agent activates and begins the Omega Master ascension sequence — the highest state in the Order.',
-   default_on:true},
+   default_on:false},
 ];
 
 var userStates={};
@@ -362,12 +367,12 @@ async function setState(key,on){
 function renderRules(uid){
   var grid=document.getElementById('rules-grid');
   grid.innerHTML='';
-  var activeCount=0,sysCount=0,userCount=0;
+  var configuredCount=0,sysCount=0,userCount=0;
 
   SYSTEM_RULES.forEach(function(r,i){
     var key='rule_'+i;
     var on=(key in userStates)?userStates[key]:r.default_on;
-    if(on) activeCount++;
+    if(on) configuredCount++;
     if(r.kind==='sys') sysCount++; else userCount++;
 
     var card=document.createElement('div');
@@ -389,10 +394,10 @@ function renderRules(uid){
     var meta=document.createElement('div');meta.className='r-meta';
     var b1=document.createElement('span');
     b1.className='rule-badge '+(on?'badge-active':'badge-paused');
-    b1.id='badge-'+i;b1.textContent=on?'ACTIVE':'PAUSED';
+    b1.id='badge-'+i;b1.textContent=on?'CONFIGURED':'DRAFT';
     var b2=document.createElement('span');
     b2.className='rule-badge '+(r.kind==='sys'?'badge-sys':'badge-user');
-    b2.textContent=r.kind==='sys'?'SYSTEM':'MEMBER';
+    b2.textContent=r.kind==='sys'?'SYSTEM TEMPLATE':'MEMBER CONFIG';
     meta.appendChild(b1);meta.appendChild(b2);
 
     body.appendChild(nm);body.appendChild(ds);body.appendChild(tr);body.appendChild(ac);body.appendChild(meta);
@@ -400,11 +405,11 @@ function renderRules(uid){
     var tog=document.createElement('button');
     tog.className='r-toggle '+(on?'on':'off');
     tog.id='toggle-'+i;
-    tog.textContent=on?'PAUSE':'ENABLE';
+    tog.textContent=on?'SET DRAFT':'SAVE CONFIG';
     tog.addEventListener('click',async function(){
       var cur=(key in userStates)?userStates[key]:r.default_on;
       var ok=await setState(key,!cur);
-      if(!ok) alert('Could not update this workflow. Try again.');
+      if(!ok) alert('Could not save this rule configuration. Try again.');
       renderRules(uid);
     });
 
@@ -412,62 +417,39 @@ function renderRules(uid){
     grid.appendChild(card);
   });
 
-  var ae=document.getElementById('stat-active');if(ae)ae.textContent=activeCount;
+  var ae=document.getElementById('stat-active');if(ae)ae.textContent=configuredCount;
   var se=document.getElementById('stat-sys');if(se)se.textContent=sysCount;
   var ue=document.getElementById('stat-user');if(ue)ue.textContent=userCount;
-  var oe=document.getElementById('ohb-active');if(oe)oe.textContent=activeCount;
+  var oe=document.getElementById('ohb-active');if(oe)oe.textContent=configuredCount;
 }
 
 function renderLog(events){
   var feed=document.getElementById('log-feed');
   feed.innerHTML='';
-  var total=0;
+  var rows=(events||[]).slice(0,18);
 
-  (events||[]).slice(0,18).forEach(function(ev){
-    total++;
-    var entry=document.createElement('div');
-    entry.className='log-entry';
-    var ts=new Date(ev.completed_at||ev.created_at).toLocaleString();
-    var ruleLabel=ev.kind==='academy'?'MATRIX ADVANCE ON TASK · ACADEMY':ev.kind==='gaming'?'MATRIX ADVANCE ON TASK · GAMING':'CONTRIBUTION SOCIAL RELAY';
-    var tsD=document.createElement('div');tsD.className='l-ts';tsD.textContent=ts;
-    var dot=document.createElement('div');dot.className='l-dot ok';
-    var msg=document.createElement('div');msg.className='l-msg';
-    var ref=document.createElement('span');ref.className='l-rule';ref.textContent=ruleLabel;
-    msg.appendChild(ref);
-    msg.appendChild(document.createTextNode('\nEvolution event fired — axes advanced +0.25 · Intelligence snapshot stamped'));
-    entry.appendChild(tsD);entry.appendChild(dot);entry.appendChild(msg);
-    feed.appendChild(entry);
-  });
-
-  var seeds=[
-    {dot:'info',rule:'DAILY HOROSCOPE DISPATCH',msg:'Morning celestial reading computed and dispatched to notifications'},
-    {dot:'warn',rule:'TRIAL SESSION SENTINEL',msg:'Monitoring active trial sessions — 0 sessions approaching expiry'},
-    {dot:'info',rule:'INCOME ALLOCATION TRIGGER',msg:'Allocation engine standing by — routes active on next income event'},
-    {dot:'ok',rule:'INTELLIGENCE SNAPSHOT',msg:'Axis evolution stamped — growth trajectory updated'},
-  ];
-  seeds.forEach(function(s){
-    total++;
-    var entry=document.createElement('div');
-    entry.className='log-entry';
-    var tsD=document.createElement('div');tsD.className='l-ts';tsD.textContent=new Date().toLocaleString();
-    var dot=document.createElement('div');dot.className='l-dot '+s.dot;
-    var msg=document.createElement('div');msg.className='l-msg';
-    var ref=document.createElement('span');ref.className='l-rule';ref.textContent=s.rule;
-    msg.appendChild(ref);
-    msg.appendChild(document.createTextNode('\n'+s.msg));
-    entry.appendChild(tsD);entry.appendChild(dot);entry.appendChild(msg);
-    feed.appendChild(entry);
-  });
-
-  if(!events||!events.length){
+  if(!rows.length){
     var empty=document.createElement('div');
     empty.className='log-entry';
     var em=document.createElement('div');em.className='l-msg';em.style.color='var(--muted)';
-    em.textContent='No automation events yet. Complete tasks across the matrix to see the engine fire.';
+    em.textContent='No task-completion records are available for this account. Automation execution is not deployed.';
     empty.appendChild(em);feed.appendChild(empty);
+    return;
   }
 
-  var fe=document.getElementById('stat-fired');if(fe)fe.textContent=total;
+  rows.forEach(function(ev){
+    var entry=document.createElement('div');
+    entry.className='log-entry';
+    var ts=new Date(ev.completed_at||ev.created_at);
+    var tsD=document.createElement('div');tsD.className='l-ts';tsD.textContent=Number.isNaN(ts.getTime())?'Timestamp unavailable':ts.toLocaleString();
+    var dot=document.createElement('div');dot.className='l-dot info';
+    var msg=document.createElement('div');msg.className='l-msg';
+    var ref=document.createElement('span');ref.className='l-rule';ref.textContent='TASK COMPLETED · '+String(ev.kind||'UNSPECIFIED').toUpperCase();
+    msg.appendChild(ref);
+    msg.appendChild(document.createTextNode('\nRecorded task completion. No automation action or matrix progression is implied or executed.'));
+    entry.appendChild(tsD);entry.appendChild(dot);entry.appendChild(msg);
+    feed.appendChild(entry);
+  });
 }
 
 (async function(){
@@ -490,7 +472,7 @@ function renderLog(events){
     var a=document.getElementById('action-select').value;
     var an=document.getElementById('action-note').value;
     if(!t||!a) return;
-    var res=await sb.from('automation_rules').insert({trigger_key:t,trigger_value:tv,action_key:a,action_note:an,is_on:true});
+    var res=await sb.from('automation_rules').insert({trigger_key:t,trigger_value:tv,action_key:a,action_note:an,is_on:false});
     if(res.error){alert('Could not save rule: '+res.error.message);return;}
     var msg=document.getElementById('success-msg');
     msg.style.display='block';

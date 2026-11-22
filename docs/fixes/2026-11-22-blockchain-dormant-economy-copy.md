@@ -41,3 +41,9 @@ CI `verify` failed `omega-registry.py --check`: the committed registry listed bo
 merge-residue shape as the ledger. Regenerated with `python3 scripts/omega-registry.py` (needs a non-shallow clone, so I ran `git fetch --unshallow` first); the only change is deleting the stale 440 row.
 My earlier local runs had reported this step (`ci-local.sh` 2j, "Skill/agent registry") as failing and I dismissed it as the shallow-clone artefact: that was a real failure hidden behind an environmental one,
 and the lesson is to unshallow before trusting 2j. `omega-registry.py --check` now passes.
+
+### Also: `ci-local.sh` could never run the advance_matrix test
+
+`workflow_gates()` entries are relative to `scripts/` and the runner prepends `scripts/`; #1520's entry was `"scripts/tests/test_advance_matrix_closed.py"`, so the local gate tried
+`scripts/scripts/tests/...` and reported `can't open file`. Corrected to `"tests/test_advance_matrix_closed.py"`. Found by a full local run on a non-shallow clone, where it was the only
+non-environmental failure left (the other 2v failure is `omega-responsive-surface-contract.py` needing a built `public/`).

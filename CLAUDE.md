@@ -504,12 +504,13 @@ it when you touch one of those areas.
 Only what changes what you do in the **first minutes** stays here:
 
 - **Live Supabase access works from this session type.** `mcp__Supabase__*` against project
-  `ydqhzvvoyufiiqvzcjns` executes SQL, applies migrations and reads advisors — verified
-  2026-09-13, despite a harness banner that says authorization is required. **Try the call
-  before reporting it blocked.** Several sessions wrongly recorded this as unavailable and
-  deferred real work; `GAP_ANALYSIS.md`'s header said no session had ever held credentials.
-  With it you can settle live what no scan can (§8.4's impersonation test), and you are then
-  responsible for regenerating `supabase/live-schema.json` in the same change.
+  `ydqhzvvoyufiiqvzcjns` ran SQL, migrations and advisors (verified
+  2026-09-13). **Try the call before reporting it blocked.** **It depends on the connector's org:** on
+  2026-11-22 `list_projects` showed only `nvgedlxlkdzvcelimbvq` (INACTIVE, non-canonical) and
+  calls on `ydqhzvvoyufiiqvzcjns` failed "no permission". Run `list_projects` first; if the
+  canonical ref is absent, the owner re-authorizes it and restarts the session. Never touch `nvge…`.
+  With it, settle live what no scan can (§8.4) and regenerate `supabase/live-schema.json`
+  in the same change.
   Connector limits: big `apply_migration` payloads time out (split them); any `DROP`
   needs human confirmation — the owner's job.
 - **Merging to `main` deploys to production.** The Supabase GitHub integration applies new

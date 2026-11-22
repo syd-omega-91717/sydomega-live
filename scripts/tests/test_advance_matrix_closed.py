@@ -1,9 +1,8 @@
 """advance_matrix(int, text) lets any signed-in member raise any track's axes and mint points; the proposal closes it.
 
-Proved on a throwaway Postgres 16 with the real function text from 0004 and 0005 (324 accepted calls, 576 points and 8,748 of 8,748 nodes before; 324 refusals, 0 points and
-0 nodes after; anon refused; owner and service_role allowed; a SECURITY DEFINER wrapper still works) - see docs/fixes/2026-11-15-close-advance-matrix.md. NOT run on Supabase.
-This file keeps what CI can: the proposal's shape, that it stays out of the migration path, and the two repository facts its safety rests on - NOTHING calls the function,
-and NOTHING else writes matrix_progress. If either stops being true the proposal's reasoning is stale, and this fails so a person re-reads it.
+The original throwaway Postgres 16 proof tested the public-wrapper revoke only (324 calls accepted before, refused after). It did not test the private function's direct authenticated permission. The corrected dual-revoke still needs a fresh throwaway replay and has not been applied on Supabase; see docs/fixes/2026-11-15-close-advance-matrix.md.
+This file keeps what CI can: both entry-point revokes, that the proposal stays out of the migration path, and the two repository facts its safety rests on - NOTHING calls the function,
+and NOTHING else writes matrix_progress. Live grant facts are recorded separately; the corrected dual-revoke still needs a fresh throwaway replay before owner approval.
 """
 import glob
 import os
@@ -28,8 +27,9 @@ WRITERS = {("0004_omega_nested_matrix.sql", "insert"), ("0004_omega_nested_matri
 
 
 class AdvanceMatrixClosed(unittest.TestCase):
-    def test_the_proposal_revokes_from_everyone_but_the_server(self):
-        self.assertRegex(CODE, r"revoke execute on function public\.advance_matrix\(integer, text\) from public, anon, authenticated;")
+    def test_the_proposal_revokes_both_public_and_private_entry_points(self):
+        self.assertRegex(CODE, r"revoke execute on function public\.advance_matrix\(integer, text\) from public, anon, authenticated, service_role;")
+        self.assertRegex(CODE, r"revoke execute on function private\.advance_matrix\(integer, text\) from public, anon, authenticated, service_role;")
         self.assertNotIn("grant execute", CODE, "the proposal must not grant anything")
 
     def test_the_proposal_is_not_in_the_migration_path(self):
@@ -79,11 +79,19 @@ class AdvanceMatrixClosed(unittest.TestCase):
                          "a new writer of matrix_progress exists: the proposal says there is no event-checked path, so re-read it")
 
     def test_the_scanners_have_teeth(self):
-        # a planted caller, a planted writer and a weakened revoke must each be seen
+        # a planted caller, a planted writer, and either weakened revoke must be seen
         self.assertTrue(re.search(r"""rpc\(\s*['"]advance_matrix['"]""", "sb.rpc('advance_matrix',{p_track:1})"))
         self.assertTrue(re.search(r"(?is)\b(update|insert\s+into)\s+(?:public\.)?matrix_progress\b", "UPDATE public.matrix_progress SET a=9"))
-        weak = SQL.replace("from public, anon, authenticated;", "from public;")
-        self.assertNotRegex(re.sub(r"--[^\n]*", "", weak).lower(), r"from public, anon, authenticated;")
+        weakened_public = SQL.replace(
+            "revoke execute on function public.advance_matrix(integer, text) from public, anon, authenticated, service_role;",
+            "revoke execute on function public.advance_matrix(integer, text) from public;", 1)
+        weakened_private = SQL.replace(
+            "revoke execute on function private.advance_matrix(integer, text) from public, anon, authenticated, service_role;",
+            "revoke execute on function private.advance_matrix(integer, text) from public;", 1)
+        self.assertNotRegex(re.sub(r"--[^\n]*", "", weakened_public).lower(),
+                            r"revoke execute on function public\.advance_matrix\(integer, text\) from public, anon, authenticated, service_role;")
+        self.assertNotRegex(re.sub(r"--[^\n]*", "", weakened_private).lower(),
+                            r"revoke execute on function private\.advance_matrix\(integer, text\) from public, anon, authenticated, service_role;")
 
 
 if __name__ == "__main__":

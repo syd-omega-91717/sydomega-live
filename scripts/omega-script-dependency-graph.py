@@ -129,10 +129,14 @@ def inspect_bg_loader_contract(bg):
 
     ordered = bool(re.search(r"\bel\.async\s*=\s*false\b", append_block))
     promise = bool(re.search(r"\bnew\s+Promise\s*\(", append_block))
-    shared_registry = (
-        bool(re.search(r"\b(?:Map|WeakMap)\s*\(", append_block))
-        and bool(re.search(r"\b(?:registry|pending|inflight|loads|promises)\.get\s*\(", append_block))
-        and bool(re.search(r"\breturn\s+(?:registry|pending|inflight|loads|promises)\.get\s*\(", append_block))
+    registry_names = set(re.findall(
+        r"\b([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*new\s+(?:Map|WeakMap)\s*\(",
+        bg,
+    ))
+    shared_registry = any(
+        re.search(r"\b" + re.escape(name) + r"\.get\s*\(", append_block)
+        and re.search(r"\breturn\s+" + re.escape(name) + r"\.get\s*\(", append_block)
+        for name in registry_names
     )
     onload = bool(re.search(r"\.onload\s*=|addEventListener\(\s*['\"]load['\"]", append_block))
     onerror = bool(re.search(r"\.onerror\s*=|addEventListener\(\s*['\"]error['\"]", append_block))

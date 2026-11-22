@@ -30,6 +30,53 @@ class VaultTaskProgressionTruthBoundaryContract(unittest.TestCase):
         self.assertIn("No governed token ledger is active; no balance is claimed.", SOURCE)
         self.assertIn("Reserve figures remain design/planning data; no authoritative financial balance is exposed here.", SOURCE)
 
+    def test_earning_ledger_never_invents_a_fallback_point_value(self):
+        vault = (ROOT / "vault.html").read_text(encoding="utf-8")
+        self.assertNotIn("points_earned||0.001", vault)
+        self.assertIn("Number.isFinite(Number(t.points_earned))", vault)
+        self.assertIn("tot===null?'—':tot.toFixed(3)+' PTS'", vault)
+        self.assertIn("validPoints?((Number(rawPoints)>=0?'+':'')+Number(rawPoints).toFixed(3)):'—'", vault)
+
+    def test_earning_ledger_fails_closed_and_uses_text_nodes_for_member_data(self):
+        vault = (ROOT / "vault.html").read_text(encoding="utf-8")
+        self.assertIn("if(tc.error)throw tc.error;", vault)
+        self.assertIn("if(!Array.isArray(tc.data))throw new Error('Task progression response is invalid');", vault)
+        self.assertIn("timestamp.textContent=fmt(t.completed_at);", vault)
+        self.assertIn("task.textContent=String(t.task_name||'UNNAMED TASK').toUpperCase();", vault)
+        self.assertIn("axis.textContent='AXIS '+String(t.axis_type||'UNKNOWN').toUpperCase();", vault)
+        self.assertIn("el2.textContent='EARNING LEDGER UNAVAILABLE · SOURCE DATA COULD NOT BE VERIFIED';", vault)
+
+    def test_recent_progression_labels_match_the_limited_query_window(self):
+        vault = (ROOT / "vault.html").read_text(encoding="utf-8")
+        self.assertIn(".limit(40)", vault)
+        self.assertIn('data-i18n="vault_ledger_total_label">RECENT PROGRESSION POINTS', vault)
+        self.assertIn('data-i18n="vault_ledger_actions_label">RECENT TASK RECORDS', vault)
+        self.assertIn('vault_ledger_window_note', vault)
+        self.assertIn('Progression points are not money or earnings.', vault)
+
+    def test_all_supported_locales_use_truthful_progression_labels(self):
+        import json
+        expected = {
+            "ar": ("نقاط التقدّم الأخيرة", "سجلات المهام الأخيرة"),
+            "es": ("PUNTOS DE PROGRESO RECIENTES", "REGISTROS DE TAREAS RECIENTES"),
+            "fr": ("POINTS DE PROGRESSION RÉCENTS", "ENREGISTREMENTS DE TÂCHES RÉCENTS"),
+            "hi": ("हाल के प्रगति अंक", "हाल के कार्य रिकॉर्ड"),
+            "nl": ("RECENTE VOORTGANGSPUNTEN", "RECENTE TAAKREGISTRATIES"),
+            "zh": ("近期进度积分", "近期任务记录"),
+        }
+        for locale, labels in expected.items():
+            with self.subTest(locale=locale):
+                data = json.loads((ROOT / "i18n" / (locale + ".json")).read_text(encoding="utf-8"))
+                self.assertEqual(data["vault_ledger_total_label"], labels[0])
+                self.assertEqual(data["vault_ledger_actions_label"], labels[1])
+                self.assertIn("vault_ledger_window_note", data)
+                self.assertIn("vault_ledger_earning_title", data)
+        english = (ROOT / "i18n.js").read_text(encoding="utf-8")
+        self.assertIn('"vault_ledger_total_label":"RECENT PROGRESSION POINTS"', english)
+        self.assertIn('"vault_ledger_actions_label":"RECENT TASK RECORDS"', english)
+        self.assertIn('"vault_ledger_window_note":"Showing up to 40 recent task records.', english)
+
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -75,17 +75,17 @@
 <div id="tab-overview" class="tab-panel act">
   <div class="net-worth">
     <div class="nw-label">WALLET NET · ACCOUNTS &minus; DEBTS</div>
-    <div class="nw-value" id="nw-value">$0</div>
-    <div class="nw-sub" id="nw-sub">0 accounts · $0 assets · $0 liabilities</div>
+    <div class="nw-value" id="nw-value">—</div>
+    <div class="nw-sub" id="nw-sub">NO ACCOUNTS RECORDED · BALANCES ARE USER-ENTERED USD EQUIVALENTS</div>
     <!-- Net worth has one home, wealth.html. This page and wealth.html both
          each headlined a net worth figure from different data (8.1 class 8). -->
     <a class="nw-sub" href="/wealth.html" style="display:inline-block;margin-top:6px;color:var(--gold)">Your net worth lives on Wealth &rarr;</a>
   </div>
   <div class="stats-row" data-omega-empty-guide="No accounts recorded yet." data-omega-empty-cta="Add your first account" data-omega-empty-go=".tab-btn[data-tab='accounts']" data-omega-empty-focus="#tab-accounts">
     <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-accounts">0</div><div class="stat-lbl">ACCOUNTS</div></div>
-    <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-assets">$0</div><div class="stat-lbl">TOTAL ASSETS</div></div>
-    <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-liab">$0</div><div class="stat-lbl">LIABILITIES</div></div>
-    <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-liquid">$0</div><div class="stat-lbl">LIQUID</div></div>
+    <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-assets">—</div><div class="stat-lbl">TOTAL ASSETS</div></div>
+    <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-liab">—</div><div class="stat-lbl">LIABILITIES</div></div>
+    <div class="stat-box card" data-reveal="fade-up"><div class="stat-num" id="stat-liquid">—</div><div class="stat-lbl">LIQUID</div></div>
   </div>
   <div class="canvas-wrap">
     <canvas id="alloc-canvas" height="200"></canvas>
@@ -261,82 +261,29 @@ function calcTotals(){
 function renderOverview(){
   var t=calcTotals();
   var nwEl=document.getElementById('nw-value');
+  document.getElementById('stat-accounts').textContent=accounts.length;
+  if(!accounts.length){
+    nwEl.textContent='—';
+    nwEl.style.color='var(--muted)';
+    nwEl.dataset.truth='EMPTY';
+    document.getElementById('nw-sub').textContent='NO ACCOUNTS RECORDED · BALANCES ARE USER-ENTERED USD EQUIVALENTS';
+    document.getElementById('stat-assets').textContent='—';
+    document.getElementById('stat-liab').textContent='—';
+    document.getElementById('stat-liquid').textContent='—';
+    drawAllocCanvas();
+    renderAllocBars();
+    return;
+  }
   nwEl.textContent=fmt(t.net);
   nwEl.style.color=t.net>=0?'#FFD700':'#FF4444';
-  document.getElementById('nw-sub').textContent=accounts.length+' accounts · '+fmt(t.assets)+' assets · '+fmt(t.liab)+' liabilities';
-  document.getElementById('stat-accounts').textContent=accounts.length;
+  nwEl.dataset.truth='USER-LOCAL';
+  document.getElementById('nw-sub').textContent=accounts.length+' accounts · '+fmt(t.assets)+' assets · '+fmt(t.liab)+' liabilities · USD-equivalent values';
   document.getElementById('stat-assets').textContent=fmt(t.assets);
   document.getElementById('stat-liab').textContent=fmt(t.liab);
   document.getElementById('stat-liquid').textContent=fmt(t.liquid);
   drawAllocCanvas();
   renderAllocBars();
 }
-
-function renderAllocBars(){
-  var t=calcTotals();
-  var el=document.getElementById('alloc-bars');
-  if(!accounts.length){el.innerHTML='';return;}
-  var types={};
-  accounts.forEach(function(a){
-    if(!types[a.type])types[a.type]=0;
-    types[a.type]+=a.type==='debt'?-a.balance:a.balance;
-  });
-  var total=t.assets||1;
-  el.innerHTML=Object.entries(types).map(function(e){
-    var type=e[0],val=e[1];
-    var pct=Math.max(0,val/total*100);
-    var col=TYPE_COLORS[type]||'#888';
-    return '<div class="alloc-bar">'
-      +'<div class="alloc-label"><span style="color:'+col+'">'+(TYPE_LABELS[type]||type)+'</span><span>'+fmt(val)+' · '+pct.toFixed(1)+'%</span></div>'
-      +'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+col+'"></div></div>'
-      +'</div>';
-  }).join('');
-}
-
-function drawAllocCanvas(){
-  var canvas=document.getElementById('alloc-canvas');
-  var W=canvas.offsetWidth||600;
-  canvas.width=W;canvas.height=200;
-  var ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,W,200);
-  if(!accounts.length){
-    ctx.fillStyle='#333';ctx.font='11px Courier New';ctx.textAlign='center';
-    ctx.fillText('NO ACCOUNTS — ADD ACCOUNTS TO SEE ALLOCATION',W/2,100);
-    return;
-  }
-  var types={};
-  accounts.forEach(function(a){
-    if(a.type==='debt')return;
-    if(!types[a.type])types[a.type]=0;
-    types[a.type]+=a.balance;
-  });
-  var total=Object.values(types).reduce(function(s,v){return s+v;},0)||1;
-  var cx=100,cy=100,r=85;
-  var startAngle=-Math.PI/2;
-  Object.entries(types).forEach(function(e){
-    var type=e[0],val=e[1];
-    var slice=val/total*Math.PI*2;
-    ctx.beginPath();ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,r,startAngle,startAngle+slice);
-    ctx.closePath();
-    ctx.fillStyle=TYPE_COLORS[type]||'#888';ctx.fill();
-    ctx.strokeStyle='#0d0d0d';ctx.lineWidth=2;ctx.stroke();
-    startAngle+=slice;
-  });
-  ctx.beginPath();ctx.arc(cx,cy,40,0,Math.PI*2);ctx.fillStyle='#0d0d0d';ctx.fill();
-  ctx.fillStyle='#FFD700';ctx.font='bold 11px Courier New';ctx.textAlign='center';
-  ctx.fillText('NET',cx,cy-4);ctx.fillText('WORTH',cx,cy+10);
-  var lx=220,ly=20;
-  Object.entries(types).forEach(function(e){
-    var type=e[0],val=e[1];
-    var col=TYPE_COLORS[type]||'#888';
-    ctx.fillStyle=col;ctx.fillRect(lx,ly,10,10);
-    ctx.fillStyle='#888';ctx.font='10px Courier New';ctx.textAlign='left';
-    ctx.fillText((TYPE_LABELS[type]||type)+' '+Math.round(val/total*100)+'%',lx+14,ly+9);
-    ly+=18;if(ly>180){ly=20;lx+=160;}
-  });
-}
-
 function renderAccounts(){
   var grid=document.getElementById('accounts-grid');
   if(!accounts.length){grid.innerHTML='<div class="empty-state">NO ACCOUNTS YET<br><small>Use the form below to get started</small></div>';return;}

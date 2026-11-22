@@ -72,8 +72,8 @@ def validate_alerts(config):
     alerts = config['monitoring'].get('alerts', {})
     channels = alerts.get('channels', [])
 
-    if not channels:
-        issues.append("⚠️  No alert channels configured")
+    if alerts.get('enabled', True) and not channels:
+        issues.append("⚠️  No alert channels configured while alert delivery is enabled")
 
     for channel in channels:
         channel_type = channel.get('type', 'unknown')

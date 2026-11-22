@@ -3849,10 +3849,10 @@
       "path": "dashboard.html",
       "contract_state": "EVIDENCE_CONTRACT",
       "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Command Bridge",
+      "workspace": "GENESIS / COMMAND",
+      "domain": "PLATFORM_ORCHESTRATION",
+      "primary_role": "AUTHENTICATED_MEMBER",
+      "purpose": "Canonical Genesis / Command entry point for daily member work, the 18-module command index, source-backed command wall, and governed navigation to World, Global State, Evidence, Replay & Recovery, and Module Access.",
       "data_sources": {
         "supabase_tables": [
           "activity_feed",
@@ -3874,23 +3874,36 @@
         ]
       },
       "capabilities": [
-        "UNVERIFIED"
+        "GENESIS_COMMAND_ROUTE_DIRECTORY",
+        "GENESIS_CANONICAL_DASHBOARD_ENTRY",
+        "WORLD_AND_ATLAS_NAVIGATION",
+        "SOURCE_BACKED_GLOBAL_STATE_OBSERVATORY_NAVIGATION",
+        "MEMBER_SCOPED_EVIDENCE_GRAPH_NAVIGATION",
+        "READ_ONLY_TEMPORAL_REPLAY_NAVIGATION",
+        "CONTINUITY_CHECKPOINT_NAVIGATION",
+        "CAPABILITY_GATEWAY_AND_PLATFORM_GUIDE_NAVIGATION",
+        "SAME_ORIGIN_PRODUCTION_RELEASE_IDENTITY_READ"
       ],
       "tasks": {
         "state": "OPEN_TASK",
         "ids": [
+          "PAGE::dashboard::GENESIS_COMMAND_BROWSER_REGRESSION",
+          "PAGE::dashboard::GENESIS_I18N_REVIEW",
           "PAGE::dashboard::REVIEW"
         ]
       },
-      "authorization": "UNVERIFIED",
+      "authorization": "AUTHENTICATED_DASHBOARD_SESSION; MEMBER_DATA_READS_REMAIN_SUBJECT_TO_SUPABASE_RLS; EXISTING_OWNER_ONLY_RPC_BOUNDARIES_PRESERVED; ROUTE_NAVIGATION_GRANTS_NO_PRIVILEGES",
       "truth_states": [
+        "LIVE",
+        "CALCULATED",
+        "UNAVAILABLE",
         "UNVERIFIED"
       ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
+      "asset_requirements": "Same-origin Genesis command JavaScript and CSS; same-origin .well-known/omega-release.json read; existing dashboard assets and provider integrations remain page-owned.",
+      "events": "Existing dashboard telemetry and action instrumentation remain unchanged; Genesis route directory and release identity read are read-only and emit no domain mutation.",
+      "failure_paths": "Release manifest read failure displays DEPLOYED BUILD UNAVAILABLE; route directory is rendered from a fixed same-origin allowlist; no metric or provider state is fabricated; specialist pages retain their own failure and authorization handling.",
+      "accessibility": "Semantic section headings; keyboard-operable route anchors; labelled tablist and tabpanel; ArrowLeft/ArrowRight/Home/End tab navigation; visible focus indicators; reduced-motion support. Manual screen-reader and device verification remains pending.",
+      "responsive": "Responsive route cards use three columns, two columns, then one column at mobile breakpoints; mobile cards retain large readable text and touch targets; reduced-motion preference is respected. Manual browser/device verification remains pending.",
       "traceability": {
         "page_source": "dashboard.html",
         "source_content_audited": true,
@@ -3901,6 +3914,7 @@
           "/omega-constellation.js",
           "/omega-daily.js",
           "/omega-esc.js",
+          "/omega-genesis-command.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
@@ -3927,18 +3941,27 @@
           ]
         },
         "capability_registry_matches": [],
-        "domain_candidates": []
+        "domain_candidates": [
+          "GENESIS / COMMAND"
+        ],
+        "style_evidence": [
+          "/omega-genesis-command.css"
+        ],
+        "static_data_sources": [
+          "/config/omega-sovereign-hubs.json (source-of-truth mirror enforced by contract test)",
+          "/.well-known/omega-release.json (same-origin deployed release identity)"
+        ]
       },
       "evidence": {
         "filesystem_present": true,
         "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
+        "source_audited_at": "2026-11-22",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 26,
+          "buttons": 27,
           "forms": 0,
           "inputs": 14,
-          "links": 8
+          "links": 12
         },
         "media_evidence": {
           "images": 0,

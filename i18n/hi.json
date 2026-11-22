@@ -505,13 +505,13 @@
   "vault_holdings_economy_label": "अर्थव्यवस्था सक्रियण",
   "vault_holdings_tokens_title": "12 संप्रभु टोकन शेष·AUTH=sqrt(A³+B³+C³)×φ/e",
   "vault_holdings_nft_vault_title": "NFT तिजोरी·12 संप्रभु लाइनें·9 स्तर प्रत्येक = 108 प्रकार",
-  "vault_ledger_total_label": "कुल अंक अर्जित",
-  "vault_ledger_actions_label": "पूर्ण किए गए कार्य",
+  "vault_ledger_total_label": "हाल के प्रगति अंक",
+  "vault_ledger_actions_label": "हाल के कार्य रिकॉर्ड",
   "vault_ledger_axisa_label": "अक्ष A—ज्ञान",
   "vault_ledger_axisb_label": "अक्ष B—महारत",
   "vault_ledger_axisc_label": "अक्ष C—योगदान",
   "vault_ledger_audit_label": "ऑडिट ईवेंट",
-  "vault_ledger_earning_title": "संप्रभु आय बहीखाता·AUTH=sqrt(A³+B³+C³)×φ/e·APEX=27.8367",
+  "vault_ledger_earning_title": "प्रगति रजिस्टर · स्रोत-रिकॉर्ड किए गए हाल के कार्य इवेंट · अधिकतम 40",
   "vault_ledger_col_timestamp": "समय टिकट",
   "vault_ledger_col_task": "कार्य",
   "vault_ledger_col_axis": "अक्ष",
@@ -1203,5 +1203,6 @@
   "tip_element": "आपका तत्व आपकी जन्म-राशि से आता है। यह प्लेटफ़ॉर्म को आपके अनुरूप रंग देता है।",
   "profile_placeholder_character_name": "आपका संप्रभु नाम...",
   "profile_placeholder_legacy_statement": "जो आप आगे सौंपते हैं...",
-  "prof_label_public_identity": "सार्वजनिक पहचान"
+  "prof_label_public_identity": "सार्वजनिक पहचान",
+  "vault_ledger_window_note": "अधिकतम 40 हाल के कार्य रिकॉर्ड दिखाए जाते हैं। प्रगति अंक धन या आय नहीं हैं।"
 }

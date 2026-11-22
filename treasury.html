@@ -38,10 +38,10 @@
     <!-- OVERVIEW TAB -->
     <div class="tab-panel active pad" id="tab-overview">
       <div class="kpi-row" data-stagger data-stagger-gap="70" data-omega-empty-guide="No assets recorded yet." data-omega-empty-cta="Add your first asset" data-omega-empty-go=".tab[data-tab='assets'] | button[onclick*='add-asset-form']" data-omega-empty-focus="#add-asset-form">
-        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-total">$0</div><div class="kpi-l">TOTAL WEALTH</div></div>
-        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-liquid">$0</div><div class="kpi-l">LIQUID</div></div>
-        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-illiquid">$0</div><div class="kpi-l">ILLIQUID</div></div>
-        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-reserve">$0</div><div class="kpi-l">RESERVES</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-total">—</div><div class="kpi-l">TOTAL WEALTH</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-liquid">—</div><div class="kpi-l">LIQUID</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-illiquid">—</div><div class="kpi-l">ILLIQUID</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-reserve">—</div><div class="kpi-l">RESERVES</div></div>
       </div>
       <div class="sechead">TREASURY OVERVIEW</div>
       <canvas id="treasury-canvas" width="600" height="180" style="width:100%;max-width:600px;border:1px solid var(--line);display:block"></canvas>
@@ -96,24 +96,24 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:18px">
         <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--gold);padding:16px;border-radius:2px">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">EMERGENCY FUND</div>
-          <div class="kpi-n" id="r-emerg">$0</div>
+          <div class="kpi-n" id="r-emerg">—</div>
           <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
           <div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:4px">TARGET (6-month expenses)</div>
           <input id="r-emerg-target" class="inp" type="number" style="width:100%;margin-bottom:8px" placeholder="Target amount...">
           <div id="r-emerg-bar-wrap" style="background:rgba(201,168,76,.1);border-radius:2px;height:6px;margin-bottom:4px">
             <div id="r-emerg-bar" style="height:6px;background:var(--gold);border-radius:2px;width:0%"></div>
           </div>
-          <div id="r-emerg-pct" style="font-family:var(--M);font-size:12px;color:var(--muted)">0% funded</div>
+          <div id="r-emerg-pct" style="font-family:var(--M);font-size:12px;color:var(--muted)">UNRECORDED</div>
         </div>
         <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--cyan);padding:16px;border-radius:2px">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px">OPPORTUNITY RESERVE</div>
-          <div class="kpi-n" id="r-opp">$0</div>
+          <div class="kpi-n" id="r-opp">—</div>
           <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
           <div style="font-size:12px;line-height:1.7;opacity:.75">Capital set aside to deploy rapidly when high-conviction opportunities arise. The sovereign stays liquid for asymmetric bets.</div>
         </div>
         <div style="border:1px solid var(--line);background:rgba(10,10,15,.55);border-top:2px solid var(--green);padding:16px;border-radius:2px">
           <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--green);margin-bottom:10px">LEGACY RESERVE</div>
-          <div class="kpi-n" id="r-legacy">$0</div>
+          <div class="kpi-n" id="r-legacy">—</div>
           <div class="kpi-l" style="margin-bottom:10px">CURRENT BALANCE</div>
           <div style="font-size:12px;line-height:1.7;opacity:.75">Capital designated for generational transfer — family trusts, endowments, or children's education. Sovereignty extends beyond a single life.</div>
         </div>
@@ -165,9 +165,9 @@
         <button class="btn" onclick="document.getElementById('add-flow-form').style.display='none'" style="margin-left:8px;opacity:.6">CANCEL</button>
       </div>
       <div class="kpi-row" data-stagger data-stagger-gap="70" style="margin-bottom:14px">
-        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-total-in" style="color:var(--green)">$0</div><div class="kpi-l">TOTAL IN</div></div>
-        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-total-out" style="color:#FF4444">$0</div><div class="kpi-l">TOTAL OUT</div></div>
-        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-net">$0</div><div class="kpi-l">NET FLOW</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-total-in" style="color:var(--green)">—</div><div class="kpi-l">TOTAL IN</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-total-out" style="color:#FF4444">—</div><div class="kpi-l">TOTAL OUT</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="f-net">—</div><div class="kpi-l">NET FLOW</div></div>
       </div>
       <div id="flow-list" style="display:grid;gap:8px"></div>
     </div>
@@ -208,6 +208,7 @@ var assets=JSON.parse(localStorage.getItem(AK)||'[]');
    visit, killing every handler defined below (see contributions.html). */
 var reserves=JSON.parse(localStorage.getItem(RK)||'{"emerg":0,"opp":0,"legacy":0,"emergTarget":0}');
 var flows=JSON.parse(localStorage.getItem(FK)||'[]');
+var reservesRecorded=localStorage.getItem('omega_treasury_reserves_recorded')==='1' || [reserves.emerg,reserves.opp,reserves.legacy].some(function(value){return Number(value||0)!==0;});
 
 function save(){localStorage.setItem(AK,JSON.stringify(assets));localStorage.setItem(RK,JSON.stringify(reserves));localStorage.setItem(FK,JSON.stringify(flows));}
 
@@ -228,12 +229,12 @@ function drawCanvas(){
   var t=calcTotals();
   var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
   ctx.clearRect(0,0,W,H);ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
-  if(!t.total){
+  if(!t.total&&!reservesRecorded){
     ctx.font='11px monospace';ctx.fillStyle='rgba(138,134,118,.5)';ctx.textAlign='center';
-    ctx.fillText('NO ASSETS RECORDED',W/2,H/2);return;
+    ctx.fillText('NO ASSETS OR RESERVES RECORDED',W/2,H/2);return;
   }
   var bars=[{l:'LIQUID',v:t.liquid,c:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF')},{l:'ILLIQUID',v:t.illiquid,c:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0')},{l:'RESERVES',v:Number(reserves.emerg||0)+Number(reserves.opp||0)+Number(reserves.legacy||0),c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C')}];
-  var maxV=Math.max.apply(null,bars.map(function(b){return b.v;}));
+  var maxV=Math.max(1,Math.max.apply(null,bars.map(function(b){return b.v;})));
   var bw=80,gap=40,x0=60,yB=H-30;
   bars.forEach(function(b,i){
     var x=x0+i*(bw+gap);
@@ -249,13 +250,13 @@ function drawCanvas(){
 function renderOverview(){
   var t=calcTotals();
   var res=Number(reserves.emerg||0)+Number(reserves.opp||0)+Number(reserves.legacy||0);
-  document.getElementById('k-total').textContent=fmt(t.total);
-  document.getElementById('k-liquid').textContent=fmt(t.liquid);
-  document.getElementById('k-illiquid').textContent=fmt(t.illiquid);
-  document.getElementById('k-reserve').textContent=fmt(res);
+  var hasAssets=assets.length>0;
+  document.getElementById('k-total').textContent=hasAssets?fmt(t.total):'—';
+  document.getElementById('k-liquid').textContent=hasAssets?fmt(t.liquid):'—';
+  document.getElementById('k-illiquid').textContent=hasAssets?fmt(t.illiquid):'—';
+  document.getElementById('k-reserve').textContent=reservesRecorded?fmt(res):'—';
   drawCanvas();
 }
-
 function renderAssets(){
   var el=document.getElementById('asset-list');if(!el)return;
   if(!assets.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO ASSETS RECORDED</div>';return;}
@@ -281,46 +282,56 @@ function renderAssets(){
 
 function renderReserves(){
   var e=Number(reserves.emerg||0),o=Number(reserves.opp||0),l=Number(reserves.legacy||0),t=Number(reserves.emergTarget||0);
-  document.getElementById('r-emerg').textContent=fmt(e);
-  document.getElementById('r-opp').textContent=fmt(o);
-  document.getElementById('r-legacy').textContent=fmt(l);
-  if(t>0){var pct=Math.min(100,Math.round(e/t*100));document.getElementById('r-emerg-bar').style.width=pct+'%';document.getElementById('r-emerg-pct').textContent=pct+'% funded';}
-  document.getElementById('ru-emerg').value=e||'';
-  document.getElementById('ru-opp').value=o||'';
-  document.getElementById('ru-legacy').value=l||'';
+  document.getElementById('r-emerg').textContent=reservesRecorded?fmt(e):'—';
+  document.getElementById('r-opp').textContent=reservesRecorded?fmt(o):'—';
+  document.getElementById('r-legacy').textContent=reservesRecorded?fmt(l):'—';
+  if(reservesRecorded&&t>0){
+    var pct=Math.min(100,Math.round(e/t*100));
+    document.getElementById('r-emerg-bar').style.width=pct+'%';
+    document.getElementById('r-emerg-pct').textContent=pct+'% funded';
+  }else{
+    document.getElementById('r-emerg-bar').style.width='0%';
+    document.getElementById('r-emerg-pct').textContent=reservesRecorded?'TARGET NOT SET':'UNRECORDED';
+  }
+  document.getElementById('ru-emerg').value=reservesRecorded?String(e):'';
+  document.getElementById('ru-opp').value=reservesRecorded?String(o):'';
+  document.getElementById('ru-legacy').value=reservesRecorded?String(l):'';
 }
-
 function renderFlows(){
   var el=document.getElementById('flow-list');if(!el)return;
+  if(!flows.length){
+    document.getElementById('f-total-in').textContent='—';
+    document.getElementById('f-total-out').textContent='—';
+    document.getElementById('f-net').textContent='—';
+    document.getElementById('f-net').style.color='var(--muted)';
+    el.textContent='NO FLOWS LOGGED';
+    return;
+  }
   var tin=0,tout=0;
   flows.forEach(function(f){if(f.type==='in')tin+=Number(f.amount||0);else tout+=Number(f.amount||0);});
   document.getElementById('f-total-in').textContent=fmt(tin);
   document.getElementById('f-total-out').textContent=fmt(tout);
-  var net=tin-tout;document.getElementById('f-net').textContent=(net>=0?'+':'')+fmt(Math.abs(net));
+  var net=tin-tout;
+  document.getElementById('f-net').textContent=(net>=0?'+':'−')+fmt(Math.abs(net));
   document.getElementById('f-net').style.color=net>=0?'var(--green)':'#FF4444';
-  if(!flows.length){el.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:20px">NO FLOWS LOGGED</div>';return;}
-  el.innerHTML=[].concat(flows).reverse().slice(0,50).map(function(f){
-    var col=f.type==='in'?'var(--green)':'#FF4444';
-    return '<div style="border:1px solid var(--line);border-left:3px solid '+col+';background:rgba(10,10,15,.4);padding:10px 12px;border-radius:2px;display:flex;gap:12px;align-items:center">'
-      +'<div style="font-family:var(--M);font-size:12px;color:'+col+'">'+(f.type==='in'?'+':'−')+'</div>'
-      +'<div style="flex:1;font-size:12px">'+esc(f.desc)+'</div>'
-      +'<div style="font-family:var(--D);font-size:var(--fs-2,14px);color:'+col+'">'+fmt(f.amount)+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted)">'+esc(f.date)+'</div>'
-      +'</div>';
-  }).join('');
-}
 
+}
 window.addAsset=function(){
   var n=document.getElementById('a-name').value.trim();if(!n)return;
   assets.push({id:Date.now(),name:n,type:document.getElementById('a-type').value,value:document.getElementById('a-value').value,cost:document.getElementById('a-cost').value,notes:document.getElementById('a-notes').value.trim(),date:new Date().toISOString().slice(0,10)});
   save();document.getElementById('add-asset-form').style.display='none';renderAssets();renderOverview();
 };
 window.saveReserves=function(){
+  reservesRecorded=true;
+  localStorage.setItem('omega_treasury_reserves_recorded','1');
   reserves.emerg=Number(document.getElementById('ru-emerg').value||0);
   reserves.opp=Number(document.getElementById('ru-opp').value||0);
   reserves.legacy=Number(document.getElementById('ru-legacy').value||0);
   reserves.emergTarget=Number(document.getElementById('r-emerg-target').value||reserves.emergTarget||0);
-  save();renderReserves();renderOverview();
+  save();
+  reservesRecorded=true;
+  try{localStorage.setItem('omega_treasury_reserves_recorded','1');}catch(e){/* saved nonzero values remain detectable */}
+  renderReserves();renderOverview();
 };
 window.addFlow=function(){
   var d=document.getElementById('f-desc').value.trim();if(!d)return;

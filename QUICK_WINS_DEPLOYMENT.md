@@ -1,6 +1,6 @@
 # Ω SYD OMEGA 91717 — Quick Wins Deployment Guide
 
-This document outlines the 4 quick-win improvements implemented in this session, their deployment requirements, and expected impact.
+This document tracks four quick-win workstreams, their verified implementation state, deployment requirements, and target impact. A proposal or passing configuration validator is not proof of production operation.
 
 ## 1. GitHub Audit Automation (DEPLOYED)
 
@@ -35,112 +35,60 @@ This document outlines the 4 quick-win improvements implemented in this session,
 
 ---
 
-## 2. Cloudflare Rate Limiting (REQUIRES CONFIGURATION)
+## 2. Cloudflare Rate Limiting (NOT DEPLOYED — NOT PRODUCTION READY)
 
-**Status:** ⚠️ Implemented, awaiting Cloudflare setup
+**Status as of 2026-11-21:** NOT ACTIVE. Do not represent this Worker as deployed DDoS protection or as a general API rate limiter.
 
-**What it does:**
-- Implements sliding-window rate limiting: 1000 req/min per IP, 100 req/min per member
-- Implements burst protection: max 20 concurrent requests per member
-- Returns 429 Too Many Requests with Retry-After header
-- Graduated backoff prevents retry storms
+**Repository evidence:**
+- `workers/rate-limiter.js` is an unreleased draft; no dedicated Worker deployment workflow exists. The Cloudflare Pages workflow deploys only the static Pages artifact.
+- The root `wrangler.toml` was removed so a default `wrangler deploy` cannot accidentally apply the incomplete production route/bindings. `wrangler.example.toml` is deliberately route-free and binding-free.
+- The draft Worker still has no exported `RateLimiter` Durable Object class, non-atomic KV counters, and an unverified JWT-sub identity. These are implementation blockers, not deployment configuration tasks.
+- The KV read/modify/write counter is not atomic under concurrent requests; the burst counter is also a KV read/modify/write operation.
+- The member limiter derives a JWT `sub` by decoding the token payload without verifying its signature. That value must not be treated as an authenticated member identity.
+- The route is configured for `sydomega.com/*`, while the Worker only checks `/api/*` and `/.supabase/*`. Browser requests sent directly to the Supabase project hostname are outside this Worker route.
 
-**Deployment steps:**
+**Existing, narrower control:** the Supabase AI quota migration defines a transaction-locked token-bucket RPC, and the deployed `concierge` Edge Function calls it after verifying the user with Supabase Auth. This is an AI request quota, not a general API rate limiter. The live `public.rate_limits` table had zero rows at the time of this audit, so recent quota consumption was not evidenced.
 
-1. **Install Wrangler CLI:**
-   ```bash
-   npm install -g @cloudflare/wrangler
-   ```
+**Proposed thresholds only (not active):**
+- IP-based: 1,000 requests/minute.
+- Member-based: 100 requests/minute.
+- Burst: 20 concurrent requests.
 
-2. **Authenticate with Cloudflare:**
-   ```bash
-   wrangler login
-   ```
+**Required before deployment:**
+1. Choose the actual protected API paths and confirm whether direct Supabase traffic needs platform-side controls instead of a same-origin Worker.
+2. Replace non-atomic KV counting with an atomic, concurrency-safe design.
+3. Use a verified identity source; never trust an unverified JWT payload.
+4. Remove or correctly implement the Durable Object binding.
+5. Provision real Cloudflare resources and store required identifiers as protected deployment configuration.
+6. Add a pinned, protected Worker deployment workflow and automated abuse/rate-limit tests.
+7. Verify the exact deployed Worker version, route, 429 behavior, Retry-After, and bypass/failure behavior.
 
-3. **Update wrangler.toml with your zone ID:**
-   ```bash
-   # Get your zone ID from Cloudflare dashboard (sydomega.com zone settings)
-   # Update line: zone_id = "your_zone_id_here"
-   ```
-
-4. **Create KV namespace:**
-   ```bash
-   wrangler kv:namespace create "RATE_LIMIT_STORE"
-   wrangler kv:namespace create "RATE_LIMIT_STORE" --preview
-   ```
-
-5. **Deploy worker:**
-   ```bash
-   wrangler deploy
-   ```
-
-6. **Verify deployment:**
-   ```bash
-   curl -I https://sydomega.com/api/health
-   # Should see header: X-RateLimit-Remaining
-   ```
-
-**Files:**
-- `wrangler.toml` — Cloudflare configuration
-- `workers/rate-limiter.js` — Rate limiter implementation
-
-**Impact:**
-- **DDoS resilience:** Automated mitigation for brute-force attacks
-- **API stability:** Prevents resource exhaustion from excessive requests
-- **Member experience:** Fair share of resources, graduated backoff prevents thundering herd
-
-**Thresholds:**
-- IP-based: 1000 req/min (60 per second)
-- Member-based: 100 req/min (1.67 per second)
-- Burst: 20 concurrent requests max
-
-**Configuration override:**
-Edit `wrangler.toml` `[[kv_namespaces]]` to point to existing namespace, or modify `rate-limiter.js` rate limits directly.
+Do not deploy the current Worker unchanged.
 
 ---
 
-## 3. Monitoring Configuration (DEPLOYED)
+## 3. Monitoring and Performance Metrics (PARTIAL)
 
-**Status:** ✅ Deployed and active
+**Status as of 2026-11-21:** Web Vitals telemetry is operating; config-driven alert delivery and a complete SRE dashboard are not verified.
 
-**What it does:**
-- Defines comprehensive alert thresholds for Core Web Vitals
-- Configures alert channels (console, localStorage, webhook)
-- Specifies sampling rates for performance data
-- Establishes data retention policies
-- Enables automated performance reporting
+**Verified implementation:**
+- `omega-metrics.js` measures LCP, CLS, INP, FCP, and TTFB in the browser.
+- It sends `web_vitals` events through `OmegaTelemetry.track`, rather than writing directly to a metrics table.
+- The live `public.telemetry_events` table contained 3,161 events, including 389 `web_vitals`, 81 `slo_breach`, and 6 `error_encountered` events at the time of this audit. Latest telemetry was recorded on 2026-11-21.
+- `monitoring-dashboard.html` reads current browser metrics from the current page. It explicitly leaves production, CI, database, cache, security, and uptime as unverified/not measured; no baseline is exposed for optimization impact.
+- `omega-monitoring.js` collects in-memory fetch/error measurements. It does not load `monitoring-config.json` or itself persist those measurements.
 
-**Deployment:**
-- Created `monitoring-config.json` with validated thresholds
-- Added `scripts/validate-monitoring.py` to CI pipeline
-- Configuration automatically loaded by `omega-monitoring.js`
+**Not operationally verified:**
+- `monitoring-config.json` is validated by CI but has no runtime code reference in the repository.
+- Its configured webhook points to `/.supabase/functions/v1/notify-performance`, but `notify-performance` is not among the 22 deployed Supabase Edge Functions.
+- No evidence currently proves the configured webhook, alert channels, sampling policy, or server-retention policy are active.
+- A global namespace collision existed: both `omega-metrics.js` and `omega-monitoring.js` assigned `window.OmegaMetrics`. This change separates Web Vitals as `OmegaVitals` and fetch/error monitoring as `OmegaMonitor`; it must pass CI and deploy before the correction is considered live.
 
-**Files:**
-- `monitoring-config.json` — Monitoring policy and thresholds
-- `scripts/validate-monitoring.py` — Configuration validator
-
-**Alert thresholds:**
-
-| Metric | Good | Warning | Critical | Unit |
-|--------|------|---------|----------|------|
-| LCP | <2.5s | <4s | >5s | ms |
-| FID | <100ms | <300ms | >500ms | ms |
-| CLS | <0.1 | <0.25 | >0.5 | score |
-| TTFB | <600ms | <1s | >1.5s | ms |
-| Page Load | <3s | <5s | >7s | ms |
-| API Latency | <200ms | <500ms | >1s | ms |
-| Error Rate | <1% | <5% | >10% | fraction |
-| Cache Hit Rate | >70% | >50% | <30% | fraction |
-
-**Alert channels:**
-1. **Console** — Immediate developer visibility in browser console
-2. **localStorage** — Persisted alert history (up to 100 alerts, 7-day TTL)
-3. **Webhook** — POST to `/.supabase/functions/v1/notify-performance` with retry logic
-
-**Impact:**
-- **Incident awareness:** Real-time alerts in monitoring dashboard
-- **Performance trends:** Historical data for trend analysis
-- **Proactive optimization:** Alerts trigger before user impact becomes severe
+**Required before claiming full monitoring:**
+1. Wire and validate the monitoring configuration in a real runtime loader, or retire the unused configuration.
+2. Deploy a secured alert endpoint or remove the non-existent webhook target.
+3. Add owner-authorized aggregate telemetry views and real historical dashboard queries.
+4. Test alert delivery, retention, SLO calculations, and failure handling end to end.
 
 ---
 
@@ -200,18 +148,22 @@ Edit `wrangler.toml` `[[kv_namespaces]]` to point to existing namespace, or modi
 - [x] CI pipeline includes all three checks
 
 ### Phase 2: Cloudflare Rate Limiting ⏳
-- [ ] Wrangler CLI installed
-- [ ] Cloudflare account authenticated
-- [ ] Zone ID configured in wrangler.toml
-- [ ] KV namespace created
-- [ ] Worker deployed
-- [ ] Rate limiting headers appear in responses
+- [ ] Select the actual protected API routes and whether Supabase-host traffic requires provider-side controls
+- [ ] Replace the draft KV counters with an atomic, concurrency-safe design
+- [ ] Verify member identity cryptographically through Supabase Auth or another trusted verifier
+- [ ] Implement or remove the unused Durable Object binding
+- [ ] Provision real Cloudflare resources and protected deployment secrets
+- [ ] Add a dedicated, approval-gated Worker deployment and rollback workflow
+- [ ] Verify the exact deployed version, route coverage, 429 responses, Retry-After, and concurrency behavior
 
-### Phase 3: Monitoring Configuration ✅
-- [x] monitoring-config.json deployed with validated thresholds
-- [x] Validation script in CI pipeline
-- [x] omega-monitoring.js loads configuration on page load
-- [x] Alerts visible in monitoring-dashboard.html
+### Phase 3: Monitoring and Performance Metrics — PARTIAL
+- [x] Web Vitals capture runs through omega-metrics.js
+- [x] Web Vitals are sent through OmegaTelemetry to telemetry_events
+- [x] monitoring-config.json schema/thresholds are checked by CI
+- [ ] Runtime loads monitoring-config.json
+- [ ] A secured notify-performance endpoint is deployed
+- [ ] Alert delivery and retention are verified end to end
+- [ ] Owner-authorized SRE dashboard reads historical aggregate telemetry
 
 ### Phase 4: Linear Schema Tracking ⏳
 - [ ] Linear workspace created
@@ -222,15 +174,15 @@ Edit `wrangler.toml` `[[kv_namespaces]]` to point to existing namespace, or modi
 
 ---
 
-## Expected Impact After Full Deployment
+## Target Impact (planning estimates — not measured production outcomes)
 
 | Dimension | Before | After | Impact |
 |-----------|--------|-------|--------|
-| Incident detection latency | ~24h | <5 min | 288× faster |
-| Rate limit protection | None | 1000 req/min/IP, 100 req/min/member | DDoS resilience |
-| Schema change visibility | Manual | Automatic tracking | 100% audit coverage |
-| Performance visibility | Dashboard only | Dashboard + alerts + reports | Continuous monitoring |
-| MTTR (mean time to recovery) | ~4h | <15 min | 16× faster |
+| Incident detection latency | Not measured | <5 min target | Not yet verified |
+| General API rate limiting | Not verified | Atomic, authenticated, route-scoped enforcement | Target only; current Worker is not deployed |
+| Schema change visibility | Workflow present; Linear credentials not verified | Automated issue traceability | Target only; integration not evidenced |
+| Performance visibility | Browser Web Vitals + persisted telemetry | Owner SRE dashboard + verified alerts | Partial; alert configuration is not runtime-wired |
+| MTTR (mean time to recovery) | Not measured | <15 min target | Not yet verified |
 
 ---
 
@@ -267,10 +219,7 @@ python scripts/validate-monitoring.py
 ```
 
 ### Cloudflare Rate Limiting
-If rate limiting isn't working:
-- Verify worker is deployed: `wrangler tail`
-- Check KV namespace exists: `wrangler kv:namespace list`
-- Test with curl: `curl -I https://sydomega.com/api/health -H "X-Forwarded-For: 1.2.3.4"`
+Rate limiting is **not deployed**. Do not run `wrangler tail`, provision resources, or interpret a test endpoint as evidence of protection. First complete the seven required design/implementation steps in Section 2, then deploy only through an approved Worker release workflow.
 
 ### Monitoring Configuration
 If alerts aren't firing:
@@ -290,7 +239,7 @@ If issues aren't being created:
 
 - **CI Pipeline:** `.github/workflows/ci.yml`, `.github/workflows/schema-tracking.yml`
 - **Monitoring:** `monitoring-config.json`, `scripts/validate-monitoring.py`
-- **Rate Limiting:** `workers/rate-limiter.js`, `wrangler.toml`
+- **Rate Limiting (unreleased draft):** `workers/rate-limiter.js`, `wrangler.example.toml`
 - **Production deployment:** `vercel.json`, `scripts/vercel-build.sh`
 
 For questions or issues, refer to `CLAUDE.md` §8–§9 for architectural context and known debt.

@@ -1,4 +1,4 @@
-"""The member-state mirror must never upload the seven finance pages' localStorage keys.
+"""The member-state mirror must never upload the local finance pages' localStorage keys.
 
 Those pages are localStorage-only on purpose (CLAUDE.md 8.2; omega-local-backup.js header). The
 mirror uploads every `omega*` key not excluded, so a finance key that is missing from NO_MIRROR is
@@ -11,7 +11,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 MIRROR = (ROOT / "omega-member-state.js").read_text(encoding="utf-8")
-FINANCE_PAGES = ["wealth", "wallet", "treasury", "revenue", "investment", "expenses", "budget"]
+FINANCE_PAGES = ["wealth", "wallet", "treasury", "revenue", "investment", "expenses", "budget", "portfolio"]
 # A storage key is an underscore name. Hyphenated names (omega-side, omega-vt) are element ids and
 # file names, and `omega:populated` is an event.
 KEY = re.compile(r"""['"](omega_[a-z0-9_]+)['"]""")

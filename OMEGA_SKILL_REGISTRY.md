@@ -96,8 +96,8 @@ Counted at generation time. These are the numbers that kept going stale in prose
 |---|---|
 | `.html` pages | 242 |
 | pages loading `bg.js` | 242 of 242 |
-| `omega-*.js` modules | 282 (2893 KB) |
-| root `.js` files | 299 |
+| `omega-*.js` modules | 285 (2908 KB) |
+| root `.js` files | 302 |
 | `supabase/*.sql` (flat bag) | 127 |
 | `supabase/migrations/*.sql` | 437 (107 numbered `NNNN_`, 330 timestamped) |
 | Edge Functions | 28 |
@@ -112,13 +112,13 @@ fails `--check`. `scripts/i18n-contract.py` enforces the rest (every
 
 | Source | Keys |
 |---|---|
-| `T_EN` (English, inlined in `i18n.js`) | 1205 |
-| `i18n/ar.json` | 1205 |
-| `i18n/es.json` | 1205 |
-| `i18n/fr.json` | 1205 |
-| `i18n/hi.json` | 1205 |
-| `i18n/nl.json` | 1205 |
-| `i18n/zh.json` | 1205 |
+| `T_EN` (English, inlined in `i18n.js`) | 1206 |
+| `i18n/ar.json` | 1206 |
+| `i18n/es.json` | 1206 |
+| `i18n/fr.json` | 1206 |
+| `i18n/hi.json` | 1206 |
+| `i18n/nl.json` | 1206 |
+| `i18n/zh.json` | 1206 |
 
 Migration replay and production migration-history evidence are maintained in
 [`supabase/migrations/README.md`](supabase/migrations/README.md). This generated

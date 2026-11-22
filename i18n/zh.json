@@ -505,13 +505,13 @@
   "vault_holdings_economy_label": "经济激活",
   "vault_holdings_tokens_title": "12 主权代币余额·AUTH=sqrt(A³+B³+C³)×φ/e",
   "vault_holdings_nft_vault_title": "NFT金库·12条主权线·9层每条=108种类型",
-  "vault_ledger_total_label": "总积分获得",
-  "vault_ledger_actions_label": "已完成的操作",
+  "vault_ledger_total_label": "近期进度积分",
+  "vault_ledger_actions_label": "近期任务记录",
   "vault_ledger_axisa_label": "轴A—知识",
   "vault_ledger_axisb_label": "轴B—掌握",
   "vault_ledger_axisc_label": "轴C—贡献",
   "vault_ledger_audit_label": "审计事件",
-  "vault_ledger_earning_title": "主权收益账本·AUTH=sqrt(A³+B³+C³)×φ/e·APEX=27.8367",
+  "vault_ledger_earning_title": "进度账本 · 最近的来源记录任务事件 · 最多 40 条",
   "vault_ledger_col_timestamp": "时间戳",
   "vault_ledger_col_task": "任务",
   "vault_ledger_col_axis": "轴",
@@ -1203,5 +1203,6 @@
   "tip_element": "你的元素来自你的出生星座，它会为你调整平台的色调。",
   "profile_placeholder_character_name": "你的主权之名...",
   "profile_placeholder_legacy_statement": "你想传承的内容...",
-  "prof_label_public_identity": "公开身份"
+  "prof_label_public_identity": "公开身份",
+  "vault_ledger_window_note": "最多显示 40 条近期任务记录。进度积分不是金钱或收入。"
 }

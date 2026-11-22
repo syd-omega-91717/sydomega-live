@@ -101,6 +101,9 @@ GATES = [
     ('page-purpose-audit-tests',
      'purpose overlap extraction ignores shared chrome and prevents shared infrastructure from implying duplicate jobs',
      ['tests/test_page_consolidation.py']),
+    ('agent-council-contract-tests',
+     'the 12-agent canonical roster, 144-seat hierarchy, server allowlist and truth labels remain aligned',
+     ['scripts/tests/test_agent_council_contract.py']),
     ('covenant-owner-access',
      'the sovereign covenant and founder records are owner-only and fail closed',
      ['scripts/tests/test_covenant_owner_access.py']),
@@ -326,6 +329,12 @@ GATES = [
     ('blueprint-truth-map',
      'every 999-blueprint point is classified once, with a reason',
      ['scripts/blueprint-truth-map.py', '--check']),
+    ('dashboard-tabs',
+     'Genesis is a first-class command tab while Today remains the default and every legacy tab hash remains intact',
+     ['scripts/tests/test_dashboard_tabs.py']),
+    ('domain-hub-workspaces',
+     'the existing 14 workspaces and the canonical Genesis 12-route directory remain aligned',
+     ['scripts/tests/test_omega_domain_hub_workspaces.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

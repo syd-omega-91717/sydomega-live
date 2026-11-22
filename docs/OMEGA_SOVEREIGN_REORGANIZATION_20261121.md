@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-21  
 **Target repository:** `syd-omega-91717/sydomega-live`  
-**Baseline:** `main` at `18304c167b440e25789bc6a3c5bf98339e81b339`  
+**Baseline:** `main` at `d8f37f346a0e82271d875cf1e12b653e7cb31415`  
 **Status:** Architecture foundation; implementation must proceed in gated, verifiable phases.
 
 ## 1. Objective
@@ -53,6 +53,8 @@ Preserve the 12 canonical primary agents and their current roster order and defi
 
 The requested structure is interpreted as **12 subordinate agent positions under each primary agent**, for **144 subordinate positions** across the 12 primary agents.
 
+**Source reconciliation / version decision:** The 999-point blueprint's Point 116 specifies 108 “Micro-Executors” and gives Sentinel deploying 9 sub-agents as its example. That is a genuine conflict with the later explicit owner instruction of 12 subordinate positions under each of the 12 primary agents. The current implementation follows the later owner instruction: **12 × 12 = 144**. This is a deliberate versioned amendment to Point 116, not a claim that the original blueprint specified 144. The blueprint text does not define the Hero / King / Pantheon families, their distribution, or subordinate identities; those families are introduced by the later owner instruction, and their allocation remains unspecified. The blueprint's Agent 1–12 numbering order in Points 47–58 also differs from the current `omega-agents.json` array order. Agent names, not array positions or historical ordinal numbers, are the identity keys; the UI and server authorization map must bind by name.
+
 Each subordinate belongs to one of three classification families:
 
 - **Hero** — specialist executor / champion archetype.
@@ -67,8 +69,9 @@ Do not invent 144 names, powers, or operational claims. Until a subordinate is s
 
 Every primary or subordinate agent record should support:
 
-- stable `agent_id` and `parent_agent_id`;
-- `tier` (`PRIMARY` or `SUBORDINATE`);
+- for every **actual provisioned agent**, stable `agent_id` and `parent_agent_id`;
+- for every **unassigned capacity slot**, stable `position_id`, `parent_agent_name`, `slot_number`, `status: UNASSIGNED`, null name/classification, empty capabilities/permissions, and `operational: false`; a slot is not an agent identity;
+- `tier` (`PRIMARY` or `SUBORDINATE`) only after an actual agent is provisioned;
 - `classification` (`HERO`, `KING`, `PANTHEON`, or null for unassigned);
 - canonical name, title, purpose, domains, and declared capabilities;
 - explicit authority scope and denied actions;
@@ -150,3 +153,26 @@ The Agent Council hub should have one visual overview with selectable layers: **
 The 999-point blueprint contains aspirational or speculative concepts (for example orbital infrastructure, Mars backups, biological/DNA locks, guaranteed market stabilization, autonomous legal immunity, and superhuman prediction). These may be represented as clearly labelled lore or simulation, but must not be implemented or advertised as real capabilities without independently validated engineering, legal authority, evidence, and safety review.
 
 Likewise, financial allocation, token issuance, custody, investment execution, medical/biometric processing, and legal decision-making require separate regulatory, security, operational, and owner approval gates. This page reorganization does not activate any of them.
+
+### Phase 1 implementation record — 2026-11-21
+
+- `agents.html` now renders a 12-primary / 144-seat hierarchy panel using the existing canonical `omega-agents.json` roster and the validated `/omega-agent-hierarchy.json` capacity registry.
+- Both Agent Council and Network views now fail closed when the canonical roster is unavailable; stale duplicate fallback identities are no longer rendered.
+- Every subordinate position is displayed as `UNASSIGNED`; no names, capabilities, permissions, or live status are fabricated.
+- Network, Pantheons, and Operations remain reachable from the Agent Council navigation; existing URLs are preserved.
+- Network, Pantheons, and Operations are now first-class lazy-loaded panels in the Agent Council workspace. Each existing page supports an embedded presentation mode, while its standalone route and original feature implementation remain intact.
+- `agent-network.html` no longer labels every agent active or fabricates authority/last-activity values; it identifies the visualization as illustrative.
+- `omega-agent-operations.js` now loads its selectable primary roster from `omega-agents.json`; the Edge Function's server-side tool allowlist remains authoritative.
+- CI static contracts, full contract suite, isolated Supabase migration replay, CodeQL, supply-chain scans, visual page survey, and production artifact/runtime checks passed on the merged implementation head. On 2026-11-21, main commit `d2fa344e54d8c03bc6a40a8b3728509e421f3285` was deployed successfully by the Cloudflare Pages Git integration. The Cloudflare Pages check reported `Deployed successfully` for `d2fa344`; the exact-production-release, production-surface-verification, and production-smoke checks also passed. The production verification workflow confirms that both `sydomega.com` and `www.sydomega.com` serve the exact release commit and checks the root, core routes, CSP, HSTS, and production surface. Vercel production promotion remains intentionally postponed because `VERCEL_PROMOTION_POSTPONED=true`; Cloudflare Pages is the production host. A separate interactive browser/device inspection of the Agent Council workspace remains outstanding.
+
+### Phase 2 implementation record — Genesis / Command — 2026-11-22
+
+- The canonical Genesis / Command route is `/dashboard.html`, matching the active navigation and the nine-hub configuration. `/command.html` and `/command-center.html` remain intact as compatibility entries; no route is deleted or redirected by this change.
+- The dashboard now includes a dedicated **Ω GENESIS** workspace tab immediately after **TODAY**. The established Today-first member loop remains the default; `#genesis` opens the command directory. Existing `#today`, `#overview`, `#personal`, `#platform`, and `#science` deep links remain supported.
+- The Genesis directory exposes the 12 destination paths in the canonical configuration. It groups the current hub, World, Global State, Evidence, Replay & Recovery, and Module Access; the two legacy command entries are clearly labelled as compatibility routes.
+- The directory uses same-origin anchors and does not iframe specialist pages, rewrite their data access, or change their Supabase RLS / server authorization. Specialist surfaces continue to own their own session and failure behavior.
+- The release label reads the same-origin `/.well-known/omega-release.json` manifest. If the manifest is absent or invalid, the UI says `UNAVAILABLE`; it does not invent a deployment status.
+- The new route directory is read-only and creates no new domain writes, payment actions, agent execution paths, or privilege grants.
+- The command tabs now support ArrowLeft / ArrowRight / Home / End keyboard navigation, and the new destination cards include visible focus states, responsive layouts, and reduced-motion handling.
+- Contract coverage asserts exact equality between the page route manifest and the canonical 12-path Genesis configuration. CI and production verification for this implementation remain pending until this PR is merged and deployed.
+- The new Genesis route descriptions are currently English-only. Localization into the six existing language packs (Arabic, French, Spanish, Hindi, Dutch, and Chinese) remains an explicit open task; no partial or invented translations are presented as complete.

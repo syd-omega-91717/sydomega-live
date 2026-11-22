@@ -30,6 +30,7 @@
 </head>
 <body>
 <aside id="omega-side" data-page="portfolio"></aside>
+<section id="portfolio-load-error" hidden role="alert" aria-live="assertive" style="max-width:620px;margin:10vh auto;padding:24px;border:1px solid var(--crim);color:var(--ink);background:var(--void2);font-family:var(--M);line-height:1.7">PORTFOLIO UNAVAILABLE · AUTHORIZED PROFILE COULD NOT BE VERIFIED. <a href="/account.html" style="color:var(--gold)">SIGN IN</a></section>
 <div class="page-shell" id="app" style="display:none">
 <header class="topbar">
   <div class="topbar-title">PORTFOLIO<span class="topbar-sub">SOVEREIGN HOLDINGS &middot; AUTHORITY &middot; MATRIX POSITION</span></div>
@@ -59,10 +60,7 @@
     <div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:12px">Loading achievements&hellip;</div>
   </div>
   <div class="sechead" style="margin-top:16px">PRIVACY</div>
-  <div class="privacy-row">
-    <input type="checkbox" id="pub-toggle" onchange="togglePrivacy(this.checked)"/>
-    <label for="pub-toggle">PUBLIC PORTFOLIO &mdash; visible to other sovereigns</label>
-  </div>
+  <div class="privacy-row" role="note">SERVER-SIDE SHARING IS NOT AVAILABLE · THIS PORTFOLIO REMAINS PRIVATE.</div>
 </div>
 
 <div class="tab-panel" id="tab-matrix">
@@ -88,8 +86,8 @@
   <div class="card-grid">
     <div class="card"><div class="card-title">AUTHORITY FORMULA</div><div class="card-body">AUTH = √(A³+B³+C³) × φ/e — where A=Knowledge, B=Mastery, C=Contribution (each 0–9). APEX = 27.8367. φ=1.6180339887, e=2.7182818285. Authority is the sovereign measure of your position across all three axes of the 9×9×9 Matrix.</div></div>
     <div class="card"><div class="card-title">THREE AXES</div><div class="card-body">Axis A (Knowledge) advances through study, research, and verified output. Axis B (Mastery) advances through skill trials, dojo performance, and discipline logs. Axis C (Contribution) advances through missions, peer rating, and published work. Each axis is scored 0–9.</div></div>
-    <div class="card"><div class="card-title">SOVEREIGN ASSETS</div><div class="card-body">Holdings represent your stake in the Sovereign Order — tokens, collectibles, credentials, and domain resources. Assets are recorded in the user_assets ledger and updated by mission outcomes, trade, and sovereign grants.</div></div>
-    <div class="card"><div class="card-title">PRIVACY CONTROLS</div><div class="card-body">Your portfolio is private by default. Enabling the public toggle shares your authority score, axis levels, and achievement count with the Order. Holdings and cosmology details remain visible only to you.</div></div>
+    <div class="card"><div class="card-title">USER-RECORDED ASSETS</div><div class="card-body">This page reads member-scoped metadata from <code>public.user_assets</code>. It does not create holdings, execute trades, issue tokens, or calculate market value. A record is not independent proof of ownership, custody or legal title.</div></div>
+    <div class="card"><div class="card-title">PRIVACY BOUNDARY</div><div class="card-body">The public-sharing control is not connected to a server-side publication or access policy. This page does not publish portfolio data to other members. Keep the portfolio private until an audited, owner-approved sharing feature exists.</div></div>
   </div>
 </div>
 <div data-page-emblem="portfolio" style="margin:20px auto 0"></div>
@@ -102,11 +100,11 @@ function setTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['overview','matrix','assets','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
-function togglePrivacy(on){localStorage.setItem('omega_portfolio_public',on?'1':'0');}
 </script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+try{localStorage.removeItem('omega_portfolio_public');}catch(e){}
 
 function renderOverview(pr){
   var a=Number(pr.axis_a||0),b=Number(pr.axis_b||0),c=Number(pr.axis_c||0);
@@ -144,7 +142,6 @@ function renderOverview(pr){
     chip.append(num,label); achRow.appendChild(chip);
   });
 
-  document.getElementById('pub-toggle').checked=localStorage.getItem('omega_portfolio_public')==='1';
 }
 
 function renderMatrix(pr){
@@ -168,27 +165,43 @@ function renderMatrix(pr){
 
 async function renderAssets(userId){
   var al=document.getElementById('assets-list');
-  var{data:assets}=await sb.from('user_assets').select('*').eq('user_id',userId).order('created_at',{ascending:false});
-  if(!assets||!assets.length){
-    al.replaceChildren();
-    var empty=document.createElement('div'); empty.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:12px'; empty.textContent='No holdings on record.'; al.appendChild(empty);
+  var result=await sb.from('user_assets').select('id,name,quantity,asset_type,track_name').eq('user_id',userId);
+  if(result.error||!Array.isArray(result.data)){
+    al.textContent='ASSET RECORDS UNAVAILABLE · THE SOURCE COULD NOT BE VERIFIED.';
+    al.dataset.truth='UNAVAILABLE';
+    al.setAttribute('role','status');
     return;
   }
+  var assets=result.data;
   al.replaceChildren();
+  if(!assets.length){
+    var empty=document.createElement('div');
+    empty.style.cssText='font-family:var(--M);font-size:12px;color:var(--muted);padding:12px';
+    empty.textContent='NO USER-RECORDED HOLDINGS.';
+    al.appendChild(empty);
+    al.dataset.truth='EMPTY';
+    return;
+  }
+  al.dataset.truth='USER-RECORDED';
   assets.forEach(function(a){
     var row=document.createElement('div'); row.className='asset-row';
     var name=document.createElement('div'); name.className='asset-name'; name.textContent=String(a.name||'Unnamed asset');
     var meta=document.createElement('div'); meta.style.cssText='display:flex;gap:12px';
-    var qty=document.createElement('div'); qty.className='asset-qty'; qty.textContent='QTY '+String(a.quantity??0);
-    var type=document.createElement('div'); type.className='asset-val'; type.textContent=String(a.asset_type||'—');
+    var qty=document.createElement('div'); qty.className='asset-qty'; qty.textContent='QTY '+(a.quantity===null||a.quantity===undefined?'—':String(a.quantity));
+    var type=document.createElement('div'); type.className='asset-val'; type.textContent=[a.asset_type||'—',a.track_name||''].filter(Boolean).join(' · ');
     meta.append(qty,type); row.append(name,meta); al.appendChild(row);
   });
 }
 
 async function boot(){
-  var sess=(await sb.auth.getSession()).data.session;
+  var authResult=await sb.auth.getSession();
+  if(authResult.error)throw authResult.error;
+  var sess=authResult.data&&authResult.data.session;
   if(!sess){window.location.href='/account.html';return;}
-  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
+  var profileResult=await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle();
+  if(profileResult.error)throw profileResult.error;
+  var pr=profileResult.data;
+  if(!pr)throw new Error('PROFILE_RECORD_UNAVAILABLE');
   if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
   document.getElementById('app').style.display='flex';
   if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
@@ -196,7 +209,12 @@ async function boot(){
   renderMatrix(pr);
   await renderAssets(sess.user.id);
 }
-boot();
+boot().catch(function(e){
+  console.warn('Portfolio access unavailable:',e);
+  var app=document.getElementById('app'),panel=document.getElementById('portfolio-load-error');
+  if(app)app.style.display='none';
+  if(panel)panel.hidden=false;
+});
 /* Telemetry sweep on data load completion */
 if(window.omegaSweep){
   var kpiRow=document.getElementById('overview-kpis');

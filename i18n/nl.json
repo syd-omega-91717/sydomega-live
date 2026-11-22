@@ -505,13 +505,13 @@
   "vault_holdings_economy_label": "ECONOMISCHE ACTIVERING",
   "vault_holdings_tokens_title": "12 SOEVEREINE TOKENSALDI · AUTH=sqrt(A³+B³+C³)×φ/e",
   "vault_holdings_nft_vault_title": "NFT-KLUIS · 12 SOEVEREINE LIJNEN · 9 NIVEAUS ELK = 108 TYPES",
-  "vault_ledger_total_label": "TOTAAL BEHAALDE PUNTEN",
-  "vault_ledger_actions_label": "VOLTOOIDE ACTIES",
+  "vault_ledger_total_label": "RECENTE VOORTGANGSPUNTEN",
+  "vault_ledger_actions_label": "RECENTE TAAKREGISTRATIES",
   "vault_ledger_axisa_label": "AS A — KENNIS",
   "vault_ledger_axisb_label": "AS B — BEHEERSING",
   "vault_ledger_axisc_label": "AS C — BIJDRAGE",
   "vault_ledger_audit_label": "AUDITGEBEURTENISSEN",
-  "vault_ledger_earning_title": "SOEVEREIN WINSTVERDIENSTE · AUTH=sqrt(A³+B³+C³)×φ/e · APEX=27.8367",
+  "vault_ledger_earning_title": "VOORTGANGSREGISTER · RECENTE BRON-GEREGISTREERDE TAAKEVENTS · MAX. 40",
   "vault_ledger_col_timestamp": "TIJDSTEMPEL",
   "vault_ledger_col_task": "TAAK",
   "vault_ledger_col_axis": "AS",
@@ -1203,5 +1203,6 @@
   "tip_element": "Je element komt van je geboortesterrenbeeld. Het kleurt het platform naar jou.",
   "profile_placeholder_character_name": "Je soevereine naam...",
   "profile_placeholder_legacy_statement": "Wat je doorgeeft...",
-  "prof_label_public_identity": "Openbare identiteit"
+  "prof_label_public_identity": "Openbare identiteit",
+  "vault_ledger_window_note": "Toont maximaal 40 recente taakrecords. Voortgangspunten zijn geen geld of inkomsten."
 }

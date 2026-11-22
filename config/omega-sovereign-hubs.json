@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "PROPOSED_NOT_YET_WIRED",
+  "status": "PARTIALLY_IMPLEMENTED",
   "generated_on": "2026-11-21",
   "source_of_truth": {
     "primary_agents": "/omega-agents.json",
@@ -28,13 +28,64 @@
     "unassigned_slots_are_operational": false,
     "primary_roster_path": "/omega-agents.json",
     "subordinate_identity_policy": "Do not fabricate names, powers, capabilities, or execution status.",
-    "authority_policy": "Parent-child relationship and classification never grant permissions."
+    "authority_policy": "Parent-child relationship and classification never grant permissions.",
+    "source_reconciliation": {
+      "prior_blueprint_reference": {
+        "document": "999-point sovereign blueprint",
+        "point": 116,
+        "subordinate_total": 108,
+        "subordinate_positions_per_primary": 9,
+        "status": "SUPERSEDED_FOR_CURRENT_CAPACITY"
+      },
+      "latest_owner_instruction": {
+        "date": "2026-11-21",
+        "subordinate_positions_per_primary": 12,
+        "subordinate_position_capacity": 144,
+        "status": "ACTIVE"
+      },
+      "decision": "The latest explicit owner instruction supersedes Point 116 for the current hierarchy capacity. This is a versioned amendment; the original blueprint remains historically unchanged.",
+      "classification_source": "Latest owner instruction dated 2026-11-21",
+      "classification_distribution": "UNSPECIFIED",
+      "subordinate_identities_and_capabilities": "NOT_DEFINED_IN_SOURCE; remain UNASSIGNED until specified and approved",
+      "agent_ordinal_order": {
+        "blueprint_points_47_58": [
+          "Sentinel",
+          "Analyst",
+          "Historian",
+          "Tutor",
+          "Merchant",
+          "Proxy",
+          "Oracle",
+          "Scout",
+          "Warden",
+          "Auditor",
+          "Beacon",
+          "Sovereign"
+        ],
+        "canonical_omega_agents_json": [
+          "Sentinel",
+          "Merchant",
+          "Scout",
+          "Warden",
+          "Sovereign",
+          "Auditor",
+          "Proxy",
+          "Oracle",
+          "Beacon",
+          "Analyst",
+          "Tutor",
+          "Historian"
+        ],
+        "identity_rule": "Use canonical agent names, not array positions or historical ordinal numbers, for parentage and authorization."
+      }
+    },
+    "position_registry_path": "/omega-agent-hierarchy.json"
   },
   "hubs": [
     {
       "id": "genesis-command",
       "title": "Ω Genesis / Command",
-      "canonical_path": "/command.html",
+      "canonical_path": "/dashboard.html",
       "destination_paths": [
         "/dashboard.html",
         "/command.html",
@@ -153,7 +204,7 @@
         "Academy",
         "Learning Paths",
         "9-Stage Ascension",
-        "729-Node Matrix",
+        "104,976-Node Matrix",
         "Examinations",
         "Gaming Progress",
         "Achievements & Credentials",
@@ -300,5 +351,15 @@
     "Some routes are intentionally cross-listed because they serve more than one workflow; the page-contract audit must select one canonical owner and use contextual links elsewhere.",
     "Sensitive health and family records must retain their existing authorization, consent, retention, and data-minimization boundaries.",
     "The Agent Council hub consolidates navigation and presentation; privileged operations remain a separately gated workflow."
-  ]
+  ],
+  "implementation_status": {
+    "agent_council_hierarchy": "PARTIALLY_IMPLEMENTED_WITH_VALIDATED_144_SLOT_REGISTRY",
+    "network_visualization": "INTEGRATED_LAZY_EMBEDDED_TAB; STANDALONE_ROUTE_PRESERVED; CANONICAL_ROSTER_ONLY; ILLUSTRATIVE_GRAPH; TRUTH_LABELS_CORRECTED",
+    "pantheons": "INTEGRATED_LAZY_EMBEDDED_TAB; STANDALONE_ROUTE_PRESERVED; AUTH_AND_LOCAL_STORAGE_BOUNDARIES_RETAINED",
+    "operations": "INTEGRATED_LAZY_EMBEDDED_TAB; STANDALONE_ROUTE_PRESERVED; SERVER_AUTHORIZED_READ_ONLY_GATEWAY_UNCHANGED",
+    "remaining_hubs": "SEVEN_PROPOSED_HUBS_NOT_YET_WIRED",
+    "verification": "MAIN_CLOUDFLARE_RELEASE_B717CBDA_EXACT_SHA_VERIFIED_ON_APEX_AND_WWW; GENESIS_COMMAND_INCLUDED_IN_MAIN_AND_PRODUCTION; INTERACTIVE_BROWSER_DEVICE_PREVIEW_PENDING; VERCEL_PROMOTION_POSTPONED_CLOUDFLARE_IS_PRODUCTION",
+    "agent_council_workspace": "INTEGRATED_LAZY_TAB_WORKSPACE_IMPLEMENTED; CI_AND_MIGRATION_REPLAY_PASSED; CLOUDFLARE_PAGES_MAIN_RELEASE_VERIFIED_B717CBDA; INTERACTIVE_BROWSER_DEVICE_PREVIEW_PENDING; VERCEL_PROMOTION_POSTPONED_CLOUDFLARE_IS_PRODUCTION",
+    "genesis_command": "IMPLEMENTED_IN_MAIN_AND_CLOUDFLARE_PRODUCTION; CANONICAL_DASHBOARD_TAB; TODAY_DEFAULT_PRESERVED; 12_DESTINATIONS_COVERED; LEGACY_COMMAND_ROUTES_PRESERVED; READ_ONLY_RELEASE_IDENTITY; NO_AUTHORIZATION_OR_DATA_BOUNDARY_CHANGE; INTERACTIVE_BROWSER_DEVICE_PREVIEW_PENDING; I18N_REVIEW_OPEN"
+  }
 }

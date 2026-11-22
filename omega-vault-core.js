@@ -54,7 +54,7 @@
     wal.forEach(function (a) { curs[String(a.currency || 'USD').toUpperCase()] = true; });
     out.push({ id: 'wallet', kind: 'asset', label: 'WALLET', href: '/wallet.html',
       value: wal.length ? wal.reduce(function (s, a) { return s + n(a.balance); }, 0) : null,
-      note: wal.length ? wal.length + ' account' + (wal.length === 1 ? '' : 's') + (Object.keys(curs).length > 1 || !curs.USD ? ' · ' + Object.keys(curs).join('/') + ' as entered' : '') : null });
+      note: wal.length ? wal.length + ' account' + (wal.length === 1 ? '' : 's') + ' · account currencies: ' + Object.keys(curs).join('/') + ' · balances entered as USD equivalent' : null });
 
     var inv = arr('omega_investments');
     out.push({ id: 'investment', kind: 'asset', label: 'INVESTMENTS', href: '/investment.html',
@@ -142,7 +142,7 @@
     var on = list.filter(function (s) { return s.value != null && pick[s.id]; });
     var have = list.filter(function (s) { return s.value != null; });
     var sum = on.reduce(function (t, s) { return t + s.value; }, 0);
-    var big = el('div', 'ovc-sum' + (sum < 0 ? ' neg' : ''), have.length ? money(sum) : '—', col);
+    var big = el('div', 'ovc-sum' + (sum < 0 ? ' neg' : ''), on.length ? money(sum) : '—', col);
     big.setAttribute('aria-live', 'polite');
     var max = Math.max.apply(null, have.map(function (s) { return Math.abs(s.value); }).concat([1]));
     list.forEach(function (s) {
@@ -167,6 +167,7 @@
     var row2 = el('div', 'ovc-warn', null, col);
     if (on.length > 1) row2.textContent = 'Counting ' + on.length + ' trackers. If one ' + (kind === 'asset' ? 'holding' : 'income or bill') + ' sits in two of them, untick one.';
     else if (!have.length) row2.textContent = 'Nothing entered yet in these trackers.';
+    else if (!on.length) row2.textContent = 'No trackers selected. Select at least one to calculate.';
     var links = el('div', 'ovc-warn', null, col);
     list.forEach(function (s, i) {
       var a = el('a', null, s.label.toLowerCase() + ' ↗', links);

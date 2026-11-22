@@ -25,3 +25,10 @@ superseded `docs/proposed-migrations/20261115230000_omega_close_advance_matrix.s
 
 **Evidence after.** `py_compile` clean; `compileall` reports 0 compile errors; `contract-suite.py`: `91 gate(s), 0 failing`;
 `test_advance_matrix_closed` 7/7. Note: `platform-experience-v6` fails in a tree holding a built `public/`; it passed once `public/` was removed.
+
+**Second break of the same kind, found from CI (`Validate production artifact`, run on `9338cc2`).** `scripts/omega-rpc-security-policy-contract.py`
+failed with `expected 72 registered functions, found 71`; reproduced locally. #1520 (`dae5313`) deliberately removed `advance_matrix` from the
+`member_self` category of `config/omega-rpc-security-policy.json` (it is now executable by no API role, so it fits none of the four caller categories;
+`service_only` would be false since `service_role` was revoked too) but left `coverage.expectedSecurityDefinerPublicFunctions` at 72. Set it to 71.
+Only that script reads the number. `config/supabase-security-definer-exposure.json` is a dated advisory snapshot of another project and was not touched.
+Verified: the contract prints PASS with 71 classified.

@@ -4,7 +4,7 @@
 every table, view, materialized view and partitioned table, mapped to its
 columns in `attnum` order.
 
-Latest verified capture: **2026-11-16**, **295 relations**, **2,777 columns**.
+Latest verified capture: **2026-11-22**, **297 relations**, **2,810 columns**.
 
 ## Why it exists
 
@@ -71,7 +71,7 @@ from (
 ) s;
 ```
 
-Update `_captured` in the same edit. **Regenerate whenever schema changes are
+Update `_captured` and `_table_count` in the same edit. **Regenerate whenever schema changes are
 applied live** — this file is dated evidence, not a target, and a stale snapshot
 silently re-opens the false-positive problem it was written to close.
 

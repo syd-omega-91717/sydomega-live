@@ -2,189 +2,639 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>&#937; SYD OMEGA 91717 &mdash; Income &amp; Allocation</title>
-<meta name="description" content="Sovereign revenue architecture, income allocation, and investment direction."/>
-<meta name="theme-color" content="#C9A84C"/>
+<title>Ω SYD OMEGA 91717 — Finance Command</title>
+<meta name="description" content="Owner finance console: provider-settled ledger actuals, governed financial scenarios and immutable simulation history."/>
+<meta name="theme-color" content="#020206"/>
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
 <style>
-.alloc-item{margin-bottom:14px}
-.alloc-item .ahead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.alloc-item .aname{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--ink)}
-.alloc-item .apct{font-family:var(--M);font-size:12px;color:var(--gold)}
-.alloc-bar{height:5px;background:rgba(201,168,76,.1);overflow:hidden}
-.alloc-fill{height:100%;transition:width .8s}
-.alloc-item .adesc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.55}
-.invest-card{border:1px solid var(--line);background:var(--surface);padding:16px}
-.inv-num{font-family:var(--D);font-size:28px;color:var(--gold);margin-bottom:4px}
-.inv-name{font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--solar);margin-bottom:8px}
-.inv-desc{font-size:12px;color:var(--muted);line-height:1.65}
-.inv-pct{font-family:var(--D);font-size:16px;color:var(--cyan);margin-top:8px}
-.invest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.tier-name{font-family:var(--M);color:var(--solar)}
-.price-cell{font-family:var(--M);color:var(--gold);text-align:right}
-.annual-cell{font-family:var(--M);font-size:12px;color:var(--muted);text-align:right}
+.finance-wrap{width:min(1440px,100%);margin:0 auto;padding:clamp(16px,3vw,34px);gap:18px}
+.finance-hero{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;padding:24px;border:1px solid rgba(201,168,76,.22);background:radial-gradient(ellipse at 82% 0%,rgba(0,229,255,.09),transparent 44%),linear-gradient(135deg,rgba(201,168,76,.075),rgba(2,2,6,.4));}
+.finance-eyebrow{font:600 13px var(--M);letter-spacing:2.4px;color:var(--cyan);text-transform:uppercase}
+.finance-title{font:600 clamp(28px,4vw,42px) var(--D);letter-spacing:1px;color:var(--solar);margin:8px 0}
+.finance-lede{max-width:780px;font:500 16px/1.65 var(--R);color:var(--ink)}
+.truth-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(63,178,127,.4);color:#7ed9ac;background:rgba(63,178,127,.07);font:600 12px var(--M);letter-spacing:1.3px}
+.truth-dot{width:7px;height:7px;border-radius:50%;background:#3fb27f;box-shadow:0 0 12px rgba(63,178,127,.65)}
+.finance-tabs{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
+.finance-tabs button{background:rgba(201,168,76,.045);border:1px solid var(--line);color:var(--muted);padding:12px 16px;font:600 13px var(--M);letter-spacing:1px;transition:all .18s}
+.finance-tabs button[aria-selected="true"]{color:var(--solar);border-color:rgba(201,168,76,.6);background:rgba(201,168,76,.12)}
+.finance-panel{display:none;gap:16px}
+.finance-panel.active{display:grid;animation:finance-in .24s ease-out}
+@keyframes finance-in{from{opacity:.55;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.finance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.finance-card{min-width:0;border:1px solid var(--line);background:linear-gradient(145deg,rgba(18,18,24,.96),rgba(5,5,9,.96));padding:17px;box-shadow:0 8px 26px rgba(0,0,0,.18)}
+.finance-card .k{font:600 12px var(--M);letter-spacing:1.2px;color:var(--muted);text-transform:uppercase}
+.finance-card .v{font:600 clamp(22px,3vw,30px) var(--D);color:var(--solar);margin-top:9px;overflow-wrap:anywhere}
+.finance-card .hint{font:500 13px/1.5 var(--R);color:var(--muted);margin-top:7px}
+.finance-section-title{font:600 15px var(--M);letter-spacing:1.6px;color:var(--cyan);text-transform:uppercase;margin:4px 0}
+.finance-surface{border:1px solid var(--line);background:rgba(10,10,15,.8);padding:18px;min-width:0}
+.finance-note{border-left:3px solid var(--gold);background:rgba(201,168,76,.06);padding:13px 16px;color:var(--ink);font:500 14px/1.6 var(--R)}
+.finance-note.warning{border-left-color:var(--crim);background:rgba(207,103,96,.07)}
+.finance-note.good{border-left-color:var(--green);background:rgba(63,178,127,.06)}
+.finance-status{font:600 13px var(--M);letter-spacing:1px;color:var(--muted);padding:10px 0}
+.finance-status[data-state="error"]{color:#ff8d82}
+.finance-status[data-state="good"]{color:#7ed9ac}
+.finance-status[data-state="warn"]{color:var(--solar)}
+.finance-list{display:grid;gap:10px}
+.finance-row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.1);font:500 14px/1.45 var(--R)}
+.finance-row:last-child{border-bottom:0}
+.finance-row strong{color:var(--ink);font:600 13px var(--M);text-align:right;overflow-wrap:anywhere}
+.finance-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:12px}
+.currency-card{border:1px solid rgba(63,178,127,.25);background:rgba(63,178,127,.035);padding:16px}
+.currency-code{font:600 14px var(--M);letter-spacing:2px;color:#7ed9ac}
+.currency-value{font:600 23px var(--D);color:var(--solar);margin:9px 0}
+.currency-meta{font:500 13px/1.6 var(--R);color:var(--muted)}
+.finance-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.finance-field{display:grid;gap:6px;min-width:0}
+.finance-field label{font:600 12px var(--M);letter-spacing:.7px;color:var(--muted)}
+.finance-field input,.finance-field select,.finance-field textarea{width:100%;min-width:0;background:#08080d;border:1px solid rgba(201,168,76,.24);color:var(--ink);padding:12px 13px;font:500 16px var(--R);border-radius:2px;outline:none}
+.finance-field input:focus,.finance-field select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,229,255,.12)}
+.finance-field small{font:500 12px/1.4 var(--R);color:var(--muted)}
+.finance-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.finance-button{border:1px solid rgba(201,168,76,.45);background:rgba(201,168,76,.12);color:var(--solar);padding:12px 16px;font:600 12px var(--M);letter-spacing:1px}
+.finance-button.primary{background:linear-gradient(110deg,rgba(201,168,76,.24),rgba(0,229,255,.1));border-color:rgba(0,229,255,.42);color:var(--ink)}
+.finance-button.danger{border-color:rgba(207,103,96,.45);color:#ff9c92;background:rgba(207,103,96,.07)}
+.finance-button:disabled{opacity:.45;cursor:not-allowed}
+.finance-table-wrap{overflow-x:auto;border:1px solid var(--line)}
+.finance-table{width:100%;border-collapse:collapse;min-width:760px}
+.finance-table th,.finance-table td{padding:12px 12px;border-bottom:1px solid rgba(201,168,76,.1);text-align:right;font:500 13px var(--M);white-space:nowrap}
+.finance-table th{color:var(--cyan);background:rgba(0,229,255,.035);font-size:12px;letter-spacing:.8px}
+.finance-table th:first-child,.finance-table td:first-child{text-align:left}
+.finance-table td{color:var(--ink)}
+.finance-empty{padding:20px;border:1px dashed rgba(201,168,76,.25);color:var(--muted);font:500 14px/1.6 var(--R);text-align:center}
+.finance-badge{display:inline-block;padding:4px 8px;border:1px solid rgba(0,229,255,.3);color:var(--cyan);font:600 12px var(--M);letter-spacing:1px}
+.finance-history-item{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.1)}
+.finance-history-item:last-child{border-bottom:0}
+.finance-history-item strong{font:600 13px var(--M);color:var(--ink)}
+.finance-history-item span{font:500 13px var(--R);color:var(--muted)}
+.finance-foot{font:500 12px/1.6 var(--R);color:var(--muted)}
+.tier-pills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tier-pills span{padding:10px;border:1px solid var(--line);background:rgba(201,168,76,.035);font:600 12px var(--M);color:var(--solar);text-align:center;letter-spacing:.6px}
+@media(max-width:900px){.finance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-form{grid-template-columns:repeat(2,minmax(0,1fr))}.tier-pills{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.finance-wrap{padding:14px;gap:14px}.finance-hero{padding:17px}.finance-form{grid-template-columns:1fr}.finance-grid{grid-template-columns:1fr 1fr}.finance-card{padding:13px}.finance-card .v{font-size:22px}.finance-tabs button{flex:1 1 calc(50% - 8px);padding:10px 8px;font-size:12px}.tier-pills{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-surface{padding:14px}}
+@media(prefers-reduced-motion:reduce){.finance-panel.active{animation:none}.finance-tabs button{transition:none}}
 </style>
 </head>
 <body>
 <aside id="omega-side" data-page="income"></aside>
-<div class="page-shell" id="app" style="display:none">
-<header class="topbar">
-  <div class="topbar-title">INCOME &amp; ALLOCATION<span class="topbar-sub">REVENUE ARCHITECTURE &middot; TIERS &middot; INVESTMENT DIRECTION</span></div>
-  <canvas data-omega-ring data-ring-size="40" data-ring-color="gold" data-ring-value="0" data-ring-live aria-label="Authority ring"></canvas>
-</header>
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="setTab('overview')">OVERVIEW</button>
-  <button class="tab-btn" onclick="setTab('tiers')">TIERS</button>
-  <button class="tab-btn" onclick="setTab('allocation')">ALLOCATION</button>
-  <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
-</div>
+<main id="app" class="page-shell finance-wrap" hidden>
+  <header class="finance-hero">
+    <div>
+      <div class="finance-eyebrow">Ω / FINANCIAL INTELLIGENCE / OWNER CONTROL</div>
+      <h1 class="finance-title">FINANCE COMMAND</h1>
+      <p class="finance-lede">A separated view of verified provider settlements and user-defined financial scenarios. Actual records and simulated projections never share the same data path.</p>
+    </div>
+    <div class="truth-chip"><span class="truth-dot"></span><span>TRUTH-BOUND FINANCE</span></div>
+  </header>
 
-<div class="tab-panel active" id="tab-overview">
-  <div class="sechead">REVENUE ARCHITECTURE</div>
-  <div class="kpi-row" data-stagger data-stagger-gap="70">
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-members">—</div><div class="kpi-label">ACTIVE MEMBERS</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-membership">—</div><div class="kpi-label">EST. MONTHLY INCOME</div></div>
-    <div class="kpi-card" data-reveal="fade-up" title="Planned rate. The &#937; economy is dormant behind platform_settings.tokens_enabled, so nothing is charged or owed today."><div class="kpi-val">9.17%</div><div class="kpi-label">COMMISSION RATE &middot; PLANNED</div></div>
-    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">104,976</div><div class="kpi-label">LATTICE NODES</div></div>
-  </div>
-  <div class="sechead" style="margin-top:8px">INCOME PROJECTION &mdash; 12-MONTH ARC (ILLUSTRATIVE)</div>
-  <div class="glass" style="padding:12px">
-    <canvas id="revenue-canvas" style="width:100%;height:160px;display:block"></canvas>
-  </div>
-  <div class="sechead" style="margin-top:8px">&#937; COMMISSION RULE</div>
-  <div class="glass" style="padding:14px 16px;font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">9.17% of all transactions flows directly to the Sovereign Vault. This is the foundational economic axiom of the platform.</div>
-  <div id="restricted-notice" style="display:none;margin-top:12px">
-    <div class="glass" style="padding:12px;font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted)">Live revenue data is visible to the Architect only. KPI projections above are illustrative.</div>
-  </div>
-</div>
+  <nav class="finance-tabs" role="tablist" aria-label="Finance sections">
+    <button type="button" data-omega-capability-id="finance-command" data-tab="actuals" id="tab-actuals" role="tab" aria-controls="panel-actuals" aria-selected="true" tabindex="0">ACTUALS</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="scenarios" id="tab-scenarios" role="tab" aria-controls="panel-scenarios" aria-selected="false" tabindex="-1">SCENARIO LAB</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="governance" id="tab-governance" role="tab" aria-controls="panel-governance" aria-selected="false" tabindex="-1">BILLING &amp; RULES</button>
+    <button type="button" data-omega-capability-id="finance-command" data-tab="audit" id="tab-audit" role="tab" aria-controls="panel-audit" aria-selected="false" tabindex="-1">AUDIT TRAIL</button>
+  </nav>
 
-<div class="tab-panel" id="tab-tiers">
-  <div class="sechead">SUBSCRIPTION TIER ENGINE &middot; 9 TIERS</div>
-  <div class="tbl-wrap">
-    <div class="tbl-head" style="grid-template-columns:1fr 1fr 1fr 1fr"><span>TIER</span><span>RANK</span><span style="text-align:right">PRICE / MO</span><span style="text-align:right">ANNUAL VALUE</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER I</span><span>INITIATE</span><span class="price-cell">$9.17</span><span class="annual-cell">$110.04</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER II</span><span>SEEKER</span><span class="price-cell">$27.17</span><span class="annual-cell">$326.04</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER III</span><span>ADEPT</span><span class="price-cell">$91.17</span><span class="annual-cell">$1,094.04</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER IV</span><span>EXPERT</span><span class="price-cell">$171.17</span><span class="annual-cell">$2,054.04</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER V</span><span>MASTER</span><span class="price-cell">$271.17</span><span class="annual-cell">$3,254.04</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER VI</span><span>ELITE</span><span class="price-cell">$391.17</span><span class="annual-cell">$4,694.04</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER VII</span><span>SOVEREIGN</span><span class="price-cell">$517.17</span><span class="annual-cell">$6,206.04</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER VIII</span><span>LEGEND</span><span class="price-cell">$717.17</span><span class="annual-cell">$8,606.04</span></div>
-    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span class="tier-name">TIER IX</span><span>OMEGA</span><span class="price-cell">$917.17</span><span class="annual-cell">$11,006.04</span></div>
-  </div>
-</div>
+  <section class="finance-panel active" id="panel-actuals" role="tabpanel" aria-labelledby="tab-actuals" tabindex="0">
+    <div class="finance-note good"><strong>LIVE LEDGER · READ ONLY.</strong> Actuals come from the Stripe settlement ledger only. The dashboard does not infer income from member counts, proposed prices, planned commissions or allocation percentages.</div>
+    <div class="finance-grid">
+      <article class="finance-card"><div class="k">Payment processing</div><div class="v" id="payments-state">—</div><div class="hint">Live platform setting</div></article>
+      <article class="finance-card"><div class="k">Stripe integration</div><div class="v" id="stripe-state">—</div><div class="hint">Live platform setting</div></article>
+      <article class="finance-card"><div class="k">Settled transactions</div><div class="v" id="settlement-count">—</div><div class="hint">Posted or reversed settlement entries</div></article>
+      <article class="finance-card"><div class="k">Unmatched reconciliations</div><div class="v" id="unmatched-count">—</div><div class="hint">Pending, mismatch or failed</div></article>
+    </div>
+    <div class="finance-surface">
+      <div class="finance-section-title" id="actuals-title">Provider-settled amounts by currency</div>
+      <div id="actuals-state" class="finance-status" role="status" aria-live="polite">Checking owner-authorized ledger…</div>
+      <div id="currency-breakdown" class="finance-breakdown">
+        <div class="finance-empty">Loading verified settlement records…</div>
+      </div>
+      <div class="finance-foot" id="actuals-updated"></div>
+    </div>
+    <div class="finance-grid">
+      <article class="finance-card"><div class="k">Refund reversals</div><div class="v" id="refund-count">—</div><div class="hint">Recorded refund ledger transactions</div></article>
+      <article class="finance-card"><div class="k">Processed Stripe events</div><div class="v" id="processed-events">—</div><div class="hint">Provider events marked processed</div></article>
+      <article class="finance-card"><div class="k">Failed Stripe events</div><div class="v" id="failed-events">—</div><div class="hint">Provider events marked failed</div></article>
+      <article class="finance-card"><div class="k">Tokens</div><div class="v" id="tokens-state">—</div><div class="hint">Issuance/transfer feature flag</div></article>
+    </div>
+    <div class="finance-note warning">Gross settled receipts are not recognized accounting revenue. This Stripe-only view does not separately net tax, processor fees, disputes, foreign exchange, reserves, recipient transfer timing or accrual adjustments. Other income channels and manual bank activity are outside this report. Creator payouts remain disabled while platform_settings.creator_earnings_enabled=false; this page does not initiate any funds transfer.</div>
+    <div id="actuals-limitations" class="finance-foot"></div>
+    <div class="finance-actions"><button type="button" data-omega-capability-id="finance-command" class="finance-button" id="refresh-actuals">REFRESH LIVE ACTUALS</button><span class="finance-foot">Owner authorization and AAL2 are enforced by the database function.</span></div>
+  </section>
 
-<div class="tab-panel" id="tab-allocation">
-  <div class="sechead">INCOME ALLOCATION DIRECTIVE &middot; % OF NET INCOME</div>
-  <div class="glass" style="padding:16px" id="alloc-bars"></div>
-  <div class="sechead" style="margin-top:8px">INVESTMENT DIRECTION</div>
-  <div class="invest-grid" id="invest-grid"></div>
-</div>
+  <section class="finance-panel" id="panel-scenarios" role="tabpanel" aria-labelledby="tab-scenarios" tabindex="0">
+    <div class="finance-note"><strong>SIMULATED ONLY.</strong> Every input below is an assumption you enter. It does not create revenue, charge a customer, alter a balance, issue a token or promise a return. Each run is stored with its input snapshot and formula version.</div>
+    <div class="finance-surface">
+      <div class="finance-section-title" id="scenario-title">Scenario definition</div>
+      <div class="finance-form">
+        <div class="finance-field"><label for="scenario-name">SCENARIO NAME</label><input id="scenario-name" maxlength="80" value="Baseline planning scenario"/></div>
+        <div class="finance-field"><label for="currency-code">CURRENCY (ISO 4217)</label><input id="currency-code" maxlength="3" pattern="[A-Za-z]{3}" value="USD" autocapitalize="characters"/><small>One currency per scenario. No FX conversion is assumed.</small></div>
+        <div class="finance-field"><label for="horizon-months">FORECAST HORIZON</label><select id="horizon-months"><option value="6">6 months</option><option value="12" selected>12 months</option><option value="18">18 months</option><option value="24">24 months</option><option value="36">36 months</option><option value="60">60 months</option></select></div>
+        <div class="finance-field"><label for="starting-members">STARTING PAYING MEMBERS</label><input id="starting-members" type="number" min="0" max="10000000" step="1" value="0"/></div>
+        <div class="finance-field"><label for="new-members">NEW PAYING MEMBERS / MONTH</label><input id="new-members" type="number" min="0" max="10000000" step="1" value="0"/></div>
+        <div class="finance-field"><label for="churn-pct">MONTHLY CHURN (%)</label><input id="churn-pct" type="number" min="0" max="100" step="0.01" value="0"/></div>
+        <div class="finance-field"><label for="monthly-price">ASSUMED MONTHLY PRICE</label><input id="monthly-price" type="number" min="0" max="1000000000" step="0.01" value="0"/><small>Not an active SYD OMEGA price.</small></div>
+        <div class="finance-field"><label for="refund-pct">REFUND ASSUMPTION (%)</label><input id="refund-pct" type="number" min="0" max="100" step="0.01" value="0"/></div>
+        <div class="finance-field"><label for="tax-pct">TAX ASSUMPTION (%)</label><input id="tax-pct" type="number" min="0" max="100" step="0.01" value="0"/><small>Applied to billings after assumed refunds; not a tax determination.</small></div>
+        <div class="finance-field"><label for="processing-fee-pct">PROCESSING FEE (%)</label><input id="processing-fee-pct" type="number" min="0" max="100" step="0.01" value="0"/><small>Enter your contracted provider rate.</small></div>
+        <div class="finance-field"><label for="processing-fixed-fee">FIXED FEE / PAYMENT</label><input id="processing-fixed-fee" type="number" min="0" max="1000000" step="0.01" value="0"/><small>Applied once per paying member each month.</small></div>
+        <div class="finance-field"><label for="operating-cost">MONTHLY OPERATING COST</label><input id="operating-cost" type="number" min="0" max="1000000000000" step="0.01" value="0"/></div>
+      </div>
+      <div class="finance-actions" style="margin-top:16px">
+        <button type="button" data-omega-capability-id="finance-command" class="finance-button" id="save-scenario">SAVE SCENARIO</button>
+        <button type="button" data-omega-capability-id="finance-command" class="finance-button primary" id="run-scenario">RUN &amp; RECORD SIMULATION</button>
+        <button type="button" data-omega-capability-id="finance-command" class="finance-button danger" id="delete-scenario" disabled>DELETE SCENARIO</button>
+      </div>
+      <div id="scenario-status" class="finance-status" role="status" aria-live="polite">Scenario inputs are not actual financial data.</div>
+    </div>
+    <div class="finance-surface">
+      <div class="finance-section-title">Saved scenarios</div>
+      <div class="finance-actions">
+        <div class="finance-field" style="flex:1;min-width:220px"><label for="scenario-select">LOAD A SAVED SCENARIO</label><select id="scenario-select"><option value="">No saved scenario selected</option></select></div>
+        <button type="button" data-omega-capability-id="finance-command" class="finance-button" id="load-scenario">LOAD SELECTED</button>
+      </div>
+      <div id="scenario-history" class="finance-list"><div class="finance-empty">Loading saved scenarios…</div></div>
+    </div>
+    <div class="finance-surface">
+      <div class="finance-section-title">Latest simulation output <span class="finance-badge">SIMULATED · FORMULA 1.0.0</span></div>
+      <div id="simulation-output" class="finance-empty">No simulation has been run in this session. Run a scenario to create a persisted, versioned result.</div>
+    </div>
+  </section>
 
-<div class="tab-panel" id="tab-science">
-  <div class="sechead">INCOME ARCHITECTURE</div>
-  <div class="card-grid">
-    <div class="card"><div class="card-title">REVENUE STREAMS</div><div class="card-body">Nine subscription tiers from $9.17/mo (Initiate) to $917.17/mo (Omega). Plus 9.17% marketplace commission on every transaction, consultancy bookings, and publishing royalties. All revenue flows through the Sovereign Vault before allocation.</div></div>
-    <div class="card"><div class="card-title">ALLOCATION RULE</div><div class="card-body">Every dollar of net income is distributed across seven categories: Technology (25%), Content (20%), Legal (15%), Marketing (15%), Reserve (12%), R&D (8%), and Architect Draw (5%). The order is non-negotiable — the platform secures before the architect earns.</div></div>
-    <div class="card"><div class="card-title">INVESTMENT DIRECTION</div><div class="card-body">Surplus capital flows to six directions: Platform Infrastructure Bonds (30%), Licensed Legal Reserves (20%), Content & Media Production (20%), Sovereign Growth Fund (15%), Affiliate & Partner Network (10%), and Technology R&D (5%).</div></div>
-    <div class="card"><div class="card-title">LEGAL NOTICE</div><div class="card-body">All monetary projections are illustrative and require licensed financial counsel before any real-world deployment. The Economic Layer (Phase II — fiat acquisition of Ω, Marketplace, and asset minting) remains sealed pending legal review on classification, KYC/AML, and payment terms.</div></div>
-  </div>
-</div>
-<div data-page-emblem="income" style="margin:20px auto 0"></div>
-</div>
+  <section class="finance-panel" id="panel-governance" role="tabpanel" aria-labelledby="tab-governance" tabindex="0">
+    <div class="finance-section-title" id="governance-title">Billing and economic controls</div>
+    <div class="finance-grid" id="billing-flags">
+      <article class="finance-card"><div class="k">Payments</div><div class="v">—</div></article>
+      <article class="finance-card"><div class="k">Stripe</div><div class="v">—</div></article>
+      <article class="finance-card"><div class="k">Token economy</div><div class="v">—</div></article>
+      <article class="finance-card"><div class="k">KYC intake</div><div class="v">—</div></article>
+    </div>
+    <div class="finance-surface">
+      <div class="finance-section-title">Twelve membership ranks</div>
+      <p class="finance-foot">The rank names below are part of the membership hierarchy. They are not evidence of paid subscription products, a live price catalogue, or money owed by members.</p>
+      <div class="tier-pills">
+        <span>INITIATE</span><span>SEEKER</span><span>ADEPT</span><span>WARDEN</span>
+        <span>VANGUARD</span><span>ARCHITECT</span><span>SOVEREIGN</span><span>LUMINARY</span>
+        <span>RADIANT</span><span>UNYIELDING</span><span>TRANSCENDENT</span><span>ASCENDANT</span>
+      </div>
+    </div>
+    <div class="finance-note warning"><strong>NO ACTIVE BILLING CATALOG.</strong> Payment processing and Stripe integration are disabled. Checkout is held behind legal, provider and runtime gates. No tier price, commission, creator split, token conversion or automatic allocation is currently represented as an executed financial rule.</div>
+    <div class="finance-surface">
+      <div class="finance-section-title">Allocation governance</div>
+      <p class="finance-lede">No automatic allocation, reserve sweep, founder draw, affiliate split or investment deployment is executed by this page. Percentages found in planning documents remain proposals until an approved policy, accounting treatment, legal basis, source of funds and controlled payment workflow exist.</p>
+    </div>
+  </section>
 
-<script>
-function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['overview','tiers','allocation','science'][i]===name);});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
-}
-var ALLOCATION=[
-  {name:'TECHNOLOGY INFRASTRUCTURE',pct:25,col:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),desc:'Servers, CDN, Supabase scale, domain, CI/CD, security hardening, monitoring. The foundation that must never fail.'},
-  {name:'CONTENT CREATION',pct:20,col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),desc:'Cinema, gaming builds, media production, graphic assets, motion design, cinematic expansion of the universe.'},
-  {name:'LEGAL & COMPLIANCE FUND',pct:15,col:(getComputedStyle(document.documentElement).getPropertyValue('--crim').trim()||'#8B0000'),desc:'Securities counsel, KYC/AML, IP registration, Madrid Protocol, licensed advisor retainer. Non-negotiable first allocation.'},
-  {name:'MARKETING & GROWTH',pct:15,col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),desc:'Targeted member acquisition, social campaigns, affiliate program, partnership outreach, SEO.'},
-  {name:'RESERVE & STABILITY',pct:12,col:'#D9B86A',desc:'Emergency fund, cash flow buffer, minimum 3 months operating reserve at all times. The sovereign safety layer.'},
-  {name:'RESEARCH & DEVELOPMENT',pct:8,col:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),desc:'AI agent development, blockchain R&D, new module builds, experiment budget for untested ideas.'},
-  {name:'ARCHITECT SOVEREIGN DRAW',pct:5,col:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),desc:'Your personal allocation. Grows proportionally as platform revenue scales. Sovereign earns after the platform is secured.'}
-];
-var INVESTMENTS=[
-  {num:'01',name:'PLATFORM INFRASTRUCTURE BONDS',pct:'30%',desc:'Reinvest into the platform itself. Every dollar that improves server capacity, security, or UX multiplies subscriber retention.'},
-  {num:'02',name:'LICENSED LEGAL RESERVES',pct:'20%',desc:'Pre-fund the legal framework before you need it. Securities counsel, token legal opinion, KYC provider contracts.'},
-  {num:'03',name:'CONTENT & MEDIA PRODUCTION',pct:'20%',desc:'The cinema universe, gaming builds, and educational academy are the stickiest retention mechanisms.'},
-  {num:'04',name:'SOVEREIGN GROWTH FUND',pct:'15%',desc:'A ring-fenced fund that compounds interest and appreciation. Only touched for strategic expansion after all operational needs are met.'},
-  {num:'05',name:'AFFILIATE & PARTNER NETWORK',pct:'10%',desc:'A network of advocates who earn commissions for bringing qualified members. The most efficient paid growth mechanism at this stage.'},
-  {num:'06',name:'TECHNOLOGY R&D',pct:'5%',desc:'Experimental AI agent builds, blockchain protocol testing, simulation engine R&D. The seeds of Phase 3 and Phase 4 architecture.'}
-];
-function buildAllocBars(){
-  var c=document.getElementById('alloc-bars');c.innerHTML='';
-  ALLOCATION.forEach(function(a){
-    var div=document.createElement('div');div.className='alloc-item';
-    div.innerHTML='<div class="ahead"><span class="aname">'+a.name+'</span><span class="apct">'+a.pct+'%</span></div>'+
-      '<div class="alloc-bar"><div class="alloc-fill" style="width:0%;background:'+a.col+'" data-w="'+a.pct+'"></div></div>'+
-      '<div class="adesc">'+a.desc+'</div>';
-    c.appendChild(div);
-  });
-  setTimeout(function(){document.querySelectorAll('.alloc-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')+'%';});},120);
-}
-function buildInvestGrid(){
-  var g=document.getElementById('invest-grid');g.innerHTML='';
-  INVESTMENTS.forEach(function(inv){
-    var div=document.createElement('div');div.className='invest-card card';
-    div.innerHTML='<div class="inv-num">'+inv.num+'</div><div class="inv-name">'+inv.name+'</div><div class="inv-desc">'+inv.desc+'</div><div class="inv-pct">'+inv.pct+' ALLOCATION</div>';
-    g.appendChild(div);
-  });
-}
-function buildRevenueChart(){
-  var cv=document.getElementById('revenue-canvas');
-  if(!cv)return;
-  var W=cv.offsetWidth||600,H=160;
-  cv.width=W;cv.height=H;
-  var ctx=cv.getContext('2d');
-  var months=['J','F','M','A','M','J','J','A','S','O','N','D'];
-  var data=[2,4,7,11,16,22,29,37,46,56,67,80];
-  var maxV=80,padL=34,padB=26,padT=12,padR=12;
-  var gW=W-padL-padR,gH=H-padB-padT;
-  for(var i=0;i<=4;i++){
-    var y=padT+gH*(1-i/4);
-    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);
-    ctx.strokeStyle='rgba(201,168,76,0.08)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(133,131,123,.6)';ctx.font='8px monospace';ctx.textAlign='right';
-    ctx.fillText('$'+(i*20)+'k',padL-4,y+3);
-  }
-  ctx.beginPath();
-  data.forEach(function(v,i){var x=padL+i*gW/11,y=padT+gH*(1-v/maxV);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.lineTo(padL+11*gW/11,padT+gH);ctx.lineTo(padL,padT+gH);ctx.closePath();
-  var gr=ctx.createLinearGradient(0,padT,0,padT+gH);
-  gr.addColorStop(0,'rgba(201,168,76,.35)');gr.addColorStop(1,'rgba(201,168,76,.02)');
-  ctx.fillStyle=gr;ctx.fill();
-  ctx.beginPath();
-  data.forEach(function(v,i){var x=padL+i*gW/11,y=padT+gH*(1-v/maxV);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.strokeStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.lineWidth=2;ctx.stroke();
-  ctx.fillStyle='rgba(133,131,123,.7)';ctx.textAlign='center';
-  months.forEach(function(m,i){ctx.fillText(m,padL+i*gW/11,H-8);});
-}
-buildAllocBars();buildInvestGrid();
-setTimeout(buildRevenueChart,150);
-</script>
-<script type="module">
-import{createClient}from'/vendor/supabase-js.js';
-var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
-async function boot(){
-  var sess=(await sb.auth.getSession()).data.session;
-  if(!sess){window.location.href='/account.html';return;}
-  var pr=(await sb.from('profiles').select('*').eq('id',sess.user.id).maybeSingle()).data||{};
-  if(!pr.is_owner&&!pr.access_approved){window.location.href='/pending.html';return;}
-  document.getElementById('app').style.display='flex';
-  if(window.__omegaPopulate)window.__omegaPopulate(pr,sess.user);
-  if(!pr.is_owner){document.getElementById('restricted-notice').style.display='block';return;}
-  var r=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true);
-  var members=r.count||0;
-  document.getElementById('kpi-members').textContent=members;
-  document.getElementById('kpi-membership').textContent='~$'+(members*9.17).toFixed(0)+'/mo';
-}
-boot();
-</script>
+  <section class="finance-panel" id="panel-audit" role="tabpanel" aria-labelledby="tab-audit" tabindex="0">
+    <div class="finance-section-title" id="audit-title">Evidence and calculation lineage</div>
+    <div class="finance-surface">
+      <div class="finance-row"><span>Actuals source</span><strong>STRIPE SETTLEMENT LEDGER</strong></div>
+      <div class="finance-row"><span>Authorization</span><strong>PLATFORM OWNER + AAL2</strong></div>
+      <div class="finance-row"><span>Scenario source</span><strong>USER-OWNED SUPABASE RECORD</strong></div>
+      <div class="finance-row"><span>Simulation execution</span><strong>DATABASE RPC · FORMULA 1.0.0</strong></div>
+      <div class="finance-row"><span>Simulation evidence</span><strong>IMMUTABLE INPUT / OUTPUT SNAPSHOT</strong></div>
+      <div class="finance-row"><span>Currency treatment</span><strong>NO CROSS-CURRENCY AGGREGATION</strong></div>
+    </div>
+    <div class="finance-surface">
+      <div class="finance-section-title">Calculation definitions</div>
+      <p class="finance-foot"><strong>Gross billings:</strong> projected paying members × assumed monthly price.</p>
+      <p class="finance-foot"><strong>Churn:</strong> rounded percentage of the opening member count, applied before adding new paying members.</p>
+      <p class="finance-foot"><strong>Refund estimate:</strong> gross billings × assumed refund percentage.</p>
+      <p class="finance-foot"><strong>Tax estimate:</strong> post-refund billings × user-entered tax assumption. This is not a jurisdictional tax calculation.</p>
+      <p class="finance-foot"><strong>Processing estimate:</strong> gross billings × assumed percentage plus assumed fixed fee × paying members.</p>
+      <p class="finance-foot"><strong>Net operating cash estimate:</strong> gross billings − refund estimate − tax estimate − processing estimate − operating cost. It excludes chargebacks, discounts, failed collections, FX, reserves, recipient transfer delays, capex, payroll, financing and corporate tax. It is not a recognized-revenue or disbursement forecast.</p>
+    </div>
+    <div class="finance-surface">
+      <div class="finance-section-title">Recorded simulation runs</div>
+      <div id="run-history" class="finance-list"><div class="finance-empty">Loading immutable simulation history…</div></div>
+    </div>
+    <div class="finance-note">Market quotes are not displayed here. Before exposing member-facing quotes, verify the deployed market-price function's provider key, subscription, rate limits and redistribution rights. This dashboard is an operational record, not investment, tax or legal advice.</div>
+  </section>
+  <div data-page-emblem="income" style="margin:12px auto 0"></div>
+</main>
+
 <script src="/bg.js" defer></script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
+<script type="module">
+import { createClient } from '/vendor/supabase-js.js';
+
+const SUPABASE_URL = 'https://ydqhzvvoyufiiqvzcjns.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q';
+const sb = window.__omegaSb || (window.__omegaSb = createClient(SUPABASE_URL, SUPABASE_KEY));
+const state = { scenarioId: null, scenarios: [], lastRun: null, financeSummary: null };
+const $ = (id) => document.getElementById(id);
+
+function setStatus(id, message, kind) {
+  const target = $(id);
+  if (!target) return;
+  target.textContent = message;
+  target.dataset.state = kind || 'neutral';
+}
+
+function formatMoney(value, currency) {
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) return '—';
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: currency,
+      maximumFractionDigits: 2
+    }).format(amount);
+  } catch (_) {
+    return currency + ' ' + amount.toFixed(2);
+  }
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString();
+}
+
+function make(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined && text !== null) element.textContent = String(text);
+  return element;
+}
+
+function setTab(name) {
+  document.querySelectorAll('[data-tab]').forEach((button) => {
+    const active = button.dataset.tab === name;
+    button.setAttribute('aria-selected', active ? 'true' : 'false');
+    button.tabIndex = active ? 0 : -1;
+  });
+  document.querySelectorAll('.finance-panel').forEach((panel) => {
+    panel.classList.toggle('active', panel.id === 'panel-' + name);
+  });
+}
+
+function renderFlag(targetId, enabled) {
+  $(targetId).textContent = enabled ? 'ENABLED' : 'DISABLED';
+  $(targetId).style.color = enabled ? 'var(--green)' : 'var(--muted)';
+}
+
+function renderActuals(summary) {
+  state.financeSummary = summary;
+  const processing = summary.processing || {};
+  const ledger = summary.ledger || {};
+  renderFlag('payments-state', Boolean(processing.payments_enabled));
+  renderFlag('stripe-state', Boolean(processing.stripe_integration_enabled));
+  renderFlag('tokens-state', Boolean(processing.tokens_enabled));
+  $('settlement-count').textContent = String(ledger.settlement_transactions ?? 0);
+  $('refund-count').textContent = String(ledger.refund_transactions ?? 0);
+  $('processed-events').textContent = String(ledger.processed_payment_events ?? 0);
+  $('failed-events').textContent = String(ledger.failed_payment_events ?? 0);
+  $('unmatched-count').textContent = String(ledger.unmatched_reconciliations ?? 0);
+
+  const currencies = Array.isArray(ledger.currencies) ? ledger.currencies : [];
+  const host = $('currency-breakdown');
+  host.replaceChildren();
+  if (!currencies.length) {
+    host.appendChild(make('div', 'finance-empty',
+      'NO VERIFIED STRIPE SETTLEMENTS ARE RECORDED. No actual currency amount is available to report.'));
+    setStatus('actuals-state', 'LIVE LEDGER CHECK COMPLETE · NO SETTLEMENT RECORDS', 'warn');
+  } else {
+    currencies.forEach((item) => {
+      const card = make('article', 'currency-card');
+      card.appendChild(make('div', 'currency-code', item.currency_code));
+      card.appendChild(make('div', 'currency-value', formatMoney(item.gross_settled, item.currency_code)));
+      card.appendChild(make('div', 'currency-meta', 'Gross settled receipts · ' + item.settlement_count + ' settlement(s)'));
+      card.appendChild(make('div', 'currency-meta', 'Refund reversals: ' + formatMoney(item.refunds, item.currency_code)));
+      card.appendChild(make('div', 'currency-meta', 'After refunds: ' + formatMoney(item.net_after_refunds, item.currency_code)));
+      host.appendChild(card);
+    });
+    setStatus('actuals-state', 'LIVE LEDGER CHECK COMPLETE · AMOUNTS SHOWN BY CURRENCY', 'good');
+  }
+  $('actuals-updated').textContent = 'Source timestamp: ' + formatDate(summary.as_of) + ' · Classification: LIVE_LEDGER · Scope: Stripe provider settlements only.';
+  const limitations = Array.isArray(summary.limitations) ? summary.limitations : [];
+  $('actuals-limitations').textContent = limitations.join(' ');
+  renderGovernance(processing);
+}
+
+function renderGovernance(processing) {
+  const host = $('billing-flags');
+  host.replaceChildren();
+  [
+    ['Payments', Boolean(processing.payments_enabled)],
+    ['Stripe integration', Boolean(processing.stripe_integration_enabled)],
+    ['Token economy', Boolean(processing.tokens_enabled)],
+    ['KYC intake', Boolean(processing.kyc_intake_enabled)]
+  ].forEach(([label, enabled]) => {
+    const card = make('article', 'finance-card');
+    card.appendChild(make('div', 'k', label));
+    const value = make('div', 'v', enabled ? 'ENABLED' : 'DISABLED');
+    value.style.color = enabled ? 'var(--green)' : 'var(--muted)';
+    card.appendChild(value);
+    host.appendChild(card);
+  });
+}
+
+function readScenarioForm() {
+  const currency = $('currency-code').value.trim().toUpperCase();
+  if (!/^[A-Z]{3}$/.test(currency)) throw new Error('Enter a valid three-letter ISO currency code.');
+  const name = $('scenario-name').value.trim();
+  if (!name || name.length > 80) throw new Error('Scenario name must contain 1 to 80 characters.');
+  const numeric = (id, min, max, integer) => {
+    const raw = $(id).value.trim();
+    const value = Number(raw);
+    if (raw === '' || !Number.isFinite(value) || value < min || value > max || (integer && !Number.isInteger(value))) {
+      throw new Error('Check the value entered for ' + id.replaceAll('-', ' ') + '.');
+    }
+    return value;
+  };
+  return {
+    name: name,
+    currency_code: currency,
+    starting_members: numeric('starting-members', 0, 10000000, true),
+    new_members_per_month: numeric('new-members', 0, 10000000, true),
+    churn_pct: numeric('churn-pct', 0, 100, false),
+    monthly_price: numeric('monthly-price', 0, 1000000000, false),
+    refund_pct: numeric('refund-pct', 0, 100, false),
+    tax_pct: numeric('tax-pct', 0, 100, false),
+    processing_fee_pct: numeric('processing-fee-pct', 0, 100, false),
+    processing_fixed_fee: numeric('processing-fixed-fee', 0, 1000000, false),
+    operating_cost_monthly: numeric('operating-cost', 0, 1000000000000, false),
+    horizon_months: numeric('horizon-months', 1, 60, true)
+  };
+}
+
+function fillScenario(row) {
+  state.scenarioId = row.id;
+  $('scenario-name').value = row.name;
+  $('currency-code').value = row.currency_code;
+  $('starting-members').value = row.starting_members;
+  $('new-members').value = row.new_members_per_month;
+  $('churn-pct').value = row.churn_pct;
+  $('monthly-price').value = row.monthly_price;
+  $('refund-pct').value = row.refund_pct;
+  $('tax-pct').value = row.tax_pct;
+  $('processing-fee-pct').value = row.processing_fee_pct;
+  $('processing-fixed-fee').value = row.processing_fixed_fee;
+  $('operating-cost').value = row.operating_cost_monthly;
+  $('horizon-months').value = String(row.horizon_months);
+  $('delete-scenario').disabled = false;
+  setStatus('scenario-status', 'Loaded saved scenario · version ' + row.version + '.', 'good');
+}
+
+async function loadScenarios() {
+  const result = await sb.from('omega_financial_scenarios')
+    .select('id,name,currency_code,starting_members,new_members_per_month,churn_pct,monthly_price,refund_pct,tax_pct,processing_fee_pct,processing_fixed_fee,operating_cost_monthly,horizon_months,version,updated_at')
+    .order('updated_at', { ascending: false })
+    .limit(50);
+  if (result.error) {
+    $('scenario-history').textContent = 'Saved scenarios are currently unavailable. No local-only fallback is presented as synchronized data.';
+    return;
+  }
+  state.scenarios = Array.isArray(result.data) ? result.data : [];
+  const select = $('scenario-select');
+  select.replaceChildren();
+  select.appendChild(new Option('Choose a saved scenario', ''));
+  state.scenarios.forEach((row) => select.appendChild(new Option(row.name + ' · v' + row.version, row.id)));
+  renderScenarioList();
+}
+
+function renderScenarioList() {
+  const host = $('scenario-history');
+  host.replaceChildren();
+  if (!state.scenarios.length) {
+    host.appendChild(make('div', 'finance-empty', 'No saved scenarios yet. Save the current assumptions to create your first scenario.'));
+    return;
+  }
+  state.scenarios.forEach((row) => {
+    const item = make('div', 'finance-history-item');
+    const left = make('div');
+    left.appendChild(make('strong', '', row.name));
+    left.appendChild(make('span', '', row.currency_code + ' · version ' + row.version + ' · updated ' + formatDate(row.updated_at)));
+    item.appendChild(left);
+    item.appendChild(make('span', '', 'SAVED ASSUMPTIONS'));
+    host.appendChild(item);
+  });
+}
+
+async function saveScenario() {
+  const payload = readScenarioForm();
+  let result;
+  if (state.scenarioId) {
+    result = await sb.from('omega_financial_scenarios').update(payload).eq('id', state.scenarioId).select('id,name,currency_code,starting_members,new_members_per_month,churn_pct,monthly_price,refund_pct,tax_pct,processing_fee_pct,processing_fixed_fee,operating_cost_monthly,horizon_months,version,updated_at').single();
+    if (result.error) throw result.error;
+  } else {
+    result = await sb.from('omega_financial_scenarios')
+      .insert(payload)
+      .select('id,name,currency_code,starting_members,new_members_per_month,churn_pct,monthly_price,refund_pct,tax_pct,processing_fee_pct,processing_fixed_fee,operating_cost_monthly,horizon_months,version,updated_at')
+      .single();
+    if (result.error) throw result.error;
+  }
+  fillScenario(result.data);
+  await loadScenarios();
+  $('scenario-select').value = result.data.id;
+  setStatus('scenario-status', 'Scenario saved to your authenticated Supabase record · version ' + result.data.version + '.', 'good');
+  return result.data;
+}
+
+function renderSimulation(result) {
+  state.lastRun = result;
+  const host = $('simulation-output');
+  host.replaceChildren();
+  const totals = result.totals || {};
+  const grid = make('div', 'finance-grid');
+  [
+    ['Gross billings', totals.gross_billings],
+    ['Refund estimate', totals.refund_estimate],
+    ['Tax estimate', totals.tax_estimate],
+    ['Processing estimate', totals.processing_fee_estimate],
+    ['Operating costs', totals.operating_costs],
+    ['Net operating cash estimate', totals.net_operating_cash_estimate]
+  ].forEach(([label, value]) => {
+    const card = make('article', 'finance-card');
+    card.appendChild(make('div', 'k', label));
+    card.appendChild(make('div', 'v', formatMoney(value, result.currency_code)));
+    grid.appendChild(card);
+  });
+  host.appendChild(make('div', 'finance-note', 'SIMULATED · ' + result.scenario_name + ' · scenario v' + result.scenario_version + ' · formula ' + result.formula_version + ' · run ' + result.run_id));
+  host.appendChild(grid);
+
+  const rows = Array.isArray(result.months) ? result.months : [];
+  const wrap = make('div', 'finance-table-wrap');
+  const table = make('table', 'finance-table');
+  const thead = make('thead');
+  const headRow = make('tr');
+  ['PERIOD','PAYING MEMBERS','GROSS BILLINGS','REFUNDS','TAX','PROCESSING','OPERATING COST','NET CASH EST.'].forEach((label) => headRow.appendChild(make('th', '', label)));
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+  const tbody = make('tbody');
+  rows.forEach((row) => {
+    const tr = make('tr');
+    [
+      String(row.period),
+      String(row.paying_members),
+      formatMoney(row.gross_billings, result.currency_code),
+      formatMoney(row.refund_estimate, result.currency_code),
+      formatMoney(row.tax_estimate, result.currency_code),
+      formatMoney(row.processing_fee_estimate, result.currency_code),
+      formatMoney(row.operating_costs, result.currency_code),
+      formatMoney(row.net_operating_cash_estimate, result.currency_code)
+    ].forEach((value) => tr.appendChild(make('td', '', value)));
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  host.appendChild(wrap);
+  host.appendChild(make('div', 'finance-foot', 'Saved as an immutable simulation run. Inputs and results are stored separately from actual payment and ledger records.'));
+}
+
+async function loadRunHistory() {
+  const result = await sb.from('omega_financial_simulation_runs')
+    .select('id,scenario_name,scenario_version,formula_version,currency_code,total_net_operating_cash_estimate,created_at')
+    .order('created_at', { ascending: false })
+    .limit(20);
+  const host = $('run-history');
+  host.replaceChildren();
+  if (result.error) {
+    host.appendChild(make('div', 'finance-empty', 'Simulation history unavailable.'));
+    return;
+  }
+  const rows = Array.isArray(result.data) ? result.data : [];
+  if (!rows.length) {
+    host.appendChild(make('div', 'finance-empty', 'No simulation runs have been recorded yet.'));
+    return;
+  }
+  rows.forEach((row) => {
+    const item = make('div', 'finance-history-item');
+    const left = make('div');
+    left.appendChild(make('strong', '', row.scenario_name + ' · ' + row.currency_code));
+    left.appendChild(make('span', '', 'Formula ' + row.formula_version + ' · scenario v' + row.scenario_version + ' · ' + formatDate(row.created_at)));
+    item.appendChild(left);
+    item.appendChild(make('strong', '', formatMoney(row.total_net_operating_cash_estimate, row.currency_code)));
+    host.appendChild(item);
+  });
+}
+
+async function loadActuals() {
+  setStatus('actuals-state', 'Refreshing owner-authorized ledger…', 'neutral');
+  const result = await sb.rpc('omega_owner_finance_summary');
+  if (result.error) {
+    const message = String(result.error.message || '');
+    if (message.includes('aal2_required')) {
+      setStatus('actuals-state', 'STEP-UP REQUIRED · complete owner MFA (AAL2) to view platform settlement aggregates.', 'warn');
+    } else if (message.includes('owner_only')) {
+      setStatus('actuals-state', 'OWNER AUTHORIZATION REQUIRED · this finance surface is restricted.', 'error');
+    } else {
+      setStatus('actuals-state', 'LIVE LEDGER UNAVAILABLE · no financial figure is being inferred.', 'error');
+    }
+    ['payments-state','stripe-state','tokens-state','settlement-count','refund-count','processed-events','failed-events','unmatched-count'].forEach((id) => {
+      $(id).textContent = 'UNAVAILABLE';
+      $(id).style.color = 'var(--muted)';
+    });
+    $('actuals-updated').textContent = '';
+    $('actuals-limitations').textContent = '';
+    $('currency-breakdown').replaceChildren(make('div', 'finance-empty', 'The authorized live ledger summary could not be retrieved. No prior figure is retained as current.'));
+    return;
+  }
+  renderActuals(result.data || {});
+}
+
+async function boot() {
+  const auth = await sb.auth.getSession();
+  if (auth.error) throw auth.error;
+  const session = auth.data && auth.data.session;
+  if (!session) {
+    window.location.href = '/account.html';
+    return;
+  }
+  const profileResult = await sb.from('profiles')
+    .select('is_owner,access_approved')
+    .eq('id', session.user.id)
+    .maybeSingle();
+  if (profileResult.error) throw profileResult.error;
+  const profile = profileResult.data;
+  if (!profile || !profile.is_owner) {
+    window.location.href = '/index.html';
+    return;
+  }
+  $('app').hidden = false;
+  $('app').style.display = 'flex';
+  if (window.__omegaPopulate) window.__omegaPopulate(profile, session.user);
+  await Promise.allSettled([loadActuals(), loadScenarios(), loadRunHistory()]);
+}
+
+const financeTablist = document.querySelector('.finance-tabs');
+financeTablist.querySelectorAll('[data-tab]').forEach((button) => {
+  button.addEventListener('click', () => setTab(button.dataset.tab));
+});
+financeTablist.addEventListener('keydown', (event) => {
+  const tabs = Array.from(financeTablist.querySelectorAll('[role="tab"]'));
+  const current = tabs.indexOf(document.activeElement);
+  if (current < 0) return;
+  let next = current;
+  if (event.key === 'ArrowRight') next = (current + 1) % tabs.length;
+  else if (event.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+  else if (event.key === 'Home') next = 0;
+  else if (event.key === 'End') next = tabs.length - 1;
+  else return;
+  event.preventDefault();
+  tabs[next].focus();
+  tabs[next].click();
+});
+$('refresh-actuals').addEventListener('click', loadActuals);
+$('save-scenario').addEventListener('click', async () => {
+  const button = $('save-scenario');
+  button.disabled = true;
+  try { await saveScenario(); }
+  catch (error) { setStatus('scenario-status', error.message || 'Scenario save failed.', 'error'); }
+  finally { button.disabled = false; }
+});
+$('run-scenario').addEventListener('click', async () => {
+  const button = $('run-scenario');
+  button.disabled = true;
+  try {
+    const saved = await saveScenario();
+    const result = await sb.rpc('omega_run_financial_scenario', { p_scenario_id: saved.id });
+    if (result.error) throw result.error;
+    renderSimulation(result.data);
+    await loadRunHistory();
+    setStatus('scenario-status', 'Simulation completed and immutable run evidence recorded.', 'good');
+  } catch (error) {
+    setStatus('scenario-status', error.message || 'Simulation failed; no success is claimed.', 'error');
+  } finally { button.disabled = false; }
+});
+$('load-scenario').addEventListener('click', () => {
+  const selected = state.scenarios.find((row) => row.id === $('scenario-select').value);
+  if (!selected) {
+    setStatus('scenario-status', 'Choose a saved scenario first.', 'warn');
+    return;
+  }
+  fillScenario(selected);
+});
+$('scenario-select').addEventListener('change', () => {
+  const selected = state.scenarios.find((row) => row.id === $('scenario-select').value);
+  if (selected) fillScenario(selected);
+});
+$('delete-scenario').addEventListener('click', async () => {
+  if (!state.scenarioId || !window.confirm('Delete this saved scenario? Recorded simulation runs will remain in the audit history.')) return;
+  const button = $('delete-scenario');
+  button.disabled = true;
+  try {
+    const result = await sb.from('omega_financial_scenarios').delete().eq('id', state.scenarioId);
+    if (result.error) throw result.error;
+    state.scenarioId = null;
+    $('scenario-name').value = 'New planning scenario';
+    $('scenario-select').value = '';
+    $('delete-scenario').disabled = true;
+    await loadScenarios();
+    await loadRunHistory();
+    setStatus('scenario-status', 'Scenario deleted. Previously recorded simulation runs remain.', 'good');
+  } catch (error) {
+    setStatus('scenario-status', error.message || 'Scenario delete failed.', 'error');
+    button.disabled = false;
+  }
+});
+
+boot().catch((error) => {
+  console.error('Finance command failed to initialize:', error);
+  const app = $('app');
+  if (app) { app.hidden = false; app.style.display = 'flex'; }
+  setStatus('actuals-state', 'FINANCE COMMAND INITIALIZATION FAILED · verify authentication and page runtime.', 'error');
+});
+</script>
+<script type="module" src="/omega-analytics-init.js"></script>
+<script type="module" src="/omega-speed-insights-init.js"></script>
+</body>
 </html>

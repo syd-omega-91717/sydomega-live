@@ -745,10 +745,10 @@
         "source_audited_at": "CI_RUNTIME",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 5,
+          "buttons": 9,
           "forms": 0,
           "inputs": 1,
-          "links": 1
+          "links": 3
         },
         "media_evidence": {
           "images": 0,

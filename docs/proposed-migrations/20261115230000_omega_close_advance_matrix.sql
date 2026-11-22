@@ -1,9 +1,11 @@
 -- Close public.advance_matrix(integer, text) to members.
 --
--- FOUND. advance_matrix is SECURITY DEFINER and executable by every signed-in member (0004_omega_nested_matrix.sql: GRANT EXECUTE ... TO authenticated;
--- 20260818000551 revokes only PUBLIC). It adds 1 to the named axis of the caller's own matrix_progress row on every call, with no check against any
--- real event, and trg_award_matrix_points (0005_omega_sovereign_points.sql) awards 2 sovereign points for every rise. So a member can fill
--- their own matrix and mint points by calling one function in a loop.
+-- FOUND. public.advance_matrix is a SECURITY INVOKER wrapper around private.advance_matrix,
+-- which is SECURITY DEFINER. Both are executable by authenticated users in the live database.
+-- The private schema also grants USAGE to anon and authenticated, so the private function's
+-- own EXECUTE grant is a second direct-call path if that schema is exposed through PostgREST.
+-- Each call adds 1 to the named axis of the caller's matrix_progress row without checking a real
+-- event; trg_award_matrix_points (0005_omega_sovereign_points.sql) awards 2 sovereign points per rise.
 --
 -- PROVED on a throwaway Postgres 16 using the real function text from both migrations: 324 calls (12 tracks x 3 axes x 9) were all accepted
 -- and left the member with 576 sovereign points and 8,748 of 8,748 matrix nodes. With the revoke below, the same loop is 324 refusals
@@ -23,12 +25,18 @@
 -- on the character roster is flat for everyone. Which real event (a task, an exam, a gate) should advance which axis of which track is a design
 -- decision for the owner, not something to guess here. The trigger would still award points on any future real UPDATE, so that path must check its event.
 --
--- Status: PROPOSAL. Deliberately NOT in supabase/migrations/ and NOT in supabase/pending-migrations.json (see
--- 20261115200000_omega_lock_birth_date_after_first_entry.sql for why). Applying it means the controlled path, and this one has no downside
--- the proof could find, so it is the one to apply first.
+-- Live read-only verification (2026-11-22): authenticated has EXECUTE on both public.advance_matrix
+-- and private.advance_matrix; anon and authenticated have USAGE on schema private; service_role has
+-- neither USAGE on private nor EXECUTE on private.advance_matrix. public.advance_matrix is not
+-- SECURITY DEFINER; private.advance_matrix is SECURITY DEFINER, owned by postgres. matrix_progress
+-- currently has 0 rows. No client, Edge Function or SQL routine calls this function.
+--
+-- Status: PROPOSAL. Deliberately NOT in supabase/migrations/ and NOT in supabase/pending-migrations.json.
+-- The controlled migration path and explicit owner approval remain required before application.
 
 -- advance_matrix(int, text) lets ANY signed-in member raise any track's axes with no event behind it, and each rise awards 2 sovereign points
 -- (trg_award_matrix_points, 0005_omega_sovereign_points.sql): a loop of 324 calls maxes all 12 tracks and mints 576 points.
 -- Nothing in the app calls it (only an option label in automation.html) and no SQL function does, so closing it breaks nothing.
 -- The function stays for the migration owner and service_role.
-revoke execute on function public.advance_matrix(integer, text) from public, anon, authenticated;
+revoke execute on function public.advance_matrix(integer, text) from public, anon, authenticated, service_role;
+revoke execute on function private.advance_matrix(integer, text) from public, anon, authenticated, service_role;

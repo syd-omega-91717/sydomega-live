@@ -1,5 +1,8 @@
 {
   "_captured": "2026-11-22",
+  "source": "Authenticated Supabase provider migration ledger read on 2026-11-22 confirms 440 applied versions, latest 20261122101614. Three applied finance migrations add owner/AAL2 settlement aggregates, RLS-isolated immutable scenario runs, bounded numeric assumptions, SECURITY INVOKER public wrappers over non-exposed private implementations, and the scenario foreign-key index. Live owner/AAL2 summary verifies zero Stripe settlements/refunds and payment, Stripe, token and KYC flags remain disabled.",
+  "remoteMigrationCount": 440,
+  "latestRemoteMigration": "20261122101614",
   "source": "Authenticated Supabase provider migration ledger read on 2026-11-22 confirms 441 applied versions, latest 20261122101614. Three applied finance migrations add owner/AAL2 settlement aggregates, RLS-isolated immutable scenario runs, bounded numeric assumptions, SECURITY INVOKER public wrappers over non-exposed private implementations, and the scenario foreign-key index. Live owner/AAL2 summary verifies zero Stripe settlements/refunds and payment, Stripe, token and KYC flags remain disabled.",
   "remoteMigrationCount": 441,
   "latestRemoteMigration": "20261122105012",
@@ -443,6 +446,7 @@
     "20261118090000",
     "20261122100837",
     "20261122100946",
+    "20261122101614"
     "20261122101614",
     "20261122105012"
   ],

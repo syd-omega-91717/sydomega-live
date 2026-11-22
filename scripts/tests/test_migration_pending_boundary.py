@@ -59,6 +59,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             "20261112091300", "20261112091400", "20261112091500",
             "20261112091600",
             "20261112103000", "20261112110000", "20261112111000",
+            "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842", "20261117002651", "20261117003721", "20261117004605", "20261118090000", "20261122100837", "20261122100946", "20261122101614",
             "20261112120000", "20261112121000", "20261112130000", "20261113010000", "20261113020000", "20261113030000", "20261113062812", "20261116214052", "20261116214700", "20261116214842", "20261117002651", "20261117003721", "20261117004605", "20261118090000", "20261122100837", "20261122100946", "20261122101614", "20261122105012",
         }
         pending_versions = {str(entry["version"]) for entry in self.pending}
@@ -67,6 +68,7 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
         self.assertEqual(len(self.remote.get("migrations", [])), len(self.remote_versions))
         self.assertEqual({str(m["version"]) for m in self.remote["migrations"]}, self.remote_versions)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122101614")
         self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
         self.assertEqual(self.remote.get("latestRemoteMigration"), self.remote.get("versions", [])[-1])
         self.assertEqual(self.remote.get("_captured"), "2026-11-22")
@@ -133,6 +135,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop column", sql)
         self.assertNotIn("drop table", sql)
         self.assertNotIn("grant ", sql)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 440)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122101614")
         self.assertEqual(self.remote.get("remoteMigrationCount"), 441)
         self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
 
@@ -145,6 +149,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("where id = 'uploads'", sql)
         self.assertIn("bucket_public is distinct from false", sql)
         self.assertIn("20261117004605", self.remote_versions)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 440)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122101614")
         self.assertEqual(self.remote.get("remoteMigrationCount"), 441)
         self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
 
@@ -165,6 +171,8 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIn(f"'{privilege.lower()}'", privileges)
         self.assertIn("omega_ai_requests_service_role_privilege_too_broad", privileges)
         self.assertIn("omega_ai_requests_client_privilege_must_remain_denied", privileges)
+        self.assertEqual(self.remote.get("remoteMigrationCount"), 440)
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122101614")
         self.assertEqual(self.remote.get("remoteMigrationCount"), 441)
         self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
 

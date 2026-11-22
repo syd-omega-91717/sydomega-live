@@ -25,6 +25,10 @@ class FamilyTruthAndXssContract(unittest.TestCase):
             "8.5% each",
             "ETERNAL SUCCESSION",
             "immutably written to the Vault",
+            "BIO-LOCKED SANCTUARY",
+            "FAMILY SAFE MODE: ACTIVE",
+            "Assets: PROTECTED",
+            "FULLY OPERATIONAL",
         )
         for phrase in forbidden:
             with self.subTest(phrase=phrase):
@@ -49,6 +53,12 @@ class FamilyTruthAndXssContract(unittest.TestCase):
         self.assertIn("textContent", loader)
         self.assertNotRegex(loader, r"innerHTML|insertAdjacentHTML")
         self.assertNotRegex(loader, r"\$\{\s*n\.(?:name|rel|notes|birth)")
+
+    def test_family_node_fields_are_escaped_before_html_rendering(self):
+        self.assertIn("esc(m.name)", FAMILY)
+        self.assertIn("esc((m.relation||'FAMILY').toUpperCase())", FAMILY)
+        self.assertIn("esc(m.sign||'SIGN NOT SET')", FAMILY)
+        self.assertIn("textContent", TREE)
 
     def test_bloodline_session_is_bound_to_the_authenticated_user(self):
         self.assertIn("bloodlineUserId=sess.user.id", FAMILY)

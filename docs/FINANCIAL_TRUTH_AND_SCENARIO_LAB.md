@@ -86,3 +86,34 @@ Stripe documents currency-specific minor-unit rules and requires zero-decimal ha
 4. Resolve Twelve Data redistribution licensing before activating member-facing market quotes.
 5. Add tested Stripe Connect onboarding only after legal/product approval.
 6. Redesign remaining finance surfaces using the Finance archetype: dark void, gold/emerald financial hierarchy, readable type, accessible tables, reduced-motion support and explicit LIVE / CALCULATED / SIMULATED / UNAVAILABLE labels.
+
+## Runtime verification
+
+A temporary synthetic scenario was executed through the live private RPC using an owner identity. Fixture inputs: 100 starting members, 10 new paying members per month, 0% churn, assumed monthly price 20 USD, 5% refunds, 10% tax assumption, 3% processing assumption, 0.30 USD fixed fee per payment, 100 USD monthly operating cost, two periods.
+
+Expected and returned totals matched:
+
+| Output | Synthetic result |
+|---|---:|
+| Gross billings | 4,600 USD |
+| Refund estimate | 230 USD |
+| Tax estimate | 437 USD |
+| Processing estimate | 207 USD |
+| Operating costs | 200 USD |
+| Net operating cash estimate | 3,526 USD |
+
+This is a formula smoke test only. It is not a platform financial result, not a customer payment and not recognized revenue. The temporary scenario and run were deleted after the test; a follow-up query confirmed zero remaining test rows.
+
+## External provider and regulatory references
+
+These sources inform implementation gates; they do not substitute for advice from counsel or the platform's payment provider.
+
+- Stripe supported currencies: https://docs.stripe.com/currencies — amounts are supplied in currency minor units; zero-decimal currencies and special cases such as ISK and UGX must be handled explicitly.
+- Stripe webhook handling: https://docs.stripe.com/webhooks — raw request body and signature verification are required; webhook endpoints should acknowledge quickly.
+- Stripe webhook recovery and duplicate handling: https://docs.stripe.com/events/manage-webhook-endpoints — Stripe retries undelivered events; handlers must safely skip events already processed.
+- Stripe Connect: https://docs.stripe.com/connect — use a Connect architecture when the product must model multiple accounts, marketplace payments, seller/creator payouts or platform money movement.
+- Stripe Europe connected-account verification update (August 2026): https://support.stripe.com/questions/europe-updated-verification-requirements-for-connected-accounts-of-platforms?locale=en-GB — custom platforms must handle updated identity, legal-entity, UBO and director requirements; the stated existing-account collection deadline was 31 October 2026.
+- Finanstilsynet CASP guidance (8 July 2026): https://www.finanstilsynet.no/tema/kryptoeiendeler-mica/kryptoeiendelstjenesteytere-casp/ — EEA crypto-asset services generally require MiCA Article 63 authorization or an applicable Article 60 notification for certain already-regulated financial entities.
+- ESMA public statement (23 June 2026): https://www.esma.europa.eu/sites/default/files/2026-06/ESMA75-113276571-1710_Public_Statement_MiCA_transitional_period_ends.pdf — the MiCA transitional period ends 1 July 2026; unauthorised CASPs serving EU clients are expected to wind down in an orderly manner.
+
+If SYD OMEGA offers crypto-asset services, custody, exchange, transfer, token distribution, or marketplace payouts to EU/EEA users, determine the legal entity, service classification, home jurisdiction, authorization/notification route and applicable national rules before enabling the feature. Do not infer that Stripe Connect onboarding or Stripe's own licenses authorize SYD OMEGA to conduct regulated activity.

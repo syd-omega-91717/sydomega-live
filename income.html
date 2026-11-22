@@ -215,6 +215,7 @@
   <div data-page-emblem="income" style="margin:12px auto 0"></div>
 </main>
 
+<script src="/bg.js" defer></script>
 <script type="module">
 import { createClient } from '/vendor/supabase-js.js';
 
@@ -623,7 +624,6 @@ boot().catch((error) => {
   setStatus('actuals-state', 'FINANCE COMMAND INITIALIZATION FAILED · verify authentication and page runtime.', 'error');
 });
 </script>
-<script src="/bg.js" defer></script>
 <script type="module" src="/omega-analytics-init.js"></script>
 <script type="module" src="/omega-speed-insights-init.js"></script>
 </body>

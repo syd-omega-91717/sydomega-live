@@ -7751,7 +7751,8 @@
       "truth_states": [
         "LIVE",
         "SIMULATED",
-        "UNAVAILABLE"
+        "UNAVAILABLE",
+        "UNVERIFIED"
       ],
       "asset_requirements": "Finance archetype: dark void, gold and emerald data hierarchy, readable tables, currency-separated values, explicit truth labels; no invented balance or revenue.",
       "events": "Each simulation run is persisted with formula version, scenario version, assumptions snapshot and result snapshot. No payment or token event is emitted.",

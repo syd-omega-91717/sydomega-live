@@ -107,6 +107,7 @@ workflow_gates() {
     "tests/test_omega_personal_context_consent_audit.py" \
     "tests/test_omega_public_source_catalog.py" \
     "tests/test_financial_truth_contract.py" \
+    "scripts/tests/test_advance_matrix_closed.py" \
     "validate-monitoring.py"; do
     # shellcheck disable=SC2086
     set -- $line

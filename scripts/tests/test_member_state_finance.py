@@ -1,4 +1,4 @@
-"""The member-state mirror must never upload the seven finance pages' localStorage keys.
+"""The member-state mirror must never upload the local finance pages' localStorage keys.
 
 Those pages are localStorage-only on purpose (CLAUDE.md 8.2; omega-local-backup.js header). The
 mirror uploads every `omega*` key not excluded, so a finance key that is missing from NO_MIRROR is

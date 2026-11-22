@@ -1,8 +1,8 @@
 {
-  "_captured": "2026-11-18",
-  "source": "Authenticated Supabase provider migration ledger read on 2026-11-18 confirms 437 applied versions, latest 20261118090000 owner_aal2_media_reservation_decisions. Live catalog checks verified media_reservations.id bigint identity, SELECT/INSERT-only RLS policies, authenticated UPDATE denied, bigint status RPC executable, and legacy UUID RPC denied. The Supabase GitHub integration applied the migration on main.",
-  "remoteMigrationCount": 437,
-  "latestRemoteMigration": "20261118090000",
+  "_captured": "2026-11-22",
+  "source": "Authenticated Supabase provider migration ledger read on 2026-11-22 confirms 439 applied versions, latest 20261122100946. The two new applied migrations add owner/AAL2 Stripe settlement aggregates and RLS-isolated, immutable financial scenario runs. Live read-only summary verified zero Stripe settlement/refund transactions and payment, Stripe, token and KYC flags remain disabled.",
+  "remoteMigrationCount": 439,
+  "latestRemoteMigration": "20261122100946",
   "versions": [
     "0001",
     "0002",
@@ -440,7 +440,9 @@
     "20261117002651",
     "20261117003721",
     "20261117004605",
-    "20261118090000"
+    "20261118090000",
+    "20261122100837",
+    "20261122100946"
   ],
   "migrations": [
     {

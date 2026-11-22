@@ -2610,3 +2610,12 @@ here for a future session rather than acted on speculatively.
 **Required sequence:** the authorized team owner must resolve the Vercel restriction in the provider account; then deploy the intended `main` SHA; verify the resulting deployment SHA and canonical production aliases; run HTTPS/asset and browser smoke checks; and attach fresh evidence to the release gate. Do not evade the provider restriction by creating another team/project, weakening repository protections, or marking production current without evidence.
 
 **Evidence boundary:** this is a verified provider rejection and source-revision mismatch. It is not evidence that every page or API is broken, nor that the current production deployment is unavailable.
+
+
+### 4.18 follow-up — 2026-11-22 family truth and rendering hardening
+
+The earlier family succession copy was not a legal designation and the interface has now been corrected to say so explicitly. The live read-only database check on 2026-11-22 found zero rows in `family_nodes`, `bloodline_nodes`, and `heritage_records`. The family interface now states that no allowance, treasury reserve, trust, asset custody, inheritance arrangement, or legal heir designation is provided by the platform. The fabricated 91% allowance visual and maturity countdown were removed; the invented 51% / 25.5% / 8.5% succession-share table was replaced with a non-legal notice. The `is_heir` field remains for backwards compatibility but is presented as a personal successor label only.
+
+The same pass closed two member-content XSS paths: bloodline names/relationships/birth values/notes now render through DOM `textContent`; heritage titles are escaped before HTML rendering. Bloodline and heritage reads/writes are explicitly scoped to the authenticated user, in addition to existing RLS. Family-node reads are narrowed to the columns used by the view. See `docs/fixes/2026-11-22-family-truth-xss.md` and the regression suite `scripts/tests/test_family_truth_and_xss.py`.
+
+No production data, RLS policy, migration, payment setting, or legal designation was changed. The family-history and heritage features remain member-submitted records, not independently verified genealogy or legal instruments.

@@ -29,6 +29,8 @@ class FinancialTruthContract(unittest.TestCase):
         self.assertIn("omega_run_financial_scenario", PAGE)
         self.assertEqual(PAGE.count('data-omega-capability-id="finance-command"'), 9)
         self.assertIn("UNAVAILABLE", PAGE)
+        self.assertIn('role="tablist"', PAGE)
+        self.assertEqual(PAGE.count('role="tabpanel"'), 4)
         self.assertIn("omega_financial_simulation_runs", PAGE)
         self.assertNotIn("localStorage", PAGE)
         self.assertIn("gross_settled", PAGE)

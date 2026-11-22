@@ -101,9 +101,9 @@ CLAIM_PATTERNS = [
 # entitlements. Strip only the narrowly defined negative payout phrase; any
 # positive claim elsewhere in the same file is still evaluated normally.
 NEGATED_PAYOUT = re.compile(
-    r'\\b(?:(?:creator|seller|sale|member)\\s+)?payouts?\\s+'
-    r'(?:are|remain|is|was|were|have\\s+been)\\s+'
-    r'(?:not\\s+)?(?:implemented|available|enabled|active|operational|supported|built|disabled|dormant)\\b',
+    r'\b(?:(?:creator|seller|sale|member)\s+)?payouts?\s+'
+    r'(?:are|remain|is|was|were|have\s+been)\s+'
+    r'(?:not\s+)?(?:implemented|available|enabled|active|operational|supported|built|disabled|dormant)\b',
     re.I,
 )
 

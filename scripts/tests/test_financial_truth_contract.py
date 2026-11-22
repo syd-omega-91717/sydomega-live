@@ -35,6 +35,8 @@ class FinancialTruthContract(unittest.TestCase):
         self.assertNotIn("localStorage", PAGE)
         self.assertIn("gross_settled", PAGE)
         self.assertIn("not recognized accounting revenue", PAGE.lower())
+        self.assertIn("platform_settings.creator_earnings_enabled=false", PAGE)
+        self.assertIn("this page does not initiate any funds transfer", PAGE)
 
     def test_scenario_rows_are_user_scoped_and_runs_are_immutable_to_clients(self):
         self.assertIn("enable row level security", MIGRATION.lower())

@@ -103,7 +103,7 @@ CLAIM_PATTERNS = [
 NEGATED_PAYOUT = re.compile(
     r'\b(?:(?:creator|seller|sale|member)\s+)?payouts?\s+'
     r'(?:are|remain|is|was|were|have\s+been)\s+'
-    r'(?:not\s+)?(?:implemented|available|enabled|active|operational|supported|built|disabled|dormant)\b',
+    r'(?:disabled|dormant|unavailable|inactive|not\s+(?:implemented|available|enabled|active|operational|supported|built|configured|created|paid|processed|funded))\b',
     re.I,
 )
 

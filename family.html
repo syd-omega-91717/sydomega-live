@@ -713,13 +713,15 @@ var ARCHIVES=[
   {icon:'&#x2394;',title:'WISDOM TEXTS',meta:'Books &middot; Teachings &middot; Oral tradition',status:'active'},
 ];
 
-/* Build timeline from local storage (heritage records) */
+/* Build timeline from account-scoped member-submitted heritage records. */
+var heritageUserId=null;
 async function buildTimeline(){
+  if(!heritageUserId) return;
   var tl=document.getElementById('timeline');
   tl.innerHTML='';
   var stored=[];
   try{
-    var r = await sb.from('heritage_records').select('title,body,era,category,created_at').eq('user_id',uid).order('created_at',{ascending:true}); if(r.error)throw r.error;
+    var r = await sb.from('heritage_records').select('title,body,era,category,created_at').eq('user_id',heritageUserId).order('created_at',{ascending:true}); if(r.error)throw r.error;
     stored = (r.data||[]).map(function(x){return {title:x.title,body:x.body,era:x.era,category:x.category,ts:x.created_at};});
   }catch(e){console.warn('[Omega Family] heritage records unavailable:',e);}
 
@@ -779,7 +781,8 @@ document.getElementById('btn-save').addEventListener('click',async function(){
   var era=document.getElementById('era-select').value;
   var cat=document.getElementById('h-category').value;
   if(!title||!body) return;
-  var { error } = await sb.from('heritage_records').insert({title:title,body:body,era:era,category:cat});
+  if(!heritageUserId) return;
+  var { error } = await sb.from('heritage_records').insert({user_id:heritageUserId,title:title,body:body,era:era,category:cat});
   if(error){ alert('Could not save record: '+error.message); return; }
   await buildTimeline();
   document.getElementById('h-title').value='';
@@ -789,9 +792,12 @@ document.getElementById('btn-save').addEventListener('click',async function(){
 });
 
 async function bootHeritage(){
-  var sess=(await sb.auth.getSession()).data.session;
+  var result=await sb.auth.getSession();
+  if(result.error) throw result.error;
+  var sess=result.data.session;
   if(!sess){window.location.href='/account.html';return;}
-  buildTimeline();
+  heritageUserId=sess.user.id;
+  await buildTimeline();
   buildRoots();
   buildArchives();
 }

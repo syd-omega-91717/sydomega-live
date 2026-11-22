@@ -7714,18 +7714,32 @@
       "path": "income.html",
       "contract_state": "EVIDENCE_CONTRACT",
       "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Income &amp; Allocation",
+      "workspace": "OWNER_FINANCE_COMMAND",
+      "domain": "FINANCIAL_OPERATIONS",
+      "primary_role": "PLATFORM_OWNER",
+      "purpose": "Owner Finance Command: AAL2-gated Stripe settlement actuals, user-owned financial scenarios, immutable simulation history and billing governance.",
       "data_sources": {
         "supabase_tables": [
-          "profiles"
+          "profiles",
+          "platform_settings",
+          "omega_ledger_accounts",
+          "omega_ledger_transactions",
+          "omega_ledger_entries",
+          "omega_payment_events",
+          "omega_payment_reconciliation",
+          "omega_financial_scenarios",
+          "omega_financial_simulation_runs"
         ],
-        "supabase_rpcs": []
+        "supabase_rpcs": [
+          "omega_owner_finance_summary",
+          "omega_run_financial_scenario"
+        ]
       },
       "capabilities": [
-        "UNVERIFIED"
+        "finance-command",
+        "verified-stripe-settlement-actuals",
+        "persisted-financial-scenario-lab",
+        "immutable-simulation-evidence"
       ],
       "tasks": {
         "state": "OPEN_TASK",
@@ -7733,42 +7747,60 @@
           "PAGE::income::REVIEW"
         ]
       },
-      "authorization": "UNVERIFIED",
+      "authorization": "Platform owner only. Actual settlement aggregate additionally checks public.is_platform_owner() and JWT AAL2. Scenario rows are scoped by RLS to auth.uid(); run RPC verifies scenario ownership and writes immutable evidence.",
       "truth_states": [
-        "UNVERIFIED"
+        "LIVE_LEDGER",
+        "SIMULATED",
+        "UNAVAILABLE"
       ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
+      "asset_requirements": "Finance archetype: dark void, gold and emerald data hierarchy, readable tables, currency-separated values, explicit truth labels; no invented balance or revenue.",
+      "events": "Each simulation run is persisted with formula version, scenario version, assumptions snapshot and result snapshot. No payment or token event is emitted.",
+      "failure_paths": "Missing session redirects to account; non-owner is denied; AAL1 displays step-up required; summary failure displays unavailable without stale financial amounts; scenario writes are RLS-scoped; run RPC rejects scenarios not owned by caller.",
+      "accessibility": "Explicit labels, keyboard-operable tab buttons, aria-selected state, aria-live status messages, responsive data tables and reduced-motion handling.",
+      "responsive": "Three-column scenario inputs, two-column tablet layout, one-column mobile layout; monthly results table scrolls horizontally on narrow screens.",
       "traceability": {
         "page_source": "income.html",
         "source_content_audited": true,
         "script_evidence": [
           "/bg.js",
+          "/vendor/supabase-js.js",
           "/omega-analytics-init.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "data_evidence": {
           "supabase_tables": [
-            "profiles"
+            "profiles",
+            "platform_settings",
+            "omega_ledger_accounts",
+            "omega_ledger_transactions",
+            "omega_ledger_entries",
+            "omega_payment_events",
+            "omega_payment_reconciliation",
+            "omega_financial_scenarios",
+            "omega_financial_simulation_runs"
           ],
-          "supabase_rpcs": []
+          "supabase_rpcs": [
+            "omega_owner_finance_summary",
+            "omega_run_financial_scenario"
+          ]
         },
-        "capability_registry_matches": [],
-        "domain_candidates": []
+        "capability_registry_matches": [
+          "finance-command"
+        ],
+        "domain_candidates": [
+          "FINANCIAL_OPERATIONS"
+        ]
       },
       "evidence": {
         "filesystem_present": true,
         "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
+        "source_audited_at": "2026-11-22",
         "method": "direct HTML source inspection",
         "interactive_evidence": {
-          "buttons": 4,
+          "buttons": 9,
           "forms": 0,
-          "inputs": 0,
+          "inputs": 11,
           "links": 0
         },
         "media_evidence": {

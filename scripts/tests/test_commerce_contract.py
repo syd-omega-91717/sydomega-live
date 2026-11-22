@@ -123,6 +123,22 @@ class CommerceContractTest(unittest.TestCase):
         write(self.fx.path("p.html"), "<html><body>Weekly payouts to members.</body></html>")
         self.assertEqual(self.fx.run().returncode, 1)
 
+    def test_explicit_disabled_payout_disclosures_are_not_claims(self):
+        write(self.fx.path("disclosure.html"),
+              "<html><body>Sale payouts are not implemented. "
+              "Creator payouts remain disabled pending legal and payment readiness."
+              "</body></html>")
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 0, r.stdout)
+
+    def test_disabled_disclosure_does_not_hide_a_separate_positive_claim(self):
+        write(self.fx.path("mixed.html"),
+              "<html><body>Creator payouts remain disabled. "
+              "Members receive 70% revenue share.</body></html>")
+        r = self.fx.run()
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("UNGATED EARNINGS CLAIM", r.stdout)
+
     def test_one_finding_per_file_not_one_per_phrase(self):
         """A minified page matching several phrases is one defect, not four."""
         write(self.fx.path("m.html"),

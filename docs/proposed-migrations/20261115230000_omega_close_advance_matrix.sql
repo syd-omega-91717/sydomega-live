@@ -1,4 +1,4 @@
--- Close public.advance_matrix(integer, text) to members.
+-- Close public and private advance_matrix(integer, text) entry points to members.
 --
 -- FOUND. public.advance_matrix is a SECURITY INVOKER wrapper around private.advance_matrix,
 -- which is SECURITY DEFINER. Both are executable by authenticated users in the live database.
@@ -7,16 +7,16 @@
 -- Each call adds 1 to the named axis of the caller's matrix_progress row without checking a real
 -- event; trg_award_matrix_points (0005_omega_sovereign_points.sql) awards 2 sovereign points per rise.
 --
--- PROVED on a throwaway Postgres 16 using the real function text from both migrations: 324 calls (12 tracks x 3 axes x 9) were all accepted
--- and left the member with 576 sovereign points and 8,748 of 8,748 matrix nodes. With the revoke below, the same loop is 324 refusals
--- (permission denied), 0 points, 0 nodes; anon is refused; the migration owner and service_role are still allowed; a SECURITY DEFINER wrapper
--- called by a member still works. NOT run on Supabase (the connector refused every call this session).
+-- ORIGINAL THROWAWAY PROOF (Postgres 16) tested the public-wrapper revoke only: 324 calls were accepted before it and refused after it.
+-- That proof did not test the private function as a direct authenticated entry point. The corrected dual-revoke below has NOT yet been
+-- re-run in a throwaway database and must be re-proven before application. Live verification is read-only; no production migration was applied.
 --
 -- WHY IT BREAKS NOTHING (each checked in the repository, not assumed):
 --   * no page, script or Edge Function calls it (automation.html has an option whose VALUE is "advance_matrix", but the page only stores
 --     it as text in automation_rules.action_key, and no code anywhere reads action_key and runs it);
 --   * no SQL function calls it (0003_omega_exams.sql mentions it in a comment; its body does not);
---   * the owner of the function and service_role keep EXECUTE, so a future server-side feature that really needs it can use it.
+--   * the postgres function owner retains EXECUTE. service_role is denied; a future SECURITY DEFINER wrapper owned by postgres can call the
+--     private function if a legitimate event-verified progression workflow is later approved and tested.
 --
 -- WHAT THIS REVEALS, NOT FIXED HERE: advance_matrix is the ONLY code in the repository that raises matrix_progress (grep of supabase/migrations/
 -- for UPDATE/INSERT on the table: my_matrix() only inserts the default 1/1/1 rows; the one UPDATE is inside advance_matrix). So there is no
@@ -37,6 +37,6 @@
 -- advance_matrix(int, text) lets ANY signed-in member raise any track's axes with no event behind it, and each rise awards 2 sovereign points
 -- (trg_award_matrix_points, 0005_omega_sovereign_points.sql): a loop of 324 calls maxes all 12 tracks and mints 576 points.
 -- Nothing in the app calls it (only an option label in automation.html) and no SQL function does, so closing it breaks nothing.
--- The function stays for the migration owner and service_role.
+-- The function remains present but callable only by its postgres owner (or a future approved SECURITY DEFINER wrapper owned by postgres).
 revoke execute on function public.advance_matrix(integer, text) from public, anon, authenticated, service_role;
 revoke execute on function private.advance_matrix(integer, text) from public, anon, authenticated, service_role;

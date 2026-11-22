@@ -59,6 +59,7 @@ function __omegaIdleAppend(el){
 }
 function __omegaAppend(el){
   var seen=__omegaAppend.seen||(__omegaAppend.seen={el:new WeakSet(),path:Object.create(null)});
+  if(list[k]!==el && list[k].isConnected)return true;
   if(document.body){if(!dup())document.body.appendChild(el);return;}
   document.addEventListener('DOMContentLoaded',function(){
     var b=document.body;if(b&&!dup())b.appendChild(el);

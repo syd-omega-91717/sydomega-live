@@ -1,5 +1,6 @@
 # Deterministic browser-script pipeline — Phase 1 audit gate
 
+**Status:** read-only inventory and loader-contract audit are merged; runtime execution-order changes are not yet integrated.
 **Status:** read-only inventory and loader-contract audit are merged. The runtime pipeline is now implemented in bg.js behind an opt-in flag that defaults OFF (see "Implementation status" below). Rollout is NOT enabled and no production claim is made.
 **Repository baseline for this follow-up:** 6db14d38505d7352f64e1cb257d965a62bc43dac.
 

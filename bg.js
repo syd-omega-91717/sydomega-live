@@ -1380,6 +1380,14 @@ if(!document.querySelector('script[data-omega-theme]')){ var s=document.createEl
     _s_data_omega_reminders.defer=true;
     __omegaAppend(_s_data_omega_reminders);
   }
+  /* Micro-lessons (blueprint 828): opt-in, inert until the member turns them on in Notifications; loads the review modules itself only then. */
+  if(!document.querySelector('script[data-omega-microlesson-mod]')){
+    var _s_data_omega_microlesson=document.createElement('script');
+    _s_data_omega_microlesson.src='/omega-microlesson.js';
+    _s_data_omega_microlesson.setAttribute('data-omega-microlesson-mod','1');
+    _s_data_omega_microlesson.defer=true;
+    __omegaAppend(_s_data_omega_microlesson);
+  }
   /* AI concierge GraphRAG bridge */
   if(!document.querySelector('script[data-omega-ai]')){
     var _s_data_omega_ai=document.createElement('script');

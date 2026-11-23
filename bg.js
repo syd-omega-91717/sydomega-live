@@ -2843,6 +2843,12 @@ setTimeout(function(){
     window.addEventListener('pageshow',function(){veil.classList.remove('show');});
   }
 
+  /* Zero-Point Awakening (omega-zero-point.js): only fetched when the intro below will actually show. */
+  try{
+    if(!REDUCE && !localStorage.getItem('omega_genesis_seen') && !document.querySelector('script[data-omega-zero-point]')){
+      var _zp=document.createElement('script');_zp.src='/omega-zero-point.js';_zp.setAttribute('data-omega-zero-point','1');__omegaAppend(_zp);
+    }
+  }catch(e){}
   /* ---- GENESIS INTRO (once per browser) ---- */
   try{
     if(!REDUCE && !localStorage.getItem('omega_genesis_seen')){
@@ -2852,7 +2858,10 @@ setTimeout(function(){
         g.innerHTML='<div class="gr"></div><div class="gr gr2"></div><div class="gx">\u03A9</div><div class="gt">THE CODE . THE FREQUENCY . THE LEGACY</div>';
         document.body.appendChild(g);
         var done=function(){g.style.opacity='0';setTimeout(function(){if(g.parentNode)g.remove();},820);};
-        g.addEventListener('click',done);setTimeout(done,3100);
+        /* omega-zero-point.js upgrades this overlay: it sets g.__omegaHold (so the 3.1 s timer below stands down) and ends it
+           through g._omegaDone. If that module never arrives, nothing is held and the legacy intro ends exactly as before. */
+        g._omegaDone=done;
+        g.addEventListener('click',done);setTimeout(function(){if(!g.__omegaHold)done();},3100);
         try{localStorage.setItem('omega_genesis_seen','1');}catch(e){}
       })();
     }

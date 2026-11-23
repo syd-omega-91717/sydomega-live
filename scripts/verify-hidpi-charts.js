@@ -18,6 +18,7 @@ const HARNESS = path.resolve(__dirname, '..');
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp' };
 function loadPW() { const sp = process.env.OMEGA_SCRATCHPAD; for (const t of [sp && path.join(sp, 'node_modules', 'playwright'), sp && path.join(sp, 'node_modules', 'playwright-core'), 'playwright', 'playwright-core']) { if (!t) continue; try { return require(t); } catch (e) { } } return null; }
 let STUB = null; try { STUB = require(path.join(HARNESS, '.claude', 'skills', 'verify-in-browser', 'harness', 'sbstub.js')).STUB; } catch (e) { }
+const retried = [];
 const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok, detail: ok ? undefined : d });
 
 const Y = new Date().getFullYear(), cm = new Date().getMonth() + 1, key = (y, m) => y + '-' + String(m).padStart(2, '0');
@@ -135,7 +136,13 @@ const WAVE2 = [
   for (const [page, id, click, cfg] of CHARTS.concat(WAVE2)) {
     const tag = page.replace('.html', '') + '#' + id;
     let m1, m2, m3;
-    try { m1 = await measure(page, id, click, 1, cfg); m2 = await measure(page, id, click, 2, cfg); m3 = await measure(page, id, click, 3, cfg); } catch (e) { check(tag + ': renders', false, String(e.message).slice(0, 160)); continue; }
+    try {
+      const measureAll = async () => [await measure(page, id, click, 1, cfg), await measure(page, id, click, 2, cfg), await measure(page, id, click, 3, cfg)];
+      [m1, m2, m3] = await measureAll();
+      /* A page's content column is intermittently 868 px instead of 539 (about 1 load in 30 on pristine origin/main under load, stable within a load, unrelated to canvases), and each scale is a separate load. A real doubling is deterministic, so a cross-scale mismatch is measured once more before it counts. */
+      const nr = (a, b) => Math.abs(a - b) <= 0.025 * Math.max(a, b) + 1;
+      if (!(nr(m1.cssW, m2.cssW) && nr(m1.cssW, m3.cssW) && nr(m1.cssH, m2.cssH) && nr(m1.cssH, m3.cssH))) { retried.push(tag); [m1, m2, m3] = await measureAll(); }
+    } catch (e) { check(tag + ': renders', false, String(e.message).slice(0, 160)); continue; }
     const minP = (cfg && cfg.min) || 0.004;
     check(tag + ': is drawn (not blank)', m1.painted > minP && m2.painted > minP && m3.painted > minP, JSON.stringify({ p1: m1.painted, p2: m2.painted }));
     // The page itself lays out a few pixels differently at different device scales (scrollbar, rounding), so compare within 2.5 percent: a canvas that doubled on screen would be off by 100.
@@ -152,6 +159,6 @@ const WAVE2 = [
   await browser.close();
   const bad = results.filter(r => !r.ok);
   results.forEach(r => console.log((r.ok ? 'PASS ' : 'FAIL ') + r.name + (r.ok ? '' : '  -> ' + r.detail)));
-  console.log(`\n${results.length - bad.length}/${results.length} passed`);
+  console.log(`\n${results.length - bad.length}/${results.length} passed` + (retried.length ? `  (cross-scale layout re-measured once for: ${retried.join(', ')})` : ''));
   process.exit(bad.length ? 1 : 0);
 })().catch(e => { console.error('ERROR', e); process.exit(1); });

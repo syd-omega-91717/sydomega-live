@@ -69,6 +69,10 @@
             var d = res && res.data; if (!d) return;
             var el = (d.element || SIGN_ELEMENT[d.sign] || 'SOVEREIGN').toString().toUpperCase();
             apply(el);
+            /* Publish what was just learned so other modules need no second profiles query: window.OmegaMemberElement (upper-case, e.g. 'FIRE')
+               and a document event for anything that wants to react when it arrives. */
+            window.OmegaMemberElement = el;
+            try { document.dispatchEvent(new CustomEvent('omega:member-element', { detail: { element: el } })); } catch (e) {}
           }).catch(function () {});
         }).catch(function () {});
       }).catch(function () {});

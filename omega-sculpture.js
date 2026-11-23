@@ -750,6 +750,15 @@
     core.scale.setScalar(0.62); core.position.y = 0.98; scene.add(core);
     core.traverse(function (o) { if (o.material && o.material.color) { o.material = o.material.clone(); o.material.emissive = new T.Color(p.gold); o.material.emissiveIntensity = 0.3; } });
 
+    /* A saved task (omega-dimension-shift.js) names the member's element; the executors who share it answer for about two seconds: their coin
+       brightens, swells and its ring flares. Which coins is read from each executor's own element in omega-agents.json, nothing invented.
+       Reduced motion skips it. */
+    var PULSE_MS = 1900, pulse = { el: '', until: 0 };
+    window.addEventListener('omega:dimension-shift', function (ev) {
+      var d = ev && ev.detail; if (!d || typeof d.element !== 'string') return;
+      pulse.el = d.element.toLowerCase(); pulse.until = Date.now() + PULSE_MS;
+    });
+
     /* the twelve seats */
     var seats = [], links = [];   /* stays EMPTY until the roster has resolved: the host builds its real <a> list from the links present at wiring time */
     var pedMat = new T.MeshStandardMaterial({ color: 0x3a2c0a, metalness: 0.3, roughness: 0.65, flatShading: true });
@@ -824,6 +833,7 @@
       var load = 0;                                           /* the fifth axis: live task activity, read exactly as the other scenes read it */
       if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getActiveTaskCount) load = Math.min(6, window.OmegaSculptureDataViz.getActiveTaskCount() || 0);
       var spin = 0.9 + load * 0.12;
+      var left = pulse.until > Date.now() ? (pulse.until - Date.now()) / PULSE_MS : 0;   /* 1 -> 0 over the pulse */
       for (var k = 0; k < N; k++) {
         var s2 = seats[k];
         s2.holder.rotation.y = tt * spin + s2.phase;          /* the coin turns: both faces carry the emblem */
@@ -831,6 +841,11 @@
         s2.armil.rotation.z = tt * 0.7 + s2.phase;
         s2.armil2.rotation.x = tt * -0.55 + s2.phase;
         s2.faceMat.emissiveIntensity = 0.55 + load * 0.04 + 0.06 * Math.sin(tt * 1.6 + s2.phase);
+        var ag2 = roster[k] || COUNCIL_FALLBACK[k];
+        var answer = (!reduceMotion && left > 0 && String(ag2.element || '').toLowerCase() === pulse.el) ? left : 0;
+        s2.armil.material.emissiveIntensity = 0.25 + 1.4 * answer;
+        if (answer) { s2.faceMat.emissiveIntensity += 0.9 * answer; s2.holder.scale.setScalar(1 + 0.2 * answer); }
+        else if (s2.holder.scale.x !== 1) s2.holder.scale.setScalar(1);
       }
       core.rotation.y = tt * 0.45;
       var ang = tt * 0.09 + lx * 0.55;

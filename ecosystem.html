@@ -26,6 +26,7 @@
 .mod-pages a{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--cyan);border:1px solid rgba(0,229,255,.2);padding:2px 5px;text-decoration:none}
 .mod-pages a:hover{border-color:var(--cyan)}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="ecosystem" aria-label="Navigation"></aside>
@@ -147,7 +148,7 @@ function buildNavGrid(){
   function resize(){
     var wrap=cv.parentElement;
     W=wrap.clientWidth;H=wrap.clientHeight;
-    cv.width=W;cv.height=H;
+    OmegaCanvas.fit(cv,W,H);
     layoutNodes();draw();
   }
 
@@ -229,7 +230,7 @@ function buildNavGrid(){
   if(window.ResizeObserver){
     var _ro=new ResizeObserver(function(){
       var wrap=cv.parentElement;
-      if(wrap.clientWidth&&wrap.clientWidth!==cv.width) resize();
+      if(wrap.clientWidth&&wrap.clientWidth!==OmegaCanvas.size(cv).w) resize();
     });
     _ro.observe(cv.parentElement);
   }

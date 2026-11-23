@@ -52,6 +52,7 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
 .empty{text-align:center;color:#888;font-size:var(--fs-1,12px);padding:40px 0;letter-spacing:.1em}
 .help-text{font-size:var(--fs-1,12px);color:var(--muted);letter-spacing:.06em}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -204,8 +205,7 @@ const canvas=document.getElementById('map-canvas');
 const ctx=canvas.getContext('2d');
 
 function resize(){
-  canvas.width=container.clientWidth;
-  canvas.height=container.clientHeight;
+  OmegaCanvas.fit(canvas,container.clientWidth,container.clientHeight);
   render();
 }
 window.addEventListener('resize',resize);
@@ -303,7 +303,7 @@ function addNode(x,y,text,color){
 }
 
 function render(){
-  const W=canvas.width,H=canvas.height;
+  const W=OmegaCanvas.size(canvas).w,H=OmegaCanvas.size(canvas).h;
   ctx.clearRect(0,0,W,H);
   ctx.save();
   ctx.translate(pan.x,pan.y);
@@ -386,11 +386,11 @@ function deleteSelectedNode(){
 function zoomIn(){zoom=Math.min(4,zoom*1.2);render();}
 function zoomOut(){zoom=Math.max(.2,zoom/1.2);render();}
 function fitView(){
-  if(!nodes.length){pan={x:canvas.width/2,y:canvas.height/2};zoom=1;render();return;}
+  if(!nodes.length){pan={x:OmegaCanvas.size(canvas).w/2,y:OmegaCanvas.size(canvas).h/2};zoom=1;render();return;}
   const xs=nodes.map(n=>n.x),ys=nodes.map(n=>n.y);
   const minX=Math.min(...xs)-80,maxX=Math.max(...xs)+80;
   const minY=Math.min(...ys)-60,maxY=Math.max(...ys)+60;
-  const W=canvas.width,H=canvas.height;
+  const W=OmegaCanvas.size(canvas).w,H=OmegaCanvas.size(canvas).h;
   zoom=Math.min(4,Math.min(W/(maxX-minX),H/(maxY-minY)));
   pan.x=W/2-zoom*(minX+maxX)/2;
   pan.y=H/2-zoom*(minY+maxY)/2;

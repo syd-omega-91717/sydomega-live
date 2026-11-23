@@ -36,12 +36,13 @@
     /* A canvas with no CSS width is laid out at its own backing-store size, so the larger store would also be a larger
        box on screen (and the next call, measuring that box, would grow it again).  Pin the CSS size when the store
        changed the box, or, for a canvas that is not displayed yet, when its CSS width is still 'auto'. */
-    var pin = !!(opts && opts.size);
+    var pin = !!(opts && opts.size) || canvas.__ocPin === true;   /* once pinned, always re-pin: a later call with a new size would otherwise see an unchanged box and leave the old CSS size */
     if (!pin && d > 1) {
       if (before > 0) pin = canvas.offsetWidth !== before;
       else { try { pin = window.getComputedStyle(canvas).width === 'auto'; } catch (e) { pin = false; } }
     }
     if (pin) {
+      canvas.__ocPin = true;
       canvas.style.width = cssW + 'px';
       canvas.style.height = cssH + 'px';
     }

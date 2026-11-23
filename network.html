@@ -90,6 +90,7 @@
 .n-sort-btn.on{color:var(--gold);border-color:rgba(201,168,76,.3)}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 
@@ -581,7 +582,7 @@ function renderDue() {
 function drawOrbit() {
   const canvas = document.getElementById('n-orbit');
   const size = Math.min(canvas.offsetWidth, 500);
-  canvas.width = size; canvas.height = size;
+  OmegaCanvas.fit(canvas, size, size);
   const ctx = canvas.getContext('2d');
   const cx = size/2, cy = size/2;
   const maxR = size/2 - 36;
@@ -654,8 +655,9 @@ function drawOrbit() {
   // Hover tooltip
   canvas.onmousemove = function(e) {
     const rect = canvas.getBoundingClientRect();
-    const mx = (e.clientX-rect.left)*(canvas.width/rect.width);
-    const my = (e.clientY-rect.top)*(canvas.height/rect.height);
+    /* node positions are in CSS pixels (the drawing size), not backing-store pixels */
+    const mx = (e.clientX-rect.left)*(OmegaCanvas.size(canvas).w/rect.width);
+    const my = (e.clientY-rect.top)*(OmegaCanvas.size(canvas).h/rect.height);
     let found = null;
     for (const np of nodePositions) {
       const dx = mx-np.x, dy = my-np.y;

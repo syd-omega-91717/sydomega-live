@@ -28,6 +28,7 @@
 .elem-legend-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(201,168,76,.05);font-family:var(--M);font-size:12px;color:var(--muted)}
 .elem-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="nexus"></aside>
@@ -247,7 +248,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
     if(w<2||h<2)return;               /* hidden tab: keep what we had */
     if(w===W&&h===H)return;
     var oldW=W,oldH=H;
-    W=w;H=h;cv.width=W;cv.height=H;   /* assigning width also clears it; the
+    W=w;H=h;OmegaCanvas.fit(cv,W,H);  /* assigning the store also clears it; the
                                          rAF loop repaints on the next frame */
     if(!seeded){seedNodes();seeded=true;}
     else if(oldW>0&&oldH>0){          /* rescale rather than re-seed, so a
@@ -365,7 +366,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
   draw();
 
   window.addEventListener('resize',function(){
-    W=wrap.offsetWidth;H=wrap.offsetHeight;cv.width=W;cv.height=H;
+    W=wrap.offsetWidth;H=wrap.offsetHeight;OmegaCanvas.fit(cv,W,H);
   });
 
   async function loadActivityFeed(){

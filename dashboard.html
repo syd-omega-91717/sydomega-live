@@ -186,6 +186,7 @@
 #l-today .clock-time{font-size:var(--fs-6,40px)}}
 </style>
 <link rel="stylesheet" href="/omega-readable-layout-v2.css"/>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body data-omega-page="dashboard">
 <a href="#main-content" style="position:fixed;top:-40px;left:0;z-index:9999;background:var(--gold);color:#000;padding:8px 14px;font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:2px;text-decoration:none;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">SKIP TO CONTENT</a>
@@ -769,7 +770,7 @@ function setTab(name){
     {name:'HEALTH',col:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),href:'/observatory.html',r:2},
   ];
   var nodes=[];
-  function resize(){W=cv.offsetWidth;H=cv.offsetHeight||360;cv.width=W;cv.height=H;}
+  function resize(){W=cv.offsetWidth;H=cv.offsetHeight||360;OmegaCanvas.fit(cv,W,H);}
   function layout(){
     var cx=W/2,cy=H/2;var radii=[0,Math.min(W,H)*.22,Math.min(W,H)*.42];
     var rings=[MODULES.filter(function(m){return m.r===0;}),MODULES.filter(function(m){return m.r===1;}),MODULES.filter(function(m){return m.r===2;})];
@@ -917,7 +918,7 @@ function setTab(name){
      the element actually gets a size, whatever reveals it. */
   if(window.ResizeObserver){
     var _ro=new ResizeObserver(function(){
-      if(cv.offsetWidth&&cv.offsetWidth!==cv.width){resize();layout();if(_galaxyReduce)draw();}
+      if(cv.offsetWidth&&cv.offsetWidth!==OmegaCanvas.size(cv).w){resize();layout();if(_galaxyReduce)draw();}
     });
     _ro.observe(cv);
   }
@@ -1067,7 +1068,7 @@ function drawPersonalWheel(areas){
   ];
   var data=areas.length?areas:DEFAULTS.map(function(d){return Object.assign({current:0,target:8},d);});
   var W=Math.min(cv.offsetWidth||200,200),H=W;
-  cv.width=W;cv.height=H;
+  OmegaCanvas.fit(cv,W,H);
   var ctx=cv.getContext('2d'),cx=W/2,cy=H/2,maxR=cx*.85,N=data.length;
   /* Grid rings */
   [2,4,6,8,10].forEach(function(v){

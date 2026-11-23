@@ -98,6 +98,7 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 .empty-state{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -442,8 +443,8 @@ function renderProgress(){
 
 function drawFreqChart(logs){
   var c=document.getElementById('freq-canvas');
-  c.width=c.offsetWidth||600;
-  var ctx=c.getContext('2d'); var W=c.width,H=c.height;
+  OmegaCanvas.fitWidth(c,600);
+  var ctx=c.getContext('2d'); var W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
 
   var days=[]; for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);days.push({d:d,label:d.toLocaleDateString('en-US',{weekday:'short'})});}

@@ -92,6 +92,7 @@ canvas.sparkline{display:block;width:100%;margin:6px 0}
 .refresh-spinner{display:inline-block;width:6px;height:6px;border:1px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-left:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -333,8 +334,8 @@ function drawSparkline(canvasId,data,color){
   var c=document.getElementById(canvasId);
   if(!c)return;
   var ctx=c.getContext('2d');
-  c.width=c.clientWidth||400;
-  var H=c.height,W=c.width;
+  OmegaCanvas.fitWidth(c,400,null,{client:true});
+  var H=OmegaCanvas.size(c).h,W=OmegaCanvas.size(c).w;
   ctx.clearRect(0,0,W,H);
   if(!data||data.length<2)return;
   var max=Math.max.apply(null,data)||1;
@@ -355,8 +356,8 @@ function drawSparkline(canvasId,data,color){
 function drawLatencyChart(){
   var c=document.getElementById('lat-canvas');if(!c)return;
   var ctx=c.getContext('2d');
-  c.width=c.clientWidth||600;
-  var W=c.width,H=c.height;
+  OmegaCanvas.fitWidth(c,600,null,{client:true});
+  var W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
   var data={p50:latencyHistory.p50,p95:latencyHistory.p95,p99:latencyHistory.p99};
   var allVals=[].concat(data.p50,data.p95,data.p99).filter(function(v){return v>0;});

@@ -31,6 +31,7 @@
 .io-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
 @media(max-width:700px){.io-grid{grid-template-columns:1fr}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="cipher"></aside>
@@ -204,7 +205,7 @@ var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqv
 
   function drawWave(text){
     var cv=document.getElementById('cipher-wave');if(!cv)return;
-    var W=cv.offsetWidth||500;cv.width=W;cv.height=48;
+    var W=cv.offsetWidth||500;OmegaCanvas.fit(cv,W,48);
     var ctx=cv.getContext('2d');
     ctx.clearRect(0,0,W,48);
     if(!text)return;

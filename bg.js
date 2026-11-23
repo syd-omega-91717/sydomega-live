@@ -2847,6 +2847,11 @@ setTimeout(function(){
   try{
     if(!REDUCE && !localStorage.getItem('omega_genesis_seen') && !document.querySelector('script[data-omega-zero-point]')){
       var _zp=document.createElement('script');_zp.src='/omega-zero-point.js';_zp.setAttribute('data-omega-zero-point','1');__omegaAppend(_zp);
+      /* While this fetch is in flight the legacy timer below waits for it (6.5 s ceiling), so a slow phone gets the upgraded intro, not a silent
+         fallback. Listeners are attached after the append and only clear a flag; a skipped (duplicate) element never fires, which the ceiling covers. */
+      window.__omegaZPPending=true;
+      _zp.addEventListener('load',function(){window.__omegaZPPending=false;});
+      _zp.addEventListener('error',function(){window.__omegaZPPending=false;});
     }
   }catch(e){}
   /* ---- GENESIS INTRO (once per browser) ---- */
@@ -2861,7 +2866,15 @@ setTimeout(function(){
         /* omega-zero-point.js upgrades this overlay: it sets g.__omegaHold (so the 3.1 s timer below stands down) and ends it
            through g._omegaDone. If that module never arrives, nothing is held and the legacy intro ends exactly as before. */
         g._omegaDone=done;
-        g.addEventListener('click',done);setTimeout(function(){if(!g.__omegaHold)done();},3100);
+        g.addEventListener('click',done);
+        var __gt0=Date.now();
+        (function legacyEnd(){
+          /* 3.1 s as before; but if the upgrade module is still downloading, keep waiting for it, up to 6.5 s in all. A held (upgraded) intro ends itself. */
+          var waited=Date.now()-__gt0;
+          if(g.__omegaHold||!g.parentNode) return;
+          if(waited>=3100 && !(window.__omegaZPPending && waited<6500)){done();return;}
+          setTimeout(legacyEnd,waited>=3100?150:Math.max(50,3100-waited));
+        })();
         try{localStorage.setItem('omega_genesis_seen','1');}catch(e){}
       })();
     }

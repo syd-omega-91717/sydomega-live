@@ -94,6 +94,7 @@
 .stat-lbl{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:4px}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 
@@ -550,13 +551,13 @@ function last30() {
 
 function drawWCChart() {
   const c = document.getElementById('j-wc-chart');
-  c.width  = c.offsetWidth || 600; c.height = 100;
+  OmegaCanvas.fitWidth(c, 600, 100);
   const ctx = c.getContext('2d');
   const days = last30();
   const map  = Object.fromEntries(_entries.map(e=>[e.date,e.words]));
   const vals = days.map(d => map[d]||0);
   const maxV = Math.max(...vals, 1);
-  const W = c.width, H = c.height, bw = W/days.length - 1.5;
+  const W = OmegaCanvas.size(c).w, H = OmegaCanvas.size(c).h, bw = W/days.length - 1.5;
   ctx.clearRect(0,0,W,H);
   vals.forEach((v,i) => {
     const bh = (v/maxV)*(H-16);
@@ -567,12 +568,12 @@ function drawWCChart() {
 
 function drawMoodChart() {
   const c = document.getElementById('j-mood-chart');
-  c.width  = c.offsetWidth || 600; c.height = 100;
+  OmegaCanvas.fitWidth(c, 600, 100);
   const ctx = c.getContext('2d');
   const days = last30();
   const map  = Object.fromEntries(_entries.map(e=>[e.date,e.mood||3]));
   const vals = days.map(d => map[d]||null);
-  const W = c.width, H = c.height, pad = 10;
+  const W = OmegaCanvas.size(c).w, H = OmegaCanvas.size(c).h, pad = 10;
   ctx.clearRect(0,0,W,H);
   [1,2,3,4,5].forEach(m => {
     const y = H - pad - ((m-1)/4)*(H-2*pad);

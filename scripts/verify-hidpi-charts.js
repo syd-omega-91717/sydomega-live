@@ -13,7 +13,7 @@
 const fs = require('fs'), path = require('path');
 if (process.argv.includes('--help') || process.argv.includes('-h')) { console.log(fs.readFileSync(__filename, 'utf8').split('*/')[0].replace(/^#!.*\n/, '').replace(/^\/\*\s?/, '')); process.exit(0); }
 const ri = process.argv.indexOf('--root');
-const ROOT = ri > 0 ? path.resolve(process.argv[ri + 1]) : path.resolve(__dirname, '..'), ORIGIN = 'http://hidpi.test';
+const ROOT = ri > 0 ? path.resolve(process.argv[ri + 1]) : path.resolve(__dirname, '..'), ORIGIN = 'https://hidpi.test';
 const HARNESS = path.resolve(__dirname, '..');
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp' };
 function loadPW() { const sp = process.env.OMEGA_SCRATCHPAD; for (const t of [sp && path.join(sp, 'node_modules', 'playwright'), sp && path.join(sp, 'node_modules', 'playwright-core'), 'playwright', 'playwright-core']) { if (!t) continue; try { return require(t); } catch (e) { } } return null; }
@@ -37,12 +37,43 @@ const CHARTS = [
   ['investment.html', 'alloc-canvas', 'ALLOCATION'], ['revenue.html', 'rev-canvas', 'CHART'], ['treasury.html', 'treasury-canvas', null], ['wealth.html', 'alloc-canvas', null]
 ];
 
+/* Wave 2: charts on pages outside the money cluster. prep redraws from known data through the page's own draw function; min is the painted fraction required. */
+const ISO = (d) => `new Date(Date.now()-${d}*864e5).toISOString()`;
+const days7 = (f) => '[' + [6,5,4,3,2,1,0].map(f).join(',') + ']';
+/* journal is a module behind a passphrase: create one through the page's own setup form (the charts then draw from the empty journal) */
+async function journalSetup(pg) {
+  if (await pg.locator('#j-init-btn').isVisible().catch(() => false)) {
+    await pg.fill('#lk-new1', 'omega-test-passphrase'); await pg.fill('#lk-new2', 'omega-test-passphrase'); await pg.click('#j-init-btn');
+    await pg.waitForFunction(() => getComputedStyle(document.getElementById('j-lock')).display === 'none', null, { timeout: 15000 });
+  }
+  /* a real entry, so the word-count bar is drawn at full strength rather than the faint empty-day tint */
+  if (await pg.locator('#j-content').isVisible().catch(() => false)) {
+    await pg.fill('#j-content', 'A real journal entry with enough words to draw a bar on the word count chart today, written through the page itself.');
+    await pg.click('#j-save-btn'); await pg.waitForTimeout(700);
+  }
+  await pg.click('#t-insights');
+}
+const WAVE2 = [
+  ['journal.html', 'j-wc-chart', null, { drive: journalSetup }],
+  ['journal.html', 'j-mood-chart', null, { drive: journalSetup }],
+  ['mood.html', 'trend-canvas', null, { prep: "drawTrend(" + days7(i => `{ts:${ISO(i)},valence:3+${i}%6,energy:2+${i}%7}`) + ");" }],
+  ['mood.html', 'freq-canvas', null, { prep: "drawFreq({calm:3,focused:5,tired:2,anxious:1});" }],
+  ['reading.html', 'genre-canvas', null, { prep: "drawGenre([{genre:'Fiction'},{genre:'Fiction'},{genre:'History'},{genre:'Science'},{genre:'Science'},{genre:'Science'}]);" }],
+  ['time.html', 'daily-canvas', null, { prep: "drawDailyTrend(" + days7(i => `{ts:${ISO(i)},duration:1800+${i}*900,category:'deep-work'}`) + ");" }],
+  ['water.html', 'hist-canvas', null, { prep: "drawHist(" + days7(i => `{ts:${ISO(i)},ml:900+${i}*250}`) + ");" }],
+  ['workout.html', 'freq-canvas', null, { prep: "drawFreqChart(" + days7(i => `{ts:${ISO(i)},exercises:[{sets:[1,2,3,4].slice(0,1+${i}%4)}]}`) + ");" }],
+  ['ops.html', 'spark-canvas', null, { prep: "drawSparkline('spark-canvas',[3,5,4,8,6,9,7,10,8,12],'#60a5fa');" }],
+  ['ops.html', 'live-spark', null, { prep: "drawSparkline('live-spark',[3,5,4,8,6,9,7,10,8,12],'#C9A84C');" }],
+  ['cipher.html', 'cipher-wave', null, { drive: async (pg) => { await pg.fill('#cipher-input', 'the quick brown fox jumps over the lazy dog'); await pg.dispatchEvent('#cipher-input', 'input'); } }]
+];
+
 (async () => {
   const pw = loadPW(); let browser;
   if (pw) for (const exe of [undefined, '/opt/pw-browsers/chromium', '/opt/pw-browsers/chromium-1243/chrome-linux64/chrome']) { try { browser = await pw.chromium.launch(exe ? { executablePath: exe } : {}); break; } catch (e) { } }
   if (!browser || !STUB) { console.log('SKIPPED: no playwright/browser (or the harness Supabase stub) available'); process.exit(process.env.OMEGA_REQUIRE_BROWSER ? 1 : 0); }
 
-  async function measure(page, id, click, dsf) {
+  async function measure(page, id, click, dsf, cfg) {
+    cfg = cfg || {};
     const ctx = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1000, height: 900 }, deviceScaleFactor: dsf });
     await ctx.route(ORIGIN + '/**', async (route) => {
       let u = decodeURIComponent(new URL(route.request().url()).pathname); if (u === '/') u = '/index.html';
@@ -58,10 +89,15 @@ const CHARTS = [
     const pg = await ctx.newPage(); const errs = []; pg.on('pageerror', e => errs.push(String(e.message).slice(0, 120)));
     await pg.goto(ORIGIN + '/' + page, { waitUntil: 'load', timeout: 60000 });
     await pg.waitForTimeout(1200);
+    if (cfg.drive) { await cfg.drive(pg); await pg.waitForTimeout(500); }
     if (click) { await pg.locator('.tab-btn, [role=tab], button').filter({ hasText: click }).first().click({ timeout: 8000 }); await pg.waitForTimeout(700); }
     /* a chart can sit on a tab that is not the default one: try each tab button until the canvas has a box */
     const shown = () => pg.evaluate((i) => { const c = document.getElementById(i); return !!c && c.clientWidth > 0 && c.clientHeight > 0; }, id);
     if (!(await shown())) { const n = await pg.locator('.tab-btn, [role=tab]').count(); for (let k = 0; k < n && !(await shown()); k++) { await pg.locator('.tab-btn, [role=tab]').nth(k).click({ timeout: 4000 }).catch(() => { }); await pg.waitForTimeout(400); } }
+    /* a chart on a pane the tab loop could not reveal (a page whose tabs are not .tab-btn): activate its ancestors so it has a layout box, as the pane would have when selected */
+    if (!(await shown())) await pg.evaluate((i) => { for (let e = document.getElementById(i); e; e = e.parentElement) { if (getComputedStyle(e).display === 'none') { e.classList.add('active'); e.style.display = 'block'; e.hidden = false; } } }, id);
+    /* charts that read page state are redrawn from known data, so a blank result means the fix broke drawing, not that nothing was seeded */
+    if (cfg.prep) { try { await pg.evaluate(cfg.prep); } catch (e) { errs.push('prep: ' + String(e.message).slice(0, 100)); } await pg.waitForTimeout(250); }
     await pg.evaluate((i) => document.getElementById(i).scrollIntoView({ block: 'center', behavior: 'instant' }), id);
     await pg.waitForTimeout(300);
     const m = await pg.evaluate((i) => {
@@ -70,14 +106,22 @@ const CHARTS = [
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const k = (y * W + x) * 4; if (Math.abs(d[k] - bg[0]) + Math.abs(d[k + 1] - bg[1]) + Math.abs(d[k + 2] - bg[2]) + Math.abs(d[k + 3] - bg[3]) > 30) { n++; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
       return { cssW: r.width, cssH: r.height, bw: W, bh: H, painted: n / (W * H), bx0: x0 / W, bx1: (x1 + 1) / W, by0: y0 / H, by1: (y1 + 1) / H };
     }, id);
+    /* a second draw plus a resize must not change the CSS size: a canvas with no CSS width that is re-measured from its own backing store grows each time */
+    if (cfg.prep) {
+      await pg.evaluate(cfg.prep); await pg.evaluate(() => window.dispatchEvent(new Event('resize'))); await pg.waitForTimeout(400);
+      await pg.evaluate(cfg.prep); await pg.waitForTimeout(250);
+      const r2 = await pg.evaluate((i) => { const c = document.getElementById(i); return [c.clientWidth, c.clientHeight, c.width, c.height]; }, id);
+      m.reW = r2[0]; m.reH = r2[1]; m.reBw = r2[2]; m.reBh = r2[3];
+    }
     await ctx.close(); return Object.assign(m, { errs });
   }
 
-  for (const [page, id, click] of CHARTS) {
+  for (const [page, id, click, cfg] of CHARTS.concat(WAVE2)) {
     const tag = page.replace('.html', '') + '#' + id;
     let m1, m2, m3;
-    try { m1 = await measure(page, id, click, 1); m2 = await measure(page, id, click, 2); m3 = await measure(page, id, click, 3); } catch (e) { check(tag + ': renders', false, String(e.message).slice(0, 160)); continue; }
-    check(tag + ': is drawn (not blank)', m1.painted > 0.004 && m2.painted > 0.004, JSON.stringify({ p1: m1.painted, p2: m2.painted }));
+    try { m1 = await measure(page, id, click, 1, cfg); m2 = await measure(page, id, click, 2, cfg); m3 = await measure(page, id, click, 3, cfg); } catch (e) { check(tag + ': renders', false, String(e.message).slice(0, 160)); continue; }
+    const minP = (cfg && cfg.min) || 0.004;
+    check(tag + ': is drawn (not blank)', m1.painted > minP && m2.painted > minP && m3.painted > minP, JSON.stringify({ p1: m1.painted, p2: m2.painted }));
     // The page itself lays out a few pixels differently at different device scales (scrollbar, rounding), so compare within 2.5 percent: a canvas that doubled on screen would be off by 100.
     const near = (a, b) => Math.abs(a - b) <= 0.025 * Math.max(a, b) + 1;
     check(tag + ': CSS size is the same at 1x, 2x and 3x (layout unchanged, not doubled)', near(m1.cssW, m2.cssW) && near(m1.cssW, m3.cssW) && near(m1.cssH, m2.cssH) && near(m1.cssH, m3.cssH), JSON.stringify([m1, m2, m3].map(m => [m.cssW, m.cssH])));
@@ -85,6 +129,7 @@ const CHARTS = [
     check(tag + ': the backing store is exactly 2x and 3x what it is at 1x', Math.abs(m2.bw - 2 * m1.bw) <= 2 && Math.abs(m2.bh - 2 * m1.bh) <= 2 && Math.abs(m3.bw - 3 * m1.bw) <= 3 && Math.abs(m3.bh - 3 * m1.bh) <= 3 && near(m1.bw, m1.cssW) && near(m1.bh, m1.cssH), JSON.stringify({ at1: [m1.bw, m1.bh, m1.cssW, m1.cssH], at2: [m2.bw, m2.bh], at3: [m3.bw, m3.bh] }));
     const same = (a, b) => ['bx0', 'bx1', 'by0', 'by1'].every(k => Math.abs(a[k] - b[k]) <= 0.04);
     check(tag + ': what was painted covers the same part of the canvas at every scale (transform applied)', same(m1, m2) && same(m1, m3), JSON.stringify({ x1: [m1.bx0, m1.bx1, m1.by0, m1.by1], x2: [m2.bx0, m2.bx1, m2.by0, m2.by1], x3: [m3.bx0, m3.bx1, m3.by0, m3.by1] }));
+    if (cfg && cfg.prep) check(tag + ': a second draw and a resize leave the CSS size unchanged (no growth loop)', [m1, m2, m3].every(m => near(m.cssW, m.reW) && near(m.cssH, m.reH)), JSON.stringify([m1, m2, m3].map(m => [m.cssW, m.cssH, m.reW, m.reH])));
     check(tag + ': no page errors', m1.errs.length + m2.errs.length + m3.errs.length === 0, JSON.stringify([m1.errs, m2.errs]));
   }
 

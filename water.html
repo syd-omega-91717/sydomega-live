@@ -66,6 +66,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 </style>
   <script src="/bg.js" defer></script>
   <script src="/omega-sparkline.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -402,8 +403,8 @@ function renderHistory(){
 
 function drawHist(logs){
   var c=document.getElementById('hist-canvas');
-  c.width=c.offsetWidth||600;
-  var ctx=c.getContext('2d'); var W=c.width,H=c.height;
+  OmegaCanvas.fitWidth(c,600);
+  var ctx=c.getContext('2d'); var W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
 
   var days=[];

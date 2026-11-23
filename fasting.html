@@ -68,6 +68,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 .empty{text-align:center;color:var(--d);font-size:var(--fs-1,12px);padding:40px 0;letter-spacing:.1em}
 @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -414,7 +415,7 @@ function renderStreak(){
 
 function drawHistory(){
   var canvas=document.getElementById('history-canvas');
-  var W=canvas.offsetWidth||600; canvas.width=W; canvas.height=160;
+  var W=canvas.offsetWidth||600; OmegaCanvas.fit(canvas,W,160);
   var ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,160);
   if(!log.length){ctx.fillStyle='#555';ctx.font='12px monospace';ctx.textAlign='center';ctx.fillText('NO DATA',W/2,80);return;}

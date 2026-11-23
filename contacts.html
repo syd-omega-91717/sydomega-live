@@ -57,6 +57,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 canvas{display:block;width:100%;max-width:500px;margin:0 auto}
 @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr}.contact-grid{grid-template-columns:1fr}.circle-ring{grid-template-columns:1fr}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -391,7 +392,7 @@ function renderCircles(){
 
 function drawNetChart(){
   var canvas=document.getElementById('net-canvas');
-  var W=canvas.offsetWidth||500; canvas.width=W; canvas.height=180;
+  var W=canvas.offsetWidth||500; OmegaCanvas.fit(canvas,W,180);
   var ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,180);
   var cats=Object.keys(CAT_COLORS);

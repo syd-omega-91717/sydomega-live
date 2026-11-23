@@ -44,6 +44,7 @@ canvas{display:block;width:100%;max-width:700px;margin:0 auto}
 .hrv-zone-bar{height:8px;border-radius:4px;flex:0 0 60px}
 @media(max-width:600px){.form-row.quad{grid-template-columns:1fr 1fr}.metric-grid{grid-template-columns:1fr 1fr}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -350,7 +351,7 @@ function renderHistory(){
 
 function drawTrend(canvasId,field,color,decimals){
   var canvas=document.getElementById(canvasId);
-  var W=canvas.offsetWidth||700; canvas.width=W; canvas.height=120;
+  var W=canvas.offsetWidth||700; OmegaCanvas.fit(canvas,W,120);
   var ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,120);
   var days=30; var today=new Date(); var pts=[];
@@ -396,7 +397,7 @@ function renderTrends(){
   drawTrend('c-rhr','rhr','#e74c3c',0);
   drawTrend('c-hrv','hrv','#3498db',0);
   var canvas=document.getElementById('c-bp');
-  var W=canvas.offsetWidth||700; canvas.width=W; canvas.height=120;
+  var W=canvas.offsetWidth||700; OmegaCanvas.fit(canvas,W,120);
   var ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,120);
   var days=30; var today=new Date(); var syspts=[]; var diaspts=[];

@@ -89,6 +89,7 @@ select.form-input option{background:#0a0a08;color:#c8c4b0}
 .alloc-pct{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--dim)}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -547,9 +548,9 @@ function renderAudit(){
 
 function drawDailyTrend(logs){
   var c=document.getElementById('daily-canvas');
-  c.width=c.offsetWidth||600;
+  OmegaCanvas.fitWidth(c,600);
   var ctx=c.getContext('2d');
-  var W=c.width,H=c.height;
+  var W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
 
   var days=[];

@@ -86,6 +86,7 @@ textarea.q-area.sm{min-height:54px}
 </style>
   <script src="/omega-today.js" defer></script>
 <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -540,8 +541,8 @@ function calcStreak(reviews){
 
 function drawTrend(reviews){
   var c=document.getElementById('trend-canvas');
-  c.width=c.offsetWidth||600;
-  var ctx=c.getContext('2d'); var W=c.width,H=c.height;
+  OmegaCanvas.fitWidth(c,600);
+  var ctx=c.getContext('2d'); var W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
 
   var last8=[...reviews].sort(function(a,b){return a.weekKey.localeCompare(b.weekKey);}).slice(-8);

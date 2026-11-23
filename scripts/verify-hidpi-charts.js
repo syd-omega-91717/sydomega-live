@@ -56,6 +56,20 @@ async function journalSetup(pg) {
 }
 const PHYS = "metrics=" + days7(i => `{date:${ISO(i)}.slice(0,10),rhr:58+${i}%7,hrv:40+${i}*3,sys:118+${i}%9,dia:76+${i}%6}`) + ";renderTrends();";
 const STOP = 'for(var t=1;t<4000;t++){clearInterval(t);clearTimeout(t);}';
+/* Wave 3: the pointer-driven canvases (their hit-testing is checked by verify-hidpi-pointer.js). reduce: freeze animation; noCover: an animated layout that still moves between loads, so the painted region is not comparable. */
+const WAVE3 = [
+  ['agent-network.html', 'network-canvas', null, { resize: true, reduce: true, css: '#network-canvas{height:520px!important}' }],
+  ['architect.html', 'arch-canvas', null, { resize: true, reduce: true }],
+  ['atlas.html', 'atlas-canvas', null, { resize: true, reduce: true, noCover: true, reveal: "window.dispatchEvent(new Event('resize'))", seeds: { omega_atlas_v2: JSON.stringify({ nodes: [0, 1, 2, 3, 4, 5].map(i => ({ id: 'n' + i, label: 'Node ' + i, desc: 'd', cat: i % 2 ? 'skill' : 'concept', tags: [], x: Math.round(150 * Math.cos(i * Math.PI / 3)), y: Math.round(150 * Math.sin(i * Math.PI / 3)), vx: 0, vy: 0 })), edges: [], panX: 0, panY: 0, scale: 1 }) } }],
+  ['dashboard.html', 'galaxy-canvas', null, { resize: true, reduce: true, noCover: true, reveal: "setTab('overview')" }],
+  ['ecosystem.html', 'eco-canvas', null, { resize: true, reduce: true }],
+  ['knowledge.html', 'kg-canvas', null, { resize: true, reduce: true }],
+  ['nexus.html', 'nexus-canvas', null, { resize: true, reduce: true, noCover: true }],
+  ['mindmap.html', 'map-canvas', null, { resize: true, reduce: true, prep: "maps=[{id:'m1',name:'T',nodes:[{id:'a',x:0,y:0,text:'Alpha',color:'#C9A84C',shape:'rect',w:120,h:40},{id:'b',x:220,y:90,text:'Beta',color:'#00E5FF',shape:'rect',w:120,h:40}],edges:[]}];loadMap('m1');" }],
+  ['network.html', 'n-orbit', null, { reduce: true, reveal: "activateTab('orbit')", seeds: { omega_contacts: JSON.stringify(['inner', 'close', 'tribe', 'network', 'outer'].flatMap((tier, i) => [0, 1, 2].map(j => ({ id: 'c' + i + j, name: 'Person ' + i + j, tier, cat: 'other', freq: 30, strength: 3, lastContact: '2026-11-01', tags: [], vip: false, added: '2026-01-01', color: '#888' })))) }, resize: true }],
+  ['queue.html', 'q-throughput', null, { reduce: true, resize: true }],
+  ['queue.html', 'q-topology', null, { reduce: true, resize: true }]
+];
 const WAVE2 = [
   ['journal.html', 'j-wc-chart', null, { drive: journalSetup }],
   ['journal.html', 'j-mood-chart', null, { drive: journalSetup }],
@@ -89,7 +103,7 @@ const WAVE2 = [
   }
   async function measure(page, id, click, dsf, cfg) {
     cfg = cfg || {};
-    const ctx = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1000, height: 900 }, deviceScaleFactor: dsf });
+    const ctx = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1000, height: 900 }, deviceScaleFactor: dsf, reducedMotion: cfg.reduce ? 'reduce' : 'no-preference' });
     await ctx.route(ORIGIN + '/**', async (route) => {
       let u = decodeURIComponent(new URL(route.request().url()).pathname); if (u === '/') u = '/index.html';
       const f = path.join(ROOT, path.normalize(u).replace(/^(\.\.[/\\])+/, ''));
@@ -100,7 +114,7 @@ const WAVE2 = [
     await ctx.route('https://esm.sh/**', r => r.fulfill({ status: 200, contentType: 'text/javascript', body: STUB }));
     await ctx.route('https://fonts.googleapis.com/**', r => r.fulfill({ status: 200, contentType: 'text/css', body: '' }));
     await ctx.route('https://fonts.gstatic.com/**', r => r.fulfill({ status: 200, body: '' }));
-    await ctx.addInitScript((seeds) => { try { localStorage.setItem('omega_demo_watched_at', '2026-01-01T00:00:00Z'); localStorage.setItem('omega_consent_v1', 'all'); localStorage.setItem('omega_genesis_seen', '1'); for (const k in seeds) localStorage.setItem(k, seeds[k]); } catch (e) { } }, SEEDS);
+    await ctx.addInitScript((seeds) => { try { localStorage.setItem('omega_demo_watched_at', '2026-01-01T00:00:00Z'); localStorage.setItem('omega_consent_v1', 'all'); localStorage.setItem('omega_genesis_seen', '1'); for (const k in seeds) localStorage.setItem(k, seeds[k]); } catch (e) { } }, Object.assign({}, SEEDS, cfg.seeds || {}));
     const pg = await ctx.newPage(); const errs = []; pg.on('pageerror', e => errs.push(String(e.message).slice(0, 120)));
     await pg.goto(ORIGIN + '/' + page, { waitUntil: 'load', timeout: 60000 });
     await pg.waitForTimeout(1200);
@@ -112,6 +126,8 @@ const WAVE2 = [
     /* a chart on a pane the tab loop could not reveal (a page whose tabs are not .tab-btn): activate its ancestors so it has a layout box, as the pane would have when selected */
     if (!(await shown())) await pg.evaluate((i) => { for (let e = document.getElementById(i); e; e = e.parentElement) { if (getComputedStyle(e).display === 'none') { e.classList.add('active'); e.style.display = 'block'; e.hidden = false; } } }, id);
     /* charts that read page state are redrawn from known data, so a blank result means the fix broke drawing, not that nothing was seeded */
+    if (cfg.reveal) { try { await pg.evaluate(cfg.reveal); } catch (e) { errs.push('reveal: ' + String(e.message).slice(0, 100)); } await pg.waitForTimeout(400); }
+    if (cfg.css) await pg.addStyleTag({ content: cfg.css });
     await settle(pg, id);
     if (cfg.prep) { try { await pg.evaluate(cfg.prep); } catch (e) { errs.push('prep: ' + String(e.message).slice(0, 100)); } await pg.waitForTimeout(250); }
     await pg.evaluate((i) => document.getElementById(i).scrollIntoView({ block: 'center', behavior: 'instant' }), id);
@@ -123,17 +139,17 @@ const WAVE2 = [
       return { cssW: r.width, cssH: r.height, bw: W, bh: H, painted: n / (W * H), bx0: x0 / W, bx1: (x1 + 1) / W, by0: y0 / H, by1: (y1 + 1) / H };
     }, id);
     /* a second draw plus a resize must not change the CSS size: a canvas with no CSS width that is re-measured from its own backing store grows each time */
-    if (cfg.prep) {
+    if (cfg.prep || cfg.resize) {
       await settle(pg, id);
-      await pg.evaluate(cfg.prep); await pg.evaluate(() => window.dispatchEvent(new Event('resize'))); await pg.waitForTimeout(400);
-      await pg.evaluate(cfg.prep); await pg.waitForTimeout(250);
+      if (cfg.prep) await pg.evaluate(cfg.prep); await pg.evaluate(() => window.dispatchEvent(new Event('resize'))); await pg.waitForTimeout(400);
+      if (cfg.prep) await pg.evaluate(cfg.prep); await pg.waitForTimeout(250);
       const r2 = await pg.evaluate((i) => { const c = document.getElementById(i); return [c.clientWidth, c.clientHeight, c.width, c.height]; }, id);
       m.reW = r2[0]; m.reH = r2[1]; m.reBw = r2[2]; m.reBh = r2[3];
     }
     await ctx.close(); return Object.assign(m, { errs });
   }
 
-  for (const [page, id, click, cfg] of CHARTS.concat(WAVE2)) {
+  for (const [page, id, click, cfg] of CHARTS.concat(WAVE2, WAVE3)) {
     const tag = page.replace('.html', '') + '#' + id;
     let m1, m2, m3;
     try {
@@ -151,8 +167,8 @@ const WAVE2 = [
     // The invariant: the backing store grows by exactly the device scale relative to 1x (and at 1x it is about the CSS size; treasury's canvas has a 1px border so its content box is 2px under its 600x180 drawing area).
     check(tag + ': the backing store is exactly 2x and 3x what it is at 1x', Math.abs(m2.bw - 2 * m1.bw) <= 2 && Math.abs(m2.bh - 2 * m1.bh) <= 2 && Math.abs(m3.bw - 3 * m1.bw) <= 3 && Math.abs(m3.bh - 3 * m1.bh) <= 3 && near(m1.bw, m1.cssW) && near(m1.bh, m1.cssH), JSON.stringify({ at1: [m1.bw, m1.bh, m1.cssW, m1.cssH], at2: [m2.bw, m2.bh], at3: [m3.bw, m3.bh] }));
     const same = (a, b) => ['bx0', 'bx1', 'by0', 'by1'].every(k => Math.abs(a[k] - b[k]) <= 0.04);
-    check(tag + ': what was painted covers the same part of the canvas at every scale (transform applied)', same(m1, m2) && same(m1, m3), JSON.stringify({ x1: [m1.bx0, m1.bx1, m1.by0, m1.by1], x2: [m2.bx0, m2.bx1, m2.by0, m2.by1], x3: [m3.bx0, m3.bx1, m3.by0, m3.by1] }));
-    if (cfg && cfg.prep) check(tag + ': a second draw and a resize leave the CSS size unchanged (no growth loop)', [m1, m2, m3].every(m => near(m.cssW, m.reW) && near(m.cssH, m.reH)), JSON.stringify([m1, m2, m3].map(m => [m.cssW, m.cssH, m.reW, m.reH])));
+    if (!(cfg && cfg.noCover)) check(tag + ': what was painted covers the same part of the canvas at every scale (transform applied)', same(m1, m2) && same(m1, m3), JSON.stringify({ x1: [m1.bx0, m1.bx1, m1.by0, m1.by1], x2: [m2.bx0, m2.bx1, m2.by0, m2.by1], x3: [m3.bx0, m3.bx1, m3.by0, m3.by1] }));
+    if (cfg && (cfg.prep || cfg.resize)) check(tag + ': a second draw and a resize leave the CSS size unchanged (no growth loop)', [m1, m2, m3].every(m => near(m.cssW, m.reW) && near(m.cssH, m.reH)), JSON.stringify([m1, m2, m3].map(m => [m.cssW, m.cssH, m.reW, m.reH])));
     check(tag + ': no page errors', m1.errs.length + m2.errs.length + m3.errs.length === 0, JSON.stringify([m1.errs, m2.errs]));
   }
 

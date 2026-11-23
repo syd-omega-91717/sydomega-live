@@ -29,9 +29,17 @@
     }catch(e){ return false; }
   }
   function emit(d){ try{ document.dispatchEvent(new CustomEvent('omega:fetch-settled',{detail:d})); }catch(e){} }
+  /* What settled, for consumers that need to know (omega-dimension-shift.js): the method and the PATHNAME only. A query string can carry a token. */
+  function what(u,input,init){
+    var o={ m:'GET', p:'' };
+    try{ o.m=String((init&&init.method)||(input&&input.method)||'GET').toUpperCase(); }catch(e){}
+    try{ o.p=new URL(String(u),location.href).pathname; }catch(e){}
+    return o;
+  }
   window.fetch=function(input,init){
     var u=(input&&input.url)?input.url:input;
     if(!watched(u)) return real.apply(this,arguments);
+    var w=what(u,input,init);
     W.inflight++; if(!W.firstAt) W.firstAt=Date.now();
     var settled=false; function done(){ if(!settled){ settled=true; W.inflight--; if(W.inflight===0) W.firstAt=0; } }
     var p; try{ p=real.apply(this,arguments); }catch(e){ done(); throw e; }
@@ -39,10 +47,10 @@
       done();
       /* 4xx is a real answer -- an unauthorised or absent row is not a
          connectivity failure. 5xx is. */
-      if(res&&res.status>=500){ W.failed++; emit({ok:false,status:res.status}); }
-      else { if(res&&res.ok) W.ok++; emit({ok:!!(res&&res.ok),status:res&&res.status}); }
+      if(res&&res.status>=500){ W.failed++; emit({ok:false,status:res.status,m:w.m,p:w.p}); }
+      else { if(res&&res.ok) W.ok++; emit({ok:!!(res&&res.ok),status:res&&res.status,m:w.m,p:w.p}); }
       return res;
-    },function(err){ done(); W.failed++; emit({ok:false,err:1}); throw err; });
+    },function(err){ done(); W.failed++; emit({ok:false,err:1,m:w.m,p:w.p}); throw err; });
   };
 })();
 
@@ -1431,6 +1439,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
 /* ===== HERO BAND DATA WIRE -- populates ohb-l/ohb-r stat boxes ===== */
 (function(){if(!document.querySelector('script[data-omega-hero-wire]')){var s=document.createElement('script');s.src='/omega-hero-wire.js';s.setAttribute('data-omega-hero-wire','1');__omegaAppend(s);}})();
 /* ===== SOVEREIGN BACKDROP -- warm element-tinted base, per-page shade ===== */
+(function(){if(!document.querySelector('script[data-omega-dimension-shift]')){var s=document.createElement('script');s.src='/omega-dimension-shift.js';s.setAttribute('data-omega-dimension-shift','1');__omegaAppend(s);}})();
 (function(){if(!document.querySelector('script[data-omega-backdrop]')){var s=document.createElement('script');s.src='/omega-backdrop.js';s.setAttribute('data-omega-backdrop','1');__omegaAppend(s);}})();
 /* ===== 12 LIVING EMBLEMS -- per-sign animated marks =====
    The guard is `data-omega-emblem-living`, NOT `data-omega-emblems`. It used

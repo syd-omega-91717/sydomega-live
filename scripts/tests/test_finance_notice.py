@@ -31,14 +31,14 @@ def tagged_pages():
 class Coverage(unittest.TestCase):
     def test_every_money_page_carries_the_notice_exactly_once(self):
         expected = {s for s in invest_section_pages() if (ROOT / (s + ".html")).exists()} | EXTRA
-        self.assertGreaterEqual(len(expected), 14)
+        self.assertGreaterEqual(len(expected), 13)   # was 14 until budget.html was merged into expenses.html
         for s in sorted(expected):
             self.assertTrue((ROOT / (s + ".html")).exists(), s + ".html does not exist (update EXTRA)")
             self.assertEqual((ROOT / (s + ".html")).read_text(encoding="utf-8").count(TAG), 1, s)
         self.assertEqual(tagged_pages() - expected, set(), "a page carries the notice that is not a money page here")
 
     def test_the_invest_section_is_read_from_nav_not_listed_here(self):
-        self.assertTrue({"investment", "treasury", "wallet", "wealth", "budget"} <= invest_section_pages())
+        self.assertTrue({"investment", "treasury", "wallet", "wealth", "expenses"} <= invest_section_pages())   # "budget" was merged into expenses
 
     def test_bg_js_is_untouched_by_this_feature(self):  # single point of failure; a leaf script tag per page needs none of it
         self.assertNotIn("omega-finance-notice", (ROOT / "bg.js").read_text(encoding="utf-8"))

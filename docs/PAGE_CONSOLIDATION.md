@@ -1,6 +1,6 @@
 # Which pages must be one, and which could be merged
 
-Snapshot of 2026-11-08 over 242 pages. Reproduce the evidence with `python3 scripts/page-consolidation.py`. **Updates: 2026-11-08 — `breath` + `meditate` merged without deleting their URLs; 2026-11-11 — six knowledge-graph routes consolidated into `insight.html` with compatibility redirects. Remaining rows are recommendations, not completed work.** Why nothing here was merged before: a page merge touches the menu, `nav.js`'s section map, `config/page-cores.json`, the page-contract registries, six language packs, the service-worker precache, the page-count claims and every link that points at the old address, and it needs a redirect so no bookmark breaks. That is a project to approve one batch at a time, not something to do while also fixing bugs.
+Snapshot of 2026-11-08 over 242 pages. Reproduce the evidence with `python3 scripts/page-consolidation.py`. **Updates: 2026-11-23 — `budget` merged into `expenses`; 2026-11-08 — `breath` + `meditate` merged without deleting their URLs; 2026-11-11 — six knowledge-graph routes consolidated into `insight.html` with compatibility redirects. Remaining rows are recommendations, not completed work.** Why nothing here was merged before: a page merge touches the menu, `nav.js`'s section map, `config/page-cores.json`, the page-contract registries, six language packs, the service-worker precache, the page-count claims and every link that points at the old address, and it needs a redirect so no bookmark breaks. That is a project to approve one batch at a time, not something to do while also fixing bugs.
 
 **Inventory counts are different measures:** this snapshot covers 242 root pages; the canonical registry records 241 page contracts; the recursive visible-copy audit scans 251 HTML files including non-contract routes. Do not compare or substitute these counts.
 
@@ -24,6 +24,7 @@ The first attempt compared raw page text and shared database tables. It reported
 | Merged | Into | How | Evidence |
 |---|---|---|---|
 | `meditate` | `breath` | techniques, timed sessions, pause, affirmations, streak and science text ported; `/meditate` redirects; both logs kept because other modules read them | `docs/fixes/2026-11-08-breath-meditate-merge.md`, `test_breath_merge.py` |
+| `budget` | `expenses` | month navigator and overview, yearly income/expense chart and monthly savings-rate chart ported; `/budget` and `/budget.html` redirect; one store (`omega_budget_months`, `omega_budget_targets`) was already shared, so no member data moves; the Vault and the invest hub now show one entry | `docs/fixes/2026-11-23-budget-expenses-merge.md`, `scripts/tests/test_budget_expenses_merge.py`, `scripts/verify-expenses-merge.js` |
 | `graph-anomalies`, `graph-centrality`, `graph-evidence`, `graph-explorer`, `graph-timeline`, `graphify` | `insight.html` | graph, event timeline, evidence register, centrality, anomalies, bounded-depth exploration and exports consolidated; legacy routes redirect to their matching lens; AI query/ingestion remain explicitly held | `docs/fixes/2026-11-11-insight-graph-consolidation.md`, `docs/fixes/2026-11-11-graph-redirect-contracts.md`, `tests/test_insight_legacy_routes.py` |
 
 ## The test "without elimination" gives
@@ -45,7 +46,7 @@ The Gaming page no longer renders duplicate `knowledge` task cards. Completion t
 | Merge | Evidence | Pages saved |
 |---|---|---|
 | **Honors**: `honors` + `trophies` (+ `achievements` links) into one page with tabs for the Hall, Trophies, Medals, Certificates | the two read the same four tables (`certificates`, `medals`, `trophies`, `profiles`); `honors` (403 words) has **no menu entry at all** while `trophies` (193 words) is folded away, so a member can reach neither easily | 1 |
-| **Budget**: `budget` + `expenses` | text similarity 0.61, 74 and 112 words, `expenses` is folded | 1 |
+| **Budget**: `budget` + `expenses` | merged 2026-11-23, see the Merged table | 1 |
 | **Progression views**: `grid` + `levels` + `gates` | three near-identical 12-based views of the same member data, 174 to 243 words each, all folded, titles 0.67 similar | 2 |
 | **Films catalogue**: `movies` (43 words) and `series` into `cinema` | all describe the same "12 Films, 12 Series, one per Olympian" list; `movies` is a stub | 2 |
 | **Breath + meditation**: `breath` + `meditate` | text similarity 0.46, both folded | 1 |

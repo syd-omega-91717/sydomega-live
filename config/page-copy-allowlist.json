@@ -17,7 +17,6 @@
       "reason": "Required per-page disclosure: this financial workspace stores the displayed records in browser-local storage and the user must be warned about device loss and backup before entering or relying on those records. Removing it from any standalone finance route would hide a material persistence limitation.",
       "verified_on": "2026-11-10",
       "scope": [
-        "budget.html",
         "expenses.html",
         "investment.html",
         "revenue.html",

@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 243,
+  "page_count": 242,
   "contracts": [
     {
       "page_id": "404",
@@ -1883,70 +1883,6 @@
           "buttons": 7,
           "forms": 0,
           "inputs": 0,
-          "links": 0
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
-      "page_id": "budget",
-      "path": "budget.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; Budget",
-      "data_sources": "UNVERIFIED",
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::budget::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "budget.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-empty-guide.js",
-          "/omega-esc.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js",
-          "omega-local-backup.js",
-          "omega-ui.js"
-        ],
-        "data_evidence": "UNVERIFIED",
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 18,
-          "forms": 0,
-          "inputs": 8,
           "links": 0
         },
         "media_evidence": {
@@ -16559,8 +16495,8 @@
     }
   ],
   "audit_summary": {
-    "page_count": 243,
-    "source_audited_pages": 243,
+    "page_count": 242,
+    "source_audited_pages": 242,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true
   }

@@ -29,7 +29,7 @@
    WHAT NONE OF THEM PROTECTS -- do not use them for these:
      - a value inside an inline event-handler attribute (onclick="f('<here>')"). The browser decodes &#39; back to '
        BEFORE it parses the handler, so no escaping is enough. Put the value in a data- attribute and read it from a
-       delegated listener (signal.html, decisions.html, budget.html).
+       delegated listener (signal.html, decisions.html, expenses.html).
      - a value inside <script> or <style>, a CSS value, or a URL that is not http(s) (javascript:, data:).
      - an href/src that was not passed through url().
 */

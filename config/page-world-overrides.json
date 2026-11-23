@@ -93,7 +93,6 @@
     "verify-modules": "genesis",
     "recovery": "genesis",
     "wealth": "exchange",
-    "budget": "exchange",
     "expenses": "exchange",
     "income": "exchange",
     "investment": "exchange",

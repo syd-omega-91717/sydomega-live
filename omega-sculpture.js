@@ -754,6 +754,7 @@
        brightens, swells and its ring flares. Which coins is read from each executor's own element in omega-agents.json, nothing invented.
        Reduced motion skips it. */
     var PULSE_MS = 1900, pulse = { el: '', until: 0 };
+    var answering = [];   /* seat indices answering the current shift, rewritten every frame; read-only, published as scene.answering so a harness can test the cause, not the pixels */
     window.addEventListener('omega:dimension-shift', function (ev) {
       var d = ev && ev.detail; if (!d || typeof d.element !== 'string') return;
       pulse.el = d.element.toLowerCase(); pulse.until = Date.now() + PULSE_MS;
@@ -826,7 +827,7 @@
       })['catch'](function () { /* the fallback roster is already painted */ }).then(finish);
     });
 
-    return { scene: scene, camera: cam, links: links, ready: ready, update: function (t, px, py) {
+    return { scene: scene, camera: cam, links: links, ready: ready, answering: answering, update: function (t, px, py) {
       var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       var tt = reduceMotion ? 0 : t;
       var lx = reduceMotion ? 0 : px, ly = reduceMotion ? 0 : py;
@@ -834,6 +835,7 @@
       if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getActiveTaskCount) load = Math.min(6, window.OmegaSculptureDataViz.getActiveTaskCount() || 0);
       var spin = 0.9 + load * 0.12;
       var left = pulse.until > Date.now() ? (pulse.until - Date.now()) / PULSE_MS : 0;   /* 1 -> 0 over the pulse */
+      answering.length = 0;
       for (var k = 0; k < N; k++) {
         var s2 = seats[k];
         s2.holder.rotation.y = tt * spin + s2.phase;          /* the coin turns: both faces carry the emblem */
@@ -844,6 +846,7 @@
         var ag2 = roster[k] || COUNCIL_FALLBACK[k];
         var answer = (!reduceMotion && left > 0 && String(ag2.element || '').toLowerCase() === pulse.el) ? left : 0;
         s2.armil.material.emissiveIntensity = 0.25 + 1.4 * answer;
+        if (answer) answering.push(k);
         if (answer) { s2.faceMat.emissiveIntensity += 0.9 * answer; s2.holder.scale.setScalar(1 + 0.2 * answer); }
         else if (s2.holder.scale.x !== 1) s2.holder.scale.setScalar(1);
       }
@@ -2922,6 +2925,7 @@
                  visible: m.visible, buffer: m.bw + 'x' + m.bh, box: m.w + 'x' + m.h,
                  links: (m.scene && m.scene.links) ? m.scene.links.length : 0,
                  records: (m.scene && typeof m.scene.count === 'number') ? m.scene.count : undefined,
+                 answering: (m.scene && Array.isArray(m.scene.answering)) ? m.scene.answering.slice() : undefined,
                  bloom: !!m.bloom, env: !!_env,
                  fpsCap: Math.round(1000 / FRAME_MS), frameMs: +_cost.toFixed(1), degraded: _degraded,
                  hover: m.hover ? m.hover.label : null };

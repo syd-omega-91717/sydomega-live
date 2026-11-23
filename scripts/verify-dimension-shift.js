@@ -54,18 +54,22 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
   }
   const post = (pg, url, method = 'POST') => pg.evaluate(async ([u, m]) => { try { const r = await fetch(u, { method: m, headers: { 'content-type': 'application/json' }, body: m === 'POST' ? '{}' : undefined }); return r.status; } catch (e) { return 'ERR'; } }, [url, method]);
   const count = (pg) => pg.evaluate(() => window.__shifts.length);
-  const gap = (pg) => pg.waitForTimeout(2700);   /* past the module's 2.5 s throttle */
+  /* Past the module's 2.5 s throttle, measured from the LAST SHIFT THAT ACTUALLY HAPPENED (detail.at), not from when the test last looked: on a starved machine a
+     shift can land late, and a fixed sleep then ends inside the throttle and the next event is (correctly) dropped. */
+  const gap = (pg) => pg.waitForFunction(() => { const a = window.__shifts, last = a.length ? a[a.length - 1].at : 0; return Date.now() - last > 2650; }, null, { timeout: 30000, polling: 100 });
+  const countReaches = (pg, n) => pg.waitForFunction((k) => window.__shifts.length >= k, n, { timeout: 15000 }).catch(() => { });
 
   /* 1. the real chain on the council page */
   {
     const { ctx, pg, errs } = await open();
     check('the member element reaches the module (published by the backdrop from the profile)', await pg.evaluate(() => window.OmegaMemberElement === 'FIRE' && window.OmegaDimensionShift.element() === 'FIRE'));
+    /* Snapshot the wash and the label at the moment the label is inserted, not after a wait: the label lives 1.7 s, and on a starved machine a later read can land after it is gone. */
+    await pg.evaluate(() => { window.__uiSnap = null; new MutationObserver((_, mo) => { const l = document.getElementById('omega-dimension-label'); if (!l || window.__uiSnap) return; const w = document.getElementById('omega-dimension-wash'), hit = document.elementFromPoint(innerWidth / 2, innerHeight / 2);
+      window.__uiSnap = { wash: !!w, washBg: w && w.style.background.slice(0, 60), washPE: w && getComputedStyle(w).pointerEvents, label: l.textContent, labelPE: getComputedStyle(l).pointerEvents, hitIsWash: !!(w && hit === w) }; mo.disconnect(); }).observe(document.body, { childList: true }); });
     const st = await post(pg, '/rest/v1/task_completions?on_conflict=user_id%2Ctask');
     check('a successful POST to task_completions (with a query string) settles ok', st === 201, st);
-    await pg.waitForFunction(() => !!document.getElementById('omega-dimension-label'), null, { timeout: 3000 }).catch(() => { });
-    const ui = await pg.evaluate(() => { const w = document.getElementById('omega-dimension-wash'), l = document.getElementById('omega-dimension-label'), live = document.getElementById('omega-dimension-live');
-      const hit = document.elementFromPoint(innerWidth / 2, innerHeight / 2);
-      return { wash: !!w, washBg: w && w.style.background.slice(0, 60), washPE: w && getComputedStyle(w).pointerEvents, label: l && l.textContent, labelPE: l && getComputedStyle(l).pointerEvents, live: live && live.textContent, hitIsWash: !!(w && hit === w), shifts: window.__shifts.length, ev: window.__shifts[0] }; });
+    await pg.waitForFunction(() => !!window.__uiSnap && window.__shifts.length >= 1, null, { timeout: 15000 }).catch(() => { });
+    const ui = await pg.evaluate(() => Object.assign({}, window.__uiSnap, { shifts: window.__shifts.length, ev: window.__shifts[0] }));
     check('the shift appears: a wash and the label "REALM OF FIRE"', ui.wash && ui.label === 'REALM OF FIRE', ui);
     check('the wash and the label never intercept the pointer', ui.washPE === 'none' && ui.labelPE === 'none' && !ui.hitIsWash, ui);
     await pg.waitForFunction(() => /realm of fire/i.test((document.getElementById('omega-dimension-live') || {}).textContent || ''), null, { timeout: 3000 }).catch(() => { });
@@ -74,7 +78,7 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
     const det = await pg.evaluate(() => window.__settled.filter(d => d && d.m === 'POST'));
     check('bg.js reports method and PATHNAME only (the query string never appears)', det.length >= 1 && det.every(d => d.p === '/rest/v1/task_completions') && !JSON.stringify(det).includes('on_conflict'), det);
     if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); await pg.screenshot({ path: path.join(SHOTS, 'shift-wash.png') }); }
-    await pg.waitForTimeout(2300);
+    await pg.waitForFunction(() => !document.getElementById('omega-dimension-wash') && !document.getElementById('omega-dimension-label'), null, { timeout: 15000 }).catch(() => { });   /* they remove themselves after 1.3 s / 1.8 s; wait for that, not for a guess */
     check('everything cleans itself up (no wash, no label left behind)', await pg.evaluate(() => !document.getElementById('omega-dimension-wash') && !document.getElementById('omega-dimension-label')));
 
     /* 2. what must NOT trigger it */
@@ -93,11 +97,14 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
 
     /* 3. a burst is one shift; the next one after the gap is another; the habits event joins the same shift */
     await gap(pg); n0 = await count(pg);
-    await Promise.all([post(pg, '/rest/v1/task_completions'), post(pg, '/rest/v1/task_completions'), post(pg, '/rest/v1/task_completions')]); await pg.waitForTimeout(500);
-    await pg.evaluate(() => document.dispatchEvent(new CustomEvent('omega:task-complete', { detail: {} }))); await pg.waitForTimeout(300);
+    /* The burst is dispatched in ONE synchronous tick (three settled saves exactly as bg.js reports them, plus the habits event). Three real network saves can settle more than
+       2.5 s apart on a starved machine, and the throttle then correctly lets each through as its own shift: that tests the machine, not the module. Section 1 covers the real chain. */
+    await pg.evaluate(() => { for (let i = 0; i < 3; i++) document.dispatchEvent(new CustomEvent('omega:fetch-settled', { detail: { ok: true, m: 'POST', p: '/rest/v1/task_completions', status: 201 } })); document.dispatchEvent(new CustomEvent('omega:task-complete', { detail: {} })); });
+    await countReaches(pg, n0 + 1); await pg.waitForTimeout(900);          /* it happened; now give any (wrong) extra shift time to show */
     check('a burst of saves (and the habits event beside them) is ONE shift', (await count(pg)) === n0 + 1, { n0, now: await count(pg) });
     await gap(pg);
-    await pg.evaluate(() => document.dispatchEvent(new CustomEvent('omega:task-complete', { detail: {} }))); await pg.waitForTimeout(300);
+    await pg.evaluate(() => document.dispatchEvent(new CustomEvent('omega:task-complete', { detail: {} })));
+    await countReaches(pg, n0 + 2); await pg.waitForTimeout(600);
     check('the habits event alone is a shift once the gap has passed', (await count(pg)) === n0 + 2, { n0, now: await count(pg) });
     check('no page errors', errs.length === 0, errs);
     await ctx.close();
@@ -106,9 +113,13 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
   /* 4. reduced motion: the label and the line, no wash, no animation */
   {
     const { ctx, pg } = await open({ reduce: true });
+    /* snapshot when the label is inserted (it lives 1.7 s; a late read on a starved machine finds it gone) */
+    await pg.evaluate(() => { window.__rm = null; new MutationObserver((_, mo) => { const l = document.getElementById('omega-dimension-label'); if (!l || window.__rm) return;
+      window.__rm = { wash: !!document.getElementById('omega-dimension-wash'), label: l.textContent, anims: document.getAnimations().filter(an => an.effect && an.effect.target && /^omega-dimension/.test(an.effect.target.id || '')).length }; mo.disconnect(); }).observe(document.body, { childList: true }); });
     await post(pg, '/rest/v1/task_completions');
-    await pg.waitForFunction(() => !!document.getElementById('omega-dimension-label'), null, { timeout: 3000 }).catch(() => { });
-    const r = await pg.evaluate(() => ({ wash: !!document.getElementById('omega-dimension-wash'), label: (document.getElementById('omega-dimension-label') || {}).textContent, anims: document.getAnimations().filter(an => an.effect && an.effect.target && /^omega-dimension/.test(an.effect.target.id || '')).length, live: !!document.getElementById('omega-dimension-live') }));
+    await pg.waitForFunction(() => !!window.__rm, null, { timeout: 15000 }).catch(() => { });
+    await pg.waitForFunction(() => !!document.getElementById('omega-dimension-live'), null, { timeout: 5000 }).catch(() => { });
+    const r = await pg.evaluate(() => Object.assign({}, window.__rm, { live: !!document.getElementById('omega-dimension-live') }));
     check('reduced motion: the label and the spoken line appear, with no wash and nothing animating', !r.wash && r.label === 'REALM OF FIRE' && r.live && r.anims === 0, r);
     await ctx.close();
   }
@@ -116,9 +127,10 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
   /* 5. it works on other pages, not just the one that holds the council */
   {
     const { ctx, pg, errs } = await open({ page: '/dashboard.html' });
+    await pg.evaluate(() => { window.__lbl = null; new MutationObserver((_, mo) => { const l = document.getElementById('omega-dimension-label'); if (l && !window.__lbl) { window.__lbl = l.textContent; mo.disconnect(); } }).observe(document.body, { childList: true }); });   /* the label lives 1.7 s: record it when it is inserted */
     await post(pg, '/rest/v1/task_completions');
-    await pg.waitForFunction(() => !!document.getElementById('omega-dimension-label'), null, { timeout: 4000 }).catch(() => { });
-    check('dashboard.html: the same save gives the same shift (platform-wide, no per-page code)', await pg.evaluate(() => (document.getElementById('omega-dimension-label') || {}).textContent === 'REALM OF FIRE'));
+    await pg.waitForFunction(() => !!window.__lbl, null, { timeout: 15000 }).catch(() => { });
+    check('dashboard.html: the same save gives the same shift (platform-wide, no per-page code)', await pg.evaluate(() => window.__lbl === 'REALM OF FIRE'), await pg.evaluate(() => window.__lbl));
     check('dashboard.html: no page errors', errs.length === 0, errs);
     await ctx.close();
   }
@@ -127,19 +139,43 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
   {
     const { ctx, pg, errs } = await open();
     await pg.evaluate(() => document.querySelector('[data-omega-sculpture="council"]').scrollIntoView({ block: 'center' }));
-    const SEL = '[data-omega-sculpture="council"] canvas';
-    const mass = () => pg.evaluate((sel) => { const c = document.querySelector(sel), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let b = 0; for (let i = 0; i < d.length; i += 4) if (d[i] + d[i + 1] + d[i + 2] > 560) b++; return b / (c.width * c.height) * 100; }, SEL);
-    await pg.waitForFunction((sel) => { const c = document.querySelector(sel); if (!c || !c.width) return false; const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 40) if (d[i] + d[i + 1] + d[i + 2] > 240) n++; return n > 60; }, SEL, { timeout: 45000 }).catch(() => { });
-    await pg.waitForTimeout(2500);
-    const best = async (k) => { let m = 0; for (let i = 0; i < k; i++) { m = Math.max(m, await mass()); await pg.waitForTimeout(120); } return m; };
-    /* VOID: no executor has it, so the scene must not react; FIRE: three executors do */
-    await pg.evaluate(() => { window.OmegaMemberElement = 'VOID'; window.OmegaDimensionShift.trigger('test'); });
-    const voidMass = await best(5); await pg.waitForTimeout(2600);
-    await pg.evaluate(() => { window.OmegaMemberElement = 'FIRE'; window.OmegaDimensionShift.trigger('test'); });
-    const fireMass = await best(5);
-    console.log('      [measured] council coin-face area during a shift: element no executor has = ' + voidMass.toFixed(2) + ' %, Fire = ' + fireMass.toFixed(2) + ' %');
-    check('the council: the matching executors brighten (Fire shift shows clearly more coin-face area than a shift nobody answers)', fireMass > voidMass * 1.15, { voidMass, fireMass });
+    /* The cause, not the pixels: the council publishes which seats are answering (scene.answering, via OmegaSculpture.status()). The first version of this check
+       compared total canvas brightness between two runs; the scene swings ~40 percent by itself, so it failed intermittently on a correct build. */
+    const AG = JSON.parse(require('fs').readFileSync(require('path').join(ROOT, 'omega-agents.json'), 'utf8')).agents.slice(0, 12);
+    const seatsOf = (el) => AG.map((a, i) => (String(a.element).toLowerCase() === el ? i : -1)).filter(i => i >= 0);
+    const want = seatsOf('fire'), wantWater = seatsOf('water');
+    const state = () => pg.evaluate(() => { const m = window.OmegaSculpture.status().find(x => x.kind === 'council'); return m ? { live: m.live, answering: m.answering } : null; });
+    /* trigger() returns false while the module's 2.5 s throttle holds, so retry until it actually fired: a fixed sleep either wastes time or loses the race */
+    const shiftFor = async (el) => { for (let i = 0; i < 80; i++) { if (await pg.evaluate((e) => { window.OmegaMemberElement = e; return window.OmegaDimensionShift.trigger('test'); }, el)) return true; await pg.waitForTimeout(150); } return false; };
+    /* The pulse lasts 1.9 s. On a starved machine the council's frame loop can skip that whole window, which is the product behaving correctly, not a bug: so the
+       check retries the shift (up to 5 times) and judges the FIRST non-empty answer. A scene that never answers still fails; a wrong set fails at once. */
+    const answerFor = async (el) => { for (let a = 0; a < 5; a++) { if (!(await shiftFor(el))) return { fired: false, got: [] }; const t0 = Date.now(); while (Date.now() - t0 < 1700) { const g = (await state()).answering; if (g.length) return { fired: true, got: g, attempts: a + 1 }; await pg.waitForTimeout(60); } } return { fired: true, got: [], attempts: 5 }; };
+    await pg.waitForFunction(() => { const m = window.OmegaSculpture.status().find(x => x.kind === 'council'); return !!m && m.live && Array.isArray(m.answering); }, null, { timeout: 30000 });
+    const calm = await state();
+    /* a shift for an element no executor has: nobody answers, over the whole window */
+    check('the council: the VOID shift fired', await shiftFor('VOID'));
+    let voidSeen = []; for (let i = 0; i < 8; i++) { voidSeen = voidSeen.concat((await state()).answering); await pg.waitForTimeout(120); }
+    const fire = await answerFor('FIRE');
+    await pg.waitForFunction(() => window.OmegaSculpture.status().find(x => x.kind === 'council').answering.length === 0, null, { timeout: 15000 }).catch(() => { });   /* it must clear on its own (the pulse is 1.9 s; a starved frame loop only delays the read) */
+    const after = await state();
+    const water = await answerFor('WATER');
+    check('the council: before any shift nobody is answering', calm && calm.answering.length === 0, calm);
+    check('the council: a shift for an element no executor has makes no seat answer (checked across the whole window)', voidSeen.length === 0, voidSeen);
+    check('the council: a Fire shift makes exactly the Fire executors answer (' + want.map(i => AG[i].name).join(', ') + ' = seats ' + want.join(',') + ' from omega-agents.json)', fire.fired && JSON.stringify(fire.got) === JSON.stringify(want), { want, fire });
+    check('the council: the answer is a pulse, not a state -- it clears by itself', after && after.answering.length === 0, after);
+    check('the council: a Water shift lights exactly the Water executors (the answer follows the member element, it is not hard-wired to Fire)', water.fired && JSON.stringify(water.got) === JSON.stringify(wantWater), { wantWater, water });
     check('the council: no page errors', errs.length === 0, errs);
+    await ctx.close();
+  }
+
+  /* 7. reduced motion: no seat animates, so none answers (the label and the spoken line still appear: check 4) */
+  {
+    const { ctx, pg } = await open({ reduce: true });
+    await pg.evaluate(() => document.querySelector('[data-omega-sculpture="council"]').scrollIntoView({ block: 'center' }));
+    await pg.waitForFunction(() => { const m = window.OmegaSculpture.status().find(x => x.kind === 'council'); return !!m && m.live && Array.isArray(m.answering); }, null, { timeout: 30000 }).catch(() => { });
+    await pg.evaluate(() => { window.OmegaMemberElement = 'FIRE'; window.OmegaDimensionShift.trigger('test'); });
+    let seen = []; for (let i = 0; i < 8; i++) { seen = seen.concat(await pg.evaluate(() => (window.OmegaSculpture.status().find(x => x.kind === 'council') || { answering: ['no-council'] }).answering)); await pg.waitForTimeout(120); }
+    check('reduced motion: a Fire shift makes no seat answer', seen.length === 0, seen);
     await ctx.close();
   }
 

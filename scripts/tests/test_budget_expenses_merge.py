@@ -70,6 +70,13 @@ class Merge(unittest.TestCase):
             self.assertNotIn(bad, EXP)
         self.assertIn("escapeHTML(largestExp.desc)", CODE)          # a member-entered description reached innerHTML unescaped before the merge
 
+    def test_every_read_of_the_store_is_normalised_and_trend_years_are_four_digits(self):
+        # budget.html normalised its ledger on load; expenses.html did not, and one junk row in an imported backup stopped the page (found by the hostile-store case).
+        self.assertIn("function readMonths(){return normaliseMonths(readJSON(BUDGET_MONTHS_KEY,{}));}", CODE)
+        self.assertIn("if(k==='__proto__')return;", CODE)
+        self.assertIn("amount:Number(e.amount)||0", CODE)
+        self.assertIn("/^\\d{4}$/.test(y)", CODE)
+
     def test_the_vault_shows_one_row_for_the_one_store(self):
         vc = (ROOT / "omega-vault-core.js").read_text(encoding="utf-8")
         self.assertIn("label: 'BUDGET & EXPENSES', href: '/expenses.html'", vc)

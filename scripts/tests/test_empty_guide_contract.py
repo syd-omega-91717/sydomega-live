@@ -8,7 +8,7 @@ import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-PAGES = ["investment", "treasury", "wallet", "revenue", "budget", "wealth"]
+PAGES = ["investment", "treasury", "wallet", "revenue", "expenses", "wealth"]
 
 
 class EmptyGuideContractTests(unittest.TestCase):

@@ -64,7 +64,7 @@ const rateSeries = y => MON.map((n, i) => n + ' ' + totals(key(y, i + 1)).rate +
     await ctx.route('https://fonts.gstatic.com/**', r => r.fulfill({ status: 200, body: '' }));
     await ctx.addInitScript(([s, t, l]) => { try { localStorage.setItem('omega_demo_watched_at', '2026-01-01T00:00:00Z'); localStorage.setItem('omega_consent_v1', 'all'); localStorage.setItem('omega_genesis_seen', '1');
       if (s) localStorage.setItem('omega_budget_months', s); if (t) localStorage.setItem('omega_budget_targets', t); if (l) localStorage.setItem('omega_expenses', l); } catch (e) { } },
-      [store ? JSON.stringify(store) : null, targets ? JSON.stringify(targets) : null, legacy ? JSON.stringify(legacy) : null]);
+      [store ? (typeof store === 'string' ? store : JSON.stringify(store)) : null, targets ? JSON.stringify(targets) : null, legacy ? JSON.stringify(legacy) : null]);   // a string store is passed through verbatim (the hostile case needs invalid-for-JSON.stringify shapes such as an own __proto__ key)
     const pg = await ctx.newPage(); const errs = []; pg.on('pageerror', e => errs.push(String(e.message).slice(0, 140)));
     await pg.goto(ORIGIN + '/' + page, { waitUntil: 'load', timeout: 60000 });
     await pg.waitForTimeout(1200);
@@ -179,6 +179,24 @@ const rateSeries = y => MON.map((n, i) => n + ' ' + totals(key(y, i + 1)).rate +
     const r = await pg.evaluate(() => ({ pwned: window.__pwned === 1, imgs: document.querySelectorAll('#insight-grid img').length, text: document.getElementById('insight-grid').textContent }));
     check('a description with markup is shown as text, nothing executes, no <img> is created', !r.pwned && r.imgs === 0 && /EVIL/.test(r.text), JSON.stringify(r).slice(0, 200));
     check('no page errors', errs.length === 0, JSON.stringify(errs));
+    await ctx.close();
+  }
+
+  /* ---------- a hostile store: markup in every stored field, junk rows, a junk month, a __proto__ key, year keys that are not years ---------- */
+  {
+    const X = '<img src=x onerror="window.__pwned=1">';
+    const raw = '{"' + curKey + '":{"income":[{"id":"a","source":"' + X.replace(/"/g, '\\"') + '","amount":"12.5","date":"' + X.replace(/"/g, '\\"') + '"},null,5,"junk"],' +
+      '"expenses":[{"id":"' + X.replace(/"/g, '\\"') + '","cat":"FOOD","desc":"' + X.replace(/"/g, '\\"') + '","amount":"' + X.replace(/"/g, '\\"') + '","date":"' + X.replace(/"/g, '\\"') + '","sub":"' + X.replace(/"/g, '\\"') + '","notes":"' + X.replace(/"/g, '\\"') + '"},null,5,"junk"]},' +
+      '"2026-10":"junk","__proto__":{"expenses":[1],"income":[1]},"abcd-01":{"income":[{"amount":1}]},"99999-01":{"income":[{"amount":1}]},"<b>-01":{"income":[{"amount":1}]}}';
+    const { ctx, pg, errs } = await open('expenses.html', { store: raw });
+    for (const t of ['budget', 'trends', 'ledger', 'science', 'add']) { await tab(pg, t); await pg.waitForTimeout(250); }
+    await tab(pg, 'budget');
+    const k = await kpis(pg);
+    check('hostile store: amounts are coerced to numbers (a markup amount counts as 0, "12.5" as 12.5), junk rows are skipped', JSON.stringify(k) === JSON.stringify(compact(['$13INCOME', '$0EXPENSES', '$13SURPLUS', '100%SAVINGS RATE'])), JSON.stringify(k));
+    const r = await pg.evaluate(() => ({ pwned: window.__pwned === 1, imgs: document.querySelectorAll('img[src="x"]').length, years: [...document.querySelectorAll('#trend-years .yr-btn')].map(b => b.textContent), proto: Object.prototype.expenses === undefined && Object.prototype.income === undefined }));
+    check('hostile store: nothing executes and no <img> is created on any tab (budget, trends, ledger, science, add)', !r.pwned && r.imgs === 0, JSON.stringify(r));
+    check('hostile store: only four-digit years become year buttons, and Object.prototype is not polluted', r.years.every(y => /^\d{4}$/.test(y)) && r.proto, JSON.stringify(r));
+    check('hostile store: no page errors', errs.length === 0, JSON.stringify(errs));
     await ctx.close();
   }
 

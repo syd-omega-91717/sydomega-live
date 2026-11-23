@@ -192,7 +192,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
         <span id="budget-month-nav-label" aria-live="polite"></span>
         <button type="button" class="btn btn-sm" id="mn-next" aria-label="Next month">&#9656;</button>
       </div>
-      <div id="budget-month-kpis" class="mkpis"></div>
+      <div id="budget-month-kpis" class="mkpis" data-omega-empty-guide="Nothing recorded for this month yet." data-omega-empty-cta="Add your first entry" data-omega-empty-go=".tab-btn[data-tab='add']" data-omega-empty-focus="#e-amount"></div>
       <div class="card" data-reveal="fade-up">
         <div class="card-title">MONTHLY BUDGET LIMITS</div>
         <p style="font-size:var(--fs-1,12px);color:var(--d);margin-bottom:14px">SET LIMITS PER CATEGORY · TRACK VS ACTUAL SPENDING THIS MONTH</p>
@@ -254,6 +254,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 <div data-page-emblem="expenses" style="margin:20px auto 0"></div>
 </main>
 </div>
+<script src="/omega-empty-guide.js" defer></script>
 <script src="/omega-esc.js"></script>
 <script>
 var escapeHTML = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
@@ -301,7 +302,25 @@ const TO_BUDGET={housing:'HOUSING',food:'FOOD',transport:'TRANSPORT',health:'HEA
 const BUDGET_GROUPS=[['HOUSING','#E57373'],['TRANSPORT','#FF9800'],['FOOD','#FFCA28'],['HEALTH','#66BB6A'],
   ['GROWTH','#5C8FD6'],['LIFESTYLE','#9C6FD6'],['GIVING','#26C6DA'],['OTHER','#90A4AE']];
 function readJSON(k,dflt){try{const v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:dflt;}catch(e){return dflt;}}
-function readMonths(){return readJSON(BUDGET_MONTHS_KEY,{});}
+/* The store also holds data restored from a backup file, so every read goes through this (ported from budget.html, whose page this one replaced): rows that are
+   not objects are dropped, a month that is not an object becomes empty, amounts become numbers, id/date/text become strings, and a '__proto__' key is skipped. Without it
+   one junk row in an imported backup threw inside deriveEntries and the whole page stopped. */
+function normaliseMonths(raw){
+  var out={};
+  if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+  function str(v){return String(v==null?'':v);}
+  function rows(a,f){return (Array.isArray(a)?a:[]).filter(function(x){return x&&typeof x==='object';}).map(function(x){return Object.assign({},x,f(x));});}
+  Object.keys(raw).forEach(function(k){
+    if(k==='__proto__')return;
+    var m=raw[k]&&typeof raw[k]==='object'?raw[k]:{};
+    out[k]=Object.assign({},m,{
+      expenses:rows(m.expenses,function(e){return {id:str(e.id),cat:str(e.cat),desc:str(e.desc),date:str(e.date),amount:Number(e.amount)||0};}),
+      income:rows(m.income,function(i){return {id:str(i.id),source:str(i.source),date:str(i.date),amount:Number(i.amount)||0};})
+    });
+  });
+  return out;
+}
+function readMonths(){return normaliseMonths(readJSON(BUDGET_MONTHS_KEY,{}));}
 function writeMonths(m){localStorage.setItem(BUDGET_MONTHS_KEY,JSON.stringify(m));}
 function monthOf(m,key){if(!m[key]||typeof m[key]!=='object')m[key]={};m[key].income=m[key].income||[];m[key].expenses=m[key].expenses||[];return m[key];}
 function toBudgetRow(e){
@@ -497,7 +516,7 @@ function renderBudget(){
   var t=monthTotals(viewMonth);
   var kp=document.getElementById('budget-month-kpis');kp.textContent='';
   [[fmtUSD(t.income),'INCOME'],[fmtUSD(t.expenses),'EXPENSES'],[fmtUSD(t.saved>0?t.saved:0),'SURPLUS'],[t.rate+'%','SAVINGS RATE']].forEach(function(k){
-    var box=mk('div','stat'),v=mk('div','stat-val',k[0]),l=mk('div','stat-lbl',k[1]);box.appendChild(v);box.appendChild(l);kp.appendChild(box);});
+    var box=mk('div','stat'),v=mk('div','stat-val stat-num',k[0]),l=mk('div','stat-lbl',k[1]);box.appendChild(v);box.appendChild(l);kp.appendChild(box);});
   var shown=BUDGET_GROUPS.filter(function(g){return +budgets[g[0]]>0||groupActual(viewMonth,g[0])>0;});
   bars.textContent='';
   if(!shown.length){bars.appendChild(mk('div','','NOTHING RECORDED FOR THIS MONTH, AND NO LIMITS SET')).style.cssText='font-size:var(--fs-1,12px);color:var(--d);padding:10px 0';return;}

@@ -48,7 +48,7 @@ class Helper(unittest.TestCase):
 
 
 class Pilot(unittest.TestCase):
-    PAGES = ("decisions", "targets", "budget", "signal")
+    PAGES = ("decisions", "targets", "signal")   # budget.html was merged into expenses.html, which has its own escapeHTML alias (verify-expenses-merge.js feeds it hostile data)
 
     def test_pages_load_the_helper_before_their_script_and_use_the_failclosed_alias(self):
         for name in self.PAGES:

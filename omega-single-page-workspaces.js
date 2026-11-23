@@ -19,7 +19,7 @@
     '/intel.html':['insight','research','prediction','intelligence','automation','graph-admin','atlas','cipher','codex','mindmap','nexus','pulse','sigma','signal','news'],
     '/arena.html':['sovereign-ai','agent-network','agents','analytics','queue','gaming'],
     '/govern.html':['governance','observatory','enterprise','privacy','roadmap','ecosystem','knowledge','knowledge-loom','maintenance','control-center','platform-kernel','agent-operations','ops','architecture','autonomous-insights','lab','design-system','design-showcase','design-lab'],
-    '/invest.html':['investment','portfolio','treasury','revenue','income','budget','expenses','wealth'],
+    '/invest.html':['investment','portfolio','treasury','revenue','income','expenses','wealth'],
     '/achieve.html':['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates','grades','levels','phases','ascension','kings','triads','grid','awards','hercules','trophies'],
     '/archive.html':['kyc','charter','sigil'],
     '/media.html':['cinema','movies','series','trailers','universe','feed','publications','visual-atlas','characters']

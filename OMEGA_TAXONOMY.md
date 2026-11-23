@@ -168,6 +168,8 @@ an invented meaning:
   `18 Geopolitical Backend Nodes`, `Legion of Wisdom stamp` (owner's 2026-11 ecosystem brief): no engineering
   definition, asset or data model exists in this repo. Only the Zero-Point intro uses a 144-spoke point field,
   as an illustration, with no claim about what 144 or 144,000 measures. Not built until the owner defines each.
+- `3D and 5D` / `dimensions` (owner brief, 2026-11-23): not a rendering mode. Defined in `SCENES.council` as three of space, one of time
+  (everything turns) and one of state (live task activity quickens it); nothing more is claimed. The owner may replace this definition.
 
 If any of these turn out to name a real tool, model, or convention relevant to this repo, replace
 its entry above with a real definition and a citation — don't remove it silently.

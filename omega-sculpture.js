@@ -19,6 +19,7 @@
        <div data-omega-sculpture="agents"></div>     the 12 executors in orbit
        <div data-omega-sculpture="matrix"></div>     the 9x9x9 lattice, 729 nodes
        <div data-omega-sculpture="gates"></div>      the twelve gates, in depth
+       <div data-omega-sculpture="lion"></div>       the winged lion over the Omega, wings beating
        <div data-omega-sculpture="sky"></div>        the member's own records as stars
 
    Optional: data-sculpt-height (CSS length, default 420px / 300px mobile),
@@ -518,6 +519,148 @@
       cam.position.x = px * 0.34;
       cam.position.y = -py * 0.26;
       cam.lookAt(0, 0, 0);
+    }};
+  };
+
+  /* ── THE WINGED LION ─────────────────────────────────────────────────
+     The brand's centrepiece as real geometry: a faceted gold lion (flat-shaded
+     so every plane catches the light), a mane of two rings of spikes, six
+     blade feathers per wing that beat in a rolling wave, eyes that glow
+     cyan, nine stars overhead, and the Omega signet beneath. It is the same
+     composition as assets/omega-legion-of-wisdom-seal.svg, which is also its
+     flat fallback when WebGL is absent. Cursor turns the head and the camera.
+
+     Honest scope: it is an illustration. It claims nothing, awards nothing,
+     and shows no figure. Reduced motion draws one still frame (t = 0).
+     Mount:  <div data-omega-sculpture="lion"></div> */
+  SCENES.lion = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(38, 1, 0.1, 100);
+    cam.position.set(0, 0.2, 6.4);
+    rig(T, scene, p);
+    starfield(T, scene, 160, 14, p.cyan);
+
+    var key = new T.PointLight(0xffe9b8, 1.5, 14); key.position.set(2.2, 2.4, 4.2); scene.add(key);
+    var fill = new T.PointLight(0x4fc3ff, 1.6, 12); fill.position.set(-3, -0.5, 3.5); scene.add(fill);
+
+    var gold = opt.accent || p.gold;
+    var goldMat = new T.MeshStandardMaterial({ color: gold, metalness: 0.78, roughness: 0.34, flatShading: true });
+    var paleMat = new T.MeshStandardMaterial({ color: 0xf3d98a, metalness: 0.7, roughness: 0.3, flatShading: true });
+    var deepMat = new T.MeshStandardMaterial({ color: 0x8a6414, metalness: 0.7, roughness: 0.4, flatShading: true });
+    var eyeMat = new T.MeshStandardMaterial({ color: 0x8fe0ff, emissive: 0x4fc3ff, emissiveIntensity: 1.4, metalness: 0, roughness: 0.3 });
+
+    var lion = new T.Group();
+    lion.position.set(0, 0.6, 0);
+    scene.add(lion);
+
+    /* the head, tilted by the cursor as one piece */
+    var head = new T.Group();
+    lion.add(head);
+
+    var maneDisc = new T.Mesh(new T.CylinderGeometry(0.6, 0.6, 0.16, 14), goldMat);
+    maneDisc.rotation.x = Math.PI / 2; maneDisc.position.z = -0.08;
+    head.add(maneDisc);
+    [{ n: 14, r: 0.60, len: 0.60, w: 0.24, z: -0.06, off: 0, m: goldMat },
+     { n: 14, r: 0.50, len: 0.42, w: 0.21, z: 0.02, off: Math.PI / 14, m: paleMat }].forEach(function (ring) {
+      for (var i = 0; i < ring.n; i++) {
+        var a = (i / ring.n) * Math.PI * 2 + ring.off;
+        var spike = new T.Mesh(new T.ConeGeometry(ring.w, ring.len, 4), ring.m);
+        spike.position.set(Math.cos(a) * (ring.r + ring.len * 0.38), Math.sin(a) * (ring.r + ring.len * 0.38), ring.z);
+        spike.rotation.z = a - Math.PI / 2;
+        head.add(spike);
+      }
+    });
+
+    var face = new T.Mesh(new T.SphereGeometry(0.6, 8, 6), paleMat);
+    face.scale.set(0.82, 1.0, 0.74); face.position.z = 0.16;
+    head.add(face);
+    var muzzle = new T.Mesh(new T.SphereGeometry(0.24, 6, 4), goldMat);
+    muzzle.scale.set(1.1, 0.8, 0.9); muzzle.position.set(0, -0.22, 0.52);
+    head.add(muzzle);
+    var nose = new T.Mesh(new T.TetrahedronGeometry(0.15), deepMat);
+    nose.position.set(0, -0.1, 0.66); nose.rotation.set(0.6, 0.785, 0);
+    head.add(nose);
+    [-1, 1].forEach(function (sd) {
+      var brow = new T.Mesh(new T.BoxGeometry(0.34, 0.07, 0.1), deepMat);
+      brow.position.set(sd * 0.21, 0.27, 0.5); brow.rotation.z = sd * -0.28;
+      head.add(brow);
+      var eye = new T.Mesh(new T.SphereGeometry(0.058, 10, 8), eyeMat);
+      eye.position.set(sd * 0.2, 0.15, 0.55);
+      head.add(eye);
+      var ear = new T.Mesh(new T.ConeGeometry(0.17, 0.3, 4), goldMat);
+      ear.position.set(sd * 0.46, 0.6, 0.0); ear.rotation.z = sd * -0.25;
+      head.add(ear);
+    });
+
+    /* wings: six blade feathers on a shoulder pivot; the left wing is the right wing mirrored */
+    var feathers = [];
+    var WING_LEN = [1.4, 1.8, 2.1, 2.1, 1.9, 1.6];
+    var featherMats = [goldMat.clone(), paleMat.clone()];
+    featherMats.forEach(function (m) { m.side = T.DoubleSide; });
+    function bladeGeo(len, wid) {
+      var sh = new T.Shape();
+      sh.moveTo(0, 0);
+      sh.quadraticCurveTo(len * 0.5, wid, len, 0);
+      sh.quadraticCurveTo(len * 0.5, -wid * 0.45, 0, 0);
+      return new T.ExtrudeGeometry(sh, { depth: 0.05, bevelEnabled: false, curveSegments: 6 });
+    }
+    function wing(side) {
+      var pivot = new T.Group();
+      pivot.position.set(side * 0.62, 0.05, -0.15);
+      var root = new T.Group(); root.scale.x = side;      /* mirror: negative scale flips winding; three.js compensates */
+      pivot.add(root);
+      for (var k = 0; k < 6; k++) {
+        var f = new T.Mesh(bladeGeo(WING_LEN[k], 0.27 - k * 0.012), featherMats[k % 2]);
+        var base = 1.1 - k * 0.24;                          /* fan from raised (about 63 deg) down to level (about 4 deg) */
+        f.rotation.z = base; f.position.z = k * 0.012;
+        root.add(f);
+        feathers.push({ mesh: f, base: base, k: k, side: side });
+      }
+      lion.add(pivot);
+      return pivot;
+    }
+    var wingR = wing(1), wingL = wing(-1);
+
+    /* the Omega signet beneath, the same extruded mark the signet scene uses */
+    var mark = buildSignet(T, gold);
+    /* the signet's own lighting assumes it is the only subject; beneath a lion its lower half falls into black, so it carries a gentle glow */
+    mark.traverse(function (o) {
+      if (o.material && o.material.color) { o.material = o.material.clone(); o.material.emissive = new T.Color(gold); o.material.emissiveIntensity = 0.38; }
+    });
+    mark.scale.setScalar(0.5); mark.position.set(0, -1.18, 0.15);
+    scene.add(mark);
+
+    /* nine stars on an arc over the head */
+    var starMat = new T.MeshBasicMaterial({ color: p.cyan, transparent: true, opacity: 0.95, blending: T.AdditiveBlending, depthWrite: false });
+    var stars = [];
+    for (var s = 0; s < 9; s++) {
+      var sa = (40 + s * 12.5) * Math.PI / 180;
+      var st = new T.Mesh(new T.OctahedronGeometry(s === 4 ? 0.07 : 0.05), starMat.clone());
+      st.position.set(Math.cos(sa) * 1.55, 0.6 + Math.sin(sa) * 1.3, -0.2);
+      scene.add(st); stars.push(st);
+    }
+
+    return { scene: scene, camera: cam, update: function (t, px, py) {
+      var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tt = reduceMotion ? 0 : t;
+      var lx = reduceMotion ? 0 : px, ly = reduceMotion ? 0 : py;
+      /* the wings beat in a wave that travels from the shoulder to the tip */
+      var beat = Math.sin(tt * 1.25) * 0.11;
+      feathers.forEach(function (f) {
+        f.mesh.rotation.z = f.base + beat * (0.55 + f.k * 0.12) + Math.sin(tt * 1.25 - f.k * 0.4) * 0.025;
+      });
+      wingR.rotation.z = beat * 0.5; wingL.rotation.z = beat * 0.5;
+      head.rotation.y = lx * 0.34; head.rotation.x = -ly * 0.2;
+      lion.position.y = 0.6 + Math.sin(tt * 0.9) * 0.04;
+      eyeMat.emissiveIntensity = 1.4 + Math.sin(tt * 1.7) * 0.5;
+      stars.forEach(function (st, i) { st.material.opacity = 0.55 + 0.4 * Math.sin(tt * 1.9 + i * 0.7); });
+      mark.rotation.y = Math.sin(tt * 0.5) * 0.22;
+      /* a narrow mount pulls the camera back so both wings stay in frame */
+      cam.position.z = 6.6 * Math.max(1, 1.35 / Math.max(0.4, cam.aspect || 1));
+      cam.position.x = lx * 0.3;
+      cam.position.y = 0.2 - ly * 0.22;
+      cam.lookAt(0, 0.1, 0);
     }};
   };
 
@@ -1736,6 +1879,13 @@
     ctx.strokeStyle = gold;
     ctx.lineCap = 'round';
 
+    if (kind === 'lion') {
+      /* No WebGL: the same composition, as the flat seal artwork. Drawn once it loads; the frame above is the glow until then. */
+      var seal = new Image();
+      seal.onload = function () { try { var side = Math.min(w, h) * 0.92; ctx.drawImage(seal, cx - side / 2, cy - side / 2, side, side); } catch (e) { } };
+      seal.src = '/assets/omega-legion-of-wisdom-seal.svg';
+      return;
+    }
     if (kind === 'solar-system') {
       ctx.globalAlpha = 0.32; ctx.lineWidth = Math.max(1, R * 0.008);
       for (var sr = 0; sr < 8; sr++) {
@@ -2495,6 +2645,7 @@
     character: 'Your character: a core, twelve gate nodes lit by the gates you have passed, and five satellites for your mana',
     sky:    'Your own record as a sky: one star for each task, lesson and certificate you have completed',
     world: 'The eighteen governed platform modules arranged as an interactive three-dimensional Omega world',
+    lion:   'The Legion of Wisdom winged lion above the Omega: a faceted gold lion with beating wings, glowing eyes and nine stars, rendered in three dimensions',
     'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'
   };
 

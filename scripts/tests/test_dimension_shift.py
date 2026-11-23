@@ -87,6 +87,14 @@ class CouncilAnswer(unittest.TestCase):
     def test_the_pulse_is_bounded(self):
         self.assertIn("var PULSE_MS = 1900", SC)
 
+    def test_the_council_publishes_which_seats_answer_so_a_test_can_read_the_cause(self):
+        # verify-dimension-shift.js asserts scene.answering (via OmegaSculpture.status()), not canvas brightness: the scene swings ~40 percent on its own.
+        self.assertIn("var answering = [];", SC)
+        self.assertIn("answering.length = 0;", SC)                                   # rewritten every frame, never accumulates
+        self.assertEqual(SC.count("answering.push(k)"), 1)
+        self.assertIn("answering: answering, update: function (t, px, py)", SC)      # the council's scene object carries it
+        self.assertIn("answering: (m.scene && Array.isArray(m.scene.answering)) ? m.scene.answering.slice() : undefined", SC)   # status() hands out a copy
+
 
 class Browser(unittest.TestCase):
     def test_browser_validation(self):

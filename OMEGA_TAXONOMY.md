@@ -165,9 +165,13 @@ an invented meaning:
 - `/Pi = 1.618` (1.618 is the golden ratio φ, not π ≈ 3.14159 — likely a mislabel in the source
   material; not corrected into a definition here, just flagged)
 - `The Fiery Triangle (Al-Muthalath al-Nari)`, `Winged Lion` as a rendered scene, `144,000 frequency grid`,
-  `18 Geopolitical Backend Nodes`, `Legion of Wisdom stamp` (owner's 2026-11 ecosystem brief): no engineering
+  `Legion of Wisdom stamp` (owner's 2026-11 ecosystem brief): no engineering
   definition, asset or data model exists in this repo. Only the Zero-Point intro uses a 144-spoke point field,
   as an illustration, with no claim about what 144 or 144,000 measures. Not built until the owner defines each.
+- `18 nodes` / `N-01..N-18` (owner brief, 2026-11-23): defined as the eighteen governed modules in `OmegaWorldEngine.modules`
+  (`omega-world-engine.js`) -- the brief's "18 Master Modules" list matches that registry name for name, in order. Drawn as a 3-D scene
+  (`SCENES.world`, world.html) and as a flat illustration (`omega-node-map.js`, sculpture.html). The brief's "geopolitical backend"
+  wording has no meaning in this repo: no region, server, data centre or hierarchy is drawn or implied. The owner may replace this definition.
 - `3D and 5D` / `dimensions` (owner brief, 2026-11-23): not a rendering mode. Defined in `SCENES.council` as three of space, one of time
   (everything turns) and one of state (live task activity quickens it); nothing more is claimed. The owner may replace this definition.
 

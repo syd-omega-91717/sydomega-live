@@ -12,7 +12,7 @@ import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SC = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
-LION = SC[SC.index("SCENES.lion = function"):SC.index("/* ── SOLAR SYSTEM LEDGER")]
+LION = SC[SC.index("SCENES.lion = function"):SC.index("/* ── THE COUNCIL CHAMBER")]   # ends where the next scene begins
 
 
 class Static(unittest.TestCase):

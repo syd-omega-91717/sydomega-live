@@ -20,6 +20,7 @@
        <div data-omega-sculpture="matrix"></div>     the 9x9x9 lattice, 729 nodes
        <div data-omega-sculpture="gates"></div>      the twelve gates, in depth
        <div data-omega-sculpture="lion"></div>       the winged lion over the Omega, wings beating
+       <div data-omega-sculpture="council"></div>    the twelve executors seated around the Omega dais
        <div data-omega-sculpture="sky"></div>        the member's own records as stars
 
    Optional: data-sculpt-height (CSS length, default 420px / 300px mobile),
@@ -667,6 +668,177 @@
       cam.position.x = lx * 0.3;
       cam.position.y = 0.2 - ly * 0.22;
       cam.lookAt(0, 0.1, 0);
+    }};
+  };
+
+  /* ── THE COUNCIL CHAMBER ─────────────────────────────────────────────
+     The twelve executors seated in a round chamber around the Omega dais. Each
+     seat is a real 3-D object, not a picture: a coin carrying that executor's
+     own zodiac emblem on both faces, turning about its vertical axis, inside a
+     tilted armillary ring that turns about another, on a pedestal, with a
+     name plate. The roster, signs, elements and destinations are read from
+     omega-agents.json (the file agents.html and omega-constellation.js use);
+     element colours from OmegaRealm.palette; inline lists are only the
+     fallback when those fetches never resolve. Every coin is a door to that
+     executor's own page.
+
+     What "dimensions" mean here, stated so nothing is implied that is not
+     built: three of space (x, y, z), one of time (the coins, rings and camera
+     turn), and one of state (the same live task-activity signal the agents and
+     signet scenes already read, OmegaSculptureDataViz.getActiveTaskCount,
+     quickens the turning and lights the rings). No figure is drawn; nothing is
+     awarded. Reduced motion draws one still frame.
+     Mount:  <div data-omega-sculpture="council"></div> */
+  var ZODIAC_GLYPH = { Aries: '\u2648\uFE0E', Taurus: '\u2649\uFE0E', Gemini: '\u264A\uFE0E', Cancer: '\u264B\uFE0E', Leo: '\u264C\uFE0E', Virgo: '\u264D\uFE0E',
+    Libra: '\u264E\uFE0E', Scorpio: '\u264F\uFE0E', Sagittarius: '\u2650\uFE0E', Capricorn: '\u2651\uFE0E', Aquarius: '\u2652\uFE0E', Pisces: '\u2653\uFE0E' };
+  var COUNCIL_FALLBACK = [
+    { name: 'Sentinel', sign: 'Aries', element: 'Fire', href: '/agents.html' }, { name: 'Merchant', sign: 'Taurus', element: 'Metal', href: '/agents.html' },
+    { name: 'Scout', sign: 'Gemini', element: 'Wind', href: '/agents.html' }, { name: 'Warden', sign: 'Cancer', element: 'Water', href: '/agents.html' },
+    { name: 'Sovereign', sign: 'Leo', element: 'Fire', href: '/agents.html' }, { name: 'Auditor', sign: 'Virgo', element: 'Sand', href: '/agents.html' },
+    { name: 'Proxy', sign: 'Libra', element: 'Wind', href: '/agents.html' }, { name: 'Oracle', sign: 'Scorpio', element: 'Water', href: '/agents.html' },
+    { name: 'Beacon', sign: 'Sagittarius', element: 'Fire', href: '/agents.html' }, { name: 'Analyst', sign: 'Capricorn', element: 'Metal', href: '/agents.html' },
+    { name: 'Tutor', sign: 'Aquarius', element: 'Wind', href: '/agents.html' }, { name: 'Historian', sign: 'Pisces', element: 'Water', href: '/agents.html' }];
+  var COUNCIL_ELEMENT_HEX = { Fire: '#ff7a45', Water: '#3da9ff', Wind: '#7fe0cf', Metal: '#c8cdd6', Sand: '#d9b86a', Soul: '#9b6bf0', Space: '#5a78e6', Void: '#b43a3a', 'The All': '#f3d98a' };
+
+  function councilCss(n) { return '#' + ('000000' + n.toString(16)).slice(-6); }
+
+  /* One executor's emblem, drawn once into a canvas: a gold-rimmed disc in the element's tint with the sign's glyph. Drawn in code, so it is
+     the platform's own artwork and needs no media-rights record. */
+  function councilEmblem(sign, tintCss) {
+    var c = document.createElement('canvas'); c.width = c.height = 256;
+    var x = c.getContext('2d');
+    var g = x.createRadialGradient(128, 112, 14, 128, 128, 126);
+    g.addColorStop(0, '#ffe39a'); g.addColorStop(0.5, tintCss); g.addColorStop(1, '#2a2008');
+    x.fillStyle = g; x.beginPath(); x.arc(128, 128, 124, 0, 6.2832); x.fill();
+    x.strokeStyle = '#f3d98a'; x.lineWidth = 7; x.beginPath(); x.arc(128, 128, 116, 0, 6.2832); x.stroke();
+    x.strokeStyle = 'rgba(26,18,4,.75)'; x.lineWidth = 3; x.beginPath(); x.arc(128, 128, 100, 0, 6.2832); x.stroke();
+    x.fillStyle = '#1a1204'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = '700 128px "Segoe UI Symbol","Noto Sans Symbols","DejaVu Sans",serif';
+    x.fillText(ZODIAC_GLYPH[sign] || '\u03A9', 128, 136);
+    return c;
+  }
+  function councilPlate(name, tintCss) {
+    var c = document.createElement('canvas'); c.width = 256; c.height = 64;
+    var x = c.getContext('2d');
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = '700 30px Cinzel,"Cinzel Decorative",Georgia,serif';
+    x.shadowColor = 'rgba(0,0,0,.9)'; x.shadowBlur = 6;
+    x.fillStyle = tintCss; x.fillText(String(name).toUpperCase(), 128, 34);
+    return c;
+  }
+
+  SCENES.council = function (T, opt) {
+    var p = palette();
+    var N = 12, RAD = 2.75;
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(40, 1, 0.1, 100);
+    cam.position.set(0, 3.4, 8.6);
+    rig(T, scene, p);
+    starfield(T, scene, 200, 18, p.cyan);
+    var key = new T.PointLight(0xffe9b8, 1.2, 16); key.position.set(0, 4, 2); scene.add(key);
+
+    /* the floor and the dais */
+    var floor = new T.Mesh(new T.CircleGeometry(3.7, 64), new T.MeshStandardMaterial({ color: 0x090b16, metalness: 0.0, roughness: 1.0 }));
+    floor.rotation.x = -Math.PI / 2; floor.position.y = -0.02; scene.add(floor);
+    [1.3, 2.2, 3.1, 3.62].forEach(function (r, i) {
+      var ring = new T.Mesh(new T.TorusGeometry(r, i === 3 ? 0.03 : 0.012, 8, 160), new T.MeshBasicMaterial({ color: p.gold, transparent: true, opacity: i === 3 ? 0.7 : 0.28 }));
+      ring.rotation.x = Math.PI / 2; ring.position.y = 0.01; scene.add(ring);
+    });
+    var dais = new T.Mesh(new T.CylinderGeometry(0.85, 1.0, 0.16, 48), new T.MeshStandardMaterial({ color: 0x4a380c, metalness: 0.25, roughness: 0.7, flatShading: true }));
+    dais.position.y = 0.06; scene.add(dais);
+    var core = buildSignet(T, p.gold);
+    core.scale.setScalar(0.62); core.position.y = 0.98; scene.add(core);
+    core.traverse(function (o) { if (o.material && o.material.color) { o.material = o.material.clone(); o.material.emissive = new T.Color(p.gold); o.material.emissiveIntensity = 0.3; } });
+
+    /* the twelve seats */
+    var seats = [], links = [];   /* stays EMPTY until the roster has resolved: the host builds its real <a> list from the links present at wiring time */
+    var pedMat = new T.MeshStandardMaterial({ color: 0x3a2c0a, metalness: 0.3, roughness: 0.65, flatShading: true });
+    var roster = COUNCIL_FALLBACK.slice();
+    function tintFor(a) { return elementColour(a.element, COUNCIL_ELEMENT_HEX[a.element] || '#c9a84c'); }
+
+    for (var i = 0; i < N; i++) {
+      var a = (i / N) * Math.PI * 2;
+      var seat = new T.Group();
+      seat.position.set(Math.cos(a) * RAD, 0, Math.sin(a) * RAD);
+      scene.add(seat);
+
+      var ped = new T.Mesh(new T.CylinderGeometry(0.2, 0.3, 0.55, 6), pedMat);
+      ped.position.y = 0.28; seat.add(ped);
+
+      var holder = new T.Group(); holder.position.y = 1.05; seat.add(holder);
+      var faceMat = new T.MeshStandardMaterial({ color: 0x777777, metalness: 0.5, roughness: 0.4, emissive: 0xffffff, emissiveIntensity: 0.6 });   /* self-lit by its own emblem so the scene's cyan fill cannot wash the element tint out */
+      var rimMat = new T.MeshStandardMaterial({ color: p.gold, metalness: 0.9, roughness: 0.3 });
+      var coin = new T.Mesh(new T.CylinderGeometry(0.4, 0.4, 0.07, 48), [rimMat, faceMat, faceMat]);
+      coin.rotation.x = Math.PI / 2; holder.add(coin);
+
+      var armil = new T.Mesh(new T.TorusGeometry(0.56, 0.014, 8, 72), new T.MeshStandardMaterial({ color: p.gold, emissive: p.gold, emissiveIntensity: 0.25, metalness: 0.9, roughness: 0.3 }));
+      armil.rotation.x = 0.9; seat.add(armil); armil.position.y = 1.05;
+      var armil2 = new T.Mesh(new T.TorusGeometry(0.5, 0.01, 8, 72), new T.MeshBasicMaterial({ color: p.cyan, transparent: true, opacity: 0.5 }));
+      armil2.rotation.y = 1.1; seat.add(armil2); armil2.position.y = 1.05;
+
+      var plateMat = new T.SpriteMaterial({ transparent: true, depthWrite: false });
+      var plate = new T.Sprite(plateMat); plate.scale.set(0.95, 0.24, 1); plate.position.y = 1.72; seat.add(plate);
+
+      /* the seat faces the dais */
+      seat.rotation.y = -a - Math.PI / 2;
+      seats.push({ seat: seat, holder: holder, coin: coin, faceMat: faceMat, rimMat: rimMat, armil: armil, armil2: armil2, plateMat: plateMat, phase: a });
+    }
+
+    /* (re)paint every seat from the roster: emblem, plate, tint, destination */
+    function paint() {
+      for (var k = 0; k < N; k++) {
+        var ag = roster[k] || COUNCIL_FALLBACK[k], st = seats[k], tint = tintFor(ag), tintCss = councilCss(tint);
+        if (st.faceMat.map) st.faceMat.map.dispose();
+        st.faceMat.map = new T.CanvasTexture(councilEmblem(ag.sign, tintCss)); st.faceMat.emissiveMap = st.faceMat.map; st.faceMat.needsUpdate = true;
+        st.armil2.material.color.setHex(tint);
+        if (st.plateMat.map) st.plateMat.map.dispose();
+        st.plateMat.map = new T.CanvasTexture(councilPlate(ag.name, tintCss)); st.plateMat.needsUpdate = true;
+      }
+    }
+    paint();
+    /* Every coin is a door to that executor's own page. The destination must be settled BEFORE the host wires navigation (it emits a real
+       <a> per link once, from the links it sees), so the links are created only here, after the roster resolves or a 4 s wait gives up and
+       the fallback roster (which sends every coin to /agents.html) is used. The host re-wires on `ready`. */
+    function openDoors() {
+      if (links.length) return;
+      for (var k = 0; k < N; k++) {
+        var ag = roster[k] || COUNCIL_FALLBACK[k];
+        var ok = typeof ag.href === 'string' && /^\/[a-z0-9._#\/-]+$/i.test(ag.href);
+        links.push({ object: seats[k].coin, href: ok ? ag.href : '/agents.html', label: ag.name });
+      }
+    }
+    var ready = new Promise(function (resolve) {
+      var done = false;
+      function finish() { if (done) return; done = true; openDoors(); resolve(); }
+      setTimeout(finish, 4000);
+      fetch('/omega-agents.json').then(function (r) { return r.json(); }).then(function (j) {
+        var list = j && (j.agents || j);
+        if (Array.isArray(list) && list.length >= N) { roster = list.slice(0, N); paint(); }
+      })['catch'](function () { /* the fallback roster is already painted */ }).then(finish);
+    });
+
+    return { scene: scene, camera: cam, links: links, ready: ready, update: function (t, px, py) {
+      var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tt = reduceMotion ? 0 : t;
+      var lx = reduceMotion ? 0 : px, ly = reduceMotion ? 0 : py;
+      var load = 0;                                           /* the fifth axis: live task activity, read exactly as the other scenes read it */
+      if (window.OmegaSculptureDataViz && window.OmegaSculptureDataViz.getActiveTaskCount) load = Math.min(6, window.OmegaSculptureDataViz.getActiveTaskCount() || 0);
+      var spin = 0.9 + load * 0.12;
+      for (var k = 0; k < N; k++) {
+        var s2 = seats[k];
+        s2.holder.rotation.y = tt * spin + s2.phase;          /* the coin turns: both faces carry the emblem */
+        s2.holder.position.y = 1.05 + Math.sin(tt * 1.1 + s2.phase * 2) * 0.05;
+        s2.armil.rotation.z = tt * 0.7 + s2.phase;
+        s2.armil2.rotation.x = tt * -0.55 + s2.phase;
+        s2.faceMat.emissiveIntensity = 0.55 + load * 0.04 + 0.06 * Math.sin(tt * 1.6 + s2.phase);
+      }
+      core.rotation.y = tt * 0.45;
+      var ang = tt * 0.09 + lx * 0.55;
+      var asp = Math.max(0.4, cam.aspect || 1);
+      var r = Math.max(8.6, 4.1 / (0.364 * asp));              /* 0.364 = tan(half of the 40 degree field of view); 4.1 = chamber radius + coin + margin */
+      cam.position.set(Math.sin(ang) * r, r * 0.4 - ly * 0.5, Math.cos(ang) * r);
+      cam.lookAt(0, 0.6, 0);
+      /* the plates always read upright to the viewer; the sprites already face the camera */
     }};
   };
 
@@ -1885,6 +2057,19 @@
     ctx.strokeStyle = gold;
     ctx.lineCap = 'round';
 
+    if (kind === 'council') {
+      /* No WebGL: twelve tinted discs on a ring around the Omega, drawn flat. */
+      var ring12 = Math.min(w, h) * 0.34;
+      ctx.globalAlpha = 0.5; ctx.lineWidth = Math.max(1, R * 0.012); ctx.beginPath(); ctx.arc(cx, cy, ring12, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
+      for (var q = 0; q < 12; q++) {
+        var qa = (q / 12) * Math.PI * 2 - Math.PI / 2;
+        ctx.fillStyle = q % 3 === 0 ? cyan : gold;
+        ctx.beginPath(); ctx.arc(cx + Math.cos(qa) * ring12, cy + Math.sin(qa) * ring12, Math.max(4, R * 0.1), 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.fillStyle = gold; ctx.font = '700 ' + Math.round(R * 0.7) + 'px Georgia,serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('\u03A9', cx, cy);
+      return;
+    }
     if (kind === 'lion') {
       /* No WebGL: the same composition, as the flat seal artwork. Drawn once it loads; the frame above is the glow until then. */
       var seal = new Image();
@@ -2522,7 +2707,7 @@
     if (m.linkEl) return;
     var wrap = document.createElement('nav');
     wrap.className = 'omega-sculpt-links';
-    wrap.setAttribute('aria-label', (m.kind === 'agents' ? 'The twelve executors'
+    wrap.setAttribute('aria-label', (m.kind === 'agents' || m.kind === 'council' ? 'The twelve executors'
       : m.kind === 'gates' ? 'The twelve gates' : m.kind === 'sky' ? 'Your records'
       : m.kind === 'world' ? 'The eighteen platform modules'
       : 'Destinations') + ' in this sculpture');
@@ -2652,6 +2837,7 @@
     sky:    'Your own record as a sky: one star for each task, lesson and certificate you have completed',
     world: 'The eighteen governed platform modules arranged as an interactive three-dimensional Omega world',
     lion:   'The Legion of Wisdom winged lion above the Omega: a faceted gold lion with beating wings, glowing eyes and nine stars, rendered in three dimensions',
+    council: 'The council chamber: twelve executors seated in a ring around the Omega dais, each a turning three-dimensional emblem coin on its own pedestal',
     'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'
   };
 

@@ -358,6 +358,7 @@
 
 <script src="omega-ui.js"></script>
 <script src="/omega-sparkline.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 <script src="/omega-esc.js"></script>
 <script type="module">
 var escHtml = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
@@ -538,7 +539,7 @@ function renderAllocation(){
   // Draw donut
   const c=document.getElementById('alloc-canvas');
   if(c&&grandTotal>0){
-    const ctx=c.getContext('2d');
+    const ctx=OmegaCanvas.fit(c,300,300,{size:true});
     ctx.clearRect(0,0,300,300);
     const cx=150,cy=150,r=120,inner=70;
     let angle=-Math.PI/2;

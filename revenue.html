@@ -184,6 +184,7 @@ function switchTab(id,btn){
   if(id==='chart')renderChart();
 }
 </script>
+<script src="/omega-canvas-hidpi.js"></script>
 <script src="/omega-esc.js"></script>
 <script>
 var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
@@ -285,8 +286,7 @@ function saveGoal(){
 
 function renderChart(){
   var canvas=document.getElementById('rev-canvas');
-  var W=canvas.offsetWidth||600;canvas.width=W;canvas.height=200;
-  var ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,200);
+  var W=canvas.offsetWidth||600;var ctx=OmegaCanvas.fit(canvas,W,200);ctx.clearRect(0,0,W,200);
   if(!streams.length){ctx.fillStyle='#333';ctx.font='11px Courier New';ctx.textAlign='center';ctx.fillText('NO STREAMS',W/2,100);return;}
   var types={};
   streams.filter(function(s){return s.status==='active';}).forEach(function(s){

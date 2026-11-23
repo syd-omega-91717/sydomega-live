@@ -255,6 +255,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 </main>
 </div>
 <script src="/omega-empty-guide.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 <script src="/omega-esc.js"></script>
 <script>
 var escapeHTML = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
@@ -573,8 +574,7 @@ function renderInsights(){
 
 function drawTrend(){
   var canvas=document.getElementById('trend-canvas');
-  var W=canvas.offsetWidth||600; canvas.width=W; canvas.height=160;
-  var ctx=canvas.getContext('2d');
+  var W=canvas.offsetWidth||600; var ctx=OmegaCanvas.fit(canvas,W,160);
   ctx.clearRect(0,0,W,160);
   var days=30; var today=new Date(); var dayData=[];
   for(var i=days-1;i>=0;i--){
@@ -605,8 +605,7 @@ function drawTrend(){
 
 function drawCatBreakdown(){
   var canvas=document.getElementById('cat-canvas');
-  var W=canvas.offsetWidth||600; canvas.width=W; canvas.height=180;
-  var ctx=canvas.getContext('2d');
+  var W=canvas.offsetWidth||600; var ctx=OmegaCanvas.fit(canvas,W,180);
   ctx.clearRect(0,0,W,180);
   var me=getMonthEntries().filter(function(e){return e.type==='expense';});
   var catTotals={};
@@ -629,8 +628,7 @@ function drawCatBreakdown(){
 
 function drawMonthly(){
   var canvas=document.getElementById('monthly-canvas');
-  var W=canvas.offsetWidth||600; canvas.width=W; canvas.height=200;
-  var ctx=canvas.getContext('2d');
+  var W=canvas.offsetWidth||600; var ctx=OmegaCanvas.fit(canvas,W,200);
   ctx.clearRect(0,0,W,200);
   var months=6; var now=new Date(); var mData=[];
   for(var i=months-1;i>=0;i--){
@@ -699,7 +697,7 @@ function renderTrends(){
   drawYear(yc,rows);drawRate(rc,rows);
 }
 function drawYear(c,rows){
-  var W=c.offsetWidth||600;c.width=W;c.height=160;var ctx=c.getContext('2d');ctx.clearRect(0,0,W,160);
+  var W=c.offsetWidth||600;var ctx=OmegaCanvas.fit(c,W,160);ctx.clearRect(0,0,W,160);
   var maxV=Math.max.apply(null,rows.map(function(r){return Math.max(r.inc,r.exp);}).concat([1]));
   var pad={l:50,r:10,t:10,b:26},W2=W-pad.l-pad.r,H2=160-pad.t-pad.b,grp=W2/12,bw=Math.max(2,Math.floor(grp/2.6));
   ctx.strokeStyle='#1a1a1a';ctx.lineWidth=1;ctx.font='9px monospace';
@@ -709,7 +707,7 @@ function drawYear(c,rows){
     ctx.fillStyle='#666';ctx.textAlign='center';ctx.fillText(r.label,cx,pad.t+H2+14);});
 }
 function drawRate(c,rows){
-  var W=c.offsetWidth||600;c.width=W;c.height=110;var ctx=c.getContext('2d');ctx.clearRect(0,0,W,110);
+  var W=c.offsetWidth||600;var ctx=OmegaCanvas.fit(c,W,110);ctx.clearRect(0,0,W,110);
   var pad={l:50,r:10,t:10,b:22},W2=W-pad.l-pad.r,H2=110-pad.t-pad.b,grp=W2/12,maxR=Math.max.apply(null,rows.map(function(r){return Math.abs(r.rate);}).concat([1]));
   var zero=pad.t+H2/2;ctx.strokeStyle='#2a2a2a';ctx.beginPath();ctx.moveTo(pad.l,zero);ctx.lineTo(pad.l+W2,zero);ctx.stroke();
   ctx.font='9px monospace';ctx.fillStyle='#555';ctx.textAlign='right';ctx.fillText('0%',pad.l-4,zero+3);

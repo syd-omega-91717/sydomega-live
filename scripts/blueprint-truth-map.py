@@ -212,14 +212,14 @@ MAP.update({
     62: (Q, 'log questions the copilot could not answer (opt-in, no content kept beyond review) so the owner can fill gaps'),
     283: (Q, 'same unanswered-question log, reviewed weekly; HIGH-RISK pipeline (new table)'),
     84: (Q, 'offline queue: actions taken offline replay on reconnect through sw.js, each write checked for .error'),
-    168: (Q, 'member-chosen information density (simple / dense) in settings; never covert adaptation'),
+    168: (Q, 'member-chosen information density (simple / dense) in settings; never covert adaptation. Re-checked 2026-11-23: the platform already sets a density PROFILE per page (omega-page-world.js:128 -> html[data-omega-density-profile], rules in omega-platform-experience-v5.css:383-440), chosen by the page and not the member, so the covert half exists; but it moves page height by 0-0.2% (dashboard 4734 vs 4727-4735, analytics 1243 vs 1247, vault 3335 vs 3343, social 1179 flat), and a shared line-height/padding override measured -4%..+2% (profile.html got taller), inside run-to-run noise. A member toggle on either would be a control that does almost nothing. Real density needs per-page design (collapsing secondary panels), not a CSS switch, so it stays PROPOSED and is not low-risk.'),
     195: (Q, 'opt-in study circles grouped by stage'),
     248: (Q, 'timed decision drills in the Dojo with play money'),
     512: (Q, '"productive struggle" exercises in academy.html that need reasoning, not lookup'),
     520: (Q, 'cross-subject links between academy lessons (one principle, several domains)'),
     668: (Q, 'community puzzles members choose to solve, disclosed as such'),
     769: (Q, 'private reflection journal: the member writes what went wrong, the copilot suggests lessons'),
-    828: (Q, 'opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed'),
+    828: (S, 'omega-microlesson.js: off unless the member turns it on (:42 prefs, toggle in Notifications > Reminders, notifications.html:50, loaded site-wide by bg.js:1255); after 90 s without input (:30 IDLE_MS) a small role=status card offers a review of what omega-review.js counts as due (:126 tick, count = OmegaReview.counts().total); never a notification, sound, focus change or navigation, never while typing or over a visible dialog or the guided tour, never 22:30-07:30, at most twice a day 3 h apart (:30 MAX_PER_DAY, GAP_MS), never when nothing is due. Exercised in Chromium with a fake clock, 11 scenarios (off, due, nothing due, typing, quiet hours, 60 s idle, tour on screen, REVIEW opens the queue, NOT NOW, 45 s auto-dismiss + cap, 2 already sent); scripts/tests/test_microlesson.py pins the restraints. English-only copy. Stored in localStorage as omega_micro_prefs / omega_micro_sent; omega-member-state.js mirrors omega_* keys by its PREFIX rule (read from its source, the mirror itself was not exercised here).'),
 })
 
 APPENDIX = [

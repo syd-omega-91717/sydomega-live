@@ -6,7 +6,7 @@ source (`docs/idea-status.json` for a FEATURE_IDEAS entry, `ledger_status` +
 `evidence` on a blueprint point). `SHIPPED` means merged to `main`, not that
 production serves it.
 
-**526 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 53, IDEA_INTAKE.md 18.
+**527 ideas** — 999 blueprint 414, FEATURE_IDEAS.md 41, GAP_ANALYSIS.md S 53, IDEA_INTAKE.md 19.
 
 | status | count |
 |---|---|
@@ -15,7 +15,7 @@ production serves it.
 | PARTIAL | 57 |
 | OPEN_GAP | 31 |
 | DORMANT | 1 |
-| SHIPPED | 45 |
+| SHIPPED | 46 |
 | DECIDED | 42 |
 | CLOSED | 22 |
 | SUPERSEDED | 1 |
@@ -58,7 +58,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B043 | 999 blueprint [PROHIBITED_OR_REDESIGN] | 100-Year Market Crash Simulation: A recursive simulation using historical data from 1929 to 2026. Users are "… | play-money crash simulator on historical series (1929, 2008, 2020): teaching, never real trades |
 | B062 | 999 blueprint [INTELLIGENCE] | Zero-Waste Data: Every "failed" search by a user is analyzed. The system asks, "Why couldn't we fulfill this?… | log questions the copilot could not answer (opt-in, no content kept beyond review) so the owner can fill gaps |
 | B084 | 999 blueprint [DESIGN_CONCEPT] | Offline Burst Sync: As the 100% owner, your commands can be queued while you are offline. The moment you "Pin… | offline queue: actions taken offline replay on reconnect through sw.js, each write checked for .error |
-| B168 | 999 blueprint [DESIGN_CONCEPT] | Subliminal Interface Adaptation: The UI doesn't just change colors; it adjusts the "Information Density." A h… | member-chosen information density (simple / dense) in settings; never covert adaptation |
+| B168 | 999 blueprint [DESIGN_CONCEPT] | Subliminal Interface Adaptation: The UI doesn't just change colors; it adjusts the "Information Density." A h… | member-chosen information density (simple / dense) in settings; never covert adaptation. Re-checked 2026-11-23: the platform already sets a density PROFILE per page (omega-page-world.js:128 -> html[data-omega-density-profile], rules in omega-platform-experience-v5.css:383-440), chosen by the page and not the member, so the covert half exists; but it moves page height by 0-0.2% (dashboard 4734 vs 4727-4735, analytics 1243 vs 1247, vault 3335 vs 3343, social 1179 flat), and a shared line-height/padding override measured -4%..+2% (profile.html got taller), inside run-to-run noise. A member toggle on either would be a control that does almost nothing. Real density needs per-page design (collapsing secondary panels), not a CSS switch, so it stays PROPOSED and is not low-risk. |
 | B195 | 999 blueprint [INTELLIGENCE] | Peer-to-Peer Calibration: The system creates "Logic Circles." Users are grouped with others who share a simil… | opt-in study circles grouped by stage |
 | B248 | 999 blueprint [INTELLIGENCE] | Cognitive Latency Reduction: Users are trained in "MFT (Medium Frequency) Reasoning." Using the Dojo, the sys… | timed decision drills in the Dojo with play money |
 | B283 | 999 blueprint [INTELLIGENCE] | Zero-Waste Search Logic: Every search query that doesn't result in 100% fulfillment is flagged for the Audito… | same unanswered-question log, reviewed weekly; HIGH-RISK pipeline (new table) |
@@ -67,9 +67,9 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B668 | 999 blueprint [INTELLIGENCE] | The "Hive-Logic" Buffer: When the Analyst faces a "N-Dissonance" problem (a problem with no current solution)… | community puzzles members choose to solve, disclosed as such |
 | B745 | 999 blueprint [R&D_OR_LORE] | Non-Linear Data Archiving: The Mars Ledger begins archiving data in "Temporal Folders." This allows the 128-c… | same simulator: compare the member's plan against 1929 / 2008 / 2020 side by side |
 | B769 | 999 blueprint [ECONOMIC_R&D] | The Ω-Confessional (Audit): The Auditor Agent (Agent 10) provides a "Self-Correction" interface. Users can su… | private reflection journal: the member writes what went wrong, the copilot suggests lessons |
-| B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | opt-in micro-lessons: flashcard reviews offered in short idle moments, never pushed |
 | N238 | 999 blueprint [APPENDIX_NODE] | The Mastery Promotion Trigger (stage -> sticker + certificate) | on a stage promotion, award the honors.html badge and issue the certificate via the already-callable private.omega_issue_certificate |
 | I18 | IDEA_INTAKE.md | Review scheduling that predicts recall (FSRS) instead of a fixed ease factor | one scheduler decides every flashcard and word review: omega-srs.js:45-68 sets the next interval as interval × a per-item ease (starting 2.… |
+| I19 | IDEA_INTAKE.md | Member-collapsible panels as the real density control | the 2026-11-23 re-check of blueprint 168 measured that the platform's density profiles move page height by 0-0.2% (omega-platform-experienc… |
 
 ### PARTIAL (57)
 
@@ -175,7 +175,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 |---|---|---|---|
 | F37 | FEATURE_IDEAS.md | LMS courses — the first real slice of the dormant academy_* scaffold, shipped dormant | FEATURE_IDEAS.md title |
 
-### SHIPPED (45)
+### SHIPPED (46)
 
 | id | source | idea | evidence |
 |---|---|---|---|
@@ -215,6 +215,7 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B245 | 999 blueprint [ECONOMIC_R&D] | The "Weight-Calculatism" Engine: Integration of the Weight = Benefit × Probability model. The Tutor Agent (Ag… | decisions.html EXPECTED VALUE framework: weight = benefit x probability per option, highest named (renderEVResult); verified in Chromium 2026-10-12 |
 | B250 | 999 blueprint [PRODUCT] | Bayesian Belief Updating: The system tracks the user's "Rate of Forgetting" (Point 5.6) and creates a Digital… | flashcard.html implements SM-2 spaced repetition: reviews scheduled at the forgetting curve (flashcard.html:125, :202) |
 | B455 | 999 blueprint [TRUST_INFRASTRUCTURE] | The "Nest" Immunity Shield (Legal): Points 455-457 hard-code absolute legal anonymity for your wife and child… | owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking |
+| B828 | 999 blueprint [INTELLIGENCE] | Global "Boredom" Elimination: The system identifies "Dead-Time" (commutes, waiting periods) and automatically… | omega-microlesson.js: off unless the member turns it on (:42 prefs, toggle in Notifications > Reminders, notifications.html:50, loaded site-wide by bg.js:1255); after 90 s without input (:30 IDLE_MS) a small role=status card offers a review of what omega-review.js counts as due (:126 tick, count = OmegaReview.counts().total); never a notification, sound, focus change or navigation, never while typing or over a visible dialog or the guided tour, never 22:30-07:30, at most twice a day 3 h apart (:30 MAX_PER_DAY, GAP_MS), never when nothing is due. Exercised in Chromium with a fake clock, 11 scenarios (off, due, nothing due, typing, quiet hours, 60 s idle, tour on screen, REVIEW opens the queue, NOT NOW, 45 s auto-dismiss + cap, 2 already sent); scripts/tests/test_microlesson.py pins the restraints. English-only copy. Stored in localStorage as omega_micro_prefs / omega_micro_sent; omega-member-state.js mirrors omega_* keys by its PREFIX rule (read from its source, the mirror itself was not exercised here). |
 | N142 | 999 blueprint [APPENDIX_NODE] | Primary Beneficiary Hard-Code (family as Level-0 users) | owner decision 2026-10-12, built: owner-granted adult family access with no fee and no public ranking. Migration 20261012150000 is applied live (schema_migrations row present, profiles.family_of exists, grant_family_access(p_uid, p_attested_adult) live, checked 2026-10-24); approvals.js:242 grants it; gate family-access-privacy in scripts/contract-suite.py keeps family off every member-visible ranking |
 | I01 | IDEA_INTAKE.md | Copilot visual commands | 14 slash commands (/handwritten, /decision-matrix, /infographic, /canvas, /layers, /cycle, /diagram, /roadmap, /sketchnotes, /iceberg, /blu… |
 | I02 | IDEA_INTAKE.md | Owner two-factor deep link | settings.html#two-factor opens the enrolment section; approvals offers it on aal2_no_factor, PR #875 (2026-10-12) |

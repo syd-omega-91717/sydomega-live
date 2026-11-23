@@ -45,7 +45,9 @@ class Static(unittest.TestCase):
         self.assertEqual(len(lens), 6)
 
     def test_narrow_mounts_pull_the_camera_back(self):
-        self.assertIn("cam.position.z = 6.6 * Math.max(1, 1.35 / Math.max(0.4, cam.aspect || 1));", LION)
+        self.assertIn("var ws = Math.max(0.55, Math.min(1, asp / 1.3));", LION)               # wings fold in as the mount narrows, never below 55%
+        self.assertIn("cam.position.z = Math.max(6.6, needHalf / (0.344 * asp));", LION)      # the camera never comes closer than the wide-mount distance
+        self.assertIn("wingR.scale.setScalar(ws); wingL.scale.setScalar(ws);", LION)
 
     def test_claims_nothing(self):  # an illustration: no figure, no award, no data
         self.assertNotRegex(LION, r"fetch\(|supabase|localStorage|\$\d|revenue|balance|token")

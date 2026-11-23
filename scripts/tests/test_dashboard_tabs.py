@@ -134,12 +134,15 @@ class TodayTabRetainsTheEcosystemSurface(unittest.TestCase):
         self.assertGreater(plain[0].start(), self.HTML.index('<div id="l-overview"'))
         self.assertLess(plain[0].start(), self.HTML.index('<div id="l-today"'))
 
-    def test_the_glowing_signet_is_the_surfaces_hero_and_nothing_else_is(self):
-        glowing = [m.start() for m in re.finditer(r'data-omega-sculpture="signet"[^>]*data-sculpt-glow="radiant"', self.HTML)]
-        self.assertEqual(len(glowing), 1)
+    def test_the_winged_lion_is_the_surfaces_hero_and_nothing_else_is(self):
+        # 2026-11-23: the owner directed the winged lion into the member's home hero, replacing the radiant signet that the owner had directed
+        # there on 2026-11-16. The lion carries the same Omega signet beneath it. Still exactly one hero, still inside TODAY above the daily loop.
+        lions = [m.start() for m in re.finditer(r'data-omega-sculpture="lion"', self.HTML)]
+        self.assertEqual(len(lions), 1)
         t = self.HTML.index('<div id="l-today"')
-        self.assertGreater(glowing[0], t)
-        self.assertLess(glowing[0], self.HTML.index("data-omega-daily"))
+        self.assertGreater(lions[0], t)
+        self.assertLess(lions[0], self.HTML.index("data-omega-daily"))
+        self.assertNotIn('data-sculpt-glow="radiant"', self.HTML, "the radiant signet is no longer on the dashboard (index.html keeps it)")
 
     def test_today_opens_on_the_surface_then_the_loop_then_the_concierge(self):
         t = self.HTML.index('<div id="l-today"')

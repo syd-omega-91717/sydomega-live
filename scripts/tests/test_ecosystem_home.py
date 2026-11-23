@@ -86,7 +86,8 @@ class EcosystemHome(unittest.TestCase):
         block = HTML[HTML.index("data-omega-ecosystem-home"):HTML.index("data-omega-daily")]
         for key in re.findall(r"q\('([a-z]+)'\)", JS):
             self.assertIn('data-oeh="%s"' % key, block, key)
-        self.assertEqual(len(re.findall(r'data-sculpt-glow="radiant"', block)), 1)
+        self.assertEqual(len(re.findall(r'data-omega-sculpture="lion"', block)), 1)          # the hero art is the winged lion (owner direction 2026-11-23)
+        self.assertEqual(len(re.findall(r'data-sculpt-glow="radiant"', block)), 0)
         self.assertEqual(len(re.findall(r'data-omega-sculpture="chronos"', block)), 1)
         self.assertNotIn('data-omega-constellation', block, "omega-constellation.js is a minimum 860px square: in this 231px box it made the panel 941px tall")
 

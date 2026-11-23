@@ -573,6 +573,14 @@
       "licence": "owner-generated",
       "evidence": "Conversation generation context and the Git commit history for this asset; retain this provenance record with the source.",
       "added": "2026-11-18"
+    },
+    {
+      "path": "assets/omega-legion-of-wisdom-seal.svg",
+      "source": "Original SVG drawn as code with Anthropic Claude (Claude Code) assistance for the SYD OMEGA 91717 Legion of Wisdom seal; every shape, gradient and path is authored in the file itself. A concept render supplied by the owner (an AI-generated image) was used as a visual reference for composition only; no pixel, path or text was copied or traced from it, and no third-party artwork or stock asset was imported.",
+      "creator": "Anthropic Claude (AI-assisted original vector authoring), commissioned for the SYD OMEGA 91717 project.",
+      "licence": "owner-generated",
+      "evidence": "Conversation context and the Git commit history for this asset; retain this record with the source. Whether purely AI-authored artwork is protected by copyright varies by jurisdiction and is not asserted here; the owner's counsel should confirm before the seal is relied on as a registered mark.",
+      "added": "2026-11-23"
     }
   ]
 }

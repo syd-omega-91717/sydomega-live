@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600" role="img" aria-labelledby="lw-t lw-d">
+  <title id="lw-t">Legion of Wisdom seal</title>
+  <desc id="lw-d">A circular gold seal. A faceted winged lion above a gold Omega on an onyx field, nine blue stars above its head. Ring text: The 144,000 Unified Consciousness Grid, Legion of Wisdom.</desc>
+  <defs>
+    <linearGradient id="goldRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8eab0"/><stop offset=".35" stop-color="#d9b445"/><stop offset=".7" stop-color="#a97f22"/><stop offset="1" stop-color="#e9cf7a"/></linearGradient>
+    <linearGradient id="goldMane" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3d98a"/><stop offset=".55" stop-color="#c49a30"/><stop offset="1" stop-color="#8a6414"/></linearGradient>
+    <linearGradient id="goldFace" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbeab0"/><stop offset=".6" stop-color="#dcb54a"/><stop offset="1" stop-color="#a47a1c"/></linearGradient>
+    <linearGradient id="goldWing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8a6414"/><stop offset=".5" stop-color="#d9b445"/><stop offset="1" stop-color="#fbeab0"/></linearGradient>
+    <linearGradient id="goldWing2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b8902a"/><stop offset="1" stop-color="#f6e7a8"/></linearGradient>
+    <radialGradient id="field" cx="50%" cy="46%" r="60%"><stop offset="0" stop-color="#101c3a"/><stop offset=".7" stop-color="#070b18"/><stop offset="1" stop-color="#03040a"/></radialGradient>
+    <filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="fieldClip"><circle cx="300" cy="300" r="236"/></clipPath>
+    <path id="arcTop" d="M48,300 A252,252 0 0 1 552,300"/>
+    <path id="arcBot" d="M28,300 A272,272 0 0 0 572,300"/>
+    <g id="wingR">
+  <g fill="url(#goldWing)" stroke="#f6e7a8" stroke-width="1.2" stroke-linejoin="round" opacity=".96"><path d="M384,292 Q463.1,257.7 500,196 Q439.4,229 384,292Z"/><path d="M384,292 Q464,283.2 512,236 Q449.1,249.1 384,292Z"/><path d="M384,292 Q455.3,307 508,276 Q450.5,270.1 384,292Z"/><path d="M384,292 Q437.9,326.6 490,312 Q444.7,290 384,292Z"/><path d="M384,292 Q413.9,339.7 462,342 Q434,308.4 384,292Z"/></g>
+  <g fill="url(#goldWing2)" stroke="#fff3c4" stroke-width="1" stroke-linejoin="round"><path d="M380,286 Q437.3,270.8 468,232 Q423.5,248.3 380,286Z"/><path d="M380,286 Q436.3,291.6 476,266 Q430.9,265.8 380,286Z"/><path d="M380,286 Q426.5,308.4 468,296 Q429.5,282.2 380,286Z"/><path d="M380,286 Q408.5,319.8 446,320 Q420.6,296.4 380,286Z"/></g>
+  <path d="M372,300 L396,274 L420,284 L404,312 Z" fill="url(#goldWing2)" stroke="#fff3c4" stroke-width="1" stroke-linejoin="round"/>
+</g>
+    <g id="headR">
+  <path d="M300,168 L322,178 L336,160 L352,185 L376,176 L378,204 L402,206 L392,232 L414,246 L392,262 L406,288 L380,292 L384,320 L358,318 L352,346 L330,332 L318,358 L300,346 Z" fill="url(#goldMane)" stroke="#f6e7a8" stroke-width="1.4" stroke-linejoin="round"/>
+  <path d="M326,190 L346,172 L350,206 Z" fill="#b8902a" stroke="#f6e7a8" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M300,194 L330,206 L350,236 L346,276 L334,308 L316,330 L300,338 Z" fill="url(#goldFace)" stroke="#fff3c4" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M300,194 L322,204 L300,242 Z" fill="#fff6d0" opacity=".28"/>
+  <path d="M334,262 L346,276 L334,308 L322,290 Z" fill="#3a2a06" opacity=".22"/>
+  <path d="M316,330 L334,308 L300,338 Z" fill="#3a2a06" opacity=".18"/>
+  <path d="M310,240 L350,222 L352,231 L316,248 Z" fill="#7a5a14"/>
+  <path d="M318,250 L346,240 L340,256 L322,260 Z" fill="#06070d"/>
+  <circle cx="331" cy="250" r="4.2" fill="#8fe0ff" filter="url(#glow)"/>
+  <path d="M300,284 L316,276 L322,292 L308,305 L300,308 Z" fill="#8a6414" stroke="#f6e7a8" stroke-width=".8" stroke-linejoin="round"/>
+  <path d="M300,308 L300,322 M300,320 L318,326 L330,313" fill="none" stroke="#5a3f08" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+  </defs>
+  <circle cx="300" cy="300" r="294" fill="#1a1204"/>
+  <circle cx="300" cy="300" r="290" fill="url(#goldRing)"/>
+  <circle cx="300" cy="300" r="250" fill="none" stroke="#1a1204" stroke-width="2.5"/>
+  <circle cx="300" cy="300" r="244" fill="url(#goldRing)"/>
+  <circle cx="300" cy="300" r="240" fill="#1a1204"/>
+  <circle cx="300" cy="300" r="237" fill="url(#field)"/>
+  <circle cx="300" cy="300" r="236" fill="none" stroke="#d9b445" stroke-width="1.2" opacity=".8"/>
+  <g font-family="Cinzel, 'Cinzel Decorative', Georgia, 'Times New Roman', serif" font-weight="700" fill="#1a1204">
+    <text font-size="21" letter-spacing="3"><textPath xlink:href="#arcTop" href="#arcTop" startOffset="50%" text-anchor="middle" textLength="640" lengthAdjust="spacing">THE 144,000 UNIFIED CONSCIOUSNESS GRID</textPath></text>
+    <text font-size="27" letter-spacing="7"><textPath xlink:href="#arcBot" href="#arcBot" startOffset="50%" text-anchor="middle" textLength="420" lengthAdjust="spacing">LEGION OF WISDOM</textPath></text>
+  </g>
+  <path d="M30,291 L39,300 L30,309 L21,300Z" fill="#1a1204"/><path d="M570,291 L579,300 L570,309 L561,300Z" fill="#1a1204"/>
+  <g clip-path="url(#fieldClip)">
+    <g fill="#5cc8ff" filter="url(#glow)"><path d="M171.3,186 L172.6,190.7 L177.3,192 L172.6,193.3 L171.3,198 L170,193.3 L165.3,192 L170,190.7Z"/><path d="M197.7,160.7 L199,165.4 L203.7,166.7 L199,168 L197.7,172.7 L196.4,168 L191.7,166.7 L196.4,165.4Z"/><path d="M229,141.7 L230.3,146.4 L235,147.7 L230.3,149.1 L229,153.7 L227.7,149.1 L223,147.7 L227.7,146.4Z"/><path d="M263.6,130 L265,134.7 L269.6,136 L265,137.3 L263.6,142 L262.3,137.3 L257.6,136 L262.3,134.7Z"/><path d="M300,124 L301.8,130.2 L308,132 L301.8,133.8 L300,140 L298.2,133.8 L292,132 L298.2,130.2Z"/><path d="M336.4,130 L337.7,134.7 L342.4,136 L337.7,137.3 L336.4,142 L335,137.3 L330.4,136 L335,134.7Z"/><path d="M371,141.7 L372.3,146.4 L377,147.7 L372.3,149.1 L371,153.7 L369.7,149.1 L365,147.7 L369.7,146.4Z"/><path d="M402.3,160.7 L403.6,165.4 L408.3,166.7 L403.6,168 L402.3,172.7 L401,168 L396.3,166.7 L401,165.4Z"/><path d="M428.7,186 L430,190.7 L434.7,192 L430,193.3 L428.7,198 L427.4,193.3 L422.7,192 L427.4,190.7Z"/></g>
+    <use xlink:href="#wingR" href="#wingR"/>
+    <use xlink:href="#wingR" href="#wingR" transform="translate(600,0) scale(-1,1)"/>
+    <use xlink:href="#headR" href="#headR"/>
+    <use xlink:href="#headR" href="#headR" transform="translate(600,0) scale(-1,1)"/>
+    <g transform="translate(0,18)" fill="none" stroke="url(#goldFace)" stroke-width="11" stroke-linecap="square" stroke-linejoin="miter">
+  <path d="M240,452 H270 C256,440 254,420 254,402 C254,366 274,346 300,346 C326,346 346,366 346,402 C346,420 344,440 330,452 H360"/></g>
+    <text x="300" y="498" text-anchor="middle" font-family="Cinzel, 'Cinzel Decorative', Georgia, 'Times New Roman', serif" font-size="15" letter-spacing="5" fill="#d9b445">SYD OMEGA . 91717</text>
+  </g>
+</svg>

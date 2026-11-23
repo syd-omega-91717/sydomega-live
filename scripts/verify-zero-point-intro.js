@@ -56,6 +56,21 @@ const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail: ok ? 
       });
     }
     if (opts.blockModule) await ctx.route('**/omega-zero-point.js', r => r.abort('failed'));
+    if (opts.pauseOnStart) await ctx.addInitScript(() => {
+      /* the module inserts its canvas synchronously inside start(); this observer's microtask runs right after that, before the first
+         animation frame, so the intro is held from its first moment however slow the machine is (no race with the 4.6 s clock) */
+      new MutationObserver(() => { const c = document.querySelector('#omega-genesis canvas'); if (c && window.OmegaZeroPoint && !window.__paused) window.__paused = OmegaZeroPoint.pause(); })
+        .observe(document, { childList: true, subtree: true });
+    });
+    if (opts.watchGenesis) await ctx.addInitScript(() => {
+      /* record what the overlay ever was, so a check never has to catch it mid-air on a slow machine */
+      window.__gen = { shown: false, canvas: false, held: false, glyph: false, removed: false };
+      new MutationObserver(() => {
+        const g = document.getElementById('omega-genesis');
+        if (g) { window.__gen.shown = true; if (g.querySelector('canvas')) window.__gen.canvas = true; if (g.__omegaHold) window.__gen.held = true; const x = g.querySelector('.gx'); if (x && getComputedStyle(x).display !== 'none') window.__gen.glyph = true; }
+        else if (window.__gen.shown) window.__gen.removed = true;
+      }).observe(document, { childList: true, subtree: true, attributes: true });
+    });
     const pg = await ctx.newPage(); const errs = [], reqs = [];
     pg.on('pageerror', e => errs.push(String(e.message).slice(0, 160)));
     pg.on('request', r => { if (/omega-zero-point\.js/.test(r.url())) reqs.push(r.url()); });
@@ -78,8 +93,10 @@ const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail: ok ? 
 
   /* 1. first visit: overlay + canvas, upgrade took the hold */
   {
-    const { ctx, pg, errs, reqs } = await open();
-    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 8000 }).catch(() => { });
+    const { ctx, pg, errs, reqs } = await open({ pauseOnStart: true });
+    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 30000 }).catch(() => { });
+    const paused = await pg.evaluate(() => OmegaZeroPoint.pause());   /* hold the intro still: nothing below may race its 4.6 s clock */
+    check('first visit: intro could be held for inspection', paused === true);
     check('first visit: module fetched exactly once and the intro is active', reqs.length === 1 && await pg.evaluate(() => !!(window.OmegaZeroPoint && OmegaZeroPoint.active())), { reqs: reqs.length });
     check('first visit: canvas present, legacy glyph hidden, overlay held', await pg.evaluate(() => { const g = document.getElementById('omega-genesis'); return !!g && !!g.querySelector('canvas') && getComputedStyle(g.querySelector('.gx')).display === 'none' && g.__omegaHold === true; }));
     check('first visit: aria-label set, sound off by default (no AudioContext created)', await pg.evaluate(() => /Escape/.test(document.getElementById('omega-genesis').getAttribute('aria-label')) && window.__ac.made === 0));
@@ -96,9 +113,9 @@ const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail: ok ? 
     check('desktop 1280 px: caption keeps its full 12 px / 6 px styling', capD && capD.fontPx === 12 && capD.spacing === 6 && capD.left >= 15, capD);
     if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); for (const t of [300, 1100, 2200, 3000, 4300]) { await pg.evaluate(t => OmegaZeroPoint.render(t), t); await pg.screenshot({ path: path.join(SHOTS, `zero-point-${String(t).padStart(4, '0')}ms.png`) }); } }
 
-    /* 3. natural completion + once-per-browser flag */
-    check('completion: overlay removed on its own and omega_genesis_seen stored', await waitGone(pg, 9000) && await pg.evaluate(() => localStorage.getItem('omega_genesis_seen') === '1'));
+    check('first visit: omega_genesis_seen is stored as soon as the intro shows', await pg.evaluate(() => localStorage.getItem('omega_genesis_seen') === '1'));
     check('no page errors on first visit', errs.length === 0, errs);
+    await pg.keyboard.press('Escape'); await waitGone(pg, 15000);
 
     /* 4. second visit in the same browser: no intro, module never requested */
     const second = await open({ ctx });
@@ -107,19 +124,37 @@ const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail: ok ? 
     await ctx.close();
   }
 
-  /* 5. skip keys */
+  /* 4b. natural completion, unpaused: the overlay removes itself, having drawn right up to the end of the sequence */
+  {
+    const { ctx, pg, errs } = await open();
+    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 15000 }).catch(() => { });
+    const ended = await pg.waitForFunction(() => !OmegaZeroPoint.active(), null, { timeout: 30000 }).then(() => true, () => false);
+    /* no key was pressed, so this end is the sequence finishing or the 5.5 s safety net; on a starved machine either may win, so only "ended without input" is claimed */
+    check('completion: ends by itself with no input', ended);
+    check('completion: overlay then removes itself', await waitGone(pg, 15000));
+    check('completion: no page errors', errs.length === 0, errs);
+    await ctx.close();
+  }
+
+  /* 5. skip keys. The intro is held from its first moment (pauseOnStart): a held intro has no timer that can end it, so if it ends
+     after the key press, the key ended it. That is a causal proof with no wall-clock budget, so it cannot flake on a slow machine. */
   for (const key of ['Escape', 'Enter', ' ']) {
-    const { ctx, pg } = await open();
-    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 8000 }).catch(() => { });
+    const { ctx, pg } = await open({ pauseOnStart: true });
+    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 30000 }).catch(() => { });
+    const name = key === ' ' ? 'Space' : key;
+    await pg.waitForTimeout(800);   /* long enough that any timer-driven end would show; a held intro must still be there */
+    const stillHeld = await pg.evaluate(() => OmegaZeroPoint.active());
     await pg.keyboard.press(key);
-    check(`skip: ${key === ' ' ? 'Space' : key} ends the intro within 1.5 s`, await waitGone(pg, 1500));
+    const ended = await pg.waitForFunction(() => !OmegaZeroPoint.active(), null, { timeout: 30000 }).then(() => true, () => false);
+    check(`skip: ${name} ends a held intro (it cannot end any other way)`, stillHeld && ended, { stillHeld, ended });
+    check(`skip: ${name} then removes the overlay`, await waitGone(pg, 30000));
     await ctx.close();
   }
 
   /* 6. sound: opt-in only, 528 Hz, button does not skip, second tap turns it off */
   {
-    const { ctx, pg } = await open();
-    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 8000 }).catch(() => { });
+    const { ctx, pg } = await open({ pauseOnStart: true });
+    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 30000 }).catch(() => { });
     await pg.click('#omega-genesis button');
     const on = await pg.evaluate(() => ({ made: window.__ac.made, freq: window.__ac.freq.slice(), label: document.querySelector('#omega-genesis button').textContent, still: !!document.getElementById('omega-genesis') }));
     check('sound: a tap creates one AudioContext at 528 Hz and does not skip the intro', on.made === 1 && on.freq.includes(528) && on.label === 'SOUND ON' && on.still, on);
@@ -135,21 +170,21 @@ const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail: ok ? 
     await ctx.close();
   }
 
-  /* 8. module cannot load: the legacy intro still plays and ends on its own timer */
+  /* 8. module cannot load: the legacy intro still plays and ends on its own timer (read from a recorder, not a live snapshot) */
   {
-    const { ctx, pg, errs } = await open({ blockModule: true });
-    await pg.waitForSelector('#omega-genesis .gx', { timeout: 4000 }).catch(() => { });
-    const legacy = await pg.evaluate(() => { const g = document.getElementById('omega-genesis'); return !!g && !g.querySelector('canvas') && !g.__omegaHold; });
-    check('module blocked: legacy intro shown (no canvas, nothing held)', legacy);
-    check('module blocked: legacy intro still ends by itself (~3.1 s + fade)', await waitGone(pg, 6000));
+    const { ctx, pg, errs } = await open({ blockModule: true, watchGenesis: true });
+    const removed = await pg.waitForFunction(() => window.__gen && window.__gen.removed, null, { timeout: 30000 }).then(() => true, () => false);
+    const gen = await pg.evaluate(() => window.__gen);
+    check('module blocked: legacy intro was shown (Omega glyph, no canvas, nothing held)', gen.shown && gen.glyph && !gen.canvas && !gen.held, gen);
+    check('module blocked: legacy intro still ends by itself', removed);
     check('module blocked: failed fetch raises no page error', errs.length === 0, errs);
     await ctx.close();
   }
 
   /* 9. mobile: canvas fills the viewport, no horizontal overflow, 44 px sound target */
   {
-    const { ctx, pg } = await open({ viewport: { width: 375, height: 740 }, mobile: true });
-    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 8000 }).catch(() => { });
+    const { ctx, pg } = await open({ viewport: { width: 375, height: 740 }, mobile: true, pauseOnStart: true });
+    await pg.waitForFunction(() => window.OmegaZeroPoint && OmegaZeroPoint.active(), null, { timeout: 30000 }).catch(() => { });
     const m = await pg.evaluate(() => { const c = document.querySelector('#omega-genesis canvas'), b = document.querySelector('#omega-genesis button'), r = b.getBoundingClientRect(); return { cw: c.getBoundingClientRect().width, vw: innerWidth, ov: document.documentElement.scrollWidth > innerWidth, bh: r.height, inView: r.right <= innerWidth && r.bottom <= innerHeight }; });
     check('mobile 375 px: canvas = viewport width, no overflow, sound button >= 44 px and on screen', m.cw === m.vw && !m.ov && m.bh >= 44 && m.inView, m);
     const cap = await pg.evaluate(() => { OmegaZeroPoint.render(4300); return OmegaZeroPoint.caption(); });

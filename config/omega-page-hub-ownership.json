@@ -81,406 +81,406 @@
       "path": "404.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "academy",
       "path": "academy.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "account",
       "path": "account.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": "profile.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "profile.html"
+      ]
     },
     {
       "page_id": "achieve",
       "path": "achieve.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "achievements",
       "path": "achievements.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "ad-network",
       "path": "ad-network.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "advertising",
       "path": "advertising.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "affirmations",
       "path": "affirmations.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "agent-network",
       "path": "agent-network.html",
       "navigation_section": "arena",
       "candidate_hub": "sovereign-ai.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "agent-operations",
       "path": "agent-operations.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "agents",
       "path": "agents.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "analytics",
       "path": "analytics.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "approvals",
       "path": "approvals.html",
       "navigation_section": "intel",
       "candidate_hub": null,
+      "protected_hub": "intel.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "intel.html"
+      ]
     },
     {
       "page_id": "architect",
       "path": "architect.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "architecture",
       "path": "architecture.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "archive",
       "path": "archive.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "arena",
       "path": "arena.html",
       "navigation_section": "arena",
       "candidate_hub": "sovereign-ai.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "ascend",
       "path": "ascend.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "ascension",
       "path": "ascension.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "atlas",
       "path": "atlas.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "automation",
       "path": "automation.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "autonomous-insights",
       "path": "autonomous-insights.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "awards",
       "path": "awards.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "beacon",
       "path": "beacon.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "blockchain",
       "path": "blockchain.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "bloodline",
       "path": "bloodline.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "body",
       "path": "body.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "breath",
       "path": "breath.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "budget",
       "path": "budget.html",
       "navigation_section": "invest",
       "candidate_hub": "invest.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "celestial-covenants",
@@ -489,7 +489,7 @@
       "candidate_hub": "media.html",
       "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
@@ -501,2982 +501,2989 @@
       "path": "character.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "characters",
       "path": "characters.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "charter",
       "path": "charter.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "chatbot",
       "path": "chatbot.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "chronicle",
       "path": "chronicle.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "cinema",
       "path": "cinema.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "cipher",
       "path": "cipher.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "city",
       "path": "city.html",
       "navigation_section": "order",
       "candidate_hub": "order.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "clarity",
       "path": "clarity.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "codex",
       "path": "codex.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "command",
       "path": "command.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "command-center",
       "path": "command-center.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "compliance",
       "path": "compliance.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "consultancy",
       "path": "consultancy.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "contacts",
       "path": "contacts.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "contracts",
       "path": "contracts.html",
       "navigation_section": "services",
       "candidate_hub": null,
+      "protected_hub": "services.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "services.html"
+      ]
     },
     {
       "page_id": "contributions",
       "path": "contributions.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "control-center",
       "path": "control-center.html",
       "navigation_section": "govern",
       "candidate_hub": null,
+      "protected_hub": "govern.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "govern.html"
+      ]
     },
     {
       "page_id": "control-plane",
       "path": "control-plane.html",
       "navigation_section": "govern",
       "candidate_hub": null,
+      "protected_hub": "govern.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "govern.html"
+      ]
     },
     {
       "page_id": "cosmetics",
       "path": "cosmetics.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "cosmic-ledger",
       "path": "cosmic-ledger.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "cosmos",
       "path": "cosmos.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "council",
       "path": "council.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "courses",
       "path": "courses.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "covenant",
       "path": "covenant.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "creation-studio",
       "path": "creation-studio.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "creator",
       "path": "creator.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "credentials",
       "path": "credentials.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "dashboard",
       "path": "dashboard.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "authorization_state": "UNVERIFIED",
+      "authorization_state": "AUTHENTICATED_DASHBOARD_SESSION; MEMBER_DATA_READS_REMAIN_SUBJECT_TO_SUPABASE_RLS; EXISTING_OWNER_ONLY_RPC_BOUNDARIES_PRESERVED; ROUTE_NAVIGATION_GRANTS_NO_PRIVILEGES",
       "truth_states": [
+        "LIVE",
+        "CALCULATED",
+        "UNAVAILABLE",
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "data-observatory",
       "path": "data-observatory.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "decisions",
       "path": "decisions.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "design-lab",
       "path": "design-lab.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "design-showcase",
       "path": "design-showcase.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "design-system",
       "path": "design-system.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "dna",
       "path": "dna.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "domain-mastery",
       "path": "domain-mastery.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "ecosystem",
       "path": "ecosystem.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "elements",
       "path": "elements.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "enter",
       "path": "enter.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "enterprise",
       "path": "enterprise.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "eternity",
       "path": "eternity.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "events",
       "path": "events.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "evidence",
       "path": "evidence.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "evolution",
       "path": "evolution.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "exam",
       "path": "exam.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "expenses",
       "path": "expenses.html",
       "navigation_section": "invest",
       "candidate_hub": "invest.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "factions",
       "path": "factions.html",
       "navigation_section": "order",
       "candidate_hub": "order.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "family",
       "path": "family.html",
       "navigation_section": "order",
       "candidate_hub": "order.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "fasting",
       "path": "fasting.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "feed",
       "path": "feed.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "flashcard",
       "path": "flashcard.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "focus",
       "path": "focus.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "forge",
       "path": "forge.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "game-last-galactic-empire",
       "path": "game-last-galactic-empire.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "game-omega-civilization",
       "path": "game-omega-civilization.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "game-origins",
       "path": "game-origins.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "game-origins-bridge",
       "path": "game-origins-bridge.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "gaming",
       "path": "gaming.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "gates",
       "path": "gates.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "gateway",
       "path": "gateway.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "govern",
       "path": "govern.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "governance",
       "path": "governance.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "grades",
       "path": "grades.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "graph",
       "path": "graph.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "graph-admin",
       "path": "graph-admin.html",
       "navigation_section": "intel",
       "candidate_hub": null,
+      "protected_hub": "intel.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "intel.html"
+      ]
     },
     {
       "page_id": "graph-anomalies",
       "path": "graph-anomalies.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "graph-centrality",
       "path": "graph-centrality.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "graph-evidence",
       "path": "graph-evidence.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "graph-explorer",
       "path": "graph-explorer.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "graph-timeline",
       "path": "graph-timeline.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "graphify",
       "path": "graphify.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "gratitude",
       "path": "gratitude.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "grid",
       "path": "grid.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "guide",
       "path": "guide.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "habits",
       "path": "habits.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "hall",
       "path": "hall.html",
       "navigation_section": "order",
       "candidate_hub": "order.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "health",
       "path": "health.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "healthz",
       "path": "healthz.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "hercules",
       "path": "hercules.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "heritage",
       "path": "heritage.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "honors",
       "path": "honors.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "horoscope",
       "path": "horoscope.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "houses",
       "path": "houses.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "identity",
       "path": "identity.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "income",
       "path": "income.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "authorization_state": "UNVERIFIED",
+      "authorization_state": "Platform owner only. Actual settlement aggregate additionally checks public.is_platform_owner() and JWT AAL2. Scenario rows are scoped by RLS to auth.uid(); run RPC verifies scenario ownership and writes immutable evidence.",
       "truth_states": [
+        "LIVE",
+        "SIMULATED",
+        "UNAVAILABLE",
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "index",
       "path": "index.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "insight",
       "path": "insight.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "intel",
       "path": "intel.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "intelligence",
       "path": "intelligence.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "interface-omni",
       "path": "interface-omni.html",
       "navigation_section": "order",
       "candidate_hub": "order.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "invest",
       "path": "invest.html",
       "navigation_section": "invest",
       "candidate_hub": "invest.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "investment",
       "path": "investment.html",
       "navigation_section": "invest",
       "candidate_hub": "invest.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "journal",
       "path": "journal.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "kings",
       "path": "kings.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "knowledge",
       "path": "knowledge.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "knowledge-loom",
       "path": "knowledge-loom.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "kyc",
       "path": "kyc.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": "profile.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "profile.html"
+      ]
     },
     {
       "page_id": "lab",
       "path": "lab.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "ladder",
       "path": "ladder.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "leaderboard",
       "path": "leaderboard.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "ledger",
       "path": "ledger.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "levels",
       "path": "levels.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "library",
       "path": "library.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "life",
       "path": "life.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "maintenance",
       "path": "maintenance.html",
       "navigation_section": "govern",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "map",
       "path": "map.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "marketing",
       "path": "marketing.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "marketplace",
       "path": "marketplace.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "matrix",
       "path": "matrix.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "media",
       "path": "media.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "membership",
       "path": "membership.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "mentors",
       "path": "mentors.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "mindmap",
       "path": "mindmap.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "mirror",
       "path": "mirror.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "missions",
       "path": "missions.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "monitoring-dashboard",
       "path": "monitoring-dashboard.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "mood",
       "path": "mood.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "movies",
       "path": "movies.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "my-quests",
       "path": "my-quests.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "network",
       "path": "network.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "news",
       "path": "news.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "nexus",
       "path": "nexus.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "notes",
       "path": "notes.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "notifications",
       "path": "notifications.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "nutrition",
       "path": "nutrition.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "oath",
       "path": "oath.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "observatory",
       "path": "observatory.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "offline",
       "path": "offline.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "omega-platform-navigator",
       "path": "omega-platform-navigator.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "ops",
       "path": "ops.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "oracle",
       "path": "oracle.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "order",
       "path": "order.html",
       "navigation_section": "order",
       "candidate_hub": "order.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "orrery",
       "path": "orrery.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "pantheons",
       "path": "pantheons.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "passport",
       "path": "passport.html",
       "navigation_section": "archive",
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "AMBIGUOUS",
-      "rationale": "Legacy archive section; canonical identity/order ownership requires review.",
+      "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "payments",
       "path": "payments.html",
       "navigation_section": "vault",
       "candidate_hub": null,
+      "protected_hub": "vault.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "vault.html"
+      ]
     },
     {
       "page_id": "pending",
       "path": "pending.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "personal-intelligence",
       "path": "personal-intelligence.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "phases",
       "path": "phases.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "physiology",
       "path": "physiology.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "platform-kernel",
       "path": "platform-kernel.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "points",
       "path": "points.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "portfolio",
       "path": "portfolio.html",
       "navigation_section": "invest",
       "candidate_hub": null,
+      "protected_hub": "invest.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "invest.html"
+      ]
     },
     {
       "page_id": "prediction",
       "path": "prediction.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "principles",
       "path": "principles.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "privacy",
       "path": "privacy.html",
       "navigation_section": "govern",
       "candidate_hub": null,
+      "protected_hub": "govern.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "govern.html"
+      ]
     },
     {
       "page_id": "profile",
       "path": "profile.html",
       "navigation_section": "identity",
       "candidate_hub": "profile.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "project-studio",
       "path": "project-studio.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "projects",
       "path": "projects.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "publications",
       "path": "publications.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "publishing",
       "path": "publishing.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "pulse",
       "path": "pulse.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "quest-progress",
       "path": "quest-progress.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "queue",
       "path": "queue.html",
       "navigation_section": "arena",
       "candidate_hub": "sovereign-ai.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "quotes",
       "path": "quotes.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "reading",
       "path": "reading.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "realm",
       "path": "realm.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "realms",
       "path": "realms.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "recovery",
       "path": "recovery.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "replay",
       "path": "replay.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "research",
       "path": "research.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "reset",
       "path": "reset.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "revenue",
       "path": "revenue.html",
       "navigation_section": "invest",
       "candidate_hub": "invest.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "rituals",
       "path": "rituals.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "roadmap",
       "path": "roadmap.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "rune",
       "path": "rune.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "sculpture",
       "path": "sculpture.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "search",
       "path": "search.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "seasonal-events",
       "path": "seasonal-events.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "security",
       "path": "security.html",
       "navigation_section": "identity",
       "candidate_hub": null,
+      "protected_hub": "profile.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "profile.html"
+      ]
     },
     {
       "page_id": "series",
       "path": "series.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "services",
       "path": "services.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "settings",
       "path": "settings.html",
       "navigation_section": "identity",
       "candidate_hub": null,
+      "protected_hub": "profile.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "profile.html"
+      ]
     },
     {
       "page_id": "sigil",
       "path": "sigil.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "sigma",
       "path": "sigma.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "signal",
       "path": "signal.html",
       "navigation_section": "intel",
       "candidate_hub": "intel.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "skills",
       "path": "skills.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "sleep",
       "path": "sleep.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "social",
       "path": "social.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "sovereign-ai",
       "path": "sovereign-ai.html",
       "navigation_section": "arena",
       "candidate_hub": "sovereign-ai.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "sovereign-core",
       "path": "sovereign-core.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Canonical Command section; primary Command Core entry point rather than a legacy specialist route. Functional, authorization and production parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
-        "UNVERIFIED"
-      ],
-      "protected_hub": null
+        "UNVERIFIED",
+        "UNAVAILABLE"
+      ]
     },
     {
       "page_id": "sovereign-covenant",
       "path": "sovereign-covenant.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "sovereigns",
       "path": "sovereigns.html",
       "navigation_section": "order",
       "candidate_hub": "order.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "standing-dashboard",
       "path": "standing-dashboard.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "stoic",
       "path": "stoic.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "studio",
       "path": "studio.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "studio-library",
       "path": "studio-library.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "subscriptions",
       "path": "subscriptions.html",
       "navigation_section": "vault",
       "candidate_hub": null,
+      "protected_hub": "vault.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "vault.html"
+      ]
     },
     {
       "page_id": "targets",
       "path": "targets.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "terms",
       "path": "terms.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": "govern.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "govern.html"
+      ]
     },
     {
       "page_id": "time",
       "path": "time.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "trailers",
       "path": "trailers.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "travel",
       "path": "travel.html",
       "navigation_section": "services",
       "candidate_hub": "services.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "treasury",
       "path": "treasury.html",
       "navigation_section": "invest",
       "candidate_hub": null,
+      "protected_hub": "invest.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "invest.html"
+      ]
     },
     {
       "page_id": "triads",
       "path": "triads.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "tribe",
       "path": "tribe.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "trophies",
       "path": "trophies.html",
       "navigation_section": "achieve",
       "candidate_hub": "achieve.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "universe",
       "path": "universe.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "vault",
       "path": "vault.html",
       "navigation_section": "vault",
       "candidate_hub": "vault.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "verify-deployment",
       "path": "verify-deployment.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "verify-modules",
       "path": "verify-modules.html",
       "navigation_section": null,
       "candidate_hub": null,
+      "protected_hub": null,
       "classification": "UNMAPPED",
       "rationale": "No effective page-section entry found in nav.js.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "vision",
       "path": "vision.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "visual-atlas",
       "path": "visual-atlas.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "vocabulary",
       "path": "vocabulary.html",
       "navigation_section": "ascend",
       "candidate_hub": "ascend.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "wallet",
       "path": "wallet.html",
       "navigation_section": "invest",
       "candidate_hub": null,
+      "protected_hub": "invest.html",
       "classification": "KEEP_SEPARATE",
       "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": "invest.html"
+      ]
     },
     {
       "page_id": "water",
       "path": "water.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "wealth",
       "path": "wealth.html",
       "navigation_section": "invest",
       "candidate_hub": "invest.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "weekly",
       "path": "weekly.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "workout",
       "path": "workout.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "world",
       "path": "world.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "world-atlas",
       "path": "world-atlas.html",
       "navigation_section": "command",
       "candidate_hub": "dashboard.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "world-shell",
       "path": "world-shell.html",
       "navigation_section": "govern",
       "candidate_hub": "govern.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     },
     {
       "page_id": "worlds",
       "path": "worlds.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
+      "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Effective nav.js section mapping; functional and authorization parity remain unverified.",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [
         "UNVERIFIED"
-      ],
-      "protected_hub": null
+      ]
     }
   ]
 }

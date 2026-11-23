@@ -34,7 +34,13 @@ class Hooks(unittest.TestCase):
 
     def test_legacy_intro_still_ends_itself_unless_the_module_holds_it(self):
         self.assertIn("g._omegaDone=done;", BG)
-        self.assertIn("setTimeout(function(){if(!g.__omegaHold)done();},3100)", BG)
+        end = BG[BG.index("(function legacyEnd(){"):]
+        end = end[:end.index("})();") + 5]
+        self.assertIn("if(g.__omegaHold||!g.parentNode) return;", end)          # an upgraded (held) intro ends itself
+        self.assertIn("waited>=3100 && !(window.__omegaZPPending && waited<6500)", end)  # 3.1 s floor, 6.5 s hard ceiling
+        self.assertIn("done();return;", end)
+        self.assertIn("window.__omegaZPPending=true;", BG)
+        self.assertEqual(BG.count("window.__omegaZPPending=false;"), 2)           # cleared on load and on error
         self.assertIn("g.addEventListener('click',done)", BG)
         self.assertIn("if(!REDUCE && !localStorage.getItem('omega_genesis_seen')){", BG)  # intro gating untouched
 
@@ -60,6 +66,23 @@ class Module(unittest.TestCase):
         for key in ("Escape", "Enter", "' '"):
             self.assertIn(key, ZP)
         self.assertIn("removeEventListener('keydown', onKey, true)", ZP)
+
+    def test_pause_hook_cannot_strand_a_visitor(self):
+        # pause() clears the safety timer for tests, so skip must still work while paused: the key handler is registered once in
+        # start() and removed only by finish(); pause() must touch neither it nor the click path.
+        m = re.search(r"pause: function \(\) \{(.*?)\},\n", ZP, re.S)
+        self.assertIsNotNone(m)
+        body = m.group(1)
+        self.assertIn("frozen = true", body)
+        self.assertNotIn("keydown", body)
+        self.assertNotIn("removeEventListener", body)
+        self.assertEqual(ZP.count("document.addEventListener('keydown', onKey, true)"), 1)
+        loop = ZP[ZP.index("function loop(now)"):ZP.index("function start()")]
+        self.assertIn("if (frozen) { raf = requestAnimationFrame(loop); return; }", loop)  # paused: idle, still cancellable by finish()
+
+    def test_last_frame_hook_reports_only_live_loop_time(self):
+        self.assertIn("render(t); lastT = t;", ZP)
+        self.assertEqual(ZP.count("lastT = t"), 1)  # the test hook render(ms) must not move it
 
     def test_sized_from_the_window_not_from_a_measured_hidden_element(self):  # CLAUDE.md 8.1 class 3
         self.assertIn("W = window.innerWidth; H = window.innerHeight;", ZP)

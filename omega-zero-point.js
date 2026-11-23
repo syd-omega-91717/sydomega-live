@@ -27,7 +27,7 @@
   var DUR = 4600, CAP = DUR + 900, SPOKES = 144, RINGS_N = 10;
   var CAPTION = 'THE CODE . THE FREQUENCY . THE LEGACY';
   var cv = null, cx = null, W = 0, H = 0, DPR = 1, raf = 0, t0 = 0, capTimer = 0, finished = false;
-  var audio = null, g = null, frozen = false, captionBox = null;
+  var audio = null, g = null, frozen = false, captionBox = null, lastT = -1;
 
   function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
   function smooth(a, b, t) { var x = clamp((t - a) / (b - a)); return x * x * (3 - 2 * x); }
@@ -167,8 +167,9 @@
 
   function loop(now) {
     if (finished) return;
+    if (frozen) { raf = requestAnimationFrame(loop); return; }   /* paused: hold the frame; Escape/Enter/Space/click still end it */
     var t = now - t0;
-    if (!frozen) render(t);
+    render(t); lastT = t;
     if (t >= DUR) { finish(); return; }
     raf = requestAnimationFrame(loop);
   }
@@ -205,8 +206,13 @@
   window.OmegaZeroPoint = {
     duration: DUR,
     /* test hook: size the overlay canvas and draw the frame at `ms` */
-    render: function (ms) { if (cx) { frozen = true; size(); render(ms); } return !!cx; },   /* freezes the live loop so a screenshot sees exactly this frame */
+    render: function (ms) { if (cx) { size(); render(ms); } return !!cx; },
+    /* test hook: hold the intro on its current frame (no drawing, no timed ending, cap timer cleared) so a check does not race the 4.6 s
+       clock on a slow machine. Skip keys and click still end it, so a visitor can never be stuck behind a paused intro. */
+    pause: function () { if (!cx || finished) return false; frozen = true; if (capTimer) { clearTimeout(capTimer); capTimer = 0; } return true; },
     active: function () { return !!cx && !finished; },
+    /* animation time (ms) of the last frame the live loop drew; < duration proves the intro ended early, whatever the machine speed */
+    lastFrame: function () { return lastT; },
     caption: function () { return captionBox && { left: captionBox.left, right: captionBox.right, width: W, fontPx: captionBox.fontPx, spacing: captionBox.spacing }; }
   };
 

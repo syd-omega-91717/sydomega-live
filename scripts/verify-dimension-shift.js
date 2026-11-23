@@ -97,8 +97,9 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
 
     /* 3. a burst is one shift; the next one after the gap is another; the habits event joins the same shift */
     await gap(pg); n0 = await count(pg);
-    await Promise.all([post(pg, '/rest/v1/task_completions'), post(pg, '/rest/v1/task_completions'), post(pg, '/rest/v1/task_completions')]);
-    await pg.evaluate(() => document.dispatchEvent(new CustomEvent('omega:task-complete', { detail: {} })));
+    /* The burst is dispatched in ONE synchronous tick (three settled saves exactly as bg.js reports them, plus the habits event). Three real network saves can settle more than
+       2.5 s apart on a starved machine, and the throttle then correctly lets each through as its own shift: that tests the machine, not the module. Section 1 covers the real chain. */
+    await pg.evaluate(() => { for (let i = 0; i < 3; i++) document.dispatchEvent(new CustomEvent('omega:fetch-settled', { detail: { ok: true, m: 'POST', p: '/rest/v1/task_completions', status: 201 } })); document.dispatchEvent(new CustomEvent('omega:task-complete', { detail: {} })); });
     await countReaches(pg, n0 + 1); await pg.waitForTimeout(900);          /* it happened; now give any (wrong) extra shift time to show */
     check('a burst of saves (and the habits event beside them) is ONE shift', (await count(pg)) === n0 + 1, { n0, now: await count(pg) });
     await gap(pg);

@@ -53,6 +53,8 @@ async function journalSetup(pg) {
   }
   await pg.click('#t-insights');
 }
+const PHYS = "metrics=" + days7(i => `{date:${ISO(i)}.slice(0,10),rhr:58+${i}%7,hrv:40+${i}*3,sys:118+${i}%9,dia:76+${i}%6}`) + ";renderTrends();";
+const STOP = 'for(var t=1;t<4000;t++){clearInterval(t);clearTimeout(t);}';
 const WAVE2 = [
   ['journal.html', 'j-wc-chart', null, { drive: journalSetup }],
   ['journal.html', 'j-mood-chart', null, { drive: journalSetup }],
@@ -62,8 +64,15 @@ const WAVE2 = [
   ['time.html', 'daily-canvas', null, { prep: "drawDailyTrend(" + days7(i => `{ts:${ISO(i)},duration:1800+${i}*900,category:'deep-work'}`) + ");" }],
   ['water.html', 'hist-canvas', null, { prep: "drawHist(" + days7(i => `{ts:${ISO(i)},ml:900+${i}*250}`) + ");" }],
   ['workout.html', 'freq-canvas', null, { prep: "drawFreqChart(" + days7(i => `{ts:${ISO(i)},exercises:[{sets:[1,2,3,4].slice(0,1+${i}%4)}]}`) + ");" }],
-  ['ops.html', 'spark-canvas', null, { prep: "drawSparkline('spark-canvas',[3,5,4,8,6,9,7,10,8,12],'#60a5fa');" }],
-  ['ops.html', 'live-spark', null, { prep: "drawSparkline('live-spark',[3,5,4,8,6,9,7,10,8,12],'#C9A84C');" }],
+  ['ops.html', 'spark-canvas', null, { prep: STOP + "drawSparkline('spark-canvas',[3,5,4,8,6,9,7,10,8,12],'#60a5fa');" }],
+  ['ops.html', 'live-spark', null, { prep: STOP + "drawSparkline('live-spark',[3,5,4,8,6,9,7,10,8,12],'#C9A84C');" }],
+  ['weekly.html', 'trend-canvas', null, { prep: "drawTrend([4,5,6,5,7,8,7,9].map(function(a,i){return {weekKey:'2026-W'+(10+i),avg:a};}));" }],
+  ['ops.html', 'lat-canvas', null, { prep: STOP + "latencyHistory.p50=[12,14,13,18,16,15,17];latencyHistory.p95=[30,34,33,41,39,36,38];latencyHistory.p99=[55,60,58,72,70,66,69];drawLatencyChart();" }],
+  ['fasting.html', 'history-canvas', null, { prep: "log=" + days7(i => `{start:${ISO(i)}.slice(0,10),completed:true,elapsed:3600*(10+${i}%6)}`) + ".concat(" + days7(i => `{start:${ISO(i + 7)}.slice(0,10),completed:true,elapsed:3600*(12+${i}%4)}`) + ");drawHistory();" }],
+  ['contacts.html', 'net-canvas', null, { prep: "var ks=Object.keys(CAT_COLORS);contacts=[{cat:ks[0]},{cat:ks[1]},{cat:ks[1]},{cat:ks[2]||ks[0]}];drawNetChart();" }],
+  ['physiology.html', 'c-rhr', null, { prep: PHYS }],
+  ['physiology.html', 'c-hrv', null, { prep: PHYS }],
+  ['physiology.html', 'c-bp', null, { prep: PHYS }],
   ['cipher.html', 'cipher-wave', null, { drive: async (pg) => { await pg.fill('#cipher-input', 'the quick brown fox jumps over the lazy dog'); await pg.dispatchEvent('#cipher-input', 'input'); } }]
 ];
 
@@ -72,6 +81,11 @@ const WAVE2 = [
   if (pw) for (const exe of [undefined, '/opt/pw-browsers/chromium', '/opt/pw-browsers/chromium-1243/chrome-linux64/chrome']) { try { browser = await pw.chromium.launch(exe ? { executablePath: exe } : {}); break; } catch (e) { } }
   if (!browser || !STUB) { console.log('SKIPPED: no playwright/browser (or the harness Supabase stub) available'); process.exit(process.env.OMEGA_REQUIRE_BROWSER ? 1 : 0); }
 
+  /* the page's layout can still be settling when a chart is first measured (a side rail arriving late changed a content column from 479 to 808 px on a page with no canvas yet fitted): wait until the canvas's width has been the same for two samples */
+  async function settle(pg, id) {
+    let last = -1, same = 0;
+    for (let k = 0; k < 24 && same < 2; k++) { const w = await pg.evaluate((i) => { const c = document.getElementById(i); return c ? c.getBoundingClientRect().width : -1; }, id); same = w === last ? same + 1 : 0; last = w; await pg.waitForTimeout(250); }
+  }
   async function measure(page, id, click, dsf, cfg) {
     cfg = cfg || {};
     const ctx = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1000, height: 900 }, deviceScaleFactor: dsf });
@@ -97,6 +111,7 @@ const WAVE2 = [
     /* a chart on a pane the tab loop could not reveal (a page whose tabs are not .tab-btn): activate its ancestors so it has a layout box, as the pane would have when selected */
     if (!(await shown())) await pg.evaluate((i) => { for (let e = document.getElementById(i); e; e = e.parentElement) { if (getComputedStyle(e).display === 'none') { e.classList.add('active'); e.style.display = 'block'; e.hidden = false; } } }, id);
     /* charts that read page state are redrawn from known data, so a blank result means the fix broke drawing, not that nothing was seeded */
+    await settle(pg, id);
     if (cfg.prep) { try { await pg.evaluate(cfg.prep); } catch (e) { errs.push('prep: ' + String(e.message).slice(0, 100)); } await pg.waitForTimeout(250); }
     await pg.evaluate((i) => document.getElementById(i).scrollIntoView({ block: 'center', behavior: 'instant' }), id);
     await pg.waitForTimeout(300);
@@ -108,6 +123,7 @@ const WAVE2 = [
     }, id);
     /* a second draw plus a resize must not change the CSS size: a canvas with no CSS width that is re-measured from its own backing store grows each time */
     if (cfg.prep) {
+      await settle(pg, id);
       await pg.evaluate(cfg.prep); await pg.evaluate(() => window.dispatchEvent(new Event('resize'))); await pg.waitForTimeout(400);
       await pg.evaluate(cfg.prep); await pg.waitForTimeout(250);
       const r2 = await pg.evaluate((i) => { const c = document.getElementById(i); return [c.clientWidth, c.clientHeight, c.width, c.height]; }, id);

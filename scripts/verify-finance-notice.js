@@ -17,6 +17,7 @@ const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'applica
 function loadPW() { const sp = process.env.OMEGA_SCRATCHPAD; for (const t of [sp && path.join(sp, 'node_modules', 'playwright'), sp && path.join(sp, 'node_modules', 'playwright-core'), 'playwright', 'playwright-core']) { if (!t) continue; try { return require(t); } catch (e) { } } return null; }
 let STUB = null; try { STUB = require(path.join(ROOT, '.claude', 'skills', 'verify-in-browser', 'harness', 'sbstub.js')).STUB; } catch (e) { }
 const pi = process.argv.indexOf('--pages'); const ONLY = pi > 0 ? process.argv[pi + 1].split(',') : null;   // for quick mutation runs
+// nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- f comes from readdirSync of this repo's own root, not from user input
 const PAGES = fs.readdirSync(ROOT).filter(f => f.endsWith('.html') && fs.readFileSync(path.join(ROOT, f), 'utf8').includes('src="/omega-finance-notice.js"')).filter(f => !ONLY || ONLY.includes(f)).sort();
 const MODULE = fs.readFileSync(path.join(ROOT, 'omega-finance-notice.js'), 'utf8');
 /* a page whose #app IS the flex-row shell (sidebar + content column inside it): the notice must go in the column, not become a third column */

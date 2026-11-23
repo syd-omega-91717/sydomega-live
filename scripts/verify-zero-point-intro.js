@@ -3,14 +3,14 @@
  *
  * Usage: node scripts/verify-zero-point-intro.js [--shots DIR] [--json]
  *
- * Serves the working tree on a loopback port and drives the REAL index.html in headless Chromium. Checks the
+ * Serves the working tree from disk (Playwright route, no http server) and drives the REAL index.html in headless Chromium. Checks the
  * rendered pixels at fixed times (deterministic, via OmegaZeroPoint.render), natural completion, skip keys,
  * once-per-browser, reduced motion, legacy fallback when the module cannot load, sound opt-in (528 Hz, never
  * autoplays), mobile layout, and zero page errors. With --shots it also writes a PNG per phase for eyeballing.
  * Zero repo deps; resolves playwright from $OMEGA_SCRATCHPAD or a normal require. No browser: prints SKIPPED and
  * exits 0 unless OMEGA_REQUIRE_BROWSER is set. Proves behaviour in a stubbed-network render, not production.
  */
-const fs = require('fs'), path = require('path'), http = require('http');
+const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const JSON_OUT = process.argv.includes('--json');
 const si = process.argv.indexOf('--shots'); const SHOTS = si > 0 ? process.argv[si + 1] : null;
@@ -33,19 +33,20 @@ const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail: ok ? 
   }
   if (!browser) { console.log('SKIPPED: no playwright/browser available'); process.exit(process.env.OMEGA_REQUIRE_BROWSER ? 1 : 0); }
 
-  const server = http.createServer((req, res) => {
-    let u = decodeURIComponent(req.url.split('?')[0]); if (u === '/') u = '/index.html';
+  /* No http server: files are served from disk through Playwright's route(), on a fake origin. */
+  const ORIGIN = 'http://zp.test';
+  const serveFromDisk = async (route) => {
+    let u = decodeURIComponent(new URL(route.request().url()).pathname); if (u === '/') u = '/index.html';
     const f = path.join(ROOT, path.normalize(u).replace(/^(\.\.[/\\])+/, ''));
-    if (!f.startsWith(ROOT)) { res.writeHead(403); return res.end(); }
-    let b; try { b = fs.readFileSync(f); } catch (e) { res.writeHead(404); return res.end('nf'); }
-    res.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream', 'cache-control': 'no-store' }); res.end(b);
-  });
-  await new Promise(r => server.listen(0, '127.0.0.1', r));
-  const ORIGIN = 'http://127.0.0.1:' + server.address().port;
+    if (!f.startsWith(ROOT)) return route.fulfill({ status: 403, body: '' });
+    let b; try { b = fs.readFileSync(f); } catch (e) { return route.fulfill({ status: 404, body: 'nf' }); }
+    return route.fulfill({ status: 200, contentType: MIME[path.extname(f)] || 'application/octet-stream', headers: { 'cache-control': 'no-store' }, body: b });
+  };
 
   async function open(opts = {}) {
     const ctx = opts.ctx || await browser.newContext({ serviceWorkers: 'block', viewport: opts.viewport || { width: 1280, height: 720 }, reducedMotion: opts.reduce ? 'reduce' : 'no-preference', isMobile: !!opts.mobile, hasTouch: !!opts.mobile });
     if (!opts.ctx) {
+      await ctx.route(ORIGIN + '/**', serveFromDisk);
       await ctx.route('https://fonts.googleapis.com/**', r => r.fulfill({ status: 200, contentType: 'text/css', body: '' }));
       await ctx.route('https://fonts.gstatic.com/**', r => r.fulfill({ status: 200, body: '' }));
       await ctx.addInitScript(() => {
@@ -157,7 +158,7 @@ const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail: ok ? 
     await ctx.close();
   }
 
-  await browser.close(); server.close();
+  await browser.close();
   const failed = results.filter(r => !r.ok);
   if (JSON_OUT) console.log(JSON.stringify({ passed: results.length - failed.length, failed: failed.length, results }, null, 2));
   else { results.forEach(r => console.log((r.ok ? 'PASS  ' : 'FAIL  ') + r.name + (r.ok ? '' : '\n      ' + JSON.stringify(r.detail)))); console.log(`\n${results.length - failed.length}/${results.length} passed`); }

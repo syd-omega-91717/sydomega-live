@@ -58,6 +58,14 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 .trend-up{background:rgba(39,174,96,.15);color:var(--green)}
 .trend-dn{background:rgba(231,76,60,.15);color:var(--red)}
 @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr}.insight-grid{grid-template-columns:1fr}}
+
+.mnav{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 0 12px;font-family:var(--M,monospace);letter-spacing:2px;font-size:12px}
+.mkpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:0 0 14px}
+.mkpis .stat-val{font-size:20px}
+.yrs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.yr-btn{padding:5px 12px;font:12px var(--M,monospace);letter-spacing:1px;border:1px solid #333;background:transparent;color:var(--d,#999);border-radius:2px;cursor:pointer}
+.yr-btn.on{border-color:var(--gold,#C9A84C);color:var(--gold,#C9A84C)}
+#trend-year-canvas,#trend-rate-canvas{width:100%;display:block}
 </style>
 </head>
 <body>
@@ -84,6 +92,7 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
       <button class="tab-btn act" data-tab="add" onclick="switchTab('add',this)">&#9670; ADD ENTRY</button>
       <button class="tab-btn" data-tab="ledger" onclick="switchTab('ledger',this)">&#9670; LEDGER</button>
       <button class="tab-btn" data-tab="budget" onclick="switchTab('budget',this)">&#9670; BUDGET</button>
+      <button class="tab-btn" data-tab="trends" id="tab-btn-trends">&#9670; TRENDS</button>
       <button class="tab-btn" data-tab="science" onclick="switchTab('science',this)">&#9670; SCIENCE</button>
     </div>
 
@@ -178,6 +187,12 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
 
     <!-- BUDGET -->
     <div id="tab-budget" class="tab-panel">
+      <div class="mnav" role="group" aria-label="Month shown">
+        <button type="button" class="btn btn-sm" id="mn-prev" aria-label="Previous month">&#9666;</button>
+        <span id="budget-month-nav-label" aria-live="polite"></span>
+        <button type="button" class="btn btn-sm" id="mn-next" aria-label="Next month">&#9656;</button>
+      </div>
+      <div id="budget-month-kpis" class="mkpis" data-omega-empty-guide="Nothing recorded for this month yet." data-omega-empty-cta="Add your first entry" data-omega-empty-go=".tab-btn[data-tab='add']" data-omega-empty-focus="#e-amount"></div>
       <div class="card" data-reveal="fade-up">
         <div class="card-title">MONTHLY BUDGET LIMITS</div>
         <p style="font-size:var(--fs-1,12px);color:var(--d);margin-bottom:14px">SET LIMITS PER CATEGORY · TRACK VS ACTUAL SPENDING THIS MONTH</p>
@@ -187,6 +202,19 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
       <div class="card" data-reveal="fade-up">
         <div class="card-title">BUDGET vs ACTUAL — <span id="budget-month-label"></span></div>
         <div id="budget-bars"></div>
+      </div>
+    </div>
+
+    <!-- TRENDS -->
+    <div id="tab-trends" class="tab-panel">
+      <div class="card" data-reveal="fade-up">
+        <div class="card-title">INCOME vs EXPENSES &mdash; <span id="trend-year-label"></span></div>
+        <div id="trend-years" class="yrs" role="group" aria-label="Year shown"></div>
+        <canvas id="trend-year-canvas" height="160" role="img" aria-label="Income and expenses by month"></canvas>
+      </div>
+      <div class="card" data-reveal="fade-up">
+        <div class="card-title">SAVINGS RATE % &mdash; MONTHLY</div>
+        <canvas id="trend-rate-canvas" height="110" role="img" aria-label="Savings rate by month"></canvas>
       </div>
     </div>
 
@@ -223,9 +251,10 @@ canvas{display:block;width:100%;max-width:600px;margin:0 auto}
     </div>
 
   </div>
-</main>
 <div data-page-emblem="expenses" style="margin:20px auto 0"></div>
+</main>
 </div>
+<script src="/omega-empty-guide.js" defer></script>
 <script src="/omega-esc.js"></script>
 <script>
 var escapeHTML = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
@@ -237,6 +266,7 @@ function switchTab(id,btn){
   document.getElementById('tab-'+id).classList.add('act');
   if(id==='ledger') renderLedger();
   if(id==='budget') renderBudget();
+  if(id==='trends') renderTrends();
   if(id==='science') renderInsights();
 }
 
@@ -272,7 +302,25 @@ const TO_BUDGET={housing:'HOUSING',food:'FOOD',transport:'TRANSPORT',health:'HEA
 const BUDGET_GROUPS=[['HOUSING','#E57373'],['TRANSPORT','#FF9800'],['FOOD','#FFCA28'],['HEALTH','#66BB6A'],
   ['GROWTH','#5C8FD6'],['LIFESTYLE','#9C6FD6'],['GIVING','#26C6DA'],['OTHER','#90A4AE']];
 function readJSON(k,dflt){try{const v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:dflt;}catch(e){return dflt;}}
-function readMonths(){return readJSON(BUDGET_MONTHS_KEY,{});}
+/* The store also holds data restored from a backup file, so every read goes through this (ported from budget.html, whose page this one replaced): rows that are
+   not objects are dropped, a month that is not an object becomes empty, amounts become numbers, id/date/text become strings, and a '__proto__' key is skipped. Without it
+   one junk row in an imported backup threw inside deriveEntries and the whole page stopped. */
+function normaliseMonths(raw){
+  var out={};
+  if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+  function str(v){return String(v==null?'':v);}
+  function rows(a,f){return (Array.isArray(a)?a:[]).filter(function(x){return x&&typeof x==='object';}).map(function(x){return Object.assign({},x,f(x));});}
+  Object.keys(raw).forEach(function(k){
+    if(k==='__proto__')return;
+    var m=raw[k]&&typeof raw[k]==='object'?raw[k]:{};
+    out[k]=Object.assign({},m,{
+      expenses:rows(m.expenses,function(e){return {id:str(e.id),cat:str(e.cat),desc:str(e.desc),date:str(e.date),amount:Number(e.amount)||0};}),
+      income:rows(m.income,function(i){return {id:str(i.id),source:str(i.source),date:str(i.date),amount:Number(i.amount)||0};})
+    });
+  });
+  return out;
+}
+function readMonths(){return normaliseMonths(readJSON(BUDGET_MONTHS_KEY,{}));}
 function writeMonths(m){localStorage.setItem(BUDGET_MONTHS_KEY,JSON.stringify(m));}
 function monthOf(m,key){if(!m[key]||typeof m[key]!=='object')m[key]={};m[key].income=m[key].income||[];m[key].expenses=m[key].expenses||[];return m[key];}
 function toBudgetRow(e){
@@ -462,21 +510,26 @@ function renderBudget(){
       +'</div>';
   }).join('');
   var bars=document.getElementById('budget-bars');
-  var now=new Date();
-  document.getElementById('budget-month-label').textContent=now.toLocaleString('default',{month:'long',year:'numeric'});
-  var actuals={};
-  getMonthEntries().filter(function(e){return e.type==='expense';}).forEach(function(e){var g=TO_BUDGET[e.cat]||'OTHER';actuals[g]=(actuals[g]||0)+e.amount;});
-  var withLimit=BUDGET_GROUPS.filter(function(g){return +budgets[g[0]]>0;});
-  if(!withLimit.length){bars.innerHTML='<div style="font-size:var(--fs-1,12px);color:var(--d);padding:10px 0">SET BUDGET LIMITS ABOVE TO SEE PROGRESS</div>';return;}
-  bars.innerHTML=withLimit.map(function(g){
-    var k=g[0],limit=+budgets[k],actual=actuals[k]||0;
-    var pct=Math.min(100,(actual/limit)*100);
-    var cls=pct>=100?'over':pct>=80?'warn':'ok';
-    return '<div class="budget-row">'
-      +'<div class="budget-cat"><span class="budget-cat-name" style="color:'+g[1]+'">'+k+'</span><span class="budget-cat-nums">$'+actual.toFixed(0)+' / $'+limit+'</span></div>'
-      +'<div class="budget-bar"><div class="budget-fill '+cls+'" style="width:'+pct+'%"></div></div>'
-      +'</div>';
-  }).join('');
+  var label=monthLabelOf(viewMonth);
+  document.getElementById('budget-month-label').textContent=label;
+  document.getElementById('budget-month-nav-label').textContent=label;
+  var t=monthTotals(viewMonth);
+  var kp=document.getElementById('budget-month-kpis');kp.textContent='';
+  [[fmtUSD(t.income),'INCOME'],[fmtUSD(t.expenses),'EXPENSES'],[fmtUSD(t.saved>0?t.saved:0),'SURPLUS'],[t.rate+'%','SAVINGS RATE']].forEach(function(k){
+    var box=mk('div','stat'),v=mk('div','stat-val stat-num',k[0]),l=mk('div','stat-lbl',k[1]);box.appendChild(v);box.appendChild(l);kp.appendChild(box);});
+  var shown=BUDGET_GROUPS.filter(function(g){return +budgets[g[0]]>0||groupActual(viewMonth,g[0])>0;});
+  bars.textContent='';
+  if(!shown.length){bars.appendChild(mk('div','','NOTHING RECORDED FOR THIS MONTH, AND NO LIMITS SET')).style.cssText='font-size:var(--fs-1,12px);color:var(--d);padding:10px 0';return;}
+  shown.forEach(function(g){
+    var k=g[0],limit=+budgets[k]||0,actual=groupActual(viewMonth,k);
+    var pct=limit>0?Math.min(100,(actual/limit)*100):0;
+    var cls=limit>0?(pct>=100?'over':pct>=80?'warn':'ok'):'ok';
+    var row=mk('div','budget-row');row.setAttribute('data-group',k);
+    var cat=mk('div','budget-cat'),nm=mk('span','budget-cat-name',k);nm.style.color=g[1];
+    cat.appendChild(nm);cat.appendChild(mk('span','budget-cat-nums','$'+actual.toFixed(0)+' / '+(limit>0?'$'+limit:'\u2014')));
+    var bar=mk('div','budget-bar'),fill=mk('div','budget-fill '+cls);fill.style.width=pct+'%';bar.appendChild(fill);
+    row.appendChild(cat);row.appendChild(bar);bars.appendChild(row);
+  });
 }
 
 function saveBudgets(){
@@ -512,7 +565,7 @@ function renderInsights(){
     +'<div class="insight-card card"><div class="insight-val" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+(net>=0?'+':'')+'$'+Math.abs(net).toFixed(0)+'</div><div class="insight-lbl">NET FLOW</div></div>'
     +'<div class="insight-card card"><div class="insight-val" style="color:'+(rate>=20?'var(--green)':rate>=10?'var(--gold)':'var(--red)')+'">'+rate+'%</div><div class="insight-lbl">SAVINGS RATE</div></div>'
     +'<div class="insight-card card"><div class="insight-val">$'+avgDaily+'</div><div class="insight-lbl">AVG DAILY SPEND</div></div>'
-    +'<div class="insight-card card"><div class="insight-val" style="font-size:var(--fs-2,14px)">'+(largestExp?largestExp.desc+' $'+largestExp.amount.toFixed(0):'—')+'</div><div class="insight-lbl">LARGEST EXPENSE</div></div>';
+    +'<div class="insight-card card"><div class="insight-val" style="font-size:var(--fs-2,14px)">'+(largestExp?escapeHTML(largestExp.desc)+' $'+largestExp.amount.toFixed(0):'—')+'</div><div class="insight-lbl">LARGEST EXPENSE</div></div>';
   drawTrend();
   drawCatBreakdown();
   drawMonthly();
@@ -613,15 +666,70 @@ function drawMonthly(){
   ctx.fillText('INCOME',pad.l+93,pad.t+H2+28);
 }
 
+/* ── MONTH VIEW + TRENDS ─────────────────────────────────────────────────────
+   Absorbed from budget.html, which this page replaces (one store, one page: CLAUDE.md 8.1 class 8). Reads the store by MONTH KEY exactly as
+   budget.html did, so an entry counts in the month it was filed under even if its date field says otherwise. Month arithmetic is integer
+   (budget.html built the next month with toISOString() on a local date, which lands a month early east of UTC). */
+let viewMonth=localMonth(new Date()), trendYear=new Date().getFullYear();
+function localMonth(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function monthLabelOf(key){var p=key.split('-');return new Date(+p[0],+p[1]-1,1).toLocaleDateString('en-US',{month:'long',year:'numeric'}).toUpperCase();}
+function mk(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+function num(v){v=Number(v);return isFinite(v)?v:0;}
+function fmtUSD(n){return num(n).toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0});}
+function monthRows(key){var m=readMonths()[key];return {income:(m&&Array.isArray(m.income)?m.income:[]).filter(Boolean),expenses:(m&&Array.isArray(m.expenses)?m.expenses:[]).filter(Boolean)};}
+function sumAmt(a){return a.reduce(function(s,x){return s+num(x.amount);},0);}
+function monthTotals(key){var r=monthRows(key),inc=sumAmt(r.income),exp=sumAmt(r.expenses);return {income:inc,expenses:exp,saved:inc-exp,rate:inc>0?Math.round(((inc-exp)/inc)*100):0};}
+function groupActual(key,g){return sumAmt(monthRows(key).expenses.filter(function(x){return String(x.cat)===g;}));}
+function changeMonth(delta){var p=viewMonth.split('-'),i=(+p[0])*12+(+p[1]-1)+delta;viewMonth=Math.floor(i/12)+'-'+String(i%12+1).padStart(2,'0');renderBudget();}
+function setTrendYear(y){trendYear=+y;renderTrends();}
+function yearMonths(y){return Array.from({length:12},function(_,i){return y+'-'+String(i+1).padStart(2,'0');});}
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function renderTrends(){
+  var years=Object.keys(readMonths()).map(function(k){return k.slice(0,4);}).filter(function(y,i,a){return /^\d{4}$/.test(y)&&a.indexOf(y)===i;});
+  var cy=String(new Date().getFullYear());if(years.indexOf(cy)<0)years.push(cy);
+  years.sort();
+  if(years.indexOf(String(trendYear))<0)trendYear=+cy;
+  document.getElementById('trend-year-label').textContent=trendYear;
+  var yb=document.getElementById('trend-years');yb.textContent='';
+  years.forEach(function(y){var b=mk('button','yr-btn'+(+y===trendYear?' on':''),y);b.type='button';b.setAttribute('aria-pressed',String(+y===trendYear));b.addEventListener('click',function(){setTrendYear(y);});yb.appendChild(b);});
+  var rows=yearMonths(trendYear).map(function(k,i){var t=monthTotals(k);return {label:MON[i],inc:t.income,exp:t.expenses,rate:t.income>0?Math.max(((t.income-t.expenses)/t.income)*100,-100):0,rateR:t.rate};});
+  var yc=document.getElementById('trend-year-canvas'),rc=document.getElementById('trend-rate-canvas');
+  yc.setAttribute('aria-label','Income and expenses by month, '+trendYear+': '+rows.map(function(r){return r.label+' income '+fmtUSD(r.inc)+', expenses '+fmtUSD(r.exp);}).join('; '));
+  rc.setAttribute('aria-label','Savings rate by month, '+trendYear+': '+rows.map(function(r){return r.label+' '+r.rateR+'%';}).join('; '));
+  drawYear(yc,rows);drawRate(rc,rows);
+}
+function drawYear(c,rows){
+  var W=c.offsetWidth||600;c.width=W;c.height=160;var ctx=c.getContext('2d');ctx.clearRect(0,0,W,160);
+  var maxV=Math.max.apply(null,rows.map(function(r){return Math.max(r.inc,r.exp);}).concat([1]));
+  var pad={l:50,r:10,t:10,b:26},W2=W-pad.l-pad.r,H2=160-pad.t-pad.b,grp=W2/12,bw=Math.max(2,Math.floor(grp/2.6));
+  ctx.strokeStyle='#1a1a1a';ctx.lineWidth=1;ctx.font='9px monospace';
+  for(var j=0;j<=4;j++){var y=pad.t+H2-(H2/4*j);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+W2,y);ctx.stroke();ctx.fillStyle='#555';ctx.textAlign='right';ctx.fillText('$'+(maxV/4*j).toFixed(0),pad.l-4,y+3);}
+  rows.forEach(function(r,i){var cx=pad.l+i*grp+grp/2,eh=(r.exp/maxV)*H2,ih=(r.inc/maxV)*H2;
+    ctx.fillStyle=CAT_COLORS.health;ctx.fillRect(cx-bw,pad.t+H2-eh,bw-1,eh);ctx.fillStyle=CAT_COLORS.savings;ctx.fillRect(cx+1,pad.t+H2-ih,bw-1,ih);
+    ctx.fillStyle='#666';ctx.textAlign='center';ctx.fillText(r.label,cx,pad.t+H2+14);});
+}
+function drawRate(c,rows){
+  var W=c.offsetWidth||600;c.width=W;c.height=110;var ctx=c.getContext('2d');ctx.clearRect(0,0,W,110);
+  var pad={l:50,r:10,t:10,b:22},W2=W-pad.l-pad.r,H2=110-pad.t-pad.b,grp=W2/12,maxR=Math.max.apply(null,rows.map(function(r){return Math.abs(r.rate);}).concat([1]));
+  var zero=pad.t+H2/2;ctx.strokeStyle='#2a2a2a';ctx.beginPath();ctx.moveTo(pad.l,zero);ctx.lineTo(pad.l+W2,zero);ctx.stroke();
+  ctx.font='9px monospace';ctx.fillStyle='#555';ctx.textAlign='right';ctx.fillText('0%',pad.l-4,zero+3);
+  rows.forEach(function(r,i){var cx=pad.l+i*grp+grp/2,h=(Math.abs(r.rate)/maxR)*(H2/2),bw=Math.max(2,Math.floor(grp/1.8));
+    ctx.fillStyle=r.rate>=0?CAT_COLORS.savings:CAT_COLORS.health;ctx.fillRect(cx-bw/2,r.rate>=0?zero-h:zero,bw,h);
+    ctx.fillStyle='#666';ctx.textAlign='center';ctx.fillText(r.label,cx,pad.t+H2+13);});
+}
 function updateAll(){
   updateStats();
   renderRecent();
   if(document.getElementById('tab-ledger').classList.contains('act')) renderLedger();
   if(document.getElementById('tab-budget').classList.contains('act')) renderBudget();
+  if(document.getElementById('tab-trends').classList.contains('act')) renderTrends();
   if(document.getElementById('tab-science').classList.contains('act')) renderInsights();
 }
 
 document.getElementById('e-date').value=new Date().toISOString().slice(0,10);
+document.getElementById('mn-prev').addEventListener('click',function(){changeMonth(-1);});
+document.getElementById('mn-next').addEventListener('click',function(){changeMonth(1);});
+document.getElementById('tab-btn-trends').addEventListener('click',function(){switchTab('trends',this);});
 updateAll();
 </script>
 <script src="/omega-local-backup.js"></script>

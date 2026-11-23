@@ -17,8 +17,8 @@
      wealth      omega_wealth_assets     {cash|invest|crypto|realestate|
                                          business|liabilities: [{value}]}
      revenue     omega_revenue           [{monthly, status}] status 'active'
-     expenses    omega_expenses          [{amount, type income|expense, date}]
-     budget      omega_budget_months     {'YYYY-MM': {income:[], expenses:[]}}
+     budget &    omega_budget_months     {'YYYY-MM': {income:[], expenses:[]}}  (expenses.html; budget.html was merged into it)
+     expenses    omega_expenses          [{amount, type income|expense, date}]  (legacy, read only until expenses.html migrates it)
    An empty store reads "no entries", never 0 presented as a balance
    (CLAUDE.md 8.1 class 9). Nothing leaves the browser.
    ========================================================================== */
@@ -83,17 +83,18 @@
       value: rv.length ? rv.reduce(function (s, r) { return s + n(r.monthly); }, 0) : null,
       note: rv.length ? rv.length + ' active stream' + (rv.length === 1 ? '' : 's') + ' / mo' : null });
 
-    var ex = arr('omega_expenses').filter(function (e) { return String(e.date || '').slice(0, 7) === m; });
-    out.push({ id: 'expenses', kind: 'flow', label: 'EXPENSES', href: '/expenses.html',
-      value: ex.length ? ex.reduce(function (s, e) { return s + (e.type === 'income' ? n(e.amount) : -Math.abs(n(e.amount))); }, 0) : null,
-      note: ex.length ? ex.length + ' entr' + (ex.length === 1 ? 'y' : 'ies') + ' this month' : null });
-
+    /* One tool, one store: expenses.html is a view over omega_budget_months (it absorbed budget.html). The old 'omega_expenses' list is read too, but only
+       while it still exists: expenses.html moves it into the store and removes it, so a member who has not reopened the page since is not shown as empty. */
     var bm = read('omega_budget_months'), bmm = bm && typeof bm === 'object' ? bm[m] : null, bi = 0, be = 0, bc = 0;
     if (bmm && typeof bmm === 'object') {
       (Array.isArray(bmm.income) ? bmm.income : []).forEach(function (x) { if (x) { bi += n(x.amount); bc++; } });
       (Array.isArray(bmm.expenses) ? bmm.expenses : []).forEach(function (x) { if (x) { be += Math.abs(n(x.amount)); bc++; } });
     }
-    out.push({ id: 'budget', kind: 'flow', label: 'BUDGET', href: '/budget.html',
+    arr('omega_expenses').filter(function (e) { return String(e.date || '').slice(0, 7) === m; }).forEach(function (e) {
+      if (e.type === 'income') bi += n(e.amount); else be += Math.abs(n(e.amount));
+      bc++;
+    });
+    out.push({ id: 'budget', kind: 'flow', label: 'BUDGET & EXPENSES', href: '/expenses.html',
       value: bc ? bi - be : null, note: bc ? money(bi) + ' in · ' + money(be) + ' out this month' : null });
 
     return out;

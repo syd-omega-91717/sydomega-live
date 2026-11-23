@@ -61,7 +61,7 @@
     /* Navigation/IA-audit remediation: the 64 pages found reachable only via
        dashboard.html/intelligence.html's own quick-link grids, folded into the
        persistent sidebar by theme (REPOSITORY_AUDIT.md §9). */
-    affirmations:'life',body:'life',breath:'life',fasting:'life',gratitude:'life',habits:'life',journal:'life',mood:'life',nutrition:'life',oath:'life',physiology:'life',rituals:'life',sleep:'life',stoic:'life',targets:'life',water:'life',weekly:'life',workout:'life',budget:'invest',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos','graph-admin':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend','standing-dashboard':'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
+    affirmations:'life',body:'life',breath:'life',fasting:'life',gratitude:'life',habits:'life',journal:'life',mood:'life',nutrition:'life',oath:'life',physiology:'life',rituals:'life',sleep:'life',stoic:'life',targets:'life',water:'life',weekly:'life',workout:'life',expenses:'invest',wealth:'invest',contacts:'command',decisions:'command',missions:'command',network:'command',notes:'command',projects:'command',quotes:'command',time:'command',vision:'command',chronicle:'cosmos',dna:'cosmos',graph:'cosmos','graph-admin':'intel',map:'cosmos',mirror:'cosmos',oracle:'cosmos',realm:'cosmos',rune:'cosmos',tribe:'cosmos',atlas:'intel',cipher:'intel',codex:'intel',mindmap:'intel',nexus:'intel',pulse:'intel',sigma:'intel',signal:'intel',architect:'ascend',clarity:'ascend',flashcard:'ascend',focus:'ascend',forge:'ascend',library:'ascend',mentors:'ascend',principles:'ascend',reading:'ascend',skills:'ascend',vocabulary:'ascend','standing-dashboard':'ascend',maintenance:'govern',ops:'govern',queue:'arena',awards:'achieve',publications:'media','omega-platform-navigator':'govern',
     'sovereign-core':'command'
   };
 
@@ -136,7 +136,7 @@
           ['world-shell','WORLD SHELL','/world-shell.html','folded']]},
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/invest.html',   col:'#E2C86D',
      sub:[['invest','INVEST WORKSPACE','/invest.html'],['investment','INVESTMENT ENGINE','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],['treasury','TREASURY','/treasury.html'],
-          ['wallet','WALLET','/wallet.html'],['revenue','REVENUE','/revenue.html'],['income','INCOME','/income.html'],['budget','BUDGET','/budget.html'],
+          ['wallet','WALLET','/wallet.html'],['revenue','REVENUE','/revenue.html'],['income','INCOME','/income.html'],
           ['expenses','EXPENSES','/expenses.html','folded'],['wealth','WEALTH','/wealth.html'],['ledger','ASSET LEDGER','/ledger.html'],['payments','PAYMENTS','/payments.html','folded'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html','folded']]},
     {key:'achieve',icon:'\u265A', label:'ACHIEVE', href:'/achieve.html', col:'#C9A84C',
      sub:[['achieve-home','ACHIEVE HOME','/achieve.html'],['ladder','LADDER','/ladder.html'],['achievements','ACHIEVEMENTS','/achievements.html'],['leaderboard','LEADERBOARD','/leaderboard.html'],['quest-progress','QUEST PROGRESS','/quest-progress.html'],['my-quests','MY QUESTS','/my-quests.html'],['cosmetics','COSMETICS','/cosmetics.html','folded'],['domain-mastery','DOMAIN MASTERY','/domain-mastery.html','folded'],['covenant','MONTHLY COVENANT','/covenant.html','folded'],['seasonal-events','SEASONAL EVENTS','/seasonal-events.html','folded'],['gates','AUTHORITY GATES','/gates.html','folded'],
@@ -456,7 +456,7 @@
     intel:['insight','intel','intelligence','research','knowledge-loom','cipher'],
     arena:['arena','sovereign-ai','agent-network','analytics'],
     govern:['govern','control-center','observatory','enterprise','knowledge-loom','architecture'],
-    invest:['invest','investment','portfolio','treasury','revenue','wallet','budget','expenses','wealth'],
+    invest:['invest','investment','portfolio','treasury','revenue','wallet','expenses','wealth'],
     /* grades, levels, phases, ascension and grid sit beside ladder.html again
        (owner decision 2026-10-19: their own designs come back to the menu). */
     achieve:['ladder','achieve','achievements','my-quests','gates','ascension','phases','levels','grades','grid'],
@@ -488,7 +488,7 @@
     identity:['profile','life','journal','targets','membership'],
     ascend:['ascend','academy','courses','focus','achievements'],
     cosmos:['cosmos','horoscope','media','movies'],
-    vault:['vault','wallet','budget','portfolio','subscriptions']
+    vault:['vault','wallet','expenses','portfolio','subscriptions']
   };
   /* PLAIN WORDS ON THE SIX DOORS (draft, 2026-11-14). Two independent reviewers said the menu was hard to read:
      COMMAND, ASCEND, VAULT and ORDER are brand names, so a newcomer has to click each one to learn what it holds.

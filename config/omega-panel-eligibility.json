@@ -1,7 +1,7 @@
 {
  "counts": {
   "excluded-pending-review": 6,
-  "hostable": 219,
+  "hostable": 218,
   "navigates-away": 10,
   "needs-fix": 0,
   "standalone-by-policy": 7,
@@ -239,14 +239,6 @@
     "text": 903
    },
    "sha": "9d0c177e37e7",
-   "status": "hostable"
-  },
-  "budget": {
-   "measured": {
-    "errors": 0,
-    "text": 756
-   },
-   "sha": "881dc32e628b",
    "status": "hostable"
   },
   "celestial-covenants": {

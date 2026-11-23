@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 241,
-  "open_task_count": 3253,
+  "page_count": 240,
+  "open_task_count": 3239,
   "pages": [
     {
       "page_id": "404",
@@ -1978,77 +1978,6 @@
         "PAGE::breath::MISSING::TRACEABILITY",
         "PAGE::breath::MISSING::TRUTH_STATES",
         "PAGE::breath::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
-      "page_id": "budget",
-      "path": "budget.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Budget",
-        "h1": [],
-        "scripts": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-empty-guide.js",
-          "/omega-esc.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js",
-          "omega-local-backup.js",
-          "omega-ui.js"
-        ],
-        "supabase_tables": [],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 18,
-          "forms": 0,
-          "inputs": 8,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "data_sources",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::budget::MISSING::ACCESSIBILITY",
-        "PAGE::budget::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::budget::MISSING::AUTHORIZATION",
-        "PAGE::budget::MISSING::DATA_SOURCES",
-        "PAGE::budget::MISSING::DOMAIN",
-        "PAGE::budget::MISSING::EVENTS",
-        "PAGE::budget::MISSING::FAILURE_PATHS",
-        "PAGE::budget::MISSING::PRIMARY_ROLE",
-        "PAGE::budget::MISSING::PURPOSE",
-        "PAGE::budget::MISSING::RESPONSIVE",
-        "PAGE::budget::MISSING::TASKS",
-        "PAGE::budget::MISSING::TRACEABILITY",
-        "PAGE::budget::MISSING::TRUTH_STATES",
-        "PAGE::budget::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

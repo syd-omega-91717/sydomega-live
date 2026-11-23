@@ -62,16 +62,14 @@ class OneOwnerPerNumber(unittest.TestCase):
         self.assertNotIn("KNOWLEDGE CERTIFICATE", cred)
         self.assertNotIn("innerHTML", cred[cred.index("function renderCerts"):cred.index("function renderKYC")])
 
-    def test_expenses_is_a_view_over_budget(self):
+    def test_expenses_is_the_one_view_over_the_budget_store(self):
+        # budget.html was merged into expenses.html (docs/fixes/2026-11-23-budget-expenses-merge.md): one page over one store.
         exp = read("expenses.html")
         self.assertIn("const BUDGET_MONTHS_KEY='omega_budget_months'", exp)
         self.assertNotIn("localStorage.setItem('omega_expenses'", exp)
         self.assertNotIn("localStorage.setItem('omega_budgets'", exp)
         self.assertIn("sub:e.cat", exp)  # fine category kept, no detail lost
-        bud = read("budget.html")
-        # only missing/invalid targets are filled, so a deliberate 0 stays 0
-        self.assertIn("!Object.prototype.hasOwnProperty.call(_targets, c.id) || _targets[c.id] == null", bud)
-        self.assertIn("if (JSON.stringify(_targets) !== before) saveTargets();", bud)
+        self.assertFalse((ROOT / "budget.html").exists())
 
     def test_network_shares_the_contact_book(self):
         net = read("network.html")

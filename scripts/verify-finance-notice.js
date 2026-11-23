@@ -30,7 +30,7 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
   const pw = loadPW(); let browser;
   if (pw) for (const exe of [undefined, '/opt/pw-browsers/chromium', '/opt/pw-browsers/chromium-1243/chrome-linux64/chrome']) { try { browser = await pw.chromium.launch(exe ? { executablePath: exe } : {}); break; } catch (e) { } }
   if (!browser || !STUB) { console.log('SKIPPED: no playwright/browser (or the harness Supabase stub) available'); process.exit(process.env.OMEGA_REQUIRE_BROWSER ? 1 : 0); }
-  check('the module is loaded by at least the fourteen money pages', ONLY || PAGES.length >= 14, PAGES.length);
+  check('the module is loaded by at least the thirteen money pages', ONLY || PAGES.length >= 13, PAGES.length);
 
   async function open(page, viewport) {
     const ctx = await browser.newContext({ serviceWorkers: 'block', viewport });
@@ -73,7 +73,8 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
     try { await pg.waitForSelector('#omega-finance-notice', { state: 'attached', timeout: 15000 }); } catch (e) { }
     await pg.waitForFunction(() => { const n = document.getElementById('omega-finance-notice'); if (!n) return true; const r = n.getBoundingClientRect(); return r.height > 0; }, null, { timeout: 15000 }).catch(() => { });
     await pg.waitForTimeout(300);
-    const o = await probe(pg);
+    let o = await probe(pg);
+    for (let i = 0; i < 25 && o.count === 1 && !o.top; i++) { await pg.waitForTimeout(200); o = await probe(pg); }     // up to 5 s: a transient bar may cover it for an instant, a permanent one fails
     const want = await pg.evaluate(() => window.OmegaFinanceNotice && (window.OmegaFinanceNotice.head + window.OmegaFinanceNotice.body));
     check(page + ': exactly one notice', o.count === 1, JSON.stringify({ count: o.count, state: o.state }));
     if (o.count === 1) {
@@ -95,6 +96,10 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
     await pg.waitForSelector('#omega-finance-notice', { state: 'attached', timeout: 15000 }).catch(() => { });
     await pg.waitForTimeout(300);
     const o = await probe(pg);
+    /* Same pages, same viewport: the page emblem must not be a stretched third column of the flex-row shell (it was 364 x 4,400 px over the tab row on investment, revenue, wallet
+       and expenses at 375 px, so the tabs could not be tapped; the reseat() in omega-page-emblem.js loses a race with the stylesheet on those pages). */
+    const em = await pg.evaluate(() => { const e = document.querySelector('[data-page-emblem]'); if (!e) return null; const p = e.parentElement, cs = getComputedStyle(p), b = e.getBoundingClientRect(); return { directRowChild: cs.display === 'flex' && /^row/.test(cs.flexDirection) && !!p.querySelector('aside, .side, #omega-side'), h: Math.round(b.height), w: Math.round(b.width) }; });
+    check(page + ' @375: the page emblem is not a stretched third column', !em || (!em.directRowChild && em.h < 800), JSON.stringify(em));
     check(page + ' @375: notice stays inside the viewport', o.count === 1 && o.rect.l >= -1 && o.rect.r <= o.vw + 1, JSON.stringify({ c: o.count, r: o.rect, vw: o.vw }));
     if (SHOTS && page === 'investment.html') await pg.screenshot({ path: path.join(SHOTS, 'investment-mobile.png') });
     await ctx.close();

@@ -37,12 +37,12 @@ This scanner reads the repository. It has no database connection, so:
 | class | pages |
 |---|---:|
 | `BUILT` | 96 |
-| `PARTIAL` | 27 |
-| `LOCAL_ONLY` | 40 |
-| `STATIC` | 71 |
+| `PARTIAL` | 26 |
+| `LOCAL_ONLY` | 39 |
+| `STATIC` | 74 |
 | `BROKEN` | 0 |
 | `UNREACHABLE` | 7 |
-| **total** | **241** |
+| **total** | **242** |
 
 ## BUILT (96)
 
@@ -92,15 +92,14 @@ This scanner reads the repository. It has no database connection, so:
 | `health.html` | reads/writes 2 tables; 1 auth call |
 | `horoscope.html` | reads/writes 1 table; 1 auth call |
 | `identity.html` | reads/writes 1 table; 1 auth call |
-| `income.html` | reads/writes 1 table; 1 auth call |
+| `income.html` | reads/writes 3 tables, 2 rpc; 1 auth call |
 | `interface-omni.html` | reads/writes 1 table, 2 rpc; 1 auth call |
 | `knowledge.html` | reads/writes 1 table; 1 auth call |
 | `kyc.html` | reads/writes 1 table; 1 auth call |
-| `ledger.html` | reads/writes 1 table; 1 auth call |
 | `levels.html` | reads/writes 1 table; 1 auth call |
 | `maintenance.html` | reads/writes 1 table; 1 auth call |
 | `map.html` | reads/writes 1 table; 1 auth call |
-| `marketing.html` | reads/writes 2 tables; 1 auth call |
+| `marketing.html` | reads/writes 2 tables, 1 rpc; 1 auth call |
 | `marketplace.html` | reads/writes 3 tables; 1 auth call |
 | `matrix.html` | reads/writes 2 tables, 1 rpc; 4 auth calls |
 | `membership.html` | reads/writes 1 table; 1 auth call |
@@ -114,6 +113,7 @@ This scanner reads the repository. It has no database connection, so:
 | `pending.html` | reads/writes 1 table; 3 auth calls |
 | `phases.html` | reads/writes 1 table; 1 auth call |
 | `points.html` | reads/writes 2 tables; 1 auth call |
+| `portfolio.html` | reads/writes 2 tables; 1 auth call |
 | `prediction.html` | reads/writes 1 table, 1 edge fn; 2 auth calls |
 | `privacy.html` | reads/writes 2 tables, 2 rpc; 2 auth calls |
 | `profile.html` | reads/writes 4 tables, 9 rpc; 8 auth calls |
@@ -145,7 +145,7 @@ This scanner reads the repository. It has no database connection, so:
 | `universe.html` | reads/writes 1 table; 1 auth call |
 | `vault.html` | reads/writes 3 tables, 1 rpc; 1 auth call |
 
-## PARTIAL (27)
+## PARTIAL (26)
 
 | page | evidence |
 |---|---|
@@ -168,16 +168,15 @@ This scanner reads the repository. It has no database connection, so:
 | `notifications.html` | reads/writes 2 tables; 1 auth call; also 5 localStorage writes |
 | `oath.html` | reads/writes 2 tables; 1 auth call; also 1 localStorage write |
 | `pantheons.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `portfolio.html` | reads/writes 2 tables; 1 auth call; also 1 localStorage write |
 | `publications.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `search.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `series.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `targets.html` | reads/writes 2 tables; 1 auth call; also 6 localStorage writes |
-| `treasury.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
+| `treasury.html` | reads/writes 1 table; 1 auth call; also 5 localStorage writes |
 | `trophies.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
 | `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes |
 
-## LOCAL_ONLY (40)
+## LOCAL_ONLY (39)
 
 | page | evidence |
 |---|---|
@@ -185,7 +184,6 @@ This scanner reads the repository. It has no database connection, so:
 | `atlas.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `body.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
 | `breath.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `budget.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `charter.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `clarity.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `contacts.html` | 4 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 4 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
@@ -222,7 +220,7 @@ This scanner reads the repository. It has no database connection, so:
 | `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (71)
+## STATIC (74)
 
 | page | evidence |
 |---|---|
@@ -237,6 +235,7 @@ This scanner reads the repository. It has no database connection, so:
 | `archive.html` | no backend call, no stored state |
 | `arena.html` | no backend call, no stored state |
 | `ascend.html` | no backend call, no stored state |
+| `celestial-covenants.html` | no backend call, no stored state |
 | `characters.html` | no backend call, no stored state |
 | `command-center.html` | no backend call, no stored state |
 | `command.html` | no backend call, no stored state |
@@ -269,6 +268,7 @@ This scanner reads the repository. It has no database connection, so:
 | `knowledge-loom.html` | no backend call, no stored state |
 | `ladder.html` | no backend call, no stored state |
 | `leaderboard.html` | no backend call, no stored state |
+| `ledger.html` | no backend call, no stored state |
 | `life.html` | no backend call, no stored state |
 | `media.html` | no persisted state; 2 auth calls only |
 | `missions.html` | no backend call, no stored state |
@@ -288,6 +288,7 @@ This scanner reads the repository. It has no database connection, so:
 | `sculpture.html` | no backend call, no stored state |
 | `security.html` | no backend call, no stored state |
 | `settings.html` | no backend call, no stored state |
+| `sovereign-core.html` | no backend call, no stored state |
 | `standing-dashboard.html` | no backend call, no stored state |
 | `studio-library.html` | no backend call, no stored state |
 | `verify-deployment.html` | no backend call, no stored state |
@@ -313,46 +314,46 @@ This scanner reads the repository. It has no database connection, so:
 ## Edge Functions
 
 Deployment state is cross-referenced to \`docs/runtime/supabase-edge-functions-live.json\`,
-captured **unknown**. This is a dated provider snapshot, not a live invocation test.
+captured **2026-11-22T09:24:00.000Z**. This is a dated provider snapshot, not a live invocation test.
 \`MISSING_DEPLOYMENT\` means a source/client/server invocation exists but the runtime manifest marks the function local-only or omits it.
 \`UNWIRED\` means the manifest marks the function deployed but this scan found no client/server call path; \`LOCAL_ONLY\` means source-only with no call path.
 
 | function | state | evidence |
 |---|---|---|
-| `agent-execute` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `checkout` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `concierge` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `concierge-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `content-delivery` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `content-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `event-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `evidence-graph` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `graphify-ai-ingest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `graphify-ai-query` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `growth-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `intel-feed` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `market-price` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `notify-access` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `omega-knowledge-embedding-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `omega-media-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `omega-notification-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `omega-provider-worker` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `omega-runtime-gateway` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `product-orchestrator` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `rankings` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `secrets-health` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `snapshot-leaderboard` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `stripe-webhook` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `studio-canon` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `studio-library` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
-| `weekly-digest` | `UNVERIFIED` | runtime manifest is missing/unreadable; deployment state cannot be determined |
+| `agent-execute` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `checkout` | `LOCAL_ONLY` | source exists; runtime manifest marks LOCAL_ONLY and no call path was found |
+| `concierge` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `concierge-orchestrator` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `content-delivery` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `content-ingest` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `event-ingest` | `LOCAL_ONLY` | source exists; runtime manifest marks LOCAL_ONLY and no call path was found |
+| `evidence-graph` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `graphify-ai-ingest` | `MISSING_DEPLOYMENT` | runtime manifest marks LOCAL_ONLY, but an invocation reference exists; deployment is missing |
+| `graphify-ai-query` | `LOCAL_ONLY` | source exists; runtime manifest marks LOCAL_ONLY and no call path was found |
+| `growth-orchestrator` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `intel-feed` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `market-price` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `notify-access` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `omega-knowledge-embedding-worker` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `omega-media-worker` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `omega-notification-worker` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `omega-provider-worker` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `omega-runtime-gateway` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `product-orchestrator` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `rankings` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `secrets-health` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `snapshot-leaderboard` | `UNWIRED` | runtime manifest marks DEPLOYED, but no client/server invocation evidence was found |
+| `stripe-webhook` | `SERVER_INVOKED` | deployed in runtime manifest; server/external invocation evidence found |
+| `studio-canon` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `studio-library` | `WIRED` | deployed in runtime manifest; client invocation found |
+| `weekly-digest` | `LOCAL_ONLY` | source exists; runtime manifest marks LOCAL_ONLY and no call path was found |
 
 ## Declared backend surface
 
 | | count |
 |---|---:|
-| tables + views declared in `supabase/` | 233 |
-| functions declared in `supabase/` | 202 |
+| tables + views declared in `supabase/` | 235 |
+| functions declared in `supabase/` | 205 |
 | tables defined in more than one root SQL file | 46 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a
@@ -421,13 +422,13 @@ it?** A relation the SQL bag declares but the database never received
 answers every query with `{data:null,error}` — an empty page, no
 exception, no console error (CLAUDE.md §8.1 class 2).
 
-Source: `supabase/live-schema.json`, captured **2026-11-16**. A dated
+Source: `supabase/live-schema.json`, captured **2026-11-22**. A dated
 snapshot, not a connection. Regenerate it whenever schema is applied
 live; a stale snapshot produces false findings in both directions.
 
 | relations declared in `supabase/` | absent from the live snapshot | of those, read by a page |
 |---|---|---|
-| 233 | 2 | 0 |
+| 235 | 2 | 0 |
 
 **No absent relation is read by any page.** Nothing is silently
 empty on this axis today.

@@ -491,26 +491,6 @@
       "reward": "/achievements.html"
     },
     {
-      "page": "budget.html",
-      "slug": "budget",
-      "archetype": "finance",
-      "role": "Treasurer",
-      "verb": "MANAGE",
-      "primaryAction": "track",
-      "actions": [
-        "track",
-        "budget",
-        "pay",
-        "invest"
-      ],
-      "successOutcome": "financial state updated",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/budget.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
       "page": "character.html",
       "slug": "character",
       "archetype": "identity",

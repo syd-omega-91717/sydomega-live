@@ -84,6 +84,16 @@
       "source": "/meditate.html",
       "destination": "/breath",
       "permanent": true
+    },
+    {
+      "source": "/budget",
+      "destination": "/expenses",
+      "permanent": true
+    },
+    {
+      "source": "/budget.html",
+      "destination": "/expenses",
+      "permanent": true
     }
   ],
   "headers": [

@@ -196,6 +196,7 @@
 .sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
 .sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 <script src="/omega-esc.js"></script>
 <script type="module">
 const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
@@ -227,7 +228,7 @@ function calcTotals(){
 function drawCanvas(){
   var cv=document.getElementById('treasury-canvas');if(!cv)return;
   var t=calcTotals();
-  var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var W=600,H=180,ctx=OmegaCanvas.fit(cv,W,H);   /* the canvas is 600x180 CSS px (see its width/height attributes); reading cv.width back would compound the device ratio on every redraw */
   ctx.clearRect(0,0,W,H);ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
   if(!t.total&&!reservesRecorded){
     ctx.font='11px monospace';ctx.fillStyle='rgba(138,134,118,.5)';ctx.textAlign='center';

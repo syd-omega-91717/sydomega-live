@@ -95,10 +95,17 @@
   }
 
   /* ── when it may speak ───────────────────────────────────────────── */
+  function shown(e) {
+    var r = e.getBoundingClientRect(); if (!(r.width > 0 && r.height > 0)) return false;
+    var c = getComputedStyle(e); return c.display !== 'none' && c.visibility !== 'hidden';
+  }
   function busy() {
     var a = document.activeElement, tag = a && a.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (a && a.isContentEditable)) return true;
-    if (document.querySelector('[role="dialog"][aria-modal="true"]')) return true;
+    /* Only a dialog the member can SEE counts: dashboard.html alone carries three hidden aria-modal dialogs, and counting those made the
+       module permanently "busy" there (found by a control scenario that should have shown a card and did not). */
+    var ds = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
+    for (var i = 0; i < ds.length; i++) if (shown(ds[i])) return true;
     return !!(document.getElementById('omega-micro-card') || document.getElementById('omega-reminder-card'));
   }
   function eligible() {

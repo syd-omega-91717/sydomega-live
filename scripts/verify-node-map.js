@@ -50,6 +50,7 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
     return { ctx, pg, errs };
   }
   const toView = async (pg, sel) => { await pg.evaluate((q) => document.querySelector(q).scrollIntoView({ block: 'center', behavior: 'instant' }), sel); await pg.waitForFunction((q) => { const b = document.querySelector(q).getBoundingClientRect(); return b.top >= -1 && b.bottom <= innerHeight + 1 || (b.top < innerHeight / 2 && b.bottom > innerHeight / 2); }, sel); await pg.waitForTimeout(150); };
+  // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- SHOTS is the developer's own --shots argument; name is a literal chosen in this file
   const shot = async (pg, name) => { if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); await pg.locator('.onm-fig, .onm-missing').first().screenshot({ path: path.join(SHOTS, name + '.png') }); } };
 
   /* ---------- desktop, full motion ---------- */

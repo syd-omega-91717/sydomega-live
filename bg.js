@@ -113,6 +113,131 @@
    The two `if(document.body){...}else requestAnimationFrame(...)` sites in
    this file are deliberately left alone: they already retry rather than drop,
    and they are the only two that were written that way. */
+/* Ω-SCRIPT-PIPELINE:begin -- opt-in, default OFF. Enable with localStorage.setItem('omega_script_pipeline','1').
+   Flag OFF: __omegaPipe stays null, nothing below runs and window.OmegaScriptPipeline is never published.
+   Flag ON: dynamic classic scripts get async=false (execution in insertion order, i.e. bg.js source order), every
+   path gets a queued/loading/loaded/failed/timeout/present/blocked state, load/error/timeout are observed with
+   addEventListener (legacy callers are unaffected), and promise-aware callers get shared load promises, declared
+   dependencies and explicit retry. Critical paths (bg/nav, /vendor/, anything auth/approval/gate/session/guard)
+   keep their legacy ordering and are never timed out or retried. A load event is NOT proof the script body ran
+   without throwing, so state 'loaded' means "fetched and executed to completion by the browser", nothing more.
+   Known cost: async=false makes a stalled fetch hold back later ordered scripts until the browser gives up on it;
+   a script cannot be cancelled, so timeout only reports -- see the doc before enabling anywhere. */
+var __omegaPipe=(function(){
+  var on=false; try{ on=localStorage.getItem('omega_script_pipeline')==='1'; }catch(e){}
+  if(!on) return null;
+  try{
+  var reg=Object.create(null), deps=Object.create(null), cfg={timeoutMs:15000};
+  var CRIT=/^\/(bg|nav)\.js$|^\/vendor\/|^\/omega-[a-z0-9-]*(auth|approv|gate|session|guard)[a-z0-9-]*\.js$/;
+  function pth(u){ try{ return new URL(u,location.href).pathname; }catch(e){ return null; } }
+  function emit(e,reason){
+    /* pathname only: a query string may carry a token, so it is never copied into a diagnostic */
+    try{ window.dispatchEvent(new CustomEvent('omega:script-pipeline',{detail:{path:e.path,state:e.state,reason:reason||null,attempt:e.attempts,ms:Math.round(performance.now()-e.t0),critical:e.critical}})); }catch(x){}
+  }
+  function entry(path){
+    return reg[path]||(reg[path]={path:path,state:'idle',attempts:0,el:null,critical:CRIT.test(path),settled:false,
+      promise:null,res:null,rej:null,timer:0,t0:0});
+  }
+  function pr(e){
+    if(!e.promise) e.promise=new Promise(function(res,rej){e.res=res;e.rej=rej;});
+    e.promise.catch(function(){}); /* an unobserved rejection must never raise unhandledrejection */
+    return e.promise;
+  }
+  function settle(e,ok,reason){
+    if(e.timer){ clearTimeout(e.timer); e.timer=0; }
+    if(e.settled) return; e.settled=true; pr(e);
+    if(ok) e.res({path:e.path,state:e.state}); else{ var er=new Error('script '+e.path+' '+e.state+(reason?' ('+reason+')':'')); er.path=e.path; er.state=e.state; er.reason=reason||e.state; e.rej(er); }
+  }
+  function set(e,state,reason){ e.state=state; emit(e,reason); }
+  function watch(e,el){
+    e.t0=performance.now(); e.attempts++; e.el=el; e.settled=false; e.promise=null;
+    el.addEventListener('load',function(){
+      if(e.el!==el) return;
+      var late=(e.state==='timeout'); set(e,'loaded',late?'late-load':null); settle(e,true);
+    });
+    el.addEventListener('error',function(){
+      if(e.el!==el) return;
+      /* error = network/CSP/MIME failure: the body never ran, so an explicit retry cannot double-execute it */
+      set(e,'failed','load-error'); settle(e,false,'load-error');
+    });
+    if(!e.critical) e.timer=setTimeout(function(){
+      e.timer=0; if(e.state!=='loading') return;
+      /* NOT 'failed': the fetch may still finish and execute, so retry stays forbidden for this state */
+      set(e,'timeout','timeout'); settle(e,false,'timeout');
+    },cfg.timeoutMs);
+  }
+  function cycle(p,stack){
+    if(stack.indexOf(p)>=0) return stack.slice(stack.indexOf(p)).concat(p);
+    var d=deps[p]||[]; stack=stack.concat(p);
+    for(var i=0;i<d.length;i++){ var c=cycle(d[i],stack); if(c) return c; }
+    return null;
+  }
+  /* Stable topological order over hard (declared) edges only; lexical tie-break; throws on a cycle. */
+  function plan(paths){
+    var want=Object.create(null), out=[], done=Object.create(null);
+    paths.forEach(function add2(p){ if(want[p]) return; want[p]=1; (deps[p]||[]).forEach(add2); });
+    var left=Object.keys(want).sort();
+    while(left.length){
+      var pick=null;
+      for(var i=0;i<left.length;i++){ if((deps[left[i]]||[]).every(function(d){return done[d]||!want[d];})){ pick=left[i]; break; } }
+      if(pick===null) throw new Error('script dependency cycle');
+      done[pick]=1; out.push(pick); left.splice(left.indexOf(pick),1);
+    }
+    return out;
+  }
+  function make(path,attempt){
+    var el=document.createElement('script'); el.src=path; el.setAttribute('data-omega-pipe',path.replace(/[^a-z0-9]+/gi,'-')); return el;
+  }
+  var api={
+    enabled:true,
+    configure:function(o){ if(o&&o.timeoutMs>0) cfg.timeoutMs=o.timeoutMs; return {timeoutMs:cfg.timeoutMs}; },
+    register:function(path,o){
+      var d=((o&&o.requires)||[]).slice().sort(), opt=((o&&o.optionalRequires)||[]).slice().sort();
+      var prev=deps[path]; deps[path]=d.concat(opt); entry(path).opt=opt;
+      var c=cycle(path,[]);
+      if(c){ if(prev) deps[path]=prev; else delete deps[path]; return {ok:false,reason:'cycle',cycle:c}; }
+      return {ok:true};
+    },
+    plan:plan,
+    status:function(path){ var e=reg[path]; return e?e.state:'unknown'; },
+    snapshot:function(){ var o={}; Object.keys(reg).sort().forEach(function(k){ o[k]={state:reg[k].state,attempts:reg[k].attempts,critical:reg[k].critical}; }); return o; },
+    whenSettled:function(path){ return pr(entry(path)); },
+    load:function(path){
+      var e=entry(path);
+      if(e.state==='loading'||e.state==='queued'||e.state==='loaded'||e.state==='present'||e.state==='timeout') return pr(e); /* shared, never a second element */
+      if(e.loadP) return e.loadP; /* one chain per attempt: concurrent callers get the identical promise */
+      var d=deps[path]||[], opt=e.opt||[];
+      return e.loadP=Promise.all(d.map(function(x){ var p=api.load(x); return opt.indexOf(x)>=0?p.catch(function(){}):p; })).then(function(){
+        /* a 'failed' script is only ever re-fetched by an explicit retry(), never implicitly by load() */
+        if(e.state==='idle'||e.state==='blocked'){ e.settled=false; e.promise=null; set(e,'queued'); __omegaAppend(make(path)); }
+        e.loadP=null; return pr(e);
+      },function(err){
+        e.state='blocked'; e.settled=false; settle(e,false,'dependency:'+(err&&err.path)); emit(e,'dependency:'+(err&&err.path)); e.loadP=null; return pr(e);
+      });
+    },
+    retry:function(path){
+      var e=reg[path];
+      if(!e||e.state!=='failed'||e.critical){ var er=new Error('script '+path+' not retryable ('+(e?e.state:'unknown')+')'); er.reason='not-retryable'; return Promise.reject(er); }
+      var old=e.el; if(old&&old.parentNode) old.parentNode.removeChild(old); /* a removed tag no longer counts as loaded-by-tag in dup() */
+      var el=make(path); e.settled=false; e.promise=null; set(e,'queued','retry'); __omegaAppend(el); return pr(e);
+    }
+  };
+  return {
+    prepare:function(el){
+      if(!el||el.tagName!=='SCRIPT'||!el.src) return;
+      var path=pth(el.src); if(!path) return; var e=entry(path);
+      if(!e.critical) el.async=false; /* insertion order == execution order for non-critical dynamic classic scripts */
+      if(e.state==='idle'||e.state==='failed'||e.state==='blocked'){ e.settled=false; e.promise=null; e.state='queued'; }
+    },
+    inserted:function(el){ if(!el||el.tagName!=='SCRIPT'||!el.src) return; var path=pth(el.src); if(!path) return; var e=entry(path); e.state='loading'; watch(e,el); emit(e); },
+    skipped:function(el){ if(!el||el.tagName!=='SCRIPT'||!el.src) return; var path=pth(el.src); if(!path) return; var e=entry(path);
+      /* already on the page via a static tag: whether it has finished is unknowable here, so say 'present', never 'loaded' */
+      if(e.state==='queued'||e.state==='idle'){ e.state='present'; emit(e,'existing-tag'); settle(e,true); } },
+    api:(window.OmegaScriptPipeline=api)
+  };
+  }catch(err){ return null; } /* the pipeline may never take bg.js down: any failure leaves the legacy path */
+})();
+/* Ω-SCRIPT-PIPELINE:end */
 /* Ambient modules (cinematic layers, voice, music, orbital ring, lattice, living art, depth tilt) change nothing a
    page needs to paint or respond. Inserted after `load`, when the browser is idle, they still run on every page;
    they just stop competing with first paint and the page's own script. __omegaAppend still de-duplicates at the
@@ -156,9 +281,13 @@ function __omegaAppend(el){
     for(var k=0;k<list.length;k++) if(list[k]!==el && list[k].isConnected) return true;
     return false;
   }
-  if(document.body){ if(!dup()) document.body.appendChild(el); return; }
+  /* Deterministic script pipeline (docs/DETERMINISTIC_SCRIPT_PIPELINE_PHASE1.md). __omegaPipe is null unless the
+     opt-in flag localStorage['omega_script_pipeline']==='1' was set before bg.js ran, so with the flag OFF (the
+     default) every line below reduces to the legacy behaviour. */
+  var P=__omegaPipe; if(P) P.prepare(el);
+  if(document.body){ if(!dup()){ document.body.appendChild(el); if(P) P.inserted(el); } else if(P) P.skipped(el); return; }
   document.addEventListener('DOMContentLoaded', function(){
-    var b = document.body; if(b && !dup()) b.appendChild(el);
+    var b = document.body; if(b){ if(!dup()){ b.appendChild(el); if(P) P.inserted(el); } else if(P) P.skipped(el); }
   });
 }
 /* Platform nervous system */

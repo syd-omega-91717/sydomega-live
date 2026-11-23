@@ -164,6 +164,10 @@ an invented meaning:
   name would do)
 - `/Pi = 1.618` (1.618 is the golden ratio φ, not π ≈ 3.14159 — likely a mislabel in the source
   material; not corrected into a definition here, just flagged)
+- `The Fiery Triangle (Al-Muthalath al-Nari)`, `Winged Lion` as a rendered scene, `144,000 frequency grid`,
+  `18 Geopolitical Backend Nodes`, `Legion of Wisdom stamp` (owner's 2026-11 ecosystem brief): no engineering
+  definition, asset or data model exists in this repo. Only the Zero-Point intro uses a 144-spoke point field,
+  as an illustration, with no claim about what 144 or 144,000 measures. Not built until the owner defines each.
 
 If any of these turn out to name a real tool, model, or convention relevant to this repo, replace
 its entry above with a real definition and a citation — don't remove it silently.

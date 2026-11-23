@@ -106,6 +106,9 @@
        module permanently "busy" there (found by a control scenario that should have shown a card and did not). */
     var ds = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
     for (var i = 0; i < ds.length; i++) if (shown(ds[i])) return true;
+    /* The guided tour (omega-tour.js, Shepherd) is a modal overlay but not an aria-modal dialog element. */
+    var tour = document.querySelectorAll('.shepherd-element, .shepherd-modal-is-visible');
+    for (var j = 0; j < tour.length; j++) if (shown(tour[j])) return true;
     return !!(document.getElementById('omega-micro-card') || document.getElementById('omega-reminder-card'));
   }
   function eligible() {

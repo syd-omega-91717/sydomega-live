@@ -1,6 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="600" viewBox="0 0 600 600" role="img" aria-labelledby="lw-t lw-d">
   <title id="lw-t">Legion of Wisdom seal</title>
   <desc id="lw-d">A circular gold seal. A faceted winged lion above a gold Omega on an onyx field, nine blue stars above its head. Ring text: The 144,000 Unified Consciousness Grid, Legion of Wisdom.</desc>
+  <style>
+    .wing{transform-box:view-box}
+    .wing-r{transform-origin:384px 292px}
+    .wing-l{transform-origin:216px 292px}
+    @media (prefers-reduced-motion:no-preference){
+      .wing-r{animation:beatR 5.2s ease-in-out infinite}
+      .wing-l{animation:beatL 5.2s ease-in-out infinite}
+      .stars .s{animation:twinkle 3.4s ease-in-out infinite}
+      .stars .s:nth-child(2){animation-delay:-.4s}.stars .s:nth-child(3){animation-delay:-.9s}.stars .s:nth-child(4){animation-delay:-1.3s}
+      .stars .s:nth-child(5){animation-delay:-1.8s}.stars .s:nth-child(6){animation-delay:-2.2s}.stars .s:nth-child(7){animation-delay:-2.6s}
+      .stars .s:nth-child(8){animation-delay:-3s}.stars .s:nth-child(9){animation-delay:-3.2s}
+      .eye{animation:eyes 4.6s ease-in-out infinite}
+    }
+    @keyframes beatR{0%,100%{transform:rotate(0)}50%{transform:rotate(-4.5deg)}}
+    @keyframes beatL{0%,100%{transform:rotate(0)}50%{transform:rotate(4.5deg)}}
+    @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.35}}
+    @keyframes eyes{0%,100%{opacity:1}50%{opacity:.55}}
+  </style>
   <defs>
     <linearGradient id="goldRing" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#f8eab0"/><stop offset=".35" stop-color="#d9b445"/><stop offset=".7" stop-color="#a97f22"/><stop offset="1" stop-color="#e9cf7a"/></linearGradient>
@@ -31,7 +49,7 @@
   <path d="M316,330 L334,308 L300,338 Z" fill="#3a2a06" opacity=".18"/>
   <path d="M310,240 L350,222 L352,231 L316,248 Z" fill="#7a5a14"/>
   <path d="M318,250 L346,240 L340,256 L322,260 Z" fill="#06070d"/>
-  <circle cx="331" cy="250" r="4.2" fill="#8fe0ff" filter="url(#glow)"/>
+  <circle class="eye" cx="331" cy="250" r="4.2" fill="#8fe0ff" filter="url(#glow)"/>
   <path d="M300,284 L316,276 L322,292 L308,305 L300,308 Z" fill="#8a6414" stroke="#f6e7a8" stroke-width=".8" stroke-linejoin="round"/>
   <path d="M300,308 L300,322 M300,320 L318,326 L330,313" fill="none" stroke="#5a3f08" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
@@ -49,9 +67,9 @@
   </g>
   <path d="M30,291 L39,300 L30,309 L21,300Z" fill="#1a1204"/><path d="M570,291 L579,300 L570,309 L561,300Z" fill="#1a1204"/>
   <g clip-path="url(#fieldClip)">
-    <g fill="#5cc8ff" filter="url(#glow)"><path d="M171.3,186 L172.6,190.7 L177.3,192 L172.6,193.3 L171.3,198 L170,193.3 L165.3,192 L170,190.7Z"/><path d="M197.7,160.7 L199,165.4 L203.7,166.7 L199,168 L197.7,172.7 L196.4,168 L191.7,166.7 L196.4,165.4Z"/><path d="M229,141.7 L230.3,146.4 L235,147.7 L230.3,149.1 L229,153.7 L227.7,149.1 L223,147.7 L227.7,146.4Z"/><path d="M263.6,130 L265,134.7 L269.6,136 L265,137.3 L263.6,142 L262.3,137.3 L257.6,136 L262.3,134.7Z"/><path d="M300,124 L301.8,130.2 L308,132 L301.8,133.8 L300,140 L298.2,133.8 L292,132 L298.2,130.2Z"/><path d="M336.4,130 L337.7,134.7 L342.4,136 L337.7,137.3 L336.4,142 L335,137.3 L330.4,136 L335,134.7Z"/><path d="M371,141.7 L372.3,146.4 L377,147.7 L372.3,149.1 L371,153.7 L369.7,149.1 L365,147.7 L369.7,146.4Z"/><path d="M402.3,160.7 L403.6,165.4 L408.3,166.7 L403.6,168 L402.3,172.7 L401,168 L396.3,166.7 L401,165.4Z"/><path d="M428.7,186 L430,190.7 L434.7,192 L430,193.3 L428.7,198 L427.4,193.3 L422.7,192 L427.4,190.7Z"/></g>
-    <use xlink:href="#wingR" href="#wingR"/>
-    <use xlink:href="#wingR" href="#wingR" transform="translate(600,0) scale(-1,1)"/>
+    <g class="stars" fill="#5cc8ff" filter="url(#glow)"><path class="s" d="M171.3,186 L172.6,190.7 L177.3,192 L172.6,193.3 L171.3,198 L170,193.3 L165.3,192 L170,190.7Z"/><path class="s" d="M197.7,160.7 L199,165.4 L203.7,166.7 L199,168 L197.7,172.7 L196.4,168 L191.7,166.7 L196.4,165.4Z"/><path class="s" d="M229,141.7 L230.3,146.4 L235,147.7 L230.3,149.1 L229,153.7 L227.7,149.1 L223,147.7 L227.7,146.4Z"/><path class="s" d="M263.6,130 L265,134.7 L269.6,136 L265,137.3 L263.6,142 L262.3,137.3 L257.6,136 L262.3,134.7Z"/><path class="s" d="M300,124 L301.8,130.2 L308,132 L301.8,133.8 L300,140 L298.2,133.8 L292,132 L298.2,130.2Z"/><path class="s" d="M336.4,130 L337.7,134.7 L342.4,136 L337.7,137.3 L336.4,142 L335,137.3 L330.4,136 L335,134.7Z"/><path class="s" d="M371,141.7 L372.3,146.4 L377,147.7 L372.3,149.1 L371,153.7 L369.7,149.1 L365,147.7 L369.7,146.4Z"/><path class="s" d="M402.3,160.7 L403.6,165.4 L408.3,166.7 L403.6,168 L402.3,172.7 L401,168 L396.3,166.7 L401,165.4Z"/><path class="s" d="M428.7,186 L430,190.7 L434.7,192 L430,193.3 L428.7,198 L427.4,193.3 L422.7,192 L427.4,190.7Z"/></g>
+    <g class="wing wing-r"><use xlink:href="#wingR" href="#wingR"/></g>
+    <g class="wing wing-l"><use xlink:href="#wingR" href="#wingR" transform="translate(600,0) scale(-1,1)"/></g>
     <use xlink:href="#headR" href="#headR"/>
     <use xlink:href="#headR" href="#headR" transform="translate(600,0) scale(-1,1)"/>
     <g transform="translate(0,18)" fill="none" stroke="url(#goldFace)" stroke-width="11" stroke-linecap="square" stroke-linejoin="miter">

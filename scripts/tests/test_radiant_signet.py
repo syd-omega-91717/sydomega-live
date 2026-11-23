@@ -32,7 +32,9 @@ class RadiantSignet(unittest.TestCase):
                     users.append(os.path.basename(f))
         # The front door asked first; on 2026-11-16 the owner directed that the member's home be the reference's composed ecosystem surface (assets/concept/reel-01.jpg), whose hero is the same
         # luminous mark, so dashboard.html is the second and last opt-in. Its single use, and that no other signet in it opts in, is pinned in test_dashboard_tabs.
-        self.assertEqual(users, ["dashboard.html", "index.html"], "every other signet on the site keeps the default look")
+        # 2026-11-23: the owner then directed the winged lion into the dashboard hero in place of this signet (test_dashboard_tabs pins that), so the front
+        # door is the only remaining opt-in again.
+        self.assertEqual(users, ["index.html"], "every other signet on the site keeps the default look")
 
     def test_nothing_the_glow_draws_reaches_the_canvas_edge(self):
         sizes = plane_sizes(BLOCK)

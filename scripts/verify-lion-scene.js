@@ -24,7 +24,7 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
   if (pw) for (const exe of [undefined, '/opt/pw-browsers/chromium', '/opt/pw-browsers/chromium-1243/chrome-linux64/chrome']) { try { browser = await pw.chromium.launch({ ...(exe ? { executablePath: exe } : {}), args }); break; } catch (e) { } }
   if (!browser || !STUB) { console.log('SKIPPED: no playwright/browser (or the harness Supabase stub) available'); process.exit(process.env.OMEGA_REQUIRE_BROWSER ? 1 : 0); }
 
-  async function open({ reduce = false, noWebgl = false, viewport = { width: 1280, height: 900 }, mobile = false } = {}) {
+  async function open({ reduce = false, noWebgl = false, viewport = { width: 1280, height: 900 }, mobile = false, page = '/sculpture.html' } = {}) {
     const ctx = await browser.newContext({ serviceWorkers: 'block', viewport, isMobile: mobile, hasTouch: mobile, reducedMotion: reduce ? 'reduce' : 'no-preference' });
     await ctx.route(ORIGIN + '/**', async (route) => {
       let u = decodeURIComponent(new URL(route.request().url()).pathname); if (u === '/') u = '/index.html';
@@ -41,7 +41,7 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
       if (nw) { const g = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function (t, ...a) { return /webgl/i.test(t) ? null : g.call(this, t, ...a); }; }
     }, noWebgl);
     const pg = await ctx.newPage(); const errs = []; pg.on('pageerror', e => errs.push(String(e.message).slice(0, 160)));
-    await pg.goto(ORIGIN + '/sculpture.html', { waitUntil: 'load', timeout: 60000 });
+    await pg.goto(ORIGIN + page, { waitUntil: 'load', timeout: 60000 });
     await pg.evaluate(() => document.querySelector('[data-omega-sculpture="lion"]').scrollIntoView({ block: 'center' }));
     return { ctx, pg, errs };
   }
@@ -99,6 +99,26 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
     const ring = await region(pg, 0.3, 0.05, 0.7, 0.95);
     check('no WebGL: the flat fallback draws the seal (bright gold present)', drawn && ring.lit > 0.03 && ring.warm > 0.4, { drawn, ring });
     check('no WebGL: no page errors', errs.length === 0, errs);
+    await ctx.close();
+  }
+
+  /* 6. the dashboard hero: the lion is what a member sees first on TODAY, and the page around it is intact */
+  for (const vp of [{ n: 'desktop', viewport: { width: 1280, height: 900 }, mobile: false }, { n: 'mobile 375 px', viewport: { width: 375, height: 740 }, mobile: true }]) {
+    const { ctx, pg, errs } = await open({ page: '/dashboard.html', viewport: vp.viewport, mobile: vp.mobile });
+    const drawn = await waitDrawn(pg); await pg.waitForTimeout(800);
+    const place = await pg.evaluate(() => {
+      const m = document.querySelector('[data-omega-sculpture="lion"]'); if (!m) return { found: false };
+      const r = m.getBoundingClientRect(), today = document.getElementById('l-today');
+      return { found: true, inToday: !!today && today.contains(m) && today.classList.contains('active'), inHero: !!m.closest('.oeh-art'), w: Math.round(r.width), h: Math.round(r.height),
+               one: document.querySelectorAll('[data-omega-sculpture="lion"]').length, radiant: document.querySelectorAll('[data-sculpt-glow="radiant"]').length,
+               overflow: document.documentElement.scrollWidth > innerWidth, copy: !!document.querySelector('.oeh-title') };
+    });
+    const wl = await region(pg, 0.0, 0.15, 0.3, 0.65), wr = await region(pg, 0.7, 0.15, 1.0, 0.65), head = await region(pg, 0.38, 0.25, 0.62, 0.65);
+    check(`dashboard ${vp.n}: the lion is the single hero mount inside the active TODAY tab, beside the hero copy`, place.found && place.inToday && place.inHero && place.one === 1 && place.copy, place);
+    check(`dashboard ${vp.n}: the radiant signet is gone from the page and nothing overflows`, place.radiant === 0 && !place.overflow, place);
+    check(`dashboard ${vp.n}: the lion draws, with gold at the head and a wing on each side`, drawn && head.lit > 0.08 && wl.lit > 0.008 && wr.lit > 0.008, { drawn, head, wl, wr });
+    check(`dashboard ${vp.n}: no page errors`, errs.length === 0, errs);
+    if (SHOTS) { await pg.evaluate(() => document.querySelector('.oeh-hero').scrollIntoView({ block: 'center' })); await pg.waitForTimeout(500); await pg.screenshot({ path: path.join(SHOTS, `dashboard-${vp.n.split(' ')[0]}.png`) }); }
     await ctx.close();
   }
 

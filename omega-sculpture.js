@@ -656,8 +656,14 @@
       eyeMat.emissiveIntensity = 1.4 + Math.sin(tt * 1.7) * 0.5;
       stars.forEach(function (st, i) { st.material.opacity = 0.55 + 0.4 * Math.sin(tt * 1.9 + i * 0.7); });
       mark.rotation.y = Math.sin(tt * 0.5) * 0.22;
-      /* a narrow mount pulls the camera back so both wings stay in frame */
-      cam.position.z = 6.6 * Math.max(1, 1.35 / Math.max(0.4, cam.aspect || 1));
+      /* A narrow mount (the dashboard's hero art is a ~180 px column) cannot hold the full wingspan at a useful size. Fold the wings in as the
+         mount narrows (never below 55%), then set the camera just far enough back to keep both in frame: the head stays large instead of
+         shrinking to fit a span it does not have room for. A wide mount keeps the full wings at the original distance. */
+      var asp = Math.max(0.4, cam.aspect || 1);
+      var ws = Math.max(0.55, Math.min(1, asp / 1.3));
+      wingR.scale.setScalar(ws); wingL.scale.setScalar(ws);
+      var needHalf = 0.62 + 2.1 * ws + 0.35;                 /* shoulder offset + longest feather + margin, in scene units */
+      cam.position.z = Math.max(6.6, needHalf / (0.344 * asp));   /* 0.344 = tan(half of the 38 degree field of view) */
       cam.position.x = lx * 0.3;
       cam.position.y = 0.2 - ly * 0.22;
       cam.lookAt(0, 0.1, 0);

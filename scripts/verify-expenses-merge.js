@@ -185,9 +185,13 @@ const rateSeries = y => MON.map((n, i) => n + ' ' + totals(key(y, i + 1)).rate +
   /* ---------- a hostile store: markup in every stored field, junk rows, a junk month, a __proto__ key, year keys that are not years ---------- */
   {
     const X = '<img src=x onerror="window.__pwned=1">';
-    const raw = '{"' + curKey + '":{"income":[{"id":"a","source":"' + X.replace(/"/g, '\\"') + '","amount":"12.5","date":"' + X.replace(/"/g, '\\"') + '"},null,5,"junk"],' +
-      '"expenses":[{"id":"' + X.replace(/"/g, '\\"') + '","cat":"FOOD","desc":"' + X.replace(/"/g, '\\"') + '","amount":"' + X.replace(/"/g, '\\"') + '","date":"' + X.replace(/"/g, '\\"') + '","sub":"' + X.replace(/"/g, '\\"') + '","notes":"' + X.replace(/"/g, '\\"') + '"},null,5,"junk"]},' +
-      '"2026-10":"junk","__proto__":{"expenses":[1],"income":[1]},"abcd-01":{"income":[{"amount":1}]},"99999-01":{"income":[{"amount":1}]},"<b>-01":{"income":[{"amount":1}]}}';
+    // Built as an object and serialised with JSON.stringify (no hand-escaping). The own "__proto__" key can only come from JSON.parse, so it starts from a static literal.
+    const hostile = JSON.parse('{"__proto__":{"expenses":[1],"income":[1]}}');
+    hostile[curKey] = { income: [{ id: 'a', source: X, amount: '12.5', date: X }, null, 5, 'junk'],
+      expenses: [{ id: X, cat: 'FOOD', desc: X, amount: X, date: X, sub: X, notes: X }, null, 5, 'junk'] };
+    hostile['2026-10'] = 'junk'; hostile['abcd-01'] = { income: [{ amount: 1 }] }; hostile['99999-01'] = { income: [{ amount: 1 }] }; hostile['<b>-01'] = { income: [{ amount: 1 }] };
+    const raw = JSON.stringify(hostile);
+    if (!raw.includes('"__proto__"')) throw new Error('the hostile seed lost its own __proto__ key');
     const { ctx, pg, errs } = await open('expenses.html', { store: raw });
     for (const t of ['budget', 'trends', 'ledger', 'science', 'add']) { await tab(pg, t); await pg.waitForTimeout(250); }
     await tab(pg, 'budget');

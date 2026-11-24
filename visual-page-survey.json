@@ -5606,33 +5606,6 @@
     ]
   },
   {
-    "page": "trophies.html",
-    "title": "Ω SYD OMEGA 91717 — Trophy Vault",
-    "h1": "",
-    "body_words": 224,
-    "cards": 17,
-    "sections": 4,
-    "tabs": 4,
-    "buttons": 0,
-    "links": 0,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 12,
-    "dense_tracking_declarations": 2,
-    "fixed_width_declarations": 0,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 98,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading",
-      "READABILITY: 2 declarations at >=3px letter spacing"
-    ]
-  },
-  {
     "page": "universe.html",
     "title": "Ω SYD OMEGA 91717 — Universe",
     "h1": "",

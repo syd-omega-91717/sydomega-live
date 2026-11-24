@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 240,
-  "open_task_count": 3239,
+  "page_count": 241,
+  "open_task_count": 3255,
   "pages": [
     {
       "page_id": "404",
@@ -479,8 +479,8 @@
         "interactive_counts": {
           "buttons": 8,
           "forms": 0,
-          "inputs": 8,
-          "links": 0
+          "inputs": 7,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -604,7 +604,9 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-agent-embed.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -673,6 +675,7 @@
         ],
         "scripts": [
           "/bg.js",
+          "/omega-agent-embed.js",
           "/omega-agent-operations.js",
           "/omega-morph.js"
         ],
@@ -750,16 +753,16 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 5,
+          "buttons": 9,
           "forms": 0,
           "inputs": 1,
-          "links": 1
+          "links": 3
         },
         "media_counts": {
           "images": 0,
           "video": 0,
           "audio": 0,
-          "iframes": 0
+          "iframes": 3
         }
       },
       "candidate_capabilities": [],
@@ -955,6 +958,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -1296,6 +1300,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -1364,6 +1369,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -1637,6 +1643,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -1706,6 +1713,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-finance-notice.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -1855,6 +1863,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -1923,6 +1932,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
@@ -1978,6 +1988,74 @@
         "PAGE::breath::MISSING::TRACEABILITY",
         "PAGE::breath::MISSING::TRUTH_STATES",
         "PAGE::breath::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "celestial-covenants",
+      "path": "celestial-covenants.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "Ω SYD OMEGA 91717 — The Celestial Covenants",
+        "h1": [
+          "THE CELESTIAL COVENANTS"
+        ],
+        "scripts": [
+          "/bg.js",
+          "/omega-celestial-covenants.js",
+          "/omega-morph.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 4,
+          "forms": 0,
+          "inputs": 0,
+          "links": 0
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::celestial-covenants::MISSING::ACCESSIBILITY",
+        "PAGE::celestial-covenants::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::celestial-covenants::MISSING::AUTHORIZATION",
+        "PAGE::celestial-covenants::MISSING::DATA_SOURCES",
+        "PAGE::celestial-covenants::MISSING::DOMAIN",
+        "PAGE::celestial-covenants::MISSING::EVENTS",
+        "PAGE::celestial-covenants::MISSING::FAILURE_PATHS",
+        "PAGE::celestial-covenants::MISSING::PRIMARY_ROLE",
+        "PAGE::celestial-covenants::MISSING::PURPOSE",
+        "PAGE::celestial-covenants::MISSING::RESPONSIVE",
+        "PAGE::celestial-covenants::MISSING::TASKS",
+        "PAGE::celestial-covenants::MISSING::TRACEABILITY",
+        "PAGE::celestial-covenants::MISSING::TRUTH_STATES",
+        "PAGE::celestial-covenants::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
@@ -2421,6 +2499,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2556,6 +2635,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
@@ -2970,6 +3050,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
@@ -3449,7 +3530,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Cosmos",
-        "h1": [],
+        "h1": [
+          "COSMOS"
+        ],
         "scripts": [
           "/bg.js",
           "/nav.js",
@@ -3941,10 +4024,13 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Command Bridge",
-        "h1": [],
+        "h1": [
+          "COMMAND"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-character-card.js",
           "/omega-command-dock.js",
           "/omega-command-wall.js",
@@ -3952,6 +4038,7 @@
           "/omega-daily.js",
           "/omega-ecosystem-home.js",
           "/omega-esc.js",
+          "/omega-genesis-command.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
@@ -3978,10 +4065,10 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 26,
+          "buttons": 27,
           "forms": 0,
           "inputs": 14,
-          "links": 16
+          "links": 20
         },
         "media_counts": {
           "images": 0,
@@ -4189,7 +4276,7 @@
           "links": 0
         },
         "media_counts": {
-          "images": 1,
+          "images": 2,
           "video": 0,
           "audio": 0,
           "iframes": 0
@@ -4525,6 +4612,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5165,7 +5253,10 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
+          "/omega-empty-guide.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
@@ -5176,7 +5267,7 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 14,
+          "buttons": 17,
           "forms": 0,
           "inputs": 9,
           "links": 0
@@ -5326,7 +5417,7 @@
           }
         ],
         "interactive_counts": {
-          "buttons": 7,
+          "buttons": 5,
           "forms": 0,
           "inputs": 12,
           "links": 0
@@ -5390,6 +5481,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
@@ -5602,6 +5694,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
@@ -7632,6 +7725,7 @@
           "/nav.js",
           "/omega-analytics-init.js",
           "/omega-demo-video.js",
+          "/omega-honors-vault.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -7645,7 +7739,7 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 7,
+          "buttons": 8,
           "forms": 0,
           "inputs": 0,
           "links": 1
@@ -7779,6 +7873,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -7918,24 +8013,34 @@
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Income &amp; Allocation",
-        "h1": [],
+        "title": "Ω SYD OMEGA 91717 — Finance Command",
+        "h1": [
+          "FINANCE COMMAND"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-finance-notice.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
+          "omega_financial_scenarios",
+          "omega_financial_simulation_runs",
           "profiles"
         ],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
+        "supabase_rpcs": [
+          "omega_owner_finance_summary",
+          "omega_run_financial_scenario"
+        ],
+        "capability_candidates": [
+          "finance-command"
+        ],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 4,
+          "buttons": 9,
           "forms": 0,
-          "inputs": 0,
+          "inputs": 13,
           "links": 0
         },
         "media_counts": {
@@ -7945,7 +8050,9 @@
           "iframes": 0
         }
       },
-      "candidate_capabilities": [],
+      "candidate_capabilities": [
+        "finance-command"
+      ],
       "candidate_domains": [],
       "missing_contract_fields": [
         "accessibility",
@@ -8005,7 +8112,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 56
+          "links": 62
         },
         "media_counts": {
           "images": 0,
@@ -8346,6 +8453,7 @@
         "scripts": [
           "/bg.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-invest-boot.js",
           "/omega-invest-native.js",
           "/omega-invest-shell-boot.js",
@@ -8365,7 +8473,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 14
+          "links": 17
         },
         "media_counts": {
           "images": 0,
@@ -8426,8 +8534,10 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-empty-guide.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -8506,6 +8616,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
@@ -8722,6 +8833,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -8866,6 +8978,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -9073,12 +9186,11 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-ledger-native.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
-        "supabase_tables": [
-          "profiles"
-        ],
+        "supabase_tables": [],
         "supabase_rpcs": [],
         "capability_candidates": [],
         "domain_candidates": [],
@@ -9086,7 +9198,7 @@
           "buttons": 4,
           "forms": 0,
           "inputs": 1,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -9101,6 +9213,7 @@
         "accessibility",
         "asset_requirements",
         "authorization",
+        "data_sources",
         "domain",
         "events",
         "failure_paths",
@@ -9116,6 +9229,7 @@
         "PAGE::ledger::MISSING::ACCESSIBILITY",
         "PAGE::ledger::MISSING::ASSET_REQUIREMENTS",
         "PAGE::ledger::MISSING::AUTHORIZATION",
+        "PAGE::ledger::MISSING::DATA_SOURCES",
         "PAGE::ledger::MISSING::DOMAIN",
         "PAGE::ledger::MISSING::EVENTS",
         "PAGE::ledger::MISSING::FAILURE_PATHS",
@@ -9498,6 +9612,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-content-tasks.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
@@ -9507,7 +9622,9 @@
           "media_reservations",
           "profiles"
         ],
-        "supabase_rpcs": [],
+        "supabase_rpcs": [
+          "set_reservation_status"
+        ],
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
@@ -9568,9 +9685,12 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-content-tasks.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/upload.js"
         ],
         "supabase_tables": [
           "marketplace_favorites",
@@ -9748,7 +9868,7 @@
           "buttons": 9,
           "forms": 0,
           "inputs": 0,
-          "links": 4
+          "links": 5
         },
         "media_counts": {
           "images": 0,
@@ -9943,6 +10063,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -10213,6 +10334,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -10420,6 +10542,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
@@ -10570,6 +10693,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -10790,6 +10914,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
@@ -11139,6 +11264,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -11412,6 +11538,7 @@
         "h1": [],
         "scripts": [
           "/bg.js",
+          "/omega-agent-embed.js",
           "/omega-analytics-init.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -11548,6 +11675,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-finance-notice.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -11566,7 +11694,7 @@
           "buttons": 8,
           "forms": 0,
           "inputs": 0,
-          "links": 0
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -11830,6 +11958,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -12038,6 +12167,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-finance-notice.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -12051,8 +12181,8 @@
         "interactive_counts": {
           "buttons": 4,
           "forms": 0,
-          "inputs": 1,
-          "links": 0
+          "inputs": 0,
+          "links": 1
         },
         "media_counts": {
           "images": 0,
@@ -12259,7 +12389,7 @@
           "buttons": 8,
           "forms": 0,
           "inputs": 5,
-          "links": 1
+          "links": 2
         },
         "media_counts": {
           "images": 0,
@@ -12310,6 +12440,7 @@
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Profile",
         "h1": [
+          "IDENTITY",
           "Portfolio Command"
         ],
         "scripts": [
@@ -12350,7 +12481,7 @@
           "buttons": 30,
           "forms": 0,
           "inputs": 10,
-          "links": 13
+          "links": 14
         },
         "media_counts": {
           "images": 2,
@@ -12623,8 +12754,10 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-content-tasks.js",
           "/omega-morph.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/upload.js"
         ],
         "supabase_tables": [
           "profiles",
@@ -12636,7 +12769,7 @@
         "capability_candidates": [],
         "domain_candidates": [],
         "interactive_counts": {
-          "buttons": 6,
+          "buttons": 5,
           "forms": 0,
           "inputs": 4,
           "links": 0
@@ -12831,6 +12964,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -12967,6 +13101,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -13466,8 +13601,10 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-empty-guide.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -13745,7 +13882,9 @@
         ],
         "scripts": [
           "/bg.js",
-          "/omega-morph.js"
+          "/omega-morph.js",
+          "/omega-node-map.js",
+          "/omega-world-engine.js"
         ],
         "supabase_tables": [],
         "supabase_rpcs": [],
@@ -14039,7 +14178,7 @@
       "contract_state": "BOOTSTRAP_OPEN",
       "authoritative_contract_present": false,
       "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; SOVEREIGN SERIES",
+        "title": "&#937; SYD OMEGA 91717 &mdash; THE TWELVE HOUSES",
         "h1": [],
         "scripts": [
           "/bg.js",
@@ -14107,7 +14246,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; PLATFORM SERVICES",
-        "h1": [],
+        "h1": [
+          "SERVICES"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -14249,6 +14390,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -14462,6 +14604,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
@@ -14533,6 +14676,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -14681,7 +14825,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; AI Command",
-        "h1": [],
+        "h1": [
+          "SOVEREIGN AI"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -14748,6 +14894,75 @@
         "PAGE::sovereign-ai::MISSING::TRACEABILITY",
         "PAGE::sovereign-ai::MISSING::TRUTH_STATES",
         "PAGE::sovereign-ai::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "sovereign-core",
+      "path": "sovereign-core.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "Ω SYD OMEGA 91717 — Sovereign Command Core",
+        "h1": [
+          "Beyond the  ordinary interface."
+        ],
+        "scripts": [
+          "/bg.js",
+          "/omega-morph.js",
+          "/omega-one-shell.js",
+          "/omega-sovereign-core-clock.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 0,
+          "forms": 0,
+          "inputs": 0,
+          "links": 26
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::sovereign-core::MISSING::ACCESSIBILITY",
+        "PAGE::sovereign-core::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::sovereign-core::MISSING::AUTHORIZATION",
+        "PAGE::sovereign-core::MISSING::DATA_SOURCES",
+        "PAGE::sovereign-core::MISSING::DOMAIN",
+        "PAGE::sovereign-core::MISSING::EVENTS",
+        "PAGE::sovereign-core::MISSING::FAILURE_PATHS",
+        "PAGE::sovereign-core::MISSING::PRIMARY_ROLE",
+        "PAGE::sovereign-core::MISSING::PURPOSE",
+        "PAGE::sovereign-core::MISSING::RESPONSIVE",
+        "PAGE::sovereign-core::MISSING::TASKS",
+        "PAGE::sovereign-core::MISSING::TRACEABILITY",
+        "PAGE::sovereign-core::MISSING::TRUTH_STATES",
+        "PAGE::sovereign-core::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
@@ -14961,6 +15176,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -15165,6 +15381,7 @@
           "/bg.js",
           "/omega-analytics-init.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -15382,6 +15599,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"
@@ -15597,8 +15815,10 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-empty-guide.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -15792,76 +16012,6 @@
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
     {
-      "page_id": "trophies",
-      "path": "trophies.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Trophy Vault",
-        "h1": [],
-        "scripts": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
-        ],
-        "supabase_tables": [
-          "certificates",
-          "medals",
-          "profiles",
-          "trophies"
-        ],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 5,
-          "forms": 0,
-          "inputs": 0,
-          "links": 0
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::trophies::MISSING::ACCESSIBILITY",
-        "PAGE::trophies::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::trophies::MISSING::AUTHORIZATION",
-        "PAGE::trophies::MISSING::DOMAIN",
-        "PAGE::trophies::MISSING::EVENTS",
-        "PAGE::trophies::MISSING::FAILURE_PATHS",
-        "PAGE::trophies::MISSING::PRIMARY_ROLE",
-        "PAGE::trophies::MISSING::PURPOSE",
-        "PAGE::trophies::MISSING::RESPONSIVE",
-        "PAGE::trophies::MISSING::TASKS",
-        "PAGE::trophies::MISSING::TRACEABILITY",
-        "PAGE::trophies::MISSING::TRUTH_STATES",
-        "PAGE::trophies::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
       "page_id": "universe",
       "path": "universe.html",
       "contract_state": "BOOTSTRAP_OPEN",
@@ -15935,7 +16085,9 @@
       "authoritative_contract_present": false,
       "evidence": {
         "title": "&#937; SYD OMEGA 91717 &mdash; Vault",
-        "h1": [],
+        "h1": [
+          "VAULT"
+        ],
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
@@ -15959,7 +16111,7 @@
           "buttons": 5,
           "forms": 0,
           "inputs": 0,
-          "links": 2
+          "links": 3
         },
         "media_counts": {
           "images": 0,
@@ -16153,6 +16305,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
@@ -16360,8 +16513,10 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-empty-guide.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-local-backup.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -16430,6 +16585,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
@@ -16499,8 +16655,10 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-empty-guide.js",
           "/omega-esc.js",
+          "/omega-finance-notice.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js",
@@ -16571,6 +16729,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-today.js",
@@ -16640,6 +16799,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "omega-ui.js"

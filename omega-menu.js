@@ -59,7 +59,7 @@
       ['\u2318', 'Family', '/family.html'],
       ['\u265A', 'Kings', '/elements.html#kings'],
       ['\u2691', 'Hall', '/hall.html'],
-      ['\u2605', 'Trophies', '/trophies.html'],
+      ['\u2605', 'Trophies', '/honors.html#vault'],
       ['\u25A6', 'City', '/city.html'],
       ['\u2693', 'Bloodline', '/family.html#bloodline'],
       ['\u26EA', 'Heritage', '/family.html#heritage'],

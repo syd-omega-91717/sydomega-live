@@ -39,7 +39,7 @@ label: 'COMMAND', pages: ['command', 'dashboard', 'beacon', 'notifications', 'se
 }, identity: {
 label: 'IDENTITY', pages: ['profile', 'identity', 'passport', 'character', 'settings', 'kyc']
 }, ascend: {
-label: 'ASCEND', pages: ['ascension', 'matrix', 'academy', 'gaming', 'honors', 'trophies', 'exam', 'contributions', 'achievements', 'leaderboard', 'grades', 'levels', 'points']
+label: 'ASCEND', pages: ['ascension', 'matrix', 'academy', 'gaming', 'honors', 'exam', 'contributions', 'achievements', 'leaderboard', 'grades', 'levels', 'points']
 }, cosmos: {
 label: 'COSMOS', pages: ['cosmos', 'elements', 'horoscope', 'pantheons', 'agents', 'gates', 'houses', 'triads', 'kings', 'chronicle', 'dna', 'graph', 'map', 'mirror', 'oracle', 'realm', 'rune', 'tribe']
 }, universe: {

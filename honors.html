@@ -190,6 +190,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .slot.earned.t4{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,229,255,.2)}
 .summary{text-align:center;font-family:monospace;font-size:.75rem;color:var(--gold);letter-spacing:.08em;padding:1rem 0}
 @media(max-width:900px){#mtab-ascension{flex-direction:column}.proto-panel{position:static;flex:1 1 auto;width:100%}}
+/* VAULT tab (ported from the retired trophies.html; names and colours come from OmegaCanon / OmegaRealm) */
+.vt-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));border:1px solid var(--line,rgba(201,168,76,.18));margin-bottom:16px}
+.vt-stat{padding:16px 20px 18px;border-right:1px solid var(--line,rgba(201,168,76,.18));text-align:center;position:relative;overflow:hidden}
+.vt-stat:last-child{border-right:none}
+.vt-stat .l{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:5px}
+.vt-stat .v{font-family:var(--D);font-size:clamp(20px,3vw,30px);font-weight:700}
+.vt-stat::after{content:'';position:absolute;left:0;bottom:0;height:2px;width:var(--vt-fill,0%);background:var(--vt-col,var(--gold));box-shadow:0 0 8px var(--vt-col,var(--gold));transition:width .8s ease}
+@media (prefers-reduced-motion:reduce){.vt-stat::after{transition:none}}
+.vt-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.vt-share{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px}
+.vt-sec{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin:18px 0 10px}
+.vt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.vt-card{border:1px solid var(--line,rgba(201,168,76,.18));background:var(--surface,rgba(10,10,15,.6));padding:20px;text-align:center;border-top:3px solid var(--tc,var(--gold))}
+.vt-card.earned{border-color:rgba(201,168,76,.4)}
+.vt-card canvas{display:block;margin:0 auto 12px}
+.vt-num{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:3px}
+.vt-name{font-family:var(--D);font-size:var(--fs-2,14px);font-weight:700;margin-bottom:4px}
+.vt-sub{font-family:var(--M);font-size:12px;letter-spacing:2px;margin-bottom:6px}
+.vt-info{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:4px}
+.vt-rack{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.vt-medal{border:1px solid var(--line,rgba(201,168,76,.18));background:var(--surface,rgba(10,10,15,.6));padding:14px;display:flex;gap:12px;align-items:center}
+.vt-medal.earned{box-shadow:0 0 14px -6px var(--mc,var(--gold))}
+.vt-medal .ic{width:36px;height:36px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:var(--D);font-size:14px;flex-shrink:0}
+.vt-row{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px dashed rgba(201,168,76,.08)}
+.vt-row.issued{border-left:3px solid var(--cc,var(--gold));padding-left:12px}
+.vt-row .n{font-family:var(--D);font-size:var(--fs-4,20px);font-weight:700;min-width:28px;opacity:.6}
+.vt-row .b{flex:1}
+.vt-badge{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:2px 8px;border:1px solid;display:inline-block}
 </style>
 </head>
 <body>
@@ -215,6 +243,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     <div class="mtab-btn active" data-mtab="catalog" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid var(--gold);color:var(--gold);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; HONORS CATALOG</div>
     <div class="mtab-btn" data-mtab="ascension" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; ASCENSION</div>
     <div class="mtab-btn" data-mtab="record" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; MY RECORD</div>
+    <div class="mtab-btn" data-mtab="vault" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; VAULT</div>
     <div class="mtab-btn" data-mtab="science" style="padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);font-family:monospace;font-size:12px;letter-spacing:2px;white-space:nowrap">&#9670; SCIENCE</div>
   </div>
 
@@ -925,6 +954,19 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
 })();
 </script>
 
+  <div class="mtab-panel" id="mtab-vault" style="display:none;max-width:1400px;margin:0 auto;padding:0 2rem 3rem">
+    <div class="vt-head"><div class="vt-sec" style="margin:0">YOUR TROPHIES &middot; MEDALS &middot; CERTIFICATES</div><button class="vt-share" id="vt-share" type="button">SHARE CARD</button></div>
+    <div class="vt-stats">
+      <div class="vt-stat" id="vt-s-t"><div class="l">TROPHIES</div><div class="v" id="vt-t" style="color:var(--gold)">0/12</div></div>
+      <div class="vt-stat" id="vt-s-m"><div class="l">MEDALS</div><div class="v" id="vt-m" style="color:var(--solar)">0/12</div></div>
+      <div class="vt-stat" id="vt-s-c"><div class="l">CERTIFICATES</div><div class="v" id="vt-c" style="color:var(--cyan)">0/12</div></div>
+      <div class="vt-stat" id="vt-s-a"><div class="l">TIER</div><div class="v" id="vt-a" style="color:var(--gold)">--</div></div>
+    </div>
+    <div class="vt-sec">TROPHIES</div><div class="vt-grid" id="vt-trophies"></div>
+    <div class="vt-sec">MEDALS</div><div class="vt-rack" id="vt-medals"></div>
+    <div class="vt-sec">CERTIFICATES</div><div id="vt-certs"></div>
+  </div>
+
 <div class="mtab-panel" id="mtab-science" style="display:none;max-width:1400px;margin:0 auto;padding:0 2rem 3rem">
   <div style="margin-top:1.5rem">
     <div class="sechead">AWARD RECORD PROVENANCE</div>
@@ -942,6 +984,7 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
     <a href="/evolution.html" style="display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid rgba(201,168,76,.35);color:var(--gold);font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-decoration:none">OPEN THE CANONICAL PROGRESSION MODEL <span aria-hidden="true">↗</span></a>
   </div>
 </div>
+<script type="module" src="/omega-honors-vault.js"></script>
 <script>
 document.querySelectorAll('.mtab-btn').forEach(function(btn){
   btn.addEventListener('click',function(){
@@ -951,6 +994,7 @@ document.querySelectorAll('.mtab-btn').forEach(function(btn){
     document.getElementById('mtab-'+btn.dataset.mtab).style.display='block';
     if(btn.dataset.mtab==='ascension'&&!window.__ascBuilt){window.__ascBuilt=true;callWhenReady('bootAscension');}
     if(btn.dataset.mtab==='record'&&!window.__achBuilt){window.__achBuilt=true;callWhenReady('bootAchievements');}
+    if(btn.dataset.mtab==='vault'&&!window.__vaultBuilt){window.__vaultBuilt=true;callWhenReady('bootVault');}
   });
 });
 function callWhenReady(fnName){

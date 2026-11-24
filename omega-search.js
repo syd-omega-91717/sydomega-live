@@ -117,7 +117,7 @@
     {t:'TRAVEL GLOBAL',d:'Global presence travel system sovereign mobility',u:'/travel.html',c:'PAGE'},
     {t:'TREASURY',d:'Treasury management sovereign financial reserve vault',u:'/treasury.html',c:'PAGE'},
     {t:'TRIADS',d:'Triadic lattice structure system triad formation',u:'/triads.html',c:'PAGE'},
-    {t:'TROPHIES',d:'Trophy cabinet achievements hall sovereign rewards',u:'/trophies.html',c:'PAGE'},
+    {t:'TROPHIES',d:'Trophy cabinet achievements hall sovereign rewards',u:'/honors.html#vault',c:'PAGE'},
     {t:'UNIVERSE STRUCTURE',d:'Platform universe architecture sovereign world map',u:'/universe.html',c:'PAGE'},
     {t:'WALLET TOKENS',d:'ΩSYD wallet token management digital assets balance',u:'/wallet.html',c:'PAGE'},
     /* ── PAGES ADDED — was reachable from dashboard/nav but missing from

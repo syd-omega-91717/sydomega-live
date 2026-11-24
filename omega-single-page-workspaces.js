@@ -20,7 +20,7 @@
     '/arena.html':['sovereign-ai','agent-network','agents','analytics','queue','gaming'],
     '/govern.html':['governance','observatory','enterprise','privacy','roadmap','ecosystem','knowledge','knowledge-loom','maintenance','control-center','platform-kernel','agent-operations','ops','architecture','autonomous-insights','lab','design-system','design-showcase','design-lab'],
     '/invest.html':['investment','portfolio','treasury','revenue','income','expenses','wealth'],
-    '/achieve.html':['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates','grades','levels','phases','ascension','kings','triads','grid','awards','hercules','trophies'],
+    '/achieve.html':['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','gates','grades','levels','phases','ascension','kings','triads','grid','awards','hercules'],
     '/archive.html':['kyc','charter','sigil'],
     '/media.html':['cinema','movies','series','trailers','universe','feed','publications','visual-atlas','characters']
   };
@@ -37,7 +37,7 @@
     '/services.html':'consultancy publishing marketing events social studio creation-studio',
     '/intel.html':'intelligence automation atlas cipher codex mindmap nexus pulse sigma signal news',
     '/govern.html':'governance roadmap ecosystem knowledge knowledge-loom maintenance control-center platform-kernel agent-operations ops architecture autonomous-insights lab design-system design-showcase design-lab',
-    '/achieve.html':'achievements leaderboard domain-mastery gates grades levels phases ascension kings triads grid hercules trophies'
+    '/achieve.html':'achievements leaderboard domain-mastery gates grades levels phases ascension kings triads grid hercules'
   };
   /* Published for the one-shell router (omega-one-shell.js): the hub -> pages map and the pages already enabled as tabs, read
      from here so the shell never keeps a second copy of them. Copies, so a caller cannot edit the tables this file uses. */

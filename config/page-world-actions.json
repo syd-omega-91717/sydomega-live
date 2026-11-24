@@ -297,7 +297,7 @@
       "districtName": "THE GAME ARENA",
       "entry": "/arena.html",
       "mission": "/missions.html",
-      "reward": "/trophies.html"
+      "reward": "/honors.html#vault"
     },
     {
       "page": "ascension.html",
@@ -1380,7 +1380,7 @@
       "districtName": "THE GAME ARENA",
       "entry": "/gaming.html",
       "mission": "/missions.html",
-      "reward": "/trophies.html"
+      "reward": "/honors.html#vault"
     },
     {
       "page": "gates.html",
@@ -2082,7 +2082,7 @@
       "districtName": "THE GAME ARENA",
       "entry": "/leaderboard.html",
       "mission": "/missions.html",
-      "reward": "/trophies.html"
+      "reward": "/honors.html#vault"
     },
     {
       "page": "ledger.html",
@@ -3742,25 +3742,6 @@
       "reward": "/achievements.html"
     },
     {
-      "page": "trophies.html",
-      "slug": "trophies",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "arena",
-      "districtName": "THE GAME ARENA",
-      "entry": "/trophies.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
       "page": "universe.html",
       "slug": "universe",
       "archetype": "command",
@@ -3990,7 +3971,7 @@
       "districtName": "THE GAME ARENA",
       "entry": "/web/templates/leaderboard.html",
       "mission": "/missions.html",
-      "reward": "/trophies.html"
+      "reward": "/honors.html#vault"
     },
     {
       "page": "web/templates/sovereign_health.html",

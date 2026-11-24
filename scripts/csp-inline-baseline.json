@@ -1,7 +1,7 @@
 {
  "404.html": {
   "handlers": 4,
-  "scripts": 2
+  "scripts": 1
  },
  "academy.html": {
   "handlers": 0,
@@ -28,11 +28,11 @@
   "scripts": 1
  },
  "agent-network.html": {
-  "handlers": 1,
+  "handlers": 0,
   "scripts": 1
  },
  "agents.html": {
-  "handlers": 5,
+  "handlers": 0,
   "scripts": 2
  },
  "analytics.html": {
@@ -49,7 +49,7 @@
  },
  "ascension.html": {
   "handlers": 1,
-  "scripts": 2
+  "scripts": 1
  },
  "atlas.html": {
   "handlers": 17,
@@ -77,7 +77,7 @@
  },
  "bloodline.html": {
   "handlers": 3,
-  "scripts": 2
+  "scripts": 1
  },
  "body.html": {
   "handlers": 14,
@@ -105,7 +105,7 @@
  },
  "chronicle.html": {
   "handlers": 9,
-  "scripts": 3
+  "scripts": 2
  },
  "cinema.html": {
   "handlers": 7,
@@ -129,7 +129,7 @@
  },
  "compliance.html": {
   "handlers": 0,
-  "scripts": 3
+  "scripts": 2
  },
  "consultancy.html": {
   "handlers": 5,
@@ -145,7 +145,7 @@
  },
  "contributions.html": {
   "handlers": 9,
-  "scripts": 2
+  "scripts": 1
  },
  "control-plane.html": {
   "handlers": 1,
@@ -177,7 +177,7 @@
  },
  "dashboard.html": {
   "handlers": 9,
-  "scripts": 3
+  "scripts": 2
  },
  "decisions.html": {
   "handlers": 17,
@@ -185,7 +185,7 @@
  },
  "design-system.html": {
   "handlers": 0,
-  "scripts": 3
+  "scripts": 2
  },
  "dna.html": {
   "handlers": 4,
@@ -232,7 +232,7 @@
   "scripts": 2
  },
  "family.html": {
-  "handlers": 2,
+  "handlers": 0,
   "scripts": 5
  },
  "fasting.html": {
@@ -261,11 +261,11 @@
  },
  "gates.html": {
   "handlers": 3,
-  "scripts": 2
+  "scripts": 1
  },
  "governance.html": {
   "handlers": 9,
-  "scripts": 2
+  "scripts": 1
  },
  "grades.html": {
   "handlers": 4,
@@ -276,23 +276,23 @@
   "scripts": 1
  },
  "graph-anomalies.html": {
-  "handlers": 2,
+  "handlers": 0,
   "scripts": 1
  },
  "graph-centrality.html": {
-  "handlers": 3,
+  "handlers": 0,
   "scripts": 1
  },
  "graph-evidence.html": {
-  "handlers": 2,
+  "handlers": 0,
   "scripts": 1
  },
  "graph-explorer.html": {
-  "handlers": 1,
+  "handlers": 0,
   "scripts": 1
  },
  "graph-timeline.html": {
-  "handlers": 1,
+  "handlers": 0,
   "scripts": 1
  },
  "graph.html": {
@@ -300,8 +300,8 @@
   "scripts": 2
  },
  "graphify.html": {
-  "handlers": 13,
-  "scripts": 2
+  "handlers": 0,
+  "scripts": 1
  },
  "gratitude.html": {
   "handlers": 1,
@@ -309,7 +309,7 @@
  },
  "grid.html": {
   "handlers": 0,
-  "scripts": 3
+  "scripts": 2
  },
  "habits.html": {
   "handlers": 11,
@@ -333,7 +333,7 @@
  },
  "heritage.html": {
   "handlers": 6,
-  "scripts": 2
+  "scripts": 1
  },
  "honors.html": {
   "handlers": 8,
@@ -345,15 +345,15 @@
  },
  "houses.html": {
   "handlers": 1,
-  "scripts": 2
+  "scripts": 1
  },
  "identity.html": {
   "handlers": 0,
-  "scripts": 3
+  "scripts": 2
  },
  "income.html": {
-  "handlers": 4,
-  "scripts": 2
+  "handlers": 0,
+  "scripts": 1
  },
  "index.html": {
   "handlers": 0,
@@ -377,7 +377,7 @@
  },
  "kings.html": {
   "handlers": 6,
-  "scripts": 2
+  "scripts": 1
  },
  "knowledge.html": {
   "handlers": 5,
@@ -397,11 +397,11 @@
  },
  "ledger.html": {
   "handlers": 4,
-  "scripts": 2
+  "scripts": 0
  },
  "levels.html": {
   "handlers": 0,
-  "scripts": 3
+  "scripts": 2
  },
  "library.html": {
   "handlers": 18,
@@ -409,7 +409,7 @@
  },
  "maintenance.html": {
   "handlers": 6,
-  "scripts": 2
+  "scripts": 1
  },
  "map.html": {
   "handlers": 7,
@@ -481,7 +481,7 @@
  },
  "notifications.html": {
   "handlers": 8,
-  "scripts": 2
+  "scripts": 1
  },
  "nutrition.html": {
   "handlers": 10,
@@ -508,8 +508,8 @@
   "scripts": 2
  },
  "pantheons.html": {
-  "handlers": 1,
-  "scripts": 2
+  "handlers": 0,
+  "scripts": 1
  },
  "passport.html": {
   "handlers": 7,
@@ -525,7 +525,7 @@
  },
  "phases.html": {
   "handlers": 0,
-  "scripts": 3
+  "scripts": 2
  },
  "physiology.html": {
   "handlers": 5,
@@ -536,7 +536,7 @@
   "scripts": 2
  },
  "portfolio.html": {
-  "handlers": 5,
+  "handlers": 4,
   "scripts": 2
  },
  "prediction.html": {
@@ -553,7 +553,7 @@
  },
  "profile.html": {
   "handlers": 10,
-  "scripts": 14
+  "scripts": 13
  },
  "project-studio.html": {
   "handlers": 0,
@@ -565,7 +565,7 @@
  },
  "publications.html": {
   "handlers": 9,
-  "scripts": 2
+  "scripts": 1
  },
  "publishing.html": {
   "handlers": 4,
@@ -613,7 +613,7 @@
  },
  "roadmap.html": {
   "handlers": 0,
-  "scripts": 3
+  "scripts": 2
  },
  "rune.html": {
   "handlers": 16,
@@ -629,11 +629,11 @@
  },
  "series.html": {
   "handlers": 6,
-  "scripts": 2
+  "scripts": 1
  },
  "services.html": {
   "handlers": 0,
-  "scripts": 3
+  "scripts": 2
  },
  "settings.html": {
   "handlers": 0,
@@ -653,7 +653,7 @@
  },
  "skills.html": {
   "handlers": 21,
-  "scripts": 2
+  "scripts": 1
  },
  "sleep.html": {
   "handlers": 8,
@@ -701,7 +701,7 @@
  },
  "trailers.html": {
   "handlers": 4,
-  "scripts": 2
+  "scripts": 1
  },
  "travel.html": {
   "handlers": 4,
@@ -709,7 +709,7 @@
  },
  "treasury.html": {
   "handlers": 9,
-  "scripts": 2
+  "scripts": 1
  },
  "triads.html": {
   "handlers": 4,
@@ -719,17 +719,13 @@
   "handlers": 0,
   "scripts": 2
  },
- "trophies.html": {
-  "handlers": 6,
-  "scripts": 2
- },
  "universe.html": {
   "handlers": 4,
   "scripts": 2
  },
  "vault.html": {
   "handlers": 5,
-  "scripts": 4
+  "scripts": 3
  },
  "verify-deployment.html": {
   "handlers": 1,

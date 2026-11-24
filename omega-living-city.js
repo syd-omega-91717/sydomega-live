@@ -28,7 +28,7 @@
     return '/'+p.replace(/\.html$/,'')+'.html';
   }
   function rewardPage(d){
-    return d.archetype==='gaming'?'/trophies.html':'/achievements.html';
+    return d.archetype==='gaming'?'/honors.html#vault':'/achievements.html';
   }
   function actionLink(d,action){
     var a=String(action||'').toLowerCase();

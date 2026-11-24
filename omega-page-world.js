@@ -14,7 +14,7 @@
     identity:{title:'IDENTITY',next:'/profile.html',nextLabel:'IDENTITY',secondary:'/character.html',secondaryLabel:'CHARACTER'},
     intelligence:{title:'INTELLIGENCE',next:'/intelligence.html',nextLabel:'INVESTIGATE',secondary:'/agents.html',secondaryLabel:'CONSULT AGENT'},
     knowledge:{title:'KNOWLEDGE',next:'/academy.html',nextLabel:'LEARN',secondary:'/exam.html',secondaryLabel:'TEST'},
-    gaming:{title:'ARENA',next:'/gaming.html',nextLabel:'PLAY',secondary:'/trophies.html',secondaryLabel:'TROPHIES'},
+    gaming:{title:'ARENA',next:'/gaming.html',nextLabel:'PLAY',secondary:'/honors.html#vault',secondaryLabel:'TROPHIES'},
     media:{title:'MEDIA',next:'/media.html',nextLabel:'CREATE / WATCH',secondary:'/visual-atlas.html',secondaryLabel:'COLLECT'},
     commerce:{title:'EXCHANGE',next:'/marketplace.html',nextLabel:'MARKET',secondary:'/subscriptions.html',secondaryLabel:'MEMBERSHIP'},
     creation:{title:'FORGE',next:'/forge.html',nextLabel:'BUILD',secondary:'/publishing.html',secondaryLabel:'PUBLISH'},

@@ -1497,20 +1497,23 @@ function callWhenReady(fnName){
 /* Hero particle canvas */
 (function(){
   const cv=document.getElementById('ph-canvas');
-  const ctx=cv.getContext('2d');let t=0;
-  function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight||220;}
+  let ctx=cv.getContext('2d'),W=0,H=0,t=0;
+  /* Drawn in CSS px through OmegaCanvas.fit (store = box x ratio). The banner is measured while the approval guard still hides the page,
+     so it re-measures when its own box changes (CLAUDE.md 8.1 class 3; it was drawn 14% too tall), not only on window resize. */
+  function resize(){W=cv.offsetWidth;H=cv.offsetHeight||220;ctx=window.OmegaCanvas?OmegaCanvas.fit(cv,W,H):(cv.width=W,cv.height=H,cv.getContext('2d'));}
   resize();window.addEventListener('resize',resize);
+  if(window.ResizeObserver){let last='';new ResizeObserver(function(){const k=cv.clientWidth+'x'+cv.clientHeight;if(k!==last){last=k;resize();}}).observe(cv);}
   const pts=Array.from({length:60},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.5+.3,s:Math.random()*.4+.05}));
   function f(){
-    t+=.005;ctx.clearRect(0,0,cv.width,cv.height);
+    t+=.005;ctx.clearRect(0,0,W,H);
     /* Gradient overlay */
-    const g=ctx.createLinearGradient(0,0,cv.width,cv.height*.7);
+    const g=ctx.createLinearGradient(0,0,W,H*.7);
     g.addColorStop(0,'rgba(7,7,11,0.7)');g.addColorStop(1,'rgba(201,168,76,0.04)');
-    ctx.fillStyle=g;ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
     /* Stars */
     pts.forEach(p=>{
       const opa=0.06+0.18*Math.sin(t*p.s*3+p.x*6);
-      ctx.beginPath();ctx.arc(p.x*cv.width,p.y*cv.height,p.r,0,Math.PI*2);
+      ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.r,0,Math.PI*2);
       ctx.fillStyle='rgba(201,168,76,'+opa+')';ctx.fill();
     });
     requestAnimationFrame(f);}f();
@@ -1587,7 +1590,7 @@ const PHASES=[
 
 function drawAchBadge(cv,sym,col){
   cv.width=80;cv.height=80;cv.style.width='40px';cv.style.height='40px';
-  const ctx=cv.getContext('2d');let t=0;
+  const ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d'));let t=0;
   function f(){
     t+=.03;ctx.clearRect(0,0,80,80);
     const g=ctx.createRadialGradient(40,40,0,40,40,36);g.addColorStop(0,col+'44');g.addColorStop(1,'transparent');

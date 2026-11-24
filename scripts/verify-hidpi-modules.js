@@ -37,6 +37,9 @@ const CASES = [
     ['profile.html', '#cv-matx'], ['profile.html', '#mat-cv'], ['profile.html', '#phb-cv-character'], ['profile.html', '#av-canvas'],
     ['social.html', '#soc-omega-cv'], ['subscriptions.html', '#sub-cv'], ['triads.html', '#triad-cv']].map(([pg, sel]) => ['fitAttr widget ' + sel, pg, sel, null, null, null, true, (css, d) => Math.round(2 * css * Math.max(1, d / 2))]),
   ['fitAttr widget #mini-radar (a small glyph: same painted region at every scale)', 'analytics.html', '#mini-radar', null, null, null, false, (css, d) => Math.round(2 * css * Math.max(1, d / 2))],
+  /* profile.html: the hero star-field banner is CSS-sized (store = box x dpr, same shape as the box: it was once measured before layout settled and drawn 14% too tall, c[8]); the achievement badges are authored at 2x. */
+  ['profile hero banner (#ph-canvas)', 'profile.html', '#ph-canvas', null, null, null, true, (css, d) => Math.round(css * d), true],
+  ['profile achievement badge (.ab-canvas)', 'profile.html', '.ab-canvas[style*="40px"]', null, null, null, true, (css, d) => Math.round(2 * css * Math.max(1, d / 2))],
   ['nav.js (brand mark)', 'dashboard.html', '#on-bcv', null, null, null, true, (css, d) => Math.round(88 * Math.max(1, d / 2))]   /* authored 88 for a 44px box; the dock scales it by a transform, so the measured box is not the authored one */
 ];
 
@@ -82,9 +85,10 @@ const CASES = [
     if (!m1 || !m3 || !m26) { check(tag + ': the canvas appears (' + c[2] + ')', false, JSON.stringify({ m1: !!m1, m26: !!m26, m3: !!m3 })); continue; }
     const near = (a, b) => Math.abs(a - b) <= 0.025 * Math.max(a, b) + 1;
     check(tag + ': CSS box is the same at 1x, 2.625x and 3x', near(m1.cssW, m3.cssW) && near(m1.cssH, m3.cssH) && near(m1.cssW, m26.cssW) && near(m1.cssH, m26.cssH), JSON.stringify([m1, m26, m3].map(m => [m.cssW, m.cssH])));
+    if (c[8]) check(tag + ': the store has the same shape as the displayed box (not stretched)', [m1, m26, m3].every(m => Math.abs(m.bh / m.bw - m.cssH / m.cssW) < 0.02), JSON.stringify([m1, m26, m3].map(m => [m.bw, m.bh, m.cssW, m.cssH])));
     if (c[7]) {
       const e = (m, d) => c[7](m.cssW, d);
-      check(tag + ': the store is 2x the box up to 2x, then dpr/2 more (never blurry, never oversized)', Math.abs(m1.bw - e(m1, 1)) <= 1 && Math.abs(m26.bw - e(m26, 2.625)) <= 1 && Math.abs(m3.bw - e(m3, 3)) <= 1 && Math.abs(m3.bh / m3.bw - m1.bh / m1.bw) < 0.02 && Math.abs(m26.bh / m26.bw - m1.bh / m1.bw) < 0.02, JSON.stringify({ at1: [m1.cssW, m1.bw], at26: [m26.cssW, m26.bw], at3: [m3.cssW, m3.bw] }));
+      check(tag + ': the store matches the expected size for this canvas at 1x, 2.625x and 3x (never blurry, never oversized)', Math.abs(m1.bw - e(m1, 1)) <= 1 && Math.abs(m26.bw - e(m26, 2.625)) <= 1 && Math.abs(m3.bw - e(m3, 3)) <= 1 && Math.abs(m3.bh / m3.bw - m1.bh / m1.bw) < 0.02 && Math.abs(m26.bh / m26.bw - m1.bh / m1.bw) < 0.02, JSON.stringify({ at1: [m1.cssW, m1.bw], at26: [m26.cssW, m26.bw], at3: [m3.cssW, m3.bw] }));
     } else if (c[3]) {
       check(tag + ': the store is the logical size at 1x', m1.bw === c[3][0] && m1.bh === c[3][1], JSON.stringify([m1.bw, m1.bh]));
       check(tag + ': the store is logical x 3 at 3x and x 2.625 at 2.625x', m3.bw === Math.round(c[3][0] * 3) && m3.bh === Math.round(c[3][1] * 3) && Math.abs(m26.bw - c[3][0] * 2.625) <= 1.5 && Math.abs(m26.bh - c[3][1] * 2.625) <= 1.5, JSON.stringify({ at3: [m3.bw, m3.bh], at26: [m26.bw, m26.bh] }));

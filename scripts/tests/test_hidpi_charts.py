@@ -177,6 +177,34 @@ class Modules(unittest.TestCase):
         self.assertIn("if(d>1&&box>0&&w>0)", code)                                        # 1x is untouched
 
 
+class Wave5(unittest.TestCase):
+    """Header and widget canvases authored at 2x their box (sharp at 2x, soft on a 3x phone) now grow above 2x."""
+    PAGES = ("analytics", "automation", "family", "identity", "interface-omni", "points", "profile", "social", "subscriptions", "triads", "approvals", "enter", "pending")
+
+    def test_nav_and_page_emblem_carry_their_own_capped_ratio(self):
+        for name in ("nav.js", "omega-page-emblem.js"):
+            code = re.sub(r"\s+", "", re.sub(r"/\*.*?\*/", "", (ROOT / name).read_text(encoding="utf-8"), flags=re.S))
+            self.assertIn("Math.min(window.devicePixelRatio||1,3)/2", code, name + ": above 2x the store grows by dpr/2, capped at 3")
+            self.assertIn("setTransform(K,0,0,K,0,0)", code, name + ": the context must carry the scale so no coordinate changes")
+
+    def test_each_page_loads_the_helper_before_the_scripts_that_use_it(self):
+        for page in self.PAGES:
+            src = (ROOT / (page + ".html")).read_text(encoding="utf-8")
+            self.assertEqual(src.count("omega-canvas-hidpi.js"), 1, page)
+            self.assertLess(src.index("omega-canvas-hidpi.js"), src.index("</head>"), page + ": load it in <head>")
+
+    def test_the_helper_measures_a_hidden_canvas_from_its_inline_width(self):
+        """The approval guard hides the page, so clientWidth is 0 when a widget first draws (8.1 class 3); falling back to full ratio gave a 6x store at 3x."""
+        code = re.sub(r"\s+", "", (ROOT / "omega-canvas-hidpi.js").read_text(encoding="utf-8"))
+        self.assertIn("canvas.clientWidth||parseFloat(canvas.style&&canvas.style.width)", code)
+
+    def test_the_three_unreached_canvases_were_left_alone(self):
+        """cosmos hero-wheel, honors auth-gauge and profile char-canvas draw in a space larger than their attributes and live in module scope, so no
+        harness reaches them; they were not converted, and must not be until one does."""
+        for page, marker in (("cosmos", "const S=160, ctx=cv.getContext('2d')"), ("honors", "const S=100, ctx=cv.getContext('2d')"), ("profile", "const S=160; const ctx=cv.getContext('2d')")):
+            self.assertIn(marker, (ROOT / (page + ".html")).read_text(encoding="utf-8"), page)
+
+
 class Browser(unittest.TestCase):
     def test_browser_validation(self):
         if not os.environ.get("OMEGA_HIDPI_BROWSER"):

@@ -431,6 +431,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
 .save-msg.show{display:block}
 </style>
 <link rel="stylesheet" href="/omega-readable-layout-v2.css"/>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body data-omega-page="profile">
 <div class="shell">
@@ -590,7 +591,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
   </div>
 <div data-page-emblem="profile" style="margin:20px auto 0"></div>
 </div>
-<script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+<script>(function(){var cv=document.getElementById('cv-matx');if(!cv||!cv.getContext)return;var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;(function f(){ctx.clearRect(0,0,80,80);for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,10+i*4+2*Math.sin(t*.03+i),t*.01*((i%2)?1:-1),t*.01*((i%2)?1:-1)+Math.PI*(.5+.25*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.7+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=7;ctx.fillText('\u03A9',40,40);ctx.shadowBlur=0;t++;requestAnimationFrame(f);})();})();</script><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
   <div style="border:1px solid rgba(201,168,76,.15);padding:16px;border-radius:2px;background:rgba(10,10,15,.5);text-align:center">
     <div style="font-family:var(--D);font-size:20px;color:var(--gold)" id="mat-a-disp">--</div>
     <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" data-i18n="profile_axis_a">AXIS A &middot; A&#179;=<span id="mat-a3">--</span></div>
@@ -616,7 +617,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
 </div>
 <script>
 (function(){var cv=document.getElementById('mat-cv');if(!cv||!cv.getContext)return;
-var ctx=cv.getContext('2d'),t=0;
+var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;
 function frame(){ctx.clearRect(0,0,120,120);
   for(var i=0;i<8;i++){
     ctx.beginPath();ctx.arc(60,60,16+i*5+3*Math.sin(t*.03+i),t*.009*((i%2)?1:-1),t*.009*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));
@@ -1376,7 +1377,7 @@ function frame(){ctx.clearRect(0,0,120,120);
 </div>
 <script>
 (function(){var cv=document.getElementById('phb-cv-character');if(!cv||!cv.getContext)return;
-var ctx=cv.getContext('2d'),t=0;
+var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;
 function f(){ctx.clearRect(0,0,80,80);
 for(var i=0;i<6;i++){ctx.beginPath();ctx.arc(40,40,12+i*3+2*Math.sin(t*.03+i),t*.009*((i%2)?1:-1),t*.009*((i%2)?1:-1)+Math.PI*(.5+.2*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.7;ctx.stroke();}
 ctx.font='bold 14px serif';ctx.textAlign='center';ctx.textBaseline='middle';
@@ -1518,7 +1519,7 @@ function callWhenReady(fnName){
 /* Avatar canvas */
 (function(){
   const cv=document.getElementById('av-canvas');
-  const ctx=cv.getContext('2d'),CX=100,CY=100;let t=0;
+  const ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),CX=100,CY=100;let t=0;
   function f(){
     t+=.018;ctx.clearRect(0,0,200,200);
     const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,92);

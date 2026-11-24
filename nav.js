@@ -693,6 +693,9 @@
   (function(){
     var cv=document.getElementById('on-bcv');if(!cv)return;
     var ctx=cv.getContext('2d'),t=0,on=true,last=0;
+    /* Authored 88x88 for a 44px box (sharp at 2x); above 2x the store grows by dpr/2 and the context carries it. */
+    var K=Math.max(1,Math.min(window.devicePixelRatio||1,3)/2);
+    if(K>1){cv.width=cv.height=Math.round(88*K);ctx.setTransform(K,0,0,K,0,0);}
     /* It drew at 60fps with a shadowBlur for the life of every page -- also on
        phones, where the sidebar is hidden and this canvas is 0x0. Now it draws
        only while on screen, at 30fps; t advances by elapsed time, so the turn

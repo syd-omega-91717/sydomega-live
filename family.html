@@ -180,6 +180,7 @@ a{color:inherit;text-decoration:none}
 #fam-tree .ft-you b{color:#5DAFB5}
 #fam-tree .ft-empty,#fam-tree .ft-note{margin:10px 0 0;text-align:center;font-family:var(--M);font-size:12px;letter-spacing:.06em;color:var(--muted);line-height:1.7}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -353,7 +354,7 @@ a{color:inherit;text-decoration:none}
 .phb-lbl{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:2.5px;color:var(--muted);margin-top:4px}
 @media(max-width:660px){.pg-hero-band{grid-template-columns:1fr}.phb-center{display:none}.phb-left{border-right:none;border-bottom:1px solid rgba(201,168,76,.15)}.phb-right{border-left:none;text-align:left}}
 </style><div class="pg-hero-band"><div class="phb-left"><div class="phb-stat" id="phb-l-family">--</div><div class="phb-lbl">FAMILY STATUS</div></div><div class="phb-center"><canvas id="phb-cv-family" width="100" height="100" style="width:50px;height:50px;display:block"></canvas></div><div class="phb-right"><div class="phb-stat" id="phb-r-family">--</div><div class="phb-lbl">CALCULATED VALUE</div></div><div data-page-emblem="family" style="margin:20px auto 0"></div>
-</div><script>(function(){var cv=document.getElementById("phb-cv-family");if(!cv||!cv.getContext)return;var ctx=cv.getContext("2d"),t=0;function frame(){ctx.clearRect(0,0,100,100);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(50,50,14+i*4+2*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle="rgba(201,168,76,"+(0.08+0.1*(8-i)/8)+")";ctx.lineWidth=.8;ctx.stroke();}ctx.font="bold 18px \"Cinzel Decorative\",serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="rgba(201,168,76,"+(0.7+0.3*Math.sin(t*.04))+")";ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=9;ctx.fillText("\u03A9",50,50);ctx.shadowBlur=0;t++;requestAnimationFrame(frame);}frame();})();</script>    </div>
+</div><script>(function(){var cv=document.getElementById("phb-cv-family");if(!cv||!cv.getContext)return;var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;function frame(){ctx.clearRect(0,0,100,100);for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(50,50,14+i*4+2*Math.sin(t*.03+i),t*.008*((i%2)?1:-1),t*.008*((i%2)?1:-1)+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle="rgba(201,168,76,"+(0.08+0.1*(8-i)/8)+")";ctx.lineWidth=.8;ctx.stroke();}ctx.font="bold 18px \"Cinzel Decorative\",serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="rgba(201,168,76,"+(0.7+0.3*Math.sin(t*.04))+")";ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=9;ctx.fillText("\u03A9",50,50);ctx.shadowBlur=0;t++;requestAnimationFrame(frame);}frame();})();</script>    </div>
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:var(--fs-3,16px);line-height:1.75;margin-bottom:20px">The Bloodline Archive stores member-submitted family-history records. Entries are editable and are not independently verified. This page does not establish ancestry, trusts, asset ownership, inheritance rights, or legal succession.</p>
 
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px">

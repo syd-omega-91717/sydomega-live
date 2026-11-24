@@ -44,6 +44,7 @@
 .pay-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid}
 @media(max-width:760px){.status-band{grid-template-columns:1fr}.sb-center{display:none}.sb-left{border-right:none;border-bottom:1px solid var(--line)}.sb-right{border-left:none;text-align:left}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="subscriptions"></aside>
@@ -176,7 +177,7 @@ window.__whenCanon=function(cb,onFail){
 window.__whenCanon(renderTiers,function(){var tg=document.getElementById('tiers-grid');if(tg&&!tg.dataset.rendered)tg.textContent='TIER LADDER UNAVAILABLE.';});
 (function(){
   var cv=document.getElementById('sub-cv');if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d'),t=0;
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;
   function frame(){
     ctx.clearRect(0,0,120,120);
     for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(60,60,16+i*5+3*Math.sin(t*.03+i),t*.008,t*.008+Math.PI*(.5+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.08+0.1*(8-i)/8)+')';ctx.lineWidth=.8;ctx.stroke();}

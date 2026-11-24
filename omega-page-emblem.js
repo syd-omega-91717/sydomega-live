@@ -201,10 +201,14 @@
     var S = opts.size || 132;
     var animate = opts.animate !== false;
     var cv = document.createElement('canvas');
-    cv.width = S * 2; cv.height = S * 2;
+    /* Drawn in 2S x 2S units, shown at S px: sharp at 2x. Above 2x (the 3x phones) the store grows by dpr/2 and the context
+       carries that scale, so every coordinate below is unchanged. At 1x and 2x k is 1 and nothing differs. */
+    var K = Math.max(1, Math.min(window.devicePixelRatio || 1, 3) / 2);
+    cv.width = Math.round(S * 2 * K); cv.height = Math.round(S * 2 * K);
     cv.style.cssText = 'width:' + S + 'px;height:' + S + 'px;display:block;margin:0 auto';
     host.appendChild(cv);
     var ctx = cv.getContext('2d'), CX = S, CY = S, t = 0;
+    ctx.setTransform(K, 0, 0, K, 0, 0);
 
     function frame() {
       ctx.clearRect(0, 0, S * 2, S * 2);

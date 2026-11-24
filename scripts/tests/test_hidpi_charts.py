@@ -131,6 +131,18 @@ class Settles(unittest.TestCase):
             self.assertIn("requestAnimationFrame(", code, page)
 
 
+class AtlasFit(unittest.TestCase):
+    """atlas.html called fitAll() at init while the canvas was 0x0, so scale became 0 and all 8 nodes mapped to the centre of the canvas (measured on
+    origin/main).  fitAll must not compute a scale from a zero-size canvas, and the seed must sit where the simulation's gravity pulls."""
+
+    def test_fit_waits_for_a_canvas_size_and_the_seed_is_at_the_origin(self):
+        code = re.sub(r"\s+", "", re.sub(r"/\*.*?\*/", "", (ROOT / "atlas.html").read_text(encoding="utf-8"), flags=re.S))
+        self.assertIn("if(!(cw()>0&&ch()>0)){pendingFit=true;return;}", code)
+        self.assertIn("if(pendingFit)fitAll();", code)
+        self.assertIn("constcx=0,cy=0;", code)
+        self.assertNotIn("constcx=400,cy=300;", code)
+
+
 class FitAttr(unittest.TestCase):
     def test_a_page_that_uses_fit_attr_never_reads_the_store_back_as_its_size(self):
         """After the first fitAttr the width/height attributes hold the larger store, so a later read of canvas.width as a logical size is wrong

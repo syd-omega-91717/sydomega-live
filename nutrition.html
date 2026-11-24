@@ -57,6 +57,7 @@
 .chart-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:rgba(201,168,76,.6);margin-bottom:10px}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -375,7 +376,7 @@ function drawMacroRings(){
     </div>`).join('');
   macros.forEach((m,i)=>{
     const c=document.getElementById('macro-ring-'+i);
-    const ctx=c.getContext('2d');
+    const ctx=OmegaCanvas.fitAttr(c);
     const pct=Math.min(1,m.val/m.target);
     ctx.clearRect(0,0,90,90);
     ctx.beginPath();ctx.arc(45,45,36,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,.07)';ctx.lineWidth=8;ctx.stroke();
@@ -486,8 +487,8 @@ function renderTrends(){
 
 function drawLineChart(id,data,labels,color,target){
   const c=document.getElementById(id);if(!c)return;
-  const ctx=c.getContext('2d');
-  const w=c.width,h=c.height,pad=30;
+  const ctx=OmegaCanvas.fitAttr(c);
+  const w=OmegaCanvas.size(c).w,h=OmegaCanvas.size(c).h,pad=30;
   ctx.clearRect(0,0,w,h);
   const max=Math.max(...data,target)*1.1||1;
   const scaleX=(w-pad*2)/(data.length-1||1);

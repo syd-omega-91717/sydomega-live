@@ -53,6 +53,7 @@
 @media(max-width:600px){.stoic-hero{grid-template-columns:1fr}.virtue-grid{grid-template-columns:1fr}}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -298,7 +299,7 @@ showQuote();
 })();
 
 function drawRing(pct){
-  var c=document.getElementById('mementoCanvas'),ctx=c.getContext('2d'),cx=60,cy=60,r=52;
+  var c=document.getElementById('mementoCanvas'),ctx=OmegaCanvas.fitAttr(c),cx=60,cy=60,r=52;
   ctx.clearRect(0,0,120,120);
   ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=8;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
   ctx.strokeStyle='rgba(200,80,80,.5)';ctx.lineWidth=8;ctx.lineCap='round';
@@ -320,7 +321,7 @@ function loadVirtueSliders(){
 function updateVirtues(){['Wisdom','Courage','Justice','Temperance'].forEach(function(v){document.getElementById('v'+v+'Val').textContent=document.getElementById('v'+v).value+'/10';});drawVirtueRadar();}
 function saveVirtues(){['Wisdom','Courage','Justice','Temperance'].forEach(function(v){virtueData['v'+v]=+document.getElementById('v'+v).value;});save(VIRTUES_KEY,virtueData);}
 function drawVirtueRadar(){
-  var c=document.getElementById('virtueRadar'),ctx=c.getContext('2d'),W=260,H=260,cx=130,cy=130,r=90;
+  var c=document.getElementById('virtueRadar'),ctx=OmegaCanvas.fitAttr(c),W=260,H=260,cx=130,cy=130,r=90;
   ctx.clearRect(0,0,W,H);
   var labels=['WISDOM','COURAGE','JUSTICE','TEMPERANCE'];
   var vals=['Wisdom','Courage','Justice','Temperance'].map(function(v){return +document.getElementById('v'+v).value/10;});

@@ -102,6 +102,7 @@ input[type=range].area-sl::-webkit-slider-thumb{-webkit-appearance:none;width:12
 .gli-status{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 6px;border:1px solid}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 
@@ -432,8 +433,7 @@ function updateTopScore() {
 function drawWheel() {
   const c = document.getElementById('v-wheel');
   const size = Math.min(c.offsetWidth, 420);
-  c.width = size; c.height = size;
-  const ctx = c.getContext('2d');
+  const ctx = OmegaCanvas.fit(c, size, size);
   const cx = size/2, cy = size/2, R = size/2 - 40;
   const N = AREAS.length;
   const step = (Math.PI*2)/N;

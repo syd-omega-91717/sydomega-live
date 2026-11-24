@@ -9,6 +9,7 @@
 
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
@@ -233,7 +234,7 @@ function renderStages(auth){
 
 function drawAuthCanvas(a,b,c,auth){
   var cv=document.getElementById('auth-canvas');if(!cv)return;
-  var ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var ctx=OmegaCanvas.fitAttr(cv),W=OmegaCanvas.size(cv).w,H=OmegaCanvas.size(cv).h;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
   var vals=[{v:a,c:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),l:'A'},{v:b,c:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),l:'B'},{v:c,c:'#4CAF50',l:'C'},{v:auth,c:(getComputedStyle(document.documentElement).getPropertyValue('--solar').trim()||'#E2C86D'),l:'AUTH'}];

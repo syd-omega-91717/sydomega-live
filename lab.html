@@ -61,6 +61,7 @@
 .sci-body{font-size:12px;color:#888;line-height:1.65}
 .sci-ref{font-size:12px;color:var(--muted);margin-top:8px;font-family:'Courier New',monospace}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -309,8 +310,7 @@ function renderRadar(){
 function drawRadarCanvas(){
   var canvas=document.getElementById('radar-canvas');
   var W=canvas.offsetWidth||600;
-  canvas.width=W;canvas.height=360;
-  var ctx=canvas.getContext('2d');
+  var ctx=OmegaCanvas.fit(canvas,W,360);
   var cx=W/2,cy=180;
   var rings=[{r:160,ring:'hold',label:'HOLD'},{r:120,ring:'assess',label:'ASSESS'},{r:80,ring:'trial',label:'TRIAL'},{r:40,ring:'adopt',label:'ADOPT'}];
   ctx.clearRect(0,0,W,360);

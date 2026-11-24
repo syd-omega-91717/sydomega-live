@@ -36,6 +36,7 @@
 .ci-label{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
 .ci-val{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold)}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="beacon"></aside>
@@ -121,7 +122,7 @@ function setTab(name){
 
 function drawRing(pct){
   var cv=document.getElementById('ring');
-  var x=cv.getContext('2d');var w=144,cx=72,cy=72,r=58,cur=0;
+  var x=OmegaCanvas.fitAttr(cv);var w=144,cx=72,cy=72,r=58,cur=0;
   var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   function step(){
     cur+=(pct-cur)*0.08;

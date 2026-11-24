@@ -52,6 +52,7 @@
 .interrupt-wrap{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -297,7 +298,7 @@ function updateDisplay(){
 /* ── Ring canvas ─── */
 function drawRing(pct){
   const c = document.getElementById('focus-ring');
-  const ctx = c.getContext('2d');
+  const ctx = OmegaCanvas.fitAttr(c);
   const cx=110,cy=110,r=95,lw=12;
   ctx.clearRect(0,0,220,220);
   // Background arc
@@ -457,7 +458,7 @@ function renderStats(){
 
 function drawScoreRing(score){
   const c=document.getElementById('score-ring');
-  const ctx=c.getContext('2d');
+  const ctx=OmegaCanvas.fitAttr(c);
   ctx.clearRect(0,0,120,120);
   ctx.beginPath();ctx.arc(60,60,48,0,Math.PI*2);
   ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=8;ctx.stroke();
@@ -490,8 +491,8 @@ function drawHeatmap(){
   const sessions=getSessions();
   const days=90, cellW=8, cellH=8, gap=2;
   const cols=Math.ceil(days/7);
-  c.width=(cellW+gap)*cols+60; c.height=(cellH+gap)*7+30;
-  ctx.clearRect(0,0,c.width,c.height);
+  const hmW=(cellW+gap)*cols+60, hmH=(cellH+gap)*7+30; OmegaCanvas.fit(c,hmW,hmH);
+  ctx.clearRect(0,0,hmW,hmH);
   // Build day map
   const dayMap={};
   sessions.forEach(s=>{

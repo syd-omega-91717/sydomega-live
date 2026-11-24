@@ -55,6 +55,7 @@ canvas{display:block;margin:0 auto}
 .empty{text-align:center;color:var(--d);font-size:var(--fs-1,12px);padding:40px 0;letter-spacing:.1em;font-family:'Courier New',monospace}
 @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -219,7 +220,7 @@ function renderSteps(){
 
 function drawRing(pct){
   var canvas=document.getElementById('ring');
-  var ctx=canvas.getContext('2d');
+  var ctx=OmegaCanvas.fitAttr(canvas);
   var cx=80,cy=80,r=68,lw=10;
   ctx.clearRect(0,0,160,160);
   ctx.strokeStyle='#1a1a1a';ctx.lineWidth=lw;

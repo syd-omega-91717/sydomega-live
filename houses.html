@@ -9,6 +9,7 @@
 
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
@@ -153,7 +154,7 @@ function renderChartDisplay(){
 
 function drawWheel(){
   var cv=document.getElementById('wheel-canvas');if(!cv)return;
-  var ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)/2-20;
+  var ctx=OmegaCanvas.fitAttr(cv),W=OmegaCanvas.size(cv).w,H=OmegaCanvas.size(cv).h,cx=W/2,cy=H/2,R=Math.min(W,H)/2-20;
   ctx.clearRect(0,0,W,H);ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--void').trim()||'#0A0A0F');ctx.fillRect(0,0,W,H);
   var slice=Math.PI*2/12;
   HOUSES.forEach(function(h,i){

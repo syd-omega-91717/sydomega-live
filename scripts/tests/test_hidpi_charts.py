@@ -205,6 +205,32 @@ class Wave5(unittest.TestCase):
             self.assertIn(marker, (ROOT / (page + ".html")).read_text(encoding="utf-8"), page)
 
 
+class Wave6Profile(unittest.TestCase):
+    """profile.html: the hero banner and the achievement badges. The portfolio chart and the genealogy tree were left alone on purpose."""
+    SRC = (ROOT / "profile.html").read_text(encoding="utf-8")
+
+    def test_the_hero_banner_is_drawn_through_fit_and_remeasured_when_its_box_changes(self):
+        i = self.SRC.index("const cv=document.getElementById('ph-canvas');")
+        block = self.SRC[i:i + 1800]
+        self.assertIn("OmegaCanvas.fit(cv,W,H)", block)
+        self.assertIn("new ResizeObserver", block)
+        self.assertIn("cv.clientWidth+'x'+cv.clientHeight", block, "both dimensions: a height read before layout settled once stretched it 14%")
+        self.assertNotRegex(block.split("function f()")[1].split("requestAnimationFrame(f)")[0], r"cv\.(width|height)", "draw in W/H, not the store size")
+
+    def test_the_achievement_badges_use_fit_attr(self):
+        i = self.SRC.index("function drawAchBadge(cv,sym,col){")
+        self.assertIn("OmegaCanvas.fitAttr(cv)", self.SRC[i:i + 400])
+
+    def test_the_portfolio_chart_is_untouched_and_still_flagged(self):
+        """It draws a hard-coded series under 'LIVE CURVE' (CLAUDE.md 8.1 class 9); making it sharper would polish fabricated data. GAP_ANALYSIS.md tracks it."""
+        self.assertIn("canvas.width=canvas.offsetWidth*2;canvas.height=canvas.offsetHeight*2;", self.SRC)
+        self.assertIn("const pts=[2.1,2.8,3.2,2.9,4.1,4.8,5.2,5.9,6.4,7.1,7.8,8.2,8.7,9.0,9.0,9.0];", self.SRC)
+        self.assertIn("perf-canvas", (ROOT / "GAP_ANALYSIS.md").read_text(encoding="utf-8"))
+
+    def test_the_genealogy_tree_was_left_alone_until_a_harness_reaches_it(self):
+        self.assertIn("const W=cv.offsetWidth||800, H=240; cv.width=W*2; cv.height=H*2;", self.SRC)
+
+
 class Browser(unittest.TestCase):
     def test_browser_validation(self):
         if not os.environ.get("OMEGA_HIDPI_BROWSER"):

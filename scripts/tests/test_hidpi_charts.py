@@ -22,7 +22,7 @@ PAGES = {"expenses": 5, "investment": 1, "revenue": 1, "treasury": 1, "wealth": 
          "agent-network": 1, "architect": 1, "atlas": 1, "dashboard": 2, "ecosystem": 1, "knowledge": 1, "network": 1, "nexus": 2,
          "mindmap": 1, "queue": 2,
          "ascension": 1, "body": 2, "beacon": 1, "breath": 1, "clarity": 1, "houses": 1, "lab": 1, "nutrition": 2, "skills": 1,
-         "sleep": 4, "stoic": 2, "sigil": 1, "vision": 1, "focus": 3}
+         "sleep": 4, "stoic": 2, "sigil": 1, "vision": 1, "focus": 3, "wallet": 1}
 
 
 class Static(unittest.TestCase):

@@ -13,11 +13,11 @@ production serves it.
 | NEEDS_DECISION | 16 |
 | PROPOSED | 18 |
 | PARTIAL | 57 |
-| OPEN_GAP | 37 |
+| OPEN_GAP | 36 |
 | DORMANT | 1 |
 | SHIPPED | 46 |
 | DECIDED | 42 |
-| CLOSED | 22 |
+| CLOSED | 23 |
 | SUPERSEDED | 1 |
 | RND_OR_LORE | 175 |
 | REJECTED | 118 |
@@ -133,16 +133,15 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | N788 | 999 blueprint [APPENDIX_NODE] | The 10-Step Foresight Engine | web-trend-scout + the weekly idea routine scan for ideas; nothing auto-releases |
 | I17 | IDEA_INTAKE.md | Let text areas grow with what the member writes (field-sizing: content) | opt-in shipped, not global. The global form in the original plan was built and measured on 2026-11-16 and rejected: across the 37 pages wit… |
 
-### OPEN_GAP (37)
+### OPEN_GAP (36)
 
 | id | source | idea | evidence |
 |---|---|---|---|
 | G01 | GAP_ANALYSIS.md S | `terms.html` has no financial, investment or tax disclaimer, and the notice shipped for the money pages has n… | GAP_ANALYSIS.md section S |
 | G02 | GAP_ANALYSIS.md S | `agent-network.html`'s canvas grows without bound on `origin/main` (measured in headless Chromium, 1000x1500… | GAP_ANALYSIS.md section S |
-| G03 | GAP_ANALYSIS.md S | five canvases size themselves before their layout has settled, then show scaled (pre-existing at 1x; the hi-D… | GAP_ANALYSIS.md section S |
+| G03 | GAP_ANALYSIS.md S | six canvases size themselves before their layout has settled, then show scaled (pre-existing at 1x; the hi-DP… | GAP_ANALYSIS.md section S |
 | G04 | GAP_ANALYSIS.md S | `atlas.html` renders all of its nodes stacked on one point in headless Chromium (its 8 default nodes on `orig… | GAP_ANALYSIS.md section S |
 | G05 | GAP_ANALYSIS.md S | one page's content column is intermittently 868 px wide instead of 539 px (`physiology.html`, `contacts.html`… | GAP_ANALYSIS.md section S |
-| G06 | GAP_ANALYSIS.md S | `wallet.html` throws `ReferenceError: drawAllocCanvas is not defined` on load (two call sites, no definition,… | GAP_ANALYSIS.md section S |
 | G07 | GAP_ANALYSIS.md S | the 3-D layer's data bindings (`omega-sculpture-dataviz.js` and the mount attributes) do not reach the scenes… | GAP_ANALYSIS.md section S |
 | G09 | GAP_ANALYSIS.md S | `OmegaSculptureDataViz.getTierProgress()` reads a column that does not exist, so it returns 0 for every membe… | GAP_ANALYSIS.md section S |
 | G10 | GAP_ANALYSIS.md S | the generative music had no way to be started. `omega-music.js` is loaded on every page (`bg.js:3131`) but no… | GAP_ANALYSIS.md section S |
@@ -279,10 +278,11 @@ works this list top-down: it builds one LOW-RISK `PROPOSED` item per run and re-
 | B-MISSING | 999 blueprint | 608 declared point numbers that the source text does not contain | the owner re-supplied the full blueprint text on 2026-10-12; it is the same 1,231-line source indexed 2026-10-04 and numbers 391 unique points (+8 repeated numbers, +14 appendix Nodes). The other 608 numbers do not occur in it, so they are not extracted and will not be invented. |
 | I03 | IDEA_INTAKE.md | Extract the 608 unextracted 999-blueprint points | the owner re-supplied the full text 2026-10-12; it is the same source and does not contain those numbers, so none are invented (scripts/blu… |
 
-### CLOSED (22)
+### CLOSED (23)
 
 | id | source | idea | evidence |
 |---|---|---|---|
+| G06 | GAP_ANALYSIS.md S | `wallet.html` no longer throws `ReferenceError: drawAllocCanvas is not defined` on load. Root cause: `eb32eeb… | GAP_ANALYSIS.md section S |
 | G08 | GAP_ANALYSIS.md S | `life.html`'s mana did not measure the member: two of its five components read a platform-wide table, through… | GAP_ANALYSIS.md section S |
 | G12 | GAP_ANALYSIS.md S | `advertising.html` no longer sells "104,976-NODE REACH". Checked on `main` at `c618336`: the KPI reads `AUDIE… | GAP_ANALYSIS.md section S |
 | G14 | GAP_ANALYSIS.md S | the identity-document pages no longer contradict each other or overstate readiness. `kyc.html:114` already re… | GAP_ANALYSIS.md section S |

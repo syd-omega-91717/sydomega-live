@@ -98,6 +98,10 @@ const WAVE4 = [
   ['focus.html', 'score-ring', null, Object.assign({}, R4)],
   ['focus.html', 'focus-heatmap', null, Object.assign({}, R4)]
 ];
+const WAVE5 = [
+  /* wallet's allocation chart was never drawn (its draw function had been deleted); seeded so it has something to draw */
+  ['wallet.html', 'alloc-canvas', null, { reduce: true, resize: true, stale: true, seeds: { omega_wallet: JSON.stringify([{ id: 'a', name: 'Checking', type: 'checking', balance: 4000, liquid: 'yes' }, { id: 'b', name: 'Savings', type: 'savings', balance: 9000, liquid: 'yes' }, { id: 'c', name: 'Brokerage', type: 'investment', balance: 15000, liquid: 'no' }, { id: 'd', name: 'Card', type: 'debt', balance: 2000, liquid: 'no' }]) } }]
+];
 const WAVE2 = [
   ['journal.html', 'j-wc-chart', null, { drive: journalSetup }],
   ['journal.html', 'j-mood-chart', null, { drive: journalSetup }],
@@ -178,7 +182,7 @@ const WAVE2 = [
     await ctx.close(); return Object.assign(m, { errs });
   }
 
-  for (const [page, id, click, cfg] of (process.env.HIDPI_ONLY === 'wave4' ? WAVE4 : CHARTS.concat(WAVE2, WAVE3, WAVE4)).filter(e => !process.env.HIDPI_PAGE || e[0] === process.env.HIDPI_PAGE)) {
+  for (const [page, id, click, cfg] of (process.env.HIDPI_ONLY === 'wave4' ? WAVE4 : CHARTS.concat(WAVE2, WAVE3, WAVE4, WAVE5)).filter(e => !process.env.HIDPI_PAGE || e[0] === process.env.HIDPI_PAGE)) {
     const tag = page.replace('.html', '') + '#' + id;
     let m1, m2, m3;
     try {

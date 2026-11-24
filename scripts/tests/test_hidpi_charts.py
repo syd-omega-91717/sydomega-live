@@ -98,6 +98,25 @@ class Pointer(unittest.TestCase):
         self.assertIn("canvas.__ocPin=true", code)
 
 
+    def test_the_helper_never_pins_a_height_unless_asked(self):
+        """Height is never detected or pinned: a percentage height in a container with no definite height is laid out from the canvas itself
+        (agent-network grows its own canvas that way), so 'the box height changed' says nothing about intrinsic size, and a pinned height
+        froze that page at 481 px against 1,339 at 1x.  The browser suites freeze that page's height to work around its pre-existing
+        growth, so they cannot see this; this contract does."""
+        code = re.sub(r"/\*.*?\*/", "", HELPER, flags=re.S)
+        sites = [m for m in re.finditer(r"style\.height\s*=", code)]
+        self.assertEqual(len(sites), 1, "style.height may be assigned in exactly one place")
+        line = code[max(0, sites[0].start() - 80):sites[0].end() + 40]
+        self.assertIn("opts.size", line, "...and only when the caller passes {size:true}")
+        self.assertNotIn("offsetHeight", code, "the helper must not read or compare the box height")
+
+    def test_a_zero_size_stays_zero(self):
+        """Clamping to 1 stored a 1 x H canvas whose aspect ratio laid dashboard's galaxy out 295,920 px tall."""
+        code = re.sub(r"\s+", "", re.sub(r"/\*.*?\*/", "", HELPER, flags=re.S))
+        self.assertNotIn("Math.max(1,Math.round", code)
+        self.assertIn("cssW>0?cssW:0", code)
+
+
 class Browser(unittest.TestCase):
     def test_browser_validation(self):
         if not os.environ.get("OMEGA_HIDPI_BROWSER"):

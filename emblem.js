@@ -80,7 +80,11 @@
   /* --- canvas --- */
   var SIZE = 64;
   var cv = document.createElement('canvas');
-  cv.width = cv.height = SIZE;
+  /* Drawn at the screen's real pixel density: the CSS size below stays SIZE, the store is SIZE x ratio (capped at 3), and every
+     coordinate in this file is still in SIZE units because the context carries the scale.  Self-contained on purpose: this module is
+     injected by bg.js on every page, so it cannot rely on a page having loaded omega-canvas-hidpi.js. */
+  var DPR = Math.min(3, Math.max(1, +window.devicePixelRatio || 1));
+  cv.width = cv.height = Math.round(SIZE * DPR);
   Object.assign(cv.style, { width: SIZE + 'px', height: SIZE + 'px', display: 'block' });
 
   var lbl = document.createElement('span');
@@ -116,6 +120,7 @@
 
   /* --- draw loop --- */
   var ctx = cv.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   var t = 0, cx = SIZE / 2, cy = SIZE / 2, R = SIZE / 2 - 4;
 
   function draw() {

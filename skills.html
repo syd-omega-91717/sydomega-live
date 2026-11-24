@@ -79,6 +79,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 .active-badge{animation:pulse 2s ease-in-out infinite}
 @media(max-width:700px){.shell{flex-direction:column}.side{width:100%!important;height:auto!important;flex-direction:row!important;overflow-x:auto!important;position:relative!important}.two-col{grid-template-columns:1fr}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell" id="app">
@@ -411,8 +412,7 @@ function drawDomainRadar(){
   var cv=document.getElementById('domain-radar');if(!cv) return;
   var skills=getSkills();
   var labels=Object.keys(DOMAINS);
-  var W=Math.min(cv.offsetWidth||260,260),H=W;cv.width=W;cv.height=H;
-  var ctx=cv.getContext('2d'),cx=W/2,cy=H/2,maxR=cx*.8,N=labels.length;
+  var W=Math.min(cv.offsetWidth||260,260),H=W;var ctx=OmegaCanvas.fit(cv,W,H),cx=W/2,cy=H/2,maxR=cx*.8,N=labels.length;
   /* Grid */
   [2,4,6,8,10].forEach(function(v){
     ctx.beginPath();

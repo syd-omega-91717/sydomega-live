@@ -20,14 +20,16 @@ PAGES = {"expenses": 5, "investment": 1, "revenue": 1, "treasury": 1, "wealth": 
          "journal": 2, "mood": 2, "reading": 1, "time": 1, "water": 1, "weekly": 1, "workout": 1,
          "ops": 2, "physiology": 2, "fasting": 1, "contacts": 1, "cipher": 1,
          "agent-network": 1, "architect": 1, "atlas": 1, "dashboard": 2, "ecosystem": 1, "knowledge": 1, "network": 1, "nexus": 2,
-         "mindmap": 1, "queue": 2}
+         "mindmap": 1, "queue": 2,
+         "ascension": 1, "body": 2, "beacon": 1, "breath": 1, "clarity": 1, "houses": 1, "lab": 1, "nutrition": 2, "skills": 1,
+         "sleep": 4, "stoic": 2, "sigil": 1, "vision": 1, "focus": 3}
 
 
 class Static(unittest.TestCase):
     def test_helper_caps_the_ratio_and_applies_the_transform(self):
         code = re.sub(r"\s+", "", re.sub(r"/\*.*?\*/", "", HELPER, flags=re.S))
         self.assertIn("Math.min(d,3)", code)
-        self.assertIn("setTransform(d,0,0,d,0,0)", code)
+        self.assertIn("setTransform(cssW>0?canvas.width/cssW:d,0,0,cssH>0?canvas.height/cssH:d,0,0)", code)   # the real store/css ratio, d only when a side is 0
         self.assertIn("window.OmegaCanvas", HELPER)
 
     def test_each_page_loads_the_helper_once_before_its_inline_scripts(self):
@@ -36,15 +38,15 @@ class Static(unittest.TestCase):
             self.assertEqual(src.count(TAG), 1, page)
             at = src.index(TAG)
             # a non-deferred tag runs in document order, so every call must sit after it
-            for m in re.finditer(r"OmegaCanvas\.fit(?:Width)?\b", src):
+            for m in re.finditer(r"OmegaCanvas\.fit(?:Width|Attr)?\b", src):
                 self.assertGreater(m.start(), at, page + ": OmegaCanvas.fit used before the helper loads")
-            self.assertEqual(len(re.findall(r"OmegaCanvas\.fit(?:Width)?\(", src)), n, page)
+            self.assertEqual(len(re.findall(r"OmegaCanvas\.fit(?:Width|Attr)?\(", src)), n, page)
 
     def test_no_money_page_assigns_canvas_size_by_hand_any_more(self):
         for page in PAGES:
             src = (ROOT / (page + ".html")).read_text(encoding="utf-8")
             code = re.sub(r"/\*.*?\*/", "", src, flags=re.S)   # a comment may describe the old pattern
-            m = re.search(r"\b(?:cv|c|canvas)\.width\s*=\s*(?!OmegaCanvas)", code)
+            m = re.search(r"\b(?:cv|c|canvas)\.width\s*=\s*(?!OmegaCanvas|\d)   # a numeric literal is the declarative attribute (sigil makes its gallery canvases 120 and draws through fitAttr); a computed size is hand-sizing", code)
             self.assertIsNone(m, page + ": hand-assigned canvas.width at ..." + (code[max(0, m.start() - 60):m.end() + 40] if m else ""))
 
 
@@ -117,6 +119,40 @@ class Pointer(unittest.TestCase):
         self.assertIn("cssW>0?cssW:0", code)
 
 
+class FitAttr(unittest.TestCase):
+    def test_a_page_that_uses_fit_attr_never_reads_the_store_back_as_its_size(self):
+        """After the first fitAttr the width/height attributes hold the larger store, so a later read of canvas.width as a logical size is wrong
+        (the second draw would use 3x the size).  Logical size comes from OmegaCanvas.size()."""
+        for page in ("ascension", "body", "beacon", "breath", "clarity", "houses", "nutrition", "sleep", "stoic", "sigil", "focus"):
+            src = (ROOT / (page + ".html")).read_text(encoding="utf-8")
+            code = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+            self.assertIn("OmegaCanvas.fitAttr(", code, page)
+            m = re.search(r"\b(?:cv|canvas|c)\.(?:width|height)\b(?!\s*=[^=])", code)
+            self.assertIsNone(m, page + ": reads the store size back at ..." + (code[max(0, m.start() - 50):m.end() + 30] if m else ""))
+
+
+class Modules(unittest.TestCase):
+    """emblem.js, omega-element-motif.js and omega-lattice-3d.js are injected by bg.js on every page, so they cannot depend on a page having
+    loaded omega-canvas-hidpi.js: each carries its own ratio maths, capped at 3, and applies it through the context transform."""
+
+    def _code(self, name):
+        return re.sub(r"\s+", "", re.sub(r"/\*.*?\*/", "", (ROOT / name).read_text(encoding="utf-8"), flags=re.S))
+
+    def test_each_module_is_self_contained_and_capped(self):
+        for name in ("emblem.js", "omega-element-motif.js", "omega-lattice-3d.js"):
+            code = self._code(name)
+            self.assertIn("devicePixelRatio", code, name)
+            self.assertIn("Math.min(3,", code, name + ": the ratio must be capped at 3")
+            self.assertIn("setTransform(", code, name + ": the context must carry the scale")
+            self.assertNotIn("OmegaCanvas", code, name + ": must not depend on the page-level helper")
+
+    def test_fit_attr_remembers_the_attributes_and_does_not_reallocate_when_unchanged(self):
+        code = self._code("omega-canvas-hidpi.js")
+        self.assertIn("canvas.__ocAW==null", code)
+        self.assertIn("canvas.__ocS===s&&canvas.width===tw&&canvas.height===th", code)   # a per-frame caller must not reassign width
+        self.assertIn("if(d>1&&box>0&&w>0)", code)                                        # 1x is untouched
+
+
 class Browser(unittest.TestCase):
     def test_browser_validation(self):
         if not os.environ.get("OMEGA_HIDPI_BROWSER"):
@@ -125,6 +161,18 @@ class Browser(unittest.TestCase):
         if not node:
             self.skipTest("node not available")
         r = subprocess.run([node, str(ROOT / "scripts" / "verify-hidpi-charts.js")], capture_output=True, text=True, timeout=1500)
+        out = r.stdout + r.stderr
+        if "SKIPPED" in out and not os.environ.get("OMEGA_REQUIRE_BROWSER"):
+            self.skipTest("no browser available")
+        self.assertEqual(r.returncode, 0, out)
+
+    def test_shared_modules_draw_at_the_pixel_ratio(self):
+        if not os.environ.get("OMEGA_HIDPI_BROWSER"):
+            self.skipTest("run with OMEGA_HIDPI_BROWSER=1; the static contracts above always run")
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node not available")
+        r = subprocess.run([node, str(ROOT / "scripts" / "verify-hidpi-modules.js")], capture_output=True, text=True, timeout=900)
         out = r.stdout + r.stderr
         if "SKIPPED" in out and not os.environ.get("OMEGA_REQUIRE_BROWSER"):
             self.skipTest("no browser available")

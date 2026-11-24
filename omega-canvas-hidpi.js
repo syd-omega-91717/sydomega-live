@@ -29,7 +29,7 @@
   }
 
   function fit(canvas, cssW, cssH, opts) {
-    var d = ratio();
+    var d = (opts && opts.scale > 0) ? opts.scale : ratio();   /* opts.scale: pixels per CSS pixel, for a store sized to the displayed box (fitAttr) */
     var beforeW = canvas.offsetWidth;
     /* A zero stays zero.  A canvas measured while hidden has css width 0; the old code stored 0 x H, which has no aspect ratio, so the
        box fell back to a default.  Clamping to 1 stored 1 x H, a 1:H ratio that laid the box out H times as tall as it was wide,
@@ -58,7 +58,7 @@
       if (opts && opts.size) canvas.style.height = cssH + 'px';
     }
     var ctx = canvas.getContext('2d');
-    ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.setTransform(cssW > 0 ? canvas.width / cssW : d, 0, 0, cssH > 0 ? canvas.height / cssH : d, 0, 0);
     canvas.__ocW = cssW;
     canvas.__ocH = cssH;
     return ctx;
@@ -76,10 +76,31 @@
     return fit(canvas, w, cssH, opts);
   }
 
+  /* A canvas whose size is its width/height attributes, drawn in those units (a ring, a wheel, a fixed chart).  The attributes are the
+     logical size and are read once, on first sight, because after the first call they hold the larger store.  Safe to call on every
+     animation frame: when the store already matches the ratio it only resets the transform and does NOT reassign width, so it neither
+     reallocates nor clears (every caller clears what it draws).  Returns the context. */
+  function fitAttr(canvas) {
+    if (canvas.__ocAW == null) { canvas.__ocAW = canvas.width; canvas.__ocAH = canvas.height; }
+    var d = ratio(), w = canvas.__ocAW, h = canvas.__ocAH;
+    /* Above 1x the store follows the DISPLAYED width: a width:100% chart whose attribute is 700 but whose box is 778 was already
+       stretched 11 percent (soft at 1x), and a store of 700 x ratio would keep that stretch.  At 1x nothing changes. */
+    var box = canvas.clientWidth, s = d;
+    if (d > 1 && box > 0 && w > 0) s = d * (box / w);
+    var tw = Math.round(w * s), th = Math.round(h * s);
+    if (canvas.__ocS === s && canvas.width === tw && canvas.height === th) {
+      var c2 = canvas.getContext('2d');
+      c2.setTransform(tw / (w || 1), 0, 0, th / (h || 1), 0, 0);
+      return c2;
+    }
+    canvas.__ocS = s;
+    return fit(canvas, w, h, { scale: s });
+  }
+
   /* CSS-pixel size of the last fit(): what drawing code should use for W and H in place of canvas.width/height. */
   function size(canvas) {
     return { w: canvas.__ocW || canvas.width, h: canvas.__ocH || canvas.height };
   }
 
-  window.OmegaCanvas = { ratio: ratio, fit: fit, fitWidth: fitWidth, size: size };
+  window.OmegaCanvas = { ratio: ratio, fit: fit, fitWidth: fitWidth, fitAttr: fitAttr, size: size };
 })();

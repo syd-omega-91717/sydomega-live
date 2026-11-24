@@ -69,6 +69,7 @@
 .empty-state{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--dim);text-align:center;padding:40px 20px;border:1px dashed rgba(201,168,76,.1)}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -314,8 +315,8 @@ function withAlpha(c, hexPair){
 }
 function drawBreathCircle(progress, phase){
   var c=document.getElementById('breath-canvas');
-  var ctx=c.getContext('2d');
-  var W=c.width,H=c.height,cx=W/2,cy=H/2;
+  var ctx=OmegaCanvas.fitAttr(c);
+  var W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h,cx=W/2,cy=H/2;
   ctx.clearRect(0,0,W,H);
 
   var maxR=100, minR=36;

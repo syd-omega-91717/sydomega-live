@@ -71,6 +71,33 @@ const WAVE3 = [
   ['queue.html', 'q-throughput', null, { reduce: true, resize: true }],
   ['queue.html', 'q-topology', null, { reduce: true, resize: true, stale: true }]
 ];
+/* Wave 4: attribute-sized charts, rings and wheels (drawn in their width/height attributes' units). Each is redrawn through the page's own draw function; reduce freezes animation. */
+const R4 = { reduce: true, resize: true, min: 0.0005, attr: true };
+const WAVE4 = [
+  ['ascension.html', 'auth-canvas', null, Object.assign({}, R4)],
+  ['body.html', 'trendChart', null, Object.assign({ prep: "drawTrendChart();drawAvgChart();" }, R4)],
+  ['body.html', 'avgChart', null, Object.assign({ prep: "drawTrendChart();drawAvgChart();" }, R4)],
+  ['beacon.html', 'ring', null, Object.assign({}, R4)],
+  ['breath.html', 'breath-canvas', null, Object.assign({ prep: "drawBreathCircle(0.5,'inhale')", noCover: true }, R4)],
+  ['clarity.html', 'ring', null, Object.assign({}, R4)],
+  ['houses.html', 'wheel-canvas', null, Object.assign({}, R4)],
+  ['lab.html', 'radar-canvas', null, Object.assign({ prep: "drawRadarCanvas()" }, R4)],
+  ['nutrition.html', 'cal-chart', null, Object.assign({}, R4)],
+  ['nutrition.html', 'pro-chart', null, Object.assign({}, R4)],
+  ['skills.html', 'domain-radar', null, Object.assign({ prep: "drawDomainRadar()" }, R4)],
+  ['sleep.html', 'scoreRing', null, Object.assign({ seeds: { omega_sleep_log: JSON.stringify([0,1,2,3,4,5,6,7,8,9].map(i => ({ date: '2026-11-' + String(10 + i).padStart(2, '0'), bedtime: '23:' + String(10 + i * 3).padStart(2, '0'), wake: '07:0' + (i % 6), waketime: '07:0' + (i % 6), hours: 7 + (i % 3) / 2, duration: 420 + i * 10, quality: 1 + (i % 5), mins: 420 + i * 10 }))) }, prep: "drawScoreRing(72);drawTrendChart();drawQualChart();drawCircadianClock(1380,420);" }, R4)],
+  ['sleep.html', 'trendChart', null, Object.assign({ seeds: { omega_sleep_log: JSON.stringify([0,1,2,3,4,5,6,7,8,9].map(i => ({ date: '2026-11-' + String(10 + i).padStart(2, '0'), bedtime: '23:' + String(10 + i * 3).padStart(2, '0'), wake: '07:0' + (i % 6), waketime: '07:0' + (i % 6), hours: 7 + (i % 3) / 2, duration: 420 + i * 10, quality: 1 + (i % 5), mins: 420 + i * 10 }))) }, prep: "drawScoreRing(72);drawTrendChart();drawQualChart();drawCircadianClock(1380,420);" }, R4)],
+  ['sleep.html', 'qualChart', null, Object.assign({ seeds: { omega_sleep_log: JSON.stringify([0,1,2,3,4,5,6,7,8,9].map(i => ({ date: '2026-11-' + String(10 + i).padStart(2, '0'), bedtime: '23:' + String(10 + i * 3).padStart(2, '0'), wake: '07:0' + (i % 6), waketime: '07:0' + (i % 6), hours: 7 + (i % 3) / 2, duration: 420 + i * 10, quality: 1 + (i % 5), mins: 420 + i * 10 }))) }, prep: "drawScoreRing(72);drawTrendChart();drawQualChart();drawCircadianClock(1380,420);" }, R4)],
+  ['sleep.html', 'circadianClock', null, Object.assign({ seeds: { omega_sleep_log: JSON.stringify([0,1,2,3,4,5,6,7,8,9].map(i => ({ date: '2026-11-' + String(10 + i).padStart(2, '0'), bedtime: '23:' + String(10 + i * 3).padStart(2, '0'), wake: '07:0' + (i % 6), waketime: '07:0' + (i % 6), hours: 7 + (i % 3) / 2, duration: 420 + i * 10, quality: 1 + (i % 5), mins: 420 + i * 10 }))) }, prep: "drawScoreRing(72);drawTrendChart();drawQualChart();drawCircadianClock(1380,420);" }, R4)],
+  ['stoic.html', 'mementoCanvas', null, Object.assign({ prep: "drawRing(60);drawVirtueRadar();" }, R4)],
+  ['stoic.html', 'virtueRadar', null, Object.assign({ prep: "drawRing(60);drawVirtueRadar();" }, R4)],
+  ['sigil.html', 'sigil-cv', null, Object.assign({ prep: "drawSigil(document.getElementById('sigil-cv'),'Aries','fire',9,'#C9A84C');drawSigil(document.getElementById('sigil-builder-cv'),'Leo','fire',9,'#C9A84C');" }, R4)],
+  ['sigil.html', 'sigil-builder-cv', null, Object.assign({ prep: "drawSigil(document.getElementById('sigil-cv'),'Aries','fire',9,'#C9A84C');drawSigil(document.getElementById('sigil-builder-cv'),'Leo','fire',9,'#C9A84C');" }, R4)],
+  ['vision.html', 'v-wheel', null, Object.assign({ reveal: "document.getElementById('t-wheel').click()" }, R4)],
+  ['focus.html', 'focus-ring', null, Object.assign({}, R4)],
+  ['focus.html', 'score-ring', null, Object.assign({}, R4)],
+  ['focus.html', 'focus-heatmap', null, Object.assign({}, R4)]
+];
 const WAVE2 = [
   ['journal.html', 'j-wc-chart', null, { drive: journalSetup }],
   ['journal.html', 'j-mood-chart', null, { drive: journalSetup }],
@@ -151,7 +178,7 @@ const WAVE2 = [
     await ctx.close(); return Object.assign(m, { errs });
   }
 
-  for (const [page, id, click, cfg] of CHARTS.concat(WAVE2, WAVE3)) {
+  for (const [page, id, click, cfg] of (process.env.HIDPI_ONLY === 'wave4' ? WAVE4 : CHARTS.concat(WAVE2, WAVE3, WAVE4)).filter(e => !process.env.HIDPI_PAGE || e[0] === process.env.HIDPI_PAGE)) {
     const tag = page.replace('.html', '') + '#' + id;
     let m1, m2, m3;
     try {
@@ -162,7 +189,8 @@ const WAVE2 = [
       for (let attempt = 0; attempt < 2 && !(nr(m1.cssW, m2.cssW) && nr(m1.cssW, m3.cssW) && nr(m1.cssH, m2.cssH) && nr(m1.cssH, m3.cssH)); attempt++) { retried.push(tag); [m1, m2, m3] = await measureAll(); }   /* up to three attempts in all: each load is independent, a doubling is deterministic */
     } catch (e) { check(tag + ': renders', false, String(e.message).slice(0, 160)); continue; }
     const minP = (cfg && cfg.min) || 0.004;
-    check(tag + ': is drawn (not blank)', m1.painted > minP && m2.painted > minP && m3.painted > minP, JSON.stringify({ p1: m1.painted, p2: m2.painted }));
+    if (cfg && cfg.blankOk) console.log('NOTE  ' + tag + ': NOT EXERCISED: ' + cfg.blankOk + ' (painted ' + [m1, m2, m3].map(m => m.painted.toFixed(4)).join(', ') + '); layout and store are still checked');
+    else check(tag + ': is drawn (not blank)', m1.painted > minP && m2.painted > minP && m3.painted > minP, JSON.stringify({ p1: m1.painted, p2: m2.painted }));
     // The page itself lays out a few pixels differently at different device scales (scrollbar, rounding), so compare within 2.5 percent: a canvas that doubled on screen would be off by 100.
     const near = (a, b) => Math.abs(a - b) <= 0.025 * Math.max(a, b) + 1;
     const nearL = (a, b) => Math.abs(a - b) <= ((cfg && cfg.tol) || 0.025) * Math.max(a, b) + 1;   /* nexus lays its page out about 4 percent differently at another device scale */
@@ -171,7 +199,9 @@ const WAVE2 = [
     // The invariant: the backing store grows by exactly the device scale relative to 1x (and at 1x it is about the CSS size; treasury's canvas has a 1px border so its content box is 2px under its 600x180 drawing area).
     /* a stale first measure (the page sized the canvas before its layout settled) can differ by a couple of pixels between loads, so the relation to the 1x store is allowed 1 percent; perScale pages (nexus) are checked against their own box at each scale */
     const tolS = stale ? 0.01 : 0;
-    const storeOk = (cfg && cfg.perScale)
+    const storeOk = (cfg && cfg.attr)
+      ? (Math.abs(m2.bw - Math.round(m2.cssW * 2)) <= 3 && Math.abs(m2.bh - Math.round(m2.cssH * 2)) <= 3 && Math.abs(m3.bw - Math.round(m3.cssW * 3)) <= 3 && Math.abs(m3.bh - Math.round(m3.cssH * 3)) <= 3)
+      : (cfg && cfg.perScale)
       ? (Math.abs(m2.bw - Math.round(m2.cssW * 2)) <= 3 && Math.abs(m2.bh - Math.round(m2.cssH * 2)) <= 3 && Math.abs(m3.bw - Math.round(m3.cssW * 3)) <= 3 && Math.abs(m3.bh - Math.round(m3.cssH * 3)) <= 3 && near(m1.bw, m1.cssW) && near(m1.bh, m1.cssH))
       : (Math.abs(m2.bw - 2 * m1.bw) <= 2 + tolS * 2 * m1.bw && Math.abs(m2.bh - 2 * m1.bh) <= 2 + tolS * 2 * m1.bh && Math.abs(m3.bw - 3 * m1.bw) <= 3 + tolS * 3 * m1.bw && Math.abs(m3.bh - 3 * m1.bh) <= 3 + tolS * 3 * m1.bh && (stale || (near(m1.bw, m1.cssW) && near(m1.bh, m1.cssH))));
     check(tag + ': the backing store is exactly 2x and 3x what it is at 1x' + ((cfg && cfg.perScale) ? ' (per scale, against the box at that scale)' : ''), storeOk, JSON.stringify({ at1: [m1.bw, m1.bh, m1.cssW, m1.cssH], at2: [m2.bw, m2.bh], at3: [m3.bw, m3.bh] }));

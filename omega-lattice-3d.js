@@ -11,7 +11,7 @@ var PHI=1.6180339887;
 function draw3DLattice(canvas, nodesEarned, opts){
   opts=opts||{};
   var ctx=canvas.getContext('2d');
-  var W=canvas.width, H=canvas.height;
+  var W=canvas.__lw||canvas.width, H=canvas.__lh||canvas.height;   /* __lw/__lh: the logical size when the store was enlarged for the pixel ratio */
   var N=opts.n||9;          /* grid dimension */
   var cellSize=opts.cell||Math.min(W,H)/(N*2.2);
   var cx=W/2, cy=H*0.38;
@@ -120,11 +120,16 @@ function showLattice3D(nodesEarned, systemLabel){
   document.body.appendChild(modal);
   var cv=document.getElementById('lattice3d-cv');
   var S=Math.min(window.innerWidth*0.85,window.innerHeight*0.65,600);
-  cv.width=Math.floor(S); cv.height=Math.floor(S*0.85);
+  var LW=Math.floor(S), LH=Math.floor(S*0.85);
+  /* the store is the logical size x the screen's pixel ratio (capped at 3); the CSS width is pinned to the logical width and the height
+     follows the store's aspect, so max-width/max-height still shrink it uniformly.  Self-contained: bg.js injects this module on every page. */
+  var D=Math.min(3,Math.max(1,+window.devicePixelRatio||1));
+  cv.width=Math.round(LW*D); cv.height=Math.round(LH*D);
+  if(D>1){cv.style.width=LW+'px';cv.__lw=LW;cv.__lh=LH;cv.getContext('2d').setTransform(cv.width/LW,0,0,cv.height/LH,0,0);}
   var t=0;
   var raf;
   function frame(){
-    draw3DLattice(cv,nodesEarned,{t:t,cell:Math.min(cv.width,cv.height)/(9*2.4)});
+    draw3DLattice(cv,nodesEarned,{t:t,cell:Math.min(LW,LH)/(9*2.4)});
     t++; raf=requestAnimationFrame(frame);
   }
   frame();

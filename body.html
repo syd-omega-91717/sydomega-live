@@ -44,6 +44,7 @@
 @media(max-width:600px){.kpi-row{grid-template-columns:1fr 1fr}.form-row,.form-row.trio,.form-row.quad{grid-template-columns:1fr}.measurement-grid{grid-template-columns:1fr}}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -321,7 +322,7 @@ function selectMetric(m,btn){
 }
 function drawTrendChart(){
   var c=document.getElementById('trendChart');if(!c)return;
-  var ctx=c.getContext('2d'),W=c.width,H=c.height;
+  var ctx=OmegaCanvas.fitAttr(c),W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
   var data=bodyLog.slice(-90).map(function(e){return{date:e.date,val:getMetricVal(e,selectedMetric)};}).filter(function(d){return d.val!=null;});
   if(!data.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='11px monospace';ctx.textAlign='center';ctx.fillText('No data for this metric',W/2,H/2);return;}
@@ -365,7 +366,7 @@ function drawTrendChart(){
 
 function drawAvgChart(){
   var c=document.getElementById('avgChart');if(!c)return;
-  var ctx=c.getContext('2d'),W=c.width,H=c.height;
+  var ctx=OmegaCanvas.fitAttr(c),W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
   var data=bodyLog.slice(-14).map(function(e){return getMetricVal(e,selectedMetric);}).filter(function(v){return v!=null;});
   if(data.length<2){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('Need more data',W/2,H/2);return;}

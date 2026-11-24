@@ -65,6 +65,7 @@
 @media(max-width:600px){.kpi-mini{grid-template-columns:1fr 1fr}.form-row,.form-row.trio{grid-template-columns:1fr}.sleep-score-wrap{flex-direction:column}}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -342,7 +343,7 @@ function renderKPIs(){
 }
 
 function drawScoreRing(score){
-  var c=document.getElementById('scoreRing'),ctx=c.getContext('2d'),cx=45,cy=45,r=36;
+  var c=document.getElementById('scoreRing'),ctx=OmegaCanvas.fitAttr(c),cx=45,cy=45,r=36;
   ctx.clearRect(0,0,90,90);
   ctx.strokeStyle='rgba(201,168,76,.1)';ctx.lineWidth=7;
   ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
@@ -354,7 +355,7 @@ function drawScoreRing(score){
 
 function drawTrendChart(){
   var c=document.getElementById('trendChart');if(!c)return;
-  var ctx=c.getContext('2d'),W=c.width,H=c.height;
+  var ctx=OmegaCanvas.fitAttr(c),W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
   var last30=sleepLog.slice(-30);
   if(!last30.length){ctx.fillStyle='rgba(138,134,118,.3)';ctx.font='11px monospace';ctx.textAlign='center';ctx.fillText('Log sleep sessions to see trend',W/2,H/2);return;}
@@ -386,7 +387,7 @@ function drawTrendChart(){
 
 function drawQualChart(){
   var c=document.getElementById('qualChart');if(!c)return;
-  var ctx=c.getContext('2d'),W=c.width,H=c.height;
+  var ctx=OmegaCanvas.fitAttr(c),W=OmegaCanvas.size(c).w,H=OmegaCanvas.size(c).h;
   ctx.clearRect(0,0,W,H);
   var last14=sleepLog.slice(-14);if(!last14.length)return;
   var pad=12,step=(W-pad*2)/(last14.length-1||1);
@@ -488,7 +489,7 @@ document.getElementById('chronoSlider').addEventListener('input',updateCircadian
 updateCircadian();
 
 function drawCircadianClock(bedMin,wakeMin){
-  var c=document.getElementById('circadianClock'),ctx=c.getContext('2d'),cx=80,cy=80,r=70;
+  var c=document.getElementById('circadianClock'),ctx=OmegaCanvas.fitAttr(c),cx=80,cy=80,r=70;
   ctx.clearRect(0,0,160,160);
   ctx.strokeStyle='rgba(201,168,76,.08)';ctx.lineWidth=10;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
   var start=(bedMin/1440)*Math.PI*2-Math.PI/2;

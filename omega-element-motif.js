@@ -114,7 +114,21 @@
   function mount(canvas, motif, col, opts) {
     opts = opts || {};
     var ctx = canvas.getContext('2d');
-    var W = canvas.width, H = canvas.height;
+    /* Drawn at the screen's real pixel density.  W and H stay the logical size (the width/height attributes the page gave, remembered
+       because the store becomes larger); the context carries the scale.  If the canvas has no CSS width its box follows its store, so
+       the CSS width is pinned to the logical width.  Self-contained: bg.js injects this module on every page. */
+    var W = canvas.__ocmW || canvas.width, H = canvas.__ocmH || canvas.height;
+    var D = Math.min(3, Math.max(1, +window.devicePixelRatio || 1));
+    if (D > 1 && W > 0 && H > 0) {
+      if (!canvas.__ocmW) {
+        canvas.__ocmW = W; canvas.__ocmH = H;
+        var bw = canvas.offsetWidth;
+        canvas.width = Math.round(W * D); canvas.height = Math.round(H * D);
+        var follows = bw > 0 ? canvas.offsetWidth !== bw : (function () { try { return getComputedStyle(canvas).width === 'auto'; } catch (e) { return false; } })();
+        if (follows) canvas.style.width = W + 'px';
+      }
+      ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+    }
     var locked = !!opts.locked;
     var t = 0;
 

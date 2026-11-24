@@ -23,6 +23,7 @@
 .color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.14s}
 .color-swatch:hover,.color-swatch.active{border-color:var(--ink)}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="sigil"></aside>
@@ -103,8 +104,8 @@ function setTab(name){
 
 function drawSigil(cv,sign,elem,auth,color){
   if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d');
-  var W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)*0.4;
+  var ctx=OmegaCanvas.fitAttr(cv);
+  var W=OmegaCanvas.size(cv).w,H=OmegaCanvas.size(cv).h,cx=W/2,cy=H/2,R=Math.min(W,H)*0.4;
   ctx.clearRect(0,0,W,H);
   ctx.strokeStyle=color||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.lineWidth=1.5;
   ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.globalAlpha=0.2;ctx.stroke();

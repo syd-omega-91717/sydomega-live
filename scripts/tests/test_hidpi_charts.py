@@ -119,6 +119,18 @@ class Pointer(unittest.TestCase):
         self.assertIn("cssW>0?cssW:0", code)
 
 
+class Settles(unittest.TestCase):
+    """These canvases used to size themselves once, before the layout settled, and re-measure only on a window resize: architect drew 958x520
+    into an 820x445 box, knowledge 979x478 into 902x440, mindmap 944x900 into 442x422 (so its offsetX hit-testing was off by that scale),
+    queue's topology 600x200 into 782x200, wallet's chart 914 into 778, atlas stayed 0x0.  Each now observes its container."""
+
+    def test_each_page_observes_its_container_width(self):
+        for page in ("architect", "knowledge", "mindmap", "queue", "atlas", "wallet"):
+            code = re.sub(r"\s+", "", re.sub(r"/\*.*?\*/", "", (ROOT / (page + ".html")).read_text(encoding="utf-8"), flags=re.S))
+            self.assertIn("newResizeObserver(function(){if(el.clientWidth===last)return;", code, page)
+            self.assertIn("requestAnimationFrame(", code, page)
+
+
 class FitAttr(unittest.TestCase):
     def test_a_page_that_uses_fit_attr_never_reads_the_store_back_as_its_size(self):
         """After the first fitAttr the width/height attributes hold the larger store, so a later read of canvas.width as a logical size is wrong

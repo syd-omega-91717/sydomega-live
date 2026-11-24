@@ -44,7 +44,7 @@ const PAGES = [
     reveal: "activateTab('orbit')", seeds: { omega_contacts: CONTACTS } },
   { page: 'nexus.html', id: 'nexus-canvas', mode: 'move', probe: "document.getElementById('node-tip').style.display==='block'?'hit':''", reset: "document.getElementById('node-tip').style.display='none'", rows: MEMBERS },
   { page: 'mindmap.html', id: 'map-canvas', mode: 'click', events: ['mousedown', 'mouseup'], probe: "selectedNode?String(selectedNode.id):''", reset: "selectedNode=null;closeEditor();render();",
-    prep: "maps=[{id:'m1',name:'T',nodes:[{id:'a',x:0,y:0,text:'Alpha',color:'#C9A84C',shape:'rect',w:120,h:40},{id:'b',x:220,y:90,text:'Beta',color:'#00E5FF',shape:'rect',w:120,h:40},{id:'c',x:-200,y:130,text:'Gamma',color:'#9b6bf0',shape:'rect',w:120,h:40}],edges:[]}];loadMap('m1');resize();fitView();" },
+    prep: "maps=[{id:'m1',name:'T',nodes:[{id:'a',x:0,y:0,text:'Alpha',color:'#C9A84C',shape:'rect',w:120,h:40},{id:'b',x:220,y:90,text:'Beta',color:'#00E5FF',shape:'rect',w:120,h:40},{id:'c',x:-200,y:130,text:'Gamma',color:'#9b6bf0',shape:'rect',w:120,h:40}],edges:[]}];loadMap('m1');" },
 ];
 const STEP = 12, MAXY = 1400;   /* the whole canvas box that fits the 1500 px viewport: a node at 55 to 65 percent of a canvas whose height differs by scale falls either side of any smaller cap */
 
@@ -153,7 +153,7 @@ const STEP = 12, MAXY = 1400;   /* the whole canvas box that fits the 1500 px vi
       const byOneX = Math.abs(sc.box.bw - Math.round(s1.box.bw * d)) <= 3 && Math.abs(sc.box.bh - Math.round(s1.box.bh * d)) <= 3;
       check(tag + ': the canvas is drawn at the pixel ratio (backing store = ' + d + ' x the size the page chose)', byBox || byOneX, JSON.stringify({ box: [sc.box.w, sc.box.h], store: [sc.box.bw, sc.box.bh], store1x: [s1.box.bw, s1.box.bh] }));
     }
-    if (Math.abs(s1.box.bw - s1.box.w) > 3 || Math.abs(s1.box.bh - s1.box.h) > 3) console.log('NOTE  ' + tag + ': at 1x the store (' + s1.box.bw + 'x' + s1.box.bh + ') is not the box (' + Math.round(s1.box.w) + 'x' + Math.round(s1.box.h) + '): the page sized it before its layout settled; pre-existing, the 1x code path is unchanged');
+    check(tag + ': at 1x the store equals the box (the page re-measures when its layout settles)', Math.abs(s1.box.bw - s1.box.w) <= 3 && Math.abs(s1.box.bh - s1.box.h) <= 3, JSON.stringify({ box: [s1.box.w, s1.box.h], store: [s1.box.bw, s1.box.bh] }));
     check(tag + ': the canvas box does not change size while the page is scanned (no growth loop)', !s1.box.grew && !s3.box.grew && !s26.box.grew, JSON.stringify([s1.box.grew, s3.box.grew, s26.box.grew]));
     check(tag + ': no page errors', s1.errs.length + s3.errs.length + s26.errs.length === 0, JSON.stringify([s1.errs, s3.errs]));
   }

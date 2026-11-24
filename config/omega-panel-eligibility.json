@@ -1,7 +1,7 @@
 {
  "counts": {
   "excluded-pending-review": 6,
-  "hostable": 218,
+  "hostable": 217,
   "navigates-away": 10,
   "needs-fix": 0,
   "standalone-by-policy": 7,
@@ -1831,14 +1831,6 @@
     "text": 643
    },
    "sha": "ba02f35c9d5b",
-   "status": "hostable"
-  },
-  "trophies": {
-   "measured": {
-    "errors": 0,
-    "text": 1189
-   },
-   "sha": "8ed230b07b2d",
    "status": "hostable"
   },
   "universe": {

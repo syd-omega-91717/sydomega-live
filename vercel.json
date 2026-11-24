@@ -76,6 +76,16 @@
       "permanent": true
     },
     {
+      "source": "/trophies",
+      "destination": "/honors#vault",
+      "permanent": true
+    },
+    {
+      "source": "/trophies.html",
+      "destination": "/honors#vault",
+      "permanent": true
+    },
+    {
       "source": "/meditate",
       "destination": "/breath",
       "permanent": true

@@ -45,7 +45,7 @@ The Gaming page no longer renders duplicate `knowledge` task cards. Completion t
 ## Should merge (strong evidence; each is a separate batch to approve)
 | Merge | Evidence | Pages saved |
 |---|---|---|
-| **Honors**: `honors` + `trophies` (+ `achievements` links) into one page with tabs for the Hall, Trophies, Medals, Certificates | the two read the same four tables (`certificates`, `medals`, `trophies`, `profiles`); `honors` (403 words) has **no menu entry at all** while `trophies` (193 words) is folded away, so a member can reach neither easily | 1 |
+| **Honors**: `honors` + `trophies` (+ `achievements` links) into one page with tabs for the Hall, Trophies, Medals, Certificates | the two read the same four tables (`certificates`, `medals`, `trophies`, `profiles`); `honors` (403 words) has **no menu entry at all** while `trophies` (193 words) is folded away, so a member can reach neither easily | 1 | **DONE 2026-11-24:** `trophies` is now the VAULT tab of `honors` (canon names); see `docs/fixes/2026-11-24-honors-trophies-merge.md`.
 | **Budget**: `budget` + `expenses` | merged 2026-11-23, see the Merged table | 1 |
 | **Progression views**: `grid` + `levels` + `gates` | three near-identical 12-based views of the same member data, 174 to 243 words each, all folded, titles 0.67 similar | 2 |
 | **Films catalogue**: `movies` (43 words) and `series` into `cinema` | all describe the same "12 Films, 12 Series, one per Olympian" list; `movies` is a stub | 2 |

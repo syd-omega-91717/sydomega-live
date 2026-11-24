@@ -6,11 +6,11 @@
     "config/omega-page-contracts.json",
     "nav.js"
   ],
-  "page_count": 242,
+  "page_count": 241,
   "hub_count": 14,
   "classification_counts": {
     "AMBIGUOUS": 10,
-    "CANDIDATE_MERGE_PANEL": 199,
+    "CANDIDATE_MERGE_PANEL": 198,
     "KEEP_SEPARATE": 19,
     "UNMAPPED": 14
   },
@@ -3224,20 +3224,6 @@
       "path": "tribe.html",
       "navigation_section": "cosmos",
       "candidate_hub": "cosmos.html",
-      "protected_hub": null,
-      "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
-      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "authorization_state": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ]
-    },
-    {
-      "page_id": "trophies",
-      "path": "trophies.html",
-      "navigation_section": "achieve",
-      "candidate_hub": "achieve.html",
       "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
       "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",

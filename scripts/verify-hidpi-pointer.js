@@ -34,7 +34,7 @@ const cursorHit = (id) => `(function(){return document.getElementById('${id}').s
 const cursorReset = (id) => `document.getElementById('${id}').style.cursor=''`;   /* the previous position's result must not leak into the next probe */
 /* page, canvas id, mode ('move' hovers, 'click' clicks), probe (JS returning '' for a miss and a non-empty string for a hit), prep (JS run once the page is up), reset (JS run after each click) */
 const PAGES = [
-  { page: 'agent-network.html', id: 'network-canvas', mode: 'click', events: ['click'], css: '#network-canvas{height:520px!important}', probe: "(function(){var p=document.getElementById('agent-panel');return p&&p.classList.contains('active')?document.getElementById('agent-content').textContent.slice(0,30):''})()", reset: "closePanel()" },
+  { page: 'agent-network.html', id: 'network-canvas', mode: 'click', events: ['click'], probe: "(function(){var p=document.getElementById('agent-panel');return p&&p.classList.contains('active')?document.getElementById('agent-content').textContent.slice(0,30):''})()", reset: "closePanel()" },
   { page: 'architect.html', id: 'arch-canvas', mode: 'click', events: ['click'], probe: "(function(){var d=document.getElementById('node-detail');return d&&d.classList.contains('visible')?document.getElementById('nd-title').textContent:''})()" },
   { page: 'atlas.html', id: 'atlas-canvas', mode: 'move', skip: 'NOT VERIFIED: even with a stored ring of nodes the page collapses all of them onto one point in headless Chromium (pristine origin/main renders its 8 default nodes stacked too, cause not found), so there is nothing hit-able to compare; its pointer maths is the same cw()/ch() substitution checked on the other pages', reveal: "window.dispatchEvent(new Event('resize'))", seeds: { omega_atlas_v2: ATLAS }, wait: 6000, probe: cursorHit('atlas-canvas'), reset: cursorReset('atlas-canvas') },
   { page: 'dashboard.html', id: 'galaxy-canvas', mode: 'move', reveal: "setTab('overview')", probe: cursorHit('galaxy-canvas'), reset: cursorReset('galaxy-canvas') },
@@ -74,8 +74,6 @@ const STEP = 12, MAXY = 1400;   /* the whole canvas box that fits the 1500 px vi
     await pg.waitForTimeout(1500);
     /* a canvas on a tab that is not the default: open the tab through the page's own router; only if it still has no box, give its ancestors one */
     if (cfg.reveal) { try { await pg.evaluate(cfg.reveal); } catch (e) { errs.push('reveal: ' + String(e.message).slice(0, 100)); } await pg.waitForTimeout(400); }
-    /* pristine origin/main grows agent-network's canvas without bound (about 300 px per second, measured to 4,000+ px): freeze its height so the scan has a stable geometry */
-    if (cfg.css) await pg.addStyleTag({ content: cfg.css });
     if (!(await pg.evaluate((i) => document.getElementById(i).getBoundingClientRect().height > 0, cfg.id))) await pg.evaluate((i) => { for (let e = document.getElementById(i); e; e = e.parentElement) { if (getComputedStyle(e).display === 'none') { e.classList.add('active'); e.style.display = 'block'; e.hidden = false; } } }, cfg.id);
     /* wait until the canvas box has stopped changing in BOTH directions (agent-network grows its own canvas for a few seconds on pristine main) */
     let last = '', same = 0;
@@ -105,6 +103,8 @@ const STEP = 12, MAXY = 1400;   /* the whole canvas box that fits the 1500 px vi
       let near = false; hits.forEach(k => { const [kx, ky] = k.split(',').map(Number); if (Math.abs((kx + 0.5) * STEP - mx) < STEP * 4 && Math.abs((ky + 0.5) * STEP - my) < STEP * 4) near = true; });
       if (!near) real.miss = !(await realProbe(mx, my));
     }
+    const box2 = await pg.evaluate((i) => { const r = document.getElementById(i).getBoundingClientRect(); return { w: r.width, h: r.height }; }, cfg.id);
+    box.grew = Math.abs(box2.h - box.h) > 1 || Math.abs(box2.w - box.w) > 1 ? [Math.round(box.w) + 'x' + Math.round(box.h), Math.round(box2.w) + 'x' + Math.round(box2.h)] : null;
     await ctx.close(); return { box, hits, cells, errs, real };
   }
   /* Hit cells -> clusters (one per node) -> positions as a fraction of the canvas box, so a page whose node layout scales with a box that differs by 2 percent between device scales
@@ -154,6 +154,7 @@ const STEP = 12, MAXY = 1400;   /* the whole canvas box that fits the 1500 px vi
       check(tag + ': the canvas is drawn at the pixel ratio (backing store = ' + d + ' x the size the page chose)', byBox || byOneX, JSON.stringify({ box: [sc.box.w, sc.box.h], store: [sc.box.bw, sc.box.bh], store1x: [s1.box.bw, s1.box.bh] }));
     }
     if (Math.abs(s1.box.bw - s1.box.w) > 3 || Math.abs(s1.box.bh - s1.box.h) > 3) console.log('NOTE  ' + tag + ': at 1x the store (' + s1.box.bw + 'x' + s1.box.bh + ') is not the box (' + Math.round(s1.box.w) + 'x' + Math.round(s1.box.h) + '): the page sized it before its layout settled; pre-existing, the 1x code path is unchanged');
+    check(tag + ': the canvas box does not change size while the page is scanned (no growth loop)', !s1.box.grew && !s3.box.grew && !s26.box.grew, JSON.stringify([s1.box.grew, s3.box.grew, s26.box.grew]));
     check(tag + ': no page errors', s1.errs.length + s3.errs.length + s26.errs.length === 0, JSON.stringify([s1.errs, s3.errs]));
   }
 

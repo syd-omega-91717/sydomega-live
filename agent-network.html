@@ -86,13 +86,21 @@ body {
   flex: 1;
   position: relative;
   overflow: hidden;
+  min-height: 60vh;   /* the canvas no longer props it up */
 }
 
+/* The canvas is taken out of the flow.  It was width:100%/height:100% of a container whose own height was the status line plus the canvas, so
+   every redraw stored the canvas's height as its height, which grew the container by the status line, which grew the canvas: measured on
+   origin/main in headless Chromium at 774, 1164, 1593 ... 3426 px over 12 s, without end.  Absolutely positioned, its size comes from the
+   container, whose size comes from the page (.main is a column flex that fills the shell), not from the canvas. */
 #network-canvas {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
 }
+#network-status { position: relative; z-index: 2; }
 
 .agent-panel {
   position: fixed;

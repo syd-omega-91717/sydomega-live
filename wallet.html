@@ -50,6 +50,7 @@
 .alloc-bar{margin-bottom:10px}
 .alloc-label{display:flex;justify-content:space-between;font-family:'Courier New',monospace;font-size:12px;color:#888;margin-bottom:4px}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -284,6 +285,76 @@ function renderOverview(){
   drawAllocCanvas();
   renderAllocBars();
 }
+/* Both functions below were deleted by eb32eeb85 ("show no wallet balance before an account is recorded") while renderOverview kept calling
+   them, so the page threw ReferenceError on load.  They read only `accounts` (no invented figures), so they are restored; the empty case
+   draws a plain "NO ACCOUNTS" line and no bars, which is what that commit asked for. */
+function renderAllocBars(){
+  var el=document.getElementById('alloc-bars');
+  if(!el)return;
+  el.textContent='';
+  if(!accounts.length)return;
+  var t=calcTotals(), types={};
+  accounts.forEach(function(a){
+    if(!types[a.type])types[a.type]=0;
+    types[a.type]+=a.type==='debt'?-a.balance:a.balance;
+  });
+  var total=t.assets||1;
+  Object.keys(types).forEach(function(type){
+    var val=types[type];
+    var pct=Math.max(0,Math.min(100,val/total*100));
+    var col=TYPE_COLORS[type]||'#888';
+    var bar=document.createElement('div');bar.className='alloc-bar';
+    var lab=document.createElement('div');lab.className='alloc-label';
+    var name=document.createElement('span');name.style.color=col;name.textContent=TYPE_LABELS[type]||type;
+    var num=document.createElement('span');num.textContent=fmt(val)+' \u00b7 '+pct.toFixed(1)+'%';
+    lab.appendChild(name);lab.appendChild(num);
+    var pb=document.createElement('div');pb.className='progress-bar';
+    var pf=document.createElement('div');pf.className='progress-fill';pf.style.width=pct+'%';pf.style.background=col;
+    pb.appendChild(pf);bar.appendChild(lab);bar.appendChild(pb);el.appendChild(bar);
+  });
+}
+
+function drawAllocCanvas(){
+  var canvas=document.getElementById('alloc-canvas');
+  if(!canvas)return;
+  var W=canvas.offsetWidth||600;
+  var ctx=OmegaCanvas.fit(canvas,W,200);   /* drawn at the screen's pixel density; coordinates stay in CSS pixels */
+  ctx.clearRect(0,0,W,200);
+  if(!accounts.length){
+    ctx.fillStyle='#8796A1';ctx.font='11px Courier New';ctx.textAlign='center';
+    ctx.fillText('NO ACCOUNTS \u2014 ADD ACCOUNTS TO SEE ALLOCATION',W/2,100);
+    return;
+  }
+  var types={};
+  accounts.forEach(function(a){
+    if(a.type==='debt')return;
+    if(!types[a.type])types[a.type]=0;
+    types[a.type]+=a.balance;
+  });
+  var total=Object.keys(types).reduce(function(s,k){return s+types[k];},0)||1;
+  var cx=100,cy=100,r=85;
+  var startAngle=-Math.PI/2;
+  Object.keys(types).forEach(function(type){
+    var slice=types[type]/total*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,startAngle,startAngle+slice);
+    ctx.closePath();
+    ctx.fillStyle=TYPE_COLORS[type]||'#888';ctx.fill();
+    ctx.strokeStyle='#0d0d0d';ctx.lineWidth=2;ctx.stroke();
+    startAngle+=slice;
+  });
+  ctx.beginPath();ctx.arc(cx,cy,40,0,Math.PI*2);ctx.fillStyle='#0d0d0d';ctx.fill();
+  ctx.fillStyle='#FFD700';ctx.font='bold 11px Courier New';ctx.textAlign='center';
+  ctx.fillText('NET',cx,cy-4);ctx.fillText('WORTH',cx,cy+10);
+  var lx=220,ly=20;
+  Object.keys(types).forEach(function(type){
+    ctx.fillStyle=TYPE_COLORS[type]||'#888';ctx.fillRect(lx,ly,10,10);
+    ctx.fillStyle='#888';ctx.font='10px Courier New';ctx.textAlign='left';
+    ctx.fillText((TYPE_LABELS[type]||type)+' '+Math.round(types[type]/total*100)+'%',lx+14,ly+9);
+    ly+=18;if(ly>180){ly=20;lx+=160;}
+  });
+}
+
 function renderAccounts(){
   var grid=document.getElementById('accounts-grid');
   if(!accounts.length){grid.innerHTML='<div class="empty-state">NO ACCOUNTS YET<br><small>Use the form below to get started</small></div>';return;}

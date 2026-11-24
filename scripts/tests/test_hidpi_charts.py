@@ -22,7 +22,7 @@ PAGES = {"expenses": 5, "investment": 1, "revenue": 1, "treasury": 1, "wealth": 
          "agent-network": 1, "architect": 1, "atlas": 1, "dashboard": 2, "ecosystem": 1, "knowledge": 1, "network": 1, "nexus": 2,
          "mindmap": 1, "queue": 2,
          "ascension": 1, "body": 2, "beacon": 1, "breath": 1, "clarity": 1, "houses": 1, "lab": 1, "nutrition": 2, "skills": 1,
-         "sleep": 4, "stoic": 2, "sigil": 1, "vision": 1, "focus": 3}
+         "sleep": 4, "stoic": 2, "sigil": 1, "vision": 1, "focus": 3, "wallet": 1}
 
 
 class Static(unittest.TestCase):
@@ -102,9 +102,9 @@ class Pointer(unittest.TestCase):
 
     def test_the_helper_never_pins_a_height_unless_asked(self):
         """Height is never detected or pinned: a percentage height in a container with no definite height is laid out from the canvas itself
-        (agent-network grows its own canvas that way), so 'the box height changed' says nothing about intrinsic size, and a pinned height
-        froze that page at 481 px against 1,339 at 1x.  The browser suites freeze that page's height to work around its pre-existing
-        growth, so they cannot see this; this contract does."""
+        (agent-network did exactly that until 2026-11-24), so 'the box height changed' says nothing about intrinsic size, and a pinned height
+        froze that page at 481 px against 1,339 at 1x.  No browser test can see this rule broken any more, because agent-network no longer has
+        that layout, so this contract is the guard."""
         code = re.sub(r"/\*.*?\*/", "", HELPER, flags=re.S)
         sites = [m for m in re.finditer(r"style\.height\s*=", code)]
         self.assertEqual(len(sites), 1, "style.height may be assigned in exactly one place")

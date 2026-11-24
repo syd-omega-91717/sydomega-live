@@ -572,7 +572,7 @@ entries (which were accurate when written):
 | `python3 scripts/omega-registry.py --check` | matches the repo |
 | `python3 scripts/capability-audit.py --check` | 15 capabilities, each with a complete six-part `contract` (§10's registry); **0** still `BLOCKED` live |
 | `python3 scripts/release-gate.py` | PASSED |
-| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; see the `runtime-verify` skill). **Skipped every GitHub run until 2026-10-12**; CI now sets `OMEGA_REQUIRE_BROWSER` (skip = fail). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **1** on `--all` (verify-deployment.html, a diagnostic page; was 48 — fix the hue's lightness, never its alpha: the scanner reads full opacity) |
+| `node scripts/verify-runtime.js` | PASS on the 13 capability entrypoints (headless; see the `runtime-verify` skill). **Skipped every GitHub run until 2026-10-12**; CI now sets `OMEGA_REQUIRE_BROWSER` (skip = fail). **Also gates text contrast**: blocking under 3:1, advisory 3–4.5:1 — **12** on `--all` (4 pages, `GAP_ANALYSIS.md` §S; was 48 — fix the hue's lightness, never its alpha: the scanner reads full opacity) |
 | `python3 scripts/commerce-contract.py` | 0 findings |
 | `python3 scripts/brand-glyph-check.py` | 0 findings; scans literal, HTML-entity and JS-escape forms |
 | `python3 scripts/reachability-contract.py` | 0 unreachable |

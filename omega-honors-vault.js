@@ -61,7 +61,9 @@ async function build(){
           });
         });
       }
-      localStorage.setItem(K,JSON.stringify({t:tn,m:mn,c:cn}));
+      /* Store which of the fixed numbers 1-12 are held (same {t,m,c} shape as before), not the rows read from the database. */
+      var held=function(list){return all.filter(function(n){return list.indexOf(n)>=0;});};
+      localStorage.setItem(K,JSON.stringify({t:held(tn),m:held(mn),c:held(cn)}));
     }catch(e){}
   }
   var total=tn.length+mn.length+cn.length;

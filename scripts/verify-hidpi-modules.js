@@ -40,6 +40,12 @@ const CASES = [
   /* profile.html: the hero star-field banner is CSS-sized (store = box x dpr, same shape as the box: it was once measured before layout settled and drawn 14% too tall, c[8]); the achievement badges are authored at 2x. */
   ['profile hero banner (#ph-canvas)', 'profile.html', '#ph-canvas', null, null, null, true, (css, d) => Math.round(css * d), true],
   ['profile achievement badge (.ab-canvas)', 'profile.html', '.ab-canvas[style*="40px"]', null, null, null, true, (css, d) => Math.round(2 * css * Math.max(1, d / 2))],
+  /* Wave 7: attribute-sized or authored at 2x. city.html measures while hidden and falls back to 600 px (a pre-existing stretch, the same on main), so its expected store is 2 x 600 x max(1, dpr/2). */
+  ['vault emblem (#vault-cv)', 'vault.html', '#vault-cv', null, null, null, true, (css, d) => Math.round(2 * css * Math.max(1, d / 2))],
+  ['vault distribution ring (#dist-cv)', 'vault.html', '#dist-cv', null, null, null, true, (css, d) => Math.round(Math.max(120, css * d))],
+  ['city simulation (#city-canvas, 600px fallback)', 'city.html', '#city-canvas', null, null, null, true, (css, d) => Math.round(1200 * Math.max(1, d / 2))],
+  ['media franchise glyph (.fc-canvas)', 'media.html', '.fc-canvas', null, null, null, true, (css, d) => Math.round(2 * css * Math.max(1, d / 2))],
+  ['cosmos agent wheel (#agent-wheel)', 'cosmos.html', '#agent-wheel', null, null, null, true, (css, d) => Math.round(2 * css * Math.max(1, d / 2))],
   ['nav.js (brand mark)', 'dashboard.html', '#on-bcv', null, null, null, true, (css, d) => Math.round(88 * Math.max(1, d / 2))]   /* authored 88 for a 44px box; the dock scales it by a transform, so the measured box is not the authored one */
 ];
 

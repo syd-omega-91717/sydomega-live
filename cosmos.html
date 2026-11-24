@@ -436,8 +436,9 @@ function buildAgentWheel(memberSign){
   /* Defensive sizing: use wrapper width, fallback to 400 */
   const wrap=cv.parentElement;
   const size=Math.max(280,Math.min(wrap?wrap.getBoundingClientRect().width||400:400,520));
-  cv.width=size*2; cv.height=size*2; cv.style.width=size+'px'; cv.style.height=size+'px';
-  const ctx=cv.getContext('2d');
+  const K=Math.max(1,Math.min(window.devicePixelRatio||1,3)/2);   /* drawn in 2x units; above 2x the store grows by dpr/2 and the context carries it */
+  cv.width=Math.round(size*2*K); cv.height=Math.round(size*2*K); cv.style.width=size+'px'; cv.style.height=size+'px';
+  const ctx=cv.getContext('2d'); ctx.setTransform(K,0,0,K,0,0);
   const cx=size,cy=size,R=size*.38,t_={v:0};
   function draw(){
     t_.v+=.006; const t=t_.v;

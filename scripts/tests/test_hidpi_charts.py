@@ -231,6 +231,43 @@ class Wave6Profile(unittest.TestCase):
         self.assertIn("const W=cv.offsetWidth||800, H=240; cv.width=W*2; cv.height=H*2;", self.SRC)
 
 
+class Wave7(unittest.TestCase):
+    """vault, city, media franchise glyphs and the cosmos agent wheel. Canvases the harness cannot reach were left alone and are pinned as such."""
+    def _src(self, name):
+        return (ROOT / (name + ".html")).read_text(encoding="utf-8")
+
+    def test_vault_reads_its_authored_size_before_fit_attr_grows_the_store(self):
+        src = self._src("vault")
+        for fn in ("function drawVaultCube(canvas){", "function drawDistRing(canvas){"):
+            body = src[src.index(fn):src.index(fn) + 400]
+            self.assertLess(body.index("canvas.width"), body.index("OmegaCanvas.fitAttr(canvas)"), fn + ": W/H must be read first")
+
+    def test_the_pages_load_the_helper_before_their_scripts(self):
+        for page in ("vault", "city", "media"):
+            src = self._src(page)
+            self.assertEqual(src.count("omega-canvas-hidpi.js"), 1, page)
+            self.assertLess(src.index("omega-canvas-hidpi.js"), src.index("</head>"), page)
+
+    def test_city_keeps_its_2x_floor_and_grows_above_it(self):
+        src = self._src("city")
+        self.assertIn("OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())})", src)
+
+    def test_the_cosmos_agent_wheel_carries_the_dpr_over_2_factor(self):
+        src = self._src("cosmos")
+        body = src[src.index("function buildAgentWheel"):][:1400]
+        self.assertIn("Math.min(window.devicePixelRatio||1,3)/2", body)
+        self.assertIn("ctx.setTransform(K,0,0,K,0,0)", body)
+
+    def test_unreachable_canvases_were_left_alone(self):
+        """No harness reaches these under the member stub (they need loaded data), so a change to them could not be seen drawing."""
+        self.assertIn("cv.width=W*2;cv.height=H*2;cv.style.width=W+'px';cv.style.height=H+'px';", self._src("family"))   # constellation
+        self.assertIn("cv.width=w*2; cv.height=h*2;", self._src("media"))                                                  # poster canvases
+        cos = self._src("cosmos")
+        self.assertIn("cv.width=size*2;cv.height=size*2;cv.style.width=size+'px';cv.style.height=size+'px';", cos)         # sign canvases
+        self.assertIn("canvas.width=size*2; canvas.height=size*2;", cos)                                                   # mandala
+        self.assertIn("cv.width=80; cv.height=80; cv.style.width='40px'; cv.style.height='40px';\n  const ctx=cv.getContext('2d');", cos)  # planet node
+
+
 class Browser(unittest.TestCase):
     def test_browser_validation(self):
         if not os.environ.get("OMEGA_HIDPI_BROWSER"):

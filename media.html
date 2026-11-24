@@ -236,6 +236,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:14px 2rem}.native-card{border:1px solid var(--border);padding:13px;background:rgba(10,10,15,.5)}.native-card b{display:block;font:600 16px monospace;color:var(--cyan)}.native-card span{display:block;margin-top:5px;font:var(--fs-1,12px) monospace;letter-spacing:1px;color:var(--gold)}.native-card small{display:block;margin-top:6px;color:var(--muted);line-height:1.5}.native-boundary{margin:0 2rem 20px;font:var(--fs-1,12px) monospace;line-height:1.7;color:var(--muted)}
 </style>
 <link rel="stylesheet" href="/omega-readable-layout-v2.css"/>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body data-omega-page="media">
 <canvas id="bg-canvas"></canvas>
@@ -791,7 +792,7 @@ const GAMES=['&#x03A9; MYTH-VERSE','&#x03A9; WARRIORS','&#x03A9; LEGACY','&#x03A
 
 function drawFranchiseGlyph(cv,col){
   cv.width=120;cv.height=80;cv.style.width='60px';cv.style.height='40px';
-  const ctx=cv.getContext('2d');let t=0;
+  const ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d'));let t=0;
   function f(){
     t+=.025;ctx.clearRect(0,0,120,80);
     const g=ctx.createRadialGradient(60,40,0,60,40,50);g.addColorStop(0,col+'33');g.addColorStop(1,'transparent');

@@ -160,10 +160,16 @@ class OmegaExperienceV6Tests(unittest.TestCase):
                 self.assertEqual(MANIFEST["pageArchetypes"].get(slug), archetype)
 
     def test_v6_profiles_stay_inside_the_canonical_omega_palette(self):
-        allowed = {"#C9A84C", "#E8C97A", "#00E5FF", "#8B0000", "#00FF88"}
+        allowed = {"#C9A84C", "#E8C97A", "#00E5FF", "#8B0000", "#00FF88", "#CF6760"}
         for name, profile in MANIFEST["archetypes"].items():
             with self.subTest(archetype=name):
                 self.assertIn(profile["accent"], allowed)
+                # The accent is painted as TEXT (headings, .sechead), so it must clear the
+                # runtime sweep's 3:1 floor on the near-black page; #8B0000 is 1.8:1 and is
+                # only legitimate as a secondary/border, never as a text accent.
+                self.assertNotEqual(profile["accent"], "#8B0000")
+                # .ova-family and other v6 rules paint the SECONDARY as text too.
+                self.assertNotEqual(profile["secondary"], "#8B0000")
                 self.assertIn(profile["secondary"], allowed)
                 self.assertTrue(profile["glow"].startswith("rgba("))
                 self.assertTrue(profile["line"].startswith("rgba("))

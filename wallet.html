@@ -435,6 +435,9 @@ function resetTargets(){targets={checking:10,savings:15,investment:40,retirement
 
 load();
 renderOverview();
+/* A layout change that is not a window resize (a side rail arriving, the approval guard lifting) used to leave this canvas sized for the old
+   width, and drawn scaled.  The first callback is kept on purpose: it is the late correction. */
+(function(){var el=document.getElementById('alloc-canvas').parentElement;if(!el||!window.ResizeObserver)return;var last=-1,raf=0;new ResizeObserver(function(){if(el.clientWidth===last)return;last=el.clientWidth;cancelAnimationFrame(raf);raf=requestAnimationFrame(drawAllocCanvas);}).observe(el);})();
 </script>
 <script src="/omega-local-backup.js"></script>
 <script src="/bg.js" defer></script>

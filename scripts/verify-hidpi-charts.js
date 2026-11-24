@@ -60,16 +60,16 @@ const STOP = 'for(var t=1;t<4000;t++){clearInterval(t);clearTimeout(t);}';
 /* Wave 3: the pointer-driven canvases (their hit-testing is checked by verify-hidpi-pointer.js). reduce: freeze animation; noCover: an animated layout that still moves between loads, so the painted region is not comparable. */
 const WAVE3 = [
   ['agent-network.html', 'network-canvas', null, { resize: true, reduce: true }],
-  ['architect.html', 'arch-canvas', null, { resize: true, reduce: true, stale: true }],
+  ['architect.html', 'arch-canvas', null, { resize: true, reduce: true, }],
   ['atlas.html', 'atlas-canvas', null, { resize: true, reduce: true, noCover: true, min: 0.0001, reveal: "window.dispatchEvent(new Event('resize'))", seeds: { omega_atlas_v2: JSON.stringify({ nodes: [0, 1, 2, 3, 4, 5].map(i => ({ id: 'n' + i, label: 'Node ' + i, desc: 'd', cat: i % 2 ? 'skill' : 'concept', tags: [], x: Math.round(150 * Math.cos(i * Math.PI / 3)), y: Math.round(150 * Math.sin(i * Math.PI / 3)), vx: 0, vy: 0 })), edges: [], panX: 0, panY: 0, scale: 1 }) } }],
   ['dashboard.html', 'galaxy-canvas', null, { resize: true, reduce: true, noCover: true, reveal: "setTab('overview')" }],
   ['ecosystem.html', 'eco-canvas', null, { resize: true, reduce: true }],
-  ['knowledge.html', 'kg-canvas', null, { resize: true, reduce: true, stale: true }],
+  ['knowledge.html', 'kg-canvas', null, { resize: true, reduce: true, }],
   ['nexus.html', 'nexus-canvas', null, { resize: true, reduce: true, noCover: true, rows: MEMBERS, tol: 0.05, perScale: true, min: 0.002 }],
-  ['mindmap.html', 'map-canvas', null, { resize: true, reduce: true, stale: true, prep: "maps=[{id:'m1',name:'T',nodes:[{id:'a',x:0,y:0,text:'Alpha',color:'#C9A84C',shape:'rect',w:120,h:40},{id:'b',x:220,y:90,text:'Beta',color:'#00E5FF',shape:'rect',w:120,h:40}],edges:[]}];loadMap('m1');" }],
+  ['mindmap.html', 'map-canvas', null, { resize: true, reduce: true, prep: "maps=[{id:'m1',name:'T',nodes:[{id:'a',x:0,y:0,text:'Alpha',color:'#C9A84C',shape:'rect',w:120,h:40},{id:'b',x:220,y:90,text:'Beta',color:'#00E5FF',shape:'rect',w:120,h:40}],edges:[]}];loadMap('m1');" }],
   ['network.html', 'n-orbit', null, { reduce: true, reveal: "activateTab('orbit')", seeds: { omega_contacts: JSON.stringify(['inner', 'close', 'tribe', 'network', 'outer'].flatMap((tier, i) => [0, 1, 2].map(j => ({ id: 'c' + i + j, name: 'Person ' + i + j, tier, cat: 'other', freq: 30, strength: 3, lastContact: '2026-11-01', tags: [], vip: false, added: '2026-01-01', color: '#888' })))) }, resize: true }],
   ['queue.html', 'q-throughput', null, { reduce: true, resize: true }],
-  ['queue.html', 'q-topology', null, { reduce: true, resize: true, stale: true }]
+  ['queue.html', 'q-topology', null, { reduce: true, resize: true, }]
 ];
 /* Wave 4: attribute-sized charts, rings and wheels (drawn in their width/height attributes' units). Each is redrawn through the page's own draw function; reduce freezes animation. */
 const R4 = { reduce: true, resize: true, min: 0.0005, attr: true };
@@ -100,7 +100,7 @@ const WAVE4 = [
 ];
 const WAVE5 = [
   /* wallet's allocation chart was never drawn (its draw function had been deleted); seeded so it has something to draw */
-  ['wallet.html', 'alloc-canvas', null, { reduce: true, resize: true, stale: true, seeds: { omega_wallet: JSON.stringify([{ id: 'a', name: 'Checking', type: 'checking', balance: 4000, liquid: 'yes' }, { id: 'b', name: 'Savings', type: 'savings', balance: 9000, liquid: 'yes' }, { id: 'c', name: 'Brokerage', type: 'investment', balance: 15000, liquid: 'no' }, { id: 'd', name: 'Card', type: 'debt', balance: 2000, liquid: 'no' }]) } }]
+  ['wallet.html', 'alloc-canvas', null, { reduce: true, resize: true, seeds: { omega_wallet: JSON.stringify([{ id: 'a', name: 'Checking', type: 'checking', balance: 4000, liquid: 'yes' }, { id: 'b', name: 'Savings', type: 'savings', balance: 9000, liquid: 'yes' }, { id: 'c', name: 'Brokerage', type: 'investment', balance: 15000, liquid: 'no' }, { id: 'd', name: 'Card', type: 'debt', balance: 2000, liquid: 'no' }]) } }]
 ];
 const WAVE2 = [
   ['journal.html', 'j-wc-chart', null, { drive: journalSetup }],

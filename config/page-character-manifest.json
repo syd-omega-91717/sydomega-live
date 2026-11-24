@@ -109,7 +109,7 @@
       ],
       "successOutcome": "mastery recorded",
       "accent": "#00E5FF",
-      "secondary": "#8B0000",
+      "secondary": "#CF6760",
       "glow": "rgba(0,229,255,.15)",
       "line": "rgba(0,229,255,.34)"
     },
@@ -130,7 +130,7 @@
       ],
       "successOutcome": "culture expanded",
       "accent": "#E8C97A",
-      "secondary": "#8B0000",
+      "secondary": "#CF6760",
       "glow": "rgba(232,201,122,.14)",
       "line": "rgba(232,201,122,.34)"
     },
@@ -255,10 +255,10 @@
         "operate"
       ],
       "successOutcome": "system state verified",
-      "accent": "#8B0000",
+      "accent": "#CF6760",
       "secondary": "#00E5FF",
-      "glow": "rgba(139,0,0,.12)",
-      "line": "rgba(139,0,0,.32)"
+      "glow": "rgba(207,103,96,.12)",
+      "line": "rgba(207,103,96,.32)"
     }
   },
   "rules": [

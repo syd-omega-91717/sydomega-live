@@ -209,6 +209,9 @@ function resize(){
   render();
 }
 window.addEventListener('resize',resize);
+/* A layout change that is not a window resize (a side rail arriving, the approval guard lifting) used to leave this canvas sized for the old
+   width, and drawn scaled.  The first callback is kept on purpose: it is the late correction. */
+(function(){var el=container;if(!el||!window.ResizeObserver)return;var last=-1,raf=0;new ResizeObserver(function(){if(el.clientWidth===last)return;last=el.clientWidth;cancelAnimationFrame(raf);raf=requestAnimationFrame(resize);}).observe(el);})();
 resize();
 
 document.getElementById('color-row').innerHTML=NODE_COLORS.map((c,i)=>`<div class="color-dot ${i===0?'selected':''}" style="background:${c}" data-c="${c}" onclick="selectColor(this)"></div>`).join('');

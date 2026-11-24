@@ -258,6 +258,9 @@ document.addEventListener('DOMContentLoaded',function(){
       if(n){selectedNode=n;showDetail(n);}drawGraph();
     },{passive:false});
     window.addEventListener('resize',function(){resizeGraph();drawGraph();});
+    /* A layout change that is not a window resize (a side rail arriving, the approval guard lifting) used to leave this canvas sized for the old
+   width, and drawn scaled.  The first callback is kept on purpose: it is the late correction. */
+(function(){var el=cv.parentElement;if(!el||!window.ResizeObserver)return;var last=-1,raf=0;new ResizeObserver(function(){if(el.clientWidth===last)return;last=el.clientWidth;cancelAnimationFrame(raf);raf=requestAnimationFrame(function(){resizeGraph();drawGraph();});}).observe(el);})();
     resizeGraph();drawGraph();
   }
   buildNodeGrid();

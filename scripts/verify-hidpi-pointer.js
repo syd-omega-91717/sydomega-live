@@ -28,15 +28,13 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
 const CONTACTS = JSON.stringify(['inner', 'close', 'tribe', 'network', 'outer'].flatMap((tier, i) => [0, 1, 2].map(j => ({ id: 'c' + i + j, name: 'Person ' + i + j, tier, cat: 'other', freq: 30, strength: 3, lastContact: '2026-11-01', tags: [], vip: false, added: '2026-01-01', color: '#888' }))));
 /* approved members for nexus: a spread of signs and axes so the graph has several nodes */
 const MEMBERS = ['Aries', 'Leo', 'Sagittarius', 'Taurus', 'Virgo', 'Cancer', 'Pisces', 'Gemini'].map((sign, i) => ({ id: 'u' + i, display_name: 'Member ' + i, axis_a: 2 + i % 4, axis_b: 3 + i % 3, axis_c: 1 + i % 5, is_owner: false, sign, access_approved: true }));
-/* the atlas seeds its own nodes while the canvas is hidden at 0x0 and the force simulation cannot separate nodes that start on one point (pristine main renders all 8 stacked), so a ring of six is stored through the page's own key; the springs sit at their rest length so it barely moves */
-const ATLAS = JSON.stringify({ nodes: [0, 1, 2, 3, 4, 5].map(i => ({ id: 'n' + i, label: 'Node ' + i, desc: 'd', cat: i % 2 ? 'skill' : 'concept', tags: [], x: Math.round(150 * Math.cos(i * Math.PI / 3)), y: Math.round(150 * Math.sin(i * Math.PI / 3)), vx: 0, vy: 0 })), edges: [0, 1, 2, 3, 4, 5].map(i => ({ id: 'e' + i, source: 'n' + i, target: 'n' + ((i + 1) % 6) })), panX: 0, panY: 0, scale: 1 });
 const cursorHit = (id) => `(function(){return document.getElementById('${id}').style.cursor==='pointer'?'hit':''})()`;
 const cursorReset = (id) => `document.getElementById('${id}').style.cursor=''`;   /* the previous position's result must not leak into the next probe */
 /* page, canvas id, mode ('move' hovers, 'click' clicks), probe (JS returning '' for a miss and a non-empty string for a hit), prep (JS run once the page is up), reset (JS run after each click) */
 const PAGES = [
   { page: 'agent-network.html', id: 'network-canvas', mode: 'click', events: ['click'], probe: "(function(){var p=document.getElementById('agent-panel');return p&&p.classList.contains('active')?document.getElementById('agent-content').textContent.slice(0,30):''})()", reset: "closePanel()" },
   { page: 'architect.html', id: 'arch-canvas', mode: 'click', events: ['click'], probe: "(function(){var d=document.getElementById('node-detail');return d&&d.classList.contains('visible')?document.getElementById('nd-title').textContent:''})()" },
-  { page: 'atlas.html', id: 'atlas-canvas', mode: 'move', skip: 'NOT VERIFIED: even with a stored ring of nodes the page collapses all of them onto one point in headless Chromium (pristine origin/main renders its 8 default nodes stacked too, cause not found), so there is nothing hit-able to compare; its pointer maths is the same cw()/ch() substitution checked on the other pages', reveal: "window.dispatchEvent(new Event('resize'))", seeds: { omega_atlas_v2: ATLAS }, wait: 6000, probe: cursorHit('atlas-canvas'), reset: cursorReset('atlas-canvas') },
+  { page: 'atlas.html', id: 'atlas-canvas', mode: 'move', reveal: "window.dispatchEvent(new Event('resize'))", wait: 5000, probe: cursorHit('atlas-canvas'), reset: cursorReset('atlas-canvas') },
   { page: 'dashboard.html', id: 'galaxy-canvas', mode: 'move', reveal: "setTab('overview')", probe: cursorHit('galaxy-canvas'), reset: cursorReset('galaxy-canvas') },
   { page: 'ecosystem.html', id: 'eco-canvas', mode: 'move', probe: cursorHit('eco-canvas'), reset: cursorReset('eco-canvas') },
   { page: 'knowledge.html', id: 'kg-canvas', mode: 'move', probe: cursorHit('kg-canvas'), reset: cursorReset('kg-canvas') },
@@ -44,7 +42,7 @@ const PAGES = [
     reveal: "activateTab('orbit')", seeds: { omega_contacts: CONTACTS } },
   { page: 'nexus.html', id: 'nexus-canvas', mode: 'move', probe: "document.getElementById('node-tip').style.display==='block'?'hit':''", reset: "document.getElementById('node-tip').style.display='none'", rows: MEMBERS },
   { page: 'mindmap.html', id: 'map-canvas', mode: 'click', events: ['mousedown', 'mouseup'], probe: "selectedNode?String(selectedNode.id):''", reset: "selectedNode=null;closeEditor();render();",
-    prep: "maps=[{id:'m1',name:'T',nodes:[{id:'a',x:0,y:0,text:'Alpha',color:'#C9A84C',shape:'rect',w:120,h:40},{id:'b',x:220,y:90,text:'Beta',color:'#00E5FF',shape:'rect',w:120,h:40},{id:'c',x:-200,y:130,text:'Gamma',color:'#9b6bf0',shape:'rect',w:120,h:40}],edges:[]}];loadMap('m1');resize();fitView();" },
+    prep: "maps=[{id:'m1',name:'T',nodes:[{id:'a',x:0,y:0,text:'Alpha',color:'#C9A84C',shape:'rect',w:120,h:40},{id:'b',x:220,y:90,text:'Beta',color:'#00E5FF',shape:'rect',w:120,h:40},{id:'c',x:-200,y:130,text:'Gamma',color:'#9b6bf0',shape:'rect',w:120,h:40}],edges:[]}];loadMap('m1');" },
 ];
 const STEP = 12, MAXY = 1400;   /* the whole canvas box that fits the 1500 px viewport: a node at 55 to 65 percent of a canvas whose height differs by scale falls either side of any smaller cap */
 
@@ -153,7 +151,7 @@ const STEP = 12, MAXY = 1400;   /* the whole canvas box that fits the 1500 px vi
       const byOneX = Math.abs(sc.box.bw - Math.round(s1.box.bw * d)) <= 3 && Math.abs(sc.box.bh - Math.round(s1.box.bh * d)) <= 3;
       check(tag + ': the canvas is drawn at the pixel ratio (backing store = ' + d + ' x the size the page chose)', byBox || byOneX, JSON.stringify({ box: [sc.box.w, sc.box.h], store: [sc.box.bw, sc.box.bh], store1x: [s1.box.bw, s1.box.bh] }));
     }
-    if (Math.abs(s1.box.bw - s1.box.w) > 3 || Math.abs(s1.box.bh - s1.box.h) > 3) console.log('NOTE  ' + tag + ': at 1x the store (' + s1.box.bw + 'x' + s1.box.bh + ') is not the box (' + Math.round(s1.box.w) + 'x' + Math.round(s1.box.h) + '): the page sized it before its layout settled; pre-existing, the 1x code path is unchanged');
+    check(tag + ': at 1x the store equals the box (the page re-measures when its layout settles)', Math.abs(s1.box.bw - s1.box.w) <= 3 && Math.abs(s1.box.bh - s1.box.h) <= 3, JSON.stringify({ box: [s1.box.w, s1.box.h], store: [s1.box.bw, s1.box.bh] }));
     check(tag + ': the canvas box does not change size while the page is scanned (no growth loop)', !s1.box.grew && !s3.box.grew && !s26.box.grew, JSON.stringify([s1.box.grew, s3.box.grew, s26.box.grew]));
     check(tag + ': no page errors', s1.errs.length + s3.errs.length + s26.errs.length === 0, JSON.stringify([s1.errs, s3.errs]));
   }

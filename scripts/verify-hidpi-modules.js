@@ -28,7 +28,16 @@ const CASES = [
   ['emblem.js', 'architect.html', '#omega-emblem-wrap canvas', [64, 64], null, null, false],
   ['omega-element-motif.js', 'elements.html', '.el-canvas-wrap canvas', [640, 320], null, null, true],
   ['omega-element-motif.js', 'cosmos.html', 'canvas.el-canvas', [200, 90], null, null, true],
-  ['omega-lattice-3d.js', 'dashboard.html', '#lattice3d-cv', null, "document.getElementById('lat-trig').click()", PLANT, true]
+  ['omega-lattice-3d.js', 'dashboard.html', '#lattice3d-cv', null, "document.getElementById('lat-trig').click()", PLANT, true],
+  /* Authored at 2x (store = 2 x the CSS box at 1x and 2x); above 2x the store grows by dpr/2. c[7] is the expected store for a CSS box and a scale. */
+  ['omega-page-emblem.js', 'honors.html', '[data-page-emblem] canvas', null, null, null, true, (css, d) => Math.round(2 * css * Math.max(1, d / 2))],
+  /* Header and widget canvases authored at 2x their CSS box (attribute = 2 x style): same rule as above, through OmegaCanvas.fitAttr. */
+  ...[['analytics.html', '#apex-cv'], ['automation.html', '#ohb-cv'], ['family.html', '#phb-cv-family'],
+    ['identity.html', '#identity-seal'], ['interface-omni.html', '#pgcv_interface_omni'], ['points.html', '#radar-cv'],
+    ['profile.html', '#cv-matx'], ['profile.html', '#mat-cv'], ['profile.html', '#phb-cv-character'], ['profile.html', '#av-canvas'],
+    ['social.html', '#soc-omega-cv'], ['subscriptions.html', '#sub-cv'], ['triads.html', '#triad-cv']].map(([pg, sel]) => ['fitAttr widget ' + sel, pg, sel, null, null, null, true, (css, d) => Math.round(2 * css * Math.max(1, d / 2))]),
+  ['fitAttr widget #mini-radar (a small glyph: same painted region at every scale)', 'analytics.html', '#mini-radar', null, null, null, false, (css, d) => Math.round(2 * css * Math.max(1, d / 2))],
+  ['nav.js (brand mark)', 'dashboard.html', '#on-bcv', null, null, null, true, (css, d) => Math.round(88 * Math.max(1, d / 2))]   /* authored 88 for a 44px box; the dock scales it by a transform, so the measured box is not the authored one */
 ];
 
 (async () => {
@@ -73,7 +82,10 @@ const CASES = [
     if (!m1 || !m3 || !m26) { check(tag + ': the canvas appears (' + c[2] + ')', false, JSON.stringify({ m1: !!m1, m26: !!m26, m3: !!m3 })); continue; }
     const near = (a, b) => Math.abs(a - b) <= 0.025 * Math.max(a, b) + 1;
     check(tag + ': CSS box is the same at 1x, 2.625x and 3x', near(m1.cssW, m3.cssW) && near(m1.cssH, m3.cssH) && near(m1.cssW, m26.cssW) && near(m1.cssH, m26.cssH), JSON.stringify([m1, m26, m3].map(m => [m.cssW, m.cssH])));
-    if (c[3]) {
+    if (c[7]) {
+      const e = (m, d) => c[7](m.cssW, d);
+      check(tag + ': the store is 2x the box up to 2x, then dpr/2 more (never blurry, never oversized)', Math.abs(m1.bw - e(m1, 1)) <= 1 && Math.abs(m26.bw - e(m26, 2.625)) <= 1 && Math.abs(m3.bw - e(m3, 3)) <= 1 && Math.abs(m3.bh / m3.bw - m1.bh / m1.bw) < 0.02 && Math.abs(m26.bh / m26.bw - m1.bh / m1.bw) < 0.02, JSON.stringify({ at1: [m1.cssW, m1.bw], at26: [m26.cssW, m26.bw], at3: [m3.cssW, m3.bw] }));
+    } else if (c[3]) {
       check(tag + ': the store is the logical size at 1x', m1.bw === c[3][0] && m1.bh === c[3][1], JSON.stringify([m1.bw, m1.bh]));
       check(tag + ': the store is logical x 3 at 3x and x 2.625 at 2.625x', m3.bw === Math.round(c[3][0] * 3) && m3.bh === Math.round(c[3][1] * 3) && Math.abs(m26.bw - c[3][0] * 2.625) <= 1.5 && Math.abs(m26.bh - c[3][1] * 2.625) <= 1.5, JSON.stringify({ at3: [m3.bw, m3.bh], at26: [m26.bw, m26.bh] }));
     } else {

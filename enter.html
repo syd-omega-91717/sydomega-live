@@ -138,6 +138,7 @@
 .lt{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:7px 16px;border:1px solid rgba(201,168,76,.15);color:var(--muted);background:none;cursor:pointer;transition:.1s}
 .lt.active,.lt:hover,.lt:focus-visible{color:var(--gold);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06)}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -384,7 +385,7 @@ countdown();
 (function(){
   var cv=document.getElementById('omega-canvas');
   if(!cv)return;
-  var ctx=cv.getContext('2d');
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d'));
   var W=200,H=140,CX=200,CY=140;
   var t=0;
   function frame(){

@@ -38,6 +38,7 @@
 .feed-empty{text-align:center;color:var(--muted);padding:2rem;font-size:var(--fs-2,14px)}
 .omega-mini{display:flex;justify-content:center;padding:.75rem;border-top:1px solid var(--line);margin-top:auto}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="social"></aside>
@@ -282,7 +283,7 @@ window.transmit=async function(){
 (function(){
   var cv=document.getElementById('soc-omega-cv');
   if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d'),t=0;
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;
   function frame(){
     ctx.clearRect(0,0,80,80);
     ctx.save();ctx.translate(40,40);ctx.rotate(t*.008);

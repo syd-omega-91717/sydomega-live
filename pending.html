@@ -63,6 +63,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--M);display:flex;a
 .kpi{border:1px solid rgba(201,168,76,.2);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold);text-align:left}
 .kpi-n{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside class="side" id="omega-side" data-page="pending" style="display:none"></aside>
@@ -161,7 +162,7 @@ function switchTab(id,btn){
 
 (function(){
   var cv=document.getElementById('gate-omega');
-  var ctx=cv.getContext('2d'),CX=80,CY=80;var t=0;
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),CX=80,CY=80;var t=0;
   function f(){
     t+=.02;ctx.clearRect(0,0,160,160);
     [[65,.4,1.5,'rgba(201,168,76,0.6)'],[48,-.6,1,'rgba(0,229,255,0.35)'],[32,.9,.8,'rgba(201,168,76,0.5)']].forEach(function(r){

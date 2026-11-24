@@ -9,6 +9,7 @@
 
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">SKIP TO CONTENT</a>
@@ -138,7 +139,7 @@
 (function(){
   var cv=document.getElementById('identity-seal');
   if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d'),t=0;
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;
   (function f(){
     ctx.clearRect(0,0,160,160);
     for(var i=0;i<6;i++){

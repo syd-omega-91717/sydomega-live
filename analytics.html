@@ -27,6 +27,7 @@
 .metric-label{font-family:var(--M);font-size:var(--fs-1,12px);letter-spacing:.06em;color:var(--muted);margin-bottom:.35rem}
 .metric-val{font-family:var(--M);font-size:var(--fs-2,14px);line-height:1.5}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="analytics"></aside>
@@ -193,7 +194,7 @@ function setTab(name){
 (function(){
   var cv=document.getElementById('apex-cv');
   if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d');
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d'));
   window.__drawApex=function(pct){
     ctx.clearRect(0,0,200,200);
     var cx=100,cy=100,r=70,sw=18;
@@ -214,7 +215,7 @@ function setTab(name){
 (function(){
   var cv=document.getElementById('mini-radar');
   if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d'),t=0;
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;
   window.__miniRadar=function(a,b,c){window.__mrA=a;window.__mrB=b;window.__mrC=c;};
   (function f(){
     ctx.clearRect(0,0,160,60);

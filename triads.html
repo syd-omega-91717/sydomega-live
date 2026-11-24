@@ -32,6 +32,7 @@
 .fe-rank{font-family:var(--M);font-size:12px;color:var(--muted);margin-top:2px}
 .triad-diagram{display:flex;justify-content:center;padding:8px 0 4px}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="triads"></aside>
@@ -155,7 +156,7 @@ function setTab(name){
 }
 (function(){
   var cv=document.getElementById('triad-cv');if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d'),t=0;
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;
   var REDUCE=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   (function draw(){
     ctx.clearRect(0,0,200,180);

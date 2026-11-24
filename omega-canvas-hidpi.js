@@ -85,7 +85,9 @@
     var d = ratio(), w = canvas.__ocAW, h = canvas.__ocAH;
     /* Above 1x the store follows the DISPLAYED width: a width:100% chart whose attribute is 700 but whose box is 778 was already
        stretched 11 percent (soft at 1x), and a store of 700 x ratio would keep that stretch.  At 1x nothing changes. */
-    var box = canvas.clientWidth, s = d;
+    /* A canvas measured while the approval guard still hides the page reports clientWidth 0 (CLAUDE.md 8.1 class 3); an inline
+       style="width:Npx" is still the displayed width, so use it rather than treating the box as the full attribute size. */
+    var box = canvas.clientWidth || parseFloat(canvas.style && canvas.style.width) || 0, s = d;
     if (d > 1 && box > 0 && w > 0) s = d * (box / w);
     var tw = Math.round(w * s), th = Math.round(h * s);
     if (canvas.__ocS === s && canvas.width === tw && canvas.height === th) {

@@ -55,6 +55,7 @@
   .tab-btn{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:.18s;flex-shrink:0}.tab-btn.active{border-bottom-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
   .tab-panel{display:none}.tab-panel.active{display:block}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div id="gate" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;font-family:serif">
@@ -168,7 +169,7 @@
     <div style="display:flex;justify-content:center;padding:14px 0 6px;border-top:1px solid rgba(201,168,76,.12)">
       <canvas id="pgcv_interface_omni" width="72" height="72" style="width:36px;height:36px;opacity:.55"></canvas>
     </div>
-    <script>(function(){{var cv=document.getElementById('pgcv_interface_omni');if(!cv||!cv.getContext)return;var ctx=cv.getContext('2d'),t=0;function f(){{ctx.clearRect(0,0,72,72);for(var i=0;i<6;i++){{ctx.beginPath();ctx.arc(36,36,12+i*4+3*Math.sin(t*.03+i),t*.007,t*.007+Math.PI*(.45+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.8;ctx.stroke();}}ctx.font='bold 16px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.6+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=8;ctx.fillText('\u03A9',36,36);ctx.shadowBlur=0;t++;requestAnimationFrame(f);}}f();}})();</script></main>
+    <script>(function(){{var cv=document.getElementById('pgcv_interface_omni');if(!cv||!cv.getContext)return;var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;function f(){{ctx.clearRect(0,0,72,72);for(var i=0;i<6;i++){{ctx.beginPath();ctx.arc(36,36,12+i*4+3*Math.sin(t*.03+i),t*.007,t*.007+Math.PI*(.45+.3*Math.sin(t*.02+i)));ctx.strokeStyle='rgba(201,168,76,'+(0.1+0.1*(6-i)/6)+')';ctx.lineWidth=.8;ctx.stroke();}}ctx.font='bold 16px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(201,168,76,'+(0.6+0.3*Math.sin(t*.04))+')';ctx.shadowColor=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.shadowBlur=8;ctx.fillText('\u03A9',36,36);ctx.shadowBlur=0;t++;requestAnimationFrame(f);}}f();}})();</script></main>
 </div>
 </div>
 <script>

@@ -65,6 +65,7 @@ select:focus,input:focus{border-color:rgba(201,168,76,.4)}
 
 @media(max-width:680px){.builder-grid{grid-template-columns:1fr}.builder-arrow{display:none}.ohb{grid-template-columns:1fr}.ohb-c{display:none}.ohb-l{border-right:none;border-bottom:1px solid var(--line)}.ohb-r{border-left:none;text-align:left}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="automation"></aside>
@@ -252,7 +253,7 @@ function setTab(name){
 (function(){
   var cv=document.getElementById('ohb-cv');
   if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d'),t=0;
+  var ctx=(window.OmegaCanvas?OmegaCanvas.fitAttr(cv):cv.getContext('2d')),t=0;
   function frame(){
     ctx.clearRect(0,0,120,120);
     for(var i=0;i<8;i++){

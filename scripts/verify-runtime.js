@@ -169,6 +169,10 @@ const FIXTURE = `<!doctype html><html><head><meta charset="utf-8"><style>
   <svg width="160" height="34" role="img" aria-label="SVG low contrast fixture">
     <text id="t-svg-block" x="2" y="24" font-size="20" fill="#08080F">VOID</text>
   </svg>
+  <svg width="160" height="60" role="img" aria-label="SVG text over its own disc">
+    <g><circle cx="30" cy="30" r="28" fill="#E86A3A"/><text id="t-svg-disc" x="30" y="33" text-anchor="middle" font-size="12" font-weight="bold" fill="#020206">FIRE</text></g>
+    <g><circle cx="110" cy="12" r="8" fill="#E86A3A"/><text id="t-svg-offdisc" x="95" y="50" font-size="12" fill="#020206">OFF</text></g>
+  </svg>
 </body></html>`;
 
 function startServer() {
@@ -370,7 +374,21 @@ const CHECK_JS = `(() => {
        WORST of them, which is the only honest standard for a gradient. */
     const elRect = r;
     let n = el, bases = null; const layers = [];
-    while (n && n !== document.documentElement) {
+    /* SVG text is painted over a sibling SHAPE (a d3 node: <g><circle/><text/></g>),
+       which is not a DOM ancestor, so the walk below never sees it and judged dark
+       labels on their own bright disc against the page (graph.html: 1.05:1 for text
+       that is 6:1 on its circle). The shape counts only if its box holds the text. */
+    if (isSvgText && el.parentNode) {
+      for (const sh of el.parentNode.children) {
+        if (sh === el || !/^(circle|ellipse|rect)$/i.test(sh.localName || '')) continue;
+        const sr = sh.getBoundingClientRect();
+        if (sr.left <= elRect.left + 0.5 && sr.top <= elRect.top + 0.5 && sr.right >= elRect.right - 0.5 && sr.bottom >= elRect.bottom - 0.5) {
+          const f = px(getComputedStyle(sh).fill);
+          if (f && alpha(f) > .995) { bases = [f.slice(0,3)]; }
+        }
+      }
+    }
+    while (!bases && n && n !== document.documentElement) {
       /* An ancestor's own background/gradient only actually paints behind
          the text element if its box sits inside the ancestor's own box. A
          position:absolute child with a negative offset (top:-24px, e.g.)
@@ -462,9 +480,9 @@ const CHECK_JS = `(() => {
    the rule has no way to repeat. */
 async function selfTest(pw, channel) {
   const EXPECT = {
-    block: ['t-block-1', 't-block-2', 't-svg-block'],
+    block: ['t-block-1', 't-block-2', 't-svg-block', 't-svg-offdisc'],
     mid:   ['t-mid-1'],
-    ok:    ['t-pass-1', 't-pass-2', 't-pass-3', 't-pass-4', 't-svg-pass']
+    ok:    ['t-pass-1', 't-pass-2', 't-pass-3', 't-pass-4', 't-svg-pass', 't-svg-disc']
   };
   const { srv, port } = await startServer();
   const browser = await (channel ? pw.chromium.launch({ channel }) : pw.chromium.launch());
@@ -485,7 +503,7 @@ async function selfTest(pw, channel) {
     console.log((same ? '  ok   ' : '  FAIL ') + k.padEnd(6) +
       ' expected [' + want.join(', ') + ']  got [' + got[k].join(', ') + ']');
   }
-  console.log(bad ? 'CONTRAST SELF-TEST: FAILED' : 'CONTRAST SELF-TEST: PASS (9 known ratios binned correctly)');
+  console.log(bad ? 'CONTRAST SELF-TEST: FAILED' : 'CONTRAST SELF-TEST: PASS (11 known ratios binned correctly)');
   return bad ? 1 : 0;
 }
 

@@ -44,11 +44,11 @@ html[data-omega-archetype="knowledge"]{
 }
 html[data-omega-archetype="gaming"]{
   --omega-v6-accent:#00E5FF;--omega-v6-accent-soft:rgba(0,229,255,.15);
-  --omega-v6-accent-line:rgba(0,229,255,.34);--omega-v6-accent-glow:0 0 32px rgba(0,229,255,.15);--omega-v6-secondary:#8B0000;
+  --omega-v6-accent-line:rgba(0,229,255,.34);--omega-v6-accent-glow:0 0 32px rgba(0,229,255,.15);--omega-v6-secondary:#CF6760;
 }
 html[data-omega-archetype="media"]{
   --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(232,201,122,.14);
-  --omega-v6-accent-line:rgba(232,201,122,.34);--omega-v6-accent-glow:0 0 30px rgba(232,201,122,.14);--omega-v6-secondary:#8B0000;
+  --omega-v6-accent-line:rgba(232,201,122,.34);--omega-v6-accent-glow:0 0 30px rgba(232,201,122,.14);--omega-v6-secondary:#CF6760;
 }
 html[data-omega-archetype="commerce"]{
   --omega-v6-accent:#E8C97A;--omega-v6-accent-soft:rgba(201,168,76,.12);
@@ -71,8 +71,8 @@ html[data-omega-archetype="finance"]{
   --omega-v6-accent-line:rgba(201,168,76,.32);--omega-v6-accent-glow:0 0 28px rgba(201,168,76,.11);--omega-v6-secondary:#00FF88;
 }
 html[data-omega-archetype="system"]{
-  --omega-v6-accent:#8B0000;--omega-v6-accent-soft:rgba(139,0,0,.12);
-  --omega-v6-accent-line:rgba(139,0,0,.32);--omega-v6-accent-glow:0 0 28px rgba(139,0,0,.12);--omega-v6-secondary:#00E5FF;
+  --omega-v6-accent:#CF6760;--omega-v6-accent-soft:rgba(207,103,96,.12);
+  --omega-v6-accent-line:rgba(207,103,96,.32);--omega-v6-accent-glow:0 0 28px rgba(207,103,96,.12);--omega-v6-secondary:#00E5FF;
 }
 
 /* Motion and depth profiles are declared by the page-character manifest. */

@@ -33,5 +33,17 @@ class WalletAllocation(unittest.TestCase):
         self.assertLess(SRC.index("omega-canvas-hidpi.js"), SRC.index("function drawAllocCanvas"))
 
 
+class AgentNetworkCanvas(unittest.TestCase):
+    """agent-network.html's canvas grew without bound (774, 1164, 1593 ... 3426 px over 12 s on origin/main): it was 100% of a container whose
+    height was the status line plus the canvas, and every redraw stored its height as its height.  Taking it out of the flow breaks the loop."""
+
+    def test_the_canvas_does_not_size_its_own_container(self):
+        css = re.sub(r"\s+", " ", re.sub(r"/\*.*?\*/", "", (ROOT / "agent-network.html").read_text(encoding="utf-8"), flags=re.S))
+        rule = re.search(r"#network-canvas \{([^}]*)\}", css).group(1)
+        self.assertIn("position: absolute", rule)
+        container = re.search(r"\.network-container \{([^}]*)\}", css).group(1)
+        self.assertIn("min-height", container)   # the canvas no longer props the container up
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -59,7 +59,7 @@ const PHYS = "metrics=" + days7(i => `{date:${ISO(i)}.slice(0,10),rhr:58+${i}%7,
 const STOP = 'for(var t=1;t<4000;t++){clearInterval(t);clearTimeout(t);}';
 /* Wave 3: the pointer-driven canvases (their hit-testing is checked by verify-hidpi-pointer.js). reduce: freeze animation; noCover: an animated layout that still moves between loads, so the painted region is not comparable. */
 const WAVE3 = [
-  ['agent-network.html', 'network-canvas', null, { resize: true, reduce: true, css: '#network-canvas{height:520px!important}' }],
+  ['agent-network.html', 'network-canvas', null, { resize: true, reduce: true }],
   ['architect.html', 'arch-canvas', null, { resize: true, reduce: true, stale: true }],
   ['atlas.html', 'atlas-canvas', null, { resize: true, reduce: true, noCover: true, min: 0.0001, reveal: "window.dispatchEvent(new Event('resize'))", seeds: { omega_atlas_v2: JSON.stringify({ nodes: [0, 1, 2, 3, 4, 5].map(i => ({ id: 'n' + i, label: 'Node ' + i, desc: 'd', cat: i % 2 ? 'skill' : 'concept', tags: [], x: Math.round(150 * Math.cos(i * Math.PI / 3)), y: Math.round(150 * Math.sin(i * Math.PI / 3)), vx: 0, vy: 0 })), edges: [], panX: 0, panY: 0, scale: 1 }) } }],
   ['dashboard.html', 'galaxy-canvas', null, { resize: true, reduce: true, noCover: true, reveal: "setTab('overview')" }],

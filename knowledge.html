@@ -29,6 +29,7 @@
 .cc-val{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--ink);margin-bottom:6px}
 .cc-desc{font-size:12px;color:var(--muted);line-height:1.6}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="knowledge"></aside>
@@ -148,7 +149,7 @@ function layoutNodes(W,H){
 function drawGraph(){
   var cv=document.getElementById('kg-canvas');if(!cv||!cv.getContext)return;
   var ctx=cv.getContext('2d');
-  var W=cv.width,H=cv.height;
+  var W=OmegaCanvas.size(cv).w,H=OmegaCanvas.size(cv).h;
   ctx.clearRect(0,0,W,H);
   KG_EDGES.forEach(function(e){
     var fn=KG_NODES.find(function(n){return n.k===e.from;});
@@ -192,7 +193,7 @@ function resizeGraph(){
   var cv=document.getElementById('kg-canvas');if(!cv)return;
   var wrap=cv.parentElement;
   _W=wrap.clientWidth;_H=wrap.clientHeight;
-  cv.width=_W;cv.height=_H;
+  OmegaCanvas.fit(cv,_W,_H);
   layoutNodes(_W,_H);
 }
 

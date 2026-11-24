@@ -65,6 +65,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--M);min-height
 .badge-gold{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold)}
 .badge-red{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#f87171}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -376,8 +377,8 @@ function matchesFilter(n){
 }
 
 function draw(){
-  W=canvas.clientWidth;H=canvas.height;
-  canvas.width=W;
+  OmegaCanvas.fitWidth(canvas,0,null,{client:true});
+  W=OmegaCanvas.size(canvas).w;H=OmegaCanvas.size(canvas).h;
   ctx.clearRect(0,0,W,H);
 
   /* Grid */

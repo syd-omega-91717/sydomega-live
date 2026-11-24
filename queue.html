@@ -81,6 +81,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--R);min-height:100
 
 @media(max-width:700px){.grid2{grid-template-columns:1fr}}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell" id="app" style="display:none">
@@ -330,7 +331,7 @@ waitReady(()=>{
   function drawThroughput(){
     const cv=document.getElementById('q-throughput');if(!cv)return;
     const W=cv.offsetWidth||500,H=120;
-    cv.width=W;cv.height=H;
+    OmegaCanvas.fit(cv,W,H);
     const ctx=cv.getContext('2d');
     ctx.clearRect(0,0,W,H);
     const max=Math.max(...throughputData,1);
@@ -360,7 +361,7 @@ waitReady(()=>{
   function drawTopology(){
     const cv=document.getElementById('q-topology');if(!cv)return;
     const W=cv.offsetWidth||600,H=200;
-    cv.width=W;cv.height=H;
+    OmegaCanvas.fit(cv,W,H);
     const ctx=cv.getContext('2d');
     ctx.clearRect(0,0,W,H);
     /* Producer → Exchange → Queues → Workers */

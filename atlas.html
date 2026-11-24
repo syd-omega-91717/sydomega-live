@@ -51,6 +51,7 @@
 .stat-lbl{font-family:var(--M,monospace);font-size:12px;letter-spacing:2px;color:rgba(138,134,118,.5);margin-top:4px}
 </style>
   <script src="/bg.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -242,15 +243,17 @@ function seedDefault(){
 /* ── Canvas sizing ── */
 function resize(){
   const wrap=canvas.parentElement;
-  canvas.width=wrap.clientWidth;
-  canvas.height=wrap.clientHeight;
+  OmegaCanvas.fit(canvas,wrap.clientWidth,wrap.clientHeight);
   draw();
 }
 window.addEventListener('resize',resize);
 
 /* ── Coordinate transforms ── */
-function worldToScreen(x,y){return {x:(x+panX)*scale+canvas.width/2,y:(y+panY)*scale+canvas.height/2};}
-function screenToWorld(sx,sy){return {x:(sx-canvas.width/2)/scale-panX,y:(sy-canvas.height/2)/scale-panY};}
+/* canvas.width/height are the backing store (CSS size x pixel ratio); the maths below is in CSS pixels */
+function cw(){return OmegaCanvas.size(canvas).w;}
+function ch(){return OmegaCanvas.size(canvas).h;}
+function worldToScreen(x,y){return {x:(x+panX)*scale+cw()/2,y:(y+panY)*scale+ch()/2};}
+function screenToWorld(sx,sy){return {x:(sx-cw()/2)/scale-panX,y:(sy-ch()/2)/scale-panY};}
 
 /* ── Force simulation ── */
 const K_SPRING=0.04, L_REST=150, K_REPEL=4000, DAMP=0.85;
@@ -285,15 +288,15 @@ function simulate(){
 
 /* ── Drawing ── */
 function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.clearRect(0,0,cw(),ch());
   // Grid
   ctx.save();
   ctx.strokeStyle='rgba(201,168,76,.04)';ctx.lineWidth=1;
   const gSize=60*scale;
-  const offX=(panX*scale+canvas.width/2)%gSize;
-  const offY=(panY*scale+canvas.height/2)%gSize;
-  for(let x=offX;x<canvas.width;x+=gSize){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}
-  for(let y=offY;y<canvas.height;y+=gSize){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+  const offX=(panX*scale+cw()/2)%gSize;
+  const offY=(panY*scale+ch()/2)%gSize;
+  for(let x=offX;x<cw();x+=gSize){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ch());ctx.stroke();}
+  for(let y=offY;y<ch();y+=gSize){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cw(),y);ctx.stroke();}
   ctx.restore();
 
   // Edges
@@ -448,7 +451,7 @@ function fitAll(){
   const rangeX=Math.max(...xs)-Math.min(...xs)+100;
   const rangeY=Math.max(...ys)-Math.min(...ys)+100;
   panX=-cx;panY=-cy;
-  scale=Math.min(2,Math.min(canvas.width/rangeX,canvas.height/rangeY)*0.9);
+  scale=Math.min(2,Math.min(cw()/rangeX,ch()/rangeY)*0.9);
 }
 window.zoom=zoom;window.fitAll=fitAll;
 

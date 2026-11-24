@@ -2,8 +2,8 @@
 
 A canvas whose backing store equals its CSS size is a 1x bitmap stretched on a 2x/3x screen: soft text and edges. OmegaCanvas.fit
 sizes the store to css x devicePixelRatio (capped at 3), applies setTransform so drawing code keeps CSS units, and pins the CSS size
-only when the canvas has none of its own. The browser suite (scripts/verify-hidpi-charts.js) measures the stores at 1x/2x/3x and
-the painted coverage; it is skipped when no browser exists and fails instead under OMEGA_REQUIRE_BROWSER.
+only when the canvas has none of its own. The browser suites (scripts/verify-hidpi-charts.js, scripts/verify-hidpi-pointer.js) measure the stores at 1x/2x/3x, the painted
+coverage and the pointer hit-testing; they are slow and layout-timing sensitive, so they run only with OMEGA_HIDPI_BROWSER=1.
 """
 import os
 import pathlib
@@ -18,7 +18,9 @@ TAG = '<script src="/omega-canvas-hidpi.js"></script>'
 # page -> number of canvases sized through the helper
 PAGES = {"expenses": 5, "investment": 1, "revenue": 1, "treasury": 1, "wealth": 1,
          "journal": 2, "mood": 2, "reading": 1, "time": 1, "water": 1, "weekly": 1, "workout": 1,
-         "ops": 2, "physiology": 2, "fasting": 1, "contacts": 1, "cipher": 1}
+         "ops": 2, "physiology": 2, "fasting": 1, "contacts": 1, "cipher": 1,
+         "agent-network": 1, "architect": 1, "atlas": 1, "dashboard": 2, "ecosystem": 1, "knowledge": 1, "network": 1, "nexus": 2,
+         "mindmap": 1, "queue": 2}
 
 
 class Static(unittest.TestCase):
@@ -41,7 +43,9 @@ class Static(unittest.TestCase):
     def test_no_money_page_assigns_canvas_size_by_hand_any_more(self):
         for page in PAGES:
             src = (ROOT / (page + ".html")).read_text(encoding="utf-8")
-            self.assertNotRegex(src, r"\b(?:cv|c|canvas)\.width\s*=\s*(?!OmegaCanvas)", page)
+            code = re.sub(r"/\*.*?\*/", "", src, flags=re.S)   # a comment may describe the old pattern
+            m = re.search(r"\b(?:cv|c|canvas)\.width\s*=\s*(?!OmegaCanvas)", code)
+            self.assertIsNone(m, page + ": hand-assigned canvas.width at ..." + (code[max(0, m.start() - 60):m.end() + 40] if m else ""))
 
 
     def test_the_helper_pins_a_canvas_whose_box_follows_its_store(self):
@@ -59,19 +63,80 @@ class Static(unittest.TestCase):
 
     def test_wave2_drawing_code_reads_css_size_not_the_backing_store(self):
         """Every chart that sized itself from canvas.width and read it back as W must now read OmegaCanvas.size()."""
-        for page in ("journal", "mood", "reading", "time", "water", "weekly", "workout", "ops"):
+        for page in ("journal", "mood", "reading", "time", "water", "weekly", "workout", "ops", "architect"):
             src = (ROOT / (page + ".html")).read_text(encoding="utf-8")
             for m in re.finditer(r"OmegaCanvas\.fitWidth\(", src):
                 tail = src[m.end():m.end() + 260]
                 self.assertIn("OmegaCanvas.size(", tail, page + ": fitWidth without reading OmegaCanvas.size() for W/H")
 
 
+class Pointer(unittest.TestCase):
+    """A canvas drawn larger than its CSS box breaks pointer maths that was written against canvas.width, silently."""
+
+    def test_no_page_scales_a_pointer_position_by_the_backing_store(self):
+        bad = []
+        for f in sorted(ROOT.glob("*.html")):
+            src = f.read_text(encoding="utf-8", errors="ignore")
+            for m in re.finditer(r"[A-Za-z_.]*(?:width|height)\s*/\s*rect\.(?:width|height)", src):
+                if "OmegaCanvas.size(" not in m.group(0):
+                    bad.append(f.name + ": " + m.group(0))
+        self.assertEqual(bad, [], "pointer scaling must use OmegaCanvas.size(canvas), not canvas.width")
+
+    def test_no_page_detects_a_resize_by_comparing_a_css_width_to_the_backing_store(self):
+        """offsetWidth !== cv.width is always true once the store is larger than the box, so the handler would re-allocate on every callback."""
+        bad = []
+        for f in sorted(ROOT.glob("*.html")):
+            src = f.read_text(encoding="utf-8", errors="ignore")
+            for m in re.finditer(r"(?:offset|client)(?:Width|Height)\s*!==\s*(?:cv|canvas|c)\.(?:width|height)\b|\b(?:cv|canvas|c)\.(?:width|height)\s*!==\s*[a-z.]*(?:offset|client)(?:Width|Height)", src):
+                bad.append(f.name + ": " + m.group(0))
+        self.assertEqual(bad, [])
+
+    def test_a_pinned_canvas_stays_pinned(self):
+        """After the first pin a later fit() with a new size sees an unchanged box; without the flag it would leave the old CSS size (mindmap on window resize)."""
+        code = re.sub(r"\s+", "", re.sub(r"/\*.*?\*/", "", HELPER, flags=re.S))
+        self.assertIn("canvas.__ocPin===true", code)
+        self.assertIn("canvas.__ocPin=true", code)
+
+
+    def test_the_helper_never_pins_a_height_unless_asked(self):
+        """Height is never detected or pinned: a percentage height in a container with no definite height is laid out from the canvas itself
+        (agent-network grows its own canvas that way), so 'the box height changed' says nothing about intrinsic size, and a pinned height
+        froze that page at 481 px against 1,339 at 1x.  The browser suites freeze that page's height to work around its pre-existing
+        growth, so they cannot see this; this contract does."""
+        code = re.sub(r"/\*.*?\*/", "", HELPER, flags=re.S)
+        sites = [m for m in re.finditer(r"style\.height\s*=", code)]
+        self.assertEqual(len(sites), 1, "style.height may be assigned in exactly one place")
+        line = code[max(0, sites[0].start() - 80):sites[0].end() + 40]
+        self.assertIn("opts.size", line, "...and only when the caller passes {size:true}")
+        self.assertNotIn("offsetHeight", code, "the helper must not read or compare the box height")
+
+    def test_a_zero_size_stays_zero(self):
+        """Clamping to 1 stored a 1 x H canvas whose aspect ratio laid dashboard's galaxy out 295,920 px tall."""
+        code = re.sub(r"\s+", "", re.sub(r"/\*.*?\*/", "", HELPER, flags=re.S))
+        self.assertNotIn("Math.max(1,Math.round", code)
+        self.assertIn("cssW>0?cssW:0", code)
+
+
 class Browser(unittest.TestCase):
     def test_browser_validation(self):
+        if not os.environ.get("OMEGA_HIDPI_BROWSER"):
+            self.skipTest("slow (about 12 minutes, layout-timing sensitive): run with OMEGA_HIDPI_BROWSER=1; the static contracts above always run")
         node = shutil.which("node")
         if not node:
             self.skipTest("node not available")
-        r = subprocess.run([node, str(ROOT / "scripts" / "verify-hidpi-charts.js")], capture_output=True, text=True, timeout=540)
+        r = subprocess.run([node, str(ROOT / "scripts" / "verify-hidpi-charts.js")], capture_output=True, text=True, timeout=1500)
+        out = r.stdout + r.stderr
+        if "SKIPPED" in out and not os.environ.get("OMEGA_REQUIRE_BROWSER"):
+            self.skipTest("no browser available")
+        self.assertEqual(r.returncode, 0, out)
+
+    def test_pointer_hit_testing_survives_a_larger_backing_store(self):
+        if not os.environ.get("OMEGA_HIDPI_BROWSER"):
+            self.skipTest("slow (about 8 minutes): run with OMEGA_HIDPI_BROWSER=1; the static contracts above always run")
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node not available")
+        r = subprocess.run([node, str(ROOT / "scripts" / "verify-hidpi-pointer.js")], capture_output=True, text=True, timeout=3000)
         out = r.stdout + r.stderr
         if "SKIPPED" in out and not os.environ.get("OMEGA_REQUIRE_BROWSER"):
             self.skipTest("no browser available")

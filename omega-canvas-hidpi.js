@@ -30,20 +30,32 @@
 
   function fit(canvas, cssW, cssH, opts) {
     var d = ratio();
-    var before = canvas.offsetWidth;
-    canvas.width = Math.max(1, Math.round(cssW * d));
-    canvas.height = Math.max(1, Math.round(cssH * d));
-    /* A canvas with no CSS width is laid out at its own backing-store size, so the larger store would also be a larger
-       box on screen (and the next call, measuring that box, would grow it again).  Pin the CSS size when the store
-       changed the box, or, for a canvas that is not displayed yet, when its CSS width is still 'auto'. */
-    var pin = !!(opts && opts.size);
-    if (!pin && d > 1) {
-      if (before > 0) pin = canvas.offsetWidth !== before;
+    var beforeW = canvas.offsetWidth;
+    /* A zero stays zero.  A canvas measured while hidden has css width 0; the old code stored 0 x H, which has no aspect ratio, so the
+       box fell back to a default.  Clamping to 1 stored 1 x H, a 1:H ratio that laid the box out H times as tall as it was wide,
+       and the page then read that height back and fed it into the next store (dashboard's galaxy reached 295,920 px). */
+    cssW = cssW > 0 ? cssW : 0;
+    cssH = cssH > 0 ? cssH : 0;
+    /* ...and the other axis is not scaled either: with no pixels on one axis the other axis's size is only its intrinsic box size,
+       which a height:auto canvas adopts, so scaling it by the pixel ratio would make the box d times taller than the page asked for. */
+    canvas.width = Math.round(cssW * (cssH > 0 ? d : 1));
+    canvas.height = Math.round(cssH * (cssW > 0 ? d : 1));
+    /* A canvas with no CSS width is laid out at its own backing-store size, so the larger store would also be a larger box on
+       screen (and the next call, measuring that box, would grow it again).  Pin the WIDTH when the store changed the box's
+       width, or, for a canvas that is not displayed yet, when its CSS width is still 'auto'.  The height is never pinned: it
+       stays whatever the page or the aspect ratio gives (the store keeps the css aspect), so a max-width:100% rule shrinks the
+       canvas uniformly as before.  Height is deliberately not detected: a percentage height inside a container whose height is
+       not definite is laid out from the canvas itself, so "the box changed" there says nothing about intrinsic size (agent-network
+       grows its own canvas that way at 1x) and pinning it froze the canvas at a fraction of its original height. */
+    var pin = !!(opts && opts.size) || canvas.__ocPin === true;   /* once pinned, always re-pin: a later call with a new size would otherwise see an unchanged box */
+    if (d > 1 && !pin) {
+      if (beforeW > 0) pin = canvas.offsetWidth !== beforeW;
       else { try { pin = window.getComputedStyle(canvas).width === 'auto'; } catch (e) { pin = false; } }
     }
     if (pin) {
+      canvas.__ocPin = true;
       canvas.style.width = cssW + 'px';
-      canvas.style.height = cssH + 'px';
+      if (opts && opts.size) canvas.style.height = cssH + 'px';
     }
     var ctx = canvas.getContext('2d');
     ctx.setTransform(d, 0, 0, d, 0, 0);

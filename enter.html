@@ -354,7 +354,9 @@ countdown();
   var cv=document.getElementById('bg-canvas');
   var ctx=cv.getContext('2d');
   var W,H,particles=[];
-  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+  /* 2x cap (see 404.html): visible dots at alpha 0.2-0.35 and a hairline grid */
+  function fitBg(cv,W,H){return window.OmegaCanvas?OmegaCanvas.fit(cv,W,H,{scale:Math.min(2,OmegaCanvas.ratio())}):(cv.width=W,cv.height=H,cv.getContext('2d'));}
+  function resize(){W=window.innerWidth;H=window.innerHeight;ctx=fitBg(cv,W,H);}
   resize(); window.addEventListener('resize',resize);
   for(var i=0;i<50;i++) particles.push({x:Math.random()*2000,y:Math.random()*1200,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.4,gold:Math.random()>.5});
   var t=0;

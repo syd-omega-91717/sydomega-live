@@ -22,7 +22,7 @@ if(!b){console.log('SKIPPED: no browser');process.exit(process.env.OMEGA_REQUIRE
 const res=[];const ck=(n,ok,d)=>res.push([ok?'PASS':'FAIL',n,ok?'':JSON.stringify(d).slice(0,300)]);
 const ctx=await b.newContext({serviceWorkers:'block',viewport:{width:1000,height:900},reducedMotion:'reduce'});
 let mode='good';
-await ctx.route(O+'/**',async r=>{let u=decodeURIComponent(new URL(r.request().url()).pathname);if(u==='/vendor/supabase-js.js')return r.fulfill({status:200,contentType:'text/javascript',body:STUB});const f=path.join(root,u);try{r.fulfill({status:200,contentType:MIME[path.extname(f)]||'application/octet-stream',body:fs.readFileSync(f)})}catch(e){r.fulfill({status:404,body:''})}});
+await ctx.route(O+'/**',async r=>{let u=decodeURIComponent(new URL(r.request().url()).pathname);if(u==='/vendor/supabase-js.js')return r.fulfill({status:200,contentType:'text/javascript',body:STUB});const f=path.join(root,path.normalize(u).replace(/^(\.\.[/\\])+/,''));try{r.fulfill({status:200,contentType:MIME[path.extname(f)]||'application/octet-stream',body:fs.readFileSync(f)})}catch(e){r.fulfill({status:404,body:''})}});
 await ctx.route('https://esm.sh/**',r=>r.fulfill({status:200,contentType:'text/javascript',body:STUB}));await ctx.route('https://fonts.g*/**',r=>r.fulfill({status:200,body:''}));
 await ctx.route('https://en.wikipedia.org/**',r=>{
   if(mode==='fail')return r.abort();

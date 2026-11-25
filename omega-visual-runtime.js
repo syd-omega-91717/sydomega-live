@@ -62,7 +62,7 @@
     var worlds=[
       ['M01','CORE','Identity · dashboard · account','/dashboard.html','var(--gold)'],
       ['M03','GAMING','Arena · characters · mastery','/gaming.html','var(--purple)'],
-      ['M06','MEDIA UNIVERSE','Cinema · series · media','/cinema.html','var(--purple)'],
+      ['M06','MEDIA UNIVERSE','Cinema · series · media','/movies.html','var(--purple)'],
       ['M08','COMMUNICATION','Social · feed · notifications','/social.html','var(--cyan)'],
       ['M09','COSMOS','Horoscope · elements · houses','/horoscope.html','var(--purple)'],
       ['M10','INTELLIGENCE NEWS','News · trends · dispatches','/news.html','var(--cyan)'],

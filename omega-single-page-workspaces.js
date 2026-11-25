@@ -22,7 +22,7 @@
     '/invest.html':['investment','portfolio','treasury','revenue','income','expenses','wealth'],
     '/achieve.html':['achievements','my-quests','quest-progress','leaderboard','domain-mastery','seasonal-events','grades','levels','phases','ascension','kings','triads','awards','hercules'],
     '/archive.html':['kyc','charter','sigil'],
-    '/media.html':['cinema','movies','series','trailers','universe','feed','publications','visual-atlas','characters']
+    '/media.html':['movies','series','trailers','universe','feed','publications','visual-atlas','characters']
   };
   /* PANELS: pages shown as TABS that open in place (omega-panels.js) instead of chips that leave the hub.
      Space-separated strings, not arrays, so the hub-list parser in test_hub_picker_links.py does not read this

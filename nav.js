@@ -45,7 +45,7 @@
     'quest-progress':'achieve','domain-mastery':'achieve','covenant':'achieve','seasonal-events':'achieve',
     cosmetics:'achieve','my-quests':'achieve',
     archive:'archive',bloodline:'archive',character:'archive',charter:'archive',
-    cinema:'media',characters:'archive',movies:'media',credentials:'archive',design_system:'govern',
+    characters:'archive',movies:'media',credentials:'archive',design_system:'govern',
     ecosystem:'govern',enterprise:'govern',feed:'media',
     governance:'govern',grades:'achieve',
     heritage:'archive',horoscope:'cosmos',
@@ -149,7 +149,7 @@
           ['credentials','CREDENTIALS','/credentials.html','folded'],['charter','CHARTER','/charter.html'],['sigil','SIGIL','/sigil.html'],
           ['membership','MEMBERSHIP','/membership.html']]},
     {key:'media',  icon:'\u25B6', label:'MEDIA',   href:'/media.html',       col:'#AB82F2',
-     sub:[['media','CREATIVE UNIVERSE','/media.html'],['cinema','CINEMA','/cinema.html','folded'],['movies','WATCH','/movies.html'],['characters','CHARACTERS','/characters.html'],
+     sub:[['media','CREATIVE UNIVERSE','/media.html'],['movies','WATCH','/movies.html'],['characters','CHARACTERS','/characters.html'],
           ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html','folded'],['universe','UNIVERSE','/universe.html','folded'],
           ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html'],['celestial-covenants','CELESTIAL COVENANTS','/celestial-covenants.html'],['game-origins','ORIGINS SLICE 0','/game-origins.html'],['game-origins-bridge','TWO-HAND BRIDGE','/game-origins-bridge.html'],['game-omega-civilization','CIVILIZATION 91717','/game-omega-civilization.html'],['game-last-galactic-empire','LAST GALACTIC EMPIRE','/game-last-galactic-empire.html'],['worlds','WORLDS','/worlds.html'],['studio-library','STUDIO LIBRARY','/studio-library.html']]},
     
@@ -461,7 +461,7 @@
        (owner decision 2026-10-19: their own designs come back to the menu). */
     achieve:['ladder','achieve','achievements','my-quests','gates','ascension','phases','levels','grades','grid'],
     archive:['archive','heritage','credentials','kyc','membership'],
-    media:['media','cinema','movies','series','publications','visual-atlas','trailers']
+    media:['media','movies','series','publications','visual-atlas','trailers']
   };
   function compactSub(sec){
     var wanted=sec.compact||COMPACT[sec.key]||[];

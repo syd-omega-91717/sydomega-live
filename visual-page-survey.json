@@ -863,35 +863,6 @@
     ]
   },
   {
-    "page": "cinema.html",
-    "title": "Ω SYD OMEGA 91717 — Cinema",
-    "h1": "",
-    "body_words": 872,
-    "cards": 56,
-    "sections": 6,
-    "tabs": 5,
-    "buttons": 0,
-    "links": 1,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 14,
-    "dense_tracking_declarations": 2,
-    "fixed_width_declarations": 1,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 94,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading",
-      "READABILITY: 2 declarations at >=3px letter spacing",
-      "FLEXIBILITY: 1 fixed widths >=320px",
-      "DENSITY: 56 card-like surfaces"
-    ]
-  },
-  {
     "page": "cipher.html",
     "title": "Ω SYD OMEGA 91717 — CIPHER",
     "h1": "",

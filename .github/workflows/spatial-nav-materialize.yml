@@ -7,7 +7,6 @@ on:
       - 'scripts/integrate-spatial-realms.js'
       - 'nav.js'
       - 'gaming.html'
-      - 'cinema.html'
       - 'characters.html'
       - 'movies.html'
 
@@ -41,5 +40,5 @@ jobs:
           grep -q '/characters.html' nav.js
           grep -q '/movies.html' nav.js
           grep -q 'data-omega-spatial-realm="gaming"' gaming.html
-          grep -q 'data-omega-spatial-realm="cinema"' cinema.html
+          grep -q 'data-omega-spatial-realm="movies"' movies.html
           git diff --exit-code

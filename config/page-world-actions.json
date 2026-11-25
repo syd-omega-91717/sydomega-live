@@ -587,26 +587,6 @@
       "reward": "/achievements.html"
     },
     {
-      "page": "cinema.html",
-      "slug": "cinema",
-      "archetype": "media",
-      "role": "Creator",
-      "verb": "CREATE",
-      "primaryAction": "watch",
-      "actions": [
-        "watch",
-        "curate",
-        "publish",
-        "collect"
-      ],
-      "successOutcome": "culture expanded",
-      "district": "citadel",
-      "districtName": "THE MEDIA CITADEL",
-      "entry": "/cinema.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
       "page": "cipher.html",
       "slug": "cipher",
       "archetype": "command",

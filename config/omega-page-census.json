@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generated_by": "scripts/omega-page-census.py",
-  "page_count": 238,
+  "page_count": 237,
   "pages": [
     {
       "page_id": "404",
@@ -1468,49 +1468,6 @@
         "downloads": false,
         "events": false,
         "truth_state": false
-      }
-    },
-    {
-      "page_id": "cinema",
-      "path": "/home/user/sydomega-live/cinema.html",
-      "scripts": [
-        "/bg.js",
-        "/omega-analytics-init.js",
-        "/omega-morph.js",
-        "/omega-spatial-realms.js",
-        "/omega-speed-insights-init.js"
-      ],
-      "assets": [
-        "/bg.js",
-        "/movies.html",
-        "/omega-analytics-init.js",
-        "/omega-morph.js",
-        "/omega-spatial-realms.js",
-        "/omega-speed-insights-init.js",
-        "/series.html"
-      ],
-      "supabase_tables": [
-        "profiles"
-      ],
-      "supabase_rpcs": [],
-      "interactive": {
-        "buttons": 7,
-        "forms": 0,
-        "links": 3,
-        "inputs": 0
-      },
-      "media": {
-        "images": 0,
-        "video": 0,
-        "audio": 0,
-        "iframes": 0
-      },
-      "signals": {
-        "localStorage": false,
-        "uploads": false,
-        "downloads": false,
-        "events": false,
-        "truth_state": true
       }
     },
     {
@@ -5994,8 +5951,8 @@
         "/omega-readable-layout-v2.css",
         "/omega-speed-insights-init.js",
         "ascension.html",
-        "cinema.html",
-        "heritage.html"
+        "heritage.html",
+        "movies.html"
       ],
       "supabase_tables": [],
       "supabase_rpcs": [],
@@ -6302,7 +6259,8 @@
         "/omega-cinematic-audio.js",
         "/omega-morph.js",
         "/omega-spatial-realms.js",
-        "/omega-speed-insights-init.js"
+        "/omega-speed-insights-init.js",
+        "/omega-watch-extras.js"
       ],
       "assets": [
         "/assets/movies/franchise-01.jpg",
@@ -6336,6 +6294,7 @@
         "/omega-morph.js",
         "/omega-spatial-realms.js",
         "/omega-speed-insights-init.js",
+        "/omega-watch-extras.js",
         "/series.html"
       ],
       "supabase_tables": [

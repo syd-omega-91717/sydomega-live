@@ -7,7 +7,7 @@ const runtime = fs.readFileSync(path.join(root, 'omega-visual-runtime.js'), 'utf
 const css = fs.readFileSync(path.join(root, 'omega-world-atlas.css'), 'utf8');
 
 const portals = [
-  '/dashboard.html', '/gaming.html', '/cinema.html', '/social.html',
+  '/dashboard.html', '/gaming.html', '/movies.html', '/social.html',
   '/horoscope.html', '/news.html', '/heritage.html', '/matrix.html',
   '/credentials.html', '/investment.html', '/sovereign-ai.html', '/approvals.html'
 ];

@@ -76,6 +76,16 @@
       "permanent": true
     },
     {
+      "source": "/cinema",
+      "destination": "/movies#elements",
+      "permanent": true
+    },
+    {
+      "source": "/cinema.html",
+      "destination": "/movies#elements",
+      "permanent": true
+    },
+    {
       "source": "/grid",
       "destination": "/levels#grid",
       "permanent": true

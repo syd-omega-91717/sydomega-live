@@ -40,6 +40,7 @@
 .council-desc{font-family:var(--M);font-size:12px;color:var(--muted)}
 </style>
 <script src="/omega-living-city.js" defer></script>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside id="omega-side" data-page="city"></aside>
@@ -235,8 +236,9 @@ function renderServices(){
 function drawCity(){
   var cv=document.getElementById('city-canvas');if(!cv)return;
   var W=cv.offsetWidth||600,H=cv.offsetHeight||280;
-  cv.width=W*2;cv.height=H*2;
-  var ctx=cv.getContext('2d');ctx.scale(2,2);
+  /* Authored at 2x (store = 2 x box, scale(2,2)): keep that floor and grow above it, so 3x phones are sharp too. */
+  var ctx=window.OmegaCanvas?OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())}):(cv.width=W*2,cv.height=H*2,cv.getContext('2d'));
+  if(!window.OmegaCanvas)ctx.scale(2,2);
   var t=0,paused=false,speed=1,frameId=0,buildings=[];
   for(var i=0;i<60;i++){
     buildings.push({x:Math.random()*W,h:20+Math.random()*120,w:6+Math.random()*22,

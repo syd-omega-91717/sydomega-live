@@ -13,7 +13,7 @@
     '/life.html':['body','physiology','workout','nutrition','sleep','mood','breath','habits','journal','rituals','fasting','targets','weekly','affirmations','gratitude','oath','stoic','water'],
     '/ascend.html':['academy','courses','focus','contributions','evolution','levels','phases','ascension','domain-mastery','clarity','flashcard','library','mentors','principles','reading','skills','vocabulary','architect','forge'],
     '/cosmos.html':['horoscope','elements','pantheons','houses','chronicle','dna','graph','map','mirror','oracle','realm','rune','tribe','realms','sculpture','cosmic-ledger'],
-    '/vault.html':['wallet','subscriptions','payments','ledger','blockchain','advertising','ad-network','sovereign-covenant'],
+    '/vault.html':['wallet','subscriptions','ledger','blockchain','advertising','ad-network','sovereign-covenant'],
     '/order.html':['family','heritage','bloodline','hall','sovereigns','factions','city','approvals','interface-omni'],
     '/services.html':['consultancy','contracts','publishing','marketing','events','travel','health','social','studio','creation-studio','project-studio','creator'],
     '/intel.html':['insight','research','prediction','intelligence','automation','graph-admin','atlas','cipher','codex','mindmap','nexus','pulse','sigma','signal','news'],

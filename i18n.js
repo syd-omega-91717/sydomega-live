@@ -1179,7 +1179,7 @@ var T_EN={
 "prof_access_axis_c":"AXIS C",
 "prof_portfolio_hero_eyebrow":"M16 // INVESTMENT ENGINE",
 "prof_portfolio_hero_title":"Portfolio Command",
-"prof_portfolio_hero_sub":"The platform's stated asset allocation model -- token reserves, precious metals, and investment intelligence. Reference model; personal portfolio tracking is dormant until the token economy is live (see /payments.html).",
+"prof_portfolio_hero_sub":"The platform's stated asset allocation model -- token reserves, precious metals, and investment intelligence. Reference model; personal portfolio tracking is dormant until the token economy is live (see /subscriptions.html#payments).",
 "prof_portfolio_total_value_sub":"Personal tracking dormant",
 "prof_portfolio_total_value_delta":"▲ Token economy not yet live",
 "prof_portfolio_token_supply_sub":"Total Omega tokens (reference)",

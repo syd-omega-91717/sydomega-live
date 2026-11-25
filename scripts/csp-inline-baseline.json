@@ -515,10 +515,6 @@
   "handlers": 7,
   "scripts": 2
  },
- "payments.html": {
-  "handlers": 8,
-  "scripts": 2
- },
  "pending.html": {
   "handlers": 4,
   "scripts": 4

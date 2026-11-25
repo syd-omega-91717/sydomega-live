@@ -2,13 +2,13 @@
   "schema_version": 1,
   "name": "Ω Page Action / Task Audit",
   "status": "SOURCE_EVIDENCE_ONLY",
-  "page_count": 241,
-  "action_count": 1321,
+  "page_count": 240,
+  "action_count": 1318,
   "counts": {
     "AVAILABLE_WITHOUT_MUTATION": 11,
     "GOVERNED": 41,
     "UNAVAILABLE": 0,
-    "UNMAPPED": 1269
+    "UNMAPPED": 1266
   },
   "actions": [
     {
@@ -18782,174 +18782,6 @@
         "data_capability_marker": false,
         "capability_registered": false
       },
-      "page": "payments",
-      "path": "payments.html"
-    },
-    {
-      "action_id": 2,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "payments",
-      "path": "payments.html"
-    },
-    {
-      "action_id": 3,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "payments",
-      "path": "payments.html"
-    },
-    {
-      "action_id": 4,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "payments",
-      "path": "payments.html"
-    },
-    {
-      "action_id": 5,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "payments",
-      "path": "payments.html"
-    },
-    {
-      "action_id": 6,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "payments",
-      "path": "payments.html"
-    },
-    {
-      "action_id": 7,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "payments",
-      "path": "payments.html"
-    },
-    {
-      "action_id": 8,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "payments",
-      "path": "payments.html"
-    },
-    {
-      "action_id": 1,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
       "page": "pending",
       "path": "pending.html"
     },
@@ -24821,7 +24653,112 @@
       "explicit_unavailable_reason": null,
       "evidence": {
         "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": false,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "subscriptions",
+      "path": "subscriptions.html"
+    },
+    {
+      "action_id": 5,
+      "kind": "button",
+      "state": "UNMAPPED",
+      "task_id": null,
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
         "onclick": true,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": false,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "subscriptions",
+      "path": "subscriptions.html"
+    },
+    {
+      "action_id": 6,
+      "kind": "button",
+      "state": "UNMAPPED",
+      "task_id": null,
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": false,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "subscriptions",
+      "path": "subscriptions.html"
+    },
+    {
+      "action_id": 7,
+      "kind": "button",
+      "state": "UNMAPPED",
+      "task_id": null,
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": false,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "subscriptions",
+      "path": "subscriptions.html"
+    },
+    {
+      "action_id": 8,
+      "kind": "button",
+      "state": "UNMAPPED",
+      "task_id": null,
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
+        "onsubmit": false,
+        "javascript_href": false,
+        "navigation_target": null,
+        "download": false,
+        "data_task_marker": false,
+        "data_capability_marker": false,
+        "capability_registered": false
+      },
+      "page": "subscriptions",
+      "path": "subscriptions.html"
+    },
+    {
+      "action_id": 9,
+      "kind": "button",
+      "state": "UNMAPPED",
+      "task_id": null,
+      "capability_id": null,
+      "explicit_unavailable_reason": null,
+      "evidence": {
+        "disabled": false,
+        "onclick": false,
         "onsubmit": false,
         "javascript_href": false,
         "navigation_target": null,

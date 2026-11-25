@@ -5,7 +5,8 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = (ROOT / "payments.html").read_text(encoding="utf-8")
+# payments.html was merged into subscriptions.html (PAYMENT HISTORY / METHODS tabs); its ledger code is omega-payments-ledger.js
+SOURCE = (ROOT / "subscriptions.html").read_text(encoding="utf-8") + (ROOT / "omega-payments-ledger.js").read_text(encoding="utf-8")
 
 
 class PaymentsTruthBoundaryContract(unittest.TestCase):

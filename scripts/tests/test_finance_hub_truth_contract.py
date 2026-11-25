@@ -6,7 +6,8 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 HUB = (ROOT / "invest.html").read_text(encoding="utf-8")
-PAYMENTS = (ROOT / "payments.html").read_text(encoding="utf-8")
+# payments.html was merged into subscriptions.html; its copy lives in the PAYMENT HISTORY / METHODS / SCIENCE tabs
+PAYMENTS = (ROOT / "subscriptions.html").read_text(encoding="utf-8") + (ROOT / "omega-payments-ledger.js").read_text(encoding="utf-8")
 
 
 class FinanceHubTruthContract(unittest.TestCase):

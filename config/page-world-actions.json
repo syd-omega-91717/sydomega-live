@@ -2661,26 +2661,6 @@
       "reward": "/achievements.html"
     },
     {
-      "page": "payments.html",
-      "slug": "payments",
-      "archetype": "finance",
-      "role": "Treasurer",
-      "verb": "MANAGE",
-      "primaryAction": "track",
-      "actions": [
-        "track",
-        "budget",
-        "pay",
-        "invest"
-      ],
-      "successOutcome": "financial state updated",
-      "district": "exchange",
-      "districtName": "THE SOVEREIGN EXCHANGE",
-      "entry": "/payments.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
       "page": "pending.html",
       "slug": "pending",
       "archetype": "command",

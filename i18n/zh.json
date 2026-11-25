@@ -1102,7 +1102,7 @@
   "prof_access_axis_c": "轴 C",
   "prof_portfolio_hero_eyebrow": "M16 // 投资引擎",
   "prof_portfolio_hero_title": "投资组合指挥",
-  "prof_portfolio_hero_sub": "平台公布的资产配置模型 —— 代币储备、贵金属与投资情报。此为参考模型；个人投资组合追踪在代币经济上线前处于休眠状态（见 /payments.html）。",
+  "prof_portfolio_hero_sub": "平台公布的资产配置模型 —— 代币储备、贵金属与投资情报。此为参考模型；个人投资组合追踪在代币经济上线前处于休眠状态（见 /subscriptions.html#payments）。",
   "prof_portfolio_total_value_sub": "个人追踪休眠中",
   "prof_portfolio_total_value_delta": "▲ 代币经济尚未上线",
   "prof_portfolio_token_supply_sub": "Omega 代币总量（参考）",

@@ -1102,7 +1102,7 @@
   "prof_access_axis_c": "المحور ج",
   "prof_portfolio_hero_eyebrow": "M16 // محرك الاستثمار",
   "prof_portfolio_hero_title": "قيادة المحفظة",
-  "prof_portfolio_hero_sub": "نموذج توزيع الأصول المعلن للمنصة -- احتياطيات الرموز والمعادن الثمينة وذكاء الاستثمار. نموذج مرجعي؛ تتبّع المحفظة الشخصية معطّل حتى يصبح اقتصاد الرموز فعّالاً (انظر ‎/payments.html).",
+  "prof_portfolio_hero_sub": "نموذج توزيع الأصول المعلن للمنصة -- احتياطيات الرموز والمعادن الثمينة وذكاء الاستثمار. نموذج مرجعي؛ تتبّع المحفظة الشخصية معطّل حتى يصبح اقتصاد الرموز فعّالاً (انظر ‎/subscriptions.html#payments).",
   "prof_portfolio_total_value_sub": "التتبّع الشخصي معطّل",
   "prof_portfolio_total_value_delta": "▲ اقتصاد الرموز غير فعّال بعد",
   "prof_portfolio_token_supply_sub": "إجمالي رموز أوميغا (مرجعي)",

@@ -161,7 +161,6 @@
         "consultancy",
         "contracts",
         "subscriptions",
-        "payments",
         "wallet",
         "portfolio"
       ],
@@ -394,8 +393,7 @@
     "existingCommerce": [
       "subscriptions",
       "marketplace",
-      "services",
-      "payments"
+      "services"
     ],
     "implementation": "Use the existing subscription/checkout/webhook path; do not create a second payment system."
   }

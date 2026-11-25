@@ -81,7 +81,6 @@
   media:[12,'b','\u25B6'],
   membership:[12,'c','\u2602'],
   passport:[12,'a','\u25C9'],
-  payments:[12,'c','\u25C6'],
   pending:[9,'a','\u231B'],
   phases:[12,'a','\u25c8'],
   portfolio:[12,'c','\u25C4'],

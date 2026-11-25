@@ -76,6 +76,16 @@
       "permanent": true
     },
     {
+      "source": "/payments",
+      "destination": "/subscriptions#payments",
+      "permanent": true
+    },
+    {
+      "source": "/payments.html",
+      "destination": "/subscriptions#payments",
+      "permanent": true
+    },
+    {
       "source": "/trophies",
       "destination": "/honors#vault",
       "permanent": true

@@ -52,7 +52,7 @@
     identity:'archive',investment:'invest',invest:'invest',kings:'achieve',
     knowledge:'intel',kyc:'archive',lab:'govern',
     levels:'achieve',membership:'archive',observatory:'govern',
-    passport:'archive',payments:'vault',phases:'achieve',
+    passport:'archive',phases:'achieve',
     portfolio:'invest',privacy:'govern',revenue:'invest',
     roadmap:'govern',series:'media',sovereign_ai:'arena',
     treasury:'invest',trailers:'media',triads:'achieve',
@@ -100,7 +100,7 @@
     {key:'vault',   icon:'\u03A9', label:'VAULT',    href:'/vault.html',    col:'#C9A84C',
      sub:[['vault','MONEY HOME','/vault.html'],['treasury-alias-1','RESERVE','/vault.html#reserve','folded'],['wallet-alias-1','WALLET','/vault.html#wallet','folded'],
           ['blockchain','BLOCKCHAIN','/blockchain.html','folded'],['billing','BILLING','/subscriptions.html#payments','folded'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html'],
-          ['marketplace','MARKETPLACE','/marketplace.html'],['income','INCOME','/income.html','folded'],['payments','PAYMENTS','/payments.html'],
+          ['marketplace','MARKETPLACE','/marketplace.html'],['income','INCOME','/income.html','folded'],
           ['ledger','ASSET LEDGER','/ledger.html','folded'],['sigil-alias-1','SIGIL VAULT','/vault.html#nft','folded'],['vault-settings','SYSTEM SETTINGS','/settings.html'],
           ['advertising','ADVERTISING','/advertising.html'],['ad-network','AD NETWORK','/ad-network.html','folded'],['sovereign-covenant','COVENANT','/sovereign-covenant.html','owner']]},
     {key:'order',   icon:'\u22D4', label:'ORDER',    href:'/order.html',   col:'#D9B86A',
@@ -137,7 +137,7 @@
     {key:'invest', icon:'\u25C6', label:'INVEST',  href:'/invest.html',   col:'#E2C86D',
      sub:[['invest','INVEST WORKSPACE','/invest.html'],['investment','INVESTMENT ENGINE','/investment.html'],['portfolio','PORTFOLIO','/portfolio.html'],['treasury','TREASURY','/treasury.html'],
           ['wallet','WALLET','/wallet.html'],['revenue','REVENUE','/revenue.html'],['income','INCOME','/income.html'],
-          ['expenses','EXPENSES','/expenses.html','folded'],['wealth','WEALTH','/wealth.html'],['ledger','ASSET LEDGER','/ledger.html'],['payments','PAYMENTS','/payments.html','folded'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html','folded']]},
+          ['expenses','EXPENSES','/expenses.html','folded'],['wealth','WEALTH','/wealth.html'],['ledger','ASSET LEDGER','/ledger.html'],['subscriptions','SUBSCRIPTIONS','/subscriptions.html','folded']]},
     {key:'achieve',icon:'\u265A', label:'ACHIEVE', href:'/achieve.html', col:'#C9A84C',
      sub:[['achieve-home','ACHIEVE HOME','/achieve.html'],['ladder','LADDER','/ladder.html'],['achievements','ACHIEVEMENTS','/achievements.html'],['leaderboard','LEADERBOARD','/leaderboard.html'],['quest-progress','QUEST PROGRESS','/quest-progress.html'],['my-quests','MY QUESTS','/my-quests.html'],['cosmetics','COSMETICS','/cosmetics.html','folded'],['domain-mastery','DOMAIN MASTERY','/domain-mastery.html','folded'],['covenant','MONTHLY COVENANT','/covenant.html','folded'],['seasonal-events','SEASONAL EVENTS','/seasonal-events.html','folded'],['gates','AUTHORITY GATES','/gates.html','folded'],
           ['grades','GRADES','/grades.html','folded'],['levels','LEVELS','/levels.html','folded'],['phases','PHASES','/phases.html','folded'],
@@ -390,7 +390,7 @@
   var HUB_SEPARATE_ROUTE_STEMS={
     '404':1,'500':1,offline:1,maintenance:1,login:1,signup:1,
     account:1,approvals:1,'contracts':1,'control-center':1,'control-plane':1,'graph-admin':1,
-    kyc:1,payments:1,portfolio:1,privacy:1,security:1,settings:1,
+    kyc:1,portfolio:1,privacy:1,security:1,settings:1,
     subscriptions:1,terms:1,treasury:1,wallet:1
   };
   function isEmbeddedView(){
@@ -449,7 +449,7 @@
     life:['life'],
     ascend:['ascend','academy','focus','evolution','contributions','forge'],
     cosmos:['orrery','cosmos','sculpture','realms','world-atlas','elements','pantheons','houses','agents','horoscope'],
-    vault:['vault','wallet','subscriptions','payments','marketplace','blockchain'],
+    vault:['vault','wallet','subscriptions','marketplace','blockchain'],
     order:['order','family','approvals','hall','sovereigns'],
     services:['services','creation-studio','consultancy','contracts','publishing','travel'],
     /* Legacy knowledge-graph routes redirect to insight.html; graph.html remains the separate Cosmos constellation. */

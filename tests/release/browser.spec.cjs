@@ -82,7 +82,7 @@ test.describe('Omega production release surface', () => {
   });
 
   test('payment boundary is reachable without initiating a charge', async ({ page }) => {
-    for (const route of ['/payments.html', '/subscriptions.html']) {
+    for (const route of ['/subscriptions.html']) {
       const url = new URL(route, BASE_URL).toString();
       const response = await page.request.get(url);
       expect([200, 401, 403]).toContain(response.status());

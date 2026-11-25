@@ -52,7 +52,7 @@ class ClassifyTests(unittest.TestCase):
     def test_policy_beats_a_clean_measurement(self):
         # the census says kyc would load; policy keeps it out regardless
         self.assertEqual(self.status(page='kyc'), 'excluded-pending-review')
-        self.assertEqual(self.status(page='payments'), 'excluded-pending-review')
+        self.assertEqual(self.status(page='wallet'), 'excluded-pending-review')   # payments.html was merged into subscriptions.html
         self.assertEqual(self.status(page='terms'), 'standalone-by-policy')
         self.assertEqual(self.status(page='account', error='context was destroyed'), 'standalone-by-policy')
 

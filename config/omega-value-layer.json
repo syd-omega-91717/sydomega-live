@@ -72,8 +72,7 @@
       "purpose": "Review memberships, commerce, assets, payments and financial records with clear boundaries.",
       "next": [
         "/vault.html",
-        "/subscriptions.html",
-        "/payments.html"
+        "/subscriptions.html"
       ]
     },
     "order": {

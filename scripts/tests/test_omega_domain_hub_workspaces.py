@@ -101,14 +101,14 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
         for row in self.matrix["pages"]:
             if row["classification"] in {"KEEP_SEPARATE", "AMBIGUOUS", "UNMAPPED", "UNMAPPED_SECTION"}:
                 self.assertIsNone(row["candidate_hub"], row["path"])
-        self.assertEqual(self.matrix["classification_counts"]["KEEP_SEPARATE"], 19)
+        self.assertEqual(self.matrix["classification_counts"]["KEEP_SEPARATE"], 18)   # was 19 until payments.html was merged into subscriptions.html
         self.assertEqual(self.matrix["classification_counts"]["AMBIGUOUS"], 10)
         self.assertEqual(self.matrix["classification_counts"]["UNMAPPED"], 14)
         self.assertEqual(self.matrix["unresolved_count"], 24)
 
     def test_protected_workflow_ownership_is_explicit_and_domain_scoped(self):
         protected = [row for row in self.matrix["pages"] if row.get("protected_hub")]
-        self.assertEqual(len(protected), 16)
+        self.assertEqual(len(protected), 15)   # was 16 until payments.html was merged into subscriptions.html
         for row in protected:
             self.assertEqual(row["classification"], "KEEP_SEPARATE", row["path"])
             self.assertIn(row["protected_hub"], {hub["path"] for hub in self.matrix["hubs"]})

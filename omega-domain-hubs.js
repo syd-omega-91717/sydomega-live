@@ -28,7 +28,7 @@
   var PROTECTED_ROUTE_STEMS={
     '404':1,'500':1,offline:1,maintenance:1,login:1,signup:1,
     account:1,approvals:1,contracts:1,'control-center':1,'control-plane':1,'graph-admin':1,
-    kyc:1,payments:1,portfolio:1,privacy:1,security:1,settings:1,
+    kyc:1,portfolio:1,privacy:1,security:1,settings:1,
     subscriptions:1,terms:1,treasury:1,wallet:1
   };
   if(embedded && PROTECTED_ROUTE_STEMS[currentPath.replace(/\.html$/i,'')]){

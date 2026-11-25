@@ -85,7 +85,7 @@
       ['progress', 'What are the gates?',
         gates.length ? gates.length + ' Authority thresholds. Crossing one moves you up: ' + gates.join(' · ') + '.'
           : 'Authority thresholds; crossing one moves you up.',
-        ['/gates.html', 'GATES']],
+        ['/levels.html#gates', 'GATES']],
       ['progress', 'What is the Matrix?',
         st.total_nodes ? 'The map of all progress: ' + (st.formula || '') + ' = ' + Number(st.total_nodes).toLocaleString('en') + ' nodes.'
           : 'The map of all progress on the platform.',

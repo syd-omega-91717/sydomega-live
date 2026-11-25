@@ -286,7 +286,6 @@
         "prediction",
         "simulation",
         "matrix",
-        "gates",
         "elements"
       ],
       "actions": [

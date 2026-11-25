@@ -6,11 +6,11 @@
     "config/omega-page-contracts.json",
     "nav.js"
   ],
-  "page_count": 240,
+  "page_count": 238,
   "hub_count": 14,
   "classification_counts": {
     "AMBIGUOUS": 10,
-    "CANDIDATE_MERGE_PANEL": 198,
+    "CANDIDATE_MERGE_PANEL": 196,
     "KEEP_SEPARATE": 18,
     "UNMAPPED": 14
   },
@@ -1298,20 +1298,6 @@
       ]
     },
     {
-      "page_id": "gates",
-      "path": "gates.html",
-      "navigation_section": "achieve",
-      "candidate_hub": "achieve.html",
-      "protected_hub": null,
-      "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
-      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "authorization_state": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ]
-    },
-    {
       "page_id": "gateway",
       "path": "gateway.html",
       "navigation_section": "command",
@@ -1484,20 +1470,6 @@
       "path": "gratitude.html",
       "navigation_section": "life",
       "candidate_hub": "life.html",
-      "protected_hub": null,
-      "classification": "CANDIDATE_MERGE_PANEL",
-      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
-      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "authorization_state": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ]
-    },
-    {
-      "page_id": "grid",
-      "path": "grid.html",
-      "navigation_section": "achieve",
-      "candidate_hub": "achieve.html",
       "protected_hub": null,
       "classification": "CANDIDATE_MERGE_PANEL",
       "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",

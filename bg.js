@@ -1895,8 +1895,8 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
   var PAGE_LENS={
     horoscope:'signs',cosmos:'signs',sigil:'signs',account:'signs',triads:'signs',
     pantheons:'gods',agents:'gods',factions:'gods',
-    gates:'gates',
-    academy:'grades',ascension:'grades',grid:'grades',matrix:'grades',membership:'grades',evolution:'grades',
+    levels:'gates',
+    academy:'grades',ascension:'grades',matrix:'grades',membership:'grades',evolution:'grades',
     trophies:'trophies',honors:'trophies',
     contributions:'medals',beacon:'medals',
     passport:'certificates',identity:'certificates',kyc:'certificates',

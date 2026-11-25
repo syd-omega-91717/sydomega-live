@@ -2101,33 +2101,6 @@
     ]
   },
   {
-    "page": "gates.html",
-    "title": "Ω SYD OMEGA 91717 — GATES",
-    "h1": "",
-    "body_words": 251,
-    "cards": 23,
-    "sections": 4,
-    "tabs": 0,
-    "buttons": 0,
-    "links": 1,
-    "forms": 2,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 23,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 1,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading",
-      "FLEXIBILITY: 1 fixed widths >=320px"
-    ]
-  },
-  {
     "page": "gateway.html",
     "title": "Ω SYD OMEGA 91717 — Gateway",
     "h1": "GATEWAY",
@@ -2440,32 +2413,6 @@
       "CONTRACT: no visible/semantic level-1 heading",
       "READABILITY: 3 declarations at >=3px letter spacing",
       "FLEXIBILITY: 1 fixed widths >=320px"
-    ]
-  },
-  {
-    "page": "grid.html",
-    "title": "Ω SYD OMEGA 91717 — GRID",
-    "h1": "",
-    "body_words": 267,
-    "cards": 41,
-    "sections": 5,
-    "tabs": 4,
-    "buttons": 0,
-    "links": 1,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 22,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 0,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 3,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading"
     ]
   },
   {

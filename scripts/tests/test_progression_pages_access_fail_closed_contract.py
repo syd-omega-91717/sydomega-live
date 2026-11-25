@@ -5,7 +5,7 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-PAGES = ("grid.html", "levels.html", "gates.html", "points.html", "realm.html")
+PAGES = ("levels.html", "points.html", "realm.html")   # grid.html and gates.html were merged into levels.html
 
 
 class ProgressionPageAccessFailClosedContract(unittest.TestCase):

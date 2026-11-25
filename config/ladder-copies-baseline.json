@@ -8,10 +8,8 @@
     "evolution.html": 2,
     "grades.html": 2,
     "graph.html": 2,
-    "grid.html": 2,
     "i18n.js": 1,
     "leaderboard.js": 1,
-    "levels.html": 1,
     "membership.html": 2,
     "nexus.html": 2,
     "omega-ascend-native.js": 2,
@@ -33,5 +31,5 @@
     "studio.html": 2,
     "tribe.html": 1
   },
-  "total": 55
+  "total": 52
 }

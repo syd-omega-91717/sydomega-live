@@ -259,10 +259,6 @@
   "handlers": 0,
   "scripts": 3
  },
- "gates.html": {
-  "handlers": 3,
-  "scripts": 1
- },
  "governance.html": {
   "handlers": 9,
   "scripts": 1
@@ -306,10 +302,6 @@
  "gratitude.html": {
   "handlers": 1,
   "scripts": 1
- },
- "grid.html": {
-  "handlers": 0,
-  "scripts": 2
  },
  "habits.html": {
   "handlers": 11,
@@ -401,7 +393,7 @@
  },
  "levels.html": {
   "handlers": 0,
-  "scripts": 2
+  "scripts": 1
  },
  "library.html": {
   "handlers": 18,

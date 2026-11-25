@@ -37,7 +37,7 @@
     d:'/dashboard.html',  e:'/evolution.html',  l:'/leaderboard.html',
     a:'/analytics.html',  m:'/matrix.html',     p:'/profile.html',
     s:'/settings.html',   v:'/vault.html',       k:'/knowledge.html',
-    x:'/exam.html',       q:'/gaming.html',      t:'/gates.html',
+    x:'/exam.html',       q:'/gaming.html',      t:'/levels.html#gates',
     i:'/intelligence.html', o:'/studio.html',    r:'/publishing.html',
   };
   var G_LABEL = {

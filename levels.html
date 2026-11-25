@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SYD OMEGA 91717 — LEVELS · 12 Sovereign Authority Levels · Lattice Progression">
-<title>&#937; SYD OMEGA 91717 &mdash; LEVELS</title>
+<meta name="description" content="SYD OMEGA 91717 — LEVELS, GRID &amp; GATES · the 12-gate authority ladder, the 12x12 lattice and the mastery gates">
+<title>&#937; SYD OMEGA 91717 &mdash; LEVELS, GRID &amp; GATES</title>
 
 <link rel="manifest" href="/manifest.json">
 <script src="/bg.js" defer></script>
@@ -16,7 +16,7 @@
   <aside class="side" id="omega-side" data-page="levels" aria-label="Navigation"></aside>
   <main class="main" role="main" id="main-content">
     <div class="topbar">
-      <div class="t">LEVELS<small>M18 &middot; 12 SOVEREIGN LEVELS &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
+      <div class="t">LEVELS<small>M18 &middot; 12 SOVEREIGN LEVELS &middot; LATTICE GRID &middot; MASTERY GATES &middot; 12&times;12&times;9&times;9&times;9 = 104,976</small></div>
       <canvas data-omega-ring data-ring-size="44" data-ring-color="gold" data-ring-value="0" data-ring-live style="flex-shrink:0;margin-left:auto" aria-label="Authority ring"></canvas>
       <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--gold)">AUTH <span id="hdr-auth" style="font-family:var(--D);font-size:14px">--</span></div>
     </div>
@@ -25,10 +25,13 @@
       <button class="tab-btn active" data-tab="all" role="tab">ALL LEVELS</button>
       <button class="tab-btn" data-tab="structure" role="tab">STRUCTURE</button>
       <button class="tab-btn" data-tab="my" role="tab">MY LEVEL</button>
+      <button class="tab-btn" data-tab="grid" role="tab">GRID</button>
+      <button class="tab-btn" data-tab="gates" role="tab">GATES</button>
+      <button class="tab-btn" data-tab="attempt" role="tab">LOG ATTEMPT</button>
+      <button class="tab-btn" data-tab="history" role="tab">HISTORY</button>
       <button class="tab-btn" data-tab="science" role="tab">SCIENCE</button>
     </div>
 
-    <!-- ALL LEVELS TAB -->
     <div class="tab-panel active pad" id="tab-all">
       <div class="kpi-row" data-stagger data-stagger-gap="70">
         <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
@@ -40,7 +43,6 @@
       <div id="level-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px"></div>
     </div>
 
-    <!-- STRUCTURE TAB -->
     <div class="tab-panel pad" id="tab-structure" style="display:none">
       <div class="sechead">LATTICE STRUCTURE &middot; HOW LEVELS WORK</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
@@ -70,9 +72,27 @@
       </div>
       <div class="sechead" style="margin-top:16px">LEVEL THRESHOLDS</div>
       <div id="thresh-list" style="display:grid;gap:6px"></div>
+
+      <div class="sechead" style="margin-top:16px">GRID STATISTICS &middot; LATTICE NUMBERS</div>
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-n">104,976</div><div class="kpi-l">BASE LATTICE NODES</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-n">571,536</div><div class="kpi-l">EXPANDED LATTICE</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-n">144</div><div class="kpi-l">SIGN × GATE COMBOS</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--gold)"><div class="kpi-n">729</div><div class="kpi-l">AXIS STATES (9³)</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--solar)"><div class="kpi-n">27.8367</div><div class="kpi-l">APEX AUTH SCORE</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--solar)"><div class="kpi-n">12</div><div class="kpi-l">GATE THRESHOLDS</div></div>
+      </div>
+      <div class="sechead">MATHEMATICAL BREAKDOWN</div>
+      <div class="glass">
+        <div style="display:grid;gap:8px;font-size:12px;line-height:1.8;color:var(--muted)">
+          <div><span style="color:var(--gold);font-family:var(--M)">12 SIGNS</span> (Zodiac axis) × <span style="color:var(--cyan);font-family:var(--M)">12 GATES</span> (Authority axis) = <span style="color:var(--solar);font-family:var(--M)">144</span> unique intersections</div>
+          <div>144 intersections × <span style="color:var(--purple);font-family:var(--M)">729</span> axis states (9³) = <span style="color:var(--solar);font-family:var(--M)">104,976</span> canonical lattice nodes</div>
+          <div>Kings expansion: <span style="color:var(--gold);font-family:var(--M)">28</span> levels × <span style="color:var(--cyan);font-family:var(--M)">28</span> gates × 729 = <span style="color:var(--solar);font-family:var(--M)">571,536</span> extended nodes</div>
+          <div>Ultimate lattice: 104,976 × 21 services × 12 phases = <span style="color:var(--green);font-family:var(--M)">26,453,952</span> platform states</div>
+        </div>
+      </div>
     </div>
 
-    <!-- MY LEVEL TAB -->
     <div class="tab-panel pad" id="tab-my" style="display:none">
       <div class="sechead">YOUR CURRENT LEVEL</div>
       <div class="glass" style="text-align:center;padding:32px;margin-bottom:16px">
@@ -94,9 +114,91 @@
           </div>
         </div>
       </div>
+
+      <div class="sechead">MY SOVEREIGN PATH</div>
+      <div class="glass" style="margin-bottom:14px">
+        <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--solar);margin-bottom:10px">CURRENT POSITION</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">SIGN</div><div style="font-family:var(--D);font-size:16px;color:var(--solar)" id="grd-my-sign">—</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">AUTH SCORE</div><div style="font-family:var(--D);font-size:16px;color:var(--gold)" id="grd-my-auth">—</div></div>
+          <div><div style="font-family:var(--M);font-size:12px;color:var(--muted)">ACTIVE GATE</div><div style="font-family:var(--D);font-size:16px;color:var(--cyan)" id="grd-my-gate">—</div></div>
+        </div>
+      </div>
+      <div class="glass">
+        <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px">GATE PROGRESSION</div>
+        <div id="grd-path-bars" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
     </div>
 
-    <!-- SCIENCE TAB -->
+    <div class="tab-panel pad" id="tab-grid" style="display:none">
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--cyan)"><div class="kpi-n" id="g-stat-auth">--</div><div class="kpi-l">AUTHORITY</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="g-stat-a">--</div><div class="kpi-l">AXIS A</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--purple)"><div class="kpi-n" id="g-stat-b">--</div><div class="kpi-l">AXIS B</div></div>
+        <div class="kpi" data-reveal="fade-up" style="--kc:var(--green)"><div class="kpi-n" id="g-stat-c">--</div><div class="kpi-l">AXIS C</div></div>
+      </div>
+      <div class="sechead">12×12 SOVEREIGN LATTICE GRID</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:1px"></div><span style="font-family:var(--M);font-size:12px;color:var(--muted)">UNLOCKED</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.3);border-radius:1px"></div><span style="font-family:var(--M);font-size:12px;color:var(--muted)">ACTIVE</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(255,255,255,.03);border-radius:1px"></div><span style="font-family:var(--M);font-size:12px;color:var(--muted)">LOCKED</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;background:rgba(63,178,127,.2);border:1px solid rgba(63,178,127,.4);border-radius:1px"></div><span style="font-family:var(--M);font-size:12px;color:var(--muted)">APEX</span></div>
+      </div>
+      <div style="overflow-x:auto">
+        <div id="grd-table" style="width:100%;font-size:12px">
+          <div id="grd-head" class="tbl-row" style="display:grid;grid-template-columns:repeat(13,minmax(24px,1fr));gap:0">
+            <div style="font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted);padding:7px 6px;text-align:left;border-bottom:1px solid var(--line)">GATE</div>
+          </div>
+          <div id="grd-tbody"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel pad" id="tab-gates" style="display:none">
+      <div class="kpi-row" data-stagger data-stagger-gap="70">
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-open">--</div><div class="kpi-l">GATES OPEN</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-mastered">--</div><div class="kpi-l">MASTERED</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-locked">--</div><div class="kpi-l">LOCKED</div></div>
+        <div class="kpi" data-reveal="fade-up"><div class="kpi-n" id="k-total">12</div><div class="kpi-l">TOTAL GATES</div></div>
+      </div>
+      <div class="osc-stage" data-omega-sculpture="gates" data-sculpt-height="min(46vh,380px)"
+           data-sculpt-label="The twelve gates rendered in depth as a corridor of thresholds, each one a mastery gate on the sovereign curriculum">
+        <div class="osc-cap">
+          <b>THE TWELVE GATES</b>
+          <span>A corridor, not a list &middot; each threshold a mastery</span>
+        </div>
+      </div>
+      <div class="sechead">THE 12 SOVEREIGN GATES</div>
+      <div id="gate-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px"></div>
+    </div>
+
+    <div class="tab-panel pad" id="tab-attempt" style="display:none">
+      <div class="sechead">LOG GATE ATTEMPT</div>
+      <div style="max-width:520px">
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">SELECT GATE</div>
+          <select id="a-gate" class="inp" style="width:100%"></select>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">OUTCOME</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="btn-pass" type="button" data-attempt="pass" style="flex:1;background:rgba(63,178,127,.2);border-color:var(--green);color:var(--green)">PASSED</button>
+            <button class="btn" id="btn-fail" type="button" data-attempt="fail" style="flex:1;background:rgba(255,68,68,.15);border-color:#FF4444;color:#FF4444">FAILED</button>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:5px">NOTES</div>
+          <textarea id="a-notes" class="inp" rows="3" style="width:100%;resize:vertical" placeholder="What did you learn? What held you back?"></textarea>
+        </div>
+      </div>
+      <div id="a-note" role="status" style="font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);margin-top:8px;max-width:520px"></div>
+    </div>
+
+    <div class="tab-panel pad" id="tab-history" style="display:none">
+      <div class="sechead">ATTEMPT HISTORY</div>
+      <div id="history-list" style="display:grid;gap:8px"></div>
+    </div>
+
     <div class="tab-panel pad" id="tab-science" style="display:none">
       <div class="sechead">SOVEREIGN LEVELS &middot; THE SCIENCE</div>
       <div class="card-grid">
@@ -117,6 +219,34 @@
           <div style="font-size:12px;line-height:1.8;color:var(--muted)">12 levels × 12 phases × 729 axis states = 104,976 unique sovereign positions in the canonical lattice. The Kings expansion (28×28×729) reaches 571,536 nodes — all encoded in the platform architecture.</div>
         </div>
       </div>
+      <div class="sechead" style="margin-top:16px">THE LATTICE GRID &middot; THE SCIENCE</div>
+      <div class="card-grid">
+        <div class="card" style="--card-accent:var(--cyan)">
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--cyan);margin-bottom:8px">THE 12×12 LATTICE</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">The Sovereign Lattice maps 12 zodiac signs (columns) against 12 authority gates (rows). Each intersection represents a unique evolutionary position. The complete grid has 144 cells, each containing 729 axis states.</div>
+        </div>
+        <div class="card" style="--card-accent:var(--gold)">
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--gold);margin-bottom:8px">ZODIAC ALIGNMENT</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Each sovereign's sign determines their column in the lattice. The sign isn't merely symbolic — it determines which energy patterns, Olympian archetypes, and elemental forces amplify each axis. Aries amplifies Axis A; Libra amplifies Axis C.</div>
+        </div>
+        <div class="card" style="--card-accent:var(--purple)">
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--purple);margin-bottom:8px">GATE PROGRESSION</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Gates unlock sequentially as AUTH score rises. Each gate unlocks a new row in the lattice, new platform capabilities, and deeper access to sovereign content. Gate XII (Apex) is only reachable at A=B=C=9, AUTH=27.8367.</div>
+        </div>
+        <div class="card" style="--card-accent:var(--green)">
+          <div style="font-family:var(--D);font-size:var(--fs-2,14px);color:var(--green);margin-bottom:8px">9³ INNER CUBE</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--muted)">Each lattice intersection has 729 internal states (9×9×9), representing all possible combinations of Axis A, B, and C (each ranging 0–9 in discrete steps). 9 is the number of completion in Pythagorean numerology.</div>
+        </div>
+      </div>
+      <div class="sechead" style="margin-top:16px">GATES &middot; THE SCIENCE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">01</div><div class="sci-title">THRESHOLD THEORY</div><div class="sci-body">Cognitive thresholds are qualitative jumps in capability — not linear accumulation. Crossing a gate represents a phase transition: new perception, new capacity, new level of performance that cannot be undone.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">02</div><div class="sci-title">THE HERO'S JOURNEY</div><div class="sci-body">Campbell's monomyth maps 12 stages of transformation matching the 12 gates: call, threshold crossing, trials, ordeal, reward, return. Each gate is a trial the hero must overcome to evolve.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">03</div><div class="sci-title">ZONE OF PROXIMAL DEVELOPMENT</div><div class="sci-body">Vygotsky's ZPD — the gap between what you can do alone and what you can do with guidance — is the exact zone where gate attempts are most productive. Too easy = no growth. Too hard = no progress.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">04</div><div class="sci-title">MASTERY-BASED PROGRESSION</div><div class="sci-body">Gates enforce mastery before advancement — proven more effective than time-based progression. Students who master prerequisites perform 80%+ better on advanced material (Bloom, 1984).</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">05</div><div class="sci-title">CHUNKING &amp; EXPERTISE</div><div class="sci-body">Chess masters hold 50,000+ board positions as single chunks in long-term memory. Gates measure whether you can access domain chunks fluently — the hallmark of genuine expertise over surface knowledge.</div></div>
+        <div class="sci-card card" data-reveal="fade-up"><div class="sci-num">06</div><div class="sci-title">GROWTH MINDSET</div><div class="sci-body">Dweck's research: viewing gates as challenges to overcome (not fixed tests of ability) increases pass rates. The fail path is data, not judgment — it maps exactly what to practice next.</div></div>
+      </div>
     </div>
 
     <div data-page-emblem="levels" style="margin:20px auto 0"></div>
@@ -130,76 +260,18 @@
 .lv-card{border:1px solid var(--line);background:rgba(10,10,15,.55);border-radius:2px;border-top:2px solid var(--lvc,var(--gold));padding:14px;text-align:center;transition:.18s}
 .lv-card.earned{border-top-color:var(--green);background:rgba(63,178,127,.04)}
 .lv-card:hover{transform:translateY(-2px)}
+.gc{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:1px;font-family:var(--M);font-size:12px}
+.gc-locked{background:rgba(255,255,255,.03);color:rgba(255,255,255,.2)}
+.gc-done{background:rgba(201,168,76,.15);color:var(--solar);border:1px solid rgba(201,168,76,.3)}
+.gc-active{background:rgba(0,229,255,.15);color:var(--cyan);border:1px solid rgba(0,229,255,.3)}
+.gc-apex{background:rgba(63,178,127,.2);color:var(--green);border:1px solid rgba(63,178,127,.4)}
+.sci-card{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px}
+.sci-num{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+.sci-title{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.sci-body{font-size:12px;line-height:1.7;color:var(--ink);opacity:.8}
 </style>
-<script>
-/* Names and thresholds are the canon's (OmegaCanon.authority.gate_names / .gates, omega-canon.json); this page used to
-   carry NOVICE/ADEPT/MASTER and shift every name by one or two rungs (FIXES_LOG 205). scripts/ladder-copy-contract.py
-   fails if this table stops matching the canon. */
-var LVLS=[
-  {n:1,name:'INITIATE',     thr:2.3197,  col:'#C9A84C'},
-  {n:2,name:'ACOLYTE',   thr:4.6394,  col:'#E2C86D'},
-  {n:3,name:'SCHOLAR',    thr:6.9592,  col:'#C9A84C'},
-  {n:4,name:'KEEPER',    thr:9.2789,  col:'#00E5FF'},
-  {n:5,name:'GUARDIAN',      thr:11.5986,  col:'#3fb27f'},
-  {n:6,name:'ARCHITECT',     thr:13.9183, col:'#E86A3A'},
-  {n:7,name:'SOVEREIGN',     thr:16.2381, col:'#9B6BF0'},
-  {n:8,name:'VANGUARD',  thr:18.5578, col:'#C9A84C'},
-  {n:9,name:'HERALD',  thr:20.8775, col:'#E2C86D'},
-  {n:10,name:'ORACLE',  thr:23.1972,  col:'#00E5FF'},
-  {n:11,name:'PRIME',    thr:25.517,  col:'#3fb27f'},
-  {n:12,name:'APEX',      thr:27.8367,col:'#E2C86D'},
-];
-function build(){
-  var grid=document.getElementById('level-grid');
-  if(grid){grid.innerHTML=LVLS.map(function(l){
-    return '<div class="lv-card card" id="lvc-'+l.n+'" style="--lvc:'+l.col+'">'
-      +'<div style="font-family:var(--D);font-size:28px;color:'+l.col+'">'+l.n+'</div>'
-      +'<div style="font-family:var(--D);font-size:12px;color:var(--ink);margin:4px 0">'+l.name+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;color:var(--muted);margin-bottom:6px">AUTH &ge; '+l.thr+'</div>'
-      +'<div style="font-family:var(--M);font-size:12px;padding:2px 8px;border:1px solid rgba(138,134,118,.3);border-radius:10px;color:var(--muted)" id="lvst-'+l.n+'">LOCKED</div>'
-      +'</div>';
-  }).join('');}
-  var tl=document.getElementById('thresh-list');
-  if(tl){tl.innerHTML=LVLS.map(function(l){
-    return '<div style="display:flex;align-items:center;gap:12px;padding:6px 10px;border:1px solid var(--line);border-left:3px solid '+l.col+'">'
-      +'<span style="font-family:var(--M);font-size:12px;min-width:30px;color:'+l.col+'">LV '+l.n+'</span>'
-      +'<span style="font-family:var(--D);font-size:12px;color:var(--ink);flex:1">'+l.name+'</span>'
-      +'<span style="font-family:var(--M);font-size:12px;color:var(--muted)">AUTH &ge; '+l.thr+'</span>'
-      +'</div>';
-  }).join('');}
-}
-build();
-function updateLevel(auth){
-  var lvIdx=-1;
-  LVLS.forEach(function(l,i){if(auth>=l.thr)lvIdx=i;});
-  LVLS.forEach(function(l,i){
-    var card=document.getElementById('lvc-'+l.n);
-    var st=document.getElementById('lvst-'+l.n);
-    if(auth>=l.thr){
-      if(card)card.classList.add('earned');
-      if(st){st.textContent='EARNED';st.style.cssText='font-family:var(--M);font-size:12px;padding:2px 8px;border:1px solid rgba(63,178,127,.4);border-radius:10px;color:var(--green);background:rgba(63,178,127,.08)';}
-    }
-  });
-  function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=String(v);}
-  var cur=lvIdx>=0?LVLS[lvIdx]:{n:0,name:'UNRANKED',thr:0};
-  sid('my-lv-num',String(cur.n>0?cur.n:1));
-  sid('my-lv-name',lvIdx>=0?cur.name:LVLS[0].name);
-  var nextIdx=lvIdx+1;
-  if(nextIdx<12)sid('my-lv-next','NEXT: '+LVLS[nextIdx].name+' at AUTH ≥ '+LVLS[nextIdx].thr);
-  else sid('my-lv-next','APEX SOVEREIGN — LATTICE COMPLETE');
-  var pct=(auth/27.8367*100).toFixed(1);
-  var ring=document.getElementById('my-auth-ring');
-  if(ring)setTimeout(function(){ring.style.setProperty('--p',Math.min(100,pct)+'%');},100);
-  var pctEl=document.getElementById('my-auth-pct');if(pctEl)pctEl.textContent=pct+'%';
-}
-function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
-  var btn=document.querySelector('[data-tab="'+name+'"]');if(btn)btn.classList.add('active');
-  var panel=document.getElementById('tab-'+name);if(panel)panel.style.display='block';
-}
-document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
-</script>
+<script src="/omega-esc.js"></script>
+<script src="/omega-ladder.js"></script>
 <script type="module">
 import{createClient}from'/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
@@ -208,16 +280,14 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
   try{
     var sessionResult=await sb.auth.getSession();if(sessionResult.error)throw sessionResult.error;var s=sessionResult.data&&sessionResult.data.session;
     if(!s){location.replace('/account.html');return;}
-    var profileResult=await sb.from('profiles').select('access_approved,is_owner,axis_a,axis_b,axis_c,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle();if(profileResult.error)throw profileResult.error;if(!profileResult.data||typeof profileResult.data!=='object')throw new Error('profile_record_unavailable');var pr=profileResult.data;
+    var profileResult=await sb.from('profiles').select('access_approved,is_owner,axis_a,axis_b,axis_c,sign,is_trial,trial_expires_at').eq('id',s.user.id).maybeSingle();if(profileResult.error)throw profileResult.error;if(!profileResult.data||typeof profileResult.data!=='object')throw new Error('profile_record_unavailable');var pr=profileResult.data;
     if(!pr.is_owner&&!pr.access_approved){location.replace('/pending.html');return;}
     if(!pr.is_owner&&pr.is_trial&&pr.trial_expires_at&&new Date(pr.trial_expires_at)<=new Date()){location.replace('/pending.html?expired=1');return;}
     document.getElementById('app').style.display='flex';
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    sid('hdr-auth',auth.toFixed(4));sid('stat-auth',auth.toFixed(4));
-    sid('stat-a',a.toFixed(3));sid('stat-b',b.toFixed(3));sid('stat-c',c.toFixed(3));
-    updateLevel(auth);
+    if(window.OmegaLadder)window.OmegaLadder.update({auth:auth,a:a,b:b,c:c,sign:pr.sign});
   }catch(e){var app=document.getElementById('app');if(app)app.style.display='none';var panel=document.getElementById('access-load-error');if(panel)panel.hidden=false;console.error('[Omega access] session/profile verification failed; page remains locked.',e);}
 })();
 </script>

@@ -1383,25 +1383,6 @@
       "reward": "/honors.html#vault"
     },
     {
-      "page": "gates.html",
-      "slug": "gates",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "void",
-      "districtName": "THE VOID OBSERVATORY",
-      "entry": "/gates.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
       "page": "gateway.html",
       "slug": "gateway",
       "archetype": "command",
@@ -1636,25 +1617,6 @@
       "district": "genesis",
       "districtName": "THE GENESIS QUARTER",
       "entry": "/gratitude.html",
-      "mission": "/missions.html",
-      "reward": "/achievements.html"
-    },
-    {
-      "page": "grid.html",
-      "slug": "grid",
-      "archetype": "command",
-      "role": "Navigator",
-      "verb": "DIRECT",
-      "primaryAction": "decide",
-      "actions": [
-        "decide",
-        "accept mission",
-        "review standing"
-      ],
-      "successOutcome": "mission accepted",
-      "district": "genesis",
-      "districtName": "THE GENESIS QUARTER",
-      "entry": "/grid.html",
       "mission": "/missions.html",
       "reward": "/achievements.html"
     },

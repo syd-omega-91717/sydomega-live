@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generated_by": "scripts/omega-page-census.py",
-  "page_count": 240,
+  "page_count": 238,
   "pages": [
     {
       "page_id": "404",
@@ -166,15 +166,15 @@
         "/bg.js",
         "/covenant.html",
         "/domain-mastery.html",
-        "/gates.html",
         "/grades.html",
-        "/grid.html",
         "/hercules.html",
         "/honors.html",
         "/honors.html#vault",
         "/kings.html",
         "/leaderboard.html",
         "/levels.html",
+        "/levels.html#gates",
+        "/levels.html#grid",
         "/nav.js",
         "/omega-achieve-boot.js",
         "/omega-achieve-native.js",
@@ -3754,50 +3754,6 @@
       }
     },
     {
-      "page_id": "gates",
-      "path": "/home/user/sydomega-live/gates.html",
-      "scripts": [
-        "/bg.js",
-        "/omega-analytics-init.js",
-        "/omega-esc.js",
-        "/omega-morph.js",
-        "/omega-speed-insights-init.js"
-      ],
-      "assets": [
-        "#main-content",
-        "/bg.js",
-        "/gates.html",
-        "/manifest.json",
-        "/omega-analytics-init.js",
-        "/omega-esc.js",
-        "/omega-morph.js",
-        "/omega-speed-insights-init.js"
-      ],
-      "supabase_tables": [
-        "profiles"
-      ],
-      "supabase_rpcs": [],
-      "interactive": {
-        "buttons": 7,
-        "forms": 0,
-        "links": 2,
-        "inputs": 2
-      },
-      "media": {
-        "images": 0,
-        "video": 0,
-        "audio": 0,
-        "iframes": 0
-      },
-      "signals": {
-        "localStorage": true,
-        "uploads": false,
-        "downloads": false,
-        "events": false,
-        "truth_state": true
-      }
-    },
-    {
       "page_id": "gateway",
       "path": "/home/user/sydomega-live/gateway.html",
       "scripts": [
@@ -4326,48 +4282,6 @@
         "downloads": false,
         "events": false,
         "truth_state": false
-      }
-    },
-    {
-      "page_id": "grid",
-      "path": "/home/user/sydomega-live/grid.html",
-      "scripts": [
-        "/bg.js",
-        "/omega-analytics-init.js",
-        "/omega-morph.js",
-        "/omega-speed-insights-init.js"
-      ],
-      "assets": [
-        "#main-content",
-        "/bg.js",
-        "/grid.html",
-        "/manifest.json",
-        "/omega-analytics-init.js",
-        "/omega-morph.js",
-        "/omega-speed-insights-init.js"
-      ],
-      "supabase_tables": [
-        "profiles"
-      ],
-      "supabase_rpcs": [],
-      "interactive": {
-        "buttons": 4,
-        "forms": 0,
-        "links": 2,
-        "inputs": 0
-      },
-      "media": {
-        "images": 0,
-        "video": 0,
-        "audio": 0,
-        "iframes": 0
-      },
-      "signals": {
-        "localStorage": false,
-        "uploads": false,
-        "downloads": false,
-        "events": false,
-        "truth_state": true
       }
     },
     {
@@ -5672,6 +5586,8 @@
       "scripts": [
         "/bg.js",
         "/omega-analytics-init.js",
+        "/omega-esc.js",
+        "/omega-ladder.js",
         "/omega-morph.js",
         "/omega-speed-insights-init.js"
       ],
@@ -5681,6 +5597,8 @@
         "/levels.html",
         "/manifest.json",
         "/omega-analytics-init.js",
+        "/omega-esc.js",
+        "/omega-ladder.js",
         "/omega-morph.js",
         "/omega-speed-insights-init.js"
       ],
@@ -5689,10 +5607,10 @@
       ],
       "supabase_rpcs": [],
       "interactive": {
-        "buttons": 4,
+        "buttons": 10,
         "forms": 0,
         "links": 2,
-        "inputs": 0
+        "inputs": 2
       },
       "media": {
         "images": 0,

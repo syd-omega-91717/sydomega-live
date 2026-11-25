@@ -41,7 +41,7 @@ label: 'IDENTITY', pages: ['profile', 'identity', 'passport', 'character', 'sett
 }, ascend: {
 label: 'ASCEND', pages: ['ascension', 'matrix', 'academy', 'gaming', 'honors', 'exam', 'contributions', 'achievements', 'leaderboard', 'grades', 'levels', 'points']
 }, cosmos: {
-label: 'COSMOS', pages: ['cosmos', 'elements', 'horoscope', 'pantheons', 'agents', 'gates', 'houses', 'triads', 'kings', 'chronicle', 'dna', 'graph', 'map', 'mirror', 'oracle', 'realm', 'rune', 'tribe']
+label: 'COSMOS', pages: ['cosmos', 'elements', 'horoscope', 'pantheons', 'agents', 'houses', 'triads', 'kings', 'chronicle', 'dna', 'graph', 'map', 'mirror', 'oracle', 'realm', 'rune', 'tribe']
 }, universe: {
 label: 'UNIVERSE', pages: ['media', 'cinema', 'series', 'trailers', 'universe', 'hall', 'city', 'ledger', 'feed', 'publications']
 }, vault: {

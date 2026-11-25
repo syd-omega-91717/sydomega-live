@@ -1870,7 +1870,7 @@
     /* Every ring is a real destination. The label is the gate's own name from
        the canon, so the 3-D scene and the page it leads to agree. */
     var links = gates.map(function (g, i) {
-      return { object: g, href: '/gates.html', label: GATE_FALLBACK[i] };
+      return { object: g, href: '/levels.html#gates', label: GATE_FALLBACK[i] };
     });
     canonGates(function (names) {
       for (var i = 0; i < links.length && i < names.length; i++) links[i].label = names[i];

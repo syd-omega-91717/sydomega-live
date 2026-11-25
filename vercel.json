@@ -76,6 +76,26 @@
       "permanent": true
     },
     {
+      "source": "/grid",
+      "destination": "/levels#grid",
+      "permanent": true
+    },
+    {
+      "source": "/grid.html",
+      "destination": "/levels#grid",
+      "permanent": true
+    },
+    {
+      "source": "/gates",
+      "destination": "/levels#gates",
+      "permanent": true
+    },
+    {
+      "source": "/gates.html",
+      "destination": "/levels#gates",
+      "permanent": true
+    },
+    {
       "source": "/payments",
       "destination": "/subscriptions#payments",
       "permanent": true

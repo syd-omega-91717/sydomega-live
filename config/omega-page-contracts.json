@@ -9,7 +9,7 @@
     "source_content_audited": true,
     "production_complete_requires_authorization_and_evidence": true
   },
-  "page_count": 240,
+  "page_count": 238,
   "contracts": [
     {
       "page_id": "404",
@@ -5931,77 +5931,6 @@
       }
     },
     {
-      "page_id": "gates",
-      "path": "gates.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; GATES",
-      "data_sources": {
-        "supabase_tables": [
-          "profiles"
-        ],
-        "supabase_rpcs": []
-      },
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::gates::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "gates.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-esc.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
-        ],
-        "data_evidence": {
-          "supabase_tables": [
-            "profiles"
-          ],
-          "supabase_rpcs": []
-        },
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 7,
-          "forms": 0,
-          "inputs": 2,
-          "links": 2
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
       "page_id": "gateway",
       "path": "gateway.html",
       "contract_state": "EVIDENCE_CONTRACT",
@@ -6847,76 +6776,6 @@
           "forms": 0,
           "inputs": 2,
           "links": 0
-        },
-        "media_evidence": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      }
-    },
-    {
-      "page_id": "grid",
-      "path": "grid.html",
-      "contract_state": "EVIDENCE_CONTRACT",
-      "authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "workspace": "UNVERIFIED",
-      "domain": "UNVERIFIED",
-      "primary_role": "UNVERIFIED",
-      "purpose": "&#937; SYD OMEGA 91717 &mdash; GRID",
-      "data_sources": {
-        "supabase_tables": [
-          "profiles"
-        ],
-        "supabase_rpcs": []
-      },
-      "capabilities": [
-        "UNVERIFIED"
-      ],
-      "tasks": {
-        "state": "OPEN_TASK",
-        "ids": [
-          "PAGE::grid::REVIEW"
-        ]
-      },
-      "authorization": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ],
-      "asset_requirements": "UNVERIFIED",
-      "events": "UNVERIFIED",
-      "failure_paths": "UNVERIFIED",
-      "accessibility": "UNVERIFIED",
-      "responsive": "UNVERIFIED",
-      "traceability": {
-        "page_source": "grid.html",
-        "source_content_audited": true,
-        "script_evidence": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
-        ],
-        "data_evidence": {
-          "supabase_tables": [
-            "profiles"
-          ],
-          "supabase_rpcs": []
-        },
-        "capability_registry_matches": [],
-        "domain_candidates": []
-      },
-      "evidence": {
-        "filesystem_present": true,
-        "source_content_audited": true,
-        "source_audited_at": "CI_RUNTIME",
-        "method": "direct HTML source inspection",
-        "interactive_evidence": {
-          "buttons": 4,
-          "forms": 0,
-          "inputs": 0,
-          "links": 2
         },
         "media_evidence": {
           "images": 0,
@@ -16344,7 +16203,7 @@
     }
   ],
   "audit_summary": {
-    "page_count": 240,
+    "page_count": 238,
     "source_audited_pages": 242,
     "remaining_source_audit_pages": 0,
     "truth_and_authorization_still_unverified": true

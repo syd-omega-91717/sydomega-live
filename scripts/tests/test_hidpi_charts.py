@@ -257,6 +257,12 @@ class Wave7(unittest.TestCase):
         src = self._src("city")
         self.assertIn("OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())})", src)
 
+    def test_city_refits_when_its_box_is_first_measured(self):
+        """The first measure happens while the approval guard hides the page (fallback 600), then the box grows: a 1.45x stretch at 868 px."""
+        src = self._src("city")
+        self.assertIn("new ResizeObserver(function(){", src)
+        self.assertIn("bx=b.xf*W", src, "building positions are fractions so a refit keeps them in the box")
+
     def test_the_cosmos_agent_wheel_carries_the_dpr_over_2_factor(self):
         src = self._src("cosmos")
         body = src[src.index("function buildAgentWheel"):][:1400]

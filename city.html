@@ -237,11 +237,12 @@ function drawCity(){
   var cv=document.getElementById('city-canvas');if(!cv)return;
   var W=cv.offsetWidth||600,H=cv.offsetHeight||280;
   /* Authored at 2x (store = 2 x box, scale(2,2)): keep that floor and grow above it, so 3x phones are sharp too. */
-  var ctx=window.OmegaCanvas?OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())}):(cv.width=W*2,cv.height=H*2,cv.getContext('2d'));
+  function fit(){return window.OmegaCanvas?OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())}):(cv.width=W*2,cv.height=H*2,cv.getContext('2d'));}
+  var ctx=fit();
   if(!window.OmegaCanvas)ctx.scale(2,2);
   var t=0,paused=false,speed=1,frameId=0,buildings=[];
   for(var i=0;i<60;i++){
-    buildings.push({x:Math.random()*W,h:20+Math.random()*120,w:6+Math.random()*22,
+    buildings.push({xf:Math.random(),h:20+Math.random()*120,w:6+Math.random()*22,
       col:Math.random()>0.7?(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'):Math.random()>0.5?(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'):'rgba(201,168,76,0.3)',
       speed:0.0005+Math.random()*0.001});
   }
@@ -270,7 +271,7 @@ function drawCity(){
     ctx.fillText('Ω',0,0);ctx.shadowBlur=0;ctx.restore();
     buildings.sort(function(a,b){return a.h-b.h;});
     buildings.forEach(function(b,i){
-      var bx=b.x,by=H,bh=b.h*(0.8+0.2*Math.sin(t*b.speed*100+i));
+      var bx=b.xf*W,by=H,bh=b.h*(0.8+0.2*Math.sin(t*b.speed*100+i));
       ctx.fillStyle=b.col.includes('rgba')?b.col:b.col+'33';
       ctx.fillRect(bx-b.w/2,by-bh,b.w,bh);
       ctx.fillStyle=b.col.includes('rgba')?'rgba(201,168,76,0.6)':b.col+'bb';
@@ -284,6 +285,13 @@ function drawCity(){
     frameId=requestAnimationFrame(frame);
   }
   frame();
+  /* The page is hidden until the approval guard lifts, so the first measure falls back to 600 and the box then grows
+     (1.45x stretch at 868 px, CLAUDE.md 8.1 class 3). Re-measure the canvas's own box and refit; the one loop keeps running. */
+  if(window.ResizeObserver)new ResizeObserver(function(){
+    var w=cv.clientWidth,h=cv.clientHeight;
+    if(!w||!h||(w===W&&h===H))return;
+    W=w;H=h;ctx=fit();if(!window.OmegaCanvas)ctx.scale(2,2);
+  }).observe(cv);
   var play=document.getElementById('city-play');
   var speedControl=document.getElementById('city-speed');
   var reset=document.getElementById('city-reset');

@@ -1114,6 +1114,7 @@
   "prof_portfolio_matrix_coord_sub": "المحور أ / ب / ج",
   "prof_portfolio_perf_title": "أداء المحفظة",
   "prof_portfolio_perf_badge": "منحنى مباشر",
+  "prof_portfolio_perf_empty": "لا يوجد سجل كافٍ بعد — يظهر المنحنى بعد قراءتين يوميتين.",
   "prof_portfolio_ath_label": "أعلى مستوى تاريخي",
   "prof_portfolio_phase_label": "الطور الحالي",
   "prof_portfolio_events_label": "أحداث التطور",

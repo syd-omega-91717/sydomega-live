@@ -1114,6 +1114,7 @@
   "prof_portfolio_matrix_coord_sub": "Eje A / B / C",
   "prof_portfolio_perf_title": "Rendimiento de la cartera",
   "prof_portfolio_perf_badge": "CURVA EN VIVO",
+  "prof_portfolio_perf_empty": "Aún no hay historial suficiente: la curva aparece tras dos lecturas diarias.",
   "prof_portfolio_ath_label": "Máximo histórico",
   "prof_portfolio_phase_label": "Fase actual",
   "prof_portfolio_events_label": "Eventos de evolución",

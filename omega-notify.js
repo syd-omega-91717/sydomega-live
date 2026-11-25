@@ -42,6 +42,14 @@
     badge.textContent=n>99?'99+':n;
     badge.setAttribute('aria-label',n+' unread notifications. Open notification centre.');
     badge.style.display=n>0?'flex':'none';
+    /* The badge is fixed at the top-right, where the page's own top row (the breadcrumb tabs) runs edge to edge on a phone; it covered the
+       last tab (at any width: the bar pins to the top once the page scrolls). While it shows, that row gets a right margin that clears it. */
+    if(n>0)document.documentElement.setAttribute('data-omega-notif','1');else document.documentElement.removeAttribute('data-omega-notif');
+    if(!document.getElementById('omega-notif-gutter')){
+      var gs=document.createElement('style');gs.id='omega-notif-gutter';
+      gs.textContent='html[data-omega-notif] .omega-workspace{margin-right:68px}';
+      (document.head||document.documentElement).appendChild(gs);
+    }
   }
 
   /* ── TOAST ───────────────────────────────────────────────────── */

@@ -63,6 +63,16 @@ Each was read against the real pages, not the similarity score. The earlier tabl
 | `grid` + `levels` + `gates` | Not near-identical. `grid` is the member's position on the 12x12 lattice, `levels` states the lattice-count canon (12 x 12 = 144 intersections, 729 nodes each, 104,976 total, the 28 x 28 Kings expansion) and the axis-to-level mapping, `gates` mounts the 3-D corridor and keeps an attempt log. A merge would make whoever ports it decide which canon numbers survive. | An owner ruling on those canon numbers. |
 | `movies` + `series` into `cinema` | They describe the same "12 Films, 12 Series" Sovereign list, so merging them would not make the two film universes agree; it would put the disagreement on one page. | The decision in "Two parallel film universes" below. |
 
+### Decision 2026-11-25: the two film catalogues stay separate, by audience
+
+| | Sovereign list (`cinema`, `movies`, `series`, `trailers`, `universe`, `chronicle`) | Studio Library (`studio-library`, `config/omega-studio-registry.json`) |
+|---|---|---|
+| Who sees it | members | owner only: the library arrives only from the owner-only `studio-library` function, and a refusal is shown, not swallowed (`omega-studio-library.js:1`, `:244`) |
+| Status | tied to the 12 signs, gods and agents | working canon: the registry carries `approvalStatuses` and a `fictionNote` |
+| Size | 12 films, 12 series | 7 franchises, 26 films |
+
+Neither is retired and they are not mapped onto each other: a member never sees the Studio list, so the two cannot disagree in front of a member. **Do not call the Sovereign list "the canon" in member copy.** `movies` + `series` into `cinema` stays unmerged because `movies` carries 13 hover-video previews and `series` one, and no headless run can show whether they play; merge only once they can be checked on a real device. **This flips** if the Studio canon is ever shown to members: the two lists must be reconciled before that ships.
+
 ## Could merge, but decide first
 - `publishing` + `studio`: same `publications` table; one drafts, the other commits. Merge only if members confuse them.
 - `agents` + `sovereign-ai`, `archive` + `order` + `govern`: similar layout, different jobs; the last three are section hubs and should stay hubs.

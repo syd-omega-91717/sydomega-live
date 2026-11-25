@@ -1114,6 +1114,7 @@
   "prof_portfolio_matrix_coord_sub": "अक्ष A / B / C",
   "prof_portfolio_perf_title": "पोर्टफ़ोलियो प्रदर्शन",
   "prof_portfolio_perf_badge": "लाइव वक्र",
+  "prof_portfolio_perf_empty": "अभी पर्याप्त इतिहास नहीं है — दो दैनिक रीडिंग के बाद वक्र दिखेगा।",
   "prof_portfolio_ath_label": "सर्वकालिक उच्च",
   "prof_portfolio_phase_label": "वर्तमान चरण",
   "prof_portfolio_events_label": "विकास घटनाएँ",

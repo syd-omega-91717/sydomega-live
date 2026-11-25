@@ -221,11 +221,16 @@ class Wave6Profile(unittest.TestCase):
         i = self.SRC.index("function drawAchBadge(cv,sym,col){")
         self.assertIn("OmegaCanvas.fitAttr(cv)", self.SRC[i:i + 400])
 
-    def test_the_portfolio_chart_is_untouched_and_still_flagged(self):
-        """It draws a hard-coded series under 'LIVE CURVE' (CLAUDE.md 8.1 class 9); making it sharper would polish fabricated data. GAP_ANALYSIS.md tracks it."""
-        self.assertIn("canvas.width=canvas.offsetWidth*2;canvas.height=canvas.offsetHeight*2;", self.SRC)
-        self.assertIn("const pts=[2.1,2.8,3.2,2.9,4.1,4.8,5.2,5.9,6.4,7.1,7.8,8.2,8.7,9.0,9.0,9.0];", self.SRC)
-        self.assertIn("perf-canvas", (ROOT / "GAP_ANALYSIS.md").read_text(encoding="utf-8"))
+    def test_the_portfolio_chart_draws_real_history_not_a_fabricated_series(self):
+        """CLAUDE.md 8.1 class 9: the curve was a hard-coded array under 'LIVE CURVE'. It now reads leaderboard_snapshots and draws nothing below two readings."""
+        self.assertNotIn("const pts=[2.1,2.8", self.SRC)
+        self.assertNotIn("9.9.9 APEX", self.SRC)
+        self.assertNotIn("canvas.width=canvas.offsetWidth*2", self.SRC)
+        self.assertIn("from('leaderboard_snapshots').select('snapshot_date,authority')", self.SRC)
+        self.assertIn("if(sn.error)", self.SRC, "a failed read must not render as data")
+        self.assertIn("series.length>=2", self.SRC)
+        self.assertIn("OmegaCanvas.fit(canvas,cssW,cssH)", self.SRC)
+        self.assertIn("new ResizeObserver(draw).observe(canvas)", self.SRC, "hidden pane: measure when shown")
 
     def test_the_genealogy_tree_was_left_alone_until_a_harness_reaches_it(self):
         self.assertIn("const W=cv.offsetWidth||800, H=240; cv.width=W*2; cv.height=H*2;", self.SRC)

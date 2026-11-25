@@ -1191,6 +1191,7 @@ var T_EN={
 "prof_portfolio_matrix_coord_sub":"Axis A / B / C",
 "prof_portfolio_perf_title":"Portfolio Performance",
 "prof_portfolio_perf_badge":"LIVE CURVE",
+"prof_portfolio_perf_empty":"Not enough history yet — a curve appears after two daily readings.",
 "prof_portfolio_ath_label":"All-Time High",
 "prof_portfolio_phase_label":"Current Phase",
 "prof_portfolio_events_label":"Evolution Events",

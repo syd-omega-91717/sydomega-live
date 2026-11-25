@@ -810,6 +810,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -887,6 +888,7 @@
           "/approvals.js",
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -1438,6 +1440,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -2567,6 +2570,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-living-city.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -3537,6 +3541,7 @@
           "/bg.js",
           "/nav.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-cosmos-native.js",
           "/omega-demo-video.js",
           "/omega-esc.js",
@@ -4747,6 +4752,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -5395,6 +5401,7 @@
           "/family-tree.js",
           "/nav.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-demo-video.js",
           "/omega-esc.js",
           "/omega-morph.js",
@@ -7724,6 +7731,7 @@
           "/bg.js",
           "/nav.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-demo-video.js",
           "/omega-honors-vault.js",
           "/omega-morph.js",
@@ -7941,6 +7949,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -8380,6 +8389,7 @@
           "/bg.js",
           "/nav.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-demo-video.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -9846,6 +9856,7 @@
           "/bg.js",
           "/nav.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-content-fabric.js",
           "/omega-demo-video.js",
           "/omega-esc.js",
@@ -11753,6 +11764,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-demo-video.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
@@ -12099,6 +12111,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -12447,6 +12460,7 @@
           "/bg.js",
           "/nav.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-demo-video.js",
           "/omega-esc.js",
           "/omega-identity-core.js",
@@ -12460,6 +12474,7 @@
           "certificates",
           "character_records",
           "evolution_events",
+          "leaderboard_snapshots",
           "profiles"
         ],
         "supabase_rpcs": [
@@ -14745,6 +14760,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-sparkline.js",
           "/omega-speed-insights-init.js"
@@ -15380,6 +15396,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-esc.js",
           "/omega-finance-notice.js",
           "/omega-morph.js",
@@ -15887,6 +15904,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -16091,6 +16109,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js",
           "/omega-vault-native.js"

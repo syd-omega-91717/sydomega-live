@@ -111,6 +111,18 @@
    ]
   },
   {
+   "a": "achieve",
+   "b": "profile",
+   "weight": 4,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:certificates",
+    "table:evolution_events",
+    "table:leaderboard_snapshots",
+    "table:task_completions"
+   ]
+  },
+  {
    "a": "dashboard",
    "b": "intel",
    "weight": 4,
@@ -131,17 +143,6 @@
     "rpc:get_platform_flag",
     "table:evolution_events",
     "table:omega_platform_events",
-    "table:task_completions"
-   ]
-  },
-  {
-   "a": "achieve",
-   "b": "profile",
-   "weight": 3,
-   "shared_pages": [],
-   "shared_relations": [
-    "table:certificates",
-    "table:evolution_events",
     "table:task_completions"
    ]
   },
@@ -252,6 +253,16 @@
    "shared_pages": [],
    "shared_relations": [
     "table:omega_member_knowledge_loom",
+    "table:task_completions"
+   ]
+  },
+  {
+   "a": "govern",
+   "b": "profile",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:leaderboard_snapshots",
     "table:task_completions"
    ]
   },
@@ -522,15 +533,6 @@
   {
    "a": "govern",
    "b": "media",
-   "weight": 1,
-   "shared_pages": [],
-   "shared_relations": [
-    "table:task_completions"
-   ]
-  },
-  {
-   "a": "govern",
-   "b": "profile",
    "weight": 1,
    "shared_pages": [],
    "shared_relations": [

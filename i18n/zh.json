@@ -1114,6 +1114,7 @@
   "prof_portfolio_matrix_coord_sub": "轴 A / B / C",
   "prof_portfolio_perf_title": "投资组合表现",
   "prof_portfolio_perf_badge": "实时曲线",
+  "prof_portfolio_perf_empty": "历史数据尚不足 — 有两次每日读数后将显示曲线。",
   "prof_portfolio_ath_label": "历史最高",
   "prof_portfolio_phase_label": "当前阶段",
   "prof_portfolio_events_label": "演化事件",

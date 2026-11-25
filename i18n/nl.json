@@ -1114,6 +1114,7 @@
   "prof_portfolio_matrix_coord_sub": "As A / B / C",
   "prof_portfolio_perf_title": "Portefeuilleprestatie",
   "prof_portfolio_perf_badge": "LIVE CURVE",
+  "prof_portfolio_perf_empty": "Nog niet genoeg geschiedenis — na twee dagelijkse metingen verschijnt een curve.",
   "prof_portfolio_ath_label": "Hoogste stand ooit",
   "prof_portfolio_phase_label": "Huidige fase",
   "prof_portfolio_events_label": "Evolutiegebeurtenissen",

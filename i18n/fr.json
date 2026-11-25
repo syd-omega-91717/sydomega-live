@@ -1114,6 +1114,7 @@
   "prof_portfolio_matrix_coord_sub": "Axe A / B / C",
   "prof_portfolio_perf_title": "Performance du portefeuille",
   "prof_portfolio_perf_badge": "COURBE EN DIRECT",
+  "prof_portfolio_perf_empty": "Historique insuffisant — une courbe apparaît après deux relevés quotidiens.",
   "prof_portfolio_ath_label": "Sommet historique",
   "prof_portfolio_phase_label": "Phase actuelle",
   "prof_portfolio_events_label": "Événements d'évolution",

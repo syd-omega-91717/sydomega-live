@@ -840,10 +840,11 @@ function frame(){ctx.clearRect(0,0,120,120);
         <div class="panel-body">
           <div class="perf-chart">
             <canvas id="perf-canvas" class="perf-canvas"></canvas>
+            <div id="perf-empty" data-i18n="prof_portfolio_perf_empty" style="display:none;position:relative;margin-top:-140px;height:140px;align-items:center;justify-content:center;text-align:center;padding:0 1rem;color:var(--muted);font-family:'Courier Prime',monospace;font-size:var(--fs-1,12px)">Not enough history yet — a curve appears after two daily readings.</div>
           </div>
           <div style="display:flex;gap:2rem;margin-top:.5rem">
-            <div><div class="stat-label" data-i18n="prof_portfolio_ath_label">All-Time High</div><div style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:var(--fs-2,14px)">9.9.9 APEX</div></div>
-            <div><div class="stat-label" data-i18n="prof_portfolio_phase_label">Current Phase</div><div style="font-family:'Courier Prime',monospace;color:var(--cyan);font-size:var(--fs-2,14px)">PHASE 0</div></div>
+            <div><div class="stat-label" data-i18n="prof_portfolio_ath_label">All-Time High</div><div style="font-family:'Courier Prime',monospace;color:var(--gold);font-size:var(--fs-2,14px)" id="perf-ath">—</div></div>
+            <div><div class="stat-label" data-i18n="prof_portfolio_phase_label">Current Phase</div><div style="font-family:'Courier Prime',monospace;color:var(--cyan);font-size:var(--fs-2,14px)" id="perf-phase">—</div></div>
             <div><div class="stat-label" data-i18n="prof_portfolio_events_label">Evolution Events</div><div style="font-family:'Courier Prime',monospace;color:var(--green);font-size:var(--fs-2,14px)" id="ev-count">0</div></div>
           </div>
         </div>
@@ -2342,6 +2343,16 @@ async function bootPortfolioExtra(){
   document.getElementById('port-coord').textContent = '('+a.toFixed(2)+', '+b.toFixed(2)+', '+c.toFixed(2)+')';
   document.getElementById('port-auth').textContent = (d.is_owner ? '\u25B2 Apex -- Authority 27.8367' : ('\u25B2 Authority '+auth.toFixed(2)+' / 27.8367'));
   try{
+    const ph=await sb.from('profiles').select('matrix_phase').eq('id',sess.user.id).maybeSingle();
+    const phEl=document.getElementById('perf-phase');
+    if(!ph.error && ph.data && ph.data.matrix_phase!=null && phEl) phEl.textContent='PHASE '+ph.data.matrix_phase;
+  }catch(e){}
+  try{
+    const sn=await sb.from('leaderboard_snapshots').select('snapshot_date,authority').eq('user_id',sess.user.id).order('snapshot_date',{ascending:true}).limit(365);
+    if(sn.error){ if(window.__perfSet) window.__perfSet(null); }
+    else if(window.__perfSet) window.__perfSet((sn.data||[]).map(function(r){return Number(r.authority);}).filter(function(v){return isFinite(v);}));
+  }catch(e){ if(window.__perfSet) window.__perfSet(null); }
+  try{
     const evc=await sb.from('evolution_events').select('id',{count:'exact',head:true}).eq('user_id',sess.user.id);
     const evEl=document.getElementById('ev-count');
     if(evEl) evEl.textContent=(evc.count||0).toLocaleString();
@@ -2386,34 +2397,52 @@ requestAnimationFrame(draw);
 }draw();
 })();
 
-// Performance chart
+// Performance chart: the member's real authority history (leaderboard_snapshots)
 (function(){
 const canvas=document.getElementById('perf-canvas');
 if(!canvas)return;
 const ctx=canvas.getContext('2d');
-canvas.width=canvas.offsetWidth*2;canvas.height=canvas.offsetHeight*2;
-ctx.scale(2,2);
-const W=canvas.offsetWidth,H=canvas.offsetHeight;
-const pts=[2.1,2.8,3.2,2.9,4.1,4.8,5.2,5.9,6.4,7.1,7.8,8.2,8.7,9.0,9.0,9.0];
-const minV=1,maxV=10;
-function toY(v){return H-((v-minV)/(maxV-minV))*(H-20)-10}
-function toX(i){return(i/(pts.length-1))*W}
-// Area fill
-ctx.beginPath();ctx.moveTo(toX(0),H);
-for(let i=0;i<pts.length;i++)ctx.lineTo(toX(i),toY(pts[i]));
-ctx.lineTo(toX(pts.length-1),H);ctx.closePath();
-const grad=ctx.createLinearGradient(0,0,0,H);
-grad.addColorStop(0,'rgba(201,168,76,0.25)');grad.addColorStop(1,'rgba(201,168,76,0)');
-ctx.fillStyle=grad;ctx.fill();
-// Line
-ctx.beginPath();ctx.moveTo(toX(0),toY(pts[0]));
-for(let i=1;i<pts.length;i++)ctx.lineTo(toX(i),toY(pts[i]));
-ctx.strokeStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.lineWidth=1.5;ctx.stroke();
-// Apex marker
-const last=pts.length-1;
-ctx.beginPath();ctx.arc(toX(last),toY(pts[last]),4,0,Math.PI*2);
-ctx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');ctx.fill();
-ctx.fillStyle='rgba(201,168,76,0.3)';ctx.beginPath();ctx.arc(toX(last),toY(pts[last]),8,0,Math.PI*2);ctx.fill();
+let series=null;
+function gold(){return getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C';}
+function draw(){
+  const cssW=canvas.clientWidth,cssH=canvas.clientHeight;
+  if(!cssW||!cssH)return;
+  const R=window.OmegaCanvas&&OmegaCanvas.fit(canvas,cssW,cssH);
+  if(!R){canvas.width=cssW*2;canvas.height=cssH*2;ctx.setTransform(2,0,0,2,0,0);}
+  const W=cssW,H=cssH;
+  ctx.clearRect(0,0,W,H);
+  const empty=document.getElementById('perf-empty');
+  const ok=series&&series.length>=2;
+  if(empty)empty.style.display=ok?'none':'flex';
+  if(!ok)return;
+  let lo=Math.min.apply(null,series),hi=Math.max.apply(null,series);
+  if(hi-lo<1e-9){lo-=1;hi+=1;}
+  const pad=(hi-lo)*0.1;lo-=pad;hi+=pad;
+  const toY=function(v){return H-((v-lo)/(hi-lo))*(H-20)-10;};
+  const toX=function(i){return (i/(series.length-1))*W;};
+  const g=gold();
+  ctx.beginPath();ctx.moveTo(toX(0),H);
+  for(let i=0;i<series.length;i++)ctx.lineTo(toX(i),toY(series[i]));
+  ctx.lineTo(toX(series.length-1),H);ctx.closePath();
+  const grad=ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'rgba(201,168,76,0.25)');grad.addColorStop(1,'rgba(201,168,76,0)');
+  ctx.fillStyle=grad;ctx.fill();
+  ctx.beginPath();ctx.moveTo(toX(0),toY(series[0]));
+  for(let i=1;i<series.length;i++)ctx.lineTo(toX(i),toY(series[i]));
+  ctx.strokeStyle=g;ctx.lineWidth=1.5;ctx.stroke();
+  const last=series.length-1;
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(toX(last),toY(series[last]),4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(201,168,76,0.3)';ctx.beginPath();ctx.arc(toX(last),toY(series[last]),8,0,Math.PI*2);ctx.fill();
+}
+window.__perfSet=function(s){
+  series=Array.isArray(s)?s:null;
+  const ath=document.getElementById('perf-ath');
+  if(ath)ath.textContent=(series&&series.length)?Math.max.apply(null,series).toFixed(2):'\u2014';
+  draw();
+};
+// the Portfolio pane is hidden at load: measure when it is shown, never before (CLAUDE.md 8.1 class 3)
+if(window.ResizeObserver)new ResizeObserver(draw).observe(canvas);
+draw();
 })();
 
 // Real evolution-events count (was a fabricated random-incrementing counter)

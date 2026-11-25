@@ -287,7 +287,7 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
     var PHI=1.6180339887,EU=2.7182818285;
     var a=Number(pr.is_owner?9:pr.axis_a||0.001),b=Number(pr.is_owner?9:pr.axis_b||0.001),c=Number(pr.is_owner?9:pr.axis_c||0.001);
     var auth=pr.is_owner?27.8367:Math.sqrt(Math.pow(a,3)+Math.pow(b,3)+Math.pow(c,3))*PHI/EU;
-    if(window.OmegaLadder)window.OmegaLadder.update({auth:auth,a:a,b:b,c:c,sign:pr.sign});
+    if(window.OmegaLadder)window.OmegaLadder.setMember({auth:auth,a:a,b:b,c:c,sign:pr.sign});
   }catch(e){var app=document.getElementById('app');if(app)app.style.display='none';var panel=document.getElementById('access-load-error');if(panel)panel.hidden=false;console.error('[Omega access] session/profile verification failed; page remains locked.',e);}
 })();
 </script>

@@ -259,7 +259,7 @@
   }
   window.OmegaLadder = {
     /* called by the page once the member's profile is read: { auth, a, b, c, sign } */
-    update: function (p) {
+    setMember: function (p) {
       S.auth = Number(p.auth) || 0; S.a = Number(p.a) || 0; S.b = Number(p.b) || 0; S.c = Number(p.c) || 0; S.sign = p.sign || '';
       sid('hdr-auth', S.auth.toFixed(4)); sid('stat-auth', S.auth.toFixed(4)); sid('stat-a', S.a.toFixed(3)); sid('stat-b', S.b.toFixed(3)); sid('stat-c', S.c.toFixed(3));
       sid('g-stat-auth', S.auth.toFixed(4)); sid('g-stat-a', S.a.toFixed(3)); sid('g-stat-b', S.b.toFixed(3)); sid('g-stat-c', S.c.toFixed(3));

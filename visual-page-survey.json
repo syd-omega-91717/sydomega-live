@@ -3942,32 +3942,6 @@
     ]
   },
   {
-    "page": "payments.html",
-    "title": "Ω SYD OMEGA 91717 — Payments",
-    "h1": "",
-    "body_words": 269,
-    "cards": 43,
-    "sections": 5,
-    "tabs": 4,
-    "buttons": 0,
-    "links": 0,
-    "forms": 0,
-    "images": 0,
-    "small_font_declarations": 0,
-    "borderline_font_declarations": 8,
-    "dense_tracking_declarations": 0,
-    "fixed_width_declarations": 0,
-    "viewport_geometry_declarations": 0,
-    "nowrap_declarations": 0,
-    "fixed_position_declarations": 0,
-    "long_unbroken_labels": 0,
-    "duplicate_title": false,
-    "focus_score": 100,
-    "findings": [
-      "CONTRACT: no visible/semantic level-1 heading"
-    ]
-  },
-  {
     "page": "pending.html",
     "title": "Ω SYD OMEGA 91717 — Access Pending",
     "h1": "",

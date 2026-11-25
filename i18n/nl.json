@@ -1102,7 +1102,7 @@
   "prof_access_axis_c": "AS C",
   "prof_portfolio_hero_eyebrow": "M16 // INVESTERINGSMOTOR",
   "prof_portfolio_hero_title": "Portefeuillecommando",
-  "prof_portfolio_hero_sub": "Het door het platform vermelde model voor activaspreiding -- tokenreserves, edelmetalen en investeringsintelligentie. Referentiemodel; het volgen van de persoonlijke portefeuille is sluimerend totdat de tokeneconomie live is (zie /payments.html).",
+  "prof_portfolio_hero_sub": "Het door het platform vermelde model voor activaspreiding -- tokenreserves, edelmetalen en investeringsintelligentie. Referentiemodel; het volgen van de persoonlijke portefeuille is sluimerend totdat de tokeneconomie live is (zie /subscriptions.html#payments).",
   "prof_portfolio_total_value_sub": "Persoonlijke tracking sluimerend",
   "prof_portfolio_total_value_delta": "▲ Tokeneconomie nog niet live",
   "prof_portfolio_token_supply_sub": "Totaal aantal Omega-tokens (referentie)",

@@ -110,7 +110,6 @@
       "capabilities": [
         "wallet",
         "subscriptions",
-        "payments",
         "ledger",
         "blockchain",
         "advertising",

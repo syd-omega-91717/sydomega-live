@@ -6,12 +6,12 @@
     "config/omega-page-contracts.json",
     "nav.js"
   ],
-  "page_count": 241,
+  "page_count": 240,
   "hub_count": 14,
   "classification_counts": {
     "AMBIGUOUS": 10,
     "CANDIDATE_MERGE_PANEL": 198,
-    "KEEP_SEPARATE": 19,
+    "KEEP_SEPARATE": 18,
     "UNMAPPED": 14
   },
   "navigation_duplicate_keys": {},
@@ -2372,20 +2372,6 @@
       "protected_hub": null,
       "classification": "AMBIGUOUS",
       "rationale": "Navigation places this page in a legacy archive group; canonical identity/order ownership requires review.",
-      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
-      "authorization_state": "UNVERIFIED",
-      "truth_states": [
-        "UNVERIFIED"
-      ]
-    },
-    {
-      "page_id": "payments",
-      "path": "payments.html",
-      "navigation_section": "vault",
-      "candidate_hub": null,
-      "protected_hub": "vault.html",
-      "classification": "KEEP_SEPARATE",
-      "rationale": "System, identity, legal, financial or owner-control route; retain a dedicated route until its independent access and lifecycle contracts are verified.",
       "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
       "authorization_state": "UNVERIFIED",
       "truth_states": [

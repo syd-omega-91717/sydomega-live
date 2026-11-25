@@ -30,7 +30,7 @@ const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok
   const pw = loadPW(); let browser;
   if (pw) for (const exe of [undefined, '/opt/pw-browsers/chromium', '/opt/pw-browsers/chromium-1243/chrome-linux64/chrome']) { try { browser = await pw.chromium.launch(exe ? { executablePath: exe } : {}); break; } catch (e) { } }
   if (!browser || !STUB) { console.log('SKIPPED: no playwright/browser (or the harness Supabase stub) available'); process.exit(process.env.OMEGA_REQUIRE_BROWSER ? 1 : 0); }
-  check('the module is loaded by at least the thirteen money pages', ONLY || PAGES.length >= 13, PAGES.length);
+  check('the module is loaded by at least the twelve money pages (payments.html was merged into subscriptions.html)', ONLY || PAGES.length >= 12, PAGES.length);
 
   async function open(page, viewport) {
     const ctx = await browser.newContext({ serviceWorkers: 'block', viewport });

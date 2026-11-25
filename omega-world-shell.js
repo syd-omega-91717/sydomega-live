@@ -45,7 +45,7 @@ label: 'COSMOS', pages: ['cosmos', 'elements', 'horoscope', 'pantheons', 'agents
 }, universe: {
 label: 'UNIVERSE', pages: ['media', 'cinema', 'series', 'trailers', 'universe', 'hall', 'city', 'ledger', 'feed', 'publications']
 }, vault: {
-label: 'VAULT', pages: ['vault', 'wallet', 'treasury', 'blockchain', 'payments', 'subscriptions', 'marketplace', 'portfolio', 'income', 'investment', 'budget', 'expenses', 'wealth', 'advertising', 'sovereign-covenant']
+label: 'VAULT', pages: ['vault', 'wallet', 'treasury', 'blockchain', 'subscriptions', 'marketplace', 'portfolio', 'income', 'investment', 'budget', 'expenses', 'wealth', 'advertising', 'sovereign-covenant']
 }, order: {
 label: 'ORDER', pages: ['family', 'bloodline', 'heritage', 'sovereigns', 'factions', 'approvals', 'interface-omni']
 }, services: {

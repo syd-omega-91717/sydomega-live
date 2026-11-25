@@ -41,7 +41,6 @@ PROTECTED_HUB_BY_STEM = {
     "account": "profile.html",
     "kyc": "profile.html",
     "terms": "govern.html",
-    "payments": "vault.html",
     "subscriptions": "vault.html",
     "wallet": "invest.html",
     "portfolio": "invest.html",
@@ -60,7 +59,7 @@ SPECIAL = {
     # Keep security, identity, legal, financial and owner-control lifecycles
     # as independent top-level routes until their dedicated contracts are proven.
     "account", "approvals", "contracts", "control-center", "control-plane", "graph-admin",
-    "kyc", "payments", "portfolio", "privacy", "security", "settings",
+    "kyc", "portfolio", "privacy", "security", "settings",
     "subscriptions", "terms", "treasury", "wallet",
 }
 AMBIGUOUS_SECTIONS = {"archive"}

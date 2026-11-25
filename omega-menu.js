@@ -52,7 +52,7 @@
       ['\u25C7', 'Portfolio', '/profile.html#portfolio'],
       ['\u2318', 'Blockchain', '/blockchain.html'],
       ['\u25C8', 'Income', '/income.html'],
-      ['\u2740', 'Payments', '/payments.html'],
+      ['\u2740', 'Payments', '/subscriptions.html#payments'],
       ['\u25B3', 'Subscriptions', '/subscriptions.html']
     ]],
     ['THE ORDER', '#C4453C', [

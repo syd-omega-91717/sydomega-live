@@ -31,7 +31,6 @@ VAULT_SECTOR = {
     "subscriptions.html",
     "marketplace.html",
     "income.html",
-    "payments.html",
     "ledger.html",
     "settings.html",
     "advertising.html",

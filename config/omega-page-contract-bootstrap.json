@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 241,
-  "open_task_count": 3255,
+  "page_count": 240,
+  "open_task_count": 3242,
   "pages": [
     {
       "page_id": "404",
@@ -8485,7 +8485,7 @@
           "buttons": 0,
           "forms": 0,
           "inputs": 0,
-          "links": 17
+          "links": 16
         },
         "media_counts": {
           "images": 0,
@@ -11674,84 +11674,6 @@
         "PAGE::passport::MISSING::TRACEABILITY",
         "PAGE::passport::MISSING::TRUTH_STATES",
         "PAGE::passport::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
-      "page_id": "payments",
-      "path": "payments.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Payments",
-        "h1": [],
-        "scripts": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-finance-notice.js",
-          "/omega-morph.js",
-          "/omega-speed-insights-init.js"
-        ],
-        "supabase_tables": [
-          "profiles"
-        ],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [
-          {
-            "domain": "Payments",
-            "primary_role": "Transaction processing"
-          }
-        ],
-        "interactive_counts": {
-          "buttons": 8,
-          "forms": 0,
-          "inputs": 0,
-          "links": 1
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [
-        {
-          "domain": "Payments",
-          "primary_role": "Transaction processing"
-        }
-      ],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::payments::MISSING::ACCESSIBILITY",
-        "PAGE::payments::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::payments::MISSING::AUTHORIZATION",
-        "PAGE::payments::MISSING::DOMAIN",
-        "PAGE::payments::MISSING::EVENTS",
-        "PAGE::payments::MISSING::FAILURE_PATHS",
-        "PAGE::payments::MISSING::PRIMARY_ROLE",
-        "PAGE::payments::MISSING::PURPOSE",
-        "PAGE::payments::MISSING::RESPONSIVE",
-        "PAGE::payments::MISSING::TASKS",
-        "PAGE::payments::MISSING::TRACEABILITY",
-        "PAGE::payments::MISSING::TRUTH_STATES",
-        "PAGE::payments::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
@@ -15402,6 +15324,7 @@
           "/omega-esc.js",
           "/omega-finance-notice.js",
           "/omega-morph.js",
+          "/omega-payments-ledger.js",
           "/omega-speed-insights-init.js"
         ],
         "supabase_tables": [
@@ -15416,7 +15339,7 @@
           }
         ],
         "interactive_counts": {
-          "buttons": 4,
+          "buttons": 9,
           "forms": 0,
           "inputs": 0,
           "links": 0

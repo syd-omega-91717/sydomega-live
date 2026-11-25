@@ -43,6 +43,31 @@
 .pay-amt{font-family:var(--M);font-size:12px;font-weight:700}
 .pay-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid}
 @media(max-width:760px){.status-band{grid-template-columns:1fr}.sb-center{display:none}.sb-left{border-right:none;border-bottom:1px solid var(--line)}.sb-right{border-left:none;text-align:left}}
+.method-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.method-card{border:1px solid var(--line);border-top:2px solid var(--mc,var(--gold));background:var(--surface);padding:14px}
+.mc-icon{font-size:20px;margin-bottom:8px}
+.mc-name{font-family:var(--D);font-size:12px;margin-bottom:5px}
+.mc-desc{font-size:12px;line-height:1.6;color:var(--muted);margin-bottom:8px}
+.mc-badge{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 8px;border:1px solid var(--line);display:inline-block}
+.mc-badge.ready{color:var(--cyan);border-color:rgba(0,229,255,.3)}
+.mc-badge.wired{color:var(--muted)}
+.mc-badge.disabled{color:var(--muted);border-color:var(--line);background:rgba(138,134,118,.06)}
+.tx-filter{display:flex;gap:0;border:1px solid var(--line);width:fit-content;margin-bottom:12px}
+.tx-filter button{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 14px;cursor:pointer;color:var(--muted);background:none;border:none;border-right:1px solid var(--line)}
+.tx-filter button:last-child{border-right:none}
+.tx-filter button.active{color:var(--gold);background:rgba(201,168,76,.08)}
+#tx-table .tbl-row{font-family:var(--M);font-size:12px;color:var(--muted)}
+#tx-table .tbl-row span:first-child{color:var(--solar)}
+.tx-amount{font-family:var(--D);font-size:var(--fs-2,14px)}
+.tx-in{color:var(--green)}
+.tx-out{color:var(--crim)}
+.tx-pending{color:var(--solar)}
+.tx-type{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:var(--solar)}
+.tx-status{font-family:var(--M);font-size:12px;letter-spacing:1.5px;padding:2px 7px;border:1px solid var(--line)}
+.st-completed{color:var(--green);border-color:rgba(63,178,127,.4)}
+.st-pending{color:var(--solar);border-color:rgba(226,200,109,.4)}
+.st-failed{color:var(--crim);border-color:rgba(139,0,0,.4)}
+.notice-bar{border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.04);border-left:3px solid var(--cyan);padding:12px 16px;font-family:var(--M);font-size:12px;color:var(--cyan);letter-spacing:.5px;margin-bottom:16px}
 </style>
 <script src="/omega-canvas-hidpi.js"></script>
 </head>
@@ -76,6 +101,7 @@
   <button class="tab-btn active" onclick="setTab('plan')">MY PLAN</button>
   <button class="tab-btn" onclick="setTab('tiers')">TIERS &amp; UPGRADE</button>
   <button class="tab-btn" onclick="setTab('payments')">PAYMENT HISTORY</button>
+  <button class="tab-btn" data-tab-open="methods">METHODS</button>
   <button class="tab-btn" onclick="setTab('science')">SCIENCE</button>
 </div>
 
@@ -114,7 +140,47 @@
 
 <div class="tab-panel" id="tab-payments">
   <div class="sechead">PAYMENT HISTORY</div>
-  <div id="payments-list" class="glass" style="padding:0" data-loading></div>
+  <div class="notice-bar" role="status">PAYMENT PROCESSING — DISABLED — Provider settlement, signed-webhook idempotency, ledger reconciliation and the end-to-end test-mode lifecycle are not yet verified. This page will not infer payments from task activity.</div>
+  <div class="sechead">ACCOUNT SUMMARY</div>
+  <div class="kpi-row" data-stagger data-stagger-gap="70" id="kpi-row">
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val" id="kpi-inflow">—</div><div class="kpi-label">TOTAL INFLOW</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">ACTIVE TIER · UNAVAILABLE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">CONSULTANCY · UNAVAILABLE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">MARKETPLACE · UNAVAILABLE</div></div>
+    <div class="kpi-card" data-reveal="fade-up"><div class="kpi-val">—</div><div class="kpi-label">NEXT BILLING · UNAVAILABLE</div></div>
+  </div>
+  <div class="sechead" style="margin-top:16px">UPCOMING</div>
+  <div class="card">
+    <div class="card-title">SUBSCRIPTION RENEWAL</div>
+    <div class="card-body">Renewal scheduling is unavailable until an active subscription and its billing state are verified through the payment provider.</div>
+  </div>
+  <div class="card" style="margin-top:8px">
+    <div class="card-title">CONSULTANCY SESSIONS</div>
+    <div class="card-body">Verified consultancy bookings and invoice records will appear here once their authoritative data source is connected.</div>
+  </div>
+  <div class="sechead">TRANSACTION HISTORY</div>
+  <div class="tx-filter">
+    <button class="active" data-tx="all">ALL</button>
+    <button data-tx="subscriptions">SUBSCRIPTIONS</button>
+    <button data-tx="consultancy">CONSULTANCY</button>
+    <button data-tx="marketplace">MARKETPLACE</button>
+  </div>
+  <div style="overflow-x:auto;border:1px solid var(--line);background:var(--surface)">
+    <div class="tbl-wrap" id="tx-table">
+      <div class="tbl-head" style="grid-template-columns:110px 1.5fr 150px 130px 130px"><span>DATE</span><span>DESCRIPTION</span><span>TYPE</span><span>STATUS</span><span>AMOUNT</span></div>
+      <div id="tx-body"></div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-methods">
+  <div class="sechead">PAYMENT METHODS</div>
+  <div class="method-grid">
+    <div class="method-card card" style="--mc:#9B6BF0"><div class="mc-icon" style="color:#9B6BF0">&#9672;</div><div class="mc-name" style="color:#9B6BF0">STRIPE &mdash; CARD</div><div class="mc-desc">Stripe checkout and signed-webhook code paths exist, but payment processing is disabled. Test-mode settlement, reconciliation, refund and entitlement lifecycles have not yet been verified end to end.</div><span class="mc-badge disabled">DISABLED · TEST-MODE VERIFICATION PENDING</span></div>
+    <div class="method-card card" style="--mc:var(--gold)"><div class="mc-icon" style="color:var(--gold)">&#8383;</div><div class="mc-name" style="color:var(--gold)">CRYPTO WALLET</div><div class="mc-desc">Omega-token, Bitcoin and Ethereum payments are not implemented. The token economy is disabled; no crypto payment can be accepted.</div><span class="mc-badge disabled">NOT IMPLEMENTED</span></div>
+    <div class="method-card card" style="--mc:var(--cyan)"><div class="mc-icon" style="color:var(--cyan)">&#937;</div><div class="mc-name" style="color:var(--cyan)">BANK TRANSFER</div><div class="mc-desc">No bank-transfer provider, settlement feed or reconciliation workflow is connected.</div><span class="mc-badge disabled">NOT INTEGRATED</span></div>
+    <div class="method-card card" style="--mc:var(--green)"><div class="mc-icon" style="color:var(--green)">&#10030;</div><div class="mc-name" style="color:var(--green)">SUBSCRIPTION AUTO-PAY</div><div class="mc-desc">Recurring billing is disabled. A membership tier or access record does not imply a paid renewal.</div><span class="mc-badge disabled">BILLING DISABLED</span></div>
+  </div>
 </div>
 
 <div class="tab-panel" id="tab-science">
@@ -124,6 +190,10 @@
     <div class="card" data-reveal="fade-up"><div class="card-title">AUTHORITY &amp; TIERS</div><div class="card-body">Subscription tier and authority score operate independently. Auth = sqrt(A³+B³+C³)×φ/e measures knowledge, mastery, and contribution — not payment level. A free-tier member with high axis values can outrank a paid subscriber on the leaderboard.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">TRIAL SESSION</div><div class="card-body">Trial members receive a 9-minute 17-second sovereign session window (9.1717 minutes). During this period all platform modules are accessible. A countdown timer appears in the plan card and status band. Upon expiry, the session redirects to the pending approval page.</div></div>
     <div class="card" data-reveal="fade-up"><div class="card-title">PAYMENT PIPELINE</div><div class="card-body">Payment history will query the transactions ledger once payments are activated; that ledger does not exist yet. All amounts in USD. The 9.17% Arbiter commission applies to all marketplace transactions. Payment activation requires KYC/AML compliance — all financial flows are governed by the Arbiter agent (Taurus, Marketplace &amp; Commerce).</div></div>
+    <div class="card"><div class="card-title">STRIPE INTEGRATION</div><div class="card-body">Checkout and signed-webhook source code exists with regression contracts. Live processing is disabled, and a complete Stripe test-mode lifecycle has not yet been verified. No payment, settlement or entitlement is claimed from this code alone.</div></div>
+    <div class="card"><div class="card-title">PLATFORM REWARDS</div><div class="card-body">Progression points are non-cash, non-transferable platform records. Omega-token issuance and token balances are disabled; task, gaming or contribution events do not create money or token claims.</div></div>
+    <div class="card"><div class="card-title">TIER DEFINITIONS &amp; BILLING</div><div class="card-body">Tier definitions and member access are managed separately from billing. Paid upgrades and renewals are disabled; no transaction-log entry is generated until an authoritative provider event and ledger settlement are verified.</div></div>
+    <div class="card"><div class="card-title">FINANCIAL COMPLIANCE</div><div class="card-body">Payment and token features remain disabled. KYC intake is not active; any future regulated payment or economic feature requires counsel-approved licensing, KYC/AML, sanctions, consumer-protection and privacy controls before activation.</div></div>
   </div>
 </div>
 <div data-page-emblem="subscriptions" style="margin:20px auto 0"></div>
@@ -131,9 +201,11 @@
 
 <script>
 function setTab(name){
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['plan','tiers','payments','science'][i]===name);});
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('active',['plan','tiers','payments','methods','science'][i]===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
 }
+/* deep links: /subscriptions#payments, #methods (the retired payments page redirects here) */
+(function(){var h=(location.hash||'').slice(1);if(['plan','tiers','payments','methods','science'].indexOf(h)>-1)setTab(h);})();
 /* The tier ladder has ONE owner: omega-canon.json, read through window.OmegaCanon
    (the same data tierUnlocks() gates features with). This page used to carry its
    own 6-tier copy with different names and prices, and perks that do not exist
@@ -243,13 +315,9 @@ function fmt(d){try{return new Date(d).toLocaleString('en-GB',{day:'2-digit',mon
       var t=c.tier(tierN);
       if(t&&!pr.is_owner){sid('mem-tier',t.name.toUpperCase());sid('plan-tier',t.name.toUpperCase());}
     });
-    /* Payment ledger is intentionally dormant until the existing legal/KYC gate is activated.
-       Do not query an undeclared relation. This is an explicit unavailable state, not an empty ledger. */
-    var ph=document.getElementById('payments-list');
-    if(ph)ph.innerHTML='<div style="font-family:var(--M);font-size:12px;color:var(--muted);padding:14px">PAYMENT LEDGER NOT ACTIVATED. NO TRANSACTION DATA IS CLAIMED UNTIL THE GOVERNED PAYMENT PIPELINE IS DEPLOYED.</div>';
   }catch(e){document.getElementById('app').style.display='flex';console.warn(e);}
 })();
 </script>
 <script src="/bg.js" defer></script>
-<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script><script src="/omega-finance-notice.js" defer></script></body>
+<script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script><script src="/omega-finance-notice.js" defer></script><script src="/omega-payments-ledger.js" defer></script></body>
 </html>

@@ -40,8 +40,8 @@ class Budget(unittest.TestCase):
                     if words(html.unescape(m.group(2))) >= 8)
         self.assertLessEqual(total, 230, total)     # was 354 before the trim (2026-11-23)
 
-    def test_there_are_fifteen_cards_and_each_still_has_a_status_chip(self):
-        self.assertEqual(len(CARDS), 15)
+    def test_there_are_fourteen_cards_and_each_still_has_a_status_chip(self):
+        self.assertEqual(len(CARDS), 14)   # was 15 until payments.html was merged into subscriptions.html
         for href, (title, text, chip) in CARDS.items():
             self.assertTrue(chip.strip(), href)
 
@@ -53,9 +53,8 @@ class Claims(unittest.TestCase):
         "/wealth.html": "not verified balances",
         "/wallet.html": "never platform balances",
         "/revenue.html": "no settlement or paid revenue is claimed",
-        "/payments.html": "no payments are inferred",
         "/expenses.html": "not ledger truth",
-        "/subscriptions.html": "billing are disabled",
+        "/subscriptions.html": "no payments are inferred",
         "/blockchain.html": "no on-chain balance is claimed",
         "/marketplace.html": "not implemented",
         "/advertising.html": "payouts remain disabled pending legal and payment readiness",
@@ -67,7 +66,7 @@ class Claims(unittest.TestCase):
             self.assertIn(needle.lower(), CARDS[href][1].lower(), href)
 
     def test_the_status_chips_are_unchanged_in_meaning(self):
-        for href, needle in {"/blockchain.html": "TOKENS DISABLED", "/payments.html": "DISABLED", "/subscriptions.html": "BILLING DISABLED", "/ad-network.html": "NOT OPERATIONAL",
+        for href, needle in {"/blockchain.html": "TOKENS DISABLED", "/subscriptions.html": "BILLING DISABLED", "/ad-network.html": "NOT OPERATIONAL",
                              "/marketplace.html": "PURCHASE FLOW DISABLED", "/wallet.html": "NO AUTHORITATIVE BALANCE", "/expenses.html": "USER-LOCAL"}.items():
             self.assertIn(needle, CARDS[href][2], href)
 

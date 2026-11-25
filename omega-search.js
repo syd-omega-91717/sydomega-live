@@ -94,7 +94,7 @@
     {t:'OBSERVATORY SRE',d:'Error budgets SLOs incidents Core Web Vitals monitoring',u:'/observatory.html',c:'PAGE'},
     {t:'PANTHEONS',d:'Divine pantheon celestial hierarchy mythology system',u:'/pantheons.html',c:'PAGE'},
     {t:'PASSPORT DIGITAL',d:'Sovereign digital passport identity travel authorization',u:'/passport.html',c:'PAGE'},
-    {t:'PAYMENTS BILLING',d:'Subscription management payment history Stripe billing',u:'/payments.html',c:'PAGE'},
+    {t:'PAYMENTS BILLING',d:'Subscription management payment history Stripe billing',u:'/subscriptions.html#payments',c:'PAGE'},
     {t:'PHASES',d:'Platform evolution phases timeline development stages',u:'/phases.html',c:'PAGE'},
     {t:'PORTFOLIO ASSETS',d:'Asset allocation performance tracker holdings',u:'/portfolio.html',c:'PAGE'},
     {t:'PREDICTION ORACLE',d:'AI forecasting oracle trajectory probability analysis',u:'/prediction.html',c:'PAGE'},

@@ -1,6 +1,6 @@
 {
  "counts": {
-  "excluded-pending-review": 6,
+  "excluded-pending-review": 5,
   "hostable": 217,
   "navigates-away": 10,
   "needs-fix": 0,
@@ -1336,15 +1336,6 @@
    },
    "sha": "a392fdb93ba4",
    "status": "hostable"
-  },
-  "payments": {
-   "measured": {
-    "errors": 0,
-    "text": 752
-   },
-   "reason": "payments: owner review required before hosting in a shell",
-   "sha": "9e22a7d77293",
-   "status": "excluded-pending-review"
   },
   "pending": {
    "measured": {

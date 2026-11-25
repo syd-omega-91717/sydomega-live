@@ -384,19 +384,6 @@ window.OmegaEmblems = (() => {
         <line x1="44" y1="28" x2="44" y2="48" stroke="currentColor" stroke-width="1"/>
       </svg>`
     },
-    'payments.html': {
-      name: 'Card',
-      domain: 'VAULT',
-      color: '--crim',
-      svg: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <rect x="12" y="16" width="40" height="32" rx="2"
-              stroke="currentColor" stroke-width="2" fill="none"/>
-        <line x1="12" y1="28" x2="52" y2="28" stroke="currentColor" stroke-width="1"/>
-        <line x1="12" y1="44" x2="52" y2="44" stroke="currentColor" stroke-width="1"/>
-        <circle cx="48" cy="52" r="2" fill="currentColor"/>
-      </svg>`
-    },
-
     // ORDER Domain (Green color)
     'projects.html': {
       name: 'Project',

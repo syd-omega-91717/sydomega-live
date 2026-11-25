@@ -16,7 +16,7 @@ CODE = re.sub(r"/\*.*?\*/", "", SRC, flags=re.S)
 NAV = (ROOT / "nav.js").read_text(encoding="utf-8")
 TAG = 'src="/omega-finance-notice.js"'
 # Money pages that nav.js files outside its "invest" section but that the commerce contract names as money surfaces.
-EXTRA = {"blockchain", "marketplace", "income", "subscriptions", "payments"}
+EXTRA = {"blockchain", "marketplace", "income", "subscriptions"}
 
 
 def invest_section_pages():
@@ -31,7 +31,7 @@ def tagged_pages():
 class Coverage(unittest.TestCase):
     def test_every_money_page_carries_the_notice_exactly_once(self):
         expected = {s for s in invest_section_pages() if (ROOT / (s + ".html")).exists()} | EXTRA
-        self.assertGreaterEqual(len(expected), 13)   # was 14 until budget.html was merged into expenses.html
+        self.assertGreaterEqual(len(expected), 12)   # was 14 until budget.html was merged into expenses.html, 13 until payments.html into subscriptions.html
         for s in sorted(expected):
             self.assertTrue((ROOT / (s + ".html")).exists(), s + ".html does not exist (update EXTRA)")
             self.assertEqual((ROOT / (s + ".html")).read_text(encoding="utf-8").count(TAG), 1, s)

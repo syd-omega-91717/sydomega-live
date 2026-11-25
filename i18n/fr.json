@@ -1102,7 +1102,7 @@
   "prof_access_axis_c": "AXE C",
   "prof_portfolio_hero_eyebrow": "M16 // MOTEUR D'INVESTISSEMENT",
   "prof_portfolio_hero_title": "Commandement du portefeuille",
-  "prof_portfolio_hero_sub": "Le modèle d'allocation d'actifs annoncé par la plateforme -- réserves de jetons, métaux précieux et intelligence d'investissement. Modèle de référence ; le suivi du portefeuille personnel est dormant jusqu'à l'activation de l'économie de jetons (voir /payments.html).",
+  "prof_portfolio_hero_sub": "Le modèle d'allocation d'actifs annoncé par la plateforme -- réserves de jetons, métaux précieux et intelligence d'investissement. Modèle de référence ; le suivi du portefeuille personnel est dormant jusqu'à l'activation de l'économie de jetons (voir /subscriptions.html#payments).",
   "prof_portfolio_total_value_sub": "Suivi personnel dormant",
   "prof_portfolio_total_value_delta": "▲ Économie de jetons pas encore active",
   "prof_portfolio_token_supply_sub": "Total des jetons Omega (référence)",

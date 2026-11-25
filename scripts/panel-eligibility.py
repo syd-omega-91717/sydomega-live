@@ -76,7 +76,6 @@ STANDALONE_BY_POLICY = {
 # docs/OMEGA_ONE_SHELL_PLAN.md section 10: payments, KYC, consent and privacy stay out until reviewed. Wallet,
 # subscriptions and marketplace handle money and are held to the same rule.
 EXCLUDED_PENDING_REVIEW = {
-    'payments': 'payments: owner review required before hosting in a shell',
     'kyc': 'KYC / identity documents: owner review required before hosting in a shell',
     'privacy': 'privacy controls: owner review required before hosting in a shell',
     'wallet': 'handles money: owner review required before hosting in a shell',

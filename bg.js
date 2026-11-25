@@ -1905,7 +1905,7 @@ if(!document.querySelector('script[data-omega-ctrl]')){var sc2=document.createEl
     kings:'kings',sovereigns:'kings',
     elements:'elements',city:'elements'
   };
-  var ECON={treasury:1,wallet:1,blockchain:1,marketplace:1,portfolio:1,income:1,ledger:1,payments:1,vault:1,contracts:1};
+  var ECON={treasury:1,wallet:1,blockchain:1,marketplace:1,portfolio:1,income:1,ledger:1,vault:1,contracts:1};
   var BROADCAST={marketing:1,social:1,news:1};
 
   function pageKey(){

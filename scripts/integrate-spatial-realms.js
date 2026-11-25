@@ -5,11 +5,10 @@
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
-const files = { gaming:path.join(root,'gaming.html'), cinema:path.join(root,'cinema.html') };
+const files = { gaming:path.join(root,'gaming.html') };
 const navFile = path.join(root,'nav.js');
 const mounts = {
   gaming:'\n<!-- Ω SPATIAL REALM: GAMING — additive mount; functional content remains authoritative -->\n<section class="omega-spatial-realm" data-omega-spatial-realm="gaming" aria-label="Gaming spatial realm"></section>\n',
-  cinema:'\n<!-- Ω SPATIAL REALM: CINEMA — additive mount; functional content remains authoritative -->\n<section class="omega-spatial-realm" data-omega-spatial-realm="cinema" aria-label="Cinema spatial realm"></section>\n'
 };
 function read(f){return fs.readFileSync(f,'utf8');}
 function write(f,s){fs.writeFileSync(f,s,'utf8');}

@@ -26,6 +26,15 @@
 .omv-desc{margin:0;padding:0 12px 8px;font-family:var(--R);font-size:14px;line-height:1.55;color:#B8B6AE}
 .omv-tags{margin:0;padding:0 12px 12px;display:flex;gap:6px;flex-wrap:wrap}
 .omv-tags span{font-family:var(--M);font-size:12px;letter-spacing:1px;padding:2px 7px;border:1px solid rgba(201,168,76,.25);color:#B8B6AE}
+.omv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:10px 0 18px}
+.omv-el,.omv-myth{border:1px solid var(--line);border-top:2px solid var(--omv-c,var(--gold));background:rgba(10,10,15,.5);padding:12px}
+.omv-el-h,.omv-myth-g{font-family:var(--D);font-size:12px;letter-spacing:1px;color:var(--gold);margin-bottom:6px}
+.omv-el-b,.omv-myth-f,.omv-note{font-family:var(--M);font-size:12px;line-height:1.7;color:var(--muted)}
+.omv-sub{font-size:12px;line-height:1.7;color:var(--muted);max-width:640px;margin:6px 0 4px}
+.omv-myth-body{margin-top:8px}.omv-myth-t{font-size:12px;line-height:1.7;color:var(--ink);opacity:.85}
+.omv-myth-a{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--cyan);display:inline-block;margin-top:8px}
+.omv-myth-b{font-family:var(--M);font-size:12px;letter-spacing:1px;cursor:pointer;background:none;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:3px 8px}
+.omv-bad{color:var(--crim)}
 .omv-cap{margin:0;padding:10px 12px 11px;font-family:var(--M);font-size:12px;letter-spacing:2.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .omv-cap b{font-weight:400;color:var(--omv-c)}
 .omv-lb{padding:0;border:1px solid rgba(201,168,76,.35);border-radius:4px;background:#000;color:var(--ink);width:min(1120px,94vw);max-width:94vw;max-height:94vh;overflow:hidden}
@@ -64,6 +73,7 @@
 </style>
 <script src="/omega-spatial-realms.js" data-omega-spatial-realms-js defer></script>
 <script src="/omega-cinematic-audio.js" defer></script>
+<script src="/omega-watch-extras.js" defer></script>
 </head>
 <body>
 <aside id="omega-side" data-page="movies"></aside>
@@ -205,6 +215,16 @@
       <p class="omv-desc">The final sovereign film. The depths of the lattice hold the Omega key. AUTH = 27.8367 required.</p>
       <p class="omv-tags"><span>APEX</span><span>WATER</span></p>
     </figure>
+</section>
+<section id="elements" aria-label="Films by element">
+  <h2 class="mh-h">FILMS BY ELEMENT</h2>
+  <p class="omv-sub">The same twelve concept reels grouped by the element tag each tile carries. Soul, Space, Void and The All are metaphysical elements, class-based and not tied to a single sign or reel, per the platform's own nine-element structure.</p>
+  <div class="omv-grid" id="omv-elements"></div>
+</section>
+<section id="olympians" aria-label="The real Olympians">
+  <h2 class="mh-h">THE REAL OLYMPIANS</h2>
+  <p class="omv-sub">Every archetype above is fronted by a real Greek god. This is the non-fiction companion: genuine mythology, fetched live from Wikipedia when you ask (no login, no key), not sovereign-universe lore.</p>
+  <div class="omv-grid" id="omv-myth-grid"></div>
 </section>
 <dialog class="omv-lb" id="omv-lb" aria-labelledby="omv-lb-title">
   <div class="omv-lb-bar"><span class="omv-lb-title" id="omv-lb-title"></span><button class="omv-x" type="button" id="omv-x" aria-label="Close film">&times;</button></div>

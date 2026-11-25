@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 238,
-  "open_task_count": 3216,
+  "page_count": 237,
+  "open_task_count": 3203,
   "pages": [
     {
       "page_id": "404",
@@ -2422,74 +2422,6 @@
         "PAGE::chronicle::MISSING::TRACEABILITY",
         "PAGE::chronicle::MISSING::TRUTH_STATES",
         "PAGE::chronicle::MISSING::WORKSPACE"
-      ],
-      "truth_rule": "SOURCE_EVIDENCE_ONLY"
-    },
-    {
-      "page_id": "cinema",
-      "path": "cinema.html",
-      "contract_state": "BOOTSTRAP_OPEN",
-      "authoritative_contract_present": false,
-      "evidence": {
-        "title": "&#937; SYD OMEGA 91717 &mdash; Cinema",
-        "h1": [],
-        "scripts": [
-          "/bg.js",
-          "/omega-analytics-init.js",
-          "/omega-morph.js",
-          "/omega-spatial-realms.js",
-          "/omega-speed-insights-init.js"
-        ],
-        "supabase_tables": [
-          "profiles"
-        ],
-        "supabase_rpcs": [],
-        "capability_candidates": [],
-        "domain_candidates": [],
-        "interactive_counts": {
-          "buttons": 7,
-          "forms": 0,
-          "inputs": 0,
-          "links": 3
-        },
-        "media_counts": {
-          "images": 0,
-          "video": 0,
-          "audio": 0,
-          "iframes": 0
-        }
-      },
-      "candidate_capabilities": [],
-      "candidate_domains": [],
-      "missing_contract_fields": [
-        "accessibility",
-        "asset_requirements",
-        "authorization",
-        "domain",
-        "events",
-        "failure_paths",
-        "primary_role",
-        "purpose",
-        "responsive",
-        "tasks",
-        "traceability",
-        "truth_states",
-        "workspace"
-      ],
-      "remediation_tasks": [
-        "PAGE::cinema::MISSING::ACCESSIBILITY",
-        "PAGE::cinema::MISSING::ASSET_REQUIREMENTS",
-        "PAGE::cinema::MISSING::AUTHORIZATION",
-        "PAGE::cinema::MISSING::DOMAIN",
-        "PAGE::cinema::MISSING::EVENTS",
-        "PAGE::cinema::MISSING::FAILURE_PATHS",
-        "PAGE::cinema::MISSING::PRIMARY_ROLE",
-        "PAGE::cinema::MISSING::PURPOSE",
-        "PAGE::cinema::MISSING::RESPONSIVE",
-        "PAGE::cinema::MISSING::TASKS",
-        "PAGE::cinema::MISSING::TRACEABILITY",
-        "PAGE::cinema::MISSING::TRUTH_STATES",
-        "PAGE::cinema::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },
@@ -10282,7 +10214,8 @@
           "/omega-cinematic-audio.js",
           "/omega-morph.js",
           "/omega-spatial-realms.js",
-          "/omega-speed-insights-init.js"
+          "/omega-speed-insights-init.js",
+          "/omega-watch-extras.js"
         ],
         "supabase_tables": [
           "profiles"

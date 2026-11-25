@@ -43,7 +43,7 @@ label: 'ASCEND', pages: ['ascension', 'matrix', 'academy', 'gaming', 'honors', '
 }, cosmos: {
 label: 'COSMOS', pages: ['cosmos', 'elements', 'horoscope', 'pantheons', 'agents', 'houses', 'triads', 'kings', 'chronicle', 'dna', 'graph', 'map', 'mirror', 'oracle', 'realm', 'rune', 'tribe']
 }, universe: {
-label: 'UNIVERSE', pages: ['media', 'cinema', 'series', 'trailers', 'universe', 'hall', 'city', 'ledger', 'feed', 'publications']
+label: 'UNIVERSE', pages: ['media', 'series', 'trailers', 'universe', 'hall', 'city', 'ledger', 'feed', 'publications']
 }, vault: {
 label: 'VAULT', pages: ['vault', 'wallet', 'treasury', 'blockchain', 'subscriptions', 'marketplace', 'portfolio', 'income', 'investment', 'budget', 'expenses', 'wealth', 'advertising', 'sovereign-covenant']
 }, order: {

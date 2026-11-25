@@ -255,7 +255,6 @@
     "media": {
       "canonical": "/media.html",
       "capabilities": [
-        "cinema",
         "movies",
         "series",
         "trailers",

@@ -103,7 +103,6 @@
   body:[9,'b','⚕'],
   breath:[9,'b','≈'],
   budget:[12,'b','▤'],
-  cinema:[12,'b','▶'],
   cipher:[12,'b','⚿'],
   clarity:[9,'a','✵'],
   codex:[12,'a','☰'],

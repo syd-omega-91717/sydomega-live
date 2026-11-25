@@ -22,12 +22,12 @@ class WatchTabs(unittest.TestCase):
             self.assertEqual([(k, l) for k, _, l in links], TABS, page)
             self.assertEqual([k for k, cur, _ in links if cur], [page], page)
 
-    def test_cinema_keeps_the_bar_but_is_not_a_tab(self):
-        html = (ROOT / "cinema.html").read_text(encoding="utf-8")
-        bars = re.findall(r'<nav class="watch-tabs" aria-label="Watch">(.*?)</nav>', html, re.S)
-        self.assertEqual(len(bars), 1)
-        self.assertEqual(re.findall(r'<a href="/([a-z]+)\.html">([A-Z ]+)</a>', bars[0]), TABS)
-        self.assertNotIn("aria-current", bars[0])
+    def test_cinema_was_merged_into_movies_and_redirects(self):
+        import json
+        self.assertFalse((ROOT / "cinema.html").exists())
+        redirects = {r["source"]: r["destination"] for r in json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))["redirects"]}
+        self.assertEqual(redirects.get("/cinema"), "/movies#elements")
+        self.assertEqual(redirects.get("/cinema.html"), "/movies#elements")
 
     def test_every_film_tile_says_what_the_film_is(self):
         html = (ROOT / "movies.html").read_text(encoding="utf-8")
@@ -40,11 +40,12 @@ class WatchTabs(unittest.TestCase):
         # a GATE tag would claim a lock the player does not enforce: every film plays for every member
         self.assertNotIn("GATE", "".join(tiles))
 
-    def test_cinema_no_longer_shows_the_four_score_tiles(self):
-        html = (ROOT / "cinema.html").read_text(encoding="utf-8")
-        for dead in ('id="stat-auth"', 'id="stat-a"', 'id="stat-b"', 'id="stat-c"'):
-            self.assertNotIn(dead, html)
-        self.assertIn('data-omega-spatial-realm="cinema"', html)
+    def test_movies_carries_what_cinema_had_that_was_true(self):
+        html = (ROOT / "movies.html").read_text(encoding="utf-8")
+        for needle in ('id="elements"', 'id="omv-elements"', 'id="olympians"', 'id="omv-myth-grid"', '/omega-watch-extras.js'):
+            self.assertIn(needle, html)
+        for dropped in ("144 SERIES", "FEATURED SERIES", "gate-locked"):
+            self.assertNotIn(dropped, html, "claims cinema made that the truth contracts deny must not come back")
 
     def test_every_tab_is_a_real_page(self):
         for page, _ in TABS:
@@ -69,7 +70,7 @@ class SpatialIntegrationStillAgrees(unittest.TestCase):
 
     def test_the_script_runs_clean_and_changes_nothing(self):
         import subprocess
-        files = ["nav.js", "gaming.html", "cinema.html", "movies.html", "characters.html"]
+        files = ["nav.js", "gaming.html", "movies.html", "characters.html"]
         before = {f: (ROOT / f).read_bytes() for f in files if (ROOT / f).exists()}
         try:
             r = subprocess.run(["node", "scripts/integrate-spatial-realms.js"], cwd=ROOT, capture_output=True, text=True)

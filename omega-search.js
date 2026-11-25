@@ -54,7 +54,7 @@
     {t:'BLOODLINE',d:'Ancestral lineage bloodline tracker genealogy heritage DNA',u:'/bloodline.html',c:'PAGE'},
     {t:'CHARACTER',d:'Character genealogy inheritance profile sovereign persona',u:'/character.html',c:'PAGE'},
     {t:'CHARTER',d:'Sovereign platform charter articles governance constitution',u:'/charter.html',c:'PAGE'},
-    {t:'CINEMA',d:'12 sovereign films franchise system streaming production',u:'/cinema.html',c:'PAGE'},
+    {t:'CINEMA',d:'12 sovereign films franchise system streaming production',u:'/movies.html',c:'PAGE'},
     {t:'CITY',d:'Sovereign city smart city layer urban development system',u:'/city.html',c:'PAGE'},
     {t:'COMPLIANCE',d:'Contracts copyright terms licenses regulatory compliance',u:'/compliance.html',c:'PAGE'},
     {t:'CONTRIBUTIONS',d:'Member contributions impact metrics open source records',u:'/contributions.html',c:'PAGE'},

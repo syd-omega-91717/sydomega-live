@@ -1,7 +1,7 @@
 {
   "counts": {
     "excluded-pending-review": 5,
-    "hostable": 215,
+    "hostable": 214,
     "navigates-away": 10,
     "needs-fix": 0,
     "standalone-by-policy": 7,
@@ -287,14 +287,6 @@
         "text": 8756
       },
       "sha": "f1f8b4c35476",
-      "status": "hostable"
-    },
-    "cinema": {
-      "measured": {
-        "errors": 0,
-        "text": 2137
-      },
-      "sha": "2249fd5dddf2",
       "status": "hostable"
     },
     "cipher": {

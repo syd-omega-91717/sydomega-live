@@ -2,13 +2,13 @@
   "schema_version": 1,
   "name": "Ω Page Action / Task Audit",
   "status": "SOURCE_EVIDENCE_ONLY",
-  "page_count": 238,
-  "action_count": 1314,
+  "page_count": 237,
+  "action_count": 1309,
   "counts": {
     "AVAILABLE_WITHOUT_MUTATION": 11,
     "GOVERNED": 41,
     "UNAVAILABLE": 0,
-    "UNMAPPED": 1262
+    "UNMAPPED": 1257
   },
   "actions": [
     {
@@ -3853,111 +3853,6 @@
       },
       "page": "chronicle",
       "path": "chronicle.html"
-    },
-    {
-      "action_id": 1,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "cinema",
-      "path": "cinema.html"
-    },
-    {
-      "action_id": 2,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "cinema",
-      "path": "cinema.html"
-    },
-    {
-      "action_id": 3,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "cinema",
-      "path": "cinema.html"
-    },
-    {
-      "action_id": 4,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "cinema",
-      "path": "cinema.html"
-    },
-    {
-      "action_id": 5,
-      "kind": "button",
-      "state": "UNMAPPED",
-      "task_id": null,
-      "capability_id": null,
-      "explicit_unavailable_reason": null,
-      "evidence": {
-        "disabled": false,
-        "onclick": true,
-        "onsubmit": false,
-        "javascript_href": false,
-        "navigation_target": null,
-        "download": false,
-        "data_task_marker": false,
-        "data_capability_marker": false,
-        "capability_registered": false
-      },
-      "page": "cinema",
-      "path": "cinema.html"
     },
     {
       "action_id": 1,

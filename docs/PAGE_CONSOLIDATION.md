@@ -53,6 +53,16 @@ The Gaming page no longer renders duplicate `knowledge` task cards. Completion t
 
 That is roughly 11 to 15 pages of 242. The saving that matters is not the count: it is that a member currently has to find ten thin pages that the menu hides.
 
+## Reviewed 2026-11-25 and deliberately not merged
+
+Each was read against the real pages, not the similarity score. The earlier table's "near-identical" and "stub" labels did not survive that.
+
+| Candidate | Why it stays separate (evidence) | What would change the answer |
+|---|---|---|
+| `payments` + `subscriptions` | `subscriptions` already has the PAYMENT HISTORY tab, but `payments` is a guarded money-truth surface: `test_payments_truth_boundary_contract.py` and `test_finance_hub_truth_contract.py` pin its copy ("processing is disabled", "no payment has been inferred"), about 60 files reference it (nav, search, 6 i18n packs, generated registries), and it shows nothing live. The merge saves one page and moves pinned claims. | A payment provider going live; then the ledger and methods become real data and the two pages should be one. |
+| `grid` + `levels` + `gates` | Not near-identical. `grid` is the member's position on the 12x12 lattice, `levels` states the lattice-count canon (12 x 12 = 144 intersections, 729 nodes each, 104,976 total, the 28 x 28 Kings expansion) and the axis-to-level mapping, `gates` mounts the 3-D corridor and keeps an attempt log. A merge would make whoever ports it decide which canon numbers survive. | An owner ruling on those canon numbers. |
+| `movies` + `series` into `cinema` | They describe the same "12 Films, 12 Series" Sovereign list, so merging them would not make the two film universes agree; it would put the disagreement on one page. | The decision in "Two parallel film universes" below. |
+
 ## Could merge, but decide first
 - `publishing` + `studio`: same `publications` table; one drafts, the other commits. Merge only if members confuse them.
 - `agents` + `sovereign-ai`, `archive` + `order` + `govern`: similar layout, different jobs; the last three are section hubs and should stay hubs.

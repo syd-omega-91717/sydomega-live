@@ -16,6 +16,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-morph.js",
           "/omega-speed-insights-init.js"
         ],
@@ -160,6 +161,7 @@
         "scripts": [
           "/bg.js",
           "/omega-analytics-init.js",
+          "/omega-canvas-hidpi.js",
           "/omega-demo-video.js",
           "/omega-morph.js",
           "/omega-password-guard.js",

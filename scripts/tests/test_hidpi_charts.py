@@ -263,6 +263,14 @@ class Wave7(unittest.TestCase):
         self.assertIn("new ResizeObserver(function(){", src)
         self.assertIn("bx=b.xf*W", src, "building positions are fractions so a refit keeps them in the box")
 
+    def test_visible_full_window_backdrops_draw_at_a_2x_cap(self):
+        """404 and account have visible dots (alpha 0.4-0.6). Measured 1.2 ms/frame at 2x vs 3.1 ms at 3x (390x844), so the cap is 2."""
+        for page in ("404", "account"):
+            src = self._src(page)
+            self.assertIn("OmegaCanvas.fit(cv,W,H,{scale:Math.min(2,OmegaCanvas.ratio())})", src, page)
+            self.assertEqual(src.count("omega-canvas-hidpi.js"), 1, page)
+            self.assertLess(src.index("omega-canvas-hidpi.js"), src.index("</head>"), page)
+
     def test_the_cosmos_agent_wheel_carries_the_dpr_over_2_factor(self):
         src = self._src("cosmos")
         body = src[src.index("function buildAgentWheel"):][:1400]

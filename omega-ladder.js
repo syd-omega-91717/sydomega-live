@@ -52,7 +52,8 @@
   var gateData = {}, attemptLog = [];
 
   function $(id) { return document.getElementById(id); }
-  var esc = (window.OmegaEsc && OmegaEsc.esc) || (function () { return ''; });
+  /* looked up at call time, never bound at load (test_omega_esc); '' when the helper is missing, so nothing unescaped can reach a sink */
+  function esc(v){ return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
   function sid(id, v) { var el = $(id); if (el) el.textContent = String(v == null ? '--' : v); }
   function load(key, fallback) { try { var v = JSON.parse(localStorage.getItem(key) || 'null'); return v == null ? fallback : v; } catch (e) { return fallback; } }
   function save(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); return true; } catch (e) { return false; } }

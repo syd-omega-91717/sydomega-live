@@ -27,6 +27,7 @@ a:hover{background:rgba(201,168,76,.08);border-color:var(--gold)}
 .kpi{border:1px solid var(--line);background:rgba(10,10,15,.55);padding:14px;border-radius:2px;border-top:2px solid var(--gold);text-align:left}
 .kpi-n{font-family:var(--D);font-size:var(--fs-4,20px);color:var(--gold);line-height:1}.kpi-l{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px}
 </style>
+<script src="/omega-canvas-hidpi.js"></script>
 </head>
 <body>
 <aside class="side" id="omega-side" data-page="404" style="display:none"></aside>
@@ -84,7 +85,9 @@ function switchTab(id,btn){
   var cv=document.getElementById('cv');
   var ctx=cv.getContext('2d');
   var W,H,pts=[];
-  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;pts=[];}
+  /* 2x cap: the dots are 2 px at 0.4 alpha, so 3x buys nothing; measured 1.2 ms/frame at 2x vs 3.1 ms at 3x (390x844, software). */
+  function fitBg(cv,W,H){return window.OmegaCanvas?OmegaCanvas.fit(cv,W,H,{scale:Math.min(2,OmegaCanvas.ratio())}):(cv.width=W,cv.height=H,cv.getContext('2d'));}
+  function resize(){W=window.innerWidth;H=window.innerHeight;ctx=fitBg(cv,W,H);pts=[];}
   function mkPt(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,a:Math.random()*Math.PI*2};}
   window.addEventListener('resize',resize);resize();
   for(var i=0;i<60;i++)pts.push(mkPt());

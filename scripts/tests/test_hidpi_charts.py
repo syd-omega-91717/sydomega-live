@@ -271,6 +271,15 @@ class Wave7(unittest.TestCase):
             self.assertEqual(src.count("omega-canvas-hidpi.js"), 1, page)
             self.assertLess(src.index("omega-canvas-hidpi.js"), src.index("</head>"), page)
 
+    def test_enter_and_offline_backdrops_draw_at_a_2x_cap(self):
+        enter = self._src("enter")
+        self.assertIn("OmegaCanvas.fit(cv,W,H,{scale:Math.min(2,OmegaCanvas.ratio())})", enter)
+        off = self._src("offline")
+        self.assertIn("Math.min(2,Math.max(1,window.devicePixelRatio||1))", off)
+        self.assertIn("ctx.setTransform(r,0,0,r,0,0)", off)
+        self.assertNotIn("omega-canvas-hidpi.js", off, "offline must not depend on a file that may not be cached")
+        self.assertNotRegex(off.split("function frame()")[1].split("requestAnimationFrame(frame)")[0], r"cv\.(width|height)", "draw in W/H, not the store size")
+
     def test_the_cosmos_agent_wheel_carries_the_dpr_over_2_factor(self):
         src = self._src("cosmos")
         body = src[src.index("function buildAgentWheel"):][:1400]

@@ -187,17 +187,18 @@ document.querySelectorAll('.lt').forEach(function(b){
 (function(){
   var cv=document.getElementById('c');
   var ctx=cv.getContext('2d');
-  var pts=[];
-  function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
-  function mkPt(){return{x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.4};}
+  var pts=[],W=0,H=0;
+  /* Self-contained on purpose: this page is served offline, where the shared helper may not be cached. 2x cap, see 404.html. */
+  function resize(){W=window.innerWidth;H=window.innerHeight;var r=Math.min(2,Math.max(1,window.devicePixelRatio||1));cv.width=Math.round(W*r);cv.height=Math.round(H*r);ctx.setTransform(r,0,0,r,0,0);}
+  function mkPt(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.4};}
   resize();window.addEventListener('resize',resize);
   for(var i=0;i<38;i++)pts.push(mkPt());
   function frame(){
-    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.clearRect(0,0,W,H);
     pts.forEach(function(p){
       p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0||p.x>cv.width)p.vx*=-1;
-      if(p.y<0||p.y>cv.height)p.vy*=-1;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
       ctx.fillStyle='rgba(201,168,76,.35)';ctx.fill();
       for(var j=pts.indexOf(p)+1;j<pts.length;j++){

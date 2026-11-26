@@ -238,6 +238,21 @@ AUTH_RE = re.compile(
 # into "recoverable by hand" and "one cache clear from gone".
 BACKUP_RE = re.compile(r'OmegaLocalBackup')
 
+# Directly loaded, platform-wide bootstrap/runtime files are deliberately not
+# attributed as page-owned persistence. bg.js injects shared modules on every
+# route; counting it would make otherwise local/static pages appear backend-built.
+# Page-owned modules such as approvals.js and omega-profile-settings.js remain
+# in scope. Shared data mirroring is reported separately by mirror_coverage().
+GLOBAL_PAGE_RUNTIME = {
+    'bg.js', 'nav.js', 'omega-morph.js', 'omega-canvas-hidpi.js',
+    'omega-analytics-init.js', 'omega-speed-insights-init.js',
+    'omega-member-state.js',
+}
+SCRIPT_SRC_RE = re.compile(
+    r'<script\\b[^>]*\\bsrc\\s*=\\s*["\\']([^"\\']+)["\\'][^>]*>',
+    re.I,
+)
+
 
 def _strip_code_comments(source):
     """Strip JS/TS/SQL comments while preserving quoted strings and URLs."""
@@ -390,8 +405,39 @@ def live_gap(rows, rels, live):
     return consumers
 
 
+def page_client_source(path):
+    """Combine page HTML with directly loaded local page modules.
+
+    This deliberately does not follow imports or modules injected at runtime by
+    bg.js. The former needs a dependency graph; the latter is platform-global
+    and would falsely promote every route. The page census/missing-script
+    contracts remain responsible for unresolved asset paths.
+    """
+    html = path.read_text(encoding='utf-8', errors='replace')
+    chunks = [html]
+    seen = set()
+    for raw_src in SCRIPT_SRC_RE.findall(html):
+        src = raw_src.strip()
+        if not src or re.match(r'^(?:[a-z][a-z0-9+.-]*:)?//', src, re.I):
+            continue
+        local_src = re.split(r'[?#]', src, maxsplit=1)[0]
+        if not local_src:
+            continue
+        relative = Path(local_src.lstrip('/'))
+        candidate = (ROOT / relative).resolve()
+        if candidate != ROOT and ROOT not in candidate.parents:
+            continue
+        if candidate.name in GLOBAL_PAGE_RUNTIME or candidate in seen:
+            continue
+        if candidate.suffix.lower() not in {'.js', '.mjs'} or not candidate.is_file():
+            continue
+        seen.add(candidate)
+        chunks.append(candidate.read_text(encoding='utf-8', errors='replace'))
+    return '\\n'.join(chunks)
+
+
 def scan_client(path):
-    text = path.read_text(encoding='utf-8', errors='replace')
+    text = page_client_source(path)
     tables = set(FROM_RE.findall(text))
     rpcs = set(RPC_RE.findall(text))
     edges = {a or b or c for a, b, c in EDGE_RE.findall(text)}

@@ -9,6 +9,9 @@ on:
       - 'docs/OMEGA_DOMAIN_REGISTRY.md'
       - 'scripts/omega-page-contract-bootstrap.py'
       - 'scripts/omega-page-action-audit.py'
+      - 'scripts/omega-page-js-binding-audit.py'
+      - 'scripts/tests/test_omega_page_js_binding_audit.py'
+      - '**/*.js'
       - 'config/omega-page-contracts.json'
   workflow_dispatch:
 
@@ -33,6 +36,12 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # repository-pinned setup-python
         with:
           python-version: '3.12'
+
+      - name: Materialize page-to-JavaScript binding inventory
+        run: python scripts/omega-page-js-binding-audit.py --write
+
+      - name: Test page-to-JavaScript binding inventory
+        run: python -m unittest scripts/tests/test_omega_page_js_binding_audit.py
 
       - name: Materialize page source evidence
         run: |
@@ -73,6 +82,35 @@ jobs:
             config/omega-page-action-audit.json
             config/omega-page-contract-bootstrap.json
           retention-days: 14
+
+      - name: Upload page-to-JavaScript binding inventory
+        if: always() && hashFiles('config/omega-page-js-binding-audit.json') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: page-js-binding-audit-${{ github.sha }}
+          path: config/omega-page-js-binding-audit.json
+          retention-days: 14
+
+      - name: Summarize page-to-JavaScript binding inventory
+        if: always() && hashFiles('config/omega-page-js-binding-audit.json') != ''
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('config/omega-page-js-binding-audit.json').read_text())
+          print('Page-to-JavaScript source inventory')
+          for key in ('page_count', 'control_count', 'direct_binding_count', 'delegated_binding_count', 'missing_local_script_count'):
+              print(f"{key}: {report[key]}")
+          print(report['truth_boundary'])
+          with open('$GITHUB_STEP_SUMMARY', 'a') as summary:
+              summary.write('## Page-to-JavaScript binding inventory\\n\\n')
+              summary.write(f"- Pages scanned: {report['page_count']}\\n")
+              summary.write(f"- HTML controls inventoried: {report['control_count']}\\n")
+              summary.write(f"- Direct static listener correlations: {report['direct_binding_count']}\\n")
+              summary.write(f"- Delegated listeners: {report['delegated_binding_count']}\\n")
+              summary.write(f"- Missing local script references: {report['missing_local_script_count']}\\n\\n")
+              summary.write('**Boundary:** Static source correlation only; not proof of browser execution, backend authorization, operation success, or production behavior.\\n')
+          PY
 
       - name: Publish evidence summary
         run: |

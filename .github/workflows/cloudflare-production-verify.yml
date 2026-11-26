@@ -1,8 +1,10 @@
 name: Cloudflare Production Release Verification
 
-# Manual production re-verification. The automatic Cloudflare Pages workflow
-# performs the same canonical-host verification immediately after deployment.
+# Cloudflare Pages Git integration deploys main. Verify the exact deployed SHA
+# and follow canonical redirects before evaluating production routes.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,7 +18,7 @@ jobs:
   verify:
     name: Verify exact production release
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Refuse manual verification from non-main
         if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
@@ -45,9 +47,9 @@ jobs:
           served=""
           www_served=""
 
-          # DNS, edge cache, and custom-domain propagation can lag deployment completion.
-          # Allow up to five minutes for both public hostnames to serve the exact main SHA.
-          for attempt in $(seq 1 30); do
+          # Cloudflare Pages can take several minutes to finish a production deployment.
+          # Allow up to ten minutes for both public hostnames to serve the exact main SHA.
+          for attempt in $(seq 1 60); do
             manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
             www_manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${www_base}/.well-known/omega-release.json" 2>/dev/null || true)"
             served="$(printf '%s' "${manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"

@@ -45,7 +45,7 @@ jobs:
           served=""
           www_served=""
 
-          # Cloudflare Pages Git integration may finish after the GitHub push event.
+          # DNS, edge cache, and custom-domain propagation can lag deployment completion.
           # Allow up to five minutes for both public hostnames to serve the exact main SHA.
           for attempt in $(seq 1 30); do
             manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"

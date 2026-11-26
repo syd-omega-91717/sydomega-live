@@ -358,6 +358,24 @@ def mirror_coverage(text):
     return eligible, policy_excluded, outside_prefix, unresolved
 
 
+def mirror_coverage_detail(info):
+    eligible, excluded, outside, unresolved = info['mirror']
+    parts = []
+    if eligible:
+        parts.append('%d key%s eligible for the `member_state` mirror'
+                     % (eligible, '' if eligible == 1 else 's'))
+    if excluded:
+        parts.append('%d key%s excluded by `SKIP`/`NO_MIRROR` policy'
+                     % (excluded, '' if excluded == 1 else 's'))
+    if outside:
+        parts.append('%d key%s NOT `omega`-prefixed, so NOT mirrored'
+                     % (outside, '' if outside == 1 else 's'))
+    if unresolved:
+        parts.append('%d key%s built at runtime — mirror eligibility unresolved'
+                     % (unresolved, '' if unresolved == 1 else 's'))
+    return ('; ' + '; '.join(parts)) if parts else ''
+
+
 def live_surface():
     """Relations the LIVE database actually had, from supabase/live-schema.json.
 
@@ -556,8 +574,10 @@ def classify(page, info, rels, fns, nav, module_tables):
         # copy is only partly delivered -- whichever data lives only in the
         # browser is lost with the cache.
         if info['ls_writes']:
-            return 'PARTIAL', detail + '; also %d localStorage write%s' % (
+            detail += '; also %d localStorage write%s' % (
                 info['ls_writes'], '' if info['ls_writes'] == 1 else 's')
+            detail += mirror_coverage_detail(info)
+            return 'PARTIAL', detail
         return 'BUILT', detail
 
     if info['ls_writes']:
@@ -568,19 +588,7 @@ def classify(page, info, rels, fns, nav, module_tables):
             detail += ' (signs the member in: %s)' % auth_ev
         detail += ('; has an OmegaLocalBackup export path'
                    if info['backup'] else '; no page-level export path')
-        eligible, excluded, outside, unres = info['mirror']
-        if eligible:
-            detail += ('; %d key%s eligible for the `member_state` mirror'
-                       % (eligible, '' if eligible == 1 else 's'))
-        if excluded:
-            detail += ('; %d key%s excluded by `SKIP`/`NO_MIRROR` policy'
-                       % (excluded, '' if excluded == 1 else 's'))
-        if outside:
-            detail += ('; **%d key%s NOT `omega`-prefixed, so NOT mirrored**'
-                       % (outside, '' if outside == 1 else 's'))
-        if unres:
-            detail += ('; %d key%s built at runtime — mirror eligibility '
-                       'unresolved by static scan' % (unres, '' if unres == 1 else 's'))
+        detail += mirror_coverage_detail(info)
         return 'LOCAL_ONLY', detail
 
     return 'STATIC', ('no persisted state; ' + auth_ev + ' only') if auth_ev \
@@ -757,7 +765,7 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns,
     w('| class | meaning |')
     w('|---|---|')
     w('| `BUILT` | Reaches Postgres, an Edge Function, or Supabase Storage; table/function references are declared in `supabase/`. |')
-    w('| `PARTIAL` | Reaches Postgres, an Edge Function, or Supabase Storage **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |')
+    w('| `PARTIAL` | Reaches Postgres, an Edge Function, or Supabase Storage **and** writes `localStorage`. Each row reports mirror-key eligibility/exclusions; it does not prove a successful upload. Browser-only values that are excluded, unresolved, oversized, or not successfully synced remain at risk. |')
     w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge/storage call **of its own**. The shared mirror only attempts eligible `omega`-prefixed keys; `SKIP`, `NO_MIRROR`, analytics keys, oversized values, signed-out sessions, and failed writes are not guaranteed to have a server copy. Each row reports static key eligibility, not proof of a successful upload. |')
     w('| `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |')
     w('| `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |')

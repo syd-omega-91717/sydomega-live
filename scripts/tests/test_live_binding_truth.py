@@ -58,6 +58,14 @@ class LiveBindingTruthContract(unittest.TestCase):
         pulse = self.source[self.source.index("function createPulseIndicator"):self.source.index("function verifyPulse")]
         self.assertIn("@media(prefers-reduced-motion:reduce)", pulse)
 
+    def test_member_count_uses_privacy_safe_aggregate_rpc(self):
+        start = self.source.index("function updateMemberCount()")
+        end = self.source.index("/* ── D. ACTIVITY TICKER", start)
+        member_count = self.source[start:end]
+        self.assertIn("rpc('omega_dashboard_public_metrics')", member_count)
+        self.assertIn("approved_members", member_count)
+        self.assertNotIn(".from('profiles')", member_count)
+
     def test_public_count_and_ticker_report_empty_and_error_states(self):
         self.assertIn("function updateMemberCount()", self.source)
         self.assertIn("function startTicker()", self.source)

@@ -1476,7 +1476,11 @@ function setCountFromQuery(id,result){if(!result||result.error||result.count==nu
         }
         tsEl.setAttribute('data-spark-values',JSON.stringify(series));
       }
-    }catch(e){}
+    }catch(e){
+      renderContributionHeatmap([],true);
+      var failedSpark=document.getElementById('dash-tasks-spark');
+      if(failedSpark)failedSpark.hidden=true;
+    }
     try{
       var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',new Date().toISOString().slice(0,10));
       setCountFromQuery('k-events',pe);

@@ -16,7 +16,7 @@ class DashboardPublicMetricsRpcContract(unittest.TestCase):
     def test_private_implementation_is_stable_security_definer_with_fixed_search_path(self):
         self.assertRegex(
             self.sql,
-            r"create or replace function private\.omega_dashboard_public_metrics\(\).*?"
+            r"(?s)create or replace function private\.omega_dashboard_public_metrics\(\).*?"
             r"returns jsonb\s+language plpgsql\s+stable\s+security definer\s+set search_path = ''",
         )
 
@@ -38,7 +38,7 @@ class DashboardPublicMetricsRpcContract(unittest.TestCase):
     def test_public_wrapper_is_security_invoker(self):
         self.assertRegex(
             self.sql,
-            r"create or replace function public\.omega_dashboard_public_metrics\(\).*?"
+            r"(?s)create or replace function public\.omega_dashboard_public_metrics\(\).*?"
             r"returns jsonb\s+language sql\s+stable\s+security invoker\s+set search_path = ''",
         )
         self.assertIn("select private.omega_dashboard_public_metrics()", self.sql)

@@ -533,7 +533,7 @@ class TestExternalPageModules(EvidenceAuditFixture):
         self.audit_stdout()
         row = next(line for line in self.report().splitlines()
                    if '`admin.html`' in line)
-        built_section = self.report().split('## BUILT', 1)[1].split('\\n## ', 1)[0]
+        built_section = self.report().split('## BUILT', 1)[1].split('\n## ', 1)[0]
         self.assertIn(row, built_section)
         self.assertIn('1 rpc', row)
 
@@ -548,7 +548,7 @@ class TestExternalPageModules(EvidenceAuditFixture):
         self.audit_stdout()
         row = next(line for line in self.report().splitlines()
                    if '`localish.html`' in line)
-        static_section = self.report().split('## STATIC', 1)[1].split('\\n## ', 1)[0]
+        static_section = self.report().split('## STATIC', 1)[1].split('\n## ', 1)[0]
         self.assertIn(row, static_section)
         self.assertNotIn('shared_bootstrap_rpc', row)
 
@@ -563,7 +563,7 @@ class TestStorageBucketsAreNotRelations(EvidenceAuditFixture):
         self.audit_stdout()
         row = next(line for line in self.report().splitlines()
                    if '`uploads.html`' in line)
-        built_section = self.report().split('## BUILT', 1)[1].split('\\n## ', 1)[0]
+        built_section = self.report().split('## BUILT', 1)[1].split('\n## ', 1)[0]
         self.assertIn(row, built_section)
         self.assertIn('1 storage bucket', row)
         self.assertNotIn('undefined table/view', row)

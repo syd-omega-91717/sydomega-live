@@ -379,11 +379,11 @@ class TestLiveSchemaCrossCheck(EvidenceAuditFixture):
 class TestMirrorCoverage(EvidenceAuditFixture):
     """LOCAL_ONLY must not be read as "this data is lost with the cache".
 
-    omega-member-state.js (bg.js, every page) mirrors every `omega`-prefixed
-    localStorage key to public.member_state. The matrix used to assert the
-    opposite as fact, and that wording nearly caused a session to rebuild
-    member_state -- a table already live with correct RLS, GRANTs and a
-    (user_id, key) primary key (FIXES_LOG.md 113).
+    omega-member-state.js (bg.js, every page) attempts to mirror eligible
+    `omega`-prefixed localStorage keys. Exact SKIP and NO_MIRROR exclusions,
+    analytics keys, oversize values, signed-out sessions and failed writes
+    are not covered. The matrix must report eligibility, not claim that a
+    successful server copy exists.
     """
 
     def test_omega_prefixed_keys_are_reported_as_mirrored(self):
@@ -391,7 +391,7 @@ class TestMirrorCoverage(EvidenceAuditFixture):
         self.write('notes.html', "<script>localStorage.setItem('omega_notes', x)</script>")
         self.audit_stdout()
         row = self.report()
-        self.assertIn('mirrored to `member_state`', row)
+        self.assertIn('eligible for the `member_state` mirror', row)
         self.assertNotIn('NOT `omega`-prefixed', row)
 
     def test_a_key_outside_the_prefix_is_flagged_not_mirrored(self):
@@ -421,6 +421,26 @@ class TestMirrorCoverage(EvidenceAuditFixture):
                    "localStorage.setItem(K, v)</script>")
         self.audit_stdout()
         self.assertIn('NOT mirrored', self.report())
+
+    def test_skip_and_no_mirror_keys_are_not_reported_as_cloud_eligible(self):
+        self.write('nav.js', "var PS={'notes':'X'};")
+        self.write('omega-member-state.js',
+                   "var SKIP={omega_bg:1};"
+                   "var NO_MIRROR={omega_expenses:1};")
+        self.write('notes.html',
+                   "<script>"
+                   "localStorage.setItem('omega_notes', x);"
+                   "localStorage.setItem('omega_bg', x);"
+                   "localStorage.setItem('omega_expenses', x);"
+                   "localStorage.setItem('omega_analytics_events', x);"
+                   "localStorage.setItem('custom_notes', x);"
+                   "</script>")
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`notes.html`' in line)
+        self.assertIn('1 key eligible for the `member_state` mirror', row)
+        self.assertIn('3 keys excluded by `SKIP`/`NO_MIRROR` policy', row)
+        self.assertIn('1 key NOT `omega`-prefixed, so NOT mirrored', row)
 
     def test_a_runtime_built_key_is_reported_unresolved_not_covered(self):
         """body.html/sleep.html/stoic.html funnel writes through save(k,v).

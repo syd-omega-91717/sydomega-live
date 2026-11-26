@@ -94,7 +94,8 @@ Do not label this as a proven runtime failure, add member write grants, or inven
 | P1 | Define Focus session reconciliation | Failure injection for normalized insert; idempotent retry/replay; no duplicate sessions; visible degraded state or durable recovery |
 | P2 | Verify Profile and Approvals with separate owner/member sessions | Browser tests for signed-out, ordinary member, approved member, owner without AAL2, owner with AAL2; prove both allowed and denied paths |
 | P2 | Verify Mindmap/Atlas backup and restore | Save on device A, restore on clean device B, preserve local conflicts, test oversized values and mirror errors |
-| P2 | Reconcile Cosmic Ledger's `lesson_completions` migration source | Fresh-install migration replay creates the read-only table with authenticated own-row SELECT RLS and no anon/member write grant, or the page removes the legacy dependency |\n| P2 | Keep media truth labels and test playback independently | Existing concept-reel labels remain; preview playback, mobile behaviour, and asset availability verified separately |
+| P2 | Reconcile Cosmic Ledger's `lesson_completions` migration source | Fresh-install migration replay creates the read-only table with authenticated own-row SELECT RLS and no anon/member write grant, or the page removes the legacy dependency |
+| P2 | Keep media truth labels and test playback independently | Existing concept-reel labels remain; preview playback, mobile behaviour, and asset availability verified separately |
 
 ## First practical step
 

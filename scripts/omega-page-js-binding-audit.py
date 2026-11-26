@@ -45,6 +45,7 @@ class PageParser(HTMLParser):
         self.scripts = []
         self._script_src = None
         self._script_parts = []
+        self._inside_script = False
         self._index = 0
 
     def handle_starttag(self, tag, attrs):

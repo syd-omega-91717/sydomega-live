@@ -249,7 +249,7 @@ GLOBAL_PAGE_RUNTIME = {
     'omega-member-state.js',
 }
 SCRIPT_SRC_RE = re.compile(
-    r'<script\\b[^>]*\\bsrc\\s*=\\s*["\\']([^"\\']+)["\\'][^>]*>',
+    r'<script\b[^>]*\bsrc\s*=\s*["\']([^"\']+)["\'][^>]*>',
     re.I,
 )
 
@@ -433,7 +433,7 @@ def page_client_source(path):
             continue
         seen.add(candidate)
         chunks.append(candidate.read_text(encoding='utf-8', errors='replace'))
-    return '\\n'.join(chunks)
+    return '\n'.join(chunks)
 
 
 def scan_client(path):

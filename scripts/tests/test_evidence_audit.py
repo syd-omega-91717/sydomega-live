@@ -551,5 +551,20 @@ class TestExternalPageModules(EvidenceAuditFixture):
         self.assertNotIn('shared_bootstrap_rpc', row)
 
 
+class TestStorageBucketsAreNotRelations(EvidenceAuditFixture):
+    def test_storage_bucket_is_not_reported_as_an_undefined_table(self):
+        self.write('nav.js', "var PS={'uploads':'X'};")
+        self.write('uploads.html',
+                   '<script type="module" src="/uploads.js"></script>')
+        self.write('uploads.js',
+                   "sb.storage.from('uploads').createSignedUrl('member/id.pdf', 60);")
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`uploads.html`' in line)
+        self.assertIn('| BUILT |', row)
+        self.assertIn('1 storage bucket', row)
+        self.assertNotIn('undefined table/view', row)
+
+
 if __name__ == '__main__':
     unittest.main()

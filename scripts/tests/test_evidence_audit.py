@@ -529,7 +529,7 @@ class TestExternalPageModules(EvidenceAuditFixture):
         self.write('admin.js', "sb.rpc('get_admin_state');")
         self.write('supabase/a.sql',
                    'CREATE FUNCTION public.get_admin_state() '
-                   'RETURNS void LANGUAGE sql AS $ SELECT; $;')
+                   'RETURNS void;')
         self.audit_stdout()
         row = next(line for line in self.report().splitlines()
                    if '`admin.html`' in line)
@@ -543,7 +543,7 @@ class TestExternalPageModules(EvidenceAuditFixture):
         self.write('bg.js', "sb.rpc('shared_bootstrap_rpc');")
         self.write('supabase/a.sql',
                    'CREATE FUNCTION public.shared_bootstrap_rpc() '
-                   'RETURNS void LANGUAGE sql AS $ SELECT; $;')
+                   'RETURNS void;')
         self.audit_stdout()
         row = next(line for line in self.report().splitlines()
                    if '`localish.html`' in line)

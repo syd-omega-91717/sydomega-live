@@ -46,6 +46,19 @@ The collector skips a key when `localStorage.getItem(key)` returns null. The ins
 
 **Required correction:** design an explicit per-key deletion/tombstone contract and migrate deliberate data-clear operations to it. Do **not** delete server rows merely because a browser has no local key: an empty browser is also the normal starting point for cache recovery, and absence-based deletion would destroy the backup. Add regression tests for local removal, remote tombstone, restore, and fresh-device recovery before changing the behaviour.
 
+A source sweep found concrete removal/migration paths whose keys are eligible for the mirror because `PREFIX = 'omega'` and they are not in the current `SKIP` or `NO_MIRROR` lists:
+
+- `weekly.html` removes `omega_wr_draft_<week>` after saving the completed review.
+- `omega-theme-elemental.js` exposes `OmegaTheme.clearState()`, which removes `omega_theme_state`.
+- `omega-celestial-covenants.js` removes `omega_covenants_lore_safe` when resetting the preference.
+- `network.html` migrates and removes `omega_network_contacts` and `omega_network_interactions`.
+- `nutrition.html` migrates and removes `omega_water_track`.
+- `bg.js` purges `omega_lux_mode`; `omega-demo-video.js` removes `omega_demo_watched_at` during reset.
+
+The prefix is broader than `omega_`: it also makes names such as `omega-v1:<cache-key>` and `omega:ad:impressions` eligible. The latter is described in its page UI as browser-only, so the mirror's current eligibility rule and the product's stated data boundary do not match. This does not prove every such key was uploaded for every user; it proves the code will collect it when present, signed in, not excluded, and within the row-size limit.
+
+Before implementing deletion, classify every current key namespace into member data, ephemeral/cache, browser-only telemetry, finance-local, and deprecated migration data. Then implement explicit deletion semantics and exclusions without deleting existing users' remote rows by assumption.
+
 ### 3. Focus has two separate persistence paths
 
 The normalized `focus_sessions` insert and the `member_state` backup of local `omega_focus_sessions` are separate writes with separate failure modes. A warning in the console is not a retry mechanism. The next implementation should define whether the normalized table is authoritative analytics history, whether the browser backup is recovery-only, and how failed inserts are reconciled without duplicates.

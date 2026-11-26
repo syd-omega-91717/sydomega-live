@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/omega-page-evidence-materialization.yml'
       - '*.html'
       - 'docs/capabilities/registry.json'
       - 'docs/OMEGA_DOMAIN_REGISTRY.md'
@@ -11,7 +12,6 @@ on:
       - 'scripts/omega-page-action-audit.py'
       - 'scripts/omega-page-js-binding-audit.py'
       - 'scripts/tests/test_omega_page_js_binding_audit.py'
-      - '.github/workflows/omega-page-evidence-materialization.yml'
       - '**/*.js'
       - 'config/omega-page-contracts.json'
   workflow_dispatch:

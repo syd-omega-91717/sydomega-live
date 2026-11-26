@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/omega-page-evidence-materialization.yml'
       - '*.html'
       - 'docs/capabilities/registry.json'
       - 'docs/OMEGA_DOMAIN_REGISTRY.md'

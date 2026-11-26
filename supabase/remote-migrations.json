@@ -1,6 +1,6 @@
 {
   "_captured": "2026-11-26",
-  "source": "Authenticated Supabase provider migration ledger read on 2026-11-26 confirms 443 applied versions, latest 20261126202613. Includes the privacy-safe aggregate-only dashboard metrics RPC migration and its idempotent duplicate provider application. Both ledger entries were inspected directly; function execution privileges were verified for authenticated and denied for anon.",
+  "source": "Authenticated Supabase provider migration ledger read on 2026-11-26 confirms 443 applied versions, latest 20261126202613. Both dashboard metrics RPC migrations are applied; the second provider-applied, idempotent record is mirrored in source for exact migration-history parity.",
   "remoteMigrationCount": 443,
   "latestRemoteMigration": "20261126202613",
   "versions": [

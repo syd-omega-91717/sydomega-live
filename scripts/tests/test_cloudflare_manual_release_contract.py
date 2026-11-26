@@ -139,8 +139,12 @@ class CloudflareManualReleaseContract(unittest.TestCase):
             with self.assertRaises(ValueError, msg=unsafe):
                 module.validate_request_url(unsafe)
 
-    def test_missing_credentials_never_attempts_deploy(self):
-        self.assertIn("ready=false", WORKFLOW)
+    def test_missing_credentials_fail_closed_before_deploy(self):
+        self.assertIn('if [ -z "${CLOUDFLARE_API_TOKEN}" ] || [ -z "${CLOUDFLARE_ACCOUNT_ID}" ]; then', WORKFLOW)
+        self.assertIn("Cloudflare deployment credentials missing", WORKFLOW)
+        self.assertIn("exit 1", WORKFLOW)
+        self.assertNotIn("ready=false", WORKFLOW)
+        self.assertIn("ready=true", WORKFLOW)
         self.assertIn("steps.creds.outputs.ready == 'true'", WORKFLOW)
         self.assertIn("npx --yes", WORKFLOW)
 

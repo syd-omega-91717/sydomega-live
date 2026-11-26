@@ -353,6 +353,9 @@ GATES = [
     ('domain-hub-workspaces',
      'the existing 14 workspaces and the canonical Genesis 12-route directory remain aligned',
      ['scripts/tests/test_omega_domain_hub_workspaces.py']),
+    ('spatial-realm-runtime',
+     'movies and gaming spatial realms mount with canonical identity and legacy cinema compatibility',
+     ['scripts/tests/test_spatial_realm_runtime.py']),
 ]
 
 INVENTORY_SCRIPT = 'scripts/build-content-registry.py'

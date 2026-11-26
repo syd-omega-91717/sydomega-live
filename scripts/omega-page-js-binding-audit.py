@@ -17,25 +17,80 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 CONTROL_TAGS = {"button", "input", "select", "textarea", "form"}
 EVENTS = {"click", "submit", "change", "input", "keydown", "keyup", "focus", "blur", "pointerdown", "drop"}
+def mask_js_non_code(source):
+    """Replace comments and quoted literals with tokens before regex correlation.
+
+    This prevents listener-shaped text inside comments, strings, and template
+    literals from being reported as executable event wiring. Template
+    interpolation is intentionally not parsed by this conservative scanner.
+    """
+    output = []
+    strings = {}
+    i = 0
+    while i < len(source):
+        ch = source[i]
+        nxt = source[i + 1] if i + 1 < len(source) else ""
+        if ch == "/" and nxt == "/":
+            while i < len(source) and source[i] not in "\\r\\n":
+                output.append(" ")
+                i += 1
+            continue
+        if ch == "/" and nxt == "*":
+            output.extend("  ")
+            i += 2
+            while i < len(source):
+                if source[i] == "*" and i + 1 < len(source) and source[i + 1] == "/":
+                    output.extend("  ")
+                    i += 2
+                    break
+                output.append("\\n" if source[i] == "\\n" else " ")
+                i += 1
+            continue
+        if ch in ("'", '"', "`"):
+            quote = ch
+            i += 1
+            literal = []
+            while i < len(source):
+                current = source[i]
+                if current == "\\\\" and i + 1 < len(source):
+                    literal.append(source[i:i + 2])
+                    i += 2
+                    continue
+                if current == quote:
+                    i += 1
+                    break
+                literal.append(current)
+                i += 1
+            token_id = len(strings)
+            strings[token_id] = "".join(literal)
+            output.append(f"__OMEGA_STRING_{token_id}__")
+            continue
+        output.append(ch)
+        i += 1
+    return "".join(output), strings
+
+
+STRING_TOKEN = re.compile(r"__OMEGA_STRING_(\\d+)__")
 ASSIGNMENT = re.compile(
-    r"""\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=\s*document\s*\.\s*"""
-    r"""(getElementById|querySelector|querySelectorAll)\s*\(\s*(['"])(.*?)\3\s*\)""",
+    r"\\b(?:var|let|const)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*document\\s*\\.\\s*"
+    r"(getElementById|querySelector|querySelectorAll)\\s*\\(\\s*__OMEGA_STRING_(\\d+)__\\s*\\)",
     re.S,
 )
 VARIABLE_LISTENER = re.compile(
-    r"""\b([A-Za-z_$][\w$]*)\s*\.\s*addEventListener\s*\(\s*(['"])([\w-]+)\2""",
+    r"\\b([A-Za-z_$][\\w$]*)\\s*\\.\\s*addEventListener\\s*\\(\\s*__OMEGA_STRING_(\\d+)__",
     re.S,
 )
 DIRECT_LISTENER = re.compile(
-    r"""document\s*\.\s*(getElementById|querySelector|querySelectorAll)\s*"""
-    r"""\(\s*(['"])(.*?)\2\s*\)\s*\.\s*addEventListener\s*"""
-    r"""\(\s*(['"])([\w-]+)\4""",
+    r"document\\s*\\.\\s*(getElementById|querySelector|querySelectorAll)\\s*"
+    r"\\(\\s*__OMEGA_STRING_(\\d+)__\\s*\\)\\s*\\.\\s*addEventListener\\s*"
+    r"\\(\\s*__OMEGA_STRING_(\\d+)__",
     re.S,
 )
 DELEGATED_LISTENER = re.compile(
-    r"""\b(document|window|body)\s*\.\s*addEventListener\s*\(\s*(['"])([\w-]+)\2""",
+    r"\\b(document|window|body)\\s*\\.\\s*addEventListener\\s*\\(\\s*__OMEGA_STRING_(\\d+)__",
     re.S,
 )
+
 
 
 class PageParser(HTMLParser):
@@ -124,13 +179,19 @@ def selector_to_control(selector, controls, method):
 
 
 def extract_bindings(source, controls, source_name):
+    code, literals = mask_js_non_code(source)
+
+    def literal(token_id):
+        return literals.get(int(token_id), "")
+
     bindings = []
     variables = {}
-    for match in ASSIGNMENT.finditer(source):
-        variable, method, _quote, selector = match.groups()
-        variables[variable] = (method, selector)
-    for match in VARIABLE_LISTENER.finditer(source):
-        variable, _quote, event = match.groups()
+    for match in ASSIGNMENT.finditer(code):
+        variable, method, token_id = match.groups()
+        variables[variable] = (method, literal(token_id))
+    for match in VARIABLE_LISTENER.finditer(code):
+        variable, token_id = match.groups()
+        event = literal(token_id)
         if variable not in variables or event not in EVENTS:
             continue
         method, selector = variables[variable]
@@ -140,8 +201,9 @@ def extract_bindings(source, controls, source_name):
             "control_ids": selector_to_control(selector, controls, method),
             "binding_kind": "direct_variable",
         })
-    for match in DIRECT_LISTENER.finditer(source):
-        method, _selector_quote, selector, _event_quote, event = match.groups()
+    for match in DIRECT_LISTENER.finditer(code):
+        method, selector_id, event_id = match.groups()
+        selector, event = literal(selector_id), literal(event_id)
         if event not in EVENTS:
             continue
         bindings.append({
@@ -151,9 +213,9 @@ def extract_bindings(source, controls, source_name):
             "binding_kind": "direct_chain",
         })
     delegated = [
-        {"source": source_name, "target": target, "event": event}
-        for target, _quote, event in DELEGATED_LISTENER.findall(source)
-        if event in EVENTS
+        {"source": source_name, "target": target, "event": literal(token_id)}
+        for target, token_id in DELEGATED_LISTENER.findall(code)
+        if literal(token_id) in EVENTS
     ]
     return bindings, delegated
 

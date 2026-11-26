@@ -51,6 +51,25 @@ class PageJsBindingAuditTests(unittest.TestCase):
         self.assertEqual(bindings, [])
         self.assertEqual(delegated, [{"source": "global.js", "target": "document", "event": "click"}])
 
+    def test_listener_shaped_text_inside_string_is_ignored(self):
+        controls = [{"control_id": 1, "tag": "button", "id": "save", "classes": [], "attributes": {}}]
+        source = """const example = "document.getElementById('fake').addEventListener('click', nope)";
+const save = document.getElementById('save'); save.addEventListener('click', saveRecord);"""
+        bindings, delegated = MODULE.extract_bindings(source, controls, "example.js")
+        self.assertEqual(len(bindings), 1)
+        self.assertEqual(bindings[0]["selector"], "save")
+        self.assertEqual(bindings[0]["control_ids"], [1])
+        self.assertEqual(delegated, [])
+
+    def test_listener_shaped_text_inside_comments_is_ignored(self):
+        controls = [{"control_id": 1, "tag": "button", "id": "save", "classes": [], "attributes": {}}]
+        source = """// document.getElementById('fake').addEventListener('click', nope)
+const save = document.getElementById('save'); save.addEventListener('click', saveRecord);"""
+        bindings, delegated = MODULE.extract_bindings(source, controls, "example.js")
+        self.assertEqual(len(bindings), 1)
+        self.assertEqual(bindings[0]["selector"], "save")
+        self.assertEqual(delegated, [])
+
     def test_inline_script_listener_is_correlated(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

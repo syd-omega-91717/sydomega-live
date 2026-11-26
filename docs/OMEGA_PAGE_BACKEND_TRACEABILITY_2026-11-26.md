@@ -69,11 +69,11 @@ The finance exclusion list prevents the shared mirror from uploading the listed 
 
 ## Audit-tool integrity gaps
 
-1. **External page modules were omitted from page classification; a fix is now under review.** PR #1576 extends `scan_client()` to inspect directly loaded local `.js`/`.mjs` modules, while excluding platform-global bootstrap/runtime scripts, and adds regression fixtures. It does not follow module imports or scripts dynamically injected by `bg.js`. The first generated snapshot correctly expanded Dashboard/Profile evidence and matched the page census, but exposed a Storage false positive (`storage.from('uploads')` was read as a table); the latest PR revision separates Storage buckets from Postgres relations and adds a regression test. Its regenerated artifact reports 237 pages: BUILT 107, PARTIAL 39, LOCAL_ONLY 45, STATIC 38, BROKEN 1, UNREACHABLE 7. Approvals is now classified as source-wired (1 table, 1 Storage bucket, 10 RPCs, 1 auth call); the remaining BROKEN source reference is Cosmic Ledger's `lesson_completions`, which exists in the dated live snapshot but lacks a repository migration. Do not treat the matrix as accepted until the latest CI run completes.
+1. **External page-module coverage is implemented.** PR #1576 merged to `main` at `101a5ad7c8827ac19e9799ebdce0456682d35057` after all 18/18 workflow runs passed. The scanner now includes directly loaded local `.js`/`.mjs` modules, excludes platform-global bootstrap/runtime scripts, and separates Supabase Storage buckets from Postgres relations. It does not follow module imports or scripts dynamically injected by `bg.js`. The regenerated artifact reports 237 pages: BUILT 107, PARTIAL 39, LOCAL_ONLY 45, STATIC 38, BROKEN 1, UNREACHABLE 7. Approvals is source-classified as wired (1 table, 1 Storage bucket, 10 RPCs, 1 auth call). The remaining BROKEN source reference is Cosmic Ledger's `lesson_completions`, which exists in the live database but lacks a repository migration. PR #1577 refreshes the committed matrix; its blocking checks must pass before that generated inventory is accepted.
 2. **Page inventory count reconciled in the scanner branch.** The committed `EVIDENCE_MATRIX.md` on the audited base was stale at 242. The regenerated matrix on PR #1576 reports 237 pages, matching `config/omega-page-census.json` (237). The regenerated artifact—not the old committed matrix—is the current source evidence; commit the refreshed matrix only after the scanner PR passes and is accepted.
 3. **Dashboard/Profile counts changed when page-owned modules were included.** The regenerated PR #1576 snapshot reports Dashboard as 12 tables, 6 RPCs, 1 Edge Function, 6 auth calls, and 2 localStorage writes; Profile as 5 tables, 11 RPCs, 19 auth calls, and 4 localStorage writes. These are source-scan counts, not proof of successful runtime calls. The previous committed counts omitted page-owned module calls and must be replaced from the exact accepted tree.
 
-Relevant scanner source: [page-only scan](../scripts/evidence-audit.py#L393), [root HTML enumeration](../scripts/evidence-audit.py#L531), [documented inline-script limitation](../FEATURE_IDEAS.md#L2937).
+Relevant scanner source: [page module aggregation](../scripts/evidence-audit.py#L409), [root HTML enumeration](../scripts/evidence-audit.py#L582), [documented inline-script limitation](../FEATURE_IDEAS.md#L2937).
 
 ## Additional source/live-schema reconciliation
 
@@ -89,15 +89,15 @@ Do not label this as a proven runtime failure, add member write grants, or inven
 
 | Priority | Work | Acceptance evidence |
 |---|---|---|
-| P0 | Correct the evidence scanner to follow page-owned external JS modules and regenerate the matrix | Fixture tests for external module table/RPC calls; generated matrix matches the same commit; Approvals no longer classified STATIC |
-| P1 | Add explicit mirror tombstones/deletion semantics | Tests prove delete does not resurrect on restore, while a fresh empty browser can still restore undeleted keys |
+| P0 | Keep the corrected scanner and generated matrix synchronized | PR #1576 merged with 18/18 checks; PR #1577 must pass and commit the 237-page matrix with Storage and external-module evidence |
+| P1 | Inventory every `omega*` key namespace, then add explicit mirror tombstones/deletion semantics | Tests prove intentional deletion stays deleted after restore, while a fresh empty browser can still restore undeleted keys; cache/telemetry/finance exclusions are independently tested |
 | P1 | Define Focus session reconciliation | Failure injection for normalized insert; idempotent retry/replay; no duplicate sessions; visible degraded state or durable recovery |
 | P2 | Verify Profile and Approvals with separate owner/member sessions | Browser tests for signed-out, ordinary member, approved member, owner without AAL2, owner with AAL2; prove both allowed and denied paths |
 | P2 | Verify Mindmap/Atlas backup and restore | Save on device A, restore on clean device B, preserve local conflicts, test oversized values and mirror errors |
-| P2 | Keep media truth labels and test playback independently | Existing concept-reel labels remain; preview playback, mobile behaviour, and asset availability verified separately |
+| P2 | Reconcile Cosmic Ledger's `lesson_completions` migration source | Fresh-install migration replay creates the read-only table with authenticated own-row SELECT RLS and no anon/member write grant, or the page removes the legacy dependency |\n| P2 | Keep media truth labels and test playback independently | Existing concept-reel labels remain; preview playback, mobile behaviour, and asset availability verified separately |
 
 ## First practical step
 
-Fix the **evidence scanner** first. Until it includes page-owned external modules and its generated counts are reconciled, it cannot be trusted as the source of truth for the full page estate. Then add the member-state deletion regression test before changing persistence semantics.
+First, complete review and merge of **PR #1577** so the corrected 237-page matrix is committed. Then build the member-state key lifecycle inventory and deletion regression tests before changing persistence semantics. Do not auto-delete remote rows based only on an empty browser cache.
 
 **Boundary:** this snapshot is a source-level traceability audit. It does not claim that every page action, provider call, storage operation, database policy, or user workflow has been exercised in production.

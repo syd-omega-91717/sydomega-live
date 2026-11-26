@@ -56,11 +56,21 @@ The finance exclusion list prevents the shared mirror from uploading the listed 
 
 ## Audit-tool integrity gaps
 
-1. **External page modules are omitted from page classification.** `scan_client()` reads only the HTML file. `approvals.html` loads `approvals.js`, yet the generated matrix says it has no backend call. `FEATURE_IDEAS.md` already records this exact limitation and lists other affected pages. Extend the scanner to inspect page-owned local script modules while excluding platform-global bootstrap/runtime scripts; add fixtures proving external module RPC/table calls are attributed to the page.
-2. **Generated inventory scopes need reconciliation.** `EVIDENCE_MATRIX.md` reports 242 root HTML pages, while `config/omega-page-census.json` records 237. Confirm whether the census intentionally excludes five files or is stale; do not publish one number as the universal page count until scopes match.
-3. **Dashboard evidence counts need regeneration/reconciliation.** The current matrix reports 12 tables and 2 RPCs for Dashboard. A literal scan of the current `dashboard.html` source produced a different set/count. Re-run the generator from the exact audited tree and reconcile the committed artifact before relying on those totals.
+1. **External page modules were omitted from page classification; a fix is now under review.** PR #1576 extends `scan_client()` to inspect directly loaded local `.js`/`.mjs` modules, while excluding platform-global bootstrap/runtime scripts, and adds regression fixtures. It does not follow module imports or scripts dynamically injected by `bg.js`. The first generated snapshot correctly expanded Dashboard/Profile evidence and matched the page census, but exposed a Storage false positive (`storage.from('uploads')` was read as a table); the latest PR revision separates Storage buckets from Postgres relations and adds a regression test. Do not treat the new matrix as final until the latest CI run completes.
+2. **Page inventory count reconciled in the scanner branch.** The committed `EVIDENCE_MATRIX.md` on the audited base was stale at 242. The regenerated matrix on PR #1576 reports 237 pages, matching `config/omega-page-census.json` (237). The regenerated artifact—not the old committed matrix—is the current source evidence; commit the refreshed matrix only after the scanner PR passes and is accepted.
+3. **Dashboard/Profile counts changed when page-owned modules were included.** The regenerated PR #1576 snapshot reports Dashboard as 12 tables, 6 RPCs, 1 Edge Function, 6 auth calls, and 2 localStorage writes; Profile as 5 tables, 11 RPCs, 19 auth calls, and 4 localStorage writes. These are source-scan counts, not proof of successful runtime calls. The previous committed counts omitted page-owned module calls and must be replaced from the exact accepted tree.
 
 Relevant scanner source: [page-only scan](../scripts/evidence-audit.py#L393), [root HTML enumeration](../scripts/evidence-audit.py#L531), [documented inline-script limitation](../FEATURE_IDEAS.md#L2937).
+
+## Additional source/live-schema reconciliation
+
+The regenerated scanner also identifies `cosmic-ledger.html` as using `lesson_completions` through `omega-sculpture.js`, while no `CREATE TABLE` definition or migration for that relation is present in the repository SQL inventory. This is a **source-of-truth / migration reproducibility gap**, not a confirmed live outage:
+
+- The committed `supabase/live-schema.json` snapshot (captured 2026-11-22) includes `public.lesson_completions` with `id`, `user_id`, `lesson`, and `completed_at`.
+- A read-only live SQL inspection on 2026-11-26 confirmed RLS enabled; an authenticated SELECT policy restricted to `auth.uid() = user_id`; authenticated SELECT only; no anon grant; a unique `(user_id, lesson)` constraint; and `ON DELETE CASCADE` to `auth.users`.
+- The live `id` column is `bigint NOT NULL` with no default, and members have no write grant. The inspected page path is read-only.
+
+Do not label this as a proven runtime failure, add member write grants, or invent a replacement schema. Reconstruct a canonical migration from the verified live definition only after reviewing the intended lifecycle and confirming whether the table is retained or retired.
 
 ## Prioritized implementation sequence
 

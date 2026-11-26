@@ -60,19 +60,6 @@
   },
   {
    "a": "dashboard",
-   "b": "govern",
-   "weight": 5,
-   "shared_pages": [],
-   "shared_relations": [
-    "table:activity_feed",
-    "table:enterprise_accounts",
-    "table:platform_events",
-    "table:task_completions",
-    "table:threat_events"
-   ]
-  },
-  {
-   "a": "dashboard",
    "b": "profile",
    "weight": 5,
    "shared_pages": [],
@@ -120,6 +107,18 @@
     "table:evolution_events",
     "table:leaderboard_snapshots",
     "table:task_completions"
+   ]
+  },
+  {
+   "a": "dashboard",
+   "b": "govern",
+   "weight": 4,
+   "shared_pages": [],
+   "shared_relations": [
+    "table:activity_feed",
+    "table:enterprise_accounts",
+    "table:task_completions",
+    "table:threat_events"
    ]
   },
   {

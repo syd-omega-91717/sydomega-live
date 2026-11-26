@@ -1,7 +1,7 @@
 name: Cloudflare Production Release Verification
 
-# Cloudflare Pages Git integration deploys main. Verify the exact deployed SHA
-# and follow canonical redirects before evaluating production routes.
+# The Cloudflare Pages deployment workflow runs first. Verify its exact deployed SHA
+# after that workflow succeeds, then evaluate canonical routes and security headers.
 on:
   workflow_run:
     workflows: ["Cloudflare Pages"]

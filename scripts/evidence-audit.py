@@ -322,21 +322,40 @@ LS_CONST_RE = re.compile(r'''(?:const|let|var)\s+(\w+)\s*=\s*['"]([^'"]+)['"]'''
 MIRROR_PREFIX = 'omega'
 
 
+def member_state_excluded_keys():
+    """Read the exact key exclusions used by omega-member-state.js."""
+    path = Path('omega-member-state.js')
+    if not path.is_file():
+        return set()
+    source = _strip_code_comments(path.read_text(encoding='utf-8', errors='replace'))
+    excluded = set()
+    for object_name in ('SKIP', 'NO_MIRROR'):
+        match = re.search(
+            r'\bvar\s+' + re.escape(object_name) + r'\s*=\s*\{([^}]*)\}',
+            source, re.S)
+        if match:
+            excluded.update(re.findall(r'\b([A-Za-z0-9_]+)\s*:', match.group(1)))
+    return excluded
+
+
 def mirror_coverage(text):
-    """(covered, uncovered, unresolved) counts of localStorage.setItem keys."""
+    """Counts (eligible, policy_excluded, outside_prefix, runtime_unresolved)."""
     consts = dict(LS_CONST_RE.findall(text))
-    covered = uncovered = unresolved = 0
+    excluded_keys = member_state_excluded_keys()
+    eligible = policy_excluded = outside_prefix = unresolved = 0
     for expr in LS_SET_KEY_RE.findall(text):
         e = expr.strip()
         lit = re.fullmatch(r'''['"]([^'"]+)['"]''', e)
         key = lit.group(1) if lit else consts.get(e)
         if key is None:
             unresolved += 1
-        elif key.startswith(MIRROR_PREFIX):
-            covered += 1
+        elif not key.startswith(MIRROR_PREFIX):
+            outside_prefix += 1
+        elif key in excluded_keys or key.startswith('omega_analytics_'):
+            policy_excluded += 1
         else:
-            uncovered += 1
-    return covered, uncovered, unresolved
+            eligible += 1
+    return eligible, policy_excluded, outside_prefix, unresolved
 
 
 def live_surface():
@@ -549,16 +568,18 @@ def classify(page, info, rels, fns, nav, module_tables):
             detail += ' (signs the member in: %s)' % auth_ev
         detail += ('; has an OmegaLocalBackup export path'
                    if info['backup'] else '; no page-level export path')
-        cov, unc, unres = info['mirror']
-        if unc == 0 and unres == 0 and cov:
-            detail += ('; all %d key%s `omega`-prefixed, so mirrored to '
-                       '`member_state` by omega-member-state.js'
-                       % (cov, '' if cov == 1 else 's'))
-        elif unc:
+        eligible, excluded, outside, unres = info['mirror']
+        if eligible:
+            detail += ('; %d key%s eligible for the `member_state` mirror'
+                       % (eligible, '' if eligible == 1 else 's'))
+        if excluded:
+            detail += ('; %d key%s excluded by `SKIP`/`NO_MIRROR` policy'
+                       % (excluded, '' if excluded == 1 else 's'))
+        if outside:
             detail += ('; **%d key%s NOT `omega`-prefixed, so NOT mirrored**'
-                       % (unc, '' if unc == 1 else 's'))
-        elif unres:
-            detail += ('; %d key%s built at runtime — mirror coverage '
+                       % (outside, '' if outside == 1 else 's'))
+        if unres:
+            detail += ('; %d key%s built at runtime — mirror eligibility '
                        'unresolved by static scan' % (unres, '' if unres == 1 else 's'))
         return 'LOCAL_ONLY', detail
 
@@ -737,7 +758,7 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns,
     w('|---|---|')
     w('| `BUILT` | Reaches Postgres, an Edge Function, or Supabase Storage; table/function references are declared in `supabase/`. |')
     w('| `PARTIAL` | Reaches Postgres, an Edge Function, or Supabase Storage **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |')
-    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge/storage call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |')
+    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge/storage call **of its own**. The shared mirror only attempts eligible `omega`-prefixed keys; `SKIP`, `NO_MIRROR`, analytics keys, oversized values, signed-out sessions, and failed writes are not guaranteed to have a server copy. Each row reports static key eligibility, not proof of a successful upload. |')
     w('| `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |')
     w('| `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |')
     w('| `UNREACHABLE` | Deployed, but neither `nav.js` nor the owner deck (`omega-owner-deck.js`) references it, and it is not a public page. |')

@@ -31,10 +31,10 @@ class CloudflareManualReleaseContract(unittest.TestCase):
 
 
     def test_git_connected_production_release_is_verified_by_exact_sha(self):
-        self.assertIn('workflows: ["Cloudflare Pages"]', PRODUCTION_VERIFY)
-        self.assertIn("workflow_run.head_sha", PRODUCTION_VERIFY)
-        self.assertIn("workflow_run.conclusion == 'success'", PRODUCTION_VERIFY)
+        self.assertIn("workflow_dispatch:", PRODUCTION_VERIFY)
+        self.assertNotIn("workflow_run", PRODUCTION_VERIFY)
         self.assertIn("github.ref != 'refs/heads/main'", PRODUCTION_VERIFY)
+        self.assertIn("CLOUDFLARE_PRODUCTION=PASS", WORKFLOW)
         self.assertIn('base="https://sydomega.com"', PRODUCTION_VERIFY)
         self.assertIn("/.well-known/omega-release.json", PRODUCTION_VERIFY)
         self.assertIn("JSON.parse(s).commit_sha", PRODUCTION_VERIFY)

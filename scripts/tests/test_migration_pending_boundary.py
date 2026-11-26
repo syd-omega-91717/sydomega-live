@@ -135,9 +135,9 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertNotIn("drop table", sql)
         self.assertNotIn("grant ", sql)
         self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 441)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261126202613")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261126202613")
 
 
 
@@ -148,10 +148,10 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
         self.assertIn("where id = 'uploads'", sql)
         self.assertIn("bucket_public is distinct from false", sql)
         self.assertIn("20261117004605", self.remote_versions)
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 441)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 441)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261126202613")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261126202613")
 
     def test_ai_usage_telemetry_schema_and_exact_privileges_are_provider_applied(self) -> None:
         schema = (MIGRATIONS / "20261117002651_omega_ai_requests_service_role_insert_grant.sql").read_text(encoding="utf-8").lower()
@@ -170,10 +170,10 @@ class MigrationPendingBoundaryTests(unittest.TestCase):
             self.assertIn(f"'{privilege.lower()}'", privileges)
         self.assertIn("omega_ai_requests_service_role_privilege_too_broad", privileges)
         self.assertIn("omega_ai_requests_client_privilege_must_remain_denied", privileges)
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 441)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
-        self.assertEqual(self.remote.get("remoteMigrationCount"), 441)
-        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261122105012")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261126202613")
+        self.assertEqual(self.remote.get("remoteMigrationCount"), len(self.remote_versions))
+        self.assertEqual(self.remote.get("latestRemoteMigration"), "20261126202613")
 
     def test_local_migration_versions_are_unique_and_inventory_matches_truth(self) -> None:
         versions: list[str] = []

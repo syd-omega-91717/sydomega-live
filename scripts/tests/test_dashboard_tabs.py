@@ -164,16 +164,25 @@ class TodayTabRetainsTheEcosystemSurface(unittest.TestCase):
 class DashboardMetricTruth(unittest.TestCase):
     HTML = read("dashboard.html")
 
-    def test_failed_count_queries_are_not_rendered_as_zero(self):
-        self.assertNotRegex(self.HTML, r"sid\(['\"][^'\"]+['\"],\s*\w+\.count\s*\|\|\s*0\)")
+    def test_platform_totals_use_the_aggregate_rpc_not_member_rls_counts(self):
+        self.assertIn("sb.rpc('omega_dashboard_public_metrics')", self.HTML)
+        for key, field in (("k-members", "approved_members"), ("k-online", "online_members"),
+                           ("k-tasks", "tasks_today"), ("ops-tasks", "tasks_7d"),
+                           ("k-events", "events_today")):
+            self.assertIn("setCountValue('%s',metrics.%s)" % (key, field), self.HTML)
+        for table in ("profiles", "member_presence", "platform_events"):
+            self.assertNotRegex(self.HTML, r"from\\(['\\"]%s['\\"]\\)\\.select\\('id',\\{count:'exact'" % table)
+        self.assertNotIn("from('task_completions').select('id',{count:'exact'", self.HTML)
+
+    def test_count_query_failures_are_not_rendered_as_zero(self):
+        self.assertNotRegex(self.HTML, r"sid\\(['\\"][^'\\"]+['\\"]\\],\\s*\\w+\\.count\\s*\\|\\|\\s*0\\)")
         self.assertIn("function setCountFromQuery(id,result)", self.HTML)
         self.assertIn("result.error||result.count==null", self.HTML.replace(" ", ""))
         self.assertIn("sid(id,null)", self.HTML)
         self.assertIn("sid(id,result.count)", self.HTML)
 
-    def test_all_live_count_tiles_use_error_aware_rendering(self):
-        for key in ("k-members", "k-online", "k-tasks", "ops-tasks", "k-events",
-                    "k-risks", "adm-pending", "adm-accounts", "adm-threats",
+    def test_owner_only_live_count_tiles_use_error_aware_rendering(self):
+        for key in ("k-risks", "adm-pending", "adm-accounts", "adm-threats",
                     "ai-queries", "ai-memories", "ai-workflows"):
             self.assertIn("setCountFromQuery('%s'," % key, self.HTML)
 
@@ -183,6 +192,7 @@ class DashboardMetricTruth(unittest.TestCase):
         self.assertIn("el.dataset.liveState='unavailable'", self.HTML)
         self.assertIn("renderContributionHeatmap([],true)", self.HTML)
         self.assertIn("if(failedSpark)failedSpark.hidden=true", self.HTML)
+
 
 if __name__ == "__main__":
     unittest.main()

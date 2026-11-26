@@ -53,10 +53,8 @@ class PageJsBindingAuditTests(unittest.TestCase):
 
     def test_listener_shaped_text_inside_string_is_ignored(self):
         controls = [{"control_id": 1, "tag": "button", "id": "save", "classes": [], "attributes": {}}]
-        source = (
-            'const example = "document.getElementById(\\'fake\\').addEventListener(\\'click\\', nope)"; '
-            "const save = document.getElementById('save'); save.addEventListener('click', saveRecord);"
-        )
+        source = """const example = "document.getElementById('fake').addEventListener('click', nope)";
+const save = document.getElementById('save'); save.addEventListener('click', saveRecord);"""
         bindings, delegated = MODULE.extract_bindings(source, controls, "example.js")
         self.assertEqual(len(bindings), 1)
         self.assertEqual(bindings[0]["selector"], "save")
@@ -65,10 +63,8 @@ class PageJsBindingAuditTests(unittest.TestCase):
 
     def test_listener_shaped_text_inside_comments_is_ignored(self):
         controls = [{"control_id": 1, "tag": "button", "id": "save", "classes": [], "attributes": {}}]
-        source = (
-            "// document.getElementById('fake').addEventListener('click', nope)\\n"
-            "const save = document.getElementById('save'); save.addEventListener('click', saveRecord);"
-        )
+        source = """// document.getElementById('fake').addEventListener('click', nope)
+const save = document.getElementById('save'); save.addEventListener('click', saveRecord);"""
         bindings, delegated = MODULE.extract_bindings(source, controls, "example.js")
         self.assertEqual(len(bindings), 1)
         self.assertEqual(bindings[0]["selector"], "save")

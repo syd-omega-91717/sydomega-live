@@ -25,9 +25,9 @@ This scanner reads the repository. It has no database connection, so:
 
 | class | meaning |
 |---|---|
-| `BUILT` | Reaches the backend; every relation and function it names is declared in `supabase/`. |
-| `PARTIAL` | Reaches the backend **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |
-| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |
+| `BUILT` | Reaches Postgres, an Edge Function, or Supabase Storage; table/function references are declared in `supabase/`. |
+| `PARTIAL` | Reaches Postgres, an Edge Function, or Supabase Storage **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |
+| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge/storage call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |
 | `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |
 | `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |
 | `UNREACHABLE` | Deployed, but neither `nav.js` nor the owner deck (`omega-owner-deck.js`) references it, and it is not a public page. |
@@ -36,98 +36,107 @@ This scanner reads the repository. It has no database connection, so:
 
 | class | pages |
 |---|---:|
-| `BUILT` | 96 |
-| `PARTIAL` | 26 |
-| `LOCAL_ONLY` | 39 |
-| `STATIC` | 74 |
-| `BROKEN` | 0 |
+| `BUILT` | 107 |
+| `PARTIAL` | 39 |
+| `LOCAL_ONLY` | 45 |
+| `STATIC` | 38 |
+| `BROKEN` | 1 |
 | `UNREACHABLE` | 7 |
-| **total** | **242** |
+| **total** | **237** |
 
-## BUILT (96)
+## BUILT (107)
 
 | page | evidence |
 |---|---|
-| `academy.html` | reads/writes 2 tables; 2 auth calls |
-| `account.html` | reads/writes 1 table, 1 rpc; 4 auth calls |
+| `achieve.html` | reads/writes 6 tables; 1 auth call |
 | `achievements.html` | reads/writes 5 tables; 1 auth call |
 | `advertising.html` | reads/writes 2 tables; 2 auth calls |
+| `agent-operations.html` | reads/writes 1 table, 1 edge fn; 1 auth call |
 | `agents.html` | reads/writes 1 table, 1 edge fn; 1 auth call |
 | `analytics.html` | reads/writes 2 tables, 2 rpc; 1 auth call |
+| `approvals.html` | reads/writes 1 table, 1 storage bucket, 10 rpc; 1 auth call |
+| `arena.html` | reads/writes 1 table, 1 rpc; 1 auth call |
+| `ascend.html` | reads/writes 4 tables; 1 auth call |
 | `automation.html` | reads/writes 3 tables; 1 auth call |
 | `autonomous-insights.html` | reads/writes 3 tables |
 | `awards.html` | reads/writes 1 table; 1 auth call |
 | `beacon.html` | reads/writes 2 tables; 1 auth call |
 | `blockchain.html` | reads/writes 1 table, 1 rpc; 1 auth call |
-| `character.html` | reads/writes 1 table, 2 rpc; 1 auth call |
+| `character.html` | reads/writes 5 tables, 2 rpc; 1 auth call |
 | `chatbot.html` | reads/writes 1 table, 1 edge fn; 1 auth call |
 | `chronicle.html` | reads/writes 1 table; 1 auth call |
-| `cinema.html` | reads/writes 1 table; 1 auth call |
 | `cipher.html` | reads/writes 1 table; 1 auth call |
 | `city.html` | reads/writes 1 table; 1 auth call |
 | `compliance.html` | reads/writes 1 table; 1 auth call |
 | `consultancy.html` | reads/writes 2 tables; 2 auth calls |
 | `contracts.html` | reads/writes 2 tables; 1 auth call |
-| `cosmos.html` | reads/writes 1 table, 2 edge fn; 3 auth calls |
+| `cosmetics.html` | reads/writes 3 tables, 1 rpc; 1 auth call |
 | `courses.html` | reads/writes 8 tables, 1 rpc; 1 auth call |
 | `covenant.html` | reads/writes 1 table; 1 auth call |
+| `creation-studio.html` | reads/writes 4 tables, 3 rpc, 2 edge fn; 2 auth calls |
 | `credentials.html` | reads/writes 2 tables; 1 auth call |
+| `data-observatory.html` | reads/writes 2 tables; 2 auth calls |
 | `design-system.html` | reads/writes 1 table; 1 auth call |
 | `dna.html` | reads/writes 1 table; 1 auth call |
 | `domain-mastery.html` | reads/writes 1 table; 1 auth call |
 | `ecosystem.html` | reads/writes 1 table; 1 auth call |
 | `elements.html` | reads/writes 1 table; 3 auth calls |
 | `enterprise.html` | reads/writes 3 tables, 1 rpc; 1 auth call |
+| `eternity.html` | reads/writes 3 tables; 1 auth call |
 | `events.html` | reads/writes 3 tables; 1 auth call |
+| `evidence.html` | reads/writes 4 tables; 1 auth call |
 | `evolution.html` | reads/writes 3 tables; 1 auth call |
 | `factions.html` | reads/writes 1 table; 1 auth call |
-| `family.html` | reads/writes 4 tables; 3 auth calls |
 | `feed.html` | reads/writes 4 tables; 1 auth call |
-| `gaming.html` | reads/writes 2 tables; 2 auth calls |
+| `govern.html` | reads/writes 1 table; 2 auth calls |
 | `grades.html` | reads/writes 1 table; 1 auth call |
 | `graph-admin.html` | reads/writes 4 tables |
 | `graph.html` | reads/writes 1 table; 1 auth call |
-| `grid.html` | reads/writes 1 table; 1 auth call |
-| `hall.html` | reads/writes 1 table, 2 rpc; 1 auth call |
+| `hall.html` | reads/writes 3 tables, 2 rpc; 1 auth call |
 | `health.html` | reads/writes 2 tables; 1 auth call |
 | `horoscope.html` | reads/writes 1 table; 1 auth call |
 | `identity.html` | reads/writes 1 table; 1 auth call |
 | `income.html` | reads/writes 3 tables, 2 rpc; 1 auth call |
-| `interface-omni.html` | reads/writes 1 table, 2 rpc; 1 auth call |
+| `insight.html` | reads/writes 5 tables; 1 auth call |
+| `intel.html` | reads/writes 4 tables, 1 rpc; 3 auth calls |
+| `knowledge-loom.html` | reads/writes 1 table; 1 auth call |
 | `knowledge.html` | reads/writes 1 table; 1 auth call |
 | `kyc.html` | reads/writes 1 table; 1 auth call |
-| `levels.html` | reads/writes 1 table; 1 auth call |
+| `leaderboard.html` | reads/writes 2 tables, 1 rpc, 1 edge fn; 1 auth call |
+| `ledger.html` | reads/writes 2 tables; 1 auth call |
+| `life.html` | reads/writes 11 tables, 1 rpc; 5 auth calls |
 | `maintenance.html` | reads/writes 1 table; 1 auth call |
 | `map.html` | reads/writes 1 table; 1 auth call |
-| `marketing.html` | reads/writes 2 tables, 1 rpc; 1 auth call |
-| `marketplace.html` | reads/writes 3 tables; 1 auth call |
-| `matrix.html` | reads/writes 2 tables, 1 rpc; 4 auth calls |
+| `marketing.html` | reads/writes 2 tables, 1 rpc, 2 edge fn; 4 auth calls |
+| `marketplace.html` | reads/writes 3 tables, 2 edge fn; 4 auth calls |
 | `membership.html` | reads/writes 1 table; 1 auth call |
 | `movies.html` | reads/writes 1 table; 1 auth call |
+| `my-quests.html` | reads/writes 2 tables; 1 auth call |
 | `news.html` | reads/writes 2 tables, 1 rpc, 1 edge fn; 1 auth call |
 | `nexus.html` | reads/writes 1 table, 1 rpc; 1 auth call |
 | `notes.html` | reads/writes 2 tables; 1 auth call |
 | `observatory.html` | reads/writes 7 tables; 1 auth call |
 | `oracle.html` | reads/writes 1 table; 1 auth call |
-| `payments.html` | reads/writes 1 table; 1 auth call |
-| `pending.html` | reads/writes 1 table; 3 auth calls |
+| `orrery.html` | reads/writes 4 tables, 1 rpc; 1 auth call |
+| `personal-intelligence.html` | reads/writes 3 tables; 1 auth call |
 | `phases.html` | reads/writes 1 table; 1 auth call |
 | `points.html` | reads/writes 2 tables; 1 auth call |
 | `portfolio.html` | reads/writes 2 tables; 1 auth call |
 | `prediction.html` | reads/writes 1 table, 1 edge fn; 2 auth calls |
-| `privacy.html` | reads/writes 2 tables, 2 rpc; 2 auth calls |
-| `profile.html` | reads/writes 4 tables, 9 rpc; 8 auth calls |
+| `privacy.html` | reads/writes 7 tables, 3 rpc; 5 auth calls |
 | `projects.html` | reads/writes 4 tables; 1 auth call |
-| `publishing.html` | reads/writes 2 tables, 1 rpc; 1 auth call |
+| `publishing.html` | reads/writes 2 tables, 1 rpc, 2 edge fn; 4 auth calls |
 | `pulse.html` | reads/writes 1 edge fn |
 | `quest-progress.html` | reads/writes 1 table; 1 auth call |
 | `queue.html` | reads/writes 2 tables; 1 auth call |
 | `realm.html` | reads/writes 1 table; 1 auth call |
+| `recovery.html` | reads/writes 1 table, 2 rpc; 1 auth call |
+| `replay.html` | reads/writes 1 table; 1 auth call |
 | `research.html` | reads/writes 2 tables; 1 auth call |
 | `roadmap.html` | reads/writes 1 table; 1 auth call |
 | `rune.html` | reads/writes 1 table; 1 auth call |
 | `seasonal-events.html` | reads/writes 1 table |
-| `services.html` | reads/writes 1 table; 1 auth call |
+| `services.html` | reads/writes 2 tables; 3 auth calls |
 | `sigil.html` | reads/writes 1 table; 1 auth call |
 | `sigma.html` | reads/writes 1 table; 1 auth call |
 | `signal.html` | reads/writes 1 table; 1 auth call |
@@ -135,48 +144,63 @@ This scanner reads the repository. It has no database connection, so:
 | `sovereign-ai.html` | reads/writes 1 table, 1 edge fn; 1 auth call |
 | `sovereign-covenant.html` | reads/writes 1 table; 1 auth call |
 | `sovereigns.html` | reads/writes 1 table; 1 auth call |
+| `studio-library.html` | reads/writes 1 edge fn |
 | `studio.html` | reads/writes 2 tables; 1 auth call |
 | `subscriptions.html` | reads/writes 1 table; 1 auth call |
-| `terms.html` | reads/writes 1 table; 3 auth calls |
 | `trailers.html` | reads/writes 1 table; 1 auth call |
 | `travel.html` | reads/writes 2 tables; 1 auth call |
 | `triads.html` | reads/writes 1 table; 1 auth call |
 | `tribe.html` | reads/writes 1 table; 1 auth call |
 | `universe.html` | reads/writes 1 table; 1 auth call |
-| `vault.html` | reads/writes 3 tables, 1 rpc; 1 auth call |
+| `vault.html` | reads/writes 3 tables, 1 rpc; 2 auth calls |
+| `world.html` | reads/writes 6 tables; 3 auth calls |
+| `worlds.html` | reads/writes 1 edge fn |
 
-## PARTIAL (26)
+## PARTIAL (39)
 
 | page | evidence |
 |---|---|
+| `academy.html` | reads/writes 4 tables; 3 auth calls; also 3 localStorage writes |
+| `account.html` | reads/writes 1 table, 1 rpc; 7 auth calls; also 1 localStorage write |
 | `ascension.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `bloodline.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
 | `codex.html` | reads/writes 2 tables; 2 auth calls; also 2 localStorage writes |
 | `contributions.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
-| `dashboard.html` | reads/writes 12 tables, 2 rpc; 1 auth call; also 1 localStorage write |
+| `control-center.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
+| `cosmos.html` | reads/writes 1 table, 2 edge fn; 7 auth calls; also 1 localStorage write |
+| `dashboard.html` | reads/writes 12 tables, 6 rpc, 1 edge fn; 6 auth calls; also 2 localStorage writes |
+| `family.html` | reads/writes 4 tables; 6 auth calls; also 1 localStorage write |
 | `focus.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
 | `forge.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `gates.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
+| `gaming.html` | reads/writes 2 tables; 3 auth calls; also 2 localStorage writes |
 | `governance.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
 | `habits.html` | reads/writes 2 tables, 1 rpc; 2 auth calls; also 11 localStorage writes |
 | `heritage.html` | reads/writes 1 table; 1 auth call; also 4 localStorage writes |
 | `houses.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `intelligence.html` | reads/writes 3 tables, 1 edge fn; 1 auth call; also 2 localStorage writes |
-| `investment.html` | reads/writes 1 edge fn; also 1 localStorage write |
+| `intelligence.html` | reads/writes 7 tables, 1 edge fn; 3 auth calls; also 2 localStorage writes |
+| `interface-omni.html` | reads/writes 1 table, 2 rpc; 4 auth calls; also 1 localStorage write |
+| `invest.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
+| `investment.html` | reads/writes 1 edge fn; also 3 localStorage writes |
 | `kings.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
+| `levels.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
+| `matrix.html` | reads/writes 2 tables, 1 rpc; 7 auth calls; also 1 localStorage write |
+| `media.html` | reads/writes 2 tables, 1 rpc; 7 auth calls; also 1 localStorage write |
 | `mirror.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `notifications.html` | reads/writes 2 tables; 1 auth call; also 5 localStorage writes |
 | `oath.html` | reads/writes 2 tables; 1 auth call; also 1 localStorage write |
 | `pantheons.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
+| `pending.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write |
+| `profile.html` | reads/writes 5 tables, 11 rpc; 19 auth calls; also 4 localStorage writes |
 | `publications.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
+| `reset.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write |
 | `search.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `series.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
 | `targets.html` | reads/writes 2 tables; 1 auth call; also 6 localStorage writes |
-| `treasury.html` | reads/writes 1 table; 1 auth call; also 5 localStorage writes |
-| `trophies.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
+| `terms.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write |
+| `treasury.html` | reads/writes 1 table; 1 auth call; also 7 localStorage writes |
 | `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes |
 
-## LOCAL_ONLY (39)
+## LOCAL_ONLY (45)
 
 | page | evidence |
 |---|---|
@@ -184,17 +208,23 @@ This scanner reads the repository. It has no database connection, so:
 | `atlas.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `body.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
 | `breath.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `celestial-covenants.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `charter.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `clarity.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `contacts.html` | 4 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 4 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `decisions.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `exam.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `expenses.html` | 3 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys built at runtime — mirror coverage unresolved by static scan |
+| `exam.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
+| `expenses.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 4 keys built at runtime — mirror coverage unresolved by static scan |
 | `fasting.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `flashcard.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `game-last-galactic-empire.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `game-omega-civilization.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `game-origins-bridge.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `game-origins.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
 | `gratitude.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `journal.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `lab.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `ladder.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
 | `library.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `mentors.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `mindmap.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
@@ -207,7 +237,7 @@ This scanner reads the repository. It has no database connection, so:
 | `principles.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `quotes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `reading.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `revenue.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `revenue.html` | 4 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys built at runtime — mirror coverage unresolved by static scan |
 | `rituals.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `skills.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `sleep.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
@@ -215,89 +245,59 @@ This scanner reads the repository. It has no database connection, so:
 | `time.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `vision.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 | `vocabulary.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `wallet.html` | 2 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `wallet.html` | 4 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys built at runtime — mirror coverage unresolved by static scan |
 | `water.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `wealth.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `wealth.html` | 7 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys built at runtime — mirror coverage unresolved by static scan |
 | `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
 
-## STATIC (74)
+## STATIC (38)
 
 | page | evidence |
 |---|---|
 | `404.html` | no backend call, no stored state |
-| `achieve.html` | no backend call, no stored state |
 | `ad-network.html` | no backend call, no stored state |
 | `agent-network.html` | no backend call, no stored state |
-| `agent-operations.html` | no backend call, no stored state |
-| `approvals.html` | no backend call, no stored state |
 | `architect.html` | no backend call, no stored state |
-| `architecture.html` | no backend call, no stored state |
+| `architecture.html` | no persisted state; 2 auth calls only |
 | `archive.html` | no backend call, no stored state |
-| `arena.html` | no backend call, no stored state |
-| `ascend.html` | no backend call, no stored state |
-| `celestial-covenants.html` | no backend call, no stored state |
 | `characters.html` | no backend call, no stored state |
 | `command-center.html` | no backend call, no stored state |
 | `command.html` | no backend call, no stored state |
-| `control-center.html` | no backend call, no stored state |
 | `control-plane.html` | no backend call, no stored state |
-| `cosmetics.html` | no backend call, no stored state |
-| `cosmic-ledger.html` | no backend call, no stored state |
 | `council.html` | no persisted state; 1 auth call only |
-| `creation-studio.html` | no backend call, no stored state |
 | `creator.html` | no backend call, no stored state |
-| `data-observatory.html` | no backend call, no stored state |
 | `design-lab.html` | no backend call, no stored state |
 | `design-showcase.html` | no backend call, no stored state |
 | `enter.html` | no backend call, no stored state |
-| `eternity.html` | no backend call, no stored state |
-| `evidence.html` | no backend call, no stored state |
-| `game-last-galactic-empire.html` | no backend call, no stored state |
-| `game-omega-civilization.html` | no backend call, no stored state |
-| `game-origins-bridge.html` | no backend call, no stored state |
-| `game-origins.html` | no backend call, no stored state |
 | `gateway.html` | no backend call, no stored state |
-| `govern.html` | no backend call, no stored state |
 | `guide.html` | no backend call, no stored state |
 | `healthz.html` | no backend call, no stored state |
 | `hercules.html` | no backend call, no stored state |
 | `index.html` | no backend call, no stored state |
-| `insight.html` | no backend call, no stored state |
-| `intel.html` | no backend call, no stored state |
-| `invest.html` | no backend call, no stored state |
-| `knowledge-loom.html` | no backend call, no stored state |
-| `ladder.html` | no backend call, no stored state |
-| `leaderboard.html` | no backend call, no stored state |
-| `ledger.html` | no backend call, no stored state |
-| `life.html` | no backend call, no stored state |
-| `media.html` | no persisted state; 2 auth calls only |
 | `missions.html` | no backend call, no stored state |
 | `monitoring-dashboard.html` | no backend call, no stored state |
-| `my-quests.html` | no backend call, no stored state |
 | `omega-platform-navigator.html` | no backend call, no stored state |
 | `ops.html` | no backend call, no stored state |
 | `order.html` | no backend call, no stored state |
-| `orrery.html` | no backend call, no stored state |
-| `personal-intelligence.html` | no backend call, no stored state |
 | `platform-kernel.html` | no backend call, no stored state |
 | `project-studio.html` | no backend call, no stored state |
 | `realms.html` | no backend call, no stored state |
-| `recovery.html` | no backend call, no stored state |
-| `replay.html` | no backend call, no stored state |
-| `reset.html` | no persisted state; 3 auth calls only |
 | `sculpture.html` | no backend call, no stored state |
 | `security.html` | no backend call, no stored state |
 | `settings.html` | no backend call, no stored state |
 | `sovereign-core.html` | no backend call, no stored state |
 | `standing-dashboard.html` | no backend call, no stored state |
-| `studio-library.html` | no backend call, no stored state |
 | `verify-deployment.html` | no backend call, no stored state |
 | `verify-modules.html` | no backend call, no stored state |
 | `visual-atlas.html` | no backend call, no stored state |
 | `world-atlas.html` | no backend call, no stored state |
 | `world-shell.html` | no backend call, no stored state |
-| `world.html` | no backend call, no stored state |
-| `worlds.html` | no backend call, no stored state |
+
+## BROKEN (1)
+
+| page | evidence |
+|---|---|
+| `cosmic-ledger.html` | undefined table/view: lesson_completions |
 
 ## UNREACHABLE (7)
 
@@ -353,7 +353,7 @@ captured **2026-11-22T09:24:00.000Z**. This is a dated provider snapshot, not a 
 | | count |
 |---|---:|
 | tables + views declared in `supabase/` | 235 |
-| functions declared in `supabase/` | 205 |
+| functions declared in `supabase/` | 206 |
 | tables defined in more than one root SQL file | 46 |
 
 Duplicate definitions are a source-of-truth hazard, not necessarily a

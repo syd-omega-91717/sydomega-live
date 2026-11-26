@@ -411,7 +411,7 @@ class TestMirrorCoverage(EvidenceAuditFixture):
                    "<script>const ENC_KEY = 'omega_journal_enc';"
                    "localStorage.setItem(ENC_KEY, v)</script>")
         self.audit_stdout()
-        self.assertIn('mirrored to `member_state`', self.report())
+        self.assertIn('eligible for the `member_state` mirror', self.report())
 
     def test_a_const_outside_the_prefix_is_still_caught(self):
         """The const path must not become a blanket pass."""

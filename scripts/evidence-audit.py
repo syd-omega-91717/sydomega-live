@@ -214,7 +214,8 @@ def _dropped_by_migrations(tbl_re):
 # Client surface -- what the shipped pages actually reach for
 # ---------------------------------------------------------------------------
 
-FROM_RE = re.compile(r"""\.from\(\s*['"]([a-zA-Z0-9_]+)['"]""")
+FROM_RE = re.compile(r"""(?<!storage)\.from\(\s*['"]([a-zA-Z0-9_]+)['"]""")
+STORAGE_RE = re.compile(r"""\.storage\.from\(\s*['"]([a-zA-Z0-9_]+)['"]""")
 RPC_RE = re.compile(r"""\.rpc\(\s*['"]([a-zA-Z0-9_]+)['"]""")
 # Also recognize a literal function name passed to the repository's small
 # invoke(sb, name, body) wrapper. The wrapper itself calls
@@ -439,10 +440,12 @@ def page_client_source(path):
 def scan_client(path):
     text = page_client_source(path)
     tables = set(FROM_RE.findall(text))
+    storage = set(STORAGE_RE.findall(text))
     rpcs = set(RPC_RE.findall(text))
     edges = {a or b or c for a, b, c in EDGE_RE.findall(text)}
     return {
         'tables': tables,
+        'storage': storage,
         'rpcs': rpcs,
         'edges': edges,
         'ls_writes': len(LS_WRITE_RE.findall(text)),
@@ -515,12 +518,14 @@ def classify(page, info, rels, fns, nav, module_tables):
     auth_ev = ('%d auth call%s' % (info['auth'], '' if info['auth'] == 1 else 's')
                ) if info['auth'] else ''
 
-    backend = info['tables'] | info['rpcs'] | info['edges']
+    backend = info['tables'] | info['storage'] | info['rpcs'] | info['edges']
     if backend:
         ev = []
         if info['tables']:
             ev.append('%d table%s' % (len(info['tables']),
                                       '' if len(info['tables']) == 1 else 's'))
+        if info['storage']:
+            ev.append('%d storage bucket%s' % (len(info['storage']), '' if len(info['storage']) == 1 else 's'))
         if info['rpcs']:
             ev.append('%d rpc' % len(info['rpcs']))
         if info['edges']:
@@ -730,9 +735,9 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns,
     w('')
     w('| class | meaning |')
     w('|---|---|')
-    w('| `BUILT` | Reaches the backend; every relation and function it names is declared in `supabase/`. |')
-    w('| `PARTIAL` | Reaches the backend **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |')
-    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |')
+    w('| `BUILT` | Reaches Postgres, an Edge Function, or Supabase Storage; table/function references are declared in `supabase/`. |')
+    w('| `PARTIAL` | Reaches Postgres, an Edge Function, or Supabase Storage **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |')
+    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge/storage call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |')
     w('| `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |')
     w('| `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |')
     w('| `UNREACHABLE` | Deployed, but neither `nav.js` nor the owner deck (`omega-owner-deck.js`) references it, and it is not a public page. |')

@@ -123,8 +123,8 @@ class CloudflarePagesDeploymentContract(unittest.TestCase):
         path = os.path.join(WORKFLOWS, "cloudflare-pages.yml")
         with open(path, encoding="utf-8") as fh:
             workflow = fh.read()
-        self.assertRegex(workflow, r"(?m)^  push:\\s*$")
-        self.assertRegex(workflow, r"(?m)^    branches: \\[main\\]$")
+        self.assertIn("  push:\n", workflow)
+        self.assertIn("    branches: [main]", workflow)
         self.assertIn("CLOUDFLARE_API_TOKEN", workflow)
         self.assertIn("CLOUDFLARE_ACCOUNT_ID", workflow)
         self.assertIn("exit 1", workflow)

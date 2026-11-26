@@ -170,12 +170,13 @@ class DashboardMetricTruth(unittest.TestCase):
                            ("k-tasks", "tasks_today"), ("ops-tasks", "tasks_7d"),
                            ("k-events", "events_today")):
             self.assertIn("setCountValue('%s',metrics.%s)" % (key, field), self.HTML)
-        for table in ("profiles", "member_presence", "platform_events"):
-            self.assertNotRegex(self.HTML, r"from\\(['\\"]%s['\\"]\\)\\.select\\('id',\\{count:'exact'" % table)
-        self.assertNotIn("from('task_completions').select('id',{count:'exact'", self.HTML)
+        self.assertNotIn("from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true)", self.HTML)
+        self.assertNotIn("from('member_presence').select('user_id',{count:'exact',head:true})", self.HTML)
+        self.assertNotIn("from('task_completions').select('id',{count:'exact',head:true})", self.HTML)
+        self.assertNotIn("from('platform_events').select('id',{count:'exact',head:true})", self.HTML)
 
     def test_count_query_failures_are_not_rendered_as_zero(self):
-        self.assertNotRegex(self.HTML, r"sid\\(['\\"][^'\\"]+['\\"]\\],\\s*\\w+\\.count\\s*\\|\\|\\s*0\\)")
+        self.assertNotIn("count||0", self.HTML)
         self.assertIn("function setCountFromQuery(id,result)", self.HTML)
         self.assertIn("result.error||result.count==null", self.HTML.replace(" ", ""))
         self.assertIn("sid(id,null)", self.HTML)

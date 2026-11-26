@@ -15,7 +15,7 @@
   var css = `
     .omega-spatial-realm{position:relative;isolation:isolate;min-height:420px;margin:18px clamp(14px,3vw,36px);overflow:hidden;border:1px solid var(--line,rgba(201,168,76,.2));background:radial-gradient(circle at 50% 35%,rgba(0,229,255,.06),transparent 42%),linear-gradient(135deg,rgba(201,168,76,.045),rgba(2,2,6,.92));border-radius:4px;perspective:1100px;contain:layout paint style}
     .omega-spatial-realm[data-realm="gaming"]{--realm:#9b6bf0;--realm2:#00e5ff}
-    .omega-spatial-realm[data-realm="cinema"]{--realm:#e8c97a;--realm2:#c4453c}
+    .omega-spatial-realm[data-realm="movies"]{--realm:#e8c97a;--realm2:#c4453c}
     .omega-spatial-stage{position:absolute;inset:0;display:grid;place-items:center;transform-style:preserve-3d;overflow:hidden}
     .omega-spatial-grid{position:absolute;width:140%;height:140%;left:-20%;top:24%;transform:rotateX(67deg) translateZ(-90px);transform-origin:center center;background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,transparent,black 30%,black 80%,transparent)}
     .omega-spatial-orbit{position:absolute;width:250px;height:250px;border:1px solid color-mix(in srgb,var(--realm) 55%,transparent);border-radius:50%;transform:rotateX(68deg) rotateZ(-12deg) translateZ(80px);box-shadow:0 0 50px color-mix(in srgb,var(--realm) 12%,transparent)}
@@ -50,16 +50,18 @@
     var root = document.querySelector('[data-omega-spatial-realm="' + realm + '"]');
     if (!root || root.getAttribute('data-mounted') === '1') return;
     root.setAttribute('data-mounted','1');
-    root.setAttribute('data-realm',realm);
+    var canonicalRealm = realm === 'cinema' ? 'movies' : realm;
+    var isGaming = canonicalRealm === 'gaming';
+    root.setAttribute('data-realm',canonicalRealm);
 
-    var title = realm === 'gaming' ? 'GAMING REALM' : 'CINEMA REALM';
-    var copy = realm === 'gaming'
+    var title = isGaming ? 'GAMING REALM' : 'MOVIES REALM';
+    var copy = isGaming
       ? 'PLAY · COMPETE · MASTER · RETURN TO THE FUNCTIONAL GAME SURFACES'
       : 'STORY · SCENE · CHARACTER · RETURN TO THE FUNCTIONAL MEDIA SURFACES';
-    var nodes = realm === 'gaming'
+    var nodes = isGaming
       ? ['ARENA','CHARACTERS','MASTERY','REWARDS']
       : ['FILMS','SERIES','SCENES','CHARACTERS'];
-    var links = realm === 'gaming'
+    var links = isGaming
       ? [['OPEN GAMES','/gaming.html'],['CHARACTERS','/characters.html']]
       : [['OPEN MOVIES','/movies.html'],['SERIES','/series.html']];
 
@@ -70,7 +72,7 @@
       + '<div class="omega-spatial-nodes">'
       + nodes.map(function(n,i){return '<div class="omega-spatial-node n'+(i+1)+'" aria-hidden="true">Ω · '+n+'</div>';}).join('')
       + '</div></div>'
-      + '<div class="omega-spatial-label">Ω / SPATIAL SYSTEM / '+realm.toUpperCase()+' / FUNCTIONAL REALM</div>'
+      + '<div class="omega-spatial-label">Ω / SPATIAL SYSTEM / '+canonicalRealm.toUpperCase()+' / FUNCTIONAL REALM</div>'
       + '<div class="omega-spatial-title">'+title+'<div class="omega-spatial-copy">'+copy+'</div></div>'
       + '<nav class="omega-spatial-actions" aria-label="'+title+' navigation">'
       + links.map(function(l){return '<a class="omega-spatial-action" href="'+l[1]+'">'+l[0]+'</a>';}).join('')
@@ -81,7 +83,8 @@
 
   function mount() {
     make('gaming');
-    make('cinema');
+    make('movies');
+    make('cinema'); // backward compatibility for any retained legacy embed
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, { once:true });
   else mount();

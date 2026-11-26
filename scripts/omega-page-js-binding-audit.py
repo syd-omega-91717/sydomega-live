@@ -18,12 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTROL_TAGS = {"button", "input", "select", "textarea", "form"}
 EVENTS = {"click", "submit", "change", "input", "keydown", "keyup", "focus", "blur", "pointerdown", "drop"}
 def mask_js_non_code(source):
-    """Replace comments and quoted literals with tokens before regex correlation.
-
-    This prevents listener-shaped text inside comments, strings, and template
-    literals from being reported as executable event wiring. Template
-    interpolation is intentionally not parsed by this conservative scanner.
-    """
+    """Replace comments and quoted literals with tokens before regex correlation."""
     output = []
     strings = {}
     i = 0
@@ -31,7 +26,7 @@ def mask_js_non_code(source):
         ch = source[i]
         nxt = source[i + 1] if i + 1 < len(source) else ""
         if ch == "/" and nxt == "/":
-            while i < len(source) and source[i] not in "\\r\\n":
+            while i < len(source) and source[i] not in "\r\n":
                 output.append(" ")
                 i += 1
             continue
@@ -43,16 +38,16 @@ def mask_js_non_code(source):
                     output.extend("  ")
                     i += 2
                     break
-                output.append("\\n" if source[i] == "\\n" else " ")
+                output.append("\n" if source[i] == "\n" else " ")
                 i += 1
             continue
-        if ch in ("'", '"', "`"):
+        if ch in ("'", '"', chr(96)):
             quote = ch
             i += 1
             literal = []
             while i < len(source):
                 current = source[i]
-                if current == "\\\\" and i + 1 < len(source):
+                if current == "\\" and i + 1 < len(source):
                     literal.append(source[i:i + 2])
                     i += 2
                     continue
@@ -70,24 +65,23 @@ def mask_js_non_code(source):
     return "".join(output), strings
 
 
-STRING_TOKEN = re.compile(r"__OMEGA_STRING_(\\d+)__")
 ASSIGNMENT = re.compile(
-    r"\\b(?:var|let|const)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*document\\s*\\.\\s*"
-    r"(getElementById|querySelector|querySelectorAll)\\s*\\(\\s*__OMEGA_STRING_(\\d+)__\\s*\\)",
+    r"\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=\s*document\s*\.\s*"
+    r"(getElementById|querySelector|querySelectorAll)\s*\(\s*__OMEGA_STRING_(\d+)__\s*\)",
     re.S,
 )
 VARIABLE_LISTENER = re.compile(
-    r"\\b([A-Za-z_$][\\w$]*)\\s*\\.\\s*addEventListener\\s*\\(\\s*__OMEGA_STRING_(\\d+)__",
+    r"\b([A-Za-z_$][\w$]*)\s*\.\s*addEventListener\s*\(\s*__OMEGA_STRING_(\d+)__",
     re.S,
 )
 DIRECT_LISTENER = re.compile(
-    r"document\\s*\\.\\s*(getElementById|querySelector|querySelectorAll)\\s*"
-    r"\\(\\s*__OMEGA_STRING_(\\d+)__\\s*\\)\\s*\\.\\s*addEventListener\\s*"
-    r"\\(\\s*__OMEGA_STRING_(\\d+)__",
+    r"document\s*\.\s*(getElementById|querySelector|querySelectorAll)\s*"
+    r"\(\s*__OMEGA_STRING_(\d+)__\s*\)\s*\.\s*addEventListener\s*"
+    r"\(\s*__OMEGA_STRING_(\d+)__",
     re.S,
 )
 DELEGATED_LISTENER = re.compile(
-    r"\\b(document|window|body)\\s*\\.\\s*addEventListener\\s*\\(\\s*__OMEGA_STRING_(\\d+)__",
+    r"\b(document|window|body)\s*\.\s*addEventListener\s*\(\s*__OMEGA_STRING_(\d+)__",
     re.S,
 )
 

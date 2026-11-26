@@ -160,5 +160,27 @@ class TodayTabRetainsTheEcosystemSurface(unittest.TestCase):
         self.assertGreater(self.HTML.index("data-omega-command-dock"), tabs)
 
 
+
+class DashboardMetricTruth(unittest.TestCase):
+    HTML = read("dashboard.html")
+
+    def test_failed_count_queries_are_not_rendered_as_zero(self):
+        self.assertNotRegex(self.HTML, r"sid\(['\"][^'\"]+['\"],\s*\w+\.count\s*\|\|\s*0\)")
+        self.assertIn("function setCountFromQuery(id,result)", self.HTML)
+        self.assertIn("result.error||result.count==null", self.HTML.replace(" ", ""))
+        self.assertIn("sid(id,null)", self.HTML)
+        self.assertIn("sid(id,result.count)", self.HTML)
+
+    def test_all_live_count_tiles_use_error_aware_rendering(self):
+        for key in ("k-members", "k-online", "k-tasks", "ops-tasks", "k-events",
+                    "k-risks", "adm-pending", "adm-accounts", "adm-threats",
+                    "ai-queries", "ai-memories", "ai-workflows"):
+            self.assertIn("setCountFromQuery('%s'," % key, self.HTML)
+
+    def test_failed_contribution_read_does_not_render_an_empty_zero_heatmap(self):
+        self.assertIn("renderContributionHeatmap(hm.data||[],!!hm.error)", self.HTML)
+        self.assertIn("if(tsEl&&!hm.error)", self.HTML)
+        self.assertIn("el.dataset.liveState='unavailable'", self.HTML)
+
 if __name__ == "__main__":
     unittest.main()

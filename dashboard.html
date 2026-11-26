@@ -1320,6 +1320,7 @@ function sid(id,v){
   }
 }
 function setCountFromQuery(id,result){if(!result||result.error||result.count==null){sid(id,null);return;}sid(id,result.count);}
+function setCountValue(id,value){if(typeof value!=='number'||!isFinite(value)||value<0){sid(id,null);return;}sid(id,value);}
 
 (async function(){
   /* ACTION CENTRE. Every item must come from this member's real state; when
@@ -1438,37 +1439,30 @@ function setCountFromQuery(id,result){if(!result||result.error||result.count==nu
     /* Radar chart */
     if(window.OmegaOSS) renderRadarChart(pr);
 
-    /* Live counts */
+    /* Public platform totals come from a constrained aggregate RPC. RLS deliberately hides private profiles, other members' tasks and platform events from ordinary member reads; direct table counts therefore produce partial, misleading totals. The RPC returns counts only. */
     try{
-      var mc=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true);
-      setCountFromQuery('k-members',mc);
-    }catch(e){}
-    try{
-      /* "Online now" -- omega-presence.js (loaded platform-wide) syncs every
-         30s; a 90s recency window covers one missed sync before a member
-         reads as offline. RLS already grants every member SELECT on this
-         table (public.member_presence, "members see presence" policy). */
-      var onlineAgo=new Date(Date.now()-90*1000).toISOString();
-      var on=await sb.from('member_presence').select('user_id',{count:'exact',head:true}).eq('is_online',true).gte('last_seen',onlineAgo);
-      setCountFromQuery('k-online',on);
-    }catch(e){}
-    try{
-      var today=new Date().toISOString().slice(0,10);
-      var tc=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',today);
-      setCountFromQuery('k-tasks',tc);
-      var tw=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',new Date(Date.now()-7*864e5).toISOString());
-      setCountFromQuery('ops-tasks',tw);
-    }catch(e){}
+      var metricsResult=await sb.rpc('omega_dashboard_public_metrics');
+      var metrics=metricsResult&&!metricsResult.error?metricsResult.data:null;
+      if(metrics&&metrics.ok===true){
+        setCountValue('k-members',metrics.approved_members);
+        setCountValue('k-online',metrics.online_members);
+        setCountValue('k-tasks',metrics.tasks_today);
+        setCountValue('ops-tasks',metrics.tasks_7d);
+        setCountValue('k-events',metrics.events_today);
+      }else{
+        ['k-members','k-online','k-tasks','ops-tasks','k-events'].forEach(function(id){sid(id,null);});
+      }
+    }catch(e){
+      ['k-members','k-online','k-tasks','ops-tasks','k-events'].forEach(function(id){sid(id,null);});
+    }
     try{
       var ninetyAgo=new Date(Date.now()-90*864e5).toISOString();
       var hm=await sb.from('task_completions').select('completed_at').eq('user_id',s.user.id).gte('completed_at',ninetyAgo);
       renderContributionHeatmap(hm.data||[],!!hm.error);
-      /* FEATURE_IDEAS.md #27 Wave 1: same fetch, no second query. Real
-         per-day counts from this member's own completions, last 14 days;
-         a day with none is a true 0. */
+      /* Personal contribution history remains scoped to this member. */
       var tsEl=document.getElementById('dash-tasks-spark'); if(tsEl&&!hm.error){
         var byDay={};
-        (hm.data||[]).forEach(function(r){var d=(r.completed_at||'').slice(0,10);if(d)byDay[d]=(byDay[d]||0)+1;});
+        (hm.data||[]).forEach(function(r){var day=(r.completed_at||'').slice(0,10);if(day)byDay[day]=(byDay[day]||0)+1;});
         var series=[];
         for(var i=13;i>=0;i--){
           var dd=new Date(Date.now()-i*864e5).toISOString().slice(0,10);
@@ -1481,10 +1475,6 @@ function setCountFromQuery(id,result){if(!result||result.error||result.count==nu
       var failedSpark=document.getElementById('dash-tasks-spark');
       if(failedSpark)failedSpark.hidden=true;
     }
-    try{
-      var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',new Date().toISOString().slice(0,10));
-      setCountFromQuery('k-events',pe);
-    }catch(e){}
     /* Analytics */
     if(pr.is_owner){
       try{

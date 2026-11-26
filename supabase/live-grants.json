@@ -26,7 +26,7 @@
     "Regenerate with the query in",
     "scripts/grant-contract.py --help (FUNCTIONS)."
   ],
-  "captured_at": "2026-11-22",
+  "captured_at": "2026-11-26",
   "project": "ydqhzvvoyufiiqvzcjns",
   "role": "authenticated",
   "relations": {
@@ -1089,6 +1089,7 @@
     "omega_create_experience",
     "omega_create_recovery_checkpoint",
     "omega_creation_surface",
+    "omega_dashboard_public_metrics",
     "omega_is_owner",
     "omega_issue_certificate",
     "omega_knowledge_hybrid_search",

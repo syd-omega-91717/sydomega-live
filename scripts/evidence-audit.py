@@ -371,7 +371,7 @@ def mirror_coverage_detail(info):
         parts.append('%d key%s NOT `omega`-prefixed, so NOT mirrored'
                      % (outside, '' if outside == 1 else 's'))
     if unresolved:
-        parts.append('%d key%s built at runtime — mirror eligibility unresolved'
+        parts.append('%d key%s built at runtime — mirror eligibility unresolved by static scan'
                      % (unresolved, '' if unresolved == 1 else 's'))
     return ('; ' + '; '.join(parts)) if parts else ''
 

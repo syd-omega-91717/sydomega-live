@@ -386,7 +386,7 @@ class TestMirrorCoverage(EvidenceAuditFixture):
     successful server copy exists.
     """
 
-    def test_omega_prefixed_keys_are_reported_as_mirrored(self):
+    def test_omega_prefixed_keys_are_reported_as_eligible(self):
         self.write('nav.js', "var PS={'notes':'X'};")
         self.write('notes.html', "<script>localStorage.setItem('omega_notes', x)</script>")
         self.audit_stdout()

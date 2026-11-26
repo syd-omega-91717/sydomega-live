@@ -453,6 +453,24 @@ class TestMirrorCoverage(EvidenceAuditFixture):
         self.assertIn('unresolved by static scan', self.report())
 
 
+class TestPartialMirrorCoverage(EvidenceAuditFixture):
+    def test_partial_rows_report_eligible_and_runtime_unresolved_keys(self):
+        self.write('nav.js', "var PS={'focus':'X'};")
+        self.write('supabase/a.sql', 'CREATE FUNCTION public.save_focus() RETURNS void;')
+        self.write('focus.html',
+                   "<script>"
+                   "sb.rpc('save_focus');"
+                   "localStorage.setItem('omega_focus_sessions', x);"
+                   "localStorage.setItem('omega_wr_draft_'+week, x);"
+                   "</script>")
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`focus.html`' in line)
+        self.assertIn('also 2 localStorage writes', row)
+        self.assertIn('1 key eligible for the `member_state` mirror', row)
+        self.assertIn('1 key built at runtime — mirror eligibility unresolved', row)
+
+
 class TestHelpDoesNotRun(EvidenceAuditFixture):
     def test_help_prints_and_writes_nothing(self):
         """Asking what a writer does must not make it do it (CLAUDE.md §8.4)."""

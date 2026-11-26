@@ -1,23 +1,20 @@
 name: Cloudflare Pages
 
-# Deploy the canonical static artifact to Cloudflare Pages on every main push.
-# Manual dispatch remains available for a controlled redeploy from main.
+# Manual fallback only. The connected Cloudflare Pages Git integration deploys main.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: cloudflare-pages-production
+  group: cloudflare-pages-manual-fallback
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -114,32 +111,3 @@ jobs:
           python scripts/cloudflare-production-smoke.py --base-url "${url}" --workers 16 --timeout 20
           echo "CLOUDFLARE_PAGES=PASS ${url} commit=${served}"
 
-          # Verify both canonical production hosts only after the Pages deployment is live.
-          base="https://sydomega.com"
-          www_base="https://www.sydomega.com"
-          expected="${GITHUB_SHA}"
-          served=""
-          www_served=""
-          for attempt in $(seq 1 30); do
-            manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${base}/.well-known/omega-release.json" 2>/dev/null || true)"
-            www_manifest="$(curl --location --silent --show-error --fail --max-redirs 5 --connect-timeout 8 --max-time 10 "${www_base}/.well-known/omega-release.json" 2>/dev/null || true)"
-            served="$(printf '%s' "${manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
-            www_served="$(printf '%s' "${www_manifest}" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).commit_sha||""))}catch(e){}})')"
-            if [ "${served}" = "${expected}" ] && [ "${www_served}" = "${expected}" ]; then break; fi
-            echo "production_attempt=${attempt} root_served=${served:-none} www_served=${www_served:-none} expected=${expected}"
-            sleep 10
-          done
-          [ "${served}" = "${expected}" ] || { echo "::error title=Production SHA mismatch::sydomega.com does not serve the exact deployed commit."; exit 1; }
-          [ "${www_served}" = "${expected}" ] || { echo "::error title=WWW production SHA mismatch::www.sydomega.com does not serve the exact deployed commit."; exit 1; }
-
-          root_code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/")"
-          [ "${root_code}" = "200" ] || { echo "production root final response returned ${root_code}"; exit 1; }
-          curl --location --silent --show-error --dump-header "${RUNNER_TEMP}/production-headers.txt" --output /dev/null --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/"
-          grep -Eiq '^content-security-policy:' "${RUNNER_TEMP}/production-headers.txt" || { echo "CSP header missing"; exit 1; }
-          grep -Eiq '^strict-transport-security:' "${RUNNER_TEMP}/production-headers.txt" || { echo "HSTS header missing"; exit 1; }
-          for path in account.html profile.html world.html news.html media.html privacy.html terms.html vault.html; do
-            code="$(curl --location --silent --show-error --output /dev/null --write-out '%{http_code}' --max-redirs 5 --connect-timeout 10 --max-time 30 "${base}/${path}")"
-            [ "${code}" = "200" ] || { echo "core route /${path} final response returned ${code}"; exit 1; }
-          done
-          python scripts/cloudflare-production-smoke.py --base-url "${base}" --workers 16 --timeout 20
-          echo "CLOUDFLARE_PRODUCTION=PASS host=sydomega.com commit=${served} www_commit=${www_served} root=${root_code}"

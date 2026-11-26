@@ -30,7 +30,7 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertNotIn("release manifest does not name", smoke)
 
 
-    def test_git_connected_production_release_is_verified_by_exact_sha(self):
+    def test_manual_production_release_verifier_checks_exact_sha(self):
         self.assertIn("workflow_dispatch:", PRODUCTION_VERIFY)
         self.assertNotIn("workflow_run", PRODUCTION_VERIFY)
         self.assertIn("github.ref != 'refs/heads/main'", PRODUCTION_VERIFY)

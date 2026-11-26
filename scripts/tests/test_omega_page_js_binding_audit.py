@@ -51,6 +51,20 @@ class PageJsBindingAuditTests(unittest.TestCase):
         self.assertEqual(bindings, [])
         self.assertEqual(delegated, [{"source": "global.js", "target": "document", "event": "click"}])
 
+    def test_inline_script_listener_is_correlated(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            page = root / "page.html"
+            page.write_text(
+                '<button id="inline-save">Save</button>'
+                '<script>const save = document.getElementById("inline-save"); '
+                'save.addEventListener("click", saveRecord);</script>',
+                encoding="utf-8",
+            )
+            report = MODULE.audit_page(page, root)
+            self.assertEqual(report["controls_with_static_direct_bindings"], 1)
+            self.assertEqual(report["direct_bindings"][0]["source"], "<inline>")
+
     def test_external_scripts_are_not_treated_as_local_missing_files(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

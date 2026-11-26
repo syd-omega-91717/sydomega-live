@@ -81,7 +81,7 @@ The regenerated scanner also identifies `cosmic-ledger.html` as using `lesson_co
 
 - The committed `supabase/live-schema.json` snapshot (captured 2026-11-22) includes `public.lesson_completions` with `id`, `user_id`, `lesson`, and `completed_at`.
 - A read-only live SQL inspection on 2026-11-26 confirmed RLS enabled; an authenticated SELECT policy restricted to `auth.uid() = user_id`; authenticated SELECT only; no anon grant; a unique `(user_id, lesson)` constraint; and `ON DELETE CASCADE` to `auth.users`.
-- The live `id` column is `bigint NOT NULL` with no default, and members have no write grant. The inspected page path is read-only.
+- The live `id` column is `bigint NOT NULL` with no default, and members have no write grant. The inspected page path is read-only, and `scripts/tests/test_omega_sky_contract.py` asserts that `task_completions`, `lesson_completions`, and `certificates` reads are filtered by the signed-in `user_id`.
 
 Do not label this as a proven runtime failure, add member write grants, or invent a replacement schema. Reconstruct a canonical migration from the verified live definition only after reviewing the intended lifecycle and confirming whether the table is retained or retired.
 

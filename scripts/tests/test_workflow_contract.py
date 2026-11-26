@@ -123,8 +123,8 @@ class CloudflarePagesDeploymentContract(unittest.TestCase):
         path = os.path.join(WORKFLOWS, "cloudflare-pages.yml")
         with open(path, encoding="utf-8") as fh:
             workflow = fh.read()
-        self.assertIn("  workflow_dispatch:\\n", workflow)
-        self.assertNotIn("  push:\\n", workflow)
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertNotIn("  push:", workflow)
         self.assertIn("Refuse production fallback deploy from non-main", workflow)
         self.assertIn("github.ref != 'refs/heads/main'", workflow)
         self.assertIn("CLOUDFLARE_API_TOKEN", workflow)

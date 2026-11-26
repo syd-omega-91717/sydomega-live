@@ -181,6 +181,8 @@ class DashboardMetricTruth(unittest.TestCase):
         self.assertIn("renderContributionHeatmap(hm.data||[],!!hm.error)", self.HTML)
         self.assertIn("if(tsEl&&!hm.error)", self.HTML)
         self.assertIn("el.dataset.liveState='unavailable'", self.HTML)
+        self.assertIn("renderContributionHeatmap([],true)", self.HTML)
+        self.assertIn("if(failedSpark)failedSpark.hidden=true", self.HTML)
 
 if __name__ == "__main__":
     unittest.main()

@@ -53,6 +53,7 @@ class PageParser(HTMLParser):
         if tag == "script":
             self._script_src = attrs.get("src")
             self._script_parts = []
+            self._inside_script = True
         if tag in CONTROL_TAGS or (tag == "a" and (attrs.get("href") or attrs.get("onclick"))):
             self._index += 1
             self.controls.append({
@@ -66,7 +67,7 @@ class PageParser(HTMLParser):
             })
 
     def handle_data(self, data):
-        if self._script_src is not None:
+        if self._inside_script:
             self._script_parts.append(data)
 
     def handle_endtag(self, tag):
@@ -77,6 +78,7 @@ class PageParser(HTMLParser):
             })
             self._script_src = None
             self._script_parts = []
+            self._inside_script = False
 
 
 def local_script_path(src, page_path):

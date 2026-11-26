@@ -17,7 +17,7 @@ class SpatialRealmRuntime(unittest.TestCase):
         self.assertIn('.omega-spatial-realm[data-realm="movies"]', runtime)
 
     def test_runtime_mounts_movies_and_keeps_gaming_and_legacy_cinema(self):
-        probe = r'''\
+        probe = r'''
 const fs = require('fs');
 const vm = require('vm');
 const roots = {};

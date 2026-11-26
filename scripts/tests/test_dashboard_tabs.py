@@ -160,5 +160,40 @@ class TodayTabRetainsTheEcosystemSurface(unittest.TestCase):
         self.assertGreater(self.HTML.index("data-omega-command-dock"), tabs)
 
 
+
+class DashboardMetricTruth(unittest.TestCase):
+    HTML = read("dashboard.html")
+
+    def test_platform_totals_use_the_aggregate_rpc_not_member_rls_counts(self):
+        self.assertIn("sb.rpc('omega_dashboard_public_metrics')", self.HTML)
+        for key, field in (("k-members", "approved_members"), ("k-online", "online_members"),
+                           ("k-tasks", "tasks_today"), ("ops-tasks", "tasks_7d"),
+                           ("k-events", "events_today")):
+            self.assertIn("setCountValue('%s',metrics.%s)" % (key, field), self.HTML)
+        self.assertNotIn("from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true)", self.HTML)
+        self.assertNotIn("from('member_presence').select('user_id',{count:'exact',head:true})", self.HTML)
+        self.assertNotIn("from('task_completions').select('id',{count:'exact',head:true})", self.HTML)
+        self.assertNotIn("from('platform_events').select('id',{count:'exact',head:true})", self.HTML)
+
+    def test_count_query_failures_are_not_rendered_as_zero(self):
+        self.assertNotIn("count||0", self.HTML)
+        self.assertIn("function setCountFromQuery(id,result)", self.HTML)
+        self.assertIn("result.error||result.count==null", self.HTML.replace(" ", ""))
+        self.assertIn("sid(id,null)", self.HTML)
+        self.assertIn("sid(id,result.count)", self.HTML)
+
+    def test_owner_only_live_count_tiles_use_error_aware_rendering(self):
+        for key in ("k-risks", "adm-pending", "adm-accounts", "adm-threats",
+                    "ai-queries", "ai-memories", "ai-workflows"):
+            self.assertIn("setCountFromQuery('%s'," % key, self.HTML)
+
+    def test_failed_contribution_read_does_not_render_an_empty_zero_heatmap(self):
+        self.assertIn("renderContributionHeatmap(hm.data||[],!!hm.error)", self.HTML)
+        self.assertIn("if(tsEl&&!hm.error)", self.HTML)
+        self.assertIn("el.dataset.liveState='unavailable'", self.HTML)
+        self.assertIn("renderContributionHeatmap([],true)", self.HTML)
+        self.assertIn("if(failedSpark)failedSpark.hidden=true", self.HTML)
+
+
 if __name__ == "__main__":
     unittest.main()

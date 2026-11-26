@@ -251,12 +251,15 @@
       return;
     }
     elements.forEach(function(el){setLiveState(el,'loading');});
-    window.__omegaSb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true)
+    window.__omegaSb.rpc('omega_dashboard_public_metrics')
       .then(function(r){
         elements.forEach(function(el){
           if(r&&r.error){setLiveState(el,'error','—');return;}
-          if(!r||r.count==null){setLiveState(el,'unavailable','—');return;}
-          setLiveState(el,'live',String(r.count));
+          var data=r&&r.data;
+          if(!data||data.ok!==true||typeof data.approved_members!=='number'||!isFinite(data.approved_members)){
+            setLiveState(el,'unavailable','—');return;
+          }
+          setLiveState(el,'live',String(data.approved_members));
         });
       }).catch(function(){elements.forEach(function(el){setLiveState(el,'error','—');});});
   }

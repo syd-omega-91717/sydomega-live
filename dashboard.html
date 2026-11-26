@@ -1106,8 +1106,7 @@ function drawPersonalWheel(areas){
 }
 
 /* ── CONTRIBUTION HEATMAP (public.task_completions, own rows only) ── */
-function renderContributionHeatmap(rows){
-  var el=document.getElementById('contribution-heatmap');if(!el) return;
+function renderContributionHeatmap(rows,unavailable){ var el=document.getElementById('contribution-heatmap');if(!el)return;if(unavailable){el.textContent='UNAVAILABLE — contribution history could not be loaded';el.dataset.liveState='unavailable';return;}delete el.dataset.liveState;
   var days=90,today=new Date();today.setHours(0,0,0,0);
   var byDay={};
   (rows||[]).forEach(function(r){
@@ -1320,6 +1319,8 @@ function sid(id,v){
     el.textContent=s;
   }
 }
+function setCountFromQuery(id,result){if(!result||result.error||result.count==null){sid(id,null);return;}sid(id,result.count);}
+function setCountValue(id,value){if(typeof value!=='number'||!isFinite(value)||value<0){sid(id,null);return;}sid(id,value);}
 
 (async function(){
   /* ACTION CENTRE. Every item must come from this member's real state; when
@@ -1438,38 +1439,30 @@ function sid(id,v){
     /* Radar chart */
     if(window.OmegaOSS) renderRadarChart(pr);
 
-    /* Live counts */
+    /* Public platform totals come from a constrained aggregate RPC. RLS deliberately hides private profiles, other members' tasks and platform events from ordinary member reads; direct table counts therefore produce partial, misleading totals. The RPC returns counts only. */
     try{
-      var mc=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',true);
-      sid('k-members',mc.count||0);
-    }catch(e){}
-    try{
-      /* "Online now" -- omega-presence.js (loaded platform-wide) syncs every
-         30s; a 90s recency window covers one missed sync before a member
-         reads as offline. RLS already grants every member SELECT on this
-         table (public.member_presence, "members see presence" policy). */
-      var onlineAgo=new Date(Date.now()-90*1000).toISOString();
-      var on=await sb.from('member_presence').select('user_id',{count:'exact',head:true}).eq('is_online',true).gte('last_seen',onlineAgo);
-      sid('k-online',on.count||0);
-    }catch(e){}
-    try{
-      var today=new Date().toISOString().slice(0,10);
-      var tc=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',today);
-      sid('k-tasks',tc.count||0);
-      var tw=await sb.from('task_completions').select('id',{count:'exact',head:true}).gte('completed_at',new Date(Date.now()-7*864e5).toISOString());
-      sid('ops-tasks',tw.count||0);
-    }catch(e){}
+      var metricsResult=await sb.rpc('omega_dashboard_public_metrics');
+      var metrics=metricsResult&&!metricsResult.error?metricsResult.data:null;
+      if(metrics&&metrics.ok===true){
+        setCountValue('k-members',metrics.approved_members);
+        setCountValue('k-online',metrics.online_members);
+        setCountValue('k-tasks',metrics.tasks_today);
+        setCountValue('ops-tasks',metrics.tasks_7d);
+        setCountValue('k-events',metrics.events_today);
+      }else{
+        ['k-members','k-online','k-tasks','ops-tasks','k-events'].forEach(function(id){sid(id,null);});
+      }
+    }catch(e){
+      ['k-members','k-online','k-tasks','ops-tasks','k-events'].forEach(function(id){sid(id,null);});
+    }
     try{
       var ninetyAgo=new Date(Date.now()-90*864e5).toISOString();
       var hm=await sb.from('task_completions').select('completed_at').eq('user_id',s.user.id).gte('completed_at',ninetyAgo);
-      renderContributionHeatmap(hm.data||[]);
-      /* FEATURE_IDEAS.md #27 Wave 1: same fetch, no second query. Real
-         per-day counts from this member's own completions, last 14 days;
-         a day with none is a true 0. */
-      var tsEl=document.getElementById('dash-tasks-spark');
-      if(tsEl){
+      renderContributionHeatmap(hm.data||[],!!hm.error);
+      /* Personal contribution history remains scoped to this member. */
+      var tsEl=document.getElementById('dash-tasks-spark'); if(tsEl&&!hm.error){
         var byDay={};
-        (hm.data||[]).forEach(function(r){var d=(r.completed_at||'').slice(0,10);if(d)byDay[d]=(byDay[d]||0)+1;});
+        (hm.data||[]).forEach(function(r){var day=(r.completed_at||'').slice(0,10);if(day)byDay[day]=(byDay[day]||0)+1;});
         var series=[];
         for(var i=13;i>=0;i--){
           var dd=new Date(Date.now()-i*864e5).toISOString().slice(0,10);
@@ -1477,11 +1470,11 @@ function sid(id,v){
         }
         tsEl.setAttribute('data-spark-values',JSON.stringify(series));
       }
-    }catch(e){}
-    try{
-      var pe=await sb.from('platform_events').select('id',{count:'exact',head:true}).gte('created_at',new Date().toISOString().slice(0,10));
-      sid('k-events',pe.count||0);
-    }catch(e){}
+    }catch(e){
+      renderContributionHeatmap([],true);
+      var failedSpark=document.getElementById('dash-tasks-spark');
+      if(failedSpark)failedSpark.hidden=true;
+    }
     /* Analytics */
     if(pr.is_owner){
       try{
@@ -1493,31 +1486,31 @@ function sid(id,v){
       }catch(e){}
       try{
         var ri=await sb.from('risk_register').select('id',{count:'exact',head:true}).eq('status','open');
-        sid('k-risks',ri.count||0);
+        setCountFromQuery('k-risks',ri);
       }catch(e){}
       try{
         var pa=await sb.from('profiles').select('id',{count:'exact',head:true}).eq('access_approved',false).eq('is_owner',false);
-        sid('adm-pending',pa.count||0);
+        setCountFromQuery('adm-pending',pa);
       }catch(e){}
       try{
         var ea=await sb.from('enterprise_accounts').select('id',{count:'exact',head:true}).eq('status','active');
-        sid('adm-accounts',ea.count||0);
+        setCountFromQuery('adm-accounts',ea);
       }catch(e){}
       try{
         var th=await sb.from('threat_events').select('id',{count:'exact',head:true}).gte('created_at',new Date(Date.now()-7*864e5).toISOString());
-        sid('adm-threats',th.count||0);
+        setCountFromQuery('adm-threats',th);
       }catch(e){}
       try{
         var aq=await sb.from('telemetry_events').select('id',{count:'exact',head:true}).eq('event_type','ai_query').gte('created_at',new Date(Date.now()-7*864e5).toISOString());
-        sid('ai-queries',aq.count||0);
+        setCountFromQuery('ai-queries',aq);
       }catch(e){}
       try{
         var am=await sb.from('ai_memory').select('id',{count:'exact',head:true});
-        sid('ai-memories',am.count||0);
+        setCountFromQuery('ai-memories',am);
       }catch(e){}
       try{
         var wf=await sb.from('workflow_executions').select('id',{count:'exact',head:true}).eq('status','completed');
-        sid('ai-workflows',wf.count||0);
+        setCountFromQuery('ai-workflows',wf);
       }catch(e){}
       /* FinOps: this session's own running cost estimate (omega-finops.js,
          loaded platform-wide, already recording -- no query, no new data).

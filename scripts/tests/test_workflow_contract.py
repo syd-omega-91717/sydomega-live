@@ -118,5 +118,25 @@ class RunsOnAssertion(unittest.TestCase):
                 self.assertEqual(self._run_with_label("not-a-runner", gate=gate).returncode, 1)
 
 
+class CloudflarePagesDeploymentContract(unittest.TestCase):
+    def test_manual_cloudflare_deploy_is_main_only_and_fails_closed_without_credentials(self):
+        path = os.path.join(WORKFLOWS, "cloudflare-pages.yml")
+        with open(path, encoding="utf-8") as fh:
+            workflow = fh.read()
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertNotIn("  push:", workflow)
+        self.assertIn("Refuse production fallback deploy from non-main", workflow)
+        self.assertIn("github.ref != 'refs/heads/main'", workflow)
+        self.assertIn("CLOUDFLARE_API_TOKEN", workflow)
+        self.assertIn("CLOUDFLARE_ACCOUNT_ID", workflow)
+        self.assertIn("Cloudflare deployment credentials missing", workflow)
+        self.assertIn("exit 1", workflow)
+        self.assertNotIn("Cloudflare Pages deploy skipped", workflow)
+        self.assertIn("npx --yes", workflow)
+        self.assertIn("pages deploy public", workflow)
+        self.assertIn("--commit-hash", workflow)
+        self.assertIn("cloudflare-production-smoke.py", workflow)
+
+
 if __name__ == "__main__":
     unittest.main()

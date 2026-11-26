@@ -32,7 +32,9 @@ class CloudflareManualReleaseContract(unittest.TestCase):
 
     def test_git_connected_production_release_is_verified_by_exact_sha(self):
         self.assertIn("branches: [main]", PRODUCTION_VERIFY)
+
         self.assertIn("github.ref != 'refs/heads/main'", PRODUCTION_VERIFY)
+        self.assertIn("CLOUDFLARE_PRODUCTION=PASS", PRODUCTION_VERIFY)
         self.assertIn('base="https://sydomega.com"', PRODUCTION_VERIFY)
         self.assertIn("/.well-known/omega-release.json", PRODUCTION_VERIFY)
         self.assertIn("JSON.parse(s).commit_sha", PRODUCTION_VERIFY)
@@ -51,8 +53,8 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn("--location --silent", PRODUCTION_VERIFY)
         self.assertEqual(PRODUCTION_VERIFY.count("for attempt in"), 1)
         self.assertEqual(PRODUCTION_VERIFY.count("for path in"), 1)
-        self.assertIn("for attempt in $(seq 1 30)", PRODUCTION_VERIFY)
-        self.assertIn("timeout-minutes: 15", PRODUCTION_VERIFY)
+        self.assertIn("for attempt in $(seq 1 60)", PRODUCTION_VERIFY)
+        self.assertIn("timeout-minutes: 20", PRODUCTION_VERIFY)
         self.assertIn("for path in account.html profile.html world.html news.html media.html privacy.html terms.html vault.html", PRODUCTION_VERIFY)
         self.assertIn("python scripts/cloudflare-production-smoke.py", PRODUCTION_VERIFY)
         self.assertIn('www_code="$(curl --location', PRODUCTION_VERIFY)
@@ -139,8 +141,12 @@ class CloudflareManualReleaseContract(unittest.TestCase):
             with self.assertRaises(ValueError, msg=unsafe):
                 module.validate_request_url(unsafe)
 
-    def test_missing_credentials_never_attempts_deploy(self):
-        self.assertIn("ready=false", WORKFLOW)
+    def test_missing_credentials_fail_closed_before_deploy(self):
+        self.assertIn('if [ -z "${CLOUDFLARE_API_TOKEN}" ] || [ -z "${CLOUDFLARE_ACCOUNT_ID}" ]; then', WORKFLOW)
+        self.assertIn("Cloudflare deployment credentials missing", WORKFLOW)
+        self.assertIn("exit 1", WORKFLOW)
+        self.assertNotIn("ready=false", WORKFLOW)
+        self.assertIn("ready=true", WORKFLOW)
         self.assertIn("steps.creds.outputs.ready == 'true'", WORKFLOW)
         self.assertIn("npx --yes", WORKFLOW)
 

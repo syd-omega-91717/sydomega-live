@@ -30,11 +30,11 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertNotIn("release manifest does not name", smoke)
 
 
-    def test_manual_production_release_verifier_checks_exact_sha(self):
-        self.assertIn("workflow_dispatch:", PRODUCTION_VERIFY)
-        self.assertNotIn("workflow_run", PRODUCTION_VERIFY)
+    def test_git_connected_production_release_is_verified_by_exact_sha(self):
+        self.assertIn("branches: [main]", PRODUCTION_VERIFY)
+
         self.assertIn("github.ref != 'refs/heads/main'", PRODUCTION_VERIFY)
-        self.assertIn("CLOUDFLARE_PRODUCTION=PASS", WORKFLOW)
+        self.assertIn("CLOUDFLARE_PRODUCTION=PASS", PRODUCTION_VERIFY)
         self.assertIn('base="https://sydomega.com"', PRODUCTION_VERIFY)
         self.assertIn("/.well-known/omega-release.json", PRODUCTION_VERIFY)
         self.assertIn("JSON.parse(s).commit_sha", PRODUCTION_VERIFY)
@@ -53,8 +53,8 @@ class CloudflareManualReleaseContract(unittest.TestCase):
         self.assertIn("--location --silent", PRODUCTION_VERIFY)
         self.assertEqual(PRODUCTION_VERIFY.count("for attempt in"), 1)
         self.assertEqual(PRODUCTION_VERIFY.count("for path in"), 1)
-        self.assertIn("for attempt in $(seq 1 30)", PRODUCTION_VERIFY)
-        self.assertIn("timeout-minutes: 15", PRODUCTION_VERIFY)
+        self.assertIn("for attempt in $(seq 1 60)", PRODUCTION_VERIFY)
+        self.assertIn("timeout-minutes: 20", PRODUCTION_VERIFY)
         self.assertIn("for path in account.html profile.html world.html news.html media.html privacy.html terms.html vault.html", PRODUCTION_VERIFY)
         self.assertIn("python scripts/cloudflare-production-smoke.py", PRODUCTION_VERIFY)
         self.assertIn('www_code="$(curl --location', PRODUCTION_VERIFY)

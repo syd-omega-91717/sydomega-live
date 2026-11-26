@@ -521,5 +521,35 @@ class TestEdgeRuntimeManifest(EvidenceAuditFixture):
         self.assertFalse(any('_shared' in line for line in self.report().splitlines() if 'Edge Functions' in line or 'WIRED' in line or 'LOCAL_ONLY' in line))
 
 
+class TestExternalPageModules(EvidenceAuditFixture):
+    def test_page_owned_external_module_calls_are_attributed_to_the_page(self):
+        self.write('nav.js', "var PS={'admin':'X'};")
+        self.write('admin.html',
+                   '<script type="module" src="/admin.js"></script>')
+        self.write('admin.js', "sb.rpc('get_admin_state');")
+        self.write('supabase/a.sql',
+                   'CREATE FUNCTION public.get_admin_state() '
+                   'RETURNS void LANGUAGE sql AS $ SELECT; $;')
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`admin.html`' in line)
+        self.assertIn('| BUILT |', row)
+        self.assertIn('1 rpc', row)
+
+    def test_platform_bootstrap_is_not_misattributed_to_every_page(self):
+        self.write('nav.js', "var PS={'localish':'X'};")
+        self.write('localish.html',
+                   '<script src="/bg.js"></script>')
+        self.write('bg.js', "sb.rpc('shared_bootstrap_rpc');")
+        self.write('supabase/a.sql',
+                   'CREATE FUNCTION public.shared_bootstrap_rpc() '
+                   'RETURNS void LANGUAGE sql AS $ SELECT; $;')
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`localish.html`' in line)
+        self.assertIn('| STATIC |', row)
+        self.assertNotIn('shared_bootstrap_rpc', row)
+
+
 if __name__ == '__main__':
     unittest.main()

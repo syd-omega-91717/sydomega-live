@@ -82,10 +82,10 @@ A second matrix-accuracy issue was found after the first refresh: the old `mirro
 The regenerated scanner also identifies `cosmic-ledger.html` as using `lesson_completions` through `omega-sculpture.js`, while no `CREATE TABLE` definition or migration for that relation is present in the repository SQL inventory. This is a **source-of-truth / migration reproducibility gap**, not a confirmed live outage:
 
 - The committed `supabase/live-schema.json` snapshot (captured 2026-11-22) includes `public.lesson_completions` with `id`, `user_id`, `lesson`, and `completed_at`.
-- A read-only live SQL inspection on 2026-11-26 confirmed RLS enabled; an authenticated SELECT policy restricted to `auth.uid() = user_id`; authenticated SELECT only; no anon grant; a unique `(user_id, lesson)` constraint; and `ON DELETE CASCADE` to `auth.users`.
+- A read-only live SQL inspection on 2026-11-26 confirmed RLS enabled; an authenticated SELECT policy restricted to `auth.uid() = user_id`; authenticated SELECT only; no anon grant or authenticated member write grant; a unique `(user_id, lesson)` constraint; and `ON DELETE CASCADE` to `auth.users`. An aggregate count confirmed **18 existing rows**.
 - The live `id` column is `bigint NOT NULL` with no default, and members have no write grant. The inspected page path is read-only, and `scripts/tests/test_omega_sky_contract.py` asserts that `task_completions`, `lesson_completions`, and `certificates` reads are filtered by the signed-in `user_id`.
 
-Do not label this as a proven runtime failure, add member write grants, or invent a replacement schema. Reconstruct a canonical migration from the verified live definition only after reviewing the intended lifecycle and confirming whether the table is retained or retired.
+Do not label this as a proven runtime failure, add member write grants, drop/recreate the table, or invent a replacement schema. Any canonical migration must preserve the 18 existing rows and the read-only own-row contract. Reconstruct it from the verified live definition only after reviewing the intended lifecycle and confirming whether the table is retained or retired.
 
 ## Prioritized implementation sequence
 

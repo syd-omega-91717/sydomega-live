@@ -69,11 +69,13 @@ The finance exclusion list prevents the shared mirror from uploading the listed 
 
 ## Audit-tool integrity gaps
 
-1. **External page-module coverage is implemented.** PR #1576 merged to `main` at `101a5ad7c8827ac19e9799ebdce0456682d35057` after all 18/18 workflow runs passed. The scanner now includes directly loaded local `.js`/`.mjs` modules, excludes platform-global bootstrap/runtime scripts, and separates Supabase Storage buckets from Postgres relations. It does not follow module imports or scripts dynamically injected by `bg.js`. The regenerated artifact reports 237 pages: BUILT 107, PARTIAL 39, LOCAL_ONLY 45, STATIC 38, BROKEN 1, UNREACHABLE 7. Approvals is source-classified as wired (1 table, 1 Storage bucket, 10 RPCs, 1 auth call). The remaining BROKEN source reference is Cosmic Ledger's `lesson_completions`, which exists in the live database but lacks a repository migration. PR #1577 refreshes the committed matrix; its blocking checks must pass before that generated inventory is accepted.
+1. **External page-module coverage is implemented.** PR #1576 merged to `main` at `101a5ad7c8827ac19e9799ebdce0456682d35057` after all 18/18 workflow runs passed. The scanner now includes directly loaded local `.js`/`.mjs` modules, excludes platform-global bootstrap/runtime scripts, and separates Supabase Storage buckets from Postgres relations. It does not follow module imports or scripts dynamically injected by `bg.js`. The regenerated artifact reports 237 pages: BUILT 107, PARTIAL 39, LOCAL_ONLY 45, STATIC 38, BROKEN 1, UNREACHABLE 7. Approvals is source-classified as wired (1 table, 1 Storage bucket, 10 RPCs, 1 auth call). The remaining BROKEN source reference is Cosmic Ledger's `lesson_completions`, which exists in the live database but lacks a repository migration. PR #1577's matrix refresh is held as draft because its mirror-eligibility annotations were incomplete; PR #1578 corrects the `SKIP`/`NO_MIRROR` exclusions and adds coverage details to `PARTIAL` rows. Regenerate the matrix after #1578 merges.
 2. **Page inventory count reconciled in the scanner branch.** The committed `EVIDENCE_MATRIX.md` on the audited base was stale at 242. The regenerated matrix on PR #1576 reports 237 pages, matching `config/omega-page-census.json` (237). The regenerated artifact—not the old committed matrix—is the current source evidence; commit the refreshed matrix only after the scanner PR passes and is accepted.
 3. **Dashboard/Profile counts changed when page-owned modules were included.** The regenerated PR #1576 snapshot reports Dashboard as 12 tables, 6 RPCs, 1 Edge Function, 6 auth calls, and 2 localStorage writes; Profile as 5 tables, 11 RPCs, 19 auth calls, and 4 localStorage writes. These are source-scan counts, not proof of successful runtime calls. The previous committed counts omitted page-owned module calls and must be replaced from the exact accepted tree.
 
 Relevant scanner source: [page module aggregation](../scripts/evidence-audit.py#L409), [root HTML enumeration](../scripts/evidence-audit.py#L582), [documented inline-script limitation](../FEATURE_IDEAS.md#L2937).
+
+A second matrix-accuracy issue was found after the first refresh: the old `mirror_coverage()` treated every `omega`-prefixed key as mirrored and omitted mirror details from `PARTIAL` rows. Runtime `omega-member-state.js` also excludes exact `SKIP` keys, `NO_MIRROR` finance keys, and `omega_analytics_*`; it only attempts uploads when signed in and the write succeeds. PR #1578 makes the scanner read those real exclusions and labels keys as eligible rather than claiming that a server copy exists. This is an audit-only correction; it does not change the runtime mirror.
 
 ## Additional source/live-schema reconciliation
 
@@ -89,7 +91,7 @@ Do not label this as a proven runtime failure, add member write grants, or inven
 
 | Priority | Work | Acceptance evidence |
 |---|---|---|
-| P0 | Keep the corrected scanner and generated matrix synchronized | PR #1576 merged with 18/18 checks; PR #1577 must pass and commit the 237-page matrix with Storage and external-module evidence |
+| P0 | Keep the corrected scanner and generated matrix synchronized | PR #1576 merged with 18/18 checks; PR #1578 must pass mirror-eligibility tests, then regenerate/commit the 237-page matrix with Storage, external-module, and mirror-exclusion evidence |
 | P1 | Inventory every `omega*` key namespace, then add explicit mirror tombstones/deletion semantics | Tests prove intentional deletion stays deleted after restore, while a fresh empty browser can still restore undeleted keys; cache/telemetry/finance exclusions are independently tested |
 | P1 | Define Focus session reconciliation | Failure injection for normalized insert; idempotent retry/replay; no duplicate sessions; visible degraded state or durable recovery |
 | P2 | Verify Profile and Approvals with separate owner/member sessions | Browser tests for signed-out, ordinary member, approved member, owner without AAL2, owner with AAL2; prove both allowed and denied paths |
@@ -99,6 +101,6 @@ Do not label this as a proven runtime failure, add member write grants, or inven
 
 ## First practical step
 
-First, complete review and merge of **PR #1577** so the corrected 237-page matrix is committed. Then build the member-state key lifecycle inventory and deletion regression tests before changing persistence semantics. Do not auto-delete remote rows based only on an empty browser cache.
+First, complete review and merge of **PR #1578**, then regenerate the matrix so its `LOCAL_ONLY` and `PARTIAL` rows reflect the real `SKIP`/`NO_MIRROR` policy. Only then accept the refreshed 237-page inventory. Next build the member-state key lifecycle inventory and deletion regression tests before changing persistence semantics. Do not auto-delete remote rows based only on an empty browser cache.
 
 **Boundary:** this snapshot is a source-level traceability audit. It does not claim that every page action, provider call, storage operation, database policy, or user workflow has been exercised in production.

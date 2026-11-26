@@ -214,7 +214,8 @@ def _dropped_by_migrations(tbl_re):
 # Client surface -- what the shipped pages actually reach for
 # ---------------------------------------------------------------------------
 
-FROM_RE = re.compile(r"""\.from\(\s*['"]([a-zA-Z0-9_]+)['"]""")
+FROM_RE = re.compile(r"""(?<!storage)\.from\(\s*['"]([a-zA-Z0-9_]+)['"]""")
+STORAGE_RE = re.compile(r"""\.storage\.from\(\s*['"]([a-zA-Z0-9_]+)['"]""")
 RPC_RE = re.compile(r"""\.rpc\(\s*['"]([a-zA-Z0-9_]+)['"]""")
 # Also recognize a literal function name passed to the repository's small
 # invoke(sb, name, body) wrapper. The wrapper itself calls
@@ -237,6 +238,21 @@ AUTH_RE = re.compile(
 # before they lose the cache. Worth reporting because it splits LOCAL_ONLY
 # into "recoverable by hand" and "one cache clear from gone".
 BACKUP_RE = re.compile(r'OmegaLocalBackup')
+
+# Directly loaded, platform-wide bootstrap/runtime files are deliberately not
+# attributed as page-owned persistence. bg.js injects shared modules on every
+# route; counting it would make otherwise local/static pages appear backend-built.
+# Page-owned modules such as approvals.js and omega-profile-settings.js remain
+# in scope. Shared data mirroring is reported separately by mirror_coverage().
+GLOBAL_PAGE_RUNTIME = {
+    'bg.js', 'nav.js', 'omega-morph.js', 'omega-canvas-hidpi.js',
+    'omega-analytics-init.js', 'omega-speed-insights-init.js',
+    'omega-member-state.js',
+}
+SCRIPT_SRC_RE = re.compile(
+    r'<script\b[^>]*\bsrc\s*=\s*["\']([^"\']+)["\'][^>]*>',
+    re.I,
+)
 
 
 def _strip_code_comments(source):
@@ -390,13 +406,46 @@ def live_gap(rows, rels, live):
     return consumers
 
 
+def page_client_source(path):
+    """Combine page HTML with directly loaded local page modules.
+
+    This deliberately does not follow imports or modules injected at runtime by
+    bg.js. The former needs a dependency graph; the latter is platform-global
+    and would falsely promote every route. The page census/missing-script
+    contracts remain responsible for unresolved asset paths.
+    """
+    html = path.read_text(encoding='utf-8', errors='replace')
+    chunks = [html]
+    seen = set()
+    for raw_src in SCRIPT_SRC_RE.findall(html):
+        src = raw_src.strip()
+        if not src or re.match(r'^(?:[a-z][a-z0-9+.-]*:)?//', src, re.I):
+            continue
+        local_src = re.split(r'[?#]', src, maxsplit=1)[0]
+        if not local_src:
+            continue
+        relative = Path(local_src.lstrip('/'))
+        candidate = (ROOT / relative).resolve()
+        if candidate != ROOT and ROOT not in candidate.parents:
+            continue
+        if candidate.name in GLOBAL_PAGE_RUNTIME or candidate in seen:
+            continue
+        if candidate.suffix.lower() not in {'.js', '.mjs'} or not candidate.is_file():
+            continue
+        seen.add(candidate)
+        chunks.append(candidate.read_text(encoding='utf-8', errors='replace'))
+    return '\n'.join(chunks)
+
+
 def scan_client(path):
-    text = path.read_text(encoding='utf-8', errors='replace')
+    text = page_client_source(path)
     tables = set(FROM_RE.findall(text))
+    storage = set(STORAGE_RE.findall(text))
     rpcs = set(RPC_RE.findall(text))
     edges = {a or b or c for a, b, c in EDGE_RE.findall(text)}
     return {
         'tables': tables,
+        'storage': storage,
         'rpcs': rpcs,
         'edges': edges,
         'ls_writes': len(LS_WRITE_RE.findall(text)),
@@ -469,12 +518,14 @@ def classify(page, info, rels, fns, nav, module_tables):
     auth_ev = ('%d auth call%s' % (info['auth'], '' if info['auth'] == 1 else 's')
                ) if info['auth'] else ''
 
-    backend = info['tables'] | info['rpcs'] | info['edges']
+    backend = info['tables'] | info['storage'] | info['rpcs'] | info['edges']
     if backend:
         ev = []
         if info['tables']:
             ev.append('%d table%s' % (len(info['tables']),
                                       '' if len(info['tables']) == 1 else 's'))
+        if info['storage']:
+            ev.append('%d storage bucket%s' % (len(info['storage']), '' if len(info['storage']) == 1 else 's'))
         if info['rpcs']:
             ev.append('%d rpc' % len(info['rpcs']))
         if info['edges']:
@@ -684,9 +735,9 @@ def write_report(rows, by_class, edge_rows, dupes, rels, fns,
     w('')
     w('| class | meaning |')
     w('|---|---|')
-    w('| `BUILT` | Reaches the backend; every relation and function it names is declared in `supabase/`. |')
-    w('| `PARTIAL` | Reaches the backend **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |')
-    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |')
+    w('| `BUILT` | Reaches Postgres, an Edge Function, or Supabase Storage; table/function references are declared in `supabase/`. |')
+    w('| `PARTIAL` | Reaches Postgres, an Edge Function, or Supabase Storage **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |')
+    w('| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge/storage call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |')
     w('| `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |')
     w('| `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |')
     w('| `UNREACHABLE` | Deployed, but neither `nav.js` nor the owner deck (`omega-owner-deck.js`) references it, and it is not a public page. |')

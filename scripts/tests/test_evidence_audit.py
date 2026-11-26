@@ -521,5 +521,53 @@ class TestEdgeRuntimeManifest(EvidenceAuditFixture):
         self.assertFalse(any('_shared' in line for line in self.report().splitlines() if 'Edge Functions' in line or 'WIRED' in line or 'LOCAL_ONLY' in line))
 
 
+class TestExternalPageModules(EvidenceAuditFixture):
+    def test_page_owned_external_module_calls_are_attributed_to_the_page(self):
+        self.write('nav.js', "var PS={'admin':'X'};")
+        self.write('admin.html',
+                   '<script type="module" src="/admin.js"></script>')
+        self.write('admin.js', "sb.rpc('get_admin_state');")
+        self.write('supabase/a.sql',
+                   'CREATE FUNCTION public.get_admin_state() '
+                   'RETURNS void;')
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`admin.html`' in line)
+        built_section = self.report().split('## BUILT', 1)[1].split('\n## ', 1)[0]
+        self.assertIn(row, built_section)
+        self.assertIn('1 rpc', row)
+
+    def test_platform_bootstrap_is_not_misattributed_to_every_page(self):
+        self.write('nav.js', "var PS={'localish':'X'};")
+        self.write('localish.html',
+                   '<script src="/bg.js"></script>')
+        self.write('bg.js', "sb.rpc('shared_bootstrap_rpc');")
+        self.write('supabase/a.sql',
+                   'CREATE FUNCTION public.shared_bootstrap_rpc() '
+                   'RETURNS void;')
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`localish.html`' in line)
+        static_section = self.report().split('## STATIC', 1)[1].split('\n## ', 1)[0]
+        self.assertIn(row, static_section)
+        self.assertNotIn('shared_bootstrap_rpc', row)
+
+
+class TestStorageBucketsAreNotRelations(EvidenceAuditFixture):
+    def test_storage_bucket_is_not_reported_as_an_undefined_table(self):
+        self.write('nav.js', "var PS={'uploads':'X'};")
+        self.write('uploads.html',
+                   '<script type="module" src="/uploads.js"></script>')
+        self.write('uploads.js',
+                   "sb.storage.from('uploads').createSignedUrl('member/id.pdf', 60);")
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`uploads.html`' in line)
+        built_section = self.report().split('## BUILT', 1)[1].split('\n## ', 1)[0]
+        self.assertIn(row, built_section)
+        self.assertIn('1 storage bucket', row)
+        self.assertNotIn('undefined table/view', row)
+
+
 if __name__ == '__main__':
     unittest.main()

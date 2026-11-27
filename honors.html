@@ -199,6 +199,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .vt-stat::after{content:'';position:absolute;left:0;bottom:0;height:2px;width:var(--vt-fill,0%);background:var(--vt-col,var(--gold));box-shadow:0 0 8px var(--vt-col,var(--gold));transition:width .8s ease}
 @media (prefers-reduced-motion:reduce){.vt-stat::after{transition:none}}
 .vt-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.vt-3d-vault{width:100%;margin:0 0 8px;border:1px solid rgba(201,168,76,.22);border-radius:10px;overflow:hidden;background:radial-gradient(ellipse at 50% 65%,rgba(201,168,76,.08),transparent 68%),rgba(4,5,10,.72)}
+.vt-3d-source{font-family:var(--M);font-size:12px;letter-spacing:1.5px;text-align:center;color:var(--muted);margin:4px 0 18px;min-height:18px}
 .vt-share{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:8px 16px;border:1px solid rgba(201,168,76,.4);color:var(--gold);background:transparent;cursor:pointer;border-radius:1px}
 .vt-sec{font-family:var(--M);font-size:12px;letter-spacing:3px;color:var(--muted);margin:18px 0 10px}
 .vt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
@@ -956,6 +958,10 @@ if(cat==='all'||card.dataset.cat===cat){card.style.display='';} else{card.style.
 </script>
 
   <div class="mtab-panel" id="mtab-vault" style="display:none;max-width:1400px;margin:0 auto;padding:0 2rem 3rem">
+    <div class="vt-3d-vault" data-omega-sculpture="vault"
+         data-sculpt-height="clamp(360px,48vw,540px)" data-sculpt-bloom="off"
+         data-sculpt-label="Three orbital rings of trophies, medals and certificates, with earned status from persisted records"></div>
+    <div class="vt-3d-source" id="vt-3d-source" role="status" aria-live="polite">WAITING FOR PERSISTED HONORS RECORDS</div>
     <div class="vt-head"><div class="vt-sec" style="margin:0">YOUR TROPHIES &middot; MEDALS &middot; CERTIFICATES</div><button class="vt-share" id="vt-share" type="button">SHARE CARD</button></div>
     <div class="vt-stats">
       <div class="vt-stat" id="vt-s-t"><div class="l">TROPHIES</div><div class="v" id="vt-t" style="color:var(--gold)">0/12</div></div>

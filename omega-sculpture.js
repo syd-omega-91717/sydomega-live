@@ -1908,10 +1908,13 @@
     var nodes = [];
 
     collections.forEach(function (collection) {
+      var collectionGroup = new T.Group();
+      root.add(collectionGroup);
+      collection.group = collectionGroup;
       var orbit = new T.Mesh(new T.TorusGeometry(collection.radius, 0.012, 6, 160),
         new T.MeshBasicMaterial({ color: collection.colour, transparent: true, opacity: 0.28 }));
       orbit.rotation.x = Math.PI / 2;
-      root.add(orbit);
+      collectionGroup.add(orbit);
       collection.orbit = orbit;
 
       for (var n = 1; n <= 12; n++) {
@@ -1943,7 +1946,7 @@
           new T.MeshBasicMaterial({ color: 0x555B66, transparent: true, opacity: 0.35 }));
         halo.rotation.x = Math.PI / 2;
         group.add(halo);
-        root.add(group);
+        collectionGroup.add(group);
         nodes.push({ group: group, mesh: mesh, halo: halo, material: material,
           collection: collection, number: n, earned: false, state: 'UNKNOWN' });
       }
@@ -2016,7 +2019,7 @@
           root.rotation.y = t * 0.038 + px * 0.08;
           root.rotation.x = py * 0.025;
           collections.forEach(function (collection) {
-            collection.orbit.rotation.z = t * collection.speed;
+            collection.group.rotation.y = t * collection.speed;
           });
           nodes.forEach(function (entry, i) {
             if (entry.earned) {

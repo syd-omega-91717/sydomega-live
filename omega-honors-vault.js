@@ -114,8 +114,8 @@ window.bootVault=function(){
   var tries=0;
   (function go(){
     var C=window.OmegaCanon;
-    if(C&&C.ready){build().catch(function(e){console.warn('vault',e);});return;}
-    if(C&&C.onReady){C.onReady(function(){build().catch(function(e){console.warn('vault',e);});});return;}
+    if(C&&C.ready){build().catch(function(e){window.OmegaHonorsVault={status:'UNAVAILABLE',trophies:[],medals:[],certificates:[]};var s=document.getElementById('vt-3d-source');if(s)s.textContent='HONORS DATA UNAVAILABLE · NO EARNED STATE INFERRED';console.warn('vault',e);});return;}
+    if(C&&C.onReady){C.onReady(function(){build().catch(function(e){window.OmegaHonorsVault={status:'UNAVAILABLE',trophies:[],medals:[],certificates:[]};var s=document.getElementById('vt-3d-source');if(s)s.textContent='HONORS DATA UNAVAILABLE · NO EARNED STATE INFERRED';console.warn('vault',e);});});return;}
     if(++tries<100){setTimeout(go,100);return;}
     var box=document.getElementById('vt-trophies');
     if(box){box.textContent='';box.appendChild(el('div','vt-info','The honors canon did not load. Reload the page to try again.'));}

@@ -1686,7 +1686,7 @@
       group.add(node);
       group.add(ring);
       planet.add(group);
-      nodes.push({ group: group, node: node, ring: ring, phase: phi });
+      nodes.push({ group: group, node: node, ring: ring, phase: phi, mod: mod, routeState: null });
       if (mod.href) links.push({ object: group, href: mod.href, label: mod.name || mod.id });
     });
 
@@ -1707,6 +1707,15 @@
           meridians.forEach(function (entry, i) { entry.rotation.z = t * (i % 2 ? 0.012 : -0.012); });
           nodes.forEach(function (entry) {
             entry.node.rotation.y = t * 0.65 + entry.phase;
+            var routeState = entry.mod.routeState || 'CHECKING';
+            if (routeState !== entry.routeState) {
+              var routeColour = routeState === 'LIVE' ? 0x00FF88
+                : routeState === 'UNAVAILABLE' ? 0xCF6760 : 0xE8C97A;
+              entry.node.material.color.setHex(routeColour);
+              entry.node.material.emissive.setHex(routeColour);
+              entry.ring.material.color.setHex(routeColour);
+              entry.routeState = routeState;
+            }
             if (!entry.group.userData.omegaHovered) {
               entry.group.scale.setScalar(1 + Math.sin(t * 1.35 + entry.phase) * 0.07);
             }

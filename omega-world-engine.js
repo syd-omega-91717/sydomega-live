@@ -24,7 +24,30 @@ var modules=[
 function esc(v) { return window.OmegaEsc ? OmegaEsc.esc(v) : ''; }
 function setText(id,value){var n=document.getElementById(id);if(n)n.textContent=String(value);}
 function render(){var root=document.getElementById('omega-world-nodes');if(!root)return;root.textContent='';modules.forEach(function(m){var a=document.createElement('a');a.className='ow-node';a.href=m.href;a.style.setProperty('--accent',m.accent);a.dataset.module=m.id;var glyph=document.createElement('span');glyph.className='ow-glyph';glyph.textContent=m.glyph;var name=document.createElement('span');name.className='ow-name';name.textContent=m.name;var purpose=document.createElement('span');purpose.className='ow-purpose';purpose.textContent=m.purpose;var role=document.createElement('span');role.className='ow-role';role.textContent=m.role;var live=document.createElement('span');live.className='ow-live';live.dataset.state='CHECKING';live.textContent='● CHECKING ROUTE';a.appendChild(glyph);a.appendChild(name);a.appendChild(purpose);a.appendChild(role);a.appendChild(live);root.appendChild(a);});}
-async function verify(){var nodes=[].slice.call(document.querySelectorAll('.ow-node'));var results=await Promise.all(nodes.map(async function(node){var live=node.querySelector('.ow-live');try{var r=await fetch(node.getAttribute('href'),{method:'HEAD',cache:'no-store',credentials:'same-origin'});var ok=r.ok||r.status===401||r.status===403;var state=ok?'LIVE':'UNAVAILABLE';live.dataset.state=state;live.textContent='● '+state+' · HTTP '+r.status;return ok;}catch(e){live.dataset.state='UNAVAILABLE';live.textContent='● UNAVAILABLE · NETWORK';return false;}}));setText('ow-live-count',results.filter(Boolean).length);setText('ow-total-count',modules.length);setText('ow-verified-at',new Date().toISOString());}
+async function verify(){
+var nodes=[].slice.call(document.querySelectorAll('.ow-node'));
+var checkedAt=new Date().toISOString();
+var results=await Promise.all(nodes.map(async function(node){
+var live=node.querySelector('.ow-live');
+var id=node.dataset.module;
+var mod=modules.find(function(item){return item.id===id;});
+try{
+var r=await fetch(node.getAttribute('href'),{method:'HEAD',cache:'no-store',credentials:'same-origin'});
+var ok=r.ok||r.status===401||r.status===403;
+var state=ok?'LIVE':'UNAVAILABLE';
+if(mod){mod.routeState=state;mod.httpStatus=r.status;mod.verifiedAt=checkedAt;}
+if(live){live.dataset.state=state;live.textContent='● '+state+' · HTTP '+r.status;}
+return ok;
+}catch(e){
+if(mod){mod.routeState='UNAVAILABLE';mod.httpStatus=0;mod.verifiedAt=checkedAt;}
+if(live){live.dataset.state='UNAVAILABLE';live.textContent='● UNAVAILABLE · NETWORK';}
+return false;
+}
+}));
+setText('ow-live-count',results.filter(Boolean).length);
+setText('ow-total-count',modules.length);
+setText('ow-verified-at',checkedAt);
+}
 function boot(){render();setText('ow-total-count',modules.length);verify();}
 window.OmegaWorldEngine={modules:modules,verify:verify,boot:boot};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();

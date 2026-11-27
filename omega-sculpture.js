@@ -1596,6 +1596,139 @@
      registry is owned by omega-world-engine.js; this scene reads it rather
      than maintaining a second list. The HTML directory remains the readable
      and accessible route surface when WebGL is unavailable or motion is reduced. */
+  /* ── GENESIS PLANET ──────────────────────────────────────────────────
+     A navigable planetary model of the platform: the 18 governed realms
+     become illuminated waypoints on one rotating world. Nine latitude
+     bands and twelve meridians carry the 9x9x9 / twelve-gate visual canon.
+     It is a symbolic interface, not a geographic or physical-world claim.
+     One shared renderer, no external textures, no generated member data. */
+  SCENES.genesis = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(42, 1, 0.1, 100);
+    cam.position.set(0, 2.4, 12.8);
+    rig(T, scene, p);
+    starfield(T, scene, 420, 32, p.cyan);
+
+    var planet = new T.Group();
+    scene.add(planet);
+    var globe = new T.Mesh(new T.SphereGeometry(2.28, 64, 48),
+      new T.MeshStandardMaterial({ color: p.void_, metalness: 0.58, roughness: 0.42,
+        emissive: p.gold, emissiveIntensity: 0.035 }));
+    planet.add(globe);
+    var wire = new T.Mesh(new T.SphereGeometry(2.305, 36, 24),
+      new T.MeshBasicMaterial({ color: p.cyan, wireframe: true,
+        transparent: true, opacity: 0.075, depthWrite: false }));
+    planet.add(wire);
+    var atmosphere = new T.Mesh(new T.SphereGeometry(2.43, 48, 32),
+      new T.MeshBasicMaterial({ color: p.cyan, transparent: true,
+        opacity: 0.055, side: T.BackSide, depthWrite: false }));
+    planet.add(atmosphere);
+
+    var latitude = [];
+    for (var lat = -4; lat <= 4; lat++) {
+      var angle = lat * Math.PI / 10;
+      var radius = 2.32 * Math.cos(angle);
+      var band = new T.Mesh(new T.TorusGeometry(Math.max(0.08, radius), 0.009, 5, 128),
+        new T.MeshBasicMaterial({ color: lat === 0 ? p.bright : p.gold,
+          transparent: true, opacity: lat === 0 ? 0.42 : 0.20, depthWrite: false }));
+      band.rotation.x = Math.PI / 2;
+      band.position.y = 2.32 * Math.sin(angle);
+      planet.add(band);
+      latitude.push(band);
+    }
+
+    var meridians = [];
+    for (var mer = 0; mer < 12; mer++) {
+      var longitude = new T.Mesh(new T.TorusGeometry(2.32, 0.008, 5, 128),
+        new T.MeshBasicMaterial({ color: mer % 3 === 0 ? p.cyan : p.gold,
+          transparent: true, opacity: mer % 3 === 0 ? 0.24 : 0.12, depthWrite: false }));
+      longitude.rotation.y = mer * Math.PI / 12;
+      planet.add(longitude);
+      meridians.push(longitude);
+    }
+
+    var axis = new T.Mesh(new T.TorusGeometry(2.72, 0.014, 6, 160),
+      new T.MeshBasicMaterial({ color: p.bright, transparent: true,
+        opacity: 0.32, depthWrite: false }));
+    axis.rotation.x = Math.PI / 2.45;
+    planet.add(axis);
+
+    var core = new T.Group();
+    core.add(buildSignet(T, p.bright));
+    core.scale.setScalar(0.31);
+    scene.add(core);
+
+    var modules = window.OmegaWorldEngine && Array.isArray(window.OmegaWorldEngine.modules)
+      ? window.OmegaWorldEngine.modules.slice(0, 18) : [];
+    var links = [], nodes = [];
+    var nodeGeo = new T.IcosahedronGeometry(0.105, 1);
+    var ringGeo = new T.TorusGeometry(0.17, 0.012, 5, 36);
+    var count = modules.length;
+
+    modules.forEach(function (mod, i) {
+      var y = 1 - (2 * (i + 0.5) / Math.max(1, count));
+      var r = Math.sqrt(Math.max(0, 1 - y * y));
+      var phi = i * Math.PI * (3 - Math.sqrt(5));
+      var normal = new T.Vector3(Math.cos(phi) * r, y, Math.sin(phi) * r);
+      var colour = /^#[0-9a-f]{6}$/i.test(mod.accent || '')
+        ? parseInt(mod.accent.slice(1), 16) : p.gold;
+      var group = new T.Group();
+      group.position.copy(normal.clone().multiplyScalar(2.34));
+      group.quaternion.setFromUnitVectors(new T.Vector3(0, 0, 1), normal);
+      var node = new T.Mesh(nodeGeo, new T.MeshStandardMaterial({
+        color: colour, emissive: colour, emissiveIntensity: 0.7,
+        metalness: 0.86, roughness: 0.2
+      }));
+      var ring = new T.Mesh(ringGeo, new T.MeshBasicMaterial({
+        color: colour, transparent: true, opacity: 0.8, depthWrite: false
+      }));
+      group.add(node);
+      group.add(ring);
+      planet.add(group);
+      nodes.push({ group: group, node: node, ring: ring, phase: phi, mod: mod, routeState: null });
+      if (mod.href) links.push({ object: group, href: mod.href, label: mod.name || mod.id });
+    });
+
+    return {
+      scene: scene,
+      camera: cam,
+      links: links,
+      count: count,
+      update: function (t, px, py) {
+        var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduced) {
+          planet.rotation.y = t * 0.075 + px * 0.16;
+          planet.rotation.x = py * 0.055 + Math.sin(t * 0.12) * 0.025;
+          wire.rotation.y = -t * 0.035;
+          atmosphere.scale.setScalar(1 + Math.sin(t * 0.7) * 0.006);
+          axis.rotation.z = t * 0.09;
+          latitude.forEach(function (entry, i) { entry.rotation.z = Math.sin(t * 0.12 + i) * 0.025; });
+          meridians.forEach(function (entry, i) { entry.rotation.z = t * (i % 2 ? 0.012 : -0.012); });
+          nodes.forEach(function (entry) {
+            entry.node.rotation.y = t * 0.65 + entry.phase;
+            var routeState = entry.mod.routeState || 'CHECKING';
+            if (routeState !== entry.routeState) {
+              var routeColour = routeState === 'LIVE' ? 0x00FF88
+                : routeState === 'UNAVAILABLE' ? 0xCF6760 : 0xE8C97A;
+              entry.node.material.color.setHex(routeColour);
+              entry.node.material.emissive.setHex(routeColour);
+              entry.ring.material.color.setHex(routeColour);
+              entry.routeState = routeState;
+            }
+            if (!entry.group.userData.omegaHovered) {
+              entry.group.scale.setScalar(1 + Math.sin(t * 1.35 + entry.phase) * 0.07);
+            }
+          });
+          core.rotation.y = -t * 0.12;
+          core.rotation.x = Math.sin(t * 0.2) * 0.035;
+        }
+        cam.position.set(px * 0.38, 2.4 - py * 0.45, 12.8);
+        cam.lookAt(0, 0, 0);
+      }
+    };
+  };
+
   SCENES.world = function (T, opt) {
     var p = palette();
     var scene = new T.Scene();
@@ -2854,6 +2987,7 @@
     character: 'Your character: a core, twelve gate nodes lit by the gates you have passed, and five satellites for your mana',
     sky:    'Your own record as a sky: one star for each task, lesson and certificate you have completed',
     world: 'The eighteen governed platform modules arranged as an interactive three-dimensional Omega world',
+    genesis: 'A rotating symbolic planet with eighteen navigable platform realms, nine latitude bands and twelve meridians',
     lion:   'The Legion of Wisdom winged lion above the Omega: a faceted gold lion with beating wings, glowing eyes and nine stars, rendered in three dimensions',
     council: 'The council chamber: twelve executors seated in a ring around the Omega dais, each a turning three-dimensional emblem coin on its own pedestal',
     'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'

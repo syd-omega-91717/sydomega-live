@@ -55,7 +55,7 @@ A source sweep found concrete removal/migration paths whose keys are eligible fo
 - `nutrition.html` migrates and removes `omega_water_track`.
 - `bg.js` purges `omega_lux_mode`; `omega-demo-video.js` removes `omega_demo_watched_at` during reset.
 
-The prefix is broader than `omega_`: it also makes names such as `omega-v1:<cache-key>` and `omega:ad:impressions` eligible unless explicitly excluded. The `omega:ad:impressions` mismatch was corrected by PR #1580: the exact key is now in `SKIP`, so it is excluded from member-state mirroring and the shared member export paths. A read-only aggregate query against the live project returned 0 rows for that exact key. This confirms no current `member_state` rows require cleanup; it does not prove the key was never present in local browsers.
+The prefix is broader than `omega_`: any key beginning with `omega` is eligible unless explicitly excluded, including colon- or hyphen-delimited namespaces. `omega:ad:impressions` is a confirmed example in `omega-ad-network.js`; `omega-v1:<cache-key>` is a pattern example, not a confirmed live key. The `omega:ad:impressions` mismatch was corrected by PR #1580: the exact key is now in `SKIP`, so it is excluded from member-state mirroring and the shared member export paths. A read-only aggregate query against the live project returned 0 rows for that exact key. This confirms no current `member_state` rows require cleanup; it does not prove the key was never present in local browsers.
 
 Before implementing deletion, classify every current key namespace into member data, ephemeral/cache, browser-only telemetry, finance-local, and deprecated migration data. Then implement explicit deletion semantics and exclusions without deleting existing users' remote rows by assumption.
 

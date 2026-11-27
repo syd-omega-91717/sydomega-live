@@ -405,9 +405,18 @@ function scheduleFocusMirrorRetry(queue){
 }
 function renderFocusMirrorStatus(){
   const queue=getFocusMirrorQueue();
-  if(!queue.length){setFocusSyncStatus('CLOUD MIRROR CURRENT','synced');return;}
-  const pending=queue.length;
-  setFocusSyncStatus('CLOUD SYNC PENDING · '+pending+' SESSION'+(pending===1?'':'S'),'pending');
+  if(queue.length){
+    setFocusSyncStatus('CLOUD SYNC PENDING · '+queue.length+' SESSION'+(queue.length===1?'':'S'),'pending');
+    return;
+  }
+  const sessions=getSessions();
+  const unqueued=sessions.filter(function(row){return row.syncStatus==='local_only'||row.syncStatus==='auth_required';}).length;
+  const legacy=sessions.filter(function(row){return !row.syncStatus;}).length;
+  if(unqueued||legacy){
+    setFocusSyncStatus('LOCAL HISTORY · CLOUD STATE UNKNOWN FOR '+(unqueued+legacy)+' SESSION'+(unqueued+legacy===1?'':'S'),'pending');
+    return;
+  }
+  setFocusSyncStatus('CLOUD MIRROR CURRENT','synced');
 }
 
 async function mirrorFocusSession(record){

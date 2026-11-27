@@ -3,6 +3,7 @@
    Loaded as a module by honors.html; defines window.bootVault, called when the VAULT tab opens. */
 import { createClient } from '/vendor/supabase-js.js';
 var sb=window.__omegaSb||(window.__omegaSb=createClient('https://ydqhzvvoyufiiqvzcjns.supabase.co','sb_publishable_9KlhhnvRs4OKgw6nxXHmYw_GxszJ46q'));
+window.OmegaHonorsVault=window.OmegaHonorsVault||{status:'WAITING',trophies:[],medals:[],certificates:[]};
 /* The VAULT tab. Names come from OmegaCanon.track(n) and colours from OmegaRealm.palette (by the track's element), never a copy. */
 function colorOf(t){var P=window.OmegaRealm&&window.OmegaRealm.palette,e=t&&t.element?String(t.element):'';e=e.charAt(0).toUpperCase()+e.slice(1).toLowerCase();return (P&&P[e]&&P[e].core)||'#C9A84C';}
 function drawIcon(cv,col,earned){
@@ -25,7 +26,9 @@ function el(tag,cls,txt,css){var e=document.createElement(tag);if(cls)e.classNam
 function fillStat(id,frac,col){var e=document.getElementById(id);if(!e)return;e.style.setProperty('--vt-fill',Math.round(frac*100)+'%');e.style.setProperty('--vt-col',col);}
 async function build(){
   var C=window.OmegaCanon;
-  var sess=(await sb.auth.getSession()).data.session;if(!sess)return;
+  var auth=await sb.auth.getSession();
+  var sess=auth&&auth.data&&auth.data.session;
+  if(!sess){window.OmegaHonorsVault={status:'UNAVAILABLE',trophies:[],medals:[],certificates:[]};var state=document.getElementById('vt-3d-source');if(state)state.textContent='HONORS DATA UNAVAILABLE · SIGN IN REQUIRED';return;}
   var uid=sess.user.id;
   var pr=(await sb.from('profiles').select('*').eq('id',uid).maybeSingle()).data||{};
   var share=document.getElementById('vt-share');
@@ -40,14 +43,19 @@ async function build(){
     sb.from('certificates').select('cert_num,issued_at').eq('user_id',uid)]);
   /* a failed read is not "nothing earned" */
   if(res[0].error||res[1].error||res[2].error){
+    window.OmegaHonorsVault={status:'UNAVAILABLE',trophies:[],medals:[],certificates:[]};
+    var state=document.getElementById('vt-3d-source');if(state)state.textContent='HONORS DATA UNAVAILABLE · NO EARNED STATE INFERRED';
     var box=document.getElementById('vt-trophies');box.textContent='';
     box.appendChild(el('div','vt-info','Your honors could not be read right now. Try again in a moment.'));return;
   }
   var et=res[0].data||[],em=res[1].data||[],ec=res[2].data||[];
+  window.OmegaHonorsVault={status:'LIVE',trophies:et.map(function(r){return Number(r.trophy_num);}),medals:em.map(function(r){return Number(r.medal_num);}),certificates:ec.map(function(r){return Number(r.cert_num);})};
+  var source=document.getElementById('vt-3d-source');
+  if(source)source.textContent='LIVE RECORDS · TROPHIES '+et.length+'/12 · MEDALS '+em.length+'/12 · CERTIFICATES '+ec.length+'/12';
   var all=[1,2,3,4,5,6,7,8,9,10,11,12];
-  var tn=isOwner?all:et.map(function(r){return r.trophy_num;});
-  var mn=isOwner?all:em.map(function(r){return r.medal_num;});
-  var cn=isOwner?all:ec.map(function(r){return r.cert_num;});
+  var tn=et.map(function(r){return r.trophy_num;});
+  var mn=em.map(function(r){return r.medal_num;});
+  var cn=ec.map(function(r){return r.cert_num;});
   /* celebrate unlocks since the last visit; the first visit only seeds the baseline (same key the old page used) */
   if(!isOwner){
     try{
@@ -79,13 +87,13 @@ async function build(){
     var t=C&&C.track(n);if(!t)return;
     var col=colorOf(t);
     var on=tn.indexOf(n)>=0;
-    var row=!isOwner&&on?et.filter(function(r){return r.trophy_num===n;})[0]:null;
+    var row=on?et.filter(function(r){return r.trophy_num===n;})[0]:null;
     var card=el('div','vt-card'+(on?' earned':''));card.style.setProperty('--tc',on?col:'var(--muted)');
     var cv=document.createElement('canvas');card.appendChild(cv);
     card.appendChild(el('div','vt-num','TROPHY '+n+' OF 12'));
     card.appendChild(el('div','vt-name',t.trophy,'color:'+(on?col:'var(--muted)')));
     card.appendChild(el('div','vt-sub','ELEMENT: '+String(t.element).toUpperCase(),'color:'+(on?col:'var(--muted)')));
-    card.appendChild(el('div','vt-info',row&&row.earned_at?'EARNED: '+new Date(row.earned_at).toLocaleDateString():(isOwner?'EARNED: OMEGA MASTER':(on?'EARNED':'LOCKED — PROGRESS REQUIRED'))));
+    card.appendChild(el('div','vt-info',row&&row.earned_at?'EARNED: '+new Date(row.earned_at).toLocaleDateString():(on?'EARNED':'LOCKED — PROGRESS REQUIRED')));
     tg.appendChild(card);
     requestAnimationFrame(function(){drawIcon(cv,col,on);});
     var mo=mn.indexOf(n)>=0;

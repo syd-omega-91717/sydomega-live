@@ -35,6 +35,13 @@ class HonorsTrophiesMerge(unittest.TestCase):
     def test_a_failed_read_is_not_shown_as_nothing_earned(self):
         self.assertRegex(JS, r"res\[0\]\.error\s*\|\|\s*res\[1\]\.error\s*\|\|\s*res\[2\]\.error")
 
+    def test_owner_earned_state_comes_from_persisted_rows(self):
+        self.assertNotIn("isOwner?all", JS)
+        self.assertIn("var tn=et.map(function(r){return r.trophy_num;});", JS)
+        self.assertIn("var mn=em.map(function(r){return r.medal_num;});", JS)
+        self.assertIn("var cn=ec.map(function(r){return r.cert_num;});", JS)
+        self.assertIn("var row=on?et.filter(function(r){return r.trophy_num===n;})[0]:null;", JS)
+
     def test_the_celebration_baseline_key_is_kept(self):
         self.assertIn("omega_trophy_celebrate_seen_v1", JS)   # otherwise every member re-celebrates every old unlock once
 

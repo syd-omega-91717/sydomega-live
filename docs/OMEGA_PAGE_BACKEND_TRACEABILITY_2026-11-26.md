@@ -55,7 +55,7 @@ A source sweep found concrete removal/migration paths whose keys are eligible fo
 - `nutrition.html` migrates and removes `omega_water_track`.
 - `bg.js` purges `omega_lux_mode`; `omega-demo-video.js` removes `omega_demo_watched_at` during reset.
 
-The prefix is broader than `omega_`: it also makes names such as `omega-v1:<cache-key>` and `omega:ad:impressions` eligible. The latter is described in its page UI as browser-only, so the mirror's current eligibility rule and the product's stated data boundary do not match. This does not prove every such key was uploaded for every user; it proves the code will collect it when present, signed in, not excluded, and within the row-size limit.
+The prefix is broader than `omega_`: it also makes names such as `omega-v1:<cache-key>` and `omega:ad:impressions` eligible unless explicitly excluded. The `omega:ad:impressions` mismatch was corrected by PR #1580: the exact key is now in `SKIP`, so it is excluded from member-state mirroring and the shared member export paths. A read-only aggregate query against the live project returned 0 rows for that exact key. This confirms no current `member_state` rows require cleanup; it does not prove the key was never present in local browsers.
 
 Before implementing deletion, classify every current key namespace into member data, ephemeral/cache, browser-only telemetry, finance-local, and deprecated migration data. Then implement explicit deletion semantics and exclusions without deleting existing users' remote rows by assumption.
 
@@ -75,7 +75,13 @@ The finance exclusion list prevents the shared mirror from uploading the listed 
 
 Relevant scanner source: [page module aggregation](../scripts/evidence-audit.py#L409), [root HTML enumeration](../scripts/evidence-audit.py#L582), [documented inline-script limitation](../FEATURE_IDEAS.md#L2937).
 
-The mirror-eligibility correction is now merged in PR #1578. The refreshed matrix reads the runtime `SKIP` and `NO_MIRROR` exclusions and treats `omega_analytics_*` as excluded. Its labels describe only static key eligibility: actual mirroring still depends on a signed-in session, a readable localStorage value within the 512 KiB limit, and a successful Supabase upsert. The audit correction does not change runtime persistence behaviour.
+The mirror-eligibility correction is merged in PR #1578. PR #1579 committed the regenerated 237-page matrix after that correction. PR #1580 then added `omega:ad:impressions` to the runtime `SKIP` map and added tests for the mirror and export privacy boundaries. The refreshed matrix reads the runtime `SKIP` and `NO_MIRROR` exclusions and treats `omega_analytics_*` as excluded. Its labels describe only static key eligibility: actual mirroring still depends on a signed-in session, a readable localStorage value within the 512 KiB limit, and a successful Supabase upsert.
+
+## Follow-up privacy correction — 2026-11-27
+
+`omega-ad-network.js` stores specimen impression counts in `omega:ad:impressions` and explicitly labels them browser-only / not billable. Because the shared mirror uses `PREFIX = 'omega'`, the key was eligible before PR #1580. That PR added the exact key to `SKIP`, which also excludes it from `OmegaMemberState.isMemberKey()` and `OmegaLocalBackup.memberKeys()`. The CI suite passed 20/20, including the new policy contract tests. A read-only live aggregate returned **0 rows** in `public.member_state` for the key. No remote rows were deleted and no schema or RLS changes were needed.
+
+This correction does not mean all browser-only or dynamic keys have been classified. The full key lifecycle inventory remains P1; the current audit identified a concrete exception, not a complete namespace census.
 
 ## Additional source/live-schema reconciliation
 
@@ -91,8 +97,8 @@ Do not label this as a proven runtime failure, add member write grants, drop/rec
 
 | Priority | Work | Acceptance evidence |
 |---|---|---|
-| P0 | Keep the corrected scanner and generated matrix synchronized | Scanner fixes merged (#1576: 18/18; #1578: 18/18); refreshed 237-page matrix generated on this branch; merge this refresh PR after blocking checks pass |
-| P1 | Inventory every `omega*` key namespace, then add explicit mirror tombstones/deletion semantics | Tests prove intentional deletion stays deleted after restore, while a fresh empty browser can still restore undeleted keys; cache/telemetry/finance exclusions are independently tested |
+| P0 | Keep the corrected scanner and generated matrix synchronized | Completed: #1576 (18/18), #1578 (18/18), #1579 (17/17); 237-page matrix is committed to main |
+| P1 | Complete member-state key lifecycle inventory, then design tombstones/deletion semantics | Every exact/dynamic key has source references and a declared data class; tests prove intentional deletion stays deleted after restore while a fresh empty browser can recover undeleted keys; cache/telemetry/finance exclusions are independently tested |
 | P1 | Define Focus session reconciliation | Failure injection for normalized insert; idempotent retry/replay; no duplicate sessions; visible degraded state or durable recovery |
 | P2 | Verify Profile and Approvals with separate owner/member sessions | Browser tests for signed-out, ordinary member, approved member, owner without AAL2, owner with AAL2; prove both allowed and denied paths |
 | P2 | Verify Mindmap/Atlas backup and restore | Save on device A, restore on clean device B, preserve local conflicts, test oversized values and mirror errors |
@@ -101,6 +107,6 @@ Do not label this as a proven runtime failure, add member write grants, drop/rec
 
 ## First practical step
 
-First, complete review and merge of the current evidence-matrix refresh PR. Then build the member-state key lifecycle inventory and deletion regression tests before changing persistence semantics. Do not auto-delete remote rows based only on an empty browser cache.
+First, build a complete member-state key lifecycle inventory that separates member data, ephemeral preferences, finance-local data, analytics, browser-only telemetry, and deprecated migration keys. Add explicit deletion/tombstone semantics only after that inventory and its restore tests are complete. Do not auto-delete remote rows based only on an empty browser cache.
 
 **Boundary:** this snapshot is a source-level traceability audit. It does not claim that every page action, provider call, storage operation, database policy, or user workflow has been exercised in production.

@@ -26,8 +26,8 @@ This scanner reads the repository. It has no database connection, so:
 | class | meaning |
 |---|---|
 | `BUILT` | Reaches Postgres, an Edge Function, or Supabase Storage; table/function references are declared in `supabase/`. |
-| `PARTIAL` | Reaches Postgres, an Edge Function, or Supabase Storage **and** writes `localStorage`. Whatever lives only in the browser is lost with the cache. |
-| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge/storage call **of its own**. This is a statement about the page, not about persistence: `omega-member-state.js` (bg.js, every page) mirrors every `omega`-prefixed key to `public.member_state`, so most of these pages do have a server copy — each row below says whether all of its keys are covered. Some pages sign the member in first; that gives them a session, not persistence. |
+| `PARTIAL` | Reaches Postgres, an Edge Function, or Supabase Storage **and** writes `localStorage`. Each row reports mirror-key eligibility/exclusions; it does not prove a successful upload. Browser-only values that are excluded, unresolved, oversized, or not successfully synced remain at risk. |
+| `LOCAL_ONLY` | Writes `localStorage`, makes no table/rpc/edge/storage call **of its own**. The shared mirror only attempts eligible `omega`-prefixed keys; `SKIP`, `NO_MIRROR`, analytics keys, oversized values, signed-out sessions, and failed writes are not guaranteed to have a server copy. Each row reports static key eligibility, not proof of a successful upload. |
 | `STATIC` | Persists nothing. Some of these are correct (display pages, and auth-only pages such as `reset.html`, whose evidence column says so); for anything meant to record something, it is a gap. |
 | `BROKEN` | Names a table, view, or function that nothing in `supabase/` declares. Supabase resolves this to `{data:null,error}` — a silent empty state, not a crash. |
 | `UNREACHABLE` | Deployed, but neither `nav.js` nor the owner deck (`omega-owner-deck.js`) references it, and it is not a public page. |
@@ -160,95 +160,95 @@ This scanner reads the repository. It has no database connection, so:
 
 | page | evidence |
 |---|---|
-| `academy.html` | reads/writes 4 tables; 3 auth calls; also 3 localStorage writes |
-| `account.html` | reads/writes 1 table, 1 rpc; 7 auth calls; also 1 localStorage write |
-| `ascension.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `bloodline.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
-| `codex.html` | reads/writes 2 tables; 2 auth calls; also 2 localStorage writes |
-| `contributions.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
-| `control-center.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write |
-| `cosmos.html` | reads/writes 1 table, 2 edge fn; 7 auth calls; also 1 localStorage write |
-| `dashboard.html` | reads/writes 12 tables, 6 rpc, 1 edge fn; 6 auth calls; also 2 localStorage writes |
-| `family.html` | reads/writes 4 tables; 6 auth calls; also 1 localStorage write |
-| `focus.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
-| `forge.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `gaming.html` | reads/writes 2 tables; 3 auth calls; also 2 localStorage writes |
-| `governance.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes |
-| `habits.html` | reads/writes 2 tables, 1 rpc; 2 auth calls; also 11 localStorage writes |
-| `heritage.html` | reads/writes 1 table; 1 auth call; also 4 localStorage writes |
-| `houses.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `intelligence.html` | reads/writes 7 tables, 1 edge fn; 3 auth calls; also 2 localStorage writes |
-| `interface-omni.html` | reads/writes 1 table, 2 rpc; 4 auth calls; also 1 localStorage write |
-| `invest.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `investment.html` | reads/writes 1 edge fn; also 3 localStorage writes |
-| `kings.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes |
-| `levels.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `matrix.html` | reads/writes 2 tables, 1 rpc; 7 auth calls; also 1 localStorage write |
-| `media.html` | reads/writes 2 tables, 1 rpc; 7 auth calls; also 1 localStorage write |
-| `mirror.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `notifications.html` | reads/writes 2 tables; 1 auth call; also 5 localStorage writes |
-| `oath.html` | reads/writes 2 tables; 1 auth call; also 1 localStorage write |
-| `pantheons.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `pending.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write |
-| `profile.html` | reads/writes 5 tables, 11 rpc; 19 auth calls; also 4 localStorage writes |
-| `publications.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `reset.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write |
-| `search.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `series.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write |
-| `targets.html` | reads/writes 2 tables; 1 auth call; also 6 localStorage writes |
-| `terms.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write |
-| `treasury.html` | reads/writes 1 table; 1 auth call; also 7 localStorage writes |
-| `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes |
+| `academy.html` | reads/writes 4 tables; 3 auth calls; also 3 localStorage writes; 1 key eligible for the `member_state` mirror; 2 keys built at runtime — mirror eligibility unresolved by static scan |
+| `account.html` | reads/writes 1 table, 1 rpc; 7 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `ascension.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `bloodline.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes; 1 key eligible for the `member_state` mirror; 2 keys built at runtime — mirror eligibility unresolved by static scan |
+| `codex.html` | reads/writes 2 tables; 2 auth calls; also 2 localStorage writes; 2 keys eligible for the `member_state` mirror |
+| `contributions.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes; 1 key eligible for the `member_state` mirror; 2 keys built at runtime — mirror eligibility unresolved by static scan |
+| `control-center.html` | reads/writes 4 tables; 1 auth call; also 1 localStorage write; 1 key NOT `omega`-prefixed, so NOT mirrored |
+| `cosmos.html` | reads/writes 1 table, 2 edge fn; 7 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `dashboard.html` | reads/writes 12 tables, 6 rpc, 1 edge fn; 6 auth calls; also 2 localStorage writes; 1 key eligible for the `member_state` mirror; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `family.html` | reads/writes 4 tables; 6 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `focus.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes; 2 keys eligible for the `member_state` mirror |
+| `forge.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `gaming.html` | reads/writes 2 tables; 3 auth calls; also 2 localStorage writes; 2 keys eligible for the `member_state` mirror |
+| `governance.html` | reads/writes 1 table; 1 auth call; also 3 localStorage writes; 1 key eligible for the `member_state` mirror; 2 keys built at runtime — mirror eligibility unresolved by static scan |
+| `habits.html` | reads/writes 2 tables, 1 rpc; 2 auth calls; also 11 localStorage writes; 11 keys eligible for the `member_state` mirror |
+| `heritage.html` | reads/writes 1 table; 1 auth call; also 4 localStorage writes; 1 key eligible for the `member_state` mirror; 3 keys built at runtime — mirror eligibility unresolved by static scan |
+| `houses.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `intelligence.html` | reads/writes 7 tables, 1 edge fn; 3 auth calls; also 2 localStorage writes; 2 keys eligible for the `member_state` mirror |
+| `interface-omni.html` | reads/writes 1 table, 2 rpc; 4 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `invest.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `investment.html` | reads/writes 1 edge fn; also 3 localStorage writes; 1 key excluded by `SKIP`/`NO_MIRROR` policy; 2 keys built at runtime — mirror eligibility unresolved by static scan |
+| `kings.html` | reads/writes 1 table; 1 auth call; also 2 localStorage writes; 1 key eligible for the `member_state` mirror; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `levels.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `matrix.html` | reads/writes 2 tables, 1 rpc; 7 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `media.html` | reads/writes 2 tables, 1 rpc; 7 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `mirror.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `notifications.html` | reads/writes 2 tables; 1 auth call; also 5 localStorage writes; 2 keys eligible for the `member_state` mirror; 3 keys built at runtime — mirror eligibility unresolved by static scan |
+| `oath.html` | reads/writes 2 tables; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `pantheons.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `pending.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `profile.html` | reads/writes 5 tables, 11 rpc; 19 auth calls; also 4 localStorage writes; 1 key eligible for the `member_state` mirror; 3 keys excluded by `SKIP`/`NO_MIRROR` policy |
+| `publications.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `reset.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `search.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `series.html` | reads/writes 1 table; 1 auth call; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `targets.html` | reads/writes 2 tables; 1 auth call; also 6 localStorage writes; 6 keys eligible for the `member_state` mirror |
+| `terms.html` | reads/writes 1 table; 6 auth calls; also 1 localStorage write; 1 key eligible for the `member_state` mirror |
+| `treasury.html` | reads/writes 1 table; 1 auth call; also 7 localStorage writes; 3 keys excluded by `SKIP`/`NO_MIRROR` policy; 4 keys built at runtime — mirror eligibility unresolved by static scan |
+| `weekly.html` | reads/writes 1 edge fn; also 2 localStorage writes; 1 key eligible for the `member_state` mirror; 1 key built at runtime — mirror eligibility unresolved by static scan |
 
 ## LOCAL_ONLY (45)
 
 | page | evidence |
 |---|---|
-| `affirmations.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `atlas.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `body.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
-| `breath.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `celestial-covenants.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `charter.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `clarity.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `contacts.html` | 4 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 4 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `decisions.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `exam.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
-| `expenses.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 4 keys built at runtime — mirror coverage unresolved by static scan |
-| `fasting.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `flashcard.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `game-last-galactic-empire.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `game-omega-civilization.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `game-origins-bridge.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `game-origins.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
-| `gratitude.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `journal.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `lab.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `ladder.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
-| `library.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `mentors.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `mindmap.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `mood.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `network.html` | 6 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 6 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `nutrition.html` | 4 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 4 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `offline.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `passport.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `physiology.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `principles.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `quotes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `reading.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `revenue.html` | 4 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys built at runtime — mirror coverage unresolved by static scan |
-| `rituals.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 3 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `skills.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `sleep.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
-| `stoic.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror coverage unresolved by static scan |
-| `time.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `vision.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `vocabulary.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 2 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `wallet.html` | 4 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys built at runtime — mirror coverage unresolved by static scan |
-| `water.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; all 5 keys `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
-| `wealth.html` | 7 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys built at runtime — mirror coverage unresolved by static scan |
-| `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; all 1 key `omega`-prefixed, so mirrored to `member_state` by omega-member-state.js |
+| `affirmations.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `atlas.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `body.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `breath.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `celestial-covenants.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `charter.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 3 keys eligible for the `member_state` mirror |
+| `clarity.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `contacts.html` | 4 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 4 keys eligible for the `member_state` mirror |
+| `decisions.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `exam.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `expenses.html` | 5 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 1 key excluded by `SKIP`/`NO_MIRROR` policy; 4 keys built at runtime — mirror eligibility unresolved by static scan |
+| `fasting.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `flashcard.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `game-last-galactic-empire.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `game-omega-civilization.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `game-origins-bridge.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `game-origins.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `gratitude.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `journal.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 5 keys eligible for the `member_state` mirror |
+| `lab.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `ladder.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `library.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `mentors.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `mindmap.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `mood.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `network.html` | 6 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 6 keys eligible for the `member_state` mirror |
+| `nutrition.html` | 4 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 4 keys eligible for the `member_state` mirror |
+| `offline.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key excluded by `SKIP`/`NO_MIRROR` policy |
+| `passport.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `physiology.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `principles.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `quotes.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `reading.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `revenue.html` | 4 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys excluded by `SKIP`/`NO_MIRROR` policy; 2 keys built at runtime — mirror eligibility unresolved by static scan |
+| `rituals.html` | 3 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 3 keys eligible for the `member_state` mirror |
+| `skills.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `sleep.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `stoic.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror; 1 key built at runtime — mirror eligibility unresolved by static scan |
+| `time.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
+| `vision.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `vocabulary.html` | 2 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 2 keys eligible for the `member_state` mirror |
+| `wallet.html` | 4 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 2 keys excluded by `SKIP`/`NO_MIRROR` policy; 2 keys built at runtime — mirror eligibility unresolved by static scan |
+| `water.html` | 5 localStorage writes, no table/rpc/edge call of its own; no page-level export path; 5 keys eligible for the `member_state` mirror |
+| `wealth.html` | 7 localStorage writes, no table/rpc/edge call of its own; has an OmegaLocalBackup export path; 5 keys excluded by `SKIP`/`NO_MIRROR` policy; 2 keys built at runtime — mirror eligibility unresolved by static scan |
+| `workout.html` | 1 localStorage write, no table/rpc/edge call of its own; no page-level export path; 1 key eligible for the `member_state` mirror |
 
 ## STATIC (38)
 

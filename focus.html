@@ -371,14 +371,18 @@ function saveSession(){
    never an update, and a follow-up own-row read confirms persistence. */
 let focusMirrorBusy=false;
 let focusRetryTimer=null;
+let focusQueueCorrupt=false;
 
 function getFocusMirrorQueue(){
+  if(focusQueueCorrupt)return[];
   try{
     const value=JSON.parse(localStorage.getItem(MIRROR_QUEUE_KEY)||'[]');
-    return Array.isArray(value)?value:[];
-  }catch(_){return[];}
+    if(!Array.isArray(value)){focusQueueCorrupt=true;return[];}
+    return value;
+  }catch(_){focusQueueCorrupt=true;return[];}
 }
 function persistFocusMirrorQueue(queue){
+  if(focusQueueCorrupt)return false;
   try{localStorage.setItem(MIRROR_QUEUE_KEY,JSON.stringify(queue));return true;}
   catch(_){return false;}
 }
@@ -406,6 +410,7 @@ function scheduleFocusMirrorRetry(queue){
   focusRetryTimer=setTimeout(function(){focusRetryTimer=null;flushFocusMirrorQueue();},Math.max(1000,due-Date.now()));
 }
 function renderFocusMirrorStatus(){
+  if(focusQueueCorrupt){setFocusSyncStatus('LOCAL HISTORY · CLOUD QUEUE UNREADABLE','error');return;}
   const queue=getFocusMirrorQueue();
   if(queue.length){
     setFocusSyncStatus('CLOUD SYNC PENDING · '+queue.length+' SESSION'+(queue.length===1?'':'S'),'pending');
@@ -418,6 +423,7 @@ function renderFocusMirrorStatus(){
     setFocusSyncStatus('LOCAL HISTORY · CLOUD STATE UNKNOWN FOR '+(unqueued+legacy)+' SESSION'+(unqueued+legacy===1?'':'S'),'pending');
     return;
   }
+  if(!sessions.length){setFocusSyncStatus('NO FOCUS SESSIONS TO SYNC','synced');return;}
   setFocusSyncStatus('CLOUD MIRROR CURRENT','synced');
 }
 
@@ -438,7 +444,17 @@ async function mirrorFocusSession(record){
       return;
     }
     const queue=getFocusMirrorQueue();
+    if(focusQueueCorrupt){
+      updateLocalFocusSync(record.id,'local_only');
+      setFocusSyncStatus('LOCAL HISTORY · CLOUD QUEUE UNREADABLE','error');
+      return;
+    }
     if(!queue.some(function(item){return item.id===record.id;})){
+      if(queue.length>=2000){
+        updateLocalFocusSync(record.id,'local_only');
+        setFocusSyncStatus('LOCAL HISTORY · CLOUD QUEUE CAPACITY REACHED','error');
+        return;
+      }
       queue.push({
         id:record.id,userId:user.id,taskName:String(record.task||'Untitled').slice(0,200),
         mode:record.mode,durationSecs:Math.max(0,Math.round(Number(record.duration)||0)),
@@ -464,6 +480,7 @@ async function mirrorFocusSession(record){
 async function flushFocusMirrorQueue(){
   if(focusMirrorBusy)return;
   const queue=getFocusMirrorQueue();
+  if(focusQueueCorrupt){setFocusSyncStatus('LOCAL HISTORY · CLOUD QUEUE UNREADABLE','error');return;}
   if(!queue.length){renderFocusMirrorStatus();return;}
   if(!(window.OmegaSB&&typeof window.OmegaSB.get==='function')){
     setFocusSyncStatus('CLOUD SYNC PENDING · CLIENT UNAVAILABLE','pending');

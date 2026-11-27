@@ -24,6 +24,7 @@ class LeaderboardPodium3D(unittest.TestCase):
         self.assertIn("rows.slice(0, 3)", scene)
         self.assertIn("NO VERIFIED ROW", scene)
         self.assertIn("WAITING FOR VERIFIED RANKING", scene)
+        self.assertIn("ELEMENT UNAVAILABLE", scene)
 
     def test_page_publishes_real_authority_sources(self):
         self.assertIn("window.OmegaLeaderboard3D={source:String(source||'VERIFIED RANKING'),rows:rows}", LOGIC)

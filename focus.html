@@ -332,14 +332,16 @@ drawRing(0);
 
 /* ── Save session ─── */
 function createFocusSessionId(){
-  const c=window.crypto;
-  if(!c) return null;
-  if(typeof c.randomUUID==='function') return c.randomUUID();
-  if(typeof c.getRandomValues!=='function') return null;
-  const b=new Uint8Array(16);c.getRandomValues(b);
-  b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;
-  const h=Array.from(b,function(v){return v.toString(16).padStart(2,'0');}).join('');
-  return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+  try{
+    const c=window.crypto;
+    if(!c)return null;
+    if(typeof c.randomUUID==='function')return c.randomUUID();
+    if(typeof c.getRandomValues!=='function')return null;
+    const b=new Uint8Array(16);c.getRandomValues(b);
+    b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;
+    const h=Array.from(b,function(v){return v.toString(16).padStart(2,'0');}).join('');
+    return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+  }catch(_){return null;}
 }
 
 function saveSession(){
@@ -358,7 +360,7 @@ function saveSession(){
   const sessions=getSessions();
   sessions.push(record);
   localStorage.setItem(STORE_KEY,JSON.stringify(sessions.slice(-500)));
-  if(id) mirrorFocusSession(record);
+  if(id){setFocusSyncStatus('CLOUD SYNC PENDING · QUEUING SESSION','pending');mirrorFocusSession(record);}
   else setFocusSyncStatus('LOCAL ONLY · SECURE SESSION ID UNAVAILABLE','error');
 }
 
@@ -496,8 +498,9 @@ async function flushFocusMirrorQueue(){
           .eq('id',item.id).eq('user_id',user.id).maybeSingle();
         if(confirmed.error)throw confirmed.error;
         if(!confirmed.data)throw new Error('idempotency_confirmation_missing');
-        current=current.filter(function(row){return row.id!==item.id;});
-        if(!persistFocusMirrorQueue(current))throw new Error('queue_storage_failed_after_confirm');
+        const nextQueue=current.filter(function(row){return row.id!==item.id;});
+        if(!persistFocusMirrorQueue(nextQueue))throw new Error('queue_storage_failed_after_confirm');
+        current=nextQueue;
         updateLocalFocusSync(item.id,'synced');
       }catch(error){
         item.attempts=(Number(item.attempts)||0)+1;

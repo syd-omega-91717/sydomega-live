@@ -13,6 +13,10 @@
 .focus-time .big{font-family:var(--M);font-size:var(--fs-6,40px);letter-spacing:4px;color:var(--gold,var(--gold))}
 .focus-time .lbl{font-family:var(--M);font-size:12px;letter-spacing:3px;color:rgba(201,168,76,.5)}
 .focus-controls{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+.focus-sync{font-family:var(--M);font-size:11px;letter-spacing:1.4px;text-align:center;margin:12px auto 0;min-height:16px;color:rgba(138,134,118,.72)}
+.focus-sync[data-state="synced"]{color:rgba(0,255,136,.8)}
+.focus-sync[data-state="pending"],.focus-sync[data-state="checking"]{color:rgba(201,168,76,.82)}
+.focus-sync[data-state="error"]{color:rgba(207,103,96,.9)}
 .fc-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;padding:10px 22px;border:1px solid rgba(201,168,76,.25);color:rgba(201,168,76,.7);background:none;border-radius:2px;cursor:pointer;transition:.15s}
 .fc-btn:hover,.fc-btn.active{background:rgba(201,168,76,.08);color:var(--gold,var(--gold));border-color:rgba(201,168,76,.5)}
 .fc-btn.primary{background:rgba(201,168,76,.12);color:var(--gold,var(--gold));border-color:rgba(201,168,76,.4)}
@@ -88,6 +92,7 @@
         <button class="fc-btn" onclick="resetTimer()">RESET</button>
         <button class="fc-btn" id="dist-btn" onclick="logDistraction()" style="display:none">DISTRACTION</button>
       </div>
+      <div class="focus-sync" id="focus-sync-status" role="status" aria-live="polite" data-state="checking">CLOUD MIRROR CHECKING</div>
     </div>
 
     <div style="padding:0 var(--pad,20px)">
@@ -188,6 +193,7 @@
 const esc = (window.OmegaEsc && OmegaEsc.esc) || (() => '');
 const STORE_KEY = 'omega_focus_sessions';
 const DIST_KEY  = 'omega_focus_distractions';
+const MIRROR_QUEUE_KEY = 'omega_focus_mirror_queue_v1';
 
 /* ── State ─── */
 let timerInterval = null;
@@ -325,67 +331,196 @@ function drawRing(pct){
 drawRing(0);
 
 /* ── Save session ─── */
+function createFocusSessionId(){
+  const c=window.crypto;
+  if(!c) return null;
+  if(typeof c.randomUUID==='function') return c.randomUUID();
+  if(typeof c.getRandomValues!=='function') return null;
+  const b=new Uint8Array(16);c.getRandomValues(b);
+  b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;
+  const h=Array.from(b,function(v){return v.toString(16).padStart(2,'0');}).join('');
+  return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+}
+
 function saveSession(){
   if(elapsed<30) return;
-  const sessions = getSessions();
-  sessions.push({
-    id: Date.now(),
-    task: currentTask||'Untitled',
-    mode: currentMode,
-    duration: elapsed,
-    target: totalSecs,
-    distractions: distractCount,
-    date: new Date().toISOString()
-  });
-  localStorage.setItem(STORE_KEY, JSON.stringify(sessions.slice(-500)));
-  mirrorFocusSession(currentTask||'Untitled', currentMode, elapsed, totalSecs, distractCount);
+  const id=createFocusSessionId();
+  const record={
+    id:id||('local-'+Date.now()),
+    task:currentTask||'Untitled',
+    mode:currentMode,
+    duration:elapsed,
+    target:totalSecs,
+    distractions:distractCount,
+    date:new Date().toISOString(),
+    syncStatus:id?'pending':'local_only'
+  };
+  const sessions=getSessions();
+  sessions.push(record);
+  localStorage.setItem(STORE_KEY,JSON.stringify(sessions.slice(-500)));
+  if(id) mirrorFocusSession(record);
+  else setFocusSyncStatus('LOCAL ONLY · SECURE SESSION ID UNAVAILABLE','error');
 }
 
-/* ── SERVER MIRROR ──────────────────────────────────────────────────────
-   public.focus_sessions, declared in supabase/chunk_10_productivity.sql and
-   applied live 2026-09-05 (RLS on, own-row policy, GRANT to authenticated).
+/* ── DURABLE SERVER MIRROR ─────────────────────────────────────────────
+   Local history remains the immediate source of truth. A durable browser
+   queue retries the normalized-table mirror. The existing UUID primary key
+   is the idempotency key: upsert(ignoreDuplicates) is INSERT ... DO NOTHING,
+   never an update, and a follow-up own-row read confirms persistence. */
+let focusMirrorBusy=false;
+let focusRetryTimer=null;
 
-   A MIRROR, not a sync, for the same reason as habits.html and
-   omega-member-state.js: this page renders synchronously from localStorage,
-   and localStorage stays what the UI reads.
-
-   Append-only, so a plain insert -- NOT an upsert. focus_sessions has no
-   unique constraint beyond its primary key, so there is no conflict target
-   to name and CLAUDE.md 8.1 class 7 does not apply here. It does apply to
-   habit_logs, which is why that page names one.
-
-   The table's CHECK constraints are real and a violation is a 23514 that
-   silently writes nothing:
-     mode IN ('DEEP WORK','ULTRADIAN','FLOW STATE','BREAK','CUSTOM')
-       -- matches this page's five data-name chips exactly, verified
-     duration_secs >= 0   -- saveSession returns early below 30s
-     target_secs  >  0    -- clamped here, since a custom-minutes field left
-                             empty would otherwise send 0 or NaN
-   .error is checked because Supabase resolves to {data:null,error} rather
-   than throwing (8.1 class 1). */
-async function mirrorFocusSession(task, mode, durationSecs, targetSecs, distractions){
+function getFocusMirrorQueue(){
   try{
-    if(!(window.OmegaSB && typeof window.OmegaSB.get === 'function')) return;
-    const sb = await window.OmegaSB.get();
-    if(!sb) return;
-    const s = await sb.auth.getSession();
-    if(s.error || !s.data || !s.data.session) return;
-
-    const target = Math.max(1, Math.round(Number(targetSecs) || 0));
-    const dur    = Math.max(0, Math.round(Number(durationSecs) || 0));
-    const dist   = Math.max(0, Math.round(Number(distractions) || 0));
-
-    const { error } = await sb.from('focus_sessions').insert({
-      user_id: s.data.session.user.id,
-      task_name: String(task).slice(0, 200),
-      mode: mode,
-      duration_secs: dur,
-      target_secs: target,
-      distractions: dist
-    });
-    if(error) console.warn('[focus] mirror insert failed:', error.message);
-  }catch(e){ console.warn('[focus] mirror unavailable:', e && e.message); }
+    const value=JSON.parse(localStorage.getItem(MIRROR_QUEUE_KEY)||'[]');
+    return Array.isArray(value)?value:[];
+  }catch(_){return[];}
 }
+function persistFocusMirrorQueue(queue){
+  try{localStorage.setItem(MIRROR_QUEUE_KEY,JSON.stringify(queue));return true;}
+  catch(_){return false;}
+}
+function setFocusSyncStatus(message,state){
+  const el=document.getElementById('focus-sync-status');
+  if(!el)return;
+  el.textContent=String(message);
+  el.dataset.state=state||'checking';
+}
+function updateLocalFocusSync(id,status){
+  const sessions=getSessions();
+  const item=sessions.find(function(row){return String(row.id)===String(id);});
+  if(!item)return;
+  item.syncStatus=status;
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(sessions.slice(-500)));}catch(_){}
+}
+function focusRetryDelay(attempts){
+  return Math.min(60*60*1000,15000*Math.pow(2,Math.min(8,Math.max(0,attempts-1))));
+}
+function scheduleFocusMirrorRetry(queue){
+  if(focusRetryTimer)clearTimeout(focusRetryTimer);
+  const due=queue.filter(function(item){return item.userId;})
+    .reduce(function(min,item){return Math.min(min,Number(item.nextAttemptAt)||0);},Infinity);
+  if(!Number.isFinite(due))return;
+  focusRetryTimer=setTimeout(function(){focusRetryTimer=null;flushFocusMirrorQueue();},Math.max(1000,due-Date.now()));
+}
+function renderFocusMirrorStatus(){
+  const queue=getFocusMirrorQueue();
+  if(!queue.length){setFocusSyncStatus('CLOUD MIRROR CURRENT','synced');return;}
+  const pending=queue.length;
+  setFocusSyncStatus('CLOUD SYNC PENDING · '+pending+' SESSION'+(pending===1?'':'S'),'pending');
+}
+
+async function mirrorFocusSession(record){
+  try{
+    if(!(window.OmegaSB&&typeof window.OmegaSB.get==='function')){
+      updateLocalFocusSync(record.id,'local_only');
+      setFocusSyncStatus('LOCAL HISTORY · CLOUD CLIENT UNAVAILABLE','error');
+      return;
+    }
+    const sb=await window.OmegaSB.get();
+    if(!sb){updateLocalFocusSync(record.id,'local_only');setFocusSyncStatus('LOCAL HISTORY · CLOUD CLIENT UNAVAILABLE','error');return;}
+    const auth=await sb.auth.getSession();
+    const user=auth&&auth.data&&auth.data.session&&auth.data.session.user;
+    if(auth.error||!user||!user.id){
+      updateLocalFocusSync(record.id,'auth_required');
+      setFocusSyncStatus('LOCAL HISTORY · SIGN IN REQUIRED FOR CLOUD MIRROR','pending');
+      return;
+    }
+    const queue=getFocusMirrorQueue();
+    if(!queue.some(function(item){return item.id===record.id;})){
+      queue.push({
+        id:record.id,userId:user.id,taskName:String(record.task||'Untitled').slice(0,200),
+        mode:record.mode,durationSecs:Math.max(0,Math.round(Number(record.duration)||0)),
+        targetSecs:Math.max(1,Math.round(Number(record.target)||0)),
+        distractions:Math.max(0,Math.round(Number(record.distractions)||0)),
+        createdAt:record.date,attempts:0,nextAttemptAt:0,lastError:null
+      });
+    }
+    if(!persistFocusMirrorQueue(queue)){
+      updateLocalFocusSync(record.id,'local_only');
+      setFocusSyncStatus('LOCAL HISTORY · BROWSER STORAGE FULL','error');
+      return;
+    }
+    updateLocalFocusSync(record.id,'pending');
+    renderFocusMirrorStatus();
+    await flushFocusMirrorQueue();
+  }catch(error){
+    updateLocalFocusSync(record.id,'pending');
+    setFocusSyncStatus('CLOUD SYNC PENDING · RETRY WILL CONTINUE','pending');
+  }
+}
+
+async function flushFocusMirrorQueue(){
+  if(focusMirrorBusy)return;
+  const queue=getFocusMirrorQueue();
+  if(!queue.length){renderFocusMirrorStatus();return;}
+  if(!(window.OmegaSB&&typeof window.OmegaSB.get==='function')){
+    setFocusSyncStatus('CLOUD SYNC PENDING · CLIENT UNAVAILABLE','pending');
+    return;
+  }
+  focusMirrorBusy=true;
+  try{
+    const sb=await window.OmegaSB.get();
+    if(!sb)throw new Error('client_unavailable');
+    const auth=await sb.auth.getSession();
+    const user=auth&&auth.data&&auth.data.session&&auth.data.session.user;
+    if(auth.error||!user||!user.id){
+      setFocusSyncStatus('CLOUD SYNC PENDING · SIGN IN REQUIRED','pending');
+      return;
+    }
+    let current=getFocusMirrorQueue();
+    const owned=current.filter(function(item){return item.userId===user.id;});
+    if(!owned.length){
+      setFocusSyncStatus('PENDING SESSIONS BELONG TO ANOTHER ACCOUNT','pending');
+      return;
+    }
+    for(const item of owned){
+      if(Number(item.nextAttemptAt)>Date.now())continue;
+      try{
+        const result=await sb.from('focus_sessions').upsert({
+          id:item.id,user_id:user.id,task_name:item.taskName,mode:item.mode,
+          duration_secs:item.durationSecs,target_secs:item.targetSecs,
+          distractions:item.distractions
+        },{onConflict:'id',ignoreDuplicates:true});
+        if(result.error)throw result.error;
+        const confirmed=await sb.from('focus_sessions').select('id')
+          .eq('id',item.id).eq('user_id',user.id).maybeSingle();
+        if(confirmed.error)throw confirmed.error;
+        if(!confirmed.data)throw new Error('idempotency_confirmation_missing');
+        current=current.filter(function(row){return row.id!==item.id;});
+        if(!persistFocusMirrorQueue(current))throw new Error('queue_storage_failed_after_confirm');
+        updateLocalFocusSync(item.id,'synced');
+      }catch(error){
+        item.attempts=(Number(item.attempts)||0)+1;
+        item.nextAttemptAt=Date.now()+focusRetryDelay(item.attempts);
+        item.lastError=String(error&&((error.code||error.message))||'sync_failed').slice(0,120);
+        persistFocusMirrorQueue(current);
+        updateLocalFocusSync(item.id,'pending');
+      }
+    }
+    renderFocusMirrorStatus();
+    scheduleFocusMirrorRetry(current);
+  }catch(error){
+    const current=getFocusMirrorQueue();
+    current.forEach(function(item){
+      item.attempts=(Number(item.attempts)||0)+1;
+      item.nextAttemptAt=Date.now()+focusRetryDelay(item.attempts);
+      item.lastError=String(error&&((error.code||error.message))||'sync_failed').slice(0,120);
+    });
+    persistFocusMirrorQueue(current);
+    setFocusSyncStatus('CLOUD SYNC PENDING · AUTOMATIC RETRY SCHEDULED','pending');
+    scheduleFocusMirrorRetry(current);
+  }finally{
+    focusMirrorBusy=false;
+  }
+}
+
+window.addEventListener('online',flushFocusMirrorQueue);
+window.addEventListener('pageshow',flushFocusMirrorQueue);
+window.addEventListener('focus',flushFocusMirrorQueue);
+document.addEventListener('visibilitychange',function(){
+  if(!document.hidden)flushFocusMirrorQueue();
+});
 
 function getSessions(){ try{return JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch{return[];} }
 function getDistractions(){ try{return JSON.parse(localStorage.getItem(DIST_KEY)||'[]');}catch{return[];} }
@@ -552,6 +687,7 @@ window.toggleTimer=toggleTimer;
 window.resetTimer=resetTimer;
 renderAll();
 updateDisplay();
+flushFocusMirrorQueue();
 </script>
 <script type="module" src="/omega-analytics-init.js"></script><script type="module" src="/omega-speed-insights-init.js"></script></body>
 </html>

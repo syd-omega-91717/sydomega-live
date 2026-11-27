@@ -1729,6 +1729,155 @@
     };
   };
 
+  /* ── SOVEREIGN PODIUM ─────────────────────────────────────────────────
+     A restrained 3D podium driven only by the verified top-three rows that
+     the leaderboard page already displays. Empty slots stay explicitly empty. */
+  SCENES.podium = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(38, 1, 0.1, 100);
+    cam.position.set(0, 2.1, 10.8);
+    rig(T, scene, p);
+    starfield(T, scene, 220, 24, p.gold);
+
+    var stage = new T.Group();
+    scene.add(stage);
+    var floor = new T.Mesh(new T.CylinderGeometry(4.15, 4.35, 0.12, 72),
+      new T.MeshStandardMaterial({ color: p.void_, metalness: 0.8, roughness: 0.3 }));
+    floor.position.y = -0.12;
+    stage.add(floor);
+    var floorRing = new T.Mesh(new T.TorusGeometry(4.1, 0.018, 6, 160),
+      new T.MeshBasicMaterial({ color: p.gold, transparent: true, opacity: 0.45 }));
+    floorRing.rotation.x = Math.PI / 2;
+    floorRing.position.y = -0.045;
+    stage.add(floorRing);
+
+    var placements = [
+      { rank: 2, rowIndex: 1, x: -2.15, height: 1.45, colour: 0xBFC7D5 },
+      { rank: 1, rowIndex: 0, x: 0, height: 2.15, colour: 0xE8C97A },
+      { rank: 3, rowIndex: 2, x: 2.15, height: 1.15, colour: 0xCD7F32 }
+    ];
+    var entries = [];
+
+    function labelSprite() {
+      var canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 256;
+      var context = canvas.getContext('2d');
+      var texture = new T.CanvasTexture(canvas);
+      var sprite = new T.Sprite(new T.SpriteMaterial({
+        map: texture, transparent: true, depthWrite: false
+      }));
+      sprite.scale.set(2.55, 0.64, 1);
+      return { canvas: canvas, context: context, texture: texture, sprite: sprite };
+    }
+
+    function drawLabel(label, row, rank, source) {
+      var ctx = label.context;
+      ctx.clearRect(0, 0, label.canvas.width, label.canvas.height);
+      ctx.textAlign = 'center';
+      ctx.fillStyle = rank === 1 ? '#E8C97A' : rank === 2 ? '#D7E0EA' : '#D99A61';
+      ctx.font = '700 40px Cinzel, Georgia, serif';
+      ctx.fillText(row ? ('RANK ' + rank + ' · ' + String(row.name || 'NAME UNAVAILABLE').slice(0, 22)) : ('RANK ' + rank + ' · NO VERIFIED ROW'), 512, 86);
+      ctx.fillStyle = '#E8E8E8';
+      ctx.font = '600 34px "Courier New", monospace';
+      ctx.fillText(row && row.auth != null ? ('AUTH ' + String(row.auth).slice(0, 14)) : 'AUTH UNAVAILABLE', 512, 154);
+      ctx.fillStyle = '#8B98A8';
+      ctx.font = '24px "Courier New", monospace';
+      ctx.fillText(String(row && row.element || source || 'SNAPSHOT UNAVAILABLE').slice(0, 34), 512, 210);
+      label.texture.needsUpdate = true;
+    }
+
+    placements.forEach(function (place) {
+      var group = new T.Group();
+      group.position.x = place.x;
+      var material = new T.MeshStandardMaterial({
+        color: place.colour, metalness: 0.88, roughness: 0.24,
+        emissive: place.colour, emissiveIntensity: 0.16
+      });
+      var column = new T.Mesh(new T.CylinderGeometry(0.76, 0.92, place.height, 8), material);
+      column.position.y = place.height / 2;
+      group.add(column);
+
+      var cap = new T.Mesh(new T.CylinderGeometry(0.88, 0.82, 0.12, 8),
+        new T.MeshStandardMaterial({ color: place.colour, metalness: 0.9, roughness: 0.18 }));
+      cap.position.y = place.height + 0.05;
+      group.add(cap);
+
+      var coin = new T.Mesh(new T.CylinderGeometry(0.42, 0.42, 0.12, 48),
+        new T.MeshStandardMaterial({ color: place.colour, metalness: 0.92, roughness: 0.16,
+          emissive: place.colour, emissiveIntensity: 0.24 }));
+      coin.rotation.x = Math.PI / 2;
+      coin.position.y = place.height + 0.56;
+      group.add(coin);
+
+      var halo = new T.Mesh(new T.TorusGeometry(0.62, 0.018, 6, 72),
+        new T.MeshBasicMaterial({ color: place.colour, transparent: true, opacity: 0.7 }));
+      halo.rotation.x = Math.PI / 2;
+      halo.position.y = place.height + 0.58;
+      group.add(halo);
+
+      var label = labelSprite();
+      label.sprite.position.set(0, place.height + 1.12, 0.05);
+      group.add(label.sprite);
+      stage.add(group);
+      entries.push({ group: group, coin: coin, halo: halo, label: label,
+        place: place, baseY: 0, currentRow: null });
+    });
+
+    var sourceLabel = labelSprite();
+    sourceLabel.sprite.scale.set(3.5, 0.46, 1);
+    sourceLabel.sprite.position.set(0, 3.35, 0.15);
+    stage.add(sourceLabel.sprite);
+
+    var currentSignature = '';
+    function syncVerifiedRows() {
+      var payload = window.OmegaLeaderboard3D || {};
+      var rows = Array.isArray(payload.rows) ? payload.rows.slice(0, 3) : [];
+      var source = String(payload.source || 'WAITING FOR VERIFIED RANKING');
+      var signature = source + '|' + rows.map(function (row) {
+        return row ? [row.name, row.auth, row.element].join(':') : 'EMPTY';
+      }).join('|');
+      if (signature === currentSignature) return;
+      currentSignature = signature;
+      entries.forEach(function (entry) {
+        var row = rows[entry.place.rowIndex] || null;
+        entry.currentRow = row;
+        drawLabel(entry.label, row, entry.place.rank, source);
+      });
+      drawLabel(sourceLabel, null, 0, source);
+      sourceLabel.context.clearRect(0, 0, sourceLabel.canvas.width, sourceLabel.canvas.height);
+      sourceLabel.context.textAlign = 'center';
+      sourceLabel.context.fillStyle = rows.length ? '#E8C97A' : '#8B98A8';
+      sourceLabel.context.font = '600 34px "Courier New", monospace';
+      sourceLabel.context.fillText(source.toUpperCase().slice(0, 38), 512, 150);
+      sourceLabel.texture.needsUpdate = true;
+    }
+
+    return {
+      scene: scene,
+      camera: cam,
+      links: [],
+      count: 0,
+      update: function (t, px, py) {
+        syncVerifiedRows();
+        var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduced) {
+          stage.rotation.y = t * 0.045 + px * 0.08;
+          stage.rotation.x = py * 0.025;
+          entries.forEach(function (entry, i) {
+            var lift = Math.sin(t * 0.72 + i * 1.3) * 0.035;
+            entry.group.position.y = lift;
+            entry.coin.rotation.y = t * 0.34 + i;
+            entry.halo.rotation.z = -t * (i + 1) * 0.045;
+          });
+        }
+        cam.position.set(px * 0.25, 2.1 - py * 0.25, 10.8);
+        cam.lookAt(0, 1.0, 0);
+      }
+    };
+  };
+
   SCENES.world = function (T, opt) {
     var p = palette();
     var scene = new T.Scene();
@@ -2988,6 +3137,7 @@
     sky:    'Your own record as a sky: one star for each task, lesson and certificate you have completed',
     world: 'The eighteen governed platform modules arranged as an interactive three-dimensional Omega world',
     genesis: 'A rotating symbolic planet with eighteen navigable platform realms, nine latitude bands and twelve meridians',
+    podium: 'A restrained three-dimensional sovereign podium driven by the verified top-three leaderboard rows',
     lion:   'The Legion of Wisdom winged lion above the Omega: a faceted gold lion with beating wings, glowing eyes and nine stars, rendered in three dimensions',
     council: 'The council chamber: twelve executors seated in a ring around the Omega dais, each a turning three-dimensional emblem coin on its own pedestal',
     'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'

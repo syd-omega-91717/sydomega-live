@@ -19,7 +19,8 @@ class FocusSessionRetryContract(unittest.TestCase):
 
     def test_durable_queue_is_written_before_network_attempt(self):
         mirror = PAGE[PAGE.index("async function mirrorFocusSession(record)"):PAGE.index("async function flushFocusMirrorQueue()")]
-        self.assertIn("MIRROR_QUEUE_KEY", mirror)
+        self.assertIn("const MIRROR_QUEUE_KEY = 'omega_focus_mirror_queue_v1'", PAGE)
+        self.assertIn("getFocusMirrorQueue()", mirror)
         self.assertIn("persistFocusMirrorQueue(queue)", mirror)
         self.assertLess(mirror.index("persistFocusMirrorQueue(queue)"), mirror.index("await flushFocusMirrorQueue()"))
 

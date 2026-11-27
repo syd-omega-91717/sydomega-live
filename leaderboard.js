@@ -8,9 +8,17 @@ function sid(id,v){var el=document.getElementById(id);if(el)el.textContent=Strin
 function calcAuth(a,b,c){return Math.sqrt(Math.pow(Number(a)||0,3)+Math.pow(Number(b)||0,3)+Math.pow(Number(c)||0,3))*PHI/EU;}
 function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;});return GATE_NAMES[g];}
 
-function renderPodium(r1,r2,r3){
+function renderPodium(r1,r2,r3,source){
   function fill(id,r){if(!r)return;sid(id+'-auth',r.auth||r.authority||'--');sid(id+'-name',(r.display_name||'MEMBER').toUpperCase().slice(0,18));sid(id+'-el',(r.element||'').toUpperCase());}
   fill('p1',r1);fill('p2',r2);fill('p3',r3);
+  var rows=[r1,r2,r3].map(function(r,i){
+    if(!r)return null;
+    var auth=r.auth!=null?r.auth:r.authority;
+    return {rank:i+1,name:String(r.display_name||'NAME UNAVAILABLE').slice(0,22),
+      auth:auth==null?null:String(auth),element:String(r.element||'').slice(0,20)};
+  });
+  window.OmegaLeaderboard3D={source:String(source||'VERIFIED RANKING'),rows:rows};
+  sid('lb-podium-source',source||'VERIFIED RANKING');
 }
 function renderTable(rows,myUid){
   var el=document.getElementById('lb-rows');if(!el)return;
@@ -67,7 +75,7 @@ function renderTable(rows,myUid){
         var total=rr.data.total||rankings.length;
         sid('lb-total',total);sid('my-total',total);sid('lb-date',dateStr);
         if(rr.data.my_rank){sid('my-rank',rr.data.my_rank);sid('my-rank-2',rr.data.my_rank);sid('banner-rank',rr.data.my_rank);}
-        renderPodium(rankings[0],rankings[1],rankings[2]);
+        renderPodium(rankings[0],rankings[1],rankings[2],'RANKINGS EDGE');
         renderTable(rankings,s.user.id);
         ranked=true;
       }
@@ -81,7 +89,7 @@ function renderTable(rows,myUid){
         sid('lb-total',rows.length);sid('my-total',rows.length);sid('lb-date',dateStr);
         var me=rows.find(function(r){return r.user_id===s.user.id;});
         if(me){sid('my-rank',me.rank_global);sid('my-rank-2',me.rank_global);sid('banner-rank',me.rank_global);}
-        renderPodium(rows[0],rows[1],rows[2]);
+        renderPodium(rows[0],rows[1],rows[2],'DAILY SNAPSHOT');
         renderTable(rows,s.user.id);
         ranked=true;
       }catch(e){}
@@ -108,7 +116,7 @@ function renderTable(rows,myUid){
       var mine=rows2.filter(function(r){return r.display_name===myName&&Math.abs(r.auth-myAuth)<0.001;});
       if(mine.length===1){mine[0].user_id=s.user.id;sid('my-rank',mine[0].rank);sid('my-rank-2',mine[0].rank);sid('banner-rank',mine[0].rank);}
       sid('lb-total',rows2.length);sid('my-total',rows2.length);sid('lb-date','LIVE');
-      renderPodium(rows2[0],rows2[1],rows2[2]);
+      renderPodium(rows2[0],rows2[1],rows2[2],'PUBLIC LEADERBOARD RPC');
       renderTable(rows2,s.user.id);
     }
   }catch(e){var app=document.getElementById('app');if(app)app.style.display='none';var panel=document.getElementById('leaderboard-load-error');if(panel)panel.hidden=false;console.error('[leaderboard] access verification failed; page remains locked.',e);}

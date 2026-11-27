@@ -442,6 +442,19 @@ class TestMirrorCoverage(EvidenceAuditFixture):
         self.assertIn('3 keys excluded by `SKIP`/`NO_MIRROR` policy', row)
         self.assertIn('1 key NOT `omega`-prefixed, so NOT mirrored', row)
 
+    def test_quoted_colon_key_in_skip_map_is_excluded(self):
+        self.write('nav.js', "var PS={'ads':'X'};")
+        self.write('omega-member-state.js',
+                   "var SKIP={'omega:ad:impressions':1};"
+                   "var NO_MIRROR={};")
+        self.write('ads.html',
+                   "<script>localStorage.setItem('omega:ad:impressions', x);</script>")
+        self.audit_stdout()
+        row = next(line for line in self.report().splitlines()
+                   if '`ads.html`' in line)
+        self.assertIn('1 key excluded by `SKIP`/`NO_MIRROR` policy', row)
+        self.assertNotIn('eligible for the `member_state` mirror', row)
+
     def test_a_runtime_built_key_is_reported_unresolved_not_covered(self):
         """body.html/sleep.html/stoic.html funnel writes through save(k,v).
         Static analysis cannot see the key, and claiming coverage would be the

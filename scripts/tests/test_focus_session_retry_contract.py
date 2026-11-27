@@ -46,6 +46,15 @@ class FocusSessionRetryContract(unittest.TestCase):
         self.assertIn("CLOUD STATE UNKNOWN", status)
         self.assertIn("CLOUD MIRROR CURRENT", status)
 
+    def test_corrupt_queue_is_not_silently_replaced(self):
+        self.assertIn("let focusQueueCorrupt=false", PAGE)
+        self.assertIn("CLOUD QUEUE UNREADABLE", PAGE)
+        self.assertIn("if(focusQueueCorrupt)return false", PAGE)
+
+    def test_queue_has_an_explicit_capacity_boundary(self):
+        self.assertIn("queue.length>=2000", PAGE)
+        self.assertIn("CLOUD QUEUE CAPACITY REACHED", PAGE)
+
 
 if __name__ == "__main__":
     unittest.main()

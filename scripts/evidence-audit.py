@@ -334,7 +334,7 @@ def member_state_excluded_keys():
             r'\bvar\s+' + re.escape(object_name) + r'\s*=\s*\{([^}]*)\}',
             source, re.S)
         if match:
-            excluded.update(re.findall(r'\b([A-Za-z0-9_]+)\s*:', match.group(1)))
+            excluded.update(re.findall(r'''['\"]?([A-Za-z0-9_:-]+)['\"]?\s*:''', match.group(1)))
     return excluded
 
 

@@ -5,6 +5,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 JS = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
 PAGE = (ROOT / "sculpture.html").read_text(encoding="utf-8")
+WORLD = (ROOT / "world.html").read_text(encoding="utf-8")
+ENGINE = (ROOT / "omega-world-engine.js").read_text(encoding="utf-8")
 
 
 def scene_body():
@@ -17,6 +19,7 @@ class GenesisPlanetScene(unittest.TestCase):
     def test_scene_is_registered_and_mounted(self):
         self.assertIn("SCENES.genesis = function", JS)
         self.assertIn('data-omega-sculpture="genesis"', PAGE)
+        self.assertIn('data-omega-sculpture="genesis"', WORLD)
 
     def test_symbolic_planet_has_canonical_visual_structure(self):
         body = scene_body()
@@ -38,17 +41,16 @@ class GenesisPlanetScene(unittest.TestCase):
     def test_reduced_motion_is_respected(self):
         self.assertIn("prefers-reduced-motion: reduce", scene_body())
 
-
-if __name__ == "__main__":
-    unittest.main()
-
     def test_world_engine_publishes_route_evidence_to_module_registry(self):
-        engine = (ROOT / "omega-world-engine.js").read_text(encoding="utf-8")
-        self.assertIn("mod.routeState=state", engine)
-        self.assertIn("mod.httpStatus=r.status", engine)
+        self.assertIn("mod.routeState=state", ENGINE)
+        self.assertIn("mod.httpStatus=r.status", ENGINE)
 
     def test_planet_waypoints_reflect_verified_route_state(self):
         body = scene_body()
         self.assertIn("entry.mod.routeState || 'CHECKING'", body)
         self.assertIn("routeState === 'LIVE' ? 0x00FF88", body)
         self.assertIn("routeState === 'UNAVAILABLE' ? 0xCF6760", body)
+
+
+if __name__ == "__main__":
+    unittest.main()

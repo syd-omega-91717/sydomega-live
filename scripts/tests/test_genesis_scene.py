@@ -41,3 +41,14 @@ class GenesisPlanetScene(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+    def test_world_engine_publishes_route_evidence_to_module_registry(self):
+        engine = (ROOT / "omega-world-engine.js").read_text(encoding="utf-8")
+        self.assertIn("mod.routeState=state", engine)
+        self.assertIn("mod.httpStatus=r.status", engine)
+
+    def test_planet_waypoints_reflect_verified_route_state(self):
+        body = scene_body()
+        self.assertIn("entry.mod.routeState || 'CHECKING'", body)
+        self.assertIn("routeState === 'LIVE' ? 0x00FF88", body)
+        self.assertIn("routeState === 'UNAVAILABLE' ? 0xCF6760", body)

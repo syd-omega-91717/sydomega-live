@@ -1784,7 +1784,7 @@
       ctx.fillText(row && row.auth != null ? ('AUTH ' + String(row.auth).slice(0, 14)) : 'AUTH UNAVAILABLE', 512, 154);
       ctx.fillStyle = '#8B98A8';
       ctx.font = '24px "Courier New", monospace';
-      ctx.fillText(String(row && row.element || source || 'SNAPSHOT UNAVAILABLE').slice(0, 34), 512, 210);
+      ctx.fillText(String(row && row.element || 'ELEMENT UNAVAILABLE').slice(0, 34), 512, 210);
       label.texture.needsUpdate = true;
     }
 

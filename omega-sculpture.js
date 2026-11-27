@@ -1876,6 +1876,162 @@
     };
   };
 
+  /* ── EVIDENCE-BACKED TROPHY VAULT ─────────────────────────────────────
+     Three concentric collections, driven only by persisted trophies, medals
+     and certificates. Unknown reads are never rendered as locked or earned. */
+  SCENES.vault = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(40, 1, 0.1, 100);
+    cam.position.set(0, 3.2, 12.5);
+    rig(T, scene, p);
+    starfield(T, scene, 340, 30, p.gold);
+
+    var root = new T.Group();
+    scene.add(root);
+    var floor = new T.Mesh(new T.CylinderGeometry(4.55, 4.75, 0.12, 72),
+      new T.MeshStandardMaterial({ color: p.void_, metalness: 0.84, roughness: 0.3 }));
+    floor.position.y = -0.65;
+    root.add(floor);
+
+    var core = new T.Group();
+    core.add(buildSignet(T, p.bright));
+    core.scale.setScalar(0.43);
+    core.position.y = 0.05;
+    root.add(core);
+
+    var collections = [
+      { key: 'trophies', radius: 3.7, colour: 0xE8C97A, speed: 0.035, kind: 'trophy' },
+      { key: 'medals', radius: 2.75, colour: 0xC0C0C0, speed: -0.052, kind: 'medal' },
+      { key: 'certificates', radius: 1.8, colour: 0x00E5FF, speed: 0.068, kind: 'certificate' }
+    ];
+    var nodes = [];
+
+    collections.forEach(function (collection) {
+      var orbit = new T.Mesh(new T.TorusGeometry(collection.radius, 0.012, 6, 160),
+        new T.MeshBasicMaterial({ color: collection.colour, transparent: true, opacity: 0.28 }));
+      orbit.rotation.x = Math.PI / 2;
+      root.add(orbit);
+      collection.orbit = orbit;
+
+      for (var n = 1; n <= 12; n++) {
+        var angle = (n - 1) * Math.PI * 2 / 12;
+        var group = new T.Group();
+        group.position.set(Math.cos(angle) * collection.radius, 0.12, Math.sin(angle) * collection.radius);
+        var material = new T.MeshStandardMaterial({
+          color: 0x343841, metalness: 0.84, roughness: 0.25,
+          emissive: 0x000000, emissiveIntensity: 0.04
+        });
+        var mesh;
+        if (collection.kind === 'trophy') {
+          mesh = new T.Mesh(new T.CylinderGeometry(0.16, 0.11, 0.22, 8), material);
+          mesh.position.y = 0.11;
+          var stem = new T.Mesh(new T.CylinderGeometry(0.035, 0.035, 0.16, 8), material);
+          stem.position.y = -0.08;
+          group.add(stem);
+          var base = new T.Mesh(new T.BoxGeometry(0.2, 0.05, 0.16), material);
+          base.position.y = -0.18;
+          group.add(base);
+        } else if (collection.kind === 'medal') {
+          mesh = new T.Mesh(new T.CylinderGeometry(0.19, 0.19, 0.075, 32), material);
+          mesh.rotation.x = Math.PI / 2;
+        } else {
+          mesh = new T.Mesh(new T.BoxGeometry(0.2, 0.28, 0.07), material);
+        }
+        group.add(mesh);
+        var halo = new T.Mesh(new T.TorusGeometry(0.27, 0.012, 5, 40),
+          new T.MeshBasicMaterial({ color: 0x555B66, transparent: true, opacity: 0.35 }));
+        halo.rotation.x = Math.PI / 2;
+        group.add(halo);
+        root.add(group);
+        nodes.push({ group: group, mesh: mesh, halo: halo, material: material,
+          collection: collection, number: n, earned: false, state: 'UNKNOWN' });
+      }
+    });
+
+    var statusCanvas = document.createElement('canvas');
+    statusCanvas.width = 1024;
+    statusCanvas.height = 160;
+    var statusContext = statusCanvas.getContext('2d');
+    var statusTexture = new T.CanvasTexture(statusCanvas);
+    var statusSprite = new T.Sprite(new T.SpriteMaterial({
+      map: statusTexture, transparent: true, depthWrite: false
+    }));
+    statusSprite.scale.set(5.0, 0.78, 1);
+    statusSprite.position.set(0, 4.15, 0);
+    root.add(statusSprite);
+
+    var currentSignature = '';
+    function syncEvidence() {
+      var data = window.OmegaHonorsVault || {};
+      var state = String(data.status || 'WAITING');
+      var sets = {
+        trophies: new Set((data.trophies || []).map(Number)),
+        medals: new Set((data.medals || []).map(Number)),
+        certificates: new Set((data.certificates || []).map(Number))
+      };
+      var signature = state + '|' + collections.map(function (c) {
+        return Array.from(sets[c.key]).sort(function (a, b) { return a - b; }).join(',');
+      }).join('|');
+      if (signature === currentSignature) return;
+      currentSignature = signature;
+      var counts = [];
+      collections.forEach(function (collection) {
+        var earnedCount = sets[collection.key].size;
+        counts.push(earnedCount + '/12');
+      });
+      nodes.forEach(function (entry) {
+        var known = state === 'LIVE';
+        var earned = known && sets[entry.collection.key].has(entry.number);
+        var colour = earned ? entry.collection.colour : known ? 0x343841 : 0x626975;
+        entry.material.color.setHex(colour);
+        entry.material.emissive.setHex(earned ? entry.collection.colour : 0x000000);
+        entry.material.emissiveIntensity = earned ? 0.48 : 0.025;
+        entry.halo.material.color.setHex(earned ? entry.collection.colour : 0x626975);
+        entry.halo.material.opacity = earned ? 0.78 : 0.18;
+        entry.earned = earned;
+        entry.state = known ? (earned ? 'EARNED' : 'LOCKED') : 'UNKNOWN';
+      });
+      statusContext.clearRect(0, 0, statusCanvas.width, statusCanvas.height);
+      statusContext.textAlign = 'center';
+      statusContext.fillStyle = state === 'LIVE' ? '#E8C97A' : '#9AA2AF';
+      statusContext.font = '600 34px "Courier New", monospace';
+      var statusText = state === 'LIVE'
+        ? 'LIVE RECORDS  ·  TROPHIES ' + counts[0] + '  ·  MEDALS ' + counts[1] + '  ·  CERTIFICATES ' + counts[2]
+        : state === 'UNAVAILABLE' ? 'HONORS DATA UNAVAILABLE  ·  NO EARNED STATE INFERRED'
+        : 'WAITING FOR PERSISTED HONORS RECORDS';
+      statusContext.fillText(statusText, 512, 92);
+      statusTexture.needsUpdate = true;
+    }
+
+    return {
+      scene: scene,
+      camera: cam,
+      links: [],
+      count: 36,
+      update: function (t, px, py) {
+        syncEvidence();
+        var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduced) {
+          root.rotation.y = t * 0.038 + px * 0.08;
+          root.rotation.x = py * 0.025;
+          collections.forEach(function (collection) {
+            collection.orbit.rotation.z = t * collection.speed;
+          });
+          nodes.forEach(function (entry, i) {
+            if (entry.earned) {
+              entry.group.scale.setScalar(1 + Math.sin(t * 1.15 + i) * 0.045);
+              entry.mesh.rotation.y = t * 0.32 + i;
+            }
+          });
+          core.rotation.y = -t * 0.09;
+        }
+        cam.position.set(px * 0.32, 3.2 - py * 0.28, 12.5);
+        cam.lookAt(0, 0.35, 0);
+      }
+    };
+  };
+
   SCENES.world = function (T, opt) {
     var p = palette();
     var scene = new T.Scene();
@@ -3136,6 +3292,7 @@
     world: 'The eighteen governed platform modules arranged as an interactive three-dimensional Omega world',
     genesis: 'A rotating symbolic planet with eighteen navigable platform realms, nine latitude bands and twelve meridians',
     podium: 'A restrained three-dimensional sovereign podium driven by the verified top-three leaderboard rows',
+    vault: 'Three orbital collections of persisted trophies, medals and certificates; unknown data is never shown as earned',
     lion:   'The Legion of Wisdom winged lion above the Omega: a faceted gold lion with beating wings, glowing eyes and nine stars, rendered in three dimensions',
     council: 'The council chamber: twelve executors seated in a ring around the Omega dais, each a turning three-dimensional emblem coin on its own pedestal',
     'solar-system': 'A symbolic Solar System Ledger connecting the Omega world to its historical cosmic concept language'

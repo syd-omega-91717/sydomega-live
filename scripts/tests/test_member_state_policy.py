@@ -9,11 +9,11 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def object_keys(source, name):
     match = re.search(
-        r'\\bvar\\s+' + re.escape(name) + r'\\s*=\\s*\\{([^}]*)\\}',
+        r'\bvar\s+' + re.escape(name) + r'\s*=\s*\{([^}]*)\}',
         source, re.S)
     if not match:
         raise AssertionError('%s map not found' % name)
-    return set(re.findall(r'''['"]?([A-Za-z0-9_:-]+)['"]?\\s*:''', match.group(1)))
+    return set(re.findall(r'''['"]?([A-Za-z0-9_:-]+)['"]?\s*:''', match.group(1)))
 
 
 class MemberStatePolicyTests(unittest.TestCase):

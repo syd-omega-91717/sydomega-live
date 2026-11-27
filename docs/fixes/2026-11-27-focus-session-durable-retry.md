@@ -8,7 +8,8 @@
 - Supabase upsert uses onConflict=id with ignoreDuplicates=true (INSERT ... ON CONFLICT DO NOTHING), followed by an own-user row read. A retry cannot update an existing session.
 - Queue items are never sent under a different authenticated user.
 - Retry is triggered on initial load, successful save, online, pageshow, focus, and visibility return, with bounded exponential backoff.
-- Legacy records and sessions saved without an authenticated owner remain local-only/unknown; the UI does not falsely mark them synced.
+- The queue has an explicit 2,000-item boundary; new records remain local-only rather than silently evicting older pending work. Corrupt queue data is not silently overwritten.
+- Legacy records and sessions saved without an authenticated owner remain UNKNOWN / local-only; the UI does not claim they synced.
 
 ## Verification boundary
-Static contract tests cover the stable ID, queue ordering, append-only idempotency, account binding, retry triggers, and truthful status labels. Browser offline/reload, duplicate replay, account-switch, and live Supabase integration tests remain required before merge.
+Static contract tests cover stable IDs, queue persistence order, append-only idempotency, owner binding, retry triggers, truthful status, corruption handling, and queue capacity. Browser offline/reload, duplicate replay, account-switch, and live Supabase integration tests remain required before merge.

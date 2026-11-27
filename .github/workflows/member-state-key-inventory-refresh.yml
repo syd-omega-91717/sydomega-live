@@ -31,7 +31,7 @@ jobs:
       - name: Commit generated inventory to this branch only
         shell: bash
         run: |
-          if git diff --quiet -- docs/operations/MEMBER_STATE_KEY_INVENTORY.md; then
+          if [ -z "$(git status --porcelain -- docs/operations/MEMBER_STATE_KEY_INVENTORY.md)" ]; then
             echo "MEMBER_STATE_KEY_INVENTORY=NO_CHANGE"
             exit 0
           fi

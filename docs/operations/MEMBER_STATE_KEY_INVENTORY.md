@@ -4,20 +4,20 @@
 
 ## Scope and limits
 
-Scanned 586 first-party HTML/JS/MJS source files for direct localStorage getItem, setItem, removeItem, and clear calls.
+Scanned 588 first-party HTML/JS/MJS source files for direct localStorage getItem, setItem, removeItem, and clear calls.
 This is static source evidence. It does not prove a key is present in a member's browser, that a mirror upload succeeded, or that a remote row exists.
 Computed keys are reported as dynamic candidates or unresolved expressions. This scanner does not parse arbitrary JavaScript data flow, IndexedDB, cookies, Cache API, or Web Storage aliases.
 
 ## Policy from omega-member-state.js
 
-- SKIP: 12 exact keys excluded from the mirror and shared member export predicate.
+- SKIP: 13 exact keys excluded from the mirror and shared member export predicate.
 - NO_MIRROR: 16 exact finance keys excluded from cloud mirroring but intentionally remain exportable.
 - omega_analytics_*: excluded from the mirror by prefix; export paths have separate handling.
 - Other keys beginning with omega are eligible only when signed in, readable, within 512 KiB, and successfully upserted.
 
 ### Exact SKIP keys
 
-`omega:ad:impressions`, `omega_axis`, `omega_bg`, `omega_cached_auth`, `omega_font`, `omega_genesis_seen`, `omega_lang`, `omega_last_gate`, `omega_last_online`, `omega_sound`, `omega_text`, `omega_track`
+`omega:ad:impressions`, `omega_axis`, `omega_bg`, `omega_cached_auth`, `omega_focus_mirror_queue_v1`, `omega_font`, `omega_genesis_seen`, `omega_lang`, `omega_last_gate`, `omega_last_online`, `omega_sound`, `omega_text`, `omega_track`
 
 ### Exact NO_MIRROR keys
 
@@ -28,12 +28,12 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 | Classification | Keys/patterns |
 |---|---:|
 | `DYNAMIC_ANALYTICS_EXCLUDED` | 1 |
-| `DYNAMIC_KEY_UNRESOLVED` | 24 |
+| `DYNAMIC_KEY_UNRESOLVED` | 12 |
 | `DYNAMIC_MEMBER_STATE_CANDIDATE` | 1 |
 | `DYNAMIC_OUTSIDE_MEMBER_STATE_PREFIX` | 1 |
-| `EPHEMERAL_OR_BROWSER_LOCAL_SKIP` | 11 |
-| `FINANCE_LOCAL_NO_MIRROR` | 12 |
-| `MEMBER_STATE_MIRROR_ELIGIBLE` | 92 |
+| `EPHEMERAL_OR_BROWSER_LOCAL_SKIP` | 12 |
+| `FINANCE_LOCAL_NO_MIRROR` | 15 |
+| `MEMBER_STATE_MIRROR_ELIGIBLE` | 101 |
 | `OUTSIDE_MEMBER_STATE_PREFIX` | 1 |
 
 ## Key references
@@ -47,46 +47,13 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 
 ### DYNAMIC_KEY_UNRESOLVED
 
-- `{unresolved: AK}` — getItem, setItem
-  - Expression: `AK`
-  - `heritage.html:133`
-  - `heritage.html:198`
 - `{unresolved: ATLAS_KEY}` — removeItem
   - Expression: `ATLAS_KEY`
   - `atlas.html:542`
-- `{unresolved: BUDGET_TARGETS_KEY}` — getItem, setItem
-  - Expression: `BUDGET_TARGETS_KEY`
-  - `expenses.html:354`
-  - `expenses.html:356`
-  - `expenses.html:542`
-- `{unresolved: CK}` — getItem, setItem
-  - Expression: `CK`
-  - `heritage.html:135`
-  - `heritage.html:211`
-- `{unresolved: DK2}` — getItem, setItem
-  - Expression: `DK2`
-  - `bloodline.html:142`
-  - `bloodline.html:185`
-- `{unresolved: DK}` — getItem, setItem
-  - Expression: `DK`
-  - `governance.html:198`
-  - `governance.html:200`
 - `{unresolved: ENC_KEY}` — getItem, setItem
   - Expression: `ENC_KEY`
   - `journal.html:640`
   - `journal.html:661`
-- `{unresolved: FK}` — getItem, setItem
-  - Expression: `FK`
-  - `treasury.html:211`
-  - `treasury.html:214`
-- `{unresolved: GK}` — getItem, setItem
-  - Expression: `GK`
-  - `contributions.html:156`
-  - `contributions.html:243`
-- `{unresolved: GTK}` — getItem, setItem
-  - Expression: `GTK`
-  - `contributions.html:161`
-  - `contributions.html:250`
 - `{unresolved: LOG_KEY}` — getItem, setItem
   - Expression: `LOG_KEY`
   - `gratitude.html:241`
@@ -94,28 +61,10 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
   - `nutrition.html:251`
   - `nutrition.html:337`
   - `nutrition.html:357`
-- `{unresolved: MK}` — getItem, setItem
-  - Expression: `MK`
-  - `kings.html:116`
-  - `kings.html:207`
-- `{unresolved: PK}` — getItem, setItem
-  - Expression: `PK`
-  - `governance.html:197`
-  - `governance.html:200`
 - `{unresolved: Q_KEY}` — getItem, setItem
   - Expression: `Q_KEY`
   - `quotes.html:357`
   - `quotes.html:358`
-- `{unresolved: RK2}` — getItem, setItem
-  - Expression: `RK2`
-  - `notifications.html:128`
-  - `notifications.html:132`
-  - `notifications.html:246`
-  - `notifications.html:251`
-- `{unresolved: RK}` — getItem, setItem
-  - Expression: `RK`
-  - `treasury.html:210`
-  - `treasury.html:214`
 - `{unresolved: SALT_KEY}` — getItem, setItem
   - Expression: `SALT_KEY`
   - `journal.html:415`
@@ -127,15 +76,6 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
   - Expression: `SHELF_KEY`
   - `library.html:165`
   - `library.html:166`
-- `{unresolved: SK}` — getItem, setItem
-  - Expression: `SK`
-  - `heritage.html:134`
-  - `heritage.html:205`
-- `{unresolved: TK}` — getItem, setItem
-  - Expression: `TK`
-  - `bloodline.html:141`
-  - `bloodline.html:181`
-  - `bloodline.html:202`
 - `{unresolved: WR_KEY}` — getItem, setItem
   - Expression: `WR_KEY`
   - `weekly.html:592`
@@ -173,9 +113,9 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
   - `omega-local-backup.js:22`
   - `omega-local-backup.js:99`
   - `omega-local-backup.js:124`
-  - `omega-member-state.js:197`
-  - `omega-member-state.js:335`
+  - `omega-member-state.js:198`
   - `omega-member-state.js:336`
+  - `omega-member-state.js:337`
   - `omega-microlesson.js:34`
   - `omega-microlesson.js:35`
   - `omega-origins-game.js:17`
@@ -188,10 +128,18 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
   - `sleep.html:257`
   - `sleep.html:258`
   - `wealth.html:425`
+- `{unresolved: pinKey}` — getItem, setItem
+  - Expression: `pinKey`
+  - `nav.js:1192`
+  - `nav.js:1194`
 - `{unresolved: recentKey()}` — getItem, setItem
   - Expression: `recentKey()`
   - `search.html:211`
   - `search.html:216`
+- `{unresolved: taskKey}` — getItem, setItem
+  - Expression: `taskKey`
+  - `omega-matrix.js:49`
+  - `omega-matrix.js:54`
 
 ### DYNAMIC_MEMBER_STATE_CANDIDATE
 
@@ -231,6 +179,9 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_cached_auth` — getItem, setItem
   - `offline.html:232`
   - `omega-user.js:70`
+- `omega_focus_mirror_queue_v1` — getItem, setItem
+  - `focus.html:379`
+  - `focus.html:386`
 - `omega_font` — setItem
   - `omega-appearance.js:44`
 - `omega_genesis_seen` — getItem, setItem
@@ -268,6 +219,10 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_budget_months` — getItem, setItem
   - `dashboard.html:1030`
   - `expenses.html:325`
+- `omega_budget_targets` — getItem, setItem
+  - `expenses.html:354`
+  - `expenses.html:356`
+  - `expenses.html:542`
 - `omega_budgets` — removeItem
   - `expenses.html:358`
 - `omega_expenses` — removeItem
@@ -282,6 +237,12 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
   - `revenue.html:200`
 - `omega_treasury_assets` — getItem, setItem
   - `treasury.html:207`
+  - `treasury.html:214`
+- `omega_treasury_flows` — getItem, setItem
+  - `treasury.html:211`
+  - `treasury.html:214`
+- `omega_treasury_reserves` — getItem, setItem
+  - `treasury.html:210`
   - `treasury.html:214`
 - `omega_treasury_reserves_recorded` — getItem, setItem
   - `treasury.html:212`
@@ -308,9 +269,6 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega:ideas` — getItem, setItem
   - `omega-creator.js:58`
   - `omega-creator.js:65`
-- `omega:pinned:` — getItem, setItem
-  - `nav.js:1192`
-  - `nav.js:1194`
 - `omega:projects` — getItem, setItem
   - `omega-project-studio.js:85`
   - `omega-project-studio.js:94`
@@ -329,6 +287,9 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_affirmations` — getItem, setItem
   - `affirmations.html:482`
   - `affirmations.html:483`
+- `omega_ancestors` — getItem, setItem
+  - `heritage.html:133`
+  - `heritage.html:198`
 - `omega_arcade_best` — getItem, setItem
   - `omega-arcade.js:167`
   - `omega-arcade.js:180`
@@ -404,6 +365,9 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
   - `omega-celestial-covenants.js:26`
   - `omega-celestial-covenants.js:31`
   - `omega-celestial-covenants.js:44`
+- `omega_culture` — getItem, setItem
+  - `heritage.html:135`
+  - `heritage.html:211`
 - `omega_decisions` — getItem, setItem
   - `dashboard.html:1048`
   - `decisions.html:337`
@@ -425,6 +389,9 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
   - `omega-demo-video.js:284`
 - `omega_diag` — getItem
   - `omega-capability.js:129`
+- `omega_dynasty` — getItem, setItem
+  - `bloodline.html:142`
+  - `bloodline.html:185`
 - `omega_exam` — getItem, setItem
   - `exam.html:140`
   - `exam.html:145`
@@ -434,11 +401,12 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_fc_cards` — getItem
   - `dashboard.html:1017`
 - `omega_focus_distractions` — getItem, setItem
-  - `focus.html:391`
-  - `focus.html:401`
+  - `focus.html:555`
+  - `focus.html:565`
 - `omega_focus_sessions` — getItem, setItem
-  - `focus.html:340`
-  - `focus.html:390`
+  - `focus.html:362`
+  - `focus.html:400`
+  - `focus.html:554`
   - `omega-daily-brief.js:213`
 - `omega_forge_scores` — getItem, setItem
   - `forge.html:208`
@@ -446,6 +414,18 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_galactic_v1` — getItem, setItem
   - `omega-galactic-game.js:27`
   - `omega-galactic-game.js:39`
+- `omega_gifts` — getItem, setItem
+  - `contributions.html:156`
+  - `contributions.html:243`
+- `omega_giving_target` — getItem, setItem
+  - `contributions.html:161`
+  - `contributions.html:250`
+- `omega_gov_decisions` — getItem, setItem
+  - `governance.html:198`
+  - `governance.html:200`
+- `omega_gov_policies` — getItem, setItem
+  - `governance.html:197`
+  - `governance.html:200`
 - `omega_gov_risks` — getItem, setItem
   - `governance.html:196`
   - `governance.html:200`
@@ -477,6 +457,9 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_heritage_profile` — getItem, setItem
   - `heritage.html:132`
   - `heritage.html:193`
+- `omega_heritage_stories` — getItem, setItem
+  - `heritage.html:134`
+  - `heritage.html:205`
 - `omega_houses_s1` — getItem, setItem
   - `series.html:242`
   - `series.html:243`
@@ -488,9 +471,6 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_kb_hint_shown` — getItem, setItem
   - `omega-keyboard.js:231`
   - `omega-keyboard.js:232`
-- `omega_last_task_` — getItem, setItem
-  - `omega-matrix.js:49`
-  - `omega-matrix.js:54`
 - `omega_lineage` — getItem, setItem
   - `bloodline.html:140`
   - `bloodline.html:175`
@@ -515,6 +495,9 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_mirror_entries` — getItem, setItem
   - `mirror.html:232`
   - `mirror.html:296`
+- `omega_model_king` — getItem, setItem
+  - `kings.html:116`
+  - `kings.html:207`
 - `omega_mood_log` — getItem, setItem
   - `mood.html:443`
   - `mood.html:444`
@@ -562,6 +545,11 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
   - `omega-pwa.js:136`
   - `omega-pwa.js:173`
   - `omega-pwa.js:252`
+- `omega_reminders` — getItem, setItem
+  - `notifications.html:128`
+  - `notifications.html:132`
+  - `notifications.html:246`
+  - `notifications.html:251`
 - `omega_ritual_logs` — getItem, setItem
   - `rituals.html:262`
   - `rituals.html:279`
@@ -596,10 +584,14 @@ Computed keys are reported as dynamic candidates or unresolved expressions. This
 - `omega_time_log` — getItem, setItem
   - `time.html:419`
   - `time.html:420`
+- `omega_traits` — getItem, setItem
+  - `bloodline.html:141`
+  - `bloodline.html:181`
+  - `bloodline.html:202`
 - `omega_trophy_celebrate_seen_v1` — getItem, setItem
-  - `omega-honors-vault.js:54`
-  - `omega-honors-vault.js:55`
-  - `omega-honors-vault.js:66`
+  - `omega-honors-vault.js:62`
+  - `omega-honors-vault.js:63`
+  - `omega-honors-vault.js:74`
 - `omega_vault_sources` — setItem
   - `omega-vault-core.js:164`
 - `omega_vision_areas` — getItem

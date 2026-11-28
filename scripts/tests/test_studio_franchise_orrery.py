@@ -29,6 +29,12 @@ class StudioFranchiseOrrery(unittest.TestCase):
         franchise_end = PAGE.index("];", franchise_start)
         franchise_titles = [title.replace(chr(92) + "'", "'") for title in re.findall(r"title:'((?:\\\\.|[^'])*)'", PAGE[franchise_start:franchise_end])]
         self.assertEqual([world[2] for world in worlds], franchise_titles)
+        worlds = re.findall(r"\{ id: '([IVX]+)', title: '([^']+)'", body)
+        self.assertEqual([world[0] for world in worlds], ["I", "II", "III", "IV", "V", "VI", "VII"])
+        franchise_start = PAGE.index("const FRANCHISES=[")
+        franchise_end = PAGE.index("];", franchise_start)
+        franchise_titles = re.findall(r"title:'([^']+)'", PAGE[franchise_start:franchise_end])
+        self.assertEqual([title for _, title in worlds], franchise_titles)
 
     def test_every_orbit_node_targets_its_matching_two_dimensional_card(self):
         body = studio_scene()
@@ -41,6 +47,7 @@ class StudioFranchiseOrrery(unittest.TestCase):
     def test_story_map_does_not_claim_production_or_release_state(self):
         body = studio_scene()
         self.assertIn("narrative index", body)
+        self.assertIn("narrative navigation", body)
         self.assertIn("not production or release telemetry", body)
         self.assertIn("STORY MAP · NOT RELEASE STATUS", PAGE)
         self.assertNotIn("IN PRODUCTION", body)

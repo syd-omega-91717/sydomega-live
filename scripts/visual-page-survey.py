@@ -28,10 +28,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP_DIRS = {"node_modules", ".git", ".next", "dist", "build", "public"}
-HTML_FILES = sorted(
-    p for p in ROOT.rglob("*.html")
-    if not any(part in SKIP_DIRS for part in p.relative_to(ROOT).parts)
-)
+def html_page_files(root: Path = ROOT) -> list[Path]:
+    """Return deployable page surfaces, excluding deterministic build-time movie frame sources."""
+    return sorted(
+        p for p in root.rglob("*.html")
+        if not any(part in SKIP_DIRS for part in p.relative_to(root).parts)
+        and p.relative_to(root).parts[:2] != ("scripts", "movies")
+    )
+
+
+HTML_FILES = html_page_files()
+BUILD_TEMPLATE_FILES = sorted((ROOT / "scripts" / "movies").rglob("*.html"))
 
 TAG_RE = re.compile(r"<[^>]+>")
 TEXT_RE = re.compile(r"[A-Za-z0-9Ω][A-Za-z0-9Ω'’./:%#&+\-]{1,}")
@@ -81,7 +88,7 @@ class _VisibleParser(HTMLParser):
         if re.search(r"display\s*:\s*none", a.get("style", ""), re.I):
             return True
         classes = a.get("class", "")
-        if re.search(r"\btab-panel\b", classes, re.I) and not re.search(r"\b(?:active|on)\b", classes, re.I):
+        if re.search(r"\btab-panel\b", classes, re.I) and not re.search(r"\b(?:active|on|act)\b", classes, re.I):
             return True
         return False
 
@@ -312,6 +319,7 @@ def main() -> int:
     root_count = sum(1 for p in HTML_FILES if p.parent == ROOT)
     nested_count = len(HTML_FILES) - root_count
     print(f"VISUAL PAGE SURVEY: {len(rows)} HTML documents scanned ({root_count} root pages, {nested_count} nested surfaces)")
+    print(f"Build-time movie frame templates excluded from page scoring: {len(BUILD_TEMPLATE_FILES)}")
     print(f"Pages requiring visual review: {len(review)}")
     print(f"Pages with structural contract findings: {len(severe)}")
     if rows:

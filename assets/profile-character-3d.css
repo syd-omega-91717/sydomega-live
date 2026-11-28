@@ -1,13 +1,13 @@
-/* Profile Character Core — scoped to the member Character tab. */
-.pcc-panel{position:relative;isolation:isolate;overflow:hidden;margin:18px 0 28px;padding:clamp(14px,2.4vw,24px);border:1px solid rgba(201,168,76,.25);background:radial-gradient(ellipse at 50% 58%,rgba(0,229,255,.07),transparent 48%),linear-gradient(135deg,rgba(10,13,22,.96),rgba(3,4,9,.94));box-shadow:inset 0 1px rgba(255,255,255,.04),0 18px 48px rgba(0,0,0,.22)}
+/* Profile Character Core — scoped component, canonical bg.js tokens only. */
+.pcc-panel{position:relative;isolation:isolate;overflow:hidden;margin:18px 0 28px;padding:clamp(14px,2.4vw,24px);border:1px solid color-mix(in srgb,var(--gold) 25%,transparent);background:radial-gradient(ellipse at 50% 58%,color-mix(in srgb,var(--cyan) 7%,transparent),transparent 48%),linear-gradient(135deg,color-mix(in srgb,var(--void) 96%,transparent),color-mix(in srgb,var(--void) 94%,transparent));box-shadow:inset 0 1px color-mix(in srgb,white 4%,transparent),0 18px 48px rgba(0,0,0,.22)}
 .pcc-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.pcc-kicker{font:700 12px/1.3 var(--M,monospace);letter-spacing:2px;color:var(--cyan,#00E5FF)}
-.pcc-head h3{margin:5px 0 0;font:700 clamp(18px,2.2vw,25px)/1.2 var(--D,serif);letter-spacing:1px;color:var(--ink,#E9E6DC)}
-.pcc-element-state{display:inline-flex;align-items:center;min-height:32px;padding:6px 10px;border:1px solid rgba(0,229,255,.25);color:var(--cyan,#00E5FF);font:700 12px/1.3 var(--M,monospace);letter-spacing:.8px}
-.pcc-stage{position:relative;min-height:320px;margin:10px 0 4px;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.06),transparent 62%)}
+.pcc-kicker{font:700 12px/1.3 var(--M,monospace);letter-spacing:2px;color:var(--cyan)}
+.pcc-head h3{margin:5px 0 0;font:700 clamp(18px,2.2vw,25px)/1.2 var(--D,serif);letter-spacing:1px;color:var(--ink)}
+.pcc-element-state{display:inline-flex;align-items:center;min-height:32px;padding:6px 10px;border:1px solid color-mix(in srgb,var(--cyan) 25%,transparent);color:var(--cyan);font:700 12px/1.3 var(--M,monospace);letter-spacing:.8px}
+.pcc-stage{position:relative;min-height:320px;margin:10px 0 4px;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,color-mix(in srgb,var(--gold) 6%,transparent),transparent 62%)}
 .pcc-stage .omega-sculpture-canvas{display:block;width:100%;height:clamp(320px,40vw,460px)}
-.pcc-source-row{display:flex;flex-wrap:wrap;gap:8px 18px;padding-top:12px;border-top:1px solid rgba(201,168,76,.14)}
-.pcc-source-row span{color:var(--muted,#A8A5A0);font:12px/1.5 var(--M,monospace);letter-spacing:.6px}
-.pcc-note{margin:12px 0 0;color:var(--muted,#A8A5A0);font-size:14px;line-height:1.65;max-width:88ch}
+.pcc-source-row{display:flex;flex-wrap:wrap;gap:8px 18px;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--gold) 14%,transparent)}
+.pcc-source-row span{color:var(--muted);font:12px/1.5 var(--M,monospace);letter-spacing:.6px}
+.pcc-note{margin:12px 0 0;color:var(--muted);font-size:14px;line-height:1.65;max-width:88ch}
 @media(max-width:620px){.pcc-head{align-items:flex-start}.pcc-element-state{max-width:100%;white-space:normal}.pcc-source-row{display:grid;grid-template-columns:1fr;gap:5px}.pcc-stage,.pcc-stage .omega-sculpture-canvas{min-height:300px;height:320px}}
 @media(prefers-reduced-motion:reduce){.pcc-panel{scroll-behavior:auto}}

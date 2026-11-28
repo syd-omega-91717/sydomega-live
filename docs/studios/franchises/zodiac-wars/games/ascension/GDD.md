@@ -1,6 +1,6 @@
 # ZODIAC WARS: ASCENSION — Game Design Document (Draft 1, PROPOSED)
 
-**Status: DESIGNED.** Nothing here is built, playable or released; Zodiac Wars content is not yet founder-approved. Written 2026-11-07 under the founder's
+**Status: DESIGNED** (Slice 0 is a PROTOTYPE since 2026-11-28; see section 7). The full game is not built, playable or released; Zodiac Wars content is not yet founder-approved. Written 2026-11-07 under the founder's
 delegation. It separates the **full game** (a design target) from **Slice 0**, the smallest honest prototype this static, no-build repository can hold.
 Multiplayer is **UNAVAILABLE**; "tactical multiplayer" is a later design target that needs server authority and is not scoped here.
 
@@ -49,6 +49,8 @@ One arena (the Ares Foundry floor, Mars), **two Houses (Aries: Kael Marren; Libr
 finishes the duel; 60 fps measured on a named mid-range device (not yet measured); every control reachable by keyboard and by touch; reduced motion verified.
 
 ## 7. What does not exist
+**Update 2026-11-28:** Slice 0 now exists as a PROTOTYPE (`game-zodiac-wars.html`, `omega-zw-logic.js`, `omega-zw-game.js`; tests `scripts/tests/test_zw_logic.py`, browser check `scripts/verify-zw-game.js`; record `docs/fixes/2026-11-28-zodiac-wars-ascension-slice-0.md`). Of section 6's acceptance list the rules tests, the 3-duel replay check and the scripted bot are met; **60 fps on a named device, a person's keyboard-and-touch review and a person's reduced-motion review are not**, and no human has played it. Everything else in this section still holds for the full game: no remapping, saves, roster, story script or art beyond the first procedural pass.
+
 No code, art, audio, roster, story script or build. The registry says CONCEPT for the series and films and DESIGNED only for this document.
 
 ## 8. Open questions for the founder

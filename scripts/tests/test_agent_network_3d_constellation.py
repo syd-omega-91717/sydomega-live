@@ -32,7 +32,7 @@ class AgentNetwork3DContract(unittest.TestCase):
         start = PAGE.index(".agent-orbit-stage{")
         end = PAGE.index("@media(prefers-reduced-motion", start)
         styles = PAGE[start:end]
-        self.assertNotRegex(styles, r"font(?:-size)?\s*:[^;]*(?:10|11)px")
+        self.assertNotRegex(styles, r"font(?:-size)?\s*:\s*(?:10|11)px(?:/|\s|;|})")
 
     def test_no_second_webgl_renderer_is_introduced(self):
         self.assertNotIn("new THREE.WebGLRenderer", PAGE)

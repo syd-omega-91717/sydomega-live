@@ -21,6 +21,7 @@ class VisualPageSurveyTests(unittest.TestCase):
         <div style="display: none">HIDDEN INLINE</div>
         <div class="tab-panel">HIDDEN TAB</div>
         <div class="tab-panel active">VISIBLE TAB</div>
+        <div class="tab-panel act"><h1>VISIBLE ACT TAB</h1></div>
         <div aria-hidden="true">HIDDEN ARIA</div>
         <div hidden>HIDDEN ATTRIBUTE</div>
         <p>VISIBLE BODY</p>
@@ -28,6 +29,7 @@ class VisualPageSurveyTests(unittest.TestCase):
         visible = survey.clean(html).lower()
         self.assertIn("visible tab", visible)
         self.assertIn("visible body", visible)
+        self.assertIn("visible act tab", visible)
         for hidden in ("hidden inline", "hidden tab", "hidden aria", "hidden attribute"):
             self.assertNotIn(hidden, visible)
 
@@ -126,6 +128,18 @@ class VisualPageSurveyTests(unittest.TestCase):
             finally:
                 survey.ROOT = original_root
         self.assertNotIn("CONTRACT: missing viewport", result["findings"])
+
+    def test_build_time_movie_frame_sources_are_excluded_from_page_survey(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "index.html").write_text("<h1>Home</h1>", encoding="utf-8")
+            (root / "scripts" / "movies").mkdir(parents=True)
+            (root / "scripts" / "movies" / "scene.html").write_text("<canvas></canvas>", encoding="utf-8")
+            (root / "scripts" / "movies" / "episode.html").write_text("<canvas></canvas>", encoding="utf-8")
+            (root / "web").mkdir()
+            (root / "web" / "page.html").write_text("<h1>Page</h1>", encoding="utf-8")
+            paths = [p.relative_to(root).as_posix() for p in survey.html_page_files(root)]
+        self.assertEqual(paths, ["index.html", "web/page.html"])
 
     def test_same_basename_pages_have_distinct_relative_paths(self) -> None:
         html = """

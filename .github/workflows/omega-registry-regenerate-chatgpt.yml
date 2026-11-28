@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - chatgpt/elemental-resonance-composer-20261128-v2
+      - chatgpt/elemental-resonance-composer-20261128
     paths:
       - .github/workflows/omega-registry-regenerate-chatgpt.yml
 

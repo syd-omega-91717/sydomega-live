@@ -23,12 +23,12 @@ class StudioFranchiseOrrery(unittest.TestCase):
 
     def test_seven_world_nodes_match_the_canonical_franchise_titles(self):
         body = studio_scene()
-        worlds = re.findall(r"\{ id: '([IVX]+)', title: '([^']+)'", body)
+        worlds = re.findall(r"\{ id: '([IVX]+)', title: (['\"])(.*?)\2", body)
         self.assertEqual([world[0] for world in worlds], ["I", "II", "III", "IV", "V", "VI", "VII"])
         franchise_start = PAGE.index("const FRANCHISES=[")
         franchise_end = PAGE.index("];", franchise_start)
-        franchise_titles = re.findall(r"title:'([^']+)'", PAGE[franchise_start:franchise_end])
-        self.assertEqual([title for _, title in worlds], franchise_titles)
+        franchise_titles = [title.replace(chr(92) + "'", "'") for title in re.findall(r"title:'((?:\\\\.|[^'])*)'", PAGE[franchise_start:franchise_end])]
+        self.assertEqual([world[2] for world in worlds], franchise_titles)
 
     def test_every_orbit_node_targets_its_matching_two_dimensional_card(self):
         body = studio_scene()

@@ -14,8 +14,9 @@ class ProfileCharacterCoreTests(unittest.TestCase):
         start = PAGE.index('id="tab-character"')
         end = PAGE.index('id="tab-', start + 8)
         panel = PAGE[start:end]
-        self.assertIn('data-omega-sculpture="character"', panel)
         self.assertIn('id="profile-character-core"', panel)
+        self.assertIn("stage.setAttribute('data-omega-sculpture','character')", PAGE)
+        self.assertIn("api.mount(stage)", PAGE)
         self.assertIn('id="profile-character-element-state"', panel)
 
     def test_element_binding_uses_canonical_sign_registry(self):
@@ -24,12 +25,16 @@ class ProfileCharacterCoreTests(unittest.TestCase):
         self.assertIn("profile.sign", PAGE)
         self.assertIn("data-sculpt-element", PAGE)
         self.assertIn("window.OmegaRealm&&window.OmegaRealm.palette", PAGE)
+        self.assertIn("api.mount(stage)", PAGE)
+        self.assertLess(PAGE.index("stage.setAttribute('data-sculpt-element',paletteKey)"), PAGE.index("stage.setAttribute('data-omega-sculpture','character')"))
         self.assertIn('"sign_element"', CANON)
 
     def test_element_binding_is_case_insensitive_and_validated(self):
         self.assertIn("key.toLowerCase()===savedSign.toLowerCase()", PAGE)
         self.assertIn("key.toLowerCase()===elementName.toLowerCase()", PAGE)
         self.assertIn("WAITING FOR ELEMENT PALETTE", PAGE)
+        self.assertIn("WAITING FOR 3D CHARACTER ENGINE", PAGE)
+        self.assertIn("attempts++<50", PAGE)
         self.assertIn("paletteAttempts<20", PAGE)
         self.assertIn("ELEMENT PALETTE UNAVAILABLE", PAGE)
         self.assertIn("NO CANON ELEMENT FOR SAVED SIGN", PAGE)

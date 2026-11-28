@@ -49,6 +49,8 @@ One arena (the Ares Foundry floor, Mars), **two Houses (Aries: Kael Marren; Libr
 finishes the duel; 60 fps measured on a named mid-range device (not yet measured); every control reachable by keyboard and by touch; reduced motion verified.
 
 ## 7. What does not exist
+**Update 2026-11-28:** Slice 0 now exists as a PROTOTYPE (`game-zodiac-wars.html`, `omega-zw-logic.js`, `omega-zw-game.js`; tests `scripts/tests/test_zw_logic.py`, browser check `scripts/verify-zw-game.js`; record `docs/fixes/2026-11-28-zodiac-wars-ascension-slice-0.md`). Of section 6's acceptance list the rules tests, the 3-duel replay check and the scripted bot are met; **60 fps on a named device, keyboard-and-touch review by a person and reduced-motion review by a person are not**, and no human has played it. Everything below still holds for the full game: no remapping, saves, roster, story script or art beyond the first procedural pass.
+
 No code, art, audio, roster, story script or build. The registry says CONCEPT for the series and films and DESIGNED only for this document.
 
 ## 8. Open questions for the founder

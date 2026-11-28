@@ -14,7 +14,7 @@
     ascend:'ascend',ascension:'ascend',matrix:'ascend',sculpture:'cosmos',realms:'cosmos',academy:'ascend',courses:'ascend',gaming:'ascend',
     honors:'achieve',exam:'ascend',contributions:'ascend',
     agents:'cosmos','agent-operations':'govern',pantheons:'cosmos',elements:'cosmos',orrery:'cosmos',
-    media:'media','celestial-covenants':'media','visual-atlas':'media','game-origins':'media','game-origins-bridge':'media','game-omega-civilization':'media','game-last-galactic-empire':'media',worlds:'media','studio-library':'media',
+    media:'media','celestial-covenants':'media','visual-atlas':'media','game-origins':'media','game-origins-bridge':'media','game-zodiac-wars':'media','game-omega-civilization':'media','game-last-galactic-empire':'media',worlds:'media','studio-library':'media',
     blockchain:'vault',marketplace:'vault',income:'vault',
     family:'order',hall:'order',
     sovereigns:'order',factions:'order',city:'order',
@@ -151,7 +151,7 @@
     {key:'media',  icon:'\u25B6', label:'MEDIA',   href:'/media.html',       col:'#AB82F2',
      sub:[['media','CREATIVE UNIVERSE','/media.html'],['movies','WATCH','/movies.html'],['characters','CHARACTERS','/characters.html'],
           ['series','SERIES','/series.html','folded'],['trailers','TRAILERS','/trailers.html','folded'],['universe','UNIVERSE','/universe.html','folded'],
-          ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html'],['celestial-covenants','CELESTIAL COVENANTS','/celestial-covenants.html'],['game-origins','ORIGINS SLICE 0','/game-origins.html'],['game-origins-bridge','TWO-HAND BRIDGE','/game-origins-bridge.html'],['game-omega-civilization','CIVILIZATION 91717','/game-omega-civilization.html'],['game-last-galactic-empire','LAST GALACTIC EMPIRE','/game-last-galactic-empire.html'],['worlds','WORLDS','/worlds.html'],['studio-library','STUDIO LIBRARY','/studio-library.html']]},
+          ['feed','ACTIVITY FEED','/feed.html'],['publications','PUBLICATIONS','/publications.html'],['visual-atlas','VISUAL ATLAS','/visual-atlas.html'],['celestial-covenants','CELESTIAL COVENANTS','/celestial-covenants.html'],['game-origins','ORIGINS SLICE 0','/game-origins.html'],['game-origins-bridge','TWO-HAND BRIDGE','/game-origins-bridge.html'],['game-zodiac-wars','ZODIAC WARS: ASCENSION','/game-zodiac-wars.html'],['game-omega-civilization','CIVILIZATION 91717','/game-omega-civilization.html'],['game-last-galactic-empire','LAST GALACTIC EMPIRE','/game-last-galactic-empire.html'],['worlds','WORLDS','/worlds.html'],['studio-library','STUDIO LIBRARY','/studio-library.html']]},
     
   ];
 

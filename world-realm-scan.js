@@ -27,8 +27,10 @@
     return value;
   }
   function stateOf(mod){
-    if(!mod||mod.routeState==='CHECKING'||!mod.routeState)return 'checking';
-    return mod.routeState==='LIVE'?'reachable':'unavailable';
+    if(!mod||!mod.routeState||mod.routeState==='CHECKING')return 'checking';
+    if(mod.routeState==='LIVE')return 'reachable';
+    if(mod.routeState==='UNAVAILABLE')return 'unavailable';
+    return 'checking';
   }
   function setState(node,state,label){
     node.dataset.state=state;

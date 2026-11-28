@@ -56,6 +56,9 @@ class WorldRealmScanConsoleTests(unittest.TestCase):
         self.assertIn("@media(max-width:420px)", STYLE)
         self.assertIn("@media(prefers-reduced-motion:reduce)", STYLE)
         self.assertIn("animation:none", STYLE)
+        self.assertIn(".ow-realm-console.is-scanning:before", STYLE)
+        self.assertIn("root.classList.toggle('is-scanning',busy||checking>0)", SCRIPT)
+        self.assertNotRegex(STYLE, r"#[0-9a-fA-F]{3,8}")
         self.assertNotIn("!important", STYLE)
 
     def test_page_scoped_styles_do_not_redefine_global_tokens(self):

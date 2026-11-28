@@ -40,17 +40,19 @@ class MemberStateKeyAuditTests(unittest.TestCase):
         self.assertEqual(rows["omega_expenses"]["category"], "FINANCE_LOCAL_NO_MIRROR")
         self.assertEqual(rows["custom_notes"]["category"], "OUTSIDE_MEMBER_STATE_PREFIX")
         self.assertIn("setItem", rows["omega_focus_sessions"]["operations"])
-        self.assertIn(("focus.html", 2), rows["omega_focus_sessions"]["refs"])
+        self.assertIn(("focus.html", 3), rows["omega_focus_sessions"]["refs"])
 
     def test_comma_separated_literal_declarations_are_resolved(self):
         (self.root / "heritage.html").write_text(
+            "<script>\n"
             "var HK='omega_heritage_profile',AK='omega_ancestors',"
             "SK='omega_heritage_stories',CK='omega_culture';\n"
             "const FIRST_KEY='omega_first',\n SECOND_KEY='omega_second';\n"
             "var COMPUTED_KEY=makeKey(), EXACT_KEY='omega_exact';\n"
             "localStorage.getItem(AK); localStorage.getItem(SK); "
             "localStorage.getItem(CK); localStorage.getItem(SECOND_KEY); "
-            "localStorage.getItem(COMPUTED_KEY);",
+            "localStorage.getItem(COMPUTED_KEY);\n"
+            "</script>",
             encoding="utf-8",
         )
         rows = AUDIT.build_inventory(self.root)["records"]

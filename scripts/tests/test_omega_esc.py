@@ -247,7 +247,8 @@ class CopyRatchet(unittest.TestCase):
         self.assertEqual(subprocess.run([sys.executable, str(RATCHET), "--help"], capture_output=True).returncode, 0)
 
     def test_the_real_tree_matches_its_baseline(self):
-        self.assertEqual(subprocess.run([sys.executable, str(RATCHET)], capture_output=True).returncode, 0)
+        result = subprocess.run([sys.executable, str(RATCHET)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

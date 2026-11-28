@@ -28,6 +28,12 @@ class AgentNetwork3DContract(unittest.TestCase):
         self.assertIn("_osc.src='/omega-sculpture.js'", BG)
         self.assertIn("SCENES.agents = function", SCULPTURE)
 
+    def test_new_constellation_labels_respect_twelve_pixel_floor(self):
+        start = PAGE.index(".agent-orbit-stage{")
+        end = PAGE.index("@media(prefers-reduced-motion", start)
+        styles = PAGE[start:end]
+        self.assertNotRegex(styles, r"font(?:-size)?\\s*:[^;]*(?:10|11)px")
+
     def test_no_second_webgl_renderer_is_introduced(self):
         self.assertNotIn("new THREE.WebGLRenderer", PAGE)
         self.assertNotIn("getContext('webgl", PAGE)

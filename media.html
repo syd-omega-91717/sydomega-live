@@ -155,7 +155,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 ::-webkit-scrollbar-track{background:var(--void2)}
 ::-webkit-scrollbar-thumb{background:var(--border)}
 
-@media(max-width:1200px){.franchise-grid{grid-template-columns:repeat(3,1fr)}.game-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:1200px){.studio-orrery-stage{margin:14px 2rem 26px;padding:clamp(14px,2.2vw,26px);border:1px solid rgba(201,168,76,.24);border-radius:12px;background:radial-gradient(ellipse at 50% 62%,rgba(0,229,255,.055),transparent 65%),linear-gradient(145deg,rgba(10,11,18,.97),rgba(2,3,8,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 18px 60px rgba(0,0,0,.24)}
+.studio-orrery-copy{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.studio-orrery-kicker{font:12px var(--M,monospace);letter-spacing:.18em;color:var(--cyan);margin-bottom:7px}
+.studio-orrery-copy h2{font:clamp(1.1rem,2vw,1.55rem) var(--D,serif);letter-spacing:.06em;color:var(--gold);margin:0 0 7px}
+.studio-orrery-copy p:not(.studio-orrery-kicker){max-width:74ch;color:var(--muted);font:14px/1.65 var(--R,sans-serif)}
+.studio-orrery-boundary{flex:0 0 auto;border:1px solid rgba(0,229,255,.25);border-radius:999px;padding:7px 10px;color:var(--cyan);font:12px var(--M,monospace);letter-spacing:.08em}
+.studio-orrery-frame{width:100%;height:clamp(340px,44vw,520px);min-height:340px;position:relative;overflow:hidden;border-radius:9px;background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.075),transparent 64%),#03040a}
+.studio-orrery-caption{margin:10px 2px 0;color:var(--muted);font:12px/1.6 var(--M,monospace)}
+.fc:target{outline:2px solid rgba(0,229,255,.65);outline-offset:5px;scroll-margin-top:90px}
+@media(max-width:640px){.studio-orrery-stage{margin:12px 10px 22px;padding:12px}.studio-orrery-frame{height:380px;min-height:380px}.studio-orrery-boundary{white-space:normal}}
+.franchise-grid{grid-template-columns:repeat(3,1fr)}.game-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:900px){.franchise-grid{grid-template-columns:repeat(2,1fr)}.universe-stats{grid-template-columns:repeat(3,1fr)}.game-grid{grid-template-columns:repeat(3,1fr)}.render-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.franchise-grid{grid-template-columns:1fr}.game-grid{grid-template-columns:repeat(2,1fr)}.universe-stats{grid-template-columns:repeat(2,1fr)}}
 /* ===== UNIVERSE + SAGA TABS (ported, styling rebuilt) ===== */
@@ -646,6 +656,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
     </div>
 
     <div class="tab-panel active" id="tab-franchises">
+      <section class="studio-orrery-stage" aria-labelledby="studio-orrery-title">
+        <div class="studio-orrery-copy">
+          <div>
+            <p class="studio-orrery-kicker">SEVEN WORLDS · ONE SAGA</p>
+            <h2 id="studio-orrery-title">THE STUDIO ORRERY</h2>
+            <p>Explore the seven canonical story worlds orbiting the Omega core. Select a world to jump to its franchise dossier. This is a narrative navigation map, not production or release telemetry.</p>
+          </div>
+          <span class="studio-orrery-boundary">STORY MAP · NOT RELEASE STATUS</span>
+        </div>
+        <div class="studio-orrery-frame" data-omega-sculpture="studio"
+             data-sculpt-height="clamp(340px,44vw,520px)"
+             data-sculpt-label="Seven canonical story worlds orbiting the Omega core; narrative navigation only, not production or release telemetry"
+             role="img" aria-label="Seven interactive story-world orbits. The two-dimensional franchise dossiers below remain available."></div>
+        <p class="studio-orrery-caption">The 2D franchise dossiers below are the readable fallback and the canonical destination for every orbit node.</p>
+      </section>
       <div class="sechead" data-reveal="fade-up">THE 7 SOVEREIGN FRANCHISES</div>
       <div class="pad" data-reveal="fade-up"><div class="franchise-grid" id="franchise-grid"></div></div>
     </div>
@@ -822,6 +847,8 @@ function buildFranchises(){
   FRANCHISES.forEach(fr=>{
     const cv=document.createElement('canvas');cv.className='fc-canvas';
     const c=document.createElement('div');c.className='fc';
+    c.id='studio-franchise-'+fr.uni;
+    c.tabIndex=-1;
     c.style.borderTopColor=fr.col+'55';
     c.innerHTML=`<div class="fc-num">FRANCHISE ${fr.uni}</div><div class="fc-title" style="color:${fr.col}">${fr.title}</div><div class="fc-desc">${fr.desc}</div><div class="fc-items">${fr.items.map(i=>LINKS[i]?`<a class="fi" href="${LINKS[i]}" style="cursor:pointer"><b>${i}</b><span class="fi-type" style="color:${fr.col};border-color:${fr.col}44">OPEN &rarr;</span></a>`:`<div class="fi"><b>${i}</b><span class="fi-type" style="color:${fr.col};border-color:${fr.col}44">ITEM</span></div>`).join('')}</div>`;
     c.insertBefore(cv,c.firstChild);

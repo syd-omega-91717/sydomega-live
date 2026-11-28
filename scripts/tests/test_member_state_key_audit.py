@@ -25,12 +25,12 @@ class MemberStateKeyAuditTests(unittest.TestCase):
 
     def test_exact_keys_constants_and_policy_categories(self):
         (self.root / "focus.html").write_text(
-            "<script>\\n"
-            "const STORE_KEY = 'omega_focus_sessions';\\n"
-            "localStorage.setItem(STORE_KEY, JSON.stringify([]));\\n"
-            "localStorage.getItem('omega:ad:impressions');\\n"
-            "localStorage.removeItem('omega_expenses');\\n"
-            "localStorage.setItem('custom_notes', 'x');\\n"
+            "<script>\n"
+            "const STORE_KEY = 'omega_focus_sessions';\n"
+            "localStorage.setItem(STORE_KEY, JSON.stringify([]));\n"
+            "localStorage.getItem('omega:ad:impressions');\n"
+            "localStorage.removeItem('omega_expenses');\n"
+            "localStorage.setItem('custom_notes', 'x');\n"
             "</script>",
             encoding="utf-8",
         )
@@ -76,10 +76,10 @@ class MemberStateKeyAuditTests(unittest.TestCase):
 
     def test_html_prose_apostrophes_do_not_hide_script_constants(self):
         (self.root / "apostrophe.html").write_text(
-            "<p>Today's member's private notes stay private.</p>\\n"
-            "<script type='module'>\\n"
-            "const STORE_KEY = 'omega_from_script';\\n"
-            "localStorage.getItem(STORE_KEY);\\n"
+            "<p>Today's member's private notes stay private.</p>\n"
+            "<script type='module'>\n"
+            "const STORE_KEY = 'omega_from_script';\n"
+            "localStorage.getItem(STORE_KEY);\n"
             "</script>",
             encoding="utf-8",
         )
@@ -89,7 +89,7 @@ class MemberStateKeyAuditTests(unittest.TestCase):
 
     def test_inline_event_handlers_are_scanned_but_json_payloads_are_not(self):
         (self.root / "inline.html").write_text(
-            "<button onclick=\"localStorage.setItem('omega_inline_action', '1')\">Save</button>\\n"
+            "<button onclick=\"localStorage.setItem('omega_inline_action', '1')\">Save</button>\n"
             "<script type='application/json'>"
             "{\\\"example\\\":\\\"localStorage.setItem('omega_not_executable', '1')\\\"}"
             "</script>",
@@ -101,7 +101,7 @@ class MemberStateKeyAuditTests(unittest.TestCase):
 
     def test_module_constants_do_not_leak_across_script_blocks(self):
         (self.root / "scope.html").write_text(
-            "<script type='module'>const MODULE_KEY='omega_module_only';</script>\\n"
+            "<script type='module'>const MODULE_KEY='omega_module_only';</script>\n"
             "<script>localStorage.getItem(MODULE_KEY);</script>",
             encoding="utf-8",
         )

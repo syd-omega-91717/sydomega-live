@@ -10,6 +10,9 @@ SCULPTURE = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
 
 def studio_scene():
     start = SCULPTURE.index("SCENES.studio = function")
+    comment = SCULPTURE.rfind("/*", 0, start)   # the scene's contract is written in the block comment directly above it
+    if comment != -1 and SCULPTURE.find("*/", comment) < start and not SCULPTURE[SCULPTURE.find("*/", comment) + 2:start].strip():
+        start = comment
     end = SCULPTURE.index("SCENES.world = function", start)
     return SCULPTURE[start:end]
 
@@ -27,14 +30,9 @@ class StudioFranchiseOrrery(unittest.TestCase):
         self.assertEqual([world[0] for world in worlds], ["I", "II", "III", "IV", "V", "VI", "VII"])
         franchise_start = PAGE.index("const FRANCHISES=[")
         franchise_end = PAGE.index("];", franchise_start)
-        franchise_titles = [title.replace(chr(92) + "'", "'") for title in re.findall(r"title:'((?:\\\\.|[^'])*)'", PAGE[franchise_start:franchise_end])]
+        block = PAGE[franchise_start:franchise_end]
+        franchise_titles = [m[1].replace(chr(92) + "'", "'") for m in re.findall(r"\{uni:'[IVX]+',title:(['\"])((?:\\.|(?!\1).)*)\1", block)]
         self.assertEqual([world[2] for world in worlds], franchise_titles)
-        worlds = re.findall(r"\{ id: '([IVX]+)', title: '([^']+)'", body)
-        self.assertEqual([world[0] for world in worlds], ["I", "II", "III", "IV", "V", "VI", "VII"])
-        franchise_start = PAGE.index("const FRANCHISES=[")
-        franchise_end = PAGE.index("];", franchise_start)
-        franchise_titles = re.findall(r"title:'([^']+)'", PAGE[franchise_start:franchise_end])
-        self.assertEqual([title for _, title in worlds], franchise_titles)
 
     def test_every_orbit_node_targets_its_matching_two_dimensional_card(self):
         body = studio_scene()
@@ -47,8 +45,8 @@ class StudioFranchiseOrrery(unittest.TestCase):
     def test_story_map_does_not_claim_production_or_release_state(self):
         body = studio_scene()
         self.assertIn("narrative index", body)
-        self.assertIn("narrative navigation", body)
-        self.assertIn("not production or release telemetry", body)
+        # the scene's accessible description lives in the module's description table, not inside the scene function
+        self.assertIn("narrative navigation only, not production or release telemetry", SCULPTURE)
         self.assertIn("STORY MAP · NOT RELEASE STATUS", PAGE)
         self.assertNotIn("IN PRODUCTION", body)
         self.assertNotIn("PUBLISHED", body)

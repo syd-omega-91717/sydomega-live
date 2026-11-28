@@ -59,7 +59,7 @@ class WorldRealmScanConsoleTests(unittest.TestCase):
         self.assertIn("@media(prefers-reduced-motion:reduce)", STYLE)
         self.assertIn("animation:none", STYLE)
         self.assertIn(".ow-realm-console.is-scanning:before", STYLE)
-        self.assertIn("root.classList.toggle('is-scanning',busy||checking>0)", SCRIPT)
+        self.assertIn("root.classList.toggle('is-scanning',activeScan)", SCRIPT)
         self.assertNotRegex(STYLE, r"#[0-9a-fA-F]{3,8}")
         self.assertNotIn("!important", STYLE)
 

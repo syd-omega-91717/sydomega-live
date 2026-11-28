@@ -13,7 +13,7 @@ ENGINE = (ROOT / "omega-world-engine.js").read_text(encoding="utf-8")
 class WorldRealmScanConsoleTests(unittest.TestCase):
     def test_world_loads_page_scoped_assets(self):
         self.assertIn('href="/world-realm-scan.css"', PAGE)
-        self.assertIn('src="/world-realm-scan.js"', PAGE)
+        self.assertIn('src="/assets/world-realm-scan.js"', PAGE)
         self.assertIn('data-omega-sculpture="genesis"', PAGE)
 
     def test_console_exposes_live_scan_metrics_and_manual_rescan(self):

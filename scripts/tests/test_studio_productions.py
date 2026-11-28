@@ -38,11 +38,12 @@ class StudioProductions(unittest.TestCase):
         film_block = MEDIA.split("var FILMS=[", 1)[1].split("];", 1)[0]
         statuses = re.findall(r"status:'([^']+)'", film_block)
         self.assertEqual(statuses, ["SCREENPLAY DRAFT"] + ["CONCEPT"] * 11)
-        self.assertNotRegex(film_block, r"(?i)\\b(?:IN PRODUCTION|PRE-PRODUCTION|DEVELOPMENT|PUBLISHED)\\b")
+        for unsupported in ("IN PRODUCTION", "PRE-PRODUCTION", "DEVELOPMENT", "PUBLISHED"):
+            self.assertNotIn(unsupported, film_block)
 
-        first = re.search(r"n:1,[\\s\\S]*?productionId:'([^']+)'", film_block)
-        self.assertIsNotNone(first)
-        production = next((p for p in REG["productions"] if p["id"] == first.group(1)), None)
+        first = film_block.split("n:1,", 1)[1].split("},", 1)[0]
+        production_id = first.split("productionId:'", 1)[1].split("'", 1)[0]
+        production = next((p for p in REG["productions"] if p["id"] == production_id), None)
         self.assertIsNotNone(production)
         self.assertEqual(production["status"], "SCREENPLAY_DRAFT")
         self.assertFalse(production["mediaFiles"])

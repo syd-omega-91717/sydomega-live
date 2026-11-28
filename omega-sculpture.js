@@ -2035,6 +2035,134 @@
     };
   };
 
+  /* ── STUDIO FRANCHISE ORRERY ──────────────────────────────────────────
+     Seven canonical story-worlds orbit the Omega core. This is an interactive
+     narrative index; orbital motion does not imply production, release, or
+     cross-franchise chronology. Each node links to its matching 2-D card. */
+  SCENES.studio = function (T, opt) {
+    var p = palette();
+    var scene = new T.Scene();
+    var cam = new T.PerspectiveCamera(40, 1, 0.1, 100);
+    cam.position.set(0, 3.8, 13.4);
+    rig(T, scene, p);
+    starfield(T, scene, 300, 28, p.cyan);
+
+    var root = new T.Group();
+    scene.add(root);
+
+    var core = new T.Group();
+    core.add(buildSignet(T, p.bright));
+    core.scale.setScalar(0.48);
+    root.add(core);
+
+    var worlds = [
+      { id: 'I', title: 'MYTH OF THE STONES', colour: 0xC9A84C, radius: 1.85, speed: 0.11, phase: 0.18, size: 0.28 },
+      { id: 'II', title: 'CAVE OF THE SHADOWS', colour: 0x8B0000, radius: 2.42, speed: -0.085, phase: 1.06, size: 0.25 },
+      { id: 'III', title: 'WRATH OF THE GODS', colour: 0xE86A3A, radius: 3.00, speed: 0.072, phase: 2.12, size: 0.29 },
+      { id: 'IV', title: 'BABYLON SINGULARITY', colour: 0x9B6BF0, radius: 3.58, speed: -0.064, phase: 3.04, size: 0.25 },
+      { id: 'V', title: "SOLOMON'S SOVEREIGNTY", colour: 0xD9B86A, radius: 4.16, speed: 0.055, phase: 4.08, size: 0.28 },
+      { id: 'VI', title: 'ZODIAC FLUX', colour: 0x00E5FF, radius: 4.74, speed: -0.048, phase: 5.02, size: 0.27 },
+      { id: 'VII', title: 'AI SOVEREIGN', colour: 0x3FB27F, radius: 5.32, speed: 0.042, phase: 5.82, size: 0.29 }
+    ];
+
+    var links = [];
+    var orbitGroups = [];
+    var nodes = [];
+
+    worlds.forEach(function (world) {
+      var orbitGroup = new T.Group();
+      root.add(orbitGroup);
+      orbitGroups.push({ group: orbitGroup, speed: world.speed, phase: world.phase });
+
+      var orbit = new T.Mesh(new T.TorusGeometry(world.radius, 0.009, 5, 144),
+        new T.MeshBasicMaterial({ color: world.colour, transparent: true, opacity: 0.24, depthWrite: false }));
+      orbit.rotation.x = Math.PI / 2;
+      orbitGroup.add(orbit);
+
+      var planet = new T.Group();
+      planet.position.set(world.radius, Math.sin(world.phase * 2) * 0.16, 0);
+      orbitGroup.add(planet);
+
+      var material = new T.MeshStandardMaterial({
+        color: world.colour, emissive: world.colour, emissiveIntensity: 0.32,
+        metalness: 0.78, roughness: 0.24
+      });
+      var sphere = new T.Mesh(new T.SphereGeometry(world.size, 24, 18), material);
+      planet.add(sphere);
+
+      var equator = new T.Mesh(new T.TorusGeometry(world.size * 1.42, 0.012, 5, 48),
+        new T.MeshBasicMaterial({ color: world.colour, transparent: true, opacity: 0.8, depthWrite: false }));
+      equator.rotation.x = Math.PI / 2.25;
+      planet.add(equator);
+
+      var moon = new T.Mesh(new T.SphereGeometry(world.size * 0.19, 12, 10),
+        new T.MeshStandardMaterial({ color: p.bright, emissive: p.bright, emissiveIntensity: 0.24 }));
+      moon.position.set(world.size * 1.65, world.size * 0.35, 0);
+      planet.add(moon);
+
+      var labelCanvas = document.createElement('canvas');
+      labelCanvas.width = 512;
+      labelCanvas.height = 112;
+      var ctx = labelCanvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, 512, 112);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#E8E0D0';
+        ctx.font = '700 26px Rajdhani, sans-serif';
+        ctx.shadowColor = '#' + world.colour.toString(16).padStart(6, '0');
+        ctx.shadowBlur = 10;
+        ctx.fillText(world.id + '  ·  ' + world.title, 256, 56, 500);
+      }
+      var texture = new T.CanvasTexture(labelCanvas);
+      if (T.SRGBColorSpace) texture.colorSpace = T.SRGBColorSpace;
+      texture.generateMipmaps = false;
+      texture.minFilter = T.LinearFilter;
+      var label = new T.Sprite(new T.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
+      label.scale.set(1.55, 0.34, 1);
+      label.position.set(0, world.size + 0.34, 0);
+      planet.add(label);
+
+      links.push({ object: planet, href: '#studio-franchise-' + world.id, label: world.title });
+      nodes.push({ group: planet, sphere: sphere, equator: equator, moon: moon, phase: world.phase, material: material });
+    });
+
+    var coreRing = new T.Mesh(new T.TorusGeometry(1.12, 0.014, 6, 144),
+      new T.MeshBasicMaterial({ color: p.gold, transparent: true, opacity: 0.32, depthWrite: false }));
+    coreRing.rotation.x = Math.PI / 2;
+    root.add(coreRing);
+
+    return {
+      scene: scene,
+      camera: cam,
+      links: links,
+      count: worlds.length,
+      update: function (t, px, py) {
+        var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduced) {
+          root.rotation.y = t * 0.022 + px * 0.055;
+          root.rotation.x = py * 0.025;
+          orbitGroups.forEach(function (entry) {
+            entry.group.rotation.y = entry.phase + t * entry.speed;
+          });
+          nodes.forEach(function (entry, i) {
+            entry.sphere.rotation.y = t * 0.32 + entry.phase;
+            entry.equator.rotation.z = -t * (0.12 + i * 0.008);
+            entry.moon.position.x = Math.cos(t * 0.7 + entry.phase) * 0.42;
+            entry.moon.position.z = Math.sin(t * 0.7 + entry.phase) * 0.42;
+            if (!entry.group.userData.omegaHovered) {
+              entry.group.scale.setScalar(1 + Math.sin(t * 1.15 + entry.phase) * 0.035);
+            }
+          });
+          core.rotation.y = -t * 0.09;
+          coreRing.rotation.z = t * 0.045;
+        }
+        cam.position.set(px * 0.22, 3.8 - py * 0.35, 13.4);
+        cam.lookAt(0, 0.15, 0);
+      }
+    };
+  };
+
   SCENES.world = function (T, opt) {
     var p = palette();
     var scene = new T.Scene();
@@ -3288,6 +3416,7 @@
   var SCULPT_LABEL = {
     signet: 'The Omega signet, rendered in three dimensions with restrained dimensional sway',
     agents: 'The twelve canonical agent identities orbiting the Omega core; illustrative roster geometry, not live execution telemetry',
+    studio: 'Seven canonical story worlds in an interactive franchise orrery; narrative navigation only, not production or release telemetry',
     matrix: 'The nine by nine by nine matrix of 729 nodes, with the Crystal-Omega at its centre',
     gates:  'The twelve gates receding into depth toward the Crystal-Omega',
     character: 'Your character: a core, twelve gate nodes lit by the gates you have passed, and five satellites for your mana',

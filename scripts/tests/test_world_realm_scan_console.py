@@ -5,7 +5,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 PAGE = (ROOT / "world.html").read_text(encoding="utf-8")
-SCRIPT = (ROOT / "world-realm-scan.js").read_text(encoding="utf-8")
+SCRIPT = (ROOT / "assets" / "world-realm-scan.js").read_text(encoding="utf-8")
 STYLE = (ROOT / "world-realm-scan.css").read_text(encoding="utf-8")
 ENGINE = (ROOT / "omega-world-engine.js").read_text(encoding="utf-8")
 
@@ -29,7 +29,7 @@ class WorldRealmScanConsoleTests(unittest.TestCase):
         self.assertIn("var modules=engine&&Array.isArray(engine.modules)?engine.modules:[]", SCRIPT)
         self.assertIn("mod.routeState==='LIVE'", SCRIPT)
         self.assertIn("mod.routeState==='UNAVAILABLE'", SCRIPT)
-        self.assertIn("mod.verifiedAt", SCRIPT)
+        self.assertIn("m.verifiedAt", SCRIPT)
         self.assertIn("httpStatus", ENGINE)
         self.assertIn("r.status===401||r.status===403", ENGINE)
 

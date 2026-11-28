@@ -3287,7 +3287,7 @@
 
   var SCULPT_LABEL = {
     signet: 'The Omega signet, rendered in three dimensions with restrained dimensional sway',
-    agents: 'The twelve agent executors in orbit around the Omega core',
+    agents: 'The twelve canonical agent identities orbiting the Omega core; illustrative roster geometry, not live execution telemetry',
     matrix: 'The nine by nine by nine matrix of 729 nodes, with the Crystal-Omega at its centre',
     gates:  'The twelve gates receding into depth toward the Crystal-Omega',
     character: 'Your character: a core, twelve gate nodes lit by the gates you have passed, and five satellites for your mana',

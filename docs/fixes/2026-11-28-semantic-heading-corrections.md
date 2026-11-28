@@ -16,3 +16,14 @@ The survey parser also now recognizes the repository's actual active-tab class, 
 ## Remaining route surfaces
 
 The same correction pass adds accessible headings and working fallback links to the retired command, security, settings, standing, and legacy route aliases. Their existing navigation targets and JavaScript redirects are preserved. The two HTML files under `scripts/movies/` are deterministic frame-rendering sources, not deployable pages; the survey now excludes that build-time directory explicitly and reports its excluded-template count instead of treating renderer templates as user-facing pages.
+
+
+## Verified survey result (PR head `4d28b46d5712943bd2b723b9f99ffc0e7135a4ac`)
+
+- 245 deployable HTML page surfaces scanned.
+- 0 structural `CONTRACT` findings.
+- 15 headings correctly classified as auth-gated behind hidden application shells.
+- 207 pages still require visual review for non-structural findings such as fixed-width geometry, dense tracking, or content density.
+- 2 deterministic movie frame-rendering HTML templates excluded and counted separately.
+
+This does not mean all 245 pages passed visual usability review; it means the survey no longer reports missing structural headings for these deployable page surfaces.

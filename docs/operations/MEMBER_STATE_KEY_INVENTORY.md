@@ -643,3 +643,5 @@ _No direct localStorage.clear() calls found._
 - Keep finance keys excluded from cloud mirroring unless an explicit owner decision changes the privacy boundary.
 - Do not infer deletion from a missing local key; an empty browser is a valid recovery target.
 - Design tombstones and restore conflict rules only after the inventory is reviewed.
+
+<!-- inventory refresh trigger; generated workflow replaces this marker -->

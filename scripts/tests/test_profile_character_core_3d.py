@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PAGE = (ROOT / "profile.html").read_text(encoding="utf-8")
 STYLE = (ROOT / "assets" / "profile-character-3d.css").read_text(encoding="utf-8")
 CANON = (ROOT / "omega-elements.json").read_text(encoding="utf-8")
+SCULPTURE = (ROOT / "omega-sculpture.js").read_text(encoding="utf-8")
 
 
 class ProfileCharacterCoreTests(unittest.TestCase):
@@ -48,7 +49,13 @@ class ProfileCharacterCoreTests(unittest.TestCase):
         self.assertIn("@media(max-width:620px)", STYLE)
         self.assertIn("@media(prefers-reduced-motion:reduce)", STYLE)
         self.assertIn("font:700 12px", STYLE)
+        self.assertNotRegex(STYLE, r"#[0-9a-fA-F]{3,8}")
         self.assertNotIn("!important", STYLE)
+        start = SCULPTURE.index("SCENES.character = function")
+        end = SCULPTURE.index("SCENES.ascension = function", start)
+        character_scene = SCULPTURE[start:end]
+        self.assertIn("matchMedia('(prefers-reduced-motion: reduce)')", character_scene)
+        self.assertIn("if (!reduceMotion)", character_scene)
 
 
 if __name__ == "__main__":

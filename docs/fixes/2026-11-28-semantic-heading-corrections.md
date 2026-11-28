@@ -10,4 +10,4 @@ The latest visual-page survey scans 247 HTML documents and reported 18 missing l
 
 No heading was added to retired redirect routes or embedded movie templates merely to silence the scanner. Those surfaces need separate classification if the survey is to distinguish full pages, redirects, and fragments.
 
-The expected survey outcome is three fewer structural heading findings; the remaining findings are not automatically defects.
+The survey parser also now recognizes the repository's actual active-tab class, `act`, alongside `active` and `on`. This matters because the 404 and pending pages put their first heading inside an active `.tab-panel.act`; the old parser incorrectly hid that content. The approvals title has a static fallback label so the hidden-app-shell pass can classify it as AUTH-GATED until localization runs. The expected outcome is two visible-heading resolutions and one correctly classified auth-gated heading, not three false green checks.

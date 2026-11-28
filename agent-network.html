@@ -88,6 +88,17 @@ body {
   overflow: hidden;
   min-height: 60vh;   /* the canvas no longer props it up */
 }
+.agent-orbit-stage{margin:clamp(14px,2.2vw,28px);padding:clamp(14px,2.2vw,28px);border:1px solid rgba(201,168,76,.24);border-radius:12px;background:radial-gradient(ellipse at 50% 60%,rgba(0,229,255,.065),transparent 62%),linear-gradient(145deg,rgba(12,13,22,.96),rgba(3,4,9,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 18px 60px rgba(0,0,0,.24)}
+.agent-orbit-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.agent-orbit-kicker{font:12px var(--M);letter-spacing:.18em;color:var(--cyan);margin-bottom:7px}
+.agent-orbit-heading h2{font:clamp(1.05rem,2vw,1.55rem) var(--D);letter-spacing:.06em;color:var(--gold);margin:0 0 7px}
+.agent-orbit-description{max-width:72ch;color:var(--muted);font:14px/1.65 var(--R)}
+.agent-orbit-reality{flex:0 0 auto;border:1px solid rgba(0,229,255,.25);border-radius:999px;padding:7px 10px;color:var(--cyan);font:11px var(--M);letter-spacing:.08em}
+.agent-orbit-frame{width:100%;height:clamp(340px,48vw,560px);min-height:340px;position:relative;overflow:hidden;border-radius:9px;background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.08),transparent 64%),#03040a}
+.agent-orbit-caption{margin:10px 2px 0;color:var(--muted);font:12px/1.6 var(--M)}
+@media(max-width:600px){.agent-orbit-stage{margin:10px;padding:12px}.agent-orbit-frame{height:380px;min-height:380px}.agent-orbit-reality{font-size:10px;white-space:normal}}
+@media(prefers-reduced-motion:reduce){.agent-orbit-stage{scroll-behavior:auto}}
+
 
 /* The canvas is taken out of the flow.  It was width:100%/height:100% of a container whose own height was the status line plus the canvas, so
    every redraw stored the canvas's height as its height, which grew the container by the status line, which grew the canvas: measured on
@@ -265,6 +276,22 @@ html.omega-agent-embed #omega-noise-overlay{display:none!important}
       <p>12 primary agent identities · Canonical roster view · Select a node to inspect its published role</p>
     </div>
     
+    <section class="agent-orbit-stage" aria-labelledby="agent-orbit-title">
+      <div class="agent-orbit-heading">
+        <div>
+          <p class="agent-orbit-kicker">THE TWELVE · ONE OMEGA CORE</p>
+          <h2 id="agent-orbit-title">PRIMARY AGENT CONSTELLATION</h2>
+          <p class="agent-orbit-description">A three-dimensional view of the canonical twelve-agent roster. Orbital paths are illustrative; they do not represent live execution, permissions, or agent-to-agent dependencies.</p>
+        </div>
+        <span class="agent-orbit-reality">ROSTER VISUAL · NOT EXECUTION TELEMETRY</span>
+      </div>
+      <div class="agent-orbit-frame" data-omega-sculpture="agents"
+           data-sculpt-height="clamp(340px,48vw,560px)"
+           data-sculpt-label="Twelve canonical agent identities arranged around the Omega core; illustrative roster geometry, not live execution telemetry">
+      </div>
+      <p class="agent-orbit-caption">Select a node to open the governed agent directory. The two-dimensional roster map below remains available as a lightweight fallback.</p>
+    </section>
+
     <div class="network-container">
       <p id="network-status" role="status" aria-live="polite" style="font-size:var(--fs-1,12px);color:var(--muted);padding:0 1rem">LOADING CANONICAL AGENT ROSTER…</p>
       <canvas id="network-canvas" role="img" aria-label="Primary agent constellation visualization; requires the canonical roster"></canvas>

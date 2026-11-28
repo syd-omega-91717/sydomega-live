@@ -13,7 +13,7 @@ class SemanticHeadingContract(unittest.TestCase):
 
     def test_owner_approvals_title_is_a_level_one_heading(self):
         page = (ROOT / "approvals.html").read_text(encoding="utf-8")
-        self.assertRegex(page, r"<h1\b[^>]*data-i18n=\"approvals_title\"")
+        self.assertRegex(page, r"<h1\b[^>]*data-i18n=\"approvals_title\">APPROVALS")
 
     def test_access_pending_title_is_a_level_one_heading(self):
         page = (ROOT / "pending.html").read_text(encoding="utf-8")

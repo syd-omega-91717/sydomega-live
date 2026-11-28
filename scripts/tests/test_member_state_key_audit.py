@@ -40,6 +40,22 @@ class MemberStateKeyAuditTests(unittest.TestCase):
         self.assertIn("setItem", rows["omega_focus_sessions"]["operations"])
         self.assertIn(("focus.html", 2), rows["omega_focus_sessions"]["refs"])
 
+    def test_comma_separated_literal_declarations_are_resolved(self):
+        (self.root / "heritage.html").write_text(
+            "var HK='omega_heritage_profile',AK='omega_ancestors',"
+            "SK='omega_heritage_stories',CK='omega_culture';\n"
+            "const FIRST_KEY='omega_first',\n SECOND_KEY='omega_second';\n"
+            "var COMPUTED_KEY=makeKey(), EXACT_KEY='omega_exact';\n"
+            "localStorage.getItem(AK); localStorage.getItem(SK); "
+            "localStorage.getItem(CK); localStorage.getItem(SECOND_KEY); "
+            "localStorage.getItem(COMPUTED_KEY);",
+            encoding="utf-8",
+        )
+        rows = AUDIT.build_inventory(self.root)["records"]
+        for key in ("omega_ancestors", "omega_heritage_stories", "omega_culture", "omega_second"):
+            self.assertEqual(rows[key]["category"], "MEMBER_STATE_MIRROR_ELIGIBLE")
+        self.assertIn("{unresolved: COMPUTED_KEY}", rows)
+
     def test_dynamic_templates_and_concatenated_prefixes_are_not_called_exact(self):
         tick = chr(96)
         (self.root / "weekly.js").write_text(

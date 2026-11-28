@@ -96,7 +96,7 @@ def read_policy(source):
     return maps
 
 
-DECL_START_RE = re.compile(r"\\b(?:const|let|var)\\s+")
+DECL_START_RE = re.compile(r"\b(?:const|let|var)\s+")
 
 
 def _declaration_end(code, start):
@@ -109,7 +109,7 @@ def _declaration_end(code, start):
             depth = max(0, depth - 1)
         elif depth == 0 and ch == ";":
             return i
-        elif depth == 0 and ch == "\\n" and not code[start:i].rstrip().endswith(","):
+        elif depth == 0 and ch == "\n" and not code[start:i].rstrip().endswith(","):
             return i
     return len(code)
 
@@ -124,7 +124,7 @@ def _split_declarators(statement):
         if quote:
             if escaped:
                 escaped = False
-            elif ch == "\\\\":
+            elif ch == "\\":
                 escaped = True
             elif ch == quote:
                 quote = None
@@ -142,7 +142,7 @@ def _split_declarators(statement):
 
 
 def _literal_declarator(part):
-    name = re.match(r"\\s*([A-Za-z_$][\\w$]*)\\s*=\\s*", part)
+    name = re.match(r"\s*([A-Za-z_$][\w$]*)\s*=\s*", part)
     if not name:
         return None
     i = name.end()
@@ -153,7 +153,7 @@ def _literal_declarator(part):
     value = []
     while i < len(part):
         ch = part[i]
-        if ch == "\\\\" and i + 1 < len(part):
+        if ch == "\\" and i + 1 < len(part):
             value.append(part[i:i + 2])
             i += 2
             continue
@@ -161,7 +161,7 @@ def _literal_declarator(part):
             if part[i + 1:].strip():
                 return None
             literal = "".join(value)
-            if quote == chr(96) and "${" in literal:
+            if quote == chr(96) and (chr(36) + "{") in literal:
                 return None
             return name.group(1), literal
         value.append(ch)

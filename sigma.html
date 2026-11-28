@@ -304,6 +304,17 @@ function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;
   }
 
   /* ── CHARTS ── */
+  /* Measures the canvas's own box and draws at the screen's density.  While the box is 0 (a hidden tab, or the approval guard still hiding the
+     column: CLAUDE.md 8.1 class 3) nothing is drawn, instead of drawing at a made-up width that is then stretched; a ResizeObserver repaints when the
+     box gets a width or changes it.  The four charts below used `offsetWidth||fallback` at 1x, so each was stored at 200-500px and shown 400-860px wide. */
+  function fitBox(cv,H,redraw){
+    if(!cv.__omegaRO&&window.ResizeObserver){cv.__omegaRO=new ResizeObserver(function(){if(cv.clientWidth&&Math.round(cv.clientWidth)!==cv.__fw)redraw();});cv.__omegaRO.observe(cv);}
+    var W=Math.round(cv.clientWidth);if(!W)return null;
+    var d=Math.min(3,Math.max(1,window.devicePixelRatio||1));
+    cv.__fw=W;cv.width=Math.round(W*d);cv.height=Math.round(H*d);
+    var ctx=cv.getContext('2d');ctx.setTransform(d,0,0,d,0,0);
+    return{ctx:ctx,W:W};
+  }
   function drawDist(){
     var cv=document.getElementById('sigma-dist');if(!cv)return;
     /* Sized from its own box; a ResizeObserver redraws once the approval
@@ -338,10 +349,11 @@ function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;
 
   function drawAxesRadar(){
     var cv=document.getElementById('sigma-axes');if(!cv)return;
-    var W=cv.offsetWidth||200,H=140;
-    cv.width=W;cv.height=H;
-    var ctx=cv.getContext('2d');
-    var cx=W/2,cy=H/2,r=Math.min(W,H)*0.4;
+    var H=140,f=fitBox(cv,H,drawAxesRadar);if(!f)return;
+    var W=f.W,ctx=f.ctx;
+    /* 0.32, not 0.4: the labels sit r+16 out and the top one is 9px tall, so r must be <= H/2-24 or "A: ..." is clipped at the top edge.  At the old 104px-wide
+       (stretched) store the radius was width-limited and hid this; drawn at the real width the radius is height-limited. */
+    var cx=W/2,cy=H/2,r=Math.min(W,H)*0.32;
     var axes=[{l:'A',v:myA,max:10},{l:'B',v:myB,max:10},{l:'C',v:myC,max:10}];
     var N=3;
     ctx.clearRect(0,0,W,H);
@@ -389,9 +401,9 @@ function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;
 
   function drawAuthCurve(a,b,c){
     var cv=document.getElementById('sigma-auth-curve');if(!cv)return;
-    var W=cv.offsetWidth||400,H=160;
-    cv.width=W;cv.height=H;
-    var ctx=cv.getContext('2d');
+    cv.__args=[a,b,c];  /* a redraw from the observer must use the member's latest inputs, not the first call's */
+    var H=160,f=fitBox(cv,H,function(){drawAuthCurve.apply(null,cv.__args);});if(!f)return;
+    var W=f.W,ctx=f.ctx;
     ctx.clearRect(0,0,W,H);
     var N=100;
     var colors=['rgba(226,200,109,.8)','rgba(0,229,255,.8)','rgba(155,107,240,.8)'];
@@ -437,9 +449,8 @@ function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;
 
   function drawElemMatrix(){
     var cv=document.getElementById('sigma-elem-matrix');if(!cv)return;
-    var W=cv.offsetWidth||500,H=220;
-    cv.width=W;cv.height=H;
-    var ctx=cv.getContext('2d');
+    var H=220,f=fitBox(cv,H,drawElemMatrix);if(!f)return;
+    var W=f.W,ctx=f.ctx;
     ctx.clearRect(0,0,W,H);
     var elems=Object.keys(ELEM_INFO);
     var barW=(W-80)/elems.length;
@@ -492,9 +503,8 @@ function getGate(auth){var g=0;GATE_THRESH.forEach(function(t,i){if(auth>=t)g=i;
   /* Scatter */
   function drawScatter(){
     var cv=document.getElementById('sigma-scatter');if(!cv)return;
-    var W=cv.offsetWidth||500,H=220;
-    cv.width=W;cv.height=H;
-    var ctx=cv.getContext('2d');
+    var H=220,f=fitBox(cv,H,drawScatter);if(!f)return;
+    var W=f.W,ctx=f.ctx;
     ctx.clearRect(0,0,W,H);
     ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(40,10);ctx.lineTo(40,H-30);ctx.lineTo(W-10,H-30);ctx.stroke();

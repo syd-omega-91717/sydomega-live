@@ -13,7 +13,6 @@ OUTPUT = Path("docs/operations/MEMBER_STATE_KEY_INVENTORY.md")
 SUFFIXES = {".html", ".js", ".mjs"}
 EXCLUDED_DIRS = {".git", ".github", "node_modules", "public", "dist", "coverage", ".vercel", "docs", "scripts"}
 CALL_RE = re.compile(r"(?:window\s*\.\s*)?localStorage\s*\.\s*(getItem|setItem|removeItem|clear)\s*\(")
-CONST_RE = re.compile(r"\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(['\"\x60])([^'\"\x60\n]*)\2")
 MAP_RE = re.compile(r"\bvar\s+(SKIP|NO_MIRROR)\s*=\s*\{([^}]*)\}", re.S)
 MAP_KEY_RE = re.compile(r"""['"]?([A-Za-z0-9_:-]+)['"]?\s*:""")
 

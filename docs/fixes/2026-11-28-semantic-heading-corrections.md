@@ -11,3 +11,8 @@ The latest visual-page survey scans 247 HTML documents and reported 18 missing l
 No heading was added to retired redirect routes or embedded movie templates merely to silence the scanner. Those surfaces need separate classification if the survey is to distinguish full pages, redirects, and fragments.
 
 The survey parser also now recognizes the repository's actual active-tab class, `act`, alongside `active` and `on`. This matters because the 404 and pending pages put their first heading inside an active `.tab-panel.act`; the old parser incorrectly hid that content. The approvals title has a static fallback label so the hidden-app-shell pass can classify it as AUTH-GATED until localization runs. The expected outcome is two visible-heading resolutions and one correctly classified auth-gated heading, not three false green checks.
+
+
+## Remaining route surfaces
+
+The same correction pass adds accessible headings and working fallback links to the retired command, security, settings, standing, and legacy route aliases. Their existing navigation targets and JavaScript redirects are preserved. The two HTML files under `scripts/movies/` are deterministic frame-rendering sources, not deployable pages; the survey now excludes that build-time directory explicitly and reports its excluded-template count instead of treating renderer templates as user-facing pages.

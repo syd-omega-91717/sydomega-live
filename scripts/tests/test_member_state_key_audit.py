@@ -25,11 +25,13 @@ class MemberStateKeyAuditTests(unittest.TestCase):
 
     def test_exact_keys_constants_and_policy_categories(self):
         (self.root / "focus.html").write_text(
-            "const STORE_KEY = 'omega_focus_sessions';\n"
-            "localStorage.setItem(STORE_KEY, JSON.stringify([]));\n"
-            "localStorage.getItem('omega:ad:impressions');\n"
-            "localStorage.removeItem('omega_expenses');\n"
-            "localStorage.setItem('custom_notes', 'x');\n",
+            "<script>\\n"
+            "const STORE_KEY = 'omega_focus_sessions';\\n"
+            "localStorage.setItem(STORE_KEY, JSON.stringify([]));\\n"
+            "localStorage.getItem('omega:ad:impressions');\\n"
+            "localStorage.removeItem('omega_expenses');\\n"
+            "localStorage.setItem('custom_notes', 'x');\\n"
+            "</script>",
             encoding="utf-8",
         )
         rows = AUDIT.build_inventory(self.root)["records"]
@@ -69,6 +71,40 @@ class MemberStateKeyAuditTests(unittest.TestCase):
         self.assertIn("omega_wr_draft_{dynamic}", rows)
         self.assertEqual(rows["omega_wr_draft_{dynamic}"]["category"], "DYNAMIC_MEMBER_STATE_CANDIDATE")
         self.assertIn("{unresolved: makeKey(user)}", rows)
+
+    def test_html_prose_apostrophes_do_not_hide_script_constants(self):
+        (self.root / "apostrophe.html").write_text(
+            "<p>Today's member's private notes stay private.</p>\\n"
+            "<script type='module'>\\n"
+            "const STORE_KEY = 'omega_from_script';\\n"
+            "localStorage.getItem(STORE_KEY);\\n"
+            "</script>",
+            encoding="utf-8",
+        )
+        rows = AUDIT.build_inventory(self.root)["records"]
+        self.assertEqual(rows["omega_from_script"]["category"], "MEMBER_STATE_MIRROR_ELIGIBLE")
+        self.assertIn(("apostrophe.html", 4), rows["omega_from_script"]["refs"])
+
+    def test_inline_event_handlers_are_scanned_but_json_payloads_are_not(self):
+        (self.root / "inline.html").write_text(
+            "<button onclick=\"localStorage.setItem('omega_inline_action', '1')\">Save</button>\\n"
+            "<script type='application/json'>"
+            "{\\\"example\\\":\\\"localStorage.setItem('omega_not_executable', '1')\\\"}"
+            "</script>",
+            encoding="utf-8",
+        )
+        rows = AUDIT.build_inventory(self.root)["records"]
+        self.assertIn("omega_inline_action", rows)
+        self.assertNotIn("omega_not_executable", rows)
+
+    def test_module_constants_do_not_leak_across_script_blocks(self):
+        (self.root / "scope.html").write_text(
+            "<script type='module'>const MODULE_KEY='omega_module_only';</script>\\n"
+            "<script>localStorage.getItem(MODULE_KEY);</script>",
+            encoding="utf-8",
+        )
+        rows = AUDIT.build_inventory(self.root)["records"]
+        self.assertIn("{unresolved: MODULE_KEY}", rows)
 
     def test_comments_and_strings_do_not_create_false_calls(self):
         (self.root / "false-positive.js").write_text(

@@ -1,0 +1,56 @@
+/* Ω WORLD — page-scoped realm scan console. Uses canonical bg.js tokens. */
+.ow-realm-console{
+  position:relative;isolation:isolate;overflow:hidden;margin:14px 0 22px;
+  padding:clamp(16px,2.4vw,26px);border:1px solid color-mix(in srgb,var(--gold) 28%,transparent);
+  background:linear-gradient(118deg,color-mix(in srgb,var(--void) 96%,transparent),color-mix(in srgb,var(--void) 94%,transparent) 58%,color-mix(in srgb,var(--cyan) 7%,var(--void)));
+  box-shadow:inset 0 1px color-mix(in srgb,white 4%,transparent),0 18px 55px rgba(0,0,0,.28);
+}
+.ow-realm-console:before{
+  content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;opacity:0;
+  background:linear-gradient(105deg,transparent 0%,color-mix(in srgb,var(--cyan) 3.5%,transparent) 46%,color-mix(in srgb,var(--cyan) 12%,transparent) 50%,color-mix(in srgb,var(--cyan) 3.5%,transparent) 54%,transparent 100%);
+}
+.ow-realm-console.is-scanning:before{opacity:1;animation:ow-realm-sweep 9.17s linear infinite}
+.ow-realm-console-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.ow-realm-eyebrow{font:700 12px/1.3 var(--M,monospace);letter-spacing:2px;color:var(--gold)}
+.ow-realm-console h2{margin:5px 0 0;font:700 clamp(19px,2.4vw,27px)/1.15 var(--D,serif);letter-spacing:1px;color:var(--ink)}
+.ow-realm-state,.ow-realm-route-state{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:6px 10px;border:1px solid color-mix(in srgb,var(--gold) 25%,transparent);font:700 12px/1.2 var(--M,monospace);letter-spacing:1px;color:var(--solar)}
+.ow-realm-state:before,.ow-realm-route-state:before{content:"";width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
+.ow-realm-state[data-state="reachable"],.ow-realm-route-state[data-state="reachable"]{color:var(--green);border-color:color-mix(in srgb,var(--green) 28%,transparent)}
+.ow-realm-state[data-state="unavailable"],.ow-realm-route-state[data-state="unavailable"]{color:var(--crim);border-color:color-mix(in srgb,var(--crim) 30%,transparent)}
+.ow-realm-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}
+.ow-realm-metrics>div{min-height:72px;padding:12px;border:1px solid color-mix(in srgb,white 8%,transparent);background:color-mix(in srgb,var(--void) 24%,transparent)}
+.ow-realm-metrics strong{display:block;font:700 clamp(21px,3vw,29px)/1 var(--D,serif);color:var(--solar);font-variant-numeric:tabular-nums}
+.ow-realm-metrics span{display:block;margin-top:7px;font:12px/1.3 var(--M,monospace);letter-spacing:1px;color:var(--muted)}
+.ow-realm-controls{display:grid;grid-template-columns:minmax(170px,.65fr) minmax(0,1.6fr) auto;align-items:end;gap:12px}
+.ow-realm-controls>label{grid-column:1/-1;margin-bottom:-7px;font:700 12px/1.3 var(--M,monospace);letter-spacing:1.5px;color:var(--cyan)}
+.ow-realm-controls select{width:100%;min-height:46px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--cyan) 35%,transparent);border-radius:0;background:var(--void);color:var(--ink);font:600 14px/1.3 var(--R,sans-serif)}
+.ow-realm-focus{min-width:0;padding:11px 13px;border-left:2px solid var(--gold);background:color-mix(in srgb,var(--void) 22%,transparent)}
+.ow-realm-focus>div{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.ow-realm-focus strong{font:700 16px/1.3 var(--D,serif);letter-spacing:.7px;color:var(--ink)}
+.ow-realm-focus>div span{font:12px/1.3 var(--M,monospace);letter-spacing:.8px;color:var(--gold)}
+.ow-realm-focus p{margin:6px 0 9px;color:var(--muted);font-size:14px;line-height:1.45}
+.ow-realm-focus .ow-realm-route-state{min-height:28px;padding:4px 8px;font-size:12px}
+.ow-realm-focus>a{display:inline-block;margin-left:10px;color:var(--cyan);font:700 12px/1.3 var(--M,monospace);letter-spacing:1px;text-decoration:none}
+.ow-realm-focus>a:focus-visible,.ow-realm-focus>a:hover{text-decoration:underline;text-underline-offset:4px}
+.ow-realm-rescan{min-height:46px;padding:10px 15px;border:1px solid color-mix(in srgb,var(--gold) 50%,transparent);border-radius:0;background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 16%,transparent),color-mix(in srgb,var(--cyan) 8%,transparent));color:var(--gold);font:700 12px/1.25 var(--M,monospace);letter-spacing:1px;cursor:pointer;white-space:nowrap}
+.ow-realm-rescan:hover{border-color:var(--cyan);box-shadow:0 0 22px color-mix(in srgb,var(--cyan) 12%,transparent)}
+.ow-realm-rescan:focus-visible,.ow-realm-controls select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.ow-realm-rescan:disabled{opacity:.55;cursor:wait}
+.ow-realm-footnote{margin:14px 0 0;color:var(--muted);font:12px/1.55 var(--M,monospace)}
+.ow-node.ow-realm-selected{border-color:var(--cyan);box-shadow:0 0 0 1px color-mix(in srgb,var(--cyan) 20%,transparent),0 12px 34px color-mix(in srgb,var(--cyan) 8%,transparent)}
+@keyframes ow-realm-sweep{0%{transform:translateX(-110%)}100%{transform:translateX(110%)}}
+@media(max-width:760px){
+  .ow-realm-controls{grid-template-columns:1fr}
+  .ow-realm-controls>label{grid-column:auto;margin-bottom:-5px}
+  .ow-realm-rescan{width:100%}
+}
+@media(max-width:420px){
+  .ow-realm-metrics{gap:6px}
+  .ow-realm-metrics>div{padding:9px 8px;min-height:66px}
+  .ow-realm-metrics span{letter-spacing:.5px}
+  .ow-realm-focus>a{margin:9px 0 0;display:block}
+}
+@media(prefers-reduced-motion:reduce){
+  .ow-realm-console.is-scanning:before{animation:none;display:none}
+  .ow-realm-rescan{transition:none}
+}

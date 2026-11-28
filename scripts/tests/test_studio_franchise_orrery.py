@@ -23,6 +23,12 @@ class StudioFranchiseOrrery(unittest.TestCase):
 
     def test_seven_world_nodes_match_the_canonical_franchise_titles(self):
         body = studio_scene()
+        worlds = re.findall(r"\{ id: '([IVX]+)', title: (['\"])(.*?)\2", body)
+        self.assertEqual([world[0] for world in worlds], ["I", "II", "III", "IV", "V", "VI", "VII"])
+        franchise_start = PAGE.index("const FRANCHISES=[")
+        franchise_end = PAGE.index("];", franchise_start)
+        franchise_titles = [title.replace(chr(92) + "'", "'") for title in re.findall(r"title:'((?:\\\\.|[^'])*)'", PAGE[franchise_start:franchise_end])]
+        self.assertEqual([world[2] for world in worlds], franchise_titles)
         worlds = re.findall(r"\{ id: '([IVX]+)', title: '([^']+)'", body)
         self.assertEqual([world[0] for world in worlds], ["I", "II", "III", "IV", "V", "VI", "VII"])
         franchise_start = PAGE.index("const FRANCHISES=[")
@@ -40,6 +46,7 @@ class StudioFranchiseOrrery(unittest.TestCase):
 
     def test_story_map_does_not_claim_production_or_release_state(self):
         body = studio_scene()
+        self.assertIn("narrative index", body)
         self.assertIn("narrative navigation", body)
         self.assertIn("not production or release telemetry", body)
         self.assertIn("STORY MAP · NOT RELEASE STATUS", PAGE)

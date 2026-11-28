@@ -22,6 +22,8 @@
   var modules=engine&&Array.isArray(engine.modules)?engine.modules:[];
   var selected=modules[0]||null;
   var busy=false;
+  var scanError=false;
+  var initialScanStalled=false;
   function safeHref(value){
     if(typeof value!=='string'||value.charAt(0)!=='/'||value.slice(0,2)==='//')return '/dashboard.html';
     return value;
@@ -40,12 +42,17 @@
     var reachable=modules.filter(function(m){return stateOf(m)==='reachable';}).length;
     var unavailable=modules.filter(function(m){return stateOf(m)==='unavailable';}).length;
     var checking=modules.length-reachable-unavailable;
-    root.classList.toggle('is-scanning',busy||checking>0);
-    root.setAttribute('aria-busy',busy||checking>0?'true':'false');
+    var activeScan=busy||(checking>0&&!initialScanStalled);
+    root.classList.toggle('is-scanning',activeScan);
+    root.setAttribute('aria-busy',activeScan?'true':'false');
     ids.reachable.textContent=String(reachable);
     ids.total.textContent=String(modules.length);
-    if(checking){
+    if(busy||(checking&&!initialScanStalled)){
       setState(ids.state,'checking','SCANNING · '+checking+' PENDING');
+    }else if(scanError){
+      setState(ids.state,'unavailable','SCAN FAILED · PRIOR RESULTS RETAINED');
+    }else if(initialScanStalled){
+      setState(ids.state,'unavailable','INITIAL SCAN STALLED · RETRY');
     }else if(unavailable){
       setState(ids.state,'unavailable','PARTIAL REACHABILITY');
     }else{
@@ -103,6 +110,8 @@
       return;
     }
     busy=true;
+    scanError=false;
+    initialScanStalled=false;
     root.classList.add('is-scanning');
     root.setAttribute('aria-busy','true');
     ids.rescan.disabled=true;
@@ -110,9 +119,11 @@
     setState(ids.state,'checking','SCANNING 18 REALMS');
     try{
       await engine.verify();
+      scanError=false;
+      initialScanStalled=false;
       render();
     }catch(error){
-      setState(ids.state,'unavailable','SCAN FAILED · RETRY AVAILABLE');
+      scanError=true;
       console.warn('[OmegaWorldScanConsole] route scan failed',error);
     }finally{
       busy=false;
@@ -149,7 +160,12 @@
       attempts++;
       render();
       var pending=modules.some(function(mod){return stateOf(mod)==='checking';});
-      if(!pending||attempts>=60)window.clearInterval(timer);
+      if(!pending)window.clearInterval(timer);
+      else if(attempts>=60){
+        initialScanStalled=true;
+        window.clearInterval(timer);
+        render();
+      }
     },250);
   }
   window.OmegaWorldScanConsole={refresh:render,scan:scan};

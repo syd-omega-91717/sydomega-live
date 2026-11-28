@@ -43,9 +43,9 @@ class MemberStateKeyAuditTests(unittest.TestCase):
     def test_comma_separated_literal_declarations_are_resolved(self):
         (self.root / "heritage.html").write_text(
             "var HK='omega_heritage_profile',AK='omega_ancestors',"
-            "SK='omega_heritage_stories',CK='omega_culture';\\n"
-            "const FIRST_KEY='omega_first',\\n SECOND_KEY='omega_second';\\n"
-            "var COMPUTED_KEY=makeKey(), EXACT_KEY='omega_exact';\\n"
+            "SK='omega_heritage_stories',CK='omega_culture';\n"
+            "const FIRST_KEY='omega_first',\n SECOND_KEY='omega_second';\n"
+            "var COMPUTED_KEY=makeKey(), EXACT_KEY='omega_exact';\n"
             "localStorage.getItem(AK); localStorage.getItem(SK); "
             "localStorage.getItem(CK); localStorage.getItem(SECOND_KEY); "
             "localStorage.getItem(COMPUTED_KEY);",

@@ -288,11 +288,22 @@ class Wave7(unittest.TestCase):
 
     def test_unreachable_canvases_were_left_alone(self):
         """No harness reaches these under the member stub (they need loaded data), so a change to them could not be seen drawing."""
-        self.assertIn("cv.width=w*2; cv.height=h*2;", self._src("media"))                                                  # poster canvases
         cos = self._src("cosmos")
         self.assertIn("cv.width=size*2;cv.height=size*2;cv.style.width=size+'px';cv.style.height=size+'px';", cos)         # sign canvases
         self.assertIn("canvas.width=size*2; canvas.height=size*2;", cos)                                                   # mandala
         self.assertIn("cv.width=80; cv.height=80; cv.style.width='40px'; cv.style.height='40px';\n  const ctx=cv.getContext('2d');", cos)  # planet node
+
+    def test_media_posters_fit_the_measured_box_and_wait_while_hidden(self):
+        """media.html film posters: measured box, >=2x via OmegaCanvas, no made-up 300x450 scene while the tab is hidden, a ResizeObserver
+        repaint, and a stable star sequence (the old code stored 600x900 and showed it in an 80px strip)."""
+        src = self._src("media")
+        poster = src[src.index("var paint=function(){"):][:3600]
+        self.assertIn("cv.clientWidth", poster)
+        self.assertIn("if(!(w>0&&h>0))return;", poster)
+        self.assertIn("OmegaCanvas.fit(cv,w,h,{scale:sc})", poster)
+        self.assertIn("new ResizeObserver(paint).observe(cv)", src)
+        self.assertNotIn("cv.offsetWidth||300", src)
+        self.assertNotIn("Math.random()*w,sy=Math.random()*h*0.7", src)
 
     def test_family_canvases_use_the_shared_helper_and_settle(self):
         """family.html: both canvases fit through OmegaCanvas (>=2x), pin their CSS height inline (bg.js canvas{height:auto} beats a page rule),
@@ -356,6 +367,19 @@ class Browser(unittest.TestCase):
         if not node:
             self.skipTest("node not available")
         r = subprocess.run([node, str(ROOT / "scripts" / "verify-family-canvases.js")], capture_output=True, text=True, timeout=600)
+        out = r.stdout + r.stderr
+        if "SKIPPED" in out and not os.environ.get("OMEGA_REQUIRE_BROWSER"):
+            self.skipTest("no browser available")
+        self.assertEqual(r.returncode, 0, out)
+
+
+    def test_media_posters_draw_one_to_one(self):
+        if not os.environ.get("OMEGA_HIDPI_BROWSER"):
+            self.skipTest("run with OMEGA_HIDPI_BROWSER=1; the static contract above always runs")
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node not available")
+        r = subprocess.run([node, str(ROOT / "scripts" / "verify-media-posters.js")], capture_output=True, text=True, timeout=600)
         out = r.stdout + r.stderr
         if "SKIPPED" in out and not os.environ.get("OMEGA_REQUIRE_BROWSER"):
             self.skipTest("no browser available")

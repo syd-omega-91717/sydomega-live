@@ -48,7 +48,9 @@ class WorldRealmScanConsoleTests(unittest.TestCase):
     def test_console_handles_missing_engine_and_failed_scan(self):
         self.assertIn("WORLD ENGINE UNAVAILABLE", SCRIPT)
         self.assertIn("WORLD REGISTRY UNAVAILABLE", SCRIPT)
-        self.assertIn("SCAN FAILED", SCRIPT)
+        self.assertIn("SCAN FAILED · PRIOR RESULTS RETAINED", SCRIPT)
+        self.assertIn("INITIAL SCAN STALLED · RETRY", SCRIPT)
+        self.assertIn("initialScanStalled=true", SCRIPT)
         self.assertIn("finally", SCRIPT)
 
     def test_visual_layer_is_responsive_and_reduced_motion_safe(self):

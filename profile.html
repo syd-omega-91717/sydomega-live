@@ -1734,11 +1734,21 @@ async function boot(){
       var signKey=Object.keys(mapping).find(function(key){return key.toLowerCase()===savedSign.toLowerCase();});
       var elementName=signKey?String(mapping[signKey]||''):'';
       if(!elementName){state.textContent='NO CANON ELEMENT FOR SAVED SIGN';return;}
-      var palette=window.OmegaRealm&&window.OmegaRealm.palette;
-      var paletteKey=palette&&Object.keys(palette).find(function(key){return key.toLowerCase()===elementName.toLowerCase();});
-      if(!paletteKey){state.textContent='ELEMENT PALETTE UNAVAILABLE · NEUTRAL CORE';return;}
-      stage.setAttribute('data-sculpt-element',paletteKey);
-      state.textContent='CANON ELEMENT LINKED · '+elementName;
+      var paletteAttempts=0;
+      function bindPalette(){
+        var palette=window.OmegaRealm&&window.OmegaRealm.palette;
+        if(!palette&&paletteAttempts<20){
+          paletteAttempts++;
+          state.textContent='WAITING FOR ELEMENT PALETTE';
+          window.setTimeout(bindPalette,100);
+          return;
+        }
+        var paletteKey=palette&&Object.keys(palette).find(function(key){return key.toLowerCase()===elementName.toLowerCase();});
+        if(!paletteKey){state.textContent='ELEMENT PALETTE UNAVAILABLE · NEUTRAL CORE';return;}
+        stage.setAttribute('data-sculpt-element',paletteKey);
+        state.textContent='CANON ELEMENT LINKED · '+elementName;
+      }
+      bindPalette();
     }).catch(function(error){
       state.textContent='CANON ELEMENT SOURCE UNAVAILABLE · NEUTRAL CORE';
       console.warn('[Omega Character Core] element binding unavailable',error);

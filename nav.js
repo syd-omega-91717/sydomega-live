@@ -175,6 +175,9 @@
       '.on-btn{font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:1px;width:34px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(201,168,76,0.2);color:#85837b;background:transparent;transition:all .14s;text-decoration:none}',
       '.on-btn:hover{color:#C9A84C;border-color:rgba(201,168,76,0.5)}',
       '.on-brand{width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:8px;flex-shrink:0;text-decoration:none}',
+      /* The a11y sheet pads every a[href] to a 44px touch target (15px each side at 14px type), which left this 44px link 12px of content and squeezed the emblem canvas to 12x44. The link is already 44x44, so it needs no padding. Its 1px ring leaves a 42px content box, so the emblem is drawn 42x42 (square), not 42x44. */
+      '#omega-side .on-brand{padding:0}',
+      '#omega-side .on-brand canvas{width:42px!important;height:42px!important}',
       '.on-sections{display:flex;flex-direction:column;gap:2px;align-items:center;width:100%;flex:1;overflow-y:auto;scrollbar-width:none}',
       '#omega-side:not(.on-all) .on-item.on-more-item{display:none!important}',
       '#omega-side .on-more{background:none;font:inherit;color:inherit;cursor:pointer;width:68px}',

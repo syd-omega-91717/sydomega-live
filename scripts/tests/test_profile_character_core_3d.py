@@ -28,6 +28,8 @@ class ProfileCharacterCoreTests(unittest.TestCase):
     def test_element_binding_is_case_insensitive_and_validated(self):
         self.assertIn("key.toLowerCase()===savedSign.toLowerCase()", PAGE)
         self.assertIn("key.toLowerCase()===elementName.toLowerCase()", PAGE)
+        self.assertIn("WAITING FOR ELEMENT PALETTE", PAGE)
+        self.assertIn("paletteAttempts<20", PAGE)
         self.assertIn("ELEMENT PALETTE UNAVAILABLE", PAGE)
         self.assertIn("NO CANON ELEMENT FOR SAVED SIGN", PAGE)
 

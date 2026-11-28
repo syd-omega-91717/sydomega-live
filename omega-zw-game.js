@@ -21,12 +21,12 @@
     var canvas = $('zw-canvas'), stage = $('zw-stage'), ctx = canvas && canvas.getContext && canvas.getContext('2d');
     if (!canvas || !ctx) { var m = $('zw-msg'); if (m) m.textContent = 'This browser cannot draw the arena.'; return; }
 
-    var g = { house: 'aries', seed: 91717, s: null, log: [], mode: 'play', rlog: null, ri: 0, keys: 0, pad: 0, touch: 0, acc: 0, last: 0, prev: { p: 0, e: 0 }, fx: [],
+    var g = { demo: false, house: 'aries', seed: 91717, s: null, log: [], mode: 'play', rlog: null, ri: 0, keys: 0, pad: 0, touch: 0, acc: 0, last: 0, prev: { p: 0, e: 0 }, fx: [],
       sound: true, ac: null, hum: null, boxW: 0, raf: 0, shake: 0, flash: 0 };
     var RM = reduced();
 
     function reset(seed) {
-      g.seed = seed >>> 0 || 1; g.s = Z.start(g.house, g.seed); g.log = []; g.mode = 'play'; g.rlog = null; g.ri = 0; g.fx = []; g.acc = 0; g.last = 0;
+      g.demo = false; g.seed = seed >>> 0 || 1; g.s = Z.start(g.house, g.seed); g.log = []; g.mode = 'play'; g.rlog = null; g.ri = 0; g.fx = []; g.acc = 0; g.last = 0;
       g.prev.p = g.s.p.x; g.prev.e = g.s.e.x;
       $('zw-seed').textContent = 'SEED ' + g.seed;
       $('zw-replay').hidden = true;
@@ -112,7 +112,12 @@
     function tick() {
       var inp;
       if (g.mode === 'replay') { inp = g.rlog[g.ri++]; if (g.ri >= g.rlog.length) { g.mode = 'replay-done'; } }
-      else { inp = g.driver ? (g.driver(g.s) | 0) : (g.keys | g.pad | g.touch); g.log.push(inp); }   /* g.driver: a test hook, asked once per 60 Hz tick (nothing in the page sets it) */
+      else {
+        /* DEMO: a scripted player (the same one the tests use) plays on this seed. Any real control takes over at once, mid-duel, and the demo ends. */
+        if (g.demo && (g.keys | g.pad | g.touch)) { g.demo = false; say('You have the controls.'); }
+        inp = g.demo ? (Z.bot(g.s) | 0) : g.driver ? (g.driver(g.s) | 0) : (g.keys | g.pad | g.touch);
+        g.log.push(inp);   /* g.driver: a test hook, asked once per 60 Hz tick (nothing in the page sets it) */
+      }   /* g.driver: a test hook, asked once per 60 Hz tick (nothing in the page sets it) */
       g.prev.p = g.s.p.x; g.prev.e = g.s.e.x;
       Z.step(g.s, inp || 0);
       if (g.s.ev.length) react(g.s.ev);
@@ -200,7 +205,7 @@
       var s = g.s, pv = Z.preview(s, 'p', 'light', (g.keys | g.pad | g.touch) & I.PAY), hv = Z.preview(s, 'p', 'heavy', (g.keys | g.pad | g.touch) & I.PAY);
       var t = 'LIGHT ' + pv.damage + ' dmg, ' + pv.frames + 'f  |  HEAVY ' + hv.damage + ' dmg, ' + hv.frames + 'f  |  COST: ' + pv.label;
       var el = $('zw-preview'); if (el && el.textContent !== t) el.textContent = t;
-      var st = $('zw-who'); var w = 'STAGE ' + (s.stage + 1) + ' OF 2 · ' + (s.stage === 0 ? 'TRAINING DUMMY' : 'THE UNBLED') + ' · ' + HOUSE_COL[s.house].name;
+      var st = $('zw-who'); var w = 'STAGE ' + (s.stage + 1) + ' OF 2 · ' + (s.stage === 0 ? 'TRAINING DUMMY' : 'THE UNBLED') + ' · ' + HOUSE_COL[s.house].name + (g.demo ? ' · DEMO: SCRIPTED PLAYER, NOT A PERSON' : '');   /* the take-over instruction is in the message line (aria-live) so this stays short on a phone */
       if (st && st.textContent !== w) st.textContent = w;
     }
 
@@ -220,6 +225,7 @@
     $('zw-h-aries').addEventListener('click', function () { house('aries'); });
     $('zw-h-libra').addEventListener('click', function () { house('libra'); });
     $('zw-restart').addEventListener('click', function () { reset(g.seed); });
+    $('zw-demo').addEventListener('click', function () { reset(g.seed); g.demo = true; say('DEMO: a scripted player, not a person, plays this seed. Press any control to take over.'); audio(); });
     $('zw-newseed').addEventListener('click', function () { reset(Math.floor(Math.random() * 1e9) + 1); });
     $('zw-replay').addEventListener('click', function () {
       var log = g.log.slice(), seed = g.seed, h = g.house; g.s = Z.start(h, seed); g.mode = 'replay'; g.rlog = log; g.ri = 0; g.acc = 0; g.fx = []; $('zw-replay').hidden = true;

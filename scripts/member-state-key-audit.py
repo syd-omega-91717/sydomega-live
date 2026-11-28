@@ -13,6 +13,13 @@ OUTPUT = Path("docs/operations/MEMBER_STATE_KEY_INVENTORY.md")
 SUFFIXES = {".html", ".js", ".mjs"}
 EXCLUDED_DIRS = {".git", ".github", "node_modules", "public", "dist", "coverage", ".vercel", "docs", "scripts"}
 CALL_RE = re.compile(r"(?:window\s*\.\s*)?localStorage\s*\.\s*(getItem|setItem|removeItem|clear)\s*\(")
+SCRIPT_BLOCK_RE = re.compile(r"""<script\b(?P<attrs>[^>]*)>(?P<body>[\s\S]*?)</script\s*>""", re.I)
+SCRIPT_TYPE_RE = re.compile(r"""\btype\s*=\s*(['"])(.*?)\1""", re.I)
+EVENT_ATTR_RE = re.compile(r"""\bon[a-z]+\s*=\s*(['"])(.*?)\1""", re.I | re.S)
+EXECUTABLE_SCRIPT_TYPES = {
+    "module", "text/javascript", "application/javascript",
+    "text/ecmascript", "application/ecmascript",
+}
 MAP_RE = re.compile(r"\bvar\s+(SKIP|NO_MIRROR)\s*=\s*\{([^}]*)\}", re.S)
 MAP_KEY_RE = re.compile(r"""['"]?([A-Za-z0-9_:-]+)['"]?\s*:""")
 
@@ -244,6 +251,33 @@ def source_files(root):
         yield path
 
 
+def javascript_blocks(path, source):
+    """Yield executable JavaScript blocks with their source offsets.
+
+    HTML prose, CSS, JSON script payloads, and attributes that are not event
+    handlers are not executable JavaScript and must not mask or create keys.
+    """
+    if path.suffix.lower() in {".js", ".mjs"}:
+        return [(source, 0)]
+
+    blocks = []
+    for match in SCRIPT_BLOCK_RE.finditer(source):
+        attrs = match.group("attrs") or ""
+        type_match = SCRIPT_TYPE_RE.search(attrs)
+        script_type = type_match.group(2).strip().lower() if type_match else ""
+        if script_type and script_type not in EXECUTABLE_SCRIPT_TYPES:
+            continue
+        body = match.group("body")
+        if body.strip():
+            blocks.append((body, match.start("body")))
+
+    for match in EVENT_ATTR_RE.finditer(source):
+        body = match.group(2)
+        if "localStorage" in body:
+            blocks.append((body, match.start(2)))
+    return blocks
+
+
 def build_inventory(root=ROOT):
     member_file = root / "omega-member-state.js"
     policy = read_policy(member_file.read_text(encoding="utf-8")) if member_file.is_file() else {"SKIP": set(), "NO_MIRROR": set()}
@@ -252,25 +286,27 @@ def build_inventory(root=ROOT):
     scanned = 0
     for path in source_files(root):
         source = path.read_text(encoding="utf-8", errors="replace")
-        code = mask_comments_and_strings(source)
-        constants = constants_in(source)
+        relative = path.relative_to(root).as_posix()
         scanned += 1
-        for match in CALL_RE.finditer(code):
-            operation = match.group(1)
-            line = source.count("\n", 0, match.start()) + 1
-            relative = path.relative_to(root).as_posix()
-            if operation == "clear":
-                clears.append((relative, line))
-                continue
-            expression, _ = extract_first_argument(source, match.end() - 1)
-            exact, prefix, unresolved = resolve_key(expression, constants)
-            category = classify(exact, prefix, policy)
-            label = exact if exact is not None else (prefix + "{dynamic}" if prefix is not None else "{unresolved: " + expression + "}")
-            record = records[label]
-            record["category"] = category
-            record["operations"].add(operation)
-            record["refs"].add((relative, line))
-            record["expression"] = expression if exact is None else ""
+        for block, offset in javascript_blocks(path, source):
+            code = mask_comments_and_strings(block)
+            constants = constants_in(block)
+            base_line = source.count("\n", 0, offset)
+            for match in CALL_RE.finditer(code):
+                operation = match.group(1)
+                line = base_line + block.count("\n", 0, match.start()) + 1
+                if operation == "clear":
+                    clears.append((relative, line))
+                    continue
+                expression, _ = extract_first_argument(block, match.end() - 1)
+                exact, prefix, unresolved = resolve_key(expression, constants)
+                category = classify(exact, prefix, policy)
+                label = exact if exact is not None else (prefix + "{dynamic}" if prefix is not None else "{unresolved: " + expression + "}")
+                record = records[label]
+                record["category"] = category
+                record["operations"].add(operation)
+                record["refs"].add((relative, line))
+                record["expression"] = expression if exact is None else ""
     return {
         "records": dict(records),
         "clears": sorted(set(clears)),

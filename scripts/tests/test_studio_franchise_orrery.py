@@ -40,7 +40,7 @@ class StudioFranchiseOrrery(unittest.TestCase):
 
     def test_story_map_does_not_claim_production_or_release_state(self):
         body = studio_scene()
-        self.assertIn("narrative navigation", body)
+        self.assertIn("narrative index", body)
         self.assertIn("not production or release telemetry", body)
         self.assertIn("STORY MAP · NOT RELEASE STATUS", PAGE)
         self.assertNotIn("IN PRODUCTION", body)

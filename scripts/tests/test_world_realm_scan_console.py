@@ -59,7 +59,7 @@ class WorldRealmScanConsoleTests(unittest.TestCase):
         self.assertNotIn("!important", STYLE)
 
     def test_page_scoped_styles_do_not_redefine_global_tokens(self):
-        self.assertNotRegex(STYLE, re.compile(r"(^|[;{}])\\s*--(?:void|gold|cyan|ink|muted)\\s*:", re.M))
+        self.assertNotRegex(STYLE, re.compile(r"(^|[;{}])\s*--(?:void|gold|cyan|ink|muted)\s*:", re.M))
         self.assertNotIn("service_role", SCRIPT)
         self.assertNotIn("SUPABASE_SERVICE", SCRIPT)
 

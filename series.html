@@ -20,7 +20,7 @@
 .by-item{display:flex;align-items:center;gap:14px;padding:11px 14px;border-bottom:1px solid rgba(201,168,76,.05);transition:.12s}
 .by-item:hover{background:rgba(201,168,76,.02)}
 .by-item:last-child{border-bottom:none}
-.by-sign{font-size:var(--fs-4,20px);flex-shrink:0;width:28px;text-align:center}
+.by-sign{font-size:var(--fs-4,20px);flex-shrink:0;width:34px;text-align:center}/* 34, not 28: the emblem module swaps the glyph for a 34x34 canvas and bg.js's canvas{max-width:100%} capped it to this box (28x34, ~18% squeezed) */
 .by-name{font-family:var(--D);font-size:12px;color:var(--ink);flex:1}
 .by-meta{font-family:var(--M);font-size:12px;letter-spacing:1.5px;color:var(--muted)}
 @media(max-width:700px){.series-grid{grid-template-columns:1fr 1fr}}

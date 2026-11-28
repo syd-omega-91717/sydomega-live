@@ -6,11 +6,11 @@
     "config/omega-page-contracts.json",
     "nav.js"
   ],
-  "page_count": 237,
+  "page_count": 238,
   "hub_count": 14,
   "classification_counts": {
     "AMBIGUOUS": 10,
-    "CANDIDATE_MERGE_PANEL": 195,
+    "CANDIDATE_MERGE_PANEL": 196,
     "KEEP_SEPARATE": 18,
     "UNMAPPED": 14
   },
@@ -1258,6 +1258,20 @@
     {
       "page_id": "game-origins-bridge",
       "path": "game-origins-bridge.html",
+      "navigation_section": "media",
+      "candidate_hub": "media.html",
+      "protected_hub": null,
+      "classification": "CANDIDATE_MERGE_PANEL",
+      "rationale": "Mapped by the effective page-section entry in nav.js; functional and authorization parity still unverified.",
+      "contract_authority": "REPOSITORY_SOURCE_EVIDENCE_ONLY",
+      "authorization_state": "UNVERIFIED",
+      "truth_states": [
+        "UNVERIFIED"
+      ]
+    },
+    {
+      "page_id": "game-zodiac-wars",
+      "path": "game-zodiac-wars.html",
       "navigation_section": "media",
       "candidate_hub": "media.html",
       "protected_hub": null,

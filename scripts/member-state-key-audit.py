@@ -96,13 +96,95 @@ def read_policy(source):
     return maps
 
 
+DECL_START_RE = re.compile(r"\\b(?:const|let|var)\\s+")
+
+
+def _declaration_end(code, start):
+    depth = 0
+    for i in range(start, len(code)):
+        ch = code[i]
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth = max(0, depth - 1)
+        elif depth == 0 and ch == ";":
+            return i
+        elif depth == 0 and ch == "\\n" and not code[start:i].rstrip().endswith(","):
+            return i
+    return len(code)
+
+
+def _split_declarators(statement):
+    parts = []
+    start = 0
+    depth = 0
+    quote = None
+    escaped = False
+    for i, ch in enumerate(statement):
+        if quote:
+            if escaped:
+                escaped = False
+            elif ch == "\\\\":
+                escaped = True
+            elif ch == quote:
+                quote = None
+        elif ch in ("'", '"', chr(96)):
+            quote = ch
+        elif ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth = max(0, depth - 1)
+        elif ch == "," and depth == 0:
+            parts.append(statement[start:i])
+            start = i + 1
+    parts.append(statement[start:])
+    return parts
+
+
+def _literal_declarator(part):
+    name = re.match(r"\\s*([A-Za-z_$][\\w$]*)\\s*=\\s*", part)
+    if not name:
+        return None
+    i = name.end()
+    if i >= len(part) or part[i] not in ("'", '"', chr(96)):
+        return None
+    quote = part[i]
+    i += 1
+    value = []
+    while i < len(part):
+        ch = part[i]
+        if ch == "\\\\" and i + 1 < len(part):
+            value.append(part[i:i + 2])
+            i += 2
+            continue
+        if ch == quote:
+            if part[i + 1:].strip():
+                return None
+            literal = "".join(value)
+            if quote == chr(96) and "${" in literal:
+                return None
+            return name.group(1), literal
+        value.append(ch)
+        i += 1
+    return None
+
+
 def constants_in(source):
+    """Resolve literal const/let/var bindings, including comma-separated declarations.
+
+    Computed expressions and dynamic template literals remain unresolved. This
+    is intentionally lexical rather than a full JavaScript scope/data-flow parser.
+    """
     code = mask_comments_and_strings(source)
     constants = {}
-    for match in CONST_RE.finditer(source):
-        if code[match.start():match.start() + 5].strip() == "":
-            continue
-        constants[match.group(1)] = match.group(3)
+    for match in DECL_START_RE.finditer(code):
+        start = match.end()
+        end = _declaration_end(code, start)
+        statement = source[start:end]
+        for part in _split_declarators(statement):
+            binding = _literal_declarator(part)
+            if binding:
+                constants[binding[0]] = binding[1]
     return constants
 
 

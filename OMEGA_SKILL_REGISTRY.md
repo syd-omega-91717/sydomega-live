@@ -128,3 +128,4 @@ migration counts, or point-in-time production parity claims.
 **`bg.js` is loaded by all 237 pages.** It is a hard single point of
 failure for the entire platform, not a partial one — if it fails to parse, every
 page is down. This is why `node --check` on it gates CI.
+

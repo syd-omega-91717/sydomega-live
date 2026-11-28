@@ -12,6 +12,7 @@
   var I = Z.INPUT;
   var HOUSE_COL = { aries: { body: '#e8662c', edge: '#ffd27a', name: 'KAEL MARREN' }, libra: { body: '#9fd8ee', edge: '#e8f4ff', name: 'ADAEZE OKONKWO-REYES' } };
   var EMBER = '#ff7a3c';
+  var K = 1.45;   /* drawn size of a fighter's body against the 1000 x 420 arena (it was 1.0: about 128 px tall and easy to lose) */
 
   function $(id) { return document.getElementById(id); }
   function reduced() { try { return root.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
@@ -66,7 +67,7 @@
             : (e.blocked ? 'Blocked, ' + e.damage + ' through.' : (e.who === 'p' ? 'You hit for ' + e.damage + '.' : 'You are hit for ' + e.damage + '.'));
           if (e.countered) tag += ' Countered for ' + e.countered + '.';
           say(tag);
-          if (!RM) { g.fx.push({ x: tx, y: FLOOR - 90, t: 0, kind: e.perfect ? 'ring' : 'spark', big: e.kind === 'heavy' }); g.shake = e.perfect ? 0 : (e.kind === 'heavy' ? 7 : 3); }
+          if (!RM) { g.fx.push({ x: tx, y: FLOOR - 90 * K, t: 0, kind: e.perfect ? 'ring' : 'spark', big: e.kind === 'heavy' }); g.shake = e.perfect ? 0 : (e.kind === 'heavy' ? 7 : 3); }
           blip(e.perfect ? 880 : (e.kind === 'heavy' ? 120 : 220), e.perfect ? 0.35 : 0.14, e.perfect ? 'sine' : 'square', e.perfect ? 0.06 : 0.04);
         } else if (e.type === 'whiff') { blip(300, 0.08, 'sine', 0.015); }
         else if (e.type === 'shadow') { say(e.who === 'p' ? 'YOUR SHADOW STIRS: damage x1.5, no guard, for 8 seconds, then a 3-second stagger.' : 'The Unbled presses: damage x1.5, no guard.'); blip(70, 0.5, 'sawtooth', 0.05); }
@@ -139,18 +140,20 @@
       var lean = a === 'light' ? Math.min(1, t / 7) * 14 : a === 'heavy' ? (t < 24 ? -Math.min(1, t / 20) * 16 : 28) : a === 'stagger' ? -10 : 0;
       ctx.rotate(lean * Math.PI / 720);
       ctx.fillStyle = col.body; ctx.strokeStyle = col.edge; ctx.lineWidth = shadow ? 3 : 2;
+      ctx.save(); ctx.scale(K, K);   /* the body is drawn K times larger so it reads at arena scale; the arm below is NOT scaled, so its length stays the rule's reach */
       ctx.beginPath(); ctx.moveTo(-18, 0);
       if (shadow) { for (var k = 0; k < 7; k++) ctx.lineTo(-18 + (k % 2 ? 4 : -4), -k * 16 - 8); ctx.lineTo(0, -128); for (k = 6; k >= 0; k--) ctx.lineTo(18 + (k % 2 ? -4 : 4), -k * 16 - 8); }
       else { ctx.lineTo(-20, -86); ctx.quadraticCurveTo(0, -122, 20, -86); ctx.lineTo(18, 0); }
       ctx.closePath(); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.arc(0, -126, 14, 0, 7); ctx.fillStyle = col.body; ctx.fill(); ctx.stroke();
+      ctx.restore();
       /* the arm/weapon: its length is the attack's real reach, so the picture and the rule agree */
       if (a === 'light' || a === 'heavy') {
         var A = Z.ATK[a], prog = Math.min(1, t / A.hit), ext = t >= A.hit - 1 && t <= A.hit + 3 ? A.reach : A.reach * 0.2 * prog;
-        ctx.lineWidth = a === 'heavy' ? 7 : 4; ctx.strokeStyle = col.edge; ctx.beginPath(); ctx.moveTo(10, -90); ctx.lineTo(10 + ext, -90 - (a === 'heavy' ? 10 : 0)); ctx.stroke();
+        ctx.lineWidth = a === 'heavy' ? 7 : 4; ctx.strokeStyle = col.edge; ctx.beginPath(); ctx.moveTo(10 * K, -90 * K); ctx.lineTo(ext, -90 * K - (a === 'heavy' ? 10 : 0)); ctx.stroke();   /* the tip is `ext` from the body's centre: at full extension exactly the rule's reach */
       }
-      if (a === 'guard') { ctx.lineWidth = f.guardT <= Z.PERFECT_FRAMES ? 6 : 3; ctx.strokeStyle = f.guardT <= Z.PERFECT_FRAMES ? '#ffffff' : col.edge; ctx.beginPath(); ctx.arc(26, -86, 46, -1.2, 1.2); ctx.stroke(); }
-      if (a === 'open') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.setLineDash([4, 6]); ctx.strokeRect(-30, -150, 60, 156); ctx.setLineDash([]); }
+      if (a === 'guard') { ctx.lineWidth = f.guardT <= Z.PERFECT_FRAMES ? 6 : 3; ctx.strokeStyle = f.guardT <= Z.PERFECT_FRAMES ? '#ffffff' : col.edge; ctx.beginPath(); ctx.arc(26 * K, -86 * K, 46 * K, -1.2, 1.2); ctx.stroke(); }
+      if (a === 'open') { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.setLineDash([4, 6]); ctx.strokeRect(-30 * K, -150 * K, 60 * K, 156 * K); ctx.setLineDash([]); }
       ctx.restore();
     }
 

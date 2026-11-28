@@ -56,6 +56,9 @@ const state = (pg) => pg.evaluate(() => { const s = OmegaZWGame.state(); return 
     check('canvas store is the box x the pixel ratio', box.sw >= box.w * 2 - 2 && box.sh >= box.h * 2 - 2, JSON.stringify(box));
     const painted = await pg.evaluate(() => { const c = document.getElementById('zw-canvas'), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height).data; const seen = new Set(); for (let i = 0; i < d.length; i += 4 * 997) seen.add(d[i] + ',' + d[i + 1] + ',' + d[i + 2]); return seen.size; });
     check('canvas is painted (more than a flat fill)', painted > 12, 'distinct colours ' + painted);
+    /* the knight (Aries, body #e8662c) must read at arena scale: its painted height is a real share of the frame (1.0 scale was about 30%, the 1.45 scale is about 47%) */
+    const fig = await pg.evaluate(() => { const c = document.getElementById('zw-canvas'), x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height).data; let top = c.height, bot = -1; for (let yy = 0; yy < c.height; yy++) for (let xx = 0; xx < c.width; xx += 2) { const i = (yy * c.width + xx) * 4; if (Math.abs(d[i] - 0xe8) < 14 && Math.abs(d[i + 1] - 0x66) < 14 && Math.abs(d[i + 2] - 0x2c) < 14) { if (yy < top) top = yy; if (yy > bot) bot = yy; } } return { share: bot < 0 ? 0 : +((bot - top) / c.height).toFixed(3) }; });
+    check('the knight is drawn at arena scale (40-60% of the frame height)', fig.share >= 0.40 && fig.share <= 0.60, JSON.stringify(fig));
     check('status says prototype and not released', await pg.evaluate(() => /PROTOTYPE/.test(document.body.textContent) && /not a released game/.test(document.body.textContent)), 'missing');
     check('cost preview is shown before any attack', await pg.evaluate(() => /COST: HEALTH/.test(document.getElementById('zw-preview').textContent)), await pg.evaluate(() => document.getElementById('zw-preview').textContent));
 

@@ -81,7 +81,7 @@ class _VisibleParser(HTMLParser):
         if re.search(r"display\s*:\s*none", a.get("style", ""), re.I):
             return True
         classes = a.get("class", "")
-        if re.search(r"\btab-panel\b", classes, re.I) and not re.search(r"\b(?:active|on)\b", classes, re.I):
+        if re.search(r"\btab-panel\b", classes, re.I) and not re.search(r"\b(?:active|on|act)\b", classes, re.I):
             return True
         return False
 

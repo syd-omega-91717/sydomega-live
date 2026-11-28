@@ -47,7 +47,9 @@
     root.setAttribute('aria-busy',activeScan?'true':'false');
     ids.reachable.textContent=String(reachable);
     ids.total.textContent=String(modules.length);
-    if(busy||(checking&&!initialScanStalled)){
+    if(busy){
+      setState(ids.state,'checking','SCANNING · REVALIDATING '+modules.length+' REALMS');
+    }else if(checking&&!initialScanStalled){
       setState(ids.state,'checking','SCANNING · '+checking+' PENDING');
     }else if(scanError){
       setState(ids.state,'unavailable','SCAN FAILED · PRIOR RESULTS RETAINED');

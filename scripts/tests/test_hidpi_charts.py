@@ -288,12 +288,27 @@ class Wave7(unittest.TestCase):
 
     def test_unreachable_canvases_were_left_alone(self):
         """No harness reaches these under the member stub (they need loaded data), so a change to them could not be seen drawing."""
-        self.assertIn("cv.width=W*2;cv.height=H*2;cv.style.width=W+'px';cv.style.height=H+'px';", self._src("family"))   # constellation
         self.assertIn("cv.width=w*2; cv.height=h*2;", self._src("media"))                                                  # poster canvases
         cos = self._src("cosmos")
         self.assertIn("cv.width=size*2;cv.height=size*2;cv.style.width=size+'px';cv.style.height=size+'px';", cos)         # sign canvases
         self.assertIn("canvas.width=size*2; canvas.height=size*2;", cos)                                                   # mandala
         self.assertIn("cv.width=80; cv.height=80; cv.style.width='40px'; cv.style.height='40px';\n  const ctx=cv.getContext('2d');", cos)  # planet node
+
+    def test_family_canvases_use_the_shared_helper_and_settle(self):
+        """family.html: both canvases fit through OmegaCanvas (>=2x), pin their CSS height inline (bg.js canvas{height:auto} beats a page rule),
+        refit from a ResizeObserver that ignores width 0, and the constellation keeps one animation loop."""
+        src = self._src("family")
+        con = src[src.index("function drawConstellation"):src.index("function buildMemberCards") if "function buildMemberCards" in src else None]
+        self.assertIn("OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())})", con)
+        self.assertIn("cancelAnimationFrame(cv.__conRaf)", con)
+        self.assertIn("if(!cv.clientWidth)return;", con)
+        self.assertIn("cv.style.height=H+'px'", con)
+        self.assertNotIn("cv.width=W*2;cv.height=H*2;cv.style.width", src)
+        tree = src[src.index("function drawTree"):][:1600]
+        self.assertIn("OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())})", tree)
+        self.assertIn("cv.style.height=H+'px'", tree)
+        self.assertNotIn("ctx.scale(2,1)", src)
+        self.assertNotIn("Math.random()*W", tree, "stars must be stable so a refit does not re-roll the sky")
 
 
 class Browser(unittest.TestCase):
@@ -328,6 +343,19 @@ class Browser(unittest.TestCase):
         if not node:
             self.skipTest("node not available")
         r = subprocess.run([node, str(ROOT / "scripts" / "verify-hidpi-pointer.js")], capture_output=True, text=True, timeout=3000)
+        out = r.stdout + r.stderr
+        if "SKIPPED" in out and not os.environ.get("OMEGA_REQUIRE_BROWSER"):
+            self.skipTest("no browser available")
+        self.assertEqual(r.returncode, 0, out)
+
+
+    def test_family_canvases_draw_one_to_one(self):
+        if not os.environ.get("OMEGA_HIDPI_BROWSER"):
+            self.skipTest("run with OMEGA_HIDPI_BROWSER=1; the static contract above always runs")
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node not available")
+        r = subprocess.run([node, str(ROOT / "scripts" / "verify-family-canvases.js")], capture_output=True, text=True, timeout=600)
         out = r.stdout + r.stderr
         if "SKIPPED" in out and not os.environ.get("OMEGA_REQUIRE_BROWSER"):
             self.skipTest("no browser available")

@@ -82,6 +82,7 @@ a{color:inherit;text-decoration:none}
 /* CONSTELLATION */
 .constellation-wrap{width:100%;border-bottom:1px solid var(--line);position:relative}
 #con-cv{display:block;width:100%;cursor:crosshair}
+#tree-canvas{display:block;width:100%}
 .cv-hint{font-family:var(--M);font-size:12px;color:var(--muted);text-align:center;padding:6px;letter-spacing:2px}
 
 /* ADD MEMBER */
@@ -457,21 +458,37 @@ let uid=null;let members=[];
 /* Constellation canvas */
 function drawConstellation(mems){
   const cv=document.getElementById('con-cv');
-  const W=cv.offsetWidth||800;const H=260;
-  cv.width=W*2;cv.height=H*2;cv.style.width=W+'px';cv.style.height=H+'px';
-  const ctx=cv.getContext('2d');ctx.scale(2,2);let t=0;
-  const CX=W/2,CY=H/2;
-  const center={x:CX,y:CY,name:'SLEIMAN',role:'ARCHITECT',col:(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),isRoot:true};
+  /* One animation loop per canvas: a second call (boot() runs again after every add/remove) used to start another rAF loop on top of the first. */
+  if(cv.__conRaf)cancelAnimationFrame(cv.__conRaf);
+  const H=260;let W=0,CX=0,CY=0,ctx=null,t=0;
+  /* The box is measured, not assumed: the approval guard can hide the page when this first runs (CLAUDE.md 8.1 class 3), so the store is
+     refitted by a ResizeObserver once the real width is known.  Never below 2x (the old floor), and OmegaCanvas.ratio() above it. */
+  function fitNow(){
+    const w=Math.round(cv.clientWidth||cv.parentElement.clientWidth||800);
+    if(w===W&&ctx)return false;
+    W=w;CX=W/2;CY=H/2;
+    cv.style.height=H+'px';  /* inline: bg.js's canvas{height:auto} is a later sheet and would beat a page rule, and the box must not follow the store's aspect */
+    ctx=window.OmegaCanvas?OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())}):(function(){cv.width=W*2;cv.height=H*2;const c=cv.getContext('2d');c.setTransform(2,0,0,2,0,0);return c;})();
+    return true;
+  }
+  fitNow();
+  const GOLD=(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C');
   const COLS={Wife:(getComputedStyle(document.documentElement).getPropertyValue('--purple').trim()||'#9B6BF0'),Son:(getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()||'#00E5FF'),Daughter:(getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3fb27f'),Mother:'#D9B86A',Father:'#D9B86A',Brother:'#C7CDD6',Sister:'#A9C2D8'};
   /* GENEALOGY TIERS: ancestors above, peers beside, descendants below */
   const TIER={Grandfather:-2,Grandmother:-2,Father:-1,Mother:-1,Wife:0,Husband:0,Brother:0,Sister:0,Cousin:0,Son:1,Daughter:1,Grandson:2,Granddaughter:2};
-  const ROWY={'-2':CY-96,'-1':CY-58,'0':CY,'1':CY+62,'2':CY+118};
   const tiers={}; mems.forEach(m=>{const tk=(TIER[m.relation]!=null?TIER[m.relation]:1);(tiers[tk]=tiers[tk]||[]).push(m);});
-  const nodes=[center];
+  let nodes=[];
+  /* Positions depend on the measured width, so they are rebuilt whenever the box changes. */
+  function layout(){
+  const center={x:CX,y:CY,name:'SLEIMAN',role:'ARCHITECT',col:GOLD,isRoot:true};
+  const ROWY={'-2':CY-96,'-1':CY-58,'0':CY,'1':CY+62,'2':CY+118};
+  nodes=[center];
   Object.keys(tiers).forEach(tk=>{const arr=tiers[tk];const ty=(ROWY[tk]!=null?ROWY[tk]:CY+62);
     if(tk==='0'){ arr.forEach((m,i)=>{const side=i%2?1:-1;const rank=Math.floor(i/2)+1;nodes.push({x:CX+side*rank*(W*0.17),y:CY,name:(m.name||'NODE').split(' ')[0],role:m.relation||'FAMILY',col:COLS[m.relation]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),isHeir:m.is_heir});}); }
     else { const n=arr.length; arr.forEach((m,i)=>{const x=(n===1?CX:(W*0.14+(W*0.72)*(i/(n-1))));nodes.push({x:x,y:ty,name:(m.name||'NODE').split(' ')[0],role:m.relation||'FAMILY',col:COLS[m.relation]||(getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||'#C9A84C'),isHeir:m.is_heir});}); }
   });
+  }
+  layout();
   function frame(){
     t+=.01;ctx.clearRect(0,0,W,H);
     ctx.font='9px monospace';ctx.textAlign='left';ctx.fillStyle='rgba(201,168,76,0.22)';
@@ -479,7 +496,7 @@ function drawConstellation(mems){
     /* Stars */
     for(let i=0;i<30;i++){const sx=(i*61+t*3)%W,sy=(i*43+t*2)%H;ctx.beginPath();ctx.arc(sx,sy,.8,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+(0.04+0.08*Math.sin(t+i))+')';ctx.fill();}
     /* Lines */
-    nodes.forEach((n,i)=>{if(i===0)return;ctx.beginPath();ctx.moveTo(center.x,center.y);ctx.lineTo(n.x,n.y);ctx.strokeStyle=n.col+'33';ctx.lineWidth=1;ctx.setLineDash([4,7]);ctx.stroke();ctx.setLineDash([]);});
+    nodes.forEach((n,i)=>{if(i===0)return;ctx.beginPath();ctx.moveTo(nodes[0].x,nodes[0].y);ctx.lineTo(n.x,n.y);ctx.strokeStyle=n.col+'33';ctx.lineWidth=1;ctx.setLineDash([4,7]);ctx.stroke();ctx.setLineDash([]);});
     /* Nodes */
     nodes.forEach((n,i)=>{
       const px=n.x+Math.cos(t*.5+i)*2,py=n.y+Math.sin(t*.7+i)*1.5;
@@ -492,7 +509,8 @@ function drawConstellation(mems){
       ctx.fillStyle=n.col;ctx.font='600 7px monospace';ctx.fillText(n.name,px,py+r+7);
       ctx.fillStyle='rgba(133,131,123,0.6)';ctx.font='6px monospace';ctx.fillText(n.role.toUpperCase(),px,py+r+15);
     });
-    requestAnimationFrame(frame);}frame();
+    cv.__conRaf=requestAnimationFrame(frame);}frame();
+  if(window.ResizeObserver){if(cv.__conRo)cv.__conRo.disconnect();cv.__conRo=new ResizeObserver(function(){if(!cv.clientWidth)return;if(fitNow())layout();});cv.__conRo.observe(cv);}
 }
 
 /* Module-local: the page's other esc() lives in a different module script. Names are free text. */
@@ -601,9 +619,14 @@ async function loadNodes(){
 
 function drawTree(nodes){
   const cv=document.getElementById('tree-canvas');
-  const W=cv.offsetWidth||800; cv.width=W*2; cv.height=600;
-  const ctx=cv.getContext('2d'); ctx.scale(2,1);
+  cv.__treeNodes=nodes;
+  /* Drawn in CSS pixels on a store that follows the displayed box (OmegaCanvas.fit), at least 2x.  The old code stored W*2 by 600 and
+     scaled (2,1) while painting only the top 300 rows, so the store was stretched 2x in x and 1x in y and half of it stayed empty. */
   const H=300;
+  const W=Math.round(cv.clientWidth||cv.parentElement.clientWidth||800);
+  cv.style.height=H+'px';
+  const ctx=window.OmegaCanvas?OmegaCanvas.fit(cv,W,H,{scale:Math.max(2,OmegaCanvas.ratio())}):(function(){cv.width=W*2;cv.height=H*2;const c=cv.getContext('2d');c.setTransform(2,0,0,2,0,0);return c;})();
+  if(!cv.__treeRo&&window.ResizeObserver){cv.__treeRo=new ResizeObserver(function(){const w=Math.round(cv.clientWidth);if(w>0&&w!==cv.__ocW)drawTree(cv.__treeNodes||[]);});cv.__treeRo.observe(cv);}
   ctx.clearRect(0,0,W,H);
   const bg=ctx.createLinearGradient(0,0,0,H); bg.addColorStop(0,'rgba(13,13,21,1)'); bg.addColorStop(1,'rgba(7,7,11,1)');
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
@@ -635,9 +658,9 @@ function drawTree(nodes){
   }
   /* Stars */
   for(let s=0;s<60;s++){
-    const sx=Math.random()*W, sy=Math.random()*H;
+    const sx=((s*0.6180339887)%1)*W, sy=((s*0.7548776662)%1)*H;
     ctx.beginPath(); ctx.arc(sx,sy,0.7,0,Math.PI*2);
-    ctx.fillStyle='rgba(201,168,76,'+(0.1+Math.random()*0.3)+')'; ctx.fill();
+    ctx.fillStyle='rgba(201,168,76,'+(0.1+((s*0.5698402910)%1)*0.3)+')'; ctx.fill();
   }
 }
 

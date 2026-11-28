@@ -21,6 +21,7 @@ class VisualPageSurveyTests(unittest.TestCase):
         <div style="display: none">HIDDEN INLINE</div>
         <div class="tab-panel">HIDDEN TAB</div>
         <div class="tab-panel active">VISIBLE TAB</div>
+        <div class="tab-panel act"><h1>VISIBLE ACT TAB</h1></div>
         <div aria-hidden="true">HIDDEN ARIA</div>
         <div hidden>HIDDEN ATTRIBUTE</div>
         <p>VISIBLE BODY</p>
@@ -28,6 +29,7 @@ class VisualPageSurveyTests(unittest.TestCase):
         visible = survey.clean(html).lower()
         self.assertIn("visible tab", visible)
         self.assertIn("visible body", visible)
+        self.assertIn("visible act tab", visible)
         for hidden in ("hidden inline", "hidden tab", "hidden aria", "hidden attribute"):
             self.assertNotIn(hidden, visible)
 

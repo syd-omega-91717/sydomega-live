@@ -40,6 +40,8 @@
     var reachable=modules.filter(function(m){return stateOf(m)==='reachable';}).length;
     var unavailable=modules.filter(function(m){return stateOf(m)==='unavailable';}).length;
     var checking=modules.length-reachable-unavailable;
+    root.classList.toggle('is-scanning',busy||checking>0);
+    root.setAttribute('aria-busy',busy||checking>0?'true':'false');
     ids.reachable.textContent=String(reachable);
     ids.total.textContent=String(modules.length);
     if(checking){
@@ -101,6 +103,8 @@
       return;
     }
     busy=true;
+    root.classList.add('is-scanning');
+    root.setAttribute('aria-busy','true');
     ids.rescan.disabled=true;
     ids.rescan.textContent='SCANNING REALMS…';
     setState(ids.state,'checking','SCANNING 18 REALMS');
@@ -112,6 +116,8 @@
       console.warn('[OmegaWorldScanConsole] route scan failed',error);
     }finally{
       busy=false;
+      root.classList.remove('is-scanning');
+      root.setAttribute('aria-busy','false');
       ids.rescan.disabled=false;
       ids.rescan.textContent='↻ RUN REALM SCAN';
       render();

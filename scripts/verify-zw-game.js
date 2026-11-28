@@ -5,7 +5,7 @@
  *
  * Proves in a real render what the Node rules tests cannot: the page loads with no errors, the canvas is drawn at the screen's real density and is painted,
  * real keyboard events move and attack, the touch buttons hold and release, a scripted player is asked once per 60 Hz tick (a test hook, OmegaZWGame.drive) and plays the whole duel to a
- * win, the replay of that duel ends in the identical state, reduced motion plays, and nothing overflows a 390 px phone. It does NOT measure frame rate on
+ * win; the page's DEMO button (a real click) plays a duel with no input, stays labelled, and a real key takes over, the replay of that duel ends in the identical state, reduced motion plays, and nothing overflows a 390 px phone. It does NOT measure frame rate on
  * a named device (a design-document acceptance item that stays open). Files are served from disk through route(). No browser: SKIPPED, exit 0 unless
  * OMEGA_REQUIRE_BROWSER is set. The full duel runs in real time (about half a minute) because the simulation is fixed at 60 Hz. */
 const fs = require('fs');
@@ -99,6 +99,22 @@ const state = (pg) => pg.evaluate(() => { const s = OmegaZWGame.state(); return 
     let rend = null; const t1 = Date.now();
     while (Date.now() - t1 < 120000) { const r = await pg.evaluate(() => { const s = OmegaZWGame.state(); return s.over ? { hash: OmegaZW.hash(s), frame: s.frame } : null; }); if (r) { rend = r; break; } await pg.waitForTimeout(500); }
     check('replay ends in the identical state as the duel', rend && rend.hash === orig.hash && rend.frame === orig.frame, JSON.stringify({ orig, rend }));
+    /* DEMO: a real click on the button; the scripted player plays a whole duel with no input, is labelled as such throughout, and any real key takes over */
+    await pg.evaluate(() => { OmegaZWGame.drive(null); OmegaZWGame.feed(0); OmegaZWGame.reset(4242); });
+    await pg.click('#zw-demo');
+    await pg.waitForFunction(() => /DEMO/.test(document.getElementById('zw-who').textContent), null, { timeout: 1000 }).catch(() => { });   // the label is drawn by the next screen frame
+    const who1 = await pg.evaluate(() => document.getElementById('zw-who').textContent);
+    check('demo: labelled as a scripted player, not a person', /DEMO: SCRIPTED PLAYER, NOT A PERSON/.test(who1), who1);
+    let dend = null; const t2 = Date.now();
+    while (Date.now() - t2 < 120000) { const st = await state(pg); if (st.over) { dend = st; break; } await pg.waitForTimeout(500); }
+    check('demo: plays the whole duel to a win with no input', dend && dend.over === 'win' && dend.stage === 1, JSON.stringify(dend));
+    check('demo: is still labelled at the end', /DEMO/.test(await pg.evaluate(() => document.getElementById('zw-who').textContent)), 'label dropped');
+    await pg.click('#zw-demo'); await pg.waitForTimeout(2500);
+    const f0 = await state(pg);
+    await pg.keyboard.down('a'); await pg.waitForTimeout(300); await pg.keyboard.up('a');
+    const f1 = await state(pg), who2 = await pg.evaluate(() => document.getElementById('zw-who').textContent), msg2 = await pg.evaluate(() => document.getElementById('zw-msg').textContent);
+    check('demo: a real keypress takes over (label gone, the game goes on)', !/DEMO/.test(who2) && f1.frame > f0.frame && !f1.over, JSON.stringify({ who2, f0, f1 }));
+    check('demo: the takeover is stated in words', /You have the controls/.test(msg2), msg2);
     check('no page errors on desktop', errs.length === 0, errs.join(' | '));
     await ctx.close();
   }

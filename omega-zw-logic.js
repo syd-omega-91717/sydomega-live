@@ -248,7 +248,7 @@
     return { state: s, hashes: hashes };
   }
 
-  /* A scripted player used by the tests (and by nothing else): it reads only the state and presses only the real inputs. It perfect-guards what the
+  /* A scripted player used by the tests and by the page's DEMO button (nothing else): it reads only the state and presses only the real inputs. It perfect-guards what the
      Unbled throws (a guard pressed about four frames before the strike lands inside the six-frame window) and punishes every opening. */
   function bot(s) {
     var p = s.p, e = s.e, d = dist(s), toward = p.x < e.x ? INPUT.RIGHT : INPUT.LEFT, away = p.x < e.x ? INPUT.LEFT : INPUT.RIGHT;

@@ -186,6 +186,13 @@ class Files(unittest.TestCase):
         self.assertIn("not a released game", html)
         self.assertLess(html.index("omega-zw-logic.js"), html.index("omega-zw-game.js"))
 
+    def test_the_demo_is_a_labelled_button_and_a_scripted_player_never_passes_as_a_person(self):
+        html = (ROOT / "game-zodiac-wars.html").read_text(encoding="utf-8")
+        game = (ROOT / "omega-zw-game.js").read_text(encoding="utf-8")
+        self.assertRegex(html, r'id="zw-demo"[^>]*>WATCH A DEMO<')
+        self.assertIn("DEMO: SCRIPTED PLAYER, NOT A PERSON", game)
+        self.assertIn("a scripted player, not a person", game)
+
     def test_nothing_in_the_rules_uses_math_random_or_the_clock(self):
         src = (ROOT / "omega-zw-logic.js").read_text(encoding="utf-8")
         self.assertNotIn("Math.random", src)

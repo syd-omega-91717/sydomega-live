@@ -7,7 +7,7 @@ The Profile Character tab now has a 3D member-specific core using the existing `
 - Reads the already-loaded member profile's saved `sign`.
 - Resolves the element from the canonical same-origin `/omega-elements.json` `sign_element` map.
 - Resolves the corresponding display palette key against the existing `OmegaRealm.palette`.
-- Sets only `data-sculpt-element`, which the existing character scene reads live.
+- Sets only `data-sculpt-element`, then explicitly mounts the character scene. This ordering ensures the first frame is correct even when reduced motion disables continuous frame updates.
 - Does not infer or set gate progress or mastery values. Those visual nodes remain neutral until verified sources are connected.
 
 ## Failure behavior

@@ -2,8 +2,8 @@
   "version": 1,
   "generated_by": "scripts/omega-page-contract-bootstrap.py",
   "authority": "evidence-only; does not populate config/omega-page-contracts.json",
-  "page_count": 237,
-  "open_task_count": 3203,
+  "page_count": 238,
+  "open_task_count": 3217,
   "pages": [
     {
       "page_id": "404",
@@ -6029,6 +6029,73 @@
         "PAGE::game-origins::MISSING::TRACEABILITY",
         "PAGE::game-origins::MISSING::TRUTH_STATES",
         "PAGE::game-origins::MISSING::WORKSPACE"
+      ],
+      "truth_rule": "SOURCE_EVIDENCE_ONLY"
+    },
+    {
+      "page_id": "game-zodiac-wars",
+      "path": "game-zodiac-wars.html",
+      "contract_state": "BOOTSTRAP_OPEN",
+      "authoritative_contract_present": false,
+      "evidence": {
+        "title": "&#937; SYD OMEGA 91717 &mdash; ZODIAC WARS ASCENSION",
+        "h1": [],
+        "scripts": [
+          "/bg.js",
+          "/omega-morph.js",
+          "/omega-zw-game.js",
+          "/omega-zw-logic.js"
+        ],
+        "supabase_tables": [],
+        "supabase_rpcs": [],
+        "capability_candidates": [],
+        "domain_candidates": [],
+        "interactive_counts": {
+          "buttons": 12,
+          "forms": 0,
+          "inputs": 0,
+          "links": 1
+        },
+        "media_counts": {
+          "images": 0,
+          "video": 0,
+          "audio": 0,
+          "iframes": 0
+        }
+      },
+      "candidate_capabilities": [],
+      "candidate_domains": [],
+      "missing_contract_fields": [
+        "accessibility",
+        "asset_requirements",
+        "authorization",
+        "data_sources",
+        "domain",
+        "events",
+        "failure_paths",
+        "primary_role",
+        "purpose",
+        "responsive",
+        "tasks",
+        "traceability",
+        "truth_states",
+        "workspace"
+      ],
+      "remediation_tasks": [
+        "PAGE::game-zodiac-wars::MISSING::ACCESSIBILITY",
+        "PAGE::game-zodiac-wars::MISSING::ASSET_REQUIREMENTS",
+        "PAGE::game-zodiac-wars::MISSING::AUTHORIZATION",
+        "PAGE::game-zodiac-wars::MISSING::DATA_SOURCES",
+        "PAGE::game-zodiac-wars::MISSING::DOMAIN",
+        "PAGE::game-zodiac-wars::MISSING::EVENTS",
+        "PAGE::game-zodiac-wars::MISSING::FAILURE_PATHS",
+        "PAGE::game-zodiac-wars::MISSING::PRIMARY_ROLE",
+        "PAGE::game-zodiac-wars::MISSING::PURPOSE",
+        "PAGE::game-zodiac-wars::MISSING::RESPONSIVE",
+        "PAGE::game-zodiac-wars::MISSING::TASKS",
+        "PAGE::game-zodiac-wars::MISSING::TRACEABILITY",
+        "PAGE::game-zodiac-wars::MISSING::TRUTH_STATES",
+        "PAGE::game-zodiac-wars::MISSING::WORKSPACE"
       ],
       "truth_rule": "SOURCE_EVIDENCE_ONLY"
     },

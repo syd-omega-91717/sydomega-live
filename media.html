@@ -1010,12 +1010,18 @@ function renderFilms(){
     card.appendChild(poster);
     card.addEventListener('click',function(){ card.classList.toggle('expanded'); });
 
-    /* Draw canvas poster art */
-    requestAnimationFrame(function(){
-      var w=cv.offsetWidth||300, h=cv.offsetHeight||450;
-      cv.width=w*2; cv.height=h*2;
-      var ctx=cv.getContext('2d');
-      ctx.scale(2,2);
+    /* Draw canvas poster art into the box the member actually sees.  The old code drew a fixed 300x450 scene (store 600x900) whenever
+       the canvas had no size yet (it lives in a hidden tab), then displayed that store in an 80px-tall strip: about 11x vertical
+       squash, and a different horizontal stretch at every width.  Now it measures, draws in CSS pixels at >=2x (OmegaCanvas.fit),
+       waits while the box is 0, and repaints when the box changes size. */
+    var paint=function(){
+      var w=Math.round(cv.clientWidth||0), h=Math.round(cv.clientHeight||0);
+      if(!(w>0&&h>0))return;
+      var ratio=window.OmegaCanvas?OmegaCanvas.ratio():1, sc=Math.max(2,ratio);
+      if(cv.__pw===w&&cv.__ph===h&&cv.__psc===sc)return;
+      cv.__pw=w; cv.__ph=h; cv.__psc=sc;
+      var ctx=window.OmegaCanvas?OmegaCanvas.fit(cv,w,h,{scale:sc}):(function(){cv.width=w*2;cv.height=h*2;var c=cv.getContext('2d');c.setTransform(2,0,0,2,0,0);return c;})();
+      ctx.clearRect(0,0,w,h);
 
       /* Background gradient */
       var bg=ctx.createLinearGradient(0,0,w,h);
@@ -1024,37 +1030,39 @@ function renderFilms(){
       ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
 
       /* Element color glow top */
-      var gl=ctx.createRadialGradient(w/2,0,0,w/2,0,w*0.8);
+      var gl=ctx.createRadialGradient(w/2,0,0,w/2,0,Math.max(w,h)*0.8);
       gl.addColorStop(0,f.elCol+'33');
       gl.addColorStop(1,'transparent');
       ctx.fillStyle=gl; ctx.fillRect(0,0,w,h);
 
-      /* Rotating rings */
-      var t=Date.now()/4000+f.n;
-      ctx.save(); ctx.translate(w/2,h*0.38);
+      /* Stars: a fixed sequence per film, so a repaint does not re-roll the sky */
+      for(var s=0;s<40;s++){
+        var sx=(((s+1)*0.6180339887+f.n*0.37)%1)*w, sy=(((s+1)*0.7548776662+f.n*0.21)%1)*h, sr=(((s+1)*0.5698402910)%1)*1.2;
+        ctx.beginPath(); ctx.arc(sx,sy,sr,0,Math.PI*2);
+        ctx.fillStyle='rgba(201,168,76,'+(0.1+(((s+1)*0.4142135624)%1)*0.3)+')'; ctx.fill();
+      }
+
+      /* Rotating rings: sized from the box, the original 2.8:1 ellipse proportion, kept inside the strip */
+      var rx=Math.min(w*0.28,h*1.35), ry=rx*0.357, t=Date.now()/4000+f.n;
+      ctx.save(); ctx.translate(w/2,h*0.5);
       for(var r=0;r<3;r++){
         ctx.save(); ctx.rotate(t*(r%2?-1:1)+r*0.5);
         ctx.beginPath();
-        ctx.ellipse(0,0,w*0.28*(1+r*0.12),w*0.1*(1+r*0.12),0,0,Math.PI*2);
+        ctx.ellipse(0,0,rx*(1+r*0.12),ry*(1+r*0.12),0,0,Math.PI*2);
         ctx.strokeStyle=f.elCol+(r===0?'66':r===1?'33':'1a');
         ctx.lineWidth=1.2; ctx.stroke();
         ctx.restore();
       }
       /* Central glyph */
       ctx.fillStyle=f.elCol+'cc';
-      ctx.font='700 '+(w*0.18)+'px serif';
+      ctx.font='700 '+Math.min(w*0.18,h*0.5)+'px serif';
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.shadowColor=f.elCol; ctx.shadowBlur=20;
       ctx.fillText(String(f.n),0,0);
       ctx.shadowBlur=0; ctx.restore();
-
-      /* Stars */
-      for(var s=0;s<40;s++){
-        var sx=Math.random()*w,sy=Math.random()*h*0.7,sr=Math.random()*1.2;
-        ctx.beginPath(); ctx.arc(sx,sy,sr,0,Math.PI*2);
-        ctx.fillStyle='rgba(201,168,76,'+(0.1+Math.random()*0.3)+')'; ctx.fill();
-      }
-    });
+    };
+    requestAnimationFrame(paint);
+    if(window.ResizeObserver)new ResizeObserver(paint).observe(cv);
     grid.appendChild(card);
   });
 }

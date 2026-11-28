@@ -1,10 +1,10 @@
 {
   "counts": {
-    "excluded-pending-review": 5,
-    "hostable": 214,
-    "navigates-away": 10,
+    "hostable": 215,
     "needs-fix": 0,
+    "navigates-away": 10,
     "standalone-by-policy": 7,
+    "excluded-pending-review": 5,
     "unmeasured": 1
   },
   "generated_from": {
@@ -698,6 +698,14 @@
       },
       "sha": "c45f46983f77",
       "status": "hostable"
+    },
+    "game-zodiac-wars": {
+      "status": "hostable",
+      "measured": {
+        "text": 613,
+        "errors": 0
+      },
+      "sha": "e519cd8646df"
     },
     "gaming": {
       "measured": {

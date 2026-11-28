@@ -86,8 +86,8 @@ class OmegaDomainHubWorkspaces(unittest.TestCase):
             and row["path"] != row["candidate_hub"]
             and row["page_id"] != "sovereign-core"
         ]
-        self.assertEqual(len(children), 180)   # -1: cinema merged into movies; -2: grid and gates merged into levels; was 183, 185 (+1 celestial-covenants, media hub); -1: budget merged into expenses (invest hub); -1: trophies merged into honors
-        self.assertEqual(self.matrix["classification_counts"]["CANDIDATE_MERGE_PANEL"], 195)   # -1: cinema merged into movies; -2: grid and gates merged into levels
+        self.assertEqual(len(children), 181)   # +1 game-zodiac-wars (media hub); -1: cinema merged into movies; -2: grid and gates merged into levels; was 183, 185 (+1 celestial-covenants, media hub); -1: budget merged into expenses (invest hub); -1: trophies merged into honors
+        self.assertEqual(self.matrix["classification_counts"]["CANDIDATE_MERGE_PANEL"], 196)   # -1: cinema merged into movies; -2: grid and gates merged into levels
         core = next(row for row in self.matrix["pages"] if row["page_id"] == "sovereign-core")
         self.assertEqual(core["candidate_hub"], "dashboard.html")
         self.assertEqual(core["classification"], "CANDIDATE_MERGE_PANEL")

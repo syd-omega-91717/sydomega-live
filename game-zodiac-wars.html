@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<!-- omega-morph:start --><style id="omega-vt">:where(html){background-color:#0A0A0F;color-scheme:dark}@view-transition{navigation:auto}::view-transition-group(omega-morph){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(omega-morph),::view-transition-new(omega-morph){height:100%;object-fit:contain}@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}</style><script id="omega-vt-morph" src="/omega-morph.js"></script><!-- omega-morph:end -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Zodiac Wars: Ascension, Slice 0: a duel prototype. Two Houses, a training dummy, then the Aries Shadow. Every attack shows its cost before you pay it. Prototype, not a released game.">
+<title>&#937; SYD OMEGA 91717 &mdash; ZODIAC WARS ASCENSION</title>
+<link rel="manifest" href="/manifest.json"><script src="/bg.js" defer></script>
+<style>
+.zw-status{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--gold);margin:0 0 8px}
+.zw-row{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.zw-btn{font-family:var(--M);font-size:12px;letter-spacing:2px;color:var(--ink);background:rgba(10,10,15,.7);border:1px solid rgba(201,168,76,.35);border-radius:3px;cursor:pointer;min-height:44px;min-width:44px;padding:8px 12px;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation}
+.zw-btn:hover{background:rgba(201,168,76,.18)}
+.zw-btn[aria-pressed=true]{background:rgba(201,168,76,.22);border-color:var(--gold);color:var(--gold)}
+.zw-btn:focus-visible,#zw-canvas:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.zw-btn[hidden]{display:none}
+.zw-info{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--M);font-size:13px;letter-spacing:2px;color:var(--ink);margin:0 0 8px}
+#zw-stage{position:relative;width:100%;max-width:960px;background:#04050a;border:1px solid rgba(201,168,76,.28);border-radius:4px;overflow:hidden}
+#zw-canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.zw-prev{font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--gold);margin:8px 0;min-height:20px}
+.zw-msg{font-family:var(--M);font-size:13px;letter-spacing:1px;color:var(--cyan);min-height:20px;margin:8px 0}
+.zw-pad{display:none;gap:8px;flex-wrap:wrap;margin:0 0 8px}
+.zw-pad .zw-btn{min-width:64px;min-height:64px;font-size:13px;touch-action:none}
+@media (pointer:coarse){.zw-pad{display:flex}}
+.zw-keys{font-family:var(--M);font-size:12px;letter-spacing:1px;color:var(--muted);margin:0}
+</style>
+</head>
+<body data-page="game-zodiac-wars">
+<div class="shell">
+  <aside class="side" id="omega-side" data-page="game-zodiac-wars" aria-label="Navigation"></aside>
+  <main class="main" role="main" id="main-content">
+    <div class="topbar"><div class="t">ZODIAC WARS: ASCENSION<small>SLICE 0 &middot; ARES FOUNDRY, MARS &middot; PROTOTYPE</small></div><a class="zw-btn" style="border-radius:50%" href="/guide.html" aria-label="Help">?</a></div>
+    <p class="zw-status" data-no-clamp>PROTOTYPE &middot; not a released game &middot; Zodiac Wars content is not founder-approved &middot; nothing is saved &middot; no multiplayer</p>
+    <div class="zw-row" role="group" aria-label="Choose a House">
+      <button type="button" class="zw-btn" id="zw-h-aries" aria-pressed="true">ARIES &middot; KAEL MARREN</button>
+      <button type="button" class="zw-btn" id="zw-h-libra" aria-pressed="false">LIBRA &middot; ADAEZE OKONKWO-REYES</button>
+      <button type="button" class="zw-btn" id="zw-restart">RESTART</button>
+      <button type="button" class="zw-btn" id="zw-newseed">NEW SEED</button>
+      <button type="button" class="zw-btn" id="zw-sound" aria-pressed="true">SOUND ON</button>
+    </div>
+    <div class="zw-info"><span id="zw-who"></span><span id="zw-seed"></span></div>
+    <div id="zw-stage">
+      <canvas id="zw-canvas" role="img" aria-label="The arena. A training dummy, then the Unbled, the Aries Shadow. Health, overreach and frame data are shown on the arena and repeated in the text below it."></canvas>
+    </div>
+    <p id="zw-preview" class="zw-prev" role="status" data-no-clamp></p>
+    <p id="zw-msg" class="zw-msg" role="status" aria-live="polite" data-no-clamp></p>
+    <div class="zw-pad" role="group" aria-label="Touch controls">
+      <button type="button" class="zw-btn" id="zw-left" aria-label="Move left" aria-pressed="false">&larr;</button>
+      <button type="button" class="zw-btn" id="zw-right" aria-label="Move right" aria-pressed="false">&rarr;</button>
+      <button type="button" class="zw-btn" id="zw-light" aria-label="Light attack" aria-pressed="false">LIGHT</button>
+      <button type="button" class="zw-btn" id="zw-heavy" aria-label="Heavy attack" aria-pressed="false">HEAVY</button>
+      <button type="button" class="zw-btn" id="zw-guard" aria-label="Guard, hold" aria-pressed="false">GUARD</button>
+      <button type="button" class="zw-btn" id="zw-pay" aria-label="Pay health to add damage, Aries only, hold" aria-pressed="false">PAY</button>
+    </div>
+    <button type="button" class="zw-btn" id="zw-replay" hidden>WATCH THE REPLAY OF THIS DUEL</button>
+    <p class="zw-keys">A / D MOVE &middot; J LIGHT &middot; K HEAVY &middot; L GUARD (HOLD; A PERFECT GUARD IS THE FIRST 6 FRAMES) &middot; U PAY (ARIES: HOLD WITH AN ATTACK) &middot; R RESTART &middot; GAMEPAD SUPPORTED</p>
+  </main>
+</div>
+<script src="/omega-zw-logic.js"></script>
+<script src="/omega-zw-game.js"></script>
+</body>
+</html>

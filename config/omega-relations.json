@@ -186,6 +186,16 @@
    ]
   },
   {
+   "a": "achieve",
+   "b": "order",
+   "weight": 2,
+   "shared_pages": [],
+   "shared_relations": [
+    "rpc:public_leaderboard",
+    "table:omega_achievement_definitions"
+   ]
+  },
+  {
    "a": "arena",
    "b": "intel",
    "weight": 2,
@@ -311,15 +321,6 @@
    "shared_pages": [],
    "shared_relations": [
     "table:task_completions"
-   ]
-  },
-  {
-   "a": "achieve",
-   "b": "order",
-   "weight": 1,
-   "shared_pages": [],
-   "shared_relations": [
-    "rpc:public_leaderboard"
    ]
   },
   {

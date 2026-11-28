@@ -130,11 +130,8 @@
     exportButton.disabled=false;
     status.textContent='CONSTELLATION COMPOSED · USER-CREATED · SESSION ONLY';
   }
-  function escapeXml(value){
-    return String(value).replace(/[&<>"']/g,function(char){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[char];
-    });
-  }
+  /* The one shared escaper (omega-esc.js; bg.js carries a bootstrap copy).  Its output is valid in SVG text and attributes, and absent the helper it returns '' rather than unescaped text. */
+  function escapeXml(value){ return window.OmegaEsc ? OmegaEsc.esc(value) : ''; }
   function designToken(name){
     var value=getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     var hex=safeHex(value);

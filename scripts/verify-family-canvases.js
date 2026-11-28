@@ -22,7 +22,6 @@ if (!pw || !BASE) { console.log('SKIPPED: no browser or no harness'); process.ex
 const ROWS = '{family_nodes:[{id:"a",name:"Maya Dagher",relation:"Wife",sign:"Leo",is_heir:false,created_at:"2026-01-01"},{id:"b",name:"Karim Dagher",relation:"Son",sign:"Aries",is_heir:true,created_at:"2026-01-02"},{id:"c",name:"Nora Dagher",relation:"Daughter",sign:"Libra",is_heir:false,created_at:"2026-01-03"}],bloodline_nodes:[{id:"x",name:"Elias Dagher",rel:"Father",birth:"1950-02-01",notes:"n",created_at:"2026-01-01"},{id:"y",name:"Mona Haddad",rel:"Mother",birth:"1955-05-05",notes:"",created_at:"2026-01-02"}]}';
 const STUB = BASE.replace('is_owner:false', 'is_owner:true').replace('from: ()=>chain({}),', 'from: (t)=>chain({t}),').replace('const payload = state.single', 'const ROWS=' + ROWS + '; const payload = (state.t&&ROWS[state.t]&&!state.single) ? {data:ROWS[state.t],error:null,count:ROWS[state.t].length,status:200} : state.single');
 const results = []; const check = (n, ok, d) => results.push({ name: n, ok: !!ok, detail: ok ? undefined : d });
-function serve(root, urlPath) { const f = path.join(root, path.normalize(urlPath).replace(/^(\.\.[/\\])+/, '')); return f.startsWith(root + path.sep) ? f : null; }
 const probe = () => ['con-cv', 'tree-canvas'].map(id => {
   const c = document.getElementById(id), bb = c.getBoundingClientRect(); let top = 1e9, bot = -1;
   try { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2) if (d[(y * c.width + x) * 4 + 3] > 8) { if (y < top) top = y; if (y > bot) bot = y; } } catch (e) { }
@@ -35,7 +34,8 @@ const probe = () => ['con-cv', 'tree-canvas'].map(id => {
     await ctx.route(ORIGIN + '/**', async r => {
       const u = decodeURIComponent(new URL(r.request().url()).pathname);
       if (u === '/vendor/supabase-js.js') return r.fulfill({ status: 200, contentType: 'text/javascript', body: STUB });
-      const f = serve(ROOT, u); if (!f) return r.fulfill({ status: 404, body: '' });
+      const f = path.join(ROOT, path.normalize(u).replace(/^(\.\.[/\\])+/, ''));
+      if (!f.startsWith(ROOT)) return r.fulfill({ status: 404, body: '' });
       try { r.fulfill({ status: 200, contentType: MIME[path.extname(f)] || 'application/octet-stream', body: fs.readFileSync(f) }); } catch (e) { r.fulfill({ status: 404, body: '' }); }
     });
     await ctx.route('https://esm.sh/**', r => r.fulfill({ status: 200, contentType: 'text/javascript', body: STUB }));

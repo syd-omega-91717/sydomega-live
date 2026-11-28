@@ -19,7 +19,7 @@
 .el-card.mine{box-shadow:inset 0 0 0 1px rgba(0,229,255,.5)}
 .el-card.locked{opacity:.45;pointer-events:none}
 .el-canvas-wrap{width:100%;height:160px;position:relative}
-.el-canvas-wrap canvas{width:100%;height:100%;display:block}
+.el-canvas-wrap canvas{width:100%;height:100%;display:block;object-fit:contain}/* the motif is composed 2:1 (640x320) but the box is 100% x 160px (2.75:1 at 440px wide): without this the art was stretched ~1.4x sideways */
 .el-body{padding:18px 20px 20px}
 .el-tier{font-family:var(--M);font-size:12px;letter-spacing:3px;margin-bottom:8px}
 .el-name{font-family:var(--D);font-size:var(--fs-4,20px);font-weight:700;margin-bottom:4px}

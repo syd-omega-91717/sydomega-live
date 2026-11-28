@@ -120,7 +120,8 @@
     omega_bg: 1, omega_font: 1, omega_lang: 1, omega_sound: 1, omega_text: 1,
     omega_axis: 1, omega_track: 1, omega_cached_auth: 1, omega_last_online: 1,
     omega_last_gate: 1, omega_genesis_seen: 1,
-    'omega:ad:impressions': 1  // specimen impression counter is explicitly browser-only
+    'omega:ad:impressions': 1, // specimen impression counter is explicitly browser-only
+    omega_focus_mirror_queue_v1: 1 // transient retry queue is browser-only
   };
 
   /* NEVER MIRRORED TO THE SERVER. The seven finance pages (wealth, wallet, treasury, revenue,

@@ -32,6 +32,13 @@ class MemberStatePolicyTests(unittest.TestCase):
         self.assertIn('skip[k]', self.backup)
         self.assertIn('MS.isMemberKey(k)', self.export)
 
+    def test_focus_retry_queue_is_transient_and_excluded_from_mirror_and_exports(self):
+        key = 'omega_focus_mirror_queue_v1'
+        self.assertIn(key, self.skip)
+        self.assertIn('!SKIP[k]', self.member)
+        self.assertIn('skip[k]', self.backup)
+        self.assertIn('MS.isMemberKey(k)', self.export)
+
     def test_finance_keys_remain_exportable_but_not_cloud_mirrored(self):
         finance = {
             'omega_wealth_assets', 'omega_wallet', 'omega_treasury_assets',

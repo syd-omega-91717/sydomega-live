@@ -432,6 +432,7 @@ select.omega-select{font-family:var(--M);font-size:12px;color:var(--ink);backgro
 </style>
 <link rel="stylesheet" href="/omega-readable-layout-v2.css"/>
 <script src="/omega-canvas-hidpi.js"></script>
+<link rel="stylesheet" href="/assets/profile-character-3d.css">
 </head>
 <body data-omega-page="profile">
 <div class="shell">
@@ -1390,6 +1391,22 @@ t++;requestAnimationFrame(f);}f();})();
     <div class="topbar">
       <div class="t" data-i18n="prof_character_title">CHARACTER SYSTEM<small data-i18n="prof_character_subtitle">M3 . SOVEREIGN IDENTITY . GENEALOGY . EVOLUTION PATH</small></div>
     </div>
+    <section class="pcc-panel" aria-label="Member-specific three-dimensional character core">
+      <div class="pcc-head">
+        <div><span class="pcc-kicker">Ω IDENTITY CORE / 3D</span><h3>YOUR SOVEREIGN CHARACTER</h3></div>
+        <span class="pcc-element-state" id="profile-character-element-state" role="status" aria-live="polite">RESOLVING CANON ELEMENT</span>
+      </div>
+      <div class="pcc-stage" id="profile-character-core" data-omega-sculpture="character"
+           data-sculpt-height="clamp(320px,40vw,460px)" data-sculpt-bloom="off"
+           data-sculpt-label="Three-dimensional member character core. Element colour is assigned from the saved zodiac sign; progression nodes remain neutral without verified source data."></div>
+      <div class="pcc-source-row">
+        <span>ELEMENT · CANON LINKED WHEN AVAILABLE</span>
+        <span>GATE PROGRESSION · NOT CONNECTED</span>
+        <span>MASTERY FEED · NOT CONNECTED</span>
+      </div>
+      <p class="pcc-note">The core colour follows the member's saved zodiac-to-element mapping in the canonical element registry. Gate nodes and mastery satellites remain neutral until their own verified member data sources are connected.</p>
+    </section>
+
     <p style="font-weight:300;color:var(--muted);max-width:72ch;font-size:14px;line-height:1.8;margin-bottom:20px" data-i18n="prof_character_intro">Your sovereign character is assigned at genesis by your zodiac sign and cannot be chosen &mdash; only evolved. Every action in the matrix refines your archetype. Your character is inherited by your heirs, gaining their traits and merging into the bloodline. This is how the Order grows across generations.</p>
 
     <div class="sechead" data-reveal="fade-up" data-i18n="prof_character_hero_header">YOUR SOVEREIGN CHARACTER <span data-canon-lattice="twelve"></span></div>
@@ -1702,6 +1719,31 @@ async function boot(){
   const res=await sb.from('profiles').select('is_owner,display_name,email,sign,axis_a,axis_b,axis_c,trophies_earned,medals_earned,certificates_earned').eq('id',sess.user.id).maybeSingle();
   if(res.error) console.warn('[Omega Profile] profile lookup failed:',res.error);
   const pr=res.data||{};
+  (function bindCharacterCore(profile){
+    var stage=document.getElementById('profile-character-core');
+    var state=document.getElementById('profile-character-element-state');
+    if(!stage||!state)return;
+    var savedSign=String(profile.sign||'').trim();
+    if(!savedSign){state.textContent='NO SAVED SIGN · NEUTRAL CORE';return;}
+    fetch('/omega-elements.json',{cache:'force-cache'}).then(function(response){
+      if(!response.ok)throw new Error('canonical element registry unavailable');
+      return response.json();
+    }).then(function(canon){
+      var mapping=canon&&canon.sign_element;
+      if(!mapping||typeof mapping!=='object')throw new Error('canonical sign mapping unavailable');
+      var signKey=Object.keys(mapping).find(function(key){return key.toLowerCase()===savedSign.toLowerCase();});
+      var elementName=signKey?String(mapping[signKey]||''):'';
+      if(!elementName){state.textContent='NO CANON ELEMENT FOR SAVED SIGN';return;}
+      var palette=window.OmegaRealm&&window.OmegaRealm.palette;
+      var paletteKey=palette&&Object.keys(palette).find(function(key){return key.toLowerCase()===elementName.toLowerCase();});
+      if(!paletteKey){state.textContent='ELEMENT PALETTE UNAVAILABLE · NEUTRAL CORE';return;}
+      stage.setAttribute('data-sculpt-element',paletteKey);
+      state.textContent='CANON ELEMENT LINKED · '+elementName;
+    }).catch(function(error){
+      state.textContent='CANON ELEMENT SOURCE UNAVAILABLE · NEUTRAL CORE';
+      console.warn('[Omega Character Core] element binding unavailable',error);
+    });
+  })(pr);
   const isOwner=!!pr.is_owner;
   const a=Number(pr.axis_a||1), b=Number(pr.axis_b||1), c=Number(pr.axis_c||1);
     try{

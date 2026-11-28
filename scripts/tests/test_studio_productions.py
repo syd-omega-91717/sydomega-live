@@ -34,6 +34,24 @@ class StudioProductions(unittest.TestCase):
                 self.assertTrue(p["screenplay"], p["id"])
                 self.assertFalse(p["mediaFiles"], "a draft with media files should be re-statused")
 
+    def test_media_saga_statuses_match_registered_production_evidence(self):
+        film_block = MEDIA.split("var FILMS=[", 1)[1].split("];", 1)[0]
+        statuses = re.findall(r"status:'([^']+)'", film_block)
+        self.assertEqual(statuses, ["SCREENPLAY DRAFT"] + ["CONCEPT"] * 11)
+        for unsupported in ("IN PRODUCTION", "PRE-PRODUCTION", "DEVELOPMENT", "PUBLISHED"):
+            self.assertNotIn(unsupported, film_block)
+
+        first = film_block.split("n:1,", 1)[1].split("},", 1)[0]
+        production_id = first.split("productionId:'", 1)[1].split("'", 1)[0]
+        production = next((p for p in REG["productions"] if p["id"] == production_id), None)
+        self.assertIsNotNone(production)
+        self.assertEqual(production["status"], "SCREENPLAY_DRAFT")
+        self.assertFalse(production["mediaFiles"])
+        package = text(production["package"])
+        self.assertRegex(package, r"(?i)not produced")
+        self.assertIn("THE ORIGIN (Film 1, screenplay draft)", MEDIA)
+        self.assertNotIn("THE ORIGIN (Film 1, in production)", MEDIA)
+
     def test_unapproved_stays_flagged_in_the_package(self):
         for p in REG["productions"]:
             if not p["approvedByOwner"]:

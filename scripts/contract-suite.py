@@ -252,6 +252,9 @@ GATES = [
     ('brand-glyph',
      'no symbol renders as a colour emoji against the monochrome palette',
      ['scripts/brand-glyph-check.py']),
+    ('no-biometric',
+     'no biometric or genetic datum is stored, no face-recognition or device-fingerprinting library is used, and no copy claims a biometric, DNA or HSM identity exists',
+     ['scripts/no-biometric-gate.py']),
     ('canon-consistency',
      'every sign, god, agent, element and token on every page agrees with '
      'the one canon table (omega-canon.json tracks)',
